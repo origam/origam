@@ -20,12 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
-using IdentityServer4;
-using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
@@ -59,7 +56,6 @@ namespace Origam.ServerCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMvc().AddXmlSerializerFormatters();
             services.AddSpaStaticFiles(configuration =>
             {
@@ -78,23 +74,7 @@ namespace Origam.ServerCore
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
-            // services.AddAuthentication(options =>
-            // {
-            //     options.DefaultAuthenticateScheme = "Jwt";
-            //     options.DefaultChallengeScheme = "Jwt";
-            // })
-            // .AddJwtBearer("Jwt", options =>
-            // {
-            //     options.TokenValidationParameters = new TokenValidationParameters
-            //     {
-            //         ValidateAudience = false,  //ValidAudience = "the audience you want to validate",
-            //         ValidateIssuer = false,  //ValidIssuer = "the user you want to validate",
-            //         ValidateIssuerSigningKey = true,
-            //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(startUpConfiguration.SecurityKey)),
-            //         ValidateLifetime = true, //validate the expiration and not before values in the token
-            //         ClockSkew = TimeSpan.FromMinutes(5) // 5 minute tolerance for the expiration date
-            //     };
-            // });
+            
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IPrincipal>(
                 provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
@@ -102,60 +82,11 @@ namespace Origam.ServerCore
             
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
-                .AddInMemoryApiResources(new[]
-                {
-                    new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
-                })
-                .AddInMemoryClients(new[]
-                {
-                    new Client
-                    {
-                        ClientId = "VsCodeTest",
-                        ClientSecrets = new[] {new Secret("bla".Sha256())},
-                        AllowedGrantTypes = GrantTypes
-                            .ResourceOwnerPasswordAndClientCredentials,
-                        AllowedScopes = new List<string> {"testApi"},
-                    },
-                    new Client
-                    {
-                        ClientId = "xamarin",
-                        ClientName = "eShop Xamarin OpenId Client",
-                        AllowedGrantTypes = GrantTypes.Hybrid,
-                        ClientSecrets =
-                        {
-                            new Secret("bla".Sha256())
-                        },
-                        RedirectUris = {"http://192.168.0.80:45455/xamarincallback"},
-                        RequireConsent = false,
-                        RequirePkce = true,
-                        // PostLogoutRedirectUris = { $"{clientsUrl["Xamarin"]}/Account/Redirecting" },
-                        // AllowedCorsOrigins = { "http://eshopxamarin" },
-                        AllowedScopes = new List<string>
-                        {
-                            "openid", "profile",
-                            IdentityServerConstants.LocalApi.ScopeName
-                        },
-                        AllowOfflineAccess = true,
-                        AllowAccessTokensViaBrowser = true
-                    },
-                })
-                .AddInMemoryIdentityResources(
-                    new IdentityResource[]
-                    {
-                        new IdentityResources.OpenId(),
-                        new IdentityResources.Profile()
-                    })
+                .AddInMemoryApiResources(Settings.GetIdentityApiResources())
+                .AddInMemoryClients(Settings.GetIdentityClients())
+                .AddInMemoryIdentityResources(Settings.GetIdentityResources())
                 .AddAspNetIdentity<IOrigamUser>();
-                // .AddTestUsers(new List<TestUser>
-                // {
-                //     new TestUser
-                //     {
-                //         SubjectId = "1",
-                //         Username = "bla",
-                //         Password = "bla"
-                //     }
-                // });
-                
+
             services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false); 
             services.AddLocalApiAuthentication();
