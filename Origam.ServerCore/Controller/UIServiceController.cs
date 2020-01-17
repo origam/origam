@@ -44,12 +44,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using IdentityServer4;
 using Microsoft.AspNetCore.Localization;
 using Origam.Workbench;
 
 namespace Origam.ServerCore.Controller
 {
-    [Authorize]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     [ApiController]
     [Route("internalApi/[controller]")]
     // ReSharper disable once InconsistentNaming

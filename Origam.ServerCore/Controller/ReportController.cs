@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -39,7 +40,7 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Controller
 {
-    [Authorize]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     [ApiController]
     [Route("internalApi/[controller]")]
     public class ReportController : AbstractController

@@ -26,6 +26,7 @@ using System.Security.Principal;
 using System.Text;
 using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServer4.Services;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -124,7 +125,7 @@ namespace Origam.ServerCore
                         {
                             new Secret("bla".Sha256())
                         },
-                        RedirectUris = {""},
+                        RedirectUris = {"http://192.168.0.80:45455/xamarincallback"},
                         RequireConsent = false,
                         RequirePkce = true,
                         // PostLogoutRedirectUris = { $"{clientsUrl["Xamarin"]}/Account/Redirecting" },
@@ -154,8 +155,10 @@ namespace Origam.ServerCore
                 //         Password = "bla"
                 //     }
                 // });
-            services.AddMvc(options => options.EnableEndpointRouting = false);
-            // services.AddLocalApiAuthentication();
+                
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddMvc(options => options.EnableEndpointRouting = false); 
+            services.AddLocalApiAuthentication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -202,8 +205,10 @@ namespace Origam.ServerCore
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRequestLocalization(); 
-            app.UseMvc();
-            // app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+            });
             app.UseSpa(spa => {});
             // add DI to origam, in order to be able to resolve IPrincipal from
             // https://davidpine.net/blog/principal-architecture-changes/
