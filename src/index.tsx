@@ -14,6 +14,11 @@ if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
 }
 
+if(process.env.NODE_ENV === 'development') {
+  axios.defaults.timeout = 3600000;
+  (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
+}
+
 (window as any).ORIGAM_CLIENT_REVISION_HASH =
   process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
   (window as any).ORIGAM_CLIENT_REVISION_DATE =
