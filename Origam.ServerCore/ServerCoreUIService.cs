@@ -572,7 +572,7 @@ namespace Origam.ServerCore
             }
             return result;
         }
-        public static IList<WorkQueueInfo> WorkQueueList(
+        public IList<WorkQueueInfo> WorkQueueList(
             IStringLocalizer<SharedResources> localizer)
         {
             try
@@ -666,7 +666,7 @@ namespace Origam.ServerCore
             OrigamPanelConfigDA.SaveUserConfig(
                 userConfig, input.ObjectInstanceId, workflowId, profileId);
         }
-        public static void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
+        public void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
         {
             SecurityTools.CurrentUserProfile();
             OrigamPanelColumnConfigDA.PersistColumnConfig(

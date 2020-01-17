@@ -49,7 +49,7 @@ namespace Origam
 
         private void WriteToDataSet(XmlDocument xmlDocument)
         {
-            using (XmlReader xmlReader = new XmlNodeReader(xmlDocument.RemoveAllEmptyAttributesAndNodes()))
+            using (XmlReader xmlReader = new XmlNodeReader(xmlDocument))
             {
                 Load(xmlReader,true);
             }

@@ -84,7 +84,7 @@ namespace Origam.Workflow
 
         public object[] AllowedStateValues(Guid entityId, Guid fieldId, object currentStateValue, DataRow dataRow, string transactionId)
         {
-            IDataDocument dataDocument = DataDocumentFactory.New( DatasetTools.GetRowXml(dataRow, DataRowVersion.Default));
+            IXmlContainer dataDocument = DatasetTools.GetRowXml(dataRow, DataRowVersion.Default);
             return AllowedStateValues(entityId, fieldId, currentStateValue, dataDocument, transactionId);
         }
 
@@ -181,7 +181,7 @@ namespace Origam.Workflow
 
         public bool IsStateAllowed(Guid entityId, Guid fieldId, object currentStateValue, object newStateValue, DataRow dataRow, string transactionId)
         {
-            IDataDocument data = DataDocumentFactory.New(DatasetTools.GetRowXml(dataRow, DataRowVersion.Default));
+            IXmlContainer data = DatasetTools.GetRowXml(dataRow, DataRowVersion.Default);
             return IsStateAllowed(entityId, fieldId, currentStateValue, newStateValue, data, transactionId);
         }
 
@@ -314,7 +314,7 @@ namespace Origam.Workflow
         {
             if (row.RowState != DataRowState.Deleted)
             {
-                IXmlContainer data = DataDocumentFactory.New( DatasetTools.GetRowXml(row, DataRowVersion.Default));
+                IXmlContainer data = DatasetTools.GetRowXml(row, DataRowVersion.Default);
 
                 // state entry or state transition
                 foreach (DataColumn column in stateColumns)
@@ -492,7 +492,7 @@ namespace Origam.Workflow
             DataRow dataRow, string transactionId)
         {
             StateMachine sm = GetMachine(entityId, fieldId, true);
-            IXmlContainer data = DataDocumentFactory.New(DatasetTools.GetRowXml(dataRow, DataRowVersion.Default));
+            IXmlContainer data = DatasetTools.GetRowXml(dataRow, DataRowVersion.Default);
 
             object rowKey = null;
             object[] keys = DatasetTools.PrimaryKey(dataRow);

@@ -447,7 +447,7 @@ namespace Origam
 			}
 			*/
 
-			if (response.CharacterSet != String.Empty)
+			if (response.CharacterSet != String.Empty && response.CharacterSet != null)
 			{
 				return Encoding.GetEncoding(response.CharacterSet);
 			}
