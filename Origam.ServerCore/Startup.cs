@@ -88,8 +88,28 @@ namespace Origam.ServerCore
                 .AddAspNetIdentity<IOrigamUser>();
 
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddMvc(options => options.EnableEndpointRouting = false); 
-            services.AddLocalApiAuthentication();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
+            services
+                .AddLocalApiAuthentication()
+                .AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+            .AddCookie("Cookies")
+            .AddOpenIdConnect(options =>
+            {
+                options.SignInScheme = "Cookies";
+                options.Authority = "https://localhost:44356";
+                options.RequireHttpsMetadata = true;
+                options.ClientId = "xamarin";
+                options.ClientSecret = "bla";
+                options.ResponseType = "code";
+                options.UsePkce = true;
+                options.Scope.Add("profile");
+                options.Scope.Add("offline_access");
+                options.SaveTokens = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
