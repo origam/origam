@@ -44,7 +44,7 @@ namespace Origam.ServerCore
                     {
                         new Secret("bla".Sha256())
                     },
-                    RedirectUris = {"http://192.168.0.80:45455/xamarincallback"},
+                    RedirectUris = {"http://localhost/xamarincallback"},
                     RequireConsent = false,
                     RequirePkce = true,
                     // PostLogoutRedirectUris = { $"{clientsUrl["Xamarin"]}/Account/Redirecting" },
@@ -55,7 +55,7 @@ namespace Origam.ServerCore
                         IdentityServerConstants.LocalApi.ScopeName
                     },
                     AllowOfflineAccess = true,
-                    AllowAccessTokensViaBrowser = true
+                    AllowAccessTokensViaBrowser = true,
                 },
             };
         }

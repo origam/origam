@@ -33,7 +33,6 @@ using Origam.Workbench.Services;
 namespace Origam.ServerCore.Controller
 {
     [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
-    // [Route("[controller]/[action]")]
     public class UIController: AbstractController
     {
         private readonly IPersistenceService persistenceService;
