@@ -1725,7 +1725,6 @@ namespace Origam.DA.Service
                         string.Join(", ", missingColumns)} column(s).");
             }
             return entity.Columns
-                .Where(x => scalarColumnNames.Contains(x.Name))
                 .OrderBy(x => scalarColumnNames.IndexOf(x.Name));
         }
 
