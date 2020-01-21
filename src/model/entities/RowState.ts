@@ -127,6 +127,7 @@ export class RowState implements IRowState {
             }*/
             const rs = new RowStateColumnItem(
               column.name,
+              column.dynamicLabel,
               flashColor2htmlColor(column.foregroundColor),
               flashColor2htmlColor(column.backgroundColor),
               column.allowRead,
@@ -158,6 +159,7 @@ export class RowStateItem implements IRowStateItem {
 export class RowStateColumnItem implements IRowStateColumnItem {
   constructor(
     public name: string,
+    public dynamicLabel: string | undefined | null,
     public foregroundColor: string | undefined,
     public backgroundColor: string | undefined,
     public allowRead: boolean,

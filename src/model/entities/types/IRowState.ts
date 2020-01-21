@@ -25,6 +25,7 @@ export interface IRowStateItem {
 
 export interface IRowStateColumnItem {
   name: string;
+  dynamicLabel: string | null | undefined;
   foregroundColor: string | undefined;
   backgroundColor: string | undefined;
   allowRead: boolean;

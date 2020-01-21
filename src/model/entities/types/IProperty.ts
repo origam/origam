@@ -26,14 +26,13 @@ export interface IPropertyData {
   isPassword: boolean;
   isRichText: boolean;
   maxLength: number;
-  
+
   formatterPattern: string;
-  
+
   allowReturnToForm?: boolean;
   isTree?: boolean;
-  
+
   lookup?: ILookup;
-  
 }
 
 export interface IProperty extends IPropertyData {
@@ -45,6 +44,7 @@ export interface IProperty extends IPropertyData {
   columnWidth: number;
   linkToMenuId?: string;
   isLink: boolean;
+  nameOverride: string | null | undefined;
 
   setColumnWidth(width: number): void;
 

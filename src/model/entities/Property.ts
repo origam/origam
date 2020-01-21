@@ -23,6 +23,7 @@ export class Property implements IProperty {
   id: string = "";
   modelInstanceId: string = "";
   name: string = "";
+  nameOverride: string | null | undefined = null;
   readOnly: boolean = false;
   x: number = 0;
   y: number = 0;
