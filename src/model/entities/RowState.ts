@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { action, createAtom, flow, observable } from "mobx";
+import { action, createAtom, flow, observable, computed } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
@@ -24,14 +24,22 @@ export class RowState implements IRowState {
     Object.assign(this, data);
   }
 
+  @observable willLoadRowstates = false;
+  @observable firstLoadingPerformed = false;
+  @computed get mayCauseFlicker() {
+    return this.willLoadRowstates && !this.firstLoadingPerformed;
+  }
+
   @observable resolvedValues: Map<string, IRowStateItem> = new Map();
   @observable idStates = new Map();
   @observable observedIds = new Map();
 
+  @observable
   isSomethingLoading = false;
 
   triggerLoadImm = flow(
     function*(this: RowState) {
+      
       if (this.isSomethingLoading) {
         return;
       }
@@ -59,6 +67,7 @@ export class RowState implements IRowState {
             Ids: Array.from(idsToLoad)
           });
           this.isSomethingLoading = false;
+          this.firstLoadingPerformed = true;
           for (let state of states) {
             this.putValue(state);
             this.idStates.delete(state.id);
@@ -66,6 +75,7 @@ export class RowState implements IRowState {
           }
         } catch (error) {
           this.isSomethingLoading = false;
+          this.firstLoadingPerformed = true;
           for (let key of idsToLoad) {
             this.idStates.set(key, IIdState.ERROR);
           }
@@ -84,10 +94,12 @@ export class RowState implements IRowState {
       this.observedIds.set(key, {
         atom: createAtom(
           `RowState atom [${key}]`,
-          () => {
+          () => requestAnimationFrame(() => {
             // console.log('trigger load')
+            this.willLoadRowstates = true;
             this.triggerLoad();
-          },
+            
+          }),
           () => {
             this.observedIds.delete(key);
           }

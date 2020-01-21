@@ -5,6 +5,8 @@ export interface IRowStateData {}
 export interface IRowState extends IRowStateData {
   $type_IRowState: 1;
 
+  mayCauseFlicker: boolean;
+
   getValue(key: string): IRowStateItem | undefined;
   putValue(state: any): void;
 

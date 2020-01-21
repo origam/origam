@@ -20,6 +20,7 @@ import { getBindingParent } from "model/selectors/DataView/getBindingParent";
 import { IRowState } from "./types/IRowState";
 import { ILookupLoader } from "./types/ILookupLoader";
 import bind from "bind-decorator";
+import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
@@ -131,12 +132,20 @@ export class DataView implements IDataView {
   }
 
   @computed get panelViewActions() {
+    const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
+    if(rowStateMayCauseFlicker) {
+      return [];
+    }
     return this.actions.filter(
       action => action.placement === IActionPlacement.PanelHeader
     );
   }
 
   @computed get toolbarActions() {
+    const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
+    if(rowStateMayCauseFlicker) {
+      return [];
+    }
     return this.actions.filter(
       action =>
         action.placement === IActionPlacement.Toolbar &&
