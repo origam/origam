@@ -23,6 +23,7 @@ import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSel
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
 import selectors from "model/selectors-tree";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -82,6 +83,9 @@ export class CellRenderer implements ICellRenderer {
 
     /* CONTENT */
     ctx.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
+    if (cell.isHidden) {
+      return;
+    }
     if (cell.isLoading) {
       ctx.fillStyle = "#888888";
       ctx.fillText("Loading...", cellPaddingLeft * CPR, 15 * CPR);
@@ -89,16 +93,15 @@ export class CellRenderer implements ICellRenderer {
       ctx.fillStyle = cell.foregroundColor || "black";
       switch (cell.type) {
         case "CheckBox":
-          if (cell.value !== null) {
-            ctx.font = `${14 * CPR}px "Font Awesome 5 Free"`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(
-              cell.value ? "\uf14a" : "\uf0c8",
-              (columnWidth / 2) * CPR,
-              (rowHeight / 2) * CPR
-            );
-          }
+          ctx.font = `${14 * CPR}px "Font Awesome 5 Free"`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(
+            !!cell.value ? "\uf14a" : "\uf0c8",
+            (columnWidth / 2) * CPR,
+            (rowHeight / 2) * CPR
+          );
+
           break;
         case "Date":
           if (cell.value !== null) {
@@ -202,6 +205,7 @@ export class CellRenderer implements ICellRenderer {
           isLoading: false,
           isInvalid: false,
           isLink: false,
+          isHidden: false,
           formatterPattern: "",
           type: "CheckBox",
           value,
@@ -209,6 +213,7 @@ export class CellRenderer implements ICellRenderer {
           backgroundColor:
             getRowStateColumnBgColor(this.tablePanelView, recordId, "") ||
             getRowStateRowBgColor(this.tablePanelView, recordId),
+
           foregroundColor: getRowStateForegroundColor(
             this.tablePanelView,
             recordId,
@@ -289,6 +294,11 @@ export class CellRenderer implements ICellRenderer {
       backgroundColor:
         getRowStateColumnBgColor(this.tablePanelView, recordId, property.id) ||
         getRowStateRowBgColor(this.tablePanelView, recordId),
+      isHidden: !getRowStateAllowRead(
+        this.tablePanelView,
+        recordId,
+        property.id
+      ),
       foregroundColor: getRowStateForegroundColor(
         this.tablePanelView,
         recordId,

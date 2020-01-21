@@ -182,6 +182,7 @@ export interface IRenderedCell {
   isColumnOrderChangeTarget: boolean;
   isLoading: boolean;
   isInvalid: boolean;
+  isHidden: boolean;
   isPassword?: boolean;
   isLink: boolean;
   formatterPattern: string;
