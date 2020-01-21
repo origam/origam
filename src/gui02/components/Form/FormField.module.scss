@@ -4,8 +4,8 @@
 
 .caption {
   position: absolute;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  // text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: normal;
   top: 0;
