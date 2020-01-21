@@ -14,6 +14,8 @@ import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 import { handleError } from "model/actions/handleError";
 import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 import bind from "bind-decorator";
+import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -87,6 +89,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
+    if (
+      openedScreen.content &&
+      !openedScreen.content.isLoading &&
+      openedScreen.content.formScreen
+    ) {
+      if (!getIsFormScreenDirty(openedScreen.content.formScreen)) {
+        yield* reloadScreen(openedScreen.content.formScreen)();
+      }
+    }
   }
 
   *closeForm(openedScreen: IOpenedScreen): Generator {
