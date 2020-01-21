@@ -6,7 +6,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import React from "react";
 import S from "./FormField.module.scss";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
-import { getRowStateNameOverride } from "model/selectors/RowState/getRowStateNameOverride";
+import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -20,7 +20,7 @@ export enum ICaptionPosition {
   const isHidden =
     !getRowStateAllowRead(property, rowId || "", property.id) ||
     getRowStateMayCauseFlicker(property);
-  const ovrCaption = getRowStateNameOverride(
+  const ovrCaption = getRowStateDynamicLabel(
     property,
     rowId || "",
     property.id
