@@ -1,7 +1,10 @@
+import { computed } from "mobx";
+import { inject, observer } from "mobx-react";
+import { IDockType } from "model/entities/types/IProperty";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
 import S from "./FormField.module.scss";
-import { render } from "react-dom";
-import { IDockType } from "model/entities/types/IProperty";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -10,6 +13,14 @@ export enum ICaptionPosition {
   None = "None"
 }
 
+@inject(({ property }) => {
+  const rowId = getSelectedRowId(property);
+  const isHidden = !getRowStateAllowRead(property, rowId || "", property.id);
+  return {
+    isHidden
+  };
+})
+@observer
 export class FormField extends React.Component<{
   caption: React.ReactNode;
   captionPosition?: ICaptionPosition;
@@ -21,8 +32,15 @@ export class FormField extends React.Component<{
   width: number;
   height: number;
   isCheckbox?: boolean;
+  isHidden?: boolean;
 }> {
+  @computed
   get captionStyle() {
+    if (this.props.isHidden) {
+      return {
+        display: "none"
+      };
+    }
     switch (this.props.captionPosition) {
       default:
       case ICaptionPosition.Left:
@@ -51,6 +69,11 @@ export class FormField extends React.Component<{
   }
 
   get formFieldStyle() {
+    if (this.props.isHidden) {
+      return {
+        display: "none"
+      };
+    }
     if (this.props.dock === IDockType.Fill) {
       return {
         top: 0,
