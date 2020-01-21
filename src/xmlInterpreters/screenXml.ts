@@ -131,6 +131,7 @@ export function interpretScreenXml(
     openingOrder: 0,
     showInfoPanel: windowXml.attributes.ShowInfoPanel === "true",
     autoRefreshInterval: parseInt(windowXml.attributes.AutoRefreshInterval, 10),
+    refreshOnFocus: windowXml.attributes.RefreshOnFocus === "true",
     cacheOnClient: windowXml.attributes.CacheOnClient === "true",
     autoSaveOnListRecordChange:
       windowXml.attributes.AutoSaveOnListRecordChange === "true",

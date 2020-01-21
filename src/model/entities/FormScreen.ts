@@ -16,6 +16,7 @@ import {
 } from "./types/IFormScreen";
 
 export class FormScreen implements IFormScreen {
+  
   $type_IFormScreen: 1 = 1;
 
   constructor(data: IFormScreenData) {
@@ -36,6 +37,7 @@ export class FormScreen implements IFormScreen {
   openingOrder: number = 0;
   showInfoPanel: boolean = false;
   autoRefreshInterval: number = 0;
+  refreshOnFocus: boolean = false;
   cacheOnClient: boolean = false;
   autoSaveOnListRecordChange: boolean = false;
   requestSaveAfterUpdate: boolean = false;

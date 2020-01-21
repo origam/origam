@@ -92,6 +92,7 @@ export interface IFormScreenData {
   openingOrder: number;
   showInfoPanel: boolean;
   autoRefreshInterval: number;
+  refreshOnFocus: boolean;
   cacheOnClient: boolean;
   autoSaveOnListRecordChange: boolean;
   requestSaveAfterUpdate: boolean;

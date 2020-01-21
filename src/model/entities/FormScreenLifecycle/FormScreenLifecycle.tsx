@@ -1,5 +1,5 @@
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, autorun, flow } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -24,6 +24,8 @@ import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getMenuItemType } from "model/selectors/getMenuItemType";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
+import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
+import { handleError } from "model/actions/handleError";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -106,12 +108,41 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  _autorefreshTimerHandle: any;
+
+  *startAutorefreshIfNeeded() {
+    const autorefreshPeriod = getAutorefreshPeriod(this);
+    if (autorefreshPeriod) {
+      autorun(() => {
+        if (getIsFormScreenDirty(this) && this._autorefreshTimerHandle) {
+          clearInterval(this._autorefreshTimerHandle);
+          this._autorefreshTimerHandle = undefined;
+        } else {
+          setInterval(() => this.performAutoreload(), autorefreshPeriod*1000);
+        }
+      });
+    }
+  }
+
+  performAutoreload() {
+    const self = this;
+    flow(function*() {
+      try {
+        yield* self.refreshSession();
+      } catch (e) {
+        yield* handleError(self)(e);
+        throw e;
+      }
+    })();
+  }
+
   *start(initUIResult: any): Generator {
     // yield* this.initUI();
     yield* this.applyInitUIResult({ initUIResult });
     if (!this.isReadData) {
       yield* this.loadData();
     }
+    yield* this.startAutorefreshIfNeeded();
   }
   /*
   *initUI() {
@@ -207,7 +238,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           });
           console.log(updateObjectResult);
           yield* processCRUDResult(dataView, updateObjectResult);
-          if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+          if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
             yield* refreshWorkQueues(this)();
           }
         }
@@ -230,7 +261,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Parameters: { ...getBindingParametersFromParent(targetDataView) }
       });
       yield* processCRUDResult(targetDataView, createObjectResult);
-      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
         yield* refreshWorkQueues(this)();
       }
     } finally {
@@ -249,7 +280,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       });
       console.log(deleteObjectResult);
       yield* processCRUDResult(this, deleteObjectResult);
-      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
         yield* refreshWorkQueues(this)();
       }
     } finally {
@@ -264,7 +295,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield api.saveSessionQuery(getSessionId(this));
       const result = yield api.saveSession(getSessionId(this));
       yield* processCRUDResult(this, result);
-      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
         yield* refreshWorkQueues(this)();
       }
     } finally {
@@ -284,7 +315,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } else {
         yield* this.loadData();
       }
-      if(getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
+      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
         yield* refreshWorkQueues(this)();
       }
     } finally {
