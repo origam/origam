@@ -26,6 +26,7 @@ import { IMainMenuItemType } from "../types/IMainMenu";
 import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
 import { handleError } from "model/actions/handleError";
+import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -40,6 +41,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     return this.inFlow > 0;
   }
   @observable inFlow = 0;
+  disposers: any[] = [];
 
   *onFlushData(): Generator<unknown, any, unknown> {
     yield* this.flushData();
@@ -113,14 +115,25 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *startAutorefreshIfNeeded() {
     const autorefreshPeriod = getAutorefreshPeriod(this);
     if (autorefreshPeriod) {
-      autorun(() => {
-        if (getIsFormScreenDirty(this) && this._autorefreshTimerHandle) {
-          clearInterval(this._autorefreshTimerHandle);
-          this._autorefreshTimerHandle = undefined;
-        } else {
-          setInterval(() => this.performAutoreload(), autorefreshPeriod*1000);
-        }
-      });
+      this.disposers.push(
+        autorun(() => {
+          if (getIsFormScreenDirty(this) || !getIsActiveScreen(this)) {
+            this.clearAutorefreshInterval();
+          } else {
+            this._autorefreshTimerHandle = setInterval(
+              () => this.performAutoreload(),
+              autorefreshPeriod * 1000
+            );
+          }
+        })
+      );
+    }
+  }
+
+  clearAutorefreshInterval() {
+    if (this._autorefreshTimerHandle) {
+      clearInterval(this._autorefreshTimerHandle);
+      this._autorefreshTimerHandle = undefined;
     }
   }
 
@@ -368,6 +381,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *closeForm() {
     try {
       this.inFlow++;
+      this.clearAutorefreshInterval();
+      this.disposers.forEach(disposer => disposer());
       yield* this.destroyUI();
       yield* closeForm(this)();
     } finally {
