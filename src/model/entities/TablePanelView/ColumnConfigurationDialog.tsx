@@ -8,7 +8,7 @@ import {
   ITableColumnsConf,
   ColumnsDialog
 } from "gui/Components/Dialogs/ColumnsDialog";
-import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog.tsx/onColumnConfigurationSubmit";
+import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {

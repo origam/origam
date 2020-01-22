@@ -7,6 +7,10 @@ import { getSelectionMember } from "model/selectors/DataView/getSelectionMember"
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import actions from "model/actions-tree";
+import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export function onTableCellClick(ctx: any) {
   return flow(function* onTableCellClick(
@@ -36,7 +40,12 @@ export function onTableCellClick(ctx: any) {
         return;
       } else {
         yield* getTablePanelView(ctx).onCellClick(event, rowIndex, columnIndex);
-        return
+        onPossibleSelectedRowChange(ctx)(
+          getMenuItemId(ctx),
+          getDataStructureEntityId(ctx),
+          getSelectedRowId(ctx)
+        );
+        return;
       }
     } catch (e) {
       yield* handleError(ctx)(e);

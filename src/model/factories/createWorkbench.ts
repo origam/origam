@@ -5,6 +5,7 @@ import { WorkbenchLifecycle } from "model/entities/WorkbenchLifecycle/WorkbenchL
 import { MainMenuEnvelope } from "../entities/MainMenu";
 import { OpenedScreens } from "model/entities/OpenedScreens";
 import { WorkQueues } from "model/entities/WorkQueues";
+import { RecordInfo } from "model/entities/RecordInfo";
 
 
 export function createWorkbench() {
@@ -14,6 +15,7 @@ export function createWorkbench() {
     clientFulltextSearch: new ClientFulltextSearch(),
     openedScreens: new OpenedScreens(),
     openedDialogScreens: new OpenedScreens(),
-    workQueues: new WorkQueues()
+    workQueues: new WorkQueues(),
+    recordInfo: new RecordInfo()
   });
 }

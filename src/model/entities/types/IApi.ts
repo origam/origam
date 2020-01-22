@@ -231,9 +231,29 @@ export interface IApi {
     Position: number;
   }): Promise<any>;
 
+  workflowAbort(data: { sessionFormIdentifier: string }): Promise<any>;
 
-  workflowAbort(data: {sessionFormIdentifier: string}): Promise<any>;
-  
-  workflowRepeat(data: {sessionFormIdentifier: string}): Promise<any>;
+  workflowRepeat(data: { sessionFormIdentifier: string }): Promise<any>;
 
+  getRecordInfo(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    RowId: string;
+  }): Promise<any>;
+
+  getRecordAudit(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    RowId: string;
+  }): Promise<
+    Array<{
+      id: string;
+      dateTime: string;
+      userName: string;
+      fieldName: string;
+      oldValue: string | null;
+      newValue: string | null;
+      actionType: number;
+    }>
+  >;
 }

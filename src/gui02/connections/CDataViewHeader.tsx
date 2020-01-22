@@ -32,6 +32,8 @@ import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVi
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 
 import uiActions from "model/actions-ui-tree";
+import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
+import { onRecordAuditClick } from "model/actions-ui/RecordInfo/onRecordAuditClick";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -180,11 +182,25 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                     >
                       Column configuration
                     </DropdownItem>
-                    <DropdownItem isDisabled={true}>Show audit</DropdownItem>
+                    <DropdownItem
+                      isDisabled={false}
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        onRecordAuditClick(dataView)(event);
+                      }}
+                    >
+                      Show audit
+                    </DropdownItem>
                     <DropdownItem isDisabled={true}>
                       Show attachments
                     </DropdownItem>
-                    <DropdownItem isDisabled={true}>
+                    <DropdownItem
+                      isDisabled={false}
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        onRecordInfoClick(dataView)(event);
+                      }}
+                    >
                       Show record information
                     </DropdownItem>
                   </Dropdown>

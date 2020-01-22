@@ -3,6 +3,7 @@ import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
 import { IClientFulltextSearch } from "./IClientFulltextSearch";
 import { IOpenedScreens } from "./IOpenedScreens";
 import { IWorkQueues } from "./IWorkQueues";
+import { IRecordInfo } from "./IRecordInfo";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -11,6 +12,7 @@ export interface IWorkbenchData {
   openedScreens: IOpenedScreens;
   openedDialogScreens: IOpenedScreens;
   workQueues: IWorkQueues;
+  recordInfo: IRecordInfo;
 }
 
 export interface IWorkbench extends IWorkbenchData {
@@ -21,6 +23,8 @@ export interface IWorkbench extends IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;  
   run(): Generator;
   setFullscreen(state: boolean): void;
+
+  
 
   parent?: any;
 }

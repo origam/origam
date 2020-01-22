@@ -7,30 +7,82 @@ import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDi
 import { SidebarSectionHeader } from "gui02/components/Sidebar/SidebarSectionHeader";
 import React from "react";
 import { CMainMenu } from "./CMainMenu";
-import { observable } from "mobx";
+import { observable, action } from "mobx";
 import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
 import { observer, MobXProviderContext } from "mobx-react";
 import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { CWorkQueues } from "./CWorkQueues";
-
-enum ISidebarSection {
-  WorkQueues,
-  Favorites,
-  Menu,
-  Info,
-  Search
-}
+import { ISidebarSection, IInfoSubsection } from "./types";
+import { CSidebarInfoSection } from "./CSidebarInfoSection";
+import { addRecordInfoExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordInfoExpandRequestHandler";
+import { addRecordAuditExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordAuditExpandRequestHandler";
+import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
+import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
+import { onSidebarInfoSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
 
 @observer
 export class CSidebar extends React.Component {
   static contextType = MobXProviderContext;
 
   get workbench(): IWorkbench {
-    return this.context.application;
+    return this.context.workbench;
   }
 
-  @observable activeSection = ISidebarSection.Menu;
+  @observable _activeSection = ISidebarSection.Menu;
+  @observable activeInfoSubsection = IInfoSubsection.Info;
+
+  get activeSection() {
+    return this._activeSection;
+  }
+
+  set activeSection(value) {
+    if (
+      this._activeSection === ISidebarSection.Info &&
+      value !== this._activeSection
+    ) {
+      onSidebarInfoSectionCollapsed(this.workbench)();
+    }
+    if (
+      this._activeSection !== ISidebarSection.Info &&
+      value === ISidebarSection.Info
+    ) {
+      if (this.activeInfoSubsection === IInfoSubsection.Info) {
+        onSidebarInfoSectionExpanded(this.workbench)();
+      }
+      if (this.activeInfoSubsection === IInfoSubsection.Audit) {
+        onSidebarAuditSectionExpanded(this.workbench)();
+      }
+    }
+    this._activeSection = value;
+  }
+
+  @action.bound handleExpandRecordAuditLog() {
+    this.activeInfoSubsection = IInfoSubsection.Audit;
+    this.activeSection = ISidebarSection.Info;
+  }
+
+  @action.bound handleExpandRecordInfo() {
+    this.activeInfoSubsection = IInfoSubsection.Info;
+    this.activeSection = ISidebarSection.Info;
+  }
+
+  disposers: any[] = [];
+
+  componentDidMount() {
+    this.disposers.push(
+      addRecordInfoExpandRequestHandler(this.workbench)(
+        this.handleExpandRecordInfo
+      ),
+      addRecordAuditExpandRequestHandler(this.workbench)(
+        this.handleExpandRecordAuditLog
+      )
+    );
+  }
+
+  componentWillUnmount() {
+    this.disposers.forEach(disposer => disposer());
+  }
 
   render() {
     const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
@@ -107,7 +159,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionBody
             isActive={this.activeSection === ISidebarSection.Info}
           >
-            &nbsp;
+            <CSidebarInfoSection activeSubsection={this.activeInfoSubsection} />
           </SidebarSectionBody>
         </SidebarSection>
         <SidebarSection

@@ -570,4 +570,46 @@ export class OrigamAPI implements IApi {
       )
     ).data;
   }
+
+  async getRecordInfo(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    RowId: string;
+  }) {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetRecordTooltip`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data.tooltip;
+  }
+
+  async getRecordAudit(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    RowId: string;
+  }) {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetAudit`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data.data.map((row: any[]) => ({
+      id: row[IAuditLogColumnIndices.Id],
+      dateTime: row[IAuditLogColumnIndices.DateTime],
+      userName: row[IAuditLogColumnIndices.UserName],
+      fieldName: row[IAuditLogColumnIndices.FieldName],
+      oldValue: row[IAuditLogColumnIndices.OldValue],
+      newValue: row[IAuditLogColumnIndices.NewValue],
+      actionType: row[IAuditLogColumnIndices.ActionType]
+    }));
+  }
+}
+
+export enum IAuditLogColumnIndices {
+  Id = 0,
+  DateTime = 1,
+  UserName = 2,
+  FieldName = 3,
+  OldValue = 4,
+  NewValue = 5,
+  ActionType = 6
 }
