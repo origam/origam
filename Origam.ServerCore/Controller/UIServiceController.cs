@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -44,12 +44,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Localization;
+using Origam.Workbench;
 
 namespace Origam.ServerCore.Controller
 {
     [Authorize]
     [ApiController]
     [Route("internalApi/[controller]")]
+    // ReSharper disable once InconsistentNaming
     public class UIServiceController : AbstractController
     {
         class EntityData
@@ -76,6 +79,7 @@ namespace Origam.ServerCore.Controller
             dataService = DataService.GetDataService();
         }
         [HttpGet("[action]/{locale}")]
+        // ReSharper disable once UnusedParameter.Global
         public IActionResult InitPortal(string locale)
         {
             Analytics.Instance.Log("UI_INIT");
@@ -87,26 +91,23 @@ namespace Origam.ServerCore.Controller
             // set locale to the cookie
             Response.Cookies.Append(
                 ORIGAMLocaleResolver.ORIGAM_CURRENT_LOCALE, locale);*/
-            return RunWithErrorHandler(() =>
-            {
-                //TODO: findout how to get request size limit
-                return Ok(sessionObjects.UIService.InitPortal(4));
-            });
+            //TODO: find out how to get request size limit
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.InitPortal(4)));
         }
         [HttpPost("[action]")]
+        // ReSharper disable once InconsistentNaming
         public IActionResult InitUI([FromBody]UIRequest request)
         {
-            // registerSession is important for sessionless handling
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIManager.InitUI(
-                    request: request,
-                    addChildSession: false,
-                    parentSession: null,
-                    basicUIService: sessionObjects.UIService));
-            });
+            // registerSession is important for session less handling
+            return RunWithErrorHandler(() => Ok(sessionObjects.UIManager.InitUI(
+                request: request,
+                addChildSession: false,
+                parentSession: null,
+                basicUIService: sessionObjects.UIService)));
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        // ReSharper disable once InconsistentNaming
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
         {
             return RunWithErrorHandler(() =>
@@ -118,100 +119,77 @@ namespace Origam.ServerCore.Controller
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult RefreshData(Guid sessionFormIdentifier)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.RefreshData(
-                    sessionFormIdentifier, localizer));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.RefreshData(
+                    sessionFormIdentifier, localizer)));
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult SaveDataQuery(Guid sessionFormIdentifier)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.SaveDataQuery(
-                    sessionFormIdentifier));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.SaveDataQuery(
+                    sessionFormIdentifier)));
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult SaveData(Guid sessionFormIdentifier)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.SaveData(
-                    sessionFormIdentifier));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.SaveData(
+                    sessionFormIdentifier)));
         }
         [HttpPost("[action]")]
         public IActionResult MasterRecord([FromBody]MasterRecordInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.GetRowData(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.GetRowData(input)));
         }
         [HttpPost("[action]")]
         public IActionResult GetData([FromBody]GetDataInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.GetData(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.GetData(input)));
         }
         [HttpPost("[action]")]
         public IActionResult RowStates([FromBody]RowStatesInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.RowStates(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.RowStates(input)));
         }
         [HttpPost("[action]")]
         public IActionResult CreateObject(
             [FromBody][Required]CreateObjectInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.CreateObject(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.CreateObject(input)));
         }
         [HttpPost("[action]")]
         public IActionResult UpdateObject(
             [FromBody][Required]UpdateObjectInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.UpdateObject(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.UpdateObject(input)));
         }
         [HttpPost("[action]")]
         public IActionResult DeleteObject(
             [FromBody][Required]DeleteObjectInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                //todo: handle deleting non existing objects
-                return Ok(sessionObjects.UIService.DeleteObject(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.DeleteObject(input)));
         }
         [HttpPost("[action]")]
         public IActionResult ExecuteActionQuery(
             [FromBody][Required]ExecuteActionQueryInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.ExecuteActionQuery(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.ExecuteActionQuery(input)));
         }
         
         [HttpPost("[action]")]
         public IActionResult ExecuteAction(
             [FromBody][Required]ExecuteActionInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.ExecuteAction(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.ExecuteAction(input)));
         }
         
         [HttpPost("[action]")]
@@ -235,7 +213,7 @@ namespace Origam.ServerCore.Controller
         public IActionResult WorkQueueList()
         {
             return RunWithErrorHandler(() => 
-                Ok(sessionObjects.UIService.WorkQueueList(localizer)));
+                Ok(ServerCoreUIService.WorkQueueList(localizer)));
         }
 
         [HttpPost("[action]")]
@@ -255,7 +233,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                sessionObjects.UIService.SaveSplitPanelConfig(input);
+                ServerCoreUIService.SaveSplitPanelConfig(input);
                 return Ok();
             });
         }
@@ -283,12 +261,12 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpPost("[action]")]
-        public IActionResult GetLookupLabelsEx([FromBody]LookupLabelsInput[] inputs)
+        public IActionResult GetLookupLabelsEx(
+            [FromBody]LookupLabelsInput[] inputs)
         {
             return RunWithErrorHandler(() =>
             {
-                Dictionary<Guid, Dictionary<Guid, string>> result
-                    = new Dictionary<Guid, Dictionary<Guid, string>>();
+                var result = new Dictionary<Guid, Dictionary<Guid, string>>();
                 foreach (var input in inputs)
                 {
                     var checkResult = CheckLookup(input);
@@ -303,18 +281,17 @@ namespace Origam.ServerCore.Controller
             });
         }
 
-        private Dictionary<Guid, string> GetLookupLabelsInternal(LookupLabelsInput input)
+        private Dictionary<Guid, string> GetLookupLabelsInternal(
+            LookupLabelsInput input)
         {
-            Dictionary<Guid, string> labelDictionary
-                = input.LabelIds.ToDictionary(
+            var labelDictionary = input.LabelIds.ToDictionary(
                     id => id,
                     id =>
                     {
-                        object lookupResult
-                            = lookupService.GetDisplayText(
+                        var lookupResult = lookupService.GetDisplayText(
                                 input.LookupId, id, false, true, null);
-                        return lookupResult is decimal
-                            ? ((decimal)lookupResult).ToString("0.#")
+                        return lookupResult is decimal decimalResult
+                            ? decimalResult.ToString("0.#")
                             : lookupResult.ToString();
                     });
             return labelDictionary;
@@ -405,7 +382,7 @@ namespace Origam.ServerCore.Controller
                         menuItem))
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
-                .OnSuccess(rowData => PrepareNewRow(rowData))
+                .OnSuccess(PrepareNewRow)
                 .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
@@ -434,56 +411,76 @@ namespace Origam.ServerCore.Controller
         [HttpGet("[action]/{sessionFormIdentifier}")]
         public IActionResult WorkflowNextQuery(Guid sessionFormIdentifier)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.WorkflowNextQuery(
-                    sessionFormIdentifier));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.WorkflowNextQuery(
+                    sessionFormIdentifier)));
         }
         [HttpPost("[action]")]
         public IActionResult WorkflowNext(
             [FromBody][Required]WorkflowNextInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.WorkflowNext(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.WorkflowNext(input)));
         }
         [HttpGet("[action]/{sessionFormIdentifier}")]
         public IActionResult WorkflowAbort(Guid sessionFormIdentifier)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.WorkflowAbort(
-                    sessionFormIdentifier));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.WorkflowAbort(
+                    sessionFormIdentifier)));
         }
         [HttpGet("[action]/{sessionFormIdentifier}")]
         public IActionResult WorkflowRepeat(Guid sessionFormIdentifier)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.WorkflowRepeat(
-                    sessionFormIdentifier, localizer));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.WorkflowRepeat(
+                    sessionFormIdentifier, localizer)));
         }
         [HttpPost("[action]")]
         public IActionResult AttachmentCount(
             [FromBody][Required]AttachmentCountInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.AttachmentCount(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.AttachmentCount(input)));
         }
         [HttpPost("[action]")]
         public IActionResult AttachmentList(
             [FromBody][Required]AttachmentListInput input)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return Ok(sessionObjects.UIService.AttachmentList(input));
-            });
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.AttachmentList(input)));
+        }
+        [HttpPost("[action]")]
+        public IActionResult GetRecordTooltip(
+            [FromBody]GetRecordTooltipInput input)
+        {
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetRow(
+                        entityData.Entity, 
+                        input.DataStructureEntityId,
+                        Guid.Empty,
+                        input.RowId))
+                .OnSuccess(RowDataToRecordTooltip)
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
+        [HttpPost("[action]")]
+        public IActionResult GetAudit([FromBody]GetAuditInput input)
+        {
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetAuditLog(
+                        entityData, 
+                        input.RowId))
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
@@ -506,12 +503,10 @@ namespace Origam.ServerCore.Controller
         }
         private Result<T,IActionResult> FindItem<T>(Guid id) where T : class
         {
-            T instance = ServiceManager.Services
+            return !(ServiceManager.Services
                 .GetService<IPersistenceService>()
                 .SchemaProvider
-                .RetrieveInstance(typeof(T), new Key(id)) 
-                as T;
-            return instance == null
+                .RetrieveInstance(typeof(T), new Key(id)) is T instance)
                 ? Result.Fail<T, IActionResult>(
                     NotFound("Object with requested id not found."))
                 : Result.Ok<T, IActionResult>(instance);
@@ -537,7 +532,7 @@ namespace Origam.ServerCore.Controller
         {
             if(!MenuLookupIndex.HasDataFor(menuItem.Id))
             {
-                XmlOutput xmlOutput = FormXmlBuilder.GetXml(menuItem.Id);
+                var xmlOutput = FormXmlBuilder.GetXml(menuItem.Id);
                 MenuLookupIndex.AddIfNotPresent(
                     menuItem.Id, xmlOutput.ContainedLookups);
             }
@@ -600,8 +595,8 @@ namespace Origam.ServerCore.Controller
         {
             return columnNames
                 .Where(
-                    columnName => !primaryKey.Any(
-                        dataColumn => dataColumn.ColumnName == columnName))
+                    columnName => primaryKey.All(
+                        dataColumn => dataColumn.ColumnName != columnName))
                 .ToArray();
         }
         private static bool Filter(
@@ -617,16 +612,19 @@ namespace Origam.ServerCore.Controller
         private Result<IEnumerable<object[]>,IActionResult> GetLookupRows(
             LookupListInput input, RowData rowData)
         {
-            LookupListRequest internalRequest = new LookupListRequest();
-            internalRequest.LookupId = input.LookupId;
-            internalRequest.FieldName = input.Property;
-            internalRequest.CurrentRow = rowData.Row;
-            internalRequest.ShowUniqueValues = input.ShowUniqueValues;
-            internalRequest.SearchText = "%" + input.SearchText + "%";
-            internalRequest.PageSize = input.PageSize;
-            internalRequest.PageNumber = input.PageNumber;
-            internalRequest.ParameterMappings = DictionaryToHashtable(input.Parameters);
-            DataTable dataTable = lookupService.GetList(internalRequest);
+            var internalRequest = new LookupListRequest
+            {
+                LookupId = input.LookupId,
+                FieldName = input.Property,
+                CurrentRow = rowData.Row,
+                ShowUniqueValues = input.ShowUniqueValues,
+                SearchText = "%" + input.SearchText + "%",
+                PageSize = input.PageSize,
+                PageNumber = input.PageNumber,
+                ParameterMappings = DictionaryToHashtable(
+                    input.Parameters)
+            };
+            var dataTable = lookupService.GetList(internalRequest);
             return AreColumnNamesValid(input, dataTable)
                 ? Result.Ok<IEnumerable<object[]>, IActionResult>(
                     GetRowData(input, dataTable))
@@ -636,12 +634,11 @@ namespace Origam.ServerCore.Controller
 
         private static Hashtable DictionaryToHashtable(IDictionary<string, object> source)
         {
-            Hashtable result = new Hashtable(source.Count);
-            foreach (KeyValuePair<string, object> kvp in source)
+            var result = new Hashtable(source.Count);
+            foreach (var (key, value) in source)
             {
-                result.Add(kvp.Key, kvp.Value);
+                result.Add(key, value);
             }
-
             return result;
         }
 
@@ -832,6 +829,27 @@ namespace Origam.ServerCore.Controller
         }
         private IActionResult ThrowAwayReturnData(IActionResult arg)
         {
+            return Ok();
+        }
+        private IActionResult RowDataToRecordTooltip(RowData rowData)
+        {
+            var requestCultureFeature = Request.HttpContext.Features
+                    .Get<IRequestCultureFeature>();
+            var cultureInfo = requestCultureFeature.RequestCulture.Culture;
+            return Ok(sessionObjects.UIService.DataRowToRecordTooltip(
+                rowData.Row, 
+                cultureInfo,
+                localizer));
+        }
+        private IActionResult GetAuditLog(EntityData entityData, object id)
+        {
+            var auditLog = AuditLogDA.RetrieveLogTransformed(
+                entityData.Entity.EntityId, id);
+            if(log != null)
+            {
+                return Ok(DataTools.DatatableToHashtable(
+                    auditLog.Tables[0], false));
+            }
             return Ok();
         }
     }

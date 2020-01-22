@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -226,7 +226,7 @@ namespace OrigamArchitect.Commands
                 if(sfd.ShowDialog() == DialogResult.OK)
                 {
                     byte[] report = core.ReportService.GetReport(abstractReport.Id,
-                        null, DataReportExportFormatType.MSExcel.ToString(), null, null);
+                        null, DataReportExportFormatType.PDF.ToString(), this.Parameters, null);
                     File.WriteAllBytes(sfd.FileName, report);
                 }
             }

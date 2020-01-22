@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -28,69 +28,7 @@ using System.Xml;
 
 namespace Origam.Schema.GuiModel
 {
-    /// <summary>
-    /// Summary description for PropertyValueItem.
-    /// </summary>
-    /// 
     [XmlModelRoot(ItemTypeConst)]
-    public class PropertyBindingInfo : AbstractPropertyValueItem
-	{
-		public const string ItemTypeConst = "PropertyBindingInfo";
-
-		public PropertyBindingInfo() : base(){}
-		
-		public PropertyBindingInfo(Guid schemaExtensionId) : base(schemaExtensionId) {}
-
-		public PropertyBindingInfo(Key primaryKey) : base(primaryKey)	{}
-
-        private string _value;
-
-        [EntityColumn("LS01")]
-        [Localizable(true)]
-        [XmlAttribute("value")]
-        public string Value
-        {
-            get
-            {
-                if (_value == null) return null;
-
-                return _value.Trim();
-            }
-            set
-            {
-                _value = value;
-            }
-
-        }
-
-        private string _designDataSetPath;
-
-		[EntityColumn("SS01")] 
-        [XmlAttribute("designDataSetPath")]
-		public string DesignDataSetPath
-		{
-			get
-			{
-				return _designDataSetPath;
-			}
-			set
-			{
-				_designDataSetPath=value;
-			}
-
-		}
-
-		[EntityColumn("ItemType")]
-		public override string ItemType
-		{
-			get
-			{
-				return PropertyBindingInfo.ItemTypeConst;
-			}
-		}
-	}
-
-	[XmlModelRoot(ItemTypeConst)]
     public class PropertyValueItem : AbstractPropertyValueItem
 	{
 
@@ -105,8 +43,9 @@ namespace Origam.Schema.GuiModel
         string _xmlPersistedValue;
 
         [XmlAttribute("value")]
+        [Localizable(true)]
         [Browsable(false)]
-        public string XmlPersistedValue
+        public string Value
         {
             get
             {
@@ -118,7 +57,7 @@ namespace Origam.Schema.GuiModel
                         return XmlConvert.ToString(BoolValue);
                     case ControlPropertyValueType.Xml:
                     case ControlPropertyValueType.String:
-                        return Value;
+                        return StringValue;
                     case ControlPropertyValueType.UniqueIdentifier:
                         return XmlConvert.ToString(GuidValue);
                     default:
@@ -134,6 +73,14 @@ namespace Origam.Schema.GuiModel
 
         public override void AfterControlPropertySet()
         {
+            // while building schema from XML, we don't know in what order
+            // the parsed xml attributes are comming, so it's possible,
+            // that attribute property type comes after the actual value
+            // (from the xml element 'value').
+            // "propertyId" is a property type (e.g.left, right, text)
+            // and it also defines the data type of property.
+            // Therefore, we have to run a fixture code when ControlProperty
+            // item comes.
             UseXmlPersistedValue();
         }
 
@@ -151,7 +98,7 @@ namespace Origam.Schema.GuiModel
                         break;
                     case ControlPropertyValueType.Xml:
                     case ControlPropertyValueType.String:
-                        Value = _xmlPersistedValue;
+                        StringValue = _xmlPersistedValue;
                         break;
                     case ControlPropertyValueType.UniqueIdentifier:
                         GuidValue = XmlConvert.ToGuid(_xmlPersistedValue);
@@ -211,21 +158,20 @@ namespace Origam.Schema.GuiModel
 
 		}
 
-        private string _value;
+        private string _stringValue;
 
         [EntityColumn("LS01")]
-        [Localizable(true)]
-        public string Value
+        public string StringValue
         {
             get
             {
-                if (_value == null) return null;
+                if (_stringValue == null) return null;
 
-                return _value.Trim();
+                return _stringValue.Trim();
             }
             set
             {
-                _value = value;
+                _stringValue = value;
             }
         }
 

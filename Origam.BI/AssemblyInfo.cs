@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Reflection;
 
 //
@@ -30,7 +31,7 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Advantage Solutions, s. r. o.")]
 [assembly: AssemblyProduct("ORIGAM")]
-[assembly: AssemblyCopyright("(c) 2005 - 2019 Advantage Solutions, s. r. o.")]
+[assembly: AssemblyCopyright("(c) 2005 - 2020 Advantage Solutions, s. r. o.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -46,6 +47,7 @@ using System.Reflection;
 // by using the '*' as shown below:
 
 [assembly: AssemblyVersion("0.0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

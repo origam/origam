@@ -144,6 +144,9 @@ Správce aplikace</value>
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
     <value>Chybné uživatelské jmeno a/nebo heslo.</value>
   </data>
+  <data name="InvalidUsernameOrPasswordWithAttemptInfo" xml:space="preserve">
+    <value>Zadané heslo není správně. Počet zbývajícíh pokusů: {0}. Použijte odkaz pro zapomenuté heslo dříve, než se Vám váš účet zablokuje&lt;</value>
+  </data>
   <data name="NewPasswordForm" xml:space="preserve">
     <value>Nové heslo:</value>
   </data>

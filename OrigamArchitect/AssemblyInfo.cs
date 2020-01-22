@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -37,7 +37,7 @@ using System.Windows.Media;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Advantage Solutions, s. r. o.")]
 [assembly: AssemblyProduct("ORIGAM")]
-[assembly: AssemblyCopyright("(c) 2005 - 2019 Advantage Solutions, s. r. o.")]
+[assembly: AssemblyCopyright("(c) 2005 - 2020 Advantage Solutions, s. r. o.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 [assembly: DisableDpiAwareness()]
@@ -54,6 +54,7 @@ using System.Windows.Media;
 // by using the '*' as shown below:
 
 [assembly: AssemblyVersion("0.0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

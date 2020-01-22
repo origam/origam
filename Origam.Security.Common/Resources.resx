@@ -322,4 +322,7 @@ Application support</value>
   <data name="No2FAProvider" xml:space="preserve">
     <value>Two-factor authentication is required, but second factor provider is not available. Please contact the administrator.</value>
   </data>
+  <data name="InvalidUsernameOrPasswordWithAttemptInfo" xml:space="preserve">
+    <value>Username or password is wrong. You have {0} remaining login attempts. Use "password forgotten" before your account gets blocked.</value>
+  </data>
 </root>

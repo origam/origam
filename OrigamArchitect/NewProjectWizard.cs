@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -542,8 +542,14 @@ namespace OrigamArchitect
 
         private void FillTemplate()
         {
-            repositories.Add(new WebGitData(Images.New, "Empty Template", null, "Empty Template.", TypeTemplate.Default));
-            repositories.Add(new WebGitData(Images.New, "Copy Template", null, "My Template.", TypeTemplate.Open));
+            repositories.Add(new WebGitData(Images.New, 
+                "Empty Template", null, 
+                "This template will create an new empty project.", 
+                TypeTemplate.Default));
+            repositories.Add(new WebGitData(Images.New,
+                "From Git Repository...", null, 
+                "You will be able to provide a URL of a Git repository in the next step.",
+                TypeTemplate.Open));
             //Disable add project from web. After project will be prepared, then can setup list of projects and enable it.
             //try
             //{
@@ -552,7 +558,7 @@ namespace OrigamArchitect
             //catch (Exception ex)
             //{
             //    this.RunWithInvoke(() => MessageBox.Show(
-            //        "Cant receive list of Repository: \n" + ex.Message,
+            //        "Cannot receive list of repositories: \n" + ex.Message,
             //        "Template Repository Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
             //}
             XmlParser.IsLoaded = true;
@@ -604,7 +610,7 @@ namespace OrigamArchitect
 
             if (!TestTemplate())
             {
-                AsMessageBox.ShowError(this, "Cant connect to Repository!", "Template", null);
+                AsMessageBox.ShowError(this, "Cannot connect to a repository!", "Template", null);
                 e.Cancel = true;
                 return;
             }
