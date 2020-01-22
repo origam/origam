@@ -51,8 +51,10 @@ namespace Origam.ServerCore
                     // AllowedCorsOrigins = { "http://eshopxamarin" },
                     AllowedScopes = new List<string>
                     {
-                        "openid", "profile",
-                        IdentityServerConstants.LocalApi.ScopeName
+                        IdentityServerConstants.LocalApi.ScopeName,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
                     },
                     AllowOfflineAccess = true,
                     AllowAccessTokensViaBrowser = true,
