@@ -14,6 +14,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Origam.Security.Common;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -21,7 +23,7 @@ namespace IdentityServer4.Quickstart.UI
     [AllowAnonymous]
     public class ExternalController : Controller
     {
-        private readonly TestUserStore _users;
+        private readonly UserManager<IOrigamUser> _userManager;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly ILogger<ExternalController> _logger;
@@ -31,16 +33,13 @@ namespace IdentityServer4.Quickstart.UI
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IEventService events,
-            ILogger<ExternalController> logger,
-            TestUserStore users = null)
+            ILogger<ExternalController> logger, UserManager<IOrigamUser> userManager)
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? new TestUserStore(TestUsers.Users);
 
             _interaction = interaction;
             _clientStore = clientStore;
             _logger = logger;
+            _userManager = userManager;
             _events = events;
         }
 
@@ -120,9 +119,9 @@ namespace IdentityServer4.Quickstart.UI
             //ProcessLoginCallbackForSaml2p(result, additionalLocalClaims, localSignInProps);
 
             // issue authentication cookie for user
-            var isuser = new IdentityServerUser(user.SubjectId)
+            var isuser = new IdentityServerUser(user.Name)
             {
-                DisplayName = user.Username,
+                DisplayName = user.Name,
                 IdentityProvider = provider,
                 AdditionalClaims = additionalLocalClaims
             };
@@ -137,7 +136,7 @@ namespace IdentityServer4.Quickstart.UI
 
             // check if external login is in the context of an OIDC request
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.SubjectId, user.Username, true, context?.ClientId));
+            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Name, user.Name, true, context?.ClientId));
 
             if (context != null)
             {
@@ -199,7 +198,7 @@ namespace IdentityServer4.Quickstart.UI
             }
         }
 
-        private (TestUser user, string provider, string providerUserId, IEnumerable<Claim> claims) FindUserFromExternalProvider(AuthenticateResult result)
+        private (IOrigamUser user, string provider, string providerUserId, IEnumerable<Claim> claims) FindUserFromExternalProvider(AuthenticateResult result)
         {
             var externalUser = result.Principal;
 
@@ -218,14 +217,19 @@ namespace IdentityServer4.Quickstart.UI
             var providerUserId = userIdClaim.Value;
 
             // find external user
-            var user = _users.FindByExternalProvider(provider, providerUserId);
-
+            // var user = _users.FindByExternalProvider(provider, providerUserId);
+            // TODO: implement FindByExternalProvider using _userManager
+            throw new NotImplementedException(); 
+            IOrigamUser user = null; 
             return (user, provider, providerUserId, claims);
         }
 
-        private TestUser AutoProvisionUser(string provider, string providerUserId, IEnumerable<Claim> claims)
+        private IOrigamUser AutoProvisionUser(string provider, string providerUserId, IEnumerable<Claim> claims)
         {
-            var user = _users.AutoProvisionUser(provider, providerUserId, claims.ToList());
+            //var user = _users.AutoProvisionUser(provider, providerUserId, claims.ToList());
+            // TODO: implement AutoProvisionUser using _userManager
+            throw new NotImplementedException(); 
+            IOrigamUser user = null;   
             return user;
         }
 
