@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Text;
 using IdentityServer4.Services;
@@ -81,7 +82,7 @@ namespace Origam.ServerCore
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
             
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
+                .AddSigningCredential(new X509Certificate2("serverCore.pfx","bla"))
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
                 .AddInMemoryClients(Settings.GetIdentityClients())
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
