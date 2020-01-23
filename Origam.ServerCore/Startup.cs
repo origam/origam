@@ -26,6 +26,7 @@ using System.Security.Principal;
 using System.Text;
 using IdentityServer4;
 using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,6 +59,8 @@ namespace Origam.ServerCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
+            services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
             services.AddMvc().AddXmlSerializerFormatters();
             services.AddSpaStaticFiles(configuration =>
             {

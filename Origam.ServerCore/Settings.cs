@@ -58,6 +58,7 @@ namespace Origam.ServerCore
                     },
                     AllowOfflineAccess = true,
                     AllowAccessTokensViaBrowser = true,
+                    AccessTokenType = AccessTokenType.Reference
                 },
             };
         }
