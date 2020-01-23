@@ -137,11 +137,11 @@ namespace Origam.Server
                         break;
 
                     case ACTION_NEXT:
-                        result = HandleWorkflowNext(cachedFormIds);
+                        result = HandleWorkflowNextAsync(cachedFormIds);
                         break;
 
                     case ACTION_ABORT:
-                        result = HandleAbort();
+                        result = HandleAbortAsync();
                         break;
 
                     case ACTION_SAVE:
@@ -531,7 +531,7 @@ namespace Origam.Server
             return new RuleExceptionDataCollection() ;
         }
 
-        private UIResult HandleWorkflowNext(IList<string> cachedWorkflowTaskIds)
+        private async System.Threading.Tasks.Task<UIResult> HandleWorkflowNextAsync(IList<string> cachedWorkflowTaskIds)
         {
             RuleExceptionDataCollection results = EvaluateEndRule();
             if (results != null)
@@ -556,7 +556,7 @@ namespace Origam.Server
             handler.Event.WaitOne();
             HandleWorkflow(handler);
             UIRequest request = GetRequest(cachedWorkflowTaskIds);
-            UIResult result = this.Service.InitUI(request);
+            UIResult result = await this.Service.InitUI(request);
             result.WorkflowTaskId = this.TaskId.ToString();
             return result;
         }
@@ -572,7 +572,7 @@ namespace Origam.Server
             return data;
         }
 
-        private UIResult HandleAbort()
+        private async System.Threading.Tasks.Task<UIResult> HandleAbortAsync()
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
 
@@ -589,7 +589,7 @@ namespace Origam.Server
 
             // call InitUI
             UIRequest request = GetRequest(null);
-            return Service.InitUI(request);
+            return await Service.InitUI(request);
         }
 
         private UIRequest GetRequest(IList<string> cachedWorkflowTaskIds)

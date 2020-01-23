@@ -33,6 +33,6 @@ namespace Origam.ServerCommon
         string GetReportStandalone(string reportId, Hashtable parameters,
             DataReportExportFormatType dataReportExportFormatType);
 
-        UIResult InitUI(UIRequest request);
+        System.Threading.Tasks.Task<UIResult> InitUI(UIRequest request);
     }
 }

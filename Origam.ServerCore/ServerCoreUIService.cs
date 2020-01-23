@@ -73,9 +73,9 @@ namespace Origam.ServerCore
             throw new NotImplementedException();
         }
 
-        public UIResult InitUI(UIRequest request)
+        public async Task<UIResult> InitUI(UIRequest request)
         {
-            return uiManager.InitUI(
+            return await uiManager.InitUIAsync(
                 request: request,
                 addChildSession: false,
                 parentSession: null,
@@ -452,7 +452,7 @@ namespace Origam.ServerCore
             return (UIResult)sessionStore.ExecuteAction(
                 SessionStore.ACTION_ABORT); 
         }
-        public UIResult WorkflowRepeat(
+        public async Task<UIResult> WorkflowRepeat(
             Guid sessionFormIdentifier,
             IStringLocalizer<SharedResources> localizer)
         {
@@ -471,7 +471,7 @@ namespace Origam.ServerCore
                     Caption = workflowSessionStore.Request.Caption
                 };
             DestroyUI(sessionFormIdentifier);
-            return InitUI(request);
+            return await InitUI(request);
         }
         public int AttachmentCount(AttachmentCountInput input)
         {

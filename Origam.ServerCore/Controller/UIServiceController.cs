@@ -63,7 +63,7 @@ namespace Origam.ServerCore.Controller
         private readonly IDataService dataService;
 
         public UIServiceController(
-            SessionObjects sessionObjects, 
+            SessionObjects sessionObjects,
             IServiceProvider serviceProvider,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log) : base(log)
@@ -71,7 +71,7 @@ namespace Origam.ServerCore.Controller
             this.sessionObjects = sessionObjects;
             IdentityServiceAgent.ServiceProvider = serviceProvider;
             this.localizer = localizer;
-            lookupService 
+            lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
         }
@@ -94,16 +94,19 @@ namespace Origam.ServerCore.Controller
             });
         }
         [HttpPost("[action]")]
-        public IActionResult InitUI([FromBody]UIRequest request)
+        public async System.Threading.Tasks.Task<IActionResult> InitUI([FromBody]UIRequest request)
         {
-            // registerSession is important for sessionless handling
-            return RunWithErrorHandler(() =>
+            return await RunWithErrorHandlerAsync(async () =>
             {
-                return Ok(sessionObjects.UIManager.InitUI(
-                    request: request,
-                    addChildSession: false,
-                    parentSession: null,
-                    basicUIService: sessionObjects.UIService));
+                return Ok(
+                    // registerSession is important for sessionless handling
+
+                    await sessionObjects.UIManager.InitUIAsync(
+                        request: request,
+                        addChildSession: false,
+                        parentSession: null,
+                        basicUIService: sessionObjects.UIService)
+                );
             });
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
@@ -485,6 +488,30 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.AttachmentList(input));
             });
         }
+
+
+        private async System.Threading.Tasks.Task<IActionResult> RunWithErrorHandlerAsync(
+            Func<System.Threading.Tasks.Task<IActionResult>> func)
+        {
+            try
+            {
+                return await func();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return NotFound(ex.ActualValue);
+            }
+            catch (SessionExpiredException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try

@@ -196,7 +196,7 @@ namespace Origam.Server
             resultList.Add(result);
         }
 
-        private void ExecuteChangeUIAction(ExecuteActionProcessData processData)
+        private async void ExecuteChangeUIAction(ExecuteActionProcessData processData)
         {
             if (processData.Action == null
                 || processData.Action.Mode != PanelActionMode.Always)
@@ -212,7 +212,7 @@ namespace Origam.Server
                 processData.SelectedItems, processData.Action);
             uir.FormSessionId = processData.SessionFormIdentifier;
             uir.RegisterSession = false;
-            result.UIResult = uiManager.InitUI(
+            result.UIResult = await uiManager.InitUIAsync(
                 request: uir,
                 addChildSession: true, 
                 parentSession: sessionManager.GetSession(processData),
