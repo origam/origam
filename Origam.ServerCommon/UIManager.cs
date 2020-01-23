@@ -186,7 +186,10 @@ namespace Origam.Server
             if(IsFormXmlNotCachedOnClient(request, ss))
             {
                 // wait for asynchronously loaded form xml
-                await GetFormXMLTask;
+                if (GetFormXMLTask != null)
+                {
+                    await GetFormXMLTask;
+                }
                 // FORM XML
                 SetFormXml(result, profile, ss);
             }
