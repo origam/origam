@@ -226,7 +226,7 @@ namespace OrigamArchitect.Commands
                 if(sfd.ShowDialog() == DialogResult.OK)
                 {
                     byte[] report = core.ReportService.GetReport(abstractReport.Id,
-                        null, DataReportExportFormatType.MSExcel.ToString(), null, null);
+                        null, DataReportExportFormatType.PDF.ToString(), this.Parameters, null);
                     File.WriteAllBytes(sfd.FileName, report);
                 }
             }
