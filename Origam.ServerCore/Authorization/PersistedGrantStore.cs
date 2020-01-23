@@ -21,50 +21,179 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
+using Origam.DA;
+using Origam.DA.ObjectPersistence;
+using Origam.DA.Service;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Authorization
 {
     public class PersistedGrantStore: IPersistedGrantStore
     {
-        private readonly List<PersistedGrant> grants = new List<PersistedGrant>();
+        private static readonly Guid OrigamIdentityGrantDataStructureId = new Guid("ee21a554-9cd7-49bd-b989-4596d918af63");
+        private static readonly Guid GetGrandByKeyFilterId = new Guid("12cffef2-6d1b-40d0-9e45-0e8b095c7248");
+        private static readonly Guid GetGrandBySubjectIdFilterId = new Guid("32682bdb-191b-448a-8414-388c9b4a695b");
+        private static readonly Guid GetBySubjectIdClientIdFilterId = new Guid("4a66c4da-f309-4aa5-93f1-9724e628fe12");
+        private static readonly Guid GetBySubjectIdClientIdTypeFilterId = new Guid("d2ea1683-a049-4a26-bed2-1abcb7218ddf");
+        private static readonly string GrantTableName = "OrigamIdentityGrant";
+        private static readonly string KeyParameterName = "OrigamIdentityGrant_parKey";
+        private static readonly string SubjectIdParameterName = "OrigamIdentityGrant_parSubjectId";
+        private static readonly string ClientIdParameterName = "OrigamIdentityGrant_parClientId";
+        private static readonly string TypeParameterName = "OrigamIdentityGrant_parType";
         
         public Task StoreAsync(PersistedGrant grant)
         {
-            grants.Add(grant);
+            IPersistenceProvider schemaProvider = ServiceManager.Services
+                .GetService<IPersistenceService>()
+                .SchemaProvider;
+
+            DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
+
+            DataStructure dataStructure = (DataStructure)schemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
+                new ModelElementKey(OrigamIdentityGrantDataStructureId));
+            
+            DataSet dataSet = dataSetGenerator.CreateDataSet(dataStructure);
+            DataRow newRow = dataSet.Tables[GrantTableName].NewRow();
+            newRow.SetField("Key", grant.Key);
+            newRow.SetField("Id", Guid.NewGuid());
+            newRow.SetField("Type", grant.Type);
+            newRow.SetField("SubjectId", grant.SubjectId);
+            newRow.SetField("ClientId", grant.ClientId);
+            newRow.SetField("CreationTime", grant.CreationTime);
+            newRow.SetField("Expiration", grant.Expiration);
+            newRow.SetField("Data", grant.Data);
+            
+            dataSet.Tables[GrantTableName].Rows.Add(newRow);
+
+            DataService.StoreData(OrigamIdentityGrantDataStructureId,
+                dataSet, false, null);
+            
             return Task.CompletedTask;
         }
 
         public Task<PersistedGrant> GetAsync(string key)
         {
-            return Task.FromResult(grants.FirstOrDefault(x => x.Key == key));
+            DataSet dataSet = DataService.LoadData(
+                OrigamIdentityGrantDataStructureId, 
+                GetGrandByKeyFilterId,
+                Guid.Empty,
+                Guid.Empty,
+                null,
+                KeyParameterName,
+                key);
+            return Task.FromResult(GrantsFromDataSet(dataSet).FirstOrDefault());
         }
-
+        
         public Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
-            return Task.FromResult(grants.Select(x=>x));
+            DataSet dataSet = DataService.LoadData(
+                OrigamIdentityGrantDataStructureId, 
+                GetGrandBySubjectIdFilterId,
+                Guid.Empty,
+                Guid.Empty,
+                null,
+                SubjectIdParameterName,
+                subjectId);
+            return Task.FromResult(GrantsFromDataSet(dataSet));
         }
 
         public Task RemoveAsync(string key)
         {
-            grants.RemoveAll(x => x.Key == key);
+            DataSet dataSet = DataService.LoadData(
+                OrigamIdentityGrantDataStructureId, 
+                GetGrandByKeyFilterId,
+                Guid.Empty,
+                Guid.Empty,
+                null,
+                KeyParameterName,
+                key);
+
+            if (dataSet.Tables[GrantTableName].Rows.Count == 0)
+            {
+                throw new ArgumentException($"Grant {key} not found.");
+            }
+            dataSet.Tables[GrantTableName].Rows[0].Delete();
+            DataService.StoreData(OrigamIdentityGrantDataStructureId, dataSet, 
+                false, null);
             return Task.CompletedTask;
         }
 
         public Task RemoveAllAsync(string subjectId, string clientId)
         {
-            grants.RemoveAll(x => x.SubjectId == subjectId && x.ClientId == clientId);
+            var parameters = new QueryParameterCollection();
+            parameters.Add(new QueryParameter(SubjectIdParameterName, subjectId));
+            parameters.Add(new QueryParameter(ClientIdParameterName, clientId));
+            DataSet dataSet = DataService.LoadData(
+                OrigamIdentityGrantDataStructureId, 
+                GetBySubjectIdClientIdFilterId,
+                Guid.Empty,
+                Guid.Empty,
+                null,
+                parameters);
+
+            foreach (DataRow row in dataSet.Tables[GrantTableName].Rows)
+            {
+                row.Delete();
+            }
+            
+            DataService.StoreData(OrigamIdentityGrantDataStructureId, dataSet, 
+                false, null);
+            
             return Task.CompletedTask;
         }
 
         public Task RemoveAllAsync(string subjectId, string clientId, string type)
         {
-            grants.RemoveAll(x => x.SubjectId == subjectId && x.ClientId == clientId && x.Type == type);
+            
+            var parameters = new QueryParameterCollection();
+            parameters.Add(new QueryParameter(SubjectIdParameterName, subjectId));
+            parameters.Add(new QueryParameter(ClientIdParameterName, clientId));
+            parameters.Add(new QueryParameter(TypeParameterName, type));
+            DataSet dataSet = DataService.LoadData(
+                OrigamIdentityGrantDataStructureId, 
+                GetBySubjectIdClientIdTypeFilterId,
+                Guid.Empty,
+                Guid.Empty,
+                null,
+                parameters);
+
+            foreach (DataRow row in dataSet.Tables[GrantTableName].Rows)
+            {
+                row.Delete();
+            }
+            
+            DataService.StoreData(OrigamIdentityGrantDataStructureId, dataSet, 
+                false, null);
+            
             return Task.CompletedTask;
+        }
+        private static IEnumerable<PersistedGrant> GrantsFromDataSet(DataSet dataSet)
+        {
+            return dataSet.Tables[GrantTableName].Rows
+                .Cast<DataRow>()
+                .Select(
+                    row =>
+                        new PersistedGrant
+                        {
+                            Key = row["Key"] as string,
+                            Type = row["Type"] as string,
+                            SubjectId = row["SubjectId"] as string,
+                            ClientId = row["ClientId"] as string,
+                            CreationTime = (DateTime) row["CreationTime"],
+                            Expiration = (DateTime) row["Expiration"],
+                            Data = row["Data"] as string,
+                        } 
+                );
         }
     }
 }
