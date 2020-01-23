@@ -60,14 +60,14 @@ namespace Origam.Server
             this.sessionManager = sessionManager;
         }
 
-        public UIResult InitUI(UIRequest request, bool addChildSession, 
+        public async Task<UIResult> InitUIAsync(UIRequest request, bool addChildSession, 
             SessionStore parentSession, IBasicUIService basicUIService)
         {
-            IAsyncResult asyncFormXmlResult = null;
+            Task GetFormXMLTask = null;
             // Stack can't handle resending DataDocumentFx, 
             // it needs to be converted to XmlDocument 
             // and then converted back to DataDocumentFx
-            foreach(object key in request.Parameters.Keys.ToList<object>())
+            foreach (object key in request.Parameters.Keys.ToList<object>())
             {
                 object value = request.Parameters[key];
                 if (value is XmlDocument xmlDoc)
@@ -139,9 +139,7 @@ namespace Origam.Server
                 if (ss.SupportsFormXmlAsync &&
                     IsFormXmlNotCachedOnClient(request, ss))
                 {
-                    asyncFormXmlResult =
-                        threadPool.QueueUserWorkItemResult(
-                            new ThreadStart(ss.PrepareFormXml), null);
+                    GetFormXMLTask = Task.Run(() => ss.PrepareFormXml());
                 }
                 ss.Init();
                 ss.IsExclusive = isExclusive;
@@ -188,10 +186,7 @@ namespace Origam.Server
             if(IsFormXmlNotCachedOnClient(request, ss))
             {
                 // wait for asynchronously loaded form xml
-                if (asyncFormXmlResult != null)
-                {
-                    asyncFormXmlResult.AsyncWaitHandle.WaitOne();
-                }
+                await GetFormXMLTask;
                 // FORM XML
                 SetFormXml(result, profile, ss);
             }
@@ -211,7 +206,7 @@ namespace Origam.Server
             if(request.RegisterSession)
             {
                 var principal = SecurityManager.CurrentPrincipal;
-                Task.Run(() =>
+                await Task.Run(() =>
                 {
                     Thread.CurrentPrincipal = principal;
                     SecurityTools.CreateUpdateOrigamOnlineUser(

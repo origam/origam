@@ -34,7 +34,7 @@ namespace Origam.ServerCommon
             return "";
         }
 
-        public UIResult InitUI(UIRequest request)
+        public async System.Threading.Tasks.Task<UIResult> InitUI(UIRequest request)
         {
             throw new NotImplementedException();
         }

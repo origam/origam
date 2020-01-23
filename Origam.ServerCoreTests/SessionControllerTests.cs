@@ -45,7 +45,7 @@ namespace Origam.ServerCoreTests
         [Test, Order(301)]
         public void ShouldCreateNewEmptySession()
         {
-            var actionResult = sut.CreateSession(new CreateSessionData
+            var actionResult = sut.CreateSessionAsync(new CreateSessionData
             {
                 MenuId = new Guid("f38fdadb-4bba-4bb7-8184-c9109d5d40cd"),
                 Parameters = new Dictionary<string, string>()
