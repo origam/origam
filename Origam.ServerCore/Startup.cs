@@ -122,9 +122,9 @@ namespace Origam.ServerCore
                     apiBranch.UseAuthentication();
                     apiBranch.Use(async (context, next) =>
                     {
-                    // Authentication middleware doesn't short-circuit the request itself
-                    // we must do that here.
-                    if (!context.User.Identity.IsAuthenticated)
+                        // Authentication middleware doesn't short-circuit the request itself
+                        // we must do that here.
+                        if (!context.User.Identity.IsAuthenticated)
                         {
                             context.Response.StatusCode = 401;
                             return;

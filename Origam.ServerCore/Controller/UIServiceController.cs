@@ -45,6 +45,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Localization;
+using Origam.Workbench;
 
 namespace Origam.ServerCore.Controller
 {
@@ -64,6 +66,7 @@ namespace Origam.ServerCore.Controller
         private readonly IDataService dataService;
         internal object _lock = new object();
 
+        #region Endpoints
         public UIServiceController(
             SessionObjects sessionObjects,
             IServiceProvider serviceProvider,
@@ -490,8 +493,39 @@ namespace Origam.ServerCore.Controller
                 return Ok(sessionObjects.UIService.AttachmentList(input));
             });
         }
-
-
+        [HttpPost("[action]")]
+        public IActionResult GetRecordTooltip(
+            [FromBody]GetRecordTooltipInput input)
+        {
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetRow(
+                        entityData.Entity, 
+                        input.DataStructureEntityId,
+                        Guid.Empty,
+                        input.RowId))
+                .OnSuccess(RowDataToRecordTooltip)
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
+        [HttpPost("[action]")]
+        public IActionResult GetAudit([FromBody]GetAuditInput input)
+        {
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetAuditLog(
+                        entityData, 
+                        input.RowId))
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
+        #endregion
         private async System.Threading.Tasks.Task<IActionResult> RunWithErrorHandlerAsync(
             Func<System.Threading.Tasks.Task<IActionResult>> func)
         {
@@ -872,6 +906,27 @@ namespace Origam.ServerCore.Controller
         }
         private IActionResult ThrowAwayReturnData(IActionResult arg)
         {
+            return Ok();
+        }
+        private IActionResult RowDataToRecordTooltip(RowData rowData)
+        {
+            var requestCultureFeature = Request.HttpContext.Features
+                .Get<IRequestCultureFeature>();
+            var cultureInfo = requestCultureFeature.RequestCulture.Culture;
+            return Ok(sessionObjects.UIService.DataRowToRecordTooltip(
+                rowData.Row, 
+                cultureInfo,
+                localizer));
+        }
+        private IActionResult GetAuditLog(EntityData entityData, object id)
+        {
+            var auditLog = AuditLogDA.RetrieveLogTransformed(
+                entityData.Entity.EntityId, id);
+            if(log != null)
+            {
+                return Ok(DataTools.DatatableToHashtable(
+                    auditLog.Tables[0], false));
+            }
             return Ok();
         }
         private IEnumerable<object> LoadData(FormReferenceMenuItem menuItem, DataStructureQuery dataStructureQuery)
