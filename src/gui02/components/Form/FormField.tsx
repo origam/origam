@@ -106,9 +106,9 @@ export class FormField extends React.Component<{
     return (
       <>
         {this.props.captionPosition !== ICaptionPosition.None && (
-          <label className={S.caption} style={this.captionStyle}>
+          <pre className={S.caption} style={this.captionStyle}>
             {props.caption}
-          </label>
+          </pre>
         )}
         <div className={S.editor} style={this.formFieldStyle}>
           {props.editor}
