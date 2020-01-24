@@ -89,6 +89,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
+    return 
+    // Temporarily disabled because it resets selected row, checkboxes etc.
     if (
       openedScreen.content &&
       !openedScreen.content.isLoading &&
