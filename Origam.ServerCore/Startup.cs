@@ -84,6 +84,7 @@ namespace Origam.ServerCore
             services.AddTransient<IPrincipal>(
                 provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
+            services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
             
             services.AddIdentityServer()
                 .AddSigningCredential(new X509Certificate2("serverCore.pfx","bla"))
