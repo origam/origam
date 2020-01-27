@@ -106,7 +106,8 @@ namespace IdentityServer4.Quickstart.UI
                 // this might be where you might initiate a custom workflow for user registration
                 // in this sample we don't show how that would be done, as our sample implementation
                 // simply auto-provisions new external user
-                user = AutoProvisionUser(provider, providerUserId, claims);
+                //user = AutoProvisionUser(provider, providerUserId, claims);
+                return NotFound();
             }
 
             // this allows us to collect any additional claims or properties
@@ -215,12 +216,9 @@ namespace IdentityServer4.Quickstart.UI
 
             var provider = result.Properties.Items["scheme"];
             var providerUserId = userIdClaim.Value;
-
-            // find external user
-            // var user = _users.FindByExternalProvider(provider, providerUserId);
-            // TODO: implement FindByExternalProvider using _userManager
-            throw new NotImplementedException(); 
-            IOrigamUser user = null; 
+            
+            Claim email = externalUser.FindFirst(claim => claim.Type == ClaimTypes.Email);
+            var user = _userManager.FindByEmailAsync(email.Value).Result;
             return (user, provider, providerUserId, claims);
         }
 

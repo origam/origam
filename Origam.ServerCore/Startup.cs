@@ -96,7 +96,8 @@ namespace Origam.ServerCore
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services
                 .AddLocalApiAuthentication()
-                .AddAuthentication().AddGoogle(options =>
+                .AddAuthentication()
+                .AddGoogle(options =>
                 {
                     options.ClientId = Configuration["GoogleClientId"];
                     options.ClientSecret = Configuration["GoogleClientSecret"]; 
