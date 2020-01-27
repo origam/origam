@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,19 +36,18 @@ namespace Origam.ServerCore.Authorization
         {
             string baseUrl = configuration[WebHostDefaults.ServerUrlsKey].Split(",")[0];
             mailSender = new AccountMailSender(
-                fromAddress: userConfig.Value.FromAddress,
-                resetPwdSubject: userConfig.Value.ResetPasswordMailSubject,
-                resetPwdBodyFilename: userConfig.Value.ResetPasswordMailBodyFileName,
-                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
-                userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
-                registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
-                registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
-                mailQueueName: userConfig.Value.MailQueueName,
                 portalBaseUrl: baseUrl,
-                applicationBasePath: AppContext.BaseDirectory);
+                registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
+                fromAddress: userConfig.Value.FromAddress, 
+                registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
+                userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
+                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject, 
+                resetPwdBodyFilename: userConfig.Value.ResetPasswordMailBodyFileName,
+                resetPwdSubject: userConfig.Value.ResetPasswordMailSubject, 
+                applicationBasePath: AppContext.BaseDirectory, 
+                mailQueueName: userConfig.Value.MailQueueName);
         }
-
-
+        
         public void SendPasswordResetToken(IOrigamUser user, string token,
             int tokenValidityHours)
         {           

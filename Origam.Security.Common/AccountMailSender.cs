@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,11 +50,13 @@ namespace Origam.Security.Common
         private readonly string mailQueueName;
         private readonly string applicationBasePath;
 
-        public AccountMailSender(string portalBaseUrl, string registerNewUserFilename, 
-            string fromAddress, string registerNewUserSubject, 
-            string userUnlockNotificationBodyFilename, 
+        public AccountMailSender(string portalBaseUrl,
+            string registerNewUserFilename,
+            string fromAddress, string registerNewUserSubject,
+            string userUnlockNotificationBodyFilename,
             string userUnlockNotificationSubject, string resetPwdBodyFilename,
-            string resetPwdSubject, string mailQueueName, string applicationBasePath)
+            string resetPwdSubject, string applicationBasePath,
+            string mailQueueName = null)
         {
             this.portalBaseUrl = portalBaseUrl;
             this.registerNewUserFilename = registerNewUserFilename;
