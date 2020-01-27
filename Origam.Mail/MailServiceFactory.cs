@@ -29,7 +29,11 @@ namespace Origam.Mail
         
         public static AbstractMailService GetMailService()
         {
+#if NETSTANDARD
+            return new OpenSmtpMailService();
+#else
             return new SystemNetMailService();            
+#endif
         }
     }
 }

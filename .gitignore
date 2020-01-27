@@ -19,3 +19,5 @@ _Resharper*/
 /Origam.ServerCore/appsettings.json
 /Origam.ServerCore/tempkey.rsa
 /Origam.ServerCore/serverCore.pfx
+/Origam.Mail/MailData.xsc
+/Origam.Mail/MailData.xss
