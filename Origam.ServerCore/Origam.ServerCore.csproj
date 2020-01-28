@@ -54,6 +54,9 @@
     <Content Update="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Remove="wwwroot\css\site.less" />
+    <Content Remove="wwwroot\css\site.css" />
+    <Content Remove="wwwroot\css\site.min.css" />
   </ItemGroup>
 
   <ItemGroup>

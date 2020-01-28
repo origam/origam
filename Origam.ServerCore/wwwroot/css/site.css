@@ -5,14 +5,52 @@
   position: relative;
   top: -4px;
 }
+
+.navbar-brand{
+  height: 60px;
+  padding: 0;
+}
+
 .navbar-brand > .icon-banner {
-  position: relative;
-  top: -2px;
-  display: inline;
+  height: 60px;
+  padding: 5px;
 }
 .icon {
   position: relative;
   top: -10px;
+}
+
+.navbar-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  background-color: white;
+  border-color: white;
+  color: black;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+  background-color: white;
+  border-color: white;
+  color: #0D0D0D;
+}
+.nav > li > a{
+  display: flex;
+  align-items: center;
+  color: #77767E;
+}
+
+.svg:hover{
+  stroke: #0D0D0D;
+}
+
+.svg {
+  stroke: #77767E;
+  stroke-width: 1.5;
+  height: 20px;
+  padding-right: 3px;
 }
 .logged-out iframe {
   display: none;
