@@ -519,8 +519,31 @@ namespace Origam.Security.Common
             {
                 pms.Add(new QueryParameter("MailWorkQueueName", mailQueueName));
             }
+#if DEBUG
+            SaveToDebugMailLog(pms);
+#endif
             WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
         }
 
+        private static void SaveToDebugMailLog(QueryParameterCollection pms)
+        {
+            FileInfo outFile = new FileInfo("logs//DebugMail.log");
+
+            string header =
+                $"\n\n--------------------------------------------------------------------------------\n" +
+                $"Sent:{DateTime.Now}\n";
+
+            string mailString = pms.Cast<QueryParameter>()
+                .Select(parameter => $"{parameter.Name}: {parameter.Value}")
+                .Aggregate(header, (x, y) => x + "\n\n" + y);
+            if (outFile.Exists)
+            {
+                File.AppendAllText(outFile.FullName, mailString);
+            }
+            else
+            {
+                File.WriteAllText(outFile.FullName, mailString);
+            }
+        }
     }
 }
