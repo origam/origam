@@ -17,44 +17,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IdentityServer4</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/css.css" />
+    <link rel="stylesheet" href="~/css/main.css" />
+    <link rel="stylesheet" href="~/css/layout.css" />
 </head>
 <body>
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-container">
-            <div class="navbar-header">
-                <a href="~/">
-                    <span class="navbar-brand">
-                        <img src="~/icons/origam.png" class="icon-banner">
-                    </span>
-                </a>
-            </div>
 
-            @if (!string.IsNullOrWhiteSpace(name))
-            {
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="~/icons/user.svg" class="svg">
-                            @name 
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-action="Logout" asp-controller="Account">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            }
+    <div class="navigation-bar">
+        <div class="logo-container">
+            <img src="~/icons/origam.png">
         </div>
+        @if (!string.IsNullOrWhiteSpace(name))
+        {
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="~/icons/user.svg" class="svg">
+                        @name
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-action="Logout" asp-controller="Account">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        }
     </div>
 
-    <div class="container body-content">
-        @RenderBody()
-    </div>
+<div class="container body-content">
+    @RenderBody()
+</div>
 
-    <script src="~/lib/jquery/jquery.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
-    <script src="~/js/svg-load.js"></script>
+<script src="~/lib/jquery/jquery.js"></script>
+<script src="~/lib/bootstrap/js/bootstrap.js"></script>
+<script src="~/js/svg-load.js"></script>
 @RenderSection("scripts", required: false)
 </body>
 </html>

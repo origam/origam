@@ -1,0 +1,39 @@
+.navigation-bar{
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    height: 60px;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background-color: white;
+    border-color: white;
+    color: black;
+}
+
+.navbar-nav > li > a{
+    padding-top: 20px;
+}
+
+.nav > li > a{
+    display: flex;
+    align-items: center;
+    color: #77767E;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: white;
+    border-color: white;
+    color: #0D0D0D;
+}
+
+.svg:hover{
+    stroke: #0D0D0D;
+}
+
+.svg {
+    stroke: #77767E;
+    stroke-width: 1.5;
+    height: 20px;
+    padding-right: 3px;
+}
+
