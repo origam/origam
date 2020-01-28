@@ -47,11 +47,13 @@ namespace Origam.ServerCore
     public class Startup
     {
         private readonly StartUpConfiguration startUpConfiguration;
+        private readonly PasswordConfiguration passwordConfiguration;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             startUpConfiguration = new StartUpConfiguration(configuration);
+            passwordConfiguration = new PasswordConfiguration(configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -59,7 +61,6 @@ namespace Origam.ServerCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
             services.AddMvc().AddXmlSerializerFormatters();
             services.AddSpaStaticFiles(configuration =>
@@ -79,6 +80,15 @@ namespace Origam.ServerCore
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = passwordConfiguration.RequireDigit;
+                options.Password.RequiredLength = passwordConfiguration.RequiredLength;
+                options.Password.RequireNonAlphanumeric = passwordConfiguration.RequireNonAlphanumeric;
+                options.Password.RequireUppercase = passwordConfiguration.RequireUppercase;
+                options.Password.RequireLowercase = passwordConfiguration.RequireLowercase;
+            });
             
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IPrincipal>(
