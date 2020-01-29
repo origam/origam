@@ -100,6 +100,7 @@ export class FormViewEditor extends React.Component<{
             isFocused={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
+            customNumberFormat={this.props.property!.customNumericFormat}
             refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={undefined}

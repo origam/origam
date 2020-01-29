@@ -28,6 +28,7 @@ export interface IPropertyData {
   maxLength: number;
 
   formatterPattern: string;
+  customNumericFormat?: string;
 
   allowReturnToForm?: boolean;
   isTree?: boolean;

@@ -1,8 +1,11 @@
-import { action } from "mobx";
+import { action, observable, computed } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
 import { Tooltip } from "react-tippy";
 import S from "./NumberEditor.module.scss";
+import numeral from "numeral";
+
+
 
 @observer
 export class NumberEditor extends React.Component<{
@@ -15,6 +18,7 @@ export class NumberEditor extends React.Component<{
   isFocused: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
+  customNumberFormat?: string | undefined;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
@@ -22,6 +26,29 @@ export class NumberEditor extends React.Component<{
   onEditorBlur?(event: any): void;
 }> {
   disposers: any[] = [];
+
+  @observable hasFocus = false;
+  @observable editingValue: null | string = "";
+
+  get numeralFormat() {
+    return (
+      (this.props.customNumberFormat
+        ? this.props.customNumberFormat.replace("#", "0")
+        : "") || "0"
+    );
+  }
+
+  @computed get numeralFormattedValue() {
+    return numeral(this.props.value).format(this.numeralFormat);
+  }
+
+  @computed get editValue() {
+    if (this.hasFocus) {
+      return this.editingValue;
+    } else {
+      return this.numeralFormattedValue;
+    }
+  }
 
   componentDidMount() {
     this.props.refocuser &&
@@ -52,9 +79,25 @@ export class NumberEditor extends React.Component<{
 
   @action.bound
   handleFocus(event: any) {
+    this.hasFocus = true;
+    this.editingValue = this.numeralFormattedValue;
     setTimeout(() => {
       this.elmInput && this.elmInput.select();
     }, 10);
+  }
+
+  @action.bound
+  handleBlur(event: any) {
+    const value = numeral(this.editValue).format(this.numeralFormat);
+    console.log('asd', value)
+    this.hasFocus = false;
+    this.props.onChange && this.props.onChange(null, value);
+    this.props.onEditorBlur && this.props.onEditorBlur(event);
+  }
+
+  @action.bound handleChange(event: any) {
+    this.editingValue = (event.target.value || "").replace(/[^\d.\-,'\s]/g, '');
+    // this.props.onChange && this.props.onChange(event, event.target.value);
   }
 
   elmInput: HTMLInputElement | null = null;
@@ -71,19 +114,17 @@ export class NumberEditor extends React.Component<{
               color: this.props.foregroundColor,
               backgroundColor: this.props.backgroundColor
             }}
+            title={this.props.customNumberFormat || ""}
             className={S.input}
             type={this.props.isPassword ? "password" : "text"}
             autoComplete={this.props.isPassword ? "new-password" : undefined}
-            value={this.props.value || ""}
+            value={this.editingValue || ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
-            onChange={(event: any) =>
-              this.props.onChange &&
-              this.props.onChange(event, event.target.value)
-            }
+            onChange={this.handleChange}
             onKeyDown={this.props.onKeyDown}
             onClick={this.props.onClick}
-            onBlur={this.props.onEditorBlur}
+            onBlur={this.handleBlur}
             onFocus={this.handleFocus}
           />
         ) : (
@@ -96,13 +137,10 @@ export class NumberEditor extends React.Component<{
             value={this.props.value || ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
-            onChange={(event: any) =>
-              this.props.onChange &&
-              this.props.onChange(event, event.target.value)
-            }
+            onChange={this.handleChange}
             onKeyDown={this.props.onKeyDown}
             onClick={this.props.onClick}
-            onBlur={this.props.onEditorBlur}
+            onBlur={this.handleBlur}
             onFocus={this.handleFocus}
           />
         )}

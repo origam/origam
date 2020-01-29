@@ -41,6 +41,7 @@ export class Property implements IProperty {
   allowReturnToForm?: boolean | undefined;
   isTree?: boolean | undefined;
   formatterPattern: string = "";
+  customNumericFormat: string = "";
   @observable columnWidth: number = 100;
   lookup?: ILookup;
 
