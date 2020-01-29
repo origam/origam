@@ -6,6 +6,7 @@ import {
   IApplicationLifecycle,
   IApplicationPage
 } from "./types/IApplicationLifecycle";
+import { stopWorkQueues } from "model/actions/WorkQueues/stopWorkQueues";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
   $type_IApplicationLifecycle: 1 = 1;
@@ -64,7 +65,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       const api = getApi(this);
       const application = getApplication(this);
       window.sessionStorage.removeItem("origamAuthToken");
-
+      yield* stopWorkQueues(application.workbench!)();
       application.resetWorkbench();
       try {
         yield api.logout();
