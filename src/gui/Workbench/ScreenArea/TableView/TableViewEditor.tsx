@@ -16,7 +16,7 @@ import { getSelectedProperty } from "../../../../model/selectors/TablePanelView/
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
-
+import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -60,6 +60,22 @@ export class TableViewEditor extends React.Component<{
 
     switch (this.props.property!.column) {
       case "Number":
+        return (
+          <NumberEditor
+            value={this.props.getCellValue!()}
+            isReadOnly={readOnly}
+            isInvalid={false}
+            isFocused={true}
+            isPassword={this.props.property!.isPassword}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
+            refocuser={undefined}
+            onChange={this.props.onChange}
+            onKeyDown={this.props.onEditorKeyDown}
+            onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
+          />
+        );
       case "Text":
         return (
           <TextEditor
@@ -127,22 +143,22 @@ export class TableViewEditor extends React.Component<{
             // api={undefined}
           />
         );
-        case "TagInput":
-            return (
-              <TagInputEditor
-                value={this.props.getCellValue!()}
-                isReadOnly={readOnly}
-                isInvalid={false}
-                isFocused={false}
-                backgroundColor={backgroundColor}
-                foregroundColor={foregroundColor}
-                refocuser={undefined}
-                onChange={this.props.onChange}
-                onKeyDown={undefined}
-                onClick={undefined}
-                onEditorBlur={this.props.onEditorBlur}
-              />
-            );
+      case "TagInput":
+        return (
+          <TagInputEditor
+            value={this.props.getCellValue!()}
+            isReadOnly={readOnly}
+            isInvalid={false}
+            isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
+            refocuser={undefined}
+            onChange={this.props.onChange}
+            onKeyDown={undefined}
+            onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
+          />
+        );
       default:
         return "Unknown field";
     }

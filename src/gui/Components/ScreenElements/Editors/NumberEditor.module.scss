@@ -1,0 +1,10 @@
+@import "./EditorsCommon.scss";
+
+.input {
+  @include input;
+  text-align: right;
+}
+
+.editorContainer {
+  @include editorContainer;
+}

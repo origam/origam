@@ -1,5 +1,6 @@
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
+import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
 import { inject, observer } from "mobx-react";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
@@ -67,12 +68,12 @@ export class FormViewEditor extends React.Component<{
 
       const errMap: Map<number, string> | undefined = errors
         ? new Map(
-            Object.entries<string>(errors.fieldErrors).map(
-              ([dsIndexStr, errMsg]: [string, string]) => [
-                parseInt(dsIndexStr, 10),
-                errMsg
-              ]
-            )
+            Object.entries<string>(
+              errors.fieldErrors
+            ).map(([dsIndexStr, errMsg]: [string, string]) => [
+              parseInt(dsIndexStr, 10),
+              errMsg
+            ])
           )
         : undefined;
 
@@ -88,6 +89,24 @@ export class FormViewEditor extends React.Component<{
 
     switch (this.props.property!.column) {
       case "Number":
+        return (
+          <NumberEditor
+            value={this.props.value}
+            isReadOnly={readOnly}
+            isInvalid={isInvalid}
+            isMultiline={this.props.property!.multiline}
+            isPassword={this.props.property!.isPassword}
+            invalidMessage={invalidMessage}
+            isFocused={false}
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
+            refocuser={undefined}
+            onChange={this.props.onChange}
+            onKeyDown={undefined}
+            onClick={undefined}
+            onEditorBlur={this.props.onEditorBlur}
+          />
+        );
       case "Text":
         return (
           <TextEditor
