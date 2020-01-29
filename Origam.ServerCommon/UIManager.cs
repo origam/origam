@@ -209,7 +209,7 @@ namespace Origam.Server
             if(request.RegisterSession)
             {
                 var principal = SecurityManager.CurrentPrincipal;
-                await Task.Run(() =>
+                Task.Run(() =>
                 {
                     Thread.CurrentPrincipal = principal;
                     SecurityTools.CreateUpdateOrigamOnlineUser(

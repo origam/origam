@@ -274,13 +274,13 @@ namespace Origam.Server
         }
 
         [JsonRpcMethod]
-        public System.Threading.Tasks.Task<UIResult> InitUI(UIRequest request)
+        public UIResult InitUI(UIRequest request)
         {
             return uiManager.InitUIAsync(
                 request: request,
                 addChildSession: false,
                 parentSession: null,
-                basicUIService: this);
+                basicUIService: this).Result;
         }
 
         [JsonRpcMethod]
@@ -365,7 +365,7 @@ namespace Origam.Server
             return (UIResult)ss.ExecuteAction(SessionStore.ACTION_ABORT); 
         }
 
-        public System.Threading.Tasks.Task<UIResult> WorkflowRepeat(Guid sessionFormIdentifier)
+        public UIResult WorkflowRepeat(Guid sessionFormIdentifier)
         {
             WorkflowSessionStore wss = sessionManager.GetSession(sessionFormIdentifier) as WorkflowSessionStore;
             if (wss == null) throw new Exception(Resources.ErrorWorkflowSessionInvalid);
@@ -2153,7 +2153,7 @@ namespace Origam.Server
         }
 
         [JsonRpcMethod]
-        public System.Threading.Tasks.Task<UIResult> WorkflowRepeat(string sessionFormIdentifier)
+        public UIResult WorkflowRepeat(string sessionFormIdentifier)
         {
             return WorkflowRepeat(new Guid(sessionFormIdentifier));
         }

@@ -19,10 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using Origam.Schema.GuiModel;
 using Origam.Server;
 
@@ -33,6 +30,6 @@ namespace Origam.ServerCommon
         string GetReportStandalone(string reportId, Hashtable parameters,
             DataReportExportFormatType dataReportExportFormatType);
 
-        System.Threading.Tasks.Task<UIResult> InitUI(UIRequest request);
+        UIResult InitUI(UIRequest request);
     }
 }

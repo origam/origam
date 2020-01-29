@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -556,7 +557,7 @@ namespace Origam.Server
             handler.Event.WaitOne();
             HandleWorkflow(handler);
             UIRequest request = GetRequest(cachedWorkflowTaskIds);
-            UIResult result = await this.Service.InitUI(request);
+            UIResult result = this.Service.InitUI(request);
             result.WorkflowTaskId = this.TaskId.ToString();
             return result;
         }
@@ -589,7 +590,7 @@ namespace Origam.Server
 
             // call InitUI
             UIRequest request = GetRequest(null);
-            return await Service.InitUI(request);
+            return Service.InitUI(request);
         }
 
         private UIRequest GetRequest(IList<string> cachedWorkflowTaskIds)
