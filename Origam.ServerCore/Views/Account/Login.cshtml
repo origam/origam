@@ -1,75 +1,72 @@
 @model Origam.ServerCore.IdentityServerGui.Account.LoginViewModel
 
 <div class="login-page">
-    <div class="row">
+    @if (Model.EnableLocalLogin)
+    {
+        <div class="detailview-container">
+            <div class="detailview-module with-title">
+                <h2>Local Login</h2>
+                <div class="input-form">
+                    <form asp-route="Login">
+                        <input type="hidden" asp-for="ReturnUrl"/>
+                        <div class="input-row">
+                            <label asp-for="Username"></label>
+                            <input class="form-control" placeholder="Username" asp-for="Username" autofocus>
+                        </div>
+                        <div class="input-row">
+                            <label asp-for="Password"></label>
+                            <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
+                        </div>
 
-        @if (Model.EnableLocalLogin)
-        {
-            <div class="detailview-container">
-                <div class="detailview-module with-title">
-                    <h2>Local Login</h2>
-                    <div class="input-form">
-                        <form asp-route="Login">
-                            <input type="hidden" asp-for="ReturnUrl"/>
-                            <div class="input-row">
-                                <label asp-for="Username"></label>
-                                <input class="form-control" placeholder="Username" asp-for="Username" autofocus>
+                        @if (Model.AllowRememberLogin)
+                        {
+                            <div class="form-group login-remember">
+                                <label asp-for="RememberLogin">
+                                    <input asp-for="RememberLogin">
+                                    <strong>Remember My Login</strong>
+                                </label>
                             </div>
-                            <div class="input-row">
-                                <label asp-for="Password"></label>
-                                <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
-                            </div>
+                        }
+                        <div class="input-row">
+                            <button class="btn btn-primary" name="button" value="login">Login</button>
+                            <button class="btn btn-primary" name="button" value="cancel">Cancel</button>
+                        </div>
 
-                            @if (Model.AllowRememberLogin)
-                            {
-                                <div class="form-group login-remember">
-                                    <label asp-for="RememberLogin">
-                                        <input asp-for="RememberLogin">
-                                        <strong>Remember My Login</strong>
-                                    </label>
-                                </div>
-                            }
-                            <div class="input-row">
-                                <button class="btn btn-primary" name="button" value="login">Login</button>
-                                <button class="btn btn-primary" name="button" value="cancel">Cancel</button>
-                            </div>
-
-                        </form>
-                    </div>
-
+                    </form>
                 </div>
-                @if (Model.VisibleExternalProviders.Any())
-                {
-                    <div class="detailview-module with-title">
-                        <h2>External Login</h2>
-                        <div class="input-form">
-                            <div class="input-row">
-                                @foreach (var provider in Model.VisibleExternalProviders)
-                                {
-                                    <a class="btn btn-default external-login-link"
-                                       asp-controller="External"
-                                       asp-action="Challenge"
-                                       asp-route-provider="@provider.AuthenticationScheme"
-                                       asp-route-returnUrl="@Model.ReturnUrl">
-                                        @provider.DisplayName
-                                    </a>
-                                }
-                            </div>
+
+            </div>
+            @if (Model.VisibleExternalProviders.Any())
+            {
+                <div class="detailview-module with-title">
+                    <h2>External Login</h2>
+                    <div class="input-form">
+                        <div class="input-row">
+                            @foreach (var provider in Model.VisibleExternalProviders)
+                            {
+                                <a class="btn btn-default external-login-link"
+                                   asp-controller="External"
+                                   asp-action="Challenge"
+                                   asp-route-provider="@provider.AuthenticationScheme"
+                                   asp-route-returnUrl="@Model.ReturnUrl">
+                                    @provider.DisplayName
+                                </a>
+                            }
                         </div>
                     </div>
-                }
-            </div>
-        }
+                </div>
+            }
+        </div>
+    }
 
 
-        <partial name="_ValidationSummary"/>
+    <partial name="_ValidationSummary"/>
 
-        @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
-        {
-            <div class="alert alert-warning">
-                <strong>Invalid login request</strong>
-                There are no login schemes configured for this client.
-            </div>
-        }
-    </div>
+    @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
+    {
+        <div class="alert alert-warning">
+            <strong>Invalid login request</strong>
+            There are no login schemes configured for this client.
+        </div>
+    }
 </div>

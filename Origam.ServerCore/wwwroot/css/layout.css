@@ -36,4 +36,10 @@
     height: 20px;
     padding-right: 3px;
 }
+.page-content{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 8px;
+    padding-bottom: 20px;
+}
 
