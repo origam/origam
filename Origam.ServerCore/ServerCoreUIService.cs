@@ -76,13 +76,13 @@ namespace Origam.ServerCore
             throw new NotImplementedException();
         }
 
-        public async Task<UIResult> InitUI(UIRequest request)
+        public UIResult InitUI(UIRequest request)
         {
-            return await uiManager.InitUIAsync(
+            return uiManager.InitUIAsync(
                 request: request,
                 addChildSession: false,
                 parentSession: null,
-                basicUIService: this);
+                basicUIService: this).Result;
         }
         public PortalResult InitPortal(int maxRequestLength)
         {
@@ -465,7 +465,7 @@ namespace Origam.ServerCore
                 Caption = workflowSessionStore.Request.Caption
             };
             DestroyUI(sessionFormIdentifier);
-            return await InitUI(request);
+            return InitUI(request);
         }
         public int AttachmentCount(AttachmentCountInput input)
         {
