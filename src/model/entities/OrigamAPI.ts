@@ -602,6 +602,14 @@ export class OrigamAPI implements IApi {
       actionType: row[IAuditLogColumnIndices.ActionType]
     }));
   }
+
+  async getReport(data: { reportUrl: string }): Promise<any> {
+    return (
+      await axios.get(`${data.reportUrl}`, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
+  }
 }
 
 export enum IAuditLogColumnIndices {

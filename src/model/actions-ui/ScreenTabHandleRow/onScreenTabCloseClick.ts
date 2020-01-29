@@ -11,7 +11,7 @@ export function onScreenTabCloseClick(ctx: any) {
       // TODO: Wait for other async operation to finish?
       const openedScreen = getOpenedScreen(ctx);
       // TODO: Better lifecycle handling
-      if (!openedScreen.content.isLoading) {
+      if (openedScreen.content && !openedScreen.content.isLoading) {
         const lifecycle = getFormScreenLifecycle(
           openedScreen.content.formScreen!
         );

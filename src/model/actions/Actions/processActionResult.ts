@@ -6,7 +6,9 @@ import { getActionCaption } from "model/selectors/Actions/getActionCaption";
 import { IMainMenuItemType } from "model/entities/types/IMainMenu";
 import { IDialogInfo } from "model/entities/types/IOpenedScreen";
 
-import actions from 'model/actions-tree'
+import actions from "model/actions-tree";
+import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
+import { openNewUrl } from "../Workbench/openNewUrl";
 
 export interface IOpenNewForm {
   (
@@ -20,6 +22,10 @@ export interface IOpenNewForm {
     isSessionRebirth?: boolean,
     registerSession?: true
   ): Generator; //boolean
+}
+
+export interface IOpenNewUrl {
+  (url: string, urlOpenMethod: IUrlUpenMethod, title: string): Generator;
 }
 
 export interface IGetActionCaption {
@@ -38,6 +44,7 @@ export function new_ProcessActionResult($: any) {
   const workbenchLifecycle = getWorkbenchLifecycle($);
   return processActionResult2({
     openNewForm: workbenchLifecycle.openNewForm,
+    openNewUrl: openNewUrl($),
     closeForm: closeForm($),
     refreshForm: actions.formScreen.refresh($),
     getActionCaption: () => getActionCaption($)
@@ -46,6 +53,7 @@ export function new_ProcessActionResult($: any) {
 
 export function processActionResult2(dep: {
   openNewForm: IOpenNewForm;
+  openNewUrl: IOpenNewUrl;
   closeForm: ICloseForm;
   refreshForm: IRefreshForm;
   getActionCaption: IGetActionCaption;
@@ -83,6 +91,14 @@ export function processActionResult2(dep: {
         }
         case IActionResultType.RefreshData: {
           yield* dep.refreshForm();
+          break;
+        }
+        case IActionResultType.OpenUrl: {
+          yield* dep.openNewUrl(
+            actionResultItem.url,
+            actionResultItem.urlOpenMethod,
+            dep.getActionCaption()
+          );
           break;
         }
       }

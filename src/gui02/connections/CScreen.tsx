@@ -5,6 +5,7 @@ import React from "react";
 import { Screen } from "../components/Screen/Screen";
 import { ScreenContainer } from "gui02/components/Screen/ScreenContainer";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import { WebScreen } from "gui02/components/WebScreen/WebScreen";
 
 @observer
 export class CScreen extends React.Component<{
@@ -12,6 +13,14 @@ export class CScreen extends React.Component<{
 }> {
   render() {
     const { openedScreen } = this.props;
+    if(openedScreen.screenUrl) {
+      return (
+        <Screen isHidden={!openedScreen.isActive}>
+          <WebScreen url={openedScreen.screenUrl} />
+        </Screen>
+      )
+    }
+    if(!openedScreen.content) return null;
     const formScreen = openedScreen.content;
     return (
       <Provider formScreen={formScreen}>

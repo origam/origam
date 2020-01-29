@@ -37,7 +37,7 @@ export class CScreenHeader extends React.Component {
       return null;
     }*/
     const isFullscreen = getIsCurrentScreenFull(activeScreen);
-
+    if(!content) return null;
     return (
       <ScreenHeader
         isLoading={

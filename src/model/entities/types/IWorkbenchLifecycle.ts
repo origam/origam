@@ -16,12 +16,14 @@ export interface IWorkbenchLifecycle {
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any }
   ): Generator;
+
+  openNewUrl(url: string, title: string): Generator;
+
   closeForm(openedScreen: IOpenedScreen): Generator;
 
   run(): Generator;
   parent?: any;
 }
-
 
 export const isIWorkbenchLifecycle = (o: any): o is IWorkbenchLifecycle =>
   o.$type_IWorkbenchLifecycle;

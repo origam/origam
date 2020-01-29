@@ -16,6 +16,7 @@ import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 import bind from "bind-decorator";
 import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { WebScreen } from "../WebScreen";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -89,7 +90,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
-    return 
+    return;
     // Temporarily disabled because it resets selected row, checkboxes etc.
     if (
       openedScreen.content &&
@@ -191,6 +192,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       yield* this.closeForm(newScreen);
       throw e;
     }
+  }
+
+  *openNewUrl(url: string, title: string) {
+    console.log("open new ", url);
+    const openedScreens = getOpenedScreens(this);
+    const newScreen = new WebScreen(title, url);
+    openedScreens.pushItem(newScreen);
+    openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
   }
 
   *initPortal() {

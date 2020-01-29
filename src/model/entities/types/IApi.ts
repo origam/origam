@@ -256,4 +256,6 @@ export interface IApi {
       actionType: number;
     }>
   >;
+
+  getReport(data: { reportUrl: string }): Promise<any>;
 }

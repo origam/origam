@@ -32,6 +32,7 @@ export class CScreenToolbar extends React.Component<{}> {
 
   render() {
     const activeScreen = getActiveScreen(this.application);
+    if(activeScreen && !activeScreen.content) return null
     const formScreen =
       activeScreen && !activeScreen.content.isLoading
         ? activeScreen.content.formScreen

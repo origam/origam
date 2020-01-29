@@ -6,6 +6,7 @@ export interface IDialogInfo {
   height: number;
 }
 
+
 export interface IOpenedScreenData {
   menuItemId: string;
   menuItemType: IMainMenuItemType;
@@ -25,6 +26,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
 
   setActive(state: boolean): void;
   setContent(screen: IFormScreenEnvelope): void;
+  screenUrl?: string;
   parent?: any;
 }
 
