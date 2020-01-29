@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using Microsoft.Extensions.Configuration;
+using Origam.Extensions;
 
 namespace Origam.ServerCore.Configuration
 {
@@ -37,31 +38,12 @@ namespace Origam.ServerCore.Configuration
         public PasswordConfiguration(IConfiguration configuration)
         {
             IConfigurationSection passwordSection = configuration.GetSection("PasswordConfig");
-
-            RequireDigit = ParseToBool(passwordSection, "RequireDigit");
-            RequiredLength = ParseToInt(passwordSection, "RequiredLength");
-            RequireNonAlphanumeric = ParseToBool(passwordSection, "RequireNonAlphanumeric");
-            RequireUppercase = ParseToBool(passwordSection, "RequireUppercase");
-            RequireLowercase = ParseToBool(passwordSection, "RequireLowercase");
-        }
-        
-        private bool ParseToBool(IConfigurationSection section, string optionName)
-        {
-            bool success = Boolean.TryParse(section[optionName], out bool boolValue);
-            if (!success)
-            {
-                throw new ArgumentException($"Cannot parse {optionName} to bool");
-            }
-            return boolValue;
-        }
-        private int ParseToInt(IConfigurationSection section, string optionName)
-        {
-            bool success = int.TryParse(section[optionName], out int intValue);
-            if (!success)
-            {
-                throw new ArgumentException($"Cannot parse {optionName} to int");
-            }
-            return intValue;
+            
+            RequireDigit = passwordSection.GetBool("RequireDigit");
+            RequiredLength =  passwordSection.GetInt("RequiredLength");
+            RequireNonAlphanumeric =  passwordSection.GetBool("RequireNonAlphanumeric");
+            RequireUppercase =  passwordSection.GetBool("RequireUppercase");
+            RequireLowercase =  passwordSection.GetBool("RequireLowercase");
         }
     }
 }
