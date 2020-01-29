@@ -125,6 +125,18 @@ export class CellRenderer implements ICellRenderer {
             ctx.restore();
           }
           break;
+        case "Number":
+          if (cell.value !== null) {
+            ctx.save();
+            ctx.textAlign = "right";
+            ctx.fillText(
+              "" + cell.value!,
+              (columnWidth - cellPaddingLeft) * CPR,
+              15 * CPR
+            );
+            ctx.restore();
+          }
+          break;
         default:
           if (cell.value !== null) {
             if (!cell.isPassword) {
