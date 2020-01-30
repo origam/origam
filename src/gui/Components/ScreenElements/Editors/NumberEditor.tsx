@@ -118,7 +118,7 @@ export class NumberEditor extends React.Component<{
             className={S.input}
             type={this.props.isPassword ? "password" : "text"}
             autoComplete={this.props.isPassword ? "new-password" : undefined}
-            value={this.editingValue || ""}
+            value={this.editValue !== undefined && this.editValue !== null ? this.editValue : ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={this.handleChange}
