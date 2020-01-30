@@ -9,6 +9,7 @@ export interface IRowState extends IRowStateData {
 
   getValue(key: string): IRowStateItem | undefined;
   putValue(state: any): void;
+  hasValue(key: string): boolean;
 
   parent?: any;
 }

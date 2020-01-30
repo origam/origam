@@ -24,10 +24,9 @@ export class RowState implements IRowState {
     Object.assign(this, data);
   }
 
-  @observable willLoadRowstates = false;
   @observable firstLoadingPerformed = false;
   @computed get mayCauseFlicker() {
-    return this.willLoadRowstates && !this.firstLoadingPerformed;
+    return !this.firstLoadingPerformed;
   }
 
   @observable resolvedValues: Map<string, IRowStateItem> = new Map();
@@ -39,7 +38,6 @@ export class RowState implements IRowState {
 
   triggerLoadImm = flow(
     function*(this: RowState) {
-      
       if (this.isSomethingLoading) {
         return;
       }
@@ -94,12 +92,11 @@ export class RowState implements IRowState {
       this.observedIds.set(key, {
         atom: createAtom(
           `RowState atom [${key}]`,
-          () => requestAnimationFrame(() => {
-            // console.log('trigger load')
-            this.willLoadRowstates = true;
-            this.triggerLoad();
-            
-          }),
+          () =>
+            requestAnimationFrame(() => {
+              // console.log('trigger load')
+              this.triggerLoad();
+            }),
           () => {
             this.observedIds.delete(key);
           }
@@ -108,6 +105,10 @@ export class RowState implements IRowState {
     }
     this.observedIds.get(key)!.atom.reportObserved();
     return this.resolvedValues.get(key);
+  }
+
+  hasValue(key: string): boolean {
+    return this.resolvedValues.has(key);
   }
 
   @action.bound

@@ -187,6 +187,7 @@ export function interpretScreenXml(
               ? flf2mof(property.attributes.FormatterPattern)
               : "",
             customNumericFormat: property.attributes.CustomNumericFormat,
+            identifier: property.attributes.Identifier,
             lookup: !property.attributes.LookupId
               ? undefined
               : new Lookup({

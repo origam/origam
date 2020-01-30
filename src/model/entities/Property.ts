@@ -43,6 +43,7 @@ export class Property implements IProperty {
   formatterPattern: string = "";
   customNumericFormat: string = "";
   @observable columnWidth: number = 100;
+  identifier?: string;
   lookup?: ILookup;
 
   linkToMenuId?: string = undefined;

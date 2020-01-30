@@ -35,6 +35,7 @@ export interface IDropdownEditorProps {
   DataStructureEntityId?: string;
   ColumnNames?: string[];
   Property?: string;
+  Identifier?: string;
   RowId?: string;
   LookupId?: string;
   Parameters?: { [key: string]: any };
@@ -62,6 +63,7 @@ export interface IDropdownEditorProps {
     Property: property.id,
     Parameters: lookup.parameters,
     RowId: getSelectedRowId(property),
+    Identifier: property.identifier,
     LookupId: lookup.lookupId,
     menuItemId: getMenuItemId(property),
     Entity: getEntity(property),
@@ -174,7 +176,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         Entity: this.props.Entity,
         SessionFormIdentifier: this.props.SessionFormIdentifier,
         DataStructureEntityId: this.props.DataStructureEntityId, // Data view entity identifier
-        ColumnNames: ["Id", ...this.props.ColumnNames], // Columns to download
+        ColumnNames: [this.props.Identifier || "Id", ...this.props.ColumnNames], // Columns to download
         Property: this.props.Property!, // Columnn Id
         Id: this.props.RowId!, // Id of the selected row
         LookupId: this.props.LookupId!, // Id of the lookup object

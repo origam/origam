@@ -33,6 +33,7 @@ export interface IPropertyData {
   allowReturnToForm?: boolean;
   isTree?: boolean;
 
+  identifier?: string;
   lookup?: ILookup;
 }
 
