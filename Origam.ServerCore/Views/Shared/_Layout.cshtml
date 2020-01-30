@@ -1,13 +1,14 @@
 ﻿@using IdentityServer4.Extensions
 @using Microsoft.Extensions.Options
 @using Origam.ServerCore.Configuration
-@inject IOptions<IdentityGuiConfig> configOptions 
+@inject IOptions<IdentityGuiConfig> ConfigOptions;
 @{
     string name = null;
     if (!true.Equals(ViewData["signed-out"]))
     {
         name = Context.User?.GetDisplayName();
     }
+    IdentityGuiConfig config = ConfigOptions.Value;
 }
 <!DOCTYPE html>
 <html>
@@ -26,7 +27,7 @@
 
     <div class="navigation-bar">
         <div class="logo-container">
-            <img src="~/icons/origam.png"/>
+            <img src="~/@config.PathToBrandIcon"/>
         </div>
         @if (!string.IsNullOrWhiteSpace(name))
         {
