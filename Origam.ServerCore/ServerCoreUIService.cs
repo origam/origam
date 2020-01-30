@@ -78,11 +78,11 @@ namespace Origam.ServerCore
 
         public UIResult InitUI(UIRequest request)
         {
-            return uiManager.InitUI(
+            return uiManager.InitUIAsync(
                 request: request,
                 addChildSession: false,
                 parentSession: null,
-                basicUIService: this);
+                basicUIService: this).Result;
         }
         public PortalResult InitPortal(int maxRequestLength)
         {
@@ -446,7 +446,7 @@ namespace Origam.ServerCore
             return (UIResult)sessionStore.ExecuteAction(
                 SessionStore.ACTION_ABORT); 
         }
-        public UIResult WorkflowRepeat(
+        public async Task<UIResult> WorkflowRepeat(
             Guid sessionFormIdentifier,
             IStringLocalizer<SharedResources> localizer)
         {
@@ -572,7 +572,7 @@ namespace Origam.ServerCore
             }
             return result;
         }
-        public static IList<WorkQueueInfo> WorkQueueList(
+        public IList<WorkQueueInfo> WorkQueueList(
             IStringLocalizer<SharedResources> localizer)
         {
             try
@@ -666,7 +666,7 @@ namespace Origam.ServerCore
             OrigamPanelConfigDA.SaveUserConfig(
                 userConfig, input.ObjectInstanceId, workflowId, profileId);
         }
-        public static void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
+        public void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
         {
             SecurityTools.CurrentUserProfile();
             OrigamPanelColumnConfigDA.PersistColumnConfig(

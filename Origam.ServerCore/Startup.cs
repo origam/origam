@@ -42,16 +42,14 @@ namespace Origam.ServerCore
     public class Startup
     {
         private readonly StartUpConfiguration startUpConfiguration;
+        private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
             startUpConfiguration = new StartUpConfiguration(configuration);
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -95,8 +93,9 @@ namespace Origam.ServerCore
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(
+            IApplicationBuilder app, IHostingEnvironment env, 
+            ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddLog4Net();
@@ -109,31 +108,27 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
-            app.MapWhen(
-                IsPublicUserApiRoute,
-                apiBranch => {
-                    apiBranch.UseResponseBuffering();
-                    apiBranch.UseMiddleware<UserApiMiddleWare>();
-                });
-
-            app.MapWhen(IsRestrictedUserApiRoute,
-                apiBranch =>
+            app.MapWhen(IsPublicUserApiRoute, apiBranch => {
+                apiBranch.UseResponseBuffering();
+                apiBranch.UseMiddleware<UserApiMiddleWare>();
+            });
+            app.MapWhen(IsRestrictedUserApiRoute, apiBranch =>
+            {
+                apiBranch.UseAuthentication();
+                apiBranch.Use(async (context, next) =>
                 {
-                    apiBranch.UseAuthentication();
-                    apiBranch.Use(async (context, next) =>
-                    {
                     // Authentication middleware doesn't short-circuit the request itself
                     // we must do that here.
                     if (!context.User.Identity.IsAuthenticated)
-                        {
-                            context.Response.StatusCode = 401;
-                            return;
-                        }
-                        await next.Invoke();
-                    });
-                    apiBranch.UseResponseBuffering();
-                    apiBranch.UseMiddleware<UserApiMiddleWare>();
+                    {
+                        context.Response.StatusCode = 401;
+                        return;
+                    }
+                    await next.Invoke();
                 });
+                apiBranch.UseResponseBuffering();
+                apiBranch.UseMiddleware<UserApiMiddleWare>();
+            });
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -147,19 +142,22 @@ namespace Origam.ServerCore
             SecurityManager.SetDIServiceProvider(app.ApplicationServices);
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
-
         private bool IsRestrictedUserApiRoute(HttpContext context)
         {
             return startUpConfiguration
                 .UserApiRestrictedRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
-
         private bool IsPublicUserApiRoute(HttpContext context)
         {
             return startUpConfiguration
                 .UserApiPublicRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
+        }
+        private bool IsReportRoute(HttpContext context)
+        {
+            return context.Request.Path.ToString()
+                .StartsWith("/internalApi/Report");
         }
     }
 }

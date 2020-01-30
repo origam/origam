@@ -32,6 +32,7 @@ using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using System.Collections.Generic;
 using Origam.DA.Service;
+using log4net;
 
 namespace Origam.Workbench.Services
 {
@@ -52,7 +53,8 @@ namespace Origam.Workbench.Services
 	{
 
 		public const string SCHEMA_LOOKUP_ID = "3396e71f-6ee9-4c1d-8fad-739822c8df96";
-
+		private static readonly ILog log =
+			LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private enum QueryType
 		{
 			List,
@@ -515,6 +517,8 @@ namespace Origam.Workbench.Services
 					case QueryType.List:
 						return new DataStructureQuery(dataLookup.ListDataStructureId, dataLookup.ListDataStructureMethodId, Guid.Empty, dataLookup.ListDataStructureSortSetId);
 					case QueryType.Value:
+						if(dataLookup.ValueDataStructureMethodId == null)
+						{ log.Warn("DataLookup has no ValueDataStructureMethodId !!"); }
 						return new DataStructureQuery(dataLookup.ValueDataStructureId, dataLookup.ValueDataStructureMethodId, Guid.Empty, dataLookup.ValueDataStructureSortSetId);
 					case QueryType.ValueCacheList:
 						return new DataStructureQuery(dataLookup.ValueDataStructureId);

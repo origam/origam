@@ -43,14 +43,5 @@ namespace Origam
             return new DataDocumentFx(dataSet);
 #endif
         }
-
-        public static IDataDocument New(XmlContainer xmlContainer)
-        {
-#if NETSTANDARD
-            return new DataDocumentCore(xmlContainer.Xml);
-# else
-            return new DataDocumentFx(xmlContainer.Xml);
-#endif
-        }
     }
 }

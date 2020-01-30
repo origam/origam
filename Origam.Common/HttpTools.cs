@@ -247,7 +247,7 @@ namespace Origam
 					headers, authenticationType, userName, password, timeout, null, false))
 				{
 					HttpWebResponse httpResponse = response as HttpWebResponse;
-					string encodingString = httpResponse.ContentEncoding.ToLower();
+					string encodingString = string.IsNullOrEmpty(httpResponse.ContentEncoding)?"":httpResponse.ContentEncoding.ToLower();
 					using (Stream responseStream =
 						encodingString.Contains("gzip") ?
 							new GZipStream(response.GetResponseStream(), CompressionMode.Decompress)
@@ -421,7 +421,7 @@ namespace Origam
 		public static string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
 		{
 			//HttpWebResponse httpResponse = response as HttpWebResponse;
-			string encodingString = httpResponse.ContentEncoding.ToLower();
+			string encodingString = httpResponse.ContentEncoding==null?"": httpResponse.ContentEncoding.ToLower();
 			using (Stream responseStream =
 				encodingString.Contains("gzip") ?
 					new GZipStream(httpResponse.GetResponseStream(), CompressionMode.Decompress)
@@ -446,7 +446,7 @@ namespace Origam
 			}
 			*/
 
-			if (response.CharacterSet != String.Empty)
+			if (response.CharacterSet != String.Empty && response.CharacterSet != null)
 			{
 				return Encoding.GetEncoding(response.CharacterSet);
 			}

@@ -104,13 +104,14 @@ namespace Origam
             get
             {
                 // if there is a IPrincipal service in the DI, use it first.
-                IPrincipal res = _DIServiceProvider?.GetService<IPrincipal>();
-                if (res != null)
+                IPrincipal ress = _DIServiceProvider?.GetService<IPrincipal>();
+                if (ress != null && (ress.Identity.IsAuthenticated || (!ress.Identity.IsAuthenticated && Thread.CurrentPrincipal==null))
+                    )
                 {
-                    return res;
-                }                    
+                    return ress;
+                }
                 // fallback to the old approach
-                res = Thread.CurrentPrincipal;
+                IPrincipal res = Thread.CurrentPrincipal;
                 if (res == null)
                 {
                     throw new UserNotLoggedInException();

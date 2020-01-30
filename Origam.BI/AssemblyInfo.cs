@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Reflection;
 
 //
@@ -46,6 +47,7 @@ using System.Reflection;
 // by using the '*' as shown below:
 
 [assembly: AssemblyVersion("0.0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

@@ -70,7 +70,7 @@ namespace Origam
             xmlDataDocument.DocumentElement.AppendChild(newNode);
         }
 
-        public void Load(XmlReader xmlReader)
+        public void Load(XmlReader xmlReader,bool doProcessing)
         {
             xmlDataDocument.Load(xmlReader);
         }
