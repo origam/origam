@@ -953,7 +953,7 @@ namespace Origam.ServerCore.Controller
                 }
             
         }
-        public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        private List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
         {
             if (columnsInfo == null)
                 throw new ArgumentNullException(nameof(columnsInfo));
