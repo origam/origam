@@ -295,8 +295,8 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                Dictionary<Guid, Dictionary<Guid, string>> result
-                    = new Dictionary<Guid, Dictionary<Guid, string>>();
+                Dictionary<Guid, Dictionary<object, string>> result
+                    = new Dictionary<Guid, Dictionary<object, string>>();
                 foreach (var input in inputs)
                 {
                     var checkResult = CheckLookup(input);
@@ -311,9 +311,9 @@ namespace Origam.ServerCore.Controller
             });
         }
 
-        private Dictionary<Guid, string> GetLookupLabelsInternal(LookupLabelsInput input)
+        private Dictionary<object, string> GetLookupLabelsInternal(LookupLabelsInput input)
         {
-            Dictionary<Guid, string> labelDictionary
+            Dictionary<object, string> labelDictionary
                 = input.LabelIds.ToDictionary(
                     id => id,
                     id =>

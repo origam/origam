@@ -218,7 +218,7 @@ namespace Origam.ServerCoreTests
             var actionResult = uiServiceController.GetLookupLabels(new LookupLabelsInput
             {
                 MenuId = new Guid("6d181c9f-c89c-4b0a-bfc2-1a59f2a025ce"),
-                LabelIds = new []
+                LabelIds = new object[]
                 {
                     new Guid("3107b7f8-43ec-41cd-8fc6-563ffdf72278"),
                     new Guid("251fc6a3-9cda-4cfb-b515-001367c92194")
