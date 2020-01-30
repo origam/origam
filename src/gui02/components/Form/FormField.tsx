@@ -7,6 +7,7 @@ import React from "react";
 import S from "./FormField.module.scss";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
+import { getRowStateHasItem } from "model/selectors/RowState/getRowStateHasItem";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -19,7 +20,8 @@ export enum ICaptionPosition {
   const rowId = getSelectedRowId(property);
   const isHidden =
     !getRowStateAllowRead(property, rowId || "", property.id) ||
-    getRowStateMayCauseFlicker(property);
+    getRowStateMayCauseFlicker(property) ||
+    !getRowStateHasItem(property, rowId || "");
 
   const ovrCaption = getRowStateDynamicLabel(
     property,
