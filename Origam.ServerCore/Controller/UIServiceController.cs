@@ -735,7 +735,7 @@ namespace Origam.ServerCore.Controller
             return Ok(obj);
         }
 
-        public IActionResult UnwrapReturnValue(
+        private IActionResult UnwrapReturnValue(
             Result<IActionResult, IActionResult> result)
         {
             return result.IsSuccess ? result.Value : result.Error;
@@ -999,7 +999,7 @@ namespace Origam.ServerCore.Controller
             LoadArrayColumns(result, listEntity, null, arrayColumns, DataListLoadedColumns,_menuItem);
             return result;
         }
-        public static bool IsColumnArray(DataColumn dataColumn)
+        private static bool IsColumnArray(DataColumn dataColumn)
         {
             if (dataColumn.ExtendedProperties.Contains(Const.OrigamDataType))
             {
@@ -1046,7 +1046,7 @@ namespace Origam.ServerCore.Controller
         {
             return new DatasetGenerator(true).CreateDataSet(DataStructure(menuItem.ListDataStructureId), true, menuItem.DefaultSet);
         }
-        public DataStructure DataStructure(Guid id)
+        private DataStructure DataStructure(Guid id)
         {
             return FindItem<DataStructure>(id).Value;
         }
