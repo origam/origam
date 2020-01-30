@@ -76,7 +76,9 @@ class SplitterDivider extends React.Component<{
           }
         )}
         style={this.style}
-      />
+      >
+        <div className="dividerLine" />
+      </div>
     );
   }
 }

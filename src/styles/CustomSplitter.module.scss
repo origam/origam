@@ -9,6 +9,9 @@
     z-index: 1000;
   }
   &:not(:global(.isDragging)):hover {
-    background-color: black;
+    background-color: white;
+    :global(.dividerLine) {
+      border-color: #202020;
+    }
   }
 }
