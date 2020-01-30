@@ -19,26 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
-using System.Text;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
@@ -118,25 +111,6 @@ namespace Origam.ServerCore
                     options.ClientSecret = identityServerConfig.GoogleClientSecret; 
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
-            //.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = "Cookies";
-            //    options.DefaultChallengeScheme = "oidc";
-            //})
-            //.AddCookie("Cookies")
-            //.AddOpenIdConnect(options =>
-            //{
-            //    options.SignInScheme = "Cookies";
-            //    options.Authority = "https://localhost:44356";
-            //    options.RequireHttpsMetadata = true;
-            //    options.ClientId = "xamarin";
-            //    options.ClientSecret = "bla";
-            //    options.ResponseType = "code";
-            //    options.UsePkce = true;
-            //    options.Scope.Add("profile");
-            //    options.Scope.Add("offline_access");
-            //    options.SaveTokens = true;
-            //});
         }
 
         public void Configure(

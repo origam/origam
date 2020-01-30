@@ -36,11 +36,8 @@ namespace Origam.Extensions
                 throw new ArgumentException($"Key \"{key}\" was not found in configuration in section \"{section.Path}\". Add it to appsettings.json");
             }
             return stringValue;
-        } 
-        public static string GetOptionalString(this IConfigurationSection section, string key)
-        {
-            return section[key] ?? "";
         }
+        
         public static bool GetBool(this IConfigurationSection section, string key)
         {
             string stringValue = section.GetString(key);
