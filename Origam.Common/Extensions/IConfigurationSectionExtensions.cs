@@ -28,21 +28,36 @@ namespace Origam.Extensions
 {
     public static class IConfigurationSectionExtensions
     {
-        public static bool GetBool(this IConfigurationSection section, string optionName)
+        public static string GetString(this IConfigurationSection section, string key)
         {
-            bool success = Boolean.TryParse(section[optionName], out bool boolValue);
+            string stringValue = section[key];
+            if (stringValue == null)
+            {
+                throw new ArgumentException($"Key \"{key}\" was not found in configuration in section \"{section.Path}\". Add it to appsettings.json");
+            }
+            return stringValue;
+        } 
+        public static string GetOptionalString(this IConfigurationSection section, string key)
+        {
+            return section[key] ?? "";
+        }
+        public static bool GetBool(this IConfigurationSection section, string key)
+        {
+            string stringValue = section.GetString(key);
+            bool success = Boolean.TryParse(stringValue, out bool boolValue);
             if (!success)
             {
-                throw new ArgumentException($"Cannot parse {optionName} to bool");
+                throw new ArgumentException($"Cannot parse {key} to bool");
             }
             return boolValue;
         }
-        public static int GetInt(this IConfigurationSection section, string optionName)
+        public static int GetInt(this IConfigurationSection section, string key)
         {
-            bool success = int.TryParse(section[optionName], out int intValue);
+            string stringValue = section.GetString(key);
+            bool success = int.TryParse(stringValue, out int intValue);
             if (!success)
             {
-                throw new ArgumentException($"Cannot parse {optionName} to int");
+                throw new ArgumentException($"Cannot parse {key} to int");
             }
             return intValue;
         }

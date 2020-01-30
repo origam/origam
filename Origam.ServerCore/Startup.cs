@@ -51,12 +51,14 @@ namespace Origam.ServerCore
         private readonly StartUpConfiguration startUpConfiguration;
         private IConfiguration Configuration { get; }
         private readonly PasswordConfiguration passwordConfiguration;
+        private readonly IdentityServerConfig identityServerConfig;
 
         public Startup(IConfiguration configuration)
         {
-            this.Configuration = configuration;
+            Configuration = configuration;
             startUpConfiguration = new StartUpConfiguration(configuration);
             passwordConfiguration = new PasswordConfiguration(configuration);
+            identityServerConfig = new IdentityServerConfig(configuration);
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -97,7 +99,9 @@ namespace Origam.ServerCore
             services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
             
             services.AddIdentityServer()
-                .AddSigningCredential(new X509Certificate2("serverCore.pfx","bla"))
+                .AddSigningCredential(new X509Certificate2(
+                    identityServerConfig.PathToJwtCertificate,
+                    identityServerConfig.PasswordForJwtCertificate))
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
                 .AddInMemoryClients(Settings.GetIdentityClients())
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
@@ -110,8 +114,8 @@ namespace Origam.ServerCore
                 .AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = Configuration["GoogleClientId"];
-                    options.ClientSecret = Configuration["GoogleClientSecret"]; 
+                    options.ClientId = identityServerConfig.GoogleClientId;
+                    options.ClientSecret = identityServerConfig.GoogleClientSecret; 
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
             //.AddAuthentication(options =>
