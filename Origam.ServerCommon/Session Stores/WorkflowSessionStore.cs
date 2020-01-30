@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -137,11 +138,11 @@ namespace Origam.Server
                         break;
 
                     case ACTION_NEXT:
-                        result = HandleWorkflowNext(cachedFormIds);
+                        result = HandleWorkflowNextAsync(cachedFormIds);
                         break;
 
                     case ACTION_ABORT:
-                        result = HandleAbort();
+                        result = HandleAbortAsync();
                         break;
 
                     case ACTION_SAVE:
@@ -531,7 +532,7 @@ namespace Origam.Server
             return new RuleExceptionDataCollection() ;
         }
 
-        private UIResult HandleWorkflowNext(IList<string> cachedWorkflowTaskIds)
+        private async System.Threading.Tasks.Task<UIResult> HandleWorkflowNextAsync(IList<string> cachedWorkflowTaskIds)
         {
             RuleExceptionDataCollection results = EvaluateEndRule();
             if (results != null)
@@ -572,7 +573,7 @@ namespace Origam.Server
             return data;
         }
 
-        private UIResult HandleAbort()
+        private async System.Threading.Tasks.Task<UIResult> HandleAbortAsync()
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
 

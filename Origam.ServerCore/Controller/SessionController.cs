@@ -55,9 +55,9 @@ namespace Origam.ServerCore.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult CreateSession([FromBody]CreateSessionData sessionData)
+        public async Task<IActionResult> CreateSessionAsync([FromBody]CreateSessionData sessionData)
         {
-            return RunWithErrorHandler(() =>
+            return await RunWithErrorHandlerAsync(async () =>
             {
                 UserProfile profile = SecurityTools.CurrentUserProfile();
                 if (!sessionObjects.SessionManager.HasPortalSession(profile.Id))
@@ -73,7 +73,7 @@ namespace Origam.ServerCore.Controllers
                     Parameters = sessionData.Parameters,
                     RegisterSession = true
                 };
-                UIResult uiResult = sessionObjects.UIManager.InitUI(
+                UIResult uiResult = await sessionObjects.UIManager.InitUIAsync(
                     request: uiRequest,
                     addChildSession: false,
                     parentSession: null,
@@ -211,6 +211,17 @@ namespace Origam.ServerCore.Controllers
             }
         }
 
+        private async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
+        {
+            try
+            {
+                return await func();
+            }
+            catch (UIException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         private void CallOrigamUserUpdate()
         {

@@ -276,11 +276,11 @@ namespace Origam.Server
         [JsonRpcMethod]
         public UIResult InitUI(UIRequest request)
         {
-            return uiManager.InitUI(
+            return uiManager.InitUIAsync(
                 request: request,
                 addChildSession: false,
                 parentSession: null,
-                basicUIService: this);
+                basicUIService: this).Result;
         }
 
         [JsonRpcMethod]

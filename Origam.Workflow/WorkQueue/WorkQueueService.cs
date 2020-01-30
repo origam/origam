@@ -764,7 +764,7 @@ namespace Origam.Workflow.WorkQueue
                 // record could have been deleted in the meantime, we test
                 if (originalRecord.Tables[0].Rows.Count > 0)
                 {
-                    IXmlContainer data = DataDocumentFactory.New(DatasetTools.GetRowXml(originalRecord.Tables[0].Rows[0], DataRowVersion.Default));
+                    IXmlContainer data = DatasetTools.GetRowXml(originalRecord.Tables[0].Rows[0], DataRowVersion.Default);
 
                     // update entry from record
                     WorkQueueRowFill(wqc, ruleEngine, entry, data);

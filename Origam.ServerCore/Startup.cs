@@ -49,18 +49,16 @@ namespace Origam.ServerCore
     public class Startup
     {
         private readonly StartUpConfiguration startUpConfiguration;
+        private IConfiguration Configuration { get; }
         private readonly PasswordConfiguration passwordConfiguration;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
             startUpConfiguration = new StartUpConfiguration(configuration);
             passwordConfiguration = new PasswordConfiguration(configuration);
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
@@ -137,8 +135,9 @@ namespace Origam.ServerCore
             //});
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(
+            IApplicationBuilder app, IHostingEnvironment env, 
+            ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLog4Net();
 
@@ -154,16 +153,14 @@ namespace Origam.ServerCore
             app.MapWhen(
                 IsPublicUserApiRoute,
                 apiBranch => {
-                    apiBranch.UseResponseBuffering();
-                    apiBranch.UseMiddleware<UserApiMiddleWare>();
-                });
-            
-            app.MapWhen(IsRestrictedUserApiRoute,
-                apiBranch =>
+                apiBranch.UseResponseBuffering();
+                apiBranch.UseMiddleware<UserApiMiddleWare>();
+            });
+            app.MapWhen(IsRestrictedUserApiRoute, apiBranch =>
+            {
+                apiBranch.UseAuthentication();
+                apiBranch.Use(async (context, next) =>
                 {
-                    apiBranch.UseAuthentication();
-                    apiBranch.Use(async (context, next) =>
-                    {
                     // Authentication middleware doesn't short-circuit the request itself
                     // we must do that here.
                     if (!context.User.Identity.IsAuthenticated)
@@ -193,19 +190,22 @@ namespace Origam.ServerCore
             SecurityManager.SetDIServiceProvider(app.ApplicationServices);
             OrigamEngine.OrigamEngine.ConnectRuntime();
         }
-
         private bool IsRestrictedUserApiRoute(HttpContext context)
         {
             return startUpConfiguration
                 .UserApiRestrictedRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
         }
-
         private bool IsPublicUserApiRoute(HttpContext context)
         {
             return startUpConfiguration
                 .UserApiPublicRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
+        }
+        private bool IsReportRoute(HttpContext context)
+        {
+            return context.Request.Path.ToString()
+                .StartsWith("/internalApi/Report");
         }
     }
 }

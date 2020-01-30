@@ -36,7 +36,7 @@ namespace Origam
     public interface IXmlContainer: ICloneable
     {
         XmlDocument Xml { get; }
-        void Load(XmlReader xmlReader);
+        void Load(XmlReader xmlReader,bool doProcessing = true);
         void LoadXml(string xmlString);
     }
 }
