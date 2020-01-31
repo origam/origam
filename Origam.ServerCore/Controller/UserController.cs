@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -46,21 +47,16 @@ namespace Origam.ServerCore.Controller
     public class UserController : ControllerBase
     {
         private readonly CoreUserManager userManager;
-        private readonly SignInManager<IOrigamUser> signInManager;
         private readonly IMailService mailService;
         private readonly UserConfig userConfig;
-        private readonly IConfiguration configuration;
         private readonly IServiceProvider serviceProvider;
 
-        public UserController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
-            IConfiguration configuration, IServiceProvider serviceProvider,
+        public UserController(CoreUserManager userManager, IServiceProvider serviceProvider,
             IMailService mailService, IOptions<UserConfig> userConfig)
         {
             this.userManager = userManager;
-            this.signInManager = signInManager;
             this.mailService = mailService;
             this.userConfig = userConfig.Value;
-            this.configuration = configuration;
             this.serviceProvider = serviceProvider;
         }
 
@@ -143,89 +139,6 @@ namespace Origam.ServerCore.Controller
             }
 
             return Content("Email confirmed, you can now log in");
-        }
-
-        [AllowAnonymous]
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Login([FromBody]LoginData loginData)
-        {
-            var user = await userManager.FindByNameAsync(loginData.UserName);
-            if (user == null)
-            {
-                return BadRequest("Invalid login");
-            }
-            if (!user.EmailConfirmed)
-            {
-                return BadRequest("Confirm your email first");
-            }
-            var passwordSignInResult =
-                await signInManager.CheckPasswordSignInAsync(user, loginData.Password, false);
-            if (!passwordSignInResult.Succeeded)
-            {                
-                await userManager.AccessFailedAsync(user);
-                return BadRequest("Invalid login");
-            }
-            return Ok(GenerateToken(loginData.UserName));
-        }
-
-        [AllowAnonymous]
-        [HttpPost("[action]")]
-        public async Task<IActionResult> RequestPasswordReset([FromBody]RequestPasswordResetData passwordData) 
-        {
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
-            var user = await userManager.FindByEmailAsync(passwordData.Email);
-            if (user == null)
-            {
-                return Content("User with that email was not found");
-            }
-            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-            mailService.SendPasswordResetToken( user, passwordResetToken, 24 );           
-            return Content("Check your email for a password reset link");
-        }
-
-        [AllowAnonymous]
-        [HttpPost("[action]")]
-        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordData passwordData)
-        {           
-            var user = await userManager.FindByIdAsync(passwordData.Id);
-            if (user == null)
-            {
-                throw new InvalidOperationException();
-            }
-            if (passwordData.Password != passwordData.RePassword)
-            {
-                return BadRequest("Passwords do not match");
-            }
-            var resetPasswordResult = 
-                await userManager.ResetPasswordAsync(user, passwordData.Token, passwordData.Password);
-            if (!resetPasswordResult.Succeeded)
-            {
-                return BadRequest(resetPasswordResult.Errors.ToErrorMessage());
-            }
-            return Content("Password updated");
-        }
-
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Logout()
-        {
-            await signInManager.SignOutAsync();
-            return Ok();
-        }  
-                
-        private string GenerateToken(string username)
-        {
-            var claims = new []
-            {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
-                new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds().ToString()),
-            };
-            var token = new JwtSecurityToken(
-                new JwtHeader(new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecurityKey"])),
-                    SecurityAlgorithms.HmacSha256)),
-                new JwtPayload(claims));
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
