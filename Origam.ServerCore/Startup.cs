@@ -57,7 +57,9 @@ namespace Origam.ServerCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
-            services.AddMvc().AddXmlSerializerFormatters();
+            services.AddMvc()
+                .AddXmlSerializerFormatters()
+                .AddNewtonsoftJson();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
