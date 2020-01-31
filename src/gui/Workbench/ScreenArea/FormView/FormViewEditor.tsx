@@ -16,6 +16,10 @@ import { IProperty } from "../../../../model/entities/types/IProperty";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
+import {
+  CheckList,
+  CheckListItem
+} from "gui/Components/ScreenElements/Editors/CheckList";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -192,6 +196,15 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={undefined}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+          />
+        );
+      case "Checklist":
+        return (
+          <CheckList
+            value={this.props.value}
+            onChange={newValue =>
+              this.props.onChange && this.props.onChange({}, newValue)
+            }
           />
         );
       default:

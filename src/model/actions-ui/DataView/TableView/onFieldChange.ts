@@ -22,6 +22,7 @@ export function onFieldChangeG(ctx: any) {
       if (
         property.column === "ComboBox" ||
         property.column === "CheckBox" ||
+        property.column === "Checklist" ||
         (property.column === "Date" && event.type === "click")
       ) {
         // Flush data to session when combo value changed.

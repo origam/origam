@@ -6,7 +6,7 @@ export enum IOrderByDirection {
   DESC = "DESC"
 }
 
-export type ICellType = "Text" | "ComboBox" | "Date" | "Number" | "CheckBox" | "TagInput";
+export type ICellType = "Text" | "ComboBox" | "Date" | "Number" | "CheckBox" | "TagInput" | "Checklist"; 
 
 export interface ITableProps {
   gridDimensions: IGridDimensions;

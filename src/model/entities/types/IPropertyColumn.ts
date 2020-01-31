@@ -4,5 +4,6 @@ export enum IPropertyColumn {
   TagInput = "TagInput",
   Date = "Date",
   Number = "Number",
-  CheckBox = "CheckBox"
+  CheckBox = "CheckBox",
+  CheckList = "Checklist"
 }
