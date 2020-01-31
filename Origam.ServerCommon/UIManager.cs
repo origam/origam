@@ -141,7 +141,7 @@ namespace Origam.Server
                 if (ss.SupportsFormXmlAsync 
                 && IsFormXmlNotCachedOnClient(request, ss))
                 {
-                    getFormXmlTask = Task.Run(ss.PrepareFormXml);
+                    getFormXmlTask = Task.Run(() => ss.PrepareFormXml());
                 }
                 ss.Init();
                 ss.IsExclusive = isExclusive;
