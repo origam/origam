@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
-
+#endregion
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -59,7 +58,6 @@ using Origam.ServerCommon;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using MoreLinq;
 
 namespace Origam.Server
@@ -143,7 +141,8 @@ namespace Origam.Server
         public string TransationId
         {
             get { return _transactionId; }
-            set { 
+            set
+            {
                 _transactionId = value;
 
                 if (this.RuleEngine != null)
@@ -185,13 +184,13 @@ namespace Origam.Server
 
         public virtual string Title
         {
-            get 
+            get
             {
                 return _title ?? this.Request.Caption;
             }
-            set 
+            set
             {
-                _title = value; 
+                _title = value;
             }
         }
 
@@ -272,7 +271,7 @@ namespace Origam.Server
         public DataStructureRuleSet RuleSet
         {
             get { return _ruleSet; }
-            set 
+            set
             {
                 _ruleSet = value;
 
@@ -285,7 +284,7 @@ namespace Origam.Server
             get
             {
                 // has ruleset
-                if(this.RuleSet != null) return true;
+                if (this.RuleSet != null) return true;
 
                 // has some lookup fields that are processed (looked up on changes) 
                 // by the rule engine
@@ -401,7 +400,7 @@ namespace Origam.Server
         }
 
         public virtual bool SupportsFormXmlAsync
-        { 
+        {
             get
             {
                 return false;
@@ -433,7 +432,7 @@ namespace Origam.Server
             this.ChildSessions.Add(ss);
             ss.ParentSession = this;
         }
-	
+
         public void Clear()
         {
             lock (_lock)
@@ -445,7 +444,7 @@ namespace Origam.Server
             }
         }
 
-        public void SetDataList(DataSet list, string entity, 
+        public void SetDataList(DataSet list, string entity,
             DataStructure listDataStructure, DataStructureMethod method)
         {
             _dataList = list;
@@ -470,9 +469,9 @@ namespace Origam.Server
                     if (e.Name == entity)
                     {
                         _dataListDataStructureEntityId = e.Id;
-                                break;
-                            }
-                        }
+                        break;
+                    }
+                }
                 RemoveNullConstraints(this.DataList);
             }
         }
@@ -626,7 +625,7 @@ namespace Origam.Server
                     if (col.Expression != "" && col.Expression != null
                         && (
                             col.Expression.ToUpper().Contains(childRelationExpression)
-                            || 
+                            ||
                                 (
                                     col.Expression.Contains("Parent.")
                                 )
@@ -811,9 +810,9 @@ namespace Origam.Server
                 // this entity has no dependencies in other tables, we only
                 // return data from this row
                 ChangeInfo ci = GetChangeInfo(
-                    requestingGrid: requestingGrid, 
-                    row: row, 
-                    operation: operation, 
+                    requestingGrid: requestingGrid,
+                    row: row,
+                    operation: operation,
                     RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                 listOfChanges.Add(ci);
             }
@@ -849,7 +848,7 @@ namespace Origam.Server
                 this.RegisterEvents();
             }
 
-            if (! hasChanges)
+            if (!hasChanges)
             {
                 listOfChanges.Add(ChangeInfo.SavedChangeInfo());
             }
@@ -890,16 +889,16 @@ namespace Origam.Server
                 if (row.Equals(changedRow))
                 {
                     ChangeInfo ci = GetChangeInfo(
-                        requestingGrid: requestingGrid, 
+                        requestingGrid: requestingGrid,
                         row: row,
-                        operation: operation, 
+                        operation: operation,
                         RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                     changes.Add(ci);
                 }
-                else if (ignoreKeys == null || ! ignoreKeys.Contains(ignoreRowIndex))
+                else if (ignoreKeys == null || !ignoreKeys.Contains(ignoreRowIndex))
                 {
                     // check if this is a child of the copied row
-                    bool isParentRow = ! IsChildRow(row, changedRow);
+                    bool isParentRow = !IsChildRow(row, changedRow);
 
                     // always parent rows because calculated fields do not change the RowState
                     if (allDetails || isParentRow || row.RowState != DataRowState.Unchanged || row.HasErrors)
@@ -920,8 +919,8 @@ namespace Origam.Server
 
                         ChangeInfo ci = GetChangeInfo(
                             requestingGrid: null,
-                            row: row, 
-                            operation: op, 
+                            row: row,
+                            operation: op,
                             RowStateProcessor: includeRowStates ? new Func<string, object[], ArrayList>(RowStates) : null);
                         changes.Add(ci);
                         // we processed it once so we do not want to get it again in a next iteration
@@ -933,18 +932,18 @@ namespace Origam.Server
                 }
 
                 Boolean tableAggregation = HasAggregation(row);
-                foreach(DataRelation childRelation in row.Table.ChildRelations)
+                foreach (DataRelation childRelation in row.Table.ChildRelations)
                 {
-                    foreach(DataRow childRow in row.GetChildRows(childRelation))
+                    foreach (DataRow childRow in row.GetChildRows(childRelation))
                     {
-                        if(RowIsChangedOrHasChangedChild(childRow) || tableAggregation)
+                        if (RowIsChangedOrHasChangedChild(childRow) || tableAggregation)
                         {
                             // check recursion
-                            foreach(DataRelation parentRelation in row.Table.ParentRelations)
+                            foreach (DataRelation parentRelation in row.Table.ParentRelations)
                             {
-                                foreach(DataRow parentRow in row.GetParentRows(parentRelation))
+                                foreach (DataRow parentRow in row.GetParentRows(parentRelation))
                                 {
-                                    if(parentRow.Equals(childRow))
+                                    if (parentRow.Equals(childRow))
                                     {
                                         // Recursion found - this row has been checked already.
                                         return;
@@ -960,15 +959,15 @@ namespace Origam.Server
 
         private bool RowIsChangedOrHasChangedChild(DataRow row)
         {
-            if(row.RowState != DataRowState.Unchanged)
+            if (row.RowState != DataRowState.Unchanged)
             {
                 return true;
             }
-            foreach(DataRelation childRelation in row.Table.ChildRelations)
+            foreach (DataRelation childRelation in row.Table.ChildRelations)
             {
-                foreach(DataRow childRow in row.GetChildRows(childRelation))
+                foreach (DataRow childRow in row.GetChildRows(childRelation))
                 {
-                    if(RowIsChangedOrHasChangedChild(childRow))
+                    if (RowIsChangedOrHasChangedChild(childRow))
                     {
                         return true;
                     }
@@ -979,7 +978,7 @@ namespace Origam.Server
 
         private bool HasAggregation(DataRow row)
         {
-            if(row.Table.ExtendedProperties.ContainsKey(Const.HasAggregation))
+            if (row.Table.ExtendedProperties.ContainsKey(Const.HasAggregation))
             {
                 return (Boolean)row.Table.ExtendedProperties[Const.HasAggregation];
             }
@@ -1025,19 +1024,19 @@ namespace Origam.Server
                 ci.WrappedObject = GetRowData(row, columns);
                 if (RowStateProcessor != null)
                 {
-                    ci.State = RowStateProcessor.Invoke(ci.Entity, new[] {ci.ObjectId})[0] as RowSecurityState;
+                    ci.State = RowStateProcessor.Invoke(ci.Entity, new[] { ci.ObjectId })[0] as RowSecurityState;
                 }
             }
             return ci;
         }
 
-        public  ChangeInfo GetDeletedInfo(string requestingGrid, string tableName, object objectId)
+        public ChangeInfo GetDeletedInfo(string requestingGrid, string tableName, object objectId)
         {
             return CreateDeletedChangeInfo(requestingGrid, tableName, objectId);
         }
         public static ChangeInfo GetDeleteInfo(string requestingGrid, string tableName, object objectId)
         {
-            return CreateDeletedChangeInfo(requestingGrid,tableName,objectId);
+            return CreateDeletedChangeInfo(requestingGrid, tableName, objectId);
         }
         private static ChangeInfo CreateDeletedChangeInfo(string requestingGrid, string tableName, object objectId)
         {
@@ -1070,21 +1069,21 @@ namespace Origam.Server
                     object value = null;
                     DataColumn dataColumn = row.Table.Columns[col];
 
-					if (IsWriteOnly(dataColumn))
-					{
-						value = null;
-					}
-					else
-					{
-						if (IsColumnArray(dataColumn))
-						{
-							value = GetRowColumnArrayValue(row, dataColumn);
-						}
-						else
-						{
-							value = GetRowColumnValue(row, dataColumn);
-						}
-					}
+                    if (IsWriteOnly(dataColumn))
+                    {
+                        value = null;
+                    }
+                    else
+                    {
+                        if (IsColumnArray(dataColumn))
+                        {
+                            value = GetRowColumnArrayValue(row, dataColumn);
+                        }
+                        else
+                        {
+                            value = GetRowColumnValue(row, dataColumn);
+                        }
+                    }
                     result.Add(value);
                 }
             }
@@ -1107,19 +1106,19 @@ namespace Origam.Server
             }
         }
 
-		public static bool IsWriteOnly(DataColumn dataColumn)
-		{
-			if (dataColumn.ExtendedProperties.Contains(Const.IsWriteOnlyAttribute))
-			{
-				return ((bool)dataColumn.ExtendedProperties[Const.IsWriteOnlyAttribute]) == true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+        public static bool IsWriteOnly(DataColumn dataColumn)
+        {
+            if (dataColumn.ExtendedProperties.Contains(Const.IsWriteOnlyAttribute))
+            {
+                return ((bool)dataColumn.ExtendedProperties[Const.IsWriteOnlyAttribute]) == true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		private static object GetRowErrors(DataRow row)
+        private static object GetRowErrors(DataRow row)
         {
             object value = null;
 
@@ -1313,10 +1312,10 @@ namespace Origam.Server
                     }
                 }
                 return result;
-            }            
+            }
 
             // data not requested (data less session)
-            return RowStatesForDataLessSessions(entity, ids, profileId);            
+            return RowStatesForDataLessSessions(entity, ids, profileId);
         }
 
         private ArrayList RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
@@ -1375,17 +1374,17 @@ namespace Origam.Server
         }
 
         public bool IsLazyLoadedRow(DataRow row)
-		{
-			return DataList != null && row.Table.DataSet == DataList;
-		}
+        {
+            return DataList != null && row.Table.DataSet == DataList;
+        }
 
         public bool IsLazyLoadedEntity(string entity)
         {
             return DataListEntity != null && entity == DataListEntity;
         }
-        
+
         #region CUD
-		public virtual ArrayList CreateObject(string entity, IDictionary<string, object> values,
+        public virtual ArrayList CreateObject(string entity, IDictionary<string, object> values,
             IDictionary<string, object> parameters, string requestingGrid)
         {
             lock (_lock)
@@ -1509,9 +1508,9 @@ namespace Origam.Server
                     UpdateRowColumn(property, newValue, profile, row);
                 }
                 ArrayList listOfChanges = GetChangesByRow(null, row, 0, this.Data.HasErrors, this.Data.HasChanges());
-                if (! this.Data.HasChanges())
+                if (!this.Data.HasChanges())
                 {
-                    listOfChanges.Add(ChangeInfo.SavedChangeInfo());                
+                    listOfChanges.Add(ChangeInfo.SavedChangeInfo());
                 }
                 return listOfChanges;
             }
@@ -1525,7 +1524,10 @@ namespace Origam.Server
 
             DataRow[] childRows = row.GetChildRows(relatedTableName);
 
-            Array newArray = (Array)newValue;
+
+            Array newArray = newValue != null
+                   ? (Array)((Newtonsoft.Json.Linq.JArray)newValue).ToObject<object[]>()
+                   : null;
             // handle null value (sent e.g. when updating dependent fields)
             // null = empty array
             if (newArray == null)
@@ -1625,7 +1627,7 @@ namespace Origam.Server
             }
             else
             {
-                row[property] =  newValue;
+                row[property] = newValue;
             }
         }
 
@@ -1824,8 +1826,8 @@ namespace Origam.Server
             }
         }
 
-        public ArrayList CopyObject(string entity, object originalId, 
-            string requestingGrid, ArrayList entities, 
+        public ArrayList CopyObject(string entity, object originalId,
+            string requestingGrid, ArrayList entities,
             IDictionary<string, object> forcedValues)
         {
             lock (_lock)
@@ -1843,7 +1845,7 @@ namespace Origam.Server
                 ArrayList toSkip = new ArrayList();
                 foreach (DataTable t in this.Data.Tables)
                 {
-                    if (!entities.Contains(t.TableName) && ! IsArrayChild(t))
+                    if (!entities.Contains(t.TableName) && !IsArrayChild(t))
                     {
                         toSkip.Add(t.TableName);
                     }
@@ -1851,7 +1853,7 @@ namespace Origam.Server
 
                 DataSet tmpDS = DatasetTools.CloneDataSet(row.Table.DataSet, false);
 
-                DatasetTools.GetDataSlice(tmpDS, new List<DataRow>{row}, profile.Id, true, toSkip);
+                DatasetTools.GetDataSlice(tmpDS, new List<DataRow> { row }, profile.Id, true, toSkip);
 
                 try
                 {
@@ -1871,7 +1873,7 @@ namespace Origam.Server
                     }
                     this.UnregisterEvents();
                     this.Data.EnforceConstraints = false;
-                    if(IsLazyLoadedEntity(entity))
+                    if (IsLazyLoadedEntity(entity))
                     {
                         // we are copying on the root of delayed loaded form
                         // so we clear the dataset completely and merge back only the copy
@@ -1904,12 +1906,12 @@ namespace Origam.Server
 
         private bool IsArrayChild(DataTable table)
         {
-            if(table.ParentRelations.Count == 1)
+            if (table.ParentRelations.Count == 1)
             {
                 foreach (DataColumn column in table.ParentRelations[0].ParentTable.Columns)
                 {
-                    if (column.ExtendedProperties.Contains(Const.ArrayRelation) 
-                        && (string)column.ExtendedProperties[Const.ArrayRelation] 
+                    if (column.ExtendedProperties.Contains(Const.ArrayRelation)
+                        && (string)column.ExtendedProperties[Const.ArrayRelation]
                             == table.ParentRelations[0].RelationName)
                     {
                         return true;
@@ -2029,7 +2031,7 @@ namespace Origam.Server
         public ArrayList UpdateObjectBatch(string entity, string property, Hashtable values)
         {
             ArrayList result = new ArrayList();
- 
+
             lock (_lock)
             {
                 foreach (DictionaryEntry entry in values)
