@@ -72,7 +72,7 @@ namespace Origam.ServerCore.Controllers
                     Parameters = sessionData.Parameters,
                     RegisterSession = true
                 };
-                UIResult uiResult = await sessionObjects.UIManager.InitUIAsync(
+                UIResult uiResult = sessionObjects.UIManager.InitUI(
                     request: uiRequest,
                     addChildSession: false,
                     parentSession: null,

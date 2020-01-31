@@ -78,11 +78,11 @@ namespace Origam.ServerCore
 
         public UIResult InitUI(UIRequest request)
         {
-            return uiManager.InitUIAsync(
+            return uiManager.InitUI(
                 request: request,
                 addChildSession: false,
                 parentSession: null,
-                basicUIService: this).Result;
+                basicUIService: this);
         }
         public PortalResult InitPortal(int maxRequestLength)
         {

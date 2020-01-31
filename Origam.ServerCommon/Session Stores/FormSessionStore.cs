@@ -53,6 +53,7 @@ using Origam.DA.Service;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Schema;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Origam.ServerCommon;
 
 namespace Origam.Server
@@ -97,13 +98,7 @@ namespace Origam.Server
         }
 
         #region Overriden SessionStore Methods
-        public override bool SupportsFormXmlAsync
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool SupportsFormXmlAsync => true;
 
         public override void Init()
         {
@@ -583,7 +578,15 @@ namespace Origam.Server
 
         public override void PrepareFormXml()
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Preparing XML...");
+            }
             _preparedFormXml = GetFormXml();
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("XML prepared...");
+            }
         }
 
         private object Refresh()

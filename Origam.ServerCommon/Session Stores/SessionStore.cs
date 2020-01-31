@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -58,6 +59,7 @@ using Origam.ServerCommon;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using MoreLinq;
 
 namespace Origam.Server

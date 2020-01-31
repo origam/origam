@@ -47,9 +47,11 @@ namespace Origam.Server
 {
     public class UIManager
     {
+        internal static readonly log4net.ILog log 
+            = log4net.LogManager.GetLogger(System.Reflection.MethodBase
+                .GetCurrentMethod().DeclaringType);
         private readonly int initialPageNumberOfRecords;
         private readonly SessionManager sessionManager;
-        private static readonly AsThreadPool threadPool = new AsThreadPool();
         private readonly Analytics analytics;
 
         public UIManager(int initialPageNumberOfRecords,
@@ -60,10 +62,10 @@ namespace Origam.Server
             this.sessionManager = sessionManager;
         }
 
-        public async Task<UIResult> InitUIAsync(UIRequest request, bool addChildSession, 
+        public UIResult InitUI(UIRequest request, bool addChildSession, 
             SessionStore parentSession, IBasicUIService basicUIService)
         {
-            Task GetFormXMLTask = null;
+            Task getFormXmlTask = null;
             // Stack can't handle resending DataDocumentFx, 
             // it needs to be converted to XmlDocument 
             // and then converted back to DataDocumentFx
@@ -136,10 +138,10 @@ namespace Origam.Server
                 analytics.SetProperty("OrigamFormId", ss.FormId);
                 analytics.SetProperty("OrigamFormName", ss.Name);
                 analytics.Log("UI_OPENFORM");
-                if (ss.SupportsFormXmlAsync &&
-                    IsFormXmlNotCachedOnClient(request, ss))
+                if (ss.SupportsFormXmlAsync 
+                && IsFormXmlNotCachedOnClient(request, ss))
                 {
-                    GetFormXMLTask = Task.Run(() => ss.PrepareFormXml());
+                    getFormXmlTask = Task.Run(ss.PrepareFormXml);
                 }
                 ss.Init();
                 ss.IsExclusive = isExclusive;
@@ -186,9 +188,17 @@ namespace Origam.Server
             if(IsFormXmlNotCachedOnClient(request, ss))
             {
                 // wait for asynchronously loaded form xml
-                if (GetFormXMLTask != null)
+                if(getFormXmlTask != null)
                 {
-                    await GetFormXMLTask;
+                    if(log.IsDebugEnabled)
+                    {
+                        log.Debug("Waiting for XML...");
+                    }
+                    Task.WaitAll(getFormXmlTask);
+                    if(log.IsDebugEnabled)
+                    {
+                        log.Debug("Waiting for XML is over...");
+                    }
                 }
                 // FORM XML
                 SetFormXml(result, profile, ss);
