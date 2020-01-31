@@ -16,7 +16,7 @@ namespace Origam.ServerCommon.Session_Stores
 {
     public class DataSetBuilder
     {
-        private object _lock;
+        private readonly object _lock = new object();
 
         public DataSet InitializeFullStructure(Guid id, DataStructureDefaultSet defaultSet)
         {
