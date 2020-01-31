@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Origam.Security.Common;
+using Origam.Security.Identity;
+using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 
 namespace Origam.ServerCore.IdentityServerGui.Account
@@ -35,6 +37,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IServiceProvider _serviceProvider;
         private readonly IMailService _mailService;
         private readonly IdentityGuiConfig _identityGuiConfig;
+        private readonly UserConfig _userConfig;
 
         public AccountController(
             UserManager<IOrigamUser> userManager,
@@ -44,7 +47,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events, IServiceProvider serviceProvider,
             IMailService mailService,
-            IOptions<IdentityGuiConfig> identityGuiConfig)
+            IOptions<IdentityGuiConfig> identityGuiConfig, UserConfig userConfig)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -54,6 +57,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _events = events;
             _serviceProvider = serviceProvider;
             _mailService = mailService;
+            _userConfig = userConfig;
             _identityGuiConfig = identityGuiConfig.Value;
         }
 
@@ -107,6 +111,50 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+        
+        // GET: /Account/ProcessInvitation
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ProcessInvitation(string code = null)
+        {
+            return code == null ? View("Error") : View();
+        }
+
+        // POST: /Account/ProcessInvitation
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcessInvitation(ProcessInvitationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            IdentityServiceAgent.ServiceProvider = _serviceProvider;
+            var newUser = new User 
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                RoleId = _userConfig.NewUserRoleId
+            };
+            var userCreationResult = await _userManager.CreateAsync(newUser, model.Password);
+            var emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            await _userManager.ConfirmEmailAsync(newUser, emailConfirmToken);
+            if (userCreationResult.Succeeded)
+            {
+                return RedirectToAction(nameof(AccountController.ProcessInvitationConfirmation), "Account");
+            }
+            AddErrors(userCreationResult);
+            return View();
+        }
+        
+        // GET: /Account/ResetPasswordConfirmation
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ProcessInvitationConfirmation()
+        {
+            return View();
         }
         
         // GET: /Account/ResetPassword

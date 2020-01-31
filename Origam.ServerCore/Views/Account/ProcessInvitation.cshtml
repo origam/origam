@@ -1,0 +1,45 @@
+@model Origam.ServerCore.IdentityServerGui.Account.ProcessInvitationViewModel
+
+@{
+    ViewBag.Title = "Process Invitation";
+    Layout = "_Layout";
+}
+
+<div class="detailview-container">
+    <div class="detailview-module with-title">
+        <form asp-controller="Account" asp-action="ResetPassword" method="post" class="form-horizontal" role="form">
+            <h2>Reset your password</h2>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Code" type="hidden" />
+            <div class="input-form">
+                <div class="input-row">
+                    <label asp-for="UserName" class="col-md-2 control-label"></label>
+                    <input asp-for="UserName" class="form-control"/>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>                  
+                <div class="input-row">
+                    <label asp-for="Email" class="col-md-2 control-label"></label>
+                    <input asp-for="Email" class="form-control"/>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>                
+                <div class="input-row">
+                    <label asp-for="Password" class="col-md-2 control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div> 
+                <div class="input-row">
+                    <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="input-row">
+                    <a class="btn normal-size primary submit-link" value="" href=# >Create</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
