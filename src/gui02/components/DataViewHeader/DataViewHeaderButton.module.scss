@@ -30,6 +30,13 @@
     margin-left: 0;
   }
 
+  &:first-of-type:last-of-type {
+    border-radius: 3em;
+    border-color: #b0afb7;
+    border-style: solid;
+    border-width: 1px;
+  }
+
 
   &:hover {
     background: #B0AFB7;
