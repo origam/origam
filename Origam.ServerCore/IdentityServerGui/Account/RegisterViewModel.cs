@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Origam.ServerCore.IdentityServerGui.Account
 {
-    public class ProcessInvitationViewModel
+    public class RegisterViewModel
     {
         [Required]
         [EmailAddress]
@@ -11,7 +11,15 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Text)]
-        public string UserName { get; set; }
+        public string UserName { get; set; }   
+        
+        [StringLength(100)]
+        [DataType(DataType.Text)]
+        public string Name { get; set; } 
+        
+        [StringLength(100)]
+        [DataType(DataType.Text)]
+        public string FirstName { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

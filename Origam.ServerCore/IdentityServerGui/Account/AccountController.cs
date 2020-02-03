@@ -114,6 +114,81 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             return View(model);
         }
         
+        //
+        // GET: /Account/Register
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register(string returnUrl = null)
+        {
+            if (!_userConfig.UserRegistrationAllowed)
+            {
+                return Ok("User registration is not allowed on this site.");
+            }
+
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (!_userConfig.UserRegistrationAllowed)
+            {
+                return Ok("User registration is not allowed on this site.");
+            }
+            if (ModelState.IsValid)
+            {
+                var user = new User { UserName = model.UserName, Email = model.Email };
+                IdentityServiceAgent.ServiceProvider = _serviceProvider;
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    _mailService.SendNewUserToken(user, code);
+                    return RedirectToAction(nameof(RegisterConfirmation), "Account");
+                }
+                AddErrors(result);
+            }
+            return View(model);
+        }
+        
+        // GET: /Account/ConfirmEmail
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (!_userConfig.UserRegistrationAllowed)
+            {
+                return Ok("User registration is not allowed on this site.");
+            }
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            return result.Succeeded 
+                ? View("EmailConfirmation") 
+                : View("Error");
+        }
+
+                
+        // GET: /Account/RegisterConfirmation
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult RegisterConfirmation()
+        {
+            return View();
+        }
+        
         // GET: /Account/ProcessInvitation
         [HttpGet]
         [AllowAnonymous]
@@ -126,7 +201,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProcessInvitation(ProcessInvitationViewModel model)
+        public async Task<IActionResult> ProcessInvitation(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -239,10 +314,14 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    return View("EmailNotConfirmed");
+                }
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.FindByNameAsync(model.Username);
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.BusinessPartnerId, user.UserName, clientId: context?.ClientId));
 
                     if (context != null)
