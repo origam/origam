@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -76,18 +77,16 @@ namespace Origam.ServerCore.Authorization
         
         public void SetInitialSetupComplete()
         {
-            IParameterService parameterService =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as
-                    IParameterService;
-            parameterService.SetCustomParameterValue(INITIAL_SETUP_PARAMETERNAME, true,
+            ServiceManager.Services
+                .GetService<IParameterService>()
+                .SetCustomParameterValue(INITIAL_SETUP_PARAMETERNAME, true,
                 Guid.Empty, 0, null, true, 0, 0, null);
         }
           public bool IsInitialSetupNeeded()
-        {
-            IParameterService parameterService =
-                ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
-        
-            return !(bool)parameterService.GetParameterValue(INITIAL_SETUP_PARAMETERNAME);
+          {
+              return !(bool)ServiceManager.Services
+                .GetService<IParameterService>()
+                .GetParameterValue(INITIAL_SETUP_PARAMETERNAME);
         }
     }
 }
