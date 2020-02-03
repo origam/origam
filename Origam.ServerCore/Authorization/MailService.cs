@@ -73,8 +73,8 @@ namespace Origam.ServerCore.Authorization
                 userId: user.BusinessPartnerId,
                 email: user.Email,
                 username: user.UserName,
-                name: user.Name ?? "",
-                firstName: user.FirstName ?? "",
+                name: user.Name,
+                firstName: user.FirstName,
                 token: token);
         }
     }

@@ -13,10 +13,12 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [DataType(DataType.Text)]
         public string UserName { get; set; }   
         
+        [Required]
         [StringLength(100)]
         [DataType(DataType.Text)]
         public string Name { get; set; } 
         
+        [Required]
         [StringLength(100)]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
