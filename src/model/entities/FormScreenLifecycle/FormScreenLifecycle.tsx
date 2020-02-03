@@ -250,10 +250,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             Values: map2obj(dataView.dataTable.getDirtyValues(row))
           });
           console.log(updateObjectResult);
+          yield* refreshWorkQueues(this)();
           yield* processCRUDResult(dataView, updateObjectResult);
-          if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
-            yield* refreshWorkQueues(this)();
-          }
         }
       }
     } finally {
@@ -273,10 +271,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Values: {},
         Parameters: { ...getBindingParametersFromParent(targetDataView) }
       });
+      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
-      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
-        yield* refreshWorkQueues(this)();
-      }
     } finally {
       this.inFlow--;
     }
@@ -292,10 +288,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Id: rowId
       });
       console.log(deleteObjectResult);
+      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, deleteObjectResult);
-      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
-        yield* refreshWorkQueues(this)();
-      }
     } finally {
       this.inFlow--;
     }
@@ -307,10 +301,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const api = getApi(this);
       yield api.saveSessionQuery(getSessionId(this));
       const result = yield api.saveSession(getSessionId(this));
+      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, result);
-      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
-        yield* refreshWorkQueues(this)();
-      }
     } finally {
       this.inFlow--;
     }
@@ -328,9 +320,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } else {
         yield* this.loadData();
       }
-      if (getMenuItemType(this) === IMainMenuItemType.WorkQueue) {
-        yield* refreshWorkQueues(this)();
-      }
+      yield* refreshWorkQueues(this)();
     } finally {
       this.inFlow--;
     }
@@ -371,7 +361,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         RequestingGrid: gridId
       });
       console.log("EA", result);
-
+      yield* refreshWorkQueues(this)();
       yield* new_ProcessActionResult(action)(result);
     } finally {
       this.inFlow--;
