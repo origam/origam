@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using IdentityServer4;
 using IdentityServer4.Models;
+using Origam.ServerCore.Configuration;
 
 namespace Origam.ServerCore
 {
@@ -23,7 +24,8 @@ namespace Origam.ServerCore
             };
         }
 
-        internal static Client[] GetIdentityClients()
+        internal static Client[] GetIdentityClients(
+            StartUpConfiguration startUpConfiguration)
         {
             return new[]
             {
@@ -38,11 +40,10 @@ namespace Origam.ServerCore
                 new Client
                 {
                     ClientId = "xamarin",
-                    ClientName = "eShop Xamarin OpenId Client",
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     ClientSecrets =
                     {
-                        new Secret("bla".Sha256())
+                        new Secret(startUpConfiguration.ClientSecret.Sha256())
                     },
                     RedirectUris = {"http://localhost/xamarincallback"},
                     RequireConsent = false,
