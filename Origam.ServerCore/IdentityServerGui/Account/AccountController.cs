@@ -47,7 +47,8 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events, IServiceProvider serviceProvider,
             IMailService mailService,
-            IOptions<IdentityGuiConfig> identityGuiConfig, UserConfig userConfig)
+            IOptions<IdentityGuiConfig> identityGuiConfig,
+            IOptions<UserConfig> userConfig)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -57,7 +58,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _events = events;
             _serviceProvider = serviceProvider;
             _mailService = mailService;
-            _userConfig = userConfig;
+            _userConfig = userConfig.Value;
             _identityGuiConfig = identityGuiConfig.Value;
         }
 
