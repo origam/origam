@@ -43,7 +43,7 @@ export interface IDropdownEditorProps {
 
   refocuser?: (cb: () => void) => () => void;
   onTextChange?(event: any, value: string): void;
-  onItemSelect?(event: any, value: string): void;
+  onItemSelect?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   api?: IApi;
@@ -83,9 +83,12 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   @observable.ref lookupItems: any[] = [];
   @observable willReload = false;
   @observable isLoading = false;
+  @observable wasTextEdited = false;
+  @observable initialTextValue = "";
 
   componentDidMount() {
     runInAction(() => {
+      this.initialTextValue = this.props.textualValue || "";
       this.props.refocuser &&
         this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
       this.makeFocusedIfNeeded();
@@ -108,6 +111,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       }
       if (prevProps.textualValue !== this.props.textualValue) {
         this.dirtyTextualValue = undefined;
+        this.initialTextValue = this.props.textualValue || "";
         this.makeFocusedIfNeeded();
       }
       if (prevProps.value !== null && this.props.value === null) {
@@ -152,6 +156,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
 
   @action.bound
   handleTextChange(event: any) {
+    this.wasTextEdited = true;
     this.dirtyTextualValue = event.target.value;
     this.elmDropdowner && this.elmDropdowner.setDropped(true);
     this.loadItems();
@@ -219,6 +224,11 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   }
 
   @action.bound handleInputBlur(event: any) {
+    if (this.value === "" && this.initialTextValue !== "") {
+      this.elmDropdowner && this.elmDropdowner.setDropped(false);
+      this.props.onItemSelect && this.props.onItemSelect(event, null);
+      return;
+    }
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
@@ -285,6 +295,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
 
   @observable selectedItemId: string | undefined;
 
+  @computed get selectedItemValue(): string | undefined {
+    return;
+  }
+
   findNextId() {
     const idx = this.lookupItems.findIndex(
       item => item[0] === this.selectedItemId
@@ -315,6 +329,11 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   @action.bound handleKeyDown(event: any) {
     if (this.isDropped) {
       switch (event.key) {
+        case "Escape":
+          this.dirtyTextualValue = undefined;
+          this.initialTextValue = this.props.textualValue || "";
+          this.elmDropdowner && this.elmDropdowner.setDropped(false);
+          break;
         case "ArrowUp":
           if (!this.selectedItemId) {
             this.selectedItemId = this.findFirstId();
