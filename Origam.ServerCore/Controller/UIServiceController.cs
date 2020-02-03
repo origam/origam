@@ -48,6 +48,7 @@ using System.Linq;
 using IdentityServer4;
 using Microsoft.AspNetCore.Localization;
 using Origam.Workbench;
+using Origam.ServerCommon.Session_Stores;
 
 namespace Origam.ServerCore.Controller
 {
@@ -100,20 +101,16 @@ namespace Origam.ServerCore.Controller
             });
         }
         [HttpPost("[action]")]
-        public async System.Threading.Tasks.Task<IActionResult> InitUI([FromBody]UIRequest request)
+        public IActionResult InitUI([FromBody]UIRequest request)
         {
-            return await RunWithErrorHandlerAsync(async () =>
-            {
-                return Ok(
-                    // registerSession is important for sessionless handling
-
-                    await sessionObjects.UIManager.InitUIAsync(
-                        request: request,
-                        addChildSession: false,
-                        parentSession: null,
-                        basicUIService: sessionObjects.UIService)
-                );
-            });
+            return RunWithErrorHandler(() => Ok(
+                // registerSession is important for sessionless handling
+                sessionObjects.UIManager.InitUI(
+                    request: request,
+                    addChildSession: false,
+                    parentSession: null,
+                    basicUIService: sessionObjects.UIService)
+            ));
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
@@ -296,8 +293,8 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                Dictionary<Guid, Dictionary<Guid, string>> result
-                    = new Dictionary<Guid, Dictionary<Guid, string>>();
+                Dictionary<Guid, Dictionary<object, string>> result
+                    = new Dictionary<Guid, Dictionary<object, string>>();
                 foreach (var input in inputs)
                 {
                     var checkResult = CheckLookup(input);
@@ -312,9 +309,9 @@ namespace Origam.ServerCore.Controller
             });
         }
 
-        private Dictionary<Guid, string> GetLookupLabelsInternal(LookupLabelsInput input)
+        private Dictionary<object, string> GetLookupLabelsInternal(LookupLabelsInput input)
         {
-            Dictionary<Guid, string> labelDictionary
+            Dictionary<object, string> labelDictionary
                 = input.LabelIds.ToDictionary(
                     id => id,
                     id =>
@@ -527,28 +524,6 @@ namespace Origam.ServerCore.Controller
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
         #endregion
-        private async System.Threading.Tasks.Task<IActionResult> RunWithErrorHandlerAsync(
-            Func<System.Threading.Tasks.Task<IActionResult>> func)
-        {
-            try
-            {
-                return await func();
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                return NotFound(ex.ActualValue);
-            }
-            catch (SessionExpiredException ex)
-            {
-                return NotFound(ex);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-        }
-
-
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try
@@ -932,9 +907,10 @@ namespace Origam.ServerCore.Controller
         }
         private IEnumerable<object> LoadData(FormReferenceMenuItem menuItem, DataStructureQuery dataStructureQuery)
         {
-            DataSet data = InitializeFullStructure(menuItem);
-            DataSet ListData = InitializeListStructure(data,menuItem.ListEntity.Name);
-            return  TransformData(LoadListData(ListData, menuItem.ListEntity.Name, menuItem.ListSortSet,menuItem), dataStructureQuery);
+            DataSetBuilder DatasetBuilder = new DataSetBuilder();
+            DataSet data = DatasetBuilder.InitializeFullStructure(menuItem.ListDataStructureId,menuItem.DefaultSet);
+            DataSet ListData = DatasetBuilder.InitializeListStructure(data,menuItem.ListEntity.Name,false);
+            return  TransformData(DatasetBuilder.LoadListData(new List<string>(), ListData, menuItem.ListEntity.Name, menuItem.ListSortSet,menuItem), dataStructureQuery);
         }
 
         private IEnumerable<object> TransformData(DataSet dataSet, DataStructureQuery query)
@@ -964,119 +940,6 @@ namespace Origam.ServerCore.Controller
             }
 
             return updatedValues;
-        }
-        private DataSet LoadListData(DataSet data, string listEntity, DataStructureSortSet sortSet, FormReferenceMenuItem _menuItem)
-        {
-            List<string> DataListLoadedColumns = new List<string>();
-            string initialColumns = "";
-            initialColumns = ListPrimaryKeyColumns(data, listEntity);
-            if (sortSet != null)
-            {
-                foreach (DataStructureSortSetItem sortItem in
-                    sortSet.ChildItemsByType(DataStructureSortSetItem.ItemTypeConst))
-                {
-                    if (sortItem.Entity.Name == listEntity)
-                    {
-                        initialColumns += ";" + sortItem.FieldName;
-                       
-                    }
-                }
-            }
-            // load list entity
-            DataSet result = DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
-                Guid.Empty, _menuItem.ListSortSetId, null, null, data, listEntity, initialColumns);
-            // load all array field child entities - there is no way how to read
-            // only children of a specific record (inside LazyLoadListRowData) so
-            // we preload all array fields here
-            ArrayList arrayColumns = new ArrayList();
-            foreach (DataColumn col in result.Tables[listEntity].Columns)
-            {
-                if (IsColumnArray(col))
-                {
-                    arrayColumns.Add(col.ColumnName);
-                }
-            }
-            LoadArrayColumns(result, listEntity, null, arrayColumns, DataListLoadedColumns,_menuItem);
-            return result;
-        }
-        private static bool IsColumnArray(DataColumn dataColumn)
-        {
-            if (dataColumn.ExtendedProperties.Contains(Const.OrigamDataType))
-            {
-                return ((Schema.OrigamDataType)dataColumn.ExtendedProperties[Const.OrigamDataType]) == Schema.OrigamDataType.Array;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        private void LoadArrayColumns(DataSet dataset, string entity,
-            QueryParameterCollection qparams, ArrayList arrayColumns,List<string> DataListLoadedColumns, FormReferenceMenuItem _menuItem)
-        {
-            lock (_lock)
-            {
-                foreach (string column in arrayColumns)
-                {
-                    if (!DataListLoadedColumns.Contains(column))
-                    {
-                        DataColumn col = dataset.Tables[entity].Columns[column];
-                        string relationName = (string)col.ExtendedProperties[Const.ArrayRelation];
-                        DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
-                            Guid.Empty, _menuItem.ListSortSetId, null, qparams, dataset, relationName,
-                            null);
-                        DataListLoadedColumns.Add(column);
-                    }
-                }
-            }
-        }
-        private static string ListPrimaryKeyColumns(DataSet data, string listEntity)
-        {
-            string initialColumns = "";
-            foreach (var pkCol in data.Tables[listEntity].PrimaryKey)
-            {
-                if (initialColumns != "")
-                {
-                    initialColumns += ";";
-                }
-                initialColumns += pkCol.ColumnName;
-            }
-            return initialColumns;
-        }
-        private DataSet InitializeFullStructure(FormReferenceMenuItem menuItem)
-        {
-            return new DatasetGenerator(true).CreateDataSet(DataStructure(menuItem.ListDataStructureId), true, menuItem.DefaultSet);
-        }
-        private DataStructure DataStructure(Guid id)
-        {
-            return FindItem<DataStructure>(id).Value;
-        }
-        private static DataSet InitializeListStructure(DataSet data, string listEntity)
-        {
-            DataSet listData = DatasetTools.CloneDataSet(data);
-            DataTable listTable = listData.Tables[listEntity];
-            // turn off constraints checking because we will be loading only partial
-            // data to the list
-            listData.EnforceConstraints = false;
-            // remove all computed columns - list will calculate values from the database,
-            // by having aggregation expressions the values would be recalculated to zeros
-            // becuase we would not have any child records
-            // row-level computed columns cause performance problems with lots of data
-            foreach (DataColumn col in listTable.Columns)
-            {
-                col.Expression = "";
-                col.ReadOnly = false;
-                // default values would distract when debugging a partly loaded list
-                col.DefaultValue = null;
-            }
-            // we add a column that will identify if the record has been loaded from
-            // the database
-            //DataColumn loadedFlagColumn =
-            //    listTable.Columns.Add("___ORIGAM_IsLoaded", typeof(bool));
-            //loadedFlagColumn.AllowDBNull = false;
-            //loadedFlagColumn.DefaultValue = false;
-            // we cannot delete non-list tables because child entities will be 
-            // neccessary for array-type fields (TagInput etc.)
-            return listData;
         }
     }
 }

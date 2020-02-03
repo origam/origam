@@ -212,7 +212,7 @@ namespace Origam.Server
                 processData.SelectedItems, processData.Action);
             uir.FormSessionId = processData.SessionFormIdentifier;
             uir.RegisterSession = false;
-            result.UIResult = await uiManager.InitUIAsync(
+            result.UIResult = uiManager.InitUI(
                 request: uir,
                 addChildSession: true, 
                 parentSession: sessionManager.GetSession(processData),

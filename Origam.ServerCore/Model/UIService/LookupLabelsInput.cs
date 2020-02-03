@@ -29,7 +29,7 @@ namespace Origam.ServerCore.Model.UIService
         [RequiredNonDefault]
         public Guid LookupId { get; set; }
         [Required]
-        public Guid[] LabelIds { get; set; }
+        public object[] LabelIds { get; set; }
         public Guid MenuId { get; set; } = Guid.Empty;
     }
 }

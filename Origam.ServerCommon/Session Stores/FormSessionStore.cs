@@ -53,9 +53,10 @@ using Origam.DA.Service;
 using core = Origam.Workbench.Services.CoreServices;
 using Origam.Schema;
 using System.Collections.Generic;
-using Origam.ServerCommon;
+using Origam.Server;
+using Origam.ServerCommon.Session_Stores;
 
-namespace Origam.Server
+namespace Origam.ServerCommon
 {
     public class FormSessionStore : SaveableSessionStore
     {
@@ -97,13 +98,7 @@ namespace Origam.Server
         }
 
         #region Overriden SessionStore Methods
-        public override bool SupportsFormXmlAsync
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool SupportsFormXmlAsync => true;
 
         public override void Init()
         {
@@ -124,7 +119,7 @@ namespace Origam.Server
 
         private void PrepareDataCore()
         {
-            var data = InitializeFullStructure();
+            var data = InitializeFullStructure(_menuItem.DefaultSet);
             SetDataSource(data);
             SetDelayedLoadingParameter(_menuItem.Method);
         }
@@ -151,11 +146,11 @@ namespace Origam.Server
             {
                 // delayed data loading - save after each move
                 // we initialize the full structure
-                data = InitializeFullStructure();
-                DataSet listData = InitializeListStructure(data, _menuItem.ListEntity.Name);
+                data = InitializeFullStructure(_menuItem.DefaultSet);
+                DataSet listData = GetDataSetBuilder().InitializeListStructure(data, _menuItem.ListEntity.Name,true);
                 // we only read the list and leave the full structure empty (it will be loaded later)
                 SetDataList(
-                    LoadListData(listData, _menuItem.ListEntity.Name, _menuItem.ListSortSet), 
+                    GetDataSetBuilder().LoadListData(DataListLoadedColumns,listData, _menuItem.ListEntity.Name, _menuItem.ListSortSet, _menuItem), 
                     _menuItem.ListEntity.Name, _menuItem.ListDataStructure, _menuItem.ListMethod);
                 this.IsDelayedLoading = true;
                 if (_menuItem.Method == null) throw new ArgumentNullException("FormReferenceMenuItem.FilterSet", "For delayed data loading you have to specify FilterSet for the main data.");
@@ -167,94 +162,16 @@ namespace Origam.Server
             }
         }
 
-        private static DataSet InitializeListStructure(DataSet data, string listEntity)
-        {
-            DataSet listData = DatasetTools.CloneDataSet(data);
-            DataTable listTable = listData.Tables[listEntity];
-            // turn off constraints checking because we will be loading only partial
-            // data to the list
-            listData.EnforceConstraints = false;
-            // remove all computed columns - list will calculate values from the database,
-            // by having aggregation expressions the values would be recalculated to zeros
-            // becuase we would not have any child records
-            // row-level computed columns cause performance problems with lots of data
-            foreach (DataColumn col in listTable.Columns)
-            {
-                col.Expression = "";
-                col.ReadOnly = false;
-                // default values would distract when debugging a partly loaded list
-                col.DefaultValue = null;
-            }
-            // we add a column that will identify if the record has been loaded from
-            // the database
-            DataColumn loadedFlagColumn = 
-                listTable.Columns.Add(LIST_LOADED_COLUMN_NAME, typeof(bool));
-            loadedFlagColumn.AllowDBNull = false;
-            loadedFlagColumn.DefaultValue = false;
-            // we cannot delete non-list tables because child entities will be 
-            // neccessary for array-type fields (TagInput etc.)
-            return listData;
-        }
-
         private void SetDelayedLoadingParameter(DataStructureMethod method)
         {
             // set the parameter for delayed data loading - there should be just 1
             DelayedLoadingParameterName = CustomParameterService.GetFirstNonCustomParameter(method);
         }
+       
 
-        private DataSet InitializeFullStructure()
+        private string ListPrimaryKeyColumns(DataSet data, string listEntity)
         {
-            return new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
-        }
-
-        private DataSet LoadListData(DataSet data, string listEntity, DataStructureSortSet sortSet)
-        {
-            DataListLoadedColumns.Clear();
-            QueryParameterCollection qparams = Request.QueryParameters;
-            string initialColumns = "";
-            initialColumns = ListPrimaryKeyColumns(data, listEntity);
-            if (sortSet != null)
-            {
-                foreach (DataStructureSortSetItem sortItem in
-                    sortSet.ChildItemsByType(DataStructureSortSetItem.ItemTypeConst))
-                {
-                    if (sortItem.Entity.Name == listEntity)
-                    {
-                        initialColumns += ";" + sortItem.FieldName;
-                        DataListLoadedColumns.Add(sortItem.FieldName);
-                    }
-                }
-            }
-            // load list entity
-            DataSet result = core.DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
-                Guid.Empty, _menuItem.ListSortSetId, null, qparams, data, listEntity, initialColumns);
-            // load all array field child entities - there is no way how to read
-            // only children of a specific record (inside LazyLoadListRowData) so
-            // we preload all array fields here
-            ArrayList arrayColumns = new ArrayList();
-            foreach (DataColumn col in result.Tables[listEntity].Columns)
-            {
-                if (IsColumnArray(col))
-                {
-                    arrayColumns.Add(col.ColumnName);
-                }
-            }
-            LoadArrayColumns(result, listEntity, qparams, arrayColumns);
-            return result;
-        }
-
-        private static string ListPrimaryKeyColumns(DataSet data, string listEntity)
-        {
-            string initialColumns = "";
-            foreach (var pkCol in data.Tables[listEntity].PrimaryKey)
-            {
-                if (initialColumns != "")
-                {
-                    initialColumns += ";";
-                }
-                initialColumns += pkCol.ColumnName;
-            }
-            return initialColumns;
+            return GetDataSetBuilder().ListPrimaryKeyColumns(data, listEntity);
         }
 
         private DataSet LoadCompleteData()
@@ -583,7 +500,15 @@ namespace Origam.Server
 
         public override void PrepareFormXml()
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Preparing XML...");
+            }
             _preparedFormXml = GetFormXml();
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("XML prepared...");
+            }
         }
 
         private object Refresh()
