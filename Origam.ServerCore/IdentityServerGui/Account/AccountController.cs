@@ -142,7 +142,14 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             }
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.UserName, Email = model.Email };
+                var user = new User
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    Name = model.Name,
+                    RoleId = _userConfig.NewUserRoleId
+                };
                 IdentityServiceAgent.ServiceProvider = _serviceProvider;
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -150,6 +157,66 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     _mailService.SendNewUserToken(user, code);
                     return RedirectToAction(nameof(RegisterConfirmation), "Account");
+                }
+                AddErrors(result);
+            }
+            return View(model);
+        } 
+        
+        //
+        // GET: /Account/RegisterInitialUser
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult RegisterInitialUser()
+        {
+            if (!(_userManager is CoreUserManager coreUserManager))
+            {
+                throw new InvalidCastException($"{nameof(_userManager)} must be of type {nameof(CoreUserManager)}");
+            }
+
+            if (!coreUserManager.IsInitialSetupNeeded())
+            {
+                return Ok("The application has been already set up.");
+            }
+            return View();
+        }
+
+        //
+        // POST: /Account/RegisterInitialUser
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterInitialUser(RegisterViewModel model)
+        {
+            if (!(_userManager is CoreUserManager coreUserManager))
+            {
+                throw new InvalidCastException($"{nameof(_userManager)} must be of type {nameof(CoreUserManager)}");
+            }
+            
+            if (!coreUserManager.IsInitialSetupNeeded())
+            {
+                return Ok("The application has been already set up.");
+            }
+            
+            if (ModelState.IsValid)
+            {
+                var user = new User
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    Name = model.Name,
+                    RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
+                };
+                IdentityServiceAgent.ServiceProvider = _serviceProvider;
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    _signInManager.SignInAsync(user, false);
+                    string emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    await _userManager.ConfirmEmailAsync(user, emailConfirmToken);
+                    coreUserManager.SetInitialSetupComplete();
+                    return Redirect("/");
                 }
                 AddErrors(result);
             }
