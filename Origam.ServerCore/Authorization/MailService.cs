@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -34,7 +35,11 @@ namespace Origam.ServerCore.Authorization
 
         public MailService(IOptions<UserConfig> userConfig, IConfiguration configuration)
         {
-            string baseUrl = configuration[WebHostDefaults.ServerUrlsKey].Split(",")[0];
+            string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
+                .Replace(";",",")
+                .Split(",")
+                .FirstOrDefault(url => url.StartsWith("https")) 
+                ?? throw new ArgumentException("Could not find server's https url");
             mailSender = new AccountMailSender(
                 portalBaseUrl: baseUrl,
                 registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
