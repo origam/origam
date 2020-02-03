@@ -20,7 +20,7 @@ export class NumberEditor extends React.Component<{
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
   refocuser?: (cb: () => void) => () => void;
-  onChange?(event: any, value: string): void;
+  onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onEditorBlur?(event: any): void;
@@ -88,11 +88,15 @@ export class NumberEditor extends React.Component<{
 
   @action.bound
   handleBlur(event: any) {
+    if(this.editValue === "") {
+      this.props.onChange && this.props.onChange(null, null);
+      this.props.onEditorBlur && this.props.onEditorBlur(event);
+    } else {
     const value = numeral(this.editValue).format(this.numeralFormat);
-    console.log('asd', value)
     this.hasFocus = false;
     this.props.onChange && this.props.onChange(null, value);
     this.props.onEditorBlur && this.props.onEditorBlur(event);
+    }
   }
 
   @action.bound handleChange(event: any) {
