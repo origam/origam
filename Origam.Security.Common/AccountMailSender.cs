@@ -81,9 +81,6 @@ namespace Origam.Security.Common
                         Uri.EscapeDataString(token)),
                     new KeyValuePair<string, string>("<%UserId%>", userId),
                     new KeyValuePair<string, string>("<%UserName%>", username),
-                    new KeyValuePair<string, string>("<%Name%>", name),
-                    new KeyValuePair<string, string>("<%FirstName%>",
-                        firstName),
                     new KeyValuePair<string, string>("<%PortalBaseUrl%>",
                         portalBaseUrl),
                     new KeyValuePair<string, string>("<%EscapedUserName%>",
@@ -96,9 +93,7 @@ namespace Origam.Security.Common
                         Uri.EscapeDataString(firstName)),
                     new KeyValuePair<string, string>("<%UserEmail%>", email),
                     new KeyValuePair<string, string>("<%EscapedUserEmail%>",
-                        Uri.EscapeDataString(email)),
-                    new KeyValuePair<string, string>("<%PortalBaseUrl%>",
-                        portalBaseUrl)
+                        Uri.EscapeDataString(email))
                 };
             // PORTAL_BASE_URL is mandatory if using default template
             if (string.IsNullOrWhiteSpace(portalBaseUrl) &&
