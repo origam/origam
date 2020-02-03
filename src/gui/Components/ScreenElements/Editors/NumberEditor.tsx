@@ -5,8 +5,6 @@ import { Tooltip } from "react-tippy";
 import S from "./NumberEditor.module.scss";
 import numeral from "numeral";
 
-
-
 @observer
 export class NumberEditor extends React.Component<{
   value: string | null;
@@ -29,6 +27,7 @@ export class NumberEditor extends React.Component<{
 
   @observable hasFocus = false;
   @observable editingValue: null | string = "";
+  @observable wasChanged = false;
 
   get numeralFormat() {
     return (
@@ -39,6 +38,9 @@ export class NumberEditor extends React.Component<{
   }
 
   @computed get numeralFormattedValue() {
+    if (this.props.value === null) {
+      return "";
+    }
     return numeral(this.props.value).format(this.numeralFormat);
   }
 
@@ -88,20 +90,33 @@ export class NumberEditor extends React.Component<{
 
   @action.bound
   handleBlur(event: any) {
-    if(this.editValue === "") {
+    console.log(this.props.value, this.editValue);
+    if (!this.wasChanged || this.props.value === this.editValue) {
+      this.props.onEditorBlur && this.props.onEditorBlur(event);
+      return;
+    }
+    if (this.editValue === "") {
       this.props.onChange && this.props.onChange(null, null);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     } else {
-    const value = numeral(this.editValue).format(this.numeralFormat);
-    this.hasFocus = false;
-    this.props.onChange && this.props.onChange(null, value);
-    this.props.onEditorBlur && this.props.onEditorBlur(event);
+      const value = numeral(this.editValue).format(this.numeralFormat);
+      this.hasFocus = false;
+      this.props.onChange && this.props.onChange(null, value);
+      this.props.onEditorBlur && this.props.onEditorBlur(event);
     }
   }
 
   @action.bound handleChange(event: any) {
-    this.editingValue = (event.target.value || "").replace(/[^\d.\-,'\s]/g, '');
+    this.wasChanged = true;
+    this.editingValue = (event.target.value || "").replace(/[^\d.\-,'\s]/g, "");
     // this.props.onChange && this.props.onChange(event, event.target.value);
+  }
+
+  @action.bound handleKeyDown(event: any) {
+    if (event.key === "Escape") {
+      this.wasChanged = false;
+    }
+    this.props.onKeyDown && this.props.onKeyDown(event);
   }
 
   elmInput: HTMLInputElement | null = null;
@@ -122,7 +137,11 @@ export class NumberEditor extends React.Component<{
             className={S.input}
             type={this.props.isPassword ? "password" : "text"}
             autoComplete={this.props.isPassword ? "new-password" : undefined}
-            value={this.editValue !== undefined && this.editValue !== null ? this.editValue : ""}
+            value={
+              this.editValue !== undefined && this.editValue !== null
+                ? this.editValue
+                : ""
+            }
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={this.handleChange}
