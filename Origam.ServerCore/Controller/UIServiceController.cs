@@ -100,20 +100,16 @@ namespace Origam.ServerCore.Controller
             });
         }
         [HttpPost("[action]")]
-        public async System.Threading.Tasks.Task<IActionResult> InitUI([FromBody]UIRequest request)
+        public IActionResult InitUI([FromBody]UIRequest request)
         {
-            return await RunWithErrorHandlerAsync(async () =>
-            {
-                return Ok(
-                    // registerSession is important for sessionless handling
-
-                    await sessionObjects.UIManager.InitUIAsync(
-                        request: request,
-                        addChildSession: false,
-                        parentSession: null,
-                        basicUIService: sessionObjects.UIService)
-                );
-            });
+            return RunWithErrorHandler(() => Ok(
+                // registerSession is important for sessionless handling
+                sessionObjects.UIManager.InitUI(
+                    request: request,
+                    addChildSession: false,
+                    parentSession: null,
+                    basicUIService: sessionObjects.UIService)
+            ));
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
@@ -527,28 +523,6 @@ namespace Origam.ServerCore.Controller
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
         #endregion
-        private async System.Threading.Tasks.Task<IActionResult> RunWithErrorHandlerAsync(
-            Func<System.Threading.Tasks.Task<IActionResult>> func)
-        {
-            try
-            {
-                return await func();
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                return NotFound(ex.ActualValue);
-            }
-            catch (SessionExpiredException ex)
-            {
-                return NotFound(ex);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-        }
-
-
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
             try

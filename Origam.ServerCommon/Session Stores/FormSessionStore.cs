@@ -98,13 +98,7 @@ namespace Origam.ServerCommon
         }
 
         #region Overriden SessionStore Methods
-        public override bool SupportsFormXmlAsync
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool SupportsFormXmlAsync => true;
 
         public override void Init()
         {
@@ -506,7 +500,15 @@ namespace Origam.ServerCommon
 
         public override void PrepareFormXml()
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Preparing XML...");
+            }
             _preparedFormXml = GetFormXml();
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("XML prepared...");
+            }
         }
 
         private object Refresh()
