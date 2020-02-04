@@ -381,14 +381,14 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (!await _userManager.IsEmailConfirmedAsync(user))
-                {
-                    return View("EmailNotConfirmed");
-                }
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    var user = await _userManager.FindByNameAsync(model.Username);
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        return View("EmailNotConfirmed");
+                    }
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.BusinessPartnerId, user.UserName, clientId: context?.ClientId));
 
                     if (context != null)
@@ -419,9 +419,16 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                         throw new Exception("invalid return URL");
                     }
                 }
-
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
-                ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                else if (result.IsLockedOut)
+                {
+                    await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "user is lockedout", clientId:context?.ClientId));
+                    ModelState.AddModelError(string.Empty, AccountOptions.UserLockoutErrorMessage);
+                }
+                else
+                {
+                    await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
+                    ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                }
             }
 
             // something went wrong, show form with error

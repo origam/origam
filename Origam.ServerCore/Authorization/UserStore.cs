@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
@@ -35,6 +36,7 @@ using Origam.Schema.EntityModel;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
+using Origam.ServerCore.Configuration;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -59,6 +61,13 @@ namespace Origam.ServerCore
             = new Guid("4e46424b-349f-4314-bc75-424206cd35b0");
         public static readonly Guid GET_BUSINESS_PARTNER_BY_USER_EMAIL
             = new Guid("46fd2484-4506-45a2-8a96-7855ea116210");
+
+        private readonly UserLockoutConfig lockoutConfig;
+
+        public UserStore(IOptions<UserLockoutConfig> userLockoutConfig)
+        {
+            lockoutConfig = userLockoutConfig.Value;
+        }
 
         public Task<IdentityResult> CreateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
@@ -359,34 +368,51 @@ namespace Origam.ServerCore
         }
 
        
-
-        public Task<DateTimeOffset?> GetLockoutEndDateAsync(IOrigamUser user, CancellationToken cancellationToken)
+        // Gets the last DateTimeOffset a user's last lockout expired, if any. A time value in the past indicates a user is not currently locked out.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.getlockoutenddateasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_GetLockoutEndDateAsync__0_
+        public async Task<DateTimeOffset?> GetLockoutEndDateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (lockoutConfig.AutoUnlockAfterSpecifiedTime)
+            {
+                if (!user.LastLockoutDate.HasValue)
+                {
+                    return null;
+                }
+
+                return
+                    new DateTimeOffset(user.LastLockoutDate.Value)
+                        .AddMinutes(lockoutConfig.LockoutTimeMinutes);
+            }
+            else
+            {
+                return user.IsLockedOut
+                    ? new DateTimeOffset(new DateTime(9999, 1, 1))
+                    : new DateTimeOffset(new DateTime(10, 1, 1));
+            }
         }
 
         public Task SetLockoutEndDateAsync(IOrigamUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
-            if (!lockoutEnd.HasValue)
+            user.LastLockoutDate = null;
+            if (lockoutEnd.HasValue)
             {
-                throw new NotImplementedException();
+                user.LastLockoutDate = lockoutEnd.Value
+                    .AddMinutes(-lockoutConfig.LockoutTimeMinutes)
+                    .LocalDateTime;
             }
-            if (lockoutEnd.Value < DateTimeOffset.Now)
-            {
-                user.IsLockedOut = false;
-                return Task.CompletedTask;
-            }
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public Task<int> IncrementAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
+        public  Task<int> IncrementAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.FailedPasswordAttemptCount++);
+            user.FailedPasswordAttemptCount++; 
+            return  Task.FromResult(user.FailedPasswordAttemptCount);
         }
 
         public Task ResetAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.FailedPasswordAttemptCount=0);
+            user.FailedPasswordAttemptCount = 0;
+            return Task.CompletedTask;
         }
 
         public Task<int> GetAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -394,15 +420,19 @@ namespace Origam.ServerCore
             return Task.FromResult(user.FailedPasswordAttemptCount);
         }
 
+        // Retrieves a flag indicating whether user lockout can be enabled for the specified user.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.getlockoutenabledasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_GetLockoutEnabledAsync__0_
         public Task<bool> GetLockoutEnabledAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-           
-            return Task.Factory.StartNew(() =>  user.IsLockedOut);
+            return Task.FromResult(true);
         }
 
+        // Sets a flag indicating whether the specified user is locked out, as an asynchronous operation.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.setlockoutenabledasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_SetLockoutEnabledAsync__0_System_Boolean_
         public Task SetLockoutEnabledAsync(IOrigamUser user, bool enabled, CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(() =>  user.IsLockedOut = enabled);
+            user.IsLockedOut = enabled;
+            return Task.CompletedTask;
         }
     }
 }

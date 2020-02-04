@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Data;
 using Origam.Security.Common;
@@ -48,6 +49,7 @@ namespace Origam.ServerCore.Authorization
             user.BusinessPartnerId = user.ProviderUserKey.ToString();
             user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
             user.PasswordHash =(string)origamUserRow["Password"];
+            user.FailedPasswordAttemptCount = (int)origamUserRow["FailedPasswordAttemptCount"];
             
             user.LanguageId = businessPartnerRow["refLanguageId"] is DBNull
                 ? Guid.Empty 
@@ -72,27 +74,34 @@ namespace Origam.ServerCore.Authorization
             origamUserRow["IsLockedOut"] = user.IsLockedOut;
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
             origamUserRow["Password"] = user.PasswordHash;
+            origamUserRow["FailedPasswordAttemptCount"] = user.FailedPasswordAttemptCount;
             origamUserRow["RecordCreatedBy"] = SecurityManager.CurrentUserProfile().Id;
         }
         
 
-        public static void UpdateOrigamUserRow(IOrigamUser user, DataRow origamnUserRow)
+        public static void UpdateOrigamUserRow(IOrigamUser user, DataRow origamUserRow)
         {
-            origamnUserRow["EmailConfirmed"] = user.EmailConfirmed;
-            origamnUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
-            SetDate(origamnUserRow,"LastLockoutDate", user.LastLockoutDate);
-            SetDate(origamnUserRow,"LastLoginDate",user.LastLoginDate);
-            origamnUserRow["IsLockedOut"] = user.IsLockedOut;
-            origamnUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
-            origamnUserRow["Password"] = user.PasswordHash;
-            origamnUserRow["RecordUpdated"] = DateTime.Now;
-            origamnUserRow["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
-            origamnUserRow["FailedPasswordAttemptCount"] = user.FailedPasswordAttemptCount;
+            origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            SetDate(origamUserRow,"LastLockoutDate", user.LastLockoutDate);
+            SetDate(origamUserRow,"LastLoginDate",user.LastLoginDate);
+            origamUserRow["IsLockedOut"] = user.IsLockedOut;
+            origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
+            origamUserRow["Password"] = user.PasswordHash;
+            origamUserRow["RecordUpdated"] = DateTime.Now;
+            origamUserRow["FailedPasswordAttemptCount"] = user.FailedPasswordAttemptCount;
+            origamUserRow["RecordUpdatedBy"] = SecurityManager.CurrentUserProfile().Id;
         }
 
         private static void SetDate(DataRow row,string columnName, DateTime dateTime)
         {
             if (dateTime == DateTime.MinValue) return;
+            row[columnName] = dateTime;
+        } 
+        
+        private static void SetDate(DataRow row,string columnName, DateTime? dateTime)
+        {
+            if (!dateTime.HasValue) return;
             row[columnName] = dateTime;
         }
 

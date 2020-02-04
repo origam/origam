@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
@@ -45,6 +46,7 @@ namespace Origam.ServerCore
         private IConfiguration Configuration { get; }
         private readonly PasswordConfiguration passwordConfiguration;
         private readonly IdentityServerConfig identityServerConfig;
+        private readonly UserLockoutConfig lockoutConfig;
 
         public Startup(IConfiguration configuration)
         {
@@ -52,6 +54,7 @@ namespace Origam.ServerCore
             startUpConfiguration = new StartUpConfiguration(configuration);
             passwordConfiguration = new PasswordConfiguration(configuration);
             identityServerConfig = new IdentityServerConfig(configuration);
+            lockoutConfig = new UserLockoutConfig(configuration);
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -63,6 +66,15 @@ namespace Origam.ServerCore
 #if DEBUG
             builder.AddRazorRuntimeCompilation();
 #endif
+            if (lockoutConfig.AutoUnlockAfterSpecifiedTime)
+            {
+                services.Configure<IdentityOptions>(options =>
+                {
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutConfig.LockoutTimeMinutes);
+                    options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
+                });
+            }
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
@@ -95,6 +107,7 @@ namespace Origam.ServerCore
                 provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
             services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
+            services.Configure<UserLockoutConfig>(options => Configuration.GetSection("UserLockoutConfig").Bind(options));
             
             services.AddIdentityServer()
                 .AddSigningCredential(new X509Certificate2(
