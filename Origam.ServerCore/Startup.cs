@@ -120,15 +120,19 @@ namespace Origam.ServerCore
 
             services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false);
-            services
+            var authenticationBuilder = services
                 .AddLocalApiAuthentication()
-                .AddAuthentication()
-                .AddGoogle(options =>
+                .AddAuthentication();
+
+            if (identityServerConfig.UseGoogleLogin)
+            {
+                authenticationBuilder.AddGoogle(options =>
                 {
                     options.ClientId = identityServerConfig.GoogleClientId;
                     options.ClientSecret = identityServerConfig.GoogleClientSecret; 
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
+            }
         }
 
         public void Configure(

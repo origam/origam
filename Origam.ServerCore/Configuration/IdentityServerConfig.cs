@@ -31,11 +31,14 @@ namespace Origam.ServerCore.Configuration
         public string PasswordForJwtCertificate { get; }
         public string GoogleClientId { get; }
         public string GoogleClientSecret { get; }
+        public bool UseGoogleLogin { get;}
+
         public IdentityServerConfig(IConfiguration configuration)
         {
             IConfigurationSection identityServerSection = configuration.GetSection("IdentityServerConfig");
             PathToJwtCertificate = identityServerSection.GetValue<string>("PathToJwtCertificate");
             PasswordForJwtCertificate = identityServerSection.GetValue<string>("PasswordForJwtCertificate");
+            UseGoogleLogin = identityServerSection.GetValue("UseGoogleLogin", false);
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
             GoogleClientSecret = identityServerSection["GoogleClientSecret"] ?? "";
         }
