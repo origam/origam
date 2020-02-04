@@ -37,7 +37,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   }
 
   *onSignOutClick(args: { event: any }) {
-    yield* this.performLogout(args);
+    yield* this.performLogout();
   }
 
   *run() {
@@ -60,7 +60,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     }
   }
 
-  *performLogout(args: any) {
+  *performLogout() {
     try {
       const api = getApi(this);
       const application = getApplication(this);
@@ -72,7 +72,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       } finally {
         api.resetAccessToken();
       }
-
       return null;
     } finally {
       this.displayedPage = IApplicationPage.Login;

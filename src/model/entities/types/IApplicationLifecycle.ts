@@ -23,6 +23,8 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
   }): Generator;
   onSignOutClick(args: { event: any }): Generator;
 
+  performLogout(): Generator;
+
   /*
   onMainMenuItemClick(args: { event: any; item: any }): void;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): void;
