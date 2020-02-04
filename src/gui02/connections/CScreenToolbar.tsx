@@ -15,7 +15,12 @@ import { observer } from "mobx-react";
 import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 
-import uiActions from 'model/actions-ui-tree'
+import uiActions from "model/actions-ui-tree";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { UserMenuDropdown } from "gui02/components/UserMenuDropdown/UserMenuDropdown";
+import { UserMenuBlock } from "gui02/components/UserMenuDropdown/UserMenuBlock";
+import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
+import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -32,13 +37,14 @@ export class CScreenToolbar extends React.Component<{}> {
 
   render() {
     const activeScreen = getActiveScreen(this.application);
-    if(activeScreen && !activeScreen.content) return null
+    if (activeScreen && !activeScreen.content) return null;
     const formScreen =
       activeScreen && !activeScreen.content.isLoading
         ? activeScreen.content.formScreen
         : undefined;
     const isDirty = formScreen && formScreen.isDirty;
     const toolbarActions = getActiveScreenActions(this.application);
+    const userName = getLoggedUserName(this.application);
     return (
       <ScreenToolbar>
         {formScreen ? (
@@ -69,7 +75,9 @@ export class CScreenToolbar extends React.Component<{}> {
                       <ScreenToolbarAction
                         icon={<Icon src="./icons/settings.svg" />}
                         label={action.caption}
-                        onClick={event => uiActions.actions.onActionClick(action)(event, action)}
+                        onClick={event =>
+                          uiActions.actions.onActionClick(action)(event, action)
+                        }
                       />
                     ))}
                 </ScreenToolbarActionGroup>
@@ -87,19 +95,41 @@ export class CScreenToolbar extends React.Component<{}> {
           </>
         ) : null}
         <ScreenToolbarPusher />
-        <ScreenToolbarAction
+        {/*<ScreenToolbarAction
           icon={<Icon src="./icons/search.svg" />}
           label="Search"
-        />
-        <ScreenToolbarAction
-          onClick={this.handleLogoutClick}
-          icon={
-            <>
-              <Icon src="./icons/user.svg" />
-              {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
-            </>
-          }
-          label="User"
+        />*/}
+        <Dropdowner
+          style={{ width: "auto" }} // TODO: Move to stylesheet
+          trigger={({ refTrigger, setDropped }) => (
+            <ScreenToolbarAction
+              rootRef={refTrigger}
+              onClick={() => setDropped(true)}
+              //onClick={this.handleLogoutClick}
+              icon={
+                <>
+                  <Icon src="./icons/user.svg" />
+                  {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
+                </>
+              }
+              label={userName}
+            />
+          )}
+          content={() => (
+            <UserMenuDropdown>
+              <UserMenuBlock
+                userName={userName || "Logged user"}
+                actionItems={
+                  <>
+                    <DropdownItem isDisabled={true}>My profile</DropdownItem>
+                    <DropdownItem onClick={this.handleLogoutClick}>
+                      Log out
+                    </DropdownItem>
+                  </>
+                }
+              />
+            </UserMenuDropdown>
+          )}
         />
       </ScreenToolbar>
     );

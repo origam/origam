@@ -5,11 +5,13 @@ import cx from "classnames";
 export class ScreenToolbarAction extends React.Component<{
   icon: React.ReactNode;
   label?: React.ReactNode;
+  rootRef?: any;
   onClick?(event: any): void;
 }> {
   render() {
     return (
       <div
+        ref={this.props.rootRef}
         className={cx(S.root, { isLabelless: !this.props.label })}
         onClick={this.props.onClick}
       >
