@@ -158,8 +158,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   handleTextChange(event: any) {
     this.wasTextEdited = true;
     this.dirtyTextualValue = event.target.value;
-    this.elmDropdowner && this.elmDropdowner.setDropped(true);
-    this.loadItems();
+    if (this.dirtyTextualValue !== "") {
+      this.elmDropdowner && this.elmDropdowner.setDropped(true);
+      this.loadItems();
+    }
   }
 
   @action.bound loadItems() {
@@ -364,6 +366,11 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         case "ArrowDown":
           if (event.altKey) {
             this.elmDropdowner && this.elmDropdowner.setDropped(true);
+          }
+          break;
+        case "Enter":
+          if (this.dirtyTextualValue === "") {
+            this.props.onItemSelect && this.props.onItemSelect(event, null);
           }
           break;
       }
