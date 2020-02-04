@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
 
 namespace Origam.ServerCore.Configuration
 {
@@ -35,8 +34,8 @@ namespace Origam.ServerCore.Configuration
         public IdentityServerConfig(IConfiguration configuration)
         {
             IConfigurationSection identityServerSection = configuration.GetSection("IdentityServerConfig");
-            PathToJwtCertificate = identityServerSection.GetString("PathToJwtCertificate");
-            PasswordForJwtCertificate = identityServerSection.GetString("PasswordForJwtCertificate");
+            PathToJwtCertificate = identityServerSection.GetValue<string>("PathToJwtCertificate");
+            PasswordForJwtCertificate = identityServerSection.GetValue<string>("PasswordForJwtCertificate");
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
             GoogleClientSecret = identityServerSection["GoogleClientSecret"] ?? "";
         }

@@ -385,12 +385,12 @@ namespace Origam.ServerCore
                 }
 
                 return
-                    Task.FromResult<>(
+                    Task.FromResult<DateTimeOffset?>(
                         new DateTimeOffset(user.LastLockoutDate.Value)
                             .AddMinutes(lockoutConfig.LockoutTimeMinutes));
             }
             return 
-                Task.FromResult<>(user.IsLockedOut
+                Task.FromResult<DateTimeOffset?>(user.IsLockedOut
                     ? new DateTimeOffset(new DateTime(9999, 1, 1))
                     : new DateTimeOffset(new DateTime(10, 1, 1)));
         }

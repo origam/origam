@@ -21,29 +21,27 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
 using Microsoft.Extensions.Configuration;
-using Origam.Extensions;
 
 namespace Origam.ServerCore.Configuration
 {
     public class PasswordConfiguration
     {
-        public bool RequireDigit { get; } = true;
-        public int RequiredLength { get; } = 10;
-        public bool RequireNonAlphanumeric { get;} = true;
-        public bool RequireUppercase { get;} = true;
-        public bool RequireLowercase { get; } = true;
+        public bool RequireDigit { get; }
+        public int RequiredLength { get; } 
+        public bool RequireNonAlphanumeric { get;} 
+        public bool RequireUppercase { get;} 
+        public bool RequireLowercase { get; } 
 
         public PasswordConfiguration(IConfiguration configuration)
         {
             IConfigurationSection passwordSection = configuration.GetSection("PasswordConfig");
             
-            RequireDigit = passwordSection.GetBool("RequireDigit");
-            RequiredLength =  passwordSection.GetInt("RequiredLength");
-            RequireNonAlphanumeric =  passwordSection.GetBool("RequireNonAlphanumeric");
-            RequireUppercase =  passwordSection.GetBool("RequireUppercase");
-            RequireLowercase =  passwordSection.GetBool("RequireLowercase");
+            RequireDigit = passwordSection.GetValue("RequireDigit", true);
+            RequiredLength =  passwordSection.GetValue("RequiredLength", 10);
+            RequireNonAlphanumeric =  passwordSection.GetValue("RequireNonAlphanumeric", true);
+            RequireUppercase =  passwordSection.GetValue("RequireUppercase", true);
+            RequireLowercase =  passwordSection.GetValue("RequireLowercase", true);
         }
     }
 }
