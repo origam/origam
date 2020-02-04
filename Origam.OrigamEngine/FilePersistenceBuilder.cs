@@ -41,18 +41,18 @@ namespace Origam.OrigamEngine
 
         public IPersistenceService GetPersistenceService() => 
             GetPersistenceService(watchFileChanges: true,
-                checkRules: true);
+                checkRules: true,useBinFile: true);
 
         public IPersistenceService GetPersistenceService(bool watchFileChanges,
-            bool checkRules)
+            bool checkRules, bool useBinFile)
         {
             persistenceService = CreateNewPersistenceService(watchFileChanges,
-                checkRules);
+                checkRules,useBinFile);
             return persistenceService;
         }
 
         public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
-            bool checkRules)
+            bool checkRules,bool useBinFile)
         {
             List<ElementName> defaultFolders = new List<ElementName>
             {
@@ -63,7 +63,7 @@ namespace Origam.OrigamEngine
             return new FilePersistenceService(
                 defaultFolders: defaultFolders,
                 watchFileChanges: watchFileChanges,
-                checkRules: checkRules);
+                checkRules: checkRules,useBinFile: useBinFile);
         }
 
         public FilePersistenceService CreateNoBinFilePersistenceService()

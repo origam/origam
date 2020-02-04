@@ -1410,7 +1410,7 @@ namespace OrigamArchitect.Commands
 	            newPersistenceService =
 	                filePersistenceBuilder.GetPersistenceService(
                         watchFileChanges: false,
-                        checkRules: false);
+                        checkRules: false,useBinFile: false);
                 
 	            PersistAllData();
 
