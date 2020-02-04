@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -158,11 +159,11 @@ namespace Origam.ServerCore.Authorization
             mailService.SendNewUserToken(user,token);
         }
 
-        public async Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
+        public Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
         {
-            user.PasswordHash = password;
+            user.PasswordHash = coreUserManager.PasswordHasher.HashPassword(user, password);
             coreUserManager.CreateOrigamUser(user);
-            return InternalIdentityResult.Success;
+            return Task.FromResult(InternalIdentityResult.Success);
         }
 
         public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
