@@ -27,7 +27,7 @@ namespace Origam.ServerCore.Authorization
 {
     public static class UserTools
     {
-        public static User Create(DataRow origamUserRow, DataRow businessPartnerRow)
+        public static IOrigamUser Create(DataRow origamUserRow, DataRow businessPartnerRow)
         {
             User user = new User();
             if (origamUserRow["RecordUpdated"] != null)
