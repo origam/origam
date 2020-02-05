@@ -22,6 +22,7 @@ import { ILookupLoader } from "./types/ILookupLoader";
 import bind from "bind-decorator";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -333,6 +334,9 @@ export class DataView implements IDataView {
     const state = this.viewStateStack.pop();
     if(state && state.selectedRowId) {
       this.setSelectedRowId(state.selectedRowId);
+      if(!getSelectedRow(this)) {
+        this.selectFirstRow();
+      }
       getTablePanelView(this).scrollToCurrentCell();
     }
   }

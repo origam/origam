@@ -246,7 +246,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
     openedScreen.content.setFormScreen(screen);
     screen.printMasterDetailTree();
-    yield* this.applyData(args.initUIResult.data);
+    yield* this.applyData(args.initUIResult.data, true);
     getDataViewList(this).forEach(dv => dv.start());
   }
 
@@ -356,7 +356,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if (this.isReadData) {
         const api = getApi(this);
         const result = yield api.refreshSession(getSessionId(this));
-        yield* this.applyData(result);
+        yield* this.applyData(result, false);
         getFormScreen(this).setDirty(false);
       } else {
         yield* this.loadData(false);
@@ -452,14 +452,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  *applyData(data: any): Generator {
+  *applyData(data: any, selectFirstRow: boolean): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       console.log(entityKey, entityValue);
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         dataView.dataTable.clear();
         dataView.dataTable.setRecords((entityValue as any).data);
-        dataView.selectFirstRow();
+        if (selectFirstRow) {
+          dataView.selectFirstRow();
+        }
       }
     }
   }
