@@ -61,10 +61,8 @@ namespace Origam
             get
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                if (dataSet.Tables.Count != 0)
-                {
-                    xmlDocument.LoadXml(dataSet.GetXml());
-                }
+                // dataSet always returns xml, so it's always to save convert to xml
+                xmlDocument.LoadXml(dataSet.GetXml());                
                 return xmlDocument;
             }
         }
