@@ -523,7 +523,7 @@ namespace Origam.Workflow.WorkQueue
                 // transform
                 DataStructure resultStructure = persistence.SchemaProvider.RetrieveInstance(typeof(DataStructure), new ModelElementKey(new Guid("2f5e1853-e885-4177-ab6d-9da52123ae82"))) as DataStructure;
                 IXsltEngine transform = AsTransform.GetXsltEngine(
-                    XsltEngineType.XslTransform, persistence.SchemaProvider);
+                    XsltEngineType.XslCompiledTransform, persistence.SchemaProvider);
                 Hashtable parameters = new Hashtable();
                 if (recipient != null)
                 {
