@@ -193,6 +193,7 @@ export interface IApi {
 
   getRows(data: {
     MenuId: string;
+    SessionFormIdentifier: string;
     DataStructureEntityId: string;
     Filter: string;
     Ordering: string[][];

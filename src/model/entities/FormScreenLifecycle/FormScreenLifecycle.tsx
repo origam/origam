@@ -221,6 +221,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       for (let rootDataView of formScreen.rootDataViews) {
         const loadedData = yield api.getRows({
           MenuId: getMenuItemId(rootDataView),
+          SessionFormIdentifier: getSessionId(this),
           DataStructureEntityId: getDataStructureEntityId(rootDataView),
           Filter: "",
           Ordering: [],
