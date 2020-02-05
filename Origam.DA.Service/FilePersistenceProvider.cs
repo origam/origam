@@ -444,7 +444,9 @@ namespace Origam.DA.Service
         {
             object retrieveInstance = RetrieveInstance(
                 type: null,
-                primaryKey: new Key {{"Id", id}});
+                primaryKey: new Key {{"Id", id}}, 
+                useCache: true, 
+                throwNotFoundException: false);
             return retrieveInstance != null;
         }
 
