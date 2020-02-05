@@ -749,6 +749,16 @@ namespace Origam.ServerCore.Controller
                     query.MethodId = entityData.MenuItem.ListMethodId;
                     query.DataSourceId 
                         = entityData.MenuItem.ListDataStructure.Id;
+                    // get parameters from session store
+                    IDictionary parameters =
+                        sessionObjects.UIService.GetParameters(
+                        input.SessionFormIdentifier);
+                    foreach (var key in parameters.Keys)
+                    {
+                        query.Parameters.Add(
+                            new QueryParameter(key.ToString(),
+                            parameters[key]));
+                    }
                 }
                 else
                 {
