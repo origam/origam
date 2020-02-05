@@ -693,7 +693,7 @@ namespace Origam.Security.Identity
                 tokenResultNode.Attributes.Append(errorMessageAttr);
 
                 rootNode.AppendChild(tokenResultNode);
-                result = xmlDoc;
+                result = new Origam.XmlContainer(xmlDoc);
             }
         }
 
