@@ -1432,11 +1432,11 @@ namespace OrigamArchitect.Commands
 			    false, false, null);
 		    statusBar.SetStatusText("Converting documentation");
 
-		    DocumentationComplete allDocumenatation = ServiceManager.Services
+		    DocumentationComplete allDocumentation = ServiceManager.Services
 			    .GetService<IDocumentationService>()
 			    .GetAllDocumentation();
 		    
-		    docService.SaveDocumentation(allDocumenatation);
+		    docService.SaveDocumentation(allDocumentation);
 	    }
     }
 	
