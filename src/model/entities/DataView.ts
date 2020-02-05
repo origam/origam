@@ -21,8 +21,14 @@ import { IRowState } from "./types/IRowState";
 import { ILookupLoader } from "./types/ILookupLoader";
 import bind from "bind-decorator";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+
+class SavedViewState {
+  constructor(public selectedRowId: string | undefined) {}
+}
 
 export class DataView implements IDataView {
+
   $type_IDataView: 1 = 1;
 
   constructor(data: IDataViewData) {
@@ -133,7 +139,7 @@ export class DataView implements IDataView {
 
   @computed get panelViewActions() {
     const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
-    if(rowStateMayCauseFlicker) {
+    if (rowStateMayCauseFlicker) {
       return [];
     }
     return this.actions.filter(
@@ -143,7 +149,7 @@ export class DataView implements IDataView {
 
   @computed get toolbarActions() {
     const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
-    if(rowStateMayCauseFlicker) {
+    if (rowStateMayCauseFlicker) {
       return [];
     }
     return this.actions.filter(
@@ -310,8 +316,25 @@ export class DataView implements IDataView {
     this.selectedRowId = id;
   }
 
+  @action.bound
   setEditing(state: boolean): void {
     this.isEditing = state;
+  }
+
+  viewStateStack: SavedViewState[] = [];
+
+  @action.bound
+  saveViewState(): void {
+    this.viewStateStack.push(new SavedViewState(this.selectedRowId));
+  }
+
+  @action.bound
+  restoreViewState(): void {
+    const state = this.viewStateStack.pop();
+    if(state && state.selectedRowId) {
+      this.setSelectedRowId(state.selectedRowId);
+      getTablePanelView(this).scrollToCurrentCell();
+    }
   }
 
   @action.bound start() {

@@ -1,5 +1,13 @@
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, computed, observable, autorun, flow } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  autorun,
+  flow,
+  when,
+  reaction
+} from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -27,6 +35,7 @@ import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
 import { handleError } from "model/actions/handleError";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
+import _ from "lodash";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -36,6 +45,10 @@ enum IQuestionSaveDataAnswer {
 
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
+
+  constructor() {}
+
+  @observable allDataViewsSteady = true;
 
   @computed get isWorking() {
     return this.inFlow > 0;
@@ -150,13 +163,37 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *start(initUIResult: any): Generator {
+    let _steadyDebounceTimeout: any;
+    reaction(
+      () =>
+        getFormScreen(this).dataViews.every(dv => !dv.isWorking) &&
+        !this.isWorking,
+      allDataViewsSteady => {
+        if (allDataViewsSteady) {
+          _steadyDebounceTimeout = setTimeout(() => {
+            _steadyDebounceTimeout = undefined;
+            this.allDataViewsSteady = true;
+          }, 100);
+        } else {
+          this.allDataViewsSteady = false;
+          if (_steadyDebounceTimeout) {
+            clearTimeout(_steadyDebounceTimeout);
+            _steadyDebounceTimeout = undefined;
+          }
+        }
+      }
+    );
+    autorun(() => {
+      console.log("ALL DATA VIEWS STEADY:", this.allDataViewsSteady);
+    });
     // yield* this.initUI();
     yield* this.applyInitUIResult({ initUIResult });
     if (!this.isReadData) {
-      yield* this.loadData();
+      yield* this.loadData(true);
     }
     yield* this.startAutorefreshIfNeeded();
   }
+
   /*
   *initUI() {
     try {
@@ -213,7 +250,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     getDataViewList(this).forEach(dv => dv.start());
   }
 
-  *loadData() {
+  *loadData(selectFirstRow: boolean) {
     try {
       this.inFlow++;
       const api = getApi(this);
@@ -231,7 +268,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         });
         rootDataView.dataTable.clear();
         rootDataView.dataTable.setRecords(loadedData);
-        rootDataView.selectFirstRow();
+        if (selectFirstRow) {
+          rootDataView.selectFirstRow();
+        }
       }
     } finally {
       this.inFlow--;
@@ -312,6 +351,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *refreshSession() {
     // TODO: Refresh lookups and rowstates !!!
     try {
+      getFormScreen(this).dataViews.forEach(dv => dv.saveViewState());
       this.inFlow++;
       if (this.isReadData) {
         const api = getApi(this);
@@ -319,12 +359,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.applyData(result);
         getFormScreen(this).setDirty(false);
       } else {
-        yield* this.loadData();
+        yield* this.loadData(false);
       }
-      yield* refreshWorkQueues(this)();
     } finally {
       this.inFlow--;
+      setTimeout(async () => {
+        console.log(getFormScreen(this).dataViews.map(dv => !dv.isWorking));
+        await when(() => this.allDataViewsSteady);
+        console.log("Refreshing view state.");
+        getFormScreen(this).dataViews.forEach(dv => dv.restoreViewState());
+      }, 10);
     }
+    yield* refreshWorkQueues(this)();
   }
 
   *executeAction(

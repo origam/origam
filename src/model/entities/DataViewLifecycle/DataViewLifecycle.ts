@@ -20,7 +20,17 @@ import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
 
-  @observable inFlow = 0;
+  @observable _inFlow = 0;
+
+  set inFlow(value: number) {
+    // console.log('Setting inFlow to', value)
+    this._inFlow = value;
+  }
+
+  get inFlow() {
+    return this._inFlow;
+  }
+
   @computed get isWorking() {
     return this.inFlow > 0;
   }
@@ -60,12 +70,29 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }.bind(this)
   );
 
-  onSelectedRowIdChange = _.debounce(this.onSelectedRowIdChangeImm, 100);
+  _selectedRowIdChangeDebounceTimeout: any;
+  @action.bound
+  onSelectedRowIdChange() {
+    if (this._selectedRowIdChangeDebounceTimeout) {
+      clearTimeout(this._selectedRowIdChangeDebounceTimeout);
+    } else {
+      this.inFlow++;
+    }
+    this._selectedRowIdChangeDebounceTimeout = setTimeout(() => {
+      this.onSelectedRowIdChangeImm();
+      this._selectedRowIdChangeDebounceTimeout = undefined;
+      this.inFlow--;
+    }, 100);
+  }
 
   @action.bound startSelectedRowReaction() {
-    return reaction(() => {
-      return getSelectedRowId(this);
-    }, this.onSelectedRowIdChange);
+    const self = this;
+    return reaction(
+      () => {
+        return getSelectedRowId(this);
+      },
+      () => self.onSelectedRowIdChange()
+    );
   }
 
   *navigateAsChild() {
@@ -110,7 +137,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         ParentRecordId: getParentRowId(this)!,
         RootRecordId: getMasterRowId(this)!
       });
-      console.log(data);
       const dataView = getDataView(this);
       dataView.dataTable.clear();
       dataView.dataTable.setRecords(data);

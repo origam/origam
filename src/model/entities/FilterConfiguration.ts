@@ -427,7 +427,6 @@ export class FilterConfiguration implements IFilterConfiguration {
           ];
         },
         () => {
-          console.log(this.dataView!.modelInstanceId);
           if (
             !this.dataView.selectedRow &&
             this.dataView.dataTable.rows.length > 0
