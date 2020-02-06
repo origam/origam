@@ -86,9 +86,7 @@ namespace Origam.ServerCore
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
             services.AddScoped<SignInManager<IOrigamUser>>();
             services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
-            services.AddScoped<CoreUserManager>();
-            services.AddScoped<UserManager<IOrigamUser>>(x =>
-                x.GetRequiredService<CoreUserManager>());
+            services.AddScoped<UserManager<IOrigamUser>>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();

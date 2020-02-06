@@ -3,7 +3,10 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Events;
@@ -16,10 +19,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Origam.DA;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
+using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.IdentityServerGui.Account
 {
@@ -38,6 +44,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IMailService _mailService;
         private readonly IdentityGuiConfig _identityGuiConfig;
         private readonly UserConfig _userConfig;
+
 
         public AccountController(
             UserManager<IOrigamUser> userManager,
@@ -142,7 +149,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             }
             if (ModelState.IsValid)
             {
-                var user = new User
+                IOrigamUser user = new User
                 {
                     UserName = model.UserName,
                     Email = model.Email,
@@ -151,7 +158,8 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     RoleId = _userConfig.NewUserRoleId
                 };
                 IdentityServiceAgent.ServiceProvider = _serviceProvider;
-                var result = await _userManager.CreateAsync(user, model.Password);
+                IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
+                user = await _userManager.FindByNameAsync(user.UserName);
                 if (result.Succeeded)
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -169,12 +177,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [AllowAnonymous]
         public IActionResult RegisterInitialUser()
         {
-            if (!(_userManager is CoreUserManager coreUserManager))
-            {
-                throw new InvalidCastException($"{nameof(_userManager)} must be of type {nameof(CoreUserManager)}");
-            }
-
-            if (!coreUserManager.IsInitialSetupNeeded())
+            if (!UserTools.IsInitialSetupNeeded())
             {
                 return Ok("The application has been already set up.");
             }
@@ -188,19 +191,14 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterInitialUser(RegisterViewModel model)
         {
-            if (!(_userManager is CoreUserManager coreUserManager))
-            {
-                throw new InvalidCastException($"{nameof(_userManager)} must be of type {nameof(CoreUserManager)}");
-            }
-            
-            if (!coreUserManager.IsInitialSetupNeeded())
+            if (!UserTools.IsInitialSetupNeeded())
             {
                 return Ok("The application has been already set up.");
             }
             
             if (ModelState.IsValid)
             {
-                var user = new User
+                IOrigamUser user = new User
                 {
                     UserName = model.UserName,
                     Email = model.Email,
@@ -209,19 +207,21 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
                 };
                 IdentityServiceAgent.ServiceProvider = _serviceProvider;
-                var result = await _userManager.CreateAsync(user, model.Password);
+                IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
+                user = await _userManager.FindByNameAsync(user.UserName);
                 if (result.Succeeded)
                 {
                     _signInManager.SignInAsync(user, false);
                     string emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     await _userManager.ConfirmEmailAsync(user, emailConfirmToken);
-                    coreUserManager.SetInitialSetupComplete();
+                    UserTools.SetInitialSetupComplete();
                     return Redirect("/");
                 }
                 AddErrors(result);
             }
             return View(model);
         }
+
         
         // GET: /Account/ConfirmEmail
         [HttpGet]

@@ -36,12 +36,12 @@ namespace Origam.ServerCore.Authorization
 {
     public class CoreManagerAdapter: IManager
     {
-        private readonly CoreUserManager coreUserManager;
+        private readonly UserManager<IOrigamUser> coreUserManager;
         private readonly IMailService mailService;
         protected static readonly ILog log
             = LogManager.GetLogger(typeof(CoreManagerAdapter));
 
-        public CoreManagerAdapter(CoreUserManager coreUserManager,
+        public CoreManagerAdapter(UserManager<IOrigamUser> coreUserManager,
             IMailService mailService)
         {
             this.coreUserManager = coreUserManager;
@@ -161,8 +161,7 @@ namespace Origam.ServerCore.Authorization
 
         public Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
         {
-            user.PasswordHash = coreUserManager.PasswordHasher.HashPassword(user, password);
-            coreUserManager.CreateOrigamUser(user);
+            coreUserManager.CreateAsync(user, password);
             return Task.FromResult(InternalIdentityResult.Success);
         }
 

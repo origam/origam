@@ -20,13 +20,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Security.Claims;
+using System.Threading;
+using Microsoft.AspNetCore.Identity;
+using Origam.DA;
 using Origam.Security.Common;
+using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Authorization
 {
     public static class UserTools
     {
+        private const string INITIAL_SETUP_PARAMETERNAME = "InitialUserCreated";
+        public static readonly Guid CREATE_USER_WORKFLOW 
+            = new Guid("2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54");
+        
         public static IOrigamUser Create(DataRow origamUserRow, DataRow businessPartnerRow)
         {
             User user = new User();
@@ -112,5 +123,59 @@ namespace Origam.ServerCore.Authorization
                 ? new DateTime(1900,1,1) 
                 : (DateTime)value;
         }
+
+        public static IdentityResult RunCreateUserWorkFlow(string password, IOrigamUser user)
+        {
+            try
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, "origam_server"),
+                    new Claim(ClaimTypes.NameIdentifier, "1"),
+                    new Claim("name", "origam_server"),
+                };
+                var identity = new ClaimsIdentity(claims, "TestAuthType");
+                Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
+                
+                user.BusinessPartnerId = Guid.NewGuid().ToString();
+
+                QueryParameterCollection parameters = new QueryParameterCollection();
+                parameters.Add(new QueryParameter("Id", user.BusinessPartnerId));
+                parameters.Add(new QueryParameter("UserName", user.UserName));
+                parameters.Add(new QueryParameter("Password", password));
+                parameters.Add(new QueryParameter("FirstName", user.FirstName));
+                parameters.Add(new QueryParameter("Name", user.Name));
+                parameters.Add(new QueryParameter("Email", user.Email));
+                parameters.Add(new QueryParameter("RoleId", user.RoleId));
+                parameters.Add(new QueryParameter("RequestEmailConfirmation",
+                    !user.EmailConfirmed));
+                // Will create new line in BusinessPartner and OrigamUser
+                WorkflowService.ExecuteWorkflow(
+                    CREATE_USER_WORKFLOW, parameters, null);
+                return IdentityResult.Success;
+            }
+            catch (Exception e)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError {Description = e.Message}
+                );
+            }
+        }
+        
+                
+        public static void SetInitialSetupComplete()
+        {
+            ServiceManager.Services
+                .GetService<IParameterService>()
+                .SetCustomParameterValue(INITIAL_SETUP_PARAMETERNAME, true,
+                    Guid.Empty, 0, null, true, 0, 0, null);
+        }
+        public static bool IsInitialSetupNeeded()
+        {
+            return !(bool)ServiceManager.Services
+                .GetService<IParameterService>()
+                .GetParameterValue(INITIAL_SETUP_PARAMETERNAME);
+        }
+
     }
 }
