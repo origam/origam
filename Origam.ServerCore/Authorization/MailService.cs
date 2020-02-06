@@ -36,9 +36,9 @@ namespace Origam.ServerCore.Authorization
         public MailService(IOptions<UserConfig> userConfig, IConfiguration configuration)
         {
             string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
-                .Replace(";",",")
-                .Split(",")
-                .FirstOrDefault(url => url.StartsWith("https")) 
+                ?.Replace(";",",")
+                ?.Split(",")
+                ?.FirstOrDefault(url => url.StartsWith("https")) 
                 ?? throw new ArgumentException("Could not find server's https url");
             mailSender = new AccountMailSender(
                 portalBaseUrl: baseUrl,
