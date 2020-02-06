@@ -61,7 +61,7 @@ namespace Origam
             get
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                // dataSet always returns xml, so it's always to save convert to xml
+                // dataSet always returns xml, so it's always safe to convert to xml
                 xmlDocument.LoadXml(dataSet.GetXml());                
                 return xmlDocument;
             }
