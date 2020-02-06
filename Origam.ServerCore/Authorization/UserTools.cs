@@ -42,8 +42,8 @@ namespace Origam.ServerCore.Authorization
             user.UserName = (string)origamUserRow["UserName"];
             user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
             user.EmailConfirmed = (bool)origamUserRow["EmailConfirmed"];
-            user.LastLockoutDate = GetValue<DateTime>(origamUserRow,"LastLockoutDate" );
-            user.LastLoginDate = GetValue<DateTime>(origamUserRow,"LastLoginDate");
+            user.LastLockoutDate = GetDate(origamUserRow,"LastLockoutDate" );
+            user.LastLoginDate = GetDate(origamUserRow,"LastLoginDate");
             user.IsLockedOut = (bool)origamUserRow["IsLockedOut"];
             user.ProviderUserKey = (Guid)origamUserRow["refBusinessPartnerId"];
             user.BusinessPartnerId = user.ProviderUserKey.ToString();
@@ -105,12 +105,12 @@ namespace Origam.ServerCore.Authorization
             row[columnName] = dateTime;
         }
 
-        private static T GetValue<T>(DataRow row, string propertyName)
+        private static DateTime GetDate(DataRow row, string propertyName)
         {
             var value = row[propertyName];
             return value is DBNull 
-                ? default 
-                : (T)value;
+                ? new DateTime(1900,1,1) 
+                : (DateTime)value;
         }
     }
 }
