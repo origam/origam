@@ -70,12 +70,10 @@ namespace Origam.ServerCore.Controller
         #region Endpoints
         public UIServiceController(
             SessionObjects sessionObjects,
-            IServiceProvider serviceProvider,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log) : base(log)
         {
             this.sessionObjects = sessionObjects;
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
             this.localizer = localizer;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();

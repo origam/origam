@@ -42,6 +42,8 @@ namespace Origam
             _DIServiceProvider = diServiceProvider;
         }
 
+        public static IServiceProvider DIServiceProvider => _DIServiceProvider;
+
         public static IOrigamAuthorizationProvider GetAuthorizationProvider()
 		{
 			if(_authorizationProvider == null)

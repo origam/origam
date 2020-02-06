@@ -53,7 +53,7 @@ namespace Origam.ServerCore.Controller
         private readonly IServiceProvider serviceProvider;
 
         public UserController(CoreUserManager userManager, SignInManager<IOrigamUser> signInManager,
-            IConfiguration configuration, IServiceProvider serviceProvider,
+            IConfiguration configuration,
             IMailService mailService, IOptions<UserConfig> userConfig)
         {
             this.userManager = userManager;
@@ -61,7 +61,6 @@ namespace Origam.ServerCore.Controller
             this.mailService = mailService;
             this.userConfig = userConfig.Value;
             this.configuration = configuration;
-            this.serviceProvider = serviceProvider;
         }
 
         [AllowAnonymous]
@@ -72,7 +71,6 @@ namespace Origam.ServerCore.Controller
             {
                 return BadRequest("Passwords don't match");
             }
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
             if (!userManager.IsInitialSetupNeeded())
             {
                 return BadRequest("Initial user already exists");
@@ -102,7 +100,6 @@ namespace Origam.ServerCore.Controller
             {
                 return BadRequest("Passwords don't match");
             }
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
             var newUser = new User 
             {
                 FirstName = userData.FirstName,
@@ -172,7 +169,6 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public async Task<IActionResult> RequestPasswordReset([FromBody]RequestPasswordResetData passwordData) 
         {
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
             var user = await userManager.FindByEmailAsync(passwordData.Email);
             if (user == null)
             {
