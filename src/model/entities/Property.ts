@@ -42,6 +42,7 @@ export class Property implements IProperty {
   isTree?: boolean | undefined;
   formatterPattern: string = "";
   customNumericFormat: string = "";
+  gridColumnWidth: number = 100;
   @observable columnWidth: number = 100;
   identifier?: string;
   lookup?: ILookup;

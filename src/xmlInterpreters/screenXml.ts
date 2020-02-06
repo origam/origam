@@ -188,6 +188,8 @@ export function interpretScreenXml(
               : "",
             customNumericFormat: property.attributes.CustomNumericFormat,
             identifier: property.attributes.Identifier,
+            gridColumnWidth: property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100,
+            columnWidth: property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100,
             lookup: !property.attributes.LookupId
               ? undefined
               : new Lookup({

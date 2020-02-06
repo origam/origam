@@ -26,7 +26,8 @@ export interface IPropertyData {
   isPassword: boolean;
   isRichText: boolean;
   maxLength: number;
-
+  gridColumnWidth: number;
+  columnWidth: number;
   formatterPattern: string;
   customNumericFormat?: string;
 
@@ -43,7 +44,7 @@ export interface IProperty extends IPropertyData {
   dataSourceIndex: number;
   dataIndex: number;
   isLookup: boolean;
-  columnWidth: number;
+  
   linkToMenuId?: string;
   isLink: boolean;
   nameOverride: string | null | undefined;
