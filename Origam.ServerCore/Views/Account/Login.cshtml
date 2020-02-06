@@ -27,32 +27,32 @@
                         </div>
                     }
                     <div class="input-row">
-                        <a class="btn normal-size primary submit-link" value="login" href=# >Login</a>
-                        <a class="btn normal-size primary submit-link" value="cancel" href=# >Cancel</a>
+                        <a class="btn normal-size primary submit-link" value="login" href=#>Login</a>
+                        <a class="btn normal-size primary submit-link" value="cancel" href=#>Cancel</a>
                     </div>
                 </form>
             </div>
         </div>
-        @if (Model.VisibleExternalProviders.Any())
-        {
-            <div class="detailview-module with-title">
-                <h2>External Login</h2>
-                <div class="input-form">
-                    <div class="input-row">
-                        @foreach (var provider in Model.VisibleExternalProviders)
-                        {
-                            <a class="btn btn-default external-login-link"
-                               asp-controller="External"
-                               asp-action="Challenge"
-                               asp-route-provider="@provider.AuthenticationScheme"
-                               asp-route-returnUrl="@Model.ReturnUrl">
-                                @provider.DisplayName
-                            </a>
-                        }
-                    </div>
-                </div>
+    </div>
+}
+@if (Model.VisibleExternalProviders.Any())
+{
+    <div class="detailview-module with-title">
+        <h2>External Login</h2>
+        <div class="input-form">
+            <div class="input-row">
+                @foreach (var provider in Model.VisibleExternalProviders)
+                {
+                    <a class="btn btn-default external-login-link"
+                       asp-controller="External"
+                       asp-action="Challenge"
+                       asp-route-provider="@provider.AuthenticationScheme"
+                       asp-route-returnUrl="@Model.ReturnUrl">
+                        @provider.DisplayName
+                    </a>
+                }
             </div>
-        }
+        </div>
     </div>
 }
 
@@ -66,3 +66,4 @@
         There are no login schemes configured for this client.
     </div>
 }
+
