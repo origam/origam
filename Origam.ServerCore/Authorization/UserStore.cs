@@ -119,11 +119,10 @@ namespace Origam.ServerCore
         public Task<IOrigamUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             DataRow origamUserRow = FindOrigamUserRowById(userId);
-            if (origamUserRow == null) return null;
+            if (origamUserRow == null)  Task.FromResult<IOrigamUser>(null);
 
             DataRow businessPartnerRow = FindBusinessPartnerRowById(userId);
-            if (businessPartnerRow == null) return null;
-
+            if (businessPartnerRow == null) Task.FromResult<IOrigamUser>(null);
             return Task.FromResult(
                 UserTools.Create(
                 origamUserRow: origamUserRow, 
@@ -133,11 +132,11 @@ namespace Origam.ServerCore
         public Task<IOrigamUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             var origamUserRow = FindOrigamUserRowByUserName(normalizedUserName);
-            if (origamUserRow == null) return null;
+            if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
 
 
             var businessPartnerRow = FindBusinessPartnerRowByUserName(normalizedUserName);
-            if (businessPartnerRow == null) return null;
+            if (businessPartnerRow == null)  Task.FromResult<IOrigamUser>(null);
 
             return Task.FromResult(
                 UserTools.Create(
@@ -213,11 +212,11 @@ namespace Origam.ServerCore
         public Task<IOrigamUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             DataRow businessPartnerRow = FindBusinessPartnerRowByEmail(normalizedEmail);
-            if (businessPartnerRow == null) return null;
+            if (businessPartnerRow == null) Task.FromResult<IOrigamUser>(null);
 
             string userName = (string)businessPartnerRow["UserName"];
             DataRow origamUserRow = FindOrigamUserRowByUserName(userName);
-            if (origamUserRow == null) return null;
+            if (origamUserRow == null) Task.FromResult<IOrigamUser>(null);
             
             return Task.FromResult(
                 UserTools.Create(
@@ -381,7 +380,12 @@ namespace Origam.ServerCore
             {
                 if (!user.LastLockoutDate.HasValue)
                 {
-                    return null;
+                    Task.FromResult<DateTimeOffset?>(null);
+                }
+
+                if (user.LastLockoutDate.Value == DateTime.MinValue)
+                {
+                    return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(new DateTime(1900,1,1)));
                 }
 
                 return
