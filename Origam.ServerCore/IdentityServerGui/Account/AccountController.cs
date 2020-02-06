@@ -256,58 +256,6 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             return View();
         }
         
-        // GET: /Account/ProcessInvitation
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ProcessInvitation(string code = null)
-        {
-            return code == null ? View("Error") : View();
-        }
-
-        // POST: /Account/ProcessInvitation
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProcessInvitation(RegisterViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            IdentityServiceAgent.ServiceProvider = _serviceProvider;
-            var newUser = new User 
-            {
-                UserName = model.UserName,
-                Email = model.Email,
-                RoleId = _userConfig.NewUserRoleId
-            };
-            var userCreationResult = await _userManager.CreateAsync(newUser, model.Password);
-            var emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            await _userManager.ConfirmEmailAsync(newUser, emailConfirmToken);
-            if (userCreationResult.Succeeded)
-            {
-                return RedirectToAction(nameof(AccountController.ProcessInvitationConfirmation), "Account");
-            }
-            AddErrors(userCreationResult);
-            return View();
-        }
-        
-        // GET: /Account/ResetPasswordConfirmation
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ProcessInvitationConfirmation()
-        {
-            return View();
-        }
-        
-        // GET: /Account/ResetPassword
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
-        {
-            return code == null ? View("Error") : View();
-        }
-        
         // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
