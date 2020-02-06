@@ -2,7 +2,7 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Transformation
     abstract="false"
-    engineType="XslTransform"
+    engineType="XslCompiledTransform"
     x:id="3199ad86-4ebf-4d7d-8378-aaa73f583f1b"
     name="WQ_Unlock"
     text="-***-ExternalFile:WQ_Unlock.origam___text___3199ad86-4ebf-4d7d-8378-aaa73f583f1b.xslt"

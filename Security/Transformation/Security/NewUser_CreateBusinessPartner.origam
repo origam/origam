@@ -2,7 +2,7 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Transformation
     abstract="false"
-    engineType="XslTransform"
+    engineType="XslCompiledTransform"
     x:id="21934fda-a12e-4560-91b2-5410c8277c59"
     name="NewUser_CreateBusinessPartner"
     text="-***-ExternalFile:NewUser_CreateBusinessPartner.origam___text___21934fda-a12e-4560-91b2-5410c8277c59.xslt"

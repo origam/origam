@@ -2,7 +2,7 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Transformation
     abstract="false"
-    engineType="XslTransform"
+    engineType="XslCompiledTransform"
     x:id="868bc2d5-073d-4060-bc75-dba807303525"
     name="TwoScalarValues_AreEqual"
     text="-***-ExternalFile:TwoScalarValues_AreEqual.origam___text___868bc2d5-073d-4060-bc75-dba807303525.xslt"

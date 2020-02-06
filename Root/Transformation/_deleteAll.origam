@@ -2,7 +2,7 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Transformation
     abstract="false"
-    engineType="XslTransform"
+    engineType="XslCompiledTransform"
     x:id="fd51c50d-c167-4144-8af7-acce5bc84103"
     name="_deleteAll"
     text="-***-ExternalFile:_deleteAll.origam___text___fd51c50d-c167-4144-8af7-acce5bc84103.xslt"

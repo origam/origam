@@ -2,7 +2,7 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <Transformation
     abstract="false"
-    engineType="XslTransform"
+    engineType="XslCompiledTransform"
     x:id="dcf49d56-62a7-4d29-adc9-c664fb65cf06"
     name="_copyAll"
     text="-***-ExternalFile:_copyAll.origam___text___dcf49d56-62a7-4d29-adc9-c664fb65cf06.xslt"
