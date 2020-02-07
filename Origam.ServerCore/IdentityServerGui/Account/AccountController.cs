@@ -211,7 +211,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 user = await _userManager.FindByNameAsync(user.UserName);
                 if (result.Succeeded)
                 {
-                    _signInManager.SignInAsync(user, false);
+                    await _signInManager.SignInAsync(user, false);
                     string emailConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     await _userManager.ConfirmEmailAsync(user, emailConfirmToken);
                     UserTools.SetInitialSetupComplete();
