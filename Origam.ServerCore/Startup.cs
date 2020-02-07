@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Origam.Security.Common;
 using Origam.Security.Identity;
@@ -134,7 +135,7 @@ namespace Origam.ServerCore
         }
 
         public void Configure(
-            IApplicationBuilder app, IHostingEnvironment env, 
+            IApplicationBuilder app, IWebHostEnvironment env, 
             ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLog4Net();
