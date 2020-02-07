@@ -129,7 +129,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return Ok("User registration is not allowed on this site.");
+                return View("Error", new Error("User registration is not allowed on this site."));
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -145,7 +145,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return Ok("User registration is not allowed on this site.");
+                return View("Error", new Error("User registration is not allowed on this site."));
             }
             if (ModelState.IsValid)
             {
@@ -179,7 +179,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!UserTools.IsInitialSetupNeeded())
             {
-                return Ok("The application has been already set up.");
+                return View("Error", new Error("The application has been already set up."));
             }
             return View();
         }
@@ -193,7 +193,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!UserTools.IsInitialSetupNeeded())
             {
-                return Ok("The application has been already set up.");
+                return View("Error", new Error("The application has been already set up."));
             }
             
             if (ModelState.IsValid)
@@ -230,7 +230,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return Ok("User registration is not allowed on this site.");
+                return View("Error", new Error("User registration is not allowed on this site."));
             }
             if (userId == null || code == null)
             {
