@@ -226,9 +226,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             //var user = _users.AutoProvisionUser(provider, providerUserId, claims.ToList());
             // TODO: implement AutoProvisionUser using _userManager
-            throw new NotImplementedException(); 
-            IOrigamUser user = null;   
-            return user;
+            throw new NotImplementedException();
         }
 
         private void ProcessLoginCallbackForOidc(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
