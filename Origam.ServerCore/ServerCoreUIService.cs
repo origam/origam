@@ -43,6 +43,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Origam.Schema.WorkflowModel;
+using Origam.ServerCore.Resources;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore

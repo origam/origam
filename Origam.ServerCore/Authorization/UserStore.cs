@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Origam.DA;
 using Origam.DA.Service;
@@ -37,6 +38,7 @@ using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
+using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -59,11 +61,14 @@ namespace Origam.ServerCore
             = new Guid("4e46424b-349f-4314-bc75-424206cd35b0");
         public static readonly Guid GET_BUSINESS_PARTNER_BY_USER_EMAIL
             = new Guid("46fd2484-4506-45a2-8a96-7855ea116210");
-
+        
+        private readonly IStringLocalizer<SharedResources> localizer;
         private readonly UserLockoutConfig lockoutConfig;
 
-        public UserStore(IOptions<UserLockoutConfig> userLockoutConfig)
+        public UserStore(IOptions<UserLockoutConfig> userLockoutConfig,
+            IStringLocalizer<SharedResources> localizer)
         {
+            this.localizer = localizer;
             lockoutConfig = userLockoutConfig.Value;
         }
 
@@ -166,7 +171,7 @@ namespace Origam.ServerCore
                 return 
                     Task.FromResult(
                         IdentityResult.Failed( 
-                             new IdentityError{Description = Resources.ErrorUserNotFound}));
+                             new IdentityError{Description = localizer["ErrorUserNotFound"]}));
             }
             UserTools.UpdateOrigamUserRow(user, origamUserRow);
             DataService.StoreData(ORIGAM_USER_DATA_STRUCTURE,

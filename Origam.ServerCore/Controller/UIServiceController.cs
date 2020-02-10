@@ -49,6 +49,7 @@ using IdentityServer4;
 using Microsoft.AspNetCore.Localization;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
+using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Controller
 {

@@ -6,7 +6,7 @@ using System;
 
 namespace Origam.ServerCore.IdentityServerGui.Account
 {
-    public class AccountOptions
+    public static class AccountOptions
     {
         public static bool AllowLocalLogin = true;
         public static bool AllowRememberLogin = true;
@@ -19,8 +19,5 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         public static readonly string WindowsAuthenticationSchemeName = Microsoft.AspNetCore.Server.IISIntegration.IISDefaults.AuthenticationScheme;
         // if user uses windows auth, should we load the groups from windows
         public static bool IncludeWindowsGroups = false;
-
-        public static readonly string InvalidCredentialsErrorMessage = "Invalid username or password";
-        public static readonly string UserLockoutErrorMessage = "User is locked out";
     }
 }

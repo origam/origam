@@ -1,4 +1,7 @@
-﻿@model Origam.ServerCore.IdentityServerGui.Account.LoggedOutViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.ServerCore.Resources
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+@model Origam.ServerCore.IdentityServerGui.Account.LoggedOutViewModel
 
 @{ 
     // set this so the layout rendering sees an anonymous user
@@ -7,7 +10,7 @@
 
 
 <h3 class="confirmation-text">
- You are now logged out.
+    @SharedLocalizer["LoggedOut"]
 </h3>
 
 @if (Model.PostLogoutRedirectUri != null)

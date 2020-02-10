@@ -34,6 +34,7 @@ using Origam.BI;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Server;
+using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 

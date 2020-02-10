@@ -28,9 +28,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Controllers;
+using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Authorization
 {
@@ -40,12 +42,14 @@ namespace Origam.ServerCore.Authorization
         private readonly IMailService mailService;
         protected static readonly ILog log
             = LogManager.GetLogger(typeof(CoreManagerAdapter));
+        private readonly IStringLocalizer<SharedResources> localizer;
 
         public CoreManagerAdapter(UserManager<IOrigamUser> coreUserManager,
-            IMailService mailService)
+            IMailService mailService, IStringLocalizer<SharedResources> localizer)
         {
             this.coreUserManager = coreUserManager;
             this.mailService = mailService;
+            this.localizer = localizer;
         }
 
         public async Task<IOrigamUser> FindByNameAsync(string name)
@@ -179,7 +183,7 @@ namespace Origam.ServerCore.Authorization
             {
                 return new TokenResult
                 { Token = "", UserName = "",
-                    ErrorMessage = Resources.EmailInvalid,
+                    ErrorMessage = localizer["EmailInvalid"], 
                     TokenValidityHours = 0};
             }
 

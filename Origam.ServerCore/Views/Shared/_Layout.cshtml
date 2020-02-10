@@ -1,4 +1,7 @@
-﻿@using IdentityServer4.Extensions
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.ServerCore.Resources
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+@using IdentityServer4.Extensions
 @using Microsoft.Extensions.Options
 @using Origam.ServerCore.Configuration
 @inject IOptions<IdentityGuiConfig> ConfigOptions;
@@ -16,7 +19,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IdentityServer4</title>
+    <title>@SharedLocalizer["IdentityServerTitle"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/css.css" />
     <link rel="stylesheet" href="~/css/main.css" />
@@ -39,7 +42,7 @@
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a asp-action="Logout" asp-controller="Account">Logout</a></li>
+                        <li><a asp-action="Logout" asp-controller="Account">@SharedLocalizer["Logout"]</a></li>
                     </ul>
                 </li>
             </ul>

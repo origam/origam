@@ -18,12 +18,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Origam.DA;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
+using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
@@ -42,8 +44,8 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IEventService _events;
         private readonly IServiceProvider _serviceProvider;
         private readonly IMailService _mailService;
-        private readonly IdentityGuiConfig _identityGuiConfig;
         private readonly UserConfig _userConfig;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
 
         public AccountController(
@@ -54,8 +56,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events, IServiceProvider serviceProvider,
             IMailService mailService,
-            IOptions<IdentityGuiConfig> identityGuiConfig,
-            IOptions<UserConfig> userConfig)
+            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -65,8 +66,8 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _events = events;
             _serviceProvider = serviceProvider;
             _mailService = mailService;
+            this._localizer = localizer;
             _userConfig = userConfig.Value;
-            _identityGuiConfig = identityGuiConfig.Value;
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return View("Error", new Error("User registration is not allowed on this site."));
+                return View("Error", new Error(_localizer["RegistrationNotAllowed"]));
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -145,7 +146,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return View("Error", new Error("User registration is not allowed on this site."));
+                return View("Error", new Error(_localizer["RegistrationNotAllowed"]));
             }
             if (ModelState.IsValid)
             {
@@ -179,7 +180,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!UserTools.IsInitialSetupNeeded())
             {
-                return View("Error", new Error("The application has been already set up."));
+                return View("Error", new Error(_localizer["AlreadySetUp"]));
             }
             return View();
         }
@@ -193,7 +194,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!UserTools.IsInitialSetupNeeded())
             {
-                return View("Error", new Error("The application has been already set up."));
+                return View("Error", new Error(_localizer["AlreadySetUp"]));
             }
             
             if (ModelState.IsValid)
@@ -230,7 +231,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return View("Error", new Error("User registration is not allowed on this site."));
+                return View("Error", new Error(_localizer["RegistrationNotAllowed"]));
             }
             if (userId == null || code == null)
             {
@@ -370,12 +371,12 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 else if (result.IsLockedOut)
                 {
                     await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "user is lockedout", clientId:context?.ClientId));
-                    ModelState.AddModelError(string.Empty, AccountOptions.UserLockoutErrorMessage);
+                    ModelState.AddModelError(string.Empty, _localizer["UserLockedOut"]);
                 }
                 else
                 {
                     await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
-                    ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                    ModelState.AddModelError(string.Empty, _localizer["InvalidLogin"]);
                 }
             }
 

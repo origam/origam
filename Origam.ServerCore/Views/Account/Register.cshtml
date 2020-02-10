@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.ServerCore.Resources
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
 @model Origam.ServerCore.IdentityServerGui.Account.RegisterViewModel
 
 @{
@@ -6,7 +9,7 @@
 
 <div class="detailview-container">
     <div class="detailview-module with-title">
-        <h2>Create a new account</h2>
+        <h2>@SharedLocalizer["CreateAccount"]</h2>
         <div class="input-form">
             <form asp-controller="Account" asp-action="Register">
                 <div class="input-row">
@@ -35,7 +38,7 @@
                 </div>
                 
                 <div class="input-row">
-                    <a class="btn normal-size primary submit-link" href=#>Create</a>
+                    <a class="btn normal-size primary submit-link" href=#>@SharedLocalizer["Create"]</a>
                 </div>
             </form>
         </div>

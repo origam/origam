@@ -30,6 +30,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,6 +41,7 @@ using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
+using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore
 {
@@ -88,7 +92,7 @@ namespace Origam.ServerCore
             services.AddScoped<SignInManager<IOrigamUser>>();
             services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
             services.AddScoped<UserManager<IOrigamUser>>();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddLocalization();
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
 
@@ -118,7 +122,12 @@ namespace Origam.ServerCore
                 .AddAspNetIdentity<IOrigamUser>();
 
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddMvc(options => options.EnableEndpointRouting = false)
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization(options => {
+                    options.DataAnnotationLocalizerProvider = (type, factory) =>
+                        factory.Create(typeof(SharedResources));
+                });
             var authenticationBuilder = services
                 .AddLocalApiAuthentication()
                 .AddAuthentication();

@@ -1,4 +1,7 @@
-﻿
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.ServerCore.Resources
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+
 <h3 class="confirmation-text">
-   You do not have access to that resource.
+   @SharedLocalizer["NoAccessToResource"]
 </h3>

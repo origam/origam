@@ -141,4 +141,94 @@
   <data name="DefaultTooltipRecordUpdated" xml:space="preserve">
     <value>Last updated by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;</value>
   </data>
+  <data name="RegistrationNotAllowed" xml:space="preserve">
+    <value>User registration is not allowed on this site.</value>
+  </data>
+  <data name="AlreadySetUp" xml:space="preserve">
+    <value>The application has been already set up.</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>Invalid username or password</value>
+  </data>
+  <data name="UserLockedOut" xml:space="preserve">
+    <value>User is locked out</value>
+  </data>
+  <data name="ErrorUserNotFound" xml:space="preserve">
+    <value>User was not found</value>
+  </data>
+  <data name="EmailInvalid" xml:space="preserve">
+    <value>Email is invalid</value>
+  </data>
+  <data name="StringTooShort" xml:space="preserve">
+    <value>The {0} must be at least {2} characters long.</value>
+  </data>
+  <data name="AccountCreated" xml:space="preserve">
+    <value>New account has been created and activated.</value>
+  </data>
+  <data name="ActivateAccount" xml:space="preserve">
+    <value>A new account has been created. Please click confirmation link in an email, we just sent you to activate the account.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CheckEmail" xml:space="preserve">
+    <value>Please check your email to reset your password.</value>
+  </data>
+  <data name="ConfirmationOk1" xml:space="preserve">
+    <value>Thank you for confirming your email. Please</value>
+  </data>
+  <data name="ConfirmationOk2" xml:space="preserve">
+    <value>Click here to Log in</value>
+  </data>
+  <data name="ConfirmLogout" xml:space="preserve">
+    <value>Would you like to logout?</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="CreateAccount" xml:space="preserve">
+    <value>Create a new account</value>
+  </data>
+  <data name="EmailSent" xml:space="preserve">
+    <value>Please click confirmation link in the email we sent you to activate yout account.</value>
+  </data>
+  <data name="IdentityServerTitle" xml:space="preserve">
+    <value>Origam Login</value>
+  </data>
+  <data name="InvalidLoginRequest" xml:space="preserve">
+    <value>Invalid login request</value>
+  </data>
+  <data name="LocalLogin" xml:space="preserve">
+    <value>Local Login</value>
+  </data>
+  <data name="LoggedOut" xml:space="preserve">
+    <value>You are now logged out.</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="NoAccessToResource" xml:space="preserve">
+    <value>You do not have access to that resource.</value>
+  </data>
+  <data name="NoLoginSchemes" xml:space="preserve">
+    <value>There are no login schemes configured for this client.</value>
+  </data>
+  <data name="RememberLogin" xml:space="preserve">
+    <value>Remember My Login</value>
+  </data>
+  <data name="ResetPassword" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="ResetPasswordTitle" xml:space="preserve">
+    <value>Reset your password</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
 </root>
