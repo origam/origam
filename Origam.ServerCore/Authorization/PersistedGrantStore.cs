@@ -65,7 +65,6 @@ namespace Origam.ServerCore.Authorization
             DataSet dataSet = dataSetGenerator.CreateDataSet(dataStructure);
             DataRow newRow = dataSet.Tables[GrantTableName].NewRow();
             newRow.SetField("Key", grant.Key);
-            newRow.SetField("Id", Guid.NewGuid());
             newRow.SetField("Type", grant.Type);
             newRow.SetField("SubjectId", grant.SubjectId);
             newRow.SetField("ClientId", grant.ClientId);
