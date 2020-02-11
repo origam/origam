@@ -112,19 +112,26 @@ namespace Origam.DA.Service
         }
         private static void Addreference(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
         {
-            if(retrievedObj.Id == new Guid("7b9a50a2-87e6-4235-b560-c603f0a0abe9"))
-            {
-                var xxx = "";
-            }
             CheckDependencies(retrievedObj, referenceIndex);
+            GetGuidFromText(retrievedObj, referenceIndex);
+            GetGuidFromReferences(retrievedObj, referenceIndex);
             foreach (AbstractSchemaItem item in retrievedObj.ChildItems)
             {
                 CheckDependencies(item, referenceIndex);
+                GetGuidFromText(item, referenceIndex);
+                GetGuidFromReferences(item, referenceIndex);
             }
-            IndexingText(retrievedObj, referenceIndex);
         }
 
-        private static void IndexingText(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+        private static void GetGuidFromReferences(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+        {
+             if (retrievedObj is Schema.GuiModel.EntityUIAction)
+            {
+                AddToIndex(((Schema.GuiModel.EntityUIAction)retrievedObj).ConfirmationRuleId, retrievedObj, referenceIndex);
+            }
+        }
+
+        private static void GetGuidFromText(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
         {
             MatchCollection mc = null;
             if (retrievedObj is Schema.EntityModel.XslTransformation)
