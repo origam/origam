@@ -93,6 +93,10 @@ namespace Origam.Schema.GuiModel
 			{
 				dependencies.Add(this.ConfirmationMessage);
 			}
+			if(this.ConfirmationRule != null)
+			{
+				dependencies.Add(this.ConfirmationRule);
+			}
             if (this.KeyboardShortcut != null)
             {
                 dependencies.Add(this.KeyboardShortcut);
