@@ -30,7 +30,7 @@ namespace Origam.ServerCore
             claims = claims.Where(claim => context.RequestedClaimTypes.Contains(claim.Type)).ToList();
  
             // // Add custom claims in token here based on user properties or any other source
-            claims.Add(new Claim("name", user.Name ?? string.Empty));
+            claims.Add(new Claim("name", user.UserName ?? string.Empty));
  
             context.IssuedClaims = claims;
         }
