@@ -25,7 +25,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 
 namespace Origam
 {
@@ -219,11 +218,12 @@ namespace Origam
         private static Type ResolveTypeFromAssembly(string classname, string assembly)
         {
             var classType = Type.GetType(classname + "," + assembly);
+#if NETSTANDARD
             if (classType == null)
             {
                 // try to load assembly to default application context
                 // With .NET Core, we need to explicitly load assemblies, that are not a part of the .dep.json file
-                AssemblyLoadContext.Default.LoadFromAssemblyPath(
+                System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(
                     ComposeAssemblyPath(assembly));
                 classType = Type.GetType(classname + "," + assembly);
                 if (log.IsDebugEnabled && classType == null)
@@ -233,6 +233,7 @@ namespace Origam
                         ComposeAssemblyPath(assembly));
                 }
             }
+#endif
             return classType;
         }
 
