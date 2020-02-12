@@ -158,7 +158,6 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     Name = model.Name,
                     RoleId = _userConfig.NewUserRoleId
                 };
-                IdentityServiceAgent.ServiceProvider = _serviceProvider;
                 IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
                 user = await _userManager.FindByNameAsync(user.UserName);
                 if (result.Succeeded)
@@ -207,7 +206,6 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     Name = model.Name,
                     RoleId = SecurityManager.BUILTIN_SUPER_USER_ROLE
                 };
-                IdentityServiceAgent.ServiceProvider = _serviceProvider;
                 IdentityResult result = UserTools.RunCreateUserWorkFlow(model.Password, user);
                 user = await _userManager.FindByNameAsync(user.UserName);
                 if (result.Succeeded)
