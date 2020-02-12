@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -35,9 +36,9 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaExtension")]
     [XmlPackageRoot("package")]
+    [ClassMetaVersion("1.0.0")]
 	public class SchemaExtension : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
-       // public const string NAMESPACE = "http://schemas.origam.com/*.*.*/package";
 
         SchemaItemProviderGroup _commonModelGroup = new SchemaItemProviderGroup("COMMON", "Common", "icon_01_common.png", 0);
 		SchemaItemProviderGroup _dataModelGroup = new SchemaItemProviderGroup("DATA", "Data", "icon_05_data.png", 1);

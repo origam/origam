@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -32,6 +33,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Input Mapping", "Input Mappings", "input-mapping.png")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 	{
 		public const string ItemTypeConst = "WorkQueueClassEntityMapping";

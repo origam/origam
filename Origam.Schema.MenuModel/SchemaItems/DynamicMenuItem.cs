@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -31,6 +32,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Dynamic Menu", "icon_dynamic-menu.png")]
     [HelpTopic("Dynamic+Menu")]
+    [ClassMetaVersion("1.0.0")]
 	public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
 	{
 		public DynamicMenu() : base() {}

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -35,6 +36,7 @@ namespace Origam.Schema.WorkflowModel
     [HelpTopic("Context+Store+Reference")]
     [DefaultProperty("ContextStore")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public class ContextReference : AbstractSchemaItem, IContextReference
 	{
 		public const string ItemTypeConst = "WorkflowContextReference";

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -33,6 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Transformation+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("Transformation")]
+    [ClassMetaVersion("1.0.0")]
     public class TransformationReference : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "TransformationReference";

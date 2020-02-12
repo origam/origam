@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
     /// Summary description for AbstractTransformation.
     /// </summary>
     [XmlModelRoot(ItemTypeConst)]
-    public class AbstractTransformation : AbstractSchemaItem, ITransformation
+    public abstract class AbstractTransformation : AbstractSchemaItem, ITransformation
 	{
 		public const string ItemTypeConst = "Transformation";
 

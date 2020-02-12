@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -29,6 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Folder", 68)]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class DashboardWidgetFolder : AbstractDashboardWidget
 	{
 		public DashboardWidgetFolder() : base() {Init();}

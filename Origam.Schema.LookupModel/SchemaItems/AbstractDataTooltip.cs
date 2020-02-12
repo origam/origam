@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -32,6 +33,7 @@ namespace Origam.Schema.LookupModel
     /// Summary description for AbstractDataTooltip.
     /// </summary>
     [XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public class AbstractDataTooltip : AbstractSchemaItem, IComparable
 	{
 		public const string ItemTypeConst = "DataTooltip";

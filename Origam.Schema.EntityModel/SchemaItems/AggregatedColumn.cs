@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -44,6 +45,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Aggregated Field", "Fields", "icon_agregated-field.png")]
     [HelpTopic("Aggregated+Field")]
     [DefaultProperty("Relation")]
+    [ClassMetaVersion("1.0.0")]
 	public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
 	{
 		public AggregatedColumn() : base() {}

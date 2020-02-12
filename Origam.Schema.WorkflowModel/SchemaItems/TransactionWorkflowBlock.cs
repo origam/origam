@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -37,6 +38,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Block) Transaction", "Tasks", "block-transaction.png")]
     [HelpTopic("Transaction+Block")]
+    [ClassMetaVersion("1.0.0")]
 	public class TransactionWorkflowBlock : AbstractWorkflowBlock, IWorkflowTransaction
 	{
 		public TransactionWorkflowBlock() : base() {}

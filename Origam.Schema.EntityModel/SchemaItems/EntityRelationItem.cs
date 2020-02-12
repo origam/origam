@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -33,6 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Relationships")]
 	[XmlModelRoot(ItemTypeConst)]
 	[DefaultProperty("RelatedEntity")]
+    [ClassMetaVersion("1.0.0")]
     public class EntityRelationItem : AbstractSchemaItem, IAssociation, ISchemaItemFactory
 	{
 		public EntityRelationItem() : base(){}

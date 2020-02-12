@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
 
@@ -29,6 +30,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Check Rule", "Tasks", "task-check-rule-4.png")]
     [HelpTopic("Check+Rule+Task")]
+    [ClassMetaVersion("1.0.0")]
 	public class CheckRuleStep : AbstractWorkflowStep
 	{
 		public CheckRuleStep() : base() {}

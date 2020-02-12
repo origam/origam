@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -31,6 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Service Method Call", "Tasks", "task-service-method-call.png")]
     [HelpTopic("Service+Method+Call+Task")]
+    [ClassMetaVersion("1.0.0")]
 	public class ServiceMethodCallTask : WorkflowTask, ISchemaItemFactory
 	{
 		public ServiceMethodCallTask() : base() {}

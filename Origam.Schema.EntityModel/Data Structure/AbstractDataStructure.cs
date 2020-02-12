@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
@@ -29,7 +30,8 @@ namespace Origam.Schema.EntityModel
 	/// Summary description for AbstractDataStructure.
 	/// </summary>
 	[XmlModelRoot(ItemTypeConst)]
-	public class AbstractDataStructure : AbstractSchemaItem, IDataStructure
+    [ClassMetaVersion("1.0.0")]
+	public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
 	{
 		public const string ItemTypeConst = "DataStructure";
 

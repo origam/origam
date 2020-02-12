@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -31,6 +32,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Screen Mapping", "Screen Mappings", "icon_screen-mapping.png")]
     [HelpTopic("Chart+Screen+Mapping")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public class ChartFormMapping : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "ChartFormMapping";

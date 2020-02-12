@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
@@ -28,6 +29,7 @@ namespace Origam.Schema.TestModel
 	/// Summary description for TestChecklistRule.
 	/// </summary>
 	[SchemaItemDescription("Checklist Rule", "Checklist Rules", 16)]
+    [ClassMetaVersion("1.0.0")]
 	public class TestChecklistRule : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "TestChecklistRule";

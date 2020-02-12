@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -34,6 +35,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Rule", "icon_rule.png")]
     [HelpTopic("Rule+Set+Rule")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class DataStructureRule : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "DataStructureRule";

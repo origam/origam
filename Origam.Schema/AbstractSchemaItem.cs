@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace Origam.Schema
     /// any class that is contained under schema versions.
     /// </summary>
     [EntityName("SchemaItem", "TargetType")]
+    [ClassMetaVersion("1.0.0")]
 	public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem, 
         IBrowserNode2, ISchemaItemFactory, ICloneable, IComparable, 
         ISchemaItemConvertible, INotifyPropertyChanged, IFilePersistent
@@ -1220,6 +1222,8 @@ namespace Origam.Schema
         #endregion
 
         #region IPersistent2 Members
+
+
         [Category("(Info)")]
         public string RelativeFilePath
         {

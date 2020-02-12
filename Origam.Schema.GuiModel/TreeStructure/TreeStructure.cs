@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -32,6 +33,7 @@ namespace Origam.Schema.GuiModel
         "icon_tree-structures.png")]
     [HelpTopic("Tree+Structures")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public class TreeStructure : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string ItemTypeConst = "TreeStructure";

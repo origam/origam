@@ -19,12 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 
 
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Text Widget", "icon_text-widget.png")]
+    [ClassMetaVersion("1.0.0")]
 	public class TextDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public TextDashboardWidget() : base() {Init();}

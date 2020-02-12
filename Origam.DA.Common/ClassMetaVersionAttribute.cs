@@ -1,4 +1,5 @@
-﻿#region license
+#region license
+
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -17,30 +18,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-using Origam.DA.Common;
-using Origam.DA.ObjectPersistence;
-using Origam.Schema.EntityModel;
 using System;
-using System.ComponentModel;
-using System.Xml.Serialization;
 
-namespace Origam.Schema.RuleModel
+namespace Origam.DA.Common
 {
-    [SchemaItemDescription("Entity Rule", "entity-rule.png")]
-    [HelpTopic("Entity+Rule")]
-    [ClassMetaVersion("1.0.0")]
-    public class EntityRule : XPathRule, IEntityRule
+    public class ClassMetaVersionAttribute : Attribute
     {
+        public Version Value { get; }
 
-		public EntityRule() : base() {}
-		public EntityRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
-        public EntityRule(Key primaryKey) : base(primaryKey) { }
-
-		[EntityColumn("B01"), DefaultValue(false)] 
-        [XmlAttribute("isPathRelative")]
-        [Browsable(false)]
-		public override bool IsPathRelative { get; set; } = false;
+        public ClassMetaVersionAttribute(string version)
+        {
+            Value = new Version(version);
+        }
     }
 }

@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -34,6 +35,7 @@ namespace Origam.Schema.MenuModel
         "icon_client-script-invocation.png")]
     [HelpTopic("Client+Script")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "EntityWorkflowActionScriptCall";

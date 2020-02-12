@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
@@ -30,6 +31,7 @@ namespace Origam.Schema
 	[SchemaItemDescription("Feature", "icon_feature.png")]
     [HelpTopic("Features")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class Feature : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "Feature";

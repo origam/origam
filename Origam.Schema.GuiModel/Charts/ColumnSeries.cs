@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -29,6 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Column Series", "Data Series", "icon_column-series.png")]
     [HelpTopic("Column+Series")]
+    [ClassMetaVersion("1.0.0")]
 	public class ColumnSeries : AbstractCartesianSeries
 	{
 		public ColumnSeries() : base() {Init();}

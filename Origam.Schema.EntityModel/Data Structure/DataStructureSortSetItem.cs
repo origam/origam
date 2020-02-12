@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -33,6 +34,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Sort Field", "icon_sort-field.png")]
     [HelpTopic("Sort+Field")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class DataStructureSortSetItem : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "DataStructureSortSetItem";

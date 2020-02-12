@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.Schema.EntityModel;
 
@@ -29,6 +30,7 @@ namespace Origam.Schema.GuiModel
     /// </summary>
     [SchemaItemDescription("Fast Report", 29)]
     [HelpTopic("Fast+Report")]
+    [ClassMetaVersion("1.0.0")]
     public class FastReport : AbstractDataReport, IDataStructureReference
     {
         public FastReport() : base() { }

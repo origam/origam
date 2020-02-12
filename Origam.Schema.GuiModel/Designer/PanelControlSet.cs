@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 using Origam.Services;
@@ -35,9 +36,9 @@ namespace Origam.Schema.GuiModel
 	[System.Drawing.ToolboxBitmap(typeof(PanelControlSet))]
     [HelpTopic("Screen+Sections")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class PanelControlSet : AbstractControlSet
 	{
-
 		private static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 		private UserControlSchemaItemProvider _controls=_schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
 

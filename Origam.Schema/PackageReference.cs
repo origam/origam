@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -34,6 +35,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("PackageReference")]
     [XmlPackageRoot("packageReference")]
+    [ClassMetaVersion("1.0.0")]
     public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
 		public PackageReference()

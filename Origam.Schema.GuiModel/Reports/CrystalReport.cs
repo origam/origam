@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.Schema.EntityModel;
 
@@ -29,6 +30,7 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("Crystal Report", "icon_crystal-report.png")]
     [HelpTopic("Crystal+Report")]
+    [ClassMetaVersion("1.0.0")]
 	public class CrystalReport : AbstractDataReport, IDataStructureReference
 	{	
 		public CrystalReport() : base(){}

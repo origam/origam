@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -35,6 +36,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Sequential Workflow", "sequential-workflow.png")]
     [HelpTopic("Sequential+Workflows")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class Workflow : AbstractSchemaItem, IWorkflow
 	{
 		public const string ItemTypeConst = "Workflow";

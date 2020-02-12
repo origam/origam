@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -39,6 +40,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
     [HelpTopic("Indexes")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class DataEntityIndex : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public DataEntityIndex() : base(){}

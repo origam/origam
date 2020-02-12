@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -28,6 +29,7 @@ using Origam.Schema.EntityModel;
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Lookup Widget", "icon_lookup-widget.png")]
+    [ClassMetaVersion("1.0.0")]
 	public class LookupDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public LookupDashboardWidget() : base() {Init();}

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -35,9 +36,9 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
     [HelpTopic("Lookup+Field")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class LookupField : AbstractSchemaItem, IDataEntityColumn
 	{
-
 		public const string ItemTypeConst = "DataEntityColumn";
 		public LookupField() : base() {}
 

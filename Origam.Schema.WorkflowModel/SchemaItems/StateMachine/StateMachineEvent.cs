@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -46,6 +47,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Event", "Events", "event-4.png")]
     [HelpTopic("Data+Events")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class StateMachineEvent : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "StateMachineEvent";

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,6 +31,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Report Page", "report-page.png")]
     [HelpTopic("Report+Page")]
+    [ClassMetaVersion("1.0.0")]
 	public class ReportPage : AbstractPage
 	{
 		public ReportPage() : base() { Init(); }

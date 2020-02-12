@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
@@ -32,6 +33,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Screen", "icon_screen.png")]
     [HelpTopic("Screens")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public class FormControlSet : AbstractControlSet
 	{
 		public const string ItemTypeConst = "FormControlSet";

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -41,6 +42,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Data+Structure+Field")]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("Field")]
+    [ClassMetaVersion("1.0.0")]
     public class DataStructureColumn : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "DataStructureColumn";

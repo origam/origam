@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -31,6 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Wait", "Tasks", "task-wait-2.png")]
     [HelpTopic("Wait+Task")]
+    [ClassMetaVersion("1.0.0")]
 	public class WaitTask : AbstractWorkflowStep
 	{
 		public WaitTask() : base() {}

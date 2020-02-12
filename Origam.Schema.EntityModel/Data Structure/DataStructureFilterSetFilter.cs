@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -35,6 +36,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Filter+Set+Filter")]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("Entity")]
+    [ClassMetaVersion("1.0.0")]
     public class DataStructureFilterSetFilter : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "DataStructureFilterSetFilter";

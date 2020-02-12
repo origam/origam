@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -32,6 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Default Value Parameter", "Parameters", "icon_default-value-parameter.png")]
     [HelpTopic("Default+Value+Parameter")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class DefaultValueParameter : SchemaItemParameter
 	{
 		public DefaultValueParameter() : base() {}

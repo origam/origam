@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 
 namespace Origam.Schema.LookupModel
@@ -28,6 +29,7 @@ namespace Origam.Schema.LookupModel
 	/// </summary>
 	[SchemaItemDescription("Data Service Lookup", "icon_lookup.png")]
     [HelpTopic("Lookups")]
+    [ClassMetaVersion("1.0.0")]
 	public class DataServiceDataLookup : AbstractDataLookup
 	{
 		public DataServiceDataLookup() : base() {}

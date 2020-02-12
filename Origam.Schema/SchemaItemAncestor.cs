@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -35,6 +36,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaItemAncestor")]
 	[XmlModelRoot("ancestor")]
+    [ClassMetaVersion("1.0.0")]
 	public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2, 
         ICloneable, IComparable, IFilePersistent
 	{

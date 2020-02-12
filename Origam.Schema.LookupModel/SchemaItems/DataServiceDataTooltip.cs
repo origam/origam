@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 
 namespace Origam.Schema.LookupModel
@@ -29,6 +30,7 @@ namespace Origam.Schema.LookupModel
 	[SchemaItemDescription("Data Service Tooltip", 
         "icon_data-service-tooltip.png")]
     [HelpTopic("Tooltips")]
+    [ClassMetaVersion("1.0.0")]
 	public class DataServiceDataTooltip : AbstractDataTooltip
 	{
 		public DataServiceDataTooltip() : base() {}

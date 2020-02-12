@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -33,7 +34,8 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Data+Structure+Reference")]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("DataStructure")]
-    public class DataStructureReference : AbstractSchemaItem, IDataStructureReference
+    [ClassMetaVersion("1.0.0")]
+    public  class DataStructureReference : AbstractSchemaItem, IDataStructureReference
 	{
 		public const string ItemTypeConst = "DataStructureReference";
 

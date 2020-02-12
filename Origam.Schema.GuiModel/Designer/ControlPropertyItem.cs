@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using System;
 using System.Xml.Serialization;
@@ -35,6 +36,7 @@ namespace Origam.Schema.GuiModel
 
 	[SchemaItemDescription("Property", "Properties", "icon_property.png")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class ControlPropertyItem : AbstractSchemaItem 
 	{
 		public const string ItemTypeConst = "ControlPropertyItem";

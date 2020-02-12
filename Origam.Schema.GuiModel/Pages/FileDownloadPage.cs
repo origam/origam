@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +32,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("File Download Page", "data-page.png")]
     [HelpTopic("File+Download+Page")]
+    [ClassMetaVersion("1.0.0")]
 	public class FileDownloadPage : AbstractPage, IDataStructureReference
 	{
 		public FileDownloadPage() : base() {Init();}

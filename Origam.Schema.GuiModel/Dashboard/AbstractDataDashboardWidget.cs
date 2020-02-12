@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Collections;
@@ -29,6 +30,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel
 {
+    [ClassMetaVersion("1.0.0")]
 	public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructureReference
 	{
 		public AbstractDataDashboardWidget() : base() {Init();}

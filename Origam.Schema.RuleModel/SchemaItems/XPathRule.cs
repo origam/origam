@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Drawing.Design;
@@ -32,6 +33,7 @@ namespace Origam.Schema.RuleModel
 	/// Summary description for XPathRule.
 	/// </summary>
 	[SchemaItemDescription("Start Rule", "icon_27_rules.png")]
+    [ClassMetaVersion("1.0.0")]
 	public class XPathRule : AbstractRule
 	{
 		public XPathRule() : base() {}

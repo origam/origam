@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -34,6 +35,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Database Field", "Fields", 
         "icon_database-field.png")]
     [HelpTopic("Database+Field")]
+    [ClassMetaVersion("1.0.0")]
 	public class FieldMappingItem : AbstractDataEntityColumn, ISchemaItemFactory,
         IDatabaseDataTypeMapping
 	{

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using System;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace Origam.Schema.GuiModel
     [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
     [HelpTopic("Styles")]
     [XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public class ControlStyleProperty : AbstractSchemaItem
     {
         public const string ItemTypeConst = "ControlStyleProperty";

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -36,6 +37,7 @@ namespace Origam.Schema.TestModel
 	/// Summary description for TestCaseStep.
 	/// </summary>
 	[SchemaItemDescription("Step", "Steps", 24)]
+    [ClassMetaVersion("1.0.0")]
 	public class TestCaseStep : AbstractSchemaItem
 	{
 		public const string ItemTypeConst = "TestCaseStep";

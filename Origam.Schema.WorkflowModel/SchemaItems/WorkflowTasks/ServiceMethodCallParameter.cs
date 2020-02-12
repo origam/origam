@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,6 +39,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Parameter", "Parameters", "parameter-mapping-blm.png")]
     [HelpTopic("Service+Method+Call+Parameter")]
 	[XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
 	public class ServiceMethodCallParameter : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string ItemTypeConst = "ServiceMethodCallParameter";
