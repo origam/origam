@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debug.cs" />
+    <Compile Include="MetaModelUpgraderTests\MetaModelUpgraderTests.cs" />
     <Compile Include="OrigamDocumentSorter\OrigamDocumentSorterTests.cs" />
     <Compile Include="EqualityExtensions.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTests.cs" />
@@ -169,6 +170,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="FlatFileSearchTests\TestFiles\Language.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\OrigamSyncProvider.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="_OrigamSettings.config">

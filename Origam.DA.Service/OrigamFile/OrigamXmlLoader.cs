@@ -51,6 +51,7 @@ namespace Origam.DA.Service
 
             if (result.IsSuccess)
             {
+                bool someFilesWereUpgraded = new MetaModelUpGrader().TryUpgrade(result.Value);
                 AddOrigamFiles(itemTracker, result.Value);
                 RemoveOrigamFilesThatNoLongerExist(itemTracker);
                 return Maybe<XmlLoadError>.None;
@@ -190,7 +191,7 @@ namespace Origam.DA.Service
         public XmlNamespaceManager NamespaceManager{ get; }
         public FileInfo FileInfo { get;}
 
-        internal XmlFileData(XmlDocument xmlDocument, FileInfo fileInfo)
+        public XmlFileData(XmlDocument xmlDocument, FileInfo fileInfo)
         {
             XmlDocument = xmlDocument;
             FileInfo = fileInfo;
