@@ -59,6 +59,7 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Globalization;
 using System.Linq;
 using MoreLinq;
+using Newtonsoft.Json.Linq;
 
 namespace Origam.Server
 {
@@ -1525,9 +1526,7 @@ namespace Origam.Server
             DataRow[] childRows = row.GetChildRows(relatedTableName);
 
 
-            Array newArray = newValue != null
-                   ? (Array)((Newtonsoft.Json.Linq.JArray)newValue).ToObject<object[]>()
-                   : null;
+            Array newArray = newValue is JArray?((JArray)newValue).ToObject<object[]>():(Array)newValue;
             // handle null value (sent e.g. when updating dependent fields)
             // null = empty array
             if (newArray == null)

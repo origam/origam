@@ -48,5 +48,6 @@ namespace Origam.ServerCore.Model.UIService
                 .Where(x=> x.Count > 0)
                 .Select(x => new Tuple<string, string>(x[0], x[1]))
                 .ToList();
+        public Object SessionFormIdentifier { get; set; }
     }
 }

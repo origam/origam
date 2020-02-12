@@ -48,10 +48,9 @@ namespace Origam.ServerCore.Controllers
     {
         private readonly SessionObjects sessionObjects;
 
-        public SessionController(SessionObjects sessionObjects, IServiceProvider serviceProvider)
+        public SessionController(SessionObjects sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
+            this.sessionObjects = sessionObjects;            
         }
 
         [HttpPost("[action]")]

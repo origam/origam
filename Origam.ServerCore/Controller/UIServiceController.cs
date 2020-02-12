@@ -72,12 +72,10 @@ namespace Origam.ServerCore.Controller
         #region Endpoints
         public UIServiceController(
             SessionObjects sessionObjects,
-            IServiceProvider serviceProvider,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log) : base(log)
         {
             this.sessionObjects = sessionObjects;
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
             this.localizer = localizer;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
@@ -751,6 +749,16 @@ namespace Origam.ServerCore.Controller
                     query.MethodId = entityData.MenuItem.ListMethodId;
                     query.DataSourceId 
                         = entityData.MenuItem.ListDataStructure.Id;
+                    // get parameters from session store
+                    IDictionary parameters =
+                        sessionObjects.UIService.GetParameters(
+                        input.SessionFormIdentifier);
+                    foreach (var key in parameters.Keys)
+                    {
+                        query.Parameters.Add(
+                            new QueryParameter(key.ToString(),
+                            parameters[key]));
+                    }
                 }
                 else
                 {

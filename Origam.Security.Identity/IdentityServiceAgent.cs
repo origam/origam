@@ -36,17 +36,17 @@ namespace Origam.Security.Identity
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
 
 #if NETSTANDARD
-        public static IServiceProvider ServiceProvider { get; set; }
+          private IManager userManager;
 
-        private IManager userManager;
 
           public IdentityServiceAgent()
           {
-              if (ServiceProvider == null)
-              {
-                  throw new InvalidOperationException("ServiceProvider was not set");
-              }
-              userManager = ServiceProvider.GetService<IManager>();
+            // according to
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
+            // we can get scoped RequestServices collection from HttpContext
+            userManager = SecurityManager.DIServiceProvider
+                .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
+                .HttpContext.RequestServices.GetService<IManager>();
           }
 #else
         private IManager userManager
@@ -693,7 +693,7 @@ namespace Origam.Security.Identity
                 tokenResultNode.Attributes.Append(errorMessageAttr);
 
                 rootNode.AppendChild(tokenResultNode);
-                result = xmlDoc;
+                result = new Origam.XmlContainer(xmlDoc);
             }
         }
 

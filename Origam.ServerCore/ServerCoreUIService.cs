@@ -320,6 +320,30 @@ namespace Origam.ServerCore
             return sessionStore.GetRowData(
                 input.Entity, input.RowId, false);
         }
+        public IDictionary GetParameters(object sessionFormIdentifier)
+        {
+            if (sessionFormIdentifier == null)
+            {
+                return new Hashtable();
+            }
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore
+                    = sessionManager.GetSession(
+                        new Guid(sessionFormIdentifier.ToString()));
+            }
+            catch
+            {
+                // ignored
+            }
+            if (sessionStore == null)
+            {
+                return new Hashtable();
+            }
+            return sessionStore.Request.Parameters;
+        }
+
         public ArrayList GetData(GetDataInput input)
         {
             SessionStore sessionStore = null;

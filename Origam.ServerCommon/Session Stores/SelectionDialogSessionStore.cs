@@ -212,12 +212,18 @@ namespace Origam.Server
             request.Icon = this.Request.Icon;
             request.Caption = this.Request.Caption;
             request.IsStandalone = this.Request.IsStandalone;
-            request.ObjectId = this.Request.ObjectId;
+            request.ObjectId = this.Request.ObjectId;            
             DataRow row = FormTools.GetSelectionDialogResultRow(this.DataStructureId,
                 this.AfterTransformationId, this.XmlData, profile.Id);
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             AbstractSchemaItem item = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(this.Request.ObjectId))) as AbstractSchemaItem;
             SetParameters(request.Parameters, row, item);
+            FormReferenceMenuItem formRef = item as FormReferenceMenuItem;
+            if (formRef != null)
+            {
+                // Request data for normal (non-lazily-loaded) screens
+                request.DataRequested = formRef.ListDataStructure == null;
+            }
             result.Request = request;
             return result;
         }
