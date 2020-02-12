@@ -40,7 +40,7 @@ namespace Origam.ServerCoreTests
 
         public SessionControllerTests()
         {
-            sut = new SessionController(sessionObjects, null);
+            sut = new SessionController(sessionObjects);
         }
 
         [Test, Order(301)]

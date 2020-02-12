@@ -66,7 +66,6 @@ namespace Origam.ServerCoreTests
             uiServiceController = new UIServiceController(
                 sessionObjects,
                 null,
-                null,
                 new NullLogger<AbstractController>());
             uiServiceController.ControllerContext = context;
         }
