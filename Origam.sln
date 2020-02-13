@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
@@ -58,7 +58,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Mail", "Origam.Mail\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.ReflectorCache", "Origam.ReflectorCache\Origam.ReflectorCache.csproj", "{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIMEParser", "MIMEParser\MIMEParser.csproj", "{CC4C4334-335D-4369-B0ED-F3C17CD57364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MIMEParser", "MIMEParser\MIMEParser.csproj", "{CC4C4334-335D-4369-B0ED-F3C17CD57364}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Schema.DeploymentModel", "Origam.Schema.DeploymentModel\Origam.Schema.DeploymentModel.csproj", "{A802634D-DCF0-4F27-992D-E3FADCAA3FB4}"
 EndProject

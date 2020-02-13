@@ -387,17 +387,9 @@ namespace OpenPOP
 				string strFileExtension=new FileInfo(strFileName).Extension;
 				string strContentType=null;
 				bool MONO=false;
-
-				if(MONO)
-				{
-					strContentType=MIMETypes.ContentType(strFileExtension);
-				}
-				else
-				{
-					Microsoft.Win32.RegistryKey extKey = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(strFileExtension);
-					strContentType = (string)extKey.GetValue("Content Type");
-				}
-
+				
+				strContentType=MIMETypes.ContentType(strFileExtension);
+			
 				if (strContentType.ToString() != null)
 				{	
 					return strContentType.ToString(); 
