@@ -124,7 +124,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Workbench.ServicesTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.SchemaTests", "Origam.SchemaTests\Origam.SchemaTests.csproj", "{198DBFB2-5A79-493B-B7CA-3C18F1B243E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.TestCommon", "Origam.TestCommon\Origam.TestCommon.csproj", "{C6BB0572-3720-4841-8DD6-6992644B7B5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.TestCommon", "Origam.TestCommon\Origam.TestCommon.csproj", "{C6BB0572-3720-4841-8DD6-6992644B7B5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Git", "Origam.Git\Origam.Git.csproj", "{17625F1F-B028-47DB-8C76-05C8F8F4E158}"
 EndProject
