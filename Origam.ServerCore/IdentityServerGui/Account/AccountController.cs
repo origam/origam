@@ -42,10 +42,10 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IMailService _mailService;
         private readonly UserConfig _userConfig;
         private readonly IStringLocalizer<SharedResources> _localizer;
+        private readonly IPersistedGrantStore _persistedGrantStore;
 
 
         public AccountController(
@@ -54,9 +54,9 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events, IServiceProvider serviceProvider,
+            IEventService events,
             IMailService mailService,
-            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer)
+            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer, IPersistedGrantStore persistedGrantStore)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -64,9 +64,9 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
-            _serviceProvider = serviceProvider;
             _mailService = mailService;
             this._localizer = localizer;
+            _persistedGrantStore = persistedGrantStore;
             _userConfig = userConfig.Value;
         }
 
@@ -417,6 +417,9 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             {
                 // delete local authentication cookie
                 await _signInManager.SignOutAsync();
+                
+                var subjectId = HttpContext.User.Identity.GetSubjectId();
+                await _persistedGrantStore.RemoveAllAsync(subjectId, vm.ClientName);
 
                 // raise the logout event
                 await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
