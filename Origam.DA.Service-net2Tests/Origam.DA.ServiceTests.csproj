@@ -8,8 +8,8 @@
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Origam.DA.Service_net2Tests</RootNamespace>
-    <AssemblyName>Origam.DA.Service_net2Tests</AssemblyName>
+    <RootNamespace>Origam.DA.ServiceTests</RootNamespace>
+    <AssemblyName>Origam.DA.ServiceTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -172,7 +172,10 @@
     <Content Include="FlatFileSearchTests\TestFiles\Language.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MetaModelUpgraderTests\TestFiles\OrigamSyncProvider.origam">
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV1.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV1.0.1.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="_OrigamSettings.config">

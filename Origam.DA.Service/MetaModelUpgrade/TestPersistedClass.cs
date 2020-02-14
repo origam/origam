@@ -21,30 +21,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
-using Origam.Extensions;
+using Origam.DA.Common;
 
 namespace Origam.DA.Service
 {
-    public class MetaModelUpGrader
+    [ClassMetaVersion("1.0.2")]
+    public class TestPersistedClass
     {
-        private void Upgrade(Version oldVersion, Version newVersion, XmlDocument origamFileDocument)
-        {
-            
-        }
-
-        public bool TryUpgrade(List<XmlFileData> xmlData)
-        {
-            foreach (XmlFileData xmlFileData in xmlData)
-            {
-                List<XmlNode> allNodes = xmlFileData.XmlDocument.GetAllNodes().ToList();
-                
-            }
-
-            return false;
-        }
+        public string Name { get; set; }
+        public string NewProperty1 { get; set; }
+        public string NewProperty2 { get; set; }
     }
 }

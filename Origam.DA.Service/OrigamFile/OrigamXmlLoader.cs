@@ -51,7 +51,6 @@ namespace Origam.DA.Service
 
             if (result.IsSuccess)
             {
-                bool someFilesWereUpgraded = new MetaModelUpGrader().TryUpgrade(result.Value);
                 AddOrigamFiles(itemTracker, result.Value);
                 RemoveOrigamFilesThatNoLongerExist(itemTracker);
                 return Maybe<XmlLoadError>.None;

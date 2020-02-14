@@ -27,31 +27,34 @@ using System.Linq;
 using System.Xml;
 using NUnit.Framework;
 using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
+using Origam.Extensions;
 using Origam.TestCommon;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
     [TestFixture]
     public class MetaModelUpGraderTests: AbstractFileTestClass
     {
-        private List<XmlFileData> xmlFileDataList;
-
-        public MetaModelUpGraderTests()
+        private XmlFileData LoadFile(string fileName)
         {
-            xmlFileDataList = TestFilesDir.EnumerateFiles().Select(file =>
-            {
-                var document = new XmlDocument();
-                document.Load(file.FullName);
-                return new XmlFileData(document, file);
-            }).ToList();
+            var file = new FileInfo(Path.Combine(TestFilesDir.FullName, fileName));
+            var document = new XmlDocument();
+            document.Load(file.FullName);
+            return new XmlFileData(document, file);
         }
 
         [Test]
-        public void ShouldOpen()
+        public void ShouldUpgradeByOneVersion()
         {
+            XmlFileData xmlFileData = LoadFile("TestPersistedClassV1.0.1.origam");
             var sut = new MetaModelUpGrader();
-            bool someFileSWereUpgraded = sut.TryUpgrade(xmlFileDataList);
-        }
+            bool someFilesWereUpgraded = sut.TryUpgrade(
+                new List<XmlFileData>{xmlFileData});
+
+            XmlNode classNode = xmlFileData.XmlDocument.ChildNodes[1].ChildNodes[0];
+            Assert.True(classNode.Attributes["NewProperty2"] != null);
+        }       
 
         protected override TestContext TestContext =>
             TestContext.CurrentContext;
