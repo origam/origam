@@ -172,6 +172,9 @@
     <Content Include="FlatFileSearchTests\TestFiles\Language.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass2V1.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV1.0.0.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

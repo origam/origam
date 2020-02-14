@@ -24,6 +24,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using NUnit.Framework;
 using Origam.DA.Service;
@@ -74,6 +75,22 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.True(classNode.Attributes["version"] != null);
             Assert.True(classNode.Attributes["version"].Value == "1.0.2");
         }
+
+        [Test]
+        public void ShouldThrowIfOneOfUpgradeScriptsIsMissing()
+        {
+            TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
+            {
+                XmlFileData xmlFileData = LoadFile("TestPersistedClass2V1.0.0.origam");
+                var sut = new MetaModelUpGrader();
+                bool someFilesWereUpgraded = sut.TryUpgrade(
+                    new List<XmlFileData>{xmlFileData});
+            });
+            Assert.That(exception.InnerException, Is.TypeOf(typeof(ClassUpgradeException)));
+        } 
+        
+       
+        
 
         protected override TestContext TestContext =>
             TestContext.CurrentContext;

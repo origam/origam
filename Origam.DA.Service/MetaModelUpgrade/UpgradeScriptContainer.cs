@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 
@@ -43,6 +44,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 throw new Exception($"There is no script to upgrade class {typeof(T).Name} from version {fromVersion} to {toVersion}");
             }
+            if (scriptsToRun[0].FromVersion != fromVersion)
+            {
+                throw new Exception($"Script to upgrade class {typeof(T).Name} from version {fromVersion} to the next version was not found");
+            }
+            if (scriptsToRun.Last().ToVersion != toVersion)
+            {
+                throw new Exception($"Script to upgrade class {typeof(T).Name} to version {toVersion} was not found");
+            }
+
+            CheckScriptsFormContinuousSequence(scriptsToRun);
 
             foreach (var upgradeScript in scriptsToRun)
             {
@@ -50,6 +61,18 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
 
             SetVersion(classNode, toVersion);
+        }
+
+        private static void CheckScriptsFormContinuousSequence(List<UpgradeScript> scriptsToRun)
+        {
+            for (int i = 0; i < scriptsToRun.Count - 1; i++)
+            {
+                if (scriptsToRun[i].ToVersion != scriptsToRun[i + 1].FromVersion)
+                {
+                    throw new ClassUpgradeException(
+                        $"There is no script to upgrade class {typeof(T).Name} from version {scriptsToRun[i].ToVersion} to {scriptsToRun[i + 1].FromVersion}");
+                }
+            }
         }
 
         private void SetVersion(XmlNode classNode, Version toVersion)
@@ -60,6 +83,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         }
     }
     
+    [DebuggerDisplay("Form: {FromVersion}, To: {ToVersion}")]
     public class UpgradeScript
     {
         public Version FromVersion { get; }

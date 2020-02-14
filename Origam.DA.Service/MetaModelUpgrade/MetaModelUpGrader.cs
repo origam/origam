@@ -44,13 +44,13 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 xmlFileData.XmlDocument
                     .GetAllNodes()
                     .Where(node => node.Name != "x:file" && node.Name != "xml")
-                    .ForEach(classNode => Create(classNode, xmlFileData));
+                    .ForEach(classNode => TryUpgrade(classNode, xmlFileData));
             }
 
             return false;
         }
 
-        private void Create(XmlNode classNode, XmlFileData xmlFileData)
+        private void TryUpgrade(XmlNode classNode, XmlFileData xmlFileData)
         {
             Type typeToUpgrade = FindType(classNode);
             Version currentClassVersion = GetCurrentClassVersion(classNode, typeToUpgrade);
@@ -59,16 +59,19 @@ namespace Origam.DA.Service.MetaModelUpgrade
             if (currentClassVersion == persistedClassVersion) return ;
             if (currentClassVersion < persistedClassVersion) throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xmlFileData.FileInfo.FullName}");
             
-            RunUpgradeScript(classNode, xmlFileData, persistedClassVersion, currentClassVersion);
+            RunUpgradeScript(classNode, xmlFileData,typeToUpgrade,  persistedClassVersion, currentClassVersion);
         }
 
-        private void RunUpgradeScript(XmlNode classNode, XmlFileData xmlFileData, Version persistedClassVersion,
+        private void RunUpgradeScript(XmlNode classNode,
+            XmlFileData xmlFileData, Type typeToUpgrade,
+            Version persistedClassVersion,
             Version currentClassVersion)
         {
             Type upgradeScriptContainerClass = GetType().Assembly.GetTypes()
                 .FirstOrDefault(type =>
                     type.IsClass && type.BaseType.IsGenericType &&
-                    type.BaseType.GetGenericTypeDefinition() == typeof(UpgradeScriptContainer<>));
+                    type.BaseType.GetGenericTypeDefinition() == typeof(UpgradeScriptContainer<>) &&
+                    type.BaseType.GetGenericArguments()[0] == typeToUpgrade);
 
             var upgradeScriptContainer = Activator.CreateInstance(upgradeScriptContainerClass);
             MethodInfo upgradeMethod = upgradeScriptContainerClass.GetMethod("Upgrade");
