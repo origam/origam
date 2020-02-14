@@ -66,7 +66,6 @@ namespace Origam.ServerCore
         {
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
             var builder = services.AddMvc()
-                .AddXmlSerializerFormatters()
                 .AddNewtonsoftJson();
 #if DEBUG
             builder.AddRazorRuntimeCompilation();
