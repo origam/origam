@@ -9,10 +9,13 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
   $type_IWebScreen: 1 = 1;
 
-  constructor(public title: string, public screenUrl: string) {}
+  constructor(title: string, public screenUrl: string) {
+    this.title = title;
+  }
 
   reloader: IReloader | null = null;
 
+  @observable title = "";
   @observable isActive = false;
   isDialog = false;
 
@@ -22,6 +25,10 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   }
 
   setContent(screen: IFormScreenEnvelope): void {}
+
+  setTitle(title: string): void {
+    this.title = title;
+  }
 
   setReloader(reloader: IReloader | null): void {
    this.reloader = reloader;

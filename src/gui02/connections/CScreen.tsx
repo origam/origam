@@ -21,7 +21,10 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer(p
       <WebScreen
         url={openedScreen.screenUrl || ""}
         isLoading={isLoading}
-        onLoad={() => {
+        onLoad={(event: any) => {
+          if (event.target.contentDocument.title) {
+            ((openedScreen as unknown) as IWebScreen).setTitle(event.target.contentDocument.title);
+          }
           setLoading(false);
         }}
         refIFrame={(elm: any) => {

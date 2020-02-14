@@ -3,6 +3,7 @@ export interface IWebScreen {
 
   reload(): void;
   setReloader(reloader: IReloader | null): void;
+  setTitle(title: string): void;
 }
 
 export interface IReloader {
