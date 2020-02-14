@@ -45,7 +45,9 @@ namespace Origam.ServerCore
                     {
                         new Secret(startUpConfiguration.ClientSecret.Sha256())
                     },
-                    RedirectUris = {"http://localhost/xamarincallback"},
+                    RedirectUris = {"https://localhost:3000/#origamClientCallback/", 
+                        "http://localhost:3000/#origamClientCallback/",
+                        "http://localhost/xamarincallback"},
                     RequireConsent = false,
                     RequirePkce = true,
                     // PostLogoutRedirectUris = { $"{clientsUrl["Xamarin"]}/Account/Redirecting" },
