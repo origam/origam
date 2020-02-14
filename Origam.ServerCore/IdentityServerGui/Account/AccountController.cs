@@ -46,7 +46,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly UserConfig _userConfig;
         private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IPersistedGrantStore _persistedGrantStore;
-
+        private readonly SessionObjects _sessionObjects;
 
         public AccountController(
             UserManager<IOrigamUser> userManager,
@@ -56,7 +56,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
             IMailService mailService,
-            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer, IPersistedGrantStore persistedGrantStore)
+            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer, IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -67,6 +67,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _mailService = mailService;
             this._localizer = localizer;
             _persistedGrantStore = persistedGrantStore;
+            this._sessionObjects = sessionObjects;
             _userConfig = userConfig.Value;
         }
 
@@ -417,6 +418,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             {
                 // delete local authentication cookie
                 await _signInManager.SignOutAsync();
+                _sessionObjects.UIService.Logout();
                 
                 var subjectId = HttpContext.User.Identity.GetSubjectId();
                 await _persistedGrantStore.RemoveAllAsync(subjectId, vm.ClientName);
