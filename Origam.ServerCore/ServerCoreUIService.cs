@@ -206,6 +206,29 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return result;
         }
+        
+        public void Logout()
+        {
+            PortalSessionStore pss = sessionManager.GetPortalSession();
+
+            if (pss == null)
+            {
+                throw new Exception("Session not available. Cannot log out.");
+            }
+
+            while(pss.FormSessions.Count > 0)
+            {
+                DestroyUI(pss.FormSessions[0].Id);
+            }
+
+            Analytics.Instance.Log("UI_LOGOUT");
+
+            sessionManager.RemovePortalSession(SecurityTools.CurrentUserProfile().Id);
+            Task.Run(() => SecurityTools.RemoveOrigamOnlineUser(
+                SecurityManager.CurrentPrincipal.Identity.Name));
+            OrigamUserContext.Reset();
+        }
+
         // ReSharper disable once InconsistentNaming
         public void DestroyUI(Guid sessionFormIdentifier)
         {
