@@ -53,8 +53,27 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
                 new List<XmlFileData>{xmlFileData});
 
             XmlNode classNode = xmlFileData.XmlDocument.ChildNodes[1].ChildNodes[0];
-            Assert.True(classNode.Attributes["NewProperty2"] != null);
-        }       
+            Assert.True(classNode.Attributes["newProperty1"] != null); // assert the property eas not removed
+            Assert.True(classNode.Attributes["newProperty1"].Value == "5"); // assert the property value was not changed
+            Assert.True(classNode.Attributes["newProperty2"] != null);
+            Assert.True(classNode.Attributes["version"] != null);
+            Assert.True(classNode.Attributes["version"].Value == "1.0.2");
+        }      
+        
+        [Test]
+        public void ShouldUpgradeTwoVersions()
+        {
+            XmlFileData xmlFileData = LoadFile("TestPersistedClassV1.0.0.origam");
+            var sut = new MetaModelUpGrader();
+            bool someFilesWereUpgraded = sut.TryUpgrade(
+                new List<XmlFileData>{xmlFileData});
+
+            XmlNode classNode = xmlFileData.XmlDocument.ChildNodes[1].ChildNodes[0];
+            Assert.True(classNode.Attributes["newProperty1"] != null);
+            Assert.True(classNode.Attributes["newProperty2"] != null);
+            Assert.True(classNode.Attributes["version"] != null);
+            Assert.True(classNode.Attributes["version"].Value == "1.0.2");
+        }
 
         protected override TestContext TestContext =>
             TestContext.CurrentContext;

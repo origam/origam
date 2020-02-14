@@ -2,8 +2,6 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <TestPersistedClass
     name="test v0"
-    newProperty1="5"
-    version="1.0.1"
     x:type="Origam.DA.Service.TestPersistedClass"
 />
 </x:file>

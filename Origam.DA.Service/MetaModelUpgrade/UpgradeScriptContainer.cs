@@ -48,6 +48,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 upgradeScript.Upgrade(classNode, doc);
             }
+
+            SetVersion(classNode, toVersion);
+        }
+
+        private void SetVersion(XmlNode classNode, Version toVersion)
+        {
+            ((XmlElement) classNode).SetAttribute(
+                "version",
+                toVersion.ToString());
         }
     }
     

@@ -12,7 +12,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.1"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("NewProperty1", "");
+                    ((XmlElement) node).SetAttribute("newProperty1", "");
                     return node;
                 }));            
             upgradeScripts.Add(new UpgradeScript(
@@ -20,7 +20,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.2"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("NewProperty2", "");
+                    ((XmlElement) node).SetAttribute("newProperty2", "");
                     return node;
                 }));
         }
