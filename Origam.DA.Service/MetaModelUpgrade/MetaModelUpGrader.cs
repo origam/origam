@@ -119,16 +119,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 throw new Exception($"Cannot get meta version of class {classNode.Name} because it does not have \"x:type\" attribute");
             }
             string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
-            return Type.GetType(typeName + "," + assemblyName);
+            Type type = Type.GetType(typeName + "," + assemblyName);
+            if (type == null)
+            {
+                throw new Exception($"Type of {classNode.Name} could not be found");
+            }
+            return type;
         }
 
         private Version GetCurrentClassVersion(XmlNode classNode, Type type)
         {
-            if (type == null)
-            {
-                throw new Exception($"Cannot get meta version of class {classNode.Name} because the class could not be found");
-            }
-
             var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as ClassMetaVersionAttribute;
             if (attribute == null)
             {
