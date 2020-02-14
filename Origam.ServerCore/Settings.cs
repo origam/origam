@@ -50,7 +50,7 @@ namespace Origam.ServerCore
                         "http://localhost/xamarincallback"},
                     RequireConsent = false,
                     RequirePkce = true,
-                    PostLogoutRedirectUris = { "/" },
+                    PostLogoutRedirectUris = { "https://localhost:3000/" },
                     // PostLogoutRedirectUris = { $"{clientsUrl["Xamarin"]}/Account/Redirecting" },
                     // AllowedCorsOrigins = { "http://eshopxamarin" },
                     AllowedScopes = new List<string>
