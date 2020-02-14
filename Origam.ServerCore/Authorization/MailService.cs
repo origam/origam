@@ -33,7 +33,6 @@ namespace Origam.ServerCore.Authorization
 
         public MailService(IOptions<UserConfig> userConfig, IConfiguration configuration)
         {
-            string baseUrl = configuration[WebHostDefaults.ServerUrlsKey].Split(",")[0];
             mailSender = new AccountMailSender(
                 fromAddress: userConfig.Value.FromAddress,
                 resetPwdSubject: userConfig.Value.ResetPasswordMailSubject,
@@ -43,7 +42,7 @@ namespace Origam.ServerCore.Authorization
                 registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
                 registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
                 mailQueueName: userConfig.Value.MailQueueName,
-                portalBaseUrl: baseUrl,
+                portalBaseUrl: userConfig.Value.PortalBaseUrl,
                 applicationBasePath: AppContext.BaseDirectory);
         }
 
