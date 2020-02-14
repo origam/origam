@@ -1,5 +1,19 @@
+@import "src/styles/common_styles.scss";
+
 .root {
   width: 100%;
   height: 100%;
   border: none;
+
+  .webContent {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .progressIndicator {
+    @include progressIndicator;
+    top: 0;
+    background-color: white;
+  }
 }
