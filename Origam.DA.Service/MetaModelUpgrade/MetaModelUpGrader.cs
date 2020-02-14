@@ -59,19 +59,20 @@ namespace Origam.DA.Service.MetaModelUpgrade
             if (currentClassVersion == persistedClassVersion) return ;
             if (currentClassVersion < persistedClassVersion) throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xmlFileData.FileInfo.FullName}");
             
-            RunUpgradeScript(classNode, xmlFileData,typeToUpgrade,  persistedClassVersion, currentClassVersion);
+            RunUpgradeScripts(classNode, xmlFileData,typeToUpgrade,  persistedClassVersion, currentClassVersion);
         }
 
-        private void RunUpgradeScript(XmlNode classNode,
+        private void RunUpgradeScripts(XmlNode classNode,
             XmlFileData xmlFileData, Type typeToUpgrade,
             Version persistedClassVersion,
             Version currentClassVersion)
         {
             Type upgradeScriptContainerClass = GetType().Assembly.GetTypes()
-                .FirstOrDefault(type =>
+                .SingleOrDefault(type =>
                     type.IsClass && type.BaseType.IsGenericType &&
                     type.BaseType.GetGenericTypeDefinition() == typeof(UpgradeScriptContainer<>) &&
-                    type.BaseType.GetGenericArguments()[0] == typeToUpgrade);
+                    type.BaseType.GetGenericArguments()[0] == typeToUpgrade)
+                ?? throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer<>).Name}<T> with generic type of {typeToUpgrade.Name}");
 
             var upgradeScriptContainer = Activator.CreateInstance(upgradeScriptContainerClass);
             MethodInfo upgradeMethod = upgradeScriptContainerClass.GetMethod("Upgrade");
