@@ -1,14 +1,17 @@
-import { IWebScreen } from "./types/IWebScreen";
+import { IWebScreen, IReloader } from "./types/IWebScreen";
 import { IOpenedScreen } from "./types/IOpenedScreen";
 import { observable, action } from "mobx";
 import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
 
 export class WebScreen implements IWebScreen, IOpenedScreen {
+
   $type_IOpenedScreen: 1 = 1;
   $type_IWebScreen: 1 = 1;
 
   constructor(public title: string, public screenUrl: string) {}
+
+  reloader: IReloader | null = null;
 
   @observable isActive = false;
   isDialog = false;
@@ -19,6 +22,14 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   }
 
   setContent(screen: IFormScreenEnvelope): void {}
+
+  setReloader(reloader: IReloader | null): void {
+   this.reloader = reloader;
+  }
+
+  reload() {
+    this.reloader && this.reloader.reload();
+  }
 
   parent?: any;
   menuItemId: string = "";

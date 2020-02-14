@@ -21,6 +21,9 @@ import { UserMenuDropdown } from "gui02/components/UserMenuDropdown/UserMenuDrop
 import { UserMenuBlock } from "gui02/components/UserMenuDropdown/UserMenuBlock";
 import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
 import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
+import { onReloadWebScreenClick } from "model/actions-ui/ScreenToolbar/onReloadWebScreen";
+import { isIFormScreen, isIFormScreenEnvelope } from "model/entities/types/IFormScreen";
+import { isIWebScreen } from "model/entities/types/IWebScreen";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -35,13 +38,11 @@ export class CScreenToolbar extends React.Component<{}> {
     onScreenToolbarLogoutClick(this.application)(event);
   }
 
-  render() {
+  renderForFormScreen() {
     const activeScreen = getActiveScreen(this.application);
     if (activeScreen && !activeScreen.content) return null;
     const formScreen =
-      activeScreen && !activeScreen.content.isLoading
-        ? activeScreen.content.formScreen
-        : undefined;
+      activeScreen && !activeScreen.content.isLoading ? activeScreen.content.formScreen : undefined;
     const isDirty = formScreen && formScreen.isDirty;
     const toolbarActions = getActiveScreenActions(this.application);
     const userName = getLoggedUserName(this.application);
@@ -53,10 +54,7 @@ export class CScreenToolbar extends React.Component<{}> {
               <ScreenToolbarAction
                 onClick={onSaveSessionClick(formScreen)}
                 icon={
-                  <Icon
-                    src="./icons/save.svg"
-                    className={isDirty ? "isRed isHoverGreen" : ""}
-                  />
+                  <Icon src="./icons/save.svg" className={isDirty ? "isRed isHoverGreen" : ""} />
                 }
               />
               <ScreenToolbarAction
@@ -75,9 +73,7 @@ export class CScreenToolbar extends React.Component<{}> {
                       <ScreenToolbarAction
                         icon={<Icon src="./icons/settings.svg" />}
                         label={action.caption}
-                        onClick={event =>
-                          uiActions.actions.onActionClick(action)(event, action)
-                        }
+                        onClick={event => uiActions.actions.onActionClick(action)(event, action)}
                       />
                     ))}
                 </ScreenToolbarActionGroup>
@@ -122,9 +118,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 actionItems={
                   <>
                     <DropdownItem isDisabled={true}>My profile</DropdownItem>
-                    <DropdownItem onClick={this.handleLogoutClick}>
-                      Log out
-                    </DropdownItem>
+                    <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
                   </>
                 }
               />
@@ -133,5 +127,135 @@ export class CScreenToolbar extends React.Component<{}> {
         />
       </ScreenToolbar>
     );
+  }
+
+  renderForWebScreen() {
+    const activeScreen = getActiveScreen(this.application);
+    const userName = getLoggedUserName(this.application);
+    return (
+      <ScreenToolbar>
+        <>
+          <ScreenToolbarActionGroup>
+            {/*<ScreenToolbarAction
+                onClick={onSaveSessionClick(formScreen)}
+                icon={
+                  <Icon
+                    src="./icons/save.svg"
+                    className={isDirty ? "isRed isHoverGreen" : ""}
+                  />
+                }
+              />*/}
+            <ScreenToolbarAction
+              onClick={onReloadWebScreenClick(activeScreen)}
+              icon={<Icon src="./icons/refresh.svg" />}
+            />
+          </ScreenToolbarActionGroup>
+
+          {/*<ScreenToolbarActionGroup>
+              <ScreenToolbarAction
+                icon={<Icon src="./icons/invoice.svg" />}
+                label="Action 3"
+              />
+              <ScreenToolbarAction
+                icon={<Icon src="./icons/word.svg" />}
+                label="Action 4"
+              />
+            </ScreenToolbarActionGroup>*/}
+        </>
+
+        <ScreenToolbarPusher />
+        {/*<ScreenToolbarAction
+          icon={<Icon src="./icons/search.svg" />}
+          label="Search"
+        />*/}
+        <Dropdowner
+          style={{ width: "auto" }} // TODO: Move to stylesheet
+          trigger={({ refTrigger, setDropped }) => (
+            <ScreenToolbarAction
+              rootRef={refTrigger}
+              onClick={() => setDropped(true)}
+              //onClick={this.handleLogoutClick}
+              icon={
+                <>
+                  <Icon src="./icons/user.svg" />
+                  {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
+                </>
+              }
+              label={userName}
+            />
+          )}
+          content={() => (
+            <UserMenuDropdown>
+              <UserMenuBlock
+                userName={userName || "Logged user"}
+                actionItems={
+                  <>
+                    <DropdownItem isDisabled={true}>My profile</DropdownItem>
+                    <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                  </>
+                }
+              />
+            </UserMenuDropdown>
+          )}
+        />
+      </ScreenToolbar>
+    );
+  }
+
+  renderDefault() {
+    const userName = getLoggedUserName(this.application);
+    return (
+      <ScreenToolbar>
+        <ScreenToolbarPusher />
+        {/*<ScreenToolbarAction
+          icon={<Icon src="./icons/search.svg" />}
+          label="Search"
+        />*/}
+        <Dropdowner
+          style={{ width: "auto" }} // TODO: Move to stylesheet
+          trigger={({ refTrigger, setDropped }) => (
+            <ScreenToolbarAction
+              rootRef={refTrigger}
+              onClick={() => setDropped(true)}
+              //onClick={this.handleLogoutClick}
+              icon={
+                <>
+                  <Icon src="./icons/user.svg" />
+                  {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
+                </>
+              }
+              label={userName}
+            />
+          )}
+          content={() => (
+            <UserMenuDropdown>
+              <UserMenuBlock
+                userName={userName || "Logged user"}
+                actionItems={
+                  <>
+                    <DropdownItem isDisabled={true}>My profile</DropdownItem>
+                    <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                  </>
+                }
+              />
+            </UserMenuDropdown>
+          )}
+        />
+      </ScreenToolbar>
+    );
+  }
+
+  render() {
+    const activeScreen = getActiveScreen(this.application);
+    if (!activeScreen) {
+      return this.renderDefault();
+    }
+    if (activeScreen.content && isIFormScreenEnvelope(activeScreen.content)) {
+      return this.renderForFormScreen();
+    }
+    if (isIWebScreen(activeScreen)) {
+      return this.renderForWebScreen();
+    }
+    return null;
   }
 }
