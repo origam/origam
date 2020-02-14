@@ -36,6 +36,18 @@ namespace Origam.DA.Service.MetaModelUpgrade
 {
     public class MetaModelUpGrader
     {
+        private readonly Assembly scriptAssembly;
+
+        public MetaModelUpGrader(Assembly scriptAssembly)
+        {
+            this.scriptAssembly = scriptAssembly;
+        }
+
+        public MetaModelUpGrader()
+        {
+            scriptAssembly = GetType().Assembly;
+        }
+
         public bool TryUpgrade(List<XmlFileData> xmlData)
         {
             
@@ -67,12 +79,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Version persistedClassVersion,
             Version currentClassVersion)
         {
-            Type upgradeScriptContainerClass = GetType().Assembly.GetTypes()
-                .SingleOrDefault(type =>
-                    type.IsClass && type.BaseType.IsGenericType &&
-                    type.BaseType.GetGenericTypeDefinition() == typeof(UpgradeScriptContainer<>) &&
-                    type.BaseType.GetGenericArguments()[0] == typeToUpgrade)
-                ?? throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer<>).Name}<T> with generic type of {typeToUpgrade.Name}");
+            Type upgradeScriptContainerClass = scriptAssembly.GetTypes()
+               .SingleOrDefault(type =>
+                   type.IsClass && type.BaseType.IsGenericType &&
+                   type.BaseType.GetGenericTypeDefinition() == typeof(UpgradeScriptContainer<>) &&
+                   type.BaseType.GetGenericArguments()[0] == typeToUpgrade)
+           ?? throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer<>).Name}<T> with generic type of {typeToUpgrade.Name}");
 
             var upgradeScriptContainer = Activator.CreateInstance(upgradeScriptContainerClass);
             MethodInfo upgradeMethod = upgradeScriptContainerClass.GetMethod("Upgrade");

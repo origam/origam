@@ -4,6 +4,6 @@
     name="test v0"
     newProperty1="5"
     version="1.0.1"
-    x:type="Origam.DA.Service.TestPersistedClass"
+    x:type="Origam.DA.ServiceTests.TestPersistedClass"
 />
 </x:file>

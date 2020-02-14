@@ -23,7 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using Origam.DA.Common;
 
-namespace Origam.DA.Service
+namespace Origam.DA.ServiceTests
 {
     [ClassMetaVersion("1.0.2")]
     public class TestPersistedClass

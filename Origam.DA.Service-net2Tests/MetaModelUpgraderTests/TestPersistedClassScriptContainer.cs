@@ -1,5 +1,6 @@
 using System;
 using System.Xml;
+using Origam.DA.ServiceTests;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {

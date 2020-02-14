@@ -28,8 +28,8 @@ using System.Linq;
 using System.Xml;
 
 namespace Origam.DA.Service.MetaModelUpgrade
-{  
-    class UpgradeScriptContainer<T>
+{
+    public class UpgradeScriptContainer<T>
     {
         protected readonly List<UpgradeScript> upgradeScripts = new List<UpgradeScript>();
         
