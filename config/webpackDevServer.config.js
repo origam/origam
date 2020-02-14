@@ -86,7 +86,11 @@ module.exports = function(proxy, allowedHost) {
       "/internalApi/*": {
         "target": "https://localhost:44356",
         "secure": false
-      }
+      },
+      "/api/*": {
+        "target": "https://localhost:44356",
+        "secure": false
+      },
     },
     before(app, server) {
       if (fs.existsSync(paths.proxySetup)) {
