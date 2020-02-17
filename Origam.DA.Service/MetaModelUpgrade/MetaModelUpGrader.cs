@@ -28,6 +28,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.DA.Common;
 using Origam.Extensions;
@@ -37,14 +38,17 @@ namespace Origam.DA.Service.MetaModelUpgrade
     public class MetaModelUpGrader
     {
         private readonly Assembly scriptAssembly;
+        private readonly IFileWriter fileWriter;
 
-        public MetaModelUpGrader(Assembly scriptAssembly)
+        public MetaModelUpGrader(Assembly scriptAssembly, IFileWriter fileWriter)
         {
             this.scriptAssembly = scriptAssembly;
+            this.fileWriter = fileWriter;
         }
 
         public MetaModelUpGrader()
         {
+            fileWriter = new FileWriter();
             scriptAssembly = GetType().Assembly;
         }
 
@@ -72,6 +76,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
             if (currentClassVersion < persistedClassVersion) throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xmlFileData.FileInfo.FullName}");
             
             RunUpgradeScripts(classNode, xmlFileData,typeToUpgrade,  persistedClassVersion, currentClassVersion);
+
+            string upgradedXmlString = OrigamDocumentSorter
+                .CopyAndSort(xmlFileData.XmlDocument)
+                .ToBeautifulString();
+                
+            fileWriter.Write(xmlFileData.FileInfo, upgradedXmlString);
         }
 
         private void RunUpgradeScripts(XmlNode classNode,

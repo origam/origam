@@ -49,7 +49,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeByOneVersion()
         {
             XmlFileData xmlFileData = LoadFile("TestPersistedClassV1.0.1.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly);
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
             bool someFilesWereUpgraded = sut.TryUpgrade(
                 new List<XmlFileData>{xmlFileData});
 
@@ -65,7 +65,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeTwoVersions()
         {
             XmlFileData xmlFileData = LoadFile("TestPersistedClassV1.0.0.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly);
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
             bool someFilesWereUpgraded = sut.TryUpgrade(
                 new List<XmlFileData>{xmlFileData});
 
@@ -82,7 +82,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
             {
                 XmlFileData xmlFileData = LoadFile("TestPersistedClass2V1.0.0.origam");
-                var sut = new MetaModelUpGrader(GetType().Assembly);
+                var sut = new MetaModelUpGrader(GetType().Assembly,  new NullFileWriter());
                 bool someFilesWereUpgraded = sut.TryUpgrade(
                     new List<XmlFileData>{xmlFileData});
             });
