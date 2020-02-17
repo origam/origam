@@ -116,7 +116,7 @@ namespace Origam.ServerCore
                     identityServerConfig.PathToJwtCertificate,
                     identityServerConfig.PasswordForJwtCertificate))
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
-                .AddInMemoryClients(Settings.GetIdentityClients(startUpConfiguration))
+                .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
                 .AddAspNetIdentity<IOrigamUser>();
 

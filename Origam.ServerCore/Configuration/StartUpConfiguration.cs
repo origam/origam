@@ -34,19 +34,7 @@ namespace Origam.ServerCore.Configuration
         {
             this.configuration = configuration;
         }
-
-        public string ClientSecret {
-            get
-            {
-                string clientSecret = configuration["ClientSecret"];
-                if (string.IsNullOrWhiteSpace(clientSecret))
-                {
-                    throw new ArgumentException("ClientSecret was not found in configuration. Please add it to appsettings.json");
-                }
-                return clientSecret;
-            }
-        }
-
+        
         public IEnumerable<string> UserApiPublicRoutes =>  
             configuration
                 .GetSection("UserApiOptions")
@@ -55,7 +43,7 @@ namespace Origam.ServerCore.Configuration
                 .Select(c => c.Value);
 
         public IEnumerable<string> UserApiRestrictedRoutes =>
-            configuration
+            configuration   
                 .GetSection("UserApiOptions")
                 .GetSection("RestrictedRoutes")
                 .GetChildren()

@@ -25,7 +25,7 @@ namespace Origam.ServerCore
         }
 
         internal static Client[] GetIdentityClients(
-            StartUpConfiguration startUpConfiguration)
+            IdentityServerConfig identityServerConfig)
         {
             return new[]
             {
@@ -43,14 +43,14 @@ namespace Origam.ServerCore
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     ClientSecrets =
                     {
-                        new Secret(startUpConfiguration.ClientSecret.Sha256())
+                        new Secret(identityServerConfig.ClientSecret.Sha256())
                     },
                     RedirectUris = {"https://localhost:3000/#origamClientCallback/", 
                         "http://localhost:3000/#origamClientCallback/",
                         "http://localhost/xamarincallback"},
                     RequireConsent = false,
                     RequirePkce = true,
-                    PostLogoutRedirectUris = { "/" },
+                    PostLogoutRedirectUris = identityServerConfig.PostLogoutRedirectUris,
                     // PostLogoutRedirectUris = { $"{clientsUrl["Xamarin"]}/Account/Redirecting" },
                     // AllowedCorsOrigins = { "http://eshopxamarin" },
                     AllowedScopes = new List<string>
