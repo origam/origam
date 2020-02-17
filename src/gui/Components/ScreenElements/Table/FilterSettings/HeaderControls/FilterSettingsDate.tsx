@@ -159,17 +159,17 @@ export class FilterSettingsDate extends React.Component<{
       case "gt":
       case "lte":
       case "gte":
-        if (this.setting.val1) {
+        //if (this.setting.val1) {
           this.props.onTriggerApplySetting &&
             this.props.onTriggerApplySetting(this.setting);
-        }
+        //}
         break;
       case "between":
       case "nbetween":
-        if (this.setting.val1 && this.setting.val2) {
+        //if (this.setting.val1 && this.setting.val2) {
           this.props.onTriggerApplySetting &&
             this.props.onTriggerApplySetting(this.setting);
-        }
+        //}
       default:
         this.props.onTriggerApplySetting &&
           this.props.onTriggerApplySetting(this.setting);
@@ -186,17 +186,17 @@ export class FilterSettingsDate extends React.Component<{
       case "gt":
       case "lte":
       case "gte":
-        if (this.setting.val1) {
+        //if (this.setting.val1) {
           this.props.onTriggerApplySetting &&
             this.props.onTriggerApplySetting(this.setting);
-        }
+        //}
         break;
       case "between":
       case "nbetween":
-        if (this.setting.val1 && this.setting.val2) {
+        //if (this.setting.val1 && this.setting.val2) {
           this.props.onTriggerApplySetting &&
             this.props.onTriggerApplySetting(this.setting);
-        }
+        //}
         break;
       default:
         this.props.onTriggerApplySetting &&

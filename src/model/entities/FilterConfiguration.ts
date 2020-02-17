@@ -1,13 +1,5 @@
 import _ from "lodash";
-import {
-  action,
-  comparer,
-  flow,
-  observable,
-  reaction,
-  toJS,
-  computed
-} from "mobx";
+import { action, comparer, flow, observable, reaction, toJS, computed } from "mobx";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
@@ -30,10 +22,9 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   setFilter(term: any): void {
+    //debugger
     this.filtering = produce(this.filtering, (draft: any) => {
-      const oldIdx = draft.findIndex(
-        (item: any) => item.propertyId === term.propertyId
-      );
+      const oldIdx = draft.findIndex((item: any) => item.propertyId === term.propertyId);
       if (oldIdx > -1) {
         draft.splice(oldIdx, 1);
       }
@@ -72,43 +63,37 @@ export class FilterConfiguration implements IFilterConfiguration {
 
             switch (term.setting.type) {
               case "contains": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return txt1.toLocaleLowerCase().includes(t2);
               }
               case "ends": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return txt1.toLocaleLowerCase().endsWith(t2);
               }
               case "eq": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return txt1.toLocaleLowerCase() === t2;
               }
               case "ncontains": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return !txt1.toLocaleLowerCase().includes(t2);
               }
               case "nends": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return !txt1.toLocaleLowerCase().endsWith(t2);
               }
               case "neq": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return txt1.toLocaleLowerCase() !== t2;
@@ -117,8 +102,7 @@ export class FilterConfiguration implements IFilterConfiguration {
                 return txt1 !== null;
               }
               case "nstarts": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return !txt1.toLocaleLowerCase().startsWith(t2);
@@ -127,8 +111,7 @@ export class FilterConfiguration implements IFilterConfiguration {
                 return txt1 === null;
               }
               case "starts": {
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 const t2 = term.setting.val1.toLocaleLowerCase();
                 return txt1.toLocaleLowerCase().startsWith(t2);
@@ -148,7 +131,9 @@ export class FilterConfiguration implements IFilterConfiguration {
                   term.setting.val1 === "" ||
                   term.setting.val2 === "" ||
                   term.setting.val1 === undefined ||
-                  term.setting.val2 === undefined
+                  term.setting.val2 === undefined ||
+                  term.setting.val1 === null ||
+                  term.setting.val2 === null
                 )
                   return true;
                 if (txt1 === null) return false;
@@ -157,27 +142,47 @@ export class FilterConfiguration implements IFilterConfiguration {
                 return t0 < t1 && t1 < t2;
               }
               case "eq":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
+                if (
+                  term.setting.val1 === "" ||
+                  term.setting.val1 === undefined ||
+                  term.setting.val1 === null
+                )
                   return true;
                 if (txt1 === null) return false;
                 return t1 === term.setting.val1;
               case "gt":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
+                if (
+                  term.setting.val1 === "" ||
+                  term.setting.val1 === undefined ||
+                  term.setting.val1 === null
+                )
                   return true;
                 if (txt1 === null) return false;
                 return t1 > term.setting.val1;
               case "gte":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
+                if (
+                  term.setting.val1 === "" ||
+                  term.setting.val1 === undefined ||
+                  term.setting.val1 === null
+                )
                   return true;
                 if (txt1 === null) return false;
                 return t1 >= term.setting.val1;
               case "lt":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
+                if (
+                  term.setting.val1 === "" ||
+                  term.setting.val1 === undefined ||
+                  term.setting.val1 === null
+                )
                   return true;
                 if (txt1 === null) return false;
                 return t1 < term.setting.val1;
               case "lte":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
+                if (
+                  term.setting.val1 === "" ||
+                  term.setting.val1 === undefined ||
+                  term.setting.val1 === null
+                )
                   return true;
                 if (txt1 === null) return false;
                 return t1 <= term.setting.val1;
@@ -186,7 +191,9 @@ export class FilterConfiguration implements IFilterConfiguration {
                   term.setting.val1 === "" ||
                   term.setting.val2 === "" ||
                   term.setting.val1 === undefined ||
-                  term.setting.val2 === undefined
+                  term.setting.val2 === undefined ||
+                  term.setting.val1 === null ||
+                  term.setting.val2 === null
                 )
                   return true;
                 if (txt1 === null) return false;
@@ -195,7 +202,11 @@ export class FilterConfiguration implements IFilterConfiguration {
                 return !(t0 < t1 && t1 < t2);
               }
               case "neq":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
+                if (
+                  term.setting.val1 === "" ||
+                  term.setting.val1 === undefined ||
+                  term.setting.val1 === null
+                )
                   return true;
                 if (txt1 === null) return false;
                 return t1 !== term.setting.val1;
@@ -225,28 +236,23 @@ export class FilterConfiguration implements IFilterConfiguration {
                 return t0 < t1 && t1 < t2;
               }
               case "eq":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 return t1 === parseFloat(term.setting.val1);
               case "gt":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 return t1 > parseFloat(term.setting.val1);
               case "gte":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 return t1 >= parseFloat(term.setting.val1);
               case "lt":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
                 return t1 < parseFloat(term.setting.val1);
               case "lte":
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 if (txt1 === null) return false;
 
                 return t1 <= parseFloat(term.setting.val1);
@@ -265,8 +271,7 @@ export class FilterConfiguration implements IFilterConfiguration {
               }
               case "neq":
                 if (txt1 === null) return false;
-                if (term.setting.val1 === "" || term.setting.val1 === undefined)
-                  return true;
+                if (term.setting.val1 === "" || term.setting.val1 === undefined) return true;
                 return t1 !== parseFloat(term.setting.val1);
               case "nnull":
                 return t1 !== null;
@@ -320,9 +325,7 @@ export class FilterConfiguration implements IFilterConfiguration {
                   const val2 = term.setting.val2 || "";
                   if (val2 === "") return true;
                   if (txt1 === null) return false;
-                  return txt1
-                    .toLocaleLowerCase()
-                    .includes(val2.toLocaleLowerCase());
+                  return txt1.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
                 }
                 break;
               case "ncontains":
@@ -331,9 +334,7 @@ export class FilterConfiguration implements IFilterConfiguration {
                   const val2 = term.setting.val2 || "";
                   if (val2 === "") return true;
                   if (txt1 === null) return false;
-                  return !txt1
-                    .toLocaleLowerCase()
-                    .includes(val2.toLocaleLowerCase());
+                  return !txt1.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
                 }
                 break;
             }
@@ -421,31 +422,19 @@ export class FilterConfiguration implements IFilterConfiguration {
       ),
       reaction(
         () => {
-          return [
-            this.dataView.selectedRow,
-            this.dataView.dataTable.rows.length
-          ];
+          return [this.dataView.selectedRow, this.dataView.dataTable.rows.length];
         },
         () => {
-          if (
-            !this.dataView.selectedRow &&
-            this.dataView.dataTable.rows.length > 0
-          ) {
+          if (!this.dataView.selectedRow && this.dataView.dataTable.rows.length > 0) {
             this.dataView.selectFirstRow();
-            console.log(
-              "sfr",
-              this.dataView.modelInstanceId,
-              this.dataView.selectedRow
-            );
+            console.log("sfr", this.dataView.modelInstanceId, this.dataView.selectedRow);
           }
         }
       )
     );
   }
 
-  @action.bound applyNewFilteringImm = flow(function*(
-    this: FilterConfiguration
-  ) {
+  @action.bound applyNewFilteringImm = flow(function*(this: FilterConfiguration) {
     console.log("New filtering:", toJS(this.filtering));
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
@@ -457,9 +446,7 @@ export class FilterConfiguration implements IFilterConfiguration {
 
         yield Promise.all(
           comboProps.map(prop =>
-            prop.lookup!.resolveList(
-              new Set(dataTable.getAllValuesOfProp(prop))
-            )
+            prop.lookup!.resolveList(new Set(dataTable.getAllValuesOfProp(prop)))
           )
         );
         //dataTable.setFilteringFn(this.filteringFunction);

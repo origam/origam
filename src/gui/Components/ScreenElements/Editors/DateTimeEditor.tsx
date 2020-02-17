@@ -154,7 +154,7 @@ export class DateTimeEditor extends React.Component<{
   isFocused?: boolean;
   foregroundColor?: string;
   backgroundColor?: string;
-  onChange?: (event: any, isoDay: string | undefined) => void;
+  onChange?: (event: any, isoDay: string | undefined | null) => void;
   onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
@@ -276,7 +276,7 @@ export class DateTimeEditor extends React.Component<{
   @action.bound handleTextfieldChange(event: any) {
     this.dirtyTextualValue = event.target.value;
     if (this.dirtyTextualValue === "") {
-      this.props.onChange && this.props.onChange(event, undefined);
+      this.props.onChange && this.props.onChange(event, null);
       return;
     }
     // TODO: Do not insist on spaces!?
