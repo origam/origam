@@ -124,7 +124,8 @@ namespace Origam.DA.Service
         public override void EndTransactionDontSave()
         {
             persistor.EndTransactionDontSave();
-            ReloadFiles(tryUpdate: false);
+            Maybe<XmlLoadError> result = ReloadFiles(tryUpdate: false);
+            if(result.HasValue) throw new Exception(result.Value.Message);
             PersistIndex(false);
         }
 
@@ -340,7 +341,8 @@ namespace Origam.DA.Service
             DirectoryInfo packageDir = index.FindPackageDirectory(packageId);
             origamFileManager.RemoveDirectoryWithContents(packageDir);
 
-            ReloadFiles(false);
+            Maybe<XmlLoadError> result = ReloadFiles(false);
+            if(result.HasValue) throw new Exception(result.Value.Message);
         }
 
         public override object Clone()
