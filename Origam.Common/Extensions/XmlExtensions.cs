@@ -74,6 +74,15 @@ namespace Origam.Extensions
                 mStream.Close();
             }
         }
+         public static string ToBeautifulString(this XmlDocument document)
+         {
+             XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+             {
+                 Indent = true,
+                 NewLineOnAttributes = true
+             }; 
+             return ToBeautifulString(document, xmlWriterSettings);
+         }
 
         public static XmlDocument RemoveAllEmptyAttributesAndNodes(this XmlDocument doc)
         {
