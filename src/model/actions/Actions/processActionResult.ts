@@ -9,6 +9,7 @@ import { IDialogInfo } from "model/entities/types/IOpenedScreen";
 import actions from "model/actions-tree";
 import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { openNewUrl } from "../Workbench/openNewUrl";
+import { processCRUDResult, ICRUDResult } from "../DataLoading/processCRUDResult";
 
 export interface IOpenNewForm {
   (
@@ -40,6 +41,10 @@ export interface IRefreshForm {
   (): Generator;
 }
 
+export interface IProcessCRUDResult {
+  (result: ICRUDResult): Generator;
+}
+
 export function new_ProcessActionResult($: any) {
   const workbenchLifecycle = getWorkbenchLifecycle($);
   return processActionResult2({
@@ -47,7 +52,8 @@ export function new_ProcessActionResult($: any) {
     openNewUrl: openNewUrl($),
     closeForm: closeForm($),
     refreshForm: actions.formScreen.refresh($),
-    getActionCaption: () => getActionCaption($)
+    getActionCaption: () => getActionCaption($),
+    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult($, crudResult)
   });
 }
 
@@ -57,6 +63,7 @@ export function processActionResult2(dep: {
   closeForm: ICloseForm;
   refreshForm: IRefreshForm;
   getActionCaption: IGetActionCaption;
+  processCRUDResult: IProcessCRUDResult;
 }) {
   return function* processActionResult2(actionResultList: any[]) {
     for (let actionResultItem of actionResultList) {
@@ -91,6 +98,10 @@ export function processActionResult2(dep: {
         }
         case IActionResultType.RefreshData: {
           yield* dep.refreshForm();
+          break;
+        }
+        case IActionResultType.UpdateData:{
+          yield* dep.processCRUDResult(actionResultItem.changes)
           break;
         }
         case IActionResultType.OpenUrl: {

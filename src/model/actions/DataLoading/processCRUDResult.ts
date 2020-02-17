@@ -3,13 +3,14 @@ import { runInAction } from "mobx";
 import _ from "lodash";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { putRowStateValue } from "../RowStates/putRowStateValue";
+import { reloadScreen } from "../FormScreen/reloadScreen";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
-  Delete = -1,
-  Update = 0,
-  Create = 1,
-  FormSaved = 2,
+  Delete = -1, // OK
+  Update = 0, // OK
+  Create = 1, // OK
+  FormSaved = 2, // OK ? - TODO: Check
   FormNeedsRefresh = 3,
   CurrentRecordNeedsUpdate = 4,
   RefreshPortal = 5
@@ -75,6 +76,11 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
     }
     case IResponseOperation.FormSaved: {
       getFormScreen(ctx).setDirty(false);
+      break;
+    }
+    case IResponseOperation.CurrentRecordNeedsUpdate: // TODO: Proper implementation
+    case IResponseOperation.FormNeedsRefresh: {
+      yield* reloadScreen(ctx)(); // TODO: It is not possible to reload data... Has to be done by different API endpoint
       break;
     }
     default:
