@@ -49,6 +49,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   onRequestScreenClose(): Generator;
 
+  clearAutorefreshInterval(): void;
+
   start(initUIResult: any): Generator;
   parent?: any;
 }

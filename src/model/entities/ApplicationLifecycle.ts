@@ -2,11 +2,9 @@ import { action, computed, observable } from "mobx";
 import { createWorkbench } from "../factories/createWorkbench";
 import { getApi } from "../selectors/getApi";
 import { getApplication } from "../selectors/getApplication";
-import {
-  IApplicationLifecycle,
-  IApplicationPage
-} from "./types/IApplicationLifecycle";
+import { IApplicationLifecycle, IApplicationPage } from "./types/IApplicationLifecycle";
 import { stopWorkQueues } from "model/actions/WorkQueues/stopWorkQueues";
+import { stopAllFormsAutorefresh } from "model/actions/Workbench/stopAllFormsAutorefresh";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
   $type_IApplicationLifecycle: 1 = 1;
@@ -65,6 +63,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       const api = getApi(this);
       const application = getApplication(this);
       window.sessionStorage.removeItem("origamAuthToken");
+      yield* stopAllFormsAutorefresh(application.workbench!)();
       yield* stopWorkQueues(application.workbench!)();
       application.resetWorkbench();
       try {
