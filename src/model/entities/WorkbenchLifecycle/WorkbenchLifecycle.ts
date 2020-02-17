@@ -22,48 +22,35 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
-    const {
-      type,
-      id,
-      label,
-      dialogWidth,
-      dialogHeight,
-      dontRequestData
-    } = args.item.attributes;
+    const { type, id, label, dialogWidth, dialogHeight, dontRequestData } = args.item.attributes;
     const { event } = args;
 
     const openedScreens = getOpenedScreens(this);
 
     let dialogInfo: IDialogInfo | undefined;
     if (type === IMainMenuItemType.FormRefWithSelection) {
-      dialogInfo = new DialogInfo(
-        parseInt(dialogWidth, 10),
-        parseInt(dialogHeight, 10)
-      );
+      dialogInfo = new DialogInfo(parseInt(dialogWidth, 10), parseInt(dialogHeight, 10));
     }
     if (event && !event.ctrlKey) {
       const existingItem = openedScreens.findLastExistingItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
+        const openedScreen = existingItem;
+        if (
+          openedScreen.content &&
+          openedScreen.content.formScreen &&
+          openedScreen.content.formScreen.refreshOnFocus &&
+          !openedScreen.content.isLoading
+        ) {
+          if (!getIsFormScreenDirty(openedScreen.content.formScreen)) {
+            yield* reloadScreen(openedScreen.content.formScreen)();
+          }
+        }
       } else {
-        yield* this.openNewForm(
-          id,
-          type,
-          label,
-          dontRequestData === "true",
-          dialogInfo,
-          {}
-        );
+        yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
       }
     } else {
-      yield* this.openNewForm(
-        id,
-        type,
-        label,
-        dontRequestData === "true",
-        dialogInfo,
-        {}
-      );
+      yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
     }
   }
 
@@ -79,6 +66,18 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const existingItem = openedScreens.findLastExistingItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
+        const openedScreen = existingItem;
+        if (
+          openedScreen.content &&
+          openedScreen.content.formScreen &&
+          openedScreen.content.formScreen.refreshOnFocus &&
+          !openedScreen.content.isLoading
+        ) {
+          if (!getIsFormScreenDirty(openedScreen.content.formScreen)) {
+            yield* reloadScreen(openedScreen.content.formScreen)();
+          }
+        }
+        
       } else {
         yield* this.openNewForm(id, type, label, false, dialogInfo, {});
       }
@@ -90,14 +89,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
-   
-    // Temporarily disabled because it resets selected row, checkboxes etc.
+
     if (
       openedScreen.content &&
       openedScreen.content.formScreen &&
       openedScreen.content.formScreen.refreshOnFocus &&
-      !openedScreen.content.isLoading 
-
+      !openedScreen.content.isLoading
     ) {
       if (!getIsFormScreenDirty(openedScreen.content.formScreen)) {
         yield* reloadScreen(openedScreen.content.formScreen)();
@@ -115,10 +112,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           openedScreen.order
         );
         if (closestScreen) {
-          openedScreens.activateItem(
-            closestScreen.menuItemId,
-            closestScreen.order
-          );
+          openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
         }
       }
       openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
@@ -130,10 +124,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           openedScreen.order
         );
         if (closestScreen) {
-          openedScreens.activateItem(
-            closestScreen.menuItemId,
-            closestScreen.order
-          );
+          openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
         }
       }
       openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
@@ -227,9 +218,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
     const workQueues = getWorkQueues(this);
-    yield* workQueues.setRefreshInterval(
-      portalInfo.workQueueListRefreshInterval
-    );
+    yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
     yield* workQueues.startTimer();
   }
 
