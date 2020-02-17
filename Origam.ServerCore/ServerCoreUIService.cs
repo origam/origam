@@ -209,11 +209,19 @@ namespace Origam.ServerCore
         
         public void Logout()
         {
-            PortalSessionStore pss = sessionManager.GetPortalSession();
+            PortalSessionStore pss;
+            try
+            {
+                pss = sessionManager.GetPortalSession();
+            }
+            catch(SessionExpiredException)
+            {
+                return;
+            }
 
             if (pss == null)
             {
-                throw new Exception("Session not available. Cannot log out.");
+                return;
             }
 
             while(pss.FormSessions.Count > 0)
