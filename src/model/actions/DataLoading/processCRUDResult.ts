@@ -4,6 +4,9 @@ import _ from "lodash";
 import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 import { putRowStateValue } from "../RowStates/putRowStateValue";
 import { reloadScreen } from "../FormScreen/reloadScreen";
+import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
+import { getIsBindingParent } from "model/selectors/DataView/getIsBindingParent";
+import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -78,7 +81,16 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       getFormScreen(ctx).setDirty(false);
       break;
     }
-    case IResponseOperation.CurrentRecordNeedsUpdate: // TODO: Proper implementation
+    case IResponseOperation.CurrentRecordNeedsUpdate: {
+      const dataViews = getDataViewList(ctx);
+      for(let dataView of dataViews) {
+        if(getIsBindingRoot(dataView)) {
+          yield* dataView.lifecycle.changeMasterRow();
+          yield* dataView.lifecycle.navigateChildren();
+        }
+      }
+      break;
+    }
     case IResponseOperation.FormNeedsRefresh: {
       yield* reloadScreen(ctx)(); // TODO: It is not possible to reload data... Has to be done by different API endpoint
       break;
