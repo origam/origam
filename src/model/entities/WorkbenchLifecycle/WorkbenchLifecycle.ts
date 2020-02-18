@@ -170,6 +170,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       // TODO: Error handling here!
       const initUIResult = yield api.initUI({
         Type: type,
+        Caption: label,
         ObjectId: id,
         FormSessionId: formSessionId,
         IsNewSession: !isSessionRebirth,

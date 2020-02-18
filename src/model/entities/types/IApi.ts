@@ -136,6 +136,7 @@ export interface IApi {
     RegisterSession: boolean;
     DataRequested: boolean;
     ObjectId: string;
+    Caption: string;
     Parameters: { [key: string]: any } | undefined;
   }): Promise<any>;
   destroyUI(data: { FormSessionId: string }): Promise<any>;

@@ -83,6 +83,7 @@ export class OrigamAPI implements IApi {
     RegisterSession: boolean;
     DataRequested: boolean;
     ObjectId: string;
+    Caption: string;
     Parameters: { [key: string]: any };
   }) {
     const result = (
