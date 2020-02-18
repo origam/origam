@@ -147,7 +147,17 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   *navigateChildren(): Generator<any, any> {
     try {
       this.inFlow++;
-      yield Promise.all(getBindingChildren(this).map(bch => flow(navigateAsChild(bch))()));
+      yield Promise.all(
+        getBindingChildren(this).map(bch =>
+          flow(function*() {
+            try {
+              yield* navigateAsChild(bch)();
+            } catch (e) {
+              yield* handleError(bch)(e);
+            }
+          })()
+        )
+      );
       /*for (let bch of getBindingChildren(this)) {
         yield navigateAsChild(bch)();
       }*/
