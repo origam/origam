@@ -14,10 +14,7 @@ import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/get
 import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePanelView/getTableViewPropertyByIdx";
 import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { CPR } from "../../../../utils/canvas";
-import {
-  IRenderCellArgs,
-  IRenderedCell
-} from "../../../Components/ScreenElements/Table/types";
+import { IRenderCellArgs, IRenderedCell } from "../../../Components/ScreenElements/Table/types";
 import { onTableCellClick } from "model/actions-ui/DataView/TableView/onTableCellClick";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
@@ -39,14 +36,7 @@ export class CellRenderer implements ICellRenderer {
   tablePanelView: ITablePanelView = null as any;
 
   @bind
-  renderCell({
-    rowIndex,
-    columnIndex,
-    rowHeight,
-    columnWidth,
-    onCellClick,
-    ctx
-  }: IRenderCellArgs) {
+  renderCell({ rowIndex, columnIndex, rowHeight, columnWidth, onCellClick, ctx }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
     onCellClick.subscribe((event: any) => {
       onTableCellClick(this.tablePanelView)(
@@ -73,7 +63,7 @@ export class CellRenderer implements ICellRenderer {
       if (cell.backgroundColor) {
         ctx.fillStyle = cell.backgroundColor;
       } else {
-        ctx.fillStyle = rowIndex % 2 === 0 ? "#ffffff" : "#f7f6fa";
+        ctx.fillStyle = rowIndex % 2 === 0 ? "#f7f6fa" : "#ffffff";
       }
     }
     ctx.fillRect(0, 0, columnWidth * CPR, (rowHeight - 0) * CPR);
@@ -129,11 +119,7 @@ export class CellRenderer implements ICellRenderer {
           if (cell.value !== null) {
             ctx.save();
             ctx.textAlign = "right";
-            ctx.fillText(
-              "" + cell.value!,
-              (columnWidth - cellPaddingLeft) * CPR,
-              15 * CPR
-            );
+            ctx.fillText("" + cell.value!, (columnWidth - cellPaddingLeft) * CPR, 15 * CPR);
             ctx.restore();
           }
           break;
@@ -185,10 +171,7 @@ export class CellRenderer implements ICellRenderer {
 
   getCell(rowIndex: number, columnIndex: number): IRenderedCell {
     const dataTable = getDataTable(this.tablePanelView);
-    const record = getTableViewRecordByExistingIdx(
-      this.tablePanelView,
-      rowIndex
-    );
+    const record = getTableViewRecordByExistingIdx(this.tablePanelView, rowIndex);
     const recordId = dataTable.getRowId(record);
     const selectedRowId = getSelectedRowId(this.tablePanelView);
     if (this.isSelectionCheckboxes) {
@@ -196,18 +179,12 @@ export class CellRenderer implements ICellRenderer {
         const selectionMember = getSelectionMember(this.tablePanelView);
         let value = false;
         if (selectionMember) {
-          const dsField = getDataSourceFieldByName(
-            this.tablePanelView,
-            selectionMember
-          );
+          const dsField = getDataSourceFieldByName(this.tablePanelView, selectionMember);
           if (dsField) {
             value = dataTable.getCellValueByDataSourceField(record, dsField);
           }
         } else {
-          value = selectors.selectionCheckboxes.getIsSelectedRowId(
-            this.tablePanelView,
-            recordId
-          );
+          value = selectors.selectionCheckboxes.getIsSelectedRowId(this.tablePanelView, recordId);
         }
         return {
           isCellCursor: false,
@@ -226,11 +203,7 @@ export class CellRenderer implements ICellRenderer {
             getRowStateColumnBgColor(this.tablePanelView, recordId, "") ||
             getRowStateRowBgColor(this.tablePanelView, recordId),
 
-          foregroundColor: getRowStateForegroundColor(
-            this.tablePanelView,
-            recordId,
-            ""
-          )
+          foregroundColor: getRowStateForegroundColor(this.tablePanelView, recordId, "")
         };
       }
       columnIndex--;
@@ -241,10 +214,7 @@ export class CellRenderer implements ICellRenderer {
     let isLoading = false;
     let isLink = false;
 
-    const property = getTableViewPropertyByIdx(
-      this.tablePanelView,
-      columnIndex
-    );
+    const property = getTableViewPropertyByIdx(this.tablePanelView, columnIndex);
 
     if (property.isLookup) {
       if (property.column === "TagInput") {
@@ -270,17 +240,11 @@ export class CellRenderer implements ICellRenderer {
         ? new Map(
             Object.entries<string>(
               errors.fieldErrors
-            ).map(([dsIndexStr, errMsg]: [string, string]) => [
-              parseInt(dsIndexStr, 10),
-              errMsg
-            ])
+            ).map(([dsIndexStr, errMsg]: [string, string]) => [parseInt(dsIndexStr, 10), errMsg])
           )
         : undefined;
 
-      const errMsg =
-        dsFieldErrors && errMap
-          ? errMap.get(property.dataSourceIndex)
-          : undefined;
+      const errMsg = dsFieldErrors && errMap ? errMap.get(property.dataSourceIndex) : undefined;
       if (errMsg) {
         isInvalid = true;
         invalidMessage = errMsg;
@@ -288,13 +252,10 @@ export class CellRenderer implements ICellRenderer {
     }
 
     return {
-      isCellCursor:
-        property.id === selectedColumnId && recordId === selectedRowId,
+      isCellCursor: property.id === selectedColumnId && recordId === selectedRowId,
       isRowCursor: recordId === selectedRowId,
-      isColumnOrderChangeSource:
-        this.tablePanelView.columnOrderChangingSourceId === property.id,
-      isColumnOrderChangeTarget:
-        this.tablePanelView.columnOrderChangingTargetId === property.id,
+      isColumnOrderChangeSource: this.tablePanelView.columnOrderChangingSourceId === property.id,
+      isColumnOrderChangeTarget: this.tablePanelView.columnOrderChangingTargetId === property.id,
       isLoading,
       isInvalid,
       isLink,
@@ -306,16 +267,8 @@ export class CellRenderer implements ICellRenderer {
       backgroundColor:
         getRowStateColumnBgColor(this.tablePanelView, recordId, property.id) ||
         getRowStateRowBgColor(this.tablePanelView, recordId),
-      isHidden: !getRowStateAllowRead(
-        this.tablePanelView,
-        recordId,
-        property.id
-      ),
-      foregroundColor: getRowStateForegroundColor(
-        this.tablePanelView,
-        recordId,
-        property.id
-      )
+      isHidden: !getRowStateAllowRead(this.tablePanelView, recordId, property.id),
+      foregroundColor: getRowStateForegroundColor(this.tablePanelView, recordId, property.id)
     };
   }
 }

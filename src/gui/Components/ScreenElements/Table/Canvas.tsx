@@ -48,9 +48,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
   }
 
   @computed public get scrollLeft() {
-    return this.props.isHorizontalScroll
-      ? this.props.scrollOffsetSource.scrollLeft
-      : 0;
+    return this.props.isHorizontalScroll ? this.props.scrollOffsetSource.scrollLeft : 0;
   }
 
   @computed public get rectTop() {
@@ -173,36 +171,44 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
 
     this.onClickSubscriptions = [];
     ctx.save();
-    ctx.beginPath();
+    /*ctx.beginPath();
     ctx.rect(
       0,
       0,
       Math.min(this.props.contentWidth - this.scrollLeft) * CPR,
       this.props.contentHeight * CPR
     );
-    ctx.clip();
+    ctx.clip();*/
     for (
       let columnIndex = firstVisibleColumnIndex; // + this.props.columnStartIndex;
       columnIndex <= lastVisibleColumnIndex; // + this.props.columnStartIndex;
       columnIndex++
     ) {
-      for (
-        let rowIndex = firstVisibleRowIndex;
-        rowIndex <= lastVisibleRowIndex;
-        rowIndex++
-      ) {
+      for (let rowIndex = firstVisibleRowIndex; rowIndex <= lastVisibleRowIndex; rowIndex++) {
         this.renderCell(columnIndex, rowIndex, ctx);
+      }
+    }
+    const dim = this.props.gridDimensions;
+    const columnRight = dim.getColumnRight(lastVisibleColumnIndex);
+    if (columnRight < this.canvasWidthPX) {
+      for (let rowIndex = firstVisibleRowIndex; rowIndex <= lastVisibleRowIndex; rowIndex++) {
+        const rowTop = dim.getRowTop(rowIndex);
+        const rowBottom = dim.getRowBottom(rowIndex);
+        const rowHeight = dim.getRowHeight(rowIndex);
+        ctx.fillStyle = rowIndex % 2 === 0 ? "#f7f6fa" : "#ffffff";
+        ctx.fillRect(
+          columnRight * CPR,
+          (rowTop - this.scrollTop) * CPR,
+          (this.canvasWidthPX - columnRight) * CPR,
+          rowHeight * CPR
+        );
       }
     }
     ctx.restore();
     this.props.onAfterRender && this.props.onAfterRender();
   }
 
-  private renderCell(
-    columnIndex: number,
-    rowIndex: number,
-    ctx: CanvasRenderingContext2D
-  ) {
+  private renderCell(columnIndex: number, rowIndex: number, ctx: CanvasRenderingContext2D) {
     const dim = this.props.gridDimensions;
     const columnLeft = dim.getColumnLeft(columnIndex) + this.props.leftOffset;
     const columnRight = dim.getColumnRight(columnIndex) + this.props.leftOffset;
@@ -223,10 +229,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
     ctx.save();
 
     // Move origin to top left corner of the cell being drawn.
-    ctx.translate(
-      (columnLeft - this.scrollLeft) * CPR,
-      (rowTop - this.scrollTop) * CPR
-    );
+    ctx.translate((columnLeft - this.scrollLeft) * CPR, (rowTop - this.scrollTop) * CPR);
 
     this.props.renderCell({
       rowIndex,
@@ -273,8 +276,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
             this.lastVisibleRowIndex
           ] as [number, number, number, number],
         data => {
-          this.props.onVisibleDataChanged &&
-            this.props.onVisibleDataChanged(...data);
+          this.props.onVisibleDataChanged && this.props.onVisibleDataChanged(...data);
         }
       )
     );
@@ -293,12 +295,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
   @action.bound public triggerCellClick(event: any, x: number, y: number) {
     let triggered = false;
     for (let subs of this.onClickSubscriptions) {
-      if (
-        subs.left <= x &&
-        x < subs.right &&
-        subs.top <= y &&
-        y < subs.bottom
-      ) {
+      if (subs.left <= x && x < subs.right && subs.top <= y && y < subs.bottom) {
         triggered = true;
         subs.onClick.trigger(event);
       }
