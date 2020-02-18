@@ -16,6 +16,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { getApi } from "../../selectors/getApi";
 import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
 import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
+import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -47,11 +48,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     function*(this: DataViewLifecycle) {
       try {
         this.inFlow++;
-        console.log(
-          getDataViewLabel(this),
-          "detected control id change",
-          getSelectedRowId(this)
-        );
+        console.log(getDataViewLabel(this), "detected control id change", getSelectedRowId(this));
         if (getSelectedRowId(this)) {
           if (getIsBindingRoot(this)) {
             yield* this.changeMasterRow();
@@ -107,7 +104,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const api = getApi(this);
       this.changeMasterRowCanceller && this.changeMasterRowCanceller();
       this.changeMasterRowCanceller = api.createCanceller();
-      yield api.setMasterRecord(
+      const crudResult = yield api.setMasterRecord(
         {
           SessionFormIdentifier: getSessionId(this),
           Entity: getEntity(this),
@@ -115,6 +112,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         },
         this.changeMasterRowCanceller
       );
+      yield* processCRUDResult(this, crudResult);
     } catch (error) {
       if (Axios.isCancel(error)) {
         return;
@@ -149,9 +147,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   *navigateChildren(): Generator<any, any> {
     try {
       this.inFlow++;
-      yield Promise.all(
-        getBindingChildren(this).map(bch => flow(navigateAsChild(bch))())
-      );
+      yield Promise.all(getBindingChildren(this).map(bch => flow(navigateAsChild(bch))()));
       /*for (let bch of getBindingChildren(this)) {
         yield navigateAsChild(bch)();
       }*/

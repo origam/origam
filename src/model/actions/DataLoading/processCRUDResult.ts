@@ -35,6 +35,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
     }
     return;
   }
+ // console.log(result)
   const resultItem = result;
   if (resultItem.state) {
     // TODO: Context for all CRUD ops?
