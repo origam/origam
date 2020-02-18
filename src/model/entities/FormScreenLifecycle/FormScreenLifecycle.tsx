@@ -261,24 +261,34 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  _flushDataRunning = false;
+  _flushDataShallRerun = false;
   *flushData() {
     try {
+      if (this._flushDataRunning) {
+        this._flushDataShallRerun = true;
+        return;
+      }
+      this._flushDataRunning = true;
       this.inFlow++;
       const api = getApi(this);
-      for (let dataView of getFormScreen(this).dataViews) {
-        for (let row of dataView.dataTable.getDirtyValueRows()) {
-          const updateObjectResult = yield api.updateObject({
-            SessionFormIdentifier: getSessionId(this),
-            Entity: dataView.entity,
-            Id: dataView.dataTable.getRowId(row),
-            Values: map2obj(dataView.dataTable.getDirtyValues(row))
-          });
-          console.log(updateObjectResult);
-          yield* refreshWorkQueues(this)();
-          yield* processCRUDResult(dataView, updateObjectResult);
+      do {
+        this._flushDataShallRerun = false;
+        for (let dataView of getFormScreen(this).dataViews) {
+          for (let row of dataView.dataTable.getDirtyValueRows()) {
+            const updateObjectResult = yield api.updateObject({
+              SessionFormIdentifier: getSessionId(this),
+              Entity: dataView.entity,
+              Id: dataView.dataTable.getRowId(row),
+              Values: map2obj(dataView.dataTable.getDirtyValues(row))
+            });
+            yield* refreshWorkQueues(this)();
+            yield* processCRUDResult(dataView, updateObjectResult);
+          }
         }
-      }
+      } while (this._flushDataShallRerun);
     } finally {
+      this._flushDataRunning = false;
       this.inFlow--;
     }
   }
