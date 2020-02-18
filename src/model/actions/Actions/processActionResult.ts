@@ -77,7 +77,8 @@ export function processActionResult2(dep: {
             parameters,
             isModalDialog,
             dialogWidth,
-            dialogHeight
+            dialogHeight,
+            caption
           } = request;
           const dialogInfo = isModalDialog
             ? new DialogInfo(dialogWidth, dialogHeight)
@@ -85,7 +86,7 @@ export function processActionResult2(dep: {
           yield* dep.openNewForm(
             objectId,
             typeString,
-            dep.getActionCaption(),
+            caption || dep.getActionCaption(),
             !dataRequested,
             dialogInfo,
             parameters

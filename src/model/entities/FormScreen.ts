@@ -1,10 +1,7 @@
 import { IDataView } from "./types/IDataView";
 import { IDataSource } from "./types/IDataSource";
 import { IComponentBinding } from "./types/IComponentBinding";
-import {
-  IFormScreenLifecycle,
-  IFormScreenLifecycle02
-} from "./types/IFormScreenLifecycle";
+import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
 import { computed, action, observable } from "mobx";
 import { IAction } from "./types/IAction";
 import { getDontRequestData } from "model/selectors/getDontRequestData";
@@ -16,7 +13,6 @@ import {
 } from "./types/IFormScreen";
 
 export class FormScreen implements IFormScreen {
-  
   $type_IFormScreen: 1 = 1;
 
   constructor(data: IFormScreenData) {
@@ -32,7 +28,7 @@ export class FormScreen implements IFormScreen {
   @observable isDirty: boolean = false;
 
   sessionId: string = "";
-  title: string = "";
+  @observable title: string = "";
   menuId: string = "";
   openingOrder: number = 0;
   showInfoPanel: boolean = false;
@@ -42,10 +38,7 @@ export class FormScreen implements IFormScreen {
   autoSaveOnListRecordChange: boolean = false;
   requestSaveAfterUpdate: boolean = false;
   screenUI: any;
-  panelConfigurations: Map<
-    string,
-    { position: number | undefined }
-  > = new Map();
+  panelConfigurations: Map<string, { position: number | undefined }> = new Map();
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
 
@@ -59,6 +52,10 @@ export class FormScreen implements IFormScreen {
 
   @computed get rootDataViews(): IDataView[] {
     return this.dataViews.filter(dv => dv.isBindingRoot);
+  }
+
+  @action.bound setTitle(title: string) {
+    this.title = title;
   }
 
   getBindingsByChildId(childId: string) {
@@ -121,9 +118,7 @@ export class FormScreen implements IFormScreen {
 
     const recursive = (dataView: IDataView, level: number) => {
       console.log(
-        `${strrep(level, "  ")}${dataView.name} (${dataView.entity} - ${
-          dataView.modelId
-        })`
+        `${strrep(level, "  ")}${dataView.name} (${dataView.entity} - ${dataView.modelId})`
       );
       for (let chb of dataView.childBindings) {
         recursive(chb.childDataView, level + 1);
@@ -132,9 +127,7 @@ export class FormScreen implements IFormScreen {
     console.log("");
     console.log("View bindings");
     console.log("=============");
-    const roots = Array.from(this.dataViews.values()).filter(
-      dv => dv.isBindingRoot
-    );
+    const roots = Array.from(this.dataViews.values()).filter(dv => dv.isBindingRoot);
     for (let dv of roots) {
       recursive(dv, 0);
     }

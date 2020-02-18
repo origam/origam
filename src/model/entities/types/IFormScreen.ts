@@ -125,6 +125,7 @@ export interface IFormScreen extends IFormScreenData {
   getDataSourceByEntity(entity: string): IDataSource | undefined;
 
   setDirty(state: boolean): void;
+  setTitle(title: string): void;
   printMasterDetailTree(): void;
 
   parent?: any;

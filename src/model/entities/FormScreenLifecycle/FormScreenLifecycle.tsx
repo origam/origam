@@ -1,13 +1,5 @@
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import {
-  action,
-  computed,
-  observable,
-  autorun,
-  flow,
-  when,
-  reaction
-} from "mobx";
+import { action, computed, observable, autorun, flow, when, reaction } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -60,17 +52,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.flushData();
   }
 
-  *onCreateRow(
-    entity: string,
-    gridId: string
-  ): Generator<unknown, any, unknown> {
+  *onCreateRow(entity: string, gridId: string): Generator<unknown, any, unknown> {
     yield* this.createRow(entity, gridId);
   }
 
-  *onDeleteRow(
-    entity: string,
-    rowId: string
-  ): Generator<unknown, any, unknown> {
+  *onDeleteRow(entity: string, rowId: string): Generator<unknown, any, unknown> {
     yield* this.deleteRow(entity, rowId);
   }
 
@@ -165,9 +151,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *start(initUIResult: any): Generator {
     let _steadyDebounceTimeout: any;
     reaction(
-      () =>
-        getFormScreen(this).dataViews.every(dv => !dv.isWorking) &&
-        !this.isWorking,
+      () => getFormScreen(this).dataViews.every(dv => !dv.isWorking) && !this.isWorking,
       allDataViewsSteady => {
         if (allDataViewsSteady) {
           _steadyDebounceTimeout = setTimeout(() => {
@@ -373,12 +357,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* refreshWorkQueues(this)();
   }
 
-  *executeAction(
-    gridId: string,
-    entity: string,
-    action: IAction,
-    selectedItems: string[]
-  ) {
+  *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
     try {
       this.inFlow++;
       const parameters: { [key: string]: any } = {};
