@@ -30,7 +30,6 @@ using System.Runtime.CompilerServices;
 using System.Xml;
 using CSharpFunctionalExtensions;
 using MoreLinq;
-using Origam.DA.Common;
 using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade
@@ -69,13 +68,31 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private void TryUpgrade(XmlNode classNode, XmlFileData xmlFileData)
         {
             Type typeToUpgrade = FindType(classNode);
-            Version currentClassVersion = GetCurrentClassVersion(classNode, typeToUpgrade);
-            Version persistedClassVersion = GetPersistedClassVersion(classNode);
+            Versions currentClassVersions = Versions.GetCurrentClassVersion(typeToUpgrade);
+            Versions persistedClassVersions = Versions.GetPersistedClassVersion(classNode, typeToUpgrade);
             
-            if (currentClassVersion == persistedClassVersion) return ;
-            if (currentClassVersion < persistedClassVersion) throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xmlFileData.FileInfo.FullName}");
-            
-            RunUpgradeScripts(classNode, xmlFileData,typeToUpgrade,  persistedClassVersion, currentClassVersion);
+            foreach (var pair in currentClassVersions)
+            {
+                Type type = pair.Key;
+                Version currentVersion = pair.Value;
+                if (!persistedClassVersions.ContainsKey(type))
+                {
+                    RunUpgradeScripts(classNode, xmlFileData, type,
+                        new Version("1.0.0"), currentVersion);
+                    continue;
+                }
+
+                if (persistedClassVersions[type] > currentVersion)
+                {
+                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xmlFileData.FileInfo.FullName}");
+                }
+
+                if (persistedClassVersions[type] < currentVersion)
+                {
+                    RunUpgradeScripts(classNode, xmlFileData, type,
+                        persistedClassVersions[type], currentVersion);
+                }
+            }
 
             string upgradedXmlString = OrigamDocumentSorter
                 .CopyAndSort(xmlFileData.XmlDocument)
@@ -102,19 +119,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new object[] {xmlFileData.XmlDocument, classNode, persistedClassVersion, currentClassVersion});
         }
 
-        private Version GetPersistedClassVersion(XmlNode classNode)
-        {
-            if (classNode == null)
-            {
-                throw new ArgumentNullException(nameof(classNode));
-            }
-            
-            string version = classNode.Attributes["version"]?.Value;
-            return version == null 
-                ? new Version("1.0.0") 
-                : new Version(version);
-        }
-
         private Type FindType(XmlNode classNode)
         {
             if (classNode == null)
@@ -135,17 +139,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 throw new Exception($"Type of {classNode.Name} could not be found");
             }
             return type;
-        }
-
-        private Version GetCurrentClassVersion(XmlNode classNode, Type type)
-        {
-            var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as ClassMetaVersionAttribute;
-            if (attribute == null)
-            {
-                throw new Exception($"Cannot get meta version of class {type.Name} because it does not have {nameof(ClassMetaVersionAttribute)} on it");
-            }
-
-            return attribute.Value;
         }
     }
 }

@@ -77,10 +77,14 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         private void SetVersion(XmlNode classNode, Version toVersion)
         {
+            string versionAttr = classNode.Attributes["versions"]?.Value;
+            Versions versions = Versions.FromAttributeString(versionAttr);
+            versions[typeof(T)] = toVersion;
+            
             ((XmlElement) classNode).SetAttribute(
-                "version",
-                toVersion.ToString());
-        }
+                    "versions",
+                    versions.ToAttributeString());
+            }
     }
     
     [DebuggerDisplay("Form: {FromVersion}, To: {ToVersion}")]
