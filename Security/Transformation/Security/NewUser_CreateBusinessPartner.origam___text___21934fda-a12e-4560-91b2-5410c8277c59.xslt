@@ -10,6 +10,7 @@
 	<xsl:param name="firstName"/>
 	<xsl:param name="userName"/>
 	<xsl:param name="roleId"/>
+	<xsl:param name="emailConfirmed"/>
 
 	<xsl:template match="ROOT">
 		<ROOT>			
@@ -26,6 +27,9 @@
 						Id="{AS:GenerateId()}"
 						refOrigamRoleId="{$roleId}"
 					/>
+				</xsl:if>
+				<xsl:if test="string($emailConfirmed)">
+					<EmailConfirmed><xsl:value-of select="$emailConfirmed"/></EmailConfirmed>
 				</xsl:if>
 			</BusinessPartner>
 		</ROOT>

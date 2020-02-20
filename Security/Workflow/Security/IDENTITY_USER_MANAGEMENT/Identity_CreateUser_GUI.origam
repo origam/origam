@@ -4,7 +4,7 @@
     abstract="false"
     x:id="79726423-e658-44ea-b9ad-0c82cfc234d0"
     name="Identity_CreateUser_GUI"
-    traceLevel="TraceArchitect"
+    traceLevel="None"
     transactionBehavior="InheritExisting"
     x:type="Origam.Schema.WorkflowModel.Workflow">
     <ContextStore

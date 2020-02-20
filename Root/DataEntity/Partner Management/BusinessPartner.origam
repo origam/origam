@@ -283,6 +283,19 @@
           x:type="Origam.Schema.EntityModel.EntityColumnReference" />
       </FunctionCallParameter>
     </DataEntityColumn>
+    <DataEntityColumn
+      abstract="true"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Boolean"
+      defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      excludeFromAllFields="false"
+      x:id="c17a8116-b016-4025-9ed8-d86996f4535f"
+      isPrimaryKey="false"
+      name="EmailConfirmed"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Element" />
     <DataEntityIndex
       abstract="true"
       generateDeploymentScript="false"

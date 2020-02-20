@@ -136,6 +136,21 @@
           x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter" />
         <ServiceMethodCallParameter
           abstract="false"
+          x:id="07e8d8f2-f614-4e55-bb86-caa78991f6f1"
+          name="EmailConfirmed"
+          serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/EmailConfirmed/984b2b27-634d-4aa7-b3c2-0541376774da"
+          x:type="Origam.Schema.WorkflowModel.ServiceMethodCallParameter">
+          <WorkflowContextReference
+            abstract="false"
+            castToDataType="String"
+            contextStore="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_CreateUserFromExistingBusinessPartner_Save.origam#Identity_CreateUserFromExistingBusinessPartner_Save/UserProfile_New/b9321ee1-5cee-4e27-b569-b29276680db0"
+            x:id="cbd5acd8-7e23-4da5-a90a-57cc7f35a6c8"
+            name="EmailConfirmed"
+            x:type="Origam.Schema.WorkflowModel.ContextReference"
+            xPath="/ROOT/BusinessPartner/EmailConfirmed" />
+        </ServiceMethodCallParameter>
+        <ServiceMethodCallParameter
+          abstract="false"
           x:id="3bba2368-0523-4182-bbc5-dd647ca6c3dc"
           name="PasswordQuestion"
           serviceMethodParameter="Security/Service/IdentityService.origam#IdentityService/CreateUser/PasswordQuestion/4f3f8c55-209d-43b9-bb3e-67f166c421e5"
