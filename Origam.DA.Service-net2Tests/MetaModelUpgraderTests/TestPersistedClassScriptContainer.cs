@@ -13,7 +13,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.1"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("newProperty1", "");
+                    AddAttribute(node, "newProperty1", "");
                     return node;
                 }));            
             upgradeScripts.Add(new UpgradeScript(
@@ -21,7 +21,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.2"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("newProperty2", "");
+                    AddAttribute(node, "newProperty2", "");
                     return node;
                 }));
         }
@@ -35,7 +35,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.1"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("TestBaseClassProperty", "");
+                    AddAttribute(node, "TestBaseClassProperty", "");
                     return node;
                 }));
         }
@@ -50,7 +50,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.1"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("newProperty1", "");
+                    AddAttribute(node, "newProperty1", "");
                     return node;
                 }));            
             upgradeScripts.Add(new UpgradeScript(
@@ -58,7 +58,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.2"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("newProperty2", "");
+                    AddAttribute(node, "newProperty2", "");
                     return node;
                 }));           
             upgradeScripts.Add(new UpgradeScript(
@@ -66,7 +66,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version("1.0.4"),
                 (node, doc) =>
                 {
-                    ((XmlElement) node).SetAttribute("newProperty4", "");
+                    AddAttribute(node, "newProperty4", "");
                     return node;
                 }));
         }

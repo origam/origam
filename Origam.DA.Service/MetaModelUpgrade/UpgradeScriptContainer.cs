@@ -84,7 +84,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
             ((XmlElement) classNode).SetAttribute(
                     "versions",
                     versions.ToAttributeString());
+        }
+        
+        protected void AddAttribute(XmlNode node, string attributeName, string attributeValue)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
             }
+            if (node.Attributes[attributeName] != null)
+            {
+                throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node.OuterXml}");
+            }
+
+            ((XmlElement) node).SetAttribute(attributeName, attributeValue);   
+        }
     }
     
     [DebuggerDisplay("Form: {FromVersion}, To: {ToVersion}")]
