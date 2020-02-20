@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Debug.cs" />
     <Compile Include="MetaModelUpgraderTests\MetaModelUpgraderTests.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestBaseClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass2.cs" />
     <Compile Include="MetaModelUpgraderTests\TestPersistedClassScriptContainer.cs" />

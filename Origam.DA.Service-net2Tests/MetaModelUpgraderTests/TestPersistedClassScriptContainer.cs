@@ -25,6 +25,20 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     return node;
                 }));
         }
+    }    
+    class TestBaseClassScriptContainer : UpgradeScriptContainer<TestBaseClass>
+    {
+        public TestBaseClassScriptContainer() 
+        {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("1.0.0"), 
+                new Version("1.0.1"),
+                (node, doc) =>
+                {
+                    ((XmlElement) node).SetAttribute("TestBaseClassProperty", "");
+                    return node;
+                }));
+        }
     }
     
     class TestPersistedClassScriptContainer2 : UpgradeScriptContainer<TestPersistedClass2>

@@ -3,7 +3,8 @@
   <TestPersistedClass
     name="test v0"
     newProperty1="5"
-    version="1.0.1"
+    TestBaseClassProperty="5"
+    versions="Origam.DA.ServiceTests.TestPersistedClass 1.0.1; Origam.DA.ServiceTests.TestBaseClass 1.0.1"
     x:type="Origam.DA.ServiceTests.TestPersistedClass"
 />
 </x:file>

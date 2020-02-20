@@ -54,11 +54,14 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
                 new List<XmlFileData>{xmlFileData});
 
             XmlNode classNode = xmlFileData.XmlDocument.ChildNodes[1].ChildNodes[0];
-            Assert.True(classNode.Attributes["newProperty1"] != null); // assert the property eas not removed
+            Assert.True(classNode.Attributes["newProperty1"] != null); // assert the property was not removed
             Assert.True(classNode.Attributes["newProperty1"].Value == "5"); // assert the property value was not changed
             Assert.True(classNode.Attributes["newProperty2"] != null);
-            Assert.True(classNode.Attributes["version"] != null);
-            Assert.True(classNode.Attributes["version"].Value == "1.0.2");
+            Assert.True(classNode.Attributes["TestBaseClassProperty"] != null);
+            Assert.True(classNode.Attributes["TestBaseClassProperty"].Value == "5");
+            Assert.True(classNode.Attributes["versions"] != null);
+            StringAssert.Contains("Origam.DA.ServiceTests.TestPersistedClass 1.0.2", classNode.Attributes["versions"].Value);
+            StringAssert.Contains("Origam.DA.ServiceTests.TestBaseClass 1.0.1", classNode.Attributes["versions"].Value);
         }      
         
         [Test]
@@ -72,8 +75,9 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             XmlNode classNode = xmlFileData.XmlDocument.ChildNodes[1].ChildNodes[0];
             Assert.True(classNode.Attributes["newProperty1"] != null);
             Assert.True(classNode.Attributes["newProperty2"] != null);
-            Assert.True(classNode.Attributes["version"] != null);
-            Assert.True(classNode.Attributes["version"].Value == "1.0.2");
+            Assert.True(classNode.Attributes["versions"] != null);
+            StringAssert.Contains("Origam.DA.ServiceTests.TestPersistedClass 1.0.2", classNode.Attributes["versions"].Value);
+            StringAssert.Contains("Origam.DA.ServiceTests.TestBaseClass 1.0.1", classNode.Attributes["versions"].Value);
         }
 
         [Test]

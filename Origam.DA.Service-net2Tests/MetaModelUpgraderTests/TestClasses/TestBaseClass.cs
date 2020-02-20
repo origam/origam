@@ -25,11 +25,9 @@ using Origam.DA.Common;
 
 namespace Origam.DA.ServiceTests
 {
-    [ClassMetaVersion("1.0.2")]
-    public class TestPersistedClass: TestBaseClass
+    [ClassMetaVersion("1.0.1")]
+    public class TestBaseClass
     {
-        public string Name { get; set; }
-        public string NewProperty1 { get; set; }
-        public string NewProperty2 { get; set; }
+        public string TestBaseClassProperty { get; set; }
     }
 }
