@@ -137,7 +137,12 @@ namespace Origam.Workflow
             File.Delete(path);
 			_result = null;
         }
-
+        
+        public void CreateDirectory(string path)
+        {
+            Directory.CreateDirectory(path);
+            _result = null;
+        }
 
 		public string[] GetFileList(string path, string searchPattern)
 		{
@@ -406,7 +411,15 @@ namespace Origam.Workflow
                     }
                     MoveFile(inPath, outPath, createDirectory, overwrite);
                     break;
-				default:
+                case "CreateDirectory":
+                    if (!(Parameters["Path"] is string))
+                    {
+                        throw new InvalidCastException(
+                            ResourceUtils.GetString("ErrorPathNotString"));
+                    }
+                    CreateDirectory((string)Parameters["Path"]);
+                    break;
+                default:
 					throw new ArgumentOutOfRangeException(
                         "MethodName", MethodName, 
                         ResourceUtils.GetString("InvalidMethodName"));
