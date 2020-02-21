@@ -28,11 +28,17 @@ import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshP
 import { handleError } from "model/actions/handleError";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import _ from "lodash";
+import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
   NoSave = 1,
   Save = 2
+}
+
+enum IQuestionDeleteDataAnswer {
+  No = 0,
+  Yes = 1
 }
 
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
@@ -57,7 +63,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onDeleteRow(entity: string, rowId: string): Generator<unknown, any, unknown> {
-    yield* this.deleteRow(entity, rowId);
+    yield* this.onRequestDeleteRow(entity, rowId);
   }
 
   *onSaveSession(): Generator<unknown, any, unknown> {
@@ -71,6 +77,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     selectedItems: string[]
   ): Generator<unknown, any, unknown> {
     yield* this.executeAction(gridId, entity, action, selectedItems);
+  }
+
+  *onRequestDeleteRow(entity: string, rowId: string) {
+    if ((yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
+      yield* this.deleteRow(entity, rowId);
+    }
   }
 
   *onRequestScreenClose(): Generator<unknown, any, unknown> {
@@ -434,6 +446,27 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             onCancelClick={() => {
               closeDialog();
               resolve(IQuestionSaveDataAnswer.Cancel);
+            }}
+          />
+        );
+      })
+    );
+  }
+
+  questionDeleteData() {
+    return new Promise(
+      action((resolve: (value: IQuestionDeleteDataAnswer) => void) => {
+        const closeDialog = getDialogStack(this).pushDialog(
+          "",
+          <QuestionDeleteData
+            screenTitle={getOpenedScreen(this).title}
+            onNoClick={() => {
+              closeDialog();
+              resolve(IQuestionDeleteDataAnswer.No);
+            }}
+            onYesClick={() => {
+              closeDialog();
+              resolve(IQuestionDeleteDataAnswer.Yes);
             }}
           />
         );
