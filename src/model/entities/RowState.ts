@@ -5,12 +5,7 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import { getSessionId } from "model/selectors/getSessionId";
 import { flashColor2htmlColor } from "utils/flashColorFormat";
-import {
-  IRowState,
-  IRowStateColumnItem,
-  IRowStateData,
-  IRowStateItem
-} from "./types/IRowState";
+import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -45,11 +40,7 @@ export class RowState implements IRowState {
         const idsToLoad: Set<string> = new Set();
         try {
           for (let key of this.observedIds.keys()) {
-            if (
-              key &&
-              !this.idStates.has(key) &&
-              !this.resolvedValues.has(key)
-            ) {
+            if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
               idsToLoad.add(key);
               this.idStates.set(key, IIdState.LOADING);
             }
@@ -88,6 +79,7 @@ export class RowState implements IRowState {
   triggerLoad = _.debounce(this.triggerLoadImm, 100);
 
   getValue(key: string) {
+    //console.log("getValue", key);
     if (!this.observedIds.has(key)) {
       this.observedIds.set(key, {
         atom: createAtom(
@@ -140,6 +132,18 @@ export class RowState implements IRowState {
         new Set(state.disabledActions)
       )
     );
+  }
+
+  @action.bound clearAll() {
+    this.resolvedValues.clear();
+    this.idStates.clear();
+    for (let obsvIdVal of this.observedIds.values()) {
+      obsvIdVal.atom.onBecomeObservedListeners.clear();
+      obsvIdVal.atom.onBecomeUnobservedListeners.clear();
+    }
+    this.observedIds.clear();
+    this.firstLoadingPerformed = false;
+    // TODO: Wait when something is currently loading.
   }
 
   parent?: any;

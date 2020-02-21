@@ -29,6 +29,7 @@ import { handleError } from "model/actions/handleError";
 import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import _ from "lodash";
 import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
+import { clearRowStates } from "model/actions/RowStates/clearRowStates";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -376,6 +377,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         getFormScreen(this).dataViews.forEach(dv => dv.restoreViewState());
       }, 10);
     }
+    yield* clearRowStates(this)();
     yield* refreshWorkQueues(this)();
   }
 
