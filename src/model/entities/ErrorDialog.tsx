@@ -35,11 +35,30 @@ export class ErrorDialogController {
 
   @computed get errorMessages() {
     return this.errorStack.map(errItem => {
-      const responseMessage =
+      console.log(errItem.error, "response.");
+
+      const handlePlainText = () =>
+        _.get(errItem.error, "response.headers.content-type", "").startsWith("text/plain") &&
+        errItem.error.response.data;
+
+      const handleMessageField = () =>
         _.get(errItem.error, "response.data.message") ||
         _.get(errItem.error, "response.data.Message");
 
-      const errorMessage = responseMessage || "" + errItem.error;
+      const handleRuntimeException = () => "" + errItem.error;
+
+      const handleLoginValidation = () =>
+        [
+          ..._.get(errItem.error, "response.data.UserName", []),
+          ..._.get(errItem.error, "response.data.Password", [])
+        ].join(" ");
+
+      const errorMessage =
+        handlePlainText() ||
+        handleMessageField() ||
+        handleLoginValidation() ||
+        handleRuntimeException();
+
       return {
         message: errorMessage,
         id: errItem.id,
@@ -144,9 +163,7 @@ export class ErrorDialogComponent extends React.Component<{
             <div className={CS.errorMessageList}>
               {this.props.errorMessages.map(errMessage => (
                 <div key={errMessage.id} className={CS.errorMessageListItem}>
-                  <span className={CS.errorMessageDatetime}>
-                    {errMessage.timestamp}
-                  </span>
+                  <span className={CS.errorMessageDatetime}>{errMessage.timestamp}</span>
                   {errMessage.message}
                 </div>
               ))}
