@@ -39,16 +39,30 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private readonly Assembly scriptAssembly;
         private readonly IFileWriter fileWriter;
 
+        private static List<UpgradeScriptContainer> scriptContainers;
+
+        private static void InstantiateScriptContainers(Assembly scriptAssembly)
+        {
+            if (scriptContainers != null) return;
+            scriptContainers = scriptAssembly.GetTypes()
+                .Where(type => type.IsSubclassOf(typeof(UpgradeScriptContainer)))
+                .Select(Activator.CreateInstance)
+                .Cast<UpgradeScriptContainer>()
+                .ToList();
+        }
+
         public MetaModelUpGrader(Assembly scriptAssembly, IFileWriter fileWriter)
         {
             this.scriptAssembly = scriptAssembly;
             this.fileWriter = fileWriter;
+            InstantiateScriptContainers(scriptAssembly);
         }
 
         public MetaModelUpGrader()
         {
             fileWriter = new FileWriter();
             scriptAssembly = GetType().Assembly;
+            InstantiateScriptContainers(scriptAssembly);
         }
 
         public bool TryUpgrade(List<XmlFileData> xmlData)
@@ -67,30 +81,30 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         private void TryUpgrade(XmlNode classNode, XmlFileData xmlFileData)
         {
-            Type typeToUpgrade = FindType(classNode);
-            Versions currentClassVersions = Versions.GetCurrentClassVersion(typeToUpgrade);
-            Versions persistedClassVersions = Versions.GetPersistedClassVersion(classNode, typeToUpgrade);
+            string classToUpgrade = GetClassName(classNode);
+            Versions currentClassVersions = Versions.GetCurrentClassVersion(classToUpgrade);
+            Versions persistedClassVersions = Versions.GetPersistedClassVersion(classNode, classToUpgrade);
             
             foreach (var pair in currentClassVersions)
             {
-                Type type = pair.Key;
+                string className = pair.Key;
                 Version currentVersion = pair.Value;
-                if (!persistedClassVersions.ContainsKey(type))
+                if (!persistedClassVersions.ContainsKey(className))
                 {
-                    RunUpgradeScripts(classNode, xmlFileData, type,
+                    RunUpgradeScripts(classNode, xmlFileData, className,
                         new Version("1.0.0"), currentVersion);
                     continue;
                 }
 
-                if (persistedClassVersions[type] > currentVersion)
+                if (persistedClassVersions[className] > currentVersion)
                 {
                     throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xmlFileData.FileInfo.FullName}");
                 }
 
-                if (persistedClassVersions[type] < currentVersion)
+                if (persistedClassVersions[className] < currentVersion)
                 {
-                    RunUpgradeScripts(classNode, xmlFileData, type,
-                        persistedClassVersions[type], currentVersion);
+                    RunUpgradeScripts(classNode, xmlFileData, className,
+                        persistedClassVersions[className], currentVersion);
                 }
             }
 
@@ -102,24 +116,17 @@ namespace Origam.DA.Service.MetaModelUpgrade
         }
 
         private void RunUpgradeScripts(XmlNode classNode,
-            XmlFileData xmlFileData, Type typeToUpgrade,
+            XmlFileData xmlFileData, string className,
             Version persistedClassVersion,
             Version currentClassVersion)
         {
-            Type upgradeScriptContainerClass = scriptAssembly.GetTypes()
-               .SingleOrDefault(type =>
-                   type.IsClass && type.BaseType.IsGenericType &&
-                   type.BaseType.GetGenericTypeDefinition() == typeof(UpgradeScriptContainer<>) &&
-                   type.BaseType.GetGenericArguments()[0] == typeToUpgrade)
-           ?? throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer<>).Name}<T> with generic type of {typeToUpgrade.Name}");
-
-            var upgradeScriptContainer = Activator.CreateInstance(upgradeScriptContainerClass);
-            MethodInfo upgradeMethod = upgradeScriptContainerClass.GetMethod("Upgrade");
-            upgradeMethod.Invoke(upgradeScriptContainer,
-                new object[] {xmlFileData.XmlDocument, classNode, persistedClassVersion, currentClassVersion});
+            var upgradeScriptContainer = scriptContainers
+                 .SingleOrDefault(container => container.ClassName == className) 
+                 ?? throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer).Name}<T> with generic type of {className}");
+            upgradeScriptContainer.Upgrade(xmlFileData.XmlDocument, classNode, persistedClassVersion, currentClassVersion);
         }
 
-        private Type FindType(XmlNode classNode)
+        private string GetClassName(XmlNode classNode)
         {
             if (classNode == null)
             {
@@ -132,13 +139,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 throw new Exception($"Cannot get meta version of class {classNode.Name} because it does not have \"x:type\" attribute");
             }
-            string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
-            Type type = Type.GetType(typeName + "," + assemblyName);
-            if (type == null)
-            {
-                throw new Exception($"Type of {classNode.Name} could not be found");
-            }
-            return type;
+            return typeName;
         }
     }
 }

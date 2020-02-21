@@ -8,7 +8,7 @@ using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
-    class Versions: Dictionary<Type, Version>
+    class Versions: Dictionary<string, Version>
     {
         public static Versions FromAttributeString(string xmlAttribute)
         {
@@ -32,10 +32,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
                         throw new ArgumentException(
                             $"Cannot parse type and version from: \"{xmlAttribute}\"");
                     }
-
-                    Type type = GetTypeByName(typeAndVersion[0]);
+                    
                     Version version = new Version(typeAndVersion[1]);
-                    return new Tuple<Type, Version>(type, version);
+                    return new Tuple<string, Version>(typeAndVersion[0], version);
                 });
            return new Versions(versionsDict);
         }
@@ -52,30 +51,32 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return type;
         }
 
-        internal static Versions GetCurrentClassVersion(Type type)
+        internal static Versions GetCurrentClassVersion(string typeName)
         {
+            Type type = GetTypeByName(typeName);
+            
             var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as ClassMetaVersionAttribute;
             if (attribute == null)
             {
-                throw new Exception($"Cannot get meta version of class {type.Name} because it does not have {nameof(ClassMetaVersionAttribute)} on it");
+                throw new Exception($"Cannot get meta version of class {type.FullName} because it does not have {nameof(ClassMetaVersionAttribute)} on it");
             }
             Version classVersion = attribute.Value;
             
-            Versions versions = new Versions {[type] = classVersion};
+            Versions versions = new Versions {[typeName] = classVersion};
 
             foreach (var baseType in type.GetAllBaseTypes())
             {
                 if (baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) 
                     is ClassMetaVersionAttribute versionAttribute)
                 {
-                    versions.Add(baseType, versionAttribute.Value);
+                    versions.Add(baseType.FullName, versionAttribute.Value);
                 }
             }
 
             return versions;
         }
 
-        internal static Versions GetPersistedClassVersion(XmlNode classNode, Type type)
+        internal static Versions GetPersistedClassVersion(XmlNode classNode, string type)
         {
             if (classNode == null)
             {
@@ -95,12 +96,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
         }
 
-        private Versions(Type type, Version version)
+        private Versions(string type, Version version)
         {
             this[type] = version;
         }
 
-        private Versions(IEnumerable<Tuple<Type, Version>> classVersions)
+        private Versions(IEnumerable<Tuple<string, Version>> classVersions)
         {
             foreach (var typeAndVersion in classVersions)
             {

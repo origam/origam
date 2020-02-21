@@ -83,26 +83,24 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         [Test]
         public void ShouldThrowIfOneOfUpgradeScriptsIsMissing()
         {
-            TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
+            Assert.Throws<ClassUpgradeException>(() =>
             {
                 XmlFileData xmlFileData = LoadFile("TestPersistedClass2V1.0.0.origam");
                 var sut = new MetaModelUpGrader(GetType().Assembly,  new NullFileWriter());
                 bool someFilesWereUpgraded = sut.TryUpgrade(
                     new List<XmlFileData>{xmlFileData});
             });
-            Assert.That(exception.InnerException, Is.TypeOf(typeof(ClassUpgradeException)));
         }         
         [Test]
         public void ShouldThrowIfAttributeIsAlreadyPresent()
         {
-            TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() =>
+            Assert.Throws<ClassUpgradeException>(() =>
             {
                 XmlFileData xmlFileData = LoadFile("TestPersistedClassV1.0.1_WrongVersion.origam");
                 var sut = new MetaModelUpGrader(GetType().Assembly,  new NullFileWriter());
                 bool someFilesWereUpgraded = sut.TryUpgrade(
                     new List<XmlFileData>{xmlFileData});
             });
-            Assert.That(exception.InnerException, Is.TypeOf(typeof(ClassUpgradeException)));
         } 
         
         protected override TestContext TestContext =>

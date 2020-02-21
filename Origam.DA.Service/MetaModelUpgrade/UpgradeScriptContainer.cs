@@ -29,10 +29,10 @@ using System.Xml;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
-    public class UpgradeScriptContainer<T>
+    public abstract class UpgradeScriptContainer
     {
         protected readonly List<UpgradeScript> upgradeScripts = new List<UpgradeScript>();
-        
+        public abstract string ClassName { get;}
         public void Upgrade(XmlDocument doc, XmlNode classNode, Version fromVersion, Version toVersion)
         {
             var scriptsToRun = upgradeScripts
@@ -42,15 +42,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
             if (scriptsToRun.Count == 0)
             {
-                throw new Exception($"There is no script to upgrade class {typeof(T).Name} from version {fromVersion} to {toVersion}");
+                throw new Exception($"There is no script to upgrade class {ClassName} from version {fromVersion} to {toVersion}");
             }
             if (scriptsToRun[0].FromVersion != fromVersion)
             {
-                throw new Exception($"Script to upgrade class {typeof(T).Name} from version {fromVersion} to the next version was not found");
+                throw new Exception($"Script to upgrade class {ClassName} from version {fromVersion} to the next version was not found");
             }
             if (scriptsToRun.Last().ToVersion != toVersion)
             {
-                throw new Exception($"Script to upgrade class {typeof(T).Name} to version {toVersion} was not found");
+                throw new Exception($"Script to upgrade class {ClassName} to version {toVersion} was not found");
             }
 
             CheckScriptsFormContinuousSequence(scriptsToRun);
@@ -63,14 +63,14 @@ namespace Origam.DA.Service.MetaModelUpgrade
             SetVersion(classNode, toVersion);
         }
 
-        private static void CheckScriptsFormContinuousSequence(List<UpgradeScript> scriptsToRun)
+        private void CheckScriptsFormContinuousSequence(List<UpgradeScript> scriptsToRun)
         {
             for (int i = 0; i < scriptsToRun.Count - 1; i++)
             {
                 if (scriptsToRun[i].ToVersion != scriptsToRun[i + 1].FromVersion)
                 {
                     throw new ClassUpgradeException(
-                        $"There is no script to upgrade class {typeof(T).Name} from version {scriptsToRun[i].ToVersion} to {scriptsToRun[i + 1].FromVersion}");
+                        $"There is no script to upgrade class {ClassName} from version {scriptsToRun[i].ToVersion} to {scriptsToRun[i + 1].FromVersion}");
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             string versionAttr = classNode.Attributes["versions"]?.Value;
             Versions versions = Versions.FromAttributeString(versionAttr);
-            versions[typeof(T)] = toVersion;
+            versions[ClassName] = toVersion;
             
             ((XmlElement) classNode).SetAttribute(
                     "versions",
@@ -106,6 +106,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public Version FromVersion { get; }
         public Version ToVersion { get;}
+        public static Version EndOfLife { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
 
         private readonly Func<XmlNode, XmlDocument, XmlNode> transformation;
 
