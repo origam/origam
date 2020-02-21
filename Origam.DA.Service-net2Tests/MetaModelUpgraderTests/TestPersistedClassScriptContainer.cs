@@ -47,7 +47,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 UpgradeScript.EndOfLife,
                 (node, doc) =>
                 {
-                    AddAttribute(node, "newProperty2", "");
+                    doc.DocumentElement.RemoveChild(node);
                     return node;
                 }));
         }

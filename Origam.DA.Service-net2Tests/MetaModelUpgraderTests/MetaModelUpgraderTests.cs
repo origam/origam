@@ -62,6 +62,18 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.True(classNode.Attributes["versions"] != null);
             StringAssert.Contains("Origam.DA.ServiceTests.TestPersistedClass 1.0.2", classNode.Attributes["versions"].Value);
             StringAssert.Contains("Origam.DA.ServiceTests.TestBaseClass 1.0.1", classNode.Attributes["versions"].Value);
+        }             
+        
+        [Test]
+        public void ShouldRemoveDeadClass()
+        {
+            XmlFileData xmlFileData = LoadFile("TestDeadClassV1.0.1.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            bool someFilesWereUpgraded = sut.TryUpgrade(
+                new List<XmlFileData>{xmlFileData});
+
+            XmlNode fileNode = xmlFileData.XmlDocument.ChildNodes[1];
+            Assert.That(fileNode.ChildNodes, Has.Count.EqualTo(0));
         }      
         
         [Test]
@@ -90,7 +102,8 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
                 bool someFilesWereUpgraded = sut.TryUpgrade(
                     new List<XmlFileData>{xmlFileData});
             });
-        }         
+        }  
+        
         [Test]
         public void ShouldThrowIfAttributeIsAlreadyPresent()
         {

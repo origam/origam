@@ -43,18 +43,17 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
             Type type = Type.GetType(typeName + "," + assemblyName);
-            if (type == null)
-            {
-                throw new Exception($"Type of {typeName} could not be found");
-            }
-
             return type;
         }
 
         internal static Versions GetCurrentClassVersion(string typeName)
         {
             Type type = GetTypeByName(typeName);
-            
+            if (type == null)
+            {
+                return  new Versions {[typeName] = UpgradeScript.EndOfLife}; 
+            }
+
             var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as ClassMetaVersionAttribute;
             if (attribute == null)
             {
