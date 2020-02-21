@@ -24,6 +24,7 @@ import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { onReloadWebScreenClick } from "model/actions-ui/ScreenToolbar/onReloadWebScreen";
 import { isIFormScreen, isIFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { isIWebScreen } from "model/entities/types/IWebScreen";
+import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -51,12 +52,12 @@ export class CScreenToolbar extends React.Component<{}> {
         {formScreen ? (
           <>
             <ScreenToolbarActionGroup>
-              <ScreenToolbarAction
+              {!getIsSuppressSave(formScreen) && <ScreenToolbarAction
                 onClick={onSaveSessionClick(formScreen)}
                 icon={
                   <Icon src="./icons/save.svg" className={isDirty ? "isRed isHoverGreen" : ""} />
                 }
-              />
+              />}
               <ScreenToolbarAction
                 onClick={onRefreshSessionClick(formScreen)}
                 icon={<Icon src="./icons/refresh.svg" />}

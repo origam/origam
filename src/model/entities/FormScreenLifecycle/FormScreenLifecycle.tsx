@@ -30,6 +30,7 @@ import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import _ from "lodash";
 import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { clearRowStates } from "model/actions/RowStates/clearRowStates";
+import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -87,7 +88,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onRequestScreenClose(): Generator<unknown, any, unknown> {
-    if (!getIsFormScreenDirty(this)) {
+    if (!getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield* this.closeForm();
       return;
     }
@@ -105,7 +106,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onRequestScreenReload(): Generator<unknown, any, unknown> {
-    if (!getIsFormScreenDirty(this)) {
+    if (!getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield* this.refreshSession();
       return;
     }
@@ -129,7 +130,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (autorefreshPeriod) {
       this.disposers.push(
         autorun(() => {
-          if (getIsFormScreenDirty(this) || !getIsActiveScreen(this)) {
+          if (
+            !getIsSuppressSave(this) &&
+            (getIsFormScreenDirty(this) || !getIsActiveScreen(this))
+          ) {
             this.clearAutorefreshInterval();
           } else {
             this._autorefreshTimerHandle = setInterval(
@@ -343,6 +347,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *saveSession() {
+    if(getIsSuppressSave(this)) {
+      return
+    }
     try {
       this.inFlow++;
       const api = getApi(this);

@@ -129,6 +129,7 @@ export function interpretScreenXml(
     menuId: windowXml.attributes.MenuId,
     sessionId,
     openingOrder: 0,
+    suppressSave: windowXml.attributes.SuppressSave === "true",
     showInfoPanel: windowXml.attributes.ShowInfoPanel === "true",
     autoRefreshInterval: parseInt(windowXml.attributes.AutoRefreshInterval, 10),
     refreshOnFocus: windowXml.attributes.RefreshOnFocus === "true",
