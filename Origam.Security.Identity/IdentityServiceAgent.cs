@@ -591,7 +591,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorPasswordAnswerNotString);
             }
-			bool emailConfirmed = true;
+			bool emailConfirmed = false;
 			if (Parameters.ContainsKey("EmailConfirmed"))
 			{
 				if (!(Parameters["EmailConfirmed"] is bool))
@@ -619,7 +619,7 @@ namespace Origam.Security.Identity
             {
                 user.ProviderUserKey = (Guid)Parameters["ProviderUserKey"];
             }
-            user.IsApproved = emailConfirmed;            
+            user.EmailConfirmed = emailConfirmed;            
             user.TransactionId = TransactionId;
             Task<InternalIdentityResult> task = userManager.CreateAsync(
                 user, Parameters["Password"].ToString().TrimEnd());

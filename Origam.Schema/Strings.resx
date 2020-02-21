@@ -192,4 +192,7 @@
   <data name="ErrorBuildReferenceIndex" xml:space="preserve">
     <value>Index of References is being built. Please wait.</value>
   </data>
+  <data name="ErrorSchemaItemAncestorPersistOnly" xml:space="preserve">
+    <value>Save Parent before Update SchemaItemAncestor </value>
+  </data>
 </root>

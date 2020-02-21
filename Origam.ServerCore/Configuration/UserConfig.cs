@@ -31,5 +31,6 @@ namespace Origam.ServerCore.Configuration
         public string UserRegistrationMailSubject { get; set; }
         public string UserRegistrationMailBodyFileName { get; set; }
         public string MailQueueName { get; set; }
+        public string PortalBaseUrl { get; set; }
     }
 }
