@@ -33,8 +33,11 @@ namespace Origam
 		static public readonly BindingFlags SearchCriteria = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 		static private Hashtable memberTypeCache = new Hashtable();
 		static private IReflectorCache classCache;
+        private static readonly log4net.ILog log
+            = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected Reflector() 
+        protected Reflector() 
 		{
 		}
 
@@ -169,23 +172,31 @@ namespace Origam
             }
 		}
 
+        private static string ComposeAssemblyPath(string assembly)
+        {
+            return AppDomain.CurrentDomain.BaseDirectory
+                    + assembly.Split(",".ToCharArray())[0].Trim()
+                    + ".dll";
+        }
+
 		static public object InvokeObject(string classname, string assembly)
-		{
-			Reflector.ActivateCache();
+        {
+            Reflector.ActivateCache();
 
-			object result = null;
+            object result = null;
 
-			// try to get the object from the cache
-			if(classCache != null)
-				result = classCache.InvokeObject(classname, assembly);
+            // try to get the object from the cache
+            if (classCache != null)
+                result = classCache.InvokeObject(classname, assembly);
 
-			if(result != null)
-				return result;
+            if (result != null)
+                return result;
 
             // it was not instanced by cache, so we invoke it using reflection
 
             // new way - a)
-            return Activator.CreateInstance(Type.GetType(classname + "," + assembly));
+            Type classType = ResolveTypeFromAssembly(classname, assembly);
+            return Activator.CreateInstance(classType);
 
             // new way - b)
             //Assembly a = Assembly.Load(assembly);
@@ -204,6 +215,28 @@ namespace Origam
             //			return result;
         }
 
+        private static Type ResolveTypeFromAssembly(string classname, string assembly)
+        {
+            var classType = Type.GetType(classname + "," + assembly);
+#if NETSTANDARD
+            if (classType == null)
+            {
+                // try to load assembly to default application context
+                // With .NET Core, we need to explicitly load assemblies, that are not a part of the .dep.json file
+                System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(
+                    ComposeAssemblyPath(assembly));
+                classType = Type.GetType(classname + "," + assembly);
+                if (log.IsDebugEnabled && classType == null)
+                {
+                    log.DebugFormat("Can't resove type '{0}' from assembly path '{1}'",
+                        classname + "," + assembly,
+                        ComposeAssemblyPath(assembly));
+                }
+            }
+#endif
+            return classType;
+        }
+
         static public object InvokeObject(string assemblyName, string typeName, object[] args)
 		{
 			Reflector.ActivateCache();
@@ -219,7 +252,9 @@ namespace Origam
             /*
              * new proposed way a)
              */
-            return Activator.CreateInstance(Type.GetType(typeName + "," + assemblyName), BindingFlags.DeclaredOnly |
+
+            var classType = ResolveTypeFromAssembly(typeName, assemblyName);
+            return Activator.CreateInstance(classType, BindingFlags.DeclaredOnly |
                 BindingFlags.Public | BindingFlags.NonPublic |
                 BindingFlags.Instance | BindingFlags.CreateInstance, null, args,
                 System.Globalization.CultureInfo.CurrentCulture);

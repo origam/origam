@@ -30,6 +30,7 @@ namespace Origam.Workbench.Services
         public static void CreatePackage(string packageName, Guid packageId, Guid referencePackageId)
         {
             IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            UpdateFileEventQueue(persistenceService,false);
             string versionNumber = "1.0.0";
             SchemaExtension newExtension = new SchemaExtension(new ModelElementKey(packageId));
             newExtension.PersistenceProvider = persistenceService.SchemaListProvider;
@@ -72,6 +73,18 @@ namespace Origam.Workbench.Services
             }
             IDeploymentService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
             deployment.Deploy();
+            UpdateFileEventQueue(persistenceService, true);
+        }
+
+        private static void UpdateFileEventQueue(IPersistenceService persistenceService, bool startStop)
+        {
+            if (persistenceService is FilePersistenceService)
+            {
+                if(startStop)
+                    ((FilePersistenceService)persistenceService).FileEventQueue.Start();
+                if(!startStop)
+                    ((FilePersistenceService)persistenceService).FileEventQueue.Stop();
+            }
         }
     }
 }

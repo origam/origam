@@ -2626,7 +2626,7 @@ namespace Origam.Rule
 					}
 					else
 					{
-						result = resultDoc;
+						result = new Origam.XmlContainer(resultDoc);
 					}
 				}
 			}

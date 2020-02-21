@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Origam.Schema.WorkflowModel;
 using Origam.Services;
 using System.Reflection;
+using System.Linq;
 
 namespace Origam.Workbench.Services
 {
@@ -160,9 +161,8 @@ namespace Origam.Workbench.Services
 						string[] classPath = service.ClassPath.Split(",".ToCharArray());
 
 						string className = classPath[0];
-						string assembly = classPath[1];
-
-						result = (IServiceAgent)Reflector.InvokeObject(className, assembly);
+                        string assembly = String.Join(",", classPath.Skip(1));
+                        result = (IServiceAgent)Reflector.InvokeObject(className, assembly);
 					}
 					else
 					{
