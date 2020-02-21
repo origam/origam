@@ -191,7 +191,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *openNewUrl(url: string, title: string) {
     console.log("open new ", url);
     const openedScreens = getOpenedScreens(this);
-    const newScreen = new WebScreen(title, url);
+    const newScreen = new WebScreen(title, url, url, 0);
     openedScreens.pushItem(newScreen);
     openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
   }

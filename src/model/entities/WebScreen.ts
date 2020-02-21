@@ -5,11 +5,15 @@ import { IFormScreenEnvelope } from "./types/IFormScreen";
 import { IMainMenuItemType } from "./types/IMainMenu";
 
 export class WebScreen implements IWebScreen, IOpenedScreen {
-
   $type_IOpenedScreen: 1 = 1;
   $type_IWebScreen: 1 = 1;
 
-  constructor(title: string, public screenUrl: string) {
+  constructor(
+    title: string,
+    public screenUrl: string,
+    public menuItemId: string,
+    public order: number
+  ) {
     this.title = title;
   }
 
@@ -31,7 +35,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   }
 
   setReloader(reloader: IReloader | null): void {
-   this.reloader = reloader;
+    this.reloader = reloader;
   }
 
   reload() {
@@ -39,10 +43,10 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   }
 
   parent?: any;
-  menuItemId: string = "";
+
   menuItemType: IMainMenuItemType = null as any;
   dontReque = undefined;
-  order: number = 0;
+
   dontRequestData = false;
   dialogInfo = undefined;
   content: IFormScreenEnvelope = null as any;
