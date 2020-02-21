@@ -16,7 +16,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     AddAttribute(node, "newProperty1", "");
-                    return node;
                 }));            
             upgradeScripts.Add(new UpgradeScript(
                 new Version("1.0.1"), 
@@ -24,7 +23,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     AddAttribute(node, "newProperty2", "");
-                    return node;
                 }));
         }
     }    
@@ -40,7 +38,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     AddAttribute(node, "newProperty1", "");
-                    return node;
                 }));            
             upgradeScripts.Add(new UpgradeScript(
                 new Version("1.0.1"), 
@@ -48,7 +45,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     doc.DocumentElement.RemoveChild(node);
-                    return node;
                 }));
         }
     }   
@@ -64,7 +60,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     AddAttribute(node, "TestBaseClassProperty", "");
-                    return node;
                 }));
         }
     }
@@ -80,7 +75,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     AddAttribute(node, "newProperty1", "");
-                    return node;
                 }));            
             upgradeScripts.Add(new UpgradeScript(
                 new Version("1.0.1"), 
@@ -88,7 +82,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     AddAttribute(node, "newProperty2", "");
-                    return node;
                 }));           
             upgradeScripts.Add(new UpgradeScript(
                 new Version("1.0.3"), 
@@ -96,7 +89,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 (node, doc) =>
                 {
                     AddAttribute(node, "newProperty4", "");
-                    return node;
                 }));
         }
     }

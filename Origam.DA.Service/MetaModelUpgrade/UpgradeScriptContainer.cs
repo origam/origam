@@ -108,10 +108,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
         public Version ToVersion { get;}
         public static Version EndOfLife { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
 
-        private readonly Func<XmlNode, XmlDocument, XmlNode> transformation;
+        private readonly Action<XmlNode, XmlDocument> transformation;
 
         public UpgradeScript(Version fromVersion, Version toVersion,
-            Func<XmlNode, XmlDocument, XmlNode> transformation)
+            Action<XmlNode, XmlDocument> transformation)
         {
             this.transformation = transformation;
             FromVersion = fromVersion;
