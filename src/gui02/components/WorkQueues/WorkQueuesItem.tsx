@@ -3,7 +3,8 @@ import S from "./WorkQueuesItem.module.scss";
 import cx from "classnames";
 
 export const WorkQueuesItem: React.FC<{
-  isActive?: boolean;
+  isActiveScreen?: boolean;
+  isOpenedScreen?: boolean;
   isHidden?: boolean;
   isEmphasized?: boolean;
   level?: number;
@@ -15,7 +16,8 @@ export const WorkQueuesItem: React.FC<{
     className={cx(
       S.root,
       {
-        isActive: props.isActive
+        isActiveScreen: props.isActiveScreen,
+        isOpenedScreen: props.isOpenedScreen
       },
       { isHidden: props.isHidden },
       { isEmphasized: props.isEmphasized }

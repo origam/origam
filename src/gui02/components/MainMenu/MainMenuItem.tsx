@@ -16,18 +16,20 @@ export class MainMenuItem extends React.Component<{
 
   isHidden: boolean;
 
+  isOpenedScreen?: boolean;
+  isActiveScreen?: boolean;
+
   onClick?(event: any): void;
 }> {
   render() {
     return (
       <a
-        className={cx(
-          S.anchor,
-          {
-            isActive: this.props.isActive
-          },
-          { isHidden: this.props.isHidden }
-        )}
+        className={cx(S.anchor, {
+          isActive: this.props.isActive,
+          isHidden: this.props.isHidden,
+          isOpenedScreen: this.props.isOpenedScreen,
+          isActiveScreen: this.props.isActiveScreen
+        })}
         style={{ paddingLeft: `${this.props.level * 1.6667}em` }}
         onClick={this.props.onClick}
       >

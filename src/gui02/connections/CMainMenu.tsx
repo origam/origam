@@ -8,9 +8,11 @@ import { MobXProviderContext } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
 import { getMainMenu } from "model/selectors/MainMenu/getMainMenu";
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -87,6 +89,8 @@ class CMainMenuCommandItem extends React.Component<{
 
   render() {
     const { props } = this;
+    const activeScreen = getActiveScreen(this.workbench)
+    const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
     return (
       <MainMenuItem
         level={props.level}
@@ -94,9 +98,10 @@ class CMainMenuCommandItem extends React.Component<{
         icon={<Icon src={iconUrl(props.node.attributes.icon)} />}
         label={props.node.attributes.label}
         isHidden={!props.isOpen}
-        onClick={event =>
-          onMainMenuItemClick(this.workbench)({ event, item: props.node })
-        }
+        // TODO: Implements selector for this idset
+        isOpenedScreen={this.workbench.openedScreenIdSet.has(props.node.attributes.id)}
+        isActiveScreen={activeMenuItemId === props.node.attributes.id}
+        onClick={event => onMainMenuItemClick(this.workbench)({ event, item: props.node })}
       />
     );
   }

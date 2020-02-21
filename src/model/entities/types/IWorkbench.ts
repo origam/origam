@@ -24,7 +24,7 @@ export interface IWorkbench extends IWorkbenchData {
   run(): Generator;
   setFullscreen(state: boolean): void;
 
-  
+  openedScreenIdSet: Set<string>;
 
   parent?: any;
 }

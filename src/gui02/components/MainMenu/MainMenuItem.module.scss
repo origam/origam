@@ -19,7 +19,12 @@
 
   @include hoverItemAnimation;
 
-  &:global(.isActive) {
+  &:global(.isOpenedScreen) {
+    background-color: #ffffff;
+  }
+
+
+  &:global(.isActiveScreen) {
     background-color: #ffffff;
     color: #4c84ff;
     font-weight: 700;

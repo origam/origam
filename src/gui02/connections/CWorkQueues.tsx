@@ -6,13 +6,14 @@ import { WorkQueuesItem } from "gui02/components/WorkQueues/WorkQueuesItem";
 import { computed } from "mobx";
 import { Icon } from "gui02/components/Icon/Icon";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
 
 @observer
 export class CWorkQueues extends React.Component {
   static contextType = MobXProviderContext;
 
   get workbench(): IWorkbench {
-    return this.context.application;
+    return this.context.workbench;
   }
 
   @computed get sortedItems() {
@@ -24,21 +25,25 @@ export class CWorkQueues extends React.Component {
   render() {
     return (
       <>
-        {this.sortedItems.map(item => (
-          <WorkQueuesItem
-            isEmphasized={item.countTotal > 0}
-            icon={<Icon src="./icons/work-queue.svg" />}
-            label={
-              <>
-                {item.name}
-                {item.countTotal > 0 && <> ({item.countTotal})</>}
-              </>
-            }
-            onClick={event =>
-              onWorkQueuesListItemClick(this.workbench)(event, item)
-            }
-          />
-        ))}
+        {this.sortedItems.map(item => {
+          const activeScreen = getActiveScreen(this.workbench);
+          const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
+          return (
+            <WorkQueuesItem
+              isEmphasized={item.countTotal > 0}
+              isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
+              isActiveScreen={activeMenuItemId === item.id}
+              icon={<Icon src="./icons/work-queue.svg" />}
+              label={
+                <>
+                  {item.name}
+                  {item.countTotal > 0 && <> ({item.countTotal})</>}
+                </>
+              }
+              onClick={event => onWorkQueuesListItemClick(this.workbench)(event, item)}
+            />
+          );
+        })}
       </>
     );
   }
