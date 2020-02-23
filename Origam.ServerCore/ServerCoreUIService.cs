@@ -693,12 +693,47 @@ namespace Origam.ServerCore
             OrigamPanelConfigDA.SaveUserConfig(
                 userConfig, input.ObjectInstanceId, workflowId, profileId);
         }
-        public void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
+        public static void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
         {
             SecurityTools.CurrentUserProfile();
             OrigamPanelColumnConfigDA.PersistColumnConfig(
                 input.InstanceId, "splitPanel", 0, 
                 input.Position, false);
+        }
+        public void SaveFavorites(SaveFavoritesInput input)
+        {
+            var profile = SecurityTools.CurrentUserProfile();
+            // save favorites
+            var favorites = core.DataService.LoadData(
+                new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
+                new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"), 
+                Guid.Empty, 
+                Guid.Empty, 
+                null, 
+                "OrigamFavoritesUserConfig_parBusinessPartnerId", 
+                profile.Id);
+            if(favorites.Tables["OrigamFavoritesUserConfig"].Rows.Count > 0)
+            {
+                var row = favorites.Tables["OrigamFavoritesUserConfig"].Rows[0];
+                row["ConfigXml"] = input.ConfigXml;
+                row["RecordUpdated"] = DateTime.Now;
+                row["RecordUpdatedBy"] = profile.Id;
+                row["refBusinessPartnerId"] = profile.Id;
+            }
+            else
+            {
+                var row = favorites.Tables["OrigamFavoritesUserConfig"]
+                    .NewRow();
+                row["Id"] = Guid.NewGuid();
+                row["RecordCreated"] = DateTime.Now;
+                row["RecordCreatedBy"] = profile.Id;
+                row["ConfigXml"] = input.ConfigXml;
+                row["refBusinessPartnerId"] = profile.Id;
+                favorites.Tables["OrigamFavoritesUserConfig"].Rows.Add(row);
+            }
+            core.DataService.StoreData(
+                new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
+                favorites, false, null);
         }
         private static bool IsRowDirty(DataRow row)
         {

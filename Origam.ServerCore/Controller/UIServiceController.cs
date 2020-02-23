@@ -227,7 +227,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                sessionObjects.UIService.SaveSplitPanelConfig(input);
+                ServerCoreUIService.SaveSplitPanelConfig(input);
                 return Ok();
             });
         }
@@ -437,6 +437,16 @@ namespace Origam.ServerCore.Controller
                         input.RowId))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
+        [HttpPost("[action]")]
+        public IActionResult SaveFavorites(
+            [FromBody][Required]SaveFavoritesInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                sessionObjects.UIService.SaveFavorites(input);
+                return Ok();
+            });
+        }
         #endregion
         private IActionResult RunWithErrorHandler(Func<IActionResult> func)
         {
@@ -538,7 +548,7 @@ namespace Origam.ServerCore.Controller
         {
             if(!MenuLookupIndex.HasDataFor(menuItem.Id))
             {
-                XmlOutput xmlOutput = FormXmlBuilder.GetXml(menuItem.Id);
+                var xmlOutput = FormXmlBuilder.GetXml(menuItem.Id);
                 MenuLookupIndex.AddIfNotPresent(
                     menuItem.Id, xmlOutput.ContainedLookups);
             }
