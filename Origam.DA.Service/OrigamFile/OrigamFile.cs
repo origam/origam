@@ -65,7 +65,7 @@ namespace Origam.DA.Service
  
         private bool IsInAGroup => ParentFolderIds.CointainsNoEmptyIds;
 
-        public XmlDocument DeferredSaveDocument
+        public OrigamXmlDocument DeferredSaveDocument
         {
             get => origamXmlManager.OpenDocument;
             set => origamXmlManager.OpenDocument = value;

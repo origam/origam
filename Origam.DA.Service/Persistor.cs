@@ -300,20 +300,16 @@ namespace Origam.DA.Service
                      isGroup: instance.IsFolder);
         }
 
-        private XmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
+        private OrigamXmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
         {
             if (IsInTransaction && transactionStore.Contains(origamFile.Path.Relative))
             {
                 return transactionStore.Get(origamFile.Path.Relative)
                     .DeferredSaveDocument;
             }
-            if (origamFile.Path.Exists)
-            {
-                XmlDocument openDoc = new XmlDocument();
-                openDoc.Load(origamFile.Path.Absolute);
-                return openDoc;
-            }
-            return OrigamXmlManager.NewDocument();
+            return origamFile.Path.Exists 
+                ? new OrigamXmlDocument(origamFile.Path.Absolute) 
+                : new OrigamXmlDocument();
         }
 
         private static void CheckObjectCanBePersisted(IPersistent obj, bool checkRules)

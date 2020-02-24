@@ -70,15 +70,4 @@ namespace Origam.DA.Service
             return Result.Ok(xmlDocument);
         }
     }
-    
-    public class OrigamXmlDocument : XmlDocument
-    {
-        public string GetNameSpaceByName(string xmlNameSpaceName)
-        {
-            if (IsEmpty) return null;
-            return ChildNodes[1]?.Attributes?[xmlNameSpaceName]?.InnerText;
-        }
-
-        public bool IsEmpty => ChildNodes.Count < 2;
-    }
 }

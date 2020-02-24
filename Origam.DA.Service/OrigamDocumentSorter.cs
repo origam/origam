@@ -29,7 +29,7 @@ namespace Origam.DA.Service
     {
         public static XmlDocument CopyAndSort(XmlDocument doc)
         {
-            var newDoc = OrigamXmlManager.NewDocument();
+            var newDoc = new OrigamXmlDocument();
             doc.ChildNodes
                 .Cast<XmlNode>()
                 .OrderBy(node => node.Name)

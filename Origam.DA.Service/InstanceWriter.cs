@@ -34,10 +34,10 @@ namespace Origam.DA.Service
     internal class InstanceWriter
     {
         private readonly ExternalFileManager externalFileManger;
-        private readonly XmlDocument xmlDocument;
+        private readonly OrigamXmlDocument xmlDocument;
 
 
-        public InstanceWriter(ExternalFileManager externalFileManger, XmlDocument xmlDocument)
+        public InstanceWriter(ExternalFileManager externalFileManger, OrigamXmlDocument xmlDocument)
         {
             this.externalFileManger = externalFileManger;
             this.xmlDocument = xmlDocument;

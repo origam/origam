@@ -36,7 +36,7 @@ namespace Origam.DA.Service
     internal class OrigamXmlManager
     {
         private readonly ExternalFileManager externalFileManger;
-        public XmlDocument OpenDocument { get; set; }
+        public OrigamXmlDocument OpenDocument { get; set; }
         private readonly object Lock = new object();
         
         private static readonly log4net.ILog log
@@ -50,17 +50,6 @@ namespace Origam.DA.Service
         public IDictionary<Guid, PersistedObjectInfo> ContainedObjects{ get;} 
             = new Dictionary<Guid, PersistedObjectInfo>();
         public ParentFolders ParentFolderIds { get; }
-        public static XmlDocument NewDocument()
-        {
-            XmlDocument newDocument = new XmlDocument();       
-            string xml = string.Format(
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?><x:file xmlns:x=\"{0}\" xmlns=\"{1}\" xmlns:p=\"{2}\"/>",
-                OrigamFile.ModelPersistenceUri,
-                OrigamFile.GroupUri,
-                OrigamFile.PackageUri);
-            newDocument.LoadXml(xml);
-            return newDocument;
-        }
 
         public OrigamXmlManager(OrigamPath path, ParentFolders parentFolderIds,
             ExternalFileManager externalFileManger)
