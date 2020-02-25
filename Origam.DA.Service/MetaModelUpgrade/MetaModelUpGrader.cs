@@ -40,6 +40,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private readonly IFileWriter fileWriter;
 
         private static List<UpgradeScriptContainer> scriptContainers;
+        private readonly Version firstVersion = new Version("1.0.0");
 
         private static void InstantiateScriptContainers(Assembly scriptAssembly)
         {
@@ -82,17 +83,22 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private void TryUpgrade(XmlNode classNode, XmlFileData xmlFileData)
         {
             string classToUpgrade = GetClassName(classNode);
-            Versions currentClassVersions = Versions.GetCurrentClassVersion(classToUpgrade);
+            Versions currentClassVersions = Versions.GetCurrentClassVersions(classToUpgrade);
             Versions persistedClassVersions = Versions.GetPersistedClassVersion(classNode, classToUpgrade);
             
             foreach (var pair in currentClassVersions)
             {
                 string className = pair.Key;
                 Version currentVersion = pair.Value;
+                if (currentVersion == firstVersion)
+                {
+                    continue;
+                }
+
                 if (!persistedClassVersions.ContainsKey(className))
                 {
                     RunUpgradeScripts(classNode, xmlFileData, className,
-                        new Version("1.0.0"), currentVersion);
+                        firstVersion, currentVersion);
                     continue;
                 }
 
