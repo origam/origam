@@ -36,7 +36,7 @@ namespace Origam.DA.Service
             string groupIdStr = 
                 xmlFileData
                     ?.XmlDocument
-                    ?.SelectSingleNode("//g:group",xmlFileData.NamespaceManager)
+                    ?.SelectSingleNode("//sig:group",xmlFileData.NamespaceManager)
                     ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
                     ?.Value 
                 ?? throw new Exception($"Could not read group id from: {FileInfo.FullName}");

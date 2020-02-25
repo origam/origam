@@ -46,7 +46,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return type;
         }
 
-        internal static Versions GetCurrentClassVersion(string typeName)
+        internal static Versions GetCurrentClassVersions(string typeName)
         {
             Type type = GetTypeByName(typeName);
             if (type == null)
@@ -54,13 +54,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 return  new Versions {[typeName] = UpgradeScript.EndOfLife}; 
             }
 
-            var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as ClassMetaVersionAttribute;
-            if (attribute == null)
-            {
-                throw new Exception($"Cannot get meta version of class {type.FullName} because it does not have {nameof(ClassMetaVersionAttribute)} on it");
-            }
-            Version classVersion = attribute.Value;
-            
+            Version classVersion = GetCurrentClassVersion(type);
+
             Versions versions = new Versions {[typeName] = classVersion};
 
             foreach (var baseType in type.GetAllBaseTypes())
@@ -73,6 +68,19 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
 
             return versions;
+        }
+
+        public static Version GetCurrentClassVersion(Type type)
+        {
+            var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as
+                    ClassMetaVersionAttribute;
+            if (attribute == null)
+            {
+                throw new Exception(
+                    $"Cannot get meta version of class {type.FullName} because it does not have {nameof(ClassMetaVersionAttribute)} on it");
+            }
+
+            return attribute.Value;
         }
 
         internal static Versions GetPersistedClassVersion(XmlNode classNode, string type)

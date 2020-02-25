@@ -33,9 +33,7 @@ namespace Origam.DA
 {
     public static class ElementNameFactory
     {
-        private static readonly Version currentModelVersion  = VersionProvider.CurrentModelMeta;
         private static readonly Version currentPersistenceVersion  = VersionProvider.CurrentPersistenceMeta;
-        private static readonly Version currentPackageMeta = VersionProvider.CurrentPackageMeta;
         private static readonly ConcurrentDictionary<string, ElementName> instances = 
             new ConcurrentDictionary<string, ElementName>();
 
@@ -44,27 +42,39 @@ namespace Origam.DA
             XmlRootAttribute rootAttribute = FindRootAttribute(type);
             if (rootAttribute == null) return null;
 
+            string nameSpace;
+            if (string.IsNullOrEmpty(rootAttribute.Namespace))
+            {
+                 // Version currentClassVersion = Versions.GetCurrentClassVersion(type);
+                 Version currentClassVersion = new Version(1,0,0);
+                 nameSpace = $"http://schemas.origam.com/{type.FullName}/{currentClassVersion}";
+            }
+            else
+            {
+                nameSpace = rootAttribute.Namespace;
+            }
+
             return CreateOrReturnCached(
-                rootAttribute.Namespace,
+                nameSpace,
                 rootAttribute.ElementName);
         }
 
         private static ElementName CreateOrReturnCached(string xmlNamespace, string xmlElementName)
         {
-            string strValue = ElementName.MakeName(xmlNamespace, xmlElementName);
+            string strValue = xmlNamespace;
 
             return instances.GetOrAdd(
                 strValue, 
                 value =>
                 {
                     string[] splitElName = xmlNamespace.Split('/');
-                    if (splitElName.Length != 5)
+                    if (splitElName.Length < 5)
                     {
                         throw new ArgumentException(xmlNamespace + " cannot be parsed to element name");
                     }
-                    if (!Version.TryParse(splitElName[3], out var version))
+                    if (!Version.TryParse(splitElName[4], out var version))
                     {
-                        throw new ArgumentException(xmlNamespace + " cannot be parsed to element name because " + splitElName[3] + " cannot be parsed to version");
+                        throw new ArgumentException($"{xmlNamespace} cannot be parsed to element name because \"{splitElName[4]}\" cannot be parsed to version");
                     }
                     return new ElementName(
                         xmlNamespace: xmlNamespace,
@@ -104,11 +114,11 @@ namespace Origam.DA
             }
 
             string xmlNamespace = splitElName   
-                                      .Take(4)
-                                      .Aggregate((name, x) => name+"/"+x)+"/";
+                                      .Take(5)
+                                      .Aggregate((name, x) => name+"/"+x);
             return CreateOrReturnCached(
                 xmlNamespace: xmlNamespace,
-                xmlElementName: splitElName[4]);
+                xmlElementName: splitElName.Length > 5 ? splitElName[5] : "");
         }
         
         public static ElementName CreatePersistenceElName(string elName)
@@ -121,18 +131,12 @@ namespace Origam.DA
         
         public static ElementName CreateModelElName(string elName)
         {     
-            return CreateVersionCheckedElName(
-                elName: elName,
-                current: currentModelVersion,
-                namespaceName: "model");
+            return Create(elName);
         }
         
         public static ElementName CreatePackageElName(string elName)
         {
-            return CreateVersionCheckedElName(
-                elName: elName,
-                current: currentPackageMeta,
-                namespaceName: "package");
+            return Create(elName);
         }
         
         private static ElementName CreateVersionCheckedElName(string elName,

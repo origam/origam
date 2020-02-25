@@ -37,7 +37,7 @@ namespace Origam.DA.Service
             NamespaceManager = new XmlNamespaceManager(XmlDocument.NameTable);       
             NamespaceManager.AddNamespace("x",OrigamFile.ModelPersistenceUri);
             NamespaceManager.AddNamespace("p",OrigamFile.PackageUri);
-            NamespaceManager.AddNamespace("g",OrigamFile.GroupUri);
+            NamespaceManager.AddNamespace("sig",OrigamFile.GroupUri);
         }
     }
 }

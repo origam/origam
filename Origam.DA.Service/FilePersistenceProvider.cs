@@ -399,8 +399,7 @@ namespace Origam.DA.Service
 
         public override List<T> RetrieveListByType<T>(string itemType)
         {
-            ElementName elName =
-                ElementNameFactory.Create(OrigamFile.GroupUri, itemType);
+            ElementName elName = ElementNameFactory.Create(typeof(T));
             return index                       
                 .GetListByElementName(elName)
                 .Select(objInfo => RetrieveInstance(objInfo))

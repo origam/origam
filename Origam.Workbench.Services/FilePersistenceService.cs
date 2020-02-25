@@ -126,12 +126,7 @@ namespace Origam.Workbench.Services
                     xmlNameSpaceName: "xmlns:x",
                     currentVersion: VersionProvider.CurrentPersistenceMeta,
                     failIfNamespaceNotFound: true),
-                
-                new MetaVersionFixer(
-                        xmlNameSpaceName: "xmlns",
-                        currentVersion: VersionProvider.CurrentModelMeta,
-                        failIfNamespaceNotFound: false),
-                
+
                 new MetaVersionFixer(
                         xmlNameSpaceName: "xmlns:p",
                         currentVersion: new Version("1.0.0"), 

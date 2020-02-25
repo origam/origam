@@ -27,6 +27,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Providers;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 
 namespace Origam.DA.Service
@@ -45,9 +46,10 @@ namespace Origam.DA.Service
 
         public void Write(IFilePersistent instance, ElementName elementName)
         {
+            string namespaceName = AddInstanceNamespace(instance);
             XmlElement elementToWriteTo = GetElementToWriteTo(instance, elementName);
             bool isLocalChild = elementToWriteTo.ParentNode.GetDepth() != 1;
-            WriteToNode(elementToWriteTo, instance, isLocalChild);
+            WriteToNode(elementToWriteTo, instance, namespaceName, isLocalChild);
         }
 
         private XmlElement GetElementToWriteTo(IFilePersistent instance, ElementName elementName)
@@ -115,12 +117,12 @@ namespace Origam.DA.Service
             return null;
         }
             
-        private void WriteToNode(XmlElement node, IFilePersistent instance, 
-            bool localChild)
+        private void WriteToNode(XmlElement node, IFilePersistent instance,
+            string namespaceName, bool localChild)
         {
             node.RemoveAllAttributes();
             // Set all the remaining properties
-            WriteXmlAttributes(node, instance);
+            WriteXmlAttributes(node, instance, namespaceName);
             // references
             WriteXmlReferenceAttributes(node, instance);
             WriteXmlExternalFiles(node, instance);
@@ -140,7 +142,22 @@ namespace Origam.DA.Service
             node.SetAttribute(OrigamFile.TypeAttribute,
                 OrigamFile.ModelPersistenceUri, instance.GetType().FullName);
         }
+
+        private string AddInstanceNamespace(IFilePersistent instance)
+        {
+            var charArray = instance
+                .GetType().Name
+                .Where(char.IsUpper)
+                .Select(char.ToLower)
+                .ToArray();
+            string namespaceName = new string(charArray);
             
+            Version currentClassVersion = Versions.GetCurrentClassVersion(instance.GetType());
+            string nameSpace = $"http://schemas.origam.com/{instance.GetType().FullName}/{currentClassVersion}";
+            string actualNamespaceName = xmlDocument.AddNamespace(namespaceName, nameSpace);
+            return actualNamespaceName;
+        }
+
         private static void WriteXmlReferenceAttributes(XmlElement node,
             IFilePersistent instance)
         {
@@ -181,7 +198,7 @@ namespace Origam.DA.Service
         }
             
         private void WriteXmlAttributes(XmlElement node,
-            IFilePersistent instance)
+            IFilePersistent instance, string namespaceName)
         {
             IList members = Reflector.FindMembers(instance.GetType(), typeof(XmlAttributeAttribute));
             foreach (MemberAttributeInfo memberInfo in members)
@@ -191,9 +208,9 @@ namespace Origam.DA.Service
                 
                 if (ShouldBeSkipped(value)) continue;
                 if (Guid.Empty.Equals(value)) continue;
-                node.SetAttribute(attribute.AttributeName,
-                    attribute.Namespace,
+                node.SetAttribute(attribute.AttributeName, 
                     XmlTools.ConvertToString(value));
+                node.Prefix = namespaceName;
             }
         }
             
