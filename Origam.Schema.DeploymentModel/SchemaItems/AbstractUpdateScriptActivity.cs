@@ -25,6 +25,7 @@ using System.ComponentModel;
 using Origam.UI;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.DeploymentModel
 {
@@ -32,6 +33,7 @@ namespace Origam.Schema.DeploymentModel
     /// Summary description for AbstractUpdateScriptActivity.
     /// </summary>
     [XmlModelRoot(ItemTypeConst)]
+    [ClassMetaVersion("1.0.0")]
     public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
 	{
 		public const string ItemTypeConst = "DeploymentUpdateScriptActivity";
