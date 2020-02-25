@@ -3,6 +3,7 @@ import axios from "axios";
 
 import _ from "lodash";
 import { IApi } from "./types/IApi";
+import { userManager } from "oauth";
 
 export class OrigamAPI implements IApi {
   constructor() {

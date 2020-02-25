@@ -7,10 +7,14 @@ const config = {
   response_type: "code",
   scope: "openid IdentityServerApi offline_access",
   post_logout_redirect_uri: "https://localhost:3000/",
-  response_mode: "query"
+  response_mode: "query",
+  automaticSilentRenew: true,
+  silent_redirect_uri: "https://localhost:3000/#origamClientCallbackRenew/"
 };
 
 export const userManager = new Oidc.UserManager(config);
+
+
 
 export async function ensureLogin() {
   if (window.location.hash.startsWith("#origamClientCallback/")) {

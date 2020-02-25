@@ -5,6 +5,7 @@ import { getApplication } from "../selectors/getApplication";
 import { IApplicationLifecycle, IApplicationPage } from "./types/IApplicationLifecycle";
 import { stopWorkQueues } from "model/actions/WorkQueues/stopWorkQueues";
 import { stopAllFormsAutorefresh } from "model/actions/Workbench/stopAllFormsAutorefresh";
+import { userManager } from "oauth";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
   $type_IApplicationLifecycle: 1 = 1;
@@ -59,10 +60,18 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   }
 
   *performLogout() {
+    const api = getApi(this);
+    const application = getApplication(this);
+    window.sessionStorage.removeItem("origamAuthToken");
+    for (let sessionStorageKey of Object.keys(window.sessionStorage)) {
+      if (sessionStorageKey.startsWith("oidc.user")) {
+        // That is an oauth session...
+        api.resetAccessToken();
+        userManager.signoutRedirect();
+        return;
+      }
+    }
     try {
-      const api = getApi(this);
-      const application = getApplication(this);
-      window.sessionStorage.removeItem("origamAuthToken");
       yield* stopAllFormsAutorefresh(application.workbench!)();
       yield* stopWorkQueues(application.workbench!)();
       application.resetWorkbench();

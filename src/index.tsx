@@ -9,7 +9,8 @@ import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
 import axios from "axios";
 import { Root } from "Root";
-import { ensureLogin } from "oauth";
+import { ensureLogin, userManager } from "oauth";
+import { getApi } from "model/selectors/getApi";
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -26,8 +27,13 @@ if (process.env.NODE_ENV === "development") {
 async function main() {
   const user = await ensureLogin();
   if (user) {
-    window.sessionStorage.setItem('origamAuthToken', user.access_token);
     const application = createApplication();
+    getApi(application).setAccessToken(user.access_token);
+    sessionStorage.setItem('origamAuthToken', user.access_token);
+    userManager.events.addUserLoaded(user => {
+      getApi(application).setAccessToken(user.access_token);
+      sessionStorage.setItem('origamAuthToken', user.access_token);
+    });
     flow(application.run.bind(application))();
 
     ReactDOM.render(<Root application={application} />, document.getElementById("root"));
