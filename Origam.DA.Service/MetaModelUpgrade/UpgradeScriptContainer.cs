@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
+using Origam.DA.Common;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
@@ -106,7 +107,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public Version FromVersion { get; }
         public Version ToVersion { get;}
-        public static Version EndOfLife { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
 
         private readonly Action<XmlNode, XmlDocument> transformation;
 

@@ -25,6 +25,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service.MetaModelUpgrade;

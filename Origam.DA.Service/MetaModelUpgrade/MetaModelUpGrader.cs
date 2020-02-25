@@ -30,6 +30,7 @@ using System.Runtime.CompilerServices;
 using System.Xml;
 using CSharpFunctionalExtensions;
 using MoreLinq;
+using Origam.DA.Common;
 using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade

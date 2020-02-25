@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
-using Origam.DA.Common;
 using Origam.Extensions;
 
-namespace Origam.DA.Service.MetaModelUpgrade
+namespace Origam.DA.Common
 {
-    class Versions: Dictionary<string, Version>
+    public class Versions: Dictionary<string, Version>
     {
+        public static Version EndOfLife { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
         public static Versions FromAttributeString(string xmlAttribute)
         {
             if (string.IsNullOrWhiteSpace(xmlAttribute))
@@ -46,12 +46,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return type;
         }
 
-        internal static Versions GetCurrentClassVersions(string typeName)
+        public static Versions GetCurrentClassVersions(string typeName)
         {
             Type type = GetTypeByName(typeName);
             if (type == null)
             {
-                return  new Versions {[typeName] = UpgradeScript.EndOfLife}; 
+                return  new Versions {[typeName] = EndOfLife}; 
             }
 
             Version classVersion = GetCurrentClassVersion(type);
@@ -83,7 +83,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return attribute.Value;
         }
 
-        internal static Versions GetPersistedClassVersion(XmlNode classNode, string type)
+        public static Versions GetPersistedClassVersion(XmlNode classNode, string type)
         {
             if (classNode == null)
             {

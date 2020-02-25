@@ -1,5 +1,6 @@
 using System;
 using System.Xml;
+using Origam.DA.Common;
 using Origam.DA.ServiceTests;
 
 namespace Origam.DA.Service.MetaModelUpgrade
@@ -41,7 +42,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }));            
             upgradeScripts.Add(new UpgradeScript(
                 new Version("1.0.1"), 
-                UpgradeScript.EndOfLife,
+                Versions.EndOfLife,
                 (node, doc) =>
                 {
                     doc.DocumentElement.RemoveChild(node);

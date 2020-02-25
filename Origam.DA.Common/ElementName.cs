@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.Extensions;
 using Origam.OrigamEngine;
 using ProtoBuf;
@@ -45,8 +46,7 @@ namespace Origam.DA
             string nameSpace;
             if (string.IsNullOrEmpty(rootAttribute.Namespace))
             {
-                 // Version currentClassVersion = Versions.GetCurrentClassVersion(type);
-                 Version currentClassVersion = new Version(1,0,0);
+                 Version currentClassVersion = Versions.GetCurrentClassVersion(type);
                  nameSpace = $"http://schemas.origam.com/{type.FullName}/{currentClassVersion}";
             }
             else
