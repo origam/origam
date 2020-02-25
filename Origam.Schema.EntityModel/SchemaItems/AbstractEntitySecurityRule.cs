@@ -131,8 +131,11 @@ namespace Origam.Schema.EntityModel
 				name += "_" + this.Rule.Name;
 			}
 
-			name += "_" + this.Roles.Replace(";", "_");
-
+			if (this.Roles != null)
+			{
+				name += "_" + this.Roles.Replace(";", "_");
+			}
+			
 			this.Name = name;
 		}
 		#endregion
