@@ -107,8 +107,7 @@ namespace Origam
             {
                 // if there is a IPrincipal service in the DI, use it first.
                 IPrincipal ress = _DIServiceProvider?.GetService<IPrincipal>();
-                if (ress != null && (ress.Identity.IsAuthenticated || (!ress.Identity.IsAuthenticated && Thread.CurrentPrincipal==null))
-                    )
+				if (ress != null)
                 {
                     return ress;
                 }
