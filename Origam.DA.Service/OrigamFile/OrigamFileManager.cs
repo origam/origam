@@ -76,7 +76,7 @@ namespace Origam.DA.Service
             fileEventQueue.Continue();
         }
         
-        public void WriteToDisc(OrigamFile origamFile, XmlDocument xmlDocument)
+        public void WriteToDisc(OrigamFile origamFile, OrigamXmlDocument xmlDocument)
         {
             string xmlToWrite = OrigamDocumentSorter
                 .CopyAndSort(xmlDocument)

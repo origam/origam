@@ -40,7 +40,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         private XmlFileData LoadFile(string fileName)
         {
             var file = new FileInfo(Path.Combine(TestFilesDir.FullName, fileName));
-            var document = new XmlDocument();
+            var document = new OrigamXmlDocument();
             document.Load(file.FullName);
             return new XmlFileData(document, file);
         }

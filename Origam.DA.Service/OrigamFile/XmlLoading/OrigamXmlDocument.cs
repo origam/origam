@@ -1,9 +1,13 @@
+using System;
+using System.Linq;
 using System.Xml;
 
 namespace Origam.DA.Service
 {
     public class OrigamXmlDocument : XmlDocument
     {
+        public bool IsEmpty => ChildNodes.Count < 2;
+        public XmlElement FileElement => (XmlElement) ChildNodes[1];
         public OrigamXmlDocument(string pathToXml)
         {
             Load(pathToXml);
@@ -22,9 +26,38 @@ namespace Origam.DA.Service
         public string GetNameSpaceByName(string xmlNameSpaceName)
         {
             if (IsEmpty) return null;
-            return ChildNodes[1]?.Attributes?[xmlNameSpaceName]?.InnerText;
+            return FileElement?.Attributes[xmlNameSpaceName]?.InnerText;
         }
 
-        public bool IsEmpty => ChildNodes.Count < 2;
+        public string AddNamespace(string nameSpaceName, string nameSpace)
+        {
+            if (IsEmpty)
+            {
+                throw new Exception("Cannot add namespace to an empty document");
+            }
+            var nextNamespaceName = GetNextNamespaceName(nameSpaceName);
+            FileElement.SetAttribute("xmlns:"+nextNamespaceName, nameSpace);
+            return nextNamespaceName;
+        }
+
+        private string GetNextNamespaceName(string nameSpaceName)
+        {
+            string currentValue = FileElement.Attributes[nameSpaceName]?.InnerText;
+            if (string.IsNullOrEmpty(currentValue))
+            {
+                return nameSpaceName;
+            }
+            
+            var lastNamespaceSuffix = FileElement.Attributes
+                .Cast<XmlAttribute>()
+                .Select(attr => attr.Name)
+                .Where(attrName => attrName.StartsWith(nameSpaceName))
+                .Select(attrName =>
+                    attrName.Substring(nameSpaceName.Length, attrName.Length- nameSpaceName.Length))
+                .Last();
+            int.TryParse(lastNamespaceSuffix, out int lastNamespaceNumber);
+            int nextNamespaceNumber = lastNamespaceNumber + 1;
+            return nameSpaceName + nextNamespaceNumber;
+        }
     }
 }

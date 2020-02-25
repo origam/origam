@@ -27,17 +27,21 @@ namespace Origam.DA.Service
 {
     public static class OrigamDocumentSorter
     {
-        public static XmlDocument CopyAndSort(XmlDocument doc)
+        public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
         {
             var newDoc = new OrigamXmlDocument();
+            foreach (XmlAttribute attribute in doc.FileElement.Attributes)
+            {
+                newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value);
+            }
             doc.ChildNodes
                 .Cast<XmlNode>()
                 .OrderBy(node => node.Name)
-                .ForEach(node => CopyNodes(node, newDoc.ChildNodes[1], newDoc));
+                .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc));
             return newDoc;
         }
 
-        private static void CopyNodes(XmlNode node, XmlNode targetNode, XmlDocument newDoc)
+        private static void CopyNodes(XmlNode node, XmlNode targetNode, OrigamXmlDocument newDoc)
         {
             node.ChildNodes
                 .Cast<XmlNode>()
@@ -45,7 +49,7 @@ namespace Origam.DA.Service
                 .ForEach(childNode =>
                 {
                     var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
-                        ? newDoc.ChildNodes[1].Attributes["xmlns"].Value
+                        ? newDoc.FileElement.Attributes["xmlns"].Value
                         : childNode.NamespaceURI;
                     XmlElement childCopy = newDoc.CreateElement(childNode.Name, xmlns);
                     CopyAttributes(childNode, childCopy);

@@ -40,7 +40,7 @@ namespace Origam.DA.Service_net2Tests
         public void ShouldSortAtributes()
         {
 
-            var doc = new XmlDocument();
+            var doc = new OrigamXmlDocument();
             string path = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
             string xml = File.ReadAllText(path);
             doc.LoadXml(xml);

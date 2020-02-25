@@ -26,11 +26,11 @@ namespace Origam.DA.Service
 {
     public class XmlFileData
     {
-        public XmlDocument XmlDocument { get; }
+        public OrigamXmlDocument XmlDocument { get; }
         public XmlNamespaceManager NamespaceManager{ get; }
         public FileInfo FileInfo { get;}
 
-        public XmlFileData(XmlDocument xmlDocument, FileInfo fileInfo)
+        public XmlFileData(OrigamXmlDocument xmlDocument, FileInfo fileInfo)
         {
             XmlDocument = xmlDocument;
             FileInfo = fileInfo;
