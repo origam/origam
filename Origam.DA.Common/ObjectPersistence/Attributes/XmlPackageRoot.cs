@@ -28,7 +28,8 @@ namespace Origam.DA.ObjectPersistence
     {
         public XmlPackageRoot(string elementName) : base(elementName)
         {
-            Namespace = "http://schemas.origam.com/"+VersionProvider.CurrentPackageMeta+"/package";
+            Namespace =
+                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}";
         }
     }
 }

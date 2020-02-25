@@ -44,19 +44,18 @@ namespace Origam.DA.Service
         public static readonly string OrigamExtension = PersistenceFiles.Extension;
         public static readonly ElementName ModelPersistenceUri =
             ElementNameFactory.CreatePersistenceElName(
-                $"http://schemas.origam.com/{VersionProvider.CurrentPersistenceMeta}/model-persistence");        
+                $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}");        
         public static readonly ElementName PackageUri =
             ElementNameFactory.CreatePackageElName(
-                $"http://schemas.origam.com/{VersionProvider.CurrentPackageMeta}/package");
+                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}");
         public static readonly ElementName GroupUri =
-            ElementNameFactory.CreateModelElName(
-                $"http://schemas.origam.com/{VersionProvider.CurrentModelMeta}/model-element");
+            ElementNameFactory.CreateModelElName("http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0");
         public static readonly ElementName PackageNameUri =
             ElementNameFactory.CreatePackageElName(
-                $"http://schemas.origam.com/{VersionProvider.CurrentPackageMeta}/packagepackage");
+                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}");
         public static readonly ElementName GroupNameUri =
             ElementNameFactory.CreateModelElName(
-                $"http://schemas.origam.com/{VersionProvider.CurrentModelMeta}/model-elementgroup");
+                $"http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0");
 
         private readonly OrigamFileManager origamFileManager;
         private readonly ExternalFileManager externalFileManger;

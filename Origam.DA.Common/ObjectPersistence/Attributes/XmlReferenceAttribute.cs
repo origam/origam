@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using Origam.OrigamEngine;
 
@@ -58,6 +59,6 @@ namespace Origam.DA.ObjectPersistence
 			
 		}
 		public string Namespace =>
-			$"http://schemas.origam.com/{VersionProvider.CurrentPackageMeta}/package";
+			$"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}";
 	}
 }
