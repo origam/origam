@@ -9,31 +9,36 @@ import { createApplication } from "./model/factories/createApplication";
 import * as serviceWorker from "./serviceWorker";
 import axios from "axios";
 import { Root } from "Root";
+import { ensureLogin } from "oauth";
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
 }
 
-if(process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   axios.defaults.timeout = 3600000;
   (window as any).ORIGAM_CLIENT_AXIOS_LIB = axios;
 }
 
-(window as any).ORIGAM_CLIENT_REVISION_HASH =
-  process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
-  (window as any).ORIGAM_CLIENT_REVISION_DATE =
-  process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
+(window as any).ORIGAM_CLIENT_REVISION_HASH = process.env.REACT_APP_GIT_REVISION_HASH || "UNKNOWN";
+(window as any).ORIGAM_CLIENT_REVISION_DATE = process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
 
-const application = createApplication();
-flow(application.run.bind(application))();
+async function main() {
+  const user = await ensureLogin();
+  if (user) {
+    window.sessionStorage.setItem('origamAuthToken', user.access_token);
+    const application = createApplication();
+    flow(application.run.bind(application))();
 
-ReactDOM.render(
-  <Root application={application} />,
-  document.getElementById("root")
-);
+    ReactDOM.render(<Root application={application} />, document.getElementById("root"));
+  } else {
+    // TODO: ???
+  }
+}
+
+main();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-

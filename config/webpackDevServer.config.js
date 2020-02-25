@@ -91,6 +91,38 @@ module.exports = function(proxy, allowedHost) {
         "target": "https://localhost:44356",
         "secure": false
       },
+      "/connect/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },
+      "/home/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },
+      /*"/icons/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },*/
+      "/lib/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },
+      "/js/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },
+      /*"/css/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },*/
+      "/Account/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },
+      "/.well-known/*": {
+        target: "https://localhost:44356",
+        secure: false
+      }
     },
     before(app, server) {
       if (fs.existsSync(paths.proxySetup)) {
