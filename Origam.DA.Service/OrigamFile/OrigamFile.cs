@@ -52,10 +52,10 @@ namespace Origam.DA.Service
             ElementNameFactory.CreateModelElName("http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0");
         public static readonly ElementName PackageNameUri =
             ElementNameFactory.CreatePackageElName(
-                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}");
+                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}/package");
         public static readonly ElementName GroupNameUri =
             ElementNameFactory.CreateModelElName(
-                $"http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0");
+                $"http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0/group");
 
         private readonly OrigamFileManager origamFileManager;
         private readonly ExternalFileManager externalFileManger;

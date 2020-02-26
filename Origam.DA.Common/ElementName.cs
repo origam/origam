@@ -61,7 +61,7 @@ namespace Origam.DA
 
         private static ElementName CreateOrReturnCached(string xmlNamespace, string xmlElementName)
         {
-            string strValue = xmlNamespace;
+            string strValue =  ElementName.MakeName(xmlNamespace, xmlElementName);
 
             return instances.GetOrAdd(
                 strValue, 
@@ -108,7 +108,7 @@ namespace Origam.DA
                 throw new ArgumentException(elNameCandidate +" is not a valid absolute Uri");
             }
             string[] splitElName = elNameCandidate.Split('/');
-            if (splitElName.Length != 5)
+            if (splitElName.Length < 5)
             {
                 throw new ArgumentException(elNameCandidate+" cannot be parsed to element name");
             }
@@ -198,7 +198,9 @@ namespace Origam.DA
         }
 
         internal static string MakeName(string xmlNamespace, string xmlElementName) => 
-            xmlNamespace + xmlElementName;
+            string.IsNullOrEmpty(xmlElementName) 
+                ? xmlNamespace 
+                : xmlNamespace +"/"+ xmlElementName;
 
         public override string ToString() => Value;
 
