@@ -28,11 +28,11 @@ namespace Origam.Schema.GuiModel
 {
     [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
     [HelpTopic("Styles")]
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class ControlStyleProperty : AbstractSchemaItem
     {
-        public const string ItemTypeConst = "ControlStyleProperty";
+        public const string CategoryConst = "ControlStyleProperty";
 
         public ControlStyleProperty() : base() { }
 
@@ -46,7 +46,7 @@ namespace Origam.Schema.GuiModel
         {
             get
             {
-                return ControlStyleProperty.ItemTypeConst;
+                return ControlStyleProperty.CategoryConst;
             }
         }
 

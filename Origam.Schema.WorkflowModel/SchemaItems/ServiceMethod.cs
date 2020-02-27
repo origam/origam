@@ -32,11 +32,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Method", "Methods", "method-1.png")]
     [HelpTopic("Service+Method")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "ServiceMethod";
+		public const string CategoryConst = "ServiceMethod";
 
 		public ServiceMethod() : base() {}
 
@@ -68,7 +68,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

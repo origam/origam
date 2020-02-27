@@ -32,10 +32,10 @@ namespace Origam.Schema.WorkflowModel
     /// <summary>
     /// Summary description for AbstractWorkflowStep.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	{															
-		public const string ItemTypeConst = "WorkflowTask";
+		public const string CategoryConst = "WorkflowTask";
 
 		public AbstractWorkflowStep() : base() {Init();}
 
@@ -54,7 +54,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 
@@ -111,7 +111,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return this.ChildItemsByType(WorkflowTaskDependency.ItemTypeConst);
+				return this.ChildItemsByType(WorkflowTaskDependency.CategoryConst);
 			}
 		}
 

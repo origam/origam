@@ -385,11 +385,11 @@ namespace Origam.Server.Doc
         private static ArrayList ChildrenStates(AbstractSchemaItem parent)
         {
             ArrayList result = new ArrayList();
-            foreach (StateMachineState state in parent.ChildItemsByType(StateMachineState.ItemTypeConst))
+            foreach (StateMachineState state in parent.ChildItemsByType(StateMachineState.CategoryConst))
             {
                 if (state.Type == StateMachineStateType.Group)
                 {
-                    result.AddRange(state.ChildItemsByType(StateMachineState.ItemTypeConst));
+                    result.AddRange(state.ChildItemsByType(StateMachineState.CategoryConst));
                 }
                 else
                 {

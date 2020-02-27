@@ -53,7 +53,7 @@ namespace Origam.Schema.WorkflowModel
 			while(item != null)
 			{
 				// get any context stores on any of parent items
-				ArrayList contexts = item.ChildItemsByType(ContextStore.ItemTypeConst);
+				ArrayList contexts = item.ChildItemsByType(ContextStore.CategoryConst);
 
 				foreach(AbstractSchemaItem store in contexts)
 				{
@@ -88,7 +88,7 @@ namespace Origam.Schema.WorkflowModel
 				while(item != null)
 				{
 					// get any context stores on any of parent items
-					ArrayList contexts = item.ChildItemsByType(ContextStore.ItemTypeConst);
+					ArrayList contexts = item.ChildItemsByType(ContextStore.CategoryConst);
 
 					foreach(AbstractSchemaItem store in contexts)
 					{
@@ -205,7 +205,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			else
 			{
-				contexts = wf.ChildItemsByType(ContextStore.ItemTypeConst);
+				contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
 			}
 
 			contextArray = new ArrayList(contexts.Count);
@@ -242,7 +242,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 				else
 				{
-					contexts = wf.ChildItemsByType(ContextStore.ItemTypeConst);
+					contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
 				}
 
 				foreach(AbstractSchemaItem store in contexts)
@@ -287,7 +287,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			else
 			{
-				contexts = wf.ChildItemsByType(ContextStore.ItemTypeConst);
+				contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
 			}
 
 			contextArray = new ArrayList(contexts.Count);
@@ -331,7 +331,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 				else
 				{
-					contexts = wf.ChildItemsByType(ContextStore.ItemTypeConst);
+					contexts = wf.ChildItemsByType(ContextStore.CategoryConst);
 				}
 
 				foreach(AbstractSchemaItem store in contexts)
@@ -450,7 +450,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			else
 			{
-				steps = wf.ChildItemsByType(WorkflowTask.ItemTypeConst);
+				steps = wf.ChildItemsByType(WorkflowTask.CategoryConst);
 			}
 
 			stepArray = new ArrayList(steps.Count);
@@ -495,7 +495,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 				else
 				{
-					tasks = wf.ChildItemsByType(WorkflowTask.ItemTypeConst);
+					tasks = wf.ChildItemsByType(WorkflowTask.CategoryConst);
 				}
 
 				foreach(AbstractSchemaItem task in tasks)
@@ -548,7 +548,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			else
 			{
-				steps = wf.ChildItemsByType(WorkflowTask.ItemTypeConst);
+				steps = wf.ChildItemsByType(WorkflowTask.CategoryConst);
 			}
 
 			stepArray = new ArrayList(steps.Count);
@@ -596,7 +596,7 @@ namespace Origam.Schema.WorkflowModel
 				}
 				else
 				{
-					tasks = wf.ChildItemsByType(WorkflowTask.ItemTypeConst);
+					tasks = wf.ChildItemsByType(WorkflowTask.CategoryConst);
 				}
 
 				foreach(AbstractSchemaItem task in tasks)
@@ -843,7 +843,7 @@ namespace Origam.Schema.WorkflowModel
 		public override System.ComponentModel.TypeConverter.StandardValuesCollection 
 			GetStandardValues(ITypeDescriptorContext context)
 		{
-			ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.ItemTypeConst);;
+			ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
 
 			states.Sort();
 
@@ -862,7 +862,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			if( value.GetType() == typeof(string) )
 			{
-				ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.ItemTypeConst);;
+				ArrayList states = (context.Instance as StateMachineState).ChildItemsByType(StateMachineState.CategoryConst);;
 
 				foreach(AbstractSchemaItem state in states)
 				{
@@ -1375,7 +1375,7 @@ namespace Origam.Schema.WorkflowModel
 			WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 			if(currentItem.Entity == null) return new StandardValuesCollection(new ArrayList());
 
-			ArrayList filters = (currentItem.Entity as IDataEntity).ChildItemsByType(EntityFilter.ItemTypeConst);
+			ArrayList filters = (currentItem.Entity as IDataEntity).ChildItemsByType(EntityFilter.CategoryConst);
 
 			ArrayList array = new ArrayList(filters.Count);
 			foreach(AbstractSchemaItem item in filters)
@@ -1405,7 +1405,7 @@ namespace Origam.Schema.WorkflowModel
 				WorkQueueClass currentItem = context.Instance as WorkQueueClass;
 				if(currentItem.Entity == null) return null;
 
-				ArrayList filters = (currentItem.Entity as IDataEntity).ChildItemsByType(EntityFilter.ItemTypeConst);
+				ArrayList filters = (currentItem.Entity as IDataEntity).ChildItemsByType(EntityFilter.CategoryConst);
 
 				foreach(AbstractSchemaItem item in filters)
 				{

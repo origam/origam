@@ -40,10 +40,10 @@ namespace Origam.Schema.WorkflowModel
     /// <summary>
     /// Summary description for AbstractScheduleTime.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     public abstract class AbstractScheduleTime : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "ScheduleTime";
+		public const string CategoryConst = "ScheduleTime";
 
 		public AbstractScheduleTime() : base() {}
 
@@ -73,7 +73,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

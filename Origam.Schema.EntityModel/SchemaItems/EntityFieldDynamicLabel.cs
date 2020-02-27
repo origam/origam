@@ -36,7 +36,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Dynamic Field Label", "Dynamic Labels", 5)]
     [HelpTopic("Dynamic+Field+Labels")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 	{
@@ -46,7 +46,7 @@ namespace Origam.Schema.EntityModel
 
 		public EntityFieldDynamicLabel(Key primaryKey) : base(primaryKey)	{}
 
-		public const string ItemTypeConst = "DataEntityFieldDynamicLabel";
+		public const string CategoryConst = "DataEntityFieldDynamicLabel";
 
 		#region Properties
 		private string _roles = "";
@@ -184,7 +184,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

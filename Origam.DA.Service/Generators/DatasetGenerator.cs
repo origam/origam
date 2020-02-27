@@ -694,7 +694,7 @@ namespace Origam.DA.Service
 			// check if the default set has a default for this column
 			if(defaultSet != null)
 			{
-				foreach(DataStructureDefaultSetDefault d in defaultSet.ChildItemsByType(DataStructureDefaultSetDefault.ItemTypeConst))
+				foreach(DataStructureDefaultSetDefault d in defaultSet.ChildItemsByType(DataStructureDefaultSetDefault.CategoryConst))
 				{
 					if(d.Field.PrimaryKey.Equals(finalColumn.Field.PrimaryKey) & d.Entity.PrimaryKey.Equals(entity.PrimaryKey))
 					{
@@ -747,7 +747,7 @@ namespace Origam.DA.Service
 			// if there is just 1 dynamic label and it is actually static (never changes)
 			// we take it as the default label so it can be used also in empty form or grid column
 			// label
-			ArrayList dynamicLabels = column.ChildItemsByType(EntityFieldDynamicLabel.ItemTypeConst);
+			ArrayList dynamicLabels = column.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 			EntityFieldDynamicLabel dynamicLabel = null;
 			if(dynamicLabels.Count == 1)
 			{
@@ -859,7 +859,7 @@ namespace Origam.DA.Service
 
         private static string AddRelation(DataSet dataset, string debugPath, IAssociation assoc, string baseEntityName, string relatedEntityName, string relationName)
         {
-            ArrayList entityItems = assoc.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
+            ArrayList entityItems = assoc.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
             DataColumn[] baseColumns = new DataColumn[entityItems.Count];
             DataColumn[] relatedColumns = new DataColumn[entityItems.Count];
             if (assoc.IsSelfJoin)
@@ -1066,7 +1066,7 @@ namespace Origam.DA.Service
 		/// <returns></returns>
 		private DataStructureEntity LookupRelation(DataStructureEntity baseEntity, IAssociation relation)
 		{
-			foreach(DataStructureEntity childEntity in baseEntity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
+			foreach(DataStructureEntity childEntity in baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst))
 			{
 				if(childEntity.Entity.PrimaryKey.Equals(relation.PrimaryKey) && childEntity.Columns.Count > 0)
 				{

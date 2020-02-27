@@ -400,7 +400,7 @@ namespace Origam.Schema.EntityModel
                 typeof(FunctionCall), schema.ActiveSchemaExtensionId, null) as FunctionCall;
 			FunctionSchemaItemProvider functionProvider = 
                 schema.GetProvider(typeof(FunctionSchemaItemProvider)) as FunctionSchemaItemProvider;
-			Function function = (Function)functionProvider.GetChildByName(functionName, Function.ItemTypeConst);
+			Function function = (Function)functionProvider.GetChildByName(functionName, Function.CategoryConst);
 			if(function == null) throw new Exception(functionName + " function not found. Cannot create filter.");
 			call.Function = function;
 			call.Name = functionName;

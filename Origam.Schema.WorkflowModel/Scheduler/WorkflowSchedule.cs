@@ -33,11 +33,11 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for WorkflowSchedule.
 	/// </summary>
 	[SchemaItemDescription("Workflow Schedule", "workflow-schedule.png")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class WorkflowSchedule : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "WorkflowSchedule";
+		public const string CategoryConst = "WorkflowSchedule";
 
 		public WorkflowSchedule() : base() {}
 
@@ -108,7 +108,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

@@ -34,7 +34,7 @@ namespace Origam.Gui
 			if(action is EntityDropdownAction)
 			{
 				foreach(EntityUIAction subAction in action.ChildItemsByType(
-                    EntityUIAction.ItemTypeConst))
+                    EntityUIAction.CategoryConst))
 				{
 					if(ShouldRenderAction(subAction, formId, panelId))
 					{

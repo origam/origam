@@ -51,7 +51,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			parentNode.SetAttribute("Text", (report.Caption == null ? report.Name : report.Caption));
 			XmlElement reportParametersElement = parentNode.OwnerDocument.CreateElement("ReportParameters");
 			parentNode.AppendChild(reportParametersElement);
-			foreach(ColumnParameterMapping mapping in control.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
+			foreach(ColumnParameterMapping mapping in control.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 			{
 				XmlElement reportParamElement = parentNode.OwnerDocument.CreateElement("ReportParameterMapping");
 				reportParametersElement.AppendChild(reportParamElement);

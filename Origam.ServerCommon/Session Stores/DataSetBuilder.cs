@@ -71,7 +71,7 @@ namespace Origam.ServerCommon.Session_Stores
             if (sortSet != null)
             {
                 foreach (DataStructureSortSetItem sortItem in
-                    sortSet.ChildItemsByType(DataStructureSortSetItem.ItemTypeConst))
+                    sortSet.ChildItemsByType(DataStructureSortSetItem.CategoryConst))
                 {
                     if (sortItem.Entity.Name == listEntity)
                     {

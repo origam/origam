@@ -52,7 +52,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

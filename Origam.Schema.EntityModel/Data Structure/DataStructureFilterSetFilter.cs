@@ -34,12 +34,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Filter", "icon_filter.png")]
     [HelpTopic("Filter+Set+Filter")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("Entity")]
     [ClassMetaVersion("1.0.0")]
     public class DataStructureFilterSetFilter : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataStructureFilterSetFilter";
+		public const string CategoryConst = "DataStructureFilterSetFilter";
 
 		public DataStructureFilterSetFilter() : base(){}
 		
@@ -171,7 +171,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

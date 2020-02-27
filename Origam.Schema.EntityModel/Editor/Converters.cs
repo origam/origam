@@ -453,7 +453,7 @@ namespace Origam.Schema.EntityModel
 			GetStandardValues(ITypeDescriptorContext context)
 		{
 			EntityRelationFilter filter = context.Instance as EntityRelationFilter;
-			ArrayList filters = ((EntityRelationItem)filter.ParentItem).RelatedEntity.ChildItemsByType(EntityFilter.ItemTypeConst);
+			ArrayList filters = ((EntityRelationItem)filter.ParentItem).RelatedEntity.ChildItemsByType(EntityFilter.CategoryConst);
 
 			ArrayList filterArray = new ArrayList(filters.Count);
 			foreach(EntityFilter f in filters)
@@ -480,7 +480,7 @@ namespace Origam.Schema.EntityModel
 			{
 				EntityRelationFilter filter = context.Instance as EntityRelationFilter;
 
-				foreach(AbstractSchemaItem item in ((EntityRelationItem)filter.ParentItem).RelatedEntity.ChildItemsByType(EntityFilter.ItemTypeConst))
+				foreach(AbstractSchemaItem item in ((EntityRelationItem)filter.ParentItem).RelatedEntity.ChildItemsByType(EntityFilter.CategoryConst))
 				{
 					if(item.Name == value.ToString())
 						return item as EntityFilter;
@@ -512,7 +512,7 @@ namespace Origam.Schema.EntityModel
 		{
 			AbstractSchemaItem item = context.Instance as AbstractSchemaItem;
 
-			ArrayList filters = ((IDataEntity)item.RootItem).ChildItemsByType(EntityFilter.ItemTypeConst);
+			ArrayList filters = ((IDataEntity)item.RootItem).ChildItemsByType(EntityFilter.CategoryConst);
 
 			ArrayList filterArray = new ArrayList(filters.Count);
 			foreach(EntityFilter f in filters)
@@ -539,7 +539,7 @@ namespace Origam.Schema.EntityModel
 			{
 				AbstractSchemaItem schemaItem = context.Instance as AbstractSchemaItem;
 
-				foreach(AbstractSchemaItem item in ((IDataEntity)schemaItem.RootItem).ChildItemsByType(EntityFilter.ItemTypeConst))
+				foreach(AbstractSchemaItem item in ((IDataEntity)schemaItem.RootItem).ChildItemsByType(EntityFilter.CategoryConst))
 				{
 					if(item.Name == value.ToString())
 						return item as EntityFilter;
@@ -638,7 +638,7 @@ namespace Origam.Schema.EntityModel
                 return null;
             }
             DataStructureEntity DataEntity = dataStructureSortSet.Entity;
-            IEnumerable<DataStructureColumn> childitem = DataEntity.ChildItemsByType(DataStructureColumn.ItemTypeConst).Cast<DataStructureColumn>();
+            IEnumerable<DataStructureColumn> childitem = DataEntity.ChildItemsByType(DataStructureColumn.CategoryConst).Cast<DataStructureColumn>();
             IEnumerable<DataStructureColumn> columnEntity = DataEntity.GetColumnsFromEntity().Cast<DataStructureColumn>();
             ArrayList columnArray = new ArrayList();
             columnArray.AddRange(childitem.Select(x => x.Name).ToList());
@@ -665,7 +665,7 @@ namespace Origam.Schema.EntityModel
                     return null;
                 }
                 DataStructureEntity DataEntity = dataStructureSortSet.Entity;
-                IEnumerable<DataStructureColumn> childitem = DataEntity.ChildItemsByType(DataStructureColumn.ItemTypeConst).Cast<DataStructureColumn>();
+                IEnumerable<DataStructureColumn> childitem = DataEntity.ChildItemsByType(DataStructureColumn.CategoryConst).Cast<DataStructureColumn>();
                 IEnumerable<DataStructureColumn> columnEntity = DataEntity.GetColumnsFromEntity().Cast<DataStructureColumn>();
                 int count = childitem.Where(x => x.Name == value.ToString()).ToList().Count();
                 count += columnEntity.Where(x => x.Name == value.ToString()).ToList().Count();
@@ -700,7 +700,7 @@ namespace Origam.Schema.EntityModel
     //			DataStructureEntityFilter dsFilter = context.Instance as DataStructureEntityFilter;
     //			DataStructureEntity dsEntity = dsFilter.ParentItem as DataStructureEntity;
     //
-    //			SchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.ItemTypeConst);
+    //			SchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
     //
     //			ArrayList columnArray = new ArrayList(filters.Count);
     //			foreach(EntityFilter filter in filters)
@@ -728,7 +728,7 @@ namespace Origam.Schema.EntityModel
     //				DataStructureEntityFilter dsFilter = context.Instance as DataStructureEntityFilter;
     //				DataStructureEntity dsEntity = dsFilter.ParentItem as DataStructureEntity;
     //
-    //				SchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.ItemTypeConst);
+    //				SchemaItemCollection filters = dsEntity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
     //
     //				foreach(EntityFilter item in filters)
     //				{
@@ -1484,7 +1484,7 @@ namespace Origam.Schema.EntityModel
 			
 			if(queryFilter.Entity == null) return null;
 
-			ArrayList filters = queryFilter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.ItemTypeConst);
+			ArrayList filters = queryFilter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
 
 			ArrayList columnArray = new ArrayList(filters.Count);
 			foreach(EntityFilter filter in filters)
@@ -1513,7 +1513,7 @@ namespace Origam.Schema.EntityModel
 			
 				if(filter.Entity == null) return null;
 
-				ArrayList filters = filter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.ItemTypeConst);
+				ArrayList filters = filter.Entity.EntityDefinition.ChildItemsByType(EntityFilter.CategoryConst);
 
 				foreach(EntityFilter item in filters)
 				{

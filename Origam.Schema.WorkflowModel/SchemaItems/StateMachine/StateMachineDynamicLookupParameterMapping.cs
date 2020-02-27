@@ -33,11 +33,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 17)]
     [HelpTopic("Dynamic+State+Workflow+Parameter")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class StateMachineDynamicLookupParameterMapping : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "StateMachineDynamicLookupParameterMapping";
+		public const string CategoryConst = "StateMachineDynamicLookupParameterMapping";
 
 		public StateMachineDynamicLookupParameterMapping() : base() {}
 
@@ -52,7 +52,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

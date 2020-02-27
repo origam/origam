@@ -110,13 +110,13 @@ namespace Origam.Gui
             Key resultContextKey = null;
             foreach(EntityUIActionParameterMapping mapping
                 in entityWorkflowAction.ChildItemsByType(
-                EntityUIActionParameterMapping.ItemTypeConst))
+                EntityUIActionParameterMapping.CategoryConst))
             {
                 if(DatasetTools.IsParameterViableAsResultContext(mapping))
                 {
                     foreach(ContextStore store 
                         in entityWorkflowAction.Workflow.ChildItemsByType(
-                        ContextStore.ItemTypeConst))
+                        ContextStore.CategoryConst))
                     {
                         if(store.Name == mapping.Name)
                         {
@@ -205,7 +205,7 @@ namespace Origam.Gui
             ExecuteActionProcessData processData)
         {
             ArrayList scriptCalls = entityWorkflowAction.ChildItemsByType(
-                EntityWorkflowActionScriptCall.ItemTypeConst);
+                EntityWorkflowActionScriptCall.CategoryConst);
             if(scriptCalls.Count == 0)
             {
                 return;

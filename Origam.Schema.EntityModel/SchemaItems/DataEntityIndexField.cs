@@ -33,7 +33,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Index Field", "Fields", "icon_index-field.png")]
     [HelpTopic("Index+Field")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
     [ClassMetaVersion("1.0.0")]
     public class DataEntityIndexField : AbstractSchemaItem
@@ -44,7 +44,7 @@ namespace Origam.Schema.EntityModel
 
 		public DataEntityIndexField(Key primaryKey) : base(primaryKey)	{}
 
-		public const string ItemTypeConst = "DataEntityIndexField";
+		public const string CategoryConst = "DataEntityIndexField";
 
 		#region Properties
 		private DataEntityIndexSortOrder _sortOrder = DataEntityIndexSortOrder.Ascending;
@@ -121,7 +121,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

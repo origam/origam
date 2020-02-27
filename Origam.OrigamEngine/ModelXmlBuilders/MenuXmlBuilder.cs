@@ -239,7 +239,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             height = 0;
             foreach (PropertyValueItem prop 
                 in panel.ChildItems[0].ChildItemsByType(
-                PropertyValueItem.ItemTypeConst))
+                PropertyValueItem.CategoryConst))
             {
                 switch (prop.ControlPropertyItem.Name)
                 {

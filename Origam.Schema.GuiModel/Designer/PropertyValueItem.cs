@@ -29,11 +29,11 @@ using System.Xml;
 
 namespace Origam.Schema.GuiModel
 {
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class PropertyValueItem : AbstractPropertyValueItem
 	{
-		public const string ItemTypeConst = "PropertyValueItem";
+		public const string CategoryConst = "PropertyValueItem";
 
 		public PropertyValueItem() : base(){}
 		
@@ -214,7 +214,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return PropertyValueItem.ItemTypeConst;
+				return PropertyValueItem.CategoryConst;
 			}
 		}
 	}

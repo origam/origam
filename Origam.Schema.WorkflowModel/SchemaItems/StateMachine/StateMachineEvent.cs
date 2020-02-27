@@ -46,11 +46,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Event", "Events", "event-4.png")]
     [HelpTopic("Data+Events")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class StateMachineEvent : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "StateMachineEvent";
+		public const string CategoryConst = "StateMachineEvent";
 
 		public StateMachineEvent() : base() {Init();}
 
@@ -67,7 +67,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
@@ -103,10 +103,10 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		[Browsable(false)]
-		public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineEventParameterMapping.ItemTypeConst);
+		public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineEventParameterMapping.CategoryConst);
 
 		[Browsable(false)]
-		public ArrayList FieldDependencies => this.ChildItemsByType(StateMachineEventFieldDependency.ItemTypeConst);
+		public ArrayList FieldDependencies => this.ChildItemsByType(StateMachineEventFieldDependency.CategoryConst);
 
 		[EntityColumn("I01")]
 		[XmlAttribute ("type")]

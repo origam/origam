@@ -29,11 +29,11 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Summary description for AbstractDataStructure.
 	/// </summary>
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public abstract class AbstractDataStructure : AbstractSchemaItem, IDataStructure
 	{
-		public const string ItemTypeConst = "DataStructure";
+		public const string CategoryConst = "DataStructure";
 
 		public AbstractDataStructure() : base(){}
 		
@@ -48,7 +48,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return DataStructure.ItemTypeConst;
+				return DataStructure.CategoryConst;
 			}
 		}
 		#endregion

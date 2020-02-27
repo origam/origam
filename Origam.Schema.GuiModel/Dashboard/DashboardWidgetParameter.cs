@@ -30,11 +30,11 @@ using Origam.Schema.EntityModel;
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Parameter", "Parameters", 29)]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class DashboardWidgetParameter : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DashboardWidgetParameter";
+		public const string CategoryConst = "DashboardWidgetParameter";
 
 		public DashboardWidgetParameter() : base() {Init();}
 		public DashboardWidgetParameter(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -129,7 +129,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion			

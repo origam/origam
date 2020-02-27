@@ -991,7 +991,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return this.ChildItemsByType(SchemaItemParameter.ItemTypeConst);
+				return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
 			}
 		}
 

@@ -65,7 +65,7 @@ namespace Origam.Schema.GuiModel
 				ControlSetItem panelControl = CreateControl(rootControl, defaultPanel.PanelControl);
 
 				// clone the panel's properties
-				foreach(PropertyValueItem originalProperty in defaultPanel.ChildItems[0].ChildItemsByType(PropertyValueItem.ItemTypeConst))
+				foreach(PropertyValueItem originalProperty in defaultPanel.ChildItems[0].ChildItemsByType(PropertyValueItem.CategoryConst))
 				{
 					PropertyValueItem property = panelControl.NewItem(typeof(PropertyValueItem), schema.ActiveSchemaExtensionId, null) as PropertyValueItem;
 
@@ -283,7 +283,7 @@ namespace Origam.Schema.GuiModel
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 			UserControlSchemaItemProvider controls = schema.GetProvider(typeof(UserControlSchemaItemProvider)) as UserControlSchemaItemProvider;
 
-			return controls.GetChildByName(name, ControlItem.ItemTypeConst) as ControlItem;
+			return controls.GetChildByName(name, ControlItem.CategoryConst) as ControlItem;
 		}
 
 		private static void PopulateControlBindings(ControlSetItem control, string entity, string field, string property)
@@ -301,7 +301,7 @@ namespace Origam.Schema.GuiModel
 		{
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
-			foreach(ControlPropertyItem propertyDef in control.ControlItem.ChildItemsByType(ControlPropertyItem.ItemTypeConst))
+			foreach(ControlPropertyItem propertyDef in control.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
 			{
 				PropertyValueItem property = control.NewItem(typeof(PropertyValueItem), schema.ActiveSchemaExtensionId, null) as PropertyValueItem;
 

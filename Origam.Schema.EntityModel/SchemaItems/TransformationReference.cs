@@ -32,12 +32,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Transformation Reference", 16)]
     [HelpTopic("Transformation+Reference")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Transformation")]
     [ClassMetaVersion("1.0.0")]
     public class TransformationReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "TransformationReference";
+		public const string CategoryConst = "TransformationReference";
 
 		public TransformationReference() : base() {}
 
@@ -52,7 +52,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

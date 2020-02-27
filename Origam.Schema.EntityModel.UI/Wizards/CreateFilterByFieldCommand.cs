@@ -122,7 +122,7 @@ namespace Origam.Schema.EntityModel.Wizards
             // function call
 			FunctionCall call = filter.NewItem(typeof(FunctionCall), _schema.ActiveSchemaExtensionId, null) as FunctionCall;
 			FunctionSchemaItemProvider functionProvider = _schema.GetProvider(typeof(FunctionSchemaItemProvider)) as FunctionSchemaItemProvider;
-			Function equalFunction = (Function)functionProvider.GetChildByName("Between", Function.ItemTypeConst);
+			Function equalFunction = (Function)functionProvider.GetChildByName("Between", Function.CategoryConst);
 			if(equalFunction == null) throw new Exception(ResourceUtils.GetString("ErrorBetweenFunctionNotFound"));
 			call.Function = equalFunction;
 			call.Name = "Between";

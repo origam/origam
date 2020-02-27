@@ -30,11 +30,11 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
     [HelpTopic("Database+Data+Type")]
     [DefaultProperty("DataType")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public  class DatabaseDataType : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DatabaseDataType";
+		public const string CategoryConst = "DatabaseDataType";
 
 		public DatabaseDataType() : base() {}
 
@@ -95,7 +95,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

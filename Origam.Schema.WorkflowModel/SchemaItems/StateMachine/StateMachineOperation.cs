@@ -34,11 +34,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Transition", "Operations", "transition-2.png")]
     [HelpTopic("State+Transition")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class StateMachineOperation : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "StateMachineOperation";
+		public const string CategoryConst = "StateMachineOperation";
 
 		public StateMachineOperation() : base() {}
 
@@ -53,7 +53,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

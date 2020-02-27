@@ -45,14 +45,14 @@ namespace Origam.Schema.DeploymentModel
 	/// </summary>
 	[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
     [HelpTopic("Deployment+Version")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class DeploymentVersion : AbstractSchemaItem, ISchemaItemFactory, IDeploymentVersion
 	{
 		IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 		ISchemaService _schemaService = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
-		public const string ItemTypeConst = "DeploymentVersion";
+		public const string CategoryConst = "DeploymentVersion";
 
 		public DeploymentVersion() : base() {}
 
@@ -102,7 +102,7 @@ namespace Origam.Schema.DeploymentModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 
@@ -258,7 +258,7 @@ namespace Origam.Schema.DeploymentModel
 		private int MaxOrder()
 		{
 			int max = 0;
-			foreach(AbstractUpdateScriptActivity activity in this.ChildItemsByType(AbstractUpdateScriptActivity.ItemTypeConst))
+			foreach(AbstractUpdateScriptActivity activity in this.ChildItemsByType(AbstractUpdateScriptActivity.CategoryConst))
 			{
 				if(activity.ActivityOrder > max) max = activity.ActivityOrder;
 			}

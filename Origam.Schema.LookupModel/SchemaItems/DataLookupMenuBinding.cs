@@ -35,12 +35,12 @@ namespace Origam.Schema.LookupModel
 	/// </summary>
 	[SchemaItemDescription("Menu Binding", "icon_menu-binding.png")]
     [HelpTopic("Menu+Bindings")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("MenuItem")]
     [ClassMetaVersion("1.0.0")]
     public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextContainer, IComparable
 	{
-		public const string ItemTypeConst = "DataLookupMenuBinding";
+		public const string CategoryConst = "DataLookupMenuBinding";
 
 		public DataLookupMenuBinding() : base() {}
 
@@ -54,7 +54,7 @@ namespace Origam.Schema.LookupModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)

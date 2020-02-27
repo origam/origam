@@ -30,11 +30,11 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class WorkQueueWorkflowCommandParameterMapping : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "WorkQueueWorkflowCommandParameterMapping";
+		public const string CategoryConst = "WorkQueueWorkflowCommandParameterMapping";
 
 		public WorkQueueWorkflowCommandParameterMapping() : base() {}
 
@@ -45,7 +45,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 		#endregion
 
 		#region Properties

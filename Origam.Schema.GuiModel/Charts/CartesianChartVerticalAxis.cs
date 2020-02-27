@@ -30,11 +30,11 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Vertical Axis", "Vertical Axes", "icon_vertical-axis.png")]
     [HelpTopic("Vertical+Axis")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class CartesianChartVerticalAxis : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "CartesianChartVerticalAxis";
+		public const string CategoryConst = "CartesianChartVerticalAxis";
 
 		public CartesianChartVerticalAxis() : base() {Init();}
 		public CartesianChartVerticalAxis(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -131,7 +131,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion			

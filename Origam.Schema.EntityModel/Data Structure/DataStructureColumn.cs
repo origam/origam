@@ -40,12 +40,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Field", "Fields", 22)]
     [HelpTopic("Data+Structure+Field")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("Field")]
     [ClassMetaVersion("1.0.0")]
     public class DataStructureColumn : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataStructureColumn";
+		public const string CategoryConst = "DataStructureColumn";
 
 		public DataStructureColumn() : base(){}
 		
@@ -456,7 +456,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

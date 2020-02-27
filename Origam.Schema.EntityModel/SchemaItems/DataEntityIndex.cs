@@ -39,7 +39,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
     [HelpTopic("Indexes")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class DataEntityIndex : AbstractSchemaItem, ISchemaItemFactory
 	{
@@ -49,7 +49,7 @@ namespace Origam.Schema.EntityModel
 
 		public DataEntityIndex(Key primaryKey) : base(primaryKey)	{}
 
-		public const string ItemTypeConst = "DataEntityIndex";
+		public const string CategoryConst = "DataEntityIndex";
 
 		#region Properties
 		private bool _isUnique = false;
@@ -100,7 +100,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

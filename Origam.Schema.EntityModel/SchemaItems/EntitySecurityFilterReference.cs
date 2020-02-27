@@ -33,12 +33,12 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Row Level Security Filter", "Row Level Security",
         "icon_row-level-security-filter.png")]
     [HelpTopic("Row+Level+Security+Filters")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Filter")]
     [ClassMetaVersion("1.0.0")]
     public class EntitySecurityFilterReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "EntitySecurityFilterReference";
+		public const string CategoryConst = "EntitySecurityFilterReference";
 
 		public EntitySecurityFilterReference() : base() {}
 
@@ -53,7 +53,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

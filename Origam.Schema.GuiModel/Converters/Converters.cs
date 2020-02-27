@@ -665,7 +665,7 @@ namespace Origam.Schema.GuiModel
         {
             ArrayList styleProperties = 
                 ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
-                .Widget.ChildItemsByType(ControlStyleProperty.ItemTypeConst);
+                .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
             ArrayList propertyArray = new ArrayList(styleProperties.Count);
             foreach (ControlStyleProperty property in styleProperties)
             {
@@ -689,7 +689,7 @@ namespace Origam.Schema.GuiModel
             {
                 ArrayList styleProperties =
                     ((context.Instance as UIStyleProperty).ParentItem as UIStyle)
-                    .Widget.ChildItemsByType(ControlStyleProperty.ItemTypeConst);
+                    .Widget.ChildItemsByType(ControlStyleProperty.CategoryConst);
                 foreach (AbstractSchemaItem item in styleProperties)
                 {
                     if (item.Name == value.ToString())

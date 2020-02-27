@@ -35,11 +35,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Sequential Workflow", "sequential-workflow.png")]
     [HelpTopic("Sequential+Workflows")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class Workflow : AbstractSchemaItem, IWorkflow
 	{
-		public const string ItemTypeConst = "Workflow";
+		public const string CategoryConst = "Workflow";
 
 		public Workflow() : base() {Init();}
 
@@ -68,7 +68,7 @@ namespace Origam.Schema.WorkflowModel
 		 * */
 		public ContextStore GetReturnContext ()
 		{
-			foreach (ContextStore context in ChildItemsByType(ContextStore.ItemTypeConst))
+			foreach (ContextStore context in ChildItemsByType(ContextStore.CategoryConst))
 			{
 				if (context.IsReturnValue) return context;
 			}
@@ -93,7 +93,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

@@ -32,12 +32,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Filter Reference", "icon_filter-reference.png")]
     [HelpTopic("Filter+Reference")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Filter")]
     [ClassMetaVersion("1.0.0")]
     public class EntityFilterReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "EntityFilterReference";
+		public const string CategoryConst = "EntityFilterReference";
 
 		public EntityFilterReference() : base() {}
 
@@ -52,7 +52,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

@@ -34,11 +34,11 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Field Dependency", "Field Dependencies", "field-dependency.png")]
     [HelpTopic("Data+Event+Field+Dependency")]
     [DefaultProperty("Field")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class StateMachineEventFieldDependency : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "StateMachineEventFieldDependency";
+		public const string CategoryConst = "StateMachineEventFieldDependency";
 
 		public StateMachineEventFieldDependency() : base() {}
 
@@ -53,7 +53,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

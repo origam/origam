@@ -49,10 +49,10 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Summary description for EntitySecurityRule.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "EntitySecurityRule";
+		public const string CategoryConst = "EntitySecurityRule";
 
 		public AbstractEntitySecurityRule() : base() {}
 
@@ -67,7 +67,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

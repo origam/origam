@@ -37,7 +37,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return Function.ItemTypeConst;
+				return Function.CategoryConst;
 			}
 		}
 		public override string Group

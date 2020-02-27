@@ -32,11 +32,11 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Menu", "home.png")]
     [HelpTopic("Menu")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class Menu : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "Menu";
+		public const string CategoryConst = "Menu";
 
 		public Menu() : base() {}
 
@@ -51,7 +51,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

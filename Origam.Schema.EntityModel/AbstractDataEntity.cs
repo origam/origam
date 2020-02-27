@@ -68,7 +68,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(SchemaItemParameter.ItemTypeConst);
+				return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
 			}
 		}
 
@@ -172,14 +172,14 @@ namespace Origam.Schema.EntityModel
 					{
 						if(!_columnsPopulated)
 						{
-							_columns = this.ChildItemsByType(AbstractDataEntityColumn.ItemTypeConst);
+							_columns = this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
 							_columnsPopulated = true;
 						}
 					}
 				}
 				return _columns;
 #else
-				return this.ChildItemsByType(AbstractDataEntityColumn.ItemTypeConst);
+				return this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
 #endif
 			}
 		}
@@ -189,7 +189,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityRelationItem.ItemTypeConst);
+				return this.ChildItemsByType(EntityRelationItem.CategoryConst);
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityFilter.ItemTypeConst);
+				return this.ChildItemsByType(EntityFilter.CategoryConst);
 			}
 		}
 
@@ -238,7 +238,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataEntityIndex.ItemTypeConst);
+				return this.ChildItemsByType(DataEntityIndex.CategoryConst);
 			}
 		}
 
@@ -247,7 +247,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(AbstractEntitySecurityRule.ItemTypeConst);
+				return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 			}
 		}
 
@@ -256,7 +256,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityConditionalFormatting.ItemTypeConst);
+				return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 			}
 		}
 

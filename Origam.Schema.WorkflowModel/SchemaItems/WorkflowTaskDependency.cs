@@ -33,11 +33,11 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Dependency", "Dependencies", "dependency-blm.png")]
     [HelpTopic("Workflow+Task+Dependency")]
     [DefaultProperty("Task")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class WorkflowTaskDependency : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "WorkflowTaskDependency";
+		public const string CategoryConst = "WorkflowTaskDependency";
 
 		public WorkflowTaskDependency() : base() {}
 
@@ -48,7 +48,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

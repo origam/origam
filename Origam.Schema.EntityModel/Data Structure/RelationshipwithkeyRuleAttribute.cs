@@ -43,7 +43,7 @@ namespace Origam.DA.ObjectPersistence.Attributes
             var dataStructure = (DataStructureEntity)instance;
             if (dataStructure.Entity != null && dataStructure.Entity is IAssociation)
             {
-                ArrayList schemaItems = dataStructure.Entity.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst);
+                ArrayList schemaItems = dataStructure.Entity.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst);
                 if (schemaItems.Count == 0)
                 {
                     return new DataException("Relationship has no key");

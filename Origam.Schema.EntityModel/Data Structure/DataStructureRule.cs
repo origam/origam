@@ -34,11 +34,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Rule", "icon_rule.png")]
     [HelpTopic("Rule+Set+Rule")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class DataStructureRule : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataStructureRule";
+		public const string CategoryConst = "DataStructureRule";
 
 		public DataStructureRule() : base(){}
 		
@@ -51,7 +51,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataStructureRuleDependency.ItemTypeConst);
+				return this.ChildItemsByType(DataStructureRuleDependency.CategoryConst);
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

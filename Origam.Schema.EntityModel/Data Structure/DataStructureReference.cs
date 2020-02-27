@@ -32,12 +32,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Data Structure Reference", "data-structure-reference.png")]
     [HelpTopic("Data+Structure+Reference")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("DataStructure")]
     [ClassMetaVersion("1.0.0")]
     public  class DataStructureReference : AbstractSchemaItem, IDataStructureReference
 	{
-		public const string ItemTypeConst = "DataStructureReference";
+		public const string CategoryConst = "DataStructureReference";
 
 		public DataStructureReference() : base() {}
 
@@ -52,7 +52,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

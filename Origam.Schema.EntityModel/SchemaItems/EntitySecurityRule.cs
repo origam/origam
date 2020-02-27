@@ -33,7 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Row Level Security Rule", "Row Level Security", 
         "icon_row-level-security-rule.png")]
     [HelpTopic("Row+Level+Security+Rules")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class EntitySecurityRule : AbstractEntitySecurityRule
 	{

@@ -518,7 +518,7 @@ namespace Origam.Workbench.Services
 		private List<DeploymentVersion> GetDeploymentVersions(SchemaExtension extension)
 		{
 			return _schema.GetProvider<DeploymentSchemaItemProvider>()
-				.ChildItemsByType(DeploymentVersion.ItemTypeConst)
+				.ChildItemsByType(DeploymentVersion.CategoryConst)
 				.Cast<DeploymentVersion>()
 				.Where(deplVersion => deplVersion.SchemaExtensionId == extension.Id)
 				.OrderBy(deplVersion => deplVersion)
@@ -529,7 +529,7 @@ namespace Origam.Workbench.Services
 			SchemaExtension extension)
 		{
 			return _schema.GetProvider<DeploymentSchemaItemProvider>()
-				.ChildItemsByType(DeploymentVersion.ItemTypeConst)
+				.ChildItemsByType(DeploymentVersion.CategoryConst)
 			    .Cast<DeploymentVersion>()
 				.Where(depVersion => depVersion.SchemaExtensionId == extension.Id)
 				.OrderBy(depVersion => depVersion.Version)

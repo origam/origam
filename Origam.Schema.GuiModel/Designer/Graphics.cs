@@ -37,11 +37,11 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("Image", "icon_image.png")]
     [HelpTopic("Images")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class Graphics : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "Graphics";
+		public const string CategoryConst = "Graphics";
 
 		public Graphics() : base()
 		{
@@ -73,7 +73,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

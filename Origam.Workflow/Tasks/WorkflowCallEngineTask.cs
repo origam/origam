@@ -94,7 +94,7 @@ namespace Origam.Workflow.Tasks
 			WorkflowCallTask task = this.Step as WorkflowCallTask;
 
 			// Fill input context stores
-			foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.ItemTypeConst))
+			foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
 			{
 				if(link.Direction == ContextStoreLinkDirection.Input)
 				{
@@ -139,7 +139,7 @@ namespace Origam.Workflow.Tasks
 				// Fill output context stores
 				if(task.OutputMethod != ServiceOutputMethod.Ignore)
 				{
-					foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.ItemTypeConst))
+					foreach(ContextStoreLink link in task.ChildItemsByType(ContextStoreLink.CategoryConst))
 					{
 						if(link.Direction == ContextStoreLinkDirection.Output)
 						{

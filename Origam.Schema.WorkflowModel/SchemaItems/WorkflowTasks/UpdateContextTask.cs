@@ -49,7 +49,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
@@ -237,7 +237,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			if (this.Entity == null) return null;
 			foreach (DataStructureColumn col in
-				Entity.ChildItemsByType(DataStructureColumn.ItemTypeConst))
+				Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
 			{
 				if (col.Name == FieldName)
 				{

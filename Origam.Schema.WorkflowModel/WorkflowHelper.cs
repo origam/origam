@@ -38,14 +38,14 @@ namespace Origam.Schema.WorkflowModel
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
 			ServiceSchemaItemProvider ssip = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
-			Service svc = ssip.GetChildByName(serviceName, Service.ItemTypeConst) as Service;
+			Service svc = ssip.GetChildByName(serviceName, Service.CategoryConst) as Service;
 
 			if(svc == null)
 			{
 				throw new ArgumentOutOfRangeException("serviceName", serviceName, "Service not found.");
 			}
 
-			ServiceMethod method = svc.GetChildByName(methodName, ServiceMethod.ItemTypeConst) as ServiceMethod;
+			ServiceMethod method = svc.GetChildByName(methodName, ServiceMethod.CategoryConst) as ServiceMethod;
 
 			if(svc == null)
 			{
@@ -97,7 +97,7 @@ namespace Origam.Schema.WorkflowModel
 
 			ServiceMethodCallTask task = WorkflowHelper.CreateServiceMethodCallTask(context, "DataService", "LoadData", persist);
 
-			ServiceMethodCallParameter p1 = task.GetChildByName("DataStructure", ServiceMethodCallParameter.ItemTypeConst) as ServiceMethodCallParameter;
+			ServiceMethodCallParameter p1 = task.GetChildByName("DataStructure", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
 			EntityHelper.CreateDataStructureReference(p1, context.Structure as DataStructure, null, null, persist);
 
 			return task;
@@ -112,10 +112,10 @@ namespace Origam.Schema.WorkflowModel
 
 			ServiceMethodCallTask task = WorkflowHelper.CreateServiceMethodCallTask(context, "DataService", "StoreData", persist);
 
-			ServiceMethodCallParameter p1 = task.GetChildByName("DataStructure", ServiceMethodCallParameter.ItemTypeConst) as ServiceMethodCallParameter;
+			ServiceMethodCallParameter p1 = task.GetChildByName("DataStructure", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
 			EntityHelper.CreateDataStructureReference(p1, context.Structure as DataStructure, null, null, persist);
 
-			ServiceMethodCallParameter p2 = task.GetChildByName("Data", ServiceMethodCallParameter.ItemTypeConst) as ServiceMethodCallParameter;
+			ServiceMethodCallParameter p2 = task.GetChildByName("Data", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
 			ContextReference cr = WorkflowHelper.CreateContextReference(p2, context, "/", false);
 			cr.Name = cr.ContextStore.Name;
 			if(persist) cr.Persist();
@@ -127,7 +127,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			ServiceMethodCallTask task = WorkflowHelper.CreateServiceMethodCallTask(context, "DataTransformationService", "Transform", persist);
 
-			ServiceMethodCallParameter p1 = task.GetChildByName("Data", ServiceMethodCallParameter.ItemTypeConst) as ServiceMethodCallParameter;
+			ServiceMethodCallParameter p1 = task.GetChildByName("Data", ServiceMethodCallParameter.CategoryConst) as ServiceMethodCallParameter;
 			ContextReference cr = WorkflowHelper.CreateContextReference(p1, context, "/", false);
 			cr.Name = cr.ContextStore.Name;
 			if(persist) cr.Persist();
@@ -205,7 +205,7 @@ namespace Origam.Schema.WorkflowModel
 				wqFieldTypes[column.DataType] = fieldCount;
 				string fieldName = DecodeWorkQueueFieldName(column.DataType) + fieldCount.ToString();
 				// find wq field (eg. "g1" for the first guid field)
-				IDataEntityColumn wqField = wqEntity.GetChildByName(fieldName, AbstractDataEntityColumn.ItemTypeConst) as IDataEntityColumn;
+				IDataEntityColumn wqField = wqEntity.GetChildByName(fieldName, AbstractDataEntityColumn.CategoryConst) as IDataEntityColumn;
 				DataStructureColumn wqDsField = EntityHelper.CreateDataStructureField(wqStructure.Entities[0] as DataStructureEntity, wqField, false);
 				// finally rename the field e.g. "g1" to "refSomethingId"
 				wqDsField.Name = column.Name;
@@ -214,7 +214,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 
 			wqc.WorkQueueStructure = wqStructure; 
-			wqc.WorkQueueStructureUserListMethod = wqStructure.GetChildByName("GetByQueueId", DataStructureMethod.ItemTypeConst) as DataStructureMethod;
+			wqc.WorkQueueStructureUserListMethod = wqStructure.GetChildByName("GetByQueueId", DataStructureMethod.CategoryConst) as DataStructureMethod;
 			wqc.Persist();
 
 			GenerateWorkQueueClassEntityMappings(wqc);

@@ -38,11 +38,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Function", "icon_10_functions.png")]
     [HelpTopic("Functions")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class Function : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "Function";
+		public const string CategoryConst = "Function";
 
 		public Function() : base() {}
 
@@ -57,7 +57,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

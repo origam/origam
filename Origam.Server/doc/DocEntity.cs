@@ -197,7 +197,7 @@ namespace Origam.Server.Doc
                     StringBuilder keys = new StringBuilder();
                     keys.Append(DocTools.ImageLink(relation.AssociatedEntity, this.FilterName));
                     keys.Append("<ul>");
-                    foreach (EntityRelationColumnPairItem key in relation.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst))
+                    foreach (EntityRelationColumnPairItem key in relation.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst))
                     {
                         keys.AppendFormat("<li>{0}</li>", key.RelatedEntityField.Name);
                     }

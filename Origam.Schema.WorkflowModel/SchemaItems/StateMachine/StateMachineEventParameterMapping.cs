@@ -40,11 +40,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
     [HelpTopic("Data+Event+Parameter+Mapping")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class StateMachineEventParameterMapping : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "WorkflowEntityParameterMapping";
+		public const string CategoryConst = "WorkflowEntityParameterMapping";
 
 		public StateMachineEventParameterMapping() : base() {}
 
@@ -55,7 +55,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

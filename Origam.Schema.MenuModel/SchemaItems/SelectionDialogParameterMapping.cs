@@ -33,11 +33,11 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 3)]
     [HelpTopic("Menu+Parameter+Mapping")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class SelectionDialogParameterMapping : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "SelectionDialogParameterMapping";
+		public const string CategoryConst = "SelectionDialogParameterMapping";
 
 		public SelectionDialogParameterMapping() : base() {}
 
@@ -53,7 +53,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

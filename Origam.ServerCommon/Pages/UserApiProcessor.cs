@@ -269,7 +269,7 @@ namespace Origam.ServerCommon.Pages
             // to datastructure could make a use of other parameters while applying
             // dynamic defaults to newly created dataset.
             List<PageParameterMapping> contentParameters = new List<PageParameterMapping>();
-            foreach (PageParameterMapping ppm in page.ChildItemsByType(PageParameterMapping.ItemTypeConst))
+            foreach (PageParameterMapping ppm in page.ChildItemsByType(PageParameterMapping.CategoryConst))
             {
                 PageParameterFileMapping fileMapping = ppm as PageParameterFileMapping;
 
@@ -468,7 +468,7 @@ namespace Origam.ServerCommon.Pages
             }
             else if (wfPage != null)
             {
-                ContextStore ctx = wfPage.Workflow.GetChildByName(ppm.Name, ContextStore.ItemTypeConst) as ContextStore;
+                ContextStore ctx = wfPage.Workflow.GetChildByName(ppm.Name, ContextStore.CategoryConst) as ContextStore;
                 if (ctx == null)
                 {
                     throw new ArgumentException(String.Format("Couldn't find a context store with " +

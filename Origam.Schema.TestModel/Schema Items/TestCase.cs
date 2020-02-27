@@ -32,7 +32,7 @@ namespace Origam.Schema.TestModel
     [ClassMetaVersion("1.0.0")]
 	public class TestCase : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "TestCase";
+		public const string CategoryConst = "TestCase";
 
 		public TestCase() : base() {}
 
@@ -47,7 +47,7 @@ namespace Origam.Schema.TestModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

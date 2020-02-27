@@ -31,11 +31,11 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "file-mapping.png")]
     [HelpTopic("Parameter+Mapping")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class PageParameterMapping : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "PageParameterMapping";
+		public const string CategoryConst = "PageParameterMapping";
 
 		public PageParameterMapping() : base() {Init();}
 		public PageParameterMapping(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -90,7 +90,7 @@ namespace Origam.Schema.GuiModel
 		}
 
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 		#endregion			
 	}
 }

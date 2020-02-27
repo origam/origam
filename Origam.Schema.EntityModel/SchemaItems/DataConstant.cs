@@ -34,11 +34,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Data Constant", "icon_data-constant.png")]
     [HelpTopic("Data+Constants")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class DataConstant : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataConstant";
+		public const string CategoryConst = "DataConstant";
 
 		public DataConstant() : base() {}
 
@@ -433,7 +433,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

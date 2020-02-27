@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Default Value Parameter", "Parameters", "icon_default-value-parameter.png")]
     [HelpTopic("Default+Value+Parameter")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class DefaultValueParameter : SchemaItemParameter
 	{

@@ -699,7 +699,7 @@ namespace Origam.DA.Service
                 );
 
             int i = 0;
-            ArrayList sortedFields = index.ChildItemsByType(DataEntityIndexField.ItemTypeConst);
+            ArrayList sortedFields = index.ChildItemsByType(DataEntityIndexField.CategoryConst);
             sortedFields.Sort();
 
             foreach (DataEntityIndexField field in sortedFields)
@@ -964,7 +964,7 @@ namespace Origam.DA.Service
             if (!entity.ParentItem.PrimaryKey.Equals(ds.PrimaryKey))
             {
                 // render joins that we need for fields in this entity
-                foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+                foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
                 {
                     if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                     {
@@ -982,7 +982,7 @@ namespace Origam.DA.Service
                 // for the root entity we render all child relation filters (filterParent relations)
                 StringBuilder joinedFilterBuilder = new StringBuilder();
                 int counter = 0;
-                foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+                foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
                 {
                     if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                     {
@@ -1148,7 +1148,7 @@ namespace Origam.DA.Service
             if (filterCount > 0) return false;
 
             // we test for child entities as well
-            foreach (DataStructureEntity childEntity in relation.ChildItemsByTypeRecursive(DataStructureEntity.ItemTypeConst))
+            foreach (DataStructureEntity childEntity in relation.ChildItemsByTypeRecursive(DataStructureEntity.CategoryConst))
             {
                 filterCount += Filters(filter, childEntity, dynamicParameters, ignoreImplicitFilters).Count;
 
@@ -1371,7 +1371,7 @@ namespace Origam.DA.Service
                 NameLeftBracket + entity.Name + NameRightBracket
                 );
 
-            foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+            foreach (DataStructureEntity relation in (entity.ChildItemsByType(DataStructureEntity.CategoryConst)))
             {
                 if (relation.RelationType == RelationType.LeftJoin || relation.RelationType == RelationType.InnerJoin)
                 {
@@ -1537,7 +1537,7 @@ namespace Origam.DA.Service
                         // When no file name, then the blob field will be emptied. Without dependency it would
                         // not touch the write only field.
                         const string writeOnlyValue = "WHEN {1} IS NULL THEN {0} ELSE {1}";
-                        ArrayList dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.ItemTypeConst);
+                        ArrayList dependenciesSource = column.Field.ChildItemsByType(EntityFieldDependency.CategoryConst);
                         ArrayList dependencies = new ArrayList();
                         // skip dependencies to virtual fields
                         foreach (EntityFieldDependency dep in dependenciesSource)
@@ -1764,7 +1764,7 @@ namespace Origam.DA.Service
                 && aggregatedColumn != null)
             {
                 bool found = false;
-                foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
+                foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
                 {
                     // if we have an aggregation column and
                     // and the aggregation sub-entity with source field
@@ -2084,7 +2084,7 @@ namespace Origam.DA.Service
             bool stopAtIncluded = false;
             bool notExistsIncluded = false;
 
-            foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+            foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
             {
                 if (relation.RelationType != RelationType.LeftJoin)
                 {
@@ -2113,7 +2113,7 @@ namespace Origam.DA.Service
             if (notExistsIncluded)
             {
                 int notExistsCount = (stopAtIncluded ? 1 : 0);
-                foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+                foreach (DataStructureEntity relation in (baseEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
                 {
                     if (relation.RelationType == RelationType.NotExists)
                     {
@@ -2313,7 +2313,7 @@ namespace Origam.DA.Service
 
             StringBuilder recursionBuilder = new StringBuilder();
             // Let's go to recursion!
-            foreach (DataStructureEntity relation in (dsEntity.ChildItemsByType(DataStructureEntity.ItemTypeConst)))
+            foreach (DataStructureEntity relation in (dsEntity.ChildItemsByType(DataStructureEntity.CategoryConst)))
             {
                 RenderSelectRelation(recursionBuilder, relation, stopAtEntity, filter, replaceParameterTexts, skipStopAtEntity, includeFilter, numberOfJoins, includeAllRelations, dynamicParameters, parameterReferences);
             }
@@ -2477,7 +2477,7 @@ namespace Origam.DA.Service
 
             if (!(ignoreImplicitFilters || entity.IgnoreImplicitFilters))
             {
-                foreach (EntitySecurityFilterReference rowLevel in entity.EntityDefinition.ChildItemsByType(EntitySecurityFilterReference.ItemTypeConst))
+                foreach (EntitySecurityFilterReference rowLevel in entity.EntityDefinition.ChildItemsByType(EntitySecurityFilterReference.CategoryConst))
                 {
                     if (!result.Contains(rowLevel.Filter))
                     {

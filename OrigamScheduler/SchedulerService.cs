@@ -219,7 +219,7 @@ namespace OrigamScheduler
 				{
 					if(parameter != null)
 					{
-						AbstractSchemaItem context = workflow.GetChildByName(parameter.Name, ContextStore.ItemTypeConst);
+						AbstractSchemaItem context = workflow.GetChildByName(parameter.Name, ContextStore.CategoryConst);
 						
 						if(context == null)
 						{

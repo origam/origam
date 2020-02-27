@@ -30,11 +30,11 @@ namespace Origam.Schema
 	/// </summary>
 	[SchemaItemDescription("Feature", "icon_feature.png")]
     [HelpTopic("Features")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class Feature : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "Feature";
+		public const string CategoryConst = "Feature";
 
 		public Feature() : base() {}
 
@@ -49,7 +49,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

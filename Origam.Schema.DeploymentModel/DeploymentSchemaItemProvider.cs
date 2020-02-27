@@ -57,7 +57,7 @@ namespace Origam.Schema.DeploymentModel
 		{
 			get
 			{
-				return DeploymentVersion.ItemTypeConst;
+				return DeploymentVersion.CategoryConst;
 			}
 		}
 

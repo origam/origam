@@ -26,11 +26,11 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.GuiModel
 {
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class ColumnParameterMapping : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "ColumnParameterMapping";
+		public const string CategoryConst = "ColumnParameterMapping";
 
 		public ColumnParameterMapping() : base() {}
 		
@@ -79,7 +79,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ColumnParameterMapping.ItemTypeConst;
+				return ColumnParameterMapping.CategoryConst;
 			}
 		}
 

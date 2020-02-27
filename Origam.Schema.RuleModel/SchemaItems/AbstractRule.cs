@@ -30,10 +30,10 @@ namespace Origam.Schema.RuleModel
     /// <summary>
     /// Summary description for AbstractRule.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     public abstract class AbstractRule : AbstractSchemaItem, IRule
 	{
-		public const string ItemTypeConst = "Rule";
+		public const string CategoryConst = "Rule";
 
 		public AbstractRule() : base() {}
 
@@ -48,7 +48,7 @@ namespace Origam.Schema.RuleModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

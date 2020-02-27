@@ -33,12 +33,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Dependency", "Dependencies", "icon_dependency.png")]
     [HelpTopic("Field+Dependencies")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
     [ClassMetaVersion("1.0.0")]
     public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "EntityFieldDependency";
+		public const string CategoryConst = "EntityFieldDependency";
 
 		public EntityFieldDependency() : base() {}
 
@@ -57,7 +57,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

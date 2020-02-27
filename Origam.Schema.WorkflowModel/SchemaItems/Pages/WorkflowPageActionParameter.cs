@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 {
 	[SchemaItemDescription("Parameter", "Parameters", 17)]
     [HelpTopic("Action+Parameter")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class WorkflowPageActionParameter : AbstractSchemaItem
 	{
@@ -37,7 +37,7 @@ namespace Origam.Schema.WorkflowModel
 		public WorkflowPageActionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
 		public WorkflowPageActionParameter(Key primaryKey) : base(primaryKey) {Init();}
 
-		public const string ItemTypeConst = "WorkflowPageActionParameter";
+		public const string CategoryConst = "WorkflowPageActionParameter";
 
 		private void Init()
 		{
@@ -49,7 +49,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

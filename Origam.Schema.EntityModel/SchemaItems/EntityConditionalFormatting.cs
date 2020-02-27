@@ -36,11 +36,11 @@ namespace Origam.Schema.EntityModel
         "Conditional Formatting", 
         "icon_conditional-formatting-rule.png")]
     [HelpTopic("Conditional+Formatting+Rules")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "EntityConditionalFormatting";
+		public const string CategoryConst = "EntityConditionalFormatting";
 
 		public EntityConditionalFormatting() : base() {}
 
@@ -55,7 +55,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

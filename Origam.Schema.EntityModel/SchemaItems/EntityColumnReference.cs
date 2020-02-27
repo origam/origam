@@ -32,12 +32,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
     [HelpTopic("Field+Reference")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
     [ClassMetaVersion("1.0.0")]
     public class EntityColumnReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "EntityColumnReference";
+		public const string CategoryConst = "EntityColumnReference";
 
 		public EntityColumnReference() : base() {}
 
@@ -52,7 +52,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

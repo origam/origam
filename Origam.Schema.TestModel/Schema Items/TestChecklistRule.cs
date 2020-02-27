@@ -32,7 +32,7 @@ namespace Origam.Schema.TestModel
     [ClassMetaVersion("1.0.0")]
 	public class TestChecklistRule : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "TestChecklistRule";
+		public const string CategoryConst = "TestChecklistRule";
 
 		public TestChecklistRule() : base() {}
 
@@ -47,7 +47,7 @@ namespace Origam.Schema.TestModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

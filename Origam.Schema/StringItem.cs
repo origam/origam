@@ -32,11 +32,11 @@ namespace Origam.Schema
 	/// </summary>
 	[SchemaItemDescription("String", "icon_string.png")]
     [HelpTopic("String+Library")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class StringItem : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "String";
+		public const string CategoryConst = "String";
 
 		public StringItem() : base(){}
 
@@ -51,7 +51,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

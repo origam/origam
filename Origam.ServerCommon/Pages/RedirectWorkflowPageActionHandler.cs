@@ -63,7 +63,7 @@ namespace Origam.ServerCommon.Pages
 
             Hashtable parameters = new Hashtable();
 
-            foreach (WorkflowPageActionParameter actionParameter in action.ChildItemsByType(WorkflowPageActionParameter.ItemTypeConst))
+            foreach (WorkflowPageActionParameter actionParameter in action.ChildItemsByType(WorkflowPageActionParameter.CategoryConst))
             {
                 string parameterResult = re.EvaluateXPath(nav, actionParameter.XPath);
                 parameters.Add(actionParameter.Name, parameterResult);

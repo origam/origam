@@ -33,11 +33,11 @@ namespace Origam.Schema.GuiModel
     /// Summary description for PropertyValueItem.
     /// </summary>
     /// 
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class PropertyBindingInfo : AbstractPropertyValueItem
 	{
-		public const string ItemTypeConst = "PropertyBindingInfo";
+		public const string CategoryConst = "PropertyBindingInfo";
 
 		public PropertyBindingInfo() : base(){}
 		
@@ -87,7 +87,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return PropertyBindingInfo.ItemTypeConst;
+				return PropertyBindingInfo.CategoryConst;
 			}
 		}
 	}

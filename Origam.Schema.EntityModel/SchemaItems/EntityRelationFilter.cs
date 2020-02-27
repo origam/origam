@@ -32,12 +32,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Filter Reference", 5)]
     [HelpTopic("Relationship+Filter")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Filter")]
     [ClassMetaVersion("1.0.0")]
     public class EntityRelationFilter : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "EntityRelationFilter";
+		public const string CategoryConst = "EntityRelationFilter";
 
 		public EntityRelationFilter() : base(){}
 		
@@ -95,7 +95,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return EntityRelationFilter.ItemTypeConst;
+				return EntityRelationFilter.CategoryConst;
 			}
 		}
 

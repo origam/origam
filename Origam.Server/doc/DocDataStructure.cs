@@ -139,7 +139,7 @@ namespace Origam.Server.Doc
             List<DiagramConnection> connections, DocEntity docEntity, int lastTop, int left)
         {
             // first parent-child
-            foreach (DataStructureEntity entity in parent.ChildItemsByType(DataStructureEntity.ItemTypeConst))
+            foreach (DataStructureEntity entity in parent.ChildItemsByType(DataStructureEntity.CategoryConst))
             {
                 IAssociation assoc = entity.Entity as IAssociation;
                 if (assoc == null || assoc.IsParentChild)
@@ -148,7 +148,7 @@ namespace Origam.Server.Doc
                 }
             }
             // then the rest
-            foreach (DataStructureEntity entity in parent.ChildItemsByType(DataStructureEntity.ItemTypeConst))
+            foreach (DataStructureEntity entity in parent.ChildItemsByType(DataStructureEntity.CategoryConst))
             {
                 IAssociation assoc = entity.Entity as IAssociation;
                 if (assoc != null && !assoc.IsParentChild)
@@ -179,7 +179,7 @@ namespace Origam.Server.Doc
 
             lastTop += 50;
             string cssClass = "dataStructureEntity";
-            if (!entity.AllFields && entity.ChildItemsByType(DataStructureColumn.ItemTypeConst).Count == 0)
+            if (!entity.AllFields && entity.ChildItemsByType(DataStructureColumn.CategoryConst).Count == 0)
             {
                 cssClass = "";
             }
@@ -204,7 +204,7 @@ namespace Origam.Server.Doc
             DataStructure ds = dataStructure as DataStructure;
             if (ds != null)
             {
-                foreach (DataStructureMethod method in dataStructure.ChildItemsByType(DataStructureMethod.ItemTypeConst))
+                foreach (DataStructureMethod method in dataStructure.ChildItemsByType(DataStructureMethod.CategoryConst))
                 {
                     DocTools.WriteSectionStart(writer, method.Name + " Method");
                     DataStructureFilterSet filterSet = method as DataStructureFilterSet;

@@ -40,11 +40,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Context Mapping", "Context Mappings", "context-mapping.png")]
     [HelpTopic("Workflow+Call+Context+Mapping")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class ContextStoreLink : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "ContextStoreLink";
+		public const string CategoryConst = "ContextStoreLink";
 
 		public ContextStoreLink() : base() {}
 
@@ -55,7 +55,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

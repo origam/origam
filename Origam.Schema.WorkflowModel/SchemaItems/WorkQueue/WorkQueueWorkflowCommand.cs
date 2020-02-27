@@ -36,7 +36,7 @@ namespace Origam.Schema.WorkflowModel
     [ClassMetaVersion("1.0.0")]
 	public class WorkQueueWorkflowCommand : EntityUIAction
 	{
-		public new const string ItemTypeConst = "WorkQueueCommand";
+		public new const string CategoryConst = "WorkQueueCommand";
 
 		public WorkQueueWorkflowCommand() : base() {Init();}
 
@@ -54,7 +54,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return this.ChildItemsByType(WorkQueueWorkflowCommandParameterMapping.ItemTypeConst);
+				return this.ChildItemsByType(WorkQueueWorkflowCommandParameterMapping.CategoryConst);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

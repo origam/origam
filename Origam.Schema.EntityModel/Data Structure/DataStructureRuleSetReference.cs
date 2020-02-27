@@ -32,12 +32,12 @@ namespace Origam.Schema.EntityModel
 
     [SchemaItemDescription("Rule Set Reference", "icon_rule-set-reference.png")]
     [HelpTopic("Rule+Set+Reference")]
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     [DefaultProperty("RuleSet")]
     [ClassMetaVersion("1.0.0")]
     public class DataStructureRuleSetReference : AbstractSchemaItem
     {
-        public const string ItemTypeConst = "DataStructureRuleSetReference";
+        public const string CategoryConst = "DataStructureRuleSetReference";
 
         public DataStructureRuleSetReference() : base(){ }
         public DataStructureRuleSetReference(Guid schemaExtensionId) : base(schemaExtensionId) { }
@@ -78,7 +78,7 @@ namespace Origam.Schema.EntityModel
         {
             get
             {
-                return ItemTypeConst; 
+                return CategoryConst; 
             }
         }
 

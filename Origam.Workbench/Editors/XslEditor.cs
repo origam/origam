@@ -743,7 +743,7 @@ namespace Origam.Workbench.Editors
             if (cboDataStructure.SelectedItem != null)
             {
                 IDataStructure structure = cboDataStructure.SelectedItem as IDataStructure;
-                foreach (DataStructureRuleSet ruleSet in structure.ChildItemsByType(DataStructureRuleSet.ItemTypeConst))
+                foreach (DataStructureRuleSet ruleSet in structure.ChildItemsByType(DataStructureRuleSet.CategoryConst))
                 {
                     cboRuleSet.Items.Add(ruleSet);
                 }

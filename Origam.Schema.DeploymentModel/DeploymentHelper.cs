@@ -59,7 +59,7 @@ namespace Origam.Schema.DeploymentModel
             ServiceSchemaItemProvider serviceProvider = schema.GetProvider(
                 typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
             Service service = serviceProvider.GetChildByName(
-                "DataService", Service.ItemTypeConst) as Service;
+                "DataService", Service.CategoryConst) as Service;
             DeploymentSchemaItemProvider deploymentProvider = schema.GetProvider(
                 typeof(DeploymentSchemaItemProvider)) as DeploymentSchemaItemProvider;
             DeploymentVersion currentVersion = deploymentProvider.CurrentVersion();

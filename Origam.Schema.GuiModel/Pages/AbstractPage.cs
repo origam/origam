@@ -29,10 +29,10 @@ using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.GuiModel
 {
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextContainer
 	{
-		public const string ItemTypeConst = "Page";
+		public const string CategoryConst = "Page";
 
 		public AbstractPage() : base() {Init();}
 		public AbstractPage(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -122,7 +122,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

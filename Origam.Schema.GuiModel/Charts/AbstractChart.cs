@@ -27,10 +27,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     public abstract class AbstractChart : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "Chart";
+		public const string CategoryConst = "Chart";
 
 		public AbstractChart() : base() {Init();}
 		public AbstractChart(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -64,7 +64,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion			

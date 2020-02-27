@@ -1894,14 +1894,14 @@ namespace Origam.DA.Service
                         if (rows.Length > 0)
                         {
                             // if there is a different number of fields, we consider them non-equal without even checking the details
-                            if (rows.Length != index.ChildItemsByType(DataEntityIndexField.ItemTypeConst).Count)
+                            if (rows.Length != index.ChildItemsByType(DataEntityIndexField.CategoryConst).Count)
                             {
                                 different = true;
                             }
 
                             if (!different)
                             {
-                                foreach (DataEntityIndexField fld in index.ChildItemsByType(DataEntityIndexField.ItemTypeConst))
+                                foreach (DataEntityIndexField fld in index.ChildItemsByType(DataEntityIndexField.CategoryConst))
                                 {
                                     rows = indexFields.Tables[0].Select("TableName = '" + t.MappedObjectName
                                         + "' AND IndexName = '" + index.Name

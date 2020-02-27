@@ -33,11 +33,11 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Abstract implementation of IDataEntityColumn.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntityColumn
 	{
 
-		public const string ItemTypeConst = "DataEntityColumn";
+		public const string CategoryConst = "DataEntityColumn";
 		public AbstractDataEntityColumn() : base()
 		{
 			Init();
@@ -441,7 +441,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(AbstractEntitySecurityRule.ItemTypeConst);
+				return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 			}
 		}
 		
@@ -450,7 +450,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityConditionalFormatting.ItemTypeConst);
+				return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 			}
 		}
 
@@ -459,7 +459,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityFieldDynamicLabel.ItemTypeConst);
+				return this.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 			}
 		}
 
@@ -494,7 +494,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return AbstractDataEntityColumn.ItemTypeConst;
+				return AbstractDataEntityColumn.CategoryConst;
 			}
 		}
 

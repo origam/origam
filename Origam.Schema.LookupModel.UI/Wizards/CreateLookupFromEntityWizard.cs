@@ -303,7 +303,7 @@ namespace Origam.Schema.LookupModel.Wizards
 
 			EntityFilter idFilter = null;
 
-			foreach(EntityFilter filter in this.Entity.ChildItemsByType(EntityFilter.ItemTypeConst))
+			foreach(EntityFilter filter in this.Entity.ChildItemsByType(EntityFilter.CategoryConst))
 			{
 				cboListFilter.Items.Add(filter);
 				cboIdFilter.Items.Add(filter);

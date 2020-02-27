@@ -30,11 +30,11 @@ namespace Origam.Schema
 	/// Parameter that can be used to parametrize any kind of schema item.
 	/// </summary>
 	[SchemaItemDescription("Parameter", "Parameters", "icon_parameter.png")]
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
     public class SchemaItemParameter : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "Parameter";
+		public const string CategoryConst = "Parameter";
 
 		public SchemaItemParameter() : base() {}
 
@@ -101,7 +101,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

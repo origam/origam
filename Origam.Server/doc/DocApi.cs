@@ -135,7 +135,7 @@ namespace Origam.Server.Doc
 
             Hashtable exampleParams = new Hashtable();
             Dictionary<string, List<PageParameterMapping>> mappings = new Dictionary<string, List<PageParameterMapping>>();
-            foreach (PageParameterMapping inputParameter in page.ChildItemsByType(PageParameterMapping.ItemTypeConst))
+            foreach (PageParameterMapping inputParameter in page.ChildItemsByType(PageParameterMapping.CategoryConst))
             {
                 if (inputParameter.MappedParameter == null) continue;
                 if (!mappings.ContainsKey(inputParameter.MappedParameter))

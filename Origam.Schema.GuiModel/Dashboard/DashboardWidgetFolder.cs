@@ -29,7 +29,7 @@ using Origam.DA.ObjectPersistence;
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Folder", 68)]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
 	public class DashboardWidgetFolder : AbstractDashboardWidget
 	{
@@ -81,7 +81,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

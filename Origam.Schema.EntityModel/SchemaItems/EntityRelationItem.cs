@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Relationship", "Relationships", "icon_relationship.png")]
     [HelpTopic("Relationships")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("RelatedEntity")]
     [ClassMetaVersion("1.0.0")]
     public class EntityRelationItem : AbstractSchemaItem, IAssociation, ISchemaItemFactory
@@ -43,7 +43,7 @@ namespace Origam.Schema.EntityModel
 
 		public EntityRelationItem(Key primaryKey) : base(primaryKey)	{}
 
-		public const string ItemTypeConst = "EntityRelation";
+		public const string CategoryConst = "EntityRelation";
 
 		#region Properties
 		[EntityColumn("G01")]  
@@ -133,7 +133,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

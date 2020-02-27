@@ -73,7 +73,7 @@ namespace Origam.Workflow
             // input parameters
             foreach (DictionaryEntry entry in parameters)
 			{
-				AbstractSchemaItem context = wf.GetChildByName((string)entry.Key, ContextStore.ItemTypeConst);
+				AbstractSchemaItem context = wf.GetChildByName((string)entry.Key, ContextStore.CategoryConst);
 					
 				if(context == null)
 				{
@@ -156,7 +156,7 @@ namespace Origam.Workflow
 			}
 			if(wf != null && method == "ExecuteWorkflow" && parameter == "Parameters")
 			{
-				foreach(ContextStore cs in wf.ChildItemsByType(ContextStore.ItemTypeConst))
+				foreach(ContextStore cs in wf.ChildItemsByType(ContextStore.CategoryConst))
 				{
 					result.Add(cs.Name);
 				}

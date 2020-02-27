@@ -53,7 +53,7 @@ namespace Origam.Workflow.Tasks
 			agent.Parameters.Clear();
 
 			// Parameters
-			foreach(ServiceMethodCallParameter parameter in task.ChildItemsByType(ServiceMethodCallParameter.ItemTypeConst))
+			foreach(ServiceMethodCallParameter parameter in task.ChildItemsByType(ServiceMethodCallParameter.CategoryConst))
 			{
 				if(parameter.HasChildItems)
 				{

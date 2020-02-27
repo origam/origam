@@ -39,10 +39,10 @@ namespace Origam.Schema.GuiModel
 	/// Summary description for EntitySecurityRule.
 	/// </summary>
 	[SchemaItemDescription("UI Action", "UI Actions", 5)]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	public abstract class EntityUIAction : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "EntityUIAction";
+		public const string CategoryConst = "EntityUIAction";
 
 		public EntityUIAction() : base() {Init();}
 
@@ -58,7 +58,7 @@ namespace Origam.Schema.GuiModel
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public Hashtable ParameterMappings {
 			get

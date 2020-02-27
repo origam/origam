@@ -51,7 +51,7 @@ namespace Origam.Workbench.Services
                         _xslFunctionProviderServices = new List<IServiceAgent>();
                         SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
                         ServiceSchemaItemProvider serviceItemProvider = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
-                        foreach (Service service in serviceItemProvider.ChildItemsByType(Service.ItemTypeConst))
+                        foreach (Service service in serviceItemProvider.ChildItemsByType(Service.CategoryConst))
                         {
                             try
                             {
@@ -154,7 +154,7 @@ namespace Origam.Workbench.Services
 					SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 					ServiceSchemaItemProvider services = schema.GetProvider(typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
 
-					Service service = services.GetChildByName(serviceName, Service.ItemTypeConst) as Service;
+					Service service = services.GetChildByName(serviceName, Service.CategoryConst) as Service;
 
 					if(service.ClassPath != null && service.ClassPath != string.Empty)
 					{

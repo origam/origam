@@ -48,7 +48,7 @@ namespace Origam.Schema.WorkflowModel
 		// as input parameters except context stores marked with `IsReturnValue'
 		public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
 		{
-			foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.ItemTypeConst))
+			foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.CategoryConst))
 			{
 				if(context.IsReturnValue == false && context.isScalar())
 				{
