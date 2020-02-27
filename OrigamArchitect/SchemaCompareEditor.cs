@@ -90,7 +90,7 @@ namespace OrigamArchitect
 			foreach(DeploymentVersion version in _schema.GetProvider(typeof(DeploymentSchemaItemProvider)).ChildItems)
 			{
 				// only version from the current extension
-				if(version.SchemaExtension.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey))
+				if(version.Package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey))
 				{
 					if(version.IsCurrentVersion) currentVersion = version;
 					cboDeploymentVersion.Items.Add(version);

@@ -43,7 +43,7 @@ namespace Origam.Schema.DeploymentModel
 			foreach(DeploymentVersion version in this.ChildItems)
 			{
 				// only version from the current extension
-				if(version.SchemaExtension.PrimaryKey.Equals(schema.ActiveExtension.PrimaryKey))
+				if(version.Package.PrimaryKey.Equals(schema.ActiveExtension.PrimaryKey))
 				{
 					if(version.IsCurrentVersion) return version;
 				}
@@ -125,7 +125,7 @@ namespace Origam.Schema.DeploymentModel
 			{
                 ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService))
                 as ISchemaService;
-                IList<SchemaExtension> packages = schema.ActiveExtension.IncludedPackages;
+                IList<Package> packages = schema.ActiveExtension.IncludedPackages;
 
                 DeploymentVersion item = new DeploymentVersion(schemaExtensionId, packages.ToList())
                 {

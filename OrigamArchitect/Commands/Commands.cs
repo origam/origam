@@ -1136,7 +1136,7 @@ namespace OrigamArchitect.Commands
 		protected void PersistAllData()
 		{
 		    newPersistenceService.SchemaProvider.BeginTransaction();
-            PersistFolders<SchemaExtension>();
+            PersistFolders<Package>();
 			PersistFolders<SchemaItemGroup>();
 			PersistFolders<PackageReference>();
 

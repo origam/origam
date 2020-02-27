@@ -37,7 +37,7 @@ namespace Origam.Schema.DeploymentModel
 		public static DeploymentVersion CreateVersion
             (SchemaItemGroup group, string name, string version)
 		{
-			SchemaExtension activePackage = ServiceManager.Services
+			Package activePackage = ServiceManager.Services
 				.GetService<ISchemaService>()
 				.ActiveExtension;
 

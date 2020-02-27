@@ -171,7 +171,7 @@ namespace Origam.ReflectorCache
 				case "Origam.Schema.EntityModel.EntityFilterReference":
 					return new Origam.Schema.EntityModel.EntityFilterReference(key);
 				case "Origam.Schema.SchemaExtension":
-					return new Origam.Schema.SchemaExtension(key);
+					return new Origam.Schema.Package(key);
 				case "Origam.Schema.WorkflowModel.ForeachWorkflowBlock":
 					return new Origam.Schema.WorkflowModel.ForeachWorkflowBlock(key);
 				case "Origam.Schema.WorkflowModel.ContextStore":

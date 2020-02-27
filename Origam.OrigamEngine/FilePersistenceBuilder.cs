@@ -56,7 +56,7 @@ namespace Origam.OrigamEngine
         {
             List<string> defaultFolders = new List<string>
             {
-                CategoryFactory.Create(typeof(SchemaExtension)),
+                CategoryFactory.Create(typeof(Package)),
                 CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 
@@ -70,7 +70,7 @@ namespace Origam.OrigamEngine
         {
             List<string> defaultFolders = new List<string>
             {
-                CategoryFactory.Create(typeof(SchemaExtension)),
+                CategoryFactory.Create(typeof(Package)),
                 CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 

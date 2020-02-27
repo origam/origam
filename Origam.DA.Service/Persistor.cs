@@ -199,7 +199,7 @@ namespace Origam.DA.Service
         {
             switch (instance)
             {
-                case SchemaExtension extension:
+                case Package extension:
                     RenameSchemaExtension(containingFile, extension);
                     break;
                 case SchemaItemGroup group:
@@ -211,18 +211,18 @@ namespace Origam.DA.Service
         }
 
         private void RenameSchemaExtension(OrigamFile containingFile,
-            SchemaExtension schemaExtension)
+            Package package)
         {
-            if (!schemaExtension.WasRenamed) return;
+            if (!package.WasRenamed) return;
             if (containingFile == null) return;
 
             try
             {
                 origamFileManager.RenameDirectory(containingFile.Path.Directory,
-                    schemaExtension.Name);
+                    package.Name);
                 persistenceProvider.RetrieveList<SchemaItemGroup>(null)
-                    .Where(group => group.Name == schemaExtension.OldName)
-                    .ForEach(group => RenameGroup(group, schemaExtension.Name));
+                    .Where(group => group.Name == package.OldName)
+                    .ForEach(group => RenameGroup(group, package.Name));
             }
             catch (Exception e)
             {
@@ -329,14 +329,14 @@ namespace Origam.DA.Service
         {
             switch (instance)
             {
-                case SchemaExtension schemaExtension:
+                case Package schemaExtension:
                     transactionStore.FolderRenamingTasks.Enqueue(
                         new RenameSchemaExtensionTask(
                             origamFileManager: origamFileManager,
                             index: index,
                             persistenceProvider: persistenceProvider,
                             origamFile: origamFile,
-                            schemaExtension: schemaExtension));
+                            package: schemaExtension));
                     break;
                 case SchemaItemGroup group:
                     transactionStore.FolderRenamingTasks.Enqueue(
@@ -354,7 +354,7 @@ namespace Origam.DA.Service
 
     class RenameSchemaExtensionTask: IDeferredTask
     {
-        private readonly SchemaExtension schemaExtension;
+        private readonly Package _package;
         private readonly OrigamFile origamFile;
         private readonly IPersistenceProvider persistenceProvider;
         private readonly FilePersistenceIndex index;
@@ -362,9 +362,9 @@ namespace Origam.DA.Service
         public RenameSchemaExtensionTask(OrigamFileManager origamFileManager,
             FilePersistenceIndex index,
             IPersistenceProvider persistenceProvider, OrigamFile origamFile,
-            SchemaExtension schemaExtension)
+            Package package)
         {
-            this.schemaExtension = schemaExtension;
+            this._package = package;
             this.origamFile = origamFile;
             this.origamFileManager = origamFileManager;
             this.index = index;
@@ -373,16 +373,16 @@ namespace Origam.DA.Service
 
         public void Run()
         {
-            if (!schemaExtension.WasRenamed) return;
+            if (!_package.WasRenamed) return;
             if (origamFile == null) return;
             try
             {
                 origamFileManager.RenameDirectory(origamFile.Path.Directory,
-                    schemaExtension.Name);
+                    _package.Name);
                 persistenceProvider
                     .RetrieveList<SchemaItemGroup>(null)
-                    .Where(group => group.Name == schemaExtension.OldName)
-                    .ForEach(group => RenameGroup(group, schemaExtension.Name));
+                    .Where(group => group.Name == _package.OldName)
+                    .ForEach(group => RenameGroup(group, _package.Name));
             }
             catch (Exception e)
             {

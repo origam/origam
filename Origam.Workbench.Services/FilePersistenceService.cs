@@ -157,16 +157,16 @@ namespace Origam.Workbench.Services
             throw new NotImplementedException();
         }
 
-        public SchemaExtension LoadSchema(Guid schemaExtensionId, 
+        public Package LoadSchema(Guid schemaExtensionId, 
             bool loadDocumentation, bool loadDeploymentScripts,
             string transactionId) => LoadSchema(schemaExtensionId);
 
-        private SchemaExtension LoadSchema(Guid schemaExtensionId)
+        private Package LoadSchema(Guid schemaExtensionId)
         {
             schemaProvider.FlushCache();
             var loadedSchema = schemaProvider
-                    .RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(schemaExtensionId))
-                    as SchemaExtension;
+                    .RetrieveInstance(typeof(Package), new ModelElementKey(schemaExtensionId))
+                    as Package;
             if (loadedSchema == null)
             {
                 throw new Exception("Shema: "+schemaExtensionId+" could not be found");  
@@ -179,7 +179,7 @@ namespace Origam.Workbench.Services
             return loadedSchema;
         }
 
-        public SchemaExtension LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
+        public Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
         {
             return LoadSchema(schemaExtensionId);
         }

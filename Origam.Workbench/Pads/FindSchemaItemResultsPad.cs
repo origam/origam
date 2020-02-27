@@ -200,7 +200,7 @@ namespace Origam.Workbench.Pads
                 TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
                 if (treenode != null)
                 {
-                    var itm = (SchemaExtension)treenode.Tag;
+                    var itm = (Package)treenode.Tag;
                     referencePackages = itm.IncludedPackages.Select(x =>{ return x.Id; }).ToList();
                     referencePackages.Add(itm.Id);
                     //if (!((SchemaExtension)treenode.Tag).Id.Equals(SchemaExtensionIdItem))

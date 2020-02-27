@@ -221,10 +221,10 @@ namespace Origam.Workbench.Commands
 			get
 			{
 				AbstractSchemaItem schemaItem = (AbstractSchemaItem) _schema.ActiveNode;
-				if (schemaItem.SchemaExtension == Owner) return false;
+				if (schemaItem.Package == Owner) return false;
 				if (schemaItem.ParentItem == null) return true;
-				return !schemaItem.SchemaExtension.IncludedPackages.Contains(Owner) ||
-				       schemaItem.ParentItem.SchemaExtension == Owner;
+				return !schemaItem.Package.IncludedPackages.Contains(Owner) ||
+				       schemaItem.ParentItem.Package == Owner;
 			}
 			set => throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 		}
@@ -233,7 +233,7 @@ namespace Origam.Workbench.Commands
 		{
 			IPersistenceProvider persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>().SchemaProvider;
-			if(!(Owner is SchemaExtension targetPackage))
+			if(!(Owner is Package targetPackage))
 			{
 				throw new ArgumentOutOfRangeException("Owner", this.Owner, ResourceUtils.GetString("ErrorNotSchemaExtension"));
 			}
@@ -243,7 +243,7 @@ namespace Origam.Workbench.Commands
 			{
 				SchemaItemGroup activeItem = _schema.ActiveNode as SchemaItemGroup;
 
-				activeItem.SchemaExtension = targetPackage;
+				activeItem.Package = targetPackage;
 			
 				activeItem.Persist();
 			}
@@ -260,15 +260,15 @@ namespace Origam.Workbench.Commands
 		}
 
 		private static void CheckCanBeMovedOrThrow(AbstractSchemaItem activeItem,
-			SchemaExtension targetPackage)
+			Package targetPackage)
 		{
 			List<ISchemaItem> dependenciesInPackagesNotReferencedByTargetPackage
 				= activeItem.GetDependencies(true)
 					.Cast<object>()
 					.OfType<ISchemaItem>()
 					.Where(item =>
-						!targetPackage.IncludedPackages.Contains(item.SchemaExtension)
-						&& item.SchemaExtension != targetPackage)
+						!targetPackage.IncludedPackages.Contains(item.Package)
+						&& item.Package != targetPackage)
 					.ToList();
 			if (dependenciesInPackagesNotReferencedByTargetPackage.Count != 0)
 			{
@@ -283,8 +283,8 @@ namespace Origam.Workbench.Commands
 					.Cast<object>()
 					.OfType<ISchemaItem>()
 					.Where(item =>
-						!item.SchemaExtension.IncludedPackages.Contains(targetPackage)
-						&& item.SchemaExtension != targetPackage)
+						!item.Package.IncludedPackages.Contains(targetPackage)
+						&& item.Package != targetPackage)
 					.ToList();
 
 			if (usagesInPackagesWhichDontDependOnTargetPackage.Count != 0)
@@ -505,7 +505,7 @@ namespace Origam.Workbench.Commands
 			}
 			IViewContent editor;
 			IPersistent item;
-			if(Owner is AbstractSchemaItem || Owner is SchemaExtension)
+			if(Owner is AbstractSchemaItem || Owner is Package)
 			{
 				item = this.Owner as IPersistent;
 			}
@@ -514,7 +514,7 @@ namespace Origam.Workbench.Commands
 				throw new ArgumentOutOfRangeException("Owner", this.Owner, ResourceUtils.GetString("ErrorEditObject"));
 			}
             string itemType = item.GetType().ToString();
-            if (item is SchemaExtension)
+            if (item is Package)
 			{
 				editor = new Origam.Workbench.Editors.PackageEditor();
 			}
@@ -612,9 +612,9 @@ namespace Origam.Workbench.Commands
 						.GetHicon());
 				}
             }
-            else if(item is SchemaExtension)
+            else if(item is Package)
 			{
-				editor.TitleName = (item as SchemaExtension).Name;
+				editor.TitleName = (item as Package).Name;
 			}
 
             if (ShowDialog)

@@ -68,18 +68,18 @@ namespace Origam.Schema
         public string Name { get; set; }
 
 		[EntityColumn("refSchemaExtensionId")]
-        [XmlParent(typeof(SchemaExtension))]
+        [XmlParent(typeof(Package))]
         public Guid SchemaExtensionId;
 
         [Browsable(false)]
-		public SchemaExtension SchemaExtension
+		public Package Package
 		{
 			get
 			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.SchemaExtensionId;
 
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), key);
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), key);
 			}
 			set => this.SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
         }
@@ -410,7 +410,7 @@ namespace Origam.Schema
 
 		public event Action<ISchemaItem> ItemCreated;
 
-		public string RelativeFilePath => SchemaExtension.Name + "\\" + RootItemType + "\\" + Path.Replace("/", "\\") + "\\"+PersistenceFiles.GroupFileName;
+		public string RelativeFilePath => Package.Name + "\\" + RootItemType + "\\" + Path.Replace("/", "\\") + "\\"+PersistenceFiles.GroupFileName;
 
 		public bool IsFolder => true;
 
@@ -428,7 +428,7 @@ namespace Origam.Schema
 		            new Dictionary<string, Guid>
 		            {
 			            {
-				            CategoryFactory.Create(typeof(SchemaExtension)),
+				            CategoryFactory.Create(typeof(Package)),
 				            SchemaExtensionId
 			            },
 			            {

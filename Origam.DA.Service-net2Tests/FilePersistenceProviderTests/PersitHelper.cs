@@ -43,7 +43,7 @@ namespace Origam.DA.Service_net2Tests
         {
             DefaultFolders = new List<string>
             {
-                CategoryFactory.Create(typeof(SchemaExtension)),
+                CategoryFactory.Create(typeof(Package)),
                 CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 
@@ -53,7 +53,7 @@ namespace Origam.DA.Service_net2Tests
 
         public void PersistAll()
         {
-            PersistFolders<SchemaExtension>();
+            PersistFolders<Package>();
             PersistFolders<SchemaItemGroup>();
 
             using (new DebugTimer())

@@ -294,7 +294,7 @@ namespace Origam.Schema
 	        new Dictionary<string, Guid>
 	        {
 		        {
-			        CategoryFactory.Create(typeof(SchemaExtension)),
+			        CategoryFactory.Create(typeof(Package)),
 			        SchemaItem.SchemaExtensionId
 		        }
 	        };

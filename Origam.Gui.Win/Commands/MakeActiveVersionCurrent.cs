@@ -39,7 +39,7 @@ namespace Origam.Gui.Win.Commands
             {
                 return Owner is DeploymentVersion 
                        && (Owner as DeploymentVersion).IsCurrentVersion == false 
-                       & (Owner as DeploymentVersion).SchemaExtension.PrimaryKey.Equals(
+                       & (Owner as DeploymentVersion).Package.PrimaryKey.Equals(
                            _schemaService.ActiveExtension.PrimaryKey);
             }
             set

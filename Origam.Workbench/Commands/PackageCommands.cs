@@ -46,7 +46,7 @@ namespace Origam.Workbench.Commands
 
 		public override void Run()
 		{
-			SchemaExtension extension = (WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad).SelectedExtension;
+			Package extension = (WorkbenchSingleton.Workbench.GetPad(typeof(Pads.ExtensionPad)) as Pads.ExtensionPad).SelectedExtension;
 			
 			SchemaService schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 

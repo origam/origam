@@ -57,11 +57,11 @@ namespace Origam.Schema
 		[EntityColumn("refPackageId")] 
 		public Guid PackageId;
 
-		public SchemaExtension Package
+		public Package Package
 		{
 			get
 			{
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(this.PackageId));
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), new ModelElementKey(this.PackageId));
 			}
 			set
 			{
@@ -73,11 +73,11 @@ namespace Origam.Schema
 		public Guid ReferencedPackageId;
 
         [XmlPackageReference("referencedPackage", "ReferencedPackageId")]
-        public SchemaExtension ReferencedPackage
+        public Package ReferencedPackage
 		{
 			get
 			{
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(this.ReferencedPackageId));
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), new ModelElementKey(this.ReferencedPackageId));
 			}
 			set
 			{
@@ -258,7 +258,7 @@ namespace Origam.Schema
 	        new Dictionary<string, Guid>
 	        {
 		        {
-			        CategoryFactory.Create(typeof(SchemaExtension)),
+			        CategoryFactory.Create(typeof(Package)),
 			        PackageId
 		        }
 	        };

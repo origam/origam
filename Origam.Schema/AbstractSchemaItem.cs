@@ -243,9 +243,9 @@ namespace Origam.Schema
 		/// Recursively changes extension on all child items of the provided schema item.
 		/// </summary>
 		/// <param name="extension"></param>
-		public void SetExtensionRecursive(SchemaExtension extension)
+		public void SetExtensionRecursive(Package extension)
 		{
-			this.SchemaExtension = extension;
+			this.Package = extension;
 
 			foreach(ISchemaItem child in this.ChildItems)
 			{
@@ -627,7 +627,7 @@ namespace Origam.Schema
 		}
 
 	    [EntityColumn("refSchemaExtensionId")]
-	    [XmlParent(typeof(SchemaExtension))]
+	    [XmlParent(typeof(Package))]
         [Browsable(false)]
 	    public Guid SchemaExtensionId { get; set; }
     
@@ -638,19 +638,19 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return this.SchemaExtension.ToString();
+				return this.Package.ToString();
 			}
 		}
 
 		[Browsable(false)]
-		public SchemaExtension SchemaExtension
+		public Package Package
 		{
 			get
 			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.SchemaExtensionId;
 
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), key);
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), key);
 			}
 			set
 			{
@@ -1235,7 +1235,7 @@ namespace Origam.Schema
                 {
                     groupPath = group.Path.Replace("/", "\\") + "\\";
                 }
-                return SchemaExtension.Name + "\\" + RootItem.ItemType
+                return Package.Name + "\\" + RootItem.ItemType
                     + "\\" + groupPath + RemoveIllegalCharactersFromPath(RootItem.Name) + PersistenceFiles.Extension;
             }
         }
@@ -1270,7 +1270,7 @@ namespace Origam.Schema
 	        new Dictionary<string, Guid>
 	        {
 		        {
-			        CategoryFactory.Create(typeof(SchemaExtension)),
+			        CategoryFactory.Create(typeof(Package)),
 			        SchemaExtensionId
 		        },
 		        {
@@ -1302,7 +1302,7 @@ namespace Origam.Schema
 				{
 					// only count items of same type, from the same package and not derived
 					if(child.ItemType == item.ItemType 
-						& child.SchemaExtension.PrimaryKey.Equals(item.SchemaExtension.PrimaryKey)
+						& child.Package.PrimaryKey.Equals(item.Package.PrimaryKey)
 						& child.DerivedFrom == null
 						)
 					{

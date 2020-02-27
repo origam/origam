@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -187,9 +188,9 @@ namespace Origam.Server.Doc
             writer.WriteEndElement();
             writer.WriteElementString(DocTools.SECTION_HEADING, "Packages");
             writer.WriteStartElement("ul");
-            List<SchemaExtension> packages = ps.SchemaProvider.RetrieveList<SchemaExtension>( null);
+            List<Package> packages = ps.SchemaProvider.RetrieveList<Package>( null);
             packages.Sort();
-            foreach (SchemaExtension package in packages)
+            foreach (Package package in packages)
             {
                 DocTools.WriteTocElement(writer, DocTools.GetSectionPath(DocTools.SECTION_TOC, DocTools.FILTER_TYPE_PACKAGE, package.PrimaryKey["Id"].ToString()), package.Name, DocTools.SECTION_TOC, "package");
             }

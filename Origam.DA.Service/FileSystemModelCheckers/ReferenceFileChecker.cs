@@ -71,7 +71,7 @@ namespace Origam.DA.Service
                 return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
             }
 
-            if (filePersistenceProvider.RetrieveInstance<SchemaExtension>(packageId) == null)
+            if (filePersistenceProvider.RetrieveInstance<Package>(packageId) == null)
             {
                 return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
             }

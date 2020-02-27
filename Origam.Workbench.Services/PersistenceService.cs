@@ -136,7 +136,7 @@ namespace Origam.Workbench.Services
 			return basicVersion.CompareTo(v) >= 0;
 		}
 
-		public SchemaExtension LoadSchema(
+		public Package LoadSchema(
 			Guid schemaExtensionId, bool loadDocumentation, bool loadDeploymentScripts, 
 			string transactionId)
 		{
@@ -144,16 +144,16 @@ namespace Origam.Workbench.Services
 				loadDeploymentScripts, transactionId);
 		}
 
-		public SchemaExtension LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
+		public Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, 
 			bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
 		{
 			IStatusBarService statusBar = ServiceManager.Services.GetService<IStatusBarService>();
-			SchemaExtension extension1;
-			SchemaExtension extension2 = null;
+			Package extension1;
+			Package extension2 = null;
 			try
 			{
 				extension1 = SchemaListProvider.RetrieveInstance(
-					typeof(SchemaExtension), new ModelElementKey(schemaExtensionId)) as SchemaExtension;
+					typeof(Package), new ModelElementKey(schemaExtensionId)) as Package;
 			}
 			catch
 			{
@@ -164,19 +164,19 @@ namespace Origam.Workbench.Services
 				try
 				{
 					extension2 = SchemaListProvider.RetrieveInstance(
-						typeof(SchemaExtension), new ModelElementKey(extraExtensionId)) as SchemaExtension;
+						typeof(Package), new ModelElementKey(extraExtensionId)) as Package;
 				}
 				catch
 				{
 					// do not do anything for extra extension - if it does not exist, we just don't load it
 				}
 			}
-			IList<SchemaExtension> packages = extension1.IncludedPackages;
+			IList<Package> packages = extension1.IncludedPackages;
 			packages.Add(extension1);
 			if(extension2 != null) 
 			{
-				IList<SchemaExtension> packages2 = extension2.IncludedPackages;
-                foreach (SchemaExtension ext2 in packages2)
+				IList<Package> packages2 = extension2.IncludedPackages;
+                foreach (Package ext2 in packages2)
                 {
                     if(!packages.Contains(ext2))
                     {
@@ -189,7 +189,7 @@ namespace Origam.Workbench.Services
 			ArrayList extensionIds = new ArrayList(packages.Count);
 			for(int i = 0; i < packages.Count; i++)
 			{
-				SchemaExtension loadingExtension = packages[i] as SchemaExtension;
+				Package loadingExtension = packages[i] as Package;
 				extensionIds.Add(loadingExtension.PrimaryKey["Id"]);
 				bool append = i > 24;
 				if(i % 24 == 0 & i > 0)
@@ -223,12 +223,12 @@ namespace Origam.Workbench.Services
             DatabasePersistenceProvider cloned = this.SchemaProvider.Clone() as DatabasePersistenceProvider;
             cloned.Init(schema);
 
-            List<SchemaExtension> list = cloned.RetrieveList<SchemaExtension>( null);
-            List<SchemaExtension> list2 = this.SchemaProvider.RetrieveList<SchemaExtension>(null);
+            List<Package> list = cloned.RetrieveList<Package>( null);
+            List<Package> list2 = this.SchemaProvider.RetrieveList<Package>(null);
 
             // only import the model if it contains the main extension and it is the main extension there as well
             bool foundActiveExtension = false;
-            foreach (SchemaExtension imported in list)
+            foreach (Package imported in list)
             {
                 if (imported.PrimaryKey.Equals(activePackage)) // && imported.ChildExtensions.Count == 0)
                 {

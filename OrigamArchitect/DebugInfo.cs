@@ -94,10 +94,10 @@ namespace Origam.Workflow
 			{
 				try
 				{
-					IList<SchemaExtension> packages = schema.ActiveExtension.IncludedPackages;
+					IList<Package> packages = schema.ActiveExtension.IncludedPackages;
 					packages.Add(schema.ActiveExtension);
 
-					foreach(SchemaExtension package in packages)
+					foreach(Package package in packages)
 					{
 						_deployment.CanUpdate(package);
 						AddInfo(package.Name, package.VersionString + "/" + _deployment.CurrentDeployedVersion(package), result);

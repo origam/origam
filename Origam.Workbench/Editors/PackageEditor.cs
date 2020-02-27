@@ -37,7 +37,7 @@ namespace Origam.Workbench.Editors
 	/// </summary>
 	public class PackageEditor : AbstractViewContent
 	{
-		private SchemaExtension _package;
+		private Package _package;
 		private SchemaService _schema = ServiceManager.Services.GetService(typeof(SchemaService)) as SchemaService;
 		private IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
@@ -439,9 +439,9 @@ namespace Origam.Workbench.Editors
 			txtCopyright.TextChanged -= txtCopyright_TextChanged;
 			txtDescription.TextChanged -= txtDescription_TextChanged;
 			
-			if(! (objectToLoad is SchemaExtension)) throw new ArgumentOutOfRangeException("objectToLoad", objectToLoad, ResourceUtils.GetString("ErrorEditPackagesOnly"));
+			if(! (objectToLoad is Package)) throw new ArgumentOutOfRangeException("objectToLoad", objectToLoad, ResourceUtils.GetString("ErrorEditPackagesOnly"));
 
-			_package = objectToLoad as SchemaExtension;
+			_package = objectToLoad as Package;
 
 			txtName.Text = _package.Name;
 			txtVersion.Text = _package.Version;
@@ -541,7 +541,7 @@ namespace Origam.Workbench.Editors
 
 				foreach(PackageReference reference in _package.References)
 				{
-					SchemaExtension referencedPackage = _persistence.SchemaListProvider.RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(reference.ReferencedPackageId)) as SchemaExtension;
+					Package referencedPackage = _persistence.SchemaListProvider.RetrieveInstance(typeof(Package), new ModelElementKey(reference.ReferencedPackageId)) as Package;
 
 					lvwReferences.Items.Add(RenderReference(reference, referencedPackage.Name));
 				}
@@ -560,7 +560,7 @@ namespace Origam.Workbench.Editors
 			return item;
 		}
 
-		private SchemaExtension SelectedReferencedPackage
+		private Package SelectedReferencedPackage
 		{
 			get
 			{
@@ -595,7 +595,7 @@ namespace Origam.Workbench.Editors
 		{
 			ebrElements.RemoveAllNodes();
 
-			SchemaExtension referencedPackage = this.SelectedReferencedPackage;
+			Package referencedPackage = this.SelectedReferencedPackage;
 			if(referencedPackage != null)
 			{
 				ebrElements.AddRootNode(referencedPackage);				
@@ -604,7 +604,7 @@ namespace Origam.Workbench.Editors
 
 		private void ebrElements_QueryFilterNode(object sender, Origam.Workbench.ExpressionBrowserEventArgs e)
 		{
-			SchemaExtension referencedPackage = this.SelectedReferencedPackage;
+			Package referencedPackage = this.SelectedReferencedPackage;
 			if(referencedPackage != null)
 			{
 				if(e.QueriedObject is AbstractSchemaItem)
@@ -615,7 +615,7 @@ namespace Origam.Workbench.Editors
 					{
 						if((e.QueriedObject as AbstractSchemaItem).ParentItem == null)
 						{
-							e.Filter = ! (e.QueriedObject as AbstractSchemaItem).SchemaExtension.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey);
+							e.Filter = ! (e.QueriedObject as AbstractSchemaItem).Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey);
 						}
 						else
 						{
@@ -644,11 +644,11 @@ namespace Origam.Workbench.Editors
 
 		private bool ShouldFilterGroup(SchemaItemGroup group)
 		{
-			if(group.SchemaExtension.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey)) return false;
+			if(group.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey)) return false;
 
 			foreach(AbstractSchemaItem child in group.ChildItems)
 			{
-				if(child.SchemaExtension.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
+				if(child.Package.PrimaryKey.Equals(SelectedReferencedPackage.PrimaryKey))
 				{
 					return false;
 				}
@@ -688,7 +688,7 @@ namespace Origam.Workbench.Editors
 				}
                 else if (e.ClickedItem == btnAddReference)
 				{
-					foreach(SchemaExtension package in _schema.AllPackages)
+					foreach(Package package in _schema.AllPackages)
 					{
 						bool found = package.PrimaryKey.Equals(_schema.ActiveExtension.PrimaryKey);
 						foreach(ListViewItem  li in lvwReferences.Items)
@@ -719,7 +719,7 @@ namespace Origam.Workbench.Editors
 			}
 		}
 
-		private bool IsPackageReferenced(SchemaExtension package)
+		private bool IsPackageReferenced(Package package)
 		{
 			if(package == null) return false;
 
@@ -758,7 +758,7 @@ namespace Origam.Workbench.Editors
 
 		private void AddPackage_Click(object sender, EventArgs e)
 		{
-			SchemaExtension referencedPackage = (sender as AsMenuCommand).Tag as SchemaExtension;
+			Package referencedPackage = (sender as AsMenuCommand).Tag as Package;
 		
 			foreach(PackageReference r in referencedPackage.References)
 			{
