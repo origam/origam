@@ -45,7 +45,7 @@ namespace Origam.DA.Service
         public static readonly string ModelPersistenceUri =
              $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}";        
         public static readonly string PackageUri =
-            $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}";
+            $"http://schemas.origam.com/Origam.Schema.Package/{VersionProvider.CurrentPackageMeta}";
         public static readonly string GroupUri =
            "http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0";
         public static readonly string PackageCategory ="package";

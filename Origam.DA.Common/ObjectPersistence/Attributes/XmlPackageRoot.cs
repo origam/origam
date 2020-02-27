@@ -28,8 +28,6 @@ namespace Origam.DA.ObjectPersistence
     {
         public XmlPackageRoot(string category) : base(category)
         {
-            Namespace =
-                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}";
         }
     }
 }

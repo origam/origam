@@ -58,7 +58,5 @@ namespace Origam.DA.ObjectPersistence
 		{
 			
 		}
-		public string Namespace =>
-			$"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}";
 	}
 }
