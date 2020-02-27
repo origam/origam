@@ -7,7 +7,7 @@ import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 import { getMainMenuEnvelope } from "model/selectors/MainMenu/getMainMenuEnvelope";
 import { findMenu } from "xmlInterpreters/menuXml";
 import { MainMenuContent } from "../MainMenu";
-import { DialogInfo } from "../OpenedScreen";
+import { DialogInfo, OpenedScreen } from "../OpenedScreen";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
@@ -17,6 +17,7 @@ import bind from "bind-decorator";
 import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { WebScreen } from "../WebScreen";
+import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -36,7 +37,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
-        if (
+        debugger
+        if (openedScreen.isSleeping) {
+          openedScreen.isSleeping = false;
+          const initUIResult = yield* this.initUIForScreen(openedScreen, false);
+          yield* openedScreen.content!.start(initUIResult);
+        } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
           openedScreen.content.formScreen.refreshOnFocus &&
@@ -67,7 +73,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
-        if (
+        if (openedScreen.isSleeping) {
+          openedScreen.isSleeping = false;
+          const initUIResult = yield* this.initUIForScreen(openedScreen, false);
+          yield* openedScreen.content!.start(initUIResult);
+        } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
           openedScreen.content.formScreen.refreshOnFocus &&
@@ -77,7 +87,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             yield* reloadScreen(openedScreen.content.formScreen)();
           }
         }
-        
       } else {
         yield* this.openNewForm(id, type, label, false, dialogInfo, {});
       }
@@ -90,7 +99,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
 
-    if (
+    if (openedScreen.isSleeping) {
+      openedScreen.isSleeping = false;
+      const initUIResult = yield* this.initUIForScreen(openedScreen, false);
+      yield* openedScreen.content!.start(initUIResult);
+    } else if (
       openedScreen.content &&
       openedScreen.content.formScreen &&
       openedScreen.content.formScreen.refreshOnFocus &&
@@ -141,12 +154,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     parameters: { [key: string]: any },
     formSessionId?: string,
     isSessionRebirth?: boolean,
-    registerSession?: true //boolean
+    registerSession?: true //boolean,
   ) {
     const openedScreens = getOpenedScreens(this);
     const openedDialogScreens = getOpenedDialogScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
-    const newFormScreen = createFormScreenEnvelope();
+    const newFormScreen = createFormScreenEnvelope(formSessionId);
     const newScreen = createOpenedScreen(
       id,
       type,
@@ -155,30 +168,27 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       newFormScreen,
       dontRequestData,
       dialogInfo,
-      parameters
+      parameters,
+      isSessionRebirth
     );
     try {
       if (newScreen.dialogInfo) {
         openedDialogScreens.pushItem(newScreen);
-        openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
+        if (!isSessionRebirth) {
+          openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
+        }
       } else {
         openedScreens.pushItem(newScreen);
-        openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+        if (!isSessionRebirth) {
+          openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
+        }
       }
-      const api = getApi(this);
 
-      // TODO: Error handling here!
-      const initUIResult = yield api.initUI({
-        Type: type,
-        Caption: label,
-        ObjectId: id,
-        FormSessionId: formSessionId,
-        IsNewSession: !isSessionRebirth,
-        RegisterSession: true, //!!registerSession,
-        DataRequested: !dontRequestData,
-        Parameters: parameters
-      });
-      console.log(initUIResult);
+      if (isSessionRebirth) {
+        return;
+      }
+
+      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth);
 
       yield* newFormScreen.start(initUIResult);
     } catch (e) {
@@ -186,6 +196,22 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       yield* this.closeForm(newScreen);
       throw e;
     }
+  }
+
+  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean) {
+    const api = getApi(this);
+    const initUIResult = yield api.initUI({
+      Type: screen.menuItemType,
+      Caption: screen.title,
+      ObjectId: screen.menuItemId,
+      FormSessionId: screen.content!.preloadedSessionId,
+      IsNewSession: isNewSession,
+      RegisterSession: true, //!!registerSession,
+      DataRequested: !screen.dontRequestData,
+      Parameters: screen.parameters
+    });
+    console.log(initUIResult);
+    return initUIResult;
   }
 
   *openNewUrl(url: string, title: string) {
@@ -200,24 +226,36 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 
-    /*
+    console.log(portalInfo);
+    const menuUI = findMenu(portalInfo.menu);
+    getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
+    getClientFulltextSearch(this).indexMainMenu(menuUI);
+
+    getMainMenuItemById(this, "0");
+
     for (let session of portalInfo.sessions) {
+      const menuItem = getMainMenuItemById(this, session.objectId);
       yield* this.openNewForm(
         session.objectId,
         session.type,
-        "", // TODO: Find in menu
-        false, // TODO: Find in menu
+        menuItem.attributes.label, // TODO: Find in menu
+        menuItem.attributes.dontRequestData === "true", // TODO: Find in menu
         undefined, // TODO: Find in... menu?
         {},
         session.formSessionId,
         true,
         true
       );
-    }*/
-    console.log(portalInfo);
-    const menuUI = findMenu(portalInfo.menu);
-    getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
-    getClientFulltextSearch(this).indexMainMenu(menuUI);
+    }
+
+    const openedScreens = getOpenedScreens(this);
+    if (openedScreens.items.length > 0) {
+      openedScreens.activateItem(openedScreens.items[0].menuItemId, openedScreens.items[0].order);
+      openedScreens.items[0].isSleeping = false;
+      const initUIResult = yield* this.initUIForScreen(openedScreens.items[0], false);
+      yield* openedScreens.items[0].content!.start(initUIResult);
+    }
+
     const workQueues = getWorkQueues(this);
     yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
     yield* workQueues.startTimer();

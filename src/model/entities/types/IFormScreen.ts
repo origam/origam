@@ -72,6 +72,7 @@ export const isILoadedFormScreen = (o: any): o is ILoadedFormScreen =>
 
 export interface IFormScreenEnvelopeData {
   formScreenLifecycle: IFormScreenLifecycle02;
+  preloadedSessionId?: string;
 }
 
 export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
@@ -79,6 +80,7 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
 
   isLoading: boolean;
   formScreen?: IFormScreen;
+  
 
   setFormScreen(formScreen?: IFormScreen): void;
   start(initUIResult: any): Generator;

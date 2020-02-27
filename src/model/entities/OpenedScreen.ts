@@ -26,6 +26,7 @@ export class OpenedScreen implements IOpenedScreen {
   menuItemType: IMainMenuItemType = null as any;
   order: number = 0;
   title: string = "";
+  isSleeping?: boolean = false;
   @observable content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
 
