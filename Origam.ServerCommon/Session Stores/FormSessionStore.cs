@@ -122,6 +122,8 @@ namespace Origam.ServerCommon
             var data = InitializeFullStructure(_menuItem.DefaultSet);
             SetDataSource(data);
             SetDelayedLoadingParameter(_menuItem.Method);
+            this.IsDelayedLoading = true;
+            this.DataListEntity = _menuItem.ListEntity.Name;
         }
 
         private void LoadDataFxServer()

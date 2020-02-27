@@ -2839,7 +2839,7 @@ namespace Origam.Rule
 				}
 			}
 
-			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data.Xml};
+			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data};
 			_ruleQueue.Enqueue(queueEntry);
 		}
 
@@ -2986,7 +2986,7 @@ namespace Origam.Rule
 					DataRow row = queueEntry[0] as DataRow;
 					DataStructureRuleSet rs = queueEntry[1] as DataStructureRuleSet;
 					Hashtable changedColumns = queueEntry[2] as Hashtable;
-					IDataDocument data = new DataDocumentCore(queueEntry[3] as XmlDocument);
+                    IDataDocument data = queueEntry[3] as IDataDocument;
 
 					row.BeginEdit();
 

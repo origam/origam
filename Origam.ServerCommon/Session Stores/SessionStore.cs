@@ -236,6 +236,7 @@ namespace Origam.Server
         public string DataListEntity
         {
             get { return _dataListEntity; }
+            set { _dataListEntity = value; }
         }
 
         public Guid DataListDataStructureEntityId
@@ -1701,13 +1702,15 @@ namespace Origam.Server
                     if (IsLazyLoadedEntity(entity))
                     {
                         // delete the row from the list
-                        DataTable table = GetTable(this.DataListEntity, this.DataList);
-                        row = table.Rows.Find(id);
-                        listRowBackup = row.ItemArray;
+                        if (this.DataList != null)
+                        {
+                            DataTable table = GetTable(this.DataListEntity, this.DataList);
+                            row = table.Rows.Find(id);
+                            listRowBackup = row.ItemArray;
 
-                        row.Delete();
-                        table.AcceptChanges();
-
+                            row.Delete();
+                            table.AcceptChanges();
+                        }
                         // save the data
                         listOfChanges.AddRange((IList)this.ExecuteAction(SessionStore.ACTION_SAVE));
                     }

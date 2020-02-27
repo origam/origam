@@ -86,10 +86,9 @@ namespace Origam.ServerCore
         }
         public PortalResult InitPortal(int maxRequestLength)
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
-            PortalResult result = new PortalResult(MenuXmlBuilder.GetMenu());
-            OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration();
+            var profile = SecurityTools.CurrentUserProfile();
+            var result = new PortalResult(MenuXmlBuilder.GetMenu());
+            var settings = ConfigurationManager.GetActiveConfiguration();
             if(settings != null)
             {
                 result.WorkQueueListRefreshInterval 
@@ -98,14 +97,14 @@ namespace Origam.ServerCore
                 result.HelpUrl = settings.HelpUrl;
             }
             result.MaxRequestLength = maxRequestLength;
-            NotificationBox logoNotificationBox = LogoNotificationBox();
+            var logoNotificationBox = LogoNotificationBox();
             if(logoNotificationBox != null)
             {
                 result.NotificationBoxRefreshInterval 
                     = logoNotificationBox.RefreshInterval * 1000;
             }
             // load favorites
-            DataSet favorites = core.DataService.LoadData(
+            var favorites = core.DataService.LoadData(
                 dataStructureId: new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
                 methodId: new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"), 
                 defaultSetId: Guid.Empty, 
@@ -122,11 +121,10 @@ namespace Origam.ServerCore
             {
                 var portalSessionStore = sessionManager.GetPortalSession(
                     profile.Id);
-                bool clearAll = portalSessionStore.ShouldBeCleared();
+                var clearAll = portalSessionStore.ShouldBeCleared();
                 // running session, we get all the form sessions
-                ArrayList sessionsToDestroy = new ArrayList();
-                foreach(SessionStore mainSessionStore 
-                    in portalSessionStore.FormSessions)
+                var sessionsToDestroy = new ArrayList();
+                foreach(var mainSessionStore in portalSessionStore.FormSessions)
                 {
                     if(clearAll)
                     {
@@ -134,8 +132,8 @@ namespace Origam.ServerCore
                     }
                     else if(sessionManager.HasFormSession(mainSessionStore.Id))
                     {
-                        SessionStore sessionStore 
-                            = mainSessionStore.ActiveSession ?? mainSessionStore;
+                        var sessionStore = mainSessionStore.ActiveSession 
+                            ?? mainSessionStore;
                         if((sessionStore is SelectionDialogSessionStore)
                             || sessionStore.IsModalDialog)
                         {
@@ -143,14 +141,14 @@ namespace Origam.ServerCore
                         }
                         else
                         {
-                            bool askWorkflowClose = false;
+                            var askWorkflowClose = false;
                             if(sessionStore 
                                 is WorkflowSessionStore workflowSessionStore)
                             {
                                 askWorkflowClose 
                                     = workflowSessionStore.AskWorkflowClose;
                             }
-                            bool hasChanges = HasChanges(sessionStore);
+                            var hasChanges = HasChanges(sessionStore);
                             result.Sessions.Add(
                                 new PortalResultSession(
                                     sessionStore.Id, 
@@ -194,10 +192,8 @@ namespace Origam.ServerCore
             else
             {
                 // new session
-                PortalSessionStore portalSessionStore 
-                    = new PortalSessionStore(profile.Id);
-                sessionManager.AddPortalSession(
-                    profile.Id, portalSessionStore);
+                var portalSessionStore = new PortalSessionStore(profile.Id);
+                sessionManager.AddPortalSession(profile.Id, portalSessionStore);
             }
             result.UserName = profile.FullName 
                 + " (" + sessionManager.PortalSessionCount + ")";
@@ -205,7 +201,6 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return result;
         }
-        // ReSharper disable once InconsistentNaming
         public void DestroyUI(Guid sessionFormIdentifier)
         {
             sessionHelper.DeleteSession(sessionFormIdentifier);
@@ -219,9 +214,11 @@ namespace Origam.ServerCore
             var result = sessionStore.ExecuteAction(
                 SessionStore.ACTION_REFRESH);
             CreateUpdateOrigamOnlineUser();
-            if (!(result is DataSet))
+            if(!(result is DataSet))
+            {
                 throw new Exception(localizer["ErrorRefreshReturnInvalid",
                     sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]);
+            }
             IList<string> columns = null;
             if (sessionStore.IsPagedLoading)
             {
@@ -238,8 +235,10 @@ namespace Origam.ServerCore
         {
             var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
             if((sessionStore.ConfirmationRule == null) ||
-                !sessionStore.Data.HasChanges())
+               !sessionStore.Data.HasChanges())
+            {
                 return new RuleExceptionDataCollection();
+            }
             var hasRows = false;
             var clone = DatasetTools.CloneDataSet(sessionStore.Data);
             var rootTables = sessionStore.Data.Tables
@@ -249,8 +248,11 @@ namespace Origam.ServerCore
             {
                 foreach(DataRow row in rootTable.Rows)
                 {
-                    if ((row.RowState == DataRowState.Deleted) ||
-                        !IsRowDirty(row)) continue;
+                    if((row.RowState == DataRowState.Deleted) ||
+                       !IsRowDirty(row))
+                    {
+                        continue;
+                    }
                     DatasetTools.GetDataSlice(
                         clone, new List<DataRow>{row});
                     hasRows = true;
@@ -336,13 +338,9 @@ namespace Origam.ServerCore
             {
                 // ignored
             }
-            if (sessionStore == null)
-            {
-                return new Hashtable();
-            }
-            return sessionStore.Request.Parameters;
+            return sessionStore == null 
+                ? new Hashtable() : sessionStore.Request.Parameters;
         }
-
         public ArrayList GetData(GetDataInput input)
         {
             SessionStore sessionStore = null;
@@ -355,7 +353,6 @@ namespace Origam.ServerCore
             {
                 // ignored
             }
-
             if (sessionStore == null)
             {
                 return new ArrayList();
@@ -435,25 +432,29 @@ namespace Origam.ServerCore
             {
                 // ignored
             }
-            if(sessionStore == null)
+            switch(sessionStore)
             {
-                return Result.Ok<RowData, IActionResult>(
-                    new RowData{Row = null, Entity = null});
-            }
-            else
-            {
-                var row = sessionStore.GetSessionRow(entity, rowId);
-                return Result.Ok<RowData, IActionResult>(
-                    new RowData{Row = row, Entity = null});
+                case null:
+                    return Result.Ok<RowData, IActionResult>(
+                        new RowData{Row = null, Entity = null});
+                default:
+                {
+                    var row = sessionStore.GetSessionRow(entity, rowId);
+                    return Result.Ok<RowData, IActionResult>(
+                        new RowData{Row = row, Entity = null});
+                }
             }
         }
         public UIResult WorkflowNext(WorkflowNextInput workflowNextInput)
         {
-            var workflowSessionStore = sessionManager.GetSession(
-                    workflowNextInput.SessionFormIdentifier) 
-                as WorkflowSessionStore;
-            return (UIResult)workflowSessionStore.ExecuteAction(
-                SessionStore.ACTION_NEXT, workflowNextInput.CachedFormIds);
+            if(sessionManager.GetSession(
+                    workflowNextInput.SessionFormIdentifier)
+                is WorkflowSessionStore workflowSessionStore)
+            {
+                return (UIResult) workflowSessionStore.ExecuteAction(
+                    SessionStore.ACTION_NEXT, workflowNextInput.CachedFormIds);
+            }
+            return null;
         }
         public RuleExceptionDataCollection WorkflowNextQuery(
             Guid sessionFormIdentifier)
@@ -470,7 +471,9 @@ namespace Origam.ServerCore
             return (UIResult)sessionStore.ExecuteAction(
                 SessionStore.ACTION_ABORT); 
         }
+#pragma warning disable 1998
         public async Task<UIResult> WorkflowRepeat(
+#pragma warning restore 1998
             Guid sessionFormIdentifier,
             IStringLocalizer<SharedResources> localizer)
         {
@@ -526,7 +529,7 @@ namespace Origam.ServerCore
             {
                 return -1;
             }
-            foreach(object recordId in idList)
+            foreach(var recordId in idList)
             {
                 var lookupService 
                     = ServiceManager.Services.GetService<IDataLookupService>();
@@ -570,6 +573,7 @@ namespace Origam.ServerCore
                                 = SecurityManager.GetProfileProvider();
                             var profile = profileProvider.GetProfile(
                                 (Guid)row["RecordCreatedBy"]) as UserProfile;
+                            // ReSharper disable once PossibleNullReferenceException
                             user = profile.FullName;
                         }
                         catch (Exception ex)
@@ -596,7 +600,7 @@ namespace Origam.ServerCore
             }
             return result;
         }
-        public IList<WorkQueueInfo> WorkQueueList(
+        public static IList<WorkQueueInfo> WorkQueueList(
             IStringLocalizer<SharedResources> localizer)
         {
             try
@@ -625,12 +629,11 @@ namespace Origam.ServerCore
                     long cnt = 0;
                     if((bool)row["IsMessageCountDisplayed"])
                     {
-                        var workQueueClass 
-                            = workQueueService.WQClass(workQueueClassName) 
-                                as WorkQueueClass;
-                        cnt = (long)lookupService.GetDisplayText(
-                            workQueueClass.WorkQueueItemCountLookupId, 
-                            workQueueId, false, false, null);
+                        if(workQueueService.WQClass(workQueueClassName) 
+                            is WorkQueueClass workQueueClass)
+                            cnt = (long) lookupService.GetDisplayText(
+                                workQueueClass.WorkQueueItemCountLookupId,
+                                workQueueId, false, false, null);
                     }
                     var workQueueInfo = new WorkQueueInfo(
                         workQueueId.ToString(), (string)row["Name"], cnt);
@@ -690,12 +693,47 @@ namespace Origam.ServerCore
             OrigamPanelConfigDA.SaveUserConfig(
                 userConfig, input.ObjectInstanceId, workflowId, profileId);
         }
-        public void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
+        public static void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
         {
             SecurityTools.CurrentUserProfile();
             OrigamPanelColumnConfigDA.PersistColumnConfig(
                 input.InstanceId, "splitPanel", 0, 
                 input.Position, false);
+        }
+        public void SaveFavorites(SaveFavoritesInput input)
+        {
+            var profile = SecurityTools.CurrentUserProfile();
+            // save favorites
+            var favorites = core.DataService.LoadData(
+                new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
+                new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"), 
+                Guid.Empty, 
+                Guid.Empty, 
+                null, 
+                "OrigamFavoritesUserConfig_parBusinessPartnerId", 
+                profile.Id);
+            if(favorites.Tables["OrigamFavoritesUserConfig"].Rows.Count > 0)
+            {
+                var row = favorites.Tables["OrigamFavoritesUserConfig"].Rows[0];
+                row["ConfigXml"] = input.ConfigXml;
+                row["RecordUpdated"] = DateTime.Now;
+                row["RecordUpdatedBy"] = profile.Id;
+                row["refBusinessPartnerId"] = profile.Id;
+            }
+            else
+            {
+                var row = favorites.Tables["OrigamFavoritesUserConfig"]
+                    .NewRow();
+                row["Id"] = Guid.NewGuid();
+                row["RecordCreated"] = DateTime.Now;
+                row["RecordCreatedBy"] = profile.Id;
+                row["ConfigXml"] = input.ConfigXml;
+                row["refBusinessPartnerId"] = profile.Id;
+                favorites.Tables["OrigamFavoritesUserConfig"].Rows.Add(row);
+            }
+            core.DataService.StoreData(
+                new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
+                favorites, false, null);
         }
         private static bool IsRowDirty(DataRow row)
         {
@@ -772,7 +810,7 @@ namespace Origam.ServerCore
                 }
             }
         } 
-        public XmlDocument DataRowToRecordTooltip(
+        public static XmlDocument DataRowToRecordTooltip(
             DataRow row, 
             CultureInfo cultureInfo,
             IStringLocalizer<SharedResources> localizer)
