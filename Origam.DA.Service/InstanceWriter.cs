@@ -143,8 +143,6 @@ namespace Origam.DA.Service
                 node.SetAttribute(OrigamFile.ParentIdAttribute,
                     OrigamFile.ModelPersistenceUri, instance.FileParentId.ToString());
             }
-            node.SetAttribute(OrigamFile.TypeAttribute,
-                OrigamFile.ModelPersistenceUri, instance.GetType().FullName);
         }
 
         private string AddInstanceNamespace(IFilePersistent instance)
