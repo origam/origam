@@ -1194,7 +1194,7 @@ namespace Origam.Gui.Designer
 				txtFeatures.Text = _rootControl.Features;
 				txtLevel.Text = _rootControl.Level.ToString ();
 			}
-			txtPackage.Text = _rootControl.Package;
+			txtPackage.Text = _rootControl.PackageName;
 			_form.Location = new Point(15,15);
 			_form.Enabled = (!this.IsReadOnly);
 

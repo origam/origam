@@ -634,7 +634,7 @@ namespace Origam.Schema
 
 		[Category("(Info)")]
 		[Description("Name of the package this model element belongs to.")]
-		public string Package
+		public string PackageName
 		{
 			get
 			{

@@ -244,7 +244,7 @@ namespace Origam.Workbench.Pads
 			if(rootName == null) rootName = item.RootItem.ItemType;
 
 			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name,
-            item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.Package,
+            item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.PackageName,
                 referencePackages.Contains(item.SchemaExtensionId)?"Yes":"No"});
 			newItem.Tag = item;
 			newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);

@@ -37,7 +37,7 @@ namespace Origam.Schema.DeploymentModel
 		List<DeploymentDependency> DeploymentDependencies { get; set; }
 		bool HasDependencies { get; }
 		Guid SchemaExtensionId { get; }
-		string Package { get; }
+		string PackageName { get; }
 	}
 
 	/// <summary>

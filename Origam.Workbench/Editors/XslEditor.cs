@@ -802,7 +802,7 @@ namespace Origam.Workbench.Editors
 				txtName.Text = _xslRule.Name;
 				txtText.Text = _xslRule.Xsl ?? "";
 				txtId.Text = _xslRule.Id.ToString();
-                txtPackage.Text = _xslRule.Package;
+                txtPackage.Text = _xslRule.PackageName;
                 cboXsltEngineType.Enabled = false;
 
 				if(_xslRule.Structure != null)
@@ -843,7 +843,7 @@ namespace Origam.Workbench.Editors
 				txtName.Text = _XslTransformation.Name;
 				txtText.Text = _XslTransformation.TextStore == null ? "" : _XslTransformation.TextStore;
 				txtId.Text = _XslTransformation.Id.ToString();
-                txtPackage.Text = _XslTransformation.Package;
+                txtPackage.Text = _XslTransformation.PackageName;
                 cboXsltEngineType.SelectedItem = _XslTransformation.XsltEngineType;
 
 				if(txtText.Text == "") txtText.Text = 

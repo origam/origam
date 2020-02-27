@@ -91,7 +91,7 @@ namespace Origam.Workbench.Diagram.InternalEditor
 		                triggerItemId: newItem.Id);
 
 	                var existingDependency = (WorkflowTaskDependency)edge.Edge.UserData;
-	                if (existingDependency.Package == newItem.Package)
+	                if (existingDependency.PackageName == newItem.PackageName)
 	                {
 		                taskRunner.RemoveDependencyTask(
 			                dependency: existingDependency,
