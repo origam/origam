@@ -66,7 +66,7 @@ namespace Origam.DA.ObjectPersistence
         /// <param name="filter"></param>
         /// <returns></returns>
         List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
-		List<T> RetrieveListByType<T>( string itemType);
+		List<T> RetrieveListByCategory<T>( string category);
 		List<T> RetrieveListByPackage<T>(Guid packageId);
 		T[] FullTextSearch<T>( string text);
 		List<T> RetrieveListByParent<T>( Key primaryKey, string parentTableName, string childTableName, bool useCache);

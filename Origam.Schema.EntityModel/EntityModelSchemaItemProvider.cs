@@ -37,7 +37,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return AbstractDataEntity.ItemTypeConst;
+				return AbstractDataEntity.CategoryConst;
 			}
 		}
 		public override bool AutoCreateFolder

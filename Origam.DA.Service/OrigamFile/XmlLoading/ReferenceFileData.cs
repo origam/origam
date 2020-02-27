@@ -38,14 +38,14 @@ namespace Origam.DA.Service
                                           ?.SelectNodes("//x:groupReference",
                                               xmlFileData.NamespaceManager)
                                       ?? throw new Exception($"Could not find groupReference in: {xmlFileData.FileInfo.FullName}");
-            foreach (object node in xmlNodeList)
+            foreach (XmlNode node in xmlNodeList)
             {
-                string name = (node as XmlNode)?.Attributes?[$"x:{OrigamFile.TypeAttribute}"].Value 
+                string category = node?.Attributes?[$"x:{OrigamFile.TypeAttribute}"].Value 
                               ?? throw new Exception($"Could not read type form file: {xmlFileData.FileInfo.FullName} node: {node}");
-                string idStr = (node as XmlNode).Attributes?["x:refId"].Value
+                string idStr = node.Attributes?["x:refId"].Value
                                ?? throw new Exception($"Could not read id form file: {xmlFileData.FileInfo.FullName} node: {node}");
 
-                var folderUri = ElementNameFactory.Create(name);
+                var folderUri = category;
                 ParentFolderIds[folderUri] = new Guid(idStr);
             }
         }

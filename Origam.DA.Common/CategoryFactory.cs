@@ -20,25 +20,34 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
+using System.Xml.Serialization;
+using Origam.DA.Common;
+using Origam.Extensions;
+using Origam.OrigamEngine;
+using ProtoBuf;
 
-namespace Origam.DA.Service
+namespace Origam.DA
 {
-    public class PackageFileData: ObjectFileData
+    public static class CategoryFactory
     {
-        public Guid PackageId { get; }
-
-        public PackageFileData(IList<string> parentFolders,XmlFileData xmlFileData, 
-            OrigamFileFactory origamFileFactory) :
-            base(new ParentFolders(parentFolders),xmlFileData, origamFileFactory)
+        public static string Create(Type type)
         {
-            string idStr = xmlFileData
-                               ?.XmlDocument
-                               ?.SelectSingleNode("//p:package", xmlFileData.NamespaceManager)
-                               ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
-                               ?.Value
-                           ?? throw new Exception($"Could not read package id form file: {xmlFileData.FileInfo.FullName}");
-            PackageId = new Guid(idStr);
+            XmlRootAttribute rootAttribute = FindRootAttribute(type);
+            return rootAttribute?.ElementName;
+        }
+
+        private static XmlRootAttribute FindRootAttribute(Type type)
+        {
+            object[] attributes = type.GetCustomAttributes(typeof(XmlRootAttribute), true);
+        
+            if (attributes != null && attributes.Length > 0)
+                return (XmlRootAttribute) attributes[0];
+            else
+                return null;
         }
     }
 }

@@ -211,8 +211,7 @@ namespace Origam.DA.Service
             ContainedObjects.Remove(id);
         }
 
-        public void WriteInstance(IFilePersistent instance,
-            ElementName elementName)
+        public void WriteInstance(IFilePersistent instance)
         {
             if (log.IsDebugEnabled)
             {
@@ -220,7 +219,7 @@ namespace Origam.DA.Service
             }
 
             new InstanceWriter(externalFileManger, OpenDocument)
-                .Write(instance,elementName);
+                .Write(instance);
             AddToLoadedObjects(instance);
         }
 

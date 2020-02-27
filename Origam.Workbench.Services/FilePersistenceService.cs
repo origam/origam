@@ -39,7 +39,7 @@ namespace Origam.Workbench.Services
     public class FilePersistenceService : IPersistenceService
     {
         private readonly FilePersistenceProvider schemaProvider;
-        private readonly IList<ElementName> defaultFolders;
+        private readonly IList<string> defaultFolders;
         
         public FileEventQueue FileEventQueue { get; }
         public IPersistenceProvider SchemaProvider => schemaProvider;
@@ -47,7 +47,7 @@ namespace Origam.Workbench.Services
         
         public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
-        public FilePersistenceService(IList<ElementName> defaultFolders,
+        public FilePersistenceService(IList<string> defaultFolders,
             string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
             bool checkRules = true)
         {

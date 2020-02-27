@@ -420,19 +420,19 @@ namespace Origam.Schema
 			set { }
 		}
 
-		public IDictionary<ElementName, Guid> ParentFolderIds
+		public IDictionary<string, Guid> ParentFolderIds
         {
             get
             {
 	            return 
-		            new Dictionary<ElementName, Guid>
+		            new Dictionary<string, Guid>
 		            {
 			            {
-				            ElementNameFactory.Create(typeof(SchemaExtension)),
+				            CategoryFactory.Create(typeof(SchemaExtension)),
 				            SchemaExtensionId
 			            },
 			            {
-				            ElementNameFactory.Create(typeof(SchemaItemGroup)),
+				            CategoryFactory.Create(typeof(SchemaItemGroup)),
 				            ParentGroupId
 			            }
 		            };

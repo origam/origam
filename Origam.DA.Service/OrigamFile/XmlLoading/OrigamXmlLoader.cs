@@ -137,7 +137,7 @@ namespace Origam.DA.Service
 
         private Result<int,XmlLoadError> UpdateVersion(OrigamXmlDocument xmlDoc,string nameSpace, bool tryUpdate)
         {
-            Version version = ElementNameFactory.Create(nameSpace).Version;
+            Version version = OrigamNameSpace.Create(nameSpace).Version;
             if ( version > currentVersion)
             {
                 return Result.Fail<int,XmlLoadError>( new XmlLoadError(ErrType.XmlGeneralError, $"Cannot work with file: {xmlDoc.BaseURI} because it's version of namespace \"{nameSpace}\" is newer than the current version: {currentVersion}"));

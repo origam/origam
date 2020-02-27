@@ -86,14 +86,13 @@ namespace Origam.DA.Service
 
         private void UpdateFile(IFilePersistent instance, OrigamFile newFile)
         {
-            ElementName elementName = ElementNameFactory.Create(instance.GetType());
             if (instance.IsFileRootElement)
             {
                 newFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
             }
 
-            var objectInfo = CreateObjectInfo(elementName, instance, newFile);
-            WriteToXmlDocument(newFile, instance, elementName); 
+            var objectInfo = CreateObjectInfo(instance, newFile);
+            WriteToXmlDocument(newFile, instance); 
             UpdateIndex(instance, objectInfo);
             transactionStore.AddOrReplace(newFile);
         }
@@ -170,11 +169,10 @@ namespace Origam.DA.Service
             return null;
         }
 
-        private PersistedObjectInfo CreateObjectInfo(ElementName elementName,
-            IFilePersistent instance, OrigamFile origamFile)
+        private PersistedObjectInfo CreateObjectInfo(IFilePersistent instance, OrigamFile origamFile)
         {
             PersistedObjectInfo updatedObjectInfo = new PersistedObjectInfo(
-                elementName: elementName,
+                category: CategoryFactory.Create(instance.GetType()),
                 id: instance.Id,
                 parentId: instance.FileParentId,
                 isFolder: instance.IsFolder,
@@ -183,8 +181,7 @@ namespace Origam.DA.Service
             return updatedObjectInfo;
         }
 
-        private void WriteToXmlDocument(OrigamFile origamFile, IFilePersistent instance,
-            ElementName elementName)
+        private void WriteToXmlDocument(OrigamFile origamFile, IFilePersistent instance)
         {
             origamFile.DeferredSaveDocument = GetDocumentToWriteTo(origamFile);
             if (instance.IsDeleted)
@@ -193,7 +190,7 @@ namespace Origam.DA.Service
             }
             else
             {
-                origamFile.WriteInstance(instance, elementName);
+                origamFile.WriteInstance(instance);
             }
         }
 

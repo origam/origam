@@ -37,14 +37,14 @@ namespace Origam.DA.Service_net2Tests
     {
         private readonly IPersistenceService persistenceService;
 
-        public IList<ElementName> DefaultFolders { get; }
+        public IList<string> DefaultFolders { get; }
         
         public PersitHelper(string testFolderPath)
         {
-            DefaultFolders = new List<ElementName>
+            DefaultFolders = new List<string>
             {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
+                CategoryFactory.Create(typeof(SchemaExtension)),
+                CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 
             persistenceService = new FilePersistenceService(DefaultFolders,

@@ -30,7 +30,7 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Maps physical table to an entity.
 	/// </summary>
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISchemaItemFactory
 	{
 		public AbstractDataEntity() : base() {Init();}
@@ -39,7 +39,7 @@ namespace Origam.Schema.EntityModel
 
 		public AbstractDataEntity(Key primaryKey) : base(primaryKey)	{Init();}
 
-		public const string  ItemTypeConst = "DataEntity";
+		public const string  CategoryConst = "DataEntity";
 
 		private void Init()
 		{
@@ -297,7 +297,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

@@ -27,9 +27,9 @@ namespace Origam.DA.Service
     public class ObjectFileDataFactory
     {
         private readonly OrigamFileFactory origamFileFactory;
-        private readonly IList<ElementName> parentFolders;
+        private readonly IList<string> parentFolders;
 
-        public ObjectFileDataFactory(OrigamFileFactory origamFileFactory, IList<ElementName> parentFolders)
+        public ObjectFileDataFactory(OrigamFileFactory origamFileFactory, IList<string> parentFolders)
         {
             this.origamFileFactory = origamFileFactory;
             this.parentFolders = parentFolders;

@@ -144,19 +144,19 @@ namespace Origam.DA.Service
         }
 
         internal IEnumerable<PersistedObjectInfo> GetByParentFolder(
-            ElementName elementName, Guid folderId)
+            string category, Guid folderId)
         {
             return readWriteLock.RunReader(() =>
-                itemTracker.GetByParentFolder(elementName, folderId)
+                itemTracker.GetByParentFolder(category, folderId)
                     .Where(BelongsToALoadedPackage)
                 );
         }
 
-        internal IEnumerable<PersistedObjectInfo> GetListByElementName(
-            ElementName elementName)
+        internal IEnumerable<PersistedObjectInfo> GetListByCategory(
+            string category)
         {
             return readWriteLock.RunReader(() =>
-                itemTracker.GetListByElementName(elementName)
+                itemTracker.GetListByCategory(category)
                     .Where(BelongsToALoadedPackage)
                 );
         }

@@ -1266,15 +1266,15 @@ namespace Origam.Schema
         }
 
         [Browsable(false)]
-        public IDictionary<ElementName, Guid> ParentFolderIds =>
-	        new Dictionary<ElementName, Guid>
+        public IDictionary<string, Guid> ParentFolderIds =>
+	        new Dictionary<string, Guid>
 	        {
 		        {
-			        ElementNameFactory.Create(typeof(SchemaExtension)),
+			        CategoryFactory.Create(typeof(SchemaExtension)),
 			        SchemaExtensionId
 		        },
 		        {
-			        ElementNameFactory.Create(typeof(SchemaItemGroup)),
+			        CategoryFactory.Create(typeof(SchemaItemGroup)),
 			        GroupId
 		        }
 	        };

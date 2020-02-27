@@ -37,7 +37,7 @@ namespace Origam.DA.Service
         public Dictionary<string, int> ItemTrackerStats => itemTrackerStats;
         
         [ProtoMember(2)]
-        private IDictionary<int,ElementName> ElementIdDictionary { get; }
+        private IDictionary<int,string> CategoryIdDictionary { get; }
 
         [ProtoMember(1)] 
         private List<OrigamFileSerializedForm> serializationList;
@@ -47,8 +47,8 @@ namespace Origam.DA.Service
             new AutoIncrementedIntIndex<Guid>();
         
         [ProtoMember(4)] 
-        private readonly AutoIncrementedIntIndex<ElementName> parentFolderIndex =
-            new AutoIncrementedIntIndex<ElementName>();
+        private readonly AutoIncrementedIntIndex<string> parentFolderIndex =
+            new AutoIncrementedIntIndex<string>();
 
         [ProtoMember(5)]
         private readonly Dictionary<string, int> itemTrackerStats;
@@ -60,18 +60,18 @@ namespace Origam.DA.Service
         public TrackerSerializationData(IEnumerable<ITrackeableFile> origamFiles, 
             Dictionary<string, int> itemTrackerStats)
         {
-            AutoIncrementedIntIndex<ElementName> elementNameIdIndex =
-                new AutoIncrementedIntIndex<ElementName>();
+            AutoIncrementedIntIndex<string> elementNameIdIndex =
+                new AutoIncrementedIntIndex<string>();
             origamFiles
                 .SelectMany(x=>x.ContainedObjects.Values)
-                .ForEach(x=> elementNameIdIndex.AddValueAndGetId(x.ElementName));
+                .ForEach(x=> elementNameIdIndex.AddValueAndGetId(x.Category));
             ToSerializationForms(origamFiles, elementNameIdIndex.ValueToId);
-            ElementIdDictionary = elementNameIdIndex.IdToValue;
+            CategoryIdDictionary = elementNameIdIndex.IdToValue;
             this.itemTrackerStats = itemTrackerStats;
         }
 
         private void ToSerializationForms(
-            IEnumerable<ITrackeableFile> origamFiles, IDictionary<ElementName,int> idElementDictionary)
+            IEnumerable<ITrackeableFile> origamFiles, IDictionary<string,int> idElementDictionary)
         {
             serializationList = origamFiles
                 .Select(orFile =>
@@ -94,7 +94,7 @@ namespace Origam.DA.Service
                     serForm.GetOrigamFile(
                         guidIndex, 
                         parentFolderIndex,
-                        ElementIdDictionary,
+                        CategoryIdDictionary,
                         origamFileFactory))
                 .ToList();
         }
@@ -104,7 +104,7 @@ namespace Origam.DA.Service
             string spacer =
                 "\n----------------------------------------------------------------------------\n";
             return "TrackerSerializationdata:\n" +
-                   "ElementIdDictionary: " + ElementIdDictionary.Print() +spacer+
+                   "ElementIdDictionary: " + CategoryIdDictionary.Print() +spacer+
                    "serializationList: [" +
                    serializationList
                        .Select(x => x.ToString())
@@ -134,8 +134,8 @@ namespace Origam.DA.Service
 
             public OrigamFileSerializedForm(ITrackeableFile origamFile,
                 AutoIncrementedIntIndex<Guid> guidIndex,
-                AutoIncrementedIntIndex<ElementName> parentFolderIndex,
-                IDictionary<ElementName,int> idElementDictionary)
+                AutoIncrementedIntIndex<string> parentFolderIndex,
+                IDictionary<string,int> idCategoryDictionary)
             {
                 origamFile.ParentFolderIds.CheckIsValid(origamFile.Path);
                 RelativePath = origamFile.Path.Relative;
@@ -144,7 +144,7 @@ namespace Origam.DA.Service
                     .Select(objInfo => new ObjectInfoSerializedForm(
                         objInfo,
                         guidIndex,
-                        idElementDictionary))
+                        idCategoryDictionary))
                     .ToList();
                 if (ContainedObjInfos == null)
                 {
@@ -158,8 +158,8 @@ namespace Origam.DA.Service
             }
 
             public ITrackeableFile GetOrigamFile(AutoIncrementedIntIndex<Guid> guidIndex,
-                AutoIncrementedIntIndex<ElementName> parentFolderIndex,
-                IDictionary<int,ElementName> elementIdDictionary, 
+                AutoIncrementedIntIndex<string> parentFolderIndex,
+                IDictionary<int,string> elementIdDictionary, 
                 OrigamFileFactory origamFileFactory)
             {
                 ITrackeableFile trackableFile = origamFileFactory.New( 
@@ -179,7 +179,7 @@ namespace Origam.DA.Service
             }
 
             private OrigamFile AddObjectInfo(AutoIncrementedIntIndex<Guid> guidIndex,
-                OrigamFile origamFile, IDictionary<int,ElementName> elementIdDictionary)
+                OrigamFile origamFile, IDictionary<int,string> elementIdDictionary)
             {
                 foreach (ObjectInfoSerializedForm objInfoSf in ContainedObjInfos)
                 {
@@ -225,9 +225,9 @@ namespace Origam.DA.Service
 
             public ObjectInfoSerializedForm(PersistedObjectInfo objInfo,
                 AutoIncrementedIntIndex<Guid> guidIndex, 
-                IDictionary<ElementName,int> idElementDictionary)
+                IDictionary<string,int> idCategoryDictionary)
             {
-                elementNameId = idElementDictionary[objInfo.ElementName];
+                elementNameId = idCategoryDictionary[objInfo.Category];
                 IdNumber = guidIndex.AddValueAndGetId(objInfo.Id);
                 ParentIdNumber = guidIndex.AddValueAndGetId(objInfo.ParentId);
                 IsFolder = objInfo.IsFolder;
@@ -235,11 +235,11 @@ namespace Origam.DA.Service
 
             public PersistedObjectInfo GetObjectInfo(OrigamFile origamFile,
                 AutoIncrementedIntIndex<Guid> guidIndex,
-                IDictionary<int,ElementName> elementIdDictionary)
+                IDictionary<int,string> elementIdDictionary)
             {
                 return 
                     new PersistedObjectInfo(
-                        elementName: elementIdDictionary[elementNameId], 
+                        category: elementIdDictionary[elementNameId], 
                         id:guidIndex[IdNumber],
                         parentId:guidIndex[ParentIdNumber],
                         isFolder:IsFolder,

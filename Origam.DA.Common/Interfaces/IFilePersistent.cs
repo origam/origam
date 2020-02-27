@@ -29,7 +29,7 @@ namespace Origam.DA.ObjectPersistence
         string RelativeFilePath { get; }
         Guid FileParentId { get; set; }
         bool IsFolder { get; }
-        IDictionary<ElementName, Guid> ParentFolderIds { get; }
+        IDictionary<string, Guid> ParentFolderIds { get; }
         string Path { get; }
         bool IsFileRootElement { get; }
     }

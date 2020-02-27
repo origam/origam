@@ -243,7 +243,7 @@ namespace Origam.Schema
 
 		public bool IsFolder => true;
 
-		public IDictionary<ElementName, Guid> ParentFolderIds => new Dictionary<ElementName, Guid>();
+		public IDictionary<string, Guid> ParentFolderIds => new Dictionary<string, Guid>();
 
 		public string Path => null;
 		#endregion

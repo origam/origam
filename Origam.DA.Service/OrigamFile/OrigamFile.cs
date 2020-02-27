@@ -42,20 +42,14 @@ namespace Origam.DA.Service
         public const string ReferenceFileName = PersistenceFiles.ReferenceFileName; 
         public const string GroupFileName = PersistenceFiles.GroupFileName; 
         public static readonly string OrigamExtension = PersistenceFiles.Extension;
-        public static readonly ElementName ModelPersistenceUri =
-            ElementNameFactory.CreatePersistenceElName(
-                $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}");        
-        public static readonly ElementName PackageUri =
-            ElementNameFactory.CreatePackageElName(
-                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}");
-        public static readonly ElementName GroupUri =
-            ElementNameFactory.CreateModelElName("http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0");
-        public static readonly ElementName PackageNameUri =
-            ElementNameFactory.CreatePackageElName(
-                $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}/package");
-        public static readonly ElementName GroupNameUri =
-            ElementNameFactory.CreateModelElName(
-                $"http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0/group");
+        public static readonly string ModelPersistenceUri =
+             $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}";        
+        public static readonly string PackageUri =
+            $"http://schemas.origam.com/package/{VersionProvider.CurrentPackageMeta}";
+        public static readonly string GroupUri =
+           "http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0";
+        public static readonly string PackageCategory ="package";
+        public static readonly string GroupCategory = "group";
 
         private readonly OrigamFileManager origamFileManager;
         private readonly ExternalFileManager externalFileManger;
@@ -96,7 +90,7 @@ namespace Origam.DA.Service
         
         public override string ToString() => Path.Absolute;
 
-        public OrigamFile(OrigamPath path, IDictionary<ElementName,Guid> parentFolderIds,
+        public OrigamFile(OrigamPath path, IDictionary<string,Guid> parentFolderIds,
             OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
             FileEventQueue fileEventQueue,
             bool isAFullyWrittenFile = false )
@@ -114,7 +108,7 @@ namespace Origam.DA.Service
                 externalFileManger);
         }
 
-        public OrigamFile(OrigamPath path, IDictionary<ElementName, Guid> parentFolderIds,
+        public OrigamFile(OrigamPath path, IDictionary<string, Guid> parentFolderIds,
             OrigamFileManager origamFileManager, OrigamPathFactory origamPathFactory,
             FileEventQueue fileEventQueue, string fileHash):
             this( path, parentFolderIds, origamFileManager,
@@ -131,10 +125,9 @@ namespace Origam.DA.Service
             origamXmlManager.RemoveInstance(id);
         }
 
-        public virtual void WriteInstance(IFilePersistent instance,
-            ElementName elementName)
+        public virtual void WriteInstance(IFilePersistent instance)
         {
-            origamXmlManager.WriteInstance(instance, elementName);
+            origamXmlManager.WriteInstance(instance);
         }
 
         public object GetFromExternalFile(Guid instanceId, string fieldName) => 

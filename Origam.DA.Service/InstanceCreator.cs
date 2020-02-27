@@ -69,8 +69,8 @@ namespace Origam.DA.Service
             foreach (MemberAttributeInfo mi in parentFolderReferences)
             {
                 XmlParentAttribute attribute = mi.Attribute as XmlParentAttribute;
-                ElementName folderUri = ElementNameFactory.Create(attribute.Type);
-                if (folderUri == OrigamFile.GroupNameUri && !isTopFileElement) continue;
+                string folderUri = CategoryFactory.Create(attribute.Type);
+                if (folderUri == OrigamFile.GroupCategory && !isTopFileElement) continue;
                 if (parentFolderIds.ContainsKey(folderUri))
                 {
                     SetValue(instance, mi, parentFolderIds[folderUri], provider);

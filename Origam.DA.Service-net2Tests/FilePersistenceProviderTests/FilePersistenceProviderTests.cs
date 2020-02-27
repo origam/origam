@@ -314,10 +314,10 @@ namespace Origam.DA.Service_net2Tests
             PrimaryKey = primaryKey;
         }
 
-        public TestItem(IList<ElementName> persistorDefaultFolders):this()
+        public TestItem(IList<string> persistorDefaultFolders):this()
         {
-            ParentFolderIds.Add(ElementNameFactory.Create(persistorDefaultFolders[0]), new Guid("1112687f-be11-49ec-a2eb-fba58d945b3e"));
-            ParentFolderIds.Add(ElementNameFactory.Create(persistorDefaultFolders[1]), new Guid("1113687f-be11-49ec-a2eb-fba58d945b3e"));
+            ParentFolderIds.Add(persistorDefaultFolders[0], new Guid("1112687f-be11-49ec-a2eb-fba58d945b3e"));
+            ParentFolderIds.Add(persistorDefaultFolders[1], new Guid("1113687f-be11-49ec-a2eb-fba58d945b3e"));
             PrimaryKey = new Key
             {
                 ["Id"] = new Guid("1111687f-be11-49ec-a2eb-fba58d945b3e")
@@ -405,7 +405,7 @@ namespace Origam.DA.Service_net2Tests
 
         public Guid FileParentId { get; set; }
         public bool IsFolder { get; }
-        public IDictionary<ElementName, Guid> ParentFolderIds { get; } = new Dictionary<ElementName, Guid>();
+        public IDictionary<string, Guid> ParentFolderIds { get; } = new Dictionary<string, Guid>();
         public string Path { get; }
         public bool IsFileRootElement => FileParentId == Guid.Empty;
 

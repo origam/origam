@@ -636,8 +636,8 @@ namespace Origam.Windows.Editor
         /// </summary>
         static XmlElementPath GetActiveElementStartPath(string xml, int index, string elementText)
         {
-            QualifiedName elementName = GetElementName(elementText);
-            if (elementName.IsEmpty)
+            QualifiedName category = GetElementName(elementText);
+            if (category.IsEmpty)
             {
                 return new XmlElementPath();
             }
@@ -647,11 +647,11 @@ namespace Origam.Windows.Editor
             XmlElementPath path = GetFullParentElementPath(xml.Substring(0, index));
 
             // Try to get a namespace for the active element's prefix.
-            if (elementName.HasPrefix && !elementNamespace.HasName)
+            if (category.HasPrefix && !elementNamespace.HasName)
             {
-                elementName.Namespace = path.GetNamespaceForPrefix(elementName.Prefix);
-                elementNamespace.Name = elementName.Namespace;
-                elementNamespace.Prefix = elementName.Prefix;
+                category.Namespace = path.GetNamespaceForPrefix(category.Prefix);
+                elementNamespace.Name = category.Namespace;
+                elementNamespace.Prefix = category.Prefix;
             }
 
             if (!elementNamespace.HasName)
@@ -670,7 +670,7 @@ namespace Origam.Windows.Editor
                     }
                 }
             }
-            path.AddElement(new QualifiedName(elementName.Name, elementNamespace));
+            path.AddElement(new QualifiedName(category.Name, elementNamespace));
             return path;
         }
 
@@ -796,8 +796,8 @@ namespace Origam.Windows.Editor
                                 case XmlNodeType.Element:
                                     if (!xmlReader.IsEmptyElement)
                                     {
-                                        QualifiedName elementName = new QualifiedName(xmlReader.LocalName, xmlReader.NamespaceURI, xmlReader.Prefix);
-                                        path.AddElement(elementName);
+                                        QualifiedName category = new QualifiedName(xmlReader.LocalName, xmlReader.NamespaceURI, xmlReader.Prefix);
+                                        path.AddElement(category);
                                     }
                                     break;
                                 case XmlNodeType.EndElement:

@@ -25,10 +25,10 @@ namespace Origam.DA.Service
 {
     public class PersistedObjectInfo
     {
-        public PersistedObjectInfo(ElementName elementName,
+        public PersistedObjectInfo(string category,
             Guid id, Guid parentId, bool isFolder, OrigamFile origamFile)
         {
-            ElementName = elementName;
+            Category = category;
             Id = id;
             ParentId = parentId;
             OrigamFile = origamFile;
@@ -43,12 +43,12 @@ namespace Origam.DA.Service
 
         public Guid ParentId { get; }
 
-        public ElementName ElementName { get; }
+        public string Category { get; }
 
         public override string ToString()
         {
             return "OrigamFile path:" + OrigamFile.Path.Absolute + ", Id: " + Id + ", ParentId: " + ParentId +
-                   ", ElementName: " + ElementName+ ", IsFolder: "+ IsFolder;
+                   ", Category: " + Category+ ", IsFolder: "+ IsFolder;
         }
     }
 }

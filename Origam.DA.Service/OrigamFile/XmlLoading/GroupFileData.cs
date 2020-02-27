@@ -29,7 +29,7 @@ namespace Origam.DA.Service
         public Guid GroupId { get; }
         public override Folder FolderToDetermineParentGroup => Folder.Parent;
         public override Folder FolderToDetermineReferenceGroup => Folder.Parent;
-        public GroupFileData(IList<ElementName> parentFolders,XmlFileData xmlFileData,
+        public GroupFileData(IList<string> parentFolders,XmlFileData xmlFileData,
             OrigamFileFactory origamFileFactory) :
             base(new ParentFolders(parentFolders), xmlFileData, origamFileFactory)
         {

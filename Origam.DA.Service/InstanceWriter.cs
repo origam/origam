@@ -45,22 +45,22 @@ namespace Origam.DA.Service
             this.xmlDocument = xmlDocument;
         }
 
-        public void Write(IFilePersistent instance, ElementName elementName)
+        public void Write(IFilePersistent instance)
         {
             string namespaceName = AddInstanceNamespace(instance);
-            XmlElement elementToWriteTo = GetElementToWriteTo(instance, elementName);
+            XmlElement elementToWriteTo = GetElementToWriteTo(instance);
             bool isLocalChild = elementToWriteTo.ParentNode.GetDepth() != 1;
             WriteToNode(elementToWriteTo, instance, namespaceName, isLocalChild);
         }
 
-        private XmlElement GetElementToWriteTo(IFilePersistent instance, ElementName elementName)
+        private XmlElement GetElementToWriteTo(IFilePersistent instance)
         {
             XmlElement existingElement  = (XmlElement)xmlDocument    
                 .GetAllNodes()
                 .FirstOrDefault(x => XmlUtils.ReadId(x) == instance.Id);
             if (existingElement == null)
             {
-                return FindElementToWriteTo(xmlDocument, instance, elementName, 0);
+                return FindElementToWriteTo(xmlDocument, instance, 0);
             }
 
             Guid? parentNodeId = XmlUtils.ReadId(existingElement.ParentNode);
@@ -69,23 +69,22 @@ namespace Origam.DA.Service
                 !parentNodeId.HasValue && instance.FileParentId != Guid.Empty;
             if (parentNodeIdInXmlDiffersFromParentIdInInstance)
             {
-                MoveElementToNewLocation(existingElement, instance, elementName);
+                MoveElementToNewLocation(existingElement, instance);
             }
             return existingElement;
         }
 
         private void MoveElementToNewLocation(XmlElement element,
-            IFilePersistent instance, ElementName elementName)
+            IFilePersistent instance)
         {
             element.ParentNode?.RemoveChild(element);
-            XmlElement newElement = FindElementToWriteTo(xmlDocument, instance, elementName, 0);
+            XmlElement newElement = FindElementToWriteTo(xmlDocument, instance, 0);
             XmlNode parentNode = newElement.ParentNode;
             parentNode.RemoveChild(newElement);
             parentNode.AppendChild(element);
         }
 
-        private XmlElement FindElementToWriteTo(XmlNode node, IFilePersistent instance,
-            ElementName elementName, int depth)
+        private XmlElement FindElementToWriteTo(XmlNode node, IFilePersistent instance, int depth)
         {
             Guid? parentId = XmlUtils.ReadId(node);
             foreach (XmlNode child in node.ChildNodes)
@@ -98,7 +97,7 @@ namespace Origam.DA.Service
                 }
                 else
                 {
-                    XmlElement foundEl = FindElementToWriteTo(child, instance, elementName, depth+1);
+                    XmlElement foundEl = FindElementToWriteTo(child, instance, depth+1);
                     if (foundEl != null) return foundEl;
                 }
             }
@@ -110,8 +109,10 @@ namespace Origam.DA.Service
                     node = node.LastChild;
                 }
                 // node does not exist, we add
+                string category = CategoryFactory.Create(instance.GetType());
+                string nameSpace = OrigamNameSpace.Create(instance.GetType()).StringValue;
                 XmlElement element = node.OwnerDocument.CreateElement(
-                    elementName.XmlElementName, elementName.XmlNamespace);
+                    category, nameSpace);
                 node.AppendChild(element);
                 return element;
             }

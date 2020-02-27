@@ -54,10 +54,10 @@ namespace Origam.OrigamEngine
         public FilePersistenceService CreateNewPersistenceService(bool watchFileChanges,
             bool checkRules,bool useBinFile)
         {
-            List<ElementName> defaultFolders = new List<ElementName>
+            List<string> defaultFolders = new List<string>
             {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
+                CategoryFactory.Create(typeof(SchemaExtension)),
+                CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 
             return new FilePersistenceService(
@@ -68,10 +68,10 @@ namespace Origam.OrigamEngine
 
         public FilePersistenceService CreateNoBinFilePersistenceService()
         {
-            List<ElementName> defaultFolders = new List<ElementName>
+            List<string> defaultFolders = new List<string>
             {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
+                CategoryFactory.Create(typeof(SchemaExtension)),
+                CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 
             return new FilePersistenceService(

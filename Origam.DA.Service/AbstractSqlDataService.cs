@@ -2102,7 +2102,7 @@ namespace Origam.DA.Service
 
         private ArrayList GetSchemaTables(IPersistenceProvider provider)
         {
-            List<AbstractSchemaItem> entityList = provider.RetrieveListByType<AbstractSchemaItem>(AbstractDataEntity.ItemTypeConst);
+            List<AbstractSchemaItem> entityList = provider.RetrieveListByCategory<AbstractSchemaItem>(AbstractDataEntity.CategoryConst);
             ArrayList schemaTables = new ArrayList();
 
             foreach (IDataEntity e in entityList)

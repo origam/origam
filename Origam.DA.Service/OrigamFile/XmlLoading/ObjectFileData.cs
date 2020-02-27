@@ -70,7 +70,7 @@ namespace Origam.DA.Service
                     bool isFolder = ParseIsFolder(childNode);
                     currentNodeId = new Guid(idAttribute.Value);
                     var objectInfo = new PersistedObjectInfo(
-                        elementName: ElementNameFactory.Create(childNode),
+                        category: childNode.LocalName,
                         id:currentNodeId ,
                         parentId: parentId,
                         isFolder: isFolder,
