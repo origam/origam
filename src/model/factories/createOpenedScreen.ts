@@ -12,7 +12,8 @@ export function createOpenedScreen(
   dontRequestData: boolean,
   dialogInfo: IDialogInfo | undefined,
   parameters: { [key: string]: any },
-  isSleeping?: boolean
+  isSleeping?: boolean,
+  isSleepingDirty?: boolean
 ): IOpenedScreen {
   return new OpenedScreen({
     menuItemId,
@@ -23,6 +24,7 @@ export function createOpenedScreen(
     dialogInfo,
     dontRequestData,
     parameters,
-    isSleeping
+    isSleeping,
+    isSleepingDirty
   });
 }

@@ -37,11 +37,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
-        debugger
         if (openedScreen.isSleeping) {
           openedScreen.isSleeping = false;
           const initUIResult = yield* this.initUIForScreen(openedScreen, false);
-          yield* openedScreen.content!.start(initUIResult);
+          yield* openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
         } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
@@ -76,7 +75,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         if (openedScreen.isSleeping) {
           openedScreen.isSleeping = false;
           const initUIResult = yield* this.initUIForScreen(openedScreen, false);
-          yield* openedScreen.content!.start(initUIResult);
+          yield* openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
         } else if (
           openedScreen.content &&
           openedScreen.content.formScreen &&
@@ -102,7 +101,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if (openedScreen.isSleeping) {
       openedScreen.isSleeping = false;
       const initUIResult = yield* this.initUIForScreen(openedScreen, false);
-      yield* openedScreen.content!.start(initUIResult);
+      yield* openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
     } else if (
       openedScreen.content &&
       openedScreen.content.formScreen &&
@@ -154,7 +153,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     parameters: { [key: string]: any },
     formSessionId?: string,
     isSessionRebirth?: boolean,
-    registerSession?: true //boolean,
+    isSleepingDirty?: boolean
   ) {
     const openedScreens = getOpenedScreens(this);
     const openedDialogScreens = getOpenedDialogScreens(this);
@@ -169,7 +168,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       dontRequestData,
       dialogInfo,
       parameters,
-      isSessionRebirth
+      isSessionRebirth,
+      isSleepingDirty
     );
     try {
       if (newScreen.dialogInfo) {
@@ -231,21 +231,23 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
 
-    getMainMenuItemById(this, "0");
-
     for (let session of portalInfo.sessions) {
       const menuItem = getMainMenuItemById(this, session.objectId);
-      yield* this.openNewForm(
-        session.objectId,
-        session.type,
-        menuItem.attributes.label, // TODO: Find in menu
-        menuItem.attributes.dontRequestData === "true", // TODO: Find in menu
-        undefined, // TODO: Find in... menu?
-        {},
-        session.formSessionId,
-        true,
-        true
-      );
+      if (menuItem) {
+        yield* this.openNewForm(
+          session.objectId,
+          session.type,
+          menuItem.attributes.label, // TODO: Find in menu
+          menuItem.attributes.dontRequestData === "true", // TODO: Find in menu
+          undefined, // TODO: Find in... menu?
+          {},
+          session.formSessionId,
+          true,
+          session.isDirty
+        );
+      } else {
+        console.log("No menu item for menuId", session.objectId);
+      }
     }
 
     const openedScreens = getOpenedScreens(this);
@@ -253,7 +255,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       openedScreens.activateItem(openedScreens.items[0].menuItemId, openedScreens.items[0].order);
       openedScreens.items[0].isSleeping = false;
       const initUIResult = yield* this.initUIForScreen(openedScreens.items[0], false);
-      yield* openedScreens.items[0].content!.start(initUIResult);
+      yield* openedScreens.items[0].content!.start(
+        initUIResult,
+        openedScreens.items[0].isSleepingDirty
+      );
     }
 
     const workQueues = getWorkQueues(this);

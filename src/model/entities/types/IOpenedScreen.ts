@@ -17,6 +17,7 @@ export interface IOpenedScreenData {
   content: IFormScreenEnvelope;
   parameters: { [key: string]: any };
   isSleeping?: boolean;
+  isSleepingDirty?: boolean;
 }
 
 export interface IOpenedScreen extends IOpenedScreenData {

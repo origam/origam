@@ -83,7 +83,7 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
   
 
   setFormScreen(formScreen?: IFormScreen): void;
-  start(initUIResult: any): Generator;
+  start(initUIResult: any, preloadIsDirty?: boolean): Generator;
 
   parent?: any;
 }
