@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import S from "./WebScreen.module.scss";
 import cx from "classnames";
 
@@ -23,6 +23,10 @@ export const WebScreen: React.FC<{
     return () => window.removeEventListener("mousedown", handleMousedown);
   }, []);
 
+  const refIFrame = useCallback((elm: any) => {
+    props.refIFrame && props.refIFrame(elm);
+  }, []);
+
   return (
     <div className={S.root}>
       {props.isLoading && (
@@ -33,7 +37,7 @@ export const WebScreen: React.FC<{
       <iframe
         onLoad={props.onLoad}
         onLoadStart={props.onLoadStart}
-        ref={props.refIFrame}
+        ref={refIFrame}
         className={S.webContent}
         src={props.url}
       />
