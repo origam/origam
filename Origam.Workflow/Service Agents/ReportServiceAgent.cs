@@ -113,7 +113,7 @@ namespace Origam.Workflow
 					if(! (this.Parameters["Report"] is Guid))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorReportNotGuild"));
 
-					if(! (this.Parameters["Data"] is XmlDocument | this.Parameters["Data"] == null))
+					if(! (this.Parameters["Data"] is IXmlContainer | this.Parameters["Data"] == null))
 						throw new InvalidCastException(ResourceUtils.GetString("ErrorNotXmlDocument"));
 
 					if(! (this.Parameters["PrinterName"] is string | this.Parameters["PrinterName"] == null))

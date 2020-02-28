@@ -118,6 +118,7 @@ namespace Origam.Workflow
             // Check input parameters
             if (this.Parameters["MessageId"] == null)
                 throw new InvalidCastException("MessageId must not be null.");
+            TraceLog("MessageId");
             _result = wqs.WorkQueueGetMessage((Guid)this.Parameters["MessageId"], this.TransactionId);
         }
 
@@ -128,10 +129,19 @@ namespace Origam.Workflow
                 throw new InvalidCastException("MessageId must not be null.");
             if (!(this.Parameters["QueueId"] is Guid))
                 throw new InvalidCastException("QueueId must be Guid.");
-
+            TraceLog("MessageId");
             wqs.WorkQueueRemove((Guid)this.Parameters["QueueId"], this.Parameters["MessageId"], this.TransactionId);
         }
 
+        private void TraceLog(string parameter)
+        {
+            ITracingService trace = ServiceManager.Services.GetService(typeof(ITracingService)) as ITracingService;
+            if (this.Trace && this.OutputMethod == ServiceOutputMethod.Ignore && ((Origam.Schema.AbstractSchemaItem)this.OutputStructure).Path == "_any")
+            {
+                trace.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, this.OutputMethod.ToString(), "Input", this.OutputStructure.Name,
+                    Workflow.WorkflowEngine.ContextData(this.Parameters[parameter]), "", null);
+            }
+        }
         private void Add(IWorkQueueService wqs)
         {
             // Check input parameters
@@ -161,7 +171,7 @@ namespace Origam.Workflow
                     i++;
                 }
             }
-
+            TraceLog("Data");
             wqs.WorkQueueAdd(this.Parameters["QueueName"] as String, this.Parameters["Data"] as IXmlContainer, attachments, this.TransactionId);
             _result = null;
         }

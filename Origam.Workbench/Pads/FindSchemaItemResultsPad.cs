@@ -238,6 +238,7 @@ namespace Origam.Workbench.Pads
 			}
 
 			string name = item.ModelDescription();
+			item.PersistenceProvider.RestrictToLoadedPackage(false);
 			string rootName = item.RootItem.ModelDescription();
 
 			if(name == null) name = item.ItemType;
@@ -248,7 +249,7 @@ namespace Origam.Workbench.Pads
                 referencePackages.Contains(item.SchemaExtensionId)?"Yes":"No"});
 			newItem.Tag = item;
 			newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);
-
+			item.PersistenceProvider.RestrictToLoadedPackage(true);
 			return newItem;
 		}
 		#endregion

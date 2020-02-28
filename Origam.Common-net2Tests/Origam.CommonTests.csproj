@@ -70,6 +70,7 @@
     <Compile Include="HttpToolsTests.cs" />
     <Compile Include="OrigamSettingsReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlReaderCoreTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Origam.Common.Nonstd\Origam.Common.NetFX.csproj">

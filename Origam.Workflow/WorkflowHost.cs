@@ -40,8 +40,6 @@ namespace Origam.Workflow
 
 		private static WorkflowHost _defaultHost = new WorkflowHost();
 
-		private AsThreadPool _threadPool = new AsThreadPool();
-      
 		private ArrayList _runningWorkflows = new ArrayList();
 		private Hashtable _runningForms = new Hashtable();
 		private bool _supportsUI = false;
@@ -90,7 +88,7 @@ namespace Origam.Workflow
             }
 			engine.Host = this;
 
-			return _threadPool.QueueUserWorkItemResult(new ThreadStart(engine.RunWorkflowFromHost), null);
+			return System.Threading.Tasks.Task.Run(() => engine.RunWorkflowFromHost());
 		}
 
 		internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
@@ -210,7 +208,6 @@ namespace Origam.Workflow
 
 		public void Dispose()
 		{
-			_threadPool.Dispose();
 		}
 
 		#endregion

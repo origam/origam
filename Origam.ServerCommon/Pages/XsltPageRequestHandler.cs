@@ -254,7 +254,7 @@ namespace Origam.ServerCommon.Pages
             string bodyKey = null;
             foreach (string key in parameters.Keys)
             {
-                if (parameters[key] is XmlDocument)
+                if (parameters[key] is IDataDocument)
                 {
                     bodyKey = key;
                     break;

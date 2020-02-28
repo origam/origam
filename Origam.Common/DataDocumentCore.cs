@@ -94,19 +94,7 @@ namespace Origam
 
         public void Load(XmlReader xmlReader, bool doProcessing)
         {
-            dataSet.ReadXml(doProcessing ? DoProcessing(xmlReader) : xmlReader);
-        }
-
-        private XmlReader DoProcessing(XmlReader xmlReader)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(xmlReader);
-            if (!string.IsNullOrEmpty(doc.OuterXml))
-            {
-                doc.RemoveAllEmptyAttributesAndNodes();
-               return XmlReader.Create(new StringReader(doc.OuterXml));
-            }
-            return xmlReader;
+            dataSet.ReadXml(doProcessing ? new XmlReaderCore(xmlReader) : xmlReader);
         }
 
         public void LoadXml(string xmlString)
