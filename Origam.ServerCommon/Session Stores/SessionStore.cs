@@ -50,7 +50,6 @@ using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.DA;
 using Origam.DA.Service;
-using Origam;
 using Origam.Schema.GuiModel;
 using Origam.Schema;
 using Origam.Schema.RuleModel;
@@ -1633,7 +1632,7 @@ namespace Origam.Server
 
         public virtual ArrayList DeleteObject(string entity, object id)
         {
-            lock (_lock)
+            lock(_lock)
             {
                 DataRow row = GetSessionRow(entity, id);
                 DataRow rootRow = DatasetTools.RootRow(row);
@@ -1649,23 +1648,23 @@ namespace Origam.Server
 
                 // get the parent rows for the rule handler in order to update them
                 ArrayList parentRows = new ArrayList();
-                foreach (DataRelation relation in row.Table.ParentRelations)
+                foreach(DataRelation relation in row.Table.ParentRelations)
                 {
                     parentRows.AddRange(row.GetParentRows(relation, DataRowVersion.Default));
                 }
-
+                bool isRowAggregated = DatasetTools.IsRowAggregated(row);
                 try
                 {
                     // .NET BUGFIX: Dataset does not refresh aggregated calculated columns on delete, we have to raise change event
-                    if (Origam.DA.DatasetTools.IsRowAggregated(row))
+                    if(isRowAggregated)
                     {
                         row.BeginEdit();
-                        foreach (DataColumn col in row.Table.Columns)
+                        foreach(DataColumn col in row.Table.Columns)
                         {
-                            if (col.ReadOnly == false & (col.DataType == typeof(int) | col.DataType == typeof(float) | col.DataType == typeof(decimal) | col.DataType == typeof(long)))
+                            if(col.ReadOnly == false & (col.DataType == typeof(int) | col.DataType == typeof(float) | col.DataType == typeof(decimal) | col.DataType == typeof(long)))
                             {
                                 object zero = Convert.ChangeType(0, col.DataType);
-                                if (!row[col].Equals(zero)) row[col] = 0;
+                                if(!row[col].Equals(zero)) row[col] = 0;
                             }
                         }
                         row.EndEdit();
@@ -1687,12 +1686,11 @@ namespace Origam.Server
 
 
                     // get the changes - from root - e.g. recalculated totals after deletion
-                    if (rootRow.Table.TableName != entity)
+                    if (isRowAggregated 
+                    || ((rootRow.Table.TableName != entity) &&
+                    _entityHasRuleDependencies[rootRow.Table.TableName]))
                     {
-                        if (_entityHasRuleDependencies[rootRow.Table.TableName])
-                        {
-                            listOfChanges.AddRange(GetChangesByRow(null, rootRow, 0, this.Data.HasErrors, this.Data.HasChanges()));
-                        }
+                        listOfChanges.AddRange(GetChangesByRow(null, rootRow, 0, this.Data.HasErrors, this.Data.HasChanges()));
                     }
 
                     // include the deletions
