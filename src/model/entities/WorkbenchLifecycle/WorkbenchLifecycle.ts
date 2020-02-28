@@ -123,11 +123,27 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           openedScreen.menuItemId,
           openedScreen.order
         );
+        openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
         if (closestScreen) {
           openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+
+          if (closestScreen.isSleeping) {
+            closestScreen.isSleeping = false;
+            const initUIResult = yield* this.initUIForScreen(closestScreen, false);
+            yield* closestScreen.content!.start(initUIResult, closestScreen.isSleepingDirty);
+          } else if (
+            closestScreen.content &&
+            closestScreen.content.formScreen &&
+            closestScreen.content.formScreen.refreshOnFocus &&
+            !closestScreen.content.isLoading
+          ) {
+            if (!getIsFormScreenDirty(closestScreen.content.formScreen)) {
+              yield* reloadScreen(closestScreen.content.formScreen)();
+            }
+          }
         }
       }
-      openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
+      
     } else {
       const openedScreens = getOpenedScreens(openedScreen);
       if (openedScreen.isActive) {
@@ -135,11 +151,27 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           openedScreen.menuItemId,
           openedScreen.order
         );
+        openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
         if (closestScreen) {
           openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+
+          if (closestScreen.isSleeping) {
+            closestScreen.isSleeping = false;
+            const initUIResult = yield* this.initUIForScreen(closestScreen, false);
+            yield* closestScreen.content!.start(initUIResult, closestScreen.isSleepingDirty);
+          } else if (
+            closestScreen.content &&
+            closestScreen.content.formScreen &&
+            closestScreen.content.formScreen.refreshOnFocus &&
+            !closestScreen.content.isLoading
+          ) {
+            if (!getIsFormScreenDirty(closestScreen.content.formScreen)) {
+              yield* reloadScreen(closestScreen.content.formScreen)();
+            }
+          }
         }
       }
-      openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
+      
     }
   }
 
