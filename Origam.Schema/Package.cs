@@ -195,7 +195,7 @@ namespace Origam.Schema
 		public List<PackageReference> References =>
 			PersistenceProvider
 				.RetrieveListByParent<PackageReference>(this.PrimaryKey,
-					"Package", "PackageReference", this.UseObjectCache);
+					"SchemaExtension", "PackageReference", this.UseObjectCache);
 
 		BrowserNodeCollection _childNodes = new BrowserNodeCollection();
 
