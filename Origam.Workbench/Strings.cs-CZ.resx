@@ -76,7 +76,7 @@
 		<value>Chyba</value>
 	</data>
 	<data name="ErrorNotSchemaExtension">
-		<value>Owner must be of type SchemaExtension</value>
+		<value>Owner must be of type Package</value>
 	</data>
 	<data name="ErrorEditObject">
 		<value>Cannot edit this object</value>

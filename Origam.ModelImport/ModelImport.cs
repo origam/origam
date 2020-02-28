@@ -267,7 +267,7 @@ namespace Origam.ModelImport
 				xmlReader = new XmlTextReader(xmlFile);
 				while(xmlReader.Read())
 				{
-					if(xmlReader.Name == "SchemaExtension")
+					if(xmlReader.Name == "Package")
 					{
 						ModelFileInfo modelFileInfo = new ModelFileInfo();
 						modelFileInfo.File = xmlFile;

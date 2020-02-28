@@ -244,9 +244,9 @@ namespace Origam.Workbench.Services
 
 #if ORIGAM_CLIENT
 			// if the imported packages are the same, they must be the same versions or higher
-			foreach(SchemaExtension current in list2)
+			foreach(Package current in list2)
 			{
-				foreach(SchemaExtension imported in list)
+				foreach(Package imported in list)
 				{
 					if(imported.PrimaryKey.Equals(current.PrimaryKey))
 					{

@@ -430,7 +430,7 @@ namespace Origam.Workbench.Commands
 
 						}						
 						ArrayList extensionIds = new ArrayList();
-						foreach(DataRow row in data.Tables["SchemaExtension"].Rows)
+						foreach(DataRow row in data.Tables["Package"].Rows)
 						{
 							extensionIds.Add(row["Id"]);
 						}
@@ -482,7 +482,7 @@ namespace Origam.Workbench.Commands
                         data.ReadXml(dialog.FileName);
                         data.EnforceConstraints = false;
 						ArrayList extensionIds = new ArrayList();
-						foreach(DataRow row in data.Tables["SchemaExtension"].Rows)
+						foreach(DataRow row in data.Tables["Package"].Rows)
 						{
 							extensionIds.Add(row["Id"]);
 						}

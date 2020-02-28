@@ -2385,7 +2385,7 @@ namespace OrigamArchitect
 			if(! AdministratorMode)
 			{
 				bool found = false;
-				foreach(SchemaExtension extension in _schema.LoadedPackages)
+				foreach(Package extension in _schema.LoadedPackages)
 				{
 					if((Guid)extension.PrimaryKey["Id"] == new Guid("147FA70D-6519-4393-B5D0-87931F9FD609"))
 					{
