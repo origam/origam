@@ -29,7 +29,22 @@ using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
-    internal class ExternalFileManager
+    public interface IExternalFileManager
+    {
+        string AddAndReturnLink(string fieldName, Guid objectId,
+            object data, ExternalFileExtension fileExtension);
+    }
+
+    public class NullExternalFileManager: IExternalFileManager
+    {
+        public string AddAndReturnLink(string fieldName, Guid objectId, object data,
+            ExternalFileExtension fileExtension)
+        {
+            return "DummyLink";
+        }
+    }
+
+    public class ExternalFileManager : IExternalFileManager
     {
         private readonly OrigamFile origamFile;
         private readonly OrigamPathFactory pathFactory;
