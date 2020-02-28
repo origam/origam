@@ -32,7 +32,7 @@
   @include hoverItemAnimation;
 
   &:hover {
-    font-weight: 700;
+    color: #4c84ff;
   }
   :global(.checkbox) {
     padding: 5px;
