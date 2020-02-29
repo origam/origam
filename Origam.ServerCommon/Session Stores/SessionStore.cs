@@ -1329,25 +1329,7 @@ namespace Origam.Server
             {
                 if (id != null)
                 {
-                    DataRow row;
-                    try
-                    {
-                        row = GetSessionRow(entity, id);
-                        if (row != null)
-                        {
-                            result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
-                            continue;
-                        }
-                        else
-                        {
-                            notFoundIds.Add(id.ToString(), id);
-                        }
-                    }
-                    catch
-                    {
-                        // not found in the session, save it for later
-                        notFoundIds.Add(id.ToString(), id);
-                    }
+                    notFoundIds.Add(id.ToString(), id);
                 }
             }
 
@@ -1365,8 +1347,12 @@ namespace Origam.Server
                     dataStructureEntityId, DataListFilterSetId, notFoundIds.Values.ToArray());
                 foreach (DataRow row in loadedRows)
                 {
-                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
-                    notFoundIds.Remove(row["Id"].ToString());
+                    RowSecurityState rowSecurity = this.RuleEngine.RowLevelSecurityState(row, profileId);
+                    if (rowSecurity != null)
+                    {
+                        result.Add(rowSecurity);
+                        notFoundIds.Remove(row["Id"].ToString());
+                    }
                 }
                 // mark records not found as not found and put them into output as well
                 notFoundIds.Values.ForEach(id => result.Add(new RowSecurityState
