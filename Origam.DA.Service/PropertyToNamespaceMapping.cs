@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 using Origam.DA.Common;
+using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 
@@ -22,8 +23,8 @@ namespace Origam.DA.Service
                 .Concat( new []{instance.GetType()})
                 .Select(type => new PropertyMapping(
                     propertyNames: GetXmlPropertyNames(type),
-                    xmlNamespace: MakeXmlNameSpace(type),
-                    xmlNamespaceName: MakeNamespaceName(type)))
+                    xmlNamespace: XmlNamespaceTools.GetXmlNameSpace(type),
+                    xmlNamespaceName: XmlNamespaceTools.GetXmlNamespaceName(type)))
                 .ToList();
 
             var mappingForTheInstanceType = propertyMappings.Last();
@@ -47,22 +48,6 @@ namespace Origam.DA.Service
                     Attribute.IsDefined(prop, typeof(XmlReferenceAttribute)))
                 .Select(prop => prop.Name)
                 .ToList();
-        }
-    
-        private static string MakeXmlNameSpace(Type type)
-        {
-            Version currentClassVersion = Versions.GetCurrentClassVersion(type);
-            return $"http://schemas.origam.com/{type.FullName}/{currentClassVersion}";
-        }
-
-        private static string MakeNamespaceName(Type type)
-        {
-            var charArray = type.Name
-                .Where(char.IsUpper)
-                .Select(char.ToLower)
-                .ToArray();
-            string namespaceName = new string(charArray);
-            return namespaceName;
         }
         
         private class PropertyMapping
@@ -95,6 +80,41 @@ namespace Origam.DA.Service
                                                   .FirstOrDefault(mapping => mapping.PropertyNames.Contains(propertyName))
                                               ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\"");
             return propertyMapping.XmlNamespace;
+        }
+    }
+
+    static class XmlNamespaceTools
+    {
+        private static readonly Dictionary<Type, string> namespaces 
+            =  new Dictionary<Type, string>();
+        private static readonly Dictionary<Type, string> namespaceNames
+            =  new Dictionary<Type, string>();
+        public static string GetXmlNameSpace(Type type)
+        {
+            if (namespaces.ContainsKey(type)) return namespaces[type];
+            
+            Version currentClassVersion = Versions.GetCurrentClassVersion(type);
+            string xmlNameSpace = $"http://schemas.origam.com/{type.FullName}/{currentClassVersion}";
+            namespaces[type] = xmlNameSpace;
+            return xmlNameSpace;
+        }
+
+        public static string GetXmlNamespaceName(Type type)
+        {
+            if (namespaceNames.ContainsKey(type)) return namespaceNames[type];
+            if (type.GetCustomAttribute(typeof(XmlNamespaceNameAttribute)) 
+                is XmlNamespaceNameAttribute attribute)
+            {
+                return attribute.XmlNamespaceName;
+            }
+            
+            var charArray = type.Name
+                .Where(char.IsUpper)
+                .Select(char.ToLower)
+                .ToArray();
+            string xmlNamespaceName = new string(charArray);
+            namespaceNames[type]= xmlNamespaceName;
+            return xmlNamespaceName;
         }
     }
 }

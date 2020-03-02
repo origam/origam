@@ -21,11 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using Origam.Schema;
 
 namespace Origam.DA.Service
 {
     public class GroupFileData : ObjectFileData
     {
+        private static readonly string GroupXpath = $"//{XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup))}:group";
         public Guid GroupId { get; }
         public override Folder FolderToDetermineParentGroup => Folder.Parent;
         public override Folder FolderToDetermineReferenceGroup => Folder.Parent;
@@ -36,7 +38,7 @@ namespace Origam.DA.Service
             string groupIdStr = 
                 xmlFileData
                     ?.XmlDocument
-                    ?.SelectSingleNode("//sig:group",xmlFileData.NamespaceManager)
+                    ?.SelectSingleNode(GroupXpath,xmlFileData.NamespaceManager)
                     ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
                     ?.Value 
                 ?? throw new Exception($"Could not read group id from: {FileInfo.FullName}");

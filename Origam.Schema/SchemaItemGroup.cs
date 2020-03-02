@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA;
+using Origam.DA.Common.ObjectPersistence.Attributes;
 
 namespace Origam.Schema
 {
@@ -39,6 +40,7 @@ namespace Origam.Schema
 	[EntityName("SchemaItemGroup")]
     [XmlModelRoot("group")]
     [ClassMetaVersion("1.0.0")]
+	[XmlNamespaceName("g")]
     public class SchemaItemGroup : AbstractPersistent, IBrowserNode2, 
         ISchemaItemFactory, ISchemaItemProvider, IComparable, IFilePersistent
 	{

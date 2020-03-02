@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.Xml;
+using Origam.DA.Common;
+using Origam.Schema;
 
 namespace Origam.DA.Service
 {
@@ -36,8 +38,10 @@ namespace Origam.DA.Service
             FileInfo = fileInfo;
             NamespaceManager = new XmlNamespaceManager(XmlDocument.NameTable);       
             NamespaceManager.AddNamespace("x",OrigamFile.ModelPersistenceUri);
-            NamespaceManager.AddNamespace("p",OrigamFile.PackageUri);
-            NamespaceManager.AddNamespace("sig",OrigamFile.GroupUri);
+            NamespaceManager.AddNamespace(
+                XmlNamespaceTools.GetXmlNamespaceName(typeof(Package)),OrigamFile.PackageUri);
+            NamespaceManager.AddNamespace(
+                XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup)),OrigamFile.GroupUri);
         }
     }
 }
