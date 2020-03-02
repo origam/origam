@@ -16,10 +16,8 @@ namespace Origam.DA.Service
         public OrigamXmlDocument()
         {
             string xml = string.Format(
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?><x:file xmlns:x=\"{0}\" xmlns=\"{1}\" xmlns:p=\"{2}\"/>",
-                OrigamFile.ModelPersistenceUri,
-                OrigamFile.GroupUri,
-                OrigamFile.PackageUri);
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?><x:file xmlns:x=\"{0}\"/>",
+                OrigamFile.ModelPersistenceUri);
             LoadXml(xml);
         }
 

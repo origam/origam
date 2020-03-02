@@ -76,10 +76,6 @@ namespace Origam.DA.Service
         public static string ReadType(XmlReader xmlReader)
         {
             return xmlReader.NamespaceURI.Split('/')[3];
-
-            return xmlReader.GetAttribute(
-                OrigamFile.TypeAttribute,
-                OrigamFile.ModelPersistenceUri);
         }
     }
 }
