@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.OrigamEngine;
@@ -47,7 +48,7 @@ namespace Origam.DA.Service
         public static readonly string PackageUri =
             $"http://schemas.origam.com/Origam.Schema.Package/{VersionProvider.CurrentPackageMeta}";
         public static readonly string GroupUri =
-           "http://schemas.origam.com/Origam.Schema.SchemaItemGroup/1.0.0";
+           $"http://schemas.origam.com/Origam.Schema.SchemaItemGroup/{Versions.GetCurrentClassVersion(typeof(SchemaItemGroup))}";
         public static readonly string PackageCategory ="package";
         public static readonly string GroupCategory = "group";
 
