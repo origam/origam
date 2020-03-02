@@ -1328,7 +1328,25 @@ namespace Origam.Server
             {
                 if (id != null)
                 {
-                    notFoundIds.Add(id.ToString(), id);
+                    DataRow row;
+                    try
+                    {
+                        row = GetSessionRow(entity, id);
+                        if (row != null)
+                        {
+                            result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                            continue;
+                        }
+                        else
+                        {
+                            notFoundIds.Add(id.ToString(), id);
+                        }
+                    }
+                    catch
+                    {
+                        // not found in the session, save it for later
+                        notFoundIds.Add(id.ToString(), id);
+                    }
                 }
             }
 
