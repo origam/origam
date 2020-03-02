@@ -19,9 +19,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+using System.Collections.Generic;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Origam.DA;
+using Origam.Schema.EntityModel;
+using Origam.Schema.MenuModel;
+using Origam.Server;
+using Origam.ServerCore.Extensions;
+using Origam.ServerCore.Model.UIService;
+using Origam.Workbench.Services;
 
 namespace Origam.ServerCore.Controller
 {
@@ -30,24 +40,111 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public abstract class AbstractController: ControllerBase
     {
+        protected class EntityData
+        {
+            public FormReferenceMenuItem MenuItem { get; set; }
+            public DataStructureEntity Entity { get; set; }
+        }
+        // ReSharper disable once InconsistentNaming
         protected readonly ILogger<AbstractController> log;
-
-        public AbstractController(ILogger<AbstractController> log)
+        protected AbstractController(ILogger<AbstractController> log)
         {
             this.log = log;
         }
-
-        public MenuLookupIndex MenuLookupIndex {
+        protected static MenuLookupIndex MenuLookupIndex {
             get
             {
-                string allowedLookups = "AllowedLookups";
-                if (!OrigamUserContext.Context.ContainsKey(allowedLookups))
+                const string allowedLookups = "AllowedLookups";
+                if(!OrigamUserContext.Context.ContainsKey(allowedLookups))
                 {
-                    OrigamUserContext.Context.Add(allowedLookups, new MenuLookupIndex());
+                    OrigamUserContext.Context.Add(
+                        allowedLookups, new MenuLookupIndex());
                 }
-                var lookupIndex = (MenuLookupIndex)OrigamUserContext.Context[allowedLookups];
+                var lookupIndex = (MenuLookupIndex)OrigamUserContext.Context[
+                    allowedLookups];
                 return lookupIndex;
             }
+        }
+        protected IActionResult RunWithErrorHandler(Func<IActionResult> func)
+        {
+            try
+            {
+                return func();
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                return NotFound(ex.ActualValue);
+            }
+            catch (SessionExpiredException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+        protected Result<FormReferenceMenuItem, IActionResult> Authorize(
+            FormReferenceMenuItem menuItem)
+        {
+            return SecurityManager.GetAuthorizationProvider().Authorize(
+                User, menuItem.Roles)
+                ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
+                : Result.Fail<FormReferenceMenuItem, IActionResult>(Forbid());
+        }
+        protected Result<T,IActionResult> FindItem<T>(Guid id) where T : class
+        {
+            return !(ServiceManager.Services
+                .GetService<IPersistenceService>()
+                .SchemaProvider
+                .RetrieveInstance(typeof(T), new Key(id)) is T instance)
+                ? Result.Fail<T, IActionResult>(
+                    NotFound("Object with requested id not found."))
+                : Result.Ok<T, IActionResult>(instance);
+        }
+        protected Result<EntityData, IActionResult> GetEntityData(
+            Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
+        {
+            return FindEntity(dataStructureEntityId)
+                .OnSuccess(entity 
+                    => new EntityData {MenuItem = menuItem, Entity = entity});
+        }
+        protected Result<EntityData, IActionResult> CheckEntityBelongsToMenu(
+            EntityData entityData)
+        {
+            return (entityData.MenuItem.Screen.DataStructure.Id 
+                == entityData.Entity.RootEntity.ParentItemId)
+                ? Result.Ok<EntityData, IActionResult>(entityData)
+                : Result.Fail<EntityData, IActionResult>(
+                    BadRequest("The requested Entity does not belong to the menu."));
+        }
+        protected Result<RowData, IActionResult> GetRow(
+            IDataService dataService,
+            DataStructureEntity entity, Guid dataStructureEntityId,
+            Guid methodId, Guid rowId)
+        {
+            var rows = SessionStore.LoadRows(dataService, entity, 
+                dataStructureEntityId, methodId, new List<Guid> { rowId });
+            if(rows.Count == 0)
+            {
+                return Result.Fail<RowData, IActionResult>(
+                    NotFound("Requested data row was not found."));
+            }
+            return Result.Ok<RowData, IActionResult>(
+                new RowData{Row = rows[0], Entity = entity});
+        }
+        protected IActionResult UnwrapReturnValue(
+            Result<IActionResult, IActionResult> result)
+        {
+            return result.IsSuccess ? result.Value : result.Error;
+        }
+        private Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
+        {
+            return FindItem<DataStructureEntity>(id)
+                .OnFailureCompensate(error =>
+                    Result.Fail<DataStructureEntity, IActionResult>(
+                        NotFound("Requested DataStructureEntity not found. " 
+                        + error.GetMessage())));
         }
     }
 }
