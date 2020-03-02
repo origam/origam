@@ -1,10 +1,7 @@
 import { IDataView } from "./IDataView";
 import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
-import {
-  IFormScreenLifecycle,
-  IFormScreenLifecycle02
-} from "./IFormScreenLifecycle";
+import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
 
 /*
@@ -80,7 +77,6 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
 
   isLoading: boolean;
   formScreen?: IFormScreen;
-  
 
   setFormScreen(formScreen?: IFormScreen): void;
   start(initUIResult: any, preloadIsDirty?: boolean): Generator;
@@ -115,6 +111,7 @@ export interface IFormScreen extends IFormScreenData {
 
   isLoading: false;
   rootDataViews: IDataView[];
+  nonRootDataViews: IDataView[];
   dontRequestData: boolean;
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];

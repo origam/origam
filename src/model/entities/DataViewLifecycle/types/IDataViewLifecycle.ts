@@ -7,6 +7,10 @@ export interface IDataViewLifecycle extends IDataViewLifecycleData {
   navigateChildren(): Generator;
   navigateAsChild(): Generator;
   start(): void;
+
+  startSelectedRowReaction(fireImmediatelly?: boolean): void;
+  stopSelectedRowReaction(): void;
+
   parent?: any;
 }
 

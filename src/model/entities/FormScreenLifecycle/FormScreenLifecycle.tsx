@@ -252,28 +252,45 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *loadData(selectFirstRow: boolean) {
+    const api = getApi(this);
+    const formScreen = getFormScreen(this);
     try {
       this.inFlow++;
-      const api = getApi(this);
-      const formScreen = getFormScreen(this);
+      for (let dataView of formScreen.nonRootDataViews) {
+        dataView.dataTable.clear();
+        dataView.setSelectedRowId(undefined);
+        dataView.lifecycle.stopSelectedRowReaction();
+      }
       for (let rootDataView of formScreen.rootDataViews) {
-        const loadedData = yield api.getRows({
-          MenuId: getMenuItemId(rootDataView),
-          SessionFormIdentifier: getSessionId(this),
-          DataStructureEntityId: getDataStructureEntityId(rootDataView),
-          Filter: "",
-          Ordering: [],
-          RowLimit: 999999,
-          ColumnNames: getColumnNamesToLoad(rootDataView),
-          MasterRowId: undefined
-        });
+        rootDataView.saveViewState();
         rootDataView.dataTable.clear();
-        rootDataView.dataTable.setRecords(loadedData);
-        if (selectFirstRow) {
-          rootDataView.selectFirstRow();
+        rootDataView.setSelectedRowId(undefined);
+        rootDataView.lifecycle.stopSelectedRowReaction();
+        try {
+          const loadedData = yield api.getRows({
+            MenuId: getMenuItemId(rootDataView),
+            SessionFormIdentifier: getSessionId(this),
+            DataStructureEntityId: getDataStructureEntityId(rootDataView),
+            Filter: "",
+            Ordering: [],
+            RowLimit: 999999,
+            ColumnNames: getColumnNamesToLoad(rootDataView),
+            MasterRowId: undefined
+          });
+          rootDataView.dataTable.setRecords(loadedData);
+          if (selectFirstRow) {
+            rootDataView.selectFirstRow();
+          }
+          //debugger
+          rootDataView.restoreViewState();
+        } finally {
+          rootDataView.lifecycle.startSelectedRowReaction(true);
         }
       }
     } finally {
+      for (let dataView of formScreen.nonRootDataViews) {
+        dataView.lifecycle.startSelectedRowReaction();
+      }
       this.inFlow--;
     }
   }
@@ -347,8 +364,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *saveSession() {
-    if(getIsSuppressSave(this)) {
-      return
+    if (getIsSuppressSave(this)) {
+      return;
     }
     try {
       this.inFlow++;
@@ -365,13 +382,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *refreshSession() {
     // TODO: Refresh lookups and rowstates !!!
     try {
-      getFormScreen(this).dataViews.forEach(dv => dv.saveViewState());
       this.inFlow++;
       if (this.isReadData) {
+        getFormScreen(this).dataViews.forEach(dv => dv.saveViewState());
         const api = getApi(this);
         const result = yield api.refreshSession(getSessionId(this));
         yield* this.applyData(result, false);
         getFormScreen(this).setDirty(false);
+        getFormScreen(this).dataViews.forEach(dv => dv.restoreViewState());
       } else {
         yield* this.loadData(false);
       }
@@ -381,7 +399,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         console.log(getFormScreen(this).dataViews.map(dv => !dv.isWorking));
         await when(() => this.allDataViewsSteady);
         console.log("Refreshing view state.");
-        getFormScreen(this).dataViews.forEach(dv => dv.restoreViewState());
       }, 10);
     }
     yield* clearRowStates(this)();

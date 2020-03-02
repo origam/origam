@@ -55,6 +55,10 @@ export class FormScreen implements IFormScreen {
     return this.dataViews.filter(dv => dv.isBindingRoot);
   }
 
+  @computed get nonRootDataViews(): IDataView[] {
+    return this.dataViews.filter(dv => !dv.isBindingRoot);
+  }
+
   @action.bound setTitle(title: string) {
     this.title = title;
   }
