@@ -44,9 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Origam.Schema.GuiModel;
-using System.Web;
 using System.Xml.XPath;
-using System.Xml;
 using Origam.Rule;
 using System.Data;
 using Origam.Workbench.Services;
@@ -54,16 +52,13 @@ using Origam.DA;
 using Origam.JSON;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
-using Microsoft.AspNetCore.Http;
-using Origam;
 using Origam.Server;
-using Origam.ServerCommon;
 
 namespace Origam.ServerCommon.Pages
 {
     class XsltPageRequestHandler : AbstractPageRequestHandler
     {
-        private const string  MIME_JSON = "application/json";
+        private const string MIME_JSON = "application/json";
         private const string MIME_HTML = "text/html";
         private const string MIME_OCTET_STREAM = "application/octet-stream";
 
@@ -171,42 +166,44 @@ namespace Origam.ServerCommon.Pages
                         isProcessed = true;
                     }
                 }
-
-                if (xpath)
+                if (!isProcessed)
                 {
-                    // subset of the returned xml - json | html not supported
-                    // it is mainly used for extracting pure text out of the result xml
-                    // so json | html serialization would have to be produced by the
-                    // xslt or stored directly in the resulting data
-                    XPathNavigator nav = result.Xml.CreateNavigator();
-                    nav.Select(xsltPage.ResultXPath);
+                    if (xpath)
+                    {
+                        // subset of the returned xml - json | html not supported
+                        // it is mainly used for extracting pure text out of the result xml
+                        // so json | html serialization would have to be produced by the
+                        // xslt or stored directly in the resulting data
+                        XPathNavigator nav = result.Xml.CreateNavigator();
+                        nav.Select(xsltPage.ResultXPath);
 
-                    if (page.MimeType == MIME_OCTET_STREAM)
-                    {
-                        byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
-                        response.AddHeader("Content-Length", bytes.LongLength.ToString());
-                        response.BinaryWrite(bytes);
-                    }
-                    else
-                    {
-                        response.AddHeader("Content-Length", nav.Value.Length.ToString());
-                        response.Write(nav.Value);
-                    }
-                }
-                else
-                {
-                    if (page.MimeType == MIME_JSON)
-                    {
-                        response.WriteToOutput(textWriter =>
-                            JsonUtils.SerializeToJson(textWriter, result.Xml, xsltPage.OmitJsonRootElement));
-                    }
-                    else
-                    {
-                        if (page.MimeType == MIME_HTML)
+                        if (page.MimeType == MIME_OCTET_STREAM)
                         {
-                            response.Write("<!DOCTYPE html>");
+                            byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
+                            response.AddHeader("Content-Length", bytes.LongLength.ToString());
+                            response.BinaryWrite(bytes);
                         }
-                        response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
+                        else
+                        {
+                            response.AddHeader("Content-Length", nav.Value.Length.ToString());
+                            response.Write(nav.Value);
+                        }
+                    }
+                    else
+                    {
+                        if (page.MimeType == MIME_JSON)
+                        {
+                            response.WriteToOutput(textWriter =>
+                                JsonUtils.SerializeToJson(textWriter, result.Xml, xsltPage.OmitJsonRootElement));
+                        }
+                        else
+                        {
+                            if (page.MimeType == MIME_HTML)
+                            {
+                                response.Write("<!DOCTYPE html>");
+                            }
+                            response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
+                        }
                     }
                 }
             }
