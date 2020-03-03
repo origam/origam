@@ -441,9 +441,16 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                sessionObjects.UIService.SaveFavorites(input);
+                ServerCoreUIService.SaveFavorites(input);
                 return Ok();
             });
+        }
+        [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        public IActionResult PendingChanges(Guid sessionFormIdentifier)
+        {
+            return RunWithErrorHandler(() => Ok(
+                sessionObjects.UIService.GetPendingChanges(
+                    sessionFormIdentifier)));
         }
         #endregion
         private Dictionary<object, string> GetLookupLabelsInternal(

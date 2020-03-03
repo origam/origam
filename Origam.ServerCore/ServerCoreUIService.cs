@@ -700,7 +700,7 @@ namespace Origam.ServerCore
                 input.InstanceId, "splitPanel", 0, 
                 input.Position, false);
         }
-        public void SaveFavorites(SaveFavoritesInput input)
+        public static void SaveFavorites(SaveFavoritesInput input)
         {
             var profile = SecurityTools.CurrentUserProfile();
             // save favorites
@@ -734,6 +734,13 @@ namespace Origam.ServerCore
             core.DataService.StoreData(
                 new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
                 favorites, false, null);
+        }
+        public ArrayList GetPendingChanges(Guid sessionFormIdentifier)
+        {
+            var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            var changes = sessionStore.PendingChanges;
+            sessionStore.PendingChanges = null;
+            return changes ?? new ArrayList();
         }
         private static bool IsRowDirty(DataRow row)
         {
