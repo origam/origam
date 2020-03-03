@@ -1,23 +1,29 @@
+import bind from "bind-decorator";
+import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
+import { handleError } from "model/actions/handleError";
 import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelope";
 import { createOpenedScreen } from "model/factories/createOpenedScreen";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getApi } from "model/selectors/getApi";
 import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
-import { getOpenedDialogScreens } from "model/selectors/getOpenedDialogScreens";
 import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 import { getMainMenuEnvelope } from "model/selectors/MainMenu/getMainMenuEnvelope";
+import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
+import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
 import { findMenu } from "xmlInterpreters/menuXml";
 import { MainMenuContent } from "../MainMenu";
-import { DialogInfo, OpenedScreen } from "../OpenedScreen";
+import { DialogInfo } from "../OpenedScreen";
 import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
-import { handleError } from "model/actions/handleError";
-import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
-import bind from "bind-decorator";
-import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
-import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { WebScreen } from "../WebScreen";
-import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
+
+export enum IRefreshOnReturnType {
+  None = "None",
+  ReloadActualRecord = "ReloadActualRecord",
+  RefreshCompleteForm = "RefreshCompleteForm",
+  MergeModalDialogChanges = "MergeModalDialogChanges"
+}
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
@@ -117,7 +123,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *closeForm(openedScreen: IOpenedScreen): Generator {
     // TODO: Refactor to get rid of code duplication
     if (openedScreen.dialogInfo) {
-      const openedScreens = getOpenedDialogScreens(openedScreen);
+      const openedScreens = getOpenedScreens(openedScreen);
       if (openedScreen.isActive) {
         const closestScreen = openedScreens.findClosestItem(
           openedScreen.menuItemId,
@@ -134,7 +140,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           } else if (
             closestScreen.content &&
             closestScreen.content.formScreen &&
-            closestScreen.content.formScreen.refreshOnFocus &&
+            (closestScreen.content.formScreen.refreshOnFocus ||
+              openedScreen.content.refreshOnReturnType ===
+                IRefreshOnReturnType.RefreshCompleteForm) &&
             !closestScreen.content.isLoading
           ) {
             if (!getIsFormScreenDirty(closestScreen.content.formScreen)) {
@@ -143,7 +151,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       }
-      
     } else {
       const openedScreens = getOpenedScreens(openedScreen);
       if (openedScreen.isActive) {
@@ -171,7 +178,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       }
-      
     }
   }
 
@@ -185,12 +191,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     parameters: { [key: string]: any },
     formSessionId?: string,
     isSessionRebirth?: boolean,
-    isSleepingDirty?: boolean
+    isSleepingDirty?: boolean,
+    refreshOnReturnType?: IRefreshOnReturnType
   ) {
     const openedScreens = getOpenedScreens(this);
-    const openedDialogScreens = getOpenedDialogScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
-    const newFormScreen = createFormScreenEnvelope(formSessionId);
+    const newFormScreen = createFormScreenEnvelope(formSessionId, refreshOnReturnType);
     const newScreen = createOpenedScreen(
       id,
       type,
@@ -204,16 +210,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       isSleepingDirty
     );
     try {
-      if (newScreen.dialogInfo) {
-        openedDialogScreens.pushItem(newScreen);
-        if (!isSessionRebirth) {
-          openedDialogScreens.activateItem(newScreen.menuItemId, newScreen.order);
-        }
-      } else {
-        openedScreens.pushItem(newScreen);
-        if (!isSessionRebirth) {
-          openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
-        }
+      openedScreens.pushItem(newScreen);
+      if (!isSessionRebirth) {
+        openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
       }
 
       if (isSessionRebirth) {

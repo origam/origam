@@ -1,17 +1,24 @@
+import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, computed, observable, autorun, flow, when, reaction } from "mobx";
+import { action, autorun, computed, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { handleError } from "model/actions/handleError";
+import { clearRowStates } from "model/actions/RowStates/clearRowStates";
+import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { IAction } from "model/entities/types/IAction";
 import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
 import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
 import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
+import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { getDialogStack } from "model/selectors/getDialogStack";
+import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import React from "react";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
@@ -21,16 +28,6 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
-import { getMenuItemType } from "model/selectors/getMenuItemType";
-import { IMainMenuItemType } from "../types/IMainMenu";
-import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
-import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
-import { handleError } from "model/actions/handleError";
-import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
-import _ from "lodash";
-import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
-import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,

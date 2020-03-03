@@ -11,6 +11,7 @@ export class OpenedScreens implements IOpenedScreens {
 
   @action.bound
   pushItem(item: IOpenedScreen): void {
+    item.stackPosition = this.maxStackPosition + 1;
     this.items.push(item);
     item.parent = this;
   }
@@ -25,10 +26,11 @@ export class OpenedScreens implements IOpenedScreens {
 
   @action.bound activateItem(menuItemId: string, order: number) {
     this.items.forEach(item => item.setActive(false));
-    const item = this.items.find(
-      item => item.menuItemId === menuItemId && item.order === order
-    );
-    item && item.setActive(true);
+    const item = this.items.find(item => item.menuItemId === menuItemId && item.order === order);
+    if (item) {
+      item.setActive(true);
+      item.stackPosition = this.maxStackPosition + 1;
+    }
   }
 
   @computed get activeItem(): IOpenedScreen | undefined {
@@ -47,19 +49,18 @@ export class OpenedScreens implements IOpenedScreens {
     return result;
   }
 
+  @computed get maxStackPosition() {
+    return Math.max(...this.items.map(item => item.stackPosition));
+  }
+
   findLastExistingItem(menuItemId: string): IOpenedScreen | undefined {
     const items = this.items.filter(item => item.menuItemId === menuItemId);
     items.sort((a, b) => a.order - b.order);
     return items.slice(-1)[0];
   }
 
-  findClosestItem(
-    menuItemId: string,
-    order: number
-  ): IOpenedScreen | undefined {
-    let idx = this.items.findIndex(
-      item => item.menuItemId === menuItemId && item.order === order
-    );
+  findClosestItem(menuItemId: string, order: number): IOpenedScreen | undefined {
+    let idx = this.items.findIndex(item => item.menuItemId === menuItemId && item.order === order);
     if (idx === -1 || this.items.length === 1) {
       return undefined;
     }

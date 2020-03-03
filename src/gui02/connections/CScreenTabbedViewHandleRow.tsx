@@ -1,14 +1,13 @@
-import React from "react";
-import { observer } from "mobx-react";
-import { MobXProviderContext } from "mobx-react";
 import { TabbedViewHandle } from "gui02/components/TabbedView/TabbedViewHandle";
 import { TabbedViewHandleRow } from "gui02/components/TabbedView/TabbedViewHandleRow";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
-import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
-import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
+import { MobXProviderContext, observer } from "mobx-react";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
+import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
+import { IWorkbench } from "model/entities/types/IWorkbench";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
+import React from "react";
 
 @observer
 export class CScreenTabbedViewHandleRow extends React.Component {
@@ -19,7 +18,8 @@ export class CScreenTabbedViewHandleRow extends React.Component {
   }
 
   getLabel(item: IOpenedScreen) {
-    const text = /*!item.content.isLoading
+    const text =
+      /*!item.content.isLoading
       ? item.content.formScreen!.title
       :*/ item.title;
     const order = item.order > 0 ? `[${item.order}]` : "";
@@ -27,7 +27,7 @@ export class CScreenTabbedViewHandleRow extends React.Component {
   }
 
   render() {
-    const openedScreenItems = getOpenedScreenItems(this.workbench);
+    const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
 
     return (
       <TabbedViewHandleRow>

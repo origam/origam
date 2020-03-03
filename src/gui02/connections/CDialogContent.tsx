@@ -1,8 +1,7 @@
-import React from "react";
-import { observer } from "mobx-react";
-import { MobXProviderContext } from "mobx-react";
-import { getOpenedDialogItems } from "model/selectors/getOpenedDialogItems";
 import { DialogScreen } from "gui/Workbench/ScreenArea/ScreenArea";
+import { MobXProviderContext, observer } from "mobx-react";
+import { getOpenedDialogScreenItems } from "model/selectors/getOpenedDialogScreenItems";
+import React from "react";
 
 @observer
 export class CDialogContent extends React.Component {
@@ -13,14 +12,11 @@ export class CDialogContent extends React.Component {
   }
 
   render() {
-    const openedDialogItems = getOpenedDialogItems(this.workbench);
+    const openedDialogItems = getOpenedDialogScreenItems(this.workbench);
     return (
       <>
         {openedDialogItems.map(item => (
-          <DialogScreen
-            openedScreen={item}
-            key={`${item.menuItemId}@${item.order}`}
-          />
+          <DialogScreen openedScreen={item} key={`${item.menuItemId}@${item.order}`} />
         ))}
       </>
     );

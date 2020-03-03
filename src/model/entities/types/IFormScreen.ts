@@ -3,6 +3,7 @@ import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
 import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
+import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
 
 /*
 export interface ILoadedFormScreenData {
@@ -70,6 +71,7 @@ export const isILoadedFormScreen = (o: any): o is ILoadedFormScreen =>
 export interface IFormScreenEnvelopeData {
   formScreenLifecycle: IFormScreenLifecycle02;
   preloadedSessionId?: string;
+  refreshOnReturnType?: IRefreshOnReturnType;
 }
 
 export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {

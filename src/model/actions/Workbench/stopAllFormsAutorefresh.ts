@@ -1,4 +1,3 @@
-import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
 import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 import { stopAutoreload } from "../FormScreen/stopAutoreload";
 
