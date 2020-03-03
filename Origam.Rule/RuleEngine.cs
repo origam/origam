@@ -3078,7 +3078,7 @@ namespace Origam.Rule
 					_ruleColumnChanges[ColumnKey(columnChanged)] = columnChanged;
 				}
 
-				rules.Sort();
+				rules.Sort(new ProcessRuleComparer());
 
 				if(rules.Count > 0)
 				{
@@ -6139,5 +6139,23 @@ namespace Origam.Rule
 		private bool valid;
 	}
 
-#endregion
+	#endregion
+
+	#region IComparer Members
+	public class ProcessRuleComparer : IComparer
+	{
+		int IComparer.Compare(Object x, Object y)
+		{
+			if ((x as DataStructureRule) != null && (y as DataStructureRule) != null)
+			{
+				return (x as DataStructureRule).Priority.CompareTo((y as DataStructureRule).Priority);
+			}
+			else
+			{
+				// rulesets are always an top, so rules are greater
+				return 1;
+			}
+		}
+	}
+    #endregion
 }
