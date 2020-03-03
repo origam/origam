@@ -222,15 +222,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }*/
 
-  *destroyUI() {
-    try {
-      this.inFlow++;
-      const api = getApi(this);
-      yield api.destroyUI({ FormSessionId: getSessionId(this) });
-    } finally {
-      this.inFlow--;
-    }
-  }
+
 
   *applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
@@ -444,7 +436,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.inFlow++;
       this.clearAutorefreshInterval();
       this.disposers.forEach(disposer => disposer());
-      yield* this.destroyUI();
       yield* closeForm(this)();
     } finally {
       this.inFlow--;

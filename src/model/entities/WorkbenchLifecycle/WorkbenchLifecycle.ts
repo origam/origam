@@ -17,6 +17,7 @@ import { IMainMenuItemType } from "../types/IMainMenu";
 import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 import { WebScreen } from "../WebScreen";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -122,14 +123,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   *closeForm(openedScreen: IOpenedScreen): Generator {
     // TODO: Refactor to get rid of code duplication
+    const openedScreens = getOpenedScreens(openedScreen);
+    const closestScreen = openedScreens.findClosestItem(
+      openedScreen.menuItemId,
+      openedScreen.order
+    );
+    openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     if (openedScreen.dialogInfo) {
-      const openedScreens = getOpenedScreens(openedScreen);
       if (openedScreen.isActive) {
-        const closestScreen = openedScreens.findClosestItem(
-          openedScreen.menuItemId,
-          openedScreen.order
-        );
-        openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
         if (closestScreen) {
           openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
 
@@ -152,13 +153,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         }
       }
     } else {
-      const openedScreens = getOpenedScreens(openedScreen);
       if (openedScreen.isActive) {
-        const closestScreen = openedScreens.findClosestItem(
-          openedScreen.menuItemId,
-          openedScreen.order
-        );
-        openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
         if (closestScreen) {
           openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
 
@@ -177,6 +172,19 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             }
           }
         }
+      }
+    }
+
+    yield* this.destroyUI(openedScreen);
+  }
+
+  *destroyUI(openedScreen: IOpenedScreen) {
+    const api = getApi(this);
+    if (openedScreen.content) {
+      if (openedScreen.content.formScreen) {
+        yield api.destroyUI({ FormSessionId: getSessionId(openedScreen.content.formScreen) });
+      } else if (openedScreen.content.preloadedSessionId) {
+        yield api.destroyUI({ FormSessionId: openedScreen.content.preloadedSessionId });
       }
     }
   }
