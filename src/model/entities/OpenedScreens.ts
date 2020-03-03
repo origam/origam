@@ -50,7 +50,7 @@ export class OpenedScreens implements IOpenedScreens {
   }
 
   @computed get maxStackPosition() {
-    return Math.max(...this.items.map(item => item.stackPosition));
+    return Math.max(...this.items.map(item => item.stackPosition), 0);
   }
 
   findLastExistingItem(menuItemId: string): IOpenedScreen | undefined {

@@ -20,7 +20,7 @@ export class OpenedScreen implements IOpenedScreen {
     this.content.parent = this;
   }
 
-  stackPosition: number = 0;
+  @observable stackPosition: number = 0;
   @observable isActive = false;
   dontRequestData: boolean = false;
   menuItemId: string = "";
