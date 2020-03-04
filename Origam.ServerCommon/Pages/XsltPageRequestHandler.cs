@@ -53,6 +53,7 @@ using Origam.JSON;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Server;
+using System.Linq;
 
 namespace Origam.ServerCommon.Pages
 {
@@ -114,6 +115,7 @@ namespace Origam.ServerCommon.Pages
                 if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON 
                     && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
+                    CheckRowState(data, ruleEngine);
                     // pure dataset > json serialization
                     response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
                     xmlData = null;
@@ -240,6 +242,28 @@ namespace Origam.ServerCommon.Pages
                         properties[current.Name] = current.Value;
                     } while (current.MoveToNextAttribute());
                     Analytics.Instance.Log(type, message, properties);
+                }
+            }
+        }
+
+        private void CheckRowState(DataSet data, RuleEngine ruleEngine)
+        {
+            DataTableCollection datatables = data.Tables;
+            object profileId = SecurityTools.CurrentUserProfile().Id;
+
+            foreach (DataTable dt in datatables)
+            {
+                if (dt.Rows.Count > 0)
+                {
+                    RowSecurityState rowSecurity = ruleEngine.RowLevelSecurityState(dt.Rows[0], profileId);
+                    if (rowSecurity != null)
+                    {
+                        List<FieldSecurityState> listState = rowSecurity.Columns.Cast<FieldSecurityState>().Where(columnState => !columnState.AllowRead).ToList();
+                        foreach (FieldSecurityState securityState in listState)
+                        {
+                            dt.Columns.Remove(securityState.Name);
+                        }
+                    }
                 }
             }
         }
