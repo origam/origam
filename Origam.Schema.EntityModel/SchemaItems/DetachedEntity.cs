@@ -29,7 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Virtual Entity", "icon_virtual-entity.png")]
     [HelpTopic("Entities")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DetachedEntity : AbstractDataEntity
 	{
 		public DetachedEntity() : base() {}

@@ -31,7 +31,7 @@ namespace Origam.Schema
 	[SchemaItemDescription("Feature", "icon_feature.png")]
     [HelpTopic("Features")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class Feature : AbstractSchemaItem
 	{
 		public const string CategoryConst = "Feature";

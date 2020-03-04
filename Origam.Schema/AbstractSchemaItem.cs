@@ -38,7 +38,7 @@ namespace Origam.Schema
     /// any class that is contained under schema versions.
     /// </summary>
     [EntityName("SchemaItem", "TargetType")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem, 
         IBrowserNode2, ISchemaItemFactory, ICloneable, IComparable, 
         ISchemaItemConvertible, INotifyPropertyChanged, IFilePersistent

@@ -37,7 +37,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Dynamic Field Label", "Dynamic Labels", 5)]
     [HelpTopic("Dynamic+Field+Labels")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 	{
 		public EntityFieldDynamicLabel() : base(){}

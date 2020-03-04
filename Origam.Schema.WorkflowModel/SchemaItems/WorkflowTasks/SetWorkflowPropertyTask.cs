@@ -46,7 +46,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Set Workflow Property", "Tasks", "task-set-workflow-property.png")]
     [HelpTopic("Set+Workflow+Property+Task")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class SetWorkflowPropertyTask : AbstractWorkflowStep, ISchemaItemFactory
 	{
 		public SetWorkflowPropertyTask() : base() {}

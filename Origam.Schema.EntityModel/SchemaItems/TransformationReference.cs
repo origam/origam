@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Transformation+Reference")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Transformation")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class TransformationReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "TransformationReference";

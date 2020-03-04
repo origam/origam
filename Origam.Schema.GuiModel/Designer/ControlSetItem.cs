@@ -32,7 +32,7 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
    [SchemaItemDescription("Alternative", "Alternatives", "icon_alternative.png")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ControlSetItem  : AbstractSchemaItem, ISchemaItemFactory 
 	{
 

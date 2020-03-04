@@ -27,7 +27,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Pie Chart", "icon_pie-chart.png")]
     [HelpTopic("Pie+Charts")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class PieChart : AbstractChart
 	{
 		public PieChart() : base() {Init();}

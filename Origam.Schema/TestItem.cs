@@ -28,7 +28,7 @@ namespace Origam.Schema
 	/// <summary>
 	/// Summary description for TestItem.
 	/// </summary>
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class TestItem : AbstractSchemaItem
 	{
 		public TestItem() : base() {}

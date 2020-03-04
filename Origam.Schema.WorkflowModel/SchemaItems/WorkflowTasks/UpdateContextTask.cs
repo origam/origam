@@ -33,7 +33,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Update context by Xpath", "Tasks", "task-update-context-by-xpath.png")]
     [HelpTopic("Update+Context+Task")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class UpdateContextTask : AbstractWorkflowStep, ISchemaItemFactory
 	{
 		public UpdateContextTask() : base()

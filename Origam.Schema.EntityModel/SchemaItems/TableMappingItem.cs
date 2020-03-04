@@ -40,7 +40,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Database Entity", "icon_database-entity.png")]
     [HelpTopic("Entities")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class TableMappingItem : AbstractDataEntity
 	{
 		public TableMappingItem() : base() {}

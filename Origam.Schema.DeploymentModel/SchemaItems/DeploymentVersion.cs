@@ -46,7 +46,7 @@ namespace Origam.Schema.DeploymentModel
 	[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
     [HelpTopic("Deployment+Version")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DeploymentVersion : AbstractSchemaItem, ISchemaItemFactory, IDeploymentVersion
 	{
 		IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;

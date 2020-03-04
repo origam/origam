@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Screen", "icon_screen.png")]
     [HelpTopic("Screens")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class FormControlSet : AbstractControlSet
 	{
 		public const string CategoryConst = "FormControlSet";

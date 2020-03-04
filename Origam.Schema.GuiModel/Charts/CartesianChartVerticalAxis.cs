@@ -31,7 +31,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Vertical Axis", "Vertical Axes", "icon_vertical-axis.png")]
     [HelpTopic("Vertical+Axis")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class CartesianChartVerticalAxis : AbstractSchemaItem
 	{
 		public const string CategoryConst = "CartesianChartVerticalAxis";

@@ -32,7 +32,7 @@ namespace Origam.Schema.RuleModel
 	/// <summary>
 	/// Summary description for XslRule.
 	/// </summary>
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class XslRule : AbstractRule
 	{
 		public XslRule() : base()

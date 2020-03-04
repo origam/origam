@@ -29,7 +29,7 @@ namespace Origam.Schema.TestModel
 	/// Summary description for TestCaseAlternative.
 	/// </summary>
 	[SchemaItemDescription("Alternative", "Alternatives", 27)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class TestCaseAlternative : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "TestCaseAlternative";

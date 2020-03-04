@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Sort Set", "Sort Sets", "icon_sort-set.png")]
     [HelpTopic("Sort+Sets")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureSortSet : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "DataStructureSortSet";

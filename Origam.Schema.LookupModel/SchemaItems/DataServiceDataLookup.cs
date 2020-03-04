@@ -29,7 +29,7 @@ namespace Origam.Schema.LookupModel
 	/// </summary>
 	[SchemaItemDescription("Data Service Lookup", "icon_lookup.png")]
     [HelpTopic("Lookups")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataServiceDataLookup : AbstractDataLookup
 	{
 		public DataServiceDataLookup() : base() {}

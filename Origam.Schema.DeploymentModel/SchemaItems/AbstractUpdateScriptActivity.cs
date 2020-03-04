@@ -33,7 +33,7 @@ namespace Origam.Schema.DeploymentModel
     /// Summary description for AbstractUpdateScriptActivity.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "DeploymentUpdateScriptActivity";

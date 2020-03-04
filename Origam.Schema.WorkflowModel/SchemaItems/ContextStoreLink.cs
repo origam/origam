@@ -41,7 +41,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Context Mapping", "Context Mappings", "context-mapping.png")]
     [HelpTopic("Workflow+Call+Context+Mapping")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ContextStoreLink : AbstractSchemaItem
 	{
 		public const string CategoryConst = "ContextStoreLink";

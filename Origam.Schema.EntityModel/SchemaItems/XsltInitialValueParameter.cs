@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     /// </summary>
     [SchemaItemDescription("Xslt Initial Value Parameter", "Parameters", "icon_xslt-initial-value-parameter.png")]
     [HelpTopic("Xslt+Initial+ValueParameter")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class XsltInitialValueParameter : SchemaItemParameter
     {
         private List<OrigamDataType> osArray ;

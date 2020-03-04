@@ -38,7 +38,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Image", "icon_image.png")]
     [HelpTopic("Images")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class Graphics : AbstractSchemaItem
 	{
 		public const string CategoryConst = "Graphics";

@@ -30,7 +30,7 @@ namespace Origam.Schema.LookupModel
 	[SchemaItemDescription("Data Service Tooltip", 
         "icon_data-service-tooltip.png")]
     [HelpTopic("Tooltips")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataServiceDataTooltip : AbstractDataTooltip
 	{
 		public DataServiceDataTooltip() : base() {}

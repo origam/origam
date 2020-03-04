@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Relationships")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("RelatedEntity")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityRelationItem : AbstractSchemaItem, IAssociation, ISchemaItemFactory
 	{
 		public EntityRelationItem() : base(){}

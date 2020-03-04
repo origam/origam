@@ -39,7 +39,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
     [HelpTopic("System+Function+Call")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class SystemFunctionCall : AbstractSchemaItem
 	{
 		public const string CategoryConst = "SystemFunctionCall";

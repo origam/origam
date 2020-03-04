@@ -34,7 +34,7 @@ namespace Origam.Schema.GuiModel
     [HelpTopic("Report+Reference")]
     [DefaultProperty("Report")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class ReportReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "ReportReference";

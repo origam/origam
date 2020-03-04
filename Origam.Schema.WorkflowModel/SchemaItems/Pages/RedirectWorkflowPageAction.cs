@@ -32,7 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Redirect", "Actions", "redirect.png")]
     [HelpTopic("Redirect+Action")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class RedirectWorkflowPageAction : AbstractWorkflowPageAction
 	{
 		public RedirectWorkflowPageAction() : base() {}

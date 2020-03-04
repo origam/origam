@@ -27,7 +27,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Cartesian Chart", "icon_cartesian-chart.png")]
     [HelpTopic("Cartesian+Charts")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class CartesianChart : AbstractChart
 	{
 		public CartesianChart() : base() {Init();}

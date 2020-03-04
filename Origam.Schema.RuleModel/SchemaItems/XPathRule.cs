@@ -33,7 +33,7 @@ namespace Origam.Schema.RuleModel
 	/// Summary description for XPathRule.
 	/// </summary>
 	[SchemaItemDescription("Start Rule", "icon_27_rules.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class XPathRule : AbstractRule
 	{
 		public XPathRule() : base() {}

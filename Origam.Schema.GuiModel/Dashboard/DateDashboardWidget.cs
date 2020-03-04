@@ -26,7 +26,7 @@ using System;
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Date Widget", "icon_date-widget.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DateDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public DateDashboardWidget() : base() {Init();}

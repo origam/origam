@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Keyboard Shortcut", "icon_shortcut.png")]
     [HelpTopic("Keyboard+Shortcuts")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class KeyboardShortcut : AbstractSchemaItem
 	{
 		public const string CategoryConst = "KeyboardShortcut";

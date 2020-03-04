@@ -37,7 +37,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Widget", "icon_widget.png")]
     [HelpTopic("Widgets")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "Control";

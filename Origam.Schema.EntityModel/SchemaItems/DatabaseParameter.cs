@@ -27,7 +27,7 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.EntityModel
 {
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DatabaseParameter : SchemaItemParameter, IDatabaseDataTypeMapping
     {
         public DatabaseParameter() : base() { }

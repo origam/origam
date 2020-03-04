@@ -36,7 +36,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
     [HelpTopic("Lookup+Field")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class LookupField : AbstractSchemaItem, IDataEntityColumn
 	{
 		public const string CategoryConst = "DataEntityColumn";

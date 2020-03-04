@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
         "icon_template-set.png")]
     [HelpTopic("Template+Sets")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureTemplateSet : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "DataStructureTemplateSet";

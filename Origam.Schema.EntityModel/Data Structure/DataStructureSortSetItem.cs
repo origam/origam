@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Sort Field", "icon_sort-field.png")]
     [HelpTopic("Sort+Field")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureSortSetItem : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureSortSetItem";

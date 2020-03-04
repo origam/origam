@@ -35,7 +35,7 @@ namespace Origam.Schema.DeploymentModel
 	[SchemaItemDescription("Service Command Update Activity", 
         "icon_service-command-update-activity.png")]
     [HelpTopic("Service+Command+Update+Activity")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
 	{
 		public ServiceCommandUpdateScriptActivity() : base()

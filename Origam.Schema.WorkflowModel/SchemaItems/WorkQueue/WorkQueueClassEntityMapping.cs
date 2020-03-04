@@ -33,7 +33,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Input Mapping", "Input Mappings", "input-mapping.png")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "WorkQueueClassEntityMapping";

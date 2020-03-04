@@ -36,7 +36,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Report Action", "UI Actions", "icon_report-action.png")]
     [HelpTopic("Report+Action")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityReportAction : EntityUIAction
 	{
 		public EntityReportAction() : base() {}

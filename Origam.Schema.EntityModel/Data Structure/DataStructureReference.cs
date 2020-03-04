@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Data+Structure+Reference")]
 	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("DataStructure")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public  class DataStructureReference : AbstractSchemaItem, IDataStructureReference
 	{
 		public const string CategoryConst = "DataStructureReference";

@@ -33,7 +33,7 @@ namespace Origam.Schema
 	[SchemaItemDescription("String", "icon_string.png")]
     [HelpTopic("String+Library")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class StringItem : AbstractSchemaItem
 	{
 		public const string CategoryConst = "String";

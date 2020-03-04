@@ -35,7 +35,7 @@ namespace Origam.Schema.MenuModel
         "icon_client-script-invocation.png")]
     [HelpTopic("Client+Script")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityWorkflowActionScriptCall : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntityWorkflowActionScriptCall";

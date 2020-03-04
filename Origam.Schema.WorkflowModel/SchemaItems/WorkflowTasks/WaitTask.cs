@@ -32,7 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Wait", "Tasks", "task-wait-2.png")]
     [HelpTopic("Wait+Task")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WaitTask : AbstractWorkflowStep
 	{
 		public WaitTask() : base() {}

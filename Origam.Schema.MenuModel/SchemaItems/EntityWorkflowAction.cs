@@ -38,7 +38,7 @@ namespace Origam.Schema.MenuModel
 	[SchemaItemDescription("Sequential Workflow Action", "UI Actions",
         "icon_sequential-workflow-action.png")]
     [HelpTopic("Sequential+Workflow+Action")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityWorkflowAction : EntityUIAction
 	{
 		public EntityWorkflowAction() : base() { Init();}

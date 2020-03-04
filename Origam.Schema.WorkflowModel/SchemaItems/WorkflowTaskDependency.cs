@@ -34,7 +34,7 @@ namespace Origam.Schema.WorkflowModel
     [HelpTopic("Workflow+Task+Dependency")]
     [DefaultProperty("Task")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkflowTaskDependency : AbstractSchemaItem
 	{
 		public const string CategoryConst = "WorkflowTaskDependency";

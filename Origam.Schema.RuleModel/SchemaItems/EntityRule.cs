@@ -30,7 +30,7 @@ namespace Origam.Schema.RuleModel
 {
     [SchemaItemDescription("Entity Rule", "entity-rule.png")]
     [HelpTopic("Entity+Rule")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityRule : XPathRule, IEntityRule
     {
 

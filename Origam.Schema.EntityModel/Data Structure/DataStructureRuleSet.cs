@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Rule Set", "Rule Sets", "icon_rule-set.png")]
     [HelpTopic("Rule+Sets")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureRuleSet : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "DataStructureRuleSet";

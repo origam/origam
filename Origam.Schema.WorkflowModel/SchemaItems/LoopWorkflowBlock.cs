@@ -34,7 +34,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Block) Loop", "Tasks", "block-loop-1.png")]
     [HelpTopic("Loop+Block")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class LoopWorkflowBlock : AbstractWorkflowBlock
 	{
 		public LoopWorkflowBlock() : base() {}

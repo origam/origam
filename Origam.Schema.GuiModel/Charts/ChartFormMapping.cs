@@ -32,7 +32,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Screen Mapping", "Screen Mappings", "icon_screen-mapping.png")]
     [HelpTopic("Chart+Screen+Mapping")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class ChartFormMapping : AbstractSchemaItem
 	{
 		public const string CategoryConst = "ChartFormMapping";

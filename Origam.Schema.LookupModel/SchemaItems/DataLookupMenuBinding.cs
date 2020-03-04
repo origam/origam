@@ -37,7 +37,7 @@ namespace Origam.Schema.LookupModel
     [HelpTopic("Menu+Bindings")]
 	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("MenuItem")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataLookupMenuBinding : AbstractSchemaItem, IAuthorizationContextContainer, IComparable
 	{
 		public const string CategoryConst = "DataLookupMenuBinding";

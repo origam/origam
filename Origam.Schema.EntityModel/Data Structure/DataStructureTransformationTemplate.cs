@@ -33,7 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Transformation Template", 
         "icon_transformation-template.png")]
     [HelpTopic("Template+Set+Template")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureTransformationTemplate : DataStructureTemplate
 	{
 		public DataStructureTransformationTemplate() : base(){}

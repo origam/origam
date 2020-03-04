@@ -26,7 +26,7 @@ namespace Origam.Schema.RuleModel
 {
     [SchemaItemDescription("Validation Rule Lookup XPath", "validation-rule-lookup-xpath.png")]
     [HelpTopic("Validation+Rule+Lookup+XPath")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EndRuleLookupXPath : XPathRule, IEndRule
     {
         public EndRuleLookupXPath() : base() {}

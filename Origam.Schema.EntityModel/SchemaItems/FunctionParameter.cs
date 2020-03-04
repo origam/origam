@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Parameter", 15)]
     [HelpTopic("Function+Parameter")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class FunctionParameter : AbstractSchemaItem
 	{
 		public const string CategoryConst = "FunctionParameter";

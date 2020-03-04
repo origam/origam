@@ -36,7 +36,7 @@ namespace Origam.Schema.MenuModel
 	[SchemaItemDescription("Search Data Source", 9)]
     [HelpTopic("Search Data Sources")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
     {
 		public const string CategoryConst = "SearchDataSource";

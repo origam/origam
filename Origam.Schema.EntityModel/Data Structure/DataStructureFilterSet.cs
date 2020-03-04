@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Filter Set", "Filter Sets", "icon_filter-set.png")]
     [HelpTopic("Filter+Sets")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureFilterSet : DataStructureMethod, ISchemaItemFactory
 	{
 		public DataStructureFilterSet() : base() {}

@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Lookup Reference", "icon_lookup-reference.png")]
     [HelpTopic("Lookup+Reference")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityFilterLookupReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntityFilterLookupReference";

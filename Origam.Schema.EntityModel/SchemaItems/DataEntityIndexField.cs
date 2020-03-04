@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Index+Field")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataEntityIndexField : AbstractSchemaItem
 	{
 		public DataEntityIndexField() : base(){}

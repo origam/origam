@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Row+Level+Security+Filters")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Filter")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntitySecurityFilterReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntitySecurityFilterReference";

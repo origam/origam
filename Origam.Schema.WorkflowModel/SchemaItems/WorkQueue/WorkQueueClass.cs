@@ -34,7 +34,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Work Queue Class", "work-queue-class.png")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "WorkQueueClass";

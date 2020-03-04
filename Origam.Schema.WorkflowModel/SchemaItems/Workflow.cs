@@ -36,7 +36,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Sequential Workflow", "sequential-workflow.png")]
     [HelpTopic("Sequential+Workflows")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class Workflow : AbstractSchemaItem, IWorkflow
 	{
 		public const string CategoryConst = "Workflow";

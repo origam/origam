@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Folder", 68)]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DashboardWidgetFolder : AbstractDashboardWidget
 	{
 		public DashboardWidgetFolder() : base() {Init();}

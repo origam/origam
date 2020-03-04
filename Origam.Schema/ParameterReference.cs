@@ -33,7 +33,7 @@ namespace Origam.Schema
     [HelpTopic("Parameter+Reference")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Parameter")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ParameterReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "ParameterReference";

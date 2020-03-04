@@ -40,7 +40,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
     [HelpTopic("Indexes")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataEntityIndex : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public DataEntityIndex() : base(){}

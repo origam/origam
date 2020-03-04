@@ -30,7 +30,7 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel
 {
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class AbstractDataDashboardWidget : AbstractDashboardWidget, IDataStructureReference
 	{
 		public AbstractDataDashboardWidget() : base() {Init();}

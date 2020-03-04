@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Pie Series", "Data Series", "icon_pie-series.png")]
     [HelpTopic("Pie+Series")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class PieSeries : AbstractSeries
 	{
 		public PieSeries() : base() {Init();}

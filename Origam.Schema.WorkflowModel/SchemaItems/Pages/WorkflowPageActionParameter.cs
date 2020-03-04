@@ -30,7 +30,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Parameter", "Parameters", 17)]
     [HelpTopic("Action+Parameter")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class WorkflowPageActionParameter : AbstractSchemaItem
 	{
 		public WorkflowPageActionParameter() : base() {Init();}

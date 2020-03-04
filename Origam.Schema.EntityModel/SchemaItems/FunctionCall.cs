@@ -33,7 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Function Call", "Fields", "icon_function-call.png")]
     [HelpTopic("Function+Call+Field")]
     [DefaultProperty("Function")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class FunctionCall : AbstractDataEntityColumn, ISchemaItemFactory
 	{
 		public FunctionCall() : base() {}

@@ -32,7 +32,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Default Set", "Default Sets", "icon_default-set.png")]
     [HelpTopic("Default+Set+Default")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureDefaultSet : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "DataStructureDefaultSet";

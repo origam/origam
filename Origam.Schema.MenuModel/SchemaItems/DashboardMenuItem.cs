@@ -28,7 +28,7 @@ namespace Origam.Schema.MenuModel
 	/// Summary description for Submenu.
 	/// </summary>
 	[SchemaItemDescription("Dashboard", "icon_dashboard.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DashboardMenuItem : AbstractMenuItem, ISchemaItemFactory
 	{
 		public DashboardMenuItem() : base() {}

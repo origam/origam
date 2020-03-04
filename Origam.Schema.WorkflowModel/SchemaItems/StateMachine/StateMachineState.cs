@@ -44,7 +44,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("State", "States", "state.png")]
     [HelpTopic("State")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class StateMachineState : AbstractSchemaItem
 	{
 		public const string CategoryConst = "StateMachineState";

@@ -31,7 +31,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Horizontal Axis", "Horizontal Axes", "icon_horizontal-axis.png")]
     [HelpTopic("Horizontal+Axis")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class CartesianChartHorizontalAxis : AbstractSchemaItem
 	{
 		public const string CategoryConst = "CartesianChartHorizontalAxis";

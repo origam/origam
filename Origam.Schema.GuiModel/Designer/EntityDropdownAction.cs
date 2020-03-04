@@ -32,7 +32,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Dropdown Action", "UI Actions", 
         "icon_dropdown-action.png")]
     [HelpTopic("DropDown+Action")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityDropdownAction : EntityUIAction
 	{
 		public EntityDropdownAction() : base() {Init();}

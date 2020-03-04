@@ -29,7 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for ScheduleGroup.
 	/// </summary>
 	[SchemaItemDescription("Schedule Group", "schedule-group.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ScheduleGroup : AbstractScheduleTime
 	{
 		public ScheduleGroup() : base() {}

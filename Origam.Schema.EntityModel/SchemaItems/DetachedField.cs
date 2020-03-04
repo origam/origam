@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Virtual Field", "Fields", "icon_virtual-field.png")]
     [HelpTopic("Virtual+Field")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DetachedField : AbstractDataEntityColumn, IRelationReference
 	{
 		public DetachedField() : base() {}

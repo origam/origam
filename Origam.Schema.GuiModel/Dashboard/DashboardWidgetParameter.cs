@@ -31,7 +31,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Parameter", "Parameters", 29)]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DashboardWidgetParameter : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DashboardWidgetParameter";

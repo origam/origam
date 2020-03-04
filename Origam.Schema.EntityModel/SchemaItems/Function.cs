@@ -39,7 +39,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Function", "icon_10_functions.png")]
     [HelpTopic("Functions")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class Function : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "Function";

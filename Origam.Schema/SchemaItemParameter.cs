@@ -31,7 +31,7 @@ namespace Origam.Schema
 	/// </summary>
 	[SchemaItemDescription("Parameter", "Parameters", "icon_parameter.png")]
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class SchemaItemParameter : AbstractSchemaItem
 	{
 		public const string CategoryConst = "Parameter";

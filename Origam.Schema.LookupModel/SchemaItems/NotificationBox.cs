@@ -33,7 +33,7 @@ namespace Origam.Schema.LookupModel
 	[SchemaItemDescription("Notification Box", "icon_notification-box.png")]
     [HelpTopic("Notification+Boxes+And+Tooltips")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class NotificationBox : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "NotificationBox";

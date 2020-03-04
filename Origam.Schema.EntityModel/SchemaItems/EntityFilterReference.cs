@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Filter+Reference")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Filter")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityFilterReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntityFilterReference";

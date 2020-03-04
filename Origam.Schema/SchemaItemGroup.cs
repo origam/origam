@@ -39,7 +39,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaItemGroup")]
     [XmlModelRoot("group")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	[XmlNamespaceName("g")]
     public class SchemaItemGroup : AbstractPersistent, IBrowserNode2, 
         ISchemaItemFactory, ISchemaItemProvider, IComparable, IFilePersistent

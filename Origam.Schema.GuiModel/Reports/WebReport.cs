@@ -32,7 +32,7 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("Web Report", "icon_web-report.png")]
     [HelpTopic("Web+Report")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WebReport : AbstractReport
 	{	
 		public WebReport() : base(){}

@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("File Mapping", "Parameter Mappings", 29)]
     [HelpTopic("File+Mapping")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class PageParameterFileMapping : PageParameterMapping
 	{
 		public PageParameterFileMapping() : base() {Init();}

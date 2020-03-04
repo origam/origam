@@ -28,7 +28,7 @@ namespace Origam.Schema.RuleModel
 {
     [SchemaItemDescription("Condition Rule", "condition-rule.png")]
     [HelpTopic("Condition+Rule")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class StartRule : XPathRule, IStartRule
     {
         public StartRule() : base() {}

@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Relationship+Filter")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Filter")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityRelationFilter : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntityRelationFilter";

@@ -32,7 +32,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Dynamic Menu", "icon_dynamic-menu.png")]
     [HelpTopic("Dynamic+Menu")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DynamicMenu : AbstractMenuItem, ISchemaItemFactory
 	{
 		public DynamicMenu() : base() {}

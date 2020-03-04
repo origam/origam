@@ -38,7 +38,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Block) Transaction", "Tasks", "block-transaction.png")]
     [HelpTopic("Transaction+Block")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class TransactionWorkflowBlock : AbstractWorkflowBlock, IWorkflowTransaction
 	{
 		public TransactionWorkflowBlock() : base() {}

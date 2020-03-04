@@ -43,7 +43,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) User Interface", "Tasks", "task-user-interface.png")]
     [HelpTopic("User+Interface+Task")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class UIFormTask : WorkflowTask, ISchemaItemFactory
 	{
 		public UIFormTask() : base()

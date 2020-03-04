@@ -33,7 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Parameter", 15)]
     [HelpTopic("Function+Call+Field")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class FunctionCallParameter : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "FunctionCallParameter";

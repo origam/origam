@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("OR Expression", 2)]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureFilterSetOrExpression : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "DataStructureFilterSetFilter";

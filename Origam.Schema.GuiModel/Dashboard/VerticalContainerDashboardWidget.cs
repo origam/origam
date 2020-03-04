@@ -27,7 +27,7 @@ using Origam.DA.ObjectPersistence;
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Vertical Container", "icon_vertical-container.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class VerticalContainerDashboardWidget : AbstractDashboardWidget
 	{
 		public VerticalContainerDashboardWidget() : base() {Init();}

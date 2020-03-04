@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Column Series", "Data Series", "icon_column-series.png")]
     [HelpTopic("Column+Series")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ColumnSeries : AbstractCartesianSeries
 	{
 		public ColumnSeries() : base() {Init();}

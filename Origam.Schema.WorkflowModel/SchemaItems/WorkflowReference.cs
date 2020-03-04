@@ -34,7 +34,7 @@ namespace Origam.Schema.WorkflowModel
     [HelpTopic("Sequential+Workflow+Reference")]
     [DefaultProperty("Workflow")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkflowReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "WorkflowReference";

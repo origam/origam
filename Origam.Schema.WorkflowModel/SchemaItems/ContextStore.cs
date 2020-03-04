@@ -36,7 +36,7 @@ namespace Origam.Schema.WorkflowModel
     [HelpTopic("Context+Store")]
     [DefaultProperty("Structure")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ContextStore : AbstractSchemaItem, IContextStore
 	{
 		public const string CategoryConst = "ContextStore";

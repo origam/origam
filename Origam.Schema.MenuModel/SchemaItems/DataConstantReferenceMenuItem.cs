@@ -33,7 +33,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Data Constant Reference", "menu_parameter.png")]
     [HelpTopic("Data+Constant+Menu+Item")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataConstantReferenceMenuItem : AbstractMenuItem
 	{
 		public DataConstantReferenceMenuItem() : base() {}

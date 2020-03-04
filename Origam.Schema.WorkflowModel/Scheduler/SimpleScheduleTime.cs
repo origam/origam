@@ -33,7 +33,7 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for SimpleScheduleTime.
 	/// </summary>
 	[SchemaItemDescription("Simple Schedule", "simple-schedule-1.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class SimpleScheduleTime : AbstractScheduleTime
 	{
 		public SimpleScheduleTime() : base() {}

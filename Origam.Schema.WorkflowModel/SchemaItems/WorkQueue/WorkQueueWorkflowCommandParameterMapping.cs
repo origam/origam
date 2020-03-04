@@ -31,7 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkQueueWorkflowCommandParameterMapping : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "WorkQueueWorkflowCommandParameterMapping";

@@ -39,7 +39,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Parameter", "Parameters", "parameter-mapping-blm.png")]
     [HelpTopic("Service+Method+Call+Parameter")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ServiceMethodCallParameter : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "ServiceMethodCallParameter";

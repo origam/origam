@@ -29,7 +29,7 @@ using Origam.Schema.EntityModel;
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Lookup Widget", "icon_lookup-widget.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class LookupDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public LookupDashboardWidget() : base() {Init();}

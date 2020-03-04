@@ -34,7 +34,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Block) For-each", "Tasks", "block-for-each.png")]
     [HelpTopic("For-Each+Block")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ForeachWorkflowBlock : AbstractWorkflowBlock
 	{
 		public ForeachWorkflowBlock() : base() {}

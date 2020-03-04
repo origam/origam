@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
     [SchemaItemDescription("Style Property", "Style Properties", "icon_style-property.png")]
     [HelpTopic("Styles")]
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class ControlStyleProperty : AbstractSchemaItem
     {
         public const string CategoryConst = "ControlStyleProperty";

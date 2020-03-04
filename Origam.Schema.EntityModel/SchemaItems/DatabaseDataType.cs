@@ -31,7 +31,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Database+Data+Type")]
     [DefaultProperty("DataType")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public  class DatabaseDataType : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DatabaseDataType";

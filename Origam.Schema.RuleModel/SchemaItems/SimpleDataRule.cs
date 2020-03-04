@@ -27,7 +27,7 @@ namespace Origam.Schema.RuleModel
 {
     [SchemaItemDescription("Simple Data Rule", "simple-data-rule.png")]
     [HelpTopic("Simple+Data+Rule")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class SimpleDataRule : XPathRule, IDataRule
     {
         public SimpleDataRule() : base() {}

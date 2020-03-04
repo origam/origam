@@ -33,7 +33,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Service", "service.png")]
     [HelpTopic("Services")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class Service : AbstractSchemaItem, IService, ISchemaItemFactory
 	{
 		public const string CategoryConst = "Service";

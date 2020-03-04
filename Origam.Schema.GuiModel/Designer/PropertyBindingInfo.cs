@@ -34,7 +34,7 @@ namespace Origam.Schema.GuiModel
     /// </summary>
     /// 
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class PropertyBindingInfo : AbstractPropertyValueItem
 	{
 		public const string CategoryConst = "PropertyBindingInfo";

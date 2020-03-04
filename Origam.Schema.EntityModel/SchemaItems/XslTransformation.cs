@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
 
 	[SchemaItemDescription("XSL Transformation (XSLT)", "xsl-transformation.png")]
     [HelpTopic("Transformations")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class XslTransformation : AbstractTransformation
 	{
         public XslTransformation() : base()

@@ -34,7 +34,7 @@ namespace Origam.Schema.MenuModel
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", 3)]
     [HelpTopic("Menu+Parameter+Mapping")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class SelectionDialogParameterMapping : AbstractSchemaItem
 	{
 		public const string CategoryConst = "SelectionDialogParameterMapping";

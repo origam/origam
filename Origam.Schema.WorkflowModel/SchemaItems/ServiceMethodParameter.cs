@@ -32,7 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Parameter", "Parameters", "parameter-blm.png")]
     [HelpTopic("Service+Method+Parameter")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class ServiceMethodParameter : SchemaItemParameter
 	{
 		public ServiceMethodParameter() : base() {}

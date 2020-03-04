@@ -33,7 +33,7 @@ namespace Origam.Schema.MenuModel
 	[SchemaItemDescription("Menu", "home.png")]
     [HelpTopic("Menu")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class Menu : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "Menu";

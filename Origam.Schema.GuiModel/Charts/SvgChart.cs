@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("SVG Chart", "icon_svg-chart.png")]
     [HelpTopic("SVG+Chart")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class SvgChart : AbstractChart
 	{
 		public SvgChart() : base() {Init();}

@@ -29,7 +29,7 @@ namespace Origam.Schema.TestModel
 	/// Summary description for TestChecklistRule.
 	/// </summary>
 	[SchemaItemDescription("Checklist Rule", "Checklist Rules", 16)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class TestChecklistRule : AbstractSchemaItem
 	{
 		public const string CategoryConst = "TestChecklistRule";

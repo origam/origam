@@ -40,7 +40,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Sequential Workflow Reference", "menu_workflow.png")]
     [HelpTopic("Sequential+Workflow+Menu+Item")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkflowReferenceMenuItem : AbstractMenuItem
 	{
 		private ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;

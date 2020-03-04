@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("Crystal Report", "icon_crystal-report.png")]
     [HelpTopic("Crystal+Report")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class CrystalReport : AbstractDataReport, IDataStructureReference
 	{	
 		public CrystalReport() : base(){}

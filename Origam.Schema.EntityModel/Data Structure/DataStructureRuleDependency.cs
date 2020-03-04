@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Rule+Set+Rule+Dependency")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Entity")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureRuleDependency : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureRuleDependency";

@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Field+Dependencies")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "EntityFieldDependency";

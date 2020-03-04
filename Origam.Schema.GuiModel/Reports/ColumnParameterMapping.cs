@@ -27,7 +27,7 @@ using System.Xml.Serialization;
 namespace Origam.Schema.GuiModel
 {
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class ColumnParameterMapping : AbstractSchemaItem
 	{
 		public const string CategoryConst = "ColumnParameterMapping";

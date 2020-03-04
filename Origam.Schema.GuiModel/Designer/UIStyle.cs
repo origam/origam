@@ -34,7 +34,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Style", "icon_style.png")]
     [HelpTopic("Styles")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class UIStyle : AbstractSchemaItem
 	{
 		public const string CategoryConst = "Style";

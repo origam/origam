@@ -31,7 +31,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Report Page", "report-page.png")]
     [HelpTopic("Report+Page")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ReportPage : AbstractPage
 	{
 		public ReportPage() : base() { Init(); }

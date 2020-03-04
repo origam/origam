@@ -36,7 +36,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaItemAncestor")]
 	[XmlModelRoot("ancestor")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2, 
         ICloneable, IComparable, IFilePersistent
 	{

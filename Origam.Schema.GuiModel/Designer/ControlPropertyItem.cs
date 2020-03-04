@@ -36,7 +36,7 @@ namespace Origam.Schema.GuiModel
 
 	[SchemaItemDescription("Property", "Properties", "icon_property.png")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ControlPropertyItem : AbstractSchemaItem 
 	{
 		public const string CategoryConst = "ControlPropertyItem";

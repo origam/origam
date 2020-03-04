@@ -35,7 +35,7 @@ namespace Origam.Schema.WorkflowModel
         "icon_workflow-method.png")]
     [HelpTopic("Data+Structure+Workflow+Method")]
     [DefaultProperty("LoadWorkflow")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureWorkflowMethod : DataStructureMethod
 	{
 		public DataStructureWorkflowMethod() : base() {}

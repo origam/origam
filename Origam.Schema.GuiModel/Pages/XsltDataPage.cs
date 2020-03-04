@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Data Page", "data-page.png")]
     [HelpTopic("Data+Page")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class XsltDataPage : AbstractPage, IDataStructureReference
 	{
 		public XsltDataPage() : base() {Init();}

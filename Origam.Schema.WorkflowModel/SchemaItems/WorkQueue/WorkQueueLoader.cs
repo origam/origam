@@ -32,7 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Loader", "Loaders", "loader-3.png")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkqueueLoader : AbstractSchemaItem
 	{
 		public const string CategoryConst = "WorkqueueLoader";

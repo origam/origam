@@ -32,7 +32,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "file-mapping.png")]
     [HelpTopic("Parameter+Mapping")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class PageParameterMapping : AbstractSchemaItem
 	{
 		public const string CategoryConst = "PageParameterMapping";

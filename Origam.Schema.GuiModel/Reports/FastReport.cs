@@ -30,7 +30,7 @@ namespace Origam.Schema.GuiModel
     /// </summary>
     [SchemaItemDescription("Fast Report", 29)]
     [HelpTopic("Fast+Report")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class FastReport : AbstractDataReport, IDataStructureReference
     {
         public FastReport() : base() { }

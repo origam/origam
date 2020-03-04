@@ -34,7 +34,7 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Tree Node", "Nodes", "icon_tree-node.png")]
     [HelpTopic("Tree+Node")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class TreeStructureNode : AbstractSchemaItem, ISchemaItemFactory, IDataStructureReference
 	{
 		public const string CategoryConst = "TreeStructure";

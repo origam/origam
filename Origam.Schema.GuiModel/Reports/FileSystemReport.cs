@@ -29,7 +29,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("File System Report", "icon_file-system-report.png")]
     [HelpTopic("File+System+Report")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class FileSystemReport : AbstractReport
     {
 		public FileSystemReport() : base() { }

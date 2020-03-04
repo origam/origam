@@ -37,7 +37,7 @@ namespace Origam.Schema.TestModel
 	/// Summary description for TestCaseStep.
 	/// </summary>
 	[SchemaItemDescription("Step", "Steps", 24)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class TestCaseStep : AbstractSchemaItem
 	{
 		public const string CategoryConst = "TestCaseStep";

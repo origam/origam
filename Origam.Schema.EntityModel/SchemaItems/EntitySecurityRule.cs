@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
         "icon_row-level-security-rule.png")]
     [HelpTopic("Row+Level+Security+Rules")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntitySecurityRule : AbstractEntitySecurityRule
 	{
 		public EntitySecurityRule() : base() {}

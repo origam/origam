@@ -34,7 +34,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Action", "Actions", 18)]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class AbstractWorkflowPageAction : AbstractSchemaItem
 	{
 		public const string CategoryConst = "WorkflowPageAction";

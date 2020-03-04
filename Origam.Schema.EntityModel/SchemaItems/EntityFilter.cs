@@ -33,7 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
     [HelpTopic("Filters")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityFilter : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "EntityFilter";

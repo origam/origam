@@ -36,7 +36,7 @@ namespace Origam.Schema.GuiModel
 	[System.Drawing.ToolboxBitmap(typeof(PanelControlSet))]
     [HelpTopic("Screen+Sections")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class PanelControlSet : AbstractControlSet
 	{
 		private static ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;

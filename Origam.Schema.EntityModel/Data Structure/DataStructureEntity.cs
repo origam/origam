@@ -46,7 +46,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Entities")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Entity")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureEntity : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "DataStructureEntity";

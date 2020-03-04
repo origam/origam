@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Database Field", "Fields", 
         "icon_database-field.png")]
     [HelpTopic("Database+Field")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class FieldMappingItem : AbstractDataEntityColumn, ISchemaItemFactory,
         IDatabaseDataTypeMapping
 	{

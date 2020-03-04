@@ -35,7 +35,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("PackageReference")]
     [XmlPackageRoot("packageReference")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
 		public PackageReference()

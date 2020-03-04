@@ -38,7 +38,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Report Reference", "menu_report.png")]
     [HelpTopic("Report+Menu+Item")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class ReportReferenceMenuItem : AbstractMenuItem
 	{
 		public ReportReferenceMenuItem() : base() {}

@@ -42,7 +42,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Data+Structure+Field")]
 	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("Field")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureColumn : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureColumn";

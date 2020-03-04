@@ -30,7 +30,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Check Rule", "Tasks", "task-check-rule-4.png")]
     [HelpTopic("Check+Rule+Task")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class CheckRuleStep : AbstractWorkflowStep
 	{
 		public CheckRuleStep() : base() {}

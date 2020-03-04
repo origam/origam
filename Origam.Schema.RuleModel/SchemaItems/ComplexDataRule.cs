@@ -27,7 +27,7 @@ namespace Origam.Schema.RuleModel
 {
     [SchemaItemDescription("Complex Data Rule", "complex-data-rule.png")]
     [HelpTopic("Complex+Data+Rule")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class ComplexDataRule : XslRule, IDataRule
     {
 		public ComplexDataRule() : base() {}

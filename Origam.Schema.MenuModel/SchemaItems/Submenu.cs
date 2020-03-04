@@ -34,7 +34,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Submenu", "menu_folder.png")]
     [HelpTopic("Submenu")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class Submenu : AbstractMenuItem, ISchemaItemFactory
 	{
 		public Submenu() : base() {}

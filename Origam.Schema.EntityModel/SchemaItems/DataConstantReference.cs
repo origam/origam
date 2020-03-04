@@ -35,7 +35,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Data+Constant+Reference")]
 	[XmlModelRoot(CategoryConst)]
     [DefaultProperty("DataConstant")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataConstantReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataConstantReference";

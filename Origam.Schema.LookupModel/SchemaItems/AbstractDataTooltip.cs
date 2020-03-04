@@ -33,7 +33,7 @@ namespace Origam.Schema.LookupModel
     /// Summary description for AbstractDataTooltip.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class AbstractDataTooltip : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "DataTooltip";

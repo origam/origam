@@ -41,7 +41,7 @@ namespace Origam.Schema.WorkflowModel
     [HelpTopic("State+Workflows")]
     [DefaultProperty("Entity")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class StateMachine : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public const string CategoryConst = "WorkflowStateMachine";

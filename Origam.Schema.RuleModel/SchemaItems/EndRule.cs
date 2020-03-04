@@ -27,7 +27,7 @@ namespace Origam.Schema.RuleModel
 {
     [SchemaItemDescription("Validation Rule", "validation-rule.png")]
     [HelpTopic("Validation+Rule")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EndRule : XslRule, IEndRule
     {
 		public EndRule() : base() {}

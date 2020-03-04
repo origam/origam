@@ -33,7 +33,7 @@ namespace Origam.Schema.GuiModel
         "icon_parameter-mapping.png")]
     [HelpTopic("Action+Parameter+Mapping")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityUIActionParameterMapping : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "EntityUIActionParameterMapping";

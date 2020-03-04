@@ -34,7 +34,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Menu Action", "UI Actions", "icon_menu-action.png")]
     [HelpTopic("Menu+Action")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityMenuAction : EntityUIAction
 	{
 		public EntityMenuAction() : base() {}

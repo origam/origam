@@ -33,7 +33,7 @@ namespace Origam.Schema.WorkflowModel
 {
 	[SchemaItemDescription("Workflow Page", "workflow-page.png")]
     [HelpTopic("Workflow+Page")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkflowPage : AbstractPage
 	{
 		public WorkflowPage() : base() {Init();}

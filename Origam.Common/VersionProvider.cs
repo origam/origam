@@ -33,10 +33,6 @@ namespace Origam.OrigamEngine
         public static Version CurrentPersistenceMeta { get; } = 
             new Version(CurrentPersistenceMetaVersion);
         
-        public static readonly string CurrentPackageMetaVersion = "1.0.0";
-        public static Version CurrentPackageMeta { get; } = 
-            new Version(CurrentPackageMetaVersion);
-
 
         public static bool IsCurrentMeta(string versionString)
         {

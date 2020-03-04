@@ -33,7 +33,7 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for WorkQueueWorkflowCommand.
 	/// </summary>
 	[SchemaItemDescription("Workflow Command", "Commands", "workflow-command.png")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkQueueWorkflowCommand : EntityUIAction
 	{
 		public new const string CategoryConst = "WorkQueueCommand";

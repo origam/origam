@@ -45,7 +45,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Aggregated Field", "Fields", "icon_agregated-field.png")]
     [HelpTopic("Aggregated+Field")]
     [DefaultProperty("Relation")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class AggregatedColumn : AbstractDataEntityColumn, IRelationReference
 	{
 		public AggregatedColumn() : base() {}

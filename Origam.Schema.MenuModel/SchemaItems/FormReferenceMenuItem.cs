@@ -36,7 +36,7 @@ namespace Origam.Schema.MenuModel
 	
 	[SchemaItemDescription("Screen Reference", "menu_form.png")]
     [HelpTopic("Screen+Menu+Item")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
 	public class FormReferenceMenuItem : AbstractMenuItem, ISchemaItemFactory
 	{
 		public FormReferenceMenuItem() : base() {}

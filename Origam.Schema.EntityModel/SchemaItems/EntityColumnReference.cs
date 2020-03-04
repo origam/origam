@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Field+Reference")]
 	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityColumnReference : AbstractSchemaItem
 	{
 		public const string CategoryConst = "EntityColumnReference";

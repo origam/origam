@@ -30,7 +30,7 @@ using System.Xml;
 namespace Origam.Schema.GuiModel
 {
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class PropertyValueItem : AbstractPropertyValueItem
 	{
 		public const string CategoryConst = "PropertyValueItem";

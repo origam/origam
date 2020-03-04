@@ -34,7 +34,7 @@ namespace Origam.Schema.EntityModel
     [HelpTopic("Rule+Set+Reference")]
     [XmlModelRoot(CategoryConst)]
     [DefaultProperty("RuleSet")]
-    [ClassMetaVersion("1.0.0")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureRuleSetReference : AbstractSchemaItem
     {
         public const string CategoryConst = "DataStructureRuleSetReference";
