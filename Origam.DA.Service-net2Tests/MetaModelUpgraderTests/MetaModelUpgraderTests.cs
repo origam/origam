@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -30,21 +29,12 @@ using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
-using Origam.TestCommon;
 
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
     [TestFixture]
-    public class MetaModelUpGraderTests: AbstractFileTestClass
+    public class MetaModelUpGraderTests: MetaModelUpGradeTestBase
     {
-        private XmlFileData LoadFile(string fileName)
-        {
-            var file = new FileInfo(Path.Combine(TestFilesDir.FullName, fileName));
-            var document = new OrigamXmlDocument();
-            document.Load(file.FullName);
-            return new XmlFileData(document, file);
-        }
-
         [Test]
         public void ShouldUpgradeByOneVersion()
         {
@@ -114,9 +104,6 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
                 bool someFilesWereUpgraded = sut.TryUpgrade(
                     new List<XmlFileData>{xmlFileData});
             });
-        } 
-        
-        protected override TestContext TestContext =>
-            TestContext.CurrentContext;
+        }
     }
 }

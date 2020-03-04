@@ -70,10 +70,12 @@
     <Compile Include="Debug.cs" />
     <Compile Include="InstanceWriterTests.cs" />
     <Compile Include="MetaModelUpgraderTests\MetaModelUpgraderTests.cs" />
+    <Compile Include="MetaModelUpgraderTests\MetaModelUpGradeTestBase.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestBaseClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass2.cs" />
     <Compile Include="MetaModelUpgraderTests\TestPersistedClassScriptContainer.cs" />
+    <Compile Include="MetaModelUpgraderTests\Version6UpGraderTests.cs" />
     <Compile Include="OrigamDocumentSorter\OrigamDocumentSorterTests.cs" />
     <Compile Include="EqualityExtensions.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTests.cs" />
@@ -183,7 +185,7 @@
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass2V1.0.0.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV1.0.0.origam">
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV5.0.0.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV1.0.1.origam">
