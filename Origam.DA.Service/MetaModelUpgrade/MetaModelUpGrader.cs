@@ -219,7 +219,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
 
             XmlAttribute typeAttribute = node.Attributes["x:type"];
-            Type type = Versions.GetTypeByName(typeAttribute.Value);
+            Type type = Reflector.GetTypeByName(typeAttribute.Value);
             node.Attributes.Remove(typeAttribute);
             return type;
         }

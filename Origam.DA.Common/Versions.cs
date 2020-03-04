@@ -38,16 +38,10 @@ namespace Origam.DA.Common
                 });
            return new Versions(versionsDict);
         }
-        
-        public static Type GetTypeByName(string typeName)
-        {
-            string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
-            return Type.GetType(typeName + "," + assemblyName);
-        }
 
         public static Versions GetCurrentClassVersions(string typeName)
         {
-            Type type = GetTypeByName(typeName);
+            Type type = Reflector.GetTypeByName(typeName);
             if (type == null)
             {
                 return  new Versions {[typeName] = EndOfLife}; 
