@@ -206,7 +206,7 @@ namespace Origam.DA.Service
                     .Where(ExternalFilePath.IsExternalFileLink)
                     .ForEach(attrText => externalFileManger.RemoveExternalFile(attrText));
 
-                nodeToDelete.ParentNode.RemoveChild(nodeToDelete);
+                OpenDocument.RemoveWithNamespace(nodeToDelete);
             }
             ContainedObjects.Remove(id);
         }

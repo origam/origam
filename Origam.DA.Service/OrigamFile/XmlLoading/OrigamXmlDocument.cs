@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Xml;
+using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
@@ -36,6 +37,21 @@ namespace Origam.DA.Service
             var nextNamespaceName = GetNextNamespaceName(nameSpaceName);
             FileElement.SetAttribute("xmlns:"+nextNamespaceName, nameSpace);
             return nextNamespaceName;
+        }
+
+        public void RemoveWithNamespace(XmlNode nodeToDelete)
+        {
+            nodeToDelete.ParentNode.RemoveChild(nodeToDelete);
+            bool moreNodesInTheNamespaceExist = 
+                this.GetAllNodes()
+                .Any(node => node.NamespaceURI == nodeToDelete.NamespaceURI);
+            if (!moreNodesInTheNamespaceExist)
+            {
+                var namespaceToRemove = FileElement.Attributes
+                    .Cast<XmlAttribute>()
+                    .First(attr => attr.Value == nodeToDelete.NamespaceURI);
+                FileElement.Attributes.Remove(namespaceToRemove);
+            }
         }
 
         private string GetNextNamespaceName(string nameSpaceName)
