@@ -43,7 +43,7 @@ namespace Origam.DA.Service
         {
             IFilePersistent instance = Instantiate(id, provider, parentId);
             
-            var namespaceMapping = new PropertyToNamespaceMapping(instance);
+            var namespaceMapping = new PropertyToNamespaceMapping(instance.GetType());
             SetXmlAttributes( instance, provider, namespaceMapping);
             NoteExternalReferences(instance, namespaceMapping);
             SetParentAttributes(parentId, instance, provider);
@@ -178,7 +178,7 @@ namespace Origam.DA.Service
                 XmlReferenceAttribute attribute = mi.Attribute as XmlReferenceAttribute;
                 string value = reader.GetAttribute(
                         attribute.AttributeName, 
-                        namespaceMapping.GetNamespace(mi.MemberInfo.Name));
+                        namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name));
                 // reference looks like "/package/folder/entity.xml/entity/field#GUID
                 // we only read the guid part
                 if (value != null)
@@ -202,7 +202,7 @@ namespace Origam.DA.Service
                 string externalLink =
                     reader.GetAttribute(
                         attribute.ContainerName,
-                        namespaceMapping.GetNamespace(mi.MemberInfo.Name));
+                        namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name));
                 externalFileManger.AddFileLink(externalLink);
             }
         }
@@ -217,7 +217,7 @@ namespace Origam.DA.Service
                 XmlAttributeAttribute attribute = mi.Attribute as XmlAttributeAttribute;
                 string value = reader.GetAttribute(
                     attribute.AttributeName,
-                    namespaceMapping.GetNamespace(mi.MemberInfo.Name));
+                    namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name));
                 SetValue(instance, mi, value, provider);
             }
         }

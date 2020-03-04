@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.Common.ObjectPersistence.Attributes;
@@ -13,17 +14,17 @@ namespace Origam.DA.Service
     class PropertyToNamespaceMapping
     {
         private readonly List<PropertyMapping> propertyMappings;
-
-        public PropertyToNamespaceMapping(IFilePersistent instance)
+        private readonly Func<Type, string> XmlNamespaceMapper;
+        public PropertyToNamespaceMapping(Type instanceIype, Func<Type, string> xmlNamespaceMapper = null)
         {
-            propertyMappings = instance
-                .GetType()
+            XmlNamespaceMapper = xmlNamespaceMapper ?? XmlNamespaceTools.GetXmlNameSpace;
+            propertyMappings = instanceIype
                 .GetAllBaseTypes()
                 .Where(baseType => baseType.GetInterfaces().Contains(typeof(IFilePersistent)))
-                .Concat( new []{instance.GetType()})
+                .Concat( new []{instanceIype})
                 .Select(type => new PropertyMapping(
                     propertyNames: GetXmlPropertyNames(type),
-                    xmlNamespace: XmlNamespaceTools.GetXmlNameSpace(type),
+                    xmlNamespace: XmlNamespaceMapper(type),
                     xmlNamespaceName: XmlNamespaceTools.GetXmlNamespaceName(type)))
                 .ToList();
 
@@ -35,35 +36,43 @@ namespace Origam.DA.Service
         public string NodeNamespaceName { get; }
         public string NodeNamespace { get; }
 
-        private List<string> GetXmlPropertyNames(Type type)
+        private List<PropertyName> GetXmlPropertyNames(Type type)
         {
             return type.GetFields()
                 .Cast<MemberInfo>()
                 .Concat(type.GetProperties())
                 .Where(prop => prop.DeclaringType == type)
-                .Where(prop =>
-                    Attribute.IsDefined(prop, typeof(XmlAttributeAttribute)) ||
-                    Attribute.IsDefined(prop, typeof(XmlExternalFileReference)) ||
-                    Attribute.IsDefined(prop, typeof(XmlPackageReferenceAttribute)) ||
-                    Attribute.IsDefined(prop, typeof(XmlReferenceAttribute)))
-                .Select(prop => prop.Name)
+                .Select(ToPropertyName)
+                .Where(x => x != null)
                 .ToList();
         }
-        
-        private class PropertyMapping
+
+        private PropertyName ToPropertyName(MemberInfo prop)
         {
-            public List<string> PropertyNames { get; }
-            public string XmlNamespace { get; }
-            public string XmlNamespaceName { get; set; }
-
-            public PropertyMapping(List<string> propertyNames, string xmlNamespace, string xmlNamespaceName)
+            string xmlAttributeName;
+            if (Attribute.IsDefined(prop, typeof(XmlAttributeAttribute)))
             {
-                PropertyNames = propertyNames;
-                XmlNamespace = xmlNamespace;
-                XmlNamespaceName = xmlNamespaceName;
+                var xmlAttribute = prop.GetCustomAttribute(typeof(XmlAttributeAttribute)) as XmlAttributeAttribute;
+                xmlAttributeName = xmlAttribute.AttributeName;
             }
-        }
+            else if (Attribute.IsDefined(prop, typeof(XmlExternalFileReference)))
+            {
+                var xmlAttribute = prop.GetCustomAttribute(typeof(XmlExternalFileReference)) as XmlExternalFileReference;
+                xmlAttributeName = xmlAttribute.ContainerName;
+            }
+            else if (Attribute.IsDefined(prop, typeof(XmlPackageReferenceAttribute)) || Attribute.IsDefined(prop, typeof(XmlReferenceAttribute)))
+            {
+                var xmlAttribute = prop.GetCustomAttribute(typeof(XmlReferenceAttribute)) as XmlReferenceAttribute;
+                xmlAttributeName = xmlAttribute.AttributeName;
+            }
+            else
+            {
+                return null;
+            }
 
+            return new PropertyName {Name = prop.Name, XmlAttributeName = xmlAttributeName};
+        }
+        
         public void AddNamespacesToDocument(OrigamXmlDocument xmlDocument)
         {
             foreach (var propertyMapping in propertyMappings)
@@ -74,12 +83,50 @@ namespace Origam.DA.Service
             }
         }
 
-        public string GetNamespace(string propertyName)
+        public string GetNamespaceByPropertyName(string propertyName)
         {
             PropertyMapping propertyMapping = propertyMappings
-                                                  .FirstOrDefault(mapping => mapping.PropertyNames.Contains(propertyName))
+                                                  .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
                                               ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\"");
             return propertyMapping.XmlNamespace;
+        }      
+        
+        public string GetNamespaceByXmlAttributeName(string xmlAttributeName)
+        {
+            PropertyMapping propertyMapping = propertyMappings
+                                                  .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
+                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{xmlAttributeName}\"");
+            return propertyMapping.XmlNamespace;
+        }
+        
+        private class PropertyName
+        {
+            public string Name { get; set; }
+            public string XmlAttributeName { get; set; }
+        }
+        
+        private class PropertyMapping
+        {
+            public List<PropertyName> PropertyNames { get; }
+            public string XmlNamespace { get; }
+            public string XmlNamespaceName { get; set; }
+
+            public PropertyMapping(List<PropertyName> propertyNames, string xmlNamespace, string xmlNamespaceName)
+            {
+                PropertyNames = propertyNames;
+                XmlNamespace = xmlNamespace;
+                XmlNamespaceName = xmlNamespaceName;
+            }
+
+            public bool ContainsPropertyNamed(string propertyName)
+            {
+                return PropertyNames.Any(propName => propName.Name == propertyName);
+            }
+
+            public bool ContainsXmlAttributeNamed(string xmlAttributeName)
+            {
+                return PropertyNames.Any(propName => propName.XmlAttributeName == xmlAttributeName);
+            }
         }
     }
 

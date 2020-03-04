@@ -46,7 +46,7 @@ namespace Origam.DA.Service
 
         public void Write(IFilePersistent instance)
         {
-            var namespaceMapping = new PropertyToNamespaceMapping(instance);
+            var namespaceMapping = new PropertyToNamespaceMapping(instance.GetType());
             namespaceMapping.AddNamespacesToDocument(xmlDocument);
 
             XmlElement elementToWriteTo = GetElementToWriteTo(instance, namespaceMapping);
@@ -182,7 +182,7 @@ namespace Origam.DA.Service
                                   + persistentValue.PrimaryKey["Id"];
                     node.SetAttribute(
                         localName: attribute.AttributeName, 
-                        namespaceURI: namespaceMapping.GetNamespace(mi.MemberInfo.Name),
+                        namespaceURI: namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name),
                         value: path);
                 }
             }
@@ -201,9 +201,8 @@ namespace Origam.DA.Service
                 if (Guid.Empty.Equals(value)) continue;
                 node.SetAttribute(
                     localName: attribute.AttributeName, 
-                    namespaceURI: namespaceMapping.GetNamespace(memberInfo.MemberInfo.Name),
+                    namespaceURI: namespaceMapping.GetNamespaceByPropertyName(memberInfo.MemberInfo.Name),
                     value: XmlTools.ConvertToString(value));
-
             }
         }
             
@@ -259,7 +258,7 @@ namespace Origam.DA.Service
                 
                 node.SetAttribute(
                     localName: attribute.ContainerName, 
-                    namespaceURI: namespaceMapping.GetNamespace(mi.MemberInfo.Name),
+                    namespaceURI: namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name),
                     value: externalFileLink);
             }
         }
