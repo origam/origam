@@ -13,15 +13,17 @@ namespace Origam.DA.Service
 {
     class PropertyToNamespaceMapping
     {
+        private readonly Type instanceType;
         private readonly List<PropertyMapping> propertyMappings;
         private readonly Func<Type, string> XmlNamespaceMapper;
-        public PropertyToNamespaceMapping(Type instanceIype, Func<Type, string> xmlNamespaceMapper = null)
+        public PropertyToNamespaceMapping(Type instanceType, Func<Type, string> xmlNamespaceMapper = null)
         {
+            this.instanceType = instanceType;
             XmlNamespaceMapper = xmlNamespaceMapper ?? XmlNamespaceTools.GetXmlNameSpace;
-            propertyMappings = instanceIype
+            propertyMappings = instanceType
                 .GetAllBaseTypes()
                 .Where(baseType => baseType.GetInterfaces().Contains(typeof(IFilePersistent)))
-                .Concat( new []{instanceIype})
+                .Concat( new []{instanceType})
                 .Select(type => new PropertyMapping(
                     propertyNames: GetXmlPropertyNames(type),
                     xmlNamespace: XmlNamespaceMapper(type),
@@ -87,7 +89,7 @@ namespace Origam.DA.Service
         {
             PropertyMapping propertyMapping = propertyMappings
                                                   .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\"");
+                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\" in {instanceType.FullName} and its base types");
             return propertyMapping.XmlNamespace;
         }      
         
@@ -95,7 +97,7 @@ namespace Origam.DA.Service
         {
             PropertyMapping propertyMapping = propertyMappings
                                                   .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{xmlAttributeName}\"");
+                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{xmlAttributeName}\" in {instanceType.FullName} and its base types");
             return propertyMapping.XmlNamespace;
         }
         

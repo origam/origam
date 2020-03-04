@@ -171,7 +171,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 var type = RemoveTypeAttribute(oldNode);
 
                 var namespaceMapping = new PropertyToNamespaceMapping(
-                    instanceIype: type, 
+                    instanceType: type, 
                     xmlNamespaceMapper: Version6NamespaceMapper);
                 namespaceMapping.AddNamespacesToDocument(xmlDocument);
 
