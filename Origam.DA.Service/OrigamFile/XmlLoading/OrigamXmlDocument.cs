@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Origam.Extensions;
@@ -9,6 +10,8 @@ namespace Origam.DA.Service
     {
         public bool IsEmpty => ChildNodes.Count < 2;
         public XmlElement FileElement => (XmlElement) ChildNodes[1];
+
+        public IEnumerable<XmlNode> ClassNodes => this.GetAllNodes().Skip(2);
         public OrigamXmlDocument(string pathToXml)
         {
             Load(pathToXml);

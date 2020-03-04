@@ -23,12 +23,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml;
-using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.DA.Common;
 using Origam.Extensions;
@@ -69,9 +66,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         public bool TryUpgrade(List<XmlFileData> xmlData)
         {
-            
             foreach (XmlFileData xmlFileData in xmlData)
             {
+                bool isVersion5 = xmlFileData.XmlDocument.FileElement
+                    .Attributes
+                    .Cast<XmlAttribute>()
+                    .Any(attr => attr.Value == "http://schemas.origam.com/5.0.0/model-element");
+                if (isVersion5)
+                {
+                    new Version6UpGrader(xmlFileData.XmlDocument).Run();
+                }
                 xmlFileData.XmlDocument
                     .GetAllNodes()
                     .Where(node => node.Name != "x:file" && node.Name != "xml")
@@ -147,6 +151,89 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 throw new Exception($"Cannot get meta version of class {classNode.Name} because it does not have \"x:type\" attribute");
             }
             return typeName;
+        }
+    }
+    public class Version6UpGrader
+    {
+        private readonly OrigamXmlDocument xmlDocument;
+
+        public Version6UpGrader(OrigamXmlDocument xmlDocument)
+        {
+            this.xmlDocument = xmlDocument;
+        }
+
+        public void Run()
+        {
+            RemoveOldDocumentNamespaces();
+
+            foreach (XmlElement oldNode in xmlDocument.ClassNodes)
+            {
+                var type = RemoveTypeAttribute(oldNode);
+
+                var namespaceMapping = new PropertyToNamespaceMapping(
+                    instanceIype: type, 
+                    xmlNamespaceMapper: Version6NamespaceMapper);
+                namespaceMapping.AddNamespacesToDocument(xmlDocument);
+
+                XmlElement newNode = xmlDocument.CreateElement
+                    (oldNode.Name, namespaceMapping.NodeNamespace);
+                newNode.Prefix = namespaceMapping.NodeNamespaceName;
+                CopyAttributes(oldNode, newNode, namespaceMapping);
+                
+                oldNode.ParentNode.AppendChild(newNode);
+                oldNode.ParentNode.RemoveChild(oldNode);
+            }
+        }
+
+        private string Version6NamespaceMapper(Type type)
+        {
+            string xmlNameSpaceWithCurrentVersion = XmlNamespaceTools.GetXmlNameSpace(type);
+            return 
+                string.Join(
+                    "/", 
+                    xmlNameSpaceWithCurrentVersion
+                            .Split("/")
+                            .SkipLast(1)
+                            .Concat(new []{"6.0.0"})
+                    );
+        }
+
+        private static void CopyAttributes(XmlElement oldNode, XmlElement newNode,
+            PropertyToNamespaceMapping namespaceMapping)
+        {
+            foreach (var attribute in oldNode.Attributes.ToArray<XmlAttribute>())
+            {
+                newNode.SetAttribute(
+                    attribute.Name,
+                    namespaceMapping.GetNamespaceByXmlAttributeName(attribute.Name),
+                    attribute.Value);
+            }
+        }
+
+        private Type RemoveTypeAttribute(XmlElement node)
+        {
+            if (string.IsNullOrWhiteSpace(node?.Attributes?["x:type"]?.Value))
+            {
+                throw new Exception(
+                    $"Cannot get type from node: {node.Name} in \n{xmlDocument.OuterXml}");
+            }
+
+            XmlAttribute typeAttribute = node.Attributes["x:type"];
+            Type type = Versions.GetTypeByName(typeAttribute.Value);
+            node.Attributes.Remove(typeAttribute);
+            return type;
+        }
+
+        private void RemoveOldDocumentNamespaces()
+        {
+            xmlDocument.FileElement.Attributes
+                .Cast<XmlAttribute>()
+                .Where(
+                    attr => attr.Value ==
+                            "http://schemas.origam.com/5.0.0/model-element" ||
+                            attr.Value == "http://schemas.origam.com/1.0.0/package")
+                .ToArray()
+                .ForEach(attr => xmlDocument.FileElement.Attributes.Remove(attr));
         }
     }
 }
