@@ -23,15 +23,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Xml.Serialization;
-using Origam.DA.Common;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Common
 {
     public class OrigamNameSpace
     {
         public Version Version { get; }
         public string StringValue { get; }
-        public string Type { get; }
+        public string FullTypeName { get; }
 
         public static OrigamNameSpace Create(Type type)
         {
@@ -40,13 +39,20 @@ namespace Origam.DA.Service
             if (string.IsNullOrEmpty(rootAttribute.Namespace))
             {
                 Version currentClassVersion = Versions.GetCurrentClassVersion(type);
-                return Create( $"http://schemas.origam.com/{type.FullName}/{currentClassVersion}");
+                return Create(type.FullName, currentClassVersion);
             }
             return Create(rootAttribute.Namespace);
+        }
+        public static OrigamNameSpace Create(string fullTypeName, Version version)
+        {
+            return Create( $"http://schemas.origam.com/{fullTypeName}/{version}");
         }
 
         public static OrigamNameSpace Create(string xmlNamespace)
         {
+            if (xmlNamespace == null)
+                throw new ArgumentNullException(nameof(xmlNamespace));
+            
             if (!xmlNamespace.StartsWith("http://schemas.origam.com"))
             {
                 throw new ArgumentException($" {nameof(OrigamNameSpace)} must start with http://schemas.origam.com");
@@ -69,7 +75,7 @@ namespace Origam.DA.Service
             return new OrigamNameSpace(
                 version: version, 
                 stringValue: xmlNamespace, 
-                type: splitElName[3]);
+                fullTypeName: splitElName[3]);
         }
         
         private static XmlRootAttribute FindRootAttribute(Type type)
@@ -82,11 +88,11 @@ namespace Origam.DA.Service
                 return null;
         }
 
-        private OrigamNameSpace(Version version, string stringValue, string type)
+        private OrigamNameSpace(Version version, string stringValue, string fullTypeName)
         {
             Version = version;
             StringValue = stringValue;
-            Type = type;
+            FullTypeName = fullTypeName;
         }
     }
 }

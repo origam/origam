@@ -26,6 +26,7 @@ using System.Linq;
 using System.Xml;
 using CSharpFunctionalExtensions;
 using MoreLinq;
+using Origam.DA.Common;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
 

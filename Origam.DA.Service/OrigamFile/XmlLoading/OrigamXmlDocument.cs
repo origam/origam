@@ -42,6 +42,13 @@ namespace Origam.DA.Service
             return nextNamespaceName;
         }
 
+        public void RenameNamespace(string oldNamespace, string newNamespace)
+        {
+            string outerXml = OuterXml;
+            string newXml = outerXml.Replace(oldNamespace, newNamespace);
+            LoadXml(newXml);
+        }
+
         public void RemoveWithNamespace(XmlNode nodeToDelete)
         {
             nodeToDelete.ParentNode.RemoveChild(nodeToDelete);

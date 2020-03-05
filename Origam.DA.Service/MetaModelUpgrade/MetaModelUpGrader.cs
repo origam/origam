@@ -77,8 +77,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     new Version6UpGrader(xmlFileData.XmlDocument).Run();
                 }
                 xmlFileData.XmlDocument
-                    .GetAllNodes()
-                    .Where(node => node.Name != "x:file" && node.Name != "xml")
+                    .ClassNodes
                     .ForEach(classNode => TryUpgrade(classNode, xmlFileData));
             }
 
@@ -87,9 +86,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         private void TryUpgrade(XmlNode classNode, XmlFileData xmlFileData)
         {
-            string classToUpgrade = GetClassName(classNode);
-            Versions currentClassVersions = Versions.GetCurrentClassVersions(classToUpgrade);
-            Versions persistedClassVersions = Versions.GetPersistedClassVersion(classNode, classToUpgrade);
+            IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
+            
+            string nodeClass = OrigamNameSpace.Create(classNode?.NamespaceURI).FullTypeName;
+            Versions persistedClassVersions = new Versions(origamNameSpaces);
+            Versions currentClassVersions = Versions.GetCurrentClassVersions(nodeClass);
             
             foreach (var pair in currentClassVersions)
             {
@@ -126,31 +127,25 @@ namespace Origam.DA.Service.MetaModelUpgrade
             fileWriter.Write(xmlFileData.FileInfo, upgradedXmlString);
         }
 
+        private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XmlNode classNode)
+        {
+            var origamNameSpaces = classNode.Attributes
+                .Cast<XmlAttribute>()
+                .Select(attr => attr.NamespaceURI)
+                .Distinct()
+                .Select(OrigamNameSpace.Create);
+            return origamNameSpaces;
+        }
+
         private void RunUpgradeScripts(XmlNode classNode,
             XmlFileData xmlFileData, string className,
             Version persistedClassVersion,
             Version currentClassVersion)
         {
             var upgradeScriptContainer = scriptContainers
-                 .SingleOrDefault(container => container.ClassName == className) 
+                 .SingleOrDefault(container => container.FullTypeName == className) 
                  ?? throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer).Name}<T> with generic type of {className}");
             upgradeScriptContainer.Upgrade(xmlFileData.XmlDocument, classNode, persistedClassVersion, currentClassVersion);
-        }
-
-        private string GetClassName(XmlNode classNode)
-        {
-            if (classNode == null)
-            {
-                throw new ArgumentNullException(nameof(classNode));
-            }
-
-            var typeName = classNode.Attributes["x:type"]?.Value;
-
-            if (typeName == null)
-            {
-                throw new Exception($"Cannot get meta version of class {classNode.Name} because it does not have \"x:type\" attribute");
-            }
-            return typeName;
         }
     }
     public class Version6UpGrader

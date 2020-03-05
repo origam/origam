@@ -27,14 +27,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Origam.DA.Common;
+using MoreLinq;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
     public abstract class UpgradeScriptContainer
     {
         protected readonly List<UpgradeScript> upgradeScripts = new List<UpgradeScript>();
-        public abstract string ClassName { get;}
-        public void Upgrade(XmlDocument doc, XmlNode classNode, Version fromVersion, Version toVersion)
+        public abstract string FullTypeName { get;}
+        public void Upgrade(OrigamXmlDocument doc, XmlNode classNode, Version fromVersion, Version toVersion)
         {
             var scriptsToRun = upgradeScripts
                 .Where(script => script.FromVersion >= fromVersion && script.ToVersion <= toVersion)
@@ -43,15 +44,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
             if (scriptsToRun.Count == 0)
             {
-                throw new Exception($"There is no script to upgrade class {ClassName} from version {fromVersion} to {toVersion}");
+                throw new Exception($"There is no script to upgrade class {FullTypeName} from version {fromVersion} to {toVersion}");
             }
             if (scriptsToRun[0].FromVersion != fromVersion)
             {
-                throw new Exception($"Script to upgrade class {ClassName} from version {fromVersion} to the next version was not found");
+                throw new Exception($"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found");
             }
             if (scriptsToRun.Last().ToVersion != toVersion)
             {
-                throw new Exception($"Script to upgrade class {ClassName} to version {toVersion} was not found");
+                throw new Exception($"Script to upgrade class {FullTypeName} to version {toVersion} was not found");
             }
 
             CheckScriptsFormContinuousSequence(scriptsToRun);
@@ -60,8 +61,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 upgradeScript.Upgrade(classNode, doc);
             }
-
-            SetVersion(classNode, toVersion);
+            SetVersion(doc, toVersion);
         }
 
         private void CheckScriptsFormContinuousSequence(List<UpgradeScript> scriptsToRun)
@@ -71,20 +71,26 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 if (scriptsToRun[i].ToVersion != scriptsToRun[i + 1].FromVersion)
                 {
                     throw new ClassUpgradeException(
-                        $"There is no script to upgrade class {ClassName} from version {scriptsToRun[i].ToVersion} to {scriptsToRun[i + 1].FromVersion}");
+                        $"There is no script to upgrade class {FullTypeName} from version {scriptsToRun[i].ToVersion} to {scriptsToRun[i + 1].FromVersion}");
                 }
             }
         }
 
-        private void SetVersion(XmlNode classNode, Version toVersion)
+        private void SetVersion(OrigamXmlDocument document, Version toVersion)
         {
-            string versionAttr = classNode.Attributes["versions"]?.Value;
-            Versions versions = Versions.FromAttributeString(versionAttr);
-            versions[ClassName] = toVersion;
-            
-            ((XmlElement) classNode).SetAttribute(
-                    "versions",
-                    versions.ToAttributeString());
+            var updatedNamespace = OrigamNameSpace
+                .Create(FullTypeName, toVersion)
+                .StringValue;
+            string oldNamespace = document.FileElement.Attributes
+                .Cast<XmlAttribute>()
+                .FirstOrDefault(attr =>
+                    OrigamNameSpace.Create(attr.Value).FullTypeName == FullTypeName)
+                ?.Value;
+            if (string.IsNullOrWhiteSpace(oldNamespace))
+            {
+                throw new Exception($"Could not find xml namespace for {{FullTypeName}} in:\n{document.OuterXml}");
+            }
+            document.RenameNamespace(oldNamespace, updatedNamespace);
         }
         
         protected void AddAttribute(XmlNode node, string attributeName, string attributeValue)
@@ -98,7 +104,24 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node.OuterXml}");
             }
 
-            ((XmlElement) node).SetAttribute(attributeName, attributeValue);   
+            var version = OrigamNameSpace.Create(node.NamespaceURI).Version.ToString();
+            Type classType = Reflector.GetTypeByName(FullTypeName);
+            var namespaceMapping = new PropertyToNamespaceMapping(classType, type => VersionNamespaceMapper(type, version));
+            string nameSpace = namespaceMapping.GetNamespaceByXmlAttributeName(attributeName);
+            ((XmlElement) node).SetAttribute(attributeName,nameSpace, attributeValue);   
+        }
+        
+        private string VersionNamespaceMapper(Type type, string version)
+        {
+            string xmlNameSpaceWithCurrentVersion = XmlNamespaceTools.GetXmlNameSpace(type);
+            return 
+                string.Join(
+                    "/", 
+                    xmlNameSpaceWithCurrentVersion
+                        .Split('/')
+                        .SkipLast(1)
+                        .Concat(new []{version})
+                );
         }
     }
     

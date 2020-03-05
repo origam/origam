@@ -75,22 +75,7 @@ namespace Origam.DA.Common
 
             return attribute.Value;
         }
-
-        public static Versions GetPersistedClassVersion(XmlNode classNode, string type)
-        {
-            if (classNode == null)
-            {
-                throw new ArgumentNullException(nameof(classNode));
-            }
-            
-            string versionsAttributeString = classNode.Attributes["versions"]?.Value;
-            if (string.IsNullOrWhiteSpace(versionsAttributeString))
-            {
-                return new Versions(type ,new Version("1.0.0"));
-            }
-
-            return FromAttributeString(versionsAttributeString);
-        }
+        
 
         private Versions()
         {
@@ -106,6 +91,14 @@ namespace Origam.DA.Common
             foreach (var typeAndVersion in classVersions)
             {
                 this[typeAndVersion.Item1] = typeAndVersion.Item2;
+            }
+        }
+
+        public Versions(IEnumerable<OrigamNameSpace> origamNameSpaces)
+        {   
+            foreach (var origamNameSpace in origamNameSpaces)
+            {
+                this[origamNameSpace.FullTypeName] = origamNameSpace.Version;
             }
         }
 
