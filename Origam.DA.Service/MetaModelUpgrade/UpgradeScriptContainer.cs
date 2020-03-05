@@ -28,6 +28,7 @@ using System.Linq;
 using System.Xml;
 using Origam.DA.Common;
 using MoreLinq;
+using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
@@ -78,6 +79,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             SetVersion(doc, toVersion);
         }
+
 
         private void CheckScriptsFormContinuousSequence(List<UpgradeScript> scriptsToRun)
         {

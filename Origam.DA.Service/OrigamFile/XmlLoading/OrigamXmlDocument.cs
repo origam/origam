@@ -49,6 +49,29 @@ namespace Origam.DA.Service
             FileElement.SetAttribute("xmlns:"+nextNamespaceName, nameSpace);
             return nextNamespaceName;
         }
+        
+        public void RemoveUnusedNamespaces()
+        {
+            foreach (var nameSpaceAttribute in FileElement.Attributes.ToArray<XmlAttribute>())
+            {
+                bool namespaceIsUsed = this.GetAllNodes()
+                    .Any(node => NamespaceIsUsed(node, nameSpaceAttribute));
+
+                if (!namespaceIsUsed)
+                {
+                    FileElement.Attributes.Remove(nameSpaceAttribute);
+                }
+            }
+        }
+
+        private static bool NamespaceIsUsed(XmlNode node, XmlAttribute nameSpaceAttribute)
+        {
+            return node.NamespaceURI == nameSpaceAttribute.Value ||
+                   (node.Attributes != null &&
+                    node.Attributes
+                        .Cast<XmlAttribute>()
+                        .Any(attr => attr.NamespaceURI == nameSpaceAttribute.Value));
+        }
 
         public void RenameNamespace(string oldNamespace, string newNamespace)
         {

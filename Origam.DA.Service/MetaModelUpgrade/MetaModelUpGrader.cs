@@ -119,7 +119,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                         persistedClassVersions[className], currentVersion);
                 }
             }
-
+            xmlFileData.XmlDocument.RemoveUnusedNamespaces();
             string upgradedXmlString = OrigamDocumentSorter
                 .CopyAndSort(xmlFileData.XmlDocument)
                 .ToBeautifulString();

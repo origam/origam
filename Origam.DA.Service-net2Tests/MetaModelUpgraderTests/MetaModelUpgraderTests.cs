@@ -57,12 +57,15 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         [Test]
         public void ShouldRemoveDeadClass()
         {
-            XmlFileData xmlFileData = LoadFile("TestDeadClassV1.0.1.origam");
+            XmlFileData xmlFileData = LoadFile("TestDeadClassV6.0.1.origam");
             var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
-            bool someFilesWereUpgraded = sut.TryUpgrade(
-                new List<XmlFileData>{xmlFileData});
+            sut.TryUpgrade(new List<XmlFileData>{xmlFileData});
 
-            XmlNode fileNode = xmlFileData.XmlDocument.ChildNodes[1];
+            XmlNode fileNode = xmlFileData.XmlDocument.FileElement;
+            bool classNamespacesPresent = xmlFileData.XmlDocument.Namespaces
+                .Any(nameSpace => nameSpace.FullTypeName.Contains("TestDeadClass") ||
+                                  nameSpace.FullTypeName.Contains("TestBaseClass"));
+            Assert.False(classNamespacesPresent);
             Assert.That(fileNode.ChildNodes, Has.Count.EqualTo(0));
         }      
         
