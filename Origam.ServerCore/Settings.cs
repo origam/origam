@@ -64,6 +64,26 @@ namespace Origam.ServerCore
                     AllowAccessTokensViaBrowser = true,
                     AccessTokenType = AccessTokenType.Reference
                 },
+                new Client
+                {
+                    ClientId = "origamWebClient",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+                    RedirectUris = {"https://localhost:3000/#origamClientCallback/"},
+                    RequireConsent = false,
+                    RequirePkce = true,
+                    PostLogoutRedirectUris = identityServerConfig.PostLogoutRedirectUris,
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.LocalApi.ScopeName,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                    },
+                    AllowOfflineAccess = true,
+                    AllowAccessTokensViaBrowser = true,
+                    AccessTokenType = AccessTokenType.Reference
+                },
             };
         }
     }
