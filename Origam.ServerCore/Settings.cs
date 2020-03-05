@@ -45,14 +45,10 @@ namespace Origam.ServerCore
                     {
                         new Secret(identityServerConfig.ClientSecret.Sha256())
                     },
-                    RedirectUris = {"https://localhost:3000/#origamClientCallback/", 
-                        "http://localhost:3000/#origamClientCallback/",
-                        "http://localhost/xamarincallback"},
+                    RedirectUris = identityServerConfig.RedirectUris,
                     RequireConsent = false,
                     RequirePkce = true,
                     PostLogoutRedirectUris = identityServerConfig.PostLogoutRedirectUris,
-                    // PostLogoutRedirectUris = { $"{clientsUrl["Xamarin"]}/Account/Redirecting" },
-                    // AllowedCorsOrigins = { "http://eshopxamarin" },
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.LocalApi.ScopeName,
@@ -69,7 +65,7 @@ namespace Origam.ServerCore
                     ClientId = "origamWebClient",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
-                    RedirectUris = {"https://localhost:3000/#origamClientCallback/"},
+                    RedirectUris =  identityServerConfig.RedirectUris,
                     RequireConsent = false,
                     RequirePkce = true,
                     PostLogoutRedirectUris = identityServerConfig.PostLogoutRedirectUris,

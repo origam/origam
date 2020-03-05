@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 
@@ -38,6 +39,7 @@ namespace Origam.ServerCore.Configuration
         public string[] PostLogoutRedirectUris { get; }
         
         public string ClientSecret { get; }
+        public string[] RedirectUris { get; set; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
@@ -48,6 +50,7 @@ namespace Origam.ServerCore.Configuration
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
             GoogleClientSecret = identityServerSection["GoogleClientSecret"] ?? "";
             PostLogoutRedirectUris = identityServerSection.GetSection("PostLogoutRedirectUris").Get<string[]>();
+            PostLogoutRedirectUris = identityServerSection.GetSection("RedirectUris").Get<string[]>();
             ClientSecret= identityServerSection["ClientSecret"] ?? throw new Exception("ClientSecret not found in config");
         }
     }
