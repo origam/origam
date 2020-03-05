@@ -18,7 +18,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   }
 
   reloader: IReloader | null = null;
-
+  @observable stackPosition: number = 0;
   @observable title = "";
   @observable isActive = false;
   isDialog = false;
@@ -45,7 +45,6 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   parent?: any;
 
   menuItemType: IMainMenuItemType = null as any;
-  dontReque = undefined;
 
   dontRequestData = false;
   dialogInfo = undefined;

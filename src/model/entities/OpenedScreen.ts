@@ -20,12 +20,15 @@ export class OpenedScreen implements IOpenedScreen {
     this.content.parent = this;
   }
 
+  @observable stackPosition: number = 0;
   @observable isActive = false;
   dontRequestData: boolean = false;
   menuItemId: string = "";
   menuItemType: IMainMenuItemType = null as any;
   order: number = 0;
   title: string = "";
+  @observable isSleeping?: boolean = false;
+  @observable isSleepingDirty?: boolean = false;
   @observable content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
 

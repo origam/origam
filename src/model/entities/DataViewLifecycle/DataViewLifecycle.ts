@@ -1,6 +1,6 @@
 import Axios from "axios";
 import _ from "lodash";
-import { action, computed, flow, observable, reaction } from "mobx";
+import { action, computed, flow, observable, reaction, comparer } from "mobx";
 import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
 import { handleError } from "model/actions/handleError";
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
@@ -82,14 +82,24 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }, 100);
   }
 
-  @action.bound startSelectedRowReaction() {
+  _selectedRowReactionDisposer: any;
+  @action.bound startSelectedRowReaction(fireImmediately?: boolean) {
+    console.log('selrow reaction started')
     const self = this;
-    return reaction(
+    return (this._selectedRowReactionDisposer = reaction(
       () => {
         return getSelectedRowId(this);
       },
-      () => self.onSelectedRowIdChange()
-    );
+      () => self.onSelectedRowIdChange(),
+      { equals: comparer.structural, fireImmediately }
+    ));
+  }
+
+  @action.bound stopSelectedRowReaction() {
+    if (this._selectedRowReactionDisposer) {
+      this._selectedRowReactionDisposer();
+      console.log('selrow reaction stopped')
+    }
   }
 
   *navigateAsChild() {

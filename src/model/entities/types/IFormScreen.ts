@@ -1,11 +1,9 @@
 import { IDataView } from "./IDataView";
 import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
-import {
-  IFormScreenLifecycle,
-  IFormScreenLifecycle02
-} from "./IFormScreenLifecycle";
+import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
+import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
 
 /*
 export interface ILoadedFormScreenData {
@@ -72,6 +70,8 @@ export const isILoadedFormScreen = (o: any): o is ILoadedFormScreen =>
 
 export interface IFormScreenEnvelopeData {
   formScreenLifecycle: IFormScreenLifecycle02;
+  preloadedSessionId?: string;
+  refreshOnReturnType?: IRefreshOnReturnType;
 }
 
 export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
@@ -81,7 +81,7 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
   formScreen?: IFormScreen;
 
   setFormScreen(formScreen?: IFormScreen): void;
-  start(initUIResult: any): Generator;
+  start(initUIResult: any, preloadIsDirty?: boolean): Generator;
 
   parent?: any;
 }
@@ -113,6 +113,7 @@ export interface IFormScreen extends IFormScreenData {
 
   isLoading: false;
   rootDataViews: IDataView[];
+  nonRootDataViews: IDataView[];
   dontRequestData: boolean;
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];

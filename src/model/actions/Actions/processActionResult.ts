@@ -10,6 +10,7 @@ import actions from "model/actions-tree";
 import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
 import { openNewUrl } from "../Workbench/openNewUrl";
 import { processCRUDResult, ICRUDResult } from "../DataLoading/processCRUDResult";
+import { IRefreshOnReturnType } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 
 export interface IOpenNewForm {
   (
@@ -21,7 +22,8 @@ export interface IOpenNewForm {
     parameters: { [key: string]: any },
     formSessionId?: string,
     isSessionRebirth?: boolean,
-    registerSession?: true
+    registerSession?: true,
+    refreshOnReturnType?: IRefreshOnReturnType
   ): Generator; //boolean
 }
 
@@ -69,7 +71,7 @@ export function processActionResult2(dep: {
     for (let actionResultItem of actionResultList) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
-          const { request } = actionResultItem;
+          const { request, refreshOnReturnType } = actionResultItem;
           const {
             objectId,
             typeString,
@@ -80,16 +82,18 @@ export function processActionResult2(dep: {
             dialogHeight,
             caption
           } = request;
-          const dialogInfo = isModalDialog
-            ? new DialogInfo(dialogWidth, dialogHeight)
-            : undefined;
+          const dialogInfo = isModalDialog ? new DialogInfo(dialogWidth, dialogHeight) : undefined;
           yield* dep.openNewForm(
             objectId,
             typeString,
             caption || dep.getActionCaption(),
             !dataRequested,
             dialogInfo,
-            parameters
+            parameters,
+            undefined,
+            undefined,
+            undefined,
+            refreshOnReturnType
           );
           break;
         }
@@ -101,8 +105,8 @@ export function processActionResult2(dep: {
           yield* dep.refreshForm();
           break;
         }
-        case IActionResultType.UpdateData:{
-          yield* dep.processCRUDResult(actionResultItem.changes)
+        case IActionResultType.UpdateData: {
+          yield* dep.processCRUDResult(actionResultItem.changes);
           break;
         }
         case IActionResultType.OpenUrl: {

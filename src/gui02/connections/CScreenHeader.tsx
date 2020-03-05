@@ -3,14 +3,14 @@ import { ScreenHeader } from "gui02/components/ScreenHeader/ScreenHeader";
 import { ScreenHeaderAction } from "gui02/components/ScreenHeader/ScreenHeaderAction";
 import { ScreenHeaderPusher } from "gui02/components/ScreenHeader/ScreenHeaderPusher";
 import { MobXProviderContext, observer } from "mobx-react";
+import { onFullscreenClick } from "model/actions-ui/ScreenHeader/onFullscreenClick";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { IWorkbench } from "model/entities/types/IWorkbench";
-import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
-import React from "react";
-import { getIsFormScreenWorking } from "model/selectors/FormScreen/getIsFormScreenWorking";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import { onFullscreenClick } from "model/actions-ui/ScreenHeader/onFullscreenClick";
+import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
 import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
+import React from "react";
+import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -21,14 +21,12 @@ export class CScreenHeader extends React.Component {
   }
 
   getLabel(openedScreen: IOpenedScreen) {
-    return (/*!openedScreen.content.isLoading
-      ? openedScreen.content.formScreen!.title
-      :*/ openedScreen.title);
+    return openedScreen.title;
   }
 
   render() {
-    const openedScreenItems = getOpenedScreenItems(this.workbench);
-    const activeScreen = openedScreenItems.find(item => item.isActive);
+    const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
+    const activeScreen = openedScreenItems.find(item => getIsTopmostNonDialogScreen(item));
     if (!activeScreen) {
       return null;
     }
@@ -37,13 +35,10 @@ export class CScreenHeader extends React.Component {
       return null;
     }*/
     const isFullscreen = getIsCurrentScreenFull(activeScreen);
-    if(!content) return null;
+    if (!content) return null;
     return (
       <ScreenHeader
-        isLoading={
-          content.isLoading ||
-          getIsScreenOrAnyDataViewWorking(content.formScreen!)
-        }
+        isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
       >
         <h1>{this.getLabel(activeScreen)}</h1>
         {/*<ScreenheaderDivider />
@@ -80,10 +75,7 @@ export class CScreenHeader extends React.Component {
           <Icon src="./icons/search-filter.svg" />
         </ScreenHeaderAction>
         <ScreenheaderDivider />*/}
-        <ScreenHeaderAction
-          onClick={onFullscreenClick(activeScreen)}
-          isActive={isFullscreen}
-        >
+        <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
           <Icon src="./icons/fullscreen.svg" />
         </ScreenHeaderAction>
         {/*<ScreenHeaderAction>

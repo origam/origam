@@ -83,6 +83,8 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       break;
     }
     case IResponseOperation.CurrentRecordNeedsUpdate: {
+
+      // TODO: Throw away all data and force further navigation / throw away all rowstates
       const dataViews = getDataViewList(ctx);
       for(let dataView of dataViews) {
         if(getIsBindingRoot(dataView)) {

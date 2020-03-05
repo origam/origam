@@ -7,6 +7,7 @@ import { ScreenContainer } from "gui02/components/Screen/ScreenContainer";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 import { WebScreen } from "gui02/components/WebScreen/WebScreen";
 import { IWebScreen } from "model/entities/types/IWebScreen";
+import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer(props => {
   const { openedScreen } = props;
@@ -17,7 +18,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer(p
     }
   }, []);
   return (
-    <Screen isHidden={!openedScreen.isActive}>
+    <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
       <WebScreen
         url={openedScreen.screenUrl || ""}
         isLoading={isLoading}
@@ -59,8 +60,8 @@ export class CScreen extends React.Component<{
       <Provider formScreen={formScreen}>
         <>
           {!formScreen.isLoading && (
-            <Screen isHidden={!openedScreen.isActive}>
-              <CtxPanelVisibility.Provider value={{ isVisible: openedScreen.isActive }}>
+            <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
+              <CtxPanelVisibility.Provider value={{ isVisible: getIsTopmostNonDialogScreen(openedScreen) }}>
                 <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI} />
               </CtxPanelVisibility.Provider>
             </Screen>

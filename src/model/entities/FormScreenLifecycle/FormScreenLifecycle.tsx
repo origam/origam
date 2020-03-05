@@ -1,17 +1,24 @@
+import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, computed, observable, autorun, flow, when, reaction } from "mobx";
+import { action, autorun, computed, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { handleError } from "model/actions/handleError";
+import { clearRowStates } from "model/actions/RowStates/clearRowStates";
+import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
 import { IAction } from "model/entities/types/IAction";
 import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
 import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
 import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
+import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { getDialogStack } from "model/selectors/getDialogStack";
+import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
 import React from "react";
 import { map2obj } from "utils/objects";
 import { interpretScreenXml } from "xmlInterpreters/screenXml";
@@ -21,16 +28,6 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
-import { getMenuItemType } from "model/selectors/getMenuItemType";
-import { IMainMenuItemType } from "../types/IMainMenu";
-import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
-import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
-import { handleError } from "model/actions/handleError";
-import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
-import _ from "lodash";
-import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
-import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -225,15 +222,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }*/
 
-  *destroyUI() {
-    try {
-      this.inFlow++;
-      const api = getApi(this);
-      yield api.destroyUI({ FormSessionId: getSessionId(this) });
-    } finally {
-      this.inFlow--;
-    }
-  }
+
 
   *applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
@@ -252,28 +241,45 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *loadData(selectFirstRow: boolean) {
+    const api = getApi(this);
+    const formScreen = getFormScreen(this);
     try {
       this.inFlow++;
-      const api = getApi(this);
-      const formScreen = getFormScreen(this);
+      for (let dataView of formScreen.nonRootDataViews) {
+        dataView.dataTable.clear();
+        dataView.setSelectedRowId(undefined);
+        dataView.lifecycle.stopSelectedRowReaction();
+      }
       for (let rootDataView of formScreen.rootDataViews) {
-        const loadedData = yield api.getRows({
-          MenuId: getMenuItemId(rootDataView),
-          SessionFormIdentifier: getSessionId(this),
-          DataStructureEntityId: getDataStructureEntityId(rootDataView),
-          Filter: "",
-          Ordering: [],
-          RowLimit: 999999,
-          ColumnNames: getColumnNamesToLoad(rootDataView),
-          MasterRowId: undefined
-        });
+        rootDataView.saveViewState();
         rootDataView.dataTable.clear();
-        rootDataView.dataTable.setRecords(loadedData);
-        if (selectFirstRow) {
-          rootDataView.selectFirstRow();
+        rootDataView.setSelectedRowId(undefined);
+        rootDataView.lifecycle.stopSelectedRowReaction();
+        try {
+          const loadedData = yield api.getRows({
+            MenuId: getMenuItemId(rootDataView),
+            SessionFormIdentifier: getSessionId(this),
+            DataStructureEntityId: getDataStructureEntityId(rootDataView),
+            Filter: "",
+            Ordering: [],
+            RowLimit: 999999,
+            ColumnNames: getColumnNamesToLoad(rootDataView),
+            MasterRowId: undefined
+          });
+          rootDataView.dataTable.setRecords(loadedData);
+          if (selectFirstRow) {
+            rootDataView.selectFirstRow();
+          }
+          //debugger
+          rootDataView.restoreViewState();
+        } finally {
+          rootDataView.lifecycle.startSelectedRowReaction(true);
         }
       }
     } finally {
+      for (let dataView of formScreen.nonRootDataViews) {
+        dataView.lifecycle.startSelectedRowReaction();
+      }
       this.inFlow--;
     }
   }
@@ -347,8 +353,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *saveSession() {
-    if(getIsSuppressSave(this)) {
-      return
+    if (getIsSuppressSave(this)) {
+      return;
     }
     try {
       this.inFlow++;
@@ -365,13 +371,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *refreshSession() {
     // TODO: Refresh lookups and rowstates !!!
     try {
-      getFormScreen(this).dataViews.forEach(dv => dv.saveViewState());
       this.inFlow++;
       if (this.isReadData) {
+        getFormScreen(this).dataViews.forEach(dv => dv.saveViewState());
         const api = getApi(this);
         const result = yield api.refreshSession(getSessionId(this));
         yield* this.applyData(result, false);
         getFormScreen(this).setDirty(false);
+        getFormScreen(this).dataViews.forEach(dv => dv.restoreViewState());
       } else {
         yield* this.loadData(false);
       }
@@ -381,7 +388,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         console.log(getFormScreen(this).dataViews.map(dv => !dv.isWorking));
         await when(() => this.allDataViewsSteady);
         console.log("Refreshing view state.");
-        getFormScreen(this).dataViews.forEach(dv => dv.restoreViewState());
       }, 10);
     }
     yield* clearRowStates(this)();
@@ -430,7 +436,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.inFlow++;
       this.clearAutorefreshInterval();
       this.disposers.forEach(disposer => disposer());
-      yield* this.destroyUI();
       yield* closeForm(this)();
     } finally {
       this.inFlow--;

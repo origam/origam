@@ -65,10 +65,7 @@ export class CheckListControler {
     })();
   }
 
-  @action.bound handleClick(
-    event: any,
-    item: { value: string; label: string }
-  ) {
+  @action.bound handleClick(event: any, item: { value: string; label: string }) {
     event.preventDefault();
     const currentIndex = this.props.value.findIndex(id => item.value === id);
     if (currentIndex > -1) {
@@ -97,9 +94,7 @@ export const CheckList: React.FC<{
       onChange={props.onChange}
       api={getApi(property)}
       DataStructureEntityId={getDataStructureEntityId(property)}
-      ColumnNames={property!.lookup.dropDownColumns.map(
-        (column: any) => column.id
-      )}
+      ColumnNames={property!.lookup.dropDownColumns.map((column: any) => column.id)}
       Property={property.id}
       Parameters={property!.lookup.parameters}
       RowId={getSelectedRowId(property)}

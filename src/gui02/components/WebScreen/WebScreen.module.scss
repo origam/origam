@@ -4,6 +4,7 @@
   width: 100%;
   height: 100%;
   border: none;
+  position: relative;
 
   .webContent {
     width: 100%;
@@ -15,5 +16,15 @@
     @include progressIndicator;
     top: 0;
     background-color: white;
+  }
+
+  .transparentOverlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
   }
 }

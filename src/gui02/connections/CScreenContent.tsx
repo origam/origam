@@ -1,10 +1,9 @@
-import React from "react";
-import { observer } from "mobx-react";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { MobXProviderContext } from "mobx-react";
-import { getOpenedScreenItems } from "model/selectors/getOpenedScreenItems";
-import { CScreen } from "./CScreen";
 import { ScreenContainer } from "gui02/components/Screen/ScreenContainer";
+import { MobXProviderContext, observer } from "mobx-react";
+import { IWorkbench } from "model/entities/types/IWorkbench";
+import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
+import React from "react";
+import { CScreen } from "./CScreen";
 
 @observer
 export class CScreenContent extends React.Component {
@@ -15,14 +14,11 @@ export class CScreenContent extends React.Component {
   }
 
   render() {
-    const openedScreenItems = getOpenedScreenItems(this.workbench);
+    const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
     return (
       <ScreenContainer>
         {openedScreenItems.map(item => (
-          <CScreen
-            key={`${item.menuItemId}@${item.order}`}
-            openedScreen={item}
-          />
+          <CScreen key={`${item.menuItemId}@${item.order}`} openedScreen={item} />
         ))}
       </ScreenContainer>
     );
