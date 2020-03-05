@@ -34,7 +34,22 @@ namespace Origam.DA.Service.MetaModelUpgrade
     public abstract class UpgradeScriptContainer
     {
         protected readonly List<UpgradeScript> upgradeScripts = new List<UpgradeScript>();
+        private PropertyToNamespaceMapping namespaceMapping;
         public abstract string FullTypeName { get;}
+
+        private PropertyToNamespaceMapping NamespaceMapping
+        {
+            get
+            {
+                if (namespaceMapping == null)
+                {
+                    Type classType = Reflector.GetTypeByName(FullTypeName);
+                    namespaceMapping = new PropertyToNamespaceMapping(classType);
+                }
+                return namespaceMapping;
+            }
+        }
+
         public void Upgrade(OrigamXmlDocument doc, XmlNode classNode, Version fromVersion, Version toVersion)
         {
             var scriptsToRun = upgradeScripts
@@ -81,15 +96,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
             var updatedNamespace = OrigamNameSpace
                 .Create(FullTypeName, toVersion)
                 .StringValue;
-            string oldNamespace = document.FileElement.Attributes
-                .Cast<XmlAttribute>()
-                .FirstOrDefault(attr =>
-                    OrigamNameSpace.Create(attr.Value).FullTypeName == FullTypeName)
-                ?.Value;
-            if (string.IsNullOrWhiteSpace(oldNamespace))
-            {
-                throw new Exception($"Could not find xml namespace for {{FullTypeName}} in:\n{document.OuterXml}");
-            }
+            string oldNamespace = GetThisClassNamespace(document)
+                                  ?? throw new Exception($"Could not find xml namespace for {{FullTypeName}} in:\n{document.OuterXml}");
+            
             document.RenameNamespace(oldNamespace, updatedNamespace);
         }
         
@@ -103,25 +112,19 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node.OuterXml}");
             }
+            
+            var thisTypeNamespace = 
+                GetThisClassNamespace((OrigamXmlDocument) node.OwnerDocument)
+                ?? NamespaceMapping.GetNamespaceByXmlAttributeName(attributeName);
 
-            var version = OrigamNameSpace.Create(node.NamespaceURI).Version.ToString();
-            Type classType = Reflector.GetTypeByName(FullTypeName);
-            var namespaceMapping = new PropertyToNamespaceMapping(classType, type => VersionNamespaceMapper(type, version));
-            string nameSpace = namespaceMapping.GetNamespaceByXmlAttributeName(attributeName);
-            ((XmlElement) node).SetAttribute(attributeName,nameSpace, attributeValue);   
+            ((XmlElement) node).SetAttribute(attributeName,thisTypeNamespace, attributeValue);   
         }
-        
-        private string VersionNamespaceMapper(Type type, string version)
+
+        private string GetThisClassNamespace(OrigamXmlDocument document)
         {
-            string xmlNameSpaceWithCurrentVersion = XmlNamespaceTools.GetXmlNameSpace(type);
-            return 
-                string.Join(
-                    "/", 
-                    xmlNameSpaceWithCurrentVersion
-                        .Split('/')
-                        .SkipLast(1)
-                        .Concat(new []{version})
-                );
+            return document.Namespaces
+                .FirstOrDefault(nameSpace => nameSpace.FullTypeName == FullTypeName)
+                ?.StringValue;
         }
     }
     

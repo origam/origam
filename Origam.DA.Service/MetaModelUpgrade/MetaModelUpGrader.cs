@@ -129,12 +129,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XmlNode classNode)
         {
-            var origamNameSpaces = classNode.Attributes
+            return classNode.Attributes
                 .Cast<XmlAttribute>()
                 .Select(attr => attr.NamespaceURI)
                 .Distinct()
                 .Select(OrigamNameSpace.Create);
-            return origamNameSpaces;
         }
 
         private void RunUpgradeScripts(XmlNode classNode,
