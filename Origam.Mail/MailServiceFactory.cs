@@ -40,15 +40,16 @@ namespace Origam.Mail
         
         public static AbstractMailService GetMailService()
         {
-            // return new OpenSmtpMailService();
 #if NETSTANDARD
             var mailConfig = configuration.GetSection("MailConfig");
-            string fromAddress = mailConfig["FromAddress"];
+            string userName = mailConfig["UserName"];
+            bool useSsl = mailConfig.GetBool("UseSsl");
             string password = mailConfig["Password"];
             string server = mailConfig["Server"];
             int port = mailConfig.GetInt("Port");
 
-            return new SystemNetMailService(server, port, fromAddress, password);            
+            return new SystemNetMailService(
+                server:server, port:port, userName: userName, password:password, useSsl:useSsl);            
 #else
             return new SystemNetMailService();            
 #endif

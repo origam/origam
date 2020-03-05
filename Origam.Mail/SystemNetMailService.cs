@@ -31,9 +31,9 @@ namespace Origam.Mail
 {
     public class SystemNetMailService : AbstractMailService
     {
-
-        private readonly string fromAddress;
+        private readonly string userName;
         private readonly string password;
+        private readonly bool useSsl;
         private readonly string defaultServer;
         private readonly int defaultPort;
 
@@ -41,18 +41,19 @@ namespace Origam.Mail
         {
         }
 
-        public SystemNetMailService(string server, int port, string fromAddress = null,
-            string password = null)
+        public SystemNetMailService(string server, int port, 
+           string userName = null, string password = null, bool useSsl = true)
         {
             if (string.IsNullOrWhiteSpace(password) &&
-                !string.IsNullOrWhiteSpace(fromAddress))
+                !string.IsNullOrWhiteSpace(userName))
             {
                 throw new ArgumentException(nameof(password)+" cannot be empty if fromAddress is not empty");
             }
             if(string.IsNullOrWhiteSpace(server)) throw new ArgumentException(nameof(server)+" cannot be empty");
 
-            this.fromAddress = fromAddress;
+            this.userName = userName;
             this.password = password;
+            this.useSsl = useSsl;
             defaultServer = server;
             defaultPort = port;
         }
@@ -235,10 +236,10 @@ namespace Origam.Mail
             {
                 smtpClient.Host = defaultServer;
                 smtpClient.Port = defaultPort;
-                smtpClient.EnableSsl = true;
+                smtpClient.EnableSsl = useSsl;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(fromAddress, password);
+                smtpClient.Credentials = new NetworkCredential(userName, password);
             }
 
             return smtpClient;
