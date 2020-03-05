@@ -123,6 +123,21 @@
   <data name="ErrorReportNotAvailable" xml:space="preserve">
     <value>Report no longer available.</value>
   </data>
+  <data name="ErrorBlobNotAvailable" xml:space="preserve">
+    <value>BLOB no longer available.</value>
+  </data>
+  <data name="ErrorBlobMemberBlobLookupNotSpecified" xml:space="preserve">
+    <value>Both BlobMember and BlobLookupId are not specified. Cannot download blob.</value>
+  </data>
+  <data name="ErrorBlobNoData" xml:space="preserve">
+    <value>Data source did not return any data.</value>
+  </data>
+  <data name="ErrorBlobNotBlob" xml:space="preserve">
+    <value>Data source returned data that is not BLOB.</value>
+  </data>
+  <data name="ErrorBlobRecordEmpty" xml:space="preserve">
+    <value>Record empty, cannot download file.</value>
+  </data>
   <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
     <value>Workflow session invalid.</value>
   </data>

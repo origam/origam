@@ -21,14 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.IO.Compression;
 using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Origam.DA;
 using Origam.Schema.MenuModel;
 using Origam.Server;
 using Origam.ServerCore.Model.Blob;
 using Origam.ServerCore.Model.UIService;
+using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Controller
@@ -38,12 +44,16 @@ namespace Origam.ServerCore.Controller
     public class BlobController : AbstractController
     {
         private readonly SessionObjects sessionObjects;
+        private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataService dataService;
+        private readonly CoreHttpTools httpTools = new CoreHttpTools();
         public BlobController(
             SessionObjects sessionObjects, 
+            IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log) : base(log)
         {
             this.sessionObjects = sessionObjects;
+            this.localizer = localizer;
             dataService = DataService.GetDataService();
         }
         [HttpPost("[action]")]
@@ -65,7 +75,106 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(rowData => CreateToken(input, rowData))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
-
+        [AllowAnonymous]
+        [HttpGet("{token:guid}")]
+        public IActionResult Get(Guid token)
+        {
+            try
+            {
+                var blobDownloadRequest = sessionObjects.SessionManager
+                    .GetBlobDownloadRequest(token);
+                if(blobDownloadRequest == null)
+                {
+                    return NotFound(localizer["ErrorBlobNotAvailable"]
+                        .ToString());
+                }
+                if(string.IsNullOrEmpty(blobDownloadRequest.BlobMember)
+                && blobDownloadRequest.BlobLookupId == Guid.Empty)
+                {
+                    return BadRequest(
+                        localizer["ErrorBlobMemberBlobLookupNotSpecified"]
+                            .ToString());
+                }
+                Stream resultStream;
+                MemoryStream memoryStream;
+                var processBlobField 
+                    = string.IsNullOrEmpty(blobDownloadRequest.BlobMember) 
+                      && (blobDownloadRequest.Row[
+                              blobDownloadRequest.BlobMember] != DBNull.Value);
+                if((blobDownloadRequest.BlobLookupId != Guid.Empty) 
+                && !processBlobField)
+                {
+                    var lookupService = ServiceManager.Services
+                        .GetService<IDataLookupService>();
+                    var result = lookupService.GetDisplayText(
+                        lookupId: blobDownloadRequest.BlobLookupId, 
+                        lookupValue: DatasetTools.PrimaryKey(
+                            blobDownloadRequest.Row)[0], 
+                        useCache: false, 
+                        returnMessageIfNull: false, 
+                        transactionId: null);
+                    byte[] bytes;
+                    switch(result)
+                    {
+                        case null:
+                        {
+                            return BadRequest(localizer["ErrorBlobNoData"]
+                                .ToString());
+                        }
+                        case byte[] arrayOfBytes:
+                        {
+                            bytes = arrayOfBytes;
+                            break;
+                        }
+                        default:
+                        {
+                            return BadRequest(localizer["ErrorBlobNotBlob"]
+                                .ToString());
+                        }
+                    }
+                    memoryStream = new MemoryStream(bytes);
+                }
+                else
+                {
+                    if(blobDownloadRequest.Row[blobDownloadRequest.BlobMember] 
+                    == DBNull.Value)
+                    {
+                        return BadRequest(localizer["ErrorBlobRecordEmpty"]
+                            .ToString());
+                    }
+                    memoryStream = new MemoryStream((byte[])blobDownloadRequest
+                        .Row[blobDownloadRequest.BlobMember]);
+                }
+                if(blobDownloadRequest.IsCompressed)
+                {
+                    resultStream = new GZipStream(memoryStream,
+                        CompressionMode.Decompress);
+                }
+                else
+                {
+                    resultStream = memoryStream;
+                }
+                var filename = (string)blobDownloadRequest
+                    .Row[blobDownloadRequest.Property];
+                var disposition = httpTools.GetFileDisposition(
+                    new CoreRequestWrapper(Request), filename);
+                if(!blobDownloadRequest.IsPreview)
+                {
+                    disposition = "attachment; " + disposition;
+                }
+                Response.Headers.Add(
+                    HeaderNames.ContentDisposition, disposition);
+                return File(resultStream, HttpTools.GetMimeType(filename));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+            finally
+            {
+                sessionObjects.SessionManager.RemoveBlobDownloadRequest(token);
+            }
+        }
         private IActionResult CreateToken(
             BlobDownloadTokenInput input, RowData rowData)
         {
