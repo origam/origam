@@ -50,7 +50,7 @@ namespace Origam.ServerCore.Configuration
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
             GoogleClientSecret = identityServerSection["GoogleClientSecret"] ?? "";
             PostLogoutRedirectUris = identityServerSection.GetSection("PostLogoutRedirectUris").Get<string[]>();
-            PostLogoutRedirectUris = identityServerSection.GetSection("RedirectUris").Get<string[]>();
+            RedirectUris = identityServerSection.GetSection("RedirectUris").Get<string[]>();
             ClientSecret= identityServerSection["ClientSecret"] ?? throw new Exception("ClientSecret not found in config");
         }
     }
