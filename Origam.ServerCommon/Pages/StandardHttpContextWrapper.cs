@@ -31,7 +31,7 @@ namespace Origam.ServerCommon.Pages
         {
             this.context = context;
             Response = new StandardHttpResponseWrapper(context);
-            Request=new StandardHttpRequestWrapper(context);
+            Request = new StandardHttpRequestWrapper(context);
         }
 
         public IResponseWrapper Response { get; }

@@ -23,6 +23,7 @@ using System;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -153,11 +154,6 @@ namespace Origam.ServerCore
             return startUpConfiguration
                 .UserApiPublicRoutes
                 .Any(route => context.Request.Path.ToString().StartsWith(route));
-        }
-        private bool IsReportRoute(HttpContext context)
-        {
-            return context.Request.Path.ToString()
-                .StartsWith("/internalApi/Report");
         }
     }
 }
