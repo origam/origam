@@ -38,20 +38,20 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         [Test]
         public void ShouldUpgradeByOneVersion()
         {
-            XmlFileData xmlFileData = LoadFile("TestPersistedClassV1.0.1.origam");
+            XmlFileData xmlFileData = LoadFile("TestPersistedClassV6.0.1.origam");
             var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
             bool someFilesWereUpgraded = sut.TryUpgrade(
                 new List<XmlFileData>{xmlFileData});
 
-            XmlNode classNode = xmlFileData.XmlDocument.ChildNodes[1].ChildNodes[0];
-            Assert.True(classNode.Attributes["newProperty1"] != null); // assert the property was not removed
-            Assert.True(classNode.Attributes["newProperty1"].Value == "5"); // assert the property value was not changed
-            Assert.True(classNode.Attributes["newProperty2"] != null);
-            Assert.True(classNode.Attributes["TestBaseClassProperty"] != null);
-            Assert.True(classNode.Attributes["TestBaseClassProperty"].Value == "5");
-            Assert.True(classNode.Attributes["versions"] != null);
-            StringAssert.Contains("Origam.DA.ServiceTests.TestPersistedClass 1.0.2", classNode.Attributes["versions"].Value);
-            StringAssert.Contains("Origam.DA.ServiceTests.TestBaseClass 1.0.1", classNode.Attributes["versions"].Value);
+            XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
+            XmlNode classNode = fileElement.ChildNodes[0];
+            Assert.True(classNode.Attributes["tpc:newProperty1"] != null); // assert the property was not removed
+            Assert.True(classNode.Attributes["tpc:newProperty1"].Value == "5"); // assert the property value was not changed
+            Assert.True(classNode.Attributes["tpc:newProperty2"] != null);
+            Assert.True(classNode.Attributes["tbc:TestBaseClassProperty"] != null);
+            Assert.True(classNode.Attributes["tbc:TestBaseClassProperty"].Value == "5");
+            Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2")); 
+            Assert.That(fileElement.Attributes["xmlns:tbc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1"));
         }             
         
         [Test]
