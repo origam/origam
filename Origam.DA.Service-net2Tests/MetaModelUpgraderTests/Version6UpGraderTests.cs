@@ -42,9 +42,11 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
             Assert.That(fileElement.Attributes, Has.Count.EqualTo(2)); 
             Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.0")); 
-            Assert.That(fileElement.Attributes["xmlns:x"]?.Value, Is.EqualTo("http://schemas.origam.com/1.0.0/model-persistence")); 
+            Assert.That(fileElement.Attributes["xmlns:x"]?.Value, Is.EqualTo("http://schemas.origam.com/model-persistence/1.0.0")); 
             XmlNode classNode = fileElement.ChildNodes[0];
             Assert.That(classNode.Prefix, Is.EqualTo("tpc")); 
+            Assert.That(classNode.Attributes["id"]?.Value, Is.EqualTo("0000-0000")); 
+            Assert.That(classNode.Attributes["id"]?.NamespaceURI, Is.EqualTo("http://schemas.origam.com/model-persistence/1.0.0")); 
             Assert.That(classNode.Attributes["name"]?.Value, Is.Not.Null);
             Assert.That(classNode.Attributes["name"]?.NamespaceURI, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.0"));
         }             

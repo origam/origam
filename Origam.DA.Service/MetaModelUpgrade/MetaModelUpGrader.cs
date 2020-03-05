@@ -38,7 +38,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private readonly IFileWriter fileWriter;
 
         private static List<UpgradeScriptContainer> scriptContainers;
-        private readonly Version firstVersion = new Version("1.0.0");
+        private readonly Version firstVersion = new Version("6.0.0");
 
         private static void InstantiateScriptContainers(Assembly scriptAssembly)
         {
@@ -150,6 +150,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
     public class Version6UpGrader
     {
         private readonly OrigamXmlDocument xmlDocument;
+        private static string oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
+        private static string newPersistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
 
         public Version6UpGrader(OrigamXmlDocument xmlDocument)
         {
@@ -197,9 +199,13 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             foreach (var attribute in oldNode.Attributes.ToArray<XmlAttribute>())
             {
+                string namespaceUri = attribute.NamespaceURI == oldPersistenceNamespace
+                    ? newPersistenceNamespace
+                    : namespaceMapping.GetNamespaceByXmlAttributeName(attribute.Name);
+                
                 newNode.SetAttribute(
-                    attribute.Name,
-                    namespaceMapping.GetNamespaceByXmlAttributeName(attribute.Name),
+                    attribute.LocalName,
+                    namespaceUri,
                     attribute.Value);
             }
         }
@@ -228,6 +234,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
                             attr.Value == "http://schemas.origam.com/1.0.0/package")
                 .ToArray()
                 .ForEach(attr => xmlDocument.FileElement.Attributes.Remove(attr));
+            
+            xmlDocument.FileElement.SetAttribute("xmlns:x", newPersistenceNamespace);
         }
     }
 }

@@ -3,5 +3,6 @@
   <TestPersistedClass
     name="test v0"
     x:type="Origam.DA.ServiceTests.TestPersistedClass"
+    x:id="0000-0000"
 />
 </x:file>
