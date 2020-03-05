@@ -2,7 +2,7 @@ import Oidc from "oidc-client";
 
 const config = {
   authority: "https://localhost:3000/",
-  client_id: "xamarin",
+  client_id: "origamWebClient",
   redirect_uri: "https://localhost:3000/#origamClientCallback/",
   response_type: "code",
   scope: "openid IdentityServerApi offline_access",

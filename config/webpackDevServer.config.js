@@ -75,11 +75,11 @@ module.exports = function(proxy, allowedHost) {
     https: protocol === 'https',
     host,
     overlay: false,
-    historyApiFallback: {
+    historyApiFallback: false, /*{
       // Paths with dots should still use the history fallback.
       // See https://github.com/facebook/create-react-app/issues/387.
       disableDotRule: true,
-    },
+    },*/
     public: allowedHost,
     proxy,
     proxy: {
@@ -95,22 +95,26 @@ module.exports = function(proxy, allowedHost) {
         target: "https://localhost:44356",
         secure: false
       },
-      "/home/*": {
+      "/assets/*": {
         target: "https://localhost:44356",
         secure: false
       },
+      /*"/home/*": {
+        target: "https://localhost:44356",
+        secure: false
+      },*/
       /*"/icons/*": {
         target: "https://localhost:44356",
         secure: false
       },*/
-      "/lib/*": {
+      /*"/lib/*": {
         target: "https://localhost:44356",
         secure: false
-      },
-      "/js/*": {
+      },*/
+     /* "/js/*": {
         target: "https://localhost:44356",
         secure: false
-      },
+      },*/
       /*"/css/*": {
         target: "https://localhost:44356",
         secure: false
