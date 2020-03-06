@@ -102,7 +102,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             
             string nodeClass = OrigamNameSpace.Create(classNode?.NamespaceURI).FullTypeName;
             Versions persistedClassVersions = new Versions(origamNameSpaces);
-            Versions currentClassVersions = Versions.GetCurrentClassVersions(nodeClass);
+            Versions currentClassVersions =
+                Versions.GetCurrentClassVersions(nodeClass, persistedClassVersions);
             
             foreach (var pair in currentClassVersions)
             {
@@ -147,9 +148,14 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Version persistedClassVersion,
             Version currentClassVersion)
         {
-            var upgradeScriptContainer = scriptContainers
-                 .SingleOrDefault(container => container.FullTypeName == className) 
-                 ?? throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer).Name}<T> with generic type of {className}");
+            var containers = scriptContainers
+                .Where(container => container.FullTypeName == className)
+                .ToArray();
+            if (containers.Length != 1)
+            {
+                throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\"");
+            }
+            var upgradeScriptContainer = containers[0];
             upgradeScriptContainer.Upgrade(xmlFileData.XmlDocument, classNode, persistedClassVersion, currentClassVersion);
         }
     }

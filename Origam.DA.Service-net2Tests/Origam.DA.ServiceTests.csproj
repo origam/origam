@@ -194,6 +194,9 @@
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV6.0.1_WrongVersion.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV6.0.2_WithDeadBaseClass.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="_OrigamSettings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

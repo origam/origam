@@ -90,6 +90,29 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.True(classNode.Attributes["tpc:name"].Value == "test v0");
             Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2")); 
             Assert.That(fileElement.Attributes["xmlns:tbc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1"));
+        }        
+        
+        [Test]
+        public void ShouldRemoveDeadBaseClass()
+        {
+            XmlFileData xmlFileData = LoadFile("TestPersistedClassV6.0.2_WithDeadBaseClass.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            bool someFilesWereUpgraded = sut.TryUpgrade(
+                new List<XmlFileData>{xmlFileData});
+
+            XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
+            XmlNode classNode = fileElement.ChildNodes[0];
+            Assert.True(classNode.Attributes["tpc:newProperty1"] != null); 
+            Assert.True(classNode.Attributes["tpc:newProperty1"].Value == "5"); 
+            Assert.True(classNode.Attributes["tpc:newProperty2"] != null);
+            Assert.That(classNode.Attributes["tbc:TestBaseClassProperty"] != null);
+            Assert.True(classNode.Attributes["tbc:TestBaseClassProperty"].Value == "5");         
+            Assert.True(classNode.Attributes["tpc:name"] != null);
+            Assert.True(classNode.Attributes["tpc:name"].Value == "test v0");
+            Assert.That(classNode.Attributes["tdbc:deadClassProperty"]?.Value, Is.Null);
+            Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2")); 
+            Assert.That(fileElement.Attributes["xmlns:tbc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1"));
+            Assert.That(fileElement.Attributes["xmlns:tdc"]?.Value, Is.Null);
         }
 
         [Test]

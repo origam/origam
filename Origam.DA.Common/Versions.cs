@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using MoreLinq;
 using Origam.Extensions;
 
 namespace Origam.DA.Common
@@ -39,7 +40,8 @@ namespace Origam.DA.Common
            return new Versions(versionsDict);
         }
 
-        public static Versions GetCurrentClassVersions(string typeName)
+        public static Versions GetCurrentClassVersions(string typeName,
+            Versions persistedClassVersions)
         {
             Type type = Reflector.GetTypeByName(typeName);
             if (type == null)
@@ -60,6 +62,10 @@ namespace Origam.DA.Common
                 }
             }
 
+            persistedClassVersions
+                .Where(pair => !versions.ContainsKey(pair.Key))
+                .ForEach(pair => versions[pair.Key] = EndOfLife);
+            
             return versions;
         }
 
