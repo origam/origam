@@ -120,7 +120,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             //ProcessLoginCallbackForSaml2p(result, additionalLocalClaims, localSignInProps);
 
             // issue authentication cookie for user
-            var isuser = new IdentityServerUser(user.UserName)
+            var isuser = new IdentityServerUser(user.BusinessPartnerId)
             {
                 DisplayName = user.UserName,
                 IdentityProvider = provider,
@@ -137,7 +137,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 
             // check if external login is in the context of an OIDC request
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.UserName, user.UserName, true, context?.ClientId));
+            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.BusinessPartnerId, user.UserName, true, context?.ClientId));
 
             if (context != null)
             {
