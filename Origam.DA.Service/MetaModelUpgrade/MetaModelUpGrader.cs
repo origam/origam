@@ -79,9 +79,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 xmlFileData.XmlDocument
                     .ClassNodes
                     .ForEach(classNode => TryUpgrade(classNode, xmlFileData));
+                
+                WriteToFile(xmlFileData);
             }
 
             return false;
+        }
+
+        private void WriteToFile(XmlFileData xmlFileData)
+        {
+            xmlFileData.XmlDocument.FixNamespaces();
+            string upgradedXmlString = OrigamDocumentSorter
+                .CopyAndSort(xmlFileData.XmlDocument)
+                .ToBeautifulString();
+
+            fileWriter.Write(xmlFileData.FileInfo, upgradedXmlString);
         }
 
         private void TryUpgrade(XmlNode classNode, XmlFileData xmlFileData)
@@ -119,12 +131,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                         persistedClassVersions[className], currentVersion);
                 }
             }
-            xmlFileData.XmlDocument.RemoveUnusedNamespaces();
-            string upgradedXmlString = OrigamDocumentSorter
-                .CopyAndSort(xmlFileData.XmlDocument)
-                .ToBeautifulString();
-                
-            fileWriter.Write(xmlFileData.FileInfo, upgradedXmlString);
         }
 
         private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XmlNode classNode)

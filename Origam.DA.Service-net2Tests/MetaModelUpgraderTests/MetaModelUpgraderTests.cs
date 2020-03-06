@@ -82,12 +82,12 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
             XmlNode classNode = fileElement.ChildNodes[0];
             Assert.True(classNode.Attributes["tpc:newProperty1"] != null); // assert the property was not removed
-            Assert.True(classNode.Attributes["tpc:newProperty1"].Value == "5"); // assert the property value was not changed
+            Assert.True(classNode.Attributes["tpc:newProperty1"].Value == ""); // assert the property value was not changed
             Assert.True(classNode.Attributes["tpc:newProperty2"] != null);
-            Assert.True(classNode.Attributes["tbc:TestBaseClassProperty"] != null);
-            Assert.True(classNode.Attributes["tbc:TestBaseClassProperty"].Value == "5");         
-            Assert.True(classNode.Attributes["tbc:name"] != null);
-            Assert.True(classNode.Attributes["tbc:name"].Value == "test v0");
+            Assert.That(classNode.Attributes["tbc:TestBaseClassProperty"] != null);
+            Assert.True(classNode.Attributes["tbc:TestBaseClassProperty"].Value == "");         
+            Assert.True(classNode.Attributes["tpc:name"] != null);
+            Assert.True(classNode.Attributes["tpc:name"].Value == "test v0");
             Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2")); 
             Assert.That(fileElement.Attributes["xmlns:tbc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1"));
         }

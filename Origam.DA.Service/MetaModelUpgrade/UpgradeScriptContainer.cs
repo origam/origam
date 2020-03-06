@@ -98,10 +98,17 @@ namespace Origam.DA.Service.MetaModelUpgrade
             var updatedNamespace = OrigamNameSpace
                 .Create(FullTypeName, toVersion)
                 .StringValue;
-            string oldNamespace = GetThisClassNamespace(document)
-                                  ?? throw new Exception($"Could not find xml namespace for {{FullTypeName}} in:\n{document.OuterXml}");
-            
-            document.RenameNamespace(oldNamespace, updatedNamespace);
+            string oldNamespace = GetThisClassNamespace(document);
+            if (oldNamespace == null)
+            {
+                document.AddNamespace(  
+                    namespaceMapping.NodeNamespaceName, 
+                    namespaceMapping.NodeNamespace);
+            }
+            else
+            {
+                document.AddNamespaceForRenaming(oldNamespace, updatedNamespace);
+            }
         }
         
         protected void AddAttribute(XmlNode node, string attributeName, string attributeValue)

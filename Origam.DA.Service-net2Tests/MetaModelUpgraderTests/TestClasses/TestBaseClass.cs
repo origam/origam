@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System.Xml.Serialization;
 using Origam.DA.Common;
 
 namespace Origam.DA.ServiceTests
@@ -28,6 +29,7 @@ namespace Origam.DA.ServiceTests
     [ClassMetaVersion("6.0.1")]
     public class TestBaseClass
     {
+        [XmlAttribute("TestBaseClassProperty")]
         public string TestBaseClassProperty { get; set; }
     }
 }

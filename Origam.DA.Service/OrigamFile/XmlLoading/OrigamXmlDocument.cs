@@ -12,6 +12,9 @@ namespace Origam.DA.Service
         public bool IsEmpty => ChildNodes.Count < 2;
         public XmlElement FileElement => (XmlElement) ChildNodes[1];
         
+        private readonly Dictionary<string,string> namespacesToRename 
+            = new Dictionary<string, string>();
+        
         public IEnumerable<OrigamNameSpace> Namespaces =>   
             FileElement.Attributes
                 .Cast<XmlAttribute>()
@@ -49,8 +52,30 @@ namespace Origam.DA.Service
             FileElement.SetAttribute("xmlns:"+nextNamespaceName, nameSpace);
             return nextNamespaceName;
         }
-        
-        public void RemoveUnusedNamespaces()
+
+        public void AddNamespaceForRenaming(string oldNamespace, string updatedNamespace)
+        {
+            namespacesToRename.Add(oldNamespace, updatedNamespace);
+        }
+
+        public void FixNamespaces()
+        {
+            RenameNamespaces();
+            RemoveUnusedNamespaces();
+        }
+
+        private void RenameNamespaces()
+        {
+            string xmlString = OuterXml;
+            foreach (var pair in namespacesToRename)
+            {
+                xmlString = xmlString.Replace(pair.Key, pair.Value);
+            }
+
+            LoadXml(xmlString);
+        }
+
+        private void RemoveUnusedNamespaces()
         {
             foreach (var nameSpaceAttribute in FileElement.Attributes.ToArray<XmlAttribute>())
             {
@@ -71,13 +96,6 @@ namespace Origam.DA.Service
                     node.Attributes
                         .Cast<XmlAttribute>()
                         .Any(attr => attr.NamespaceURI == nameSpaceAttribute.Value));
-        }
-
-        public void RenameNamespace(string oldNamespace, string newNamespace)
-        {
-            string outerXml = OuterXml;
-            string newXml = outerXml.Replace(oldNamespace, newNamespace);
-            LoadXml(newXml);
         }
 
         public void RemoveWithNamespace(XmlNode nodeToDelete)
