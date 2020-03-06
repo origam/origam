@@ -117,16 +117,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            if (node.Attributes[attributeName] != null)
-            {
-                throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node.OuterXml}");
-            }
-            
+            XmlElement element = (XmlElement) node;
             var thisTypeNamespace = 
                 GetThisClassNamespace((OrigamXmlDocument) node.OwnerDocument)
                 ?? NamespaceMapping.GetNamespaceByXmlAttributeName(attributeName);
 
-            ((XmlElement) node).SetAttribute(attributeName,thisTypeNamespace, attributeValue);   
+            if (element.GetAttributeNode(attributeName,thisTypeNamespace ) != null)
+            {
+                throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node.OuterXml}");
+            }
+            element.SetAttribute(attributeName,thisTypeNamespace, attributeValue);   
         }
 
         private string GetThisClassNamespace(OrigamXmlDocument document)

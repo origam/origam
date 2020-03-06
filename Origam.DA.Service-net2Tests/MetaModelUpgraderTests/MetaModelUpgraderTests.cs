@@ -109,7 +109,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         {
             Assert.Throws<ClassUpgradeException>(() =>
             {
-                XmlFileData xmlFileData = LoadFile("TestPersistedClassV1.0.1_WrongVersion.origam");
+                XmlFileData xmlFileData = LoadFile("TestPersistedClassV6.0.1_WrongVersion.origam");
                 var sut = new MetaModelUpGrader(GetType().Assembly,  new NullFileWriter());
                 bool someFilesWereUpgraded = sut.TryUpgrade(
                     new List<XmlFileData>{xmlFileData});
