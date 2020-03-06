@@ -331,6 +331,18 @@ namespace Origam.Rule
 			return (bool) identityServiceAgent.Result; 
 		}
 
+		public bool CheckEntityRule(DataTable dt, object profileId)
+		{
+			if (dt.ExtendedProperties.Contains("EntityId"))
+			{
+				Guid entityId = (Guid)dt.ExtendedProperties["EntityId"];
+				IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+				ArrayList listOFrules = entity.RowLevelSecurityRules;
+				var ll = listOFrules.Cast<EntitySecurityRule>().Where(secrule => secrule.Type == PermissionType.Deny).ToList();
+			}
+			return false;
+		}
+
 		public static bool IsUserEmailConfirmed(string userId)
 		{
 			IServiceAgent identityServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService))
