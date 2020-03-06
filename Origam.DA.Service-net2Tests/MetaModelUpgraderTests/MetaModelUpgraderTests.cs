@@ -97,7 +97,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         {
             Assert.Throws<ClassUpgradeException>(() =>
             {
-                XmlFileData xmlFileData = LoadFile("TestPersistedClass2V1.0.0.origam");
+                XmlFileData xmlFileData = LoadFile("TestPersistedClass2V6.0.0.origam");
                 var sut = new MetaModelUpGrader(GetType().Assembly,  new NullFileWriter());
                 bool someFilesWereUpgraded = sut.TryUpgrade(
                     new List<XmlFileData>{xmlFileData});

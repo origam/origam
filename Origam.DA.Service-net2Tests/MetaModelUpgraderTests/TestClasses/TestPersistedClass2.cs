@@ -25,7 +25,7 @@ using Origam.DA.Common;
 
 namespace Origam.DA.ServiceTests
 {
-    [ClassMetaVersion("1.0.4")]
+    [ClassMetaVersion("6.0.4")]
     public class TestPersistedClass2
     {
         public string Name { get; set; }

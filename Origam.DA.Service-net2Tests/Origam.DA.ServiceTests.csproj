@@ -182,7 +182,7 @@
     <Content Include="MetaModelUpgraderTests\TestFiles\TestDeadClassV6.0.1.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass2V1.0.0.origam">
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass2V6.0.0.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV5.0.0.origam">

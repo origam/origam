@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" >
-  <TestPersistedClass2
-    name="test v0"
-    x:type="Origam.DA.ServiceTests.TestPersistedClass2"
-/>
-</x:file>
