@@ -72,7 +72,26 @@ namespace Origam.ServerCore.Controller
                         input.DataStructureEntityId,
                         Guid.Empty,
                         input.RowId))
-                .OnSuccess(rowData => CreateToken(input, rowData))
+                .OnSuccess(rowData => CreateDownloadToken(input, rowData))
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+        }
+        [HttpPost("[action]")]
+        public IActionResult UploadToken(
+            [FromBody][Required]BlobUploadTokenInput input)
+        {
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .OnSuccess(Authorize)
+                .OnSuccess(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .OnSuccess(CheckEntityBelongsToMenu)
+                .OnSuccess(entityData => 
+                    GetRow(
+                        dataService,
+                        entityData.Entity, 
+                        input.DataStructureEntityId,
+                        Guid.Empty,
+                        input.RowId))
+                .OnSuccess(rowData => CreateUploadToken(input, rowData))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
         [AllowAnonymous]
@@ -175,7 +194,7 @@ namespace Origam.ServerCore.Controller
                 sessionObjects.SessionManager.RemoveBlobDownloadRequest(token);
             }
         }
-        private IActionResult CreateToken(
+        private IActionResult CreateDownloadToken(
             BlobDownloadTokenInput input, RowData rowData)
         {
             var token = Guid.NewGuid();
@@ -186,6 +205,22 @@ namespace Origam.ServerCore.Controller
                     input.Parameters, 
                     input.Property, 
                     input.IsPreview));
+            return Ok(token);
+        }
+
+        private IActionResult CreateUploadToken(
+            BlobUploadTokenInput input, RowData rowData)
+        {
+            var token = Guid.NewGuid();
+            sessionObjects.SessionManager.AddBlobUploadRequest(
+                token,
+                new BlobUploadRequest(
+                    rowData.Row,
+                    SecurityManager.CurrentPrincipal,
+                    input.Parameters,
+                    input.DateCreated,
+                    input.DateLastModified,
+                    input.Property));
             return Ok(token);
         }
     }
