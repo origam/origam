@@ -78,8 +78,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }
                 xFileData.Document
                     .ClassNodes
+                    .ToArray()
                     .ForEach(classNode => TryUpgrade(classNode, xFileData));
                 
+                xFileData.Document.FixNamespaces();
                 WriteToFile(xFileData);
             }
 
@@ -88,7 +90,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         private void WriteToFile(XFileData xFileData)
         {
-            // xFileData.XmlDocument.FixNamespaces();
             // string upgradedXmlString = OrigamDocumentSorter
             //     .CopyAndSort(xFileData.XmlDocument)
             //     .ToBeautifulString();

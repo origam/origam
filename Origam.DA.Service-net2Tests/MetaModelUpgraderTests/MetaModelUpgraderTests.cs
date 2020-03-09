@@ -60,20 +60,19 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tbc"))?.Value, Is.EqualTo(tbcNamespace.ToString()));
         }             
         
-        // [Test]
-        // public void ShouldRemoveDeadClass()
-        // {
-        //     XmlFileData xmlFileData = LoadFile("TestDeadClassV6.0.1.origam");
-        //     var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
-        //     sut.TryUpgrade(new List<XmlFileData>{xmlFileData});
-        //
-        //     XmlNode fileNode = xmlFileData.XmlDocument.FileElement;
-        //     bool classNamespacesPresent = xmlFileData.XmlDocument.Namespaces
-        //         .Any(nameSpace => nameSpace.FullTypeName.Contains("TestDeadClass") ||
-        //                           nameSpace.FullTypeName.Contains("TestBaseClass"));
-        //     Assert.False(classNamespacesPresent);
-        //     Assert.That(fileNode.ChildNodes, Has.Count.EqualTo(0));
-        // }      
+        [Test]
+        public void ShouldRemoveDeadClass()
+        {
+            XFileData xFileData = LoadFile("TestDeadClassV6.0.1.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            sut.TryUpgrade(new List<XFileData>{xFileData});
+            
+            bool classNamespacesPresent = xFileData.Document.Namespaces
+                .Any(nameSpace => nameSpace.FullTypeName.Contains("TestDeadClass") ||
+                                  nameSpace.FullTypeName.Contains("TestBaseClass"));
+            Assert.False(classNamespacesPresent);
+            Assert.That(xFileData.Document.ClassNodes.ToList(), Has.Count.EqualTo(0));
+        }      
         //
         // [Test]
         // public void ShouldUpgradeTwoVersions()

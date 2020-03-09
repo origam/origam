@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using MoreLinq;
 using Origam.DA.Common;
 using Origam.Extensions;
 
@@ -142,6 +143,7 @@ namespace Origam.DA.Service
 
         public bool IsEmpty => XDocument.Root == null || !XDocument.Root.Descendants().Any();
         public XElement FileElement => XDocument.Root;
+        public IEnumerable<OrigamNameSpace> Namespaces => GetNamespaces(XDocument);
         
         public IEnumerable<XElement> ClassNodes => XDocument.Root.Descendants();
         public OrigamXDocument()
@@ -242,6 +244,26 @@ namespace Origam.DA.Service
                         el.Add(new XAttribute(updatedNamespace.GetName(attr.Name.LocalName), attr.Value));
                     });
             } 
+        }
+
+        public void FixNamespaces()
+        {
+            var nodeNamespaces = FileElement
+                .Descendants()
+                .Select(node => node.Name.NamespaceName);
+
+            var usedNamespaces = FileElement
+                .Descendants()
+                .Attributes()
+                .Select(attr => attr.Name.NamespaceName)
+                .Concat(nodeNamespaces)
+                .Distinct()
+                .ToArray();
+            
+            FileElement
+                .Attributes()
+                .Where(attr => !usedNamespaces.Contains(attr.Value))
+                .Remove();
         }
     }
 }
