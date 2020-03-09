@@ -125,23 +125,26 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tdbc"))?.Value, Is.Null);
         }   
         
-        // [Test]
-        // public void ShouldUpgradeRenamedClass()
-        // {
-        //     XmlFileData xmlFileData = LoadFile("TestRenamedClassV6.0.0.origam");
-        //     var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
-        //     bool someFilesWereUpgraded = sut.TryUpgrade(
-        //         new List<XmlFileData>{xmlFileData});
-        //
-        //     XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
-        //     XmlNode classNode = fileElement.ChildNodes[0];
-        //     Assert.That(classNode.LocalName, Is.EqualTo("TestRenamedClass"));
-        //     Assert.That(classNode.Attributes["tonc:name"], Is.Null);
-        //     Assert.That(fileElement.Attributes["xmlns:tonc"]?.Value, Is.Null);
-        //     Assert.That(classNode.Attributes["trc:name"]?.Value, Is.EqualTo("test"));
-        //     Assert.That(fileElement.Attributes["xmlns:trc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1"));
-        // }
-        //
+        [Test]
+        public void ShouldUpgradeRenamedClass()
+        {
+            XFileData xFileData = LoadFile("TestRenamedClassV6.0.0.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            sut.TryUpgrade(new List<XFileData>{xFileData});
+        
+            XNamespace toncNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestOldNameClass/6.0.0";
+            XNamespace trcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1";
+            
+            XElement fileElement = xFileData.Document.FileElement;
+            XElement classNode = xFileData.Document.ClassNodes.First();
+            
+            Assert.That(classNode.Name.LocalName, Is.EqualTo("TestRenamedClass"));
+            Assert.That(classNode.Attribute(toncNamespace.GetName("name")), Is.Null);
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tonc"))?.Value, Is.Null);
+            Assert.That(classNode.Attribute(trcNamespace.GetName("name"))?.Value, Is.EqualTo("test"));
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("trc"))?.Value, Is.EqualTo(trcNamespace.ToString()));
+        }
+        
         // [Test]
         // public void ShouldThrowIfOneOfUpgradeScriptsIsMissing()
         // {

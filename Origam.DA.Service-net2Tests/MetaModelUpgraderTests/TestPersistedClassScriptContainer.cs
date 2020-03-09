@@ -33,33 +33,30 @@ namespace Origam.DA.Service.MetaModelUpgrade
         }
     }     
     
-    // class TestTestRenamedClassScriptContainer : UpgradeScriptContainer
-    // {
-    //     public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestRenamedClass";
-    //     public override List<string> OldFullTypeNames { get; } = new List<string>{"Origam.DA.ServiceTests.TestOldNameClass"};
-    //
-    //     public TestTestRenamedClassScriptContainer() 
-    //     {
-    //         upgradeScripts.Add(new UpgradeScript(
-    //             new Version("6.0.0"), 
-    //             new Version("6.0.1"),
-    //             (node, doc) =>
-    //             {
-    //                 doc.FileElement.RemoveAttribute("xmlns:tonc");
-    //                 doc.FileElement.SetAttribute("xmlns:trc","http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1");
-    //                 var classElement = (XmlElement)doc.FileElement.ChildNodes[0];
-    //                 var newElement = doc.CreateElement("trc","TestRenamedClass", "http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1");
-    //                 var name = classElement.Attributes["tonc:name"].Value;
-    //                 newElement.SetAttribute(
-    //                     "name",
-    //                     "http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1",
-    //                     name);
-    //                 XmlNode parent = node.ParentNode;
-    //                 parent.RemoveChild(node);
-    //                 parent.AppendChild(newElement);
-    //             }));
-    //     }
-    // }    
+    class TestTestRenamedClassScriptContainer : UpgradeScriptContainer
+    {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestRenamedClass";
+        public override List<string> OldFullTypeNames { get; } = new List<string>{"Origam.DA.ServiceTests.TestOldNameClass"};
+    
+        public TestTestRenamedClassScriptContainer() 
+        {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.0"), 
+                new Version("6.0.1"),
+                (node, doc) =>
+                {
+                    XNamespace trcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1";
+                    XNamespace toncNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestOldNameClass/6.0.0";
+                    node.Name = trcNamespace.GetName("TestRenamedClass");
+                    XAttribute attribute = node.Attribute(toncNamespace.GetName("name"));
+                    attribute.Remove();
+                    node.Add(new XAttribute(trcNamespace.GetName("name"), attribute.Value));
+                    
+                    doc.FileElement.Attribute(XNamespace.Xmlns.GetName("tonc")).Remove();
+                    doc.FileElement.Add(new XAttribute(trcNamespace + "trc", trcNamespace));
+                }));
+        }
+    }    
     
     class TestDeadClassScriptContainer : UpgradeScriptContainer
     {
