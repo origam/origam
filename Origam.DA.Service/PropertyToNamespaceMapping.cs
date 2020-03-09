@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.DA.Common.ObjectPersistence.Attributes;
@@ -32,11 +33,11 @@ namespace Origam.DA.Service
 
             var mappingForTheInstanceType = propertyMappings.Last();
             NodeNamespaceName = mappingForTheInstanceType.XmlNamespaceName;
-            NodeNamespace = mappingForTheInstanceType.XmlNamespace;
+            NodeNamespace =mappingForTheInstanceType.XmlNamespace;
         }
 
         public string NodeNamespaceName { get; }
-        public string NodeNamespace { get; }
+        public XNamespace NodeNamespace { get; }
 
         private List<PropertyName> GetXmlPropertyNames(Type type)
         {
@@ -74,12 +75,21 @@ namespace Origam.DA.Service
 
             return new PropertyName {Name = prop.Name, XmlAttributeName = xmlAttributeName};
         }
-        
+
         public void AddNamespacesToDocument(OrigamXmlDocument xmlDocument)
         {
             foreach (var propertyMapping in propertyMappings)
             {
                 propertyMapping.XmlNamespaceName = xmlDocument.AddNamespace(
+                    nameSpaceName: propertyMapping.XmlNamespaceName, 
+                    nameSpace: propertyMapping.XmlNamespace);
+            }
+        }       
+        public void AddNamespacesToDocument(OrigamXDocument xDocument)
+        {
+            foreach (var propertyMapping in propertyMappings)
+            {
+                propertyMapping.XmlNamespaceName = xDocument.AddNamespace(
                     nameSpaceName: propertyMapping.XmlNamespaceName, 
                     nameSpace: propertyMapping.XmlNamespace);
             }
@@ -93,7 +103,7 @@ namespace Origam.DA.Service
             return propertyMapping.XmlNamespace;
         }      
         
-        public string GetNamespaceByXmlAttributeName(string xmlAttributeName)
+        public XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName)
         {
             PropertyMapping propertyMapping = propertyMappings
                                                   .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))

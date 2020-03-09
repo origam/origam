@@ -114,7 +114,7 @@ namespace Origam.DA.Service
                 // node does not exist, we add
                 string category = CategoryFactory.Create(instance.GetType());
                 XmlElement element = node.OwnerDocument.CreateElement(namespaceMapping.NodeNamespaceName,
-                    category, namespaceMapping.NodeNamespace);
+                    category, namespaceMapping.NodeNamespace.ToString());
                 node.AppendChild(element);
                 return element;
             }

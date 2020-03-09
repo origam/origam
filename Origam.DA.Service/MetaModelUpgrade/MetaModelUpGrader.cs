@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using System.Xml.Linq;
 using MoreLinq;
 using Origam.DA.Common;
 using Origam.Extensions;
@@ -64,23 +65,22 @@ namespace Origam.DA.Service.MetaModelUpgrade
             InstantiateScriptContainers(scriptAssembly);
         }
 
-        public bool TryUpgrade(List<XmlFileData> xmlData)
+        public bool TryUpgrade(List<XFileData> xmlData)
         {
-            foreach (XmlFileData xmlFileData in xmlData)
+            foreach (XFileData xFileData in xmlData)
             {
-                bool isVersion5 = xmlFileData.XmlDocument.FileElement
-                    .Attributes
-                    .Cast<XmlAttribute>()
+                bool isVersion5 = xFileData.Document.FileElement
+                    .Attributes()
                     .Any(attr => attr.Value == "http://schemas.origam.com/5.0.0/model-element");
                 if (isVersion5)
                 {
-                    new Version6UpGrader(xmlFileData.XmlDocument).Run();
+                    new Version6UpGrader(xFileData.Document).Run();
                 }
-                xmlFileData.XmlDocument
-                    .ClassNodes
-                    .ForEach(classNode => TryUpgrade(classNode, xmlFileData));
-                
-                WriteToFile(xmlFileData);
+                // xFileData.XmlDocument
+                //     .ClassNodes
+                //     .ForEach(classNode => TryUpgrade(classNode, xFileData));
+                //
+                // WriteToFile(xFileData);
             }
 
             return false;
@@ -164,35 +164,30 @@ namespace Origam.DA.Service.MetaModelUpgrade
     }
     public class Version6UpGrader
     {
-        private readonly OrigamXmlDocument xmlDocument;
-        private static string oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
-        private static string newPersistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
+        private readonly OrigamXDocument xDocument;
+        private static XNamespace oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
+        private static XNamespace newPersistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
 
-        public Version6UpGrader(OrigamXmlDocument xmlDocument)
+        public Version6UpGrader(OrigamXDocument xDocument)
         {
-            this.xmlDocument = xmlDocument;
+            this.xDocument = xDocument;
         }
 
         public void Run()
         {
             RemoveOldDocumentNamespaces();
 
-            foreach (XmlElement oldNode in xmlDocument.ClassNodes)
+            foreach (XElement node in xDocument.ClassNodes)
             {
-                var type = RemoveTypeAttribute(oldNode);
+                var type = RemoveTypeAttribute(node);
 
                 var namespaceMapping = new PropertyToNamespaceMapping(
                     instanceType: type, 
                     xmlNamespaceMapper: Version6NamespaceMapper);
-                namespaceMapping.AddNamespacesToDocument(xmlDocument);
-
-                XmlElement newNode = xmlDocument.CreateElement
-                    (oldNode.Name, namespaceMapping.NodeNamespace);
-                newNode.Prefix = namespaceMapping.NodeNamespaceName;
-                CopyAttributes(oldNode, newNode, namespaceMapping);
+                namespaceMapping.AddNamespacesToDocument(xDocument);
                 
-                oldNode.ParentNode.AppendChild(newNode);
-                oldNode.ParentNode.RemoveChild(oldNode);
+                node.Name = namespaceMapping.NodeNamespace.GetName(node.Name.LocalName);
+                CopyAttributes(node, namespaceMapping);
             }
         }
 
@@ -209,48 +204,45 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     );
         }
 
-        private static void CopyAttributes(XmlElement oldNode, XmlElement newNode,
+        private static void CopyAttributes(XElement node,
             PropertyToNamespaceMapping namespaceMapping)
         {
-            foreach (var attribute in oldNode.Attributes.ToArray<XmlAttribute>())
-            {
-                string namespaceUri = attribute.NamespaceURI == oldPersistenceNamespace
+            List<XAttribute> atList = node.Attributes().ToList();  
+            node.Attributes().Remove();  
+            foreach (XAttribute attribute in atList){
+                XNamespace nameSpace = attribute.Name.Namespace == oldPersistenceNamespace
                     ? newPersistenceNamespace
-                    : namespaceMapping.GetNamespaceByXmlAttributeName(attribute.Name);
-                
-                newNode.SetAttribute(
-                    attribute.LocalName,
-                    namespaceUri,
-                    attribute.Value);
+                    : namespaceMapping.GetNamespaceByXmlAttributeName(attribute.Name.LocalName);
+                node.Add(new XAttribute(nameSpace.GetName(attribute.Name.LocalName), attribute.Value));
             }
         }
 
-        private Type RemoveTypeAttribute(XmlElement node)
+        private Type RemoveTypeAttribute(XElement node)
         {
-            if (string.IsNullOrWhiteSpace(node?.Attributes?["x:type"]?.Value))
+            XName name = oldPersistenceNamespace.GetName("type");
+            XAttribute typeAttribute = node?.Attribute(name);
+            if (string.IsNullOrWhiteSpace(typeAttribute?.Value))
             {
                 throw new Exception(
-                    $"Cannot get type from node: {node.Name} in \n{xmlDocument.OuterXml}");
+                    $"Cannot get type from node: {node?.Name} in \n{xDocument}");
             }
-
-            XmlAttribute typeAttribute = node.Attributes["x:type"];
+            
             Type type = Reflector.GetTypeByName(typeAttribute.Value);
-            node.Attributes.Remove(typeAttribute);
+            typeAttribute.Remove();
             return type;
         }
 
         private void RemoveOldDocumentNamespaces()
         {
-            xmlDocument.FileElement.Attributes
-                .Cast<XmlAttribute>()
+            xDocument.FileElement
+                .Attributes()
                 .Where(
                     attr => attr.Value ==
                             "http://schemas.origam.com/5.0.0/model-element" ||
                             attr.Value == "http://schemas.origam.com/1.0.0/package")
-                .ToArray()
-                .ForEach(attr => xmlDocument.FileElement.Attributes.Remove(attr));
-            
-            xmlDocument.FileElement.SetAttribute("xmlns:x", newPersistenceNamespace);
+                .Remove();
+            xDocument.FileElement.Name = newPersistenceNamespace.GetName(xDocument.FileElement.Name.LocalName);
+            xDocument.FileElement.Attribute(XNamespace.Xmlns + "x").Value = newPersistenceNamespace.ToString();
         }
     }
 }

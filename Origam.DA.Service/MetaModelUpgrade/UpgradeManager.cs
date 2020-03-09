@@ -23,14 +23,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using CSharpFunctionalExtensions;
+using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
     public class UpgradeManager
     {
         private readonly XmlLoader xmlLoader;
-        private List<XmlFileData> xmlFileData = new List<XmlFileData>();
+        private List<XFileData> xFileData = new List<XFileData>();
 
         public UpgradeManager(DirectoryInfo topDirectory)
         {
@@ -43,7 +47,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Result<List<XmlFileData>,XmlLoadError> result = xmlLoader.LoadOrigamFiles();
             if (result.IsSuccess)
             {
-                xmlFileData = result.Value;
+                xFileData = result.Value
+                    .Select(fileData => new XFileData(fileData))
+                    .ToList();
                 return Maybe<XmlLoadError>.None;
             }
             return result.Error;
@@ -51,7 +57,31 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         public void Upgrade()
         {
-            new MetaModelUpGrader().TryUpgrade(xmlFileData);
+            new MetaModelUpGrader().TryUpgrade(xFileData);
+        }
+    }
+
+    public class XFileData
+    {
+        public OrigamXDocument Document { get; }
+        public FileInfo File { get; }
+
+
+        public XFileData(XmlFileData xmlFileData)
+            : this(xmlFileData.XmlDocument, xmlFileData.FileInfo)
+        {
+        }
+
+        public XFileData(OrigamXmlDocument xmlDocument, FileInfo file)
+        {
+            Document = new OrigamXDocument(xmlDocument);
+            File = file;
+        }
+
+        public XFileData(OrigamXDocument document, FileInfo file)
+        {
+            Document = document;
+            File = file;
         }
     }
 }

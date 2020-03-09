@@ -22,7 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
@@ -35,20 +37,22 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         [Test]
         public void ShouldUpgradeToVersion6()
         {
-            XmlFileData xmlFileData = LoadFile("TestPersistedClassV5.0.0.origam");
-            var sut = new Version6UpGrader(xmlFileData.XmlDocument);
+            XFileData xFileData = LoadFile("TestPersistedClassV5.0.0.origam");
+            var sut = new Version6UpGrader(xFileData.Document);
             sut.Run();
 
-            XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
-            Assert.That(fileElement.Attributes, Has.Count.EqualTo(2)); 
-            Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.0")); 
-            Assert.That(fileElement.Attributes["xmlns:x"]?.Value, Is.EqualTo("http://schemas.origam.com/model-persistence/1.0.0")); 
-            XmlNode classNode = fileElement.ChildNodes[0];
-            Assert.That(classNode.Prefix, Is.EqualTo("tpc")); 
-            Assert.That(classNode.Attributes["id"]?.Value, Is.EqualTo("0000-0000")); 
-            Assert.That(classNode.Attributes["id"]?.NamespaceURI, Is.EqualTo("http://schemas.origam.com/model-persistence/1.0.0")); 
-            Assert.That(classNode.Attributes["name"]?.Value, Is.Not.Null);
-            Assert.That(classNode.Attributes["name"]?.NamespaceURI, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.0"));
+            XElement fileElement = xFileData.Document.FileElement;
+            Assert.That(fileElement.Attributes().ToList(), Has.Count.EqualTo(2));
+            XNamespace testClassNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.0";
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tpc"))?.Value, Is.EqualTo(testClassNamespace.ToString()));
+            XNamespace persistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("x"))?.Value, Is.EqualTo(persistenceNamespace.ToString())); 
+            XElement classNode = fileElement.Descendants().First();
+            Assert.That(classNode.GetPrefixOfNamespace(classNode.Name.Namespace), Is.EqualTo("tpc")); 
+            Assert.That(classNode.Attribute(persistenceNamespace.GetName("id"))?.Value, Is.EqualTo("0000-0000")); 
+            Assert.That(classNode.Attribute(persistenceNamespace.GetName("id"))?.Name.Namespace, Is.EqualTo(persistenceNamespace)); 
+            Assert.That(classNode.Attribute(testClassNamespace.GetName("name"))?.Value, Is.Not.Null);
+            Assert.That(classNode.Attribute(testClassNamespace.GetName("name"))?.Name.Namespace, Is.EqualTo(testClassNamespace));
         }             
     }
 }
