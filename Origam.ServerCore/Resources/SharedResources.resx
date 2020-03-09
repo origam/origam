@@ -138,6 +138,9 @@
   <data name="ErrorBlobRecordEmpty" xml:space="preserve">
     <value>Record empty, cannot download file.</value>
   </data>
+  <data name="ErrorBlobFileNotAvailable" xml:space="preserve">
+    <value>File is not available.</value>
+  </data>
   <data name="ErrorWorkflowSessionInvalid" xml:space="preserve">
     <value>Workflow session invalid.</value>
   </data>

@@ -695,31 +695,6 @@ namespace Origam.ServerCore.Controller
                 rowData.Row[key] = DatasetTools.ConvertValue(value, dataType);
             }
         }
-        private IActionResult SubmitChange(RowData rowData, Operation operation)
-        {
-            try
-            {
-                DataService.StoreData(
-                    dataStructureId: rowData.Entity.RootEntity.ParentItemId,
-                    data: rowData.Row.Table.DataSet,
-                    loadActualValuesAfterUpdate: false,
-                    transactionId: null);
-            }
-            catch(DBConcurrencyException ex)
-            {
-                if(string.IsNullOrEmpty(ex.Message) 
-                    && (ex.InnerException != null))
-                {
-                    return Conflict(ex.InnerException.Message);
-                }
-                return Conflict(ex.Message);
-            }
-            return Ok(SessionStore.GetChangeInfo(
-                requestingGrid: null, 
-                row: rowData.Row, 
-                operation: operation, 
-                RowStateProcessor: null));
-        }
         private RowData MakeEmptyRow(DataStructureEntity entity)
         {
             var dataSet = dataService.GetEmptyDataSet(

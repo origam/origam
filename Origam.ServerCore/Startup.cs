@@ -135,6 +135,8 @@ namespace Origam.ServerCore
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRequestLocalization();
+            app.UseCors(builder => 
+                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseMvc();
             app.UseSpa(spa => {});
             // add DI to origam, in order to be able to resolve IPrincipal from

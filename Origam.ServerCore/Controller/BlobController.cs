@@ -21,8 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
+using System.Security.Principal;
+using System.Threading;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +35,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Origam.DA;
+using Origam.Schema;
 using Origam.Schema.MenuModel;
 using Origam.Server;
 using Origam.ServerCore.Model.Blob;
@@ -194,6 +200,125 @@ namespace Origam.ServerCore.Controller
                 sessionObjects.SessionManager.RemoveBlobDownloadRequest(token);
             }
         }
+        [AllowAnonymous]
+        [HttpPost("{token:guid}/{filename}")]
+        public IActionResult Post(Guid token, string filename)
+        {
+            try
+            {
+                var blobUploadRequest = sessionObjects.SessionManager
+                    .GetBlobUploadRequest(token);
+                if(blobUploadRequest == null)
+                {
+                    return NotFound(localizer["ErrorBlobFileNotAvailable"]
+                        .ToString());
+                }
+                //todo: review user management
+                Thread.CurrentPrincipal =
+                    new GenericPrincipal(
+                        new GenericIdentity(blobUploadRequest.UserName),
+                        new string[] { });
+                var profile = SecurityTools.CurrentUserProfile();
+                DatasetTools.UpdateOrigamSystemColumns(
+                    blobUploadRequest.Row, false, profile.Id);
+                blobUploadRequest.Row[blobUploadRequest.Property] = filename;
+                if(CheckMember(blobUploadRequest.OriginalPathMember, false))
+                {
+                    blobUploadRequest.Row[blobUploadRequest.OriginalPathMember] 
+                        = filename;
+                }
+                if(CheckMember(blobUploadRequest.DateCreatedMember, false))
+                {
+                    blobUploadRequest.Row[blobUploadRequest.DateCreatedMember] 
+                        = blobUploadRequest.DateCreated;
+                }
+                if(CheckMember(blobUploadRequest.DateLastModifiedMember, false))
+                {
+                    blobUploadRequest.Row[
+                        blobUploadRequest.DateLastModifiedMember] 
+                        = blobUploadRequest.DateLastModified;
+                }
+                if(CheckMember(blobUploadRequest.CompressionStateMember, false))
+                {
+                    blobUploadRequest.Row[
+                        blobUploadRequest.CompressionStateMember] 
+                        = blobUploadRequest.ShouldCompress;
+                }
+                var input = StreamTools.ReadToEnd(Request.Body);
+                if(blobUploadRequest.ShouldCompress)
+                {
+                    var gZipStream = new GZipStream(
+                        new MemoryStream(input), CompressionMode.Compress);
+                    blobUploadRequest.Row[blobUploadRequest.BlobMember] 
+                        = StreamTools.ReadToEnd(gZipStream);
+                }
+                else
+                {
+                    blobUploadRequest.Row[blobUploadRequest.BlobMember] = input;
+                }
+                if(CheckMember(blobUploadRequest.FileSizeMember, false))
+                {
+                    blobUploadRequest.Row[blobUploadRequest.FileSizeMember] 
+                        = input.LongLength;
+                }
+                if(CheckMember(blobUploadRequest.ThumbnailMember, false))
+                {
+                    Image image = null;
+                    try
+                    {
+                        image = Image.FromStream(new MemoryStream(input));
+                    }
+                    catch
+                    {
+                        blobUploadRequest.Row[blobUploadRequest.ThumbnailMember] 
+                            = DBNull.Value;
+                    }
+                    if(image != null)
+                    {
+                        try
+                        {
+                            var parameterService = ServiceManager.Services
+                                .GetService<IParameterService>();
+                            var width = (int) parameterService
+                                .GetParameterValue(
+                                    blobUploadRequest.ThumbnailWidthConstantId,
+                                    OrigamDataType.Integer);
+                            var height = (int) parameterService
+                                .GetParameterValue(
+                                blobUploadRequest.ThumbnailHeightConstantId,
+                                OrigamDataType.Integer);
+                            var row = blobUploadRequest.Row;
+                            var thumbnailMember 
+                                = blobUploadRequest.ThumbnailMember;
+                            row[thumbnailMember] 
+                                = FixedSizeBytes(image, width, height);
+                        }
+                        finally
+                        {
+                            image.Dispose();
+                        }
+                    }
+                }
+                if(!blobUploadRequest.SubmitImmediately)
+                {
+                    return Ok();
+                }
+                var rowData = new RowData
+                {
+                    Row = blobUploadRequest.Row,
+                    Entity = blobUploadRequest.Entity
+                };
+                return SubmitChange(rowData, Operation.Update);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+            finally
+            {
+                sessionObjects.SessionManager.RemoveBlobUploadRequest(token);
+            }
+        }
         private IActionResult CreateDownloadToken(
             BlobDownloadTokenInput input, RowData rowData)
         {
@@ -220,8 +345,77 @@ namespace Origam.ServerCore.Controller
                     input.Parameters,
                     input.DateCreated,
                     input.DateLastModified,
-                    input.Property));
+                    input.Property,
+                    input.SubmitImmediately,
+                    rowData.Entity));
             return Ok(token);
+        }
+        private static bool CheckMember(object val, bool throwExceptions)
+        {
+            if((val != null) && !val.Equals(string.Empty) 
+            && !val.Equals(Guid.Empty))
+            {
+                return true;
+            }
+            if (throwExceptions)
+            {
+                throw new NullReferenceException("Member not set.");
+            }
+            return false;
+        }
+        private static byte[] FixedSizeBytes(Image image, int width, int height)
+        {
+            using (var thumbnail = FixedSize(image, width, height))
+            {
+                var memoryStream = new MemoryStream();
+                try
+                {
+                    thumbnail.Save(memoryStream, ImageFormat.Png);
+                    return memoryStream.GetBuffer();
+                }
+                finally
+                {
+                    memoryStream.Close();
+                }
+            }
+        }
+        private static Image FixedSize(Image image, int width, int height)
+        {
+            var sourceWidth = image.Width;
+            var sourceHeight = image.Height;
+            const int sourceX = 0;
+            const int  sourceY = 0;
+            var destX = 0;
+            var destY = 0;
+            float percent;
+            var percentWidth = width / (float)sourceWidth;
+            var percentHeight = height / (float)sourceHeight;
+            if(percentHeight < percentWidth)
+            {
+                percent = percentHeight;
+                destX = Convert.ToInt16((width - (sourceWidth * percent)) / 2);
+            }
+            else
+            {
+                percent = percentWidth;
+                destY = Convert.ToInt16(
+                    (height - (sourceHeight * percent)) / 2);
+            }
+            var destWidth = (int)(sourceWidth * percent);
+            var destHeight = (int)(sourceHeight * percent);
+            var bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            bitmap.SetResolution(image.HorizontalResolution,
+                image.VerticalResolution);
+            bitmap.MakeTransparent(Color.Transparent);
+            var graphics = Graphics.FromImage(bitmap);
+            graphics.Clear(Color.Transparent);
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.DrawImage(image,
+                new Rectangle(destX, destY, destWidth, destHeight),
+                new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
+                GraphicsUnit.Pixel);
+            graphics.Dispose();
+            return bitmap;
         }
     }
 }

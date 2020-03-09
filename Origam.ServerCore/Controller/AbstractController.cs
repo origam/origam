@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ using Origam.Server;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model.UIService;
 using Origam.Workbench.Services;
+using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Controller
 {
@@ -145,6 +147,32 @@ namespace Origam.ServerCore.Controller
                     Result.Fail<DataStructureEntity, IActionResult>(
                         NotFound("Requested DataStructureEntity not found. " 
                         + error.GetMessage())));
+        }
+        protected IActionResult SubmitChange(
+            RowData rowData, Operation operation)
+        {
+            try
+            {
+                DataService.StoreData(
+                    dataStructureId: rowData.Entity.RootEntity.ParentItemId,
+                    data: rowData.Row.Table.DataSet,
+                    loadActualValuesAfterUpdate: false,
+                    transactionId: null);
+            }
+            catch(DBConcurrencyException ex)
+            {
+                if(string.IsNullOrEmpty(ex.Message) 
+                    && (ex.InnerException != null))
+                {
+                    return Conflict(ex.InnerException.Message);
+                }
+                return Conflict(ex.Message);
+            }
+            return Ok(SessionStore.GetChangeInfo(
+                requestingGrid: null, 
+                row: rowData.Row, 
+                operation: operation, 
+                RowStateProcessor: null));
         }
     }
 }

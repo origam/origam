@@ -36,6 +36,7 @@ namespace Origam.ServerCore.Model.Blob
         public string Property { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateLastModified { get; set; }
+        public bool SubmitImmediately { get; set; }
         public IDictionary Parameters { get; set; }
     }
 }

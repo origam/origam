@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -45,6 +46,7 @@ using System.Security.Principal;
 using System.Collections;
 using Origam.Workbench.Services;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.Server
 {
@@ -56,8 +58,14 @@ namespace Origam.Server
         private DateTime _dateCreated;
         private DateTime _dateLastModified;
         private string _property;
+        private bool _submitImmediately;
+        private DataStructureEntity _entity;
 
-        public BlobUploadRequest(DataRow row, IPrincipal principal, IDictionary parameters, DateTime dateCreated, DateTime dateLastModified, string property)
+        public BlobUploadRequest(
+            DataRow row, IPrincipal principal, IDictionary parameters, 
+            DateTime dateCreated, DateTime dateLastModified, string property,
+            bool submitImmediately = false,
+            DataStructureEntity entity = null)
         {
             _row = row;
             _userName = principal.Identity.Name;
@@ -65,6 +73,8 @@ namespace Origam.Server
             _dateCreated = dateCreated;
             _dateLastModified = dateLastModified;
             _property = property;
+            _submitImmediately = submitImmediately;
+            _entity = entity;
         }
 
         public DataRow Row
@@ -103,6 +113,17 @@ namespace Origam.Server
             set { _property = value; }
         }
 
+        public bool SubmitImmediately
+        {
+            get { return _submitImmediately; }
+            set { _submitImmediately = value; }
+        }
+
+        public DataStructureEntity Entity
+        {
+            get { return _entity; }
+            set { _entity = value; }
+        }
         public string BlobMember {get {return (string)this.Parameters["BlobMember"]; } }
         public string FileSizeMember { get { return (string)this.Parameters["FileSizeMember"]; } }
         public Guid ThumbnailHeightConstantId { get { return new Guid((string)this.Parameters["ThumbnailHeightConstantId"]); } }
