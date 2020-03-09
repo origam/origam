@@ -1,4 +1,5 @@
 #region license
+
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -17,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System.Collections.Generic;
@@ -74,6 +76,26 @@ namespace Origam.Extensions
                 mStream.Close();
             }
         }
+
+        public static string ToBeautifulString(this XDocument document,
+            XmlWriterSettings xmlWriterSettings)
+        {
+            MemoryStream mStream = new MemoryStream();
+            XmlWriter writer = XmlWriter.Create(mStream, xmlWriterSettings);
+            try
+            {
+                document.Save(writer);
+                writer.Flush();
+                mStream.Flush();
+                mStream.Position = 0;
+                StreamReader sReader = new StreamReader(mStream);
+                return sReader.ReadToEnd();
+            }
+            finally
+            {
+                mStream.Close();
+            }
+        }
          public static string ToBeautifulString(this XmlDocument document)
          {
              XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
@@ -84,10 +106,22 @@ namespace Origam.Extensions
              return ToBeautifulString(document, xmlWriterSettings);
          }
 
-        public static XmlDocument RemoveAllEmptyAttributesAndNodes(this XmlDocument doc)
+        public static string ToBeautifulString(this XDocument document)
+        {
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+            {
+                Indent = true,
+                NewLineOnAttributes = true
+            };
+            return ToBeautifulString(document, xmlWriterSettings);
+        }
+
+        public static XmlDocument RemoveAllEmptyAttributesAndNodes(
+            this XmlDocument doc)
         {
 #if NETSTANDARD
-            foreach (XmlAttribute att in doc.SelectNodes("descendant::*/@*[not(normalize-space(.))]"))
+            foreach (XmlAttribute att in doc.SelectNodes(
+                "descendant::*/@*[not(normalize-space(.))]"))
             {
                 att.OwnerElement.RemoveAttributeNode(att);
             }
