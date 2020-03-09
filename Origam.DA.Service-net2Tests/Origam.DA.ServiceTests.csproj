@@ -74,6 +74,7 @@
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestBaseClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass2.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestRenamedClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestPersistedClassScriptContainer.cs" />
     <Compile Include="MetaModelUpgraderTests\Version6UpGraderTests.cs" />
     <Compile Include="OrigamDocumentSorter\OrigamDocumentSorterTests.cs" />
@@ -195,6 +196,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV6.0.2_WithDeadBaseClass.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="_OrigamSettings.config">

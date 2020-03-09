@@ -113,6 +113,23 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2")); 
             Assert.That(fileElement.Attributes["xmlns:tbc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1"));
             Assert.That(fileElement.Attributes["xmlns:tdc"]?.Value, Is.Null);
+        }   
+        
+        [Test]
+        public void ShouldUpgradeRenamedClass()
+        {
+            XmlFileData xmlFileData = LoadFile("TestRenamedClassV6.0.0.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            bool someFilesWereUpgraded = sut.TryUpgrade(
+                new List<XmlFileData>{xmlFileData});
+
+            XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
+            XmlNode classNode = fileElement.ChildNodes[0];
+            Assert.That(classNode.LocalName, Is.EqualTo("TestRenamedClass"));
+            Assert.That(classNode.Attributes["tonc:name"], Is.Null);
+            Assert.That(fileElement.Attributes["xmlns:tonc"]?.Value, Is.Null);
+            Assert.That(classNode.Attributes["trc:name"]?.Value, Is.EqualTo("test"));
+            Assert.That(fileElement.Attributes["xmlns:trc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1"));
         }
 
         [Test]
