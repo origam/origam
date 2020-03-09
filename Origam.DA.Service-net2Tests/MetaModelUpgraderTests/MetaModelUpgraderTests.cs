@@ -145,18 +145,17 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("trc"))?.Value, Is.EqualTo(trcNamespace.ToString()));
         }
         
-        // [Test]
-        // public void ShouldThrowIfOneOfUpgradeScriptsIsMissing()
-        // {
-        //     Assert.Throws<ClassUpgradeException>(() =>
-        //     {
-        //         XmlFileData xmlFileData = LoadFile("TestPersistedClass2V6.0.0.origam");
-        //         var sut = new MetaModelUpGrader(GetType().Assembly,  new NullFileWriter());
-        //         bool someFilesWereUpgraded = sut.TryUpgrade(
-        //             new List<XmlFileData>{xmlFileData});
-        //     });
-        // }  
-        //
+        [Test]
+        public void ShouldThrowIfOneOfUpgradeScriptsIsMissing()
+        {
+            Assert.Throws<ClassUpgradeException>(() =>
+            {
+                XFileData xFileData = LoadFile("TestPersistedClass2V6.0.0.origam");
+                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                sut.TryUpgrade(new List<XFileData>{xFileData});
+            });
+        }  
+        
         // [Test]
         // public void ShouldThrowIfAttributeIsAlreadyPresent()
         // {
