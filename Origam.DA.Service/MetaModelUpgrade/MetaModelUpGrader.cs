@@ -149,7 +149,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Version currentClassVersion)
         {
             var containers = scriptContainers
-                .Where(container => container.FullTypeName == className)
+                .Where(container =>
+                    container.FullTypeName == className ||
+                    container.OldFullTypeNames != null &&
+                    container.OldFullTypeNames.Contains(className))
                 .ToArray();
             if (containers.Length != 1)
             {

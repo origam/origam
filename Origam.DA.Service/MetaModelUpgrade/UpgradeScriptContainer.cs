@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
@@ -37,6 +38,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
         protected readonly List<UpgradeScript> upgradeScripts = new List<UpgradeScript>();
         private PropertyToNamespaceMapping namespaceMapping;
         public abstract string FullTypeName { get;}
+        public abstract List<string> OldFullTypeNames { get;}
+        
+        Version LastVersionInContainer => upgradeScripts
+            .OrderBy(script => script.ToVersion)
+            .Last()
+            .ToVersion;
 
         private PropertyToNamespaceMapping NamespaceMapping
         {
@@ -50,25 +57,28 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 return namespaceMapping;
             }
         }
-
+        
         public void Upgrade(OrigamXmlDocument doc, XmlNode classNode, Version fromVersion, Version toVersion)
         {
+            Version endVersion = toVersion == Versions.Last 
+                ? LastVersionInContainer 
+                : toVersion;
             var scriptsToRun = upgradeScripts
-                .Where(script => script.FromVersion >= fromVersion && script.ToVersion <= toVersion)
+                .Where(script => script.FromVersion >= fromVersion && script.ToVersion <= endVersion)
                 .OrderBy(script => script.FromVersion)
                 .ToList();
 
             if (scriptsToRun.Count == 0)
             {
-                throw new Exception($"There is no script to upgrade class {FullTypeName} from version {fromVersion} to {toVersion}");
+                throw new Exception($"There is no script to upgrade class {FullTypeName} from version {fromVersion} to {endVersion}");
             }
             if (scriptsToRun[0].FromVersion != fromVersion)
             {
                 throw new Exception($"Script to upgrade class {FullTypeName} from version {fromVersion} to the next version was not found");
             }
-            if (scriptsToRun.Last().ToVersion != toVersion)
+            if (scriptsToRun.Last().ToVersion != endVersion)
             {
-                throw new Exception($"Script to upgrade class {FullTypeName} to version {toVersion} was not found");
+                throw new Exception($"Script to upgrade class {FullTypeName} to version {endVersion} was not found");
             }
 
             CheckScriptsFormContinuousSequence(scriptsToRun);
@@ -77,7 +87,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 upgradeScript.Upgrade(classNode, doc);
             }
-            SetVersion(doc, toVersion);
+            SetVersion(doc, endVersion);
         }
 
 
@@ -143,17 +153,17 @@ namespace Origam.DA.Service.MetaModelUpgrade
         public Version FromVersion { get; }
         public Version ToVersion { get;}
 
-        private readonly Action<XmlNode, XmlDocument> transformation;
+        private readonly Action<XmlNode, OrigamXmlDocument> transformation;
 
         public UpgradeScript(Version fromVersion, Version toVersion,
-            Action<XmlNode, XmlDocument> transformation)
+            Action<XmlNode, OrigamXmlDocument> transformation)
         {
             this.transformation = transformation;
             FromVersion = fromVersion;
             ToVersion = toVersion;
         }
 
-        public void Upgrade(XmlNode classNode, XmlDocument doc)
+        public void Upgrade(XmlNode classNode, OrigamXmlDocument doc)
         {
             transformation(classNode, doc);
         } 

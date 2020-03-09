@@ -10,7 +10,7 @@ namespace Origam.DA.Common
 {
     public class Versions: Dictionary<string, Version>
     {
-        public static Version EndOfLife { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
+        public static Version Last { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
         public static Versions FromAttributeString(string xmlAttribute)
         {
             if (string.IsNullOrWhiteSpace(xmlAttribute))
@@ -46,7 +46,7 @@ namespace Origam.DA.Common
             Type type = Reflector.GetTypeByName(typeName);
             if (type == null)
             {
-                return  new Versions {[typeName] = EndOfLife}; 
+                return  new Versions {[typeName] = Last}; 
             }
 
             Version classVersion = GetCurrentClassVersion(type);
@@ -64,7 +64,7 @@ namespace Origam.DA.Common
 
             persistedClassVersions
                 .Where(pair => !versions.ContainsKey(pair.Key))
-                .ForEach(pair => versions[pair.Key] = EndOfLife);
+                .ForEach(pair => versions[pair.Key] = Last);
             
             return versions;
         }
