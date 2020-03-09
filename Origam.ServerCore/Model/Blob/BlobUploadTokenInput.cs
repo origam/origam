@@ -21,18 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Origam.ServerCore.Model.Blob
 {
-    public class BlobUploadTokenInput
+    public class BlobUploadTokenInput : AmbiguousInput
     {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        [RequiredNonDefault]
-        public Guid RowId { get; set; }
         public string Property { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateLastModified { get; set; }

@@ -445,6 +445,35 @@ namespace Origam.ServerCore
                 }
             }
         }
+        public Result<Guid, IActionResult> GetEntityId(
+            Guid sessionFormIdentifier, string entity)
+        {
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore 
+                    = sessionManager.GetSession(sessionFormIdentifier);
+            }
+            catch
+            {
+                // ignored
+            }
+            switch(sessionStore)
+            {
+                case null:
+                    return Result.Ok<Guid, IActionResult>(Guid.Empty);
+                default:
+                {
+                    var table = sessionStore.GetTable(entity, sessionStore.Data);
+                    var entityId = Guid.Empty;
+                    if (table.ExtendedProperties.Contains("EntityId"))
+                    {
+                        entityId = (Guid)table.ExtendedProperties["EntityId"];
+                    }
+                    return Result.Ok<Guid, IActionResult>(entityId);
+                }
+            }
+        }
         public UIResult WorkflowNext(WorkflowNextInput workflowNextInput)
         {
             if(sessionManager.GetSession(

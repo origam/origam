@@ -18,17 +18,10 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
 
 namespace Origam.ServerCore.Model.UIService
 {
-    public class GetAuditInput
+    public class GetAuditInput : AmbiguousInput
     {
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        [RequiredNonDefault]
-        public Guid RowId { get; set; }
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
     }
 }

@@ -31,6 +31,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.Server;
 using Origam.ServerCore.Extensions;
+using Origam.ServerCore.Model;
 using Origam.ServerCore.Model.UIService;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
@@ -173,6 +174,56 @@ namespace Origam.ServerCore.Controller
                 row: rowData.Row, 
                 operation: operation, 
                 RowStateProcessor: null));
+        }
+        protected Result<RowData, IActionResult> AmbiguousInputToRowData(
+            AmbiguousInput input, IDataService dataService, 
+            SessionObjects sessionObjects)
+        {
+            if(input.SessionFormIdentifier == Guid.Empty)
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .OnSuccess(Authorize)
+                    .OnSuccess(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem))
+                    .OnSuccess(CheckEntityBelongsToMenu)
+                    .OnSuccess(entityData =>
+                        GetRow(
+                            dataService,
+                            entityData.Entity,
+                            input.DataStructureEntityId,
+                            Guid.Empty,
+                            input.RowId));
+            }
+            else
+            {
+                return sessionObjects.UIService.GetRow(
+                    input.SessionFormIdentifier, input.Entity, input.RowId);
+            }
+        }
+        protected Result<Guid, IActionResult> AmbiguousInputToEntityId(
+            AmbiguousInput input, IDataService dataService, 
+            SessionObjects sessionObjects)
+        {
+            if(input.SessionFormIdentifier == Guid.Empty)
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .OnSuccess(Authorize)
+                    .OnSuccess(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem))
+                    .OnSuccess(CheckEntityBelongsToMenu)
+                    .OnSuccess(EntityDataToEntityId);
+            }
+            else
+            {
+                return sessionObjects.UIService.GetEntityId(
+                    input.SessionFormIdentifier, input.Entity);
+            }
+        }
+
+        protected Result<Guid, IActionResult> EntityDataToEntityId(
+            EntityData entityData)
+        {
+            return Result.Ok<Guid, IActionResult>(entityData.Entity.EntityId);
         }
     }
 }

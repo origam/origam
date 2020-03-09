@@ -36,7 +36,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Origam.DA;
 using Origam.Schema;
-using Origam.Schema.MenuModel;
 using Origam.Server;
 using Origam.ServerCore.Model.Blob;
 using Origam.ServerCore.Model.UIService;
@@ -66,18 +65,7 @@ namespace Origam.ServerCore.Controller
         public IActionResult DownloadToken(
             [FromBody][Required]BlobDownloadTokenInput input)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => 
-                    GetRow(
-                        dataService,
-                        entityData.Entity, 
-                        input.DataStructureEntityId,
-                        Guid.Empty,
-                        input.RowId))
+            return AmbiguousInputToRowData(input, dataService, sessionObjects)
                 .OnSuccess(rowData => CreateDownloadToken(input, rowData))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
@@ -85,18 +73,7 @@ namespace Origam.ServerCore.Controller
         public IActionResult UploadToken(
             [FromBody][Required]BlobUploadTokenInput input)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => 
-                    GetRow(
-                        dataService,
-                        entityData.Entity, 
-                        input.DataStructureEntityId,
-                        Guid.Empty,
-                        input.RowId))
+            return AmbiguousInputToRowData(input, dataService, sessionObjects)
                 .OnSuccess(rowData => CreateUploadToken(input, rowData))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
