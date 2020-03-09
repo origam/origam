@@ -90,11 +90,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         private void WriteToFile(XFileData xFileData)
         {
-            // string upgradedXmlString = OrigamDocumentSorter
-            //     .CopyAndSort(xFileData.XmlDocument)
-            //     .ToBeautifulString();
+            string upgradedXmlString = OrigamDocumentSorter
+                .CopyAndSort(xFileData.Document.XDocument)
+                .ToBeautifulString();
 
-            // fileWriter.Write(xFileData.FileInfo, upgradedXmlString);
+            fileWriter.Write(xFileData.File, upgradedXmlString);
         }
 
         private void TryUpgrade(XElement classNode, XFileData xFileData)

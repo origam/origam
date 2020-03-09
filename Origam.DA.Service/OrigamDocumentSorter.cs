@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using MoreLinq;
 
 namespace Origam.DA.Service
@@ -68,6 +69,28 @@ namespace Origam.DA.Service
                         localName: attr.LocalName,
                         namespaceURI: attr.NamespaceURI,
                         value: attr.Value));
+        }
+
+        public static XDocument CopyAndSort(XDocument document)
+        {
+            return new XDocument(Sort(document.Root));
+        }
+        
+        private static XElement Sort(XElement element)
+        {
+            XElement newElement = new XElement(
+                element.Name,
+                element
+                    .Elements()
+                    .OrderBy(x => x.Name.LocalName)
+                    .Select(Sort));
+                    
+            newElement.Add(
+                element
+                    .Attributes()
+                    .OrderBy(attr => attr.Name.LocalName));
+
+            return newElement;
         }
     }
 }

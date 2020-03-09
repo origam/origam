@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.Extensions;
@@ -37,7 +38,7 @@ namespace Origam.DA.Service_net2Tests
     class OrigamDocumentSorterTests : AbstractFileTestClass
     {
         [Test]
-        public void ShouldSortAtributes()
+        public void ShouldSortAttributes()
         {
 
             var doc = new OrigamXmlDocument();
@@ -55,6 +56,24 @@ namespace Origam.DA.Service_net2Tests
                 .CopyAndSort(doc)
                 .ToBeautifulString(xmlWriterSettings);
             File.WriteAllText(Path.Combine(TestFilesDir.FullName, "Sorted.origam"), sortedDoc);
+        } 
+        
+        [Test]
+        public void ShouldSortAttributesXDocument()
+        {
+            string path = Path.Combine(TestFilesDir.FullName, "Unsorted.origam");
+            XDocument xDocument = XDocument.Load(path);
+            
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+            {
+                Indent = true,
+                NewLineOnAttributes = true
+            };
+
+            string beautifulString = OrigamDocumentSorter
+                .CopyAndSort(xDocument)
+                .ToBeautifulString(xmlWriterSettings);
+            File.WriteAllText(Path.Combine(TestFilesDir.FullName, "Sorted.origam"), beautifulString);
         }
 
         protected override TestContext TestContext => TestContext.CurrentContext;
