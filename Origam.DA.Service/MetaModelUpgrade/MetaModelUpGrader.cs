@@ -76,31 +76,31 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 {
                     new Version6UpGrader(xFileData.Document).Run();
                 }
-                // xFileData.XmlDocument
-                //     .ClassNodes
-                //     .ForEach(classNode => TryUpgrade(classNode, xFileData));
-                //
-                // WriteToFile(xFileData);
+                xFileData.Document
+                    .ClassNodes
+                    .ForEach(classNode => TryUpgrade(classNode, xFileData));
+                
+                WriteToFile(xFileData);
             }
 
             return false;
         }
 
-        private void WriteToFile(XmlFileData xmlFileData)
+        private void WriteToFile(XFileData xFileData)
         {
-            xmlFileData.XmlDocument.FixNamespaces();
-            string upgradedXmlString = OrigamDocumentSorter
-                .CopyAndSort(xmlFileData.XmlDocument)
-                .ToBeautifulString();
+            // xFileData.XmlDocument.FixNamespaces();
+            // string upgradedXmlString = OrigamDocumentSorter
+            //     .CopyAndSort(xFileData.XmlDocument)
+            //     .ToBeautifulString();
 
-            fileWriter.Write(xmlFileData.FileInfo, upgradedXmlString);
+            // fileWriter.Write(xFileData.FileInfo, upgradedXmlString);
         }
 
-        private void TryUpgrade(XmlNode classNode, XmlFileData xmlFileData)
+        private void TryUpgrade(XElement classNode, XFileData xFileData)
         {
             IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
             
-            string nodeClass = OrigamNameSpace.Create(classNode?.NamespaceURI).FullTypeName;
+            string nodeClass = OrigamNameSpace.Create(classNode?.Name.NamespaceName).FullTypeName;
             Versions persistedClassVersions = new Versions(origamNameSpaces);
             Versions currentClassVersions =
                 Versions.GetCurrentClassVersions(nodeClass, persistedClassVersions);
@@ -116,35 +116,34 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
                 if (!persistedClassVersions.ContainsKey(className))
                 {
-                    RunUpgradeScripts(classNode, xmlFileData, className,
+                    RunUpgradeScripts(classNode, xFileData, className,
                         firstVersion, currentVersion);
                     continue;
                 }
 
                 if (persistedClassVersions[className] > currentVersion)
                 {
-                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xmlFileData.FileInfo.FullName}");
+                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xFileData.File.FullName}");
                 }
 
                 if (persistedClassVersions[className] < currentVersion)
                 {
-                    RunUpgradeScripts(classNode, xmlFileData, className,
+                    RunUpgradeScripts(classNode, xFileData, className,
                         persistedClassVersions[className], currentVersion);
                 }
             }
         }
 
-        private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XmlNode classNode)
+        private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XElement classNode)
         {
-            return classNode.Attributes
-                .Cast<XmlAttribute>()
-                .Select(attr => attr.NamespaceURI)
+            return classNode.Attributes()
+                .Select(attr => attr.Name.NamespaceName)
                 .Distinct()
                 .Select(OrigamNameSpace.Create);
         }
 
-        private void RunUpgradeScripts(XmlNode classNode,
-            XmlFileData xmlFileData, string className,
+        private void RunUpgradeScripts(XElement classNode,
+            XFileData xFileData, string className,
             Version persistedClassVersion,
             Version currentClassVersion)
         {
@@ -159,7 +158,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\"");
             }
             var upgradeScriptContainer = containers[0];
-            upgradeScriptContainer.Upgrade(xmlFileData.XmlDocument, classNode, persistedClassVersion, currentClassVersion);
+            upgradeScriptContainer.Upgrade(xFileData.Document, classNode, persistedClassVersion, currentClassVersion);
         }
     }
     public class Version6UpGrader

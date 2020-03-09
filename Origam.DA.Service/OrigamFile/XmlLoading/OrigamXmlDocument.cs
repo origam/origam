@@ -142,13 +142,6 @@ namespace Origam.DA.Service
 
         public bool IsEmpty => XDocument.Root == null || !XDocument.Root.Descendants().Any();
         public XElement FileElement => XDocument.Root;
-
-        // public IEnumerable<OrigamNameSpace> Namespaces =>   
-        //     FileElement.Attributes
-        //         .Cast<XmlAttribute>()
-        //         .Select(attr => attr.Value)
-        //         .Distinct()
-        //         .Select(OrigamNameSpace.Create);
         
         public IEnumerable<XElement> ClassNodes => XDocument.Root.Descendants();
         public OrigamXDocument()
@@ -190,7 +183,16 @@ namespace Origam.DA.Service
                 nameSpace);
             return nextNamespaceName;
         }
-        
+
+        public static IEnumerable<OrigamNameSpace> GetNamespaces(XDocument doc)
+        {
+            return doc.Root
+                    .Attributes()
+                    .Select(attr => attr.Value)
+                    .Distinct()
+                    .Select(OrigamNameSpace.Create);
+        }
+
         private string GetNextNamespaceName(string nameSpaceName)
         {
             string currentValue = XDocument.Root
@@ -212,6 +214,34 @@ namespace Origam.DA.Service
             int.TryParse(lastNamespaceSuffix, out int lastNamespaceNumber);
             int nextNamespaceNumber = lastNamespaceNumber + 1;
             return nameSpaceName + nextNamespaceNumber;
+        }
+
+        public void RenameNamespace(XNamespace oldNamespace, XNamespace updatedNamespace)
+        {
+            XAttribute namespaceAttribute = FileElement
+                .Attributes()
+                .First(attr => attr.Value == oldNamespace);
+            namespaceAttribute.Remove();
+            FileElement.Add(
+                new XAttribute(XNamespace.Xmlns + namespaceAttribute.Name.LocalName, 
+                updatedNamespace));
+            
+            foreach (XElement el in FileElement.Descendants())  
+            {
+                if (el.Name.Namespace == oldNamespace)
+                {
+                    el.Name = updatedNamespace.GetName(el.Name.LocalName);
+                }
+
+                el.Attributes()
+                    .Where(attr => attr.Name.Namespace == oldNamespace)
+                    .ToList()
+                    .ForEach(attr =>
+                    {
+                        attr.Remove();
+                        el.Add(new XAttribute(updatedNamespace.GetName(attr.Name.LocalName), attr.Value));
+                    });
+            } 
         }
     }
 }

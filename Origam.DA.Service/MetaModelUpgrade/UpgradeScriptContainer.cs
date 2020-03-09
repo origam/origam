@@ -27,6 +27,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using Origam.DA.Common;
 using MoreLinq;
 using Origam.Extensions;
@@ -58,7 +59,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
         
-        public void Upgrade(OrigamXmlDocument doc, XmlNode classNode, Version fromVersion, Version toVersion)
+        public void Upgrade(OrigamXDocument doc, XElement classNode, Version fromVersion, Version toVersion)
         {
             Version endVersion = toVersion == Versions.Last 
                 ? LastVersionInContainer 
@@ -103,12 +104,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        private void SetVersion(OrigamXmlDocument document, Version toVersion)
+        private void SetVersion(OrigamXDocument document, Version toVersion)
         {
-            var updatedNamespace = OrigamNameSpace
+            XNamespace updatedNamespace = OrigamNameSpace
                 .Create(FullTypeName, toVersion)
                 .StringValue;
-            string oldNamespace = GetThisClassNamespace(document);
+            XNamespace oldNamespace = GetThisClassNamespace(document.XDocument);
             if (oldNamespace == null)
             {
                 document.AddNamespace(  
@@ -117,31 +118,31 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             else
             {
-                document.AddNamespaceForRenaming(oldNamespace, updatedNamespace);
+                document.RenameNamespace(oldNamespace, updatedNamespace);
             }
         }
         
-        protected void AddAttribute(XmlNode node, string attributeName, string attributeValue)
+        protected void AddAttribute(XElement node, string attributeName, string attributeValue)
         {
             if (node == null)
             {
                 throw new ArgumentNullException(nameof(node));
             }
-            XmlElement element = (XmlElement) node;
-            var thisTypeNamespace = 
-                GetThisClassNamespace((OrigamXmlDocument) node.OwnerDocument)
+            XNamespace thisTypeNamespace = 
+                GetThisClassNamespace(node.Document)
                 ?? NamespaceMapping.GetNamespaceByXmlAttributeName(attributeName);
 
-            if (element.GetAttributeNode(attributeName,thisTypeNamespace.ToString() ) != null)
+            XName xName = thisTypeNamespace.GetName(attributeName);
+            if (node.Attribute(xName) != null)
             {
-                throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node.OuterXml}");
+                throw new ClassUpgradeException($"Cannot add new attribute \"{attributeName}\" because it already exist. Node:\n{node}");
             }
-            element.SetAttribute(attributeName,thisTypeNamespace.ToString(), attributeValue);   
+            node.Add(new XAttribute(xName, attributeValue));
         }
 
-        private string GetThisClassNamespace(OrigamXmlDocument document)
+        private XNamespace GetThisClassNamespace(XDocument document)
         {
-            return document.Namespaces
+            return OrigamXDocument.GetNamespaces(document)
                 .FirstOrDefault(nameSpace => nameSpace.FullTypeName == FullTypeName)
                 ?.StringValue;
         }
@@ -153,17 +154,17 @@ namespace Origam.DA.Service.MetaModelUpgrade
         public Version FromVersion { get; }
         public Version ToVersion { get;}
 
-        private readonly Action<XmlNode, OrigamXmlDocument> transformation;
+        private readonly Action<XElement, OrigamXDocument> transformation;
 
         public UpgradeScript(Version fromVersion, Version toVersion,
-            Action<XmlNode, OrigamXmlDocument> transformation)
+            Action<XElement, OrigamXDocument> transformation)
         {
             this.transformation = transformation;
             FromVersion = fromVersion;
             ToVersion = toVersion;
         }
 
-        public void Upgrade(XmlNode classNode, OrigamXmlDocument doc)
+        public void Upgrade(XElement classNode, OrigamXDocument doc)
         {
             transformation(classNode, doc);
         } 
