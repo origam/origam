@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using Origam.DA.Common;
 using Origam.DA.ServiceTests;
 using Origam.Extensions;
@@ -83,29 +84,30 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }));
         }
     }       
-    // class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
-    // {
-    //     public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadBaseClass";
-    //     public override List<string> OldFullTypeNames { get; }
-    //
-    //     public TestTestDeadBaseClassScriptContainer() 
-    //     {
-    //         upgradeScripts.Add(new UpgradeScript(
-    //             new Version("6.0.0"), 
-    //             new Version("6.0.1"),
-    //             (node, doc) =>
-    //             {
-    //                 AddAttribute(node, "deadClassProperty", "");
-    //             }));            
-    //         upgradeScripts.Add(new UpgradeScript(
-    //             new Version("6.0.1"), 
-    //             Versions.Last,
-    //             (node, doc) =>
-    //             {
-    //                 ((XmlElement)node).RemoveAttribute("deadClassProperty", "http://schemas.origam.com/Origam.DA.ServiceTests.TestDeadBaseClass/6.0.1");
-    //             }));
-    //     }
-    // }   
+    class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
+    {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadBaseClass";
+        public override List<string> OldFullTypeNames { get; }
+    
+        public TestTestDeadBaseClassScriptContainer() 
+        {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.0"), 
+                new Version("6.0.1"),
+                (node, doc) =>
+                {
+                    AddAttribute(node, "deadClassProperty", "");
+                }));            
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.1"), 
+                Versions.Last,
+                (node, doc) =>
+                {
+                    XNamespace deadNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestDeadBaseClass/6.0.1";
+                    node.Attribute(deadNamespace.GetName("deadClassProperty")).Remove();
+                }));
+        }
+    }   
     
     class TestBaseClassScriptContainer : UpgradeScriptContainer
     {

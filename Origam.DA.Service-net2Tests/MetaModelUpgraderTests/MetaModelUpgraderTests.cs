@@ -98,29 +98,33 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tbc"))?.Value, Is.EqualTo(tbcNamespace.ToString()));
         }        
         
-        // [Test]
-        // public void ShouldRemoveDeadBaseClass()
-        // {
-        //     XmlFileData xmlFileData = LoadFile("TestPersistedClassV6.0.2_WithDeadBaseClass.origam");
-        //     var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
-        //     bool someFilesWereUpgraded = sut.TryUpgrade(
-        //         new List<XmlFileData>{xmlFileData});
-        //
-        //     XmlElement fileElement = xmlFileData.XmlDocument.FileElement;
-        //     XmlNode classNode = fileElement.ChildNodes[0];
-        //     Assert.True(classNode.Attributes["tpc:newProperty1"] != null); 
-        //     Assert.True(classNode.Attributes["tpc:newProperty1"].Value == "5"); 
-        //     Assert.True(classNode.Attributes["tpc:newProperty2"] != null);
-        //     Assert.That(classNode.Attributes["tbc:TestBaseClassProperty"] != null);
-        //     Assert.True(classNode.Attributes["tbc:TestBaseClassProperty"].Value == "5");         
-        //     Assert.True(classNode.Attributes["tpc:name"] != null);
-        //     Assert.True(classNode.Attributes["tpc:name"].Value == "test v0");
-        //     Assert.That(classNode.Attributes["tdbc:deadClassProperty"]?.Value, Is.Null);
-        //     Assert.That(fileElement.Attributes["xmlns:tpc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2")); 
-        //     Assert.That(fileElement.Attributes["xmlns:tbc"]?.Value, Is.EqualTo("http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1"));
-        //     Assert.That(fileElement.Attributes["xmlns:tdc"]?.Value, Is.Null);
-        // }   
-        //
+        [Test]
+        public void ShouldRemoveDeadBaseClass()
+        {
+            XFileData xFileData = LoadFile("TestPersistedClassV6.0.2_WithDeadBaseClass.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            sut.TryUpgrade(new List<XFileData>{xFileData});
+
+            XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
+            XNamespace tbcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1";
+            XNamespace deadNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestDeadBaseClass/6.0.1";
+
+            XElement fileElement = xFileData.Document.FileElement;
+            XElement classNode = xFileData.Document.ClassNodes.First();
+            
+            Assert.True(classNode.Attribute(tpcNamespace.GetName("newProperty1")) != null); // assert the property was not removed
+            Assert.True(classNode.Attribute(tpcNamespace.GetName("newProperty1")).Value == "5"); // assert the property value was not changed
+            Assert.True(classNode.Attribute(tpcNamespace.GetName("newProperty2")) != null);
+            Assert.True(classNode.Attribute(tbcNamespace.GetName("TestBaseClassProperty")) != null);
+            Assert.True(classNode.Attribute(tbcNamespace.GetName("TestBaseClassProperty")).Value == "5");         
+            Assert.True(classNode.Attribute(tpcNamespace.GetName("name")) != null);
+            Assert.True(classNode.Attribute(tpcNamespace.GetName("name")).Value == "test v0");
+            Assert.That(classNode.Attribute(deadNamespace.GetName("deadClassProperty")), Is.Null);
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tpc"))?.Value, Is.EqualTo(tpcNamespace.ToString()));
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tbc"))?.Value, Is.EqualTo(tbcNamespace.ToString()));
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tdbc"))?.Value, Is.Null);
+        }   
+        
         // [Test]
         // public void ShouldUpgradeRenamedClass()
         // {
