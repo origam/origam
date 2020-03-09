@@ -156,16 +156,15 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             });
         }  
         
-        // [Test]
-        // public void ShouldThrowIfAttributeIsAlreadyPresent()
-        // {
-        //     Assert.Throws<ClassUpgradeException>(() =>
-        //     {
-        //         XmlFileData xmlFileData = LoadFile("TestPersistedClassV6.0.1_WrongVersion.origam");
-        //         var sut = new MetaModelUpGrader(GetType().Assembly,  new NullFileWriter());
-        //         bool someFilesWereUpgraded = sut.TryUpgrade(
-        //             new List<XmlFileData>{xmlFileData});
-        //     });
-        // }
+        [Test]
+        public void ShouldThrowIfAttributeIsAlreadyPresent()
+        {
+            Assert.Throws<ClassUpgradeException>(() =>
+            {
+                XFileData xFileData = LoadFile("TestPersistedClassV6.0.1_WrongVersion.origam");
+                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                sut.TryUpgrade(new List<XFileData>{xFileData});
+            });
+        }
     }
 }
