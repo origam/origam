@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using MoreLinq;
 using Origam.DA.Common;
 using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.ObjectPersistence;
@@ -12,14 +13,48 @@ using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
-    class PropertyToNamespaceMapping
+    internal interface IPropertyToNamespaceMapping
     {
-        private readonly Type instanceType;
+        XNamespace NodeNamespace { get; }
+        XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName);
+        void AddNamespacesToDocument(OrigamXDocument document);
+    }
+
+    class DeadClassPropertyToNamespaceMapping : IPropertyToNamespaceMapping
+    {
+        private string xmlNamespaceName;
+
+        public DeadClassPropertyToNamespaceMapping(string fullTypeName, Version version)
+        {
+            string typeName = fullTypeName.Split(".").Last();
+            NodeNamespace =  XmlNamespaceTools.GetXmlNamespace(fullTypeName, version);
+            xmlNamespaceName = XmlNamespaceTools.GetXmlNamespaceName(typeName);
+        }
+
+        public XNamespace NodeNamespace { get; }
+
+        public XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName)
+        {
+            return NodeNamespace;
+        }
+
+        public void AddNamespacesToDocument(OrigamXDocument document)
+        {
+            xmlNamespaceName = document.AddNamespace(
+                nameSpaceName: xmlNamespaceName, 
+                nameSpace: NodeNamespace.ToString());
+        }
+    }
+
+    class PropertyToNamespaceMapping : IPropertyToNamespaceMapping
+    {
         private readonly List<PropertyMapping> propertyMappings;
         private readonly Func<Type, string> XmlNamespaceMapper;
+        private readonly string typeFullName;
+
         public PropertyToNamespaceMapping(Type instanceType, Func<Type, string> xmlNamespaceMapper = null)
         {
-            this.instanceType = instanceType;
+            typeFullName = instanceType.FullName;
             XmlNamespaceMapper = xmlNamespaceMapper ?? XmlNamespaceTools.GetXmlNameSpace;
             propertyMappings = instanceType
                 .GetAllBaseTypes()
@@ -85,11 +120,11 @@ namespace Origam.DA.Service
                     nameSpace: propertyMapping.XmlNamespace);
             }
         }       
-        public void AddNamespacesToDocument(OrigamXDocument xDocument)
+        public void AddNamespacesToDocument(OrigamXDocument document)
         {
             foreach (var propertyMapping in propertyMappings)
             {
-                propertyMapping.XmlNamespaceName = xDocument.AddNamespace(
+                propertyMapping.XmlNamespaceName = document.AddNamespace(
                     nameSpaceName: propertyMapping.XmlNamespaceName, 
                     nameSpace: propertyMapping.XmlNamespace);
             }
@@ -99,7 +134,7 @@ namespace Origam.DA.Service
         {
             PropertyMapping propertyMapping = propertyMappings
                                                   .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\" in {instanceType.FullName} and its base types");
+                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\" in {typeFullName} and its base types");
             return propertyMapping.XmlNamespace;
         }      
         
@@ -107,7 +142,7 @@ namespace Origam.DA.Service
         {
             PropertyMapping propertyMapping = propertyMappings
                                                   .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{xmlAttributeName}\" in {instanceType.FullName} and its base types");
+                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{xmlAttributeName}\" in {typeFullName} and its base types");
             return propertyMapping.XmlNamespace;
         }
         
@@ -153,9 +188,14 @@ namespace Origam.DA.Service
             if (namespaces.ContainsKey(type)) return namespaces[type];
             
             Version currentClassVersion = Versions.GetCurrentClassVersion(type);
-            string xmlNameSpace = $"http://schemas.origam.com/{type.FullName}/{currentClassVersion}";
+            string xmlNameSpace = GetXmlNamespace(type.FullName, currentClassVersion);
             namespaces[type] = xmlNameSpace;
             return xmlNameSpace;
+        }
+
+        public static string GetXmlNamespace(string fullTypeName, Version version)
+        {
+            return $"http://schemas.origam.com/{fullTypeName}/{version}";
         }
 
         public static string GetXmlNamespaceName(Type type)
@@ -167,13 +207,18 @@ namespace Origam.DA.Service
                 return attribute.XmlNamespaceName;
             }
             
-            var charArray = type.Name
+            var xmlNamespaceName = GetXmlNamespaceName(type.Name);
+            namespaceNames[type]= xmlNamespaceName;
+            return xmlNamespaceName;
+        }
+
+        public static string GetXmlNamespaceName(string typeName)
+        {
+            var charArray = typeName
                 .Where(char.IsUpper)
                 .Select(char.ToLower)
                 .ToArray();
-            string xmlNamespaceName = new string(charArray);
-            namespaceNames[type]= xmlNamespaceName;
-            return xmlNamespaceName;
+            return new string(charArray);
         }
     }
 }
