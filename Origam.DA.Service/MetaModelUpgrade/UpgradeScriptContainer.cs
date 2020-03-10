@@ -87,8 +87,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             foreach (var upgradeScript in scriptsToRun)
             {
                 upgradeScript.Upgrade(classNode, doc);
+                SetVersion(doc, upgradeScript.ToVersion);
             }
-            SetVersion(doc, endVersion);
         }
 
 

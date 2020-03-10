@@ -38,7 +38,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeToVersion6()
         {
             XFileData xFileData = LoadFile("TestPersistedClassV5.0.0.origam");
-            var sut = new Version6UpGrader(xFileData.Document);
+            var sut = new Version6UpGrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
             sut.Run();
 
             XElement fileElement = xFileData.Document.FileElement;

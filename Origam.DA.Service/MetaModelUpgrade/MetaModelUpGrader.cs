@@ -35,34 +35,26 @@ namespace Origam.DA.Service.MetaModelUpgrade
 {
     public class MetaModelUpGrader
     {
-        private readonly Assembly scriptAssembly;
+        private readonly ScriptContainerLocator scriptLocator;
         private readonly IFileWriter fileWriter;
 
-        private static List<UpgradeScriptContainer> scriptContainers;
         private readonly Version firstVersion = new Version("6.0.0");
-
-        private static void InstantiateScriptContainers(Assembly scriptAssembly)
-        {
-            if (scriptContainers != null) return;
-            scriptContainers = scriptAssembly.GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(UpgradeScriptContainer)))
-                .Select(Activator.CreateInstance)
-                .Cast<UpgradeScriptContainer>()
-                .ToList();
-        }
-
         public MetaModelUpGrader(Assembly scriptAssembly, IFileWriter fileWriter)
         {
-            this.scriptAssembly = scriptAssembly;
+            scriptLocator = new ScriptContainerLocator(scriptAssembly);
             this.fileWriter = fileWriter;
-            InstantiateScriptContainers(scriptAssembly);
+        }
+
+        public MetaModelUpGrader(IFileWriter fileWriter)
+        {
+            this.fileWriter = fileWriter;
+            scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
 
         public MetaModelUpGrader()
         {
             fileWriter = new FileWriter();
-            scriptAssembly = GetType().Assembly;
-            InstantiateScriptContainers(scriptAssembly);
+            scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
 
         public bool TryUpgrade(List<XFileData> xmlData)
@@ -74,7 +66,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     .Any(attr => attr.Value == "http://schemas.origam.com/5.0.0/model-element");
                 if (isVersion5)
                 {
-                    new Version6UpGrader(xFileData.Document).Run();
+                    new Version6UpGrader(scriptLocator ,xFileData.Document).Run();
                 }
                 xFileData.Document
                     .ClassNodes
@@ -149,28 +141,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Version persistedClassVersion,
             Version currentClassVersion)
         {
-            var containers = scriptContainers
-                .Where(container =>
-                    container.FullTypeName == className ||
-                    container.OldFullTypeNames != null &&
-                    container.OldFullTypeNames.Contains(className))
-                .ToArray();
-            if (containers.Length != 1)
-            {
-                throw new ClassUpgradeException($"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\"");
-            }
-            var upgradeScriptContainer = containers[0];
+            var upgradeScriptContainer = scriptLocator.FindByTypeName(className);
             upgradeScriptContainer.Upgrade(xFileData.Document, classNode, persistedClassVersion, currentClassVersion);
         }
     }
     public class Version6UpGrader
     {
+        private readonly ScriptContainerLocator scriptLocator;
         private readonly OrigamXDocument xDocument;
         private static XNamespace oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
         private static XNamespace newPersistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
 
-        public Version6UpGrader(OrigamXDocument xDocument)
+        public Version6UpGrader(ScriptContainerLocator scriptLocator,
+            OrigamXDocument xDocument)
         {
+            this.scriptLocator = scriptLocator;
             this.xDocument = xDocument;
         }
 
@@ -180,13 +165,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
             foreach (XElement node in xDocument.ClassNodes)
             {
-                var type = RemoveTypeAttribute(node);
-
-                var namespaceMapping = new PropertyToNamespaceMapping(
-                    instanceType: type, 
-                    xmlNamespaceMapper: Version6NamespaceMapper);
+                IPropertyToNamespaceMapping namespaceMapping = GetNamespaceMapping(node);
                 namespaceMapping.AddNamespacesToDocument(xDocument);
                 
+                RemoveTypeAttribute(node);
                 node.Name = namespaceMapping.NodeNamespace.GetName(node.Name.LocalName);
                 CopyAttributes(node, namespaceMapping);
             }
@@ -206,9 +188,13 @@ namespace Origam.DA.Service.MetaModelUpgrade
         }
 
         private static void CopyAttributes(XElement node,
-            PropertyToNamespaceMapping namespaceMapping)
+            IPropertyToNamespaceMapping namespaceMapping)
         {
-            List<XAttribute> atList = node.Attributes().ToList();  
+            List<XAttribute> atList = node
+                .Attributes()
+                .Where(attr => attr.Name.LocalName != "xmlns")
+                .ToList();  
+            
             node.Attributes().Remove();  
             foreach (XAttribute attribute in atList){
                 XNamespace nameSpace = attribute.Name.Namespace == oldPersistenceNamespace
@@ -218,7 +204,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        private Type RemoveTypeAttribute(XElement node)
+        private IPropertyToNamespaceMapping GetNamespaceMapping(XElement node)
         {
             XName name = oldPersistenceNamespace.GetName("type");
             XAttribute typeAttribute = node?.Attribute(name);
@@ -229,8 +215,31 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             
             Type type = Reflector.GetTypeByName(typeAttribute.Value);
-            typeAttribute.Remove();
-            return type;
+            bool classIsDearOrRenamed = type == null;
+            if (classIsDearOrRenamed)
+            {
+                var scriptContainer = scriptLocator.FindByTypeName(typeAttribute.Value);
+                type = Reflector.GetTypeByName(scriptContainer.FullTypeName);
+                
+                bool classIsDead = type == null;
+                if (classIsDead)
+                {
+                    return new DeadClassPropertyToNamespaceMapping(
+                        scriptContainer.FullTypeName,
+                        new Version(6,0,0));
+                }
+            }
+
+            return new PropertyToNamespaceMapping(
+                instanceType: type, 
+                xmlNamespaceMapper: Version6NamespaceMapper) ;
+        }  
+        
+        private void RemoveTypeAttribute(XElement node)
+        {
+            XName name = oldPersistenceNamespace.GetName("type");
+            XAttribute typeAttribute = node?.Attribute(name);
+            typeAttribute?.Remove();
         }
 
         private void RemoveOldDocumentNamespaces()
