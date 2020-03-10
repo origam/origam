@@ -31,24 +31,16 @@ namespace Origam.ServerCore
             {
                 new Client
                 {
-                    ClientId = "VsCodeTest",
-                    ClientSecrets = new[] {new Secret("bla".Sha256())},
-                    AllowedGrantTypes = GrantTypes
-                        .ResourceOwnerPasswordAndClientCredentials,
-                    AllowedScopes = new List<string> {"testApi"},
-                },
-                new Client
-                {
-                    ClientId = "xamarin",
+                    ClientId = "origamMobileClient",
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     ClientSecrets =
                     {
-                        new Secret(identityServerConfig.ClientSecret.Sha256())
+                        new Secret(identityServerConfig.MobileClient.ClientSecret.Sha256())
                     },
-                    RedirectUris = identityServerConfig.RedirectUris,
+                    RedirectUris = identityServerConfig.MobileClient.RedirectUris,
                     RequireConsent = false,
                     RequirePkce = true,
-                    PostLogoutRedirectUris = identityServerConfig.PostLogoutRedirectUris,
+                    PostLogoutRedirectUris = identityServerConfig.MobileClient.PostLogoutRedirectUris,
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.LocalApi.ScopeName,
@@ -65,10 +57,10 @@ namespace Origam.ServerCore
                     ClientId = "origamWebClient",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
-                    RedirectUris =  identityServerConfig.RedirectUris,
+                    RedirectUris =  identityServerConfig.WebClient.RedirectUris,
                     RequireConsent = false,
                     RequirePkce = true,
-                    PostLogoutRedirectUris = identityServerConfig.PostLogoutRedirectUris,
+                    PostLogoutRedirectUris = identityServerConfig.WebClient.PostLogoutRedirectUris,
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.LocalApi.ScopeName,
