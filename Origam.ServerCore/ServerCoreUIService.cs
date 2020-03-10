@@ -43,6 +43,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Origam.Schema.WorkflowModel;
+using Origam.ServerCore.Resources;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
@@ -201,6 +202,38 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return result;
         }
+        
+        public void Logout()
+        {
+            PortalSessionStore pss;
+            try
+            {
+                pss = sessionManager.GetPortalSession();
+            }
+            catch(SessionExpiredException)
+            {
+                return;
+            }
+
+            if (pss == null)
+            {
+                return;
+            }
+
+            while(pss.FormSessions.Count > 0)
+            {
+                DestroyUI(pss.FormSessions[0].Id);
+            }
+
+            Analytics.Instance.Log("UI_LOGOUT");
+
+            sessionManager.RemovePortalSession(SecurityTools.CurrentUserProfile().Id);
+            Task.Run(() => SecurityTools.RemoveOrigamOnlineUser(
+                SecurityManager.CurrentPrincipal.Identity.Name));
+            OrigamUserContext.Reset();
+        }
+
+        // ReSharper disable once InconsistentNaming
         public void DestroyUI(Guid sessionFormIdentifier)
         {
             sessionHelper.DeleteSession(sessionFormIdentifier);

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,11 +50,13 @@ namespace Origam.Security.Common
         private readonly string mailQueueName;
         private readonly string applicationBasePath;
 
-        public AccountMailSender(string portalBaseUrl, string registerNewUserFilename, 
-            string fromAddress, string registerNewUserSubject, 
-            string userUnlockNotificationBodyFilename, 
+        public AccountMailSender(string portalBaseUrl,
+            string registerNewUserFilename,
+            string fromAddress, string registerNewUserSubject,
+            string userUnlockNotificationBodyFilename,
             string userUnlockNotificationSubject, string resetPwdBodyFilename,
-            string resetPwdSubject, string mailQueueName, string applicationBasePath)
+            string resetPwdSubject, string applicationBasePath,
+            string mailQueueName = null)
         {
             this.portalBaseUrl = portalBaseUrl;
             this.registerNewUserFilename = registerNewUserFilename;
@@ -78,9 +81,6 @@ namespace Origam.Security.Common
                         Uri.EscapeDataString(token)),
                     new KeyValuePair<string, string>("<%UserId%>", userId),
                     new KeyValuePair<string, string>("<%UserName%>", username),
-                    new KeyValuePair<string, string>("<%Name%>", name),
-                    new KeyValuePair<string, string>("<%FirstName%>",
-                        firstName),
                     new KeyValuePair<string, string>("<%PortalBaseUrl%>",
                         portalBaseUrl),
                     new KeyValuePair<string, string>("<%EscapedUserName%>",
@@ -93,9 +93,7 @@ namespace Origam.Security.Common
                         Uri.EscapeDataString(firstName)),
                     new KeyValuePair<string, string>("<%UserEmail%>", email),
                     new KeyValuePair<string, string>("<%EscapedUserEmail%>",
-                        Uri.EscapeDataString(email)),
-                    new KeyValuePair<string, string>("<%PortalBaseUrl%>",
-                        portalBaseUrl)
+                        Uri.EscapeDataString(email))
                 };
             // PORTAL_BASE_URL is mandatory if using default template
             if (string.IsNullOrWhiteSpace(portalBaseUrl) &&
@@ -516,8 +514,31 @@ namespace Origam.Security.Common
             {
                 pms.Add(new QueryParameter("MailWorkQueueName", mailQueueName));
             }
+#if DEBUG
+            SaveToDebugMailLog(pms);
+#endif
             WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
         }
 
+        private static void SaveToDebugMailLog(QueryParameterCollection pms)
+        {
+            FileInfo outFile = new FileInfo("logs//DebugMail.log");
+
+            string header =
+                $"\n\n--------------------------------------------------------------------------------\n" +
+                $"Sent:{DateTime.Now}\n";
+
+            string mailString = pms.Cast<QueryParameter>()
+                .Select(parameter => $"{parameter.Name}: {parameter.Value}")
+                .Aggregate(header, (x, y) => x + "\n\n" + y);
+            if (outFile.Exists)
+            {
+                File.AppendAllText(outFile.FullName, mailString);
+            }
+            else
+            {
+                File.WriteAllText(outFile.FullName, mailString);
+            }
+        }
     }
 }

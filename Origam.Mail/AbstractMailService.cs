@@ -359,7 +359,7 @@ namespace Origam.Mail
             {
                 return popClient.GetMessage(index);
             }
-            catch (Pop3CommandException ex)
+            catch (Pop3CommandException)
             {
                 return null; // message with this number was already deleted
             }

@@ -34,24 +34,7 @@ namespace Origam.ServerCore.Configuration
         {
             this.configuration = configuration;
         }
-
-        public string SecurityKey {
-            get
-            {
-                string securityKey = configuration["SecurityKey"];
-                if (string.IsNullOrWhiteSpace(securityKey))
-                {
-                    throw new ArgumentException("SecurityKey was not found in configuration. Please add it to appsettings.json");
-                }
-
-                if (securityKey.Length < 16)
-                {
-                    throw new ArgumentException("SecurityKey found in appsettings.json has to be at least 16 characters long!");
-                }
-                return securityKey;
-            }
-        }
-
+        
         public IEnumerable<string> UserApiPublicRoutes =>  
             configuration
                 .GetSection("UserApiOptions")
@@ -60,7 +43,7 @@ namespace Origam.ServerCore.Configuration
                 .Select(c => c.Value);
 
         public IEnumerable<string> UserApiRestrictedRoutes =>
-            configuration
+            configuration   
                 .GetSection("UserApiOptions")
                 .GetSection("RestrictedRoutes")
                 .GetChildren()

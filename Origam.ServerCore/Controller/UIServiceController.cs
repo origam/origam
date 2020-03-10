@@ -43,13 +43,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using IdentityServer4;
 using Microsoft.AspNetCore.Localization;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
+using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Controller
 {
-    [Authorize]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     [ApiController]
     [Route("internalApi/[controller]")]
     public class UIServiceController : AbstractController
@@ -783,7 +785,7 @@ namespace Origam.ServerCore.Controller
                     values, query.ColumnsInfo);
             }
         }
-        public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        private List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
         {
             if(columnsInfo == null)
             {
