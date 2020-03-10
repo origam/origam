@@ -77,7 +77,18 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 Versions.Last,
                 (node, doc) =>
                 {
+                    XNamespace tdcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestDeadClass/6.0.1";
+                    XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
+                    
                     node.Remove();
+                    string namePropertyValue = node.Attribute(tdcNamespace.GetName("name")).Value;
+                    XElement newElement = new XElement(tpcNamespace.GetName("TestPersistedClass"));
+                    newElement.SetAttributeValue(tpcNamespace.GetName("name"), namePropertyValue);
+                    newElement.SetAttributeValue(tpcNamespace.GetName("newProperty1"), "");
+                    newElement.SetAttributeValue(tpcNamespace.GetName("newProperty2"), "");
+                    doc.FileElement.SetAttributeValue(XNamespace.Xmlns.GetName("tpc"), tpcNamespace);
+                    doc.FileElement.Add(newElement);
+                    
                 }));
         }
     }       

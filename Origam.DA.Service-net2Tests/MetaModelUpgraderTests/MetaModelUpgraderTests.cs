@@ -61,17 +61,24 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         }             
         
         [Test]
-        public void ShouldRemoveDeadClass()
+        public void ShouldReplaceClass()
         {
             XFileData xFileData = LoadFile("TestDeadClassV6.0.1.origam");
             var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(new List<XFileData>{xFileData});
             
+            XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
+            
             bool classNamespacesPresent = xFileData.Document.Namespaces
                 .Any(nameSpace => nameSpace.FullTypeName.Contains("TestDeadClass") ||
                                   nameSpace.FullTypeName.Contains("TestBaseClass"));
             Assert.False(classNamespacesPresent);
-            Assert.That(xFileData.Document.ClassNodes.ToList(), Has.Count.EqualTo(0));
+            
+            XElement classNode = xFileData.Document.ClassNodes.First();
+            var fileElement = xFileData.Document.FileElement;
+            Assert.That(classNode.Name.LocalName, Is.EqualTo("TestPersistedClass"));
+            Assert.That(classNode.Attribute(tpcNamespace.GetName("name"))?.Value, Is.EqualTo("test v0")); // "test v0" was value of the dead class's name property
+            Assert.That( fileElement.Attribute(XNamespace.Xmlns.GetName("tpc"))?.Value, Is.EqualTo(tpcNamespace.ToString()));
         }      
         
         [Test]
