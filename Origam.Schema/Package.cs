@@ -36,7 +36,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaExtension")]
     [XmlPackageRoot("package")]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.1.0")]
 	public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -89,6 +89,7 @@
     <Compile Include="SchemaItemComparator.cs" />
     <Compile Include="SchemaItemsToCompare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptContainersTests\PackageScriptContainerTests.cs" />
     <Compile Include="TypeTools.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +207,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0_WithChild.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ScriptContainersTests\TestFiles\Security_V5.0.0_.origamPackage">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="_OrigamSettings.config">
