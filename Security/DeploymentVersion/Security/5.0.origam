@@ -43,5 +43,14 @@
       platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="35"
+      commandText="-***-ExternalFile:5.0.origam___commandText___7ada8bee-9af1-4b58-9ce3-5158f171d481.txt"
+      x:id="7ada8bee-9af1-4b58-9ce3-5158f171d481"
+      name="00035_Database_Entity_OrigamIdentityGrant"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>
