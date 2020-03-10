@@ -202,6 +202,9 @@
     <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestRenamedClassV6.0.0_WithChild.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="_OrigamSettings.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

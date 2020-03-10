@@ -146,6 +146,39 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         }
         
         [Test]
+        public void ShouldUpgradeRenamedClassWithChild()
+        {
+            XFileData xFileData = LoadFile("TestRenamedClassV6.0.0_WithChild.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            sut.TryUpgrade(new List<XFileData>{xFileData});
+
+            XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
+            XNamespace tbcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1";
+            XNamespace toncNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestOldNameClass/6.0.0";
+            XNamespace trcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestRenamedClass/6.0.1";
+            
+            XElement fileElement = xFileData.Document.FileElement;
+            XElement renamedClassNode = xFileData.Document.ClassNodes.First();
+            
+            Assert.That(renamedClassNode.Name.LocalName, Is.EqualTo("TestRenamedClass"));
+            Assert.That(renamedClassNode.Attribute(toncNamespace.GetName("name")), Is.Null);
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tonc"))?.Value, Is.Null);
+            Assert.That(renamedClassNode.Attribute(trcNamespace.GetName("name"))?.Value, Is.EqualTo("test"));
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("trc"))?.Value, Is.EqualTo(trcNamespace.ToString()));
+            
+            XElement childClassNode = renamedClassNode.Elements().First();
+            Assert.True(childClassNode.Attribute(tpcNamespace.GetName("newProperty1")) != null); // assert the property was not removed
+            Assert.True(childClassNode.Attribute(tpcNamespace.GetName("newProperty1")).Value == "5"); // assert the property value was not changed
+            Assert.True(childClassNode.Attribute(tpcNamespace.GetName("newProperty2")) != null);
+            Assert.True(childClassNode.Attribute(tbcNamespace.GetName("TestBaseClassProperty")) != null);
+            Assert.True(childClassNode.Attribute(tbcNamespace.GetName("TestBaseClassProperty")).Value == "5");         
+            Assert.True(childClassNode.Attribute(tpcNamespace.GetName("name")) != null);
+            Assert.True(childClassNode.Attribute(tpcNamespace.GetName("name")).Value == "test v0");
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tpc"))?.Value, Is.EqualTo(tpcNamespace.ToString()));
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tbc"))?.Value, Is.EqualTo(tbcNamespace.ToString()));
+        }
+
+        [Test]
         public void ShouldThrowIfOneOfUpgradeScriptsIsMissing()
         {
             Assert.Throws<ClassUpgradeException>(() =>
