@@ -39,6 +39,7 @@ using Origam.Schema;
 using Origam.Server;
 using Origam.ServerCore.Model.Blob;
 using Origam.ServerCore.Model.UIService;
+using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
