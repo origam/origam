@@ -7,7 +7,7 @@ using Origam.TestCommon;
 
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
-    public class MetaModelUpGradeTestBase : AbstractFileTestClass
+    public class ClassUpgradeTestBase : AbstractFileTestClass
     {
         protected XFileData LoadFile(string fileName)
         {

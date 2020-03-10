@@ -32,7 +32,7 @@ using Origam.DA.Service.MetaModelUpgrade;
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
     [TestFixture]
-    public class Version6UpGraderTests: MetaModelUpGradeTestBase
+    public class Version6UpGraderTests: ClassUpgradeTestBase
     {
         [Test]
         public void ShouldUpgradeToVersion6()

@@ -34,7 +34,7 @@ using Origam.Extensions;
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
     [TestFixture]
-    public class MetaModelUpGraderTests: MetaModelUpGradeTestBase
+    public class MetaModelUpGraderTests: ClassUpgradeTestBase
     {
         [Test]
         public void ShouldUpgradeByOneVersion()
