@@ -1223,11 +1223,16 @@ namespace OrigamArchitect
 
         public void Connect()
         {
-            Connect(null);
+	        Connect(null);
 	        SubscribeToPersistenceServiceEvents();
         }
-		
-		private void SubscribeToPersistenceServiceEvents()
+
+        private static void InitializeMetaModelUpgradeService()
+        {
+	        ServiceManager.Services.AddService(new MetaModelUpgradeService());
+        }
+
+        private void SubscribeToPersistenceServiceEvents()
 		{
 			var currentPersistenceService =
 				ServiceManager.Services.GetService<IPersistenceService>();
@@ -1467,7 +1472,8 @@ namespace OrigamArchitect
 			{
 				return;
 			}         
-
+            InitializeMetaModelUpgradeService();
+            SubscribeToUpgradeServiceEvents();
             Application.DoEvents();
 
             foreach (DockContent content in this.dockPanel.Documents.ToList())
@@ -1556,7 +1562,23 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    public void DoModelChecksAsync()
+		private void SubscribeToUpgradeServiceEvents()
+		{
+			var metaModelUpgradeService = ServiceManager.Services.GetService<IMetaModelUpgradeService>();
+
+			metaModelUpgradeService.UpgradeStarted += (sender, args) =>
+			{
+				Task.Run(() =>
+				{
+					using (var form = new ModelUpgradeForm(metaModelUpgradeService))
+					{
+						form.ShowDialog();
+					}
+				});
+			};
+		}
+
+		public void DoModelChecksAsync()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
@@ -1840,7 +1862,7 @@ namespace OrigamArchitect
 		/// </summary>
 		private bool LoadSchemaList()
 		{
-            IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
+			IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
 			ServiceManager.Services.AddService(persistence);
 
 			try
