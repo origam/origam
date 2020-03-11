@@ -398,6 +398,9 @@
     </Compile>
     <Content Include="App.ico" />
     <Content Include="build.xml" />
+    <EmbeddedResource Include="ModelUpgradeForm.resx">
+      <DependentUpon>ModelUpgradeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="origam_desktop_architect_logo.png" />
     <Content Include="_OrigamArchitect.exe.config" />
     <Content Include="_OrigamSettings.config" />

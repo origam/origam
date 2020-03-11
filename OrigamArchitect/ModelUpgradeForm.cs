@@ -27,7 +27,7 @@ namespace OrigamArchitect
                     progressBar.Maximum = info.TotalFiles;
                     progressBar.Step = 1;
                     progressBar.Value = info.FilesDone;
-                    infoLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
+                    currentFileLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
                 }
 
                 if (progressBar.InvokeRequired)

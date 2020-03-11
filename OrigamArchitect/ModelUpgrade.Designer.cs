@@ -37,56 +37,55 @@ namespace OrigamArchitect
             this.infoLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // progressBar1
+            // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(12, 47);
+            this.progressBar.Location = new System.Drawing.Point(10, 41);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(582, 23);
+            this.progressBar.Size = new System.Drawing.Size(499, 20);
             this.progressBar.TabIndex = 0;
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(519, 113);
+            this.cancelButton.Location = new System.Drawing.Point(443, 72);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.Size = new System.Drawing.Size(64, 20);
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += OnCancelButtonClick;
             // 
             // currentFileLabel
             // 
-            this.currentFileLabel.Location = new System.Drawing.Point(12, 83);
+            this.currentFileLabel.Location = new System.Drawing.Point(10, 72);
             this.currentFileLabel.Name = "currentFileLabel";
-            this.currentFileLabel.Size = new System.Drawing.Size(582, 23);
+            this.currentFileLabel.Size = new System.Drawing.Size(427, 20);
             this.currentFileLabel.TabIndex = 2;
             this.currentFileLabel.Text = "label1";
             // 
             // infoLabel
             // 
-            this.infoLabel.Location = new System.Drawing.Point(12, 21);
+            this.infoLabel.Location = new System.Drawing.Point(10, 18);
             this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Size = new System.Drawing.Size(582, 23);
+            this.infoLabel.Size = new System.Drawing.Size(499, 20);
             this.infoLabel.TabIndex = 3;
-            this.infoLabel.Text =
-                "Please wait, meta model upgrade in progress...";
+            this.infoLabel.Text = "Please wait, meta model upgrade in progress...";
             // 
-            // ModelUpgrade
+            // ModelUpgradeForm
             // 
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(606, 148);
+            this.ClientSize = new System.Drawing.Size(519, 102);
             this.ControlBox = false;
             this.Controls.Add(this.infoLabel);
             this.Controls.Add(this.currentFileLabel);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.progressBar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ModelUpgrade";
+            this.Name = "ModelUpgradeForm";
             this.Text = "Meta Model Upgrade";
             this.ResumeLayout(false);
+
         }
 
         #endregion
