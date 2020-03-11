@@ -1327,18 +1327,8 @@ namespace OrigamArchitect
 
 			if (maybeError.HasNoValue) return null;
 			XmlLoadError error = maybeError.Value;
-			switch (error.Type)	
-			{
-				case ErrType.XmlGeneralError:
-				    this.RunWithInvoke(() => MessageBox.Show(this, error.Message));
-                    return maybeError;
-				case ErrType.XmlVersionIsOlderThanCurrent:
-					return TryHandleOldVersionFound(filePersistService, error.Message) 
-					    ? null 
-					    : maybeError;
-				default:
-					throw new NotImplementedException();
-			}
+			this.RunWithInvoke(() => MessageBox.Show(this, error.Message));
+            return maybeError;
 		}
 
 		private bool TryHandleOldVersionFound(FilePersistenceService filePersistService,
