@@ -40,6 +40,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         event EventHandler UpgradeStarted;
         event EventHandler UpgradeFinished;
         List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData);
+        void Cancel();
     }
 
     public class NullMetaModelUpgradeService : IMetaModelUpgradeService
@@ -59,20 +60,26 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             return xmlFileData;
         }
+
+        public void Cancel()
+        {
+        }
     }
 
     public class MetaModelUpgradeService: IMetaModelUpgradeService
     {
+        private MetaModelUpGrader metaModelUpGrader;
         public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
         public event EventHandler UpgradeStarted;
         public event EventHandler UpgradeFinished;
+        private bool canceled;
 
         public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData)
         {
             List<XFileData> xFileData = xmlFileData
                 .Select(fileData => new XFileData(fileData))
                 .ToList();
-            var metaModelUpGrader = new MetaModelUpGrader();
+            metaModelUpGrader = new MetaModelUpGrader();
             
             metaModelUpGrader.UpgradeStarted += OnUpgradeStarted;
             metaModelUpGrader.UpgradeFinished += OnUpgradeFinished;
@@ -82,9 +89,19 @@ namespace Origam.DA.Service.MetaModelUpgrade
             metaModelUpGrader.UpgradeStarted -= OnUpgradeStarted;
             metaModelUpGrader.UpgradeFinished -= OnUpgradeFinished;
 
+            if (canceled)
+            {
+                return new List<XmlFileData>();
+            }
             return xFileData
                 .Select(fileData => new XmlFileData(fileData))
                 .ToList();
+        }
+
+        public void Cancel()
+        {
+            canceled = true;
+            metaModelUpGrader?.Cancel();
         }
 
         private void OnUpgradeFinished(object sender, EventArgs e)

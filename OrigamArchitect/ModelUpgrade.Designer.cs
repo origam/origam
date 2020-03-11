@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace OrigamArchitect
 {
@@ -51,6 +52,7 @@ namespace OrigamArchitect
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += OnCancelButtonClick;
             // 
             // currentFileLabel
             // 

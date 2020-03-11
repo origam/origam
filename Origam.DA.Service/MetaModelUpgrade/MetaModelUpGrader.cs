@@ -40,6 +40,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         public event EventHandler UpgradeFinished;
         private readonly ScriptContainerLocator scriptLocator;
         private readonly IFileWriter fileWriter;
+        private bool canceled;
 
         private readonly Version firstVersion = new Version("6.0.0");
         public MetaModelUpGrader(Assembly scriptAssembly, IFileWriter fileWriter)
@@ -59,12 +60,18 @@ namespace Origam.DA.Service.MetaModelUpgrade
             fileWriter = new FileWriter();
             scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
-
+        
+        public void Cancel()
+        {
+            canceled = true;
+        }
+        
         public bool TryUpgrade(List<XFileData> xmlData)
         {
             UpgradeStarted?.Invoke(null, EventArgs.Empty);
             for (int i = 0; i < xmlData.Count; i++)
             {
+                if (canceled) break;
                 XFileData xFileData = xmlData[i];
                 bool isVersion5 = xFileData.Document.FileElement
                     .Attributes()

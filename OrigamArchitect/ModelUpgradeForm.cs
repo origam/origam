@@ -13,9 +13,12 @@ namespace OrigamArchitect
 {
     public partial class ModelUpgradeForm : Form
     {
+        private readonly IMetaModelUpgradeService metaModelUpgradeService;
+
         public ModelUpgradeForm(
             IMetaModelUpgradeService metaModelUpgradeService)
         {
+            this.metaModelUpgradeService = metaModelUpgradeService;
             metaModelUpgradeService.UpgradeProgress += (sender, info) =>
             {
                 void ProgressAction()
@@ -38,18 +41,21 @@ namespace OrigamArchitect
             };
             metaModelUpgradeService.UpgradeFinished += (sender, args) =>
             {
-                void CloseAction() => Close();
-                if (progressBar.InvokeRequired)
+                if (InvokeRequired)
                 {
-                    Invoke((Action) CloseAction);
+                    Invoke((Action) Close);
                 }
                 else
                 {
                     Close();
                 }
-               
             };
             InitializeComponent();
+        }
+        
+        private void OnCancelButtonClick(object sender, EventArgs args)
+        {
+            metaModelUpgradeService.Cancel();
         }
     }
 }
