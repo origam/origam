@@ -1518,9 +1518,7 @@ namespace OrigamArchitect
                 CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-				bool shouldContinue = TryUpgradeMetaModel();
-				if(!shouldContinue) return;
-                DoModelChecksAsync();
+				DoModelChecksAsync();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1635,30 +1633,7 @@ namespace OrigamArchitect
 	            }
 	        }
 	    }
-
-	    private bool TryUpgradeMetaModel()
-	    {
-		    string modelSourceControlLocation = ConfigurationManager
-			    .GetActiveConfiguration().ModelSourceControlLocation;
-		    var upgradeManager =
-			    new UpgradeManager(new DirectoryInfo(modelSourceControlLocation));
-		    Maybe<XmlLoadError> error = upgradeManager.LoadFiles();
-		    if (error.HasValue)
-		    {
-			    this.RunWithInvoke(() =>
-				    {
-					    DialogResult dialogResult = MessageBox.Show(
-						    error.Value.Message,
-						    "Model Errors",
-						    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-				    }
-			    );
-			    return false;
-		    }
-		    upgradeManager.Upgrade();
-		    return true;
-	    }
-
+	    
 	    protected override void WndProc(ref Message m)
 		{
 			if(m.Msg == 16)
