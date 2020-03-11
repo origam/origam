@@ -39,11 +39,11 @@ namespace OrigamArchitect
             };
             InitializeComponent();
         }
-        
-        private void OnCancelButtonClick(object sender, EventArgs args)
+
+        private void cancelButton_Click(object sender, EventArgs e)
         {
             metaModelUpgradeService.Cancel();
-            this.RunWithInvoke(()=> currentFileLabel.Text = "Canceling...");
+            this.RunWithInvoke(() => currentFileLabel.Text = "Canceling...");
         }
     }
 }
