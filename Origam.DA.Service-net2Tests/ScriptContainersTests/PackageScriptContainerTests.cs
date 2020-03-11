@@ -36,7 +36,7 @@ namespace Origam.DA.ServiceTests.ScriptContainersTests
         {
             XFileData xFileData = LoadFile("Security_V5.0.0_.origamPackage");
             var modelUpGrader = new MetaModelUpGrader(new NullFileWriter());
-            modelUpGrader.TryUpgrade(xFileData);
+            modelUpGrader.Upgrade(xFileData);
         }
     }
 }

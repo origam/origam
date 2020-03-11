@@ -57,7 +57,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
         
-        public void TryUpgrade(XFileData xFileData)
+        public void Upgrade(XFileData xFileData)
         {
             bool isVersion5 = xFileData.Document.FileElement
                 .Attributes()
@@ -68,7 +68,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             xFileData.Document
                 .ClassNodes
-                .ToArray().ForEach(classNode => TryUpgrade(classNode, xFileData));
+                .ToArray().ForEach(classNode => Upgrade(classNode, xFileData));
             
             xFileData.Document.FixNamespaces();
             WriteToFile(xFileData);
@@ -83,7 +83,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             fileWriter.Write(xFileData.File, upgradedXmlString);
         }
 
-        private void TryUpgrade(XElement classNode, XFileData xFileData)
+        private void Upgrade(XElement classNode, XFileData xFileData)
         {
             IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
             
