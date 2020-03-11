@@ -35,6 +35,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
 {
     public class MetaModelUpGrader
     {
+        public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
+        public event EventHandler UpgradeStarted;
+        public event EventHandler UpgradeFinished;
         private readonly ScriptContainerLocator scriptLocator;
         private readonly IFileWriter fileWriter;
 
@@ -59,8 +62,10 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         public bool TryUpgrade(List<XFileData> xmlData)
         {
-            foreach (XFileData xFileData in xmlData)
+            UpgradeStarted?.Invoke(null, EventArgs.Empty);
+            for (int i = 0; i < xmlData.Count; i++)
             {
+                XFileData xFileData = xmlData[i];
                 bool isVersion5 = xFileData.Document.FileElement
                     .Attributes()
                     .Any(attr => attr.Value == "http://schemas.origam.com/5.0.0/model-element");
@@ -75,8 +80,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 
                 xFileData.Document.FixNamespaces();
                 WriteToFile(xFileData);
+                UpgradeProgress?.Invoke(null, new UpgradeProgressInfo(xmlData.Count, i));
             }
-
+            UpgradeFinished?.Invoke(null, EventArgs.Empty);
             return false;
         }
 
@@ -254,5 +260,18 @@ namespace Origam.DA.Service.MetaModelUpgrade
             xDocument.FileElement.Name = newPersistenceNamespace.GetName(xDocument.FileElement.Name.LocalName);
             xDocument.FileElement.Attribute(XNamespace.Xmlns + "x").Value = newPersistenceNamespace.ToString();
         }
+    }
+
+    public class UpgradeProgressInfo
+    {
+        public int TotalFiles { get;}
+        public int FilesDone { get; }
+
+        public UpgradeProgressInfo(int totalFiles, int filesDone)
+        {
+            TotalFiles = totalFiles;
+            FilesDone = filesDone;
+        }
+
     }
 }

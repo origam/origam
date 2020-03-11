@@ -29,6 +29,7 @@ using Origam.Schema.WorkflowModel;
 using NUnit.Framework;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.TestCommon;
 
 namespace Origam.DA.Service_net2Tests
@@ -70,6 +71,7 @@ namespace Origam.DA.Service_net2Tests
             InitFilePersistenceProvider(parentFolders, TestProjectDir);
             var origamXmlLoader =
                 new OrigamXmlLoader(
+                    metaModelUpgradeService: new NullMetaModelUpgradeService(), 
                     objectFileDataFactory: MakeObjectFileDataFactory(TestProjectDir),
                     topDirectory: TestProjectDir,
                     xmlFileDataFactory: new XmlFileDataFactory(new List<MetaVersionFixer>()));
@@ -171,7 +173,8 @@ namespace Origam.DA.Service_net2Tests
                 new ObjectFileDataFactory(origamFileFactory, parentFolders);          
             var trackerLoaderFactory =
                 new TrackerLoaderFactory(topDir, objectFileDataFactory,
-                    origamFileFactory,XmlFileDataFactory, pathToIndexBin,true,index);
+                    origamFileFactory,XmlFileDataFactory, pathToIndexBin,
+                    true,index, new NullMetaModelUpgradeService());
 
             var filePersistenceProvider =
                 new FilePersistenceProvider(

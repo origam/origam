@@ -37,14 +37,17 @@ namespace Origam.DA.Service
         private readonly ObjectFileDataFactory objectFileDataFactory;
         private readonly DirectoryInfo topDirectory;
         private readonly XmlFileDataFactory xmlFileDataFactory;
+        private readonly IMetaModelUpgradeService metaModelUpgradeService;
         private readonly XmlLoader xmlLoader;
 
-        public OrigamXmlLoader(ObjectFileDataFactory objectFileDataFactory, 
-            DirectoryInfo topDirectory, XmlFileDataFactory xmlFileDataFactory)
+        public OrigamXmlLoader(ObjectFileDataFactory objectFileDataFactory,
+            DirectoryInfo topDirectory, XmlFileDataFactory xmlFileDataFactory,
+            IMetaModelUpgradeService metaModelUpgradeService)
         {
             this.objectFileDataFactory = objectFileDataFactory;
             this.topDirectory = topDirectory;
             this.xmlFileDataFactory = xmlFileDataFactory;
+            this.metaModelUpgradeService = metaModelUpgradeService;
             xmlLoader = new XmlLoader(topDirectory, xmlFileDataFactory);
         }
 
@@ -55,7 +58,8 @@ namespace Origam.DA.Service
 
             if (result.IsSuccess)
             {
-                AddOrigamFiles(itemTracker, result.Value);
+                List<XmlFileData> upgradedData = metaModelUpgradeService.Upgrade(result.Value);
+                    AddOrigamFiles(itemTracker, upgradedData);
                 RemoveOrigamFilesThatNoLongerExist(itemTracker);
                 return Maybe<XmlLoadError>.None;
             } 

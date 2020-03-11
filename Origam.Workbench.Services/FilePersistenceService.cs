@@ -32,6 +32,7 @@ using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.OrigamEngine;
 
 namespace Origam.Workbench.Services
@@ -39,6 +40,7 @@ namespace Origam.Workbench.Services
     public class FilePersistenceService : IPersistenceService
     {
         private readonly FilePersistenceProvider schemaProvider;
+        private readonly IMetaModelUpgradeService metaModelUpgradeService;
         private readonly IList<string> defaultFolders;
         
         public FileEventQueue FileEventQueue { get; }
@@ -47,10 +49,11 @@ namespace Origam.Workbench.Services
         
         public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
-        public FilePersistenceService(IList<string> defaultFolders,
+        public FilePersistenceService(IMetaModelUpgradeService metaModelUpgradeService, IList<string> defaultFolders,
             string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
             bool checkRules = true)
         {
+            this.metaModelUpgradeService = metaModelUpgradeService;
             this.defaultFolders = defaultFolders;
             var topDirectory = GetTopDirectory(basePath);
             topDirectory.Create();
@@ -82,7 +85,8 @@ namespace Origam.Workbench.Services
                                             xmlFileDataFactory,
                                             pathToIndexBin,
                                             useBinFile,
-                                            index);
+                                            index,
+                                            metaModelUpgradeService);
             index.InitItemTracker(trackerLoaderFactory);
             
             schemaProvider = new FilePersistenceProvider(
@@ -219,7 +223,7 @@ namespace Origam.Workbench.Services
 
         public object Clone()
         {
-            return new FilePersistenceService(defaultFolders);
+            return new FilePersistenceService(metaModelUpgradeService, defaultFolders);
         }
 
         public void MergeSchema(System.Data.DataSet schema, Key activePackage)

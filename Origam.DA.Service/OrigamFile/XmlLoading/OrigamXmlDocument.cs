@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using MoreLinq;
 using Origam.DA.Common;
 using Origam.Extensions;
@@ -16,6 +17,14 @@ namespace Origam.DA.Service
         public OrigamXmlDocument(string pathToXml)
         {
             Load(pathToXml);
+        }
+
+        public OrigamXmlDocument(XDocument xDocument)
+        {
+            using(var xmlReader = xDocument.CreateReader())
+            {
+                Load(xmlReader);
+            }
         }
 
         public OrigamXmlDocument()

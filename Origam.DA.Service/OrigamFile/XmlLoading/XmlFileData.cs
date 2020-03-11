@@ -22,6 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.IO;
 using System.Xml;
 using Origam.DA.Common;
+using Origam.DA.Service.MetaModelUpgrade;
+using Origam.Extensions;
 using Origam.Schema;
 
 namespace Origam.DA.Service
@@ -42,6 +44,14 @@ namespace Origam.DA.Service
                 XmlNamespaceTools.GetXmlNamespaceName(typeof(Package)),OrigamFile.PackageUri);
             NamespaceManager.AddNamespace(
                 XmlNamespaceTools.GetXmlNamespaceName(typeof(SchemaItemGroup)),OrigamFile.GroupUri);
+        }
+
+        public XmlFileData(XFileData xFileData)
+            :this(
+                new OrigamXmlDocument(xFileData.Document.XDocument),
+                xFileData.File)
+        {
+           
         }
     }
 }
