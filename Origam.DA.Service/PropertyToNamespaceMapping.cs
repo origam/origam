@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -179,18 +180,18 @@ namespace Origam.DA.Service
 
     static class XmlNamespaceTools
     {
-        private static readonly Dictionary<Type, string> namespaces 
-            =  new Dictionary<Type, string>();
-        private static readonly Dictionary<Type, string> namespaceNames
-            =  new Dictionary<Type, string>();
+        private static readonly ConcurrentDictionary<Type, string> namespaces 
+            =  new ConcurrentDictionary<Type, string>();
+        private static readonly ConcurrentDictionary<Type, string> namespaceNames
+            =  new ConcurrentDictionary<Type, string>();
         public static string GetXmlNameSpace(Type type)
         {
-            if (namespaces.ContainsKey(type)) return namespaces[type];
-            
-            Version currentClassVersion = Versions.GetCurrentClassVersion(type);
-            string xmlNameSpace = GetXmlNamespace(type.FullName, currentClassVersion);
-            namespaces[type] = xmlNameSpace;
-            return xmlNameSpace;
+            return
+                namespaces.GetOrAdd(type, type1 =>
+                {
+                    Version currentClassVersion = Versions.GetCurrentClassVersion(type);
+                   return GetXmlNamespace(type.FullName, currentClassVersion);
+                });
         }
 
         public static string GetXmlNamespace(string fullTypeName, Version version)
@@ -200,16 +201,18 @@ namespace Origam.DA.Service
 
         public static string GetXmlNamespaceName(Type type)
         {
-            if (namespaceNames.ContainsKey(type)) return namespaceNames[type];
-            if (type.GetCustomAttribute(typeof(XmlNamespaceNameAttribute)) 
-                is XmlNamespaceNameAttribute attribute)
-            {
-                return attribute.XmlNamespaceName;
-            }
-            
-            var xmlNamespaceName = GetXmlNamespaceName(type.Name);
-            namespaceNames[type]= xmlNamespaceName;
-            return xmlNamespaceName;
+            return
+                namespaceNames.GetOrAdd(
+                    type, 
+                    typePar =>
+                    {
+                        if (typePar.GetCustomAttribute(typeof(XmlNamespaceNameAttribute)) 
+                            is XmlNamespaceNameAttribute attribute)
+                        {
+                            return attribute.XmlNamespaceName;
+                        }
+                        return GetXmlNamespaceName(typePar.Name);
+                    });
         }
 
         public static string GetXmlNamespaceName(string typeName)
