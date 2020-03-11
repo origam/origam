@@ -18,15 +18,36 @@ namespace OrigamArchitect
         {
             metaModelUpgradeService.UpgradeProgress += (sender, info) =>
             {
-                progressBar.Minimum = 0;
-                progressBar.Maximum = info.TotalFiles;
-                progressBar.Step = 1;
-                progressBar.Value = info.FilesDone;
-                infoLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
+                void ProgressAction()
+                {
+                    progressBar.Minimum = 0;
+                    progressBar.Maximum = info.TotalFiles;
+                    progressBar.Step = 1;
+                    progressBar.Value = info.FilesDone;
+                    infoLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
+                }
+
+                if (progressBar.InvokeRequired)
+                {
+                    Invoke((Action) ProgressAction);
+                }
+                else
+                {
+                    ProgressAction();
+                }
             };
             metaModelUpgradeService.UpgradeFinished += (sender, args) =>
             {
-                Close();
+                void CloseAction() => Close();
+                if (progressBar.InvokeRequired)
+                {
+                    Invoke((Action) CloseAction);
+                }
+                else
+                {
+                    Close();
+                }
+               
             };
             InitializeComponent();
         }

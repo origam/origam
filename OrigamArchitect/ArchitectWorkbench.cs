@@ -1227,11 +1227,6 @@ namespace OrigamArchitect
 	        SubscribeToPersistenceServiceEvents();
         }
 
-        private static void InitializeMetaModelUpgradeService()
-        {
-	        ServiceManager.Services.AddService(new MetaModelUpgradeService());
-        }
-
         private void SubscribeToPersistenceServiceEvents()
 		{
 			var currentPersistenceService =
@@ -1471,9 +1466,7 @@ namespace OrigamArchitect
             if (!LoadConfiguration(configurationName))
 			{
 				return;
-			}         
-            InitializeMetaModelUpgradeService();
-            SubscribeToUpgradeServiceEvents();
+			}
             Application.DoEvents();
 
             foreach (DockContent content in this.dockPanel.Documents.ToList())
@@ -1572,6 +1565,7 @@ namespace OrigamArchitect
 				{
 					using (var form = new ModelUpgradeForm(metaModelUpgradeService))
 					{
+						form.StartPosition = FormStartPosition.CenterScreen;
 						form.ShowDialog();
 					}
 				});
@@ -1947,6 +1941,7 @@ namespace OrigamArchitect
 			splash.Show();
 			Application.DoEvents();
 			InitializeDefaultServices();
+			SubscribeToUpgradeServiceEvents();
 			InitializeDefaultPads();
 
 			//this.LoadWorkspace();
@@ -2042,6 +2037,7 @@ namespace OrigamArchitect
 
 		private void InitializeDefaultServices()
 		{
+			ServiceManager.Services.AddService(new MetaModelUpgradeService());
 			// Status bar service
 			_statusBarService = new StatusBarService(statusBar);
 			ServiceManager.Services.AddService(_statusBarService);
