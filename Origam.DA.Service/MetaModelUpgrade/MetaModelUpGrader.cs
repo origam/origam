@@ -35,12 +35,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
 {
     public class MetaModelUpGrader
     {
-        public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
-        public event EventHandler UpgradeStarted;
-        public event EventHandler UpgradeFinished;
         private readonly ScriptContainerLocator scriptLocator;
         private readonly IFileWriter fileWriter;
-        private bool canceled;
 
         private readonly Version firstVersion = new Version("6.0.0");
         public MetaModelUpGrader(Assembly scriptAssembly, IFileWriter fileWriter)
@@ -61,35 +57,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
             scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
         
-        public void Cancel()
+        public void TryUpgrade(XFileData xFileData)
         {
-            canceled = true;
-        }
-        
-        public void TryUpgrade(List<XFileData> xmlData)
-        {
-            UpgradeStarted?.Invoke(null, EventArgs.Empty);
-            for (int i = 0; i < xmlData.Count; i++)
+            bool isVersion5 = xFileData.Document.FileElement
+                .Attributes()
+                .Any(attr => attr.Value == "http://schemas.origam.com/5.0.0/model-element");
+            if (isVersion5)
             {
-                if (canceled) break;
-                XFileData xFileData = xmlData[i];
-                bool isVersion5 = xFileData.Document.FileElement
-                    .Attributes()
-                    .Any(attr => attr.Value == "http://schemas.origam.com/5.0.0/model-element");
-                if (isVersion5)
-                {
-                    new Version6UpGrader(scriptLocator ,xFileData.Document).Run();
-                }
-                xFileData.Document
-                    .ClassNodes
-                    .ToArray()
-                    .ForEach(classNode => TryUpgrade(classNode, xFileData));
-                
-                xFileData.Document.FixNamespaces();
-                WriteToFile(xFileData);
-                UpgradeProgress?.Invoke(null, new UpgradeProgressInfo(xmlData.Count, i));
+                new Version6UpGrader(scriptLocator ,xFileData.Document).Run();
             }
-            UpgradeFinished?.Invoke(null, EventArgs.Empty);
+            xFileData.Document
+                .ClassNodes
+                .ToArray().ForEach(classNode => TryUpgrade(classNode, xFileData));
+            
+            xFileData.Document.FixNamespaces();
+            WriteToFile(xFileData);
         }
 
         private void WriteToFile(XFileData xFileData)
@@ -192,9 +174,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return 
                 string.Join(
                     "/", 
-                    xmlNameSpaceWithCurrentVersion
-                            .Split("/")
-                            .SkipLast(1)
+                    MoreEnumerable.SkipLast(xmlNameSpaceWithCurrentVersion
+                                .Split("/"), 1)
                             .Concat(new []{"6.0.0"})
                     );
         }

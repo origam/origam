@@ -75,47 +75,36 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData)
         {
-            List<XFileData> xFileData = xmlFileData
-                .Select(fileData => new XFileData(fileData))
-                .ToList();
             metaModelUpGrader = new MetaModelUpGrader();
-            
-            metaModelUpGrader.UpgradeStarted += OnUpgradeStarted;
-            metaModelUpGrader.UpgradeFinished += OnUpgradeFinished;
-            metaModelUpGrader.UpgradeProgress += OnUpgradeProgress;
-            metaModelUpGrader.TryUpgrade(xFileData);
-            metaModelUpGrader.UpgradeProgress -= OnUpgradeProgress;
-            metaModelUpGrader.UpgradeStarted -= OnUpgradeStarted;
-            metaModelUpGrader.UpgradeFinished -= OnUpgradeFinished;
 
-            if (canceled)
-            {
-                return new List<XmlFileData>();
-            }
-            return xFileData
+            int filesProcessed = 0;
+            UpgradeStarted?.Invoke(null, EventArgs.Empty);
+            List<XmlFileData> upgradedData = xmlFileData
+                .AsParallel()
+                .Select(fileData => new XFileData(fileData))
+                .Select(xFileData =>
+                {
+                    if (canceled) return xFileData;
+                    metaModelUpGrader.TryUpgrade(xFileData);
+                    filesProcessed += 1;
+                    UpgradeProgress?.Invoke(
+                        null,
+                        new UpgradeProgressInfo(xmlFileData.Count,
+                            filesProcessed));
+                    return xFileData;
+                })
                 .Select(fileData => new XmlFileData(fileData))
                 .ToList();
+            UpgradeFinished?.Invoke(null, EventArgs.Empty);
+            
+            return canceled 
+                ? new List<XmlFileData>()
+                : upgradedData;
         }
 
         public void Cancel()
         {
             canceled = true;
-            metaModelUpGrader?.Cancel();
-        }
-
-        private void OnUpgradeFinished(object sender, EventArgs e)
-        {
-            UpgradeFinished?.Invoke(null, EventArgs.Empty);
-        }
-
-        private void OnUpgradeStarted(object sender, EventArgs e)
-        {
-            UpgradeStarted?.Invoke(null, EventArgs.Empty);
-        }
-
-        private void OnUpgradeProgress(object sender, UpgradeProgressInfo info)
-        {
-            UpgradeProgress?.Invoke(null, info);
         }
 
         public void InitializeService()
