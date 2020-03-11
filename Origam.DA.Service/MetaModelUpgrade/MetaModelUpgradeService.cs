@@ -81,11 +81,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
             UpgradeStarted?.Invoke(null, EventArgs.Empty);
             List<XmlFileData> upgradedData = xmlFileData
                 .AsParallel()
+                .Where(x => !canceled)
                 .Select(fileData => new XFileData(fileData))
                 .Select(xFileData =>
                 {
-                    if (canceled) return xFileData;
-                    metaModelUpGrader.TryUpgrade(xFileData);
+                    metaModelUpGrader.Upgrade(xFileData);
                     filesProcessed += 1;
                     UpgradeProgress?.Invoke(
                         null,
