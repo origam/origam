@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Origam.DA.Service.MetaModelUpgrade;
+using Origam.Extensions;
 
 namespace OrigamArchitect
 {
@@ -30,25 +31,11 @@ namespace OrigamArchitect
                     currentFileLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
                 }
 
-                if (progressBar.InvokeRequired)
-                {
-                    Invoke((Action) ProgressAction);
-                }
-                else
-                {
-                    ProgressAction();
-                }
+                this.RunWithInvoke(ProgressAction);
             };
             metaModelUpgradeService.UpgradeFinished += (sender, args) =>
             {
-                if (InvokeRequired)
-                {
-                    Invoke((Action) Close);
-                }
-                else
-                {
-                    Close();
-                }
+                this.RunWithInvoke(Close);
             };
             InitializeComponent();
         }
@@ -56,6 +43,7 @@ namespace OrigamArchitect
         private void OnCancelButtonClick(object sender, EventArgs args)
         {
             metaModelUpgradeService.Cancel();
+            this.RunWithInvoke(()=> currentFileLabel.Text = "Canceling...");
         }
     }
 }
