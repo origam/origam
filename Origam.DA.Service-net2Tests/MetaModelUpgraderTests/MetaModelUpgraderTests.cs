@@ -41,7 +41,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         {
             XFileData xFileData = LoadFile("TestPersistedClassV6.0.1.origam");
             var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
-            bool someFilesWereUpgraded = sut.TryUpgrade(
+            sut.TryUpgrade(
                 new List<XFileData>{xFileData});
             
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";

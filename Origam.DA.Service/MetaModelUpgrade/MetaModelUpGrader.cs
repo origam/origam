@@ -66,7 +66,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             canceled = true;
         }
         
-        public bool TryUpgrade(List<XFileData> xmlData)
+        public void TryUpgrade(List<XFileData> xmlData)
         {
             UpgradeStarted?.Invoke(null, EventArgs.Empty);
             for (int i = 0; i < xmlData.Count; i++)
@@ -90,7 +90,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 UpgradeProgress?.Invoke(null, new UpgradeProgressInfo(xmlData.Count, i));
             }
             UpgradeFinished?.Invoke(null, EventArgs.Empty);
-            return false;
         }
 
         private void WriteToFile(XFileData xFileData)

@@ -33,7 +33,6 @@ using Origam.Workbench.Services;
 
 namespace Origam.DA.Service.MetaModelUpgrade
 {
-
     public interface IMetaModelUpgradeService : IWorkbenchService
     {
         event EventHandler<UpgradeProgressInfo> UpgradeProgress;
