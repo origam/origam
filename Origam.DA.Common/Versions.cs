@@ -43,6 +43,11 @@ namespace Origam.DA.Common
         public static Versions GetCurrentClassVersions(string typeName,
             Versions persistedClassVersions)
         {
+            if (typeName == "model-persistence") // nodes in .origamGroupReference file
+            {
+                return new Versions();
+            }
+
             Type type = Reflector.GetTypeByName(typeName);
             if (type == null)
             {
