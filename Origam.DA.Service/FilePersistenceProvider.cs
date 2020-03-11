@@ -124,7 +124,7 @@ namespace Origam.DA.Service
         public override void EndTransactionDontSave()
         {
             persistor.EndTransactionDontSave();
-            Maybe<XmlLoadError> result = ReloadFiles(tryUpdate: false);
+            Maybe<XmlLoadError> result = ReloadFiles();
             if(result.HasValue) throw new Exception(result.Value.Message);
             PersistIndex(false);
         }
@@ -341,7 +341,7 @@ namespace Origam.DA.Service
             DirectoryInfo packageDir = index.FindPackageDirectory(packageId);
             origamFileManager.RemoveDirectoryWithContents(packageDir);
 
-            Maybe<XmlLoadError> result = ReloadFiles(false);
+            Maybe<XmlLoadError> result = ReloadFiles();
             if(result.HasValue) throw new Exception(result.Value.Message);
         }
 
@@ -417,10 +417,10 @@ namespace Origam.DA.Service
                 .ToList();
         }
 
-        public Maybe<XmlLoadError> ReloadFiles(bool tryUpdate)
+        public Maybe<XmlLoadError> ReloadFiles()
         {
             localizationCache.Reload();
-            return index.ReloadFiles(trackerLoaderFactory, tryUpdate);
+            return index.ReloadFiles(trackerLoaderFactory);
         }
 
         public DirectoryInfo GetParentPackageDirectory(Guid itemId)

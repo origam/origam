@@ -40,19 +40,18 @@ namespace Origam.DA.Service
 
         public Result<List<XmlFileData>, XmlLoadError> LoadOrigamFiles()
         {
-            return FindMissingFiles(itemTracker: null,  tryUpdate: false);
+            return FindMissingFiles(itemTracker: null);
         }
 
         public Result<List<XmlFileData>, XmlLoadError> FindMissingFiles(
-            ItemTracker itemTracker, bool tryUpdate)
+            ItemTracker itemTracker)
         {
             List<Result<XmlFileData, XmlLoadError>> results = topDirectory
                 .GetAllFilesInSubDirectories()
                 .AsParallel()
                 .Where(OrigamFile.IsPersistenceFile)
                 .Where(file => itemTracker == null || !itemTracker.ContainsFile(file))
-                .Select(fileInfo =>
-                    xmlFileDataFactory.Create(fileInfo, tryUpdate))
+                .Select(xmlFileDataFactory.Create)
                 .ToList();
 
             List<Result<XmlFileData, XmlLoadError>> errors = results

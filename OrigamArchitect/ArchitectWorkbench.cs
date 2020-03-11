@@ -1323,8 +1323,7 @@ namespace OrigamArchitect
 
 		private Maybe<XmlLoadError> TryLoadModelFiles(FilePersistenceService filePersistService)
 		{
-			Maybe<XmlLoadError> maybeError =
-				filePersistService.Reload(tryUpdate: false);
+			Maybe<XmlLoadError> maybeError = filePersistService.Reload();
 
 			if (maybeError.HasNoValue) return null;
 			XmlLoadError error = maybeError.Value;
@@ -1351,13 +1350,12 @@ namespace OrigamArchitect
 			if (updateVersionsResult != DialogResult.Yes) return false;
 			MessageBox.Show(this,
 				$"This functionality has not been implemented yet.{Environment.NewLine}No files will be reloaded!");
-			Maybe<XmlLoadError> reloadError =
-				filePersistService.Reload(tryUpdate: true);
+			Maybe<XmlLoadError> reloadError = filePersistService.Reload();
 			if (reloadError.HasValue)
 			{
 				throw new NotImplementedException();
 			}
-			return false; // change to true, when filePersistService.Reload(tryUpdate: true) is implemented!
+			return false; 
 		}
 
 		private void ReloadOpenWindows(

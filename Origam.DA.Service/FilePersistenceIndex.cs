@@ -77,8 +77,7 @@ namespace Origam.DA.Service
             readWriteLock.RunWriter(()=> itemTracker.ClearCache());
         }
         
-        public Maybe<XmlLoadError> ReloadFiles(TrackerLoaderFactory trackerLoaderFactory,
-            bool tryUpdate)
+        public Maybe<XmlLoadError> ReloadFiles(TrackerLoaderFactory trackerLoaderFactory)
         {
             return readWriteLock.RunWriter(() =>
             {
@@ -88,8 +87,7 @@ namespace Origam.DA.Service
                 }
 
                 itemTrackerWasJustLoadedFromBin = false;
-                return trackerLoaderFactory.XmlLoader.LoadInto(itemTracker,
-                    tryUpdate);
+                return trackerLoaderFactory.XmlLoader.LoadInto(itemTracker);
             });
         }
         
@@ -213,7 +211,7 @@ namespace Origam.DA.Service
 
                 if (itemTracker.IsEmpty)
                 {
-                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(itemTracker, false);
+                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(itemTracker);
                     if(error.HasValue)
                     {
                         throw new Exception(error.Value.Message);

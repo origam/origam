@@ -51,10 +51,10 @@ namespace Origam.DA.Service
             xmlLoader = new XmlLoader(topDirectory, xmlFileDataFactory);
         }
 
-        public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker,  bool tryUpdate)
+        public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker)
         {
             Result<List<XmlFileData>, XmlLoadError> result =
-                xmlLoader.FindMissingFiles(itemTracker, tryUpdate);
+                xmlLoader.FindMissingFiles(itemTracker);
 
             if (result.IsSuccess)
             {
@@ -105,62 +105,11 @@ namespace Origam.DA.Service
             
             itemTracker.Clear();
             List<XmlFileData> allOrigamFiles = 
-                xmlLoader.FindMissingFiles(itemTracker: itemTracker, tryUpdate: false)
+                xmlLoader.FindMissingFiles(itemTracker)
                 .Value;
             return new PreLoadedNamespaceFinder(
                 allOrigamFiles,
                 objectFileDataFactory);
         }
-    }
-    
-    public class MetaVersionFixer
-    {
-        private readonly string xmlNameSpaceName;
-        private readonly bool failIfNamespaceNotFound;
-        private readonly Version currentVersion;
-
-        public MetaVersionFixer(string xmlNameSpaceName, Version currentVersion,
-            bool failIfNamespaceNotFound)
-        {
-            this.xmlNameSpaceName = xmlNameSpaceName;
-            this.failIfNamespaceNotFound = failIfNamespaceNotFound;
-            this.currentVersion = currentVersion;
-        }
-
-        public  Result<int,XmlLoadError> UpdateVersion(OrigamXmlDocument xmlDoc, bool tryUpdate)
-        {
-            if (xmlDoc.IsEmpty) Result.Ok<int, XmlLoadError>(0);
-            string nameSpace = xmlDoc.GetNameSpaceByName(xmlNameSpaceName);
-            if (nameSpace != null)
-            {
-                return UpdateVersion(xmlDoc, nameSpace, tryUpdate);
-            }
-            return failIfNamespaceNotFound 
-                ? Result.Fail<int,XmlLoadError>( new XmlLoadError(ErrType.XmlGeneralError, xmlNameSpaceName+" namespace not found in: "+xmlDoc.BaseURI)) 
-                : Result.Ok<int, XmlLoadError>(0);
-        }
-
-        private Result<int,XmlLoadError> UpdateVersion(OrigamXmlDocument xmlDoc,string nameSpace, bool tryUpdate)
-        {
-            Version version = OrigamNameSpace.Create(nameSpace).Version;
-            if ( version > currentVersion)
-            {
-                return Result.Fail<int,XmlLoadError>( new XmlLoadError(ErrType.XmlGeneralError, $"Cannot work with file: {xmlDoc.BaseURI} because it's version of namespace \"{nameSpace}\" is newer than the current version: {currentVersion}"));
-            }
-            if( version < currentVersion &&
-               !version.DiffersOnlyInBuildFrom(currentVersion))
-            {
-                if(tryUpdate)
-                {
-                    throw new NotImplementedException();
-                } else
-                {
-                    return Result.Fail<int,XmlLoadError>( 
-                        new XmlLoadError( ErrType.XmlVersionIsOlderThanCurrent,
-                        $"{xmlDoc.BaseURI} has old version of: {nameSpace}, current version: {currentVersion}"));
-                }
-            }
-            return Result.Ok<int, XmlLoadError>(0);
-        } 
     }
 }

@@ -46,8 +46,8 @@ namespace Origam.DA.Service_net2Tests
             OrigamFile.GroupCategory
         };
 
-        private static readonly XmlFileDataFactory XmlFileDataFactory =
-            new XmlFileDataFactory(new List<MetaVersionFixer>());
+        private static readonly XmlFileDataFactory XmlFileDataFactory = 
+            new XmlFileDataFactory();
 
         private OrigamFileFactory MakeOrigamFileFactory(DirectoryInfo topDir)
         {
@@ -74,13 +74,11 @@ namespace Origam.DA.Service_net2Tests
                     metaModelUpgradeService: new NullMetaModelUpgradeService(), 
                     objectFileDataFactory: MakeObjectFileDataFactory(TestProjectDir),
                     topDirectory: TestProjectDir,
-                    xmlFileDataFactory: new XmlFileDataFactory(new List<MetaVersionFixer>()));
+                    xmlFileDataFactory: new XmlFileDataFactory());
 
             var pathFactory = new OrigamPathFactory(TestProjectDir);
             ItemTracker itemTracker = new ItemTracker(pathFactory);
-            origamXmlLoader.LoadInto(
-                itemTracker: itemTracker,
-                tryUpdate: false);
+            origamXmlLoader.LoadInto(itemTracker);
         }
 
         [Test]

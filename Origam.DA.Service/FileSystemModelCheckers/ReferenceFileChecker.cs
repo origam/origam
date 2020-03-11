@@ -81,7 +81,7 @@ namespace Origam.DA.Service
 
         private  ReferenceFileData ReadToFileData(FileInfo groupReferenceFile)
         {
-            var xmlFileDataFactory = new XmlFileDataFactory(new List<MetaVersionFixer>());
+            var xmlFileDataFactory = new XmlFileDataFactory();
             Result<XmlFileData, XmlLoadError> result = xmlFileDataFactory.Create(groupReferenceFile);
 
             var xmlFileData = new ReferenceFileData(result.Value, referenceFileFactory);

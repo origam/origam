@@ -85,7 +85,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 .Select(fileData => new XFileData(fileData))
                 .Select(xFileData =>
                 {
-                    metaModelUpGrader.Upgrade(xFileData);
+                    metaModelUpGrader.TryUpgrade(xFileData);
                     filesProcessed += 1;
                     UpgradeProgress?.Invoke(
                         null,

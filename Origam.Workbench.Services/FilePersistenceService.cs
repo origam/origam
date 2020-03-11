@@ -76,8 +76,7 @@ namespace Origam.Workbench.Services
             var objectFileDataFactory = new ObjectFileDataFactory(
                                             origamFileFactory, 
                                             defaultFolders);
-            var xmlFileDataFactory =
-                new XmlFileDataFactory(InitializeVersionFixers());
+            var xmlFileDataFactory = new XmlFileDataFactory();
             var trackerLoaderFactory = new TrackerLoaderFactory(
                                             topDirectory, 
                                             objectFileDataFactory, 
@@ -122,18 +121,6 @@ namespace Origam.Workbench.Services
             ReloadNeeded?.Invoke(this, args);
         }
 
-        private List<MetaVersionFixer> InitializeVersionFixers()
-        {
-            var metaVersionFixers = new List<MetaVersionFixer>
-            {
-                new MetaVersionFixer(
-                    xmlNameSpaceName: "xmlns:x",
-                    currentVersion: VersionProvider.CurrentPersistenceMeta,
-                    failIfNamespaceNotFound: true),
-            };
-            return metaVersionFixers;
-        }
-
         private IFileChangesWatchDog GetNewWatchDog(DirectoryInfo topDir,
             bool watchFileChanges, FileInfo pathToIndexBin)
         {
@@ -148,8 +135,8 @@ namespace Origam.Workbench.Services
                 directoryNamesToIgnore: new List<string>{".git"});
         }
 
-        public Maybe<XmlLoadError> Reload(bool tryUpdate) => 
-            schemaProvider.ReloadFiles(tryUpdate);
+        public Maybe<XmlLoadError> Reload() => 
+            schemaProvider.ReloadFiles();
 
         public void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
         {

@@ -41,7 +41,7 @@ namespace Origam.Server.Utils
                     if (persistenceProvider is FilePersistenceProvider filePersistProvider)
                     {
                         filePersistProvider.FlushCache();
-                        Maybe<XmlLoadError> result = filePersistProvider.ReloadFiles(tryUpdate: false);
+                        Maybe<XmlLoadError> result = filePersistProvider.ReloadFiles();
                         if(result.HasValue) throw new Exception(result.Value.Message);
                         filePersistProvider.PersistIndex();
                     }
