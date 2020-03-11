@@ -15,14 +15,14 @@
 
 @if (Model.PostLogoutRedirectUri != null)
 {
-    <div>
+    <div class="login-link">
         Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
         <span>@Model.ClientName</span> application.
     </div>
 }
 else
 {
-    <div>
+    <div class="login-link" >
         Click <a href="/account/login">here</a> to login again.
     </div> 
 }
