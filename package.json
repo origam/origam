@@ -96,6 +96,7 @@
     "xml-js": "^1.6.11",
     "xstate": "^4.6.3"
   },
+  "homepage": "./",
   "scripts": {
     "start": "node scripts/start.js",
     "start-selenium": "set BROWSER=node none.js && set REACT_APP_SELENIUM_KICK=1 && concurrently --kill-others \"node-dev --respawn --no-deps --dedupe ./tests/fixture-server01\" \"node scripts/start.js\"",

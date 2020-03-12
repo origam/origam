@@ -1,16 +1,22 @@
 import Oidc from "oidc-client";
 
+const [windowLocation, _rest] = window.location.href.split('#');
+
 const config = {
-  authority: `${window.location.origin}/`,
+  authority: `${windowLocation}`,
   client_id: "origamWebClient",
-  redirect_uri: `${window.location.origin}/#origamClientCallback/`,
+  redirect_uri: `${windowLocation}#origamClientCallback/`,
   response_type: "code",
   scope: "openid IdentityServerApi offline_access",
-  post_logout_redirect_uri: `${window.location.origin}/`,
+  post_logout_redirect_uri: `${windowLocation}`,
   response_mode: "query",
   automaticSilentRenew: true,
-  silent_redirect_uri: `${window.location.origin}/#origamClientCallbackRenew/`
+  silent_redirect_uri: `${windowLocation}#origamClientCallbackRenew/`
 };
+
+console.log(config)
+
+console.log(window.location)
 
 export const userManager = new Oidc.UserManager(config);
 
