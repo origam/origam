@@ -11,35 +11,7 @@ namespace Origam.DA.Common
     public class Versions: Dictionary<string, Version>
     {
         public static Version Last { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
-        public static Versions FromAttributeString(string xmlAttribute)
-        {
-            if (string.IsNullOrWhiteSpace(xmlAttribute))
-            {
-                return new Versions();
-            }
-
-            var versionsDict = xmlAttribute
-                .Split(";")
-                .Where(typeVersionPair => typeVersionPair.Trim() != "")
-                .Select(typeVersionPair =>
-                {
-                    string[] typeAndVersion = typeVersionPair
-                        .Split(" ")
-                        .Select(x=> x.Trim())
-                        .Where(x=>x != "")
-                        .ToArray();
-                    if (typeAndVersion.Length != 2)
-                    {
-                        throw new ArgumentException(
-                            $"Cannot parse type and version from: \"{xmlAttribute}\"");
-                    }
-                    
-                    Version version = new Version(typeAndVersion[1]);
-                    return new Tuple<string, Version>(typeAndVersion[0], version);
-                });
-           return new Versions(versionsDict);
-        }
-
+ 
         public static Versions GetCurrentClassVersions(string typeName,
             Versions persistedClassVersions)
         {
@@ -91,20 +63,7 @@ namespace Origam.DA.Common
         private Versions()
         {
         }
-
-        private Versions(string type, Version version)
-        {
-            this[type] = version;
-        }
-
-        private Versions(IEnumerable<Tuple<string, Version>> classVersions)
-        {
-            foreach (var typeAndVersion in classVersions)
-            {
-                this[typeAndVersion.Item1] = typeAndVersion.Item2;
-            }
-        }
-
+        
         public Versions(IEnumerable<OrigamNameSpace> origamNameSpaces)
         {   
             foreach (var origamNameSpace in origamNameSpaces)
@@ -112,13 +71,6 @@ namespace Origam.DA.Common
                 this[origamNameSpace.FullTypeName] = origamNameSpace.Version;
             }
         }
-
-        public string ToAttributeString()
-        {
-            return string.Join(
-                "; ", 
-                this.Select(pair => $"{pair.Key} {pair.Value}"));
-        }
-
+        
     }
 }
