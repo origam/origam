@@ -114,15 +114,20 @@ namespace Origam.ServerCore
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
             services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
             services.Configure<UserLockoutConfig>(options => Configuration.GetSection("UserLockoutConfig").Bind(options));
-            
-            services.AddIdentityServer()
-                .AddSigningCredential(new X509Certificate2(
-                    identityServerConfig.PathToJwtCertificate,
-                    identityServerConfig.PasswordForJwtCertificate))
+
+            IIdentityServerBuilder serverBuilder = services.AddIdentityServer()
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
                 .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
                 .AddAspNetIdentity<IOrigamUser>();
+
+            if (!string.IsNullOrEmpty(identityServerConfig.PathToJwtCertificate))
+            {
+                serverBuilder
+                    .AddSigningCredential(new X509Certificate2(
+                        identityServerConfig.PathToJwtCertificate,
+                        identityServerConfig.PasswordForJwtCertificate));
+            }
 
             services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false)
