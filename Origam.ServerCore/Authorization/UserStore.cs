@@ -205,11 +205,11 @@ namespace Origam.ServerCore
         public Task<IOrigamUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             DataRow businessPartnerRow = FindBusinessPartnerRowByEmail(normalizedEmail);
-            if (businessPartnerRow == null) Task.FromResult<IOrigamUser>(null);
+            if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
             string userName = (string)businessPartnerRow["UserName"];
             DataRow origamUserRow = FindOrigamUserRowByUserName(userName);
-            if (origamUserRow == null) Task.FromResult<IOrigamUser>(null);
+            if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
             
             return Task.FromResult(
                 UserTools.Create(
