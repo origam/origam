@@ -256,6 +256,14 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             return View();
         }
         
+        // GET: /Account/ResetPassword
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            return code == null ? View("Error") : View();
+        }
+        
         // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
