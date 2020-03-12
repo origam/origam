@@ -276,7 +276,7 @@ namespace Origam.Gui
 
                 transformer.Run();
 
-                XmlDocument transformationResult = transformer.Result as XmlDocument;
+                XmlContainer transformationResult = transformer.Result as XmlContainer;
 
                 if (transformationResult != null)
                 {
@@ -284,7 +284,7 @@ namespace Origam.Gui
                     DataSet resultData = gen.CreateDataSet(entity);
                     resultData.EnforceConstraints = false;
                     IDataDocument resultDoc = DataDocumentFactory.New(resultData);
-                    resultDoc.Load(new XmlNodeReader(transformationResult));
+                    resultDoc.Load(new XmlNodeReader(transformationResult.Xml));
                     DatasetTools.MergeDataSet(
                         dataDoc.DataSet, resultDoc.DataSet, null,
                         new MergeParams(profileId));
