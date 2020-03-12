@@ -59,7 +59,7 @@ namespace Origam.DA.Service
             if (result.IsSuccess)
             {
                 List<XmlFileData> upgradedData = metaModelUpgradeService.Upgrade(result.Value);
-                    AddOrigamFiles(itemTracker, upgradedData);
+                AddOrigamFiles(itemTracker, upgradedData);
                 RemoveOrigamFilesThatNoLongerExist(itemTracker);
                 return Maybe<XmlLoadError>.None;
             } 
@@ -72,7 +72,7 @@ namespace Origam.DA.Service
         private void AddOrigamFiles(ItemTracker itemTracker,
             List<XmlFileData> filesToLoad)
         {
-            GetNamespaceFinder(filesToLoad, itemTracker)
+            GetNamespaceFinder(filesToLoad)
                 .FileDataWithNamespacesAssigned
                 .AsParallel()
                 .Select(objFileData => objFileData.Read())
@@ -90,25 +90,14 @@ namespace Origam.DA.Service
             itemTracker.KeepOnly(allFilesInSubDirectories);
         }
 
-        private INamespaceFinder GetNamespaceFinder(List<XmlFileData> filesToLoad,
-            ItemTracker itemTracker)
+        private INamespaceFinder GetNamespaceFinder(List<XmlFileData> filesToLoad)
         {
             if (filesToLoad.Count == 0)
             {
                 return new NullNamespaceFinder();
-            } 
-
-            // PreLoadedNamespaceFinder needs to realod all files so we have to
-            // clear tracker and run FindMissingFiles method again to get all
-            // origam files. This will not be necessary once loading of
-            // individual files is supported.  
-            
-            itemTracker.Clear();
-            List<XmlFileData> allOrigamFiles = 
-                xmlLoader.FindMissingFiles(itemTracker)
-                .Value;
+            }
             return new PreLoadedNamespaceFinder(
-                allOrigamFiles,
+                filesToLoad,
                 objectFileDataFactory);
         }
     }
