@@ -78,7 +78,7 @@ namespace Origam.DA.Service_net2Tests
 
             var pathFactory = new OrigamPathFactory(TestProjectDir);
             ItemTracker itemTracker = new ItemTracker(pathFactory);
-            origamXmlLoader.LoadInto(itemTracker);
+            origamXmlLoader.LoadInto(itemTracker, false);
         }
 
         [Test]

@@ -87,7 +87,9 @@ namespace Origam.DA.Service
                 }
 
                 itemTrackerWasJustLoadedFromBin = false;
-                return trackerLoaderFactory.XmlLoader.LoadInto(itemTracker);
+                return trackerLoaderFactory.XmlLoader.LoadInto(
+                    itemTracker: itemTracker,
+                    tryUpgrade: false);
             });
         }
         
@@ -200,7 +202,8 @@ namespace Origam.DA.Service
                 itemTracker.GetByPath(instanceRelativeFilePath));
         }
 
-        public void InitItemTracker(TrackerLoaderFactory trackerLoaderFactory)
+        public void InitItemTracker(TrackerLoaderFactory trackerLoaderFactory,
+            bool tryUpgrade)
         {
             readWriteLock.RunWriter(() =>
             {
@@ -211,7 +214,9 @@ namespace Origam.DA.Service
 
                 if (itemTracker.IsEmpty)
                 {
-                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(itemTracker);
+                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
+                        itemTracker: itemTracker,
+                        tryUpgrade: tryUpgrade);
                     if(error.HasValue)
                     {
                         throw new Exception(error.Value.Message);

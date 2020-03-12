@@ -86,7 +86,9 @@ namespace Origam.Workbench.Services
                                             useBinFile,
                                             index,
                                             metaModelUpgradeService);
-            index.InitItemTracker(trackerLoaderFactory);
+            index.InitItemTracker(
+                trackerLoaderFactory: trackerLoaderFactory, 
+                tryUpgrade: useBinFile);
             
             schemaProvider = new FilePersistenceProvider(
                 topDirectory: topDirectory,

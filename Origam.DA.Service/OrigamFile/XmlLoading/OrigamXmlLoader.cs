@@ -51,22 +51,23 @@ namespace Origam.DA.Service
             xmlLoader = new XmlLoader(topDirectory, xmlFileDataFactory);
         }
 
-        public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker)
+        public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, bool tryUpgrade)
         {
             Result<List<XmlFileData>, XmlLoadError> result =
                 xmlLoader.FindMissingFiles(itemTracker);
 
-            if (result.IsSuccess)
-            {
-                List<XmlFileData> upgradedData = metaModelUpgradeService.Upgrade(result.Value);
-                AddOrigamFiles(itemTracker, upgradedData);
-                RemoveOrigamFilesThatNoLongerExist(itemTracker);
-                return Maybe<XmlLoadError>.None;
-            } 
-            else
+            if (result.IsFailure)
             {
                 return result.Error;
             }
+
+            List<XmlFileData> dataToAdd = tryUpgrade
+                ? metaModelUpgradeService.Upgrade(result.Value)
+                : result.Value;
+
+            AddOrigamFiles(itemTracker, dataToAdd);
+            RemoveOrigamFilesThatNoLongerExist(itemTracker);
+            return Maybe<XmlLoadError>.None;
         }
 
         private void AddOrigamFiles(ItemTracker itemTracker,
