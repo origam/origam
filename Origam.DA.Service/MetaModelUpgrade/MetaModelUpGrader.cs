@@ -60,16 +60,23 @@ namespace Origam.DA.Service.MetaModelUpgrade
         
         public void TryUpgrade(XFileData xFileData)
         {
-            if (IsVersion5(xFileData))
+            bool isVersion5 = IsVersion5(xFileData);
+            if (isVersion5)
             {
                 new Version6UpGrader(scriptLocator, xFileData.Document).Run();
             }
-            xFileData.Document
+
+            List<bool> upgradeFlags = xFileData.Document
                 .ClassNodes
-                .ToArray().ForEach(classNode => TryUpgrade(classNode, xFileData));
-            
-            xFileData.Document.FixNamespaces();
-            WriteToFile(xFileData);
+                .ToArray()
+                .Select(classNode => TryUpgrade(classNode, xFileData))
+                .ToList();
+
+            if (isVersion5 || upgradeFlags.Any(x => x))
+            {
+                xFileData.Document.FixNamespaces();
+                WriteToFile(xFileData);
+            }
         }
 
         private bool IsVersion5(XFileData xFileData)
@@ -93,7 +100,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             fileWriter.Write(xFileData.File, upgradedXmlString);
         }
 
-        private void TryUpgrade(XElement classNode, XFileData xFileData)
+        private bool TryUpgrade(XElement classNode, XFileData xFileData)
         {
             IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
             
@@ -101,7 +108,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Versions persistedClassVersions = new Versions(origamNameSpaces);
             Versions currentClassVersions =
                 Versions.GetCurrentClassVersions(nodeClass, persistedClassVersions);
-            
+            bool scriptsRun = false;
             foreach (var pair in currentClassVersions)
             {
                 string className = pair.Key;
@@ -110,7 +117,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 {
                     continue;
                 }
-
+                scriptsRun = true;
+                
                 if (!persistedClassVersions.ContainsKey(className))
                 {
                     RunUpgradeScripts(classNode, xFileData, className,
@@ -129,6 +137,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
                         persistedClassVersions[className], currentVersion);
                 }
             }
+
+            return scriptsRun;
         }
 
         private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XElement classNode)
