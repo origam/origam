@@ -38,7 +38,6 @@ namespace Origam.DA.Service
         private readonly DirectoryInfo topDirectory;
         private readonly XmlFileDataFactory xmlFileDataFactory;
         private readonly IMetaModelUpgradeService metaModelUpgradeService;
-        private readonly XmlLoader xmlLoader;
 
         public OrigamXmlLoader(ObjectFileDataFactory objectFileDataFactory,
             DirectoryInfo topDirectory, XmlFileDataFactory xmlFileDataFactory,
@@ -48,13 +47,11 @@ namespace Origam.DA.Service
             this.topDirectory = topDirectory;
             this.xmlFileDataFactory = xmlFileDataFactory;
             this.metaModelUpgradeService = metaModelUpgradeService;
-            xmlLoader = new XmlLoader(topDirectory, xmlFileDataFactory);
         }
 
         public Maybe<XmlLoadError> LoadInto(ItemTracker itemTracker, bool tryUpgrade)
         {
-            Result<List<XmlFileData>, XmlLoadError> result =
-                xmlLoader.FindMissingFiles(itemTracker);
+            Result<List<XmlFileData>, XmlLoadError> result = FindMissingFiles(itemTracker);
 
             if (result.IsFailure)
             {
@@ -84,6 +81,29 @@ namespace Origam.DA.Service
                 });
         }
 
+        private Result<List<XmlFileData>, XmlLoadError> FindMissingFiles(
+            ItemTracker itemTracker)
+        {
+            List<Result<XmlFileData, XmlLoadError>> results = topDirectory
+                .GetAllFilesInSubDirectories()
+                .AsParallel()
+                .Where(OrigamFile.IsPersistenceFile)
+                .Where(file => itemTracker == null || !itemTracker.ContainsFile(file))
+                .Select(xmlFileDataFactory.Create)
+                .ToList();
+
+            List<Result<XmlFileData, XmlLoadError>> errors = results
+                .Where(result => result.IsFailure)
+                .ToList();
+
+            IEnumerable<XmlFileData> data = results
+                .Select(res => res.Value);
+                
+            return errors.Count == 0
+                ? Result.Ok<List<XmlFileData>, XmlLoadError>(data.ToList())
+                : Result.Fail<List<XmlFileData>, XmlLoadError>(errors[0].Error);
+        }
+        
         private void RemoveOrigamFilesThatNoLongerExist(ItemTracker itemTracker)
         {
             IEnumerable<FileInfo> allFilesInSubDirectories
