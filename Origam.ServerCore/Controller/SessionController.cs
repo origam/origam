@@ -26,6 +26,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
@@ -40,7 +41,7 @@ using Origam.ServerCore.Model.Session;
 
 namespace Origam.ServerCore.Controllers
 {
-    [Authorize]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     [ApiController]
     [Route("internalApi/[controller]")]
     public class SessionController : ControllerBase

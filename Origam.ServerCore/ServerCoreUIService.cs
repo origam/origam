@@ -43,6 +43,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Origam.Schema.WorkflowModel;
+using Origam.ServerCore.Resources;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
@@ -201,6 +202,38 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return result;
         }
+        
+        public void Logout()
+        {
+            PortalSessionStore pss;
+            try
+            {
+                pss = sessionManager.GetPortalSession();
+            }
+            catch(SessionExpiredException)
+            {
+                return;
+            }
+
+            if (pss == null)
+            {
+                return;
+            }
+
+            while(pss.FormSessions.Count > 0)
+            {
+                DestroyUI(pss.FormSessions[0].Id);
+            }
+
+            Analytics.Instance.Log("UI_LOGOUT");
+
+            sessionManager.RemovePortalSession(SecurityTools.CurrentUserProfile().Id);
+            Task.Run(() => SecurityTools.RemoveOrigamOnlineUser(
+                SecurityManager.CurrentPrincipal.Identity.Name));
+            OrigamUserContext.Reset();
+        }
+
+        // ReSharper disable once InconsistentNaming
         public void DestroyUI(Guid sessionFormIdentifier)
         {
             sessionHelper.DeleteSession(sessionFormIdentifier);
@@ -442,6 +475,35 @@ namespace Origam.ServerCore
                     var row = sessionStore.GetSessionRow(entity, rowId);
                     return Result.Ok<RowData, IActionResult>(
                         new RowData{Row = row, Entity = null});
+                }
+            }
+        }
+        public Result<Guid, IActionResult> GetEntityId(
+            Guid sessionFormIdentifier, string entity)
+        {
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore 
+                    = sessionManager.GetSession(sessionFormIdentifier);
+            }
+            catch
+            {
+                // ignored
+            }
+            switch(sessionStore)
+            {
+                case null:
+                    return Result.Ok<Guid, IActionResult>(Guid.Empty);
+                default:
+                {
+                    var table = sessionStore.GetTable(entity, sessionStore.Data);
+                    var entityId = Guid.Empty;
+                    if (table.ExtendedProperties.Contains("EntityId"))
+                    {
+                        entityId = (Guid)table.ExtendedProperties["EntityId"];
+                    }
+                    return Result.Ok<Guid, IActionResult>(entityId);
                 }
             }
         }
@@ -700,7 +762,7 @@ namespace Origam.ServerCore
                 input.InstanceId, "splitPanel", 0, 
                 input.Position, false);
         }
-        public void SaveFavorites(SaveFavoritesInput input)
+        public static void SaveFavorites(SaveFavoritesInput input)
         {
             var profile = SecurityTools.CurrentUserProfile();
             // save favorites
@@ -734,6 +796,13 @@ namespace Origam.ServerCore
             core.DataService.StoreData(
                 new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
                 favorites, false, null);
+        }
+        public ArrayList GetPendingChanges(Guid sessionFormIdentifier)
+        {
+            var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            var changes = sessionStore.PendingChanges;
+            sessionStore.PendingChanges = null;
+            return changes ?? new ArrayList();
         }
         private static bool IsRowDirty(DataRow row)
         {

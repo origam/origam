@@ -44,7 +44,9 @@ namespace Origam.ServerCore
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.AddLog4Net();
-                    logging.SetMinimumLevel(LogLevel.Debug);
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.AddConsole();
+                    logging.AddDebug();
                 });
     }
 }

@@ -88,7 +88,7 @@ namespace Origam.ServerCommon.Pages
                 var (code, page) = ResolvePage(context, out var urlParameters);
                 if (code == 404)
                 {
-                    // nothing found, let others handle it
+                    Handle404(context);
                     return;
                 }
                 if (code != 200)
@@ -186,6 +186,11 @@ namespace Origam.ServerCommon.Pages
                 context.Response.Write(message);
                 context.Response.End();
             }
+        }
+
+        protected virtual void Handle404(IHttpContextWrapper context)
+        { 
+            // nothing found, let others handle it
         }
 
         private static void PageAnalytics(

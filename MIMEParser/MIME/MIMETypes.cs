@@ -386,7 +386,6 @@ namespace OpenPOP
 			{
 				string strFileExtension=new FileInfo(strFileName).Extension;
 				string strContentType=null;
-				bool MONO=false;
 				
 				strContentType=MIMETypes.ContentType(strFileExtension);
 			

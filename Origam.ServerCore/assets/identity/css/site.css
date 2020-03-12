@@ -1,0 +1,120 @@
+﻿body {
+  margin-top: 65px;
+}
+.navbar-header {
+  position: relative;
+  top: -4px;
+}
+
+.navbar-brand{
+  height: 60px;
+  padding: 0;
+}
+
+.navbar-brand > .icon-banner {
+  height: 60px;
+  padding: 5px;
+}
+.icon {
+  position: relative;
+  top: -10px;
+}
+
+.navbar-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+  background-color: white;
+  border-color: white;
+  color: black;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+  background-color: white;
+  border-color: white;
+  color: #0D0D0D;
+}
+.nav > li > a{
+  display: flex;
+  align-items: center;
+  color: #77767E;
+}
+
+.svg:hover{
+  stroke: #0D0D0D;
+}
+
+.svg {
+  stroke: #77767E;
+  stroke-width: 1.5;
+  height: 20px;
+  padding-right: 3px;
+}
+.logged-out iframe {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.page-consent .client-logo {
+  float: left;
+}
+.page-consent .client-logo img {
+  width: 80px;
+  height: 80px;
+}
+.page-consent .consent-buttons {
+  margin-top: 25px;
+}
+.page-consent .consent-form .consent-scopecheck {
+  display: inline-block;
+  margin-right: 5px;
+}
+.page-consent .consent-form .consent-description {
+  margin-left: 25px;
+}
+.page-consent .consent-form .consent-description label {
+  font-weight: normal;
+}
+.page-consent .consent-form .consent-remember {
+  padding-left: 16px;
+}
+.grants .page-header {
+  margin-bottom: 10px;
+}
+.grants .grant {
+  margin-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid lightgray;
+}
+.grants .grant img {
+  width: 100px;
+  height: 100px;
+}
+.grants .grant .clientname {
+  font-size: 140%;
+  font-weight: bold;
+}
+.grants .grant .granttype {
+  font-size: 120%;
+  font-weight: bold;
+}
+.grants .grant .created {
+  font-size: 120%;
+  font-weight: bold;
+}
+.grants .grant .expires {
+  font-size: 120%;
+  font-weight: bold;
+}
+.grants .grant li {
+  list-style-type: none;
+  display: inline;
+}
+.grants .grant li:after {
+  content: ', ';
+}
+.grants .grant li:last-child:after {
+  content: '';
+}

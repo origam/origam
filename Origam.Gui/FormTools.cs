@@ -188,7 +188,7 @@ namespace Origam.Gui
                 IXmlContainer transformationResult = transformer.Result as IXmlContainer;
                 if (transformationResult != null)
                 {
-                    dataDoc.Load(new XmlNodeReader(transformationResult.Xml.RemoveAllEmptyAttributesAndNodes()));
+                    dataDoc.Load(new XmlNodeReader(transformationResult.Xml));
                 }
                 sdData.Merge(dataDoc.DataSet);
             }
@@ -284,7 +284,7 @@ namespace Origam.Gui
                     DataSet resultData = gen.CreateDataSet(entity);
                     resultData.EnforceConstraints = false;
                     IDataDocument resultDoc = DataDocumentFactory.New(resultData);
-                    resultDoc.Load(new XmlNodeReader(transformationResult.RemoveAllEmptyAttributesAndNodes()));
+                    resultDoc.Load(new XmlNodeReader(transformationResult));
                     DatasetTools.MergeDataSet(
                         dataDoc.DataSet, resultDoc.DataSet, null,
                         new MergeParams(profileId));

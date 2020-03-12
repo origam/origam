@@ -460,6 +460,9 @@
                             <Component Id="ORIGAM.BI.CRYSTALREPORTS.DLL" DiskId="1" Guid="C63B0781-A782-45DE-9A7F-9BEBA79624D3">
                                 <File Id="ORIGAM.BI.CRYSTALREPORTS.DLL" Name="Origam.BI.CrystalReports.dll" Source="server_source\bin\Origam.BI.CrystalReports.dll" />
                             </Component>
+							<Component Id="ORIGAM.BI.EXCEL.DLL" DiskId="1" Guid="BFF702CF-6C99-4888-B469-1AFF6876C837">
+                                <File Id="ORIGAM.BI.EXCEL.DLL" Name="Origam.BI.Excel.dll" Source="server_source\bin\Origam.BI.Excel.dll" />
+                            </Component>
                             <Component Id="ORIGAM.BI.DLL" DiskId="1" Guid="D07FB606-A48B-4DBF-92C1-941A75741FB1">
                                 <File Id="ORIGAM.BI.DLL" Name="Origam.BI.dll" Source="server_source\bin\Origam.BI.dll" />
                             </Component>
@@ -1336,6 +1339,7 @@
             <ComponentRef Id="CREATENEWCOMPANY.ASPX.CDCAB7D2.COMPILED" />
             <ComponentRef Id="ORIGAM.ORIGAMENGINE.DLL" />
             <ComponentRef Id="ORIGAM.BI.CRYSTALREPORTS.DLL" />
+			<ComponentRef Id="ORIGAM.BI.EXCEL.DLL" />
             <ComponentRef Id="ORIGAM.BI.DLL" />
             <ComponentRef Id="ORIGAM.DA.DLL" />
             <ComponentRef Id="ORIGAM.DA.SERVICE.DLL" />

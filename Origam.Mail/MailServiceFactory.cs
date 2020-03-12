@@ -19,17 +19,40 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System.IO;
+using Microsoft.Extensions.Configuration;
+using Origam.Extensions;
+
 namespace Origam.Mail
 {
     public class MailServiceFactory
     {
+#if NETSTANDARD
+        private static readonly IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+#endif
         private MailServiceFactory()
         {
+
         }
         
         public static AbstractMailService GetMailService()
         {
+#if NETSTANDARD
+            var mailConfig = configuration.GetSection("MailConfig");
+            string userName = mailConfig["UserName"];
+            bool useSsl = mailConfig.GetBool("UseSsl");
+            string password = mailConfig["Password"];
+            string server = mailConfig["Server"];
+            int port = mailConfig.GetInt("Port");
+
+            return new SystemNetMailService(
+                server:server, port:port, userName: userName, password:password, useSsl:useSsl);            
+#else
             return new SystemNetMailService();            
+#endif
         }
     }
 }

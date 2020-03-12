@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Origam.ServerCommon.Pages;
+using Origam.ServerCore.Pages;
 
 namespace Origam.ServerCore
 {
@@ -33,7 +34,7 @@ namespace Origam.ServerCore
 
         public async Task Invoke(HttpContext context)
         {
-            UserApiProcessor userApiProcessor = new UserApiProcessor(new CoreHttpTools());
+            CoreUserApiProcessor userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
             var contextWrapper = new StandardHttpContextWrapper(context);
             userApiProcessor.Process(contextWrapper);
         }

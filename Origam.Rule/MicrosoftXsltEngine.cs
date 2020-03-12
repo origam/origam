@@ -185,7 +185,7 @@ namespace Origam.Rule
                     swr.Close();
                     TracingService.TraceStep(this.TraceWorkflowId, this.TraceStepName, this.TraceStepId, "Transformation Service", "Input", null, b.ToString(), traceParameters.ToString(), null);
                 }
-                XPathDocument sourceXpathDoc = new XPathDocument(new XmlNodeReader(data.Xml.RemoveAllEmptyAttributesAndNodes()));
+                XPathDocument sourceXpathDoc = new XPathDocument(new XmlNodeReader(data.Xml));
                 try
                 {
                     if (this.Trace && resultDoc is IDataDocument) 

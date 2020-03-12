@@ -1,0 +1,12 @@
+Token: <%Token%>
+UserId : <%UserId%>
+UserName: <%UserName%>
+Name: <%Name%>
+FirstName: <%FirstName%>
+PortalBaseUrl: <%PortalBaseUrl%>
+EscapedUserName: <%EscapedUserName%>
+EscapedName: <%EscapedName%>
+UserEmail: <%UserEmail%>
+EscapedUserEmail: <%EscapedUserEmail%>
+
+link: <%PortalBaseUrl%>/Account/ConfirmEmail?code=<%Token%>&userId=<%UserId%>

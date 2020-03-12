@@ -32,7 +32,6 @@ using Origam.Schema.LookupModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server;
-using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model.UIService;
 using Origam.Services;
 using Origam.Workbench.Services;
@@ -44,22 +43,19 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using IdentityServer4;
 using Microsoft.AspNetCore.Localization;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
+using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Controller
 {
-    [Authorize]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     [ApiController]
     [Route("internalApi/[controller]")]
     public class UIServiceController : AbstractController
     {
-        private class EntityData
-        {
-            public FormReferenceMenuItem MenuItem { get; set; }
-            public DataStructureEntity Entity { get; set; }
-        }
         private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataLookupService lookupService;
@@ -236,8 +232,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                Dictionary<Guid, Dictionary<object, string>> result
-                    = new Dictionary<Guid, Dictionary<object, string>>();
+                var result = new Dictionary<Guid, Dictionary<object, string>>();
                 foreach (var input in inputs)
                 {
                     var checkResult = CheckLookup(input);
@@ -255,30 +250,10 @@ namespace Origam.ServerCore.Controller
         public IActionResult GetLookupList([FromBody]LookupListInput input)
         {
             //todo: implement GetFilterLookupList
-            if(input.SessionFormIdentifier == Guid.Empty)
-            {
-                return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => CheckLookupIsAllowedInMenu(
-                        menuItem, input.LookupId))
-                    .OnSuccess(menuItem => GetEntityData(
-                        input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(entityData => GetRow(
-                        entityData.Entity, input.DataStructureEntityId,
-                        Guid.Empty, input.Id))
-                    .OnSuccess(rowData => GetLookupRows(input, rowData))
-                    .OnSuccess(ToActionResult)
-                    .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
-            }
-            else
-            {
-                return sessionObjects.UIService.GetRow(
-                        input.SessionFormIdentifier, input.Entity, input.Id)
-                    .OnSuccess(rowData => GetLookupRows(input, rowData))
-                    .OnSuccess(ToActionResult)
-                    .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
-            }
+            return LookupListInputToRowData(input)
+                .OnSuccess(rowData => GetLookupRows(input, rowData))
+                .OnSuccess(ToActionResult)
+                .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult GetRows([FromBody]GetRowsInput input)
@@ -306,6 +281,7 @@ namespace Origam.ServerCore.Controller
                 .OnSuccess(CheckEntityBelongsToMenu)
                 .OnSuccess(entityData => 
                     GetRow(
+                        dataService,
                         entityData.Entity, 
                         input.DataStructureEntityId,
                         Guid.Empty,
@@ -351,6 +327,7 @@ namespace Origam.ServerCore.Controller
                         input.DataStructureEntityId, menuItem))
                     .OnSuccess(CheckEntityBelongsToMenu)
                     .OnSuccess(entityData => GetRow(
+                        dataService,
                         entityData.Entity,
                         input.DataStructureEntityId,
                         Guid.Empty,
@@ -409,32 +386,16 @@ namespace Origam.ServerCore.Controller
         public IActionResult GetRecordTooltip(
             [FromBody]GetRecordTooltipInput input)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => 
-                    GetRow(
-                        entityData.Entity, 
-                        input.DataStructureEntityId,
-                        Guid.Empty,
-                        input.RowId))
+            return AmbiguousInputToRowData(input, dataService, sessionObjects)
                 .OnSuccess(RowDataToRecordTooltip)
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult GetAudit([FromBody]GetAuditInput input)
         {
-            return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => 
-                    GetAuditLog(
-                        entityData, 
-                        input.RowId))
+            return AmbiguousInputToEntityId(input, dataService, sessionObjects)
+                .OnSuccess(entityId => 
+                    GetAuditLog(entityId, input.RowId))
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
@@ -443,30 +404,18 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                sessionObjects.UIService.SaveFavorites(input);
+                ServerCoreUIService.SaveFavorites(input);
                 return Ok();
             });
         }
-        #endregion
-        private IActionResult RunWithErrorHandler(Func<IActionResult> func)
+        [HttpGet("[action]/{sessionFormIdentifier:guid}")]
+        public IActionResult PendingChanges(Guid sessionFormIdentifier)
         {
-            try
-            {
-                return func();
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                return NotFound(ex.ActualValue);
-            }
-            catch (SessionExpiredException ex)
-            {
-                return NotFound(ex);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            return RunWithErrorHandler(() => Ok(
+                sessionObjects.UIService.GetPendingChanges(
+                    sessionFormIdentifier)));
         }
+        #endregion
         private Dictionary<object, string> GetLookupLabelsInternal(
             LookupLabelsInput input)
         {
@@ -504,24 +453,6 @@ namespace Origam.ServerCore.Controller
             }
             return null;
         }
-        private Result<T,IActionResult> FindItem<T>(Guid id) where T : class
-        {
-            return !(ServiceManager.Services
-                .GetService<IPersistenceService>()
-                .SchemaProvider
-                .RetrieveInstance(typeof(T), new Key(id)) is T instance)
-                ? Result.Fail<T, IActionResult>(
-                    NotFound("Object with requested id not found."))
-                : Result.Ok<T, IActionResult>(instance);
-        }
-        private Result<FormReferenceMenuItem, IActionResult> Authorize(
-            FormReferenceMenuItem menuItem)
-        {
-            return SecurityManager.GetAuthorizationProvider().Authorize(
-                User, menuItem.Roles)
-                ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
-                : Result.Fail<FormReferenceMenuItem, IActionResult>(Forbid());
-        }
         private Result<IActionResult, IActionResult> ExecuteDataReader(
             DataStructureQuery dataStructureQuery, GetRowsInput input)
         {
@@ -556,29 +487,6 @@ namespace Origam.ServerCore.Controller
                 ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
                 : Result.Fail<FormReferenceMenuItem, IActionResult>(
                     BadRequest("Lookup is not referenced in any entity in the Menu item"));
-        }
-        private Result<EntityData, IActionResult> CheckEntityBelongsToMenu(
-            EntityData entityData)
-        {
-            return (entityData.MenuItem.Screen.DataStructure.Id 
-                == entityData.Entity.RootEntity.ParentItemId)
-                ? Result.Ok<EntityData, IActionResult>(entityData)
-                : Result.Fail<EntityData, IActionResult>(
-                    BadRequest("The requested Entity does not belong to the menu."));
-        }
-        private Result<RowData, IActionResult> GetRow(
-            DataStructureEntity entity, Guid dataStructureEntityId,
-            Guid methodId, Guid rowId)
-        {
-            var rows = SessionStore.LoadRows(dataService, entity, 
-                dataStructureEntityId, methodId, new List<Guid> { rowId });
-            if(rows.Count == 0)
-            {
-                return Result.Fail<RowData, IActionResult>(
-                    NotFound("Requested data row was not found."));
-            }
-            return Result.Ok<RowData, IActionResult>(
-                new RowData{Row = rows[0], Entity = entity});
         }
         private IEnumerable<object[]> GetRowData(
             LookupListInput input, DataTable dataTable)
@@ -642,6 +550,29 @@ namespace Origam.ServerCore.Controller
                 : Result.Fail<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
         }
+        private Result<RowData, IActionResult> LookupListInputToRowData(
+            LookupListInput input)
+        {
+            if(input.SessionFormIdentifier == Guid.Empty)
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .OnSuccess(Authorize)
+                    .OnSuccess(menuItem => CheckLookupIsAllowedInMenu(
+                        menuItem, input.LookupId))
+                    .OnSuccess(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem))
+                    .OnSuccess(CheckEntityBelongsToMenu)
+                    .OnSuccess(entityData => GetRow(
+                        dataService,
+                        entityData.Entity, input.DataStructureEntityId,
+                        Guid.Empty, input.Id));
+            }
+            else
+            {
+                return sessionObjects.UIService.GetRow(
+                    input.SessionFormIdentifier, input.Entity, input.Id);
+            }
+        }
         private static Hashtable DictionaryToHashtable(IDictionary<string, object> source)
         {
             var result = new Hashtable(source.Count);
@@ -664,11 +595,6 @@ namespace Origam.ServerCore.Controller
         private IActionResult ToActionResult(object obj)
         {
             return Ok(obj);
-        }
-        public IActionResult UnwrapReturnValue(
-            Result<IActionResult, IActionResult> result)
-        {
-            return result.IsSuccess ? result.Value : result.Error;
         }
         private Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
             GetRowsInput input, EntityData entityData)
@@ -746,21 +672,6 @@ namespace Origam.ServerCore.Controller
             }
             return Result.Ok<DataStructureQuery, IActionResult>(query);
         }
-        private Result<EntityData, IActionResult> GetEntityData(
-            Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
-        {
-            return FindEntity(dataStructureEntityId)
-                .OnSuccess(entity 
-                    => new EntityData {MenuItem = menuItem, Entity = entity});
-        }
-        private Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
-        {
-            return FindItem<DataStructureEntity>(id)
-                .OnFailureCompensate(error =>
-                    Result.Fail<DataStructureEntity, IActionResult>(
-                        NotFound("Requested DataStructureEntity not found. " 
-                        + error.GetMessage())));
-        }
         private static void FillRow(
             RowData rowData, Dictionary<string, string> newValues)
         {
@@ -769,31 +680,6 @@ namespace Origam.ServerCore.Controller
                 var dataType = rowData.Row.Table.Columns[key].DataType;
                 rowData.Row[key] = DatasetTools.ConvertValue(value, dataType);
             }
-        }
-        private IActionResult SubmitChange(RowData rowData, Operation operation)
-        {
-            try
-            {
-                DataService.StoreData(
-                    dataStructureId: rowData.Entity.RootEntity.ParentItemId,
-                    data: rowData.Row.Table.DataSet,
-                    loadActualValuesAfterUpdate: false,
-                    transactionId: null);
-            }
-            catch(DBConcurrencyException ex)
-            {
-                if(string.IsNullOrEmpty(ex.Message) 
-                    && (ex.InnerException != null))
-                {
-                    return Conflict(ex.InnerException.Message);
-                }
-                return Conflict(ex.Message);
-            }
-            return Ok(SessionStore.GetChangeInfo(
-                requestingGrid: null, 
-                row: rowData.Row, 
-                operation: operation, 
-                RowStateProcessor: null));
         }
         private RowData MakeEmptyRow(DataStructureEntity entity)
         {
@@ -858,10 +744,10 @@ namespace Origam.ServerCore.Controller
                 cultureInfo,
                 localizer));
         }
-        private IActionResult GetAuditLog(EntityData entityData, object id)
+        private IActionResult GetAuditLog(Guid entityId, object id)
         {
             var auditLog = AuditLogDA.RetrieveLogTransformed(
-                entityData.Entity.EntityId, id);
+                entityId, id);
             if(log != null)
             {
                 return Ok(DataTools.DatatableToHashtable(
@@ -899,7 +785,7 @@ namespace Origam.ServerCore.Controller
                     values, query.ColumnsInfo);
             }
         }
-        public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        private List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
         {
             if(columnsInfo == null)
             {

@@ -198,6 +198,10 @@
       <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
       <Name>Origam.BI.CrystalReports</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj">
+      <Project>{2380e7b2-c993-4167-abca-22ff07a91b2a}</Project>
+      <Name>Origam.BI.Excel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj">
       <Project>{183e889e-77ab-46b0-8d4f-30bb68671907}</Project>
       <Name>Origam.BI.FastReport</Name>

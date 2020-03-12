@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Origam;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.MenuModel;
@@ -38,16 +37,26 @@ namespace Origam.Server
         private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
         private readonly Dictionary<Guid, SessionStore> formSessions;
         private readonly Dictionary<Guid, ReportRequest> reportRequests;
+        private readonly Dictionary<Guid, BlobDownloadRequest> 
+            blobDownloadRequests;
+        private readonly Dictionary<Guid, BlobUploadRequest> 
+            blobUploadRequests;
         private readonly Analytics analytics;
 
-        public SessionManager(Dictionary<Guid, PortalSessionStore> portalSessions,
-            Dictionary<Guid, SessionStore> formSessions, Analytics analytics,
-            Dictionary<Guid, ReportRequest> reportRequests)
+        public SessionManager(
+            Dictionary<Guid, PortalSessionStore> portalSessions,
+            Dictionary<Guid, SessionStore> formSessions, 
+            Analytics analytics,
+            Dictionary<Guid, ReportRequest> reportRequests,
+            Dictionary<Guid, BlobDownloadRequest> blobDownloadRequests,
+            Dictionary<Guid, BlobUploadRequest> blobUploadRequests)
         {
             this.analytics = analytics;
             this.portalSessions = portalSessions;
             this.formSessions = formSessions;
             this.reportRequests = reportRequests;
+            this.blobDownloadRequests = blobDownloadRequests;
+            this.blobUploadRequests = blobUploadRequests;
         }
         
         public int PortalSessionCount => portalSessions.Count;
@@ -308,18 +317,40 @@ namespace Origam.Server
         }
         public ReportRequest GetReportRequest(Guid key)
         {
-            if(!reportRequests.ContainsKey(key))
-            {
-                return null;
-            } 
-            else
-            {
-                return reportRequests[key];
-            }
+            return reportRequests.ContainsKey(key) 
+                ? reportRequests[key] : null;
         }
         public void RemoveReportRequest(Guid key)
         {
             reportRequests.Remove(key);
+        }
+        public void AddBlobDownloadRequest(Guid key,
+            BlobDownloadRequest request)
+        {
+            blobDownloadRequests.Add(key, request);
+        }
+        public BlobDownloadRequest GetBlobDownloadRequest(Guid key)
+        {
+            return blobDownloadRequests.ContainsKey(key) 
+                ? blobDownloadRequests[key] : null;
+        }
+        public void RemoveBlobDownloadRequest(Guid key)
+        {
+            blobDownloadRequests.Remove(key);
+        }
+        public void AddBlobUploadRequest(Guid key,
+            BlobUploadRequest request)
+        {
+            blobUploadRequests.Add(key, request);
+        }
+        public BlobUploadRequest GetBlobUploadRequest(Guid key)
+        {
+            return blobUploadRequests.ContainsKey(key) 
+                ? blobUploadRequests[key] : null;
+        }
+        public void RemoveBlobUploadRequest(Guid key)
+        {
+            blobUploadRequests.Remove(key);
         }
     }
 
