@@ -40,10 +40,16 @@ namespace Origam.ServerCore.Authorization
         
         public static IOrigamUser Create(DataRow origamUserRow, DataRow businessPartnerRow)
         {
-            if(origamUserRow==null)
+            if(origamUserRow == null && businessPartnerRow == null)
             {
                 return null;
             }
+
+            if (origamUserRow == null)
+            {
+                throw new ArgumentNullException($"A complete user cannot be constructed because {nameof(origamUserRow)} is null.");
+            }
+
             User user = new User();
             if (origamUserRow["RecordUpdated"] != null)
             {
