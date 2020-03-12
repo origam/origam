@@ -58,7 +58,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             scriptLocator = new ScriptContainerLocator(GetType().Assembly);
         }
         
-        public void TryUpgrade(XFileData xFileData)
+        public bool TryUpgrade(XFileData xFileData)
         {
             bool isVersion5 = IsVersion5(xFileData);
             if (isVersion5)
@@ -76,7 +76,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
             {
                 xFileData.Document.FixNamespaces();
                 WriteToFile(xFileData);
+                return true;
             }
+            return false;
         }
 
         private bool IsVersion5(XFileData xFileData)
@@ -117,12 +119,12 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 {
                     continue;
                 }
-                scriptsRun = true;
-                
+
                 if (!persistedClassVersions.ContainsKey(className))
                 {
                     RunUpgradeScripts(classNode, xFileData, className,
                         firstVersion, currentVersion);
+                    scriptsRun = true;
                     continue;
                 }
 
@@ -135,6 +137,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 {
                     RunUpgradeScripts(classNode, xFileData, className,
                         persistedClassVersions[className], currentVersion);
+                    scriptsRun = true;
                 }
             }
 

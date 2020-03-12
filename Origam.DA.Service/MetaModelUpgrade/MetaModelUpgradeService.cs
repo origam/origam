@@ -82,18 +82,19 @@ namespace Origam.DA.Service.MetaModelUpgrade
             List<XmlFileData> upgradedData = xmlFileData
                 .AsParallel()
                 .Where(x => !canceled)
-                .Select(fileData => new XFileData(fileData))
-                .Select(xFileData =>
+                .Select(fileData =>
                 {
-                    metaModelUpGrader.TryUpgrade(xFileData);
+                    var xFileData = new XFileData(fileData);
+                    bool wasUpgraded = metaModelUpGrader.TryUpgrade(xFileData);
                     filesProcessed += 1;
                     UpgradeProgress?.Invoke(
                         null,
                         new UpgradeProgressInfo(xmlFileData.Count,
                             filesProcessed));
-                    return xFileData;
+                    return wasUpgraded
+                        ? new XmlFileData(xFileData) 
+                        : fileData;
                 })
-                .Select(fileData => new XmlFileData(fileData))
                 .ToList();
             UpgradeFinished?.Invoke(null, EventArgs.Empty);
             
