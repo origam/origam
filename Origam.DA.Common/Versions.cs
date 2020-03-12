@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,40 +11,45 @@ namespace Origam.DA.Common
 {
     public class Versions: Dictionary<string, Version>
     {
+        private static readonly ConcurrentDictionary<string, Versions> instances 
+            = new ConcurrentDictionary<string, Versions>();
         public static Version Last { get; } = new Version(Int32.MaxValue, Int32.MaxValue, Int32.MaxValue);
  
         public static Versions GetCurrentClassVersions(string typeName,
             Versions persistedClassVersions)
         {
-            if (typeName == "model-persistence") // nodes in .origamGroupReference file
-            {
-                return new Versions();
-            }
+            return
+                instances.GetOrAdd(typeName, name => {
+                    if (typeName == "model-persistence") // nodes in .origamGroupReference file
+                    {
+                        return new Versions();
+                    }
 
-            Type type = Reflector.GetTypeByName(typeName);
-            if (type == null)
-            {
-                return  new Versions {[typeName] = Last}; 
-            }
+                    Type type = Reflector.GetTypeByName(typeName);
+                    if (type == null)
+                    {
+                        return  new Versions {[typeName] = Last}; 
+                    }
 
-            Version classVersion = GetCurrentClassVersion(type);
+                    Version classVersion = GetCurrentClassVersion(type);
 
-            Versions versions = new Versions {[typeName] = classVersion};
+                    Versions versions = new Versions {[typeName] = classVersion};
 
-            foreach (var baseType in type.GetAllBaseTypes())
-            {
-                if (baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) 
-                    is ClassMetaVersionAttribute versionAttribute)
-                {
-                    versions.Add(baseType.FullName, versionAttribute.Value);
-                }
-            }
+                    foreach (var baseType in type.GetAllBaseTypes())
+                    {
+                        if (baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) 
+                            is ClassMetaVersionAttribute versionAttribute)
+                        {
+                            versions.Add(baseType.FullName, versionAttribute.Value);
+                        }
+                    }
 
-            persistedClassVersions
-                .Where(pair => !versions.ContainsKey(pair.Key))
-                .ForEach(pair => versions[pair.Key] = Last);
-            
-            return versions;
+                    persistedClassVersions
+                        .Where(pair => !versions.ContainsKey(pair.Key))
+                        .ForEach(pair => versions[pair.Key] = Last);
+                
+                    return versions;
+                });
         }
 
         public static Version GetCurrentClassVersion(Type type)
