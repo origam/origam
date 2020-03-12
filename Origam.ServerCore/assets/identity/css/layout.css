@@ -42,4 +42,14 @@
     padding-top: 8px;
     padding-bottom: 20px;
 }
-
+.login-link
+{
+	 width: 50%;
+    height: auto;
+    margin: 0 auto;
+    position: relative;
+}
+iframe
+{
+	border:0
+}
