@@ -35,12 +35,6 @@ namespace Origam.DA.Service
             LoadXml(xml);
         }
 
-        public string GetNameSpaceByName(string xmlNameSpaceName)
-        {
-            if (IsEmpty) return null;
-            return FileElement?.Attributes[xmlNameSpaceName]?.InnerText;
-        }
-
         public string AddNamespace(string nameSpaceName, string nameSpace)
         {
             if (IsEmpty)
