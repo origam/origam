@@ -35,18 +35,6 @@ namespace Origam.DA.Common
         
         private static readonly ConcurrentDictionary<string, OrigamNameSpace> instances 
             =  new ConcurrentDictionary<string, OrigamNameSpace>();
-
-        public static OrigamNameSpace Create(Type type)
-        {
-            XmlRootAttribute rootAttribute = FindRootAttribute(type);
-            
-            if (string.IsNullOrEmpty(rootAttribute.Namespace))
-            {
-                Version currentClassVersion = Versions.GetCurrentClassVersion(type);
-                return CreateOrGet(type.FullName, currentClassVersion);
-            }
-            return CreateOrGet(rootAttribute.Namespace);
-        }
         
         public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
         {
@@ -93,17 +81,7 @@ namespace Origam.DA.Common
                 stringValue: xmlNamespace,
                 fullTypeName: splitElName[3]);
         }
-
-        private static XmlRootAttribute FindRootAttribute(Type type)
-        {
-            object[] attributes = type.GetCustomAttributes(typeof(XmlRootAttribute), true);
         
-            if (attributes != null && attributes.Length > 0)
-                return (XmlRootAttribute) attributes[0];
-            else
-                return null;
-        }
-
         private OrigamNameSpace(Version version, string stringValue, string fullTypeName)
         {
             Version = version;
