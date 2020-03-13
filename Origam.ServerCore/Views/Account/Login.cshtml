@@ -5,38 +5,42 @@
 
 @if (Model.EnableLocalLogin)
 {
-    <div class="detailview-container">
-        <div class="detailview-module with-title">
-            <h2>@SharedLocalizer["LocalLogin"]</h2>
-            <div class="input-form">
-                <form asp-route="Login">
-                    <input type="hidden" asp-for="ReturnUrl"/>
-                    <div class="input-row">
-                        <label asp-for="Username"></label>
-                        <input placeholder="Username" asp-for="Username" autofocus>
-                    </div>
-                    <div class="input-row">
-                        <label asp-for="Password"></label>
-                        <input type="password" placeholder="Password" asp-for="Password" autocomplete="off">
-                    </div>
-
-                    @if (Model.AllowRememberLogin)
-                    {
-                        <div class="form-group login-remember">
-                            <label asp-for="RememberLogin">
-                                <input asp-for="RememberLogin">
-                                <strong>@SharedLocalizer["RememberLogin"]</strong>
-                            </label>
+        <div class="detailview-container">
+            <div class="detailview-module with-title">
+                <h2>@SharedLocalizer["LocalLogin"]</h2>
+                <div class="input-form">
+                    <form asp-route="Login">
+                        <input type="hidden" asp-for="ReturnUrl"/>
+                        <div class="input-row">
+                            <label asp-for="Username"></label>
+                            <input placeholder="Username" asp-for="Username" autofocus>
                         </div>
-                    }
-                    <div class="input-row">
-                        <a class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
-                        <a class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
-                    </div>
-                </form>
+                        <div class="input-row">
+                            <label asp-for="Password"></label>
+                            <input type="password" placeholder="Password" asp-for="Password" autocomplete="off">
+                        </div>
+
+                        @if (Model.AllowRememberLogin)
+                        {
+                            <div class="form-group login-remember">
+                                <label asp-for="RememberLogin">
+                                    <input asp-for="RememberLogin">
+                                    <strong>@SharedLocalizer["RememberLogin"]</strong>
+                                </label>
+                            </div>
+                        }
+                        <div class="input-row">
+                            <a class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
+                            <a class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+    <div class="login-link">
+        Click <a href="/account/forgotpassword">here</a> to reset your password.
     </div>
+    <br/>
 }
 @if (Model.VisibleExternalProviders.Any())
 {
@@ -69,4 +73,3 @@
         @SharedLocalizer["NoLoginSchemes"]
     </div>
 }
-

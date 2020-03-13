@@ -112,10 +112,10 @@ namespace Origam.ServerCore
         public Task<IOrigamUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             DataRow origamUserRow = FindOrigamUserRowById(userId);
-            if (origamUserRow == null)  Task.FromResult<IOrigamUser>(null);
+            if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
 
             DataRow businessPartnerRow = FindBusinessPartnerRowById(userId);
-            if (businessPartnerRow == null) Task.FromResult<IOrigamUser>(null);
+            if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
             return Task.FromResult(
                 UserTools.Create(
                 origamUserRow: origamUserRow, 
@@ -129,7 +129,7 @@ namespace Origam.ServerCore
 
 
             var businessPartnerRow = FindBusinessPartnerRowByUserName(normalizedUserName);
-            if (businessPartnerRow == null)  Task.FromResult<IOrigamUser>(null);
+            if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
             return Task.FromResult(
                 UserTools.Create(
@@ -205,11 +205,11 @@ namespace Origam.ServerCore
         public Task<IOrigamUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             DataRow businessPartnerRow = FindBusinessPartnerRowByEmail(normalizedEmail);
-            if (businessPartnerRow == null) Task.FromResult<IOrigamUser>(null);
+            if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
             string userName = (string)businessPartnerRow["UserName"];
             DataRow origamUserRow = FindOrigamUserRowByUserName(userName);
-            if (origamUserRow == null) Task.FromResult<IOrigamUser>(null);
+            if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
             
             return Task.FromResult(
                 UserTools.Create(
@@ -373,7 +373,7 @@ namespace Origam.ServerCore
             {
                 if (!user.LastLockoutDate.HasValue)
                 {
-                    Task.FromResult<DateTimeOffset?>(null);
+                    return Task.FromResult<DateTimeOffset?>(null);
                 }
 
                 if (user.LastLockoutDate.Value == DateTime.MinValue)

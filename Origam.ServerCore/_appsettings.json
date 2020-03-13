@@ -1,7 +1,7 @@
 {
     "PathToClientApp": "\\origam-html5\\build",
     "UserConfig": {
-        "FromAddress": "",
+        "FromAddress": "admin@localhost",
         "NewUserRoleId": "",
         "ResetPasswordMailSubject": "Reset Password",
         "ResetPasswordMailBodyFileName": "testResetPwFile.txt",
