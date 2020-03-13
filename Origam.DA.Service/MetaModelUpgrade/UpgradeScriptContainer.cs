@@ -30,6 +30,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Origam.DA.Common;
 using MoreLinq;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
 namespace Origam.DA.Service.MetaModelUpgrade

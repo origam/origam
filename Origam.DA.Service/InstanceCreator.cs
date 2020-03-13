@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
 namespace Origam.DA.Service

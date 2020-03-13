@@ -28,6 +28,7 @@ using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service.MetaModelUpgrade;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 
 namespace Origam.DA.Service

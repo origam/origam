@@ -29,6 +29,7 @@ using System.Xml;
 using System.Xml.Linq;
 using MoreLinq;
 using Origam.DA.Common;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 using Origam.Schema;
 

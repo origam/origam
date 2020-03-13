@@ -23,6 +23,7 @@ using System.IO;
 using System.Xml;
 using Origam.DA.Common;
 using Origam.DA.Service.MetaModelUpgrade;
+using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
 using Origam.Schema;
 

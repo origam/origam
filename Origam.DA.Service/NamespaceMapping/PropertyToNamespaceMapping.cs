@@ -3,81 +3,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using MoreLinq;
-using Origam.DA.Common;
-using Origam.DA.Common.ObjectPersistence.Attributes;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 
-namespace Origam.DA.Service
+namespace Origam.DA.Service.NamespaceMapping
 {
-    internal interface IPropertyToNamespaceMapping
-    {
-        XNamespace NodeNamespace { get; }
-        XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName);
-        void AddNamespacesToDocumentAndAdjustMappings(OrigamXDocument document);
-    }
-
-    class DeadClassPropertyToNamespaceMapping : IPropertyToNamespaceMapping
-    {
-        private string xmlNamespaceName;    
-
-        public DeadClassPropertyToNamespaceMapping(string fullTypeName, Version version)
-        {
-            string typeName = fullTypeName.Split(".").Last();
-            NodeNamespace =  XmlNamespaceTools.GetXmlNamespace(fullTypeName, version);
-            xmlNamespaceName = XmlNamespaceTools.GetXmlNamespaceName(typeName);
-        }
-
-        public XNamespace NodeNamespace { get; }
-
-        public XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName)
-        {
-            return NodeNamespace;
-        }
-
-        public void AddNamespacesToDocumentAndAdjustMappings(OrigamXDocument document)
-        {
-            xmlNamespaceName = document.AddNamespace(
-                nameSpaceName: xmlNamespaceName, 
-                nameSpace: NodeNamespace.ToString());
-        }
-    }
-    
-    class Version6PropertyToNamespaceMapping : PropertyToNamespaceMapping
-    {
-        private static readonly ConcurrentDictionary<Type, Version6PropertyToNamespaceMapping> instances
-            = new ConcurrentDictionary<Type, Version6PropertyToNamespaceMapping>();
-        private static readonly Version version6 = new Version(6,0,0);
-        
-        public static Version6PropertyToNamespaceMapping CreateOrGet(Type instanceType)
-        {
-            return instances.GetOrAdd(
-                instanceType, 
-                type =>
-                {
-                    var typeFullName = instanceType.FullName;
-                    var propertyMappings =
-                        GetPropertyMappings(instanceType,  TypeToV6Namespace);
-                    return new Version6PropertyToNamespaceMapping(propertyMappings, typeFullName);
-                });
-        }
-
-        protected Version6PropertyToNamespaceMapping(List<PropertyMapping> propertyMappings, string typeFullName)
-            : base(propertyMappings, typeFullName)
-        {
-            
-        }
-
-        private static string TypeToV6Namespace(Type type)
-        {
-            return XmlNamespaceTools.GetXmlNamespace(type.FullName, version6);
-        }
-    }
-
     class PropertyToNamespaceMapping : IPropertyToNamespaceMapping
     {
         private readonly List<PropertyMapping> propertyMappings;
@@ -245,53 +177,6 @@ namespace Origam.DA.Service
                     .ToList();
                 return new PropertyMapping(propertyNames, XmlNamespace, XmlNamespaceName);
             }
-        }
-    }
-
-    static class XmlNamespaceTools
-    {
-        private static readonly ConcurrentDictionary<Type, string> namespaces 
-            =  new ConcurrentDictionary<Type, string>();
-        private static readonly ConcurrentDictionary<Type, string> namespaceNames
-            =  new ConcurrentDictionary<Type, string>();
-        public static string GetXmlNameSpace(Type type)
-        {
-            return
-                namespaces.GetOrAdd(type, type1 =>
-                {
-                    Version currentClassVersion = Versions.GetCurrentClassVersion(type1);
-                    return GetXmlNamespace(type1.FullName, currentClassVersion);
-                });
-        }
-
-        public static string GetXmlNamespace(string fullTypeName, Version version)
-        {
-            return $"http://schemas.origam.com/{fullTypeName}/{version}";
-        }
-
-        public static string GetXmlNamespaceName(Type type)
-        {
-            return
-                namespaceNames.GetOrAdd(
-                    type, 
-                    typePar =>
-                    {
-                        if (typePar.GetCustomAttribute(typeof(XmlNamespaceNameAttribute)) 
-                            is XmlNamespaceNameAttribute attribute)
-                        {
-                            return attribute.XmlNamespaceName;
-                        }
-                        return GetXmlNamespaceName(typePar.Name);
-                    });
-        }
-
-        public static string GetXmlNamespaceName(string typeName)
-        {
-            var charArray = typeName
-                .Where(char.IsUpper)
-                .Select(char.ToLower)
-                .ToArray();
-            return new string(charArray);
         }
     }
 }
