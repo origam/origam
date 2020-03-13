@@ -169,12 +169,13 @@ namespace Origam.DA.Service.MetaModelUpgrade
             upgradeScriptContainer.Upgrade(xFileData.Document, classNode, persistedClassVersion, currentClassVersion);
         }
     }
+    
     public class Version6UpGrader
     {
         private readonly ScriptContainerLocator scriptLocator;
         private readonly OrigamXDocument document;
         private static XNamespace oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
-        private static XNamespace newPersistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";
+        private static XNamespace newPersistenceNamespace = OrigamFile.ModelPersistenceUri;
 
         public Version6UpGrader(ScriptContainerLocator scriptLocator,
             OrigamXDocument document)
