@@ -243,19 +243,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             node.Name = namespaceMapping.NodeNamespace.GetName(node.Name.LocalName);
             CopyAttributes(node, namespaceMapping);
         }
-
-        private string Version6NamespaceMapper(Type type)
-        {
-            string xmlNameSpaceWithCurrentVersion = XmlNamespaceTools.GetXmlNameSpace(type);
-            return 
-                string.Join(
-                    "/", 
-                    MoreEnumerable.SkipLast(xmlNameSpaceWithCurrentVersion
-                                .Split("/"), 1)
-                            .Concat(new []{"6.0.0"})
-                    );
-        }
-
+        
         private static void CopyAttributes(XElement node,
             IPropertyToNamespaceMapping namespaceMapping)
         {
@@ -299,9 +287,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }
             }
 
-            return new PropertyToNamespaceMapping(
-                instanceType: type, 
-                xmlNamespaceMapper: Version6NamespaceMapper) ;
+            return new Version6PropertyToNamespaceMapping(type) ;
         }  
         
         private void RemoveTypeAttribute(XElement node)
@@ -335,6 +321,5 @@ namespace Origam.DA.Service.MetaModelUpgrade
             TotalFiles = totalFiles;
             FilesDone = filesDone;
         }
-
     }
 }
