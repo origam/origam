@@ -237,7 +237,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private void UpgradeNode(XElement node)
         {
             IPropertyToNamespaceMapping namespaceMapping = GetNamespaceMapping(node);
-            namespaceMapping.AddNamespacesToDocument(document);
+            namespaceMapping.AddNamespacesToDocumentAndAdjustMappings(document);
 
             RemoveTypeAttribute(node);
             node.Name = namespaceMapping.NodeNamespace.GetName(node.Name.LocalName);
@@ -287,7 +287,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }
             }
 
-            return new Version6PropertyToNamespaceMapping(type) ;
+            return Version6PropertyToNamespaceMapping.CreateOrGet(type).DeepCopy() ;
         }  
         
         private void RemoveTypeAttribute(XElement node)

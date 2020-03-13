@@ -43,7 +43,7 @@ namespace Origam.DA.Service
         {
             IFilePersistent instance = Instantiate(id, provider, parentId);
             
-            var namespaceMapping = new PropertyToNamespaceMapping(instance.GetType());
+            var namespaceMapping = PropertyToNamespaceMapping.CreateOrGet(instance.GetType());
             SetXmlAttributes( instance, provider, namespaceMapping);
             NoteExternalReferences(instance, namespaceMapping);
             SetParentAttributes(parentId, instance, provider);

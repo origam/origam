@@ -46,8 +46,10 @@ namespace Origam.DA.Service
 
         public void Write(IFilePersistent instance)
         {
-            var namespaceMapping = new PropertyToNamespaceMapping(instance.GetType());
-            namespaceMapping.AddNamespacesToDocument(xmlDocument);
+            var namespaceMapping = PropertyToNamespaceMapping
+                .CreateOrGet(instance.GetType())
+                .DeepCopy();
+            namespaceMapping.AddNamespacesToDocumentAndAdjustMappings(xmlDocument);
 
             XmlElement elementToWriteTo = GetElementToWriteTo(instance, namespaceMapping);
             bool isLocalChild = elementToWriteTo.ParentNode.GetDepth() != 1;
