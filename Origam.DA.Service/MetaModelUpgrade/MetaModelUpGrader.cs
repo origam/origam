@@ -113,21 +113,29 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
             
-            string nodeClass = OrigamNameSpace.Create(classNode?.Name.NamespaceName).FullTypeName;
+            string fullTypeName = OrigamNameSpace.Create(classNode?.Name.NamespaceName).FullTypeName;
             Versions persistedClassVersions = new Versions(origamNameSpaces);
-            Versions currentClassVersions =
-                Versions.GetCurrentClassVersions(nodeClass, persistedClassVersions);
-            bool scriptsRun = false;
-            foreach (var pair in currentClassVersions)
+            Versions currentClassVersions = Versions.GetCurrentClassVersions(fullTypeName);
+
+            if (!currentClassVersions.IsDead)
             {
-                string className = pair.Key;
-                Version currentVersion = pair.Value;
+                var deadClasses = persistedClassVersions
+                    .TypeNames
+                    .Where(typeName => !currentClassVersions.Contains(typeName));
+
+                currentClassVersions =  new Versions(currentClassVersions, deadClasses);
+            }
+            
+            bool scriptsRun = false;
+            foreach (string className in currentClassVersions.TypeNames)
+            {
+                Version currentVersion = currentClassVersions[className];
                 if (currentVersion == firstVersion)
                 {
                     continue;
                 }
 
-                if (!persistedClassVersions.ContainsKey(className))
+                if (!persistedClassVersions.Contains(className))
                 {
                     RunUpgradeScripts(classNode, xFileData, className,
                         firstVersion, currentVersion);
@@ -137,7 +145,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
                 if (persistedClassVersions[className] > currentVersion)
                 {
-                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name} in {xFileData.File.FullName}");
+                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode?.Name} in {xFileData.File.FullName}");
                 }
 
                 if (persistedClassVersions[className] < currentVersion)
