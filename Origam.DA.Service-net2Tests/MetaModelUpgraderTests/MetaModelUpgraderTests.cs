@@ -22,10 +22,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
+using Moq;
 using NUnit.Framework;
 using Origam.DA.Service;
 using Origam.DA.Service.MetaModelUpgrade;
@@ -150,6 +152,27 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tpc"))?.Value, Is.EqualTo(tpcNamespace.ToString()));
             Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tbc"))?.Value, Is.EqualTo(tbcNamespace.ToString()));
             Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tdbc"))?.Value, Is.Null);
+        }          
+        
+        [Test]
+        public void ShouldRemoveDeadBaseClassAndDeleteEmptyFile()
+        {
+            Mock<IFileWriter> mockWriter = new Mock<IFileWriter>();
+            mockWriter.Setup(mock => mock.Write(It.IsAny<FileInfo>(), It.IsAny<string>()));
+            mockWriter.Setup(mock => mock.Delete(It.IsAny<FileInfo>()));
+            
+            XFileData xFileData = LoadFile("TestDeadClass2V6.0.1.origam");
+            var sut = new MetaModelUpGrader(GetType().Assembly, mockWriter.Object);
+            sut.TryUpgrade(xFileData);
+
+            XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
+            XNamespace tbcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestBaseClass/6.0.1";
+            XNamespace deadNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestDeadBaseClass/6.0.1";
+
+            XElement fileElement = xFileData.Document.FileElement;
+            Assert.That(fileElement.Elements().ToList(), Has.Count.EqualTo(0));
+            Assert.That(fileElement.Attribute(XNamespace.Xmlns.GetName("tdbc"))?.Value, Is.Null);
+            mockWriter.Verify(mock => mock.Delete(xFileData.File), Times.Once());
         }   
         
         [Test]

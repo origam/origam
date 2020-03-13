@@ -75,7 +75,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             if (isVersion5 || upgradeFlags.Any(x => x))
             {
                 xFileData.Document.FixNamespaces();
-                WriteToFile(xFileData);
+                WriteFile(xFileData);
                 return true;
             }
             return false;
@@ -93,13 +93,20 @@ namespace Origam.DA.Service.MetaModelUpgrade
                    value == "http://schemas.origam.com/1.0.0/packagepackage");
         }
 
-        private void WriteToFile(XFileData xFileData)
+        private void WriteFile(XFileData xFileData)
         {
-            string upgradedXmlString = OrigamDocumentSorter
-                .CopyAndSort(xFileData.Document.XDocument)
-                .ToBeautifulString();
+            if (xFileData.Document.IsEmpty)
+            {
+                fileWriter.Delete(xFileData.File);
+            }
+            else
+            {
+                string upgradedXmlString = OrigamDocumentSorter
+                    .CopyAndSort(xFileData.Document.XDocument)
+                    .ToBeautifulString();
 
-            fileWriter.Write(xFileData.File, upgradedXmlString);
+                fileWriter.Write(xFileData.File, upgradedXmlString);
+            }
         }
 
         private bool TryUpgrade(XElement classNode, XFileData xFileData)

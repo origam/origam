@@ -91,6 +91,30 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     
                 }));
         }
+    }        
+    
+    class TestDeadClass2ScriptContainer : UpgradeScriptContainer
+    {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass2";
+        public override List<string> OldFullTypeNames { get; }
+    
+        public TestDeadClass2ScriptContainer() 
+        {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.0"), 
+                new Version("6.0.1"),
+                (node, doc) =>
+                {
+                    AddAttribute(node, "newProperty1", "");
+                }));            
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.1"), 
+                Versions.Last,
+                (node, doc) =>
+                {
+                    node.Remove();
+                }));
+        }
     }       
     class TestTestDeadBaseClassScriptContainer : UpgradeScriptContainer
     {

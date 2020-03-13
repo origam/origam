@@ -5,11 +5,16 @@ namespace Origam.DA.Service.MetaModelUpgrade
     public interface IFileWriter
     {
         void Write(FileInfo file, string text);
+        void Delete(FileInfo file);
     }
 
     public class NullFileWriter : IFileWriter
     {
         public void Write(FileInfo file, string text)
+        {
+        }
+
+        public void Delete(FileInfo file)
         {
         }
     }
@@ -19,6 +24,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
         public void Write(FileInfo file, string text)
         {
             File.WriteAllText(file.FullName, text);
+        }
+
+        public void Delete(FileInfo file)
+        {
+            file.Delete();
         }
     }
 }
