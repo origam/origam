@@ -22,35 +22,38 @@ namespace Origam.DA.Common
         public bool IsDead => versionDict.Count == 1 &&
                               versionDict.First().Value == Last;
 
-        public static Versions GetCurrentClassVersions(string typeName)
+        public static Versions GetCurrentClassVersions(string fullTypeName)
         {
             return
-                instances.GetOrAdd(typeName, name => {
-                    if (typeName == "model-persistence") // nodes in .origamGroupReference file
-                    {
-                        return new Versions();
-                    }
+                instances.GetOrAdd(fullTypeName, MakeCurrentClassVersions);
+        }
 
-                    Type type = Reflector.GetTypeByName(typeName);
-                    if (type == null)
-                    {
-                        return  new Versions(typeName, Last); 
-                    }
+        private static Versions MakeCurrentClassVersions(string fullTypeName)
+        {
+            if (fullTypeName == "model-persistence") // nodes in .origamGroupReference file
+            {
+                return new Versions();
+            }
 
-                    Version classVersion = GetCurrentClassVersion(type);
+            Type type = Reflector.GetTypeByName(fullTypeName);
+            if (type == null)
+            {
+                return new Versions(fullTypeName, Last);
+            }
 
-                    Versions versions = new Versions(typeName, classVersion);
+            Version classVersion = GetCurrentClassVersion(type);
 
-                    foreach (var baseType in type.GetAllBaseTypes())
-                    {
-                        if (baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) 
-                            is ClassMetaVersionAttribute versionAttribute)
-                        {
-                            versions.versionDict.Add(baseType.FullName, versionAttribute.Value);
-                        }
-                    }
-                    return versions;
-                });
+            Versions versions = new Versions(fullTypeName, classVersion);
+
+            foreach (var baseType in type.GetAllBaseTypes())
+            {
+                if (baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) is ClassMetaVersionAttribute versionAttribute)
+                {
+                    versions.versionDict.Add(baseType.FullName, versionAttribute.Value);
+                }
+            }
+
+            return versions;
         }
 
         public static Version GetCurrentClassVersion(Type type)
