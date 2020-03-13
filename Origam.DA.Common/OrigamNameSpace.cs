@@ -43,16 +43,17 @@ namespace Origam.DA.Common
             if (string.IsNullOrEmpty(rootAttribute.Namespace))
             {
                 Version currentClassVersion = Versions.GetCurrentClassVersion(type);
-                return Create(type.FullName, currentClassVersion);
+                return CreateOrGet(type.FullName, currentClassVersion);
             }
-            return Create(rootAttribute.Namespace);
+            return CreateOrGet(rootAttribute.Namespace);
         }
-        public static OrigamNameSpace Create(string fullTypeName, Version version)
+        
+        public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
         {
-            return Create( $"http://schemas.origam.com/{fullTypeName}/{version}");
+            return CreateOrGet( $"http://schemas.origam.com/{fullTypeName}/{version}");
         }
 
-        public static OrigamNameSpace Create(string xmlNamespace)
+        public static OrigamNameSpace CreateOrGet(string xmlNamespace)
         {
             return instances.GetOrAdd(xmlNamespace, CreateNonCached);
         }

@@ -108,7 +108,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private void SetVersion(OrigamXDocument document, Version toVersion)
         {
             XNamespace updatedNamespace = OrigamNameSpace
-                .Create(FullTypeName, toVersion)
+                .CreateOrGet(FullTypeName, toVersion)
                 .StringValue;
             XNamespace oldNamespace = GetThisClassNamespace(document.XDocument);
             if (oldNamespace == null)

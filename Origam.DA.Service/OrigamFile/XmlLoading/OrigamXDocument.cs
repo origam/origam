@@ -63,7 +63,7 @@ namespace Origam.DA.Service
                 .Attributes()
                 .Select(attr => attr.Value)
                 .Distinct()
-                .Select(OrigamNameSpace.Create);
+                .Select(OrigamNameSpace.CreateOrGet);
         }
 
         private string GetNextNamespaceName(string nameSpaceName)

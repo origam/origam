@@ -114,7 +114,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
             
-            string fullTypeName = OrigamNameSpace.Create(classNode?.Name.NamespaceName).FullTypeName;
+            string fullTypeName = OrigamNameSpace.CreateOrGet(classNode?.Name.NamespaceName).FullTypeName;
             Versions persistedClassVersions = new Versions(origamNameSpaces);
             Versions currentClassVersions = Versions.GetCurrentClassVersions(fullTypeName);
 
@@ -166,7 +166,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 .Select(attr => attr.Name.NamespaceName)
                 .Where(name => name != OrigamFile.ModelPersistenceUri)
                 .Distinct()
-                .Select(OrigamNameSpace.Create);
+                .Select(OrigamNameSpace.CreateOrGet);
         }
 
         private void RunUpgradeScripts(XElement classNode,
