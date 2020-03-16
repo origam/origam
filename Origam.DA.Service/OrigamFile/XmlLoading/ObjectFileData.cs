@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Xml;
+using Origam.DA.Common;
 
 namespace Origam.DA.Service
 {
@@ -63,9 +64,10 @@ namespace Origam.DA.Service
             {
                 var childNode = (XmlNode) nodeObj;
                 XmlAttribute idAttribute = childNode.Attributes?[$"x:{OrigamFile.IdAttribute}"];
-                Guid currentNodeId; 
+                Guid currentNodeId;
                 if (idAttribute != null)
                 {
+                    var nodeNameSpace = OrigamNameSpace.CreateOrGet(childNode.NamespaceURI);
                     Guid parentId = ParseParentId(parentNodeId, childNode);
                     bool isFolder = ParseIsFolder(childNode);
                     currentNodeId = new Guid(idAttribute.Value);
@@ -74,7 +76,9 @@ namespace Origam.DA.Service
                         id:currentNodeId ,
                         parentId: parentId,
                         isFolder: isFolder,
-                        origamFile: (OrigamFile)origamFile);
+                        origamFile: (OrigamFile)origamFile,
+                        fullTypeName: nodeNameSpace.FullTypeName,
+                        version: nodeNameSpace.Version);
 
                     if (origamFile.ContainedObjects.ContainsKey(objectInfo.Id))
                     {

@@ -33,7 +33,7 @@ namespace Origam.DA.Service
     {
         public List<ITrackeableFile> GetOrigamFiles(OrigamFileFactory origamFileFactory) 
             => TransformBack(origamFileFactory);
-
+        
         public Dictionary<string, int> ItemTrackerStats => itemTrackerStats;
         
         [ProtoMember(2)]
@@ -52,7 +52,11 @@ namespace Origam.DA.Service
 
         [ProtoMember(5)]
         private readonly Dictionary<string, int> itemTrackerStats;
-        
+
+        [ProtoMember(6)]
+        private readonly AutoIncrementedIntIndex<TypeInfo> typeIndex 
+            = new AutoIncrementedIntIndex<TypeInfo>();
+       
         private TrackerSerializationData()
         {
         }
@@ -79,7 +83,8 @@ namespace Origam.DA.Service
                         orFile,
                         guidIndex,
                         parentFolderIndex, 
-                        idElementDictionary))
+                        idElementDictionary,
+                        typeIndex))
                 .ToList();
         }
 
@@ -95,7 +100,8 @@ namespace Origam.DA.Service
                         guidIndex, 
                         parentFolderIndex,
                         CategoryIdDictionary,
-                        origamFileFactory))
+                        origamFileFactory,
+                        typeIndex))
                 .ToList();
         }
 
@@ -135,7 +141,8 @@ namespace Origam.DA.Service
             public OrigamFileSerializedForm(ITrackeableFile origamFile,
                 AutoIncrementedIntIndex<Guid> guidIndex,
                 AutoIncrementedIntIndex<string> parentFolderIndex,
-                IDictionary<string,int> idCategoryDictionary)
+                IDictionary<string, int> idCategoryDictionary,
+                AutoIncrementedIntIndex<TypeInfo> typeIndex)
             {
                 origamFile.ParentFolderIds.CheckIsValid(origamFile.Path);
                 RelativePath = origamFile.Path.Relative;
@@ -144,7 +151,8 @@ namespace Origam.DA.Service
                     .Select(objInfo => new ObjectInfoSerializedForm(
                         objInfo,
                         guidIndex,
-                        idCategoryDictionary))
+                        idCategoryDictionary,
+                        typeIndex))
                     .ToList();
                 if (ContainedObjInfos == null)
                 {
@@ -157,10 +165,12 @@ namespace Origam.DA.Service
                         entry => guidIndex.AddValueAndGetId(entry.Value));
             }
 
-            public ITrackeableFile GetOrigamFile(AutoIncrementedIntIndex<Guid> guidIndex,
+            public ITrackeableFile GetOrigamFile(
+                AutoIncrementedIntIndex<Guid> guidIndex,
                 AutoIncrementedIntIndex<string> parentFolderIndex,
-                IDictionary<int,string> elementIdDictionary, 
-                OrigamFileFactory origamFileFactory)
+                IDictionary<int, string> elementIdDictionary,
+                OrigamFileFactory origamFileFactory,
+                AutoIncrementedIntIndex<TypeInfo> typeIndex)
             {
                 ITrackeableFile trackableFile = origamFileFactory.New( 
                     relativePath: RelativePath,
@@ -172,21 +182,24 @@ namespace Origam.DA.Service
 
                 if (trackableFile is OrigamFile origamFile)
                 {
-                    trackableFile = AddObjectInfo(guidIndex, origamFile, elementIdDictionary);
+                    trackableFile = AddObjectInfo(guidIndex, origamFile, elementIdDictionary, typeIndex);
                 }
 
                 return trackableFile;
             }
 
-            private OrigamFile AddObjectInfo(AutoIncrementedIntIndex<Guid> guidIndex,
-                OrigamFile origamFile, IDictionary<int,string> elementIdDictionary)
+            private OrigamFile AddObjectInfo(
+                AutoIncrementedIntIndex<Guid> guidIndex,
+                OrigamFile origamFile,
+                IDictionary<int, string> elementIdDictionary,
+                AutoIncrementedIntIndex<TypeInfo> typeIndex)    
             {
                 foreach (ObjectInfoSerializedForm objInfoSf in ContainedObjInfos)
                 {
                     Guid guid = guidIndex[objInfoSf.IdNumber];
                     PersistedObjectInfo objInfo =
                         objInfoSf.GetObjectInfo(origamFile, 
-                            guidIndex, elementIdDictionary);
+                            guidIndex, elementIdDictionary, typeIndex);
 
                     origamFile.ContainedObjects.Add(guid, objInfo);
                 }
@@ -211,47 +224,111 @@ namespace Origam.DA.Service
         private class ObjectInfoSerializedForm
         {
             [ProtoMember(1)]
-            private readonly int elementNameId;
+            private readonly int categoryId;
+
+
             [ProtoMember(2)]
             public int IdNumber { get; }
             [ProtoMember(3)]
             private bool IsFolder { get; }
             [ProtoMember(4)]
             private int ParentIdNumber { get; }
-
+            
+            [ProtoMember(5)]          
+            public int TypeId { get; }
+            
             private ObjectInfoSerializedForm()
             {
             }
-
+            
             public ObjectInfoSerializedForm(PersistedObjectInfo objInfo,
-                AutoIncrementedIntIndex<Guid> guidIndex, 
-                IDictionary<string,int> idCategoryDictionary)
+                AutoIncrementedIntIndex<Guid> guidIndex,
+                IDictionary<string, int> idCategoryDictionary,
+                AutoIncrementedIntIndex<TypeInfo> typeIndex)
             {
-                elementNameId = idCategoryDictionary[objInfo.Category];
+                categoryId = idCategoryDictionary[objInfo.Category];
                 IdNumber = guidIndex.AddValueAndGetId(objInfo.Id);
                 ParentIdNumber = guidIndex.AddValueAndGetId(objInfo.ParentId);
                 IsFolder = objInfo.IsFolder;
+                TypeId = typeIndex.AddValueAndGetId(new TypeInfo(objInfo.FullTypeName, objInfo.Version));
             }
 
             public PersistedObjectInfo GetObjectInfo(OrigamFile origamFile,
                 AutoIncrementedIntIndex<Guid> guidIndex,
-                IDictionary<int,string> elementIdDictionary)
+                IDictionary<int, string> elementIdDictionary,
+                AutoIncrementedIntIndex<TypeInfo> typeIndex)
             {
                 return 
                     new PersistedObjectInfo(
-                        category: elementIdDictionary[elementNameId], 
+                        category: elementIdDictionary[categoryId], 
                         id:guidIndex[IdNumber],
                         parentId:guidIndex[ParentIdNumber],
                         isFolder:IsFolder,
-                        origamFile:origamFile);
+                        origamFile:origamFile,
+                        fullTypeName: typeIndex[TypeId].FullTypeName,
+                        version: typeIndex[TypeId].Version);
             }
             public override string ToString()
             {
                 return "ObjectInfoSerializedForm: " +
-                       " elementNameId: " + elementNameId +
+                       " elementNameId: " + categoryId +
                        ", IdNumber: " + IdNumber +
                        ", IsFolder: " + IsFolder +
                        ", ParentIdNumber: " + ParentIdNumber;
+            }
+        }
+        
+        [ProtoContract]
+        private class TypeInfo
+        {
+            [ProtoMember(1)]
+            public string FullTypeName { get;  }
+
+            public Version Version {
+                get
+                {
+                    if (version == null)
+                    {
+                        version = Version.Parse(versionStr);
+                    }
+                    return version;
+                }
+            }
+
+            private Version version;
+
+            [ProtoMember(2)]
+            private readonly string versionStr;
+
+            public TypeInfo()
+            {
+            }
+
+            public TypeInfo( string fullTypeName, Version version)
+            {
+                versionStr =  version.ToString();
+                FullTypeName = fullTypeName;
+            }
+
+            protected bool Equals(TypeInfo other)
+            {
+                return versionStr == other.versionStr && FullTypeName == other.FullTypeName;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((TypeInfo) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((versionStr != null ? versionStr.GetHashCode() : 0) * 397) ^ (FullTypeName != null ? FullTypeName.GetHashCode() : 0);
+                }
             }
         }
     }

@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using MoreLinq;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
@@ -176,7 +177,9 @@ namespace Origam.DA.Service
                 id: instance.Id,
                 parentId: instance.FileParentId,
                 isFolder: instance.IsFolder,
-                origamFile: origamFile);
+                origamFile: origamFile,
+                fullTypeName: instance.GetType().FullName,
+                version: Versions.GetCurrentClassVersion(instance.GetType()));
             origamFile.ContainedObjects[instance.Id] = updatedObjectInfo;
             return updatedObjectInfo;
         }
