@@ -25,14 +25,8 @@ using System.Collections.Generic;
 
 namespace Origam.ServerCore.Model.Blob
 {
-    public class BlobDownloadTokenInput
+    public class BlobDownloadTokenInput : AmbiguousInput
     {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        [RequiredNonDefault]
-        public Guid RowId { get; set; }
         public string Property { get; set; }
         public bool IsPreview { get; set; }
         public IDictionary Parameters { get; set; }

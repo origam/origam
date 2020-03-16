@@ -215,9 +215,6 @@
                         <Component Id="OFFICE.DLL" DiskId="1" Guid="C1BDD342-F8B5-491F-9E3B-7DE4B20D82E5">
                             <File Id="OFFICE.DLL" Name="office.dll" Source="source\office.dll" />
                         </Component>
-                        <Component Id="OPENSMTP.DLL" DiskId="1" Guid="66CD1DBC-C1F7-4314-B26C-D4FE963FD495">
-                            <File Id="OPENSMTP.DLL" Name="OpenSmtp.dll" Source="source\OpenSmtp.dll" />
-                        </Component>
                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL" DiskId="1" Guid="065D8E2C-762C-4C16-B760-4B896DA3BF9F">
                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL" Name="Origam.ProjectAutomation.dll" Source="source\Origam.ProjectAutomation.dll" />
                         </Component>
@@ -1244,9 +1241,6 @@
                                         <Component Id="OFFICE.DLL_1" DiskId="1" Guid="54EC1EC1-33C6-4B49-9082-1ADEF758040D">
                                             <File Id="OFFICE.DLL_1" Name="office.dll" Source="server_source\bin\office.dll" />
                                         </Component>
-                                        <Component Id="OPENSMTP.DLL_1" DiskId="1" Guid="6D1F8526-EFB0-4369-B100-FFAAAECA4DBC">
-                                            <File Id="OPENSMTP.DLL_1" Name="OpenSmtp.dll" Source="server_source\bin\OpenSmtp.dll" />
-                                        </Component>
                                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL_1" DiskId="1" Guid="A836EDF8-89F6-4B88-B20E-8F68BE589260">
                                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL_1" Name="Origam.ProjectAutomation.dll" Source="server_source\bin\Origam.ProjectAutomation.dll" />
                                         </Component>
@@ -1693,7 +1687,6 @@
             <ComponentRef Id="CSHARPFUNCTIONALEXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.DRAWING.COMMON.DLL" />
             <ComponentRef Id="CSHARPFUNCTIONALEXTENSIONS.DLL_1" />
-            <ComponentRef Id="OPENSMTP.DLL" />
             <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL" />
             <ComponentRef Id="SCHEDULETIMER.DLL" />
             <ComponentRef Id="WEIFENLUO.WINFORMSUI.DOCKING.DLL" />
@@ -1996,7 +1989,6 @@
             <ComponentRef Id="NPOI.OPENXML4NET.DLL_1" />
             <ComponentRef Id="NPOI.OPENXMLFORMATS.DLL_1" />
             <ComponentRef Id="OFFICE.DLL_1" />
-            <ComponentRef Id="OPENSMTP.DLL_1" />
             <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL_1" />
             <ComponentRef Id="ORIGAM.SECURITY.IDENTITY.DLL" />
             <ComponentRef Id="ORIGAM.SECURITY.NETFX.DLL" />

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 namespace Origam.ServerCore.Configuration
 {
     public class UserConfig
@@ -31,6 +32,7 @@ namespace Origam.ServerCore.Configuration
         public string UserRegistrationMailSubject { get; set; }
         public string UserRegistrationMailBodyFileName { get; set; }
         public string MailQueueName { get; set; }
+        public bool UserRegistrationAllowed { get; set; }
         public string PortalBaseUrl { get; set; }
     }
 }

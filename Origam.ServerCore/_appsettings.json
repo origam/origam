@@ -1,0 +1,62 @@
+{
+    "PathToClientApp": "\\origam-html5\\build",
+    "UserConfig": {
+        "FromAddress": "admin@localhost",
+        "NewUserRoleId": "",
+        "ResetPasswordMailSubject": "Reset Password",
+        "ResetPasswordMailBodyFileName": "testResetPwFile.txt",
+        "UserUnlockNotificationSubject": "",
+        "UserUnlockNotificationBodyFileName": "",
+        "UserRegistrationMailSubject": "Register",
+        "UserRegistrationMailBodyFileName": "testNewUserFile.txt",
+        "MailQueueName": "",
+        "UserRegistrationAllowed": "true"
+    },
+    "IdentityGuiConfig": {
+        "PathToBrandIcon": "icons/origam.png"
+    },
+    "IdentityServerConfig": {
+        "PathToJwtCertificate": "serverCore.pfx",
+        "PasswordForJwtCertificate": "bla",
+        "UseGoogleLogin": "false",
+        "GoogleClientId": "",
+        "GoogleClientSecret": "",
+        "WebClient": {
+            "RedirectUris": [
+                "https://localhost:3000/#origamClientCallback/",
+                "http://localhost:3000/#origamClientCallback/"
+            ],
+            "PostLogoutRedirectUris": ["/", "https://192.168.0.80:45455"]
+        },
+        "MobileClient":{
+            "RedirectUris": [ "http://localhost/xamarincallback" ],
+            "ClientSecret": "iiiidddddddddddddddddddddddddddddddddddddddddddddii",
+            "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
+        }
+    },
+    "UserLockoutConfig": {
+        "AutoUnlockAfterSpecifiedTime": "true",
+        "LockoutTimeMinutes": 5,
+        "MaxFailedAccessAttempts": 5
+    },
+    "PasswordConfig": {
+        "RequireDigit": "false",
+        "RequiredLength": "6",
+        "RequireNonAlphanumeric": "false",
+        "RequireUppercase": "false",
+        "RequireLowercase": "true"
+    },
+    "MailConfig": {
+        "UserName": "",
+        "Password": "",
+        "Server": "",
+        "Port": 587,
+        "UseSsl":  "true"
+    },
+    "urls": "https://localhost:44356;http://localhost:5000",
+    "UserApiOptions": {
+        "RestrictedRoutes": [
+            "/api/private"
+        ]
+    }
+}

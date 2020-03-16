@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.ServerCore.Resources
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+﻿@{
+    ViewData["Title"] = "Registration Confirmation";
+}
+ 
+<h3 class="confirmation-text">
+    @SharedLocalizer["ActivateAccount"]
+</h3>

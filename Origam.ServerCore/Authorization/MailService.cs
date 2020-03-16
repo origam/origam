@@ -17,8 +17,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -33,20 +35,24 @@ namespace Origam.ServerCore.Authorization
 
         public MailService(IOptions<UserConfig> userConfig, IConfiguration configuration)
         {
+            string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
+                ?.Replace(";",",")
+                ?.Split(",")
+                ?.FirstOrDefault(url => url.StartsWith("https")) 
+                ?? throw new ArgumentException("Could not find server's https url");
             mailSender = new AccountMailSender(
-                fromAddress: userConfig.Value.FromAddress,
-                resetPwdSubject: userConfig.Value.ResetPasswordMailSubject,
-                resetPwdBodyFilename: userConfig.Value.ResetPasswordMailBodyFileName,
-                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
-                userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
-                registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
+                portalBaseUrl: baseUrl,
                 registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
-                mailQueueName: userConfig.Value.MailQueueName,
-                portalBaseUrl: userConfig.Value.PortalBaseUrl,
-                applicationBasePath: AppContext.BaseDirectory);
+                fromAddress: userConfig.Value.FromAddress, 
+                registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
+                userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
+                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject, 
+                resetPwdBodyFilename: userConfig.Value.ResetPasswordMailBodyFileName,
+                resetPwdSubject: userConfig.Value.ResetPasswordMailSubject, 
+                applicationBasePath: AppContext.BaseDirectory, 
+                mailQueueName: userConfig.Value.MailQueueName);
         }
-
-
+        
         public void SendPasswordResetToken(IOrigamUser user, string token,
             int tokenValidityHours)
         {           

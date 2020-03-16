@@ -127,17 +127,16 @@ namespace Origam.Security.Identity
             : base(store)
         {
             var appSettings = System.Configuration.ConfigurationManager.AppSettings;
-            accountMailSender = new AccountMailSender(
-                fromAddress: appSettings["mailFrom"],
-                resetPwdSubject: appSettings["ResetPasswordMail_Subject"],
-                resetPwdBodyFilename: appSettings["ResetPasswordMail_BodyFileName"],
-                userUnlockNotificationSubject: appSettings["UserUnlockNotification_Subject"],
-                userUnlockNotificationBodyFilename: appSettings["UserUnlockNotification_BodyFileName"],
+            accountMailSender = new AccountMailSender(portalBaseUrl: appSettings["PortalBaseUrl"],
+                registerNewUserFilename: appSettings["userRegistration_MailBodyFileName"], 
+                fromAddress: appSettings["mailFrom"], 
                 registerNewUserSubject: appSettings["userRegistration_MailSubject"],
-                registerNewUserFilename: appSettings["userRegistration_MailBodyFileName"],
-                mailQueueName: appSettings["MailQueue_Name"],
-                portalBaseUrl: appSettings["PortalBaseUrl"],
-                applicationBasePath: AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
+                userUnlockNotificationBodyFilename: appSettings["UserUnlockNotification_BodyFileName"], 
+                userUnlockNotificationSubject: appSettings["UserUnlockNotification_Subject"], 
+                resetPwdBodyFilename: appSettings["ResetPasswordMail_BodyFileName"], 
+                resetPwdSubject: appSettings["ResetPasswordMail_Subject"],
+                applicationBasePath: AppDomain.CurrentDomain.SetupInformation.ApplicationBase, 
+                mailQueueName: appSettings["MailQueue_Name"]);
         }
 
         /// <summary>

@@ -22,6 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -31,6 +34,7 @@ using Origam.BI;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Server;
+using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 

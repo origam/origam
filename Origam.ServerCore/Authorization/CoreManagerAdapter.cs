@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -28,24 +29,28 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Controllers;
+using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Authorization
 {
     public class CoreManagerAdapter: IManager
     {
-        private readonly CoreUserManager coreUserManager;
+        private readonly UserManager<IOrigamUser> coreUserManager;
         private readonly IMailService mailService;
         protected static readonly ILog log
             = LogManager.GetLogger(typeof(CoreManagerAdapter));
+        private readonly IStringLocalizer<SharedResources> localizer;
 
-        public CoreManagerAdapter(CoreUserManager coreUserManager,
-            IMailService mailService)
+        public CoreManagerAdapter(UserManager<IOrigamUser> coreUserManager,
+            IMailService mailService, IStringLocalizer<SharedResources> localizer)
         {
             this.coreUserManager = coreUserManager;
             this.mailService = mailService;
+            this.localizer = localizer;
         }
 
         public async Task<IOrigamUser> FindByNameAsync(string name)
@@ -161,8 +166,13 @@ namespace Origam.ServerCore.Authorization
 
         public Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
         {
-            user.PasswordHash = coreUserManager.PasswordHasher.HashPassword(user, password);
-            coreUserManager.CreateOrigamUser(user);
+            Task<IdentityResult> task = coreUserManager.CreateAsync(user, password);
+            IdentityResult identity = task.Result;
+            List<string> errors = identity.Errors.Select(error => { return error.Description; }).ToList();
+            if (errors.Count > 0)
+            {
+                return Task.FromResult(new InternalIdentityResult(errors));
+            }
             return Task.FromResult(InternalIdentityResult.Success);
         }
 
@@ -180,7 +190,7 @@ namespace Origam.ServerCore.Authorization
             {
                 return new TokenResult
                 { Token = "", UserName = "",
-                    ErrorMessage = Resources.EmailInvalid,
+                    ErrorMessage = localizer["EmailInvalid"], 
                     TokenValidityHours = 0};
             }
 
