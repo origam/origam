@@ -253,8 +253,9 @@ namespace Origam.ServerCommon.Pages
             
             foreach (DataTable dt in datatables)
             {
-                if (ruleEngine.CheckEntityRule(dt, profileId))
+                if (ruleEngine.CheckEntityRule(dt))
                 {
+                   dt.Columns.Cast<DataColumn>().Select(columnD => columnD.AllowDBNull = true ).ToList();
                     foreach (DataRow dataRow in dt.Rows)
                     {
                         RowSecurityState rowSecurity = ruleEngine.RowLevelSecurityState(dataRow, profileId);
