@@ -55,7 +55,15 @@ namespace Origam.DA.Common
 
             return versions;
         }
-
+        
+        public static Version TryGetCurrentClassVersion(string fullTypeName)
+        {
+            Type type = Reflector.GetTypeByName(fullTypeName);
+            var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as
+                ClassMetaVersionAttribute;
+            return attribute?.Value;
+        }
+        
         public static Version GetCurrentClassVersion(Type type)
         {
             var attribute = type.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) as
