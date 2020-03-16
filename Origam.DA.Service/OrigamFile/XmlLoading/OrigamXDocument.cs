@@ -50,7 +50,7 @@ namespace Origam.DA.Service
             {
                 throw new Exception("Cannot add namespace to an empty document");
             }
-            var nextNamespaceName = GetNextNamespaceName(nameSpaceName);
+            var nextNamespaceName = GetNextNamespaceName(nameSpaceName, nameSpace);
             FileElement.SetAttributeValue(
                 XName.Get( nextNamespaceName, "http://www.w3.org/2000/xmlns/"),
                 nameSpace);
@@ -66,13 +66,13 @@ namespace Origam.DA.Service
                 .Select(OrigamNameSpace.CreateOrGet);
         }
 
-        private string GetNextNamespaceName(string nameSpaceName)
+        private string GetNextNamespaceName(string nameSpaceName, string nameSpace)
         {
             string currentValue = XDocument.Root
                 ?.Attributes(XName.Get(nameSpaceName, "http://www.w3.org/2000/xmlns/"))
                 .FirstOrDefault()
                 ?.Value;
-            if (string.IsNullOrEmpty(currentValue))
+            if (string.IsNullOrEmpty(currentValue) || currentValue == nameSpace)
             {
                 return nameSpaceName;
             }

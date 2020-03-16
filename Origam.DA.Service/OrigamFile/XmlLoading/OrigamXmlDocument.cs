@@ -41,7 +41,7 @@ namespace Origam.DA.Service
             {
                 throw new Exception("Cannot add namespace to an empty document");
             }
-            var nextNamespaceName = GetNextNamespaceName(nameSpaceName);
+            var nextNamespaceName = GetNextNamespaceName(nameSpaceName, nameSpace);
             FileElement.SetAttribute("xmlns:"+nextNamespaceName, nameSpace);
             return nextNamespaceName;
         }
@@ -61,10 +61,10 @@ namespace Origam.DA.Service
             }
         }
 
-        private string GetNextNamespaceName(string nameSpaceName)
+        private string GetNextNamespaceName(string nameSpaceName, string nameSpace)
         {
             string currentValue = FileElement.Attributes[nameSpaceName]?.InnerText;
-            if (string.IsNullOrEmpty(currentValue))
+            if (string.IsNullOrEmpty(currentValue) || currentValue == nameSpace)
             {
                 return nameSpaceName;
             }
