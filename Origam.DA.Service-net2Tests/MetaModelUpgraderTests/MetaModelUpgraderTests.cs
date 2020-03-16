@@ -240,6 +240,28 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         }  
         
         [Test]
+        public void ShouldThrowIfNoUpgradeScriptExists()
+        {
+            Assert.Throws<ClassUpgradeException>(() =>
+            {
+                XFileData xFileData = LoadFile("TestPersistedClass3V6.0.0.origam");
+                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                sut.TryUpgrade(xFileData);
+            });
+        }  
+                
+        [Test]
+        public void ShouldThrowIfUpgradeScriptToLastVersionIsNotFound()
+        {
+            Assert.Throws<ClassUpgradeException>(() =>
+            {
+                XFileData xFileData = LoadFile("TestPersistedClass4V6.0.0.origam");
+                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                sut.TryUpgrade(xFileData);
+            });
+        }  
+        
+        [Test]
         public void ShouldThrowIfAttributeIsAlreadyPresent()
         {
             Assert.Throws<ClassUpgradeException>(() =>

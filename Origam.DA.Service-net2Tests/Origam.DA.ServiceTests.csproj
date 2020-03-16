@@ -75,6 +75,8 @@
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestBaseClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass2.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass3.cs" />
+    <Compile Include="MetaModelUpgraderTests\TestClasses\TestPersistedClass4.cs" />
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestRenamedClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestPersistedClassScriptContainer.cs" />
     <Compile Include="MetaModelUpgraderTests\Version6UpGraderTests.cs" />
@@ -195,6 +197,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass2V6.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass3V6.0.0.origam">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClass4V6.0.0.origam">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MetaModelUpgraderTests\TestFiles\TestPersistedClassV5.0.0.origam">

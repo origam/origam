@@ -187,5 +187,22 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     AddAttribute(node, "newProperty4", "");
                 }));
         }
+    } 
+    
+    class TestPersistedClassScriptContainer4 : UpgradeScriptContainer
+    {
+        public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass4";
+        public override List<string> OldFullTypeNames { get; }
+
+        public TestPersistedClassScriptContainer4() 
+        {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.0"), 
+                new Version("6.0.1"),
+                (node, doc) =>
+                {
+                    AddAttribute(node, "newProperty1", "");
+                }));
+        }
     }
 }
