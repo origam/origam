@@ -258,6 +258,9 @@ namespace Origam.Schema.GuiModel
 		[EntityColumn("B06")]
 		[XmlAttribute ("disableConstraintForInputValidation")]
 		public bool DisableConstraintForInputValidation { get; set; }
+		[Category("Security")]
+		[XmlAttribute("processRowLevelRules")]
+		public bool ProcessRowLevelRules { get; set; } = false;
 		#endregion
 	}
 }

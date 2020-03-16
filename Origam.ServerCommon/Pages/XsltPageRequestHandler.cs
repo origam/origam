@@ -115,7 +115,10 @@ namespace Origam.ServerCommon.Pages
                 if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON 
                     && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
-                    CheckRowState(data, ruleEngine);
+                    if (xsltPage.ProcessRowLevelRules)
+                    {
+                        CheckRowState(data, ruleEngine);
+                    }
                     // pure dataset > json serialization
                     response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
                     xmlData = null;
