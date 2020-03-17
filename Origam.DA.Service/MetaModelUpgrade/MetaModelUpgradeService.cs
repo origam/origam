@@ -72,29 +72,18 @@ namespace Origam.DA.Service.MetaModelUpgrade
         public event EventHandler UpgradeStarted;
         public event EventHandler UpgradeFinished;
         private bool canceled;
+        private int filesProcessed;
 
         public List<XmlFileData> Upgrade(List<XmlFileData> xmlFileData)
         {
             metaModelUpGrader = new MetaModelUpGrader();
 
-            int filesProcessed = 0;
+            filesProcessed = 0;
             UpgradeStarted?.Invoke(null, EventArgs.Empty);
             List<XmlFileData> upgradedData = xmlFileData
                 .AsParallel()
                 .Where(x => !canceled)
-                .Select(fileData =>
-                {
-                    var xFileData = new XFileData(fileData);
-                    bool wasUpgraded = metaModelUpGrader.TryUpgrade(xFileData);
-                    filesProcessed += 1;
-                    UpgradeProgress?.Invoke(
-                        null,
-                        new UpgradeProgressInfo(xmlFileData.Count,
-                            filesProcessed));
-                    return wasUpgraded
-                        ? new XmlFileData(xFileData) 
-                        : fileData;
-                })
+                .Select(fileData => Upgrade(fileData, xmlFileData.Count))
                 .ToList();
             UpgradeFinished?.Invoke(null, EventArgs.Empty);
             
@@ -114,6 +103,34 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
         public void UnloadService()
         {
+        }
+        
+        private XmlFileData Upgrade(XmlFileData fileData, int totalFileCount)
+        {
+            var xFileData = new XFileData(fileData);
+            bool wasUpgraded;
+            try
+            {
+                wasUpgraded = metaModelUpGrader.TryUpgrade(xFileData);
+            }
+            catch
+            {
+                UpgradeProgress?.Invoke(
+                    null,
+                    new UpgradeProgressInfo(
+                        totalFileCount,
+                        totalFileCount));
+                throw;
+            }
+
+            filesProcessed += 1;
+            UpgradeProgress?.Invoke(
+                null,
+                new UpgradeProgressInfo(totalFileCount,
+                    filesProcessed));
+            return wasUpgraded
+                ? new XmlFileData(xFileData) 
+                : fileData;
         }
     }
 
