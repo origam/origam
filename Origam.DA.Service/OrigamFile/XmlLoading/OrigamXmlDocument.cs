@@ -12,7 +12,7 @@ namespace Origam.DA.Service
     public class OrigamXmlDocument : XmlDocument
     {
         public bool IsEmpty => ChildNodes.Count < 2;
-        public XmlElement FileElement => (XmlElement) ChildNodes[1];
+        public XmlElement FileElement => LastChild as XmlElement;
 
         public OrigamXmlDocument(string pathToXml)
         {
