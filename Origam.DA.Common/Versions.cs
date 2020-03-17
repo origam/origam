@@ -47,7 +47,8 @@ namespace Origam.DA.Common
 
             foreach (var baseType in type.GetAllBaseTypes())
             {
-                if (baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute)) is ClassMetaVersionAttribute versionAttribute)
+                if (baseType.GetCustomAttribute(typeof(ClassMetaVersionAttribute), false) 
+                    is ClassMetaVersionAttribute versionAttribute)
                 {
                     versions.versionDict.Add(baseType.FullName, versionAttribute.Value);
                 }
