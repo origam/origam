@@ -131,24 +131,26 @@ namespace Origam.DA.Service.MetaModelUpgrade
             foreach (string className in currentClassVersions.TypeNames)
             {
                 Version currentVersion = currentClassVersions[className];
-                if (currentVersion == firstVersion)
-                {
-                    continue;
-                }
 
                 if (!persistedClassVersions.Contains(className))
                 {
-                    RunUpgradeScripts(classNode, xFileData, className,
-                        firstVersion, currentVersion);
-                    scriptsRun = true;
+                    if (currentVersion != firstVersion)
+                    {
+                        RunUpgradeScripts(classNode, xFileData, className,
+                            firstVersion, currentVersion); 
+                        scriptsRun = true;
+                    }
                     continue;
                 }
 
+                if (persistedClassVersions[className] == currentVersion)
+                {
+                    continue;
+                }
                 if (persistedClassVersions[className] > currentVersion)
                 {
                     throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode?.Name} in {xFileData.File.FullName}");
                 }
-
                 if (persistedClassVersions[className] < currentVersion)
                 {
                     RunUpgradeScripts(classNode, xFileData, className,
