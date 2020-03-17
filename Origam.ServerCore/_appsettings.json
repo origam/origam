@@ -30,8 +30,11 @@
         },
         "MobileClient":{
             "RedirectUris": [ "http://localhost/xamarincallback" ],
-            "ClientSecret": "iiiidddddddddddddddddddddddddddddddddddddddddddddii",
+            "ClientSecret": "mobileSecret",
             "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
+        },
+        "ServerClient":{
+            "ClientSecret": "serverSecret",
         }
     },
     "UserLockoutConfig": {
