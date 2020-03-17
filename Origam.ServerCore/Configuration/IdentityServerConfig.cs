@@ -36,8 +36,9 @@ namespace Origam.ServerCore.Configuration
         public string GoogleClientSecret { get; }
         public bool UseGoogleLogin { get;}
        
-        public WebClient WebClient { get; set; }
-        public MobileClient MobileClient { get; set; }
+        public WebClient WebClient { get; }
+        public MobileClient MobileClient { get; }
+        public ServerClient ServerClient { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
@@ -76,7 +77,19 @@ namespace Origam.ServerCore.Configuration
                     .GetValue<string>("ClientSecret") 
                               ?? throw new Exception("ClientSecret not found in config")
             };
+
+            var serverClientSection = identityServerSection
+                .GetSection("ServerClient");
+            ServerClient = new ServerClient()
+            {
+                ClientSecret = serverClientSection.GetValue<string>("ClientSecret")
+            };
         }
+    }
+
+    public class ServerClient
+    {
+        public string ClientSecret { get; set; }
     }
 
     public class WebClient

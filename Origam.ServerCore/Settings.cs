@@ -31,6 +31,14 @@ namespace Origam.ServerCore
             {
                 new Client
                 {
+                    ClientId = "serverClient",
+                    ClientSecrets = new[] {new Secret(identityServerConfig.ServerClient.ClientSecret.Sha256())},
+                    AllowedGrantTypes = GrantTypes
+                        .ResourceOwnerPasswordAndClientCredentials,
+                    AllowedScopes = new List<string> {IdentityServerConstants.LocalApi.ScopeName},
+                },
+                new Client
+                {
                     ClientId = "origamMobileClient",
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     ClientSecrets =
