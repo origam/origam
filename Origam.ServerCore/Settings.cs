@@ -27,17 +27,23 @@ namespace Origam.ServerCore
         internal static Client[] GetIdentityClients(
             IdentityServerConfig identityServerConfig)
         {
-            return new[]
+            List<Client> clients = new List<Client>();
+            if (identityServerConfig.ServerClient != null)
             {
-                new Client
+                Client serverClient = new Client
                 {
                     ClientId = "serverClient",
                     ClientSecrets = new[] {new Secret(identityServerConfig.ServerClient.ClientSecret.Sha256())},
                     AllowedGrantTypes = GrantTypes
                         .ResourceOwnerPasswordAndClientCredentials,
                     AllowedScopes = new List<string> {IdentityServerConstants.LocalApi.ScopeName},
-                },
-                new Client
+                };
+                clients.Add(serverClient);
+            }
+
+            if (identityServerConfig.MobileClient != null)
+            {
+                var mobileClient = new Client
                 {
                     ClientId = "origamMobileClient",
                     AllowedGrantTypes = GrantTypes.Hybrid,
@@ -59,8 +65,13 @@ namespace Origam.ServerCore
                     AllowOfflineAccess = true,
                     AllowAccessTokensViaBrowser = true,
                     AccessTokenType = AccessTokenType.Reference
-                },
-                new Client
+                };
+                clients.Add(mobileClient);
+            }
+
+            if (identityServerConfig.WebClient != null)
+            {
+                Client webClient = new Client
                 {
                     ClientId = "origamWebClient",
                     AllowedGrantTypes = GrantTypes.Code,
@@ -79,8 +90,10 @@ namespace Origam.ServerCore
                     AllowOfflineAccess = true,
                     AllowAccessTokensViaBrowser = true,
                     AccessTokenType = AccessTokenType.Reference
-                },
-            };
+                };
+                clients.Add( webClient);
+            }
+            return clients.ToArray();
         }
     }
 }
