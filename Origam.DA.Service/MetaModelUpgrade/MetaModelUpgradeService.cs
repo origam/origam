@@ -151,5 +151,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
             Document = new OrigamXDocument(xmlDocument);
             File = file;
         }
+
+        public XFileData(OrigamXDocument document, FileInfo file)
+        {
+            Document = document;
+            File = file;
+        }
     }
 }
