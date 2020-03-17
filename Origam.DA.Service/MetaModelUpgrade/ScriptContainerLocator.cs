@@ -15,7 +15,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             this.scriptAssembly = scriptAssembly;
         }
         
-        internal UpgradeScriptContainer FindByTypeName(string className)
+        internal UpgradeScriptContainer TryFindByTypeName(string className)
         {
             if (scriptContainers == null)
             {
@@ -28,12 +28,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
                     container.OldFullTypeNames != null &&
                     container.OldFullTypeNames.Contains(className))
                 .ToArray();
-            if (containers.Length != 1)
+            if (containers.Length == 1)
             {
-                throw new ClassUpgradeException(
-                    $"Could not find exactly one ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\"");
+                return containers[0];
             }
-            return containers[0];
+            if (containers.Length == 0)
+            {
+                return null;
+            }
+            throw new ClassUpgradeException($"More than one ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\" was found");
+        }  
+        
+        internal UpgradeScriptContainer FindByTypeName(string className)
+        {
+            var scriptContainer = TryFindByTypeName(className);
+            return scriptContainer ?? throw new ClassUpgradeException($"Could not find ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\"");
         }
         
         private void InitializeContainerList()
