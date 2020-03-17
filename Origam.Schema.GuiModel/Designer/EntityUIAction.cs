@@ -29,6 +29,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.Extensions;
 
 //using Origam.Schema.RuleModel;
@@ -40,6 +41,7 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("UI Action", "UI Actions", 5)]
 	[XmlModelRoot(CategoryConst)]
+	[ClassMetaVersion("6.0.0")]
 	public abstract class EntityUIAction : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "EntityUIAction";

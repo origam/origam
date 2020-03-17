@@ -26,6 +26,7 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.LookupModel
 {
@@ -33,6 +34,7 @@ namespace Origam.Schema.LookupModel
     /// Summary description for AbstractMenuItem.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	{
 		public const string CategoryConst = "DataLookup";

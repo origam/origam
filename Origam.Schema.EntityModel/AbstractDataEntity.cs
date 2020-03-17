@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.EntityModel
 {
@@ -31,6 +32,7 @@ namespace Origam.Schema.EntityModel
 	/// Maps physical table to an entity.
 	/// </summary>
 	[XmlModelRoot(CategoryConst)]
+	[ClassMetaVersion("6.0.0")]
 	public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISchemaItemFactory
 	{
 		public AbstractDataEntity() : base() {Init();}

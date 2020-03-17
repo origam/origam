@@ -219,7 +219,7 @@ namespace Origam.Schema.GuiModel
 		}
 	}
 
-
+	[ClassMetaVersion("6.0.0")]
     public abstract class AbstractPropertyValueItem  : AbstractSchemaItem, IQueryLocalizable
 	{
 		public AbstractPropertyValueItem() : base(){}

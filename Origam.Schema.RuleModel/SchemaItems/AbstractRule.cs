@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.Schema.EntityModel;
 using Origam.DA.ObjectPersistence;
 
@@ -31,6 +32,7 @@ namespace Origam.Schema.RuleModel
     /// Summary description for AbstractRule.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractRule : AbstractSchemaItem, IRule
 	{
 		public const string CategoryConst = "Rule";

@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.EntityModel
 {
@@ -50,6 +51,7 @@ namespace Origam.Schema.EntityModel
     /// Summary description for EntitySecurityRule.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "EntitySecurityRule";

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 
@@ -31,6 +32,7 @@ namespace Origam.Schema.GuiModel
     /// <summary>
     /// Summary description for AbstractDataReport.
     /// </summary>
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractDataReport : AbstractReport
     {
         public AbstractDataReport() : base() { }

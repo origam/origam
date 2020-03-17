@@ -26,6 +26,7 @@ using System.ComponentModel;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.EntityModel;
 
 namespace Origam.Schema.EntityModel
@@ -34,6 +35,7 @@ namespace Origam.Schema.EntityModel
     /// Abstract implementation of IDataEntityColumn.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntityColumn
 	{
 
