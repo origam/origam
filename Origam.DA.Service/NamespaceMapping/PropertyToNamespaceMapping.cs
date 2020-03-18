@@ -31,7 +31,7 @@ namespace Origam.DA.Service.NamespaceMapping
             });
         }
 
-        protected static List<PropertyMapping> GetPropertyMappings(Type instanceType, Func<Type, string> xmlNamespaceGetter)
+        private static List<PropertyMapping> GetPropertyMappings(Type instanceType, Func<Type, string> xmlNamespaceGetter)
         {
             var propertyMappings = instanceType
                 .GetAllBaseTypes()
@@ -46,15 +46,14 @@ namespace Origam.DA.Service.NamespaceMapping
             return propertyMappings;
         }
         
-        private static List<PropertyName> GetXmlPropertyNames(Type type)
+        protected static IEnumerable<PropertyName> GetXmlPropertyNames(Type type)
         {
             return type.GetFields()
                 .Cast<MemberInfo>()
                 .Concat(type.GetProperties())
                 .Where(prop => prop.DeclaringType == type)
                 .Select(ToPropertyName)
-                .Where(x => x != null)
-                .ToList();
+                .Where(x => x != null);
         }
 
         private static PropertyName ToPropertyName(MemberInfo prop)
@@ -148,9 +147,9 @@ namespace Origam.DA.Service.NamespaceMapping
             public string XmlNamespace { get; }
             public string XmlNamespaceName { get; set; }
 
-            public PropertyMapping(List<PropertyName> propertyNames, string xmlNamespace, string xmlNamespaceName)
+            public PropertyMapping(IEnumerable<PropertyName> propertyNames, string xmlNamespace, string xmlNamespaceName)
             {
-                PropertyNames = propertyNames;
+                PropertyNames = propertyNames.ToList();
                 XmlNamespace = xmlNamespace;
                 XmlNamespaceName = xmlNamespaceName;
             }
@@ -173,8 +172,7 @@ namespace Origam.DA.Service.NamespaceMapping
                         {
                             Name = x.Name,
                             XmlAttributeName = x.XmlAttributeName
-                        })
-                    .ToList();
+                        });
                 return new PropertyMapping(propertyNames, XmlNamespace, XmlNamespaceName);
             }
         }

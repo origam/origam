@@ -312,7 +312,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }
             }
 
-            return Version6PropertyToNamespaceMapping.CreateOrGet(type).DeepCopy() ;
+            return Version6PropertyToNamespaceMapping
+                .CreateOrGet(type, scriptLocator)
+                .DeepCopy() ;
         }  
         
         private void RemoveTypeAttribute(XElement node)
