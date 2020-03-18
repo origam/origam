@@ -41,7 +41,7 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
     [HelpTopic("Data+Event+Parameter+Mapping")]
 	[XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.0.1")]
 	public class StateMachineEventParameterMapping : AbstractSchemaItem
 	{
 		public const string CategoryConst = "WorkflowEntityParameterMapping";
@@ -70,7 +70,7 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		[EntityColumn("I01")] 
-		[XmlAttribute ("wfParameterTpe")]
+		[XmlAttribute ("wfParameterType")]
 		public WorkflowEntityParameterMappingType Type { get; set; } = 
 			WorkflowEntityParameterMappingType.Current;
 
