@@ -166,10 +166,13 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            if (Configuration.GetValue<bool>("BehindProxy") == true)
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedProto
-            });
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+                });
+            }
             app.UseIdentityServer();
             app.MapWhen(
                 IsPublicUserApiRoute,

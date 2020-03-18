@@ -61,5 +61,6 @@
         "RestrictedRoutes": [
             "/api/private"
         ]
-    }
+    },
+	"BehindProxy":  "false"
 }
