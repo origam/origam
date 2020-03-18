@@ -46,6 +46,7 @@ using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Resources;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Origam.ServerCore
 {
@@ -165,6 +166,10 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });
             app.UseIdentityServer();
             app.MapWhen(
                 IsPublicUserApiRoute,
