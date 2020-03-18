@@ -153,6 +153,24 @@ namespace Origam.DA.Service.MetaModelUpgrade
             return scriptsRun;
         }
 
+        private static Versions GetCurrentClassVersions(string fullTypeName,
+            Versions persistedClassVersions)
+        {
+            Versions currentClassVersions =
+                Versions.GetCurrentClassVersions(fullTypeName);
+
+            if (!currentClassVersions.IsDead)
+            {
+                var deadClasses = persistedClassVersions
+                    .TypeNames
+                    .Where(typeName => !currentClassVersions.Contains(typeName));
+
+                currentClassVersions = new Versions(currentClassVersions, deadClasses);
+            }
+
+            return currentClassVersions;
+        }
+
         private static IEnumerable<OrigamNameSpace> GetOrigamNameSpaces(XElement classNode)
         {
             return classNode.Attributes()
