@@ -59,8 +59,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 return namespaceMapping;
             }
         }
-        
-        public void Upgrade(OrigamXDocument doc, XElement classNode, Version fromVersion, Version toVersion)
+
+        public void Upgrade(DocumentContainer documentContainer, XElement classNode,
+            Version fromVersion, Version toVersion)
         {
             Version endVersion = toVersion == Versions.Last 
                 ? LastVersionInContainer 
@@ -87,9 +88,9 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
             foreach (var upgradeScript in scriptsToRun)
             {
-                upgradeScript.Upgrade(classNode, doc);
-                SetVersion(doc, upgradeScript.ToVersion);
+                upgradeScript.Upgrade(classNode, documentContainer.Document);
             }
+            documentContainer.ScheduleNamespaceUpgrade(this, endVersion);
         }
 
 
@@ -105,7 +106,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        private void SetVersion(OrigamXDocument document, Version toVersion)
+        public void SetVersion(OrigamXDocument document, Version toVersion)
         {
             XNamespace updatedNamespace = OrigamNameSpace
                 .CreateOrGet(FullTypeName, toVersion)

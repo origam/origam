@@ -23,6 +23,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -67,12 +68,15 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 new Version6UpGrader(scriptLocator, xFileData.Document).Run();
             }
 
+            var documentContainer = new DocumentContainer(xFileData);
             List<bool> upgradeFlags = xFileData.Document
                 .ClassNodes
                 .ToArray()
-                .Select(classNode => TryUpgrade(classNode, xFileData))
+                .Select(classNode => TryUpgrade(classNode, documentContainer))
                 .ToList();
 
+            documentContainer.ExecuteNamespaceUpgrade();
+            
             if (isVersion5 || upgradeFlags.Any(x => x))
             {
                 xFileData.Document.FixNamespaces();
@@ -110,7 +114,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
         }
 
-        private bool TryUpgrade(XElement classNode, XFileData xFileData)
+        private bool TryUpgrade(XElement classNode, DocumentContainer documentContainer)
         {
             IEnumerable<OrigamNameSpace> origamNameSpaces = GetOrigamNameSpaces(classNode);
             
@@ -127,7 +131,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 {
                     if (currentVersion != firstVersion)
                     {
-                        RunUpgradeScripts(classNode, xFileData, className,
+                        RunUpgradeScripts(classNode, documentContainer, className,
                             firstVersion, currentVersion); 
                         scriptsRun = true;
                     }
@@ -140,11 +144,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 }
                 if (persistedClassVersions[className] > currentVersion)
                 {
-                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name.LocalName} in {xFileData.File.FullName}");
+                    throw new Exception($"Class version written in persisted object is greater than current version of the class. This should never happen, please check version of {classNode.Name.LocalName} in {documentContainer.File.FullName}");
                 }
                 if (persistedClassVersions[className] < currentVersion)
                 {
-                    RunUpgradeScripts(classNode, xFileData, className,
+                    RunUpgradeScripts(classNode, documentContainer, className,
                         persistedClassVersions[className], currentVersion);
                     scriptsRun = true;
                 }
@@ -181,7 +185,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         }
 
         private void RunUpgradeScripts(XElement classNode,
-            XFileData xFileData, string className,
+            DocumentContainer documentContainer, string className,
             Version persistedClassVersion,
             Version currentClassVersion)
         {
@@ -195,7 +199,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 throw new ClassUpgradeException($"Could not find ancestor of {typeof(UpgradeScriptContainer).Name} which upgrades type of \"{className}\"");
             }
             
-            upgradeScriptContainer.Upgrade(xFileData.Document, classNode, persistedClassVersion, currentClassVersion);
+            upgradeScriptContainer.Upgrade(documentContainer, classNode, persistedClassVersion, currentClassVersion);
         }
     }
     
@@ -341,6 +345,35 @@ namespace Origam.DA.Service.MetaModelUpgrade
         {
             TotalFiles = totalFiles;
             FilesDone = filesDone;
+        }
+    }
+
+    public class DocumentContainer
+    {
+        private readonly XFileData fileData;
+        public OrigamXDocument Document => fileData.Document;
+        public FileInfo File { get; set; }
+        private readonly Dictionary<UpgradeScriptContainer, Version> scriptVersionPairs 
+            = new Dictionary<UpgradeScriptContainer, Version>();
+
+        public DocumentContainer(XFileData fileData)
+        {
+            this.fileData = fileData;
+        }
+
+        public void ScheduleNamespaceUpgrade(UpgradeScriptContainer scriptContainer, Version toVersion)
+        {
+            scriptVersionPairs[scriptContainer] = toVersion;
+        }
+
+        public void ExecuteNamespaceUpgrade()
+        {
+            foreach (var scriptVersionPair in scriptVersionPairs)
+            {
+                Version toVersion = scriptVersionPair.Value;
+                var upgradeScriptContainer = scriptVersionPair.Key;
+                upgradeScriptContainer.SetVersion(Document, toVersion);
+            }
         }
     }
 }
