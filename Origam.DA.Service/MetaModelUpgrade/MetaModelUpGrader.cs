@@ -116,17 +116,8 @@ namespace Origam.DA.Service.MetaModelUpgrade
             
             string fullTypeName = OrigamNameSpace.CreateOrGet(classNode?.Name.NamespaceName).FullTypeName;
             Versions persistedClassVersions = new Versions(origamNameSpaces);
-            Versions currentClassVersions = Versions.GetCurrentClassVersions(fullTypeName);
+            Versions currentClassVersions = GetCurrentClassVersions(fullTypeName, persistedClassVersions);
 
-            if (!currentClassVersions.IsDead)
-            {
-                var deadClasses = persistedClassVersions
-                    .TypeNames
-                    .Where(typeName => !currentClassVersions.Contains(typeName));
-
-                currentClassVersions =  new Versions(currentClassVersions, deadClasses);
-            }
-            
             bool scriptsRun = false;
             foreach (string className in currentClassVersions.TypeNames)
             {
