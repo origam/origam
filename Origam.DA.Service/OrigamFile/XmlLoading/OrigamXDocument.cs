@@ -136,5 +136,15 @@ namespace Origam.DA.Service
                 .Where(attr => !usedNamespaces.Contains(attr.Value))
                 .Remove();
         }
+
+        public XNamespace FindClassNamespace(string fullTypeName)
+        {
+            return 
+               FileElement
+                   .Attributes()
+                   .Select(attr => attr.Value)
+                   .FirstOrDefault(nameSpace => nameSpace.Contains(fullTypeName))
+               ?? throw new Exception($"Could not find namespace for class {fullTypeName} in {XDocument}");
+        }
     }
 }

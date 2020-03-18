@@ -77,7 +77,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
                 Versions.Last,
                 (node, doc) =>
                 {
-                    XNamespace tdcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestDeadClass/6.0.1";
+                    XNamespace tdcNamespace = doc.FindClassNamespace("Origam.DA.ServiceTests.TestDeadClass");
                     XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
                     
                     node.Remove();
