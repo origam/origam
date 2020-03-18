@@ -13,7 +13,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass";
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
 
         public TestPersistedClassScriptContainer() 
         {
@@ -38,7 +38,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestRenamedClass";
         public override List<string> OldFullTypeNames { get; } = new List<string>{"Origam.DA.ServiceTests.TestOldNameClass"};
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         
         public TestTestRenamedClassScriptContainer() 
         {
@@ -64,7 +64,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass";
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         
         public TestDeadClassScriptContainer() 
         {
@@ -100,7 +100,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadClass2";
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         
         public TestDeadClass2ScriptContainer() 
         {
@@ -124,7 +124,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestDeadBaseClass";
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         
         public TestTestDeadBaseClassScriptContainer() 
         {
@@ -150,7 +150,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestBaseClass";
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         
         public TestBaseClassScriptContainer() 
         {
@@ -168,7 +168,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass2";
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         
         public TestPersistedClassScriptContainer2() 
         {
@@ -200,7 +200,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         public override string FullTypeName { get; } = "Origam.DA.ServiceTests.TestPersistedClass4";
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         
         public TestPersistedClassScriptContainer4() 
         {

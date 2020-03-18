@@ -31,7 +31,7 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
     class PackageScriptContainer : UpgradeScriptContainer
     {
         public override string FullTypeName { get; } = typeof(Package).FullName;
-        public override Dictionary<string, string[]> OldPropertyNames { get; }
+        public override Dictionary<string, string[]> OldPropertyXmlNames { get; }
         public override List<string> OldFullTypeNames { get; } 
             = new List<string>{"Origam.Schema.SchemaExtension"};
 

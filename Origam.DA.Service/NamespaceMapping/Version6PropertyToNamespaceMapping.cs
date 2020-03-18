@@ -53,7 +53,7 @@ namespace Origam.DA.Service.NamespaceMapping
         {
             var oldPropertyNameDict = scriptLocator
                                        .TryFindByTypeName(type.FullName)
-                                       ?.OldPropertyNames
+                                       ?.OldPropertyXmlNames
                                        ?? new Dictionary<string, string[]>();
             var oldPropertyNames = oldPropertyNameDict
                 .SelectMany(pair => 
