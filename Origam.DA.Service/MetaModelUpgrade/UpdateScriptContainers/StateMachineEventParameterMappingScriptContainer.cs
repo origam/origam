@@ -9,11 +9,8 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
     {
         public override string FullTypeName { get; } = typeof(StateMachineEventParameterMapping).FullName;
         public override List<string> OldFullTypeNames { get; }
-        public override Dictionary<string, string[]> OldPropertyXmlNames { get; } 
-            = new Dictionary<string, string[]>
-        {
-            {nameof(StateMachineEventParameterMapping.Type), new []{"wfParameterTpe"}}
-        };
+        public override string[] OldPropertyXmlNames { get; } 
+            = {"wfParameterTpe"};
         
         public StateMachineEventParameterMappingScriptContainer() 
         {

@@ -41,7 +41,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
         private PropertyToNamespaceMapping namespaceMapping;
         public abstract string FullTypeName { get;}
         public abstract List<string> OldFullTypeNames { get;}
-        public abstract Dictionary<string, string[]> OldPropertyXmlNames { get; }
+        public abstract string[] OldPropertyXmlNames { get; }
 
         Version LastVersionInContainer => upgradeScripts
             .OrderBy(script => script.ToVersion)

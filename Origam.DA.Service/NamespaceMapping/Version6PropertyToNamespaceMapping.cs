@@ -54,17 +54,15 @@ namespace Origam.DA.Service.NamespaceMapping
             var oldPropertyNameDict = scriptLocator
                                        .TryFindByTypeName(type.FullName)
                                        ?.OldPropertyXmlNames
-                                       ?? new Dictionary<string, string[]>();
+                                       ?? new string[0];
             var oldPropertyNames = oldPropertyNameDict
-                .SelectMany(pair => 
-                    pair.Value.Select(oldName =>
-                        new PropertyName
-                        {
-                            Name = pair.Key,
-                            XmlAttributeName = oldName
-                        })
-                    );
-
+                .Select(oldName =>
+                    new PropertyName
+                    {
+                        Name = "",
+                        XmlAttributeName = oldName
+                    });
+                    
             return new PropertyMapping(
                 propertyNames: GetXmlPropertyNames(type).Concat(oldPropertyNames),
                 xmlNamespace: TypeToV6Namespace(type),

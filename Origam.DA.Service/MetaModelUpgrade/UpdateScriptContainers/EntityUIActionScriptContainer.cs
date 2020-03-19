@@ -12,11 +12,9 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
         public override string FullTypeName { get; } = typeof(EntityUIAction).FullName;
         public override List<string> OldFullTypeNames { get; }
 
-        public override Dictionary<string, string[]> OldPropertyXmlNames { get; } 
-            = new Dictionary<string, string[]>
-            {
-                {"", new []{"screen", "screenSection"}}
-            };
+        public override string[] OldPropertyXmlNames { get; } =
+            {"screen", "screenSection"};
+            
 
         public EntityUIActionScriptContainer() 
         {
