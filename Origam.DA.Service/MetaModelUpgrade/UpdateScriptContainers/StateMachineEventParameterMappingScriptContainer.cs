@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
+using Origam.Extensions;
 using Origam.Schema.WorkflowModel;
 
 namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
@@ -19,15 +21,9 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
                 new Version("6.0.1"),
                 (node, doc) =>
                 {
-                    XNamespace nameSpace = node.Name.Namespace;
-                    var typeAttribute = node.Attribute(nameSpace.GetName("wfParameterTpe"));
-                    if (typeAttribute == null) return;
-
-                    string value = typeAttribute.Value;
-                    typeAttribute.Remove();
-                    
-                    node.SetAttributeValue(nameSpace.GetName("wfParameterType"), value);
-                }));
+                    node.RenameAttribute( "wfParameterTpe", "wfParameterType");
+                })
+            );
         }
     }
 }
