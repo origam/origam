@@ -163,7 +163,7 @@ namespace Origam.Workbench.Diagram
 
 		private bool ShouldBeShownOnScreen(EntityUIAction action, Guid screenId)
 		{
-			return action.ScreenId == Guid.Empty || action.ScreenId == screenId;
+			return !action.ScreenIds.Any()|| action.ScreenIds.Contains(screenId);
 		}
 
 		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)

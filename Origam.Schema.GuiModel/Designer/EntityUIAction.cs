@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.ComponentModel;
 using System.IO;
@@ -31,6 +32,7 @@ using Origam.Schema.RuleModel;
 using System.Xml.Serialization;
 using Origam.DA.Common;
 using Origam.Extensions;
+using Origam.Schema.GuiModel.Designer;
 
 //using Origam.Schema.RuleModel;
 
@@ -41,7 +43,7 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("UI Action", "UI Actions", 5)]
 	[XmlModelRoot(CategoryConst)]
-	[ClassMetaVersion("6.0.0")]
+	[ClassMetaVersion("6.1.0")]
 	public abstract class EntityUIAction : AbstractSchemaItem, IComparable
 	{
 		public const string CategoryConst = "EntityUIAction";
@@ -54,7 +56,9 @@ namespace Origam.Schema.GuiModel
 	
 		private void Init()
 		{
-			this.ChildItemTypes.Add(typeof(EntityUIActionParameterMapping));
+			ChildItemTypes.Add(typeof(EntityUIActionParameterMapping));
+			ChildItemTypes.Add(typeof(ScreenCondition));
+			ChildItemTypes.Add(typeof(ScreenSectionCondition));
 		}
 
 		#region Overriden AbstractDataEntityColumn Members
@@ -78,14 +82,6 @@ namespace Origam.Schema.GuiModel
             if (this.Rule != null)
             {
                 dependencies.Add(this.Rule);
-            }
-            if (this.Screen != null)
-            {
-                dependencies.Add(this.Screen);
-            }
-            if (this.ScreenSection != null)
-            {
-                dependencies.Add(this.ScreenSection);
             }
             if (this.ButtonIcon != null)
             {
@@ -119,29 +115,14 @@ namespace Origam.Schema.GuiModel
         [XmlAttribute("roles")]
 		public string Roles { get; set; } = "";
 
-		[EntityColumn("G01")]  
-		public Guid ScreenId;
-
-		[Category("Condition")]
-		[TypeConverter(typeof(FormControlSetConverter))]
-        [XmlReference("screen", "ScreenId")]
-		public FormControlSet Screen
-		{
-			get => (FormControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenId));
-			set => this.ScreenId = value?.Id ?? Guid.Empty;
-		}
-
-		[EntityColumn("G15")]  
-		public Guid ScreenSectionId;
-
-		[Category("Condition")]
-		[TypeConverter(typeof(PanelControlSetConverter))]
-        [XmlReference("screenSection", "ScreenSectionId")]
-        public PanelControlSet ScreenSection
-		{
-			get => (PanelControlSet)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ScreenSectionId));
-			set => this.ScreenSectionId = value?.Id ?? Guid.Empty;
-		}
+		public IEnumerable<Guid> ScreenIds => ChildItems
+			.ToGeneric()
+			.OfType<ScreenCondition>()
+			.Select(reference => reference.ScreenId);
+		public IEnumerable<Guid> ScreenSectionIds  => ChildItems
+			.ToGeneric()
+			.OfType<ScreenSectionCondition>()
+			.Select(reference => reference.ScreenSectionId);
 
 		[EntityColumn("SS01")]
 		[StringNotEmptyModelElementRule()]

@@ -142,6 +142,21 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             node.Add(new XAttribute(xName, attributeValue));
         }
+        
+        protected XNamespace GetPersistenceNamespace(XElement element)
+        {
+            return element 
+                .Attributes()
+                .First(attr => attr.Name.LocalName == "id").Name
+                .Namespace;
+        }
+        protected XNamespace GetAbstractSchemaItemNamespace(XElement element)
+        {
+            return element 
+                .Attributes()
+                .First(attr => attr.Name.LocalName == "name").Name
+                .Namespace;
+        }
 
         private XNamespace GetThisClassNamespace(XDocument document)
         {
