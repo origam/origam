@@ -331,13 +331,16 @@ namespace Origam.Rule
 			return (bool) identityServiceAgent.Result; 
 		}
 
-		public bool CheckEntityRule(DataTable dt)
+		public bool CheckEntityFieldRule(DataTable dt)
 		{
 			if (dt.ExtendedProperties.Contains("EntityId"))
 			{
 				Guid entityId = (Guid)dt.ExtendedProperties["EntityId"];
 				IDataEntity entity = _persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
-				if(entity.ChildItemsByTypeRecursive(EntityFieldSecurityRule.ItemTypeConst).Count>0)
+				if(entity.ChildItemsByTypeRecursive(EntityFieldSecurityRule.ItemTypeConst)
+					.ToArray().Cast<EntityFieldSecurityRule>()
+					.Where(rule=>rule.Type == PermissionType.Deny && rule.ReadCredential)
+					.Count()>0)
 				{
 					return true;
 				}

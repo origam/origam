@@ -112,13 +112,16 @@ namespace Origam.ServerCommon.Pages
             else
             {
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
+                if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
+                {
+                    if (xsltPage.ProcessGetReadRowLevelRules)
+                    {
+                        ProcessReadFieldRuleState(data, ruleEngine);
+                    }
+                }
                 if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON 
                     && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
-                    if (xsltPage.ProcessRowLevelRules)
-                    {
-                        CheckRowState(data, ruleEngine);
-                    }
                     // pure dataset > json serialization
                     response.WriteToOutput(textWriter => JsonUtils.SerializeToJson(textWriter, data, false));
                     xmlData = null;
@@ -249,14 +252,14 @@ namespace Origam.ServerCommon.Pages
             }
         }
 
-        private void CheckRowState(DataSet data, RuleEngine ruleEngine)
+        private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
         {
             DataTableCollection datatables = data.Tables;
             object profileId = SecurityTools.CurrentUserProfile().Id;
             
             foreach (DataTable dt in datatables)
             {
-                if (ruleEngine.CheckEntityRule(dt))
+                if (ruleEngine.CheckEntityFieldRule(dt))
                 {
                    dt.Columns.Cast<DataColumn>().Select(columnD => columnD.AllowDBNull = true ).ToList();
                     foreach (DataRow dataRow in dt.Rows)

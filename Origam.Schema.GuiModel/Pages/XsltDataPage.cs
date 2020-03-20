@@ -259,8 +259,9 @@ namespace Origam.Schema.GuiModel
 		[XmlAttribute ("disableConstraintForInputValidation")]
 		public bool DisableConstraintForInputValidation { get; set; }
 		[Category("Security")]
-		[XmlAttribute("processRowLevelRules")]
-		public bool ProcessRowLevelRules { get; set; } = false;
+		[XmlAttribute("processGetReadRowLevelRules")]
+		[Description("Enable check Field Security Rule on output data.")]
+		public bool ProcessGetReadRowLevelRules { get; set; } = false;
 		#endregion
 	}
 }
