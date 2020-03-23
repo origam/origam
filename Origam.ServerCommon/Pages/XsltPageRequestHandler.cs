@@ -54,6 +54,8 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Server;
 using System.Linq;
+using Origam.Schema.EntityModel;
+using Origam.Schema;
 
 namespace Origam.ServerCommon.Pages
 {
@@ -114,7 +116,7 @@ namespace Origam.ServerCommon.Pages
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
                 if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
-                    if (xsltPage.ProcessGetReadRowLevelRules)
+                    if (xsltPage.ProcessReadFieldRowLevelRulesForGETRequests)
                     {
                         ProcessReadFieldRuleState(data, ruleEngine);
                     }
@@ -256,10 +258,14 @@ namespace Origam.ServerCommon.Pages
         {
             DataTableCollection datatables = data.Tables;
             object profileId = SecurityTools.CurrentUserProfile().Id;
-            
+            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
             foreach (DataTable dt in datatables)
             {
-                if (ruleEngine.CheckEntityFieldRule(dt))
+                Guid entityId = (Guid)dt.ExtendedProperties["EntityId"];
+                IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+
+                if (entity.HasEntityAFieldDenyReadRule())
                 {
                    dt.Columns.Cast<DataColumn>().Select(columnD => columnD.AllowDBNull = true ).ToList();
                     foreach (DataRow dataRow in dt.Rows)
