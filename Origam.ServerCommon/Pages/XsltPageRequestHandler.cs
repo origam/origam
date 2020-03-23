@@ -267,7 +267,9 @@ namespace Origam.ServerCommon.Pages
 
                 if (entity.HasEntityAFieldDenyReadRule())
                 {
-                   dt.Columns.Cast<DataColumn>().Select(columnD => columnD.AllowDBNull = true ).ToList();
+                    //we do this for disable contrains if column is AllowDBNull = false.
+                    //for allow field set Dbnull if has Deny Read rule. 
+                    dt.Columns.Cast<DataColumn>().ToList().ForEach(columnD => columnD.AllowDBNull = true );
                     foreach (DataRow dataRow in dt.Rows)
                     {
                         RowSecurityState rowSecurity = ruleEngine.RowLevelSecurityState(dataRow, profileId);
