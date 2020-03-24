@@ -334,7 +334,7 @@ export class OrigamAPI implements IApi {
   }
 
   async initPortal(): Promise<any> {
-    const { data } = await axios.get(`${this.urlPrefix}/UIService/InitPortal/en-us`, {
+    const { data } = await axios.get(`${this.urlPrefix}/UIService/InitPortal`, {
       headers: this.httpAuthHeader
     });
     return {
