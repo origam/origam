@@ -39,8 +39,17 @@ namespace Origam
         {
 #if NETSTANDARD
             return new DataDocumentCore(dataSet);
-# else
-            return new DataDocumentFx(dataSet);
+#else
+            if (dataSet.ExtendedProperties["IDataDocument"]==null)
+            {
+                var val = new DataDocumentFx(dataSet); 
+                dataSet.ExtendedProperties.Add("IDataDocument", val);
+                return val;
+            }
+            else
+            {
+                return (IDataDocument)dataSet.ExtendedProperties["IDataDocument"];
+            }
 #endif
         }
     }
