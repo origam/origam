@@ -16,3 +16,11 @@ Array.prototype.forEach.call(
 });
 
 
+const languageSelect = document.getElementById("languageSelect");
+const languageSelectForm = document.getElementById("languageSelectForm");
+if(languageSelect){
+    languageSelect.addEventListener("click",function(event){
+        languageSelectForm.submit();
+    });
+}
+
