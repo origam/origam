@@ -417,6 +417,15 @@ namespace Origam.ServerCore.Controller
                 .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
 
         }
+        [HttpPost("[action]")]
+        public IActionResult DeleteFilter([FromBody]Guid filterId)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                ServerCoreUIService.DeleteFilter(filterId);
+                return Ok();
+            });
+        }
         #endregion
         private Dictionary<object, string> GetLookupLabelsInternal(
             LookupLabelsInput input)

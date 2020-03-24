@@ -860,6 +860,12 @@ namespace Origam.ServerCore
             OrigamPanelFilterDA.PersistFilter(storedFilter);
             return Result.Ok<Guid, IActionResult>(filterRow.Id);
         }
+        public static void DeleteFilter(Guid filterId)
+        {
+            var filter = OrigamPanelFilterDA.LoadFilter(filterId);
+            filter.PanelFilter.Rows[0].Delete();
+            OrigamPanelFilterDA.PersistFilter(filter);
+        }
         private static bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)
