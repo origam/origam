@@ -866,6 +866,10 @@ namespace Origam.ServerCore
             filter.PanelFilter.Rows[0].Delete();
             OrigamPanelFilterDA.PersistFilter(filter);
         }
+        public static Result SetDefaultFilter()
+        {
+            return Result.Ok();
+        }
         private static bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)

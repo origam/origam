@@ -67,16 +67,16 @@ namespace Origam.ServerCore.Controller
             [FromBody][Required]BlobDownloadTokenInput input)
         {
             return AmbiguousInputToRowData(input, dataService, sessionObjects)
-                .OnSuccess(rowData => CreateDownloadToken(input, rowData))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Map(rowData => CreateDownloadToken(input, rowData))
+                .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult UploadToken(
             [FromBody][Required]BlobUploadTokenInput input)
         {
             return AmbiguousInputToRowData(input, dataService, sessionObjects)
-                .OnSuccess(rowData => CreateUploadToken(input, rowData))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Map(rowData => CreateUploadToken(input, rowData))
+                .Finally(UnwrapReturnValue);
         }
         [AllowAnonymous]
         [HttpGet("{token:guid}")]
