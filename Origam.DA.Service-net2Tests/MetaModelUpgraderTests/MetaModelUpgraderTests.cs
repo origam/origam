@@ -38,6 +38,8 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
     [TestFixture]
     public class MetaModelUpGraderTests: ClassUpgradeTestBase
     {
+        protected override string DirName { get; } = "MetaModelUpgraderTests";
+        
         [Test]
         public void ShouldUpgradeByOneVersion()
         {
