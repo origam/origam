@@ -54,6 +54,8 @@ using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
 using Origam.Server;
 using System.Linq;
+using Origam.Schema.EntityModel;
+using Origam.Schema;
 
 namespace Origam.ServerCommon.Pages
 {
@@ -112,6 +114,13 @@ namespace Origam.ServerCommon.Pages
             else
             {
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
+                if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
+                {
+                    if (xsltPage.ProcessReadFieldRowLevelRulesForGETRequests)
+                    {
+                        ProcessReadFieldRuleState(data, ruleEngine);
+                    }
+                }
                 if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON 
                     && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
@@ -241,6 +250,38 @@ namespace Origam.ServerCommon.Pages
                         properties[current.Name] = current.Value;
                     } while (current.MoveToNextAttribute());
                     Analytics.Instance.Log(type, message, properties);
+                }
+            }
+        }
+
+        private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
+        {
+            DataTableCollection datatables = data.Tables;
+            object profileId = SecurityTools.CurrentUserProfile().Id;
+            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
+            foreach (DataTable dt in datatables)
+            {
+                Guid entityId = (Guid)dt.ExtendedProperties["EntityId"];
+                IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+
+                if (entity.HasEntityAFieldDenyReadRule())
+                {
+                    //we do this for disable contrains if column is AllowDBNull = false.
+                    //for allow field set Dbnull if has Deny Read rule. 
+                    dt.Columns.Cast<DataColumn>().ToList().ForEach(columnD => columnD.AllowDBNull = true );
+                    foreach (DataRow dataRow in dt.Rows)
+                    {
+                        RowSecurityState rowSecurity = ruleEngine.RowLevelSecurityState(dataRow, profileId);
+                        if (rowSecurity != null)
+                        {
+                            List<FieldSecurityState> listState = rowSecurity.Columns.Cast<FieldSecurityState>().Where(columnState => !columnState.AllowRead).ToList();
+                            foreach (FieldSecurityState securityState in listState)
+                            {
+                                dataRow[securityState.Name] = DBNull.Value;
+                            }
+                        }
+                    }
                 }
             }
         }
