@@ -142,7 +142,7 @@ namespace Origam.ServerCore.Controller
         {
             return result.IsSuccess ? result.Value : result.Error;
         }
-        private Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
+        protected Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
         {
             return FindItem<DataStructureEntity>(id)
                 .OnFailureCompensate(error =>
@@ -187,13 +187,12 @@ namespace Origam.ServerCore.Controller
                     .OnSuccess(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
                     .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(entityData =>
-                        GetRow(
-                            dataService,
-                            entityData.Entity,
-                            input.DataStructureEntityId,
-                            Guid.Empty,
-                            input.RowId));
+                    .OnSuccess(entityData => GetRow(
+                        dataService,
+                        entityData.Entity,
+                        input.DataStructureEntityId,
+                        Guid.Empty,
+                        input.RowId));
             }
             else
             {
@@ -220,11 +219,14 @@ namespace Origam.ServerCore.Controller
                     input.SessionFormIdentifier, input.Entity);
             }
         }
-
         protected Result<Guid, IActionResult> EntityDataToEntityId(
             EntityData entityData)
         {
             return Result.Ok<Guid, IActionResult>(entityData.Entity.EntityId);
+        }
+        protected IActionResult ToActionResult(object obj)
+        {
+            return Ok(obj);
         }
     }
 }

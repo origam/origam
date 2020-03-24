@@ -42,6 +42,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.ServerCore.Resources;
 using core = Origam.Workbench.Services.CoreServices;
@@ -803,6 +805,60 @@ namespace Origam.ServerCore
             var changes = sessionStore.PendingChanges;
             sessionStore.PendingChanges = null;
             return changes ?? new ArrayList();
+        }
+        public static Result<Guid, IActionResult> SaveFilter(
+            DataStructureEntity entity, SaveFilterInput input)
+        {
+            var profileId = SecurityTools.CurrentUserProfile().Id;
+            var storedFilter = new OrigamPanelFilter();
+            var filterRow = storedFilter.PanelFilter.NewPanelFilterRow();
+            filterRow.Id = Guid.NewGuid();
+            filterRow.Name = input.Filter.Name;
+            filterRow.IsGlobal = input.Filter.IsGlobal;
+            filterRow.IsDefault = input.IsDefault;
+            filterRow.PanelId = input.PanelId;
+            filterRow.ProfileId = profileId;
+            filterRow.RecordCreated = DateTime.Now;
+            filterRow.RecordCreatedBy = profileId;
+            storedFilter.PanelFilter.Rows.Add(filterRow);
+            foreach(var filterDetail in input.Filter.Details)
+            {
+                if(entity.Column(filterDetail.Property) == null)
+                {
+                    continue;
+                }
+                if(entity.Column(filterDetail.Property).DataType 
+                == OrigamDataType.UniqueIdentifier)
+                {
+                    var filterOperator = (FilterOperator)filterDetail.Operator;
+                    if(filterDetail.Value1 is string value1)
+                    {
+                        if(Guid.TryParse(value1, out var parsedValue))
+                        {
+                            filterDetail.Value1 = parsedValue;
+                        }
+                    }
+                    if((filterDetail.Value2 != null) 
+                    && (filterDetail.Value1 is string) 
+                    && (filterOperator != FilterOperator.Equals)
+                    && (filterOperator != FilterOperator.NotEquals))
+                    {
+                        if(filterDetail.Value2 is string value2)
+                        {
+                            if(Guid.TryParse(value2, out var parsedValue))
+                            {
+                                filterDetail.Value2 = parsedValue;
+                            }
+                        }
+                    }
+                }
+                OrigamPanelFilterDA.AddPanelFilterDetailRow(
+                    storedFilter, profileId, filterRow.Id, 
+                    filterDetail.Property, filterDetail.Operator, 
+                    filterDetail.Value1, filterDetail.Value2);
+            }
+            OrigamPanelFilterDA.PersistFilter(storedFilter);
+            return Result.Ok<Guid, IActionResult>(filterRow.Id);
         }
         private static bool IsRowDirty(DataRow row)
         {

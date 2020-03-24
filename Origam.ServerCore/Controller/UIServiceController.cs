@@ -73,19 +73,11 @@ namespace Origam.ServerCore.Controller
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
         }
-        [HttpGet("[action]/{locale}")]
+        [HttpGet("[action]")]
         // ReSharper disable once UnusedParameter.Global
-        public IActionResult InitPortal(string locale)
+        public IActionResult InitPortal()
         {
             Analytics.Instance.Log("UI_INIT");
-            //TODO: find out how to setup locale cookies and incorporate
-            // locale resolver
-            /*// set locale
-            locale = locale.Replace("_", "-");
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(locale);
-            // set locale to the cookie
-            Response.Cookies.Append(
-                ORIGAMLocaleResolver.ORIGAM_CURRENT_LOCALE, locale);*/
             return RunWithErrorHandler(() 
                 => Ok(sessionObjects.UIService.InitPortal(4)));
         }
@@ -415,6 +407,16 @@ namespace Origam.ServerCore.Controller
                 sessionObjects.UIService.GetPendingChanges(
                     sessionFormIdentifier)));
         }
+        [HttpPost("[action]")]
+        public IActionResult SaveFilter([FromBody]SaveFilterInput input)
+        {
+            return FindEntity(input.DataStructureEntityId)
+                .OnSuccess(dataStructureEntity
+                    => ServerCoreUIService.SaveFilter(dataStructureEntity, input))
+                .OnSuccess(filterId => ToActionResult(filterId))
+                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+
+        }
         #endregion
         private Dictionary<object, string> GetLookupLabelsInternal(
             LookupLabelsInput input)
@@ -591,10 +593,6 @@ namespace Origam.ServerCore.Controller
                 .ToArray();
             return input.ColumnNames
                 .All(colName => actualColumnNames.Contains(colName));
-        }
-        private IActionResult ToActionResult(object obj)
-        {
-            return Ok(obj);
         }
         private Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
             GetRowsInput input, EntityData entityData)
