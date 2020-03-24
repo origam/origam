@@ -46,6 +46,9 @@ using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Resources;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
 namespace Origam.ServerCore
 {
@@ -56,6 +59,7 @@ namespace Origam.ServerCore
         private readonly PasswordConfiguration passwordConfiguration;
         private readonly IdentityServerConfig identityServerConfig;
         private readonly UserLockoutConfig lockoutConfig;
+        private LanguageConfig languageConfig;
 
         public Startup(IConfiguration configuration)
         {
@@ -64,6 +68,7 @@ namespace Origam.ServerCore
             passwordConfiguration = new PasswordConfiguration(configuration);
             identityServerConfig = new IdentityServerConfig(configuration);
             lockoutConfig = new UserLockoutConfig(configuration);
+            languageConfig = new LanguageConfig(configuration);
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -149,6 +154,15 @@ namespace Origam.ServerCore
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
             }
+            
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = languageConfig.Default;
+                options.SupportedCultures = languageConfig.Allowed;
+                options.SupportedUICultures = languageConfig.Allowed;
+                options.RequestCultureProviders.Insert(0,
+                    new CookieRequestCultureProvider{CookieName = "origamCurrentLocale"});
+            });
         }
 
         public void Configure(
@@ -165,6 +179,15 @@ namespace Origam.ServerCore
             {
                 app.UseHsts();
             }
+            if (Configuration.GetValue<bool>("BehindProxy") == true)
+            {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+                });
+            }
+            var localizationOptions= app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
             app.UseIdentityServer();
             app.MapWhen(
                 IsPublicUserApiRoute,
@@ -196,7 +219,6 @@ namespace Origam.ServerCore
                 RequestPath = new PathString("/assets")
             });
             app.UseSpaStaticFiles();
-            app.UseRequestLocalization(); 
             app.UseCors(builder => 
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseMvc(routes =>

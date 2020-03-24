@@ -258,6 +258,11 @@ namespace Origam.Schema.GuiModel
 		[EntityColumn("B06")]
 		[XmlAttribute ("disableConstraintForInputValidation")]
 		public bool DisableConstraintForInputValidation { get; set; }
+		[Category("Security")]
+		[XmlAttribute("processGetReadRowLevelRules")]
+		[Description("Enable checking of field-based row level security rules on the output data for GET requests." +
+			". Actually only DENY READ field based rules will be checked and applied if this is turned on.")]
+		public bool ProcessReadFieldRowLevelRulesForGETRequests { get; set; } = false;
 		#endregion
 	}
 }

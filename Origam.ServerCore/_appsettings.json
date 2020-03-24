@@ -1,7 +1,7 @@
 {
     "PathToClientApp": "\\origam-html5\\build",
     "UserConfig": {
-        "FromAddress": "",
+        "FromAddress": "admin@localhost",
         "NewUserRoleId": "",
         "ResetPasswordMailSubject": "Reset Password",
         "ResetPasswordMailBodyFileName": "testResetPwFile.txt",
@@ -30,8 +30,11 @@
         },
         "MobileClient":{
             "RedirectUris": [ "http://localhost/xamarincallback" ],
-            "ClientSecret": "iiiidddddddddddddddddddddddddddddddddddddddddddddii",
+            "ClientSecret": "mobileSecret",
             "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
+        },
+        "ServerClient":{
+            "ClientSecret": "serverSecret",
         }
     },
     "UserLockoutConfig": {
@@ -58,5 +61,6 @@
         "RestrictedRoutes": [
             "/api/private"
         ]
-    }
+    },
+	"BehindProxy":  "false"
 }

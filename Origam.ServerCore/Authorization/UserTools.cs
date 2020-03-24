@@ -40,6 +40,16 @@ namespace Origam.ServerCore.Authorization
         
         public static IOrigamUser Create(DataRow origamUserRow, DataRow businessPartnerRow)
         {
+            if(origamUserRow == null && businessPartnerRow == null)
+            {
+                return null;
+            }
+
+            if (origamUserRow == null)
+            {
+                throw new ArgumentNullException($"A complete user cannot be constructed because {nameof(origamUserRow)} is null.");
+            }
+
             User user = new User();
             if (origamUserRow["RecordUpdated"] != null)
             {
@@ -50,7 +60,7 @@ namespace Origam.ServerCore.Authorization
             {
                 user.SecurityStamp = origamUserRow["RecordCreated"].ToString();
             }
-            user.UserName = (string)origamUserRow["UserName"];
+
             user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
             user.EmailConfirmed = (bool)origamUserRow["EmailConfirmed"];
             user.LastLockoutDate = GetDate(origamUserRow,"LastLockoutDate" );
@@ -58,18 +68,22 @@ namespace Origam.ServerCore.Authorization
             user.IsLockedOut = (bool)origamUserRow["IsLockedOut"];
             user.ProviderUserKey = (Guid)origamUserRow["refBusinessPartnerId"];
             user.BusinessPartnerId = user.ProviderUserKey.ToString();
-            user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
-            user.PasswordHash =(string)origamUserRow["Password"];
+            user.PasswordHash = (string)origamUserRow["Password"];
             user.FailedPasswordAttemptCount = (int)origamUserRow["FailedPasswordAttemptCount"];
-            
+
+            user.UserName = (string)businessPartnerRow["UserName"];
             user.LanguageId = businessPartnerRow["refLanguageId"] is DBNull
                 ? Guid.Empty 
                 :(Guid)businessPartnerRow["refLanguageId"];
-            user.Email = (string)businessPartnerRow["UserEmail"];
-            user.Name = (string)businessPartnerRow["Name"];
-            user.FirstName = (string)businessPartnerRow["FirstName"];
+            user.Email = GetStringRow(businessPartnerRow["UserEmail"]);
+            user.Name = GetStringRow(businessPartnerRow["Name"]);
+            user.FirstName = GetStringRow(businessPartnerRow["FirstName"]);
 
             return user;
+        }
+        private static string GetStringRow(object obj)
+        {
+            return obj is DBNull ? string.Empty : (string)obj;
         }
 
         public static void AddToOrigamUserRow(IOrigamUser user, DataRow origamUserRow)

@@ -193,7 +193,7 @@
     <value>Please check your email to reset your password.</value>
   </data>
   <data name="ConfirmationOk1" xml:space="preserve">
-    <value>Thank you for confirming your email. Please</value>
+    <value>Thank you for confirming your email. Please </value>
   </data>
   <data name="ConfirmationOk2" xml:space="preserve">
     <value>Click here to Log in</value>

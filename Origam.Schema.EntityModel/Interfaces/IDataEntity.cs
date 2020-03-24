@@ -87,5 +87,6 @@ namespace Origam.Schema.EntityModel
 		ArrayList ChildEntities {get;}
 
 		IDataEntityColumn DescribingField {get; set;}
+		bool HasEntityAFieldDenyReadRule();
 	}
 }

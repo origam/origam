@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -165,7 +166,13 @@ namespace Origam.ServerCore.Authorization
 
         public Task<InternalIdentityResult> CreateAsync(IOrigamUser user, string password)
         {
-            coreUserManager.CreateAsync(user, password);
+            Task<IdentityResult> task = coreUserManager.CreateAsync(user, password);
+            IdentityResult identity = task.Result;
+            List<string> errors = identity.Errors.Select(error => { return error.Description; }).ToList();
+            if (errors.Count > 0)
+            {
+                return Task.FromResult(new InternalIdentityResult(errors));
+            }
             return Task.FromResult(InternalIdentityResult.Success);
         }
 
