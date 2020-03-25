@@ -29,9 +29,7 @@
 <body>
 
     <div class="navigation-bar">
-        <div class="logo-container">
-            <img src="~/assets/identity/@config.PathToBrandIcon"/>
-        </div>
+
         @if (!string.IsNullOrWhiteSpace(name))
         {
             <ul class="nav navbar-nav">
@@ -50,6 +48,9 @@
     </div>
 
 <div id="page-container" class="page-content">
+        <div class="logo-container centered">
+            <img src="~/assets/identity/@config.PathToBrandIcon"/>
+        </div>
     @RenderBody()
 </div>
 
