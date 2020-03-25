@@ -199,9 +199,13 @@ namespace Origam.Schema.LookupModel.Wizards
                     GeneratedModelElements.Add(script2);
                 }
                 // 7. new field script (after values because of a default value
-                FieldsScripts(fk,
-                              baseField,
-                              baseEntity);
+                // only if it's not a virtual detached entity
+                if (!(baseEntity is DetachedEntity))
+                {
+                    FieldsScripts(fk,
+                                  baseField,
+                                  baseEntity);
+                }
             }
         }
         private TableMappingItem CreateLookupEntity(

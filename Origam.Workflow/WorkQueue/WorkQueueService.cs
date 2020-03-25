@@ -501,10 +501,7 @@ namespace Origam.Workflow.WorkQueue
                 throw new Exception("Recipient must be type OrigamNotificationContactData.OrigamNotificationContactRow.");
             }
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            // set a language of current thread to recipient's one and remeber the old one
-            System.Globalization.CultureInfo originalUICulture = null;
-            System.Globalization.CultureInfo originalCulture = null;
-
+            
             using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
                 recipient != null && !recipient.IsLanguageTagIETFNull() ?
                     recipient.LanguageTagIETF : ""))

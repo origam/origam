@@ -453,7 +453,7 @@ namespace OpenPOP.MIMEParser
 						if(Utility.IsQuotedPrintable(_contentTransferEncoding))
 							decodedAttachment=DecodeQP.ConvertHexContent(decodedAttachment, _contentCharset);
 						else if(IsEncoding("8bit"))
-							decodedAttachment=decodedAttachment;
+							{}
 						else
 							decodedAttachment=Utility.deCodeB64s(Utility.RemoveNonB64(decodedAttachment), _contentCharset);
 					}

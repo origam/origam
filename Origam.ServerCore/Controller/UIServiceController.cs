@@ -243,9 +243,9 @@ namespace Origam.ServerCore.Controller
         {
             //todo: implement GetFilterLookupList
             return LookupListInputToRowData(input)
-                .OnSuccess(rowData => GetLookupRows(input, rowData))
-                .OnSuccess(ToActionResult)
-                .OnBoth<IActionResult,IActionResult>(UnwrapReturnValue);
+                .Bind(rowData => GetLookupRows(input, rowData))
+                .Map(ToActionResult)
+                .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult GetRows([FromBody]GetRowsInput input)
@@ -253,84 +253,83 @@ namespace Origam.ServerCore.Controller
             return RunWithErrorHandler(() =>
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => GetEntityData(
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(entityData => GetRowsGetQuery(input, entityData))
-                    .OnSuccess(datastructureQuery=>ExecuteDataReader(
+                    .Bind(CheckEntityBelongsToMenu)
+                    .Bind(entityData => GetRowsGetQuery(input, entityData))
+                    .Bind(datastructureQuery=>ExecuteDataReader(
                         datastructureQuery, input))
-                    .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                    .Finally(UnwrapReturnValue);
             });
         }
         [HttpPut("[action]")]
         public IActionResult Row([FromBody]UpdateRowInput input)
         {
             return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => GetEntityData(
+                .Bind(Authorize)
+                .Bind(menuItem => GetEntityData(
                     input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => 
+                .Bind(CheckEntityBelongsToMenu)
+                .Bind(entityData => 
                     GetRow(
                         dataService,
                         entityData.Entity, 
                         input.DataStructureEntityId,
                         Guid.Empty,
                         input.RowId))
-                .OnSuccess(rowData => FillRow(rowData, input.NewValues))
-                .OnSuccess(rowData => SubmitChange(rowData, Operation.Update))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Tap(rowData => FillRow(rowData, input.NewValues))
+                .Map(rowData => SubmitChange(rowData, Operation.Update))
+                .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult Row([FromBody]NewRowInput input)
         {
             return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem => GetEntityData(
+                .Bind(Authorize)
+                .Bind(menuItem => GetEntityData(
                     input.DataStructureEntityId, menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
-                .OnSuccess(rowData => FillRow(input, rowData))
-                .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Bind(CheckEntityBelongsToMenu)
+                .Map(entityData => MakeEmptyRow(entityData.Entity))
+                .Tap(rowData => FillRow(input, rowData))
+                .Map(rowData => SubmitChange(rowData, Operation.Create))
+                .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult NewEmptyRow([FromBody]NewEmptyRowInput input)
         {
             return FindItem<FormReferenceMenuItem>(input.MenuId)
-                .OnSuccess(Authorize)
-                .OnSuccess(menuItem =>
+                .Bind(Authorize)
+                .Bind(menuItem =>
                     GetEntityData(input.DataStructureEntityId,
                         menuItem))
-                .OnSuccess(CheckEntityBelongsToMenu)
-                .OnSuccess(entityData => MakeEmptyRow(entityData.Entity))
-                .OnSuccess(PrepareNewRow)
-                .OnSuccess(rowData => SubmitChange(rowData, Operation.Create))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Bind(CheckEntityBelongsToMenu)
+                .Map(entityData => MakeEmptyRow(entityData.Entity))
+                .Map(PrepareNewRow)
+                .Map(rowData => SubmitChange(rowData, Operation.Create))
+                .Finally(UnwrapReturnValue);
         }
         [HttpDelete("[action]")]
         public IActionResult Row([FromBody]DeleteRowInput input)
         {
-            return
-                FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => GetEntityData(
-                        input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(entityData => GetRow(
-                        dataService,
-                        entityData.Entity,
-                        input.DataStructureEntityId,
-                        Guid.Empty,
-                        input.RowIdToDelete))
-                    .OnSuccess(rowData =>
-                    {
-                        rowData.Row.Delete();
-                        return SubmitDelete(rowData);
-                    })
-                    .OnSuccess(ThrowAwayReturnData)
-                    .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+            return FindItem<FormReferenceMenuItem>(input.MenuId)
+                .Bind(Authorize)
+                .Bind(menuItem => GetEntityData(
+                    input.DataStructureEntityId, menuItem))
+                .Bind(CheckEntityBelongsToMenu)
+                .Bind(entityData => GetRow(
+                    dataService,
+                    entityData.Entity,
+                    input.DataStructureEntityId,
+                    Guid.Empty,
+                    input.RowIdToDelete))
+                .Map(rowData =>
+                {
+                    rowData.Row.Delete();
+                    return SubmitDelete(rowData);
+                })
+                .Map(ThrowAwayReturnData)
+                .Finally(UnwrapReturnValue);
         }
         [HttpGet("[action]/{sessionFormIdentifier}")]
         public IActionResult WorkflowNextQuery(Guid sessionFormIdentifier)
@@ -379,16 +378,16 @@ namespace Origam.ServerCore.Controller
             [FromBody]GetRecordTooltipInput input)
         {
             return AmbiguousInputToRowData(input, dataService, sessionObjects)
-                .OnSuccess(RowDataToRecordTooltip)
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Map(RowDataToRecordTooltip)
+                .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult GetAudit([FromBody]GetAuditInput input)
         {
             return AmbiguousInputToEntityId(input, dataService, sessionObjects)
-                .OnSuccess(entityId => 
+                .Map(entityId => 
                     GetAuditLog(entityId, input.RowId))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult SaveFavorites(
@@ -411,10 +410,10 @@ namespace Origam.ServerCore.Controller
         public IActionResult SaveFilter([FromBody]SaveFilterInput input)
         {
             return FindEntity(input.DataStructureEntityId)
-                .OnSuccess(dataStructureEntity
+                .Bind(dataStructureEntity
                     => ServerCoreUIService.SaveFilter(dataStructureEntity, input))
-                .OnSuccess(filterId => ToActionResult(filterId))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+                .Map(filterId => ToActionResult(filterId))
+                .Finally(UnwrapReturnValue);
 
         }
         [HttpPost("[action]")]
@@ -453,8 +452,8 @@ namespace Origam.ServerCore.Controller
             {
                 var menuResult = FindItem<FormReferenceMenuItem>(
                     input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem
+                    .Bind(Authorize)
+                    .Bind(menuItem
                         => CheckLookupIsAllowedInMenu(
                             menuItem, input.LookupId));
                 if (menuResult.IsFailure)
@@ -495,8 +494,8 @@ namespace Origam.ServerCore.Controller
                     menuItem.Id, xmlOutput.ContainedLookups);
             }
             return MenuLookupIndex.IsAllowed(menuItem.Id, lookupId)
-                ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
-                : Result.Fail<FormReferenceMenuItem, IActionResult>(
+                ? Result.Success<FormReferenceMenuItem, IActionResult>(menuItem)
+                : Result.Failure<FormReferenceMenuItem, IActionResult>(
                     BadRequest("Lookup is not referenced in any entity in the Menu item"));
         }
         private IEnumerable<object[]> GetRowData(
@@ -556,9 +555,9 @@ namespace Origam.ServerCore.Controller
             };
             var dataTable = lookupService.GetList(internalRequest);
             return AreColumnNamesValid(input, dataTable)
-                ? Result.Ok<IEnumerable<object[]>, IActionResult>(
+                ? Result.Success<IEnumerable<object[]>, IActionResult>(
                     GetRowData(input, dataTable))
-                : Result.Fail<IEnumerable<object[]>, IActionResult>(
+                : Result.Failure<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
         }
         private Result<RowData, IActionResult> LookupListInputToRowData(
@@ -567,13 +566,13 @@ namespace Origam.ServerCore.Controller
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => CheckLookupIsAllowedInMenu(
+                    .Bind(Authorize)
+                    .Bind(menuItem => CheckLookupIsAllowedInMenu(
                         menuItem, input.LookupId))
-                    .OnSuccess(menuItem => GetEntityData(
+                    .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(entityData => GetRow(
+                    .Bind(CheckEntityBelongsToMenu)
+                    .Bind(entityData => GetRow(
                         dataService,
                         entityData.Entity, input.DataStructureEntityId,
                         Guid.Empty, input.Id));
@@ -652,9 +651,9 @@ namespace Origam.ServerCore.Controller
                 {
                     return FindItem<DataStructureMethod>(
                             entityData.MenuItem.MethodId)
-                        .OnSuccess(
+                        .Map(
                             CustomParameterService.GetFirstNonCustomParameter)
-                        .OnSuccess(parameterName =>
+                        .Bind(parameterName =>
                         {
                             query.DataSourceId 
                                 = entityData.Entity.RootEntity.ParentItemId;
@@ -663,12 +662,12 @@ namespace Origam.ServerCore.Controller
                             if (input.MasterRowId == Guid.Empty)
                             {
                                 return Result
-                                    .Fail<DataStructureQuery, IActionResult>(
+                                    .Failure<DataStructureQuery, IActionResult>(
                                     BadRequest("MasterRowId cannot be empty"));
                             }
                             query.MethodId = entityData.MenuItem.MethodId;
                             return Result
-                                .Ok<DataStructureQuery, IActionResult>(query);
+                                .Success<DataStructureQuery, IActionResult>(query);
                         });
                 }
             }
