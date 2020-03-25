@@ -66,7 +66,7 @@ namespace Origam.Rule
             {
                 resultDoc.Xml.Load(reader);
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 // WORKAROUND: when loading data to a predefined DataSet (using XmlDataDocument)
                 // and the result of the transformation is nothing (completely empty, not even a root node),
