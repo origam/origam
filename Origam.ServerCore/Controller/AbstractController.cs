@@ -93,8 +93,8 @@ namespace Origam.ServerCore.Controller
         {
             return SecurityManager.GetAuthorizationProvider().Authorize(
                 User, menuItem.Roles)
-                ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
-                : Result.Fail<FormReferenceMenuItem, IActionResult>(Forbid());
+                ? Result.Success<FormReferenceMenuItem, IActionResult>(menuItem)
+                : Result.Failure<FormReferenceMenuItem, IActionResult>(Forbid());
         }
         protected Result<T,IActionResult> FindItem<T>(Guid id) where T : class
         {
@@ -102,24 +102,24 @@ namespace Origam.ServerCore.Controller
                 .GetService<IPersistenceService>()
                 .SchemaProvider
                 .RetrieveInstance(typeof(T), new Key(id)) is T instance)
-                ? Result.Fail<T, IActionResult>(
+                ? Result.Failure<T, IActionResult>(
                     NotFound("Object with requested id not found."))
-                : Result.Ok<T, IActionResult>(instance);
+                : Result.Success<T, IActionResult>(instance);
         }
         protected Result<EntityData, IActionResult> GetEntityData(
             Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
         {
             return FindEntity(dataStructureEntityId)
-                .OnSuccess(entity 
-                    => new EntityData {MenuItem = menuItem, Entity = entity});
+                .Map(entity => 
+                    new EntityData {MenuItem = menuItem, Entity = entity});
         }
         protected Result<EntityData, IActionResult> CheckEntityBelongsToMenu(
             EntityData entityData)
         {
             return (entityData.MenuItem.Screen.DataStructure.Id 
                 == entityData.Entity.RootEntity.ParentItemId)
-                ? Result.Ok<EntityData, IActionResult>(entityData)
-                : Result.Fail<EntityData, IActionResult>(
+                ? Result.Success<EntityData, IActionResult>(entityData)
+                : Result.Failure<EntityData, IActionResult>(
                     BadRequest("The requested Entity does not belong to the menu."));
         }
         protected Result<RowData, IActionResult> GetRow(
@@ -131,10 +131,10 @@ namespace Origam.ServerCore.Controller
                 dataStructureEntityId, methodId, new List<Guid> { rowId });
             if(rows.Count == 0)
             {
-                return Result.Fail<RowData, IActionResult>(
+                return Result.Failure<RowData, IActionResult>(
                     NotFound("Requested data row was not found."));
             }
-            return Result.Ok<RowData, IActionResult>(
+            return Result.Success<RowData, IActionResult>(
                 new RowData{Row = rows[0], Entity = entity});
         }
         protected IActionResult UnwrapReturnValue(
@@ -146,7 +146,7 @@ namespace Origam.ServerCore.Controller
         {
             return FindItem<DataStructureEntity>(id)
                 .OnFailureCompensate(error =>
-                    Result.Fail<DataStructureEntity, IActionResult>(
+                    Result.Failure<DataStructureEntity, IActionResult>(
                         NotFound("Requested DataStructureEntity not found. " 
                         + error.GetMessage())));
         }
@@ -183,11 +183,11 @@ namespace Origam.ServerCore.Controller
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => GetEntityData(
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(entityData => GetRow(
+                    .Bind(CheckEntityBelongsToMenu)
+                    .Bind(entityData => GetRow(
                         dataService,
                         entityData.Entity,
                         input.DataStructureEntityId,
@@ -207,11 +207,11 @@ namespace Origam.ServerCore.Controller
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => GetEntityData(
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(EntityDataToEntityId);
+                    .Bind(CheckEntityBelongsToMenu)
+                    .Bind(EntityDataToEntityId);
             }
             else
             {

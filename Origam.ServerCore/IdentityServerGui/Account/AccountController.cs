@@ -16,7 +16,10 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
@@ -47,6 +50,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IPersistedGrantStore _persistedGrantStore;
         private readonly SessionObjects _sessionObjects;
+        private readonly RequestLocalizationOptions _requestLocalizationOptions;
 
         public AccountController(
             UserManager<IOrigamUser> userManager,
@@ -56,7 +60,9 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
             IMailService mailService,
-            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer, IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects)
+            IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer,
+            IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
+            IOptions<RequestLocalizationOptions> requestLocalizationOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -65,10 +71,11 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _schemeProvider = schemeProvider;
             _events = events;
             _mailService = mailService;
-            this._localizer = localizer;
+            _localizer = localizer;
             _persistedGrantStore = persistedGrantStore;
-            this._sessionObjects = sessionObjects;
+            _sessionObjects = sessionObjects;
             _userConfig = userConfig.Value;
+            _requestLocalizationOptions = requestLocalizationOptions.Value;
         }
 
         /// <summary>
@@ -596,6 +603,20 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+        }
+        
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            var cultureProvider = _requestLocalizationOptions.RequestCultureProviders
+                .OfType<CookieRequestCultureProvider>().First();
+            Response.Cookies.Append(
+                cultureProvider.CookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
         }
     }
 }
