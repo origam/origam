@@ -294,7 +294,6 @@ namespace Origam.Geo
 		 */
 		private static Jtsk BesseltoJTSK (Bessel bessel)
 		{
-			double a     = 6377397.15508;
 			double e     = 0.081696831215303;
 			double n     = 0.97992470462083;
 			double rho_0 = 12310230.12797036;
