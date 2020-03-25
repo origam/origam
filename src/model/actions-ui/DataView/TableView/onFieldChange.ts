@@ -18,6 +18,9 @@ export function onFieldChangeG(ctx: any) {
     value: any
   ) {
     try {
+      if(property.column === "ComboBox") {
+        value = `${value}`;
+      }
       getDataView(ctx).onFieldChange(event, row, property, value);
       if (
         property.column === "ComboBox" ||

@@ -105,10 +105,10 @@ export class DataTable implements IDataTable {
     if (property.isLookup) {
       if (property.column === "TagInput") {
         return value.map((valueItem: any) =>
-          property.lookup!.getValue(valueItem)
+          property.lookup!.getValue(`${valueItem}`)
         );
       } else {
-        return property.lookup!.getValue(value);
+        return property.lookup!.getValue(`${value}`);
       }
     } else {
       return value;
