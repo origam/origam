@@ -91,7 +91,7 @@ namespace Origam.Schema
 
 		[Category("(Info)")]
 		[Description("Unique ID of this model element. Model elements are internally identified by ID's, not names.")]
-		public Guid Id
+		public new Guid Id
 		{
 			get
 			{
