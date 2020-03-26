@@ -7,6 +7,7 @@ import moment from "moment";
 import { Tooltip } from "react-tippy";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import DateCompleter from "./DateCompleter"
+import { getLocaleFromCookie } from "../../../../utils/cookies"
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -233,15 +234,7 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleInputBlur(event: any) {
     
-    let dateCompleter;
-
-    if(navigator.language == "en-US"){
-      dateCompleter = new DateCompleter("DD.MM.YYYY h:mm:ss", ".",
-      ":", " ", () =>  moment())
-    }else{
-      dateCompleter = new DateCompleter("MM/DD/YYYY h:mm:ss A", "/",
-      ":", " ", () =>  moment())
-    }
+    const dateCompleter = this.getDateCompleter()
 
     const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue)
     if(completedMoment){
@@ -251,6 +244,17 @@ export class DateTimeEditor extends React.Component<{
     this.dirtyTextualValue = undefined;
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
+
+  @action.bound getDateCompleter(){
+    if(getLocaleFromCookie() == "en-US"){
+      return new DateCompleter("MM/DD/YYYY h:mm:ss A", "/",
+      ":", " ", () =>  moment())
+    }else{
+      return new DateCompleter("DD.MM.YYYY h:mm:ss", ".",
+      ":", " ", () =>  moment())
+    }
+  }
+
 
   @action.bound handleContainerMouseDown(event: any) {
     // event.preventDefault();
