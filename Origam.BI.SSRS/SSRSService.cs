@@ -84,7 +84,6 @@ namespace Origam.BI.SSRS
             string reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(report.ReportPath, parameters);
             string historyID = null;
             string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
-            string showHideToggle = null;
             string encoding;
             string mimeType;
             string extension;

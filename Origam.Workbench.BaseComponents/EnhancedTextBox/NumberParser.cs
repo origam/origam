@@ -43,14 +43,14 @@ namespace Origam.Gui.UI
             try
             {
                 return textParseFunc.Invoke(text);
-            } catch (OverflowException ex) 
+            } catch (OverflowException) 
             {
                 // TODO: fix error message tooltip which does not show up above 
                 // the textBox (commented lines below)
 //                errorReporter.NotifyInputError($"The value {text} " +
 //                                 $"is too big or too small for {ValueType.Name}");
                 throw;
-            } catch (FormatException ex)
+            } catch (FormatException)
             {
                 errorReporter.NotifyInputError($"Cannot parse \"{text}\" to" +
                                                $" {ValueType.Name}");
