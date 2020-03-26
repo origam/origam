@@ -56,3 +56,7 @@ iframe
     display: flex;
     justify-content: center;
 }
+
+#reset-link{
+  text-decoration: underline;
+}

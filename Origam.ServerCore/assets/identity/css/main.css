@@ -673,7 +673,6 @@ p, pre {
 a, a:visited, a img, a img:visited {
   color: #0D0D0D;
   cursor: pointer;
-  text-decoration: underline;
   font-style: normal; }
   a:hover, a:active, a:visited:hover, a:visited:active, a img:hover, a img:active, a img:visited:hover, a img:visited:active {
     color: rgba(13, 13, 13, 0.5); }
