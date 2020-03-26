@@ -6,6 +6,7 @@ import { action, observable, computed, runInAction } from "mobx";
 import moment from "moment";
 import { Tooltip } from "react-tippy";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import DateCompleter from "./DateCompleter"
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -231,6 +232,22 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleInputBlur(event: any) {
+    
+    let dateCompleter;
+
+    if(navigator.language == "en-US"){
+      dateCompleter = new DateCompleter("DD.MM.YYYY h:mm:ss", ".",
+      ":", " ", () =>  moment())
+    }else{
+      dateCompleter = new DateCompleter("MM/DD/YYYY h:mm:ss A", "/",
+      ":", " ", () =>  moment())
+    }
+
+    const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue)
+    if(completedMoment){
+      this.props.onChange && this.props.onChange(event, completedMoment.toISOString(true));
+    }
+
     this.dirtyTextualValue = undefined;
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
@@ -254,9 +271,12 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @computed get formattedMomentValue() {
-    return this.momentValue
-      ? this.momentValue.format(this.props.outputFormat)
-      : "";
+    if (!this.momentValue) return ""
+    if (this.momentValue.hour() == 0 && this.momentValue.minute() == 0 && this.momentValue.second() == 0) {
+      const expectedDateFormat = this.props.outputFormat.split(" ")[0]
+      return this.momentValue.format(expectedDateFormat)
+    }
+    return this.momentValue.format(this.props.outputFormat)
   }
 
   @computed get textfieldValue() {
@@ -268,7 +288,7 @@ export class DateTimeEditor extends React.Component<{
   @computed get isTooltipShown() {
     return (
       this.textfieldValue !== undefined &&
-      (!moment(this.textfieldValue) ||
+      (!moment(this.textfieldValue, this.props.outputFormat) ||
         this.formattedMomentValue !== this.textfieldValue)
     );
   }
@@ -278,24 +298,6 @@ export class DateTimeEditor extends React.Component<{
     if (this.dirtyTextualValue === "") {
       this.props.onChange && this.props.onChange(event, null);
       return;
-    }
-    // TODO: Do not insist on spaces!?
-    const simpleFormat = this.props.outputFormat
-      .replace(/MM/g, "M")
-      .replace(/DD/g, "D");
-    const dirtyMomentValue = [
-      moment(this.dirtyTextualValue, simpleFormat, true),
-      moment(this.dirtyTextualValue, "M")
-    ].find(m => m.isValid());
-    if (dirtyMomentValue) {
-      this.props.onChange &&
-        this.props.onChange(event, dirtyMomentValue.toISOString(true));
-    } else if (
-      this.dirtyTextualValue &&
-      /^[A-Za-z]+$/.test(this.dirtyTextualValue)
-    ) {
-      this.props.onChange &&
-        this.props.onChange(event, moment().toISOString(true));
     }
   }
 
