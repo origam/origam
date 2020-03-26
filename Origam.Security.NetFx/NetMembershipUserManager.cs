@@ -431,11 +431,11 @@ namespace Origam.Security.Identity
                 = Membership.GetUser(new Guid(userId));
             if (membershipUser == null)
             {
-                return IdentityResult.Failed(Resources.UserIdNotFound);
+                return  await Task.FromResult(IdentityResult.Failed(Resources.UserIdNotFound));
             }
             membershipUser.IsApproved = true;
             Membership.UpdateUser(membershipUser);
-            return IdentityResult.Success;
+            return await Task.FromResult(IdentityResult.Success);
         }
     }
 }
