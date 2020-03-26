@@ -120,8 +120,6 @@ namespace Origam.Schema.GuiModel
 			}
 		}
 
-		private bool _isExternal;
-
 		[EntityColumn("G01")]  
 		public Guid PanelControlSetId;
 

@@ -854,7 +854,7 @@ namespace Origam.DA.ObjectPersistence.Providers
 					}
 				}
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 				// If we have added some rows already, we have to roll back, otherwise
 				// data will be corrupted.

@@ -303,7 +303,7 @@ namespace Origam.Schema.EntityModel
 						break;
 
 					case OrigamDataType.Date:
-						if(value == null || value == "")
+						if (string.IsNullOrEmpty(Convert.ToString(value)))
 						{
 							this.DateValue = null;
 						}
