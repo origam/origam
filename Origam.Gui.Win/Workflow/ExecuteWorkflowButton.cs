@@ -127,7 +127,7 @@ namespace Origam.Gui.Win
                     mapping.IsDeleted = true;
                 }
             }
-            catch(Exception ex)
+            catch(Exception)
             {
 #if DEBUG
                 System.Diagnostics.Debug.WriteLine("AsReportPanel:ERROR=>" + ex.ToString());
