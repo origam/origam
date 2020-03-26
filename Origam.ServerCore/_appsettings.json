@@ -62,5 +62,9 @@
             "/api/private"
         ]
     },
-	"BehindProxy":  "false"
+	"BehindProxy":  "false",
+    "LanguageConfig":{
+        "Default": "en-US",
+        "Allowed":["en-US", "cs-CZ", "de-DE"]
+    }
 }
