@@ -17,16 +17,19 @@ namespace IdentityServer4.Validation
         /// <summary>
         /// The logger
         /// </summary>
+        // ReSharper disable once UnassignedReadonlyField
         protected readonly ILogger Logger;
 
         /// <summary>
         /// The user service
         /// </summary>
+        // ReSharper disable once UnassignedReadonlyField
         protected readonly IProfileService Profile;
 
         /// <summary>
         /// The client store
         /// </summary>
+        // ReSharper disable once UnassignedReadonlyField
         protected readonly IClientStore Clients;
 
         /// <summary>
