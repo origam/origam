@@ -31,8 +31,9 @@ using System.Collections;
 using static Origam.DA.Common.Enums;
 using Origam.DA.Common;
 using Origam.DA.Service;
+using Origam.Schema.LookupModel.Wizards;
 
-namespace Origam.Schema.LookupModel.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateLookupFromEntityCommand.

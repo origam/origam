@@ -23,7 +23,7 @@ using System;
 using Origam.UI;
 
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel.UI
 {
 	/// <summary>
 	/// Summary description for CreateDataStructureFromEntityCommand.
@@ -38,7 +38,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			set
 			{
-				throw new ArgumentException(Origam.Schema.WorkflowModel.ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
 		}
 

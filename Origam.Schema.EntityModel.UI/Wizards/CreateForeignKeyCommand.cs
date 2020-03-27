@@ -21,11 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Windows.Forms;
-
+using Origam.Schema.EntityModel.Wizards;
 using Origam.UI;
 using Origam.Workbench.Commands;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateNtoNEntityCommand.

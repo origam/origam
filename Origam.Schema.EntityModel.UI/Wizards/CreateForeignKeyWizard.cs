@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateForeignKeyWizard.

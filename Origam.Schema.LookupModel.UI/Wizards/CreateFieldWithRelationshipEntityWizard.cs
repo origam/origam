@@ -25,7 +25,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using Origam.Schema.EntityModel;
 
-namespace Origam.Schema.LookupModel.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards
 {
     /// <summary>
     /// Summary description for CreateFieldWithRelationshipEntityWizard.
