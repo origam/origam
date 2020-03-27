@@ -289,7 +289,7 @@ namespace Origam.Server
             set { _endRule = value; }
         }
 
-        public AbstractDataStructure DataStructure
+        public new AbstractDataStructure DataStructure
         {
             get { return _dataStructure; }
             set { _dataStructure = value; }
