@@ -77,6 +77,7 @@ namespace Origam.ServerCore.Controllers
                     addChildSession: false,
                     parentSession: null,
                     basicUIService: sessionObjects.UIService);
+                await Task.CompletedTask; //CS1998
                 return Ok(newSessionId);
             });
         }
