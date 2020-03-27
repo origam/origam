@@ -36,7 +36,7 @@ namespace Origam.DA.Service
         public bool Paging { get; set; }
         public string CustomFilters { get; set; } = "";
         public int RowLimit { get; set; }
-        public List<Tuple<string, string>> CustomOrdering { get; set; }
+        public List<Ordering> CustomOrdering { get; set; }
         public bool ForceDatabaseCalculation { get; set; }
         public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
     }

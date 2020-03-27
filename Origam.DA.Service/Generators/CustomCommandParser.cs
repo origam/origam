@@ -32,6 +32,9 @@ namespace Origam.DA.Service.Generators
         private Node currentNode = null;
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
 
+        public string WhereClause { get; private set; }
+        public string OrderByClause { get; private set; }
+
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket)
         {
             columnOrderingRenderer 
@@ -41,11 +44,14 @@ namespace Origam.DA.Service.Generators
         /// <summary>
         /// returns ORDER BY clause without the "ORDER BY" keyword
         /// </summary>
-        /// <param name="ordering"> [[columnName, "asc"|"desc"],...] </param>
         /// <returns></returns>
-        public string ToSqlOrderBy(List<Tuple<string,string>> ordering)
+        public CustomCommandParser OrderBy(List<Ordering> orderings)
         {
-            return columnOrderingRenderer.ToSqlOrderBy(ordering);
+            if (orderings != null)
+            {
+                OrderByClause = columnOrderingRenderer.ToSqlOrderBy(orderings);
+            }
+            return this;
         }
 
         /// <summary>
@@ -53,12 +59,13 @@ namespace Origam.DA.Service.Generators
         /// </summary>
         /// <param name="strFilter">input example: "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]";
         /// </param>
-        public string ToSqlWhere(string strFilter)
+        public CustomCommandParser Where(string strFilter)
         {
-            if (string.IsNullOrWhiteSpace(strFilter)) return "";
+            if (string.IsNullOrWhiteSpace(strFilter)) return this;
             var inpValue = GetCheckedInput(strFilter);
             ParseToNodeTree(inpValue);
-            return root.SqlRepresentation();
+            WhereClause = root.SqlRepresentation();
+            return this;
         }
 
         private void ParseToNodeTree(string filter)
@@ -141,28 +148,21 @@ namespace Origam.DA.Service.Generators
             this.nameRightBracket = nameRightBracket;
         }
 
-        internal string ToSqlOrderBy(List<Tuple<string, string>> ordering)
+        internal string ToSqlOrderBy(List<Ordering> orderings)
         {
-            if (ordering == null) return "";
-            return string.Join(", ",
-                ordering
-                    .Select(x => ToSql(x.Item1, x.Item2))
+            if (orderings == null) return "";
+                return string.Join(", ", orderings.Select(ToSql)
             );
         }
 
-        private string ToSql(string column, string orderingName)
+        private string ToSql(Ordering ordering)
         {
-            if (string.IsNullOrWhiteSpace(column))
+            if (ordering.LookupId == null)
             {
-                throw new ArgumentException(nameof(column) + " cannot be empty");
+                string orderingSql = OrderingToSQLName(ordering.Direction);
+                return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
             }
-            if (string.IsNullOrWhiteSpace(orderingName))
-            {
-                throw new ArgumentException(nameof(orderingName) + " cannot be empty");
-            }
-
-            string orderingSql = OrderingToSQLName(orderingName);
-            return $"{nameLeftBracket}{column}{nameRightBracket} {orderingSql}";
+            return "";
         }
 
         private string OrderingToSQLName(string orderingName)

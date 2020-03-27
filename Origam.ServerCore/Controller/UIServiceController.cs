@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -47,6 +47,7 @@ using IdentityServer4;
 using Microsoft.AspNetCore.Localization;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
+using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Controller
@@ -602,16 +603,76 @@ namespace Origam.ServerCore.Controller
             return input.ColumnNames
                 .All(colName => actualColumnNames.Contains(colName));
         }
+
+        private Result<List<Ordering>, IActionResult> GetOrderings(List<List<string>> orderingList)
+        {
+            var orderingsResult = orderingList
+                .Where(x=> x.Count > 0)
+                .Select(Create)
+                .ToList();
+            var failures = orderingsResult
+                .Where(result => result.IsFailure)
+                .Select(result => result.Error.GetMessage())
+                .ToList();
+            if (failures.Count > 0)
+            {
+                Result.Failure<List<Ordering>, IActionResult>(BadRequest(string.Join("\n",failures)));
+            }
+
+            List<Ordering> orderings = orderingsResult.Select(result => result.Value).ToList();
+            return Result.Ok<List<Ordering>, IActionResult>(orderings);
+        }
+
+        private Result<Ordering, IActionResult> Create(
+            List<string> orderingData, int customSortOrder)
+        {
+            switch (orderingData.Count)
+            {
+                case 0:
+                    return Result.Failure<Ordering, IActionResult>(
+                        BadRequest("Cannot create Ordering from an empty list"));
+                case 1:
+                    return Result.Ok<Ordering, IActionResult>(
+                        new Ordering(orderingData[0], "ASC", customSortOrder + 1000));
+                case 2:
+                    return Result.Ok<Ordering, IActionResult>(
+                        new Ordering(orderingData[0], orderingData[1], customSortOrder + 1000));
+                case 3:
+                    bool isGuid = Guid.TryParse(orderingData[2], out Guid lookupId);
+                    if (!isGuid)
+                    {
+                        return Result.Failure<Ordering, IActionResult>(
+                            BadRequest($"lookupId {orderingData[2]} cannot be parsed to Guid"));
+                    }
+                    return
+                        Result.Ok<Ordering, IActionResult>(
+                            new Ordering(
+                               columnName: orderingData[0], 
+                               direction: orderingData[1],
+                               lookupId: lookupId, 
+                               sortOrder: customSortOrder + 1000));
+                default:
+                    return Result.Failure<Ordering, IActionResult>(
+                        BadRequest("Too many parameters for an Ordering item"));
+            }
+        }
+
         private Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
             GetRowsInput input, EntityData entityData)
         {
+            var customOrdering = GetOrderings(input.Ordering);
+            if (customOrdering.IsFailure)
+            {
+                return Result.Failure<DataStructureQuery, IActionResult>(customOrdering.Error);
+            }
+            
             var query = new DataStructureQuery
             {
                 Entity = entityData.Entity.Name,
                 CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
                     ? null
                     : input.Filter,
-                CustomOrdering = input.OrderingAsTuples,
+                CustomOrdering = customOrdering.Value,
                 RowLimit = input.RowLimit,
                 ColumnsInfo = new ColumnsInfo(input.ColumnNames
                     .Select(colName =>

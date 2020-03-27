@@ -324,10 +324,10 @@ namespace Origam.DA.Service
         public void BuildCommands(IDbDataAdapter adapter, SelectParameters selectParameters,
             bool forceDatabaseCalculation)
         {
-            CustomCommandParser commandParser = 
-                new CustomCommandParser(NameLeftBracket, NameRightBracket);
-            string customWhereClause = commandParser.ToSqlWhere(selectParameters.CustomFilters);
-            string customOrderByClause = commandParser.ToSqlOrderBy(selectParameters.CustomOrdering);
+            CustomCommandParser commandParser =
+                new CustomCommandParser(NameLeftBracket, NameRightBracket)
+                    .Where(selectParameters.CustomFilters)
+                    .OrderBy(selectParameters.CustomOrdering);
 
             Hashtable selectParameterReferences = new Hashtable();
             DataStructure dataStructure = selectParameters.DataStructure;
@@ -345,9 +345,9 @@ namespace Origam.DA.Service
                     selectParameters.Paging,
                     false,
                     forceDatabaseCalculation,
-                    customWhereClause,
-                    customOrderByClause,
-                    selectParameters.RowLimit));
+                    commandParser,
+                    selectParameters.RowLimit,
+                    selectParameters.CustomOrdering));
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -904,11 +904,15 @@ namespace Origam.DA.Service
                 forceDatabaseCalculation);
         }
 
-        internal string SelectSql(DataStructure ds, DataStructureEntity entity, DataStructureFilterSet filter,
-               DataStructureSortSet sortSet, ColumnsInfo columnsInfo, Hashtable replaceParameterTexts,
-               Hashtable dynamicParameters, Hashtable selectParameterReferences, bool restrictScalarToTop1,
-               bool paging, bool isInRecursion, bool forceDatabaseCalculation,
-               string customWhereClause = null, string customOrderByClause = null, int? rowLimit = null)
+        internal string SelectSql(DataStructure ds, DataStructureEntity entity,
+            DataStructureFilterSet filter,
+            DataStructureSortSet sortSet, ColumnsInfo columnsInfo,
+            Hashtable replaceParameterTexts,
+            Hashtable dynamicParameters, Hashtable selectParameterReferences,
+            bool restrictScalarToTop1,
+            bool paging, bool isInRecursion, bool forceDatabaseCalculation,
+            CustomCommandParser customCommandParser = null,
+            int? rowLimit = null, List<Ordering> customOrdering = null)
         {
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -941,12 +945,12 @@ namespace Origam.DA.Service
             RenderSelectColumns(ds, sqlExpression, orderByBuilder,
                 groupByBuilder, entity, columnsInfo, replaceParameterTexts, dynamicParameters,
                 sortSet, selectParameterReferences, isInRecursion, concatScalarColumns,
-                forceDatabaseCalculation);
+                forceDatabaseCalculation, customOrdering);
 
             // paging column
             if (paging)
             {
-                if (sortSet == null)
+                if (sortSet == null || customOrdering != null)
                 {
                     sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS {0}", RowNumColumnName);
                 }
@@ -1072,7 +1076,7 @@ namespace Origam.DA.Service
                 sqlExpression.Append(whereBuilder.ToString());
             }
 
-            if (!string.IsNullOrEmpty(customWhereClause))
+            if (!string.IsNullOrEmpty(customCommandParser?.WhereClause))
             {
                 if (whereExists)
                 {
@@ -1084,7 +1088,7 @@ namespace Origam.DA.Service
                     PrettyLine(sqlExpression);
                     sqlExpression.Append("WHERE ");
                 }
-                sqlExpression.Append(customWhereClause);
+                sqlExpression.Append(customCommandParser.WhereClause);
             }
 
             // GROUP BY
@@ -1095,10 +1099,10 @@ namespace Origam.DA.Service
             }
 
             // ORDER BY
-            if (!string.IsNullOrWhiteSpace(customOrderByClause))
+            if (!string.IsNullOrWhiteSpace(customCommandParser?.OrderByClause))
             {
                 PrettyLine(sqlExpression);
-                sqlExpression.AppendFormat("ORDER BY {0}", customOrderByClause);
+                sqlExpression.AppendFormat("ORDER BY {0}", customCommandParser.OrderByClause);
             }
             else
             {
@@ -1624,11 +1628,16 @@ namespace Origam.DA.Service
                 selectParameterReferences, false, true, forceDatabaseCalculation);
         }
 
-        internal bool RenderSelectColumns(DataStructure ds, StringBuilder sqlExpression,
-            StringBuilder orderByBuilder, StringBuilder groupByBuilder, DataStructureEntity entity,
-            ColumnsInfo columnsInfo, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
-            DataStructureSortSet sortSet, Hashtable selectParameterReferences, bool isInRecursion,
-            bool concatScalarColumns, bool forceDatabaseCalculation)
+        internal bool RenderSelectColumns(DataStructure ds,
+            StringBuilder sqlExpression,
+            StringBuilder orderByBuilder, StringBuilder groupByBuilder,
+            DataStructureEntity entity,
+            ColumnsInfo columnsInfo, Hashtable replaceParameterTexts,
+            Hashtable dynamicParameters,
+            DataStructureSortSet sortSet, Hashtable selectParameterReferences,
+            bool isInRecursion,
+            bool concatScalarColumns, bool forceDatabaseCalculation,
+            List<Ordering> customOrderings = null) 
         {
 
             int i = 0;
@@ -1657,11 +1666,14 @@ namespace Origam.DA.Service
             i = 0;
             foreach (DataStructureColumn column in GetSortedColumns(entity, columnsInfo?.ColumnNames))
             {
+                LookupOrderingInfo customOrderingInfo =
+                    LookupOrderingInfo.TryCreate(customOrderings, column.Name );
                 var expression = RenderDataStructureColumn(ds, entity,
                         replaceParameterTexts, dynamicParameters,
                         sortSet, selectParameterReferences, isInRecursion,
                         forceDatabaseCalculation, group, order, ref groupByNeeded,
-                        columnsInfo ?? ColumnsInfo.Empty, column);
+                        columnsInfo ?? ColumnsInfo.Empty, column,
+                        customOrderingInfo);
                 if (expression != null)
                 {
                     if (i > 0) sqlExpression.Append(",");
@@ -1705,8 +1717,7 @@ namespace Origam.DA.Service
             }
             return groupByNeeded;
         }
-
-
+        
         internal IEnumerable<DataStructureColumn> GetSortedColumns(
             DataStructureEntity entity,
             List<string> scalarColumnNames)
@@ -1728,13 +1739,14 @@ namespace Origam.DA.Service
                 .OrderBy(x => scalarColumnNames.IndexOf(x.Name));
         }
 
-        public string RenderDataStructureColumn(DataStructure ds, 
-            DataStructureEntity entity, 
-            Hashtable replaceParameterTexts, 
-            Hashtable dynamicParameters, DataStructureSortSet sortSet, 
+        private string RenderDataStructureColumn(DataStructure ds,
+            DataStructureEntity entity,
+            Hashtable replaceParameterTexts,
+            Hashtable dynamicParameters, DataStructureSortSet sortSet,
             Hashtable selectParameterReferences, bool isInRecursion,
-            bool forceDatabaseCalculation, ArrayList group, SortedList order, 
-            ref bool groupByNeeded, ColumnsInfo columnsInfo, DataStructureColumn column)
+            bool forceDatabaseCalculation, ArrayList @group, SortedList order,
+            ref bool groupByNeeded, ColumnsInfo columnsInfo,
+            DataStructureColumn column, LookupOrderingInfo orderingInfo)
         {
             string result = null;
             bool processColumn = false;
@@ -1850,7 +1862,7 @@ namespace Origam.DA.Service
 
             // does not matter if processColumn=true, because we want to sort anytime sorting is specified,
             // e.g. if this is a scalar query and sorting is by another than the scalar column
-            if (column.IsColumnSorted(sortSet))
+            if (column.IsColumnSorted(sortSet) || orderingInfo != null)
             {
                 System.Diagnostics.Debug.Assert(resultExpression != String.Empty, "No expression generated for sorting.", "Column: " + column.Path);
                 SortOrder sortOrder;
@@ -1859,20 +1871,27 @@ namespace Origam.DA.Service
                 // value, not by the source value, this will bring the same logic
                 // as in the UI - when user sorts, it will always sort by a looked-up
                 // values
-                if (column.FinalLookup != null && !column.UseLookupValue)
+                if ((column.FinalLookup != null || orderingInfo != null) && !column.UseLookupValue)
                 {
                     sortExpression = RenderLookupColumnExpression(ds, entity, column,
-                        replaceParameterTexts, dynamicParameters, selectParameterReferences);
+                        replaceParameterTexts, dynamicParameters, 
+                        selectParameterReferences, orderingInfo.Lookup);
                 }
                 sortOrder.Expression = sortExpression;
-                sortOrder.SortDirection = column.SortDirection(sortSet);
-
-                if (order.Contains(column.SortOrder(sortSet)))
+                if (orderingInfo == null)
                 {
-                    throw new InvalidOperationException(ResourceUtils.GetString("ErrorSortOrder", column.SortOrder(sortSet).ToString(), column.Path));
+                    sortOrder.SortDirection = column.SortDirection(sortSet);
+                    if (order.Contains(column.SortOrder(sortSet)))
+                    {
+                        throw new InvalidOperationException(ResourceUtils.GetString("ErrorSortOrder", column.SortOrder(sortSet).ToString(), column.Path));
+                    }
+                    order.Add(column.SortOrder(sortSet), sortOrder);
                 }
-
-                order.Add(column.SortOrder(sortSet), sortOrder);
+                else
+                {
+                    sortOrder.SortDirection = orderingInfo.Direction;
+                    order.Add(orderingInfo.SortOrder, sortOrder);
+                }
             }
             return result;
         }
@@ -1953,7 +1972,7 @@ namespace Origam.DA.Service
 
         private string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity,
             DataStructureColumn column, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
-            Hashtable parameterReferences)
+            Hashtable parameterReferences, DataServiceDataLookup customLookup = null)
         {
             if (column.Aggregation != AggregationType.None)
             {
@@ -1961,7 +1980,7 @@ namespace Origam.DA.Service
             }
 
             return RenderLookupColumnExpression(ds, column.Entity == null ? entity : column.Entity, column.Field,
-                column.DefaultLookup == null ? column.Field.DefaultLookup : column.DefaultLookup,
+                column.FinalLookup ?? customLookup,
                 replaceParameterTexts, dynamicParameters, parameterReferences);
         }
 
@@ -3520,5 +3539,38 @@ namespace Origam.DA.Service
         public bool RenderSqlForDetachedFields { get; set; }
         public ISchemaItem SchemaItem { get; set; }
         public DataStructureEntity Entity { get; set; }
+    }
+    
+    internal class LookupOrderingInfo
+    {
+        public DataServiceDataLookup Lookup { get; }
+        public DataStructureColumnSortDirection Direction { get; }
+        public int SortOrder { get; }
+
+        internal static LookupOrderingInfo TryCreate(List<Ordering> orderings, string columnName)
+        {
+            var ordering = orderings
+                ?.FirstOrDefault(x => x.ColumnName == columnName);
+            if (ordering == null || ordering.LookupId == Guid.Empty) return null;
+                
+            var lookup = ServiceManager.Services
+                .GetService<IPersistenceService>()
+                .SchemaProvider
+                .RetrieveInstance(typeof(DataServiceDataLookup),
+                    new Key(ordering.LookupId)) as DataServiceDataLookup;
+
+            var direction = ordering.Direction.ToLower() == "asc"
+                ? DataStructureColumnSortDirection.Ascending
+                : DataStructureColumnSortDirection.Descending;
+            return new  LookupOrderingInfo(lookup, direction, ordering.SortOrder);
+        }
+
+        private LookupOrderingInfo(DataServiceDataLookup lookup,
+            DataStructureColumnSortDirection direction, int sortOrder)
+        {
+            Lookup = lookup;
+            Direction = direction;
+            SortOrder = sortOrder;
+        }
     }
 }

@@ -67,7 +67,7 @@ namespace Origam.DA
 		public QueryParameterCollection Parameters = new QueryParameterCollection();
 		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
 
-	    public List<Tuple<string, string>> CustomOrdering { get; set; }
+	    public List<Ordering> CustomOrdering { get; set; }
 	    public string CustomFilters { get; set; }
 
 	    public bool Paging

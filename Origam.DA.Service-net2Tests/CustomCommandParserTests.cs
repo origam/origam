@@ -41,7 +41,9 @@ namespace Origam.DA.Service_net2Tests
         [TestCase("", "")]
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
-            var sqlWhere = new CustomCommandParser("","").ToSqlWhere(filter);
+            var sqlWhere = new CustomCommandParser("","")
+                .Where(filter)
+                .WhereClause;
             Assert.That(sqlWhere, Is.EqualTo(expectedSqlWhere));
         }
 
@@ -52,18 +54,19 @@ namespace Origam.DA.Service_net2Tests
         [TestCase("[\"name\"\"gt\",\"John Doe\"")] // "," is missing
         public void ShouldThrowArgumentExceptionWhenParsingFilter(string filter)
         {
-            Assert.Throws<ArgumentException>(() => new CustomCommandParser("","").ToSqlWhere(filter));
+            Assert.Throws<ArgumentException>(() =>
+                new CustomCommandParser("","").Where(filter));
         }
 
         [Test]
         public void ShouldParseOrderBy()
         {
-            List<Tuple<string, string>> ordering = new List<Tuple<string, string>>
+            List<Ordering> ordering = new List<Ordering>
             {
-                new Tuple<string, string>("col1", "desc"),
-                new Tuple<string, string>("col2", "asc")
+                new Ordering("col1", "desc",100),
+                new Ordering("col2", "asc",101)
             };
-            string orderBy = new CustomCommandParser("","").ToSqlOrderBy(ordering);
+            string orderBy = new CustomCommandParser("","").OrderBy(ordering).OrderByClause;
             Assert.That(orderBy, Is.EqualTo("col1 DESC, col2 ASC"));
         }
 
@@ -77,17 +80,17 @@ namespace Origam.DA.Service_net2Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new CustomCommandParser("","").ToSqlOrderBy(ToListOfTuples(orderingStr));
+                new CustomCommandParser("","").OrderBy(ToListOfOrderings(orderingStr));
             });
         }
 
-        private List<Tuple<string, string>> ToListOfTuples(string orderingStr)
+        private List<Ordering> ToListOfOrderings(string orderingStr)
         {
             if (orderingStr == null) return null;
             string[] strings = orderingStr.Split(',');
-            return new List<Tuple<string, string>>
+            return new List<Ordering>
             {
-                new Tuple<string, string>(strings[0], strings [1])
+                new Ordering(strings[0], strings [1],100)
             };
         }
     }
