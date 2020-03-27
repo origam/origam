@@ -66,7 +66,7 @@ namespace Origam.Workbench
         private Timer watcherTimer;
         private Hashtable _customImages = new Hashtable();
         private bool _fileChangesPending = false;
-        private bool _supportsGit = false;
+        protected bool _supportsGit = false;
         
 
 		public ExpressionBrowser()
