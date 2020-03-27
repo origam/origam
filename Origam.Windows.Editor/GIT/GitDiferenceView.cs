@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Origam.Git;
 using Origam.UI;
 using WeifenLuo.WinFormsUI.Docking;
@@ -102,8 +94,5 @@ namespace Origam.Windows.Editor.GIT
         public event EventHandler Saving;
         public event SaveEventHandler Saved;
         public event EventHandler StatusTextChanged;
-        public void Dispose()
-        {
-        }
     }
 }
