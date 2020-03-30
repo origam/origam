@@ -89,10 +89,31 @@ namespace Origam.Windows.Editor.GIT
         public object LoadedObject { get; }
         public string Test() => "";
 
-        public event EventHandler TitleNameChanged;
-        public event EventHandler DirtyChanged;
-        public event EventHandler Saving;
-        public event SaveEventHandler Saved;
-        public event EventHandler StatusTextChanged;
+        public event EventHandler TitleNameChanged
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler DirtyChanged
+        {
+            add { }
+            remove { }
+        }
+
+        public event EventHandler Saving
+        {
+            add { }
+            remove { }
+        }
+        public event SaveEventHandler Saved
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler StatusTextChanged
+        {
+            add { }
+            remove { }
+        }
     }
 }

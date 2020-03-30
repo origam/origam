@@ -143,7 +143,11 @@ namespace Origam.Gui.Designer
 
 		public event System.EventHandler Activated;
 
-		public event System.EventHandler Deactivated;
+		public event System.EventHandler Deactivated
+		{
+			add { }
+			remove { }
+		}
 
 		public event System.ComponentModel.Design.DesignerTransactionCloseEventHandler TransactionClosed;
 
@@ -1020,7 +1024,11 @@ namespace Origam.Gui.Designer
 			}
 		}
 
-		public event System.ComponentModel.Design.DesignerEventHandler DesignerDisposed;
+		public event System.ComponentModel.Design.DesignerEventHandler DesignerDisposed
+		{
+			add { }
+			remove { }
+		}
 
 		public IDesignerHost ActiveDesigner
 		{
@@ -1031,11 +1039,23 @@ namespace Origam.Gui.Designer
 			}
 		}
 
-		public event System.ComponentModel.Design.DesignerEventHandler DesignerCreated;
+		public event System.ComponentModel.Design.DesignerEventHandler DesignerCreated
+		{
+			add { }
+			remove { }
+		}
 
-		public event System.ComponentModel.Design.ActiveDesignerEventHandler ActiveDesignerChanged;
+		public event System.ComponentModel.Design.ActiveDesignerEventHandler ActiveDesignerChanged
+		{
+			add { }
+			remove { }
+		}
 
-		public event System.EventHandler SelectionChanged;
+		public event System.EventHandler SelectionChanged
+		{
+			add { }
+			remove { }
+		}
 
 		#endregion
 
