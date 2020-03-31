@@ -348,7 +348,8 @@ namespace Origam.DA.Service
                     commandParser,
                     selectParameters.RowLimit,
                     selectParameters.CustomOrdering,
-                    selectParameters.CustomGrouping));
+                    selectParameters.CustomGrouping,
+                    selectParameters.AggregatedColumns));
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -914,7 +915,8 @@ namespace Origam.DA.Service
             bool paging, bool isInRecursion, bool forceDatabaseCalculation,
             CustomCommandParser customCommandParser = null,
             int? rowLimit = null, List<Ordering> customOrdering = null,
-            Grouping customGrouping = null)
+            Grouping customGrouping = null,
+            List<Aggregation> selectParametersAggregatedColumns = null)
         {
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -947,7 +949,7 @@ namespace Origam.DA.Service
             RenderSelectColumns(ds, sqlExpression, orderByBuilder,
                 groupByBuilder, entity, columnsInfo, replaceParameterTexts, dynamicParameters,
                 sortSet, selectParameterReferences, isInRecursion, concatScalarColumns,
-                forceDatabaseCalculation, customOrdering, customGrouping);
+                forceDatabaseCalculation, customOrdering, customGrouping, selectParametersAggregatedColumns);
 
             // paging column
             if (paging)
@@ -1639,7 +1641,9 @@ namespace Origam.DA.Service
             DataStructureSortSet sortSet, Hashtable selectParameterReferences,
             bool isInRecursion,
             bool concatScalarColumns, bool forceDatabaseCalculation,
-            List<Ordering> customOrderings = null, Grouping customGrouping = null)
+            List<Ordering> customOrderings = null,
+            Grouping customGrouping = null,
+            List<Aggregation> aggregatedColumns = null)
         {
             DataStructureColumn groupByColumn = null;
             int i = 0;
@@ -1666,7 +1670,10 @@ namespace Origam.DA.Service
                 return false;
             }
             i = 0;
-            foreach (DataStructureColumn column in GetSortedColumns(entity, columnsInfo?.ColumnNames))
+            var dataStructureColumns =
+                GetSortedColumns(entity, columnsInfo?.ColumnNames)
+                    .ToArray();
+            foreach (DataStructureColumn column in dataStructureColumns)
             {
                 if (customGrouping != null && column.Name == customGrouping.GroupBy)
                 {
@@ -1688,9 +1695,19 @@ namespace Origam.DA.Service
                     sqlExpression.Append(expression);
                 }
             }
+
+            if (aggregatedColumns != null)
+            {
+                RenderAggregations(ds, sqlExpression, entity,
+                    columnsInfo, replaceParameterTexts, dynamicParameters,
+                    selectParameterReferences, isInRecursion,aggregatedColumns,
+                    dataStructureColumns);
+            }
+
             if (customGrouping != null)
             {
                 sqlExpression.Append($", COUNT(*) as {ColumnData.GroupByCountColumn} ");
+               
                 if (customGrouping.LookupId != Guid.Empty)
                 {
                     var lookup = ServiceManager.Services
@@ -1747,7 +1764,47 @@ namespace Origam.DA.Service
             }
             return groupByNeeded;
         }
-        
+
+        private void RenderAggregations(DataStructure ds, StringBuilder sqlExpression,
+            DataStructureEntity entity, ColumnsInfo columnsInfo,
+            Hashtable replaceParameterTexts, Hashtable dynamicParameters, 
+            Hashtable selectParameterReferences,
+            bool isInRecursion, List<Aggregation> aggregatedColumns,
+            DataStructureColumn[] dataStructureColumns)
+        {
+            string groupExpression="";
+            bool groupByNeeded = false;
+            foreach (var aggregation in aggregatedColumns)
+            {
+                var column = dataStructureColumns
+                    .First(col => col.Name == aggregation.ColumnName);
+                string renderedColumn = GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
+                    dynamicParameters, selectParameterReferences, isInRecursion,
+                    ref groupByNeeded, columnsInfo, column, ref groupExpression);
+                switch (aggregation.AggregationType)
+                {
+                    case CustomAggregationType.Max:
+                        sqlExpression.Append(
+                            $" ,MAX({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                        break;
+                    case CustomAggregationType.Sum:
+                        sqlExpression.Append(
+                            $" ,SUM({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                        break;
+                    case CustomAggregationType.Avg:
+                        sqlExpression.Append(
+                            $" ,AVG({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                        break;
+                    case CustomAggregationType.Min:
+                        sqlExpression.Append(
+                            $" ,MIN({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
         internal IEnumerable<DataStructureColumn> GetSortedColumns(
             DataStructureEntity entity,
             List<string> scalarColumnNames)
@@ -1840,45 +1897,10 @@ namespace Origam.DA.Service
 
             if (processColumn || column.IsColumnSorted(sortSet))
             {
-                if (column.UseLookupValue)
-                {
-                    resultExpression = RenderLookupColumnExpression(ds, entity, column,
-                        replaceParameterTexts, dynamicParameters, selectParameterReferences);
-                    // if we would group by lookuped column, we use original column in group-by clause
-                    groupExpression = RenderExpression(column.Field as AbstractSchemaItem,
-                        column.Entity == null ? entity : column.Entity, replaceParameterTexts,
-                        dynamicParameters, selectParameterReferences); ;
-                }
-                else
-                {
-                    resultExpression = RenderExpression(
-                        item: column.Field as AbstractSchemaItem,
-                        entity: column.Entity ?? entity,
-                        replaceParameterTexts: replaceParameterTexts,
-                        dynamicParameters: dynamicParameters,
-                        parameterReferences: selectParameterReferences,
-                        renderSqlForDetachedFields: columnsInfo.RenderSqlForDetachedFields);
-                    groupExpression = resultExpression;
-
-                    if (column.Aggregation != AggregationType.None)
-                    {
-                        if (column.Field is AggregatedColumn)
-                        {
-                            throw new NotSupportedException(ResourceUtils.GetString("ErrorAggregInAggreg", column.Path));
-                        }
-                        resultExpression = FixAggregationDataType(column.DataType, resultExpression);
-                        resultExpression = FixSumAggregation(column.Aggregation, GetAggregationString(column.Aggregation) + "(" + resultExpression + ")");
-                        groupByNeeded = true;
-                    }
-                }
-                if (column.DataType == OrigamDataType.Geography)
-                {
-                    if (!isInRecursion)
-                    {
-                        // convert to text, becouse .net didn't have geolocation data type
-                        resultExpression = ConvertGeoToTextClause(resultExpression);
-                    }
-                }
+                resultExpression = 
+                    GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
+                        dynamicParameters, selectParameterReferences, isInRecursion,
+                        ref groupByNeeded, columnsInfo, column, ref groupExpression);
 
                 if (processColumn && !string.IsNullOrWhiteSpace(resultExpression))
                 {
@@ -1928,6 +1950,65 @@ namespace Origam.DA.Service
                 }
             }
             return result;
+        }
+
+        private string GetDataStructureColumnSqlName(DataStructure ds,
+            DataStructureEntity entity, Hashtable replaceParameterTexts,
+            Hashtable dynamicParameters, Hashtable selectParameterReferences,
+            bool isInRecursion, ref bool groupByNeeded, ColumnsInfo columnsInfo,
+            DataStructureColumn column, ref string groupExpression)
+        {
+            string resultExpression;
+            if (column.UseLookupValue)
+            {
+                resultExpression = RenderLookupColumnExpression(ds, entity, column,
+                    replaceParameterTexts, dynamicParameters,
+                    selectParameterReferences);
+                // if we would group by lookuped column, we use original column in group-by clause
+                groupExpression = RenderExpression(column.Field as AbstractSchemaItem,
+                    column.Entity == null ? entity : column.Entity,
+                    replaceParameterTexts,
+                    dynamicParameters, selectParameterReferences);
+            }
+            else
+            {
+                resultExpression = RenderExpression(
+                    item: column.Field as AbstractSchemaItem,
+                    entity: column.Entity ?? entity,
+                    replaceParameterTexts: replaceParameterTexts,
+                    dynamicParameters: dynamicParameters,
+                    parameterReferences: selectParameterReferences,
+                    renderSqlForDetachedFields: columnsInfo.RenderSqlForDetachedFields);
+                groupExpression = resultExpression;
+
+                if (column.Aggregation != AggregationType.None)
+                {
+                    if (column.Field is AggregatedColumn)
+                    {
+                        throw new NotSupportedException(
+                            ResourceUtils.GetString("ErrorAggregInAggreg",
+                                column.Path));
+                    }
+
+                    resultExpression =
+                        FixAggregationDataType(column.DataType, resultExpression);
+                    resultExpression = FixSumAggregation(column.Aggregation,
+                        GetAggregationString(column.Aggregation) + "(" +
+                        resultExpression + ")");
+                    groupByNeeded = true;
+                }
+            }
+
+            if (column.DataType == OrigamDataType.Geography)
+            {
+                if (!isInRecursion)
+                {
+                    // convert to text, becouse .net didn't have geolocation data type
+                    resultExpression = ConvertGeoToTextClause(resultExpression);
+                }
+            }
+
+            return resultExpression;
         }
 
         private static bool ShouldBeProcessed(bool forceDatabaseCalculation, DataStructureColumn column, FunctionCall functionCall)

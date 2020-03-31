@@ -20,26 +20,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Origam.Schema.EntityModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Origam.DA;
+using Origam.Extensions;
 
-namespace Origam.DA.Service
+namespace Origam.ServerCore.Model.UIService
+
 {
-    public class SelectParameters
+    public class GetGroupsAggregations
     {
-        public DataStructure DataStructure { get; set; }
-        public DataStructureEntity Entity { get; set; }
-        public DataStructureFilterSet Filter { get; set; }
-        public DataStructureSortSet SortSet { get; set; }
-        public Hashtable Parameters { get; set; }
-        public bool Paging { get; set; }
-        public string CustomFilters { get; set; } = "";
-        public int RowLimit { get; set; }
-        public List<Ordering> CustomOrdering { get; set; }
-        public bool ForceDatabaseCalculation { get; set; }
-        public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
-        public Grouping CustomGrouping { get; set; }
+        [RequiredNonDefault]
+        public Guid MenuId { get; set; }
+        [RequiredNonDefault]
+        public Guid DataStructureEntityId { get; set; }
+        public string Filter { get; set; }
         public List<Aggregation> AggregatedColumns { get; set; }
+        public Object SessionFormIdentifier { get; set; }
+        public Guid MasterRowId { get; set; }
     }
 }

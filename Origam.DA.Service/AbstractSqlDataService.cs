@@ -1591,7 +1591,8 @@ namespace Origam.DA.Service
                 CustomOrdering = query.CustomOrdering,
                 CustomGrouping = query.CustomGrouping,
                 RowLimit = query.RowLimit,
-                ForceDatabaseCalculation = query.ForceDatabaseCalculation
+                ForceDatabaseCalculation = query.ForceDatabaseCalculation,
+                AggregatedColumns = query.AggregatedColumns
             };
             DbDataAdapter adapter = GetAdapter(
                 adapterParameters, currentProfile);
@@ -1611,20 +1612,24 @@ namespace Origam.DA.Service
 	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
+		        var queryColumns = 
+			        query.ColumnsInfo.Columns
+			        .ToList()
+			        .Concat(query.AggregatedColumns.Select(x => new ColumnData(x.SqlQueryColumnName)))
+			        .ToList();
 		        while(reader.Read())
 		        {
-			        object[] values = new object[query.ColumnsInfo.Count];
-                    for (int i = 0, index = 0; i < query.ColumnsInfo.Count; i++)
+			        object[] values = new object[queryColumns.Count];
+                    for (int i = 0; i < queryColumns.Count; i++)
                     {
-                        if (query.ColumnsInfo.Columns[i].IsVirtual)
+                        if (queryColumns[i].IsVirtual)
                         {
                             continue;
                         }
-                        values[i] = reader.GetValue(reader.GetOrdinal(query.ColumnsInfo.Columns[i].Name));
-                        index++;
+                        values[i] = reader.GetValue(reader.GetOrdinal(queryColumns[i].Name));
                     }
 			        yield return detachedFieldPacker.ProcessReaderOutput(
-                        values, query.ColumnsInfo);
+                        values, queryColumns);
 		        }
 	        }
         }

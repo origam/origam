@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Origam.DA;
 using Origam.Extensions;
 
 namespace Origam.ServerCore.Model.UIService
@@ -49,5 +50,6 @@ namespace Origam.ServerCore.Model.UIService
                 .ToList();
         
         public Object SessionFormIdentifier { get; set; }
+        public List<Aggregation> AggregatedColumns { get; set; }
     }
 }

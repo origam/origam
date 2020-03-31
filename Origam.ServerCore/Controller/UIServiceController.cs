@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -790,7 +790,8 @@ namespace Origam.ServerCore.Controller
                     columns: columns, 
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
-                CustomGrouping= new Grouping(input.GroupBy, input.GroupByLookupId)
+                CustomGrouping= new Grouping(input.GroupBy, input.GroupByLookupId),
+                AggregatedColumns = input.AggregatedColumns
             };
             if(entityData.MenuItem.ListDataStructure != null)
             {
