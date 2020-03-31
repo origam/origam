@@ -47,6 +47,8 @@ namespace Origam.Schema.EntityModel
 
 		[TypeConverter(typeof(DataQueryEntityConverter))]
 		[RefreshProperties(RefreshProperties.Repaint)]
+        [NotNullModelElementRuleAttribute()]
+        [XmlReference("entity", "DataStructureEntityId")]
 		public DataStructureEntity Entity
 		{
 			get
