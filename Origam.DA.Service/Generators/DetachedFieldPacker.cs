@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Origam.DA.Service
     public interface IDetachedFieldPacker
     {
         List<object> ProcessReaderOutput(object[] values,
-            ColumnsInfo columnsInfo);
+            List<ColumnData> columnData);
 
         string RenderSqlExpression(DataStructureEntity entity,
             DetachedField detachedField);
@@ -36,7 +37,7 @@ namespace Origam.DA.Service
     
     class DetachedFieldPackerPostgre : IDetachedFieldPacker
     {
-        public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        public List<object> ProcessReaderOutput(object[] values, List<ColumnData> columnData)
         {
             throw new NotImplementedException();
         }
@@ -50,23 +51,23 @@ namespace Origam.DA.Service
 
     public class DetachedFieldPackerMs : IDetachedFieldPacker
     {
-        public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        public List<object> ProcessReaderOutput(object[] values, List<ColumnData> columnData)
         {
-            if (columnsInfo == null)
-                throw new ArgumentNullException(nameof(columnsInfo));
+            if (columnData == null)
+                throw new ArgumentNullException(nameof(columnData));
             var updatedValues = new List<object>();
-            for (int i = 0; i < columnsInfo.Count; i++)
+            for (int i = 0; i < columnData.Count; i++)
             {
-                if (columnsInfo.Columns[i].IsVirtual)
+                if (columnData[i].IsVirtual)
                 {
-                    if (columnsInfo.Columns[i].HasRelation && values[i] != null)
+                    if (columnData[i].HasRelation && values[i] != null)
                     {
                         updatedValues.Add(((string) values[i]).Split((char) 1));
                         continue;
                     }
                     else
                     {
-                        updatedValues.Add(columnsInfo.Columns[i].DefaultValue);
+                        updatedValues.Add(columnData[i].DefaultValue);
                         continue;
                     }
                 }
