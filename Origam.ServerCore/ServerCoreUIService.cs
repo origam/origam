@@ -911,6 +911,36 @@ namespace Origam.ServerCore
                 DeleteFilter(oldFilterId);
             }
         }
+        public void ResetDefaultFilter(ResetDefaultFilterInput input)
+        {
+            var profileId = SecurityTools.CurrentUserProfile().Id;
+            Guid workflowId;
+            if(!(sessionManager.GetSession(input.SessionFormIdentifier) 
+                is WorkflowSessionStore workflowSessionStore))
+            {
+                workflowId = Guid.Empty;
+            }
+            else
+            {
+                workflowId = workflowSessionStore.WorkflowId;
+            }
+            var userConfig = OrigamPanelConfigDA.LoadConfigData(
+                input.PanelInstanceId, workflowId, profileId);
+            if ((userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            || (userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] 
+            == DBNull.Value))
+            {
+                return;
+            }
+            var filterId = (Guid)userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"];
+            userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] = DBNull.Value;
+            OrigamPanelConfigDA.SaveUserConfig(
+                userConfig, input.PanelInstanceId, workflowId, profileId);
+            DeleteFilter(filterId);
+        }
         private static bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)

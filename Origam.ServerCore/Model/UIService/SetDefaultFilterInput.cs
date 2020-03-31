@@ -27,6 +27,5 @@ namespace Origam.ServerCore.Model.UIService
     {
         public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
         public Guid PanelInstanceId { get; set; }
-        
     }
 }

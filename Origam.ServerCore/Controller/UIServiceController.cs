@@ -437,6 +437,16 @@ namespace Origam.ServerCore.Controller
                 .Map(ThrowAwayReturnData)
                 .Finally(UnwrapReturnValue);
         }
+        [HttpPost("[action]")]
+        public IActionResult ResetDefaultFilter(
+            [FromBody]ResetDefaultFilterInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                sessionObjects.UIService.ResetDefaultFilter(input);
+                return Ok();
+            });
+        }
         #endregion
         private Dictionary<object, string> GetLookupLabelsInternal(
             LookupLabelsInput input)
