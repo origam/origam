@@ -23,11 +23,10 @@ using System;
 
 namespace Origam.ServerCore.Model.UIService
 {
-    public class SaveFilterInput
+    public class SetDefaultFilterInput : SaveFilterInput
     {
-        public Guid DataStructureEntityId { get; set; }
-        public Guid PanelId { get; set; }
-        public UIGridFilterCoreConfiguration Filter { get; set; }
-        public bool IsDefault { get; set; }
+        public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
+        public Guid PanelInstanceId { get; set; }
+        
     }
 }

@@ -866,9 +866,50 @@ namespace Origam.ServerCore
             filter.PanelFilter.Rows[0].Delete();
             OrigamPanelFilterDA.PersistFilter(filter);
         }
-        public static Result SetDefaultFilter()
+        public void SetDefaultFilter(
+            SetDefaultFilterInput input, DataStructureEntity entity)
         {
-            return Result.Ok();
+            var profileId = SecurityTools.CurrentUserProfile().Id;
+            Guid workflowId;
+            if(!(sessionManager.GetSession(input.SessionFormIdentifier) 
+                is WorkflowSessionStore workflowSessionStore))
+            {
+                workflowId = Guid.Empty;
+            }
+            else
+            {
+                workflowId = workflowSessionStore.WorkflowId;
+            }
+            var userConfig = OrigamPanelConfigDA.LoadConfigData(
+                input.PanelInstanceId, workflowId, profileId);
+            if(userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            {
+                OrigamPanelConfigDA.CreatePanelConfigRow(
+                    userConfig.Tables["OrigamFormPanelConfig"], 
+                    input.PanelInstanceId, 
+                    workflowId, 
+                    profileId, 
+                    OrigamPanelViewMode.Form);
+            }
+            var shouldDeleteFilter = false;
+            var oldFilterId = Guid.Empty;
+            if(userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] 
+            != DBNull.Value)
+            {
+                shouldDeleteFilter = true;
+                oldFilterId = (Guid)userConfig.Tables["OrigamFormPanelConfig"]
+                    .Rows[0]["refOrigamPanelFilterId"];
+            }
+            var filterId = SaveFilter(entity, input).Value;
+            userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] = filterId;
+            OrigamPanelConfigDA.SaveUserConfig(
+                userConfig, input.PanelInstanceId, workflowId, profileId);
+            if (shouldDeleteFilter)
+            {
+                DeleteFilter(oldFilterId);
+            }
         }
         private static bool IsRowDirty(DataRow row)
         {

@@ -425,6 +425,18 @@ namespace Origam.ServerCore.Controller
                 return Ok();
             });
         }
+        [HttpPost("[action]")]
+        public IActionResult SetDefaultFilter(
+            [FromBody]SetDefaultFilterInput input)
+        {
+            return FindEntity(input.DataStructureEntityId)
+                .Tap(dataStructureEntity
+                    => sessionObjects.UIService.SetDefaultFilter(
+                        input, dataStructureEntity))
+                .Map(ToActionResult)
+                .Map(ThrowAwayReturnData)
+                .Finally(UnwrapReturnValue);
+        }
         #endregion
         private Dictionary<object, string> GetLookupLabelsInternal(
             LookupLabelsInput input)

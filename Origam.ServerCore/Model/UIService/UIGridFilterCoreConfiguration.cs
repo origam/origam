@@ -20,14 +20,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
+using Origam.Server;
 
 namespace Origam.ServerCore.Model.UIService
 {
-    public class SaveFilterInput
+    public class UIGridFilterCoreConfiguration
     {
-        public Guid DataStructureEntityId { get; set; }
-        public Guid PanelId { get; set; }
-        public UIGridFilterCoreConfiguration Filter { get; set; }
-        public bool IsDefault { get; set; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public bool IsGlobal { get; set; }
+        public IList<UIGridFilterFieldConfiguration> Details { get; set; }
+	
     }
 }
