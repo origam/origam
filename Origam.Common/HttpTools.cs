@@ -390,6 +390,7 @@ namespace Origam
 				request.Headers[HttpRequestHeader.Authorization] = string.Format(
 					"{0} {1}", authenticationType, credentials);
 			}
+			request.Proxy = new WebProxy(new Uri("http://localhost:8080"));
 			if (content != null)
 			{
 				request.ContentType = contentType;
