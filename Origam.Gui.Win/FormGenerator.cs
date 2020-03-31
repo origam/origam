@@ -49,7 +49,7 @@ namespace Origam.Gui.Win
 	/// Summary description for FormGenerator.
 	/// </summary>
 	/// 
-	public sealed class FormGenerator : IDisposable
+	public class FormGenerator : IDisposable
 	{
 		private enum ProcessPropertyValueOperation {Save, Load}
 
