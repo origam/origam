@@ -108,5 +108,6 @@ namespace Origam.DA
 
 	    public string Entity { get; set; }
 	    public bool ForceDatabaseCalculation { get; set; }
+	    public Grouping CustomGrouping { get; set; }
 	}
 }

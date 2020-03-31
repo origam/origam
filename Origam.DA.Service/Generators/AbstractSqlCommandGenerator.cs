@@ -347,7 +347,8 @@ namespace Origam.DA.Service
                     forceDatabaseCalculation,
                     commandParser,
                     selectParameters.RowLimit,
-                    selectParameters.CustomOrdering));
+                    selectParameters.CustomOrdering,
+                    selectParameters.CustomGrouping));
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -912,7 +913,8 @@ namespace Origam.DA.Service
             bool restrictScalarToTop1,
             bool paging, bool isInRecursion, bool forceDatabaseCalculation,
             CustomCommandParser customCommandParser = null,
-            int? rowLimit = null, List<Ordering> customOrdering = null)
+            int? rowLimit = null, List<Ordering> customOrdering = null,
+            Grouping customGrouping = null)
         {
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -945,7 +947,7 @@ namespace Origam.DA.Service
             RenderSelectColumns(ds, sqlExpression, orderByBuilder,
                 groupByBuilder, entity, columnsInfo, replaceParameterTexts, dynamicParameters,
                 sortSet, selectParameterReferences, isInRecursion, concatScalarColumns,
-                forceDatabaseCalculation, customOrdering);
+                forceDatabaseCalculation, customOrdering, customGrouping);
 
             // paging column
             if (paging)
@@ -1637,9 +1639,9 @@ namespace Origam.DA.Service
             DataStructureSortSet sortSet, Hashtable selectParameterReferences,
             bool isInRecursion,
             bool concatScalarColumns, bool forceDatabaseCalculation,
-            List<Ordering> customOrderings = null) 
+            List<Ordering> customOrderings = null, Grouping customGrouping = null)
         {
-
+            DataStructureColumn groupByColumn = null;
             int i = 0;
             ArrayList group = new ArrayList();
             SortedList order = new SortedList();
@@ -1666,6 +1668,10 @@ namespace Origam.DA.Service
             i = 0;
             foreach (DataStructureColumn column in GetSortedColumns(entity, columnsInfo?.ColumnNames))
             {
+                if (customGrouping != null && column.Name == customGrouping.GroupBy)
+                {
+                    groupByColumn = column;
+                }
                 LookupOrderingInfo customOrderingInfo =
                     LookupOrderingInfo.TryCreate(customOrderings, column.Name );
                 var expression = RenderDataStructureColumn(ds, entity,
@@ -1682,7 +1688,31 @@ namespace Origam.DA.Service
                     sqlExpression.Append(expression);
                 }
             }
+            if (customGrouping != null)
+            {
+                sqlExpression.Append($", COUNT(*) as {ColumnData.GroupByCountColumn} ");
+                if (customGrouping.LookupId != Guid.Empty)
+                {
+                    var lookup = ServiceManager.Services
+                        .GetService<IPersistenceService>()
+                        .SchemaProvider
+                        .RetrieveInstance(typeof(DataServiceDataLookup),
+                            new Key(customGrouping.LookupId)) as DataServiceDataLookup;
 
+                    var resultExpression = 
+                        RenderLookupColumnExpression(ds, entity, groupByColumn,
+                        replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
+                    sqlExpression.Append(" , ");
+                    sqlExpression.Append(resultExpression);
+                    sqlExpression.Append($" AS {ColumnData.GroupByCaptionColumn} ");
+                }
+
+                groupByNeeded = true;
+                if (!group.Contains(customGrouping.GroupBy))
+                {
+                    group.Add(customGrouping.GroupBy);
+                }
+            }
             if (order.Count > 0)
             {
                 i = 0;
@@ -1726,8 +1756,12 @@ namespace Origam.DA.Service
             {
                 return entity.Columns;
             }
-            List<string> missingColumns = scalarColumnNames.Where(
-                x => !entity.Columns.Exists(y => y.Name == x)).ToList();
+            List<string> missingColumns = scalarColumnNames
+                .Where(x =>
+                    !entity.Columns.Exists(y => y.Name == x) &&
+                    x != ColumnData.GroupByCountColumn.Name && 
+                    x != ColumnData.GroupByCaptionColumn.Name)
+                .ToList();
             if(missingColumns.Count > 0)
             {
                 throw new Exception(
@@ -1875,7 +1909,7 @@ namespace Origam.DA.Service
                 {
                     sortExpression = RenderLookupColumnExpression(ds, entity, column,
                         replaceParameterTexts, dynamicParameters, 
-                        selectParameterReferences, orderingInfo.Lookup);
+                        selectParameterReferences, orderingInfo?.Lookup);
                 }
                 sortOrder.Expression = sortExpression;
                 if (orderingInfo == null)

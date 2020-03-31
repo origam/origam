@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -79,6 +80,11 @@ namespace Origam.DA
         public object DefaultValue { get; }
         public bool HasRelation { get;}
 
+        public static readonly ColumnData
+            GroupByCountColumn = new ColumnData("groupByCount");        
+        public static readonly ColumnData
+            GroupByCaptionColumn = new ColumnData("groupByCaption");
+        
         public ColumnData(string name, bool isVirtual, object defaultValue, bool hasRelation)
         {
             Name = name;
@@ -90,6 +96,11 @@ namespace Origam.DA
         public ColumnData(string name)
         {
             Name = name;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

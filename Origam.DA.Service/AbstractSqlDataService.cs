@@ -1589,6 +1589,7 @@ namespace Origam.DA.Service
                 ColumnsInfo = query.ColumnsInfo,
                 CustomFilters = query.CustomFilters,
                 CustomOrdering = query.CustomOrdering,
+                CustomGrouping = query.CustomGrouping,
                 RowLimit = query.RowLimit,
                 ForceDatabaseCalculation = query.ForceDatabaseCalculation
             };

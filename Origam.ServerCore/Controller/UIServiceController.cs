@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -260,7 +260,22 @@ namespace Origam.ServerCore.Controller
                     .Bind(CheckEntityBelongsToMenu)
                     .Bind(entityData => GetRowsGetQuery(input, entityData))
                     .Bind(datastructureQuery=>ExecuteDataReader(
-                        datastructureQuery, input))
+                        datastructureQuery, input.MenuId))
+                    .Finally(UnwrapReturnValue);
+            });
+        }       
+
+        [HttpPost("[action]")]
+        public IActionResult GetGroups([FromBody]GetGroupsInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(input.DataStructureEntityId, menuItem))
+                    .Bind(CheckEntityBelongsToMenu)
+                    .Bind(entityData => GetRowsGetGroupQuery(input, entityData))                    
+                    .Bind(dataStructureQuery => ExecuteDataReader(dataStructureQuery, input.MenuId))
                     .Finally(UnwrapReturnValue);
             });
         }
@@ -465,7 +480,7 @@ namespace Origam.ServerCore.Controller
             return null;
         }
         private Result<IActionResult, IActionResult> ExecuteDataReader(
-            DataStructureQuery dataStructureQuery, GetRowsInput input)
+            DataStructureQuery dataStructureQuery, Guid methodId)
         {
             Result<DataStructureMethod, IActionResult> method 
                 = FindItem<DataStructureMethod>(dataStructureQuery.MethodId);
@@ -474,7 +489,7 @@ namespace Origam.ServerCore.Controller
                 var structureMethod = method.Value;
                 if (structureMethod is DataStructureWorkflowMethod)
                 {
-                    var menuItem = FindItem<FormReferenceMenuItem>(input.MenuId)
+                    var menuItem = FindItem<FormReferenceMenuItem>(methodId)
                         .Value;
                     IEnumerable<object> result2 = LoadData(
                         menuItem,dataStructureQuery).ToList();
@@ -689,6 +704,93 @@ namespace Origam.ServerCore.Controller
                     .ToList(),
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
+            };
+            if(entityData.MenuItem.ListDataStructure != null)
+            {
+                if(entityData.MenuItem.ListEntity.Name 
+                    == entityData.Entity.Name)
+                {
+                    query.MethodId = entityData.MenuItem.ListMethodId;
+                    query.DataSourceId 
+                        = entityData.MenuItem.ListDataStructure.Id;
+                    // get parameters from session store
+                    var parameters = sessionObjects.UIService.GetParameters(
+                        input.SessionFormIdentifier);
+                    foreach (var key in parameters.Keys)
+                    {
+                        query.Parameters.Add(
+                            new QueryParameter(key.ToString(),
+                            parameters[key]));
+                    }
+                }
+                else
+                {
+                    return FindItem<DataStructureMethod>(entityData.MenuItem.MethodId)
+                        .Map(CustomParameterService.GetFirstNonCustomParameter)
+                        .Bind(parameterName =>
+                        {
+                            query.DataSourceId 
+                                = entityData.Entity.RootEntity.ParentItemId;
+                            query.Parameters.Add(new QueryParameter(
+                                parameterName, input.MasterRowId));
+                            if (input.MasterRowId == Guid.Empty)
+                            {
+                                return Result
+                                    .Failure<DataStructureQuery, IActionResult>(
+                                    BadRequest("MasterRowId cannot be empty"));
+                            }
+                            query.MethodId = entityData.MenuItem.MethodId;
+                            return Result
+                                .Success<DataStructureQuery, IActionResult>(query);
+                        });
+                }
+            }
+            else
+            {
+                query.MethodId = entityData.MenuItem.MethodId;
+                query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
+            }
+            return Result.Ok<DataStructureQuery, IActionResult>(query);
+        }   
+        private Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
+            GetGroupsInput input, EntityData entityData)
+        {
+            var customOrdering = GetOrderings(input.Ordering);
+            if (customOrdering.IsFailure)
+            {
+                return Result.Failure<DataStructureQuery, IActionResult>(customOrdering.Error);
+            }
+            
+            var field = entityData.Entity.Column(input.GroupBy).Field;
+            var columnData = new ColumnData(
+                name: input.GroupBy,
+                isVirtual: (field is DetachedField),
+                defaultValue: (field as DetachedField)
+                ?.DefaultValue?.Value,
+                hasRelation: (field as DetachedField)
+                ?.ArrayRelation != null);
+
+            List<ColumnData> columns = new List<ColumnData>
+                {columnData, ColumnData.GroupByCountColumn};
+
+            if (input.GroupByLookupId != Guid.Empty)
+            {
+                columns.Add(ColumnData.GroupByCaptionColumn);
+            }
+
+            var query = new DataStructureQuery
+            {
+                Entity = entityData.Entity.Name,
+                CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
+                    ? null
+                    : input.Filter,
+                CustomOrdering = customOrdering.Value,
+                RowLimit = input.RowLimit,
+                ColumnsInfo = new ColumnsInfo(
+                    columns: columns, 
+                    renderSqlForDetachedFields: true),
+                ForceDatabaseCalculation = true,
+                CustomGrouping= new Grouping(input.GroupBy, input.GroupByLookupId)
             };
             if(entityData.MenuItem.ListDataStructure != null)
             {

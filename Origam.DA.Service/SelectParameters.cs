@@ -39,5 +39,6 @@ namespace Origam.DA.Service
         public List<Ordering> CustomOrdering { get; set; }
         public bool ForceDatabaseCalculation { get; set; }
         public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
+        public Grouping CustomGrouping { get; set; }
     }
 }
