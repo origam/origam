@@ -210,6 +210,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.ServerCore", "Origam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "IdentityServer4\IdentityServer4.csproj", "{EF68B85C-4FC9-47A5-85FD-7693B7ABED3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.DocProcessor", "Origam.DocProcessor\Origam.DocProcessor.csproj", "{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Architect|Any CPU = Debug Architect|Any CPU
@@ -1530,6 +1532,22 @@ Global
 		{EF68B85C-4FC9-47A5-85FD-7693B7ABED3E}.Release Server|Any CPU.Build.0 = Release|Any CPU
 		{EF68B85C-4FC9-47A5-85FD-7693B7ABED3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF68B85C-4FC9-47A5-85FD-7693B7ABED3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug Client|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug Client|Any CPU.Build.0 = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug Server|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug Server|Any CPU.Build.0 = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release Architect|Any CPU.ActiveCfg = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release Architect|Any CPU.Build.0 = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release Client|Any CPU.ActiveCfg = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release Client|Any CPU.Build.0 = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release Server|Any CPU.ActiveCfg = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release Server|Any CPU.Build.0 = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

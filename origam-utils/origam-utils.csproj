@@ -7,7 +7,7 @@
     <ProjectGuid>{3896810A-D91A-48AB-B6D8-DB2306F0B62D}</ProjectGuid>
     <DefineConstants Condition="'$(TargetFramework)'=='netcoreapp2.1'">NETCORE2_1</DefineConstants>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
+    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>Origam.Utils</RootNamespace>
     <AssemblyName>origam-utils</AssemblyName>
 	<FileAlignment>512</FileAlignment>
@@ -96,6 +96,7 @@
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
       <Name>Origam.DA.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.DocProcessor\Origam.DocProcessor.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
       <Name>Origam.OrigamEngine</Name>
