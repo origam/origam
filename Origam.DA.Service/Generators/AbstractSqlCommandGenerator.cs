@@ -151,8 +151,22 @@ namespace Origam.DA.Service
         {
             Hashtable selectParameterReferences = new Hashtable();
             IDbCommand cmd = GetCommand(
-                SelectSql(ds, ds.Entities[0] as DataStructureEntity, filter, sortSet,
-                columnsInfo, null, parameters, selectParameterReferences, true, false, false, true));
+                SelectSql(
+                    selectParameters: new SelectParameters
+                    {
+                        DataStructure = ds,
+                        Entity = ds.Entities[0] as DataStructureEntity,
+                        Filter = filter,
+                        SortSet = sortSet,
+                        ColumnsInfo = columnsInfo,
+                        Parameters = parameters,
+                        Paging = false
+                    },
+                    replaceParameterTexts: null,
+                    selectParameterReferences: selectParameterReferences, 
+                    restrictScalarToTop1: true, 
+                    isInRecursion: false, 
+                    forceDatabaseCalculation: true));
             cmd.CommandType = CommandType.Text;
             BuildSelectParameters(cmd, selectParameterReferences);
             BuildFilterParameters(cmd, ds, filter, null, parameters);
@@ -334,22 +348,13 @@ namespace Origam.DA.Service
             DataStructureEntity entity = selectParameters.Entity;
             adapter.SelectCommand =
                 GetCommand(SelectSql(
-                    dataStructure,
-                    entity,
-                    selectParameters.Filter, 
-                    selectParameters.SortSet, 
-                    selectParameters.ColumnsInfo,
-                    null, selectParameters.Parameters,
-                    selectParameterReferences, 
-                    false, 
-                    selectParameters.Paging,
-                    false,
-                    forceDatabaseCalculation,
-                    commandParser,
-                    selectParameters.RowLimit,
-                    selectParameters.CustomOrdering,
-                    selectParameters.CustomGrouping,
-                    selectParameters.AggregatedColumns));
+                    selectParameters: selectParameters,
+                    replaceParameterTexts: null,
+                    selectParameterReferences: selectParameterReferences, 
+                    restrictScalarToTop1: false,
+                    isInRecursion: false,
+                    forceDatabaseCalculation: forceDatabaseCalculation,
+                    customCommandParser: commandParser));
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -879,8 +884,21 @@ namespace Origam.DA.Service
             bool forceDatabaseCalculation)
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append(SelectSql(ds, entity, filter, sortSet, columnsInfo, null, parameters,
-                selectParameterReferences, true, false, false, forceDatabaseCalculation));
+            builder.Append(SelectSql( new SelectParameters
+                {
+                    Entity = entity,
+                    DataStructure = ds,
+                    Filter = filter,
+                    ColumnsInfo = columnsInfo,
+                    SortSet = sortSet,
+                    Parameters = parameters,
+                    Paging = false
+                }, 
+                replaceParameterTexts: null, 
+                selectParameterReferences: selectParameterReferences, 
+                restrictScalarToTop1: true,  
+                isInRecursion: false, 
+                forceDatabaseCalculation: forceDatabaseCalculation));
             return builder.ToString();
         }
 
@@ -892,8 +910,20 @@ namespace Origam.DA.Service
             Hashtable parameters, Hashtable selectParameterReferences, bool paging,
             bool forceDatabaseCalculation)
         {
-            return SelectSql(ds, entity, filter, sortSet, columnsInfo, null, parameters,
-                selectParameterReferences, true, paging, false, forceDatabaseCalculation);
+            return SelectSql( new SelectParameters
+                {
+                    Entity = entity,
+                    DataStructure = ds,
+                    Filter = filter,
+                    ColumnsInfo = columnsInfo,
+                    SortSet = sortSet,
+                    Parameters = parameters,
+                    Paging = paging
+                }, replaceParameterTexts: null, 
+                selectParameterReferences: selectParameterReferences, 
+                restrictScalarToTop1: true, 
+                isInRecursion: false, 
+                forceDatabaseCalculation: forceDatabaseCalculation);
         }
 
         public string SelectSql(DataStructure ds, DataStructureEntity entity,
@@ -901,23 +931,42 @@ namespace Origam.DA.Service
             Hashtable replaceParameterTexts, Hashtable dynamicParameters,
             Hashtable selectParameterReferences, bool forceDatabaseCalculation)
         {
-            return SelectSql(ds, entity, filter, sortSet, columnsInfo, replaceParameterTexts,
-                dynamicParameters, selectParameterReferences, true, false, false,
-                forceDatabaseCalculation);
+            return SelectSql(
+                selectParameters: new SelectParameters
+                {
+                    Entity = entity,
+                    DataStructure = ds,
+                    Filter = filter,
+                    ColumnsInfo = columnsInfo,
+                    SortSet = sortSet,
+                    Parameters = dynamicParameters,
+                    Paging = false
+                }, 
+                replaceParameterTexts: replaceParameterTexts, 
+                selectParameterReferences: selectParameterReferences, 
+                restrictScalarToTop1: true, 
+                isInRecursion: false,
+                forceDatabaseCalculation: forceDatabaseCalculation);
         }
 
-        internal string SelectSql(DataStructure ds, DataStructureEntity entity,
-            DataStructureFilterSet filter,
-            DataStructureSortSet sortSet, ColumnsInfo columnsInfo,
-            Hashtable replaceParameterTexts,
-            Hashtable dynamicParameters, Hashtable selectParameterReferences,
+        internal string SelectSql(SelectParameters selectParameters,
+            Hashtable replaceParameterTexts, Hashtable selectParameterReferences,
             bool restrictScalarToTop1,
-            bool paging, bool isInRecursion, bool forceDatabaseCalculation,
-            CustomCommandParser customCommandParser = null,
-            int? rowLimit = null, List<Ordering> customOrdering = null,
-            Grouping customGrouping = null,
-            List<Aggregation> aggregatedColumns = null)
+            bool isInRecursion, bool forceDatabaseCalculation,
+            CustomCommandParser customCommandParser = null)
         {
+            var entity = selectParameters.Entity;
+            var paging = selectParameters.Paging;
+            var ds = selectParameters.DataStructure;
+            var sortSet = selectParameters.SortSet;
+            var columnsInfo = selectParameters.ColumnsInfo;
+            var dynamicParameters = selectParameters.Parameters;
+            var customOrdering = selectParameters.CustomOrdering;
+            var customGrouping = selectParameters.CustomGrouping;
+            var aggregatedColumns = selectParameters.AggregatedColumns;
+            var filter = selectParameters.Filter;
+            var rowLimit = selectParameters.RowLimit;
+            
             if (!(entity.EntityDefinition is TableMappingItem))
             {
                 throw new Exception("Only database mapped entities can be processed by the Data Service!");
@@ -2192,15 +2241,21 @@ namespace Origam.DA.Service
             try
             {
                 builder.Append("("
-                    + SelectSql(dataServiceLookup.ValueDataStructure,
-                    lookupEntity,
-                    valueFilterSet,
-                    dataServiceLookup.ValueSortSet,
-                    new ColumnsInfo(dataServiceLookup.ValueDisplayMember),
-                    replaceTexts,
-                    dynamicParameters,
-                    parameterReferences,
-                    true, false, true, true)
+                    + SelectSql(new SelectParameters
+                        {
+                            DataStructure =  dataServiceLookup.ValueDataStructure,
+                            Entity = lookupEntity,
+                            Filter = valueFilterSet,
+                            SortSet = dataServiceLookup.ValueSortSet,
+                            ColumnsInfo =  new ColumnsInfo(dataServiceLookup.ValueDisplayMember),
+                            Parameters = dynamicParameters,
+                            Paging = false
+                        },
+                        replaceParameterTexts: replaceTexts,
+                        selectParameterReferences: parameterReferences,
+                        restrictScalarToTop1: true,
+                        isInRecursion: true, 
+                        forceDatabaseCalculation: true)
                     );
             }
             finally
@@ -2906,15 +2961,22 @@ namespace Origam.DA.Service
             }
 
             string resultExpression = "("
-                + SelectSql(lookup.ListDataStructure,
-                lookupEntity,
-                lookup.ListMethod as DataStructureFilterSet,
-                null,
-                new ColumnsInfo(lookup.ListDisplayMember),
-                replaceTexts,
-                dynamicParameters,
-                parameterReferences,
-                false, false, true, true)
+                + SelectSql(
+                    selectParameters: new SelectParameters
+                    {
+                        DataStructure = lookup.ListDataStructure,
+                        Entity = lookupEntity,
+                        Filter = lookup.ListMethod as DataStructureFilterSet,
+                        SortSet = null,
+                        ColumnsInfo = new ColumnsInfo(lookup.ListDisplayMember),
+                        Paging = false,
+                        Parameters = dynamicParameters
+                    },
+                    replaceParameterTexts: replaceTexts,
+                    selectParameterReferences: parameterReferences, 
+                    restrictScalarToTop1: false, 
+                    isInRecursion: true,
+                    forceDatabaseCalculation: true)
                 + ")";
 
             return resultExpression;
