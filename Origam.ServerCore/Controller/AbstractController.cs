@@ -231,7 +231,7 @@ namespace Origam.ServerCore.Controller
         }
         
         protected Result<DataStructureQuery, IActionResult> AddMethodAndSource(
-            object sessionFormIdentifier, Guid masterRowId, EntityData entityData,
+            Guid sessionFormIdentifier, Guid masterRowId, EntityData entityData,
             DataStructureQuery query)
         {
             bool isLazyLoaded = entityData.MenuItem.ListDataStructure != null;

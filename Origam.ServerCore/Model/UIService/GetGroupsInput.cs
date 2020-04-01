@@ -43,7 +43,7 @@ namespace Origam.ServerCore.Model.UIService
         public string GroupBy { get; set; }
         public Guid MasterRowId { get; set; }
         public Guid GroupByLookupId { get; set; }
-        public Object SessionFormIdentifier { get; set; }
+        public Guid SessionFormIdentifier { get; set; }
         public List<Aggregation> AggregatedColumns { get; set; }
     }
 }

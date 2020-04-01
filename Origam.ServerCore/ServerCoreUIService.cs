@@ -356,18 +356,16 @@ namespace Origam.ServerCore
             return sessionStore.GetRowData(
                 input.Entity, input.RowId, false);
         }
-        public IDictionary GetParameters(object sessionFormIdentifier)
+        public IDictionary GetParameters(Guid sessionFormIdentifier)
         {
-            if (sessionFormIdentifier == null)
+            if (sessionFormIdentifier == Guid.Empty)
             {
                 return new Hashtable();
             }
             SessionStore sessionStore = null;
             try
             {
-                sessionStore
-                    = sessionManager.GetSession(
-                        new Guid(sessionFormIdentifier.ToString()));
+                sessionStore = sessionManager.GetSession(sessionFormIdentifier);
             }
             catch
             {
