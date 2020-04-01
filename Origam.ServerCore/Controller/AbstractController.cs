@@ -236,7 +236,8 @@ namespace Origam.ServerCore.Controller
             object sessionFormIdentifier, Guid masterRowId, EntityData entityData,
             DataStructureQuery query)
         {
-            if (entityData.MenuItem.ListDataStructure != null)
+            bool isLazyLoaded = entityData.MenuItem.ListDataStructure != null;
+            if (isLazyLoaded)
             {
                 if (entityData.MenuItem.ListEntity.Name
                     == entityData.Entity.Name)
