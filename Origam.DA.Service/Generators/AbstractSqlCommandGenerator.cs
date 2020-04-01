@@ -1705,7 +1705,6 @@ namespace Origam.DA.Service
             bool isInRecursion,
             bool concatScalarColumns, bool forceDatabaseCalculation)
         {
-
             var ds = selectParameters.DataStructure;
             var entity = selectParameters.Entity;
             var columnsInfo = selectParameters.ColumnsInfo;
@@ -1767,9 +1766,12 @@ namespace Origam.DA.Service
 
             if (aggregatedColumns != null)
             {
-                RenderAggregations(ds, sqlExpression, entity,
-                    columnsInfo, replaceParameterTexts, dynamicParameters,
-                    selectParameterReferences, isInRecursion,aggregatedColumns);
+                RenderAggregations(
+                    selectParameters: selectParameters, 
+                    sqlExpression: sqlExpression,
+                    replaceParameterTexts: replaceParameterTexts,
+                    selectParameterReferences: selectParameterReferences, 
+                    isInRecursion: isInRecursion);
             }
 
             if (customGrouping != null)
@@ -1833,12 +1835,16 @@ namespace Origam.DA.Service
             return groupByNeeded;
         }
 
-        private void RenderAggregations(DataStructure ds, StringBuilder sqlExpression,
-            DataStructureEntity entity, ColumnsInfo columnsInfo,
-            Hashtable replaceParameterTexts, Hashtable dynamicParameters, 
-            Hashtable selectParameterReferences,
-            bool isInRecursion, List<Aggregation> aggregatedColumns)
+        private void RenderAggregations(SelectParameters selectParameters,
+            StringBuilder sqlExpression, Hashtable replaceParameterTexts, 
+            Hashtable selectParameterReferences, bool isInRecursion)
         {
+            var ds = selectParameters.DataStructure;
+            var entity = selectParameters.Entity;
+            var columnsInfo = selectParameters.ColumnsInfo;
+            var aggregatedColumns = selectParameters.AggregatedColumns;
+            var dynamicParameters = selectParameters.Parameters;
+            
             string groupExpression="";
             bool groupByNeeded = false;
             bool noColumnsYet = sqlExpression.Length < 8;
