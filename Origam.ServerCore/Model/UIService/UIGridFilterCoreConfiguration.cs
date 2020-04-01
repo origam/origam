@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -19,31 +19,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Resources;
-using System.Threading;
+using System;
+using System.Collections.Generic;
+using Origam.Server;
 
-namespace Origam.Schema.LookupModel.UI
+namespace Origam.ServerCore.Model.UIService
 {
-	public class ResourceUtils
-	{
-		private static readonly string BASENAME = "Origam.Schema.LookupModel.UI.Strings";
-
-		private static ResourceManager _rm = null;
-		
-		public static string GetString(string key)
-		{
-			if (_rm == null) 
-			{
-				_rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
-			}
-
-			return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
-		}
-
-		public static string GetString(string key, params object[] args)
-		{
-			string rawString = GetString(key);
-			return string.Format(rawString, args);
-		}
-	}
+    public class UIGridFilterCoreConfiguration
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public bool IsGlobal { get; set; }
+        public IList<UIGridFilterFieldConfiguration> Details { get; set; }
+	
+    }
 }

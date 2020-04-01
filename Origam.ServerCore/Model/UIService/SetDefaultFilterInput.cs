@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -19,31 +19,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Resources;
-using System.Threading;
+using System;
 
-namespace Origam.Schema.LookupModel.UI
+namespace Origam.ServerCore.Model.UIService
 {
-	public class ResourceUtils
-	{
-		private static readonly string BASENAME = "Origam.Schema.LookupModel.UI.Strings";
-
-		private static ResourceManager _rm = null;
-		
-		public static string GetString(string key)
-		{
-			if (_rm == null) 
-			{
-				_rm = new ResourceManager(BASENAME, typeof(ResourceUtils).Assembly);
-			}
-
-			return _rm.GetString(key, Thread.CurrentThread.CurrentCulture);
-		}
-
-		public static string GetString(string key, params object[] args)
-		{
-			string rawString = GetString(key);
-			return string.Format(rawString, args);
-		}
-	}
+    public class SetDefaultFilterInput : SaveFilterInput
+    {
+        public Guid SessionFormIdentifier { get; set; } = Guid.Empty;
+        public Guid PanelInstanceId { get; set; }
+    }
 }

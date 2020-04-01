@@ -35,7 +35,7 @@ using Origam.Services;
 
 namespace Origam.DA.Service
 {
-    public class FileEventQueue: IDisposable
+    public sealed class FileEventQueue: IDisposable
     {
         private static readonly ILog log
             = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

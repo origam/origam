@@ -2600,7 +2600,7 @@ namespace OrigamArchitect
 					}
 				}
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				// continue if auto-upgrade fails
 			}

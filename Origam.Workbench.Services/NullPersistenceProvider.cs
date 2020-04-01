@@ -38,7 +38,11 @@ namespace Origam.Workbench.Services
         {
         }
 
-        public event EventHandler<IPersistent> InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted
+        {
+            add { }
+            remove { }
+        }
         public void OnInstancePersisted(object sender)
         {
         }

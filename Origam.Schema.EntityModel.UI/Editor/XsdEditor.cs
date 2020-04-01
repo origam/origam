@@ -26,7 +26,7 @@ using Origam.UI;
 using Origam.Windows.Editor;
 using Origam.Workbench.Editors;
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel.UI
 {
 	/// <summary>
 	/// Summary description for XslTransformationEditor.

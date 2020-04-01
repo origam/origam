@@ -37,7 +37,11 @@ namespace Origam.DA.Service
 
     public class NullWatchDog : IFileChangesWatchDog
     {
-        public event EventHandler<FileSystemChangeEventArgs> FileChanged;
+        public event EventHandler<FileSystemChangeEventArgs> FileChanged
+        {
+            add { }
+            remove { }
+        }
         public void Start()
         {
         }

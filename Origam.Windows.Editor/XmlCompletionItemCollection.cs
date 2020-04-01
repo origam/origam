@@ -136,7 +136,7 @@ namespace Origam.Windows.Editor
             {
                 if (item.Text == name)
                 {
-                    if (item.Description == description)
+                    if (Convert.ToString(item.Description) == description)
                     {
                         return true;
                     }

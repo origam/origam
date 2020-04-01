@@ -25,7 +25,7 @@ using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 using Origam.UI;
 
-namespace Origam.Schema.LookupModel.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateLookupFromEntityCommand.

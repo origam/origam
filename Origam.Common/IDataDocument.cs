@@ -30,7 +30,6 @@ namespace Origam
         DataSet DataSet { get; }
         void AppendChild(XmlNodeType element, string prefix, string name);
         void AppendChild(XmlElement documentElement, bool deep);
-        void DocumentElementAppendChild(XmlNode node);
     }
 
     public interface IXmlContainer: ICloneable
@@ -38,5 +37,6 @@ namespace Origam
         XmlDocument Xml { get; }
         void Load(XmlReader xmlReader,bool doProcessing = true);
         void LoadXml(string xmlString);
+        void DocumentElementAppendChild(XmlNode node);
     }
 }

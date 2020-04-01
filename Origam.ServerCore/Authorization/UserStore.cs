@@ -44,7 +44,7 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
 {
-    public class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigamUser>,
+    public sealed class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigamUser>,
         IUserTwoFactorStore<IOrigamUser>, IUserPasswordStore<IOrigamUser>,IUserLockoutStore<IOrigamUser>
     {
         public static readonly Guid ORIGAM_USER_DATA_STRUCTURE

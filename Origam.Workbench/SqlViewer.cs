@@ -47,9 +47,21 @@ namespace Origam.Workbench
             }
         }
 
-        public event EventHandler ToolStripsLoaded;
-        public event EventHandler AllToolStripsRemoved;
-        public event EventHandler ToolStripsNeedUpdate;
+        public event EventHandler ToolStripsLoaded
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler AllToolStripsRemoved
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler ToolStripsNeedUpdate
+        {
+            add { }
+            remove { }
+        }
 
         private void btnExecuteSql_Click(object sender, EventArgs e)
         {
