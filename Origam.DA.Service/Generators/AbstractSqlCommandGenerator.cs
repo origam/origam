@@ -1771,7 +1771,8 @@ namespace Origam.DA.Service
                     sqlExpression: sqlExpression,
                     replaceParameterTexts: replaceParameterTexts,
                     selectParameterReferences: selectParameterReferences, 
-                    isInRecursion: isInRecursion);
+                    isInRecursion: isInRecursion,
+                    noColumnsRenderedYet: i == 0);
             }
 
             if (customGrouping != null)
@@ -1836,8 +1837,9 @@ namespace Origam.DA.Service
         }
 
         private void RenderAggregations(SelectParameters selectParameters,
-            StringBuilder sqlExpression, Hashtable replaceParameterTexts, 
-            Hashtable selectParameterReferences, bool isInRecursion)
+            StringBuilder sqlExpression, Hashtable replaceParameterTexts,
+            Hashtable selectParameterReferences, bool isInRecursion,
+            bool noColumnsRenderedYet)
         {
             var ds = selectParameters.DataStructure;
             var entity = selectParameters.Entity;
@@ -1847,7 +1849,6 @@ namespace Origam.DA.Service
             
             string groupExpression="";
             bool groupByNeeded = false;
-            bool noColumnsYet = sqlExpression.Length < 8;
             for (int i = 0; i < aggregatedColumns.Count; i++)
             {
                 var aggregation = aggregatedColumns[i];
@@ -1856,7 +1857,7 @@ namespace Origam.DA.Service
                 string renderedColumn = GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
                     dynamicParameters, selectParameterReferences, isInRecursion,
                     ref groupByNeeded, columnsInfo, column, ref groupExpression);
-                if (i == 0 && noColumnsYet)
+                if (i == 0 && noColumnsRenderedYet)
                 {
                     sqlExpression.Append(" ");
                 }
