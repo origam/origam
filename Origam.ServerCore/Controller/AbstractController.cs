@@ -204,8 +204,7 @@ namespace Origam.ServerCore.Controller
             }
         }
         protected Result<Guid, IActionResult> AmbiguousInputToEntityId(
-            AmbiguousInput input, IDataService dataService, 
-            SessionObjects sessionObjects)
+            AmbiguousInput input, SessionObjects sessionObjects)
         {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
