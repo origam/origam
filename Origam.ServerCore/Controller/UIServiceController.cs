@@ -57,7 +57,6 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public class UIServiceController : AbstractController
     {
-        private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataLookupService lookupService;
         private readonly IDataService dataService;
@@ -66,9 +65,8 @@ namespace Origam.ServerCore.Controller
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log)
+            ILogger<AbstractController> log) : base(log, sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
             this.localizer = localizer;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
@@ -723,54 +721,8 @@ namespace Origam.ServerCore.Controller
                 ForceDatabaseCalculation = true,
                 AggregatedColumns = input.AggregatedColumns
             };
-            if(entityData.MenuItem.ListDataStructure != null)
-            {
-                if(entityData.MenuItem.ListEntity.Name 
-                    == entityData.Entity.Name)
-                {
-                    query.MethodId = entityData.MenuItem.ListMethodId;
-                    query.DataSourceId 
-                        = entityData.MenuItem.ListDataStructure.Id;
-                    // get parameters from session store
-                    var parameters = sessionObjects.UIService.GetParameters(
-                        input.SessionFormIdentifier);
-                    foreach (var key in parameters.Keys)
-                    {
-                        query.Parameters.Add(
-                            new QueryParameter(key.ToString(),
-                            parameters[key]));
-                    }
-                }
-                else
-                {
-                    return FindItem<DataStructureMethod>(
-                            entityData.MenuItem.MethodId)
-                        .Map(
-                            CustomParameterService.GetFirstNonCustomParameter)
-                        .Bind(parameterName =>
-                        {
-                            query.DataSourceId 
-                                = entityData.Entity.RootEntity.ParentItemId;
-                            query.Parameters.Add(new QueryParameter(
-                                parameterName, input.MasterRowId));
-                            if (input.MasterRowId == Guid.Empty)
-                            {
-                                return Result
-                                    .Failure<DataStructureQuery, IActionResult>(
-                                    BadRequest("MasterRowId cannot be empty"));
-                            }
-                            query.MethodId = entityData.MenuItem.MethodId;
-                            return Result
-                                .Success<DataStructureQuery, IActionResult>(query);
-                        });
-                }
-            }
-            else
-            {
-                query.MethodId = entityData.MenuItem.MethodId;
-                query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
-            }
-            return Result.Ok<DataStructureQuery, IActionResult>(query);
+            return AddMethodAndSource(
+                input.SessionFormIdentifier, input.MasterRowId, entityData, query);
         }
         private Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
             GetRowsInput input, EntityData entityData)
@@ -805,53 +757,10 @@ namespace Origam.ServerCore.Controller
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
             };
-            if(entityData.MenuItem.ListDataStructure != null)
-            {
-                if(entityData.MenuItem.ListEntity.Name 
-                    == entityData.Entity.Name)
-                {
-                    query.MethodId = entityData.MenuItem.ListMethodId;
-                    query.DataSourceId 
-                        = entityData.MenuItem.ListDataStructure.Id;
-                    // get parameters from session store
-                    var parameters = sessionObjects.UIService.GetParameters(
-                        input.SessionFormIdentifier);
-                    foreach (var key in parameters.Keys)
-                    {
-                        query.Parameters.Add(
-                            new QueryParameter(key.ToString(),
-                            parameters[key]));
-                    }
-                }
-                else
-                {
-                    return FindItem<DataStructureMethod>(entityData.MenuItem.MethodId)
-                        .Map(CustomParameterService.GetFirstNonCustomParameter)
-                        .Bind(parameterName =>
-                        {
-                            query.DataSourceId 
-                                = entityData.Entity.RootEntity.ParentItemId;
-                            query.Parameters.Add(new QueryParameter(
-                                parameterName, input.MasterRowId));
-                            if (input.MasterRowId == Guid.Empty)
-                            {
-                                return Result
-                                    .Failure<DataStructureQuery, IActionResult>(
-                                    BadRequest("MasterRowId cannot be empty"));
-                            }
-                            query.MethodId = entityData.MenuItem.MethodId;
-                            return Result
-                                .Success<DataStructureQuery, IActionResult>(query);
-                        });
-                }
-            }
-            else
-            {
-                query.MethodId = entityData.MenuItem.MethodId;
-                query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
-            }
-            return Result.Ok<DataStructureQuery, IActionResult>(query);
-        }   
+            return AddMethodAndSource(
+                input.SessionFormIdentifier, input.MasterRowId, entityData, query);
+        }
+        
         private Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
             GetGroupsInput input, EntityData entityData)
         {
@@ -893,54 +802,8 @@ namespace Origam.ServerCore.Controller
                 CustomGrouping= new Grouping(input.GroupBy, input.GroupByLookupId),
                 AggregatedColumns = input.AggregatedColumns 
             };
-            if(entityData.MenuItem.ListDataStructure != null)
-            {
-                if(entityData.MenuItem.ListEntity.Name 
-                    == entityData.Entity.Name)
-                {
-                    query.MethodId = entityData.MenuItem.ListMethodId;
-                    query.DataSourceId 
-                        = entityData.MenuItem.ListDataStructure.Id;
-                    // get parameters from session store
-                    var parameters = sessionObjects.UIService.GetParameters(
-                        input.SessionFormIdentifier);
-                    foreach (var key in parameters.Keys)
-                    {
-                        query.Parameters.Add(
-                            new QueryParameter(key.ToString(),
-                            parameters[key]));
-                    }
-                }
-                else
-                {
-                    return FindItem<DataStructureMethod>(
-                            entityData.MenuItem.MethodId)
-                        .Map(
-                            CustomParameterService.GetFirstNonCustomParameter)
-                        .Bind(parameterName =>
-                        {
-                            query.DataSourceId 
-                                = entityData.Entity.RootEntity.ParentItemId;
-                            query.Parameters.Add(new QueryParameter(
-                                parameterName, input.MasterRowId));
-                            if (input.MasterRowId == Guid.Empty)
-                            {
-                                return Result
-                                    .Failure<DataStructureQuery, IActionResult>(
-                                    BadRequest("MasterRowId cannot be empty"));
-                            }
-                            query.MethodId = entityData.MenuItem.MethodId;
-                            return Result
-                                .Success<DataStructureQuery, IActionResult>(query);
-                        });
-                }
-            }
-            else
-            {
-                query.MethodId = entityData.MenuItem.MethodId;
-                query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
-            }
-            return Result.Ok<DataStructureQuery, IActionResult>(query);
+            return AddMethodAndSource(
+                input.SessionFormIdentifier, input.MasterRowId, entityData, query);
         }
         private static void FillRow(
             RowData rowData, Dictionary<string, string> newValues)

@@ -45,15 +45,13 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public class ReportController : AbstractController
     {
-        private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly CoreHttpTools httpTools = new CoreHttpTools();
         public ReportController(
             SessionObjects sessionObjects, 
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log)
+            ILogger<AbstractController> log) : base(log, sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
             this.localizer = localizer;
         }
         [HttpGet("{reportRequestId:guid}")]

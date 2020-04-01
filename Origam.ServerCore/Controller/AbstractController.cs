@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
+using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.Server;
@@ -44,6 +45,7 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public abstract class AbstractController: ControllerBase
     {
+        protected readonly SessionObjects sessionObjects;
         protected class EntityData
         {
             public FormReferenceMenuItem MenuItem { get; set; }
@@ -51,9 +53,10 @@ namespace Origam.ServerCore.Controller
         }
         // ReSharper disable once InconsistentNaming
         protected readonly ILogger<AbstractController> log;
-        protected AbstractController(ILogger<AbstractController> log)
+        protected AbstractController(ILogger<AbstractController> log, SessionObjects sessionObjects)
         {
             this.log = log;
+            this.sessionObjects = sessionObjects;
         }
         protected static MenuLookupIndex MenuLookupIndex {
             get
@@ -228,5 +231,60 @@ namespace Origam.ServerCore.Controller
         {
             return Ok(obj);
         }
+        
+        protected Result<DataStructureQuery, IActionResult> AddMethodAndSource(
+            object sessionFormIdentifier, Guid masterRowId, EntityData entityData,
+            DataStructureQuery query)
+        {
+            if (entityData.MenuItem.ListDataStructure != null)
+            {
+                if (entityData.MenuItem.ListEntity.Name
+                    == entityData.Entity.Name)
+                {
+                    query.MethodId = entityData.MenuItem.ListMethodId;
+                    query.DataSourceId
+                        = entityData.MenuItem.ListDataStructure.Id;
+                    // get parameters from session store
+                    var parameters = sessionObjects.UIService.GetParameters(
+                        sessionFormIdentifier);
+                    foreach (var key in parameters.Keys)
+                    {
+                        query.Parameters.Add(
+                            new QueryParameter(key.ToString(),
+                                parameters[key]));
+                    }
+                }
+                else
+                {
+                    return FindItem<DataStructureMethod>(entityData.MenuItem.MethodId)
+                        .Map(CustomParameterService.GetFirstNonCustomParameter)
+                        .Bind(parameterName =>
+                        {
+                            query.DataSourceId
+                                = entityData.Entity.RootEntity.ParentItemId;
+                            query.Parameters.Add(new QueryParameter(
+                                parameterName, masterRowId));
+                            if (masterRowId == Guid.Empty)
+                            {
+                                return Result
+                                    .Failure<DataStructureQuery, IActionResult>(
+                                        BadRequest("MasterRowId cannot be empty"));
+                            }
+
+                            query.MethodId = entityData.MenuItem.MethodId;
+                            return Result
+                                .Success<DataStructureQuery, IActionResult>(query);
+                        });
+                }
+            }
+            else
+            {
+                query.MethodId = entityData.MenuItem.MethodId;
+                query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
+            }
+
+            return Result.Ok<DataStructureQuery, IActionResult>(query);
+        }
+
     }
 }

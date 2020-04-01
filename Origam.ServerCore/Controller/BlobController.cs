@@ -49,16 +49,14 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public class BlobController : AbstractController
     {
-        private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataService dataService;
         private readonly CoreHttpTools httpTools = new CoreHttpTools();
         public BlobController(
             SessionObjects sessionObjects, 
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log)
+            ILogger<AbstractController> log) : base(log, sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
             this.localizer = localizer;
             dataService = DataService.GetDataService();
         }
