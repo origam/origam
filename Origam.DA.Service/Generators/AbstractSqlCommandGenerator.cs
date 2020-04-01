@@ -916,7 +916,7 @@ namespace Origam.DA.Service
             CustomCommandParser customCommandParser = null,
             int? rowLimit = null, List<Ordering> customOrdering = null,
             Grouping customGrouping = null,
-            List<Aggregation> selectParametersAggregatedColumns = null)
+            List<Aggregation> aggregatedColumns = null)
         {
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -949,7 +949,7 @@ namespace Origam.DA.Service
             RenderSelectColumns(ds, sqlExpression, orderByBuilder,
                 groupByBuilder, entity, columnsInfo, replaceParameterTexts, dynamicParameters,
                 sortSet, selectParameterReferences, isInRecursion, concatScalarColumns,
-                forceDatabaseCalculation, customOrdering, customGrouping, selectParametersAggregatedColumns);
+                forceDatabaseCalculation, customOrdering, customGrouping, aggregatedColumns);
 
             // paging column
             if (paging)
@@ -1671,8 +1671,7 @@ namespace Origam.DA.Service
             }
             i = 0;
             var dataStructureColumns =
-                GetSortedColumns(entity, columnsInfo?.ColumnNames)
-                    .ToArray();
+                GetSortedColumns(entity, columnsInfo?.ColumnNames, aggregatedColumns);
             foreach (DataStructureColumn column in dataStructureColumns)
             {
                 if (customGrouping != null && column.Name == customGrouping.GroupBy)
@@ -1700,8 +1699,7 @@ namespace Origam.DA.Service
             {
                 RenderAggregations(ds, sqlExpression, entity,
                     columnsInfo, replaceParameterTexts, dynamicParameters,
-                    selectParameterReferences, isInRecursion,aggregatedColumns,
-                    dataStructureColumns);
+                    selectParameterReferences, isInRecursion,aggregatedColumns);
             }
 
             if (customGrouping != null)
@@ -1769,35 +1767,45 @@ namespace Origam.DA.Service
             DataStructureEntity entity, ColumnsInfo columnsInfo,
             Hashtable replaceParameterTexts, Hashtable dynamicParameters, 
             Hashtable selectParameterReferences,
-            bool isInRecursion, List<Aggregation> aggregatedColumns,
-            DataStructureColumn[] dataStructureColumns)
+            bool isInRecursion, List<Aggregation> aggregatedColumns)
         {
             string groupExpression="";
             bool groupByNeeded = false;
-            foreach (var aggregation in aggregatedColumns)
+            bool noColumnsYet = sqlExpression.Length < 8;
+            for (int i = 0; i < aggregatedColumns.Count; i++)
             {
-                var column = dataStructureColumns
+                var aggregation = aggregatedColumns[i];
+                var column = entity.Columns
                     .First(col => col.Name == aggregation.ColumnName);
                 string renderedColumn = GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
                     dynamicParameters, selectParameterReferences, isInRecursion,
                     ref groupByNeeded, columnsInfo, column, ref groupExpression);
+                if (i == 0 && noColumnsYet)
+                {
+                    sqlExpression.Append(" ");
+                }
+                else
+                {
+                    sqlExpression.Append(" ,");
+                }
+
                 switch (aggregation.AggregationType)
                 {
                     case CustomAggregationType.Max:
                         sqlExpression.Append(
-                            $" ,MAX({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                            $"MAX({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
                         break;
                     case CustomAggregationType.Sum:
                         sqlExpression.Append(
-                            $" ,SUM({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                            $"SUM({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
                         break;
                     case CustomAggregationType.Avg:
                         sqlExpression.Append(
-                            $" ,AVG({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                            $"AVG({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
                         break;
                     case CustomAggregationType.Min:
                         sqlExpression.Append(
-                            $" ,MIN({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                            $"MIN({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -1807,13 +1815,20 @@ namespace Origam.DA.Service
 
         internal IEnumerable<DataStructureColumn> GetSortedColumns(
             DataStructureEntity entity,
-            List<string> scalarColumnNames)
+            List<string> scalarColumnNames, List<Aggregation> aggregatedColumns)
         {
-            if((scalarColumnNames == null) || (scalarColumnNames.Count == 0))
+            bool noColumnsRequested = scalarColumnNames == null || scalarColumnNames.Count == 0;
+            bool noAggregateColumns = aggregatedColumns == null || aggregatedColumns.Count == 0;
+            if(noColumnsRequested && noAggregateColumns)
             {
                 return entity.Columns;
             }
-            List<string> missingColumns = scalarColumnNames
+            if (noColumnsRequested && !noAggregateColumns)
+            {
+                return new DataStructureColumn[0];
+            }
+
+            List<string> missingColumns = (scalarColumnNames ?? new List<string>())
                 .Where(x =>
                     !entity.Columns.Exists(y => y.Name == x) &&
                     x != ColumnData.GroupByCountColumn.Name && 

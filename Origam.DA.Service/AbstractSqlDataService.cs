@@ -83,6 +83,7 @@ namespace Origam.DA.Service
 					        Parameters = Query.Parameters.ToHashtable(),
 					        Paging = Query.Paging,
 					        ColumnsInfo = Query.ColumnsInfo,
+					        AggregatedColumns = Query.AggregatedColumns
 					    };
                         adapter = DataService.GetAdapter(selectParameters, CurrentProfile);
 						break;
@@ -1612,11 +1613,13 @@ namespace Origam.DA.Service
 	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
+		        var aggregationColData = 
+					(query.AggregatedColumns ?? new List<Aggregation>())
+			        .Select(x => new ColumnData(x.SqlQueryColumnName));
 		        var queryColumns = 
 			        query.ColumnsInfo.Columns
-			        .ToList()
-			        .Concat(query.AggregatedColumns.Select(x => new ColumnData(x.SqlQueryColumnName)))
-			        .ToList();
+				        .Concat(aggregationColData)
+						.ToList();
 		        while(reader.Read())
 		        {
 			        object[] values = new object[queryColumns.Count];
