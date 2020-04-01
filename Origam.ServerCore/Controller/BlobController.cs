@@ -64,7 +64,7 @@ namespace Origam.ServerCore.Controller
         public IActionResult DownloadToken(
             [FromBody][Required]BlobDownloadTokenInput input)
         {
-            return AmbiguousInputToRowData(input, dataService, sessionObjects)
+            return AmbiguousInputToRowData(input, dataService)
                 .Map(rowData => CreateDownloadToken(input, rowData))
                 .Finally(UnwrapReturnValue);
         }
@@ -72,7 +72,7 @@ namespace Origam.ServerCore.Controller
         public IActionResult UploadToken(
             [FromBody][Required]BlobUploadTokenInput input)
         {
-            return AmbiguousInputToRowData(input, dataService, sessionObjects)
+            return AmbiguousInputToRowData(input, dataService)
                 .Map(rowData => CreateUploadToken(input, rowData))
                 .Finally(UnwrapReturnValue);
         }

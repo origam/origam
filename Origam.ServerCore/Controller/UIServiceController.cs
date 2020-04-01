@@ -406,14 +406,14 @@ namespace Origam.ServerCore.Controller
         public IActionResult GetRecordTooltip(
             [FromBody]GetRecordTooltipInput input)
         {
-            return AmbiguousInputToRowData(input, dataService, sessionObjects)
+            return AmbiguousInputToRowData(input, dataService)
                 .Map(RowDataToRecordTooltip)
                 .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult GetAudit([FromBody]GetAuditInput input)
         {
-            return AmbiguousInputToEntityId(input, dataService, sessionObjects)
+            return AmbiguousInputToEntityId(input)
                 .Map(entityId => 
                     GetAuditLog(entityId, input.RowId))
                 .Finally(UnwrapReturnValue);

@@ -180,8 +180,7 @@ namespace Origam.ServerCore.Controller
                 RowStateProcessor: null));
         }
         protected Result<RowData, IActionResult> AmbiguousInputToRowData(
-            AmbiguousInput input, IDataService dataService, 
-            SessionObjects sessionObjects)
+            AmbiguousInput input, IDataService dataService)
         {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
@@ -204,7 +203,7 @@ namespace Origam.ServerCore.Controller
             }
         }
         protected Result<Guid, IActionResult> AmbiguousInputToEntityId(
-            AmbiguousInput input, SessionObjects sessionObjects)
+            AmbiguousInput input)
         {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
