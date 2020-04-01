@@ -157,7 +157,7 @@ namespace Origam.DA.Service.Generators
 
         private string ToSql(Ordering ordering)
         {
-            if (ordering.LookupId == null)
+            if (ordering.LookupId == Guid.Empty)
             {
                 string orderingSql = OrderingToSQLName(ordering.Direction);
                 return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
