@@ -962,8 +962,6 @@ namespace Origam.DA.Service
             var columnsInfo = selectParameters.ColumnsInfo;
             var dynamicParameters = selectParameters.Parameters;
             var customOrdering = selectParameters.CustomOrdering;
-            var customGrouping = selectParameters.CustomGrouping;
-            var aggregatedColumns = selectParameters.AggregatedColumns;
             var filter = selectParameters.Filter;
             var rowLimit = selectParameters.RowLimit;
             
@@ -993,12 +991,17 @@ namespace Origam.DA.Service
             // when processing lookup columns we process semicolon delimited list of columns
             // to be returned as a single concatted field
             // Example: FirstName;Name -> concat(FirstName, ', ', Name)
-            bool concatScalarColumns = restrictScalarToTop1;
             // Select
-            RenderSelectColumns(ds, sqlExpression, orderByBuilder,
-                groupByBuilder, entity, columnsInfo, replaceParameterTexts, dynamicParameters,
-                sortSet, selectParameterReferences, isInRecursion, concatScalarColumns,
-                forceDatabaseCalculation, customOrdering, customGrouping, aggregatedColumns);
+            RenderSelectColumns(
+                selectParameters: selectParameters, 
+                sqlExpression: sqlExpression, 
+                orderByBuilder: orderByBuilder,
+                groupByBuilder: groupByBuilder, 
+                replaceParameterTexts: replaceParameterTexts, 
+                selectParameterReferences: selectParameterReferences,
+                isInRecursion: isInRecursion, 
+                concatScalarColumns: restrictScalarToTop1,
+                forceDatabaseCalculation: forceDatabaseCalculation);
 
             // paging column
             if (paging)
@@ -1676,24 +1679,42 @@ namespace Origam.DA.Service
             DataStructureSortSet sortSet, Hashtable selectParameterReferences,
             bool forceDatabaseCalculation)
         {
-            return RenderSelectColumns(ds, sqlExpression, orderByBuilder, groupByBuilder,
-                entity, columnsInfo, replaceParameterTexts, dynamicParameters, sortSet,
-                selectParameterReferences, false, true, forceDatabaseCalculation);
+            return RenderSelectColumns(
+                selectParameters: new SelectParameters
+                {
+                    DataStructure = ds,
+                    Entity = entity,
+                    SortSet = sortSet,
+                    ColumnsInfo = columnsInfo,
+                    Parameters = dynamicParameters
+                }, 
+                sqlExpression: sqlExpression,
+                orderByBuilder: orderByBuilder, 
+                groupByBuilder: groupByBuilder,
+                replaceParameterTexts: replaceParameterTexts, 
+                selectParameterReferences: selectParameterReferences, 
+                isInRecursion: false, 
+                concatScalarColumns: true, 
+                forceDatabaseCalculation: forceDatabaseCalculation);
         }
 
-        internal bool RenderSelectColumns(DataStructure ds,
+        internal bool RenderSelectColumns(SelectParameters selectParameters,
             StringBuilder sqlExpression,
-            StringBuilder orderByBuilder, StringBuilder groupByBuilder,
-            DataStructureEntity entity,
-            ColumnsInfo columnsInfo, Hashtable replaceParameterTexts,
-            Hashtable dynamicParameters,
-            DataStructureSortSet sortSet, Hashtable selectParameterReferences,
+            StringBuilder orderByBuilder, StringBuilder groupByBuilder, 
+            Hashtable replaceParameterTexts, Hashtable selectParameterReferences,
             bool isInRecursion,
-            bool concatScalarColumns, bool forceDatabaseCalculation,
-            List<Ordering> customOrderings = null,
-            Grouping customGrouping = null,
-            List<Aggregation> aggregatedColumns = null)
+            bool concatScalarColumns, bool forceDatabaseCalculation)
         {
+
+            var ds = selectParameters.DataStructure;
+            var entity = selectParameters.Entity;
+            var columnsInfo = selectParameters.ColumnsInfo;
+            var sortSet = selectParameters.SortSet;
+            var customOrderings = selectParameters.CustomOrdering;
+            var customGrouping = selectParameters.CustomGrouping;
+            var aggregatedColumns = selectParameters.AggregatedColumns;
+            var dynamicParameters = selectParameters.Parameters;
+            
             DataStructureColumn groupByColumn = null;
             int i = 0;
             ArrayList group = new ArrayList();
