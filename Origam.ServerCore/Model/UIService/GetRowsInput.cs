@@ -42,12 +42,7 @@ namespace Origam.ServerCore.Model.UIService
         public string[] ColumnNames { get; set; }
 
         public Guid MasterRowId { get; set; }
-
-        public List<Tuple<string, string>> OrderingAsTuples =>
-            Ordering
-                .Where(x=> x.Count > 0)
-                .Select(x => new Tuple<string, string>(x[0], x[1]))
-                .ToList();
+        
         public Object SessionFormIdentifier { get; set; }
     }
 }
