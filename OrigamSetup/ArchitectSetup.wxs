@@ -1353,9 +1353,6 @@
                                         <Component Id="SYSTEM.VALUETUPLE.DLL_1" DiskId="1" Guid="37e139d4-a320-42ba-aa9e-d92b9faba4f1">
                                             <File Id="SYSTEM.VALUETUPLE_1" Name="System.ValueTuple.dll" Source="server_source\bin\SYSTEM.VALUETUPLE.DLL" />
                                         </Component>
-                                        <Component Id="ORIGAM_UTILS.EXE" DiskId="1" Guid="CF8D2ED7-4B3A-485C-BBF4-A6CDA926754B">
-                                            <File Id="ORIGAM_UTILS.EXE" Name="origam-utils.exe" Source="server_source\bin\origam-utils.exe" />
-                                        </Component>
                                         <Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" DiskId="1" Guid="E42358D4-5F5F-4A15-B58B-94CD19CE2DEB">
                                             <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" Name="System.Threading.Tasks.Extensions.dll" Source="server_source\bin\System.Threading.Tasks.Extensions.dll" />
                                         </Component>
@@ -2118,7 +2115,6 @@
             <ComponentRef Id="GIT2_6311E88.DLL" />
             <ComponentRef Id="SYSTEM.VALUETUPLE.DLL" />
             <ComponentRef Id="SYSTEM.VALUETUPLE.DLL_1" />
-            <ComponentRef Id="ORIGAM_UTILS.EXE" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />
