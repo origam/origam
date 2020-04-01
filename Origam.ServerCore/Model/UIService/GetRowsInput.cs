@@ -28,7 +28,7 @@ using Origam.Extensions;
 namespace Origam.ServerCore.Model.UIService
 
 {
-    public class GetRowsInput
+    public class GetRowsInput: IEntityIdentification
     {
         [RequiredNonDefault]
         public Guid MenuId { get; set; }
@@ -40,9 +40,8 @@ namespace Origam.ServerCore.Model.UIService
         public int RowLimit { get; set; }
         [Required]
         public string[] ColumnNames { get; set; }
-
         public Guid MasterRowId { get; set; }
         
-        public Object SessionFormIdentifier { get; set; }
+        public Guid SessionFormIdentifier { get; set; }
     }
 }

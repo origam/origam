@@ -251,14 +251,10 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .Bind(Authorize)
-                    .Bind(menuItem => GetEntityData(
-                        input.DataStructureEntityId, menuItem))
-                    .Bind(CheckEntityBelongsToMenu)
+                return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetQuery(input, entityData))
-                    .Bind(datastructureQuery=>ExecuteDataReader(
-                        datastructureQuery, input.MenuId))
+                    .Bind(dataStructureQuery=>ExecuteDataReader(
+                        dataStructureQuery, input.MenuId))
                     .Finally(UnwrapReturnValue);
             });
         }       
@@ -268,10 +264,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .Bind(Authorize)
-                    .Bind(menuItem => GetEntityData(input.DataStructureEntityId, menuItem))
-                    .Bind(CheckEntityBelongsToMenu)
+                return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetAggregationQuery(input, entityData))                    
                     .Bind(dataStructureQuery => ExecuteDataReader(dataStructureQuery, input.MenuId))
                     .Finally(UnwrapReturnValue);
@@ -283,10 +276,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .Bind(Authorize)
-                    .Bind(menuItem => GetEntityData(input.DataStructureEntityId, menuItem))
-                    .Bind(CheckEntityBelongsToMenu)
+                return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetGroupQuery(input, entityData))                    
                     .Bind(dataStructureQuery => ExecuteDataReader(dataStructureQuery, input.MenuId))
                     .Finally(UnwrapReturnValue);

@@ -29,7 +29,7 @@ using Origam.Extensions;
 namespace Origam.ServerCore.Model.UIService
 
 {
-    public class GetGroupsAggregations
+    public class GetGroupsAggregations : IEntityIdentification
     {
         [RequiredNonDefault]
         public Guid MenuId { get; set; }

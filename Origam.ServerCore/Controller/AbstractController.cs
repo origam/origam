@@ -219,6 +219,24 @@ namespace Origam.ServerCore.Controller
                 return sessionObjects.UIService.GetEntityId(
                     input.SessionFormIdentifier, input.Entity);
             }
+        } 
+        protected Result<EntityData, IActionResult> EntityIdentificationToEntityData(
+            IEntityIdentification input)
+        {
+            if(input.SessionFormIdentifier == Guid.Empty)
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem))
+                    .Bind(CheckEntityBelongsToMenu);
+            }
+            else
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .Bind(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem));
+            }
         }
         protected Result<Guid, IActionResult> EntityDataToEntityId(
             EntityData entityData)
