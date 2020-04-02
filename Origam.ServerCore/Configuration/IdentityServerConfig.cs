@@ -44,6 +44,11 @@ namespace Origam.ServerCore.Configuration
         {
             IConfigurationSection identityServerSection = configuration.GetSection("IdentityServerConfig");
             PathToJwtCertificate = identityServerSection.GetValue<string>("PathToJwtCertificate");
+            if (string.IsNullOrWhiteSpace(PathToJwtCertificate))
+            {
+                throw new ArgumentException($"{nameof(PathToJwtCertificate)} mut be specified.");
+            }
+
             PasswordForJwtCertificate = identityServerSection.GetValue<string>("PasswordForJwtCertificate");
             UseGoogleLogin = identityServerSection.GetValue("UseGoogleLogin", false);
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";

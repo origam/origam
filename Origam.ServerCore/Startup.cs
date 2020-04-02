@@ -124,16 +124,11 @@ namespace Origam.ServerCore
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
                 .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
-                .AddAspNetIdentity<IOrigamUser>();
-
-            if (!string.IsNullOrEmpty(identityServerConfig.PathToJwtCertificate))
-            {
-                serverBuilder
-                    .AddSigningCredential(new X509Certificate2(
-                        identityServerConfig.PathToJwtCertificate,
-                        identityServerConfig.PasswordForJwtCertificate));
-            }
-
+                .AddAspNetIdentity<IOrigamUser>()
+                .AddSigningCredential(new X509Certificate2(
+                    identityServerConfig.PathToJwtCertificate,
+                    identityServerConfig.PasswordForJwtCertificate));
+            
             services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
