@@ -782,12 +782,18 @@ namespace Origam.Server
             return false;
         }
 
-        public ArrayList GetChangesByRow(string requestingGrid, DataRow row, Operation operation, bool hasErrors, bool hasChanges)
+        public ArrayList GetChangesByRow(
+            string requestingGrid, DataRow row, Operation operation, 
+            bool hasErrors, bool hasChanges, bool fromTemplate)
         {
-            return GetChangesByRow(requestingGrid, row, operation, null, true, hasErrors, hasChanges);
+            return GetChangesByRow(requestingGrid, row, operation, null, true, 
+                hasErrors, hasChanges, fromTemplate);
         }
 
-        internal ArrayList GetChangesByRow(string requestingGrid, DataRow row, Operation operation, Hashtable ignoreKeys, bool includeRowStates, bool hasErrors, bool hasChanges)
+        internal ArrayList GetChangesByRow(
+            string requestingGrid, DataRow row, Operation operation, 
+            Hashtable ignoreKeys, bool includeRowStates, bool hasErrors, 
+            bool hasChanges, bool fromTemplate)
         {
             ArrayList listOfChanges = new ArrayList();
             DataRow rootRow = DatasetTools.RootRow(row);
@@ -800,7 +806,10 @@ namespace Origam.Server
                 CloneErrors(rootRow, listRow);
             }
 
-            if (_entityHasRuleDependencies[row.Table.TableName] || operation == Operation.CurrentRecordNeedsUpdate || hasErrors)
+            if (_entityHasRuleDependencies[row.Table.TableName] 
+            || (operation == Operation.CurrentRecordNeedsUpdate)
+            || hasErrors
+            || fromTemplate)
             {
                 // entity has some dependencies (e.g. calculated columns in other tables)
                 // so we return also the parents and children of this row
@@ -873,12 +882,15 @@ namespace Origam.Server
 
         public ArrayList GetChanges(string entity, object id, Operation operation, bool hasErrors, bool hasChanges)
         {
-            return GetChangesByRow(null, this.GetSessionRow(entity, id), operation, hasErrors, hasChanges);
+            return GetChangesByRow(null, this.GetSessionRow(entity, id), 
+                operation, hasErrors, hasChanges, false);
         }
 
         public ArrayList GetChanges(string entity, object id, Operation operation, Hashtable ignoreKeys, bool includeRowStates, bool hasErrors, bool hasChanges)
         {
-            return GetChangesByRow(null, this.GetSessionRow(entity, id), operation, ignoreKeys, includeRowStates, hasErrors, hasChanges);
+            return GetChangesByRow(null, this.GetSessionRow(entity, id), 
+                operation, ignoreKeys, includeRowStates, hasErrors, hasChanges,
+                false);
         }
 
         private void GetChangesRecursive(ArrayList changes, string requestingGrid, DataRow row, Operation operation, DataRow changedRow, bool allDetails, Hashtable ignoreKeys, bool includeRowStates)
@@ -905,19 +917,17 @@ namespace Origam.Server
                     if (allDetails || isParentRow || row.RowState != DataRowState.Unchanged || row.HasErrors)
                     {
                         Operation op = operation;
-
-                        if (op == Operation.CurrentRecordNeedsUpdate)
+                        // this is a parent row of the copied row, we set the status Update
+                        if ((op == Operation.CurrentRecordNeedsUpdate) && isParentRow)
                         {
-                            // this is a parent row of the copied row, we set the status Update
-                            if (isParentRow) op = Operation.Update;
-                        }
-                        else
-                        {
-                            // no copy (in that case we leave copy status), then this
-                            // is update, because it is not the actual changed row
                             op = Operation.Update;
                         }
-
+                        // no copy (in that case we leave copy status), then this
+                        // is update, because it is not the actual changed row
+                        else if (isParentRow)
+                        {
+                            op = Operation.Update;
+                        }
                         ChangeInfo ci = GetChangeInfo(
                             requestingGrid: null,
                             row: row,
@@ -1486,7 +1496,9 @@ namespace Origam.Server
 
                 NewRowToDataList(newRow);
 
-                ArrayList listOfChanges = GetChangesByRow(requestingGrid, newRow, Operation.Create, this.Data.HasErrors, this.Data.HasChanges());
+                ArrayList listOfChanges = GetChangesByRow(requestingGrid, 
+                    newRow, Operation.Create, this.Data.HasErrors, 
+                    this.Data.HasChanges(), false);
 
                 return listOfChanges;
             }
@@ -1512,7 +1524,9 @@ namespace Origam.Server
                 {
                     UpdateRowColumn(property, newValue, profile, row);
                 }
-                ArrayList listOfChanges = GetChangesByRow(null, row, 0, this.Data.HasErrors, this.Data.HasChanges());
+                ArrayList listOfChanges = GetChangesByRow(null, row,
+                    Operation.Update, this.Data.HasErrors, 
+                    this.Data.HasChanges(), false);
                 if (!this.Data.HasChanges())
                 {
                     listOfChanges.Add(ChangeInfo.SavedChangeInfo());
@@ -1694,7 +1708,10 @@ namespace Origam.Server
                     || ((rootRow.Table.TableName != entity) &&
                     _entityHasRuleDependencies[rootRow.Table.TableName]))
                     {
-                        listOfChanges.AddRange(GetChangesByRow(null, rootRow, 0, this.Data.HasErrors, this.Data.HasChanges()));
+                        listOfChanges.AddRange(GetChangesByRow(
+                            null, rootRow, Operation.Update, 
+                            this.Data.HasErrors, this.Data.HasChanges(),
+                            false));
                     }
 
                     // include the deletions
@@ -1897,7 +1914,10 @@ namespace Origam.Server
 
                     NewRowToDataList(newRow);
 
-                    return GetChangesByRow(requestingGrid, newRow, Operation.CurrentRecordNeedsUpdate, this.Data.HasErrors, this.Data.HasChanges());
+                    return GetChangesByRow(requestingGrid, newRow, 
+                        Operation.CurrentRecordNeedsUpdate, 
+                        this.Data.HasErrors, this.Data.HasChanges(),
+                        false);
                 }
                 finally
                 {
