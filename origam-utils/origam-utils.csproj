@@ -96,7 +96,7 @@
       <Project>{ff4722b4-01f8-4062-af39-f243a6bf336d}</Project>
       <Name>Origam.DA.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DocProcessor\Origam.DocProcessor.csproj" />
+    <ProjectReference Include="..\Origam.Documentation\Origam.Documentation.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
       <Name>Origam.OrigamEngine</Name>

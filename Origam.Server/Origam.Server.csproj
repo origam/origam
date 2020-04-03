@@ -298,9 +298,9 @@
       <Project>{ee92b4de-5635-4b60-80b0-532c438b280f}</Project>
       <Name>Origam.Workflow.SimplicorService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.DocProcessor\Origam.DocProcessor.csproj">
+    <ProjectReference Include="..\Origam.Documentation\Origam.Documentation.csproj">
       <Project>{46fb3705-3b11-4a49-ae05-7bee7aa9cfdf}</Project>
-      <Name>Origam.DocProcessor</Name>
+      <Name>Origam.Documentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\ORIGAMLocaleResolver\ORIGAMLocaleResolver.csproj">
       <Project>{4f685ce8-44f7-4f46-9e86-2ec2143f9a1f}</Project>
