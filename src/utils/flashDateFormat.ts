@@ -5,7 +5,7 @@ export function flf2mof(flf: string) {
     .replace(/A/g, "a")
     .replace(/H/g, "k")
     .replace(/J/g, "H")
-    .replace(/L/g, "h")
+    .replace(/K/g, "h")
     .replace(/N/g, "m")
     .replace(/S/g, "s")
     .replace(/Q/g, "S");
