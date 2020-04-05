@@ -2,12 +2,14 @@ import { IFilterConfiguration } from "../../types/IFilterConfiguration";
 import { IProperty } from "../../types/IProperty";
 import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
+import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
   columnConfigurationDialog: IColumnConfigurationDialog;
   filterConfiguration: IFilterConfiguration;
   orderingConfiguration: IOrderingConfiguration;
+  groupingConfiguration: IGroupingConfiguration;
 }
 
 export interface ITableCanvas {
@@ -33,7 +35,6 @@ export interface ITablePanelView extends ITablePanelViewData {
   allTableProperties: IProperty[];
 
   hiddenPropertyIds: Map<string, boolean>;
-  groupingIndices: Map<string, number>;
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;

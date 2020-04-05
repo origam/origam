@@ -25,6 +25,7 @@ import { IFormScreenLifecycle02 } from "../model/entities/types/IFormScreenLifec
 import { IPanelViewType } from "../model/entities/types/IPanelViewType";
 import { flf2mof } from "../utils/flashDateFormat";
 import { findStopping } from "./xmlUtils";
+import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -293,7 +294,8 @@ export function interpretScreenXml(
           tablePropertyIds: properties.slice(1).map(prop => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
           filterConfiguration: new FilterConfiguration(),
-          orderingConfiguration: new OrderingConfiguration()
+          orderingConfiguration: new OrderingConfiguration(),
+          groupingConfiguration: new GroupingConfiguration(),
         }),
         formPanelView: new FormPanelView(),
         lookupLoader: new LookupLoader(),

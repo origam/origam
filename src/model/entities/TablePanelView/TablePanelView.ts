@@ -21,6 +21,7 @@ import {
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 import selectors from "model/selectors-tree";
+import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -30,21 +31,25 @@ export class TablePanelView implements ITablePanelView {
     this.columnConfigurationDialog.parent = this;
     this.filterConfiguration.parent = this;
     this.orderingConfiguration.parent = this;
+    this.groupingConfiguration.parent = this;
   }
 
   columnConfigurationDialog: IColumnConfigurationDialog = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   orderingConfiguration: IOrderingConfiguration = null as any;
+  groupingConfiguration: IGroupingConfiguration = null as any;
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
   @observable tablePropertyIds: string[] = [];
 
   @observable hiddenPropertyIds: Map<string, boolean> = new Map();
-  @observable groupingIndices: Map<string, number> = new Map();
+
 
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
+
+
 
   @computed get allTableProperties() {
     return this.tablePropertyIds.map(id =>
