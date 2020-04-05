@@ -40,13 +40,32 @@ export class ColumnsDialog extends React.Component<{
   refGrid = React.createRef<MultiGrid>();
 
   @action.bound setVisible(rowIndex: number, state: boolean) {
-    this.configuration = produce(this.configuration, draft => {
+    this.configuration = produce(this.configuration, (draft) => {
       draft.columnConf[rowIndex].isVisible = state;
     });
   }
 
+  @action.bound setGrouping(rowIndex: number, state: boolean) {
+    this.configuration = produce(this.configuration, (draft) => {
+      const columnConfCopy = [...draft.columnConf];
+      columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
+      if (draft.columnConf[rowIndex].groupingIndex === 0) {
+        draft.columnConf[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
+      } else {
+        draft.columnConf[rowIndex].groupingIndex = 0;
+        let groupingIndex = 1;
+        columnConfCopy.reverse();
+        for(let columnConfItem of columnConfCopy) {
+          if(columnConfItem.groupingIndex > 0) {
+            columnConfItem.groupingIndex = groupingIndex++;
+          } 
+        }
+      }
+    });
+  }
+
   @action.bound handleFixedColumnsCountChange(event: any) {
-    this.configuration = produce(this.configuration, draft => {
+    this.configuration = produce(this.configuration, (draft) => {
       draft.fixedColumnCount = parseInt(event.target.value, 10);
     });
     console.log(this.configuration);
@@ -61,8 +80,7 @@ export class ColumnsDialog extends React.Component<{
           <>
             <button
               onClick={(event: any) =>
-                this.props.onOkClick &&
-                this.props.onOkClick(event, this.configuration)
+                this.props.onOkClick && this.props.onOkClick(event, this.configuration)
               }
             >
               OK
@@ -112,21 +130,14 @@ export class ColumnsDialog extends React.Component<{
   }
 
   getCell(rowIndex: number, columnIndex: number) {
-    const {
-      isVisible,
-      name,
-      aggregation,
-      groupingIndex
-    } = this.configuration.columnConf[rowIndex];
+    const { isVisible, name, aggregation, groupingIndex } = this.configuration.columnConf[rowIndex];
     switch (columnIndex) {
       case 0:
         return (
           <input
             type="checkbox"
             key={`${rowIndex}@${columnIndex}`}
-            onChange={(event: any) =>
-              this.setVisible(rowIndex, event.target.checked)
-            }
+            onChange={(event: any) => this.setVisible(rowIndex, event.target.checked)}
             checked={isVisible}
           />
         );
@@ -139,6 +150,7 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
+              onClick={(event: any) => this.setGrouping(rowIndex, event.target.checked)}
             />{" "}
             {groupingIndex > 0 ? groupingIndex : ""}
           </span>
@@ -161,10 +173,7 @@ export class ColumnsDialog extends React.Component<{
       return (
         <Observer>
           {() => (
-            <div
-              style={args.style}
-              className={S.columnTableCell + " " + rowClassName}
-            >
+            <div style={args.style} className={S.columnTableCell + " " + rowClassName}>
               {this.getCell(args.rowIndex - 1, args.columnIndex)}
             </div>
           )}
@@ -246,10 +255,7 @@ export class TableHeader extends React.Component<{
     return (
       <div style={this.props.style} className={S.columnTableCell + " header"}>
         {this.getHeader(this.props.columnIndex)}
-        <div
-          className={S.columnWidthHandle}
-          onMouseDown={this.handleColumnWidthHandleMouseDown}
-        />
+        <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown} />
       </div>
     );
   }
