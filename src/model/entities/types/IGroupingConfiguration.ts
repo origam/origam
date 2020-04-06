@@ -1,4 +1,3 @@
-import { IDataOrdering } from "../OrderingConfiguration";
 
 export interface IGroupingConfigurationData {
 
@@ -11,7 +10,6 @@ export interface IGroupingConfiguration extends IGroupingConfigurationData {
   clearGrouping(): void;
   applyGrouping(): void;
 
-  generatedOrderingTerms: IDataOrdering[];
 
   parent?: any;
 }
