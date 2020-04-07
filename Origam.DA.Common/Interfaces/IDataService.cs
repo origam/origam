@@ -78,7 +78,11 @@ namespace Origam.DA
             IPrincipal userProfile, 
             string transactionId);
 
-        IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery);
+        IEnumerable<IEnumerable<object>> ExecuteDataReader
+	        (DataStructureQuery dataStructureQuery);
+
+        IEnumerable<IEnumerable<KeyValuePair<string, object>>>
+	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
 	}
 }
 

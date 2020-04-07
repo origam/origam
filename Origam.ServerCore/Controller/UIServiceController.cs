@@ -253,8 +253,11 @@ namespace Origam.ServerCore.Controller
             {
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetQuery(input, entityData))
-                    .Bind(dataStructureQuery=>ExecuteDataReader(
-                        dataStructureQuery, input.MenuId))
+                    .Bind(dataStructureQuery=>
+                        ExecuteDataReader(
+                            dataStructureQuery: dataStructureQuery,
+                            methodId: input.MenuId,
+                            returnKeyValuePairs: false))
                     .Finally(UnwrapReturnValue);
             });
         }       
@@ -266,7 +269,10 @@ namespace Origam.ServerCore.Controller
             {
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetAggregationQuery(input, entityData))                    
-                    .Bind(dataStructureQuery => ExecuteDataReader(dataStructureQuery, input.MenuId))
+                    .Bind(dataStructureQuery => ExecuteDataReader(
+                        dataStructureQuery: dataStructureQuery, 
+                        methodId: input.MenuId, 
+                        returnKeyValuePairs: true))
                     .Finally(UnwrapReturnValue);
             });
         }  
@@ -278,7 +284,10 @@ namespace Origam.ServerCore.Controller
             {
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetGroupQuery(input, entityData))                    
-                    .Bind(dataStructureQuery => ExecuteDataReader(dataStructureQuery, input.MenuId))
+                    .Bind(dataStructureQuery => ExecuteDataReader(
+                        dataStructureQuery: dataStructureQuery,
+                        methodId: input.MenuId,
+                        returnKeyValuePairs: true))
                     .Finally(UnwrapReturnValue);
             });
         }
@@ -505,7 +514,7 @@ namespace Origam.ServerCore.Controller
             return null;
         }
         private Result<IActionResult, IActionResult> ExecuteDataReader(
-            DataStructureQuery dataStructureQuery, Guid methodId)
+            DataStructureQuery dataStructureQuery, Guid methodId, bool returnKeyValuePairs)
         {
             Result<DataStructureMethod, IActionResult> method 
                 = FindItem<DataStructureMethod>(dataStructureQuery.MethodId);
@@ -521,9 +530,21 @@ namespace Origam.ServerCore.Controller
                     return Result.Ok<IActionResult, IActionResult>(Ok(result2));
                 }
             }
-            IEnumerable<object> result = dataService.ExecuteDataReader(
-                dataStructureQuery).ToList();
-            return Result.Ok<IActionResult, IActionResult>(Ok(result));
+
+            if (returnKeyValuePairs)
+            {
+                var linesAsPairs = dataService
+                    .ExecuteDataReaderReturnPairs(dataStructureQuery)
+                    .ToList();
+                return Result.Ok<IActionResult, IActionResult>(Ok(linesAsPairs));
+            }
+            else
+            {
+                var linesAsArrays = dataService
+                    .ExecuteDataReader(dataStructureQuery)
+                    .ToList();
+                return Result.Ok<IActionResult, IActionResult>(Ok(linesAsArrays));
+            }
         }
         private Result<FormReferenceMenuItem, IActionResult> CheckLookupIsAllowedInMenu(
             FormReferenceMenuItem menuItem, Guid lookupId)

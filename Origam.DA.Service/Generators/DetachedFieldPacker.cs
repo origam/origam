@@ -28,7 +28,7 @@ namespace Origam.DA.Service
 {
     public interface IDetachedFieldPacker
     {
-        List<object> ProcessReaderOutput(object[] values,
+        List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values,
             List<ColumnData> columnData);
 
         string RenderSqlExpression(DataStructureEntity entity,
@@ -37,7 +37,8 @@ namespace Origam.DA.Service
     
     class DetachedFieldPackerPostgre : IDetachedFieldPacker
     {
-        public List<object> ProcessReaderOutput(object[] values, List<ColumnData> columnData)
+        public List<KeyValuePair<string, object>> ProcessReaderOutput(
+            KeyValuePair<string, object>[] values, List<ColumnData> columnData)
         {
             throw new NotImplementedException();
         }
@@ -51,27 +52,32 @@ namespace Origam.DA.Service
 
     public class DetachedFieldPackerMs : IDetachedFieldPacker
     {
-        public List<object> ProcessReaderOutput(object[] values, List<ColumnData> columnData)
+        public List<KeyValuePair<string, object>> ProcessReaderOutput(
+            KeyValuePair<string, object>[] values, List<ColumnData> columnData)
         {
             if (columnData == null)
                 throw new ArgumentNullException(nameof(columnData));
-            var updatedValues = new List<object>();
+            var updatedValues = new List<KeyValuePair<string, object>>();
+            
             for (int i = 0; i < columnData.Count; i++)
             {
                 if (columnData[i].IsVirtual)
                 {
-                    if (columnData[i].HasRelation && values[i] != null)
+                    if (columnData[i].HasRelation && values[i].Value != null)
                     {
-                        updatedValues.Add(((string) values[i]).Split((char) 1));
+                        updatedValues.Add(new KeyValuePair<string, object>(
+                            values[i].Key, ((string) values[i].Value).Split((char) 1)));
                         continue;
                     }
                     else
                     {
-                        updatedValues.Add(columnData[i].DefaultValue);
+                        updatedValues.Add(new KeyValuePair<string, object>
+                            (values[i].Key, columnData[i].DefaultValue));
                         continue;
                     }
                 }
-                updatedValues.Add(values[i]);
+                updatedValues.Add(new KeyValuePair<string, object>(
+                    values[i].Key, values[i].Value));
             }
 
             return updatedValues;

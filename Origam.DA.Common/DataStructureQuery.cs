@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Origam.DA
 {
@@ -110,5 +111,15 @@ namespace Origam.DA
 	    public bool ForceDatabaseCalculation { get; set; }
 	    public Grouping CustomGrouping { get; set; }
 	    public List<Aggregation> AggregatedColumns { get; set; }
+	    
+	    public List<ColumnData> GetAllQueryColumns()
+	    {
+		    var aggregationColData =
+			    (AggregatedColumns ?? new List<Aggregation>())
+			    .Select(x => new ColumnData(x.SqlQueryColumnName));
+		    return ColumnsInfo.Columns
+			    .Concat(aggregationColData)
+			    .ToList();
+	    }
 	}
 }

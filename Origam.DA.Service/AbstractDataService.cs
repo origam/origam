@@ -812,9 +812,13 @@ namespace Origam.DA.Service
             DataStructureQuery dataStructureQuery, 
             IPrincipal userProfile, 
             string transactionId);
+        
+        public abstract IEnumerable<IEnumerable<object>> ExecuteDataReader
+	        (DataStructureQuery dataStructureQuery);
 
-        public abstract IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery);
-
+        public abstract IEnumerable<IEnumerable<KeyValuePair<string, object>>>
+	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
+        
         #endregion
 
         #region IDisposable Members

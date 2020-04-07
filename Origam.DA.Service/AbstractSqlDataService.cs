@@ -1608,36 +1608,48 @@ namespace Origam.DA.Service
             return adapter.SelectCommand.ExecuteReader(commandBehavior);
         }
         
-        public override IEnumerable<object> ExecuteDataReader(DataStructureQuery query)
+        public override IEnumerable<IEnumerable<object>> ExecuteDataReader(DataStructureQuery query)
+        {
+	        return ExecuteDataReaderInternal(query)
+		        .Select(line
+			        => line.Select(pair => pair.Value));
+        }
+        
+        public override IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
+        {
+	        return ExecuteDataReaderInternal(query)
+		        .Select(line
+			        => line.ToDictionary(
+				        pair => pair.Key, 
+				        pair => pair.Value));
+        }
+
+        private IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderInternal(DataStructureQuery query)
         {
 	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
-		        var aggregationColData = 
-					(query.AggregatedColumns ?? new List<Aggregation>())
-			        .Select(x => new ColumnData(x.SqlQueryColumnName));
-		        var queryColumns = 
-			        query.ColumnsInfo.Columns
-				        .Concat(aggregationColData)
-						.ToList();
+		        var queryColumns = query.GetAllQueryColumns();
 		        while(reader.Read())
 		        {
-			        object[] values = new object[queryColumns.Count];
-                    for (int i = 0; i < queryColumns.Count; i++)
-                    {
-                        if (queryColumns[i].IsVirtual)
-                        {
-                            continue;
-                        }
-                        values[i] = reader.GetValue(reader.GetOrdinal(queryColumns[i].Name));
-                    }
+			        var values = new KeyValuePair<string, object>[queryColumns.Count];
+			        for (int i = 0; i < queryColumns.Count; i++)
+			        {
+				        if (queryColumns[i].IsVirtual)
+				        {
+					        continue;
+				        }
+				        object value = reader.GetValue(reader.GetOrdinal(queryColumns[i].Name));
+				        values[i] = new KeyValuePair<string, object>(
+					        queryColumns[i].Name , value);
+			        }
 			        yield return detachedFieldPacker.ProcessReaderOutput(
-                        values, queryColumns);
+				        values, queryColumns);
 		        }
 	        }
         }
 
-	    private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
+        private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
 	    {
 	        DataStructureEntity entity;
 	        switch (query.DataSourceType)
