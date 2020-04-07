@@ -9,6 +9,7 @@ import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 import { IAction } from "./IAction";
 import { IRowState } from "./IRowState";
 import { ILookupLoader } from "./ILookupLoader";
+import { Grouper } from "../Grouper";
 
 export interface IDataViewData {
   id: string;
@@ -42,7 +43,7 @@ export interface IDataViewData {
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
   lookupLoader: ILookupLoader;
-  
+  grouper: Grouper;
 }
 
 export interface IDataView extends IDataViewData {

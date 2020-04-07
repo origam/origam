@@ -7,6 +7,8 @@ import { AdditionalRowData } from "./AdditionalRowData";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IDataSourceField } from "./types/IDataSourceField";
+import { IRowGroup } from "./types/IRowGroup";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -16,6 +18,11 @@ export class DataTable implements IDataTable {
   }
 
   @observable.shallow allRows: any[][] = [];
+  @observable.shallow groupData: any[] = [];
+
+  @computed get groups(): IRowGroup[]{
+    return getGrouper(this).group(this.groupData)
+  }
 
   @computed get filteringFn():
     | ((dataTable: IDataTable) => (row: any[]) => boolean)
@@ -215,6 +222,11 @@ export class DataTable implements IDataTable {
   setRecords(rows: any[][]) {
     this.clear();
     this.allRows.push(...rows);
+  }
+
+  @action.bound
+  setGroups(rows: any[]) {
+    this.groupData = rows
   }
 
   @action.bound
