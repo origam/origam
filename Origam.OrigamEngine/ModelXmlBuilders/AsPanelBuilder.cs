@@ -64,6 +64,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			parentNode.SetAttribute("IsHeadless", XmlConvert.ToString(renderData.HideNavigationPanel));
 			parentNode.SetAttribute("DisableActionButtons", XmlConvert.ToString(renderData.DisableActionButtons));
 			parentNode.SetAttribute("ShowAddButton", XmlConvert.ToString(renderData.ShowNewButton));
+			parentNode.SetAttribute("HideCopyButton", XmlConvert.ToString(renderData.HideCopyButton));
 			parentNode.SetAttribute("ShowDeleteButton", XmlConvert.ToString(renderData.ShowDeleteButton));
 			parentNode.SetAttribute("ShowSelectionCheckboxes", XmlConvert.ToString(showSelectionCheckboxes));
 			parentNode.SetAttribute("IsGridHeightDynamic", XmlConvert.ToString(renderData.IsGridHeightDynamic));

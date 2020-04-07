@@ -89,6 +89,7 @@ namespace Origam.ServerCore
         }
         public PortalResult InitPortal(int maxRequestLength)
         {
+            OrigamUserContext.Reset();
             var profile = SecurityTools.CurrentUserProfile();
             var result = new PortalResult(MenuXmlBuilder.GetMenu());
             var settings = ConfigurationManager.GetActiveConfiguration();

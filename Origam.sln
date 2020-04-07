@@ -210,7 +210,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.ServerCore", "Origam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "IdentityServer4\IdentityServer4.csproj", "{EF68B85C-4FC9-47A5-85FD-7693B7ABED3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.DocProcessor", "Origam.DocProcessor\Origam.DocProcessor.csproj", "{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Documentation", "Origam.Documentation\Origam.Documentation.csproj", "{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

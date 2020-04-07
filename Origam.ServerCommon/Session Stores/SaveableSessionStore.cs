@@ -168,7 +168,7 @@ namespace Origam.Server
                 foreach (DataRow r in changedRows)
                 {
                     listOfChanges.AddRange(GetChangesByRow(
-                        null, r, 0, changedKeys, true, false, false));
+                        null, r, 0, changedKeys, true, false, false, false));
                     // if there is a list, we update the list, so it has the actual changed data
                     if ((DataList != null) 
                     && DataList.Tables.Contains(r.Table.TableName))
@@ -224,7 +224,9 @@ namespace Origam.Server
 
                 DataRow newRow = table.Rows.Find(key);
                 NewRowToDataList(newRow);
-                ArrayList listOfChanges = GetChangesByRow(requestingGrid, newRow, Operation.Create, this.Data.HasErrors, this.Data.HasChanges());
+                ArrayList listOfChanges = GetChangesByRow(requestingGrid, 
+                    newRow, Operation.Create, this.Data.HasErrors, 
+                    this.Data.HasChanges(), true);
 
                 return listOfChanges;
             }
