@@ -81,9 +81,9 @@ namespace Origam.DA
         public bool HasRelation { get;}
 
         public static readonly ColumnData
-            GroupByCountColumn = new ColumnData("groupByCount");        
+            GroupByCountColumn = new ColumnData("groupCount");        
         public static readonly ColumnData
-            GroupByCaptionColumn = new ColumnData("groupByCaption");
+            GroupByCaptionColumn = new ColumnData("groupCaption");
         
         public ColumnData(string name, bool isVirtual, object defaultValue, bool hasRelation)
         {
