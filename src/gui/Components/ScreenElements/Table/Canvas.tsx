@@ -6,7 +6,7 @@ import {
   observable,
   reaction,
   runInAction,
-  autorun
+  autorun,
 } from "mobx";
 import { observer } from "mobx-react";
 import * as React from "react";
@@ -15,6 +15,8 @@ import { PubSub } from "../../../../utils/events";
 import { CPR } from "../../../../utils/canvas";
 import { rangeQuery } from "../../../../utils/arrays";
 import S from "./Canvas.module.css";
+import _ from "lodash";
+import { SearchResultsPanel } from "gui/Workbench/SearchResults";
 
 /* eslint-disable no-unused-expressions */
 
@@ -98,16 +100,16 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
         minWidth: this.canvasWidthCSS + 1,
         maxWidth: this.canvasWidthCSS + 1,
         minHeight: this.canvasHeightCSS,
-        maxHeight: this.canvasHeightCSS
-      }
+        maxHeight: this.canvasHeightCSS,
+      },
     };
   }
 
   @computed
   get visibleRowsRange() {
     return rangeQuery(
-      i => this.props.gridDimensions.getRowBottom(i),
-      i => this.props.gridDimensions.getRowTop(i),
+      (i) => this.props.gridDimensions.getRowBottom(i),
+      (i) => this.props.gridDimensions.getRowTop(i),
       this.props.gridDimensions.rowCount,
       this.scrollTop,
       this.scrollTop + this.props.height
@@ -125,8 +127,8 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
   @computed
   public get visibleColumnsRange() {
     return rangeQuery(
-      i => this.props.gridDimensions.getColumnRight(i),
-      i => this.props.gridDimensions.getColumnLeft(i),
+      (i) => this.props.gridDimensions.getColumnRight(i),
+      (i) => this.props.gridDimensions.getColumnLeft(i),
       this.props.gridDimensions.columnCount,
       this.scrollLeft + this.props.leftOffset,
       this.scrollLeft + this.props.width - this.props.leftOffset
@@ -163,7 +165,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
       firstVisibleColumnIndex,
       lastVisibleColumnIndex,
       firstVisibleRowIndex,
-      lastVisibleRowIndex
+      lastVisibleRowIndex,
     } = this;
 
     ctx.fillStyle = "white";
@@ -223,7 +225,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
       top: rowTop,
       right: columnRight,
       bottom: rowBottom,
-      onClick: onClickPubSub
+      onClick: onClickPubSub,
     });
 
     ctx.save();
@@ -243,7 +245,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
       rowHeight,
       rowBottom,
       ctx,
-      onCellClick: onClickPubSub
+      onCellClick: onClickPubSub,
     });
 
     ctx.restore();
@@ -265,7 +267,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
       autorun(this.renderingReactionEffect, {
         scheduler(fn) {
           requestAnimationFrame(fn);
-        }
+        },
       }),
       reaction(
         () =>
@@ -273,9 +275,9 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
             this.firstVisibleColumnIndex,
             this.lastVisibleColumnIndex,
             this.firstVisibleRowIndex,
-            this.lastVisibleRowIndex
+            this.lastVisibleRowIndex,
           ] as [number, number, number, number],
-        data => {
+        (data) => {
           this.props.onVisibleDataChanged && this.props.onVisibleDataChanged(...data);
         }
       )
@@ -289,7 +291,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
   }
 
   public componentWillUnmount() {
-    this.reactionDisposers.forEach(d => d());
+    this.reactionDisposers.forEach((d) => d());
   }
 
   @action.bound public triggerCellClick(event: any, x: number, y: number) {
@@ -317,3 +319,4 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
     );
   }
 }
+
