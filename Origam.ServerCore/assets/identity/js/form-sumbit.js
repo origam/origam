@@ -24,3 +24,13 @@ if(languageSelect){
     });
 }
 
+function onLoginEnter(e) {
+    if (e.key === "Enter") {
+        document.getElementById('loginButton').click()
+    }
+}
+
+document.getElementById('passInput').onkeydown = onLoginEnter;
+document.getElementById('userNameInput').onkeydown = onLoginEnter;
+
+

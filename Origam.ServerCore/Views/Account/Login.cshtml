@@ -26,11 +26,11 @@
                         <input type="hidden" asp-for="ReturnUrl"/>
                         <div class="input-row">
                             <label asp-for="Username"></label>
-                            <input placeholder="Username" asp-for="Username" autofocus>
+                            <input id="userNameInput" placeholder="Username" asp-for="Username" autofocus>
                         </div>
                         <div class="input-row">
                             <label asp-for="Password"></label>
-                            <input type="password" placeholder="Password" asp-for="Password" autocomplete="off">
+                            <input id="passInput" type="password" placeholder="Password" asp-for="Password" autocomplete="off">
                         </div>
 
                         @if (Model.AllowRememberLogin)
@@ -43,7 +43,7 @@
                             </div>
                         }
                         <div class="input-row">
-                            <a class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
+                            <a id="loginButton" class="btn normal-size primary submit-link" value="login" href=#>@SharedLocalizer["Login"]</a>
                             <a class="btn normal-size primary submit-link" value="cancel" href=#>@SharedLocalizer["Cancel"]</a>
                         </div>
                     </form>
