@@ -23,10 +23,10 @@ export default class Scroller extends React.Component<IScrollerProps> {
   }
 
   @action.bound private handleScroll(event: any) {
-    this.props.scrollOffsetTarget.setScrollOffset(
+    this.props.onScroll(
       event,
-      event.target.scrollTop,
-      event.target.scrollLeft
+      event.target.scrollLeft,
+      event.target.scrollTop
     );
   }
 
