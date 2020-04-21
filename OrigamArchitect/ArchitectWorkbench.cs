@@ -106,11 +106,11 @@ namespace OrigamArchitect
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
         FindRulesPad _findRulesPad;
+		LogPad _logPad;
 #endif
         PropertyPad _propertyPad;
 		WorkflowPlayerPad _workflowPad;
 		OutputPad _outputPad;
-		LogPad _logPad;
         ServerLogPad _serverLogPad;
         ExtensionPad _extensionPad;
 
