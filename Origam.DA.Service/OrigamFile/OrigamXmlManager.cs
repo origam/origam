@@ -26,7 +26,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using CSharpFunctionalExtensions;
-using MoreLinq.Extensions;
+using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 //using MoreLinq;

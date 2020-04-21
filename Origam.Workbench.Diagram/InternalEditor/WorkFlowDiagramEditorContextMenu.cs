@@ -24,7 +24,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
-using MoreLinq.Extensions;
+using MoreLinq;
 using Origam.Extensions;
 using Origam.Gui.Win.Commands;
 using Origam.Schema;

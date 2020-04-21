@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using MoreLinq.Extensions;
+using MoreLinq;
 using Origam.DA.Service.FileSystemModeCheckers;
 using Origam.Extensions;
 
