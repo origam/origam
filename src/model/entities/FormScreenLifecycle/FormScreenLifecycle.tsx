@@ -28,6 +28,9 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
+import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGroupingConfiguration";
+import { IDataView } from "../types/IDataView";
+import { IRowGroup } from "../types/IRowGroup";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -238,6 +241,52 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data, true);
     getDataViewList(this).forEach(dv => dv.start());
+  }
+
+  loadChildRows(rootDataView: IDataView, filter: string){
+    const api = getApi(this);
+    return api.getRows({
+      MenuId: getMenuItemId(rootDataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(rootDataView),
+      Filter: filter,
+      Ordering: [],
+      RowLimit: 999999,
+      ColumnNames: getColumnNamesToLoad(rootDataView),
+      MasterRowId: undefined
+    });
+  }
+
+  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string){
+    const api = getApi(this);
+    return api.getGroups({
+      MenuId: getMenuItemId(rootDataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(rootDataView),
+      Filter: filter,
+      Ordering: [],
+      RowLimit: 999999,
+      GroupBy: groupByColumn,
+      GroupByLookupId: undefined,
+      MasterRowId: undefined,
+      AggregatedColumn: undefined
+    })
+  }
+
+  loadGroups(rootDataView: IDataView, groupBy: string){
+    const api = getApi(this);
+    return api.getGroups({
+      MenuId: getMenuItemId(rootDataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(rootDataView),
+      Filter: "",
+      Ordering: [],
+      RowLimit: 999999,
+      GroupBy: groupBy,
+      GroupByLookupId: undefined,
+      MasterRowId: undefined,
+      AggregatedColumn: undefined
+    });
   }
 
   *loadData(selectFirstRow: boolean) {

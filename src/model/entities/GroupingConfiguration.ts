@@ -1,5 +1,8 @@
 import { observable, computed, action, flow } from "mobx";
 import { IGroupingConfiguration } from "./types/IGroupingConfiguration";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export class GroupingConfiguration implements IGroupingConfiguration {
   @observable groupingIndices: Map<string, number> = new Map();
@@ -18,6 +21,20 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     return entries.map((item) => item[0]);
   }
 
+  @computed get firstGroupingColumn() {
+    return this.orderedGroupingColumnIds[0];
+  }
+
+  nextColumnToGroupBy(columnId: string){
+    const currentIndex = this.groupingIndices.get(columnId);
+    if(!currentIndex){
+      return undefined
+    }
+    const nextIndex = currentIndex + 1;
+    const nextEntry = Array.from(this.groupingIndices.entries())
+      .find((columnId, index) => index === nextIndex);
+    return nextEntry ? nextEntry[0] : undefined 
+  }  
 
   @action.bound
   setGrouping(columnId: string, groupingIndex: number): void {
@@ -31,7 +48,7 @@ export class GroupingConfiguration implements IGroupingConfiguration {
 
   @action.bound
   applyGrouping(): void {
-
+    getGrouper(this).apply(this.firstGroupingColumn)
   }
 
   parent?: any;

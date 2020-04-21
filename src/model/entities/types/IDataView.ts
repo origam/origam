@@ -7,9 +7,9 @@ import { IDataViewLifecycle } from "../DataViewLifecycle/types/IDataViewLifecycl
 import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 import { IAction } from "./IAction";
-import { IRowState } from "./IRowState";
 import { ILookupLoader } from "./ILookupLoader";
-import { Grouper } from "../Grouper";
+import { ServerSideGrouper } from "../ServerSideGrouper";
+import { ClientSideGrouper } from "../ClientSideGrouper";
 
 export interface IDataViewData {
   id: string;
@@ -43,10 +43,12 @@ export interface IDataViewData {
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
   lookupLoader: ILookupLoader;
-  grouper: Grouper;
+  serverSideGrouper: ServerSideGrouper; 
+  clientSideGrouper: ClientSideGrouper;
 }
 
 export interface IDataView extends IDataViewData {
+ 
   $type_IDataView: 1;
 
   isBindingRoot: boolean;

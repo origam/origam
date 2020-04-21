@@ -8,6 +8,7 @@ export interface IDataTable extends IDataTableData {
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
+  allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
   visibleRowCount: number;
 

@@ -26,7 +26,7 @@ import { IPanelViewType } from "../model/entities/types/IPanelViewType";
 import { flf2mof } from "../utils/flashDateFormat";
 import { findStopping } from "./xmlUtils";
 import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
-import { Grouper } from "model/entities/Grouper";
+import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -290,7 +290,7 @@ export function interpretScreenXml(
           dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
         dataTable: new DataTable({}),
-        grouper: new Grouper(),
+        serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
           tablePropertyIds: properties.slice(1).map(prop => prop.id),

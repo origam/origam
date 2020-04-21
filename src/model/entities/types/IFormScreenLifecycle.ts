@@ -1,4 +1,6 @@
 import { IAction } from "model/entities/types/IAction";
+import { IDataView } from "./IDataView";
+import { IRowGroup } from "./IRowGroup";
 export interface IFormScreenLifecycleData {}
 
 export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
@@ -52,6 +54,11 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   clearAutorefreshInterval(): void;
 
   start(initUIResult: any): Generator;
+
+  loadGroups(rootDataView: IDataView, groupBy: string):  Promise<any[]>;
+  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string): Promise<any[]>;
+  loadChildRows(rootDataView: IDataView, filter: string): Promise<any[]>;
+
   parent?: any;
 }
 

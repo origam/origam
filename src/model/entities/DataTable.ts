@@ -18,10 +18,9 @@ export class DataTable implements IDataTable {
   }
 
   @observable.shallow allRows: any[][] = [];
-  @observable.shallow groupData: any[] = [];
 
   @computed get groups(): IRowGroup[]{
-    return getGrouper(this).group(this.groupData)
+    return getGrouper(this).getTopLevelGroups()
   }
 
   @computed get filteringFn():
@@ -222,11 +221,6 @@ export class DataTable implements IDataTable {
   setRecords(rows: any[][]) {
     this.clear();
     this.allRows.push(...rows);
-  }
-
-  @action.bound
-  setGroups(rows: any[]) {
-    this.groupData = rows
   }
 
   @action.bound

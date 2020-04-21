@@ -23,6 +23,8 @@ import bind from "bind-decorator";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { ServerSideGrouper } from "./ServerSideGrouper";
+import { ClientSideGrouper } from "./ClientSideGrouper";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -78,6 +80,8 @@ export class DataView implements IDataView {
   tablePanelView: ITablePanelView = null as any;
   formPanelView: IFormPanelView = null as any;
   lookupLoader: ILookupLoader = null as any;
+  serverSideGrouper: ServerSideGrouper = null as any;
+  clientSideGrouper: ClientSideGrouper = null as any;
 
   @observable selectedRowIdsMap: Map<string, boolean> = new Map();
 
