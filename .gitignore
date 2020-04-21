@@ -23,3 +23,5 @@ http-client.env.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.ionide/symbolCache.db
+src/.ionide/symbolCache.db
