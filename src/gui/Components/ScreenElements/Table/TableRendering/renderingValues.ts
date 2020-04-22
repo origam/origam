@@ -6,6 +6,9 @@ export const scRenderTable: Array<() => void> = [];
 export const scRenderRow: Array<() => void> = [];
 export const scRenderCell: Array<() => void> = [];
 
+export const context = ValueBox<any>();
+scRenderTable.push(() => context.clear());
+
 export const context2d = ValueBox<CanvasRenderingContext2D>();
 scRenderTable.push(() => context2d.clear());
 

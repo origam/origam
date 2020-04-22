@@ -22,6 +22,7 @@ import {
   worldHeight,
   realFixedColumnCount,
   clickSubscriptions,
+  context,
 } from "./renderingValues";
 import { firstDrawableRowIndex, lastDrawableRowIndex } from "./drawableRowIndex";
 import { drawCurrentCell, currentRow } from "./currentCell";
@@ -30,6 +31,7 @@ import { IProperty, ITableRow, IClickSubsItem } from "./types";
 import { CPR } from "utils/canvas";
 
 export function renderTable(
+  aCtx: any,
   aCtx2d: CanvasRenderingContext2D,
   aTableRows: ITableRow[],
   aGroupedColumnIds: string[],
@@ -45,6 +47,7 @@ export function renderTable(
   aFixedColumnCount: number,
   aClickSubscriptions: IClickSubsItem[]
 ) {
+  context.set(aCtx);
   context2d.set(aCtx2d);
   tableRows.set(aTableRows);
   groupingColumnIds.set(aGroupedColumnIds);

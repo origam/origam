@@ -124,6 +124,7 @@ function createTableRenderer(ctx: any) {
 
   function drawTable(ctx2d: CanvasRenderingContext2D) {
     renderTable(
+      ctx,
       ctx2d,
       tableRowsCom.get(),
       groupedColumnIds.get(),
