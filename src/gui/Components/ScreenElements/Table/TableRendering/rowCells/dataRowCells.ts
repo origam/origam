@@ -33,7 +33,7 @@ export const dataRowColumnIds = Memoized(() => {
     ...tableColumnIds()
   ]
 })
-scRenderTable.push(dataRowCellsDraws.clear);
+scRenderTable.push(dataRowColumnIds.clear);
 
 export function isDataRow(row: ITableRow): row is any[] {
   return Array.isArray(row);

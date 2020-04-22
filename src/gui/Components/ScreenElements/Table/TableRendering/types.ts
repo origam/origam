@@ -1,6 +1,6 @@
 export interface IProperty {
   id: string;
-  type: string;
+  column: string;
   dataIndex: number;
 }
 

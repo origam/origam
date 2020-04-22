@@ -1,5 +1,5 @@
 import { action, computed, observable, comparer, autorun, runInAction } from "mobx";
-import { observer, Observer } from "mobx-react";
+import { observer, Observer, MobXProviderContext } from "mobx-react";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Measure, { BoundingRect } from "react-measure";
@@ -16,9 +16,14 @@ import { tableRows } from "./TableRendering/tableRows";
 import { IProperty, IClickSubsItem } from "./TableRendering/types";
 import { renderTable } from "./TableRendering/renderTable";
 import { handleTableClick } from "./TableRendering/onClick";
+import { getProperties } from "model/selectors/DataView/getProperties";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 
-function createTableRenderer() {
-  const rootGroupsObs = observable([
+function createTableRenderer(ctx: any) {
+  /*const rootGroupsObs = observable([
     new GroupItem([], [], "Column 1", "Value 1"),
     new GroupItem(
       [
@@ -55,42 +60,12 @@ function createTableRenderer() {
     new GroupItem([], [], "Column 1", "Value 3"),
     new GroupItem([], [], "Column 1", "Value 4"),
     new GroupItem([], [], "Column 1", "Value 5"),
-  ]);
-  const tableRowsCom = tableRows(computed(() => rootGroupsObs));
-  const groupedColumnIds = observable<string>(["k", "l"]);
-  const tableColumnIds = observable<string>(["m", "a", "l", "k", "c", "b"]);
-  const properties = observable<IProperty>([
-    {
-      id: "k",
-      type: "Number",
-      dataIndex: 0,
-    },
-    {
-      id: "l",
-      type: "Number",
-      dataIndex: 1,
-    },
-    {
-      id: "m",
-      type: "Number",
-      dataIndex: 2,
-    },
-    {
-      id: "a",
-      type: "Text",
-      dataIndex: 3,
-    },
-    {
-      id: "b",
-      type: "Text",
-      dataIndex: 4,
-    },
-    {
-      id: "c",
-      type: "Text",
-      dataIndex: 5,
-    },
-  ]);
+  ]);*/
+  /*const tableRowsCom = tableRows(computed(() => rootGroupsObs));*/
+  const tableRowsCom = computed(() => getDataTable(ctx).rows)
+  const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds)
+  // const tableColumnIds = observable<string>(["m", "a", "l", "k", "c", "b"]);
+  const properties = observable<IProperty>(getProperties(ctx));
 
   const columnWidthsObs = observable(
     new Map([
@@ -107,21 +82,27 @@ function createTableRenderer() {
     () => new Map(properties.map((property) => [property.id, property]))
   );
 
+  const tableColumnIds = computed(
+    () => getTableViewProperties(ctx).map(prop => prop.id)
+  )
+
   const scrollTopObs = observable.box<number>(0);
   const scrollLeftObs = observable.box<number>(0);
   const viewportWidthObs = observable.box<number>(500);
   const viewportHeightObs = observable.box<number>(300);
-  const isCheckboxedTableObs = observable.box<boolean>(true);
+
   const fixedColumnCountObs = observable.box<number>(0);
 
   const clickSubscriptions: IClickSubsItem[] = [];
 
+    const isCheckboxedTable = getIsSelectionCheckboxesShown(ctx);
+
   const gridLeadCellsDimensionsCom = computed(() => {
     const widths = Array.from(
       (function* () {
-        if (isCheckboxedTableObs.get()) yield 20;
-        yield* groupedColumnIds.map((id) => 20);
-        yield* tableColumnIds
+        if (isCheckboxedTable) yield 20;
+        yield* groupedColumnIds.get().map((id) => 20);
+        yield* tableColumnIds.get()
           .map((id) => columnWidthsObs.get(id))
           .filter((width) => width !== undefined) as number[];
       })()
@@ -145,14 +126,14 @@ function createTableRenderer() {
     renderTable(
       ctx2d,
       tableRowsCom.get(),
-      groupedColumnIds,
-      tableColumnIds,
+      groupedColumnIds.get(),
+      tableColumnIds.get(),
       propertyById.get(),
       scrollLeftObs.get(),
       scrollTopObs.get(),
       viewportWidthObs.get(),
       viewportHeightObs.get(),
-      isCheckboxedTableObs.get(),
+      isCheckboxedTable,
       gridLeadCellsDimensionsCom.get(),
       columnWidthsObs,
       fixedColumnCountObs.get(),
@@ -199,9 +180,13 @@ export const Table: React.FC<
   return <RawTable {...props} isVisible={ctxPanelVisibility.isVisible} ref={props.refTable} />;
 };
 
+
+
 @observer
 export class RawTable extends React.Component<ITableProps & { isVisible: boolean }> {
-  tableRenderer = createTableRenderer();
+  static contextType = MobXProviderContext;
+  
+  tableRenderer = createTableRenderer(this.context.tablePanelView);
 
   @observable _contentBounds: BoundingRect = {
     top: 0,
