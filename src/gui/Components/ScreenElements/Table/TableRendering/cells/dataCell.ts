@@ -15,6 +15,10 @@ import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import selectors from "model/selectors-tree";
+import moment from "moment";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -26,13 +30,92 @@ export function dataColumnsDraws() {
     applyScrollTranslation();
     clipCell();
     drawDataCellBackground();
-    ctx2d.fillStyle = "black";
-    ctx2d.font = `${CPR * 12}px "IBM Plex Sans", Arial, sans-serif`;
-    ctx2d.fillText(
-      currentCellText(),
-      CPR * (currentColumnLeft() + 2),
-      CPR * (currentRowTop() + 17)
-    );
+
+    const ctx = context();
+    const tablePanelView = getTablePanelView(ctx);
+    const property = getTableViewPropertyByIdx(tablePanelView, columnIndex());
+    const dataTable = getDataTable(tablePanelView);
+    const record = getTableViewRecordByExistingIdx(tablePanelView, rowIndex());
+    const recordId = dataTable.getRowId(record);
+
+    const isHidden = !getRowStateAllowRead(tablePanelView, recordId, property.id)
+    const foregroundColor = getRowStateForegroundColor(tablePanelView, recordId, "")
+    const type = property.column;
+    const cellPaddingLeft = columnIndex() === 0 ? 25 : 15;
+
+    let isLink = false;
+    let isLoading = false;
+    if (property.isLookup) {
+      isLoading =property.lookup!.isLoading(currentCellText());
+      isLink = selectors.column.isLinkToForm(property);
+    }
+
+    ctx2d.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
+    if (isHidden) {
+      return;
+    }
+    if (isLoading) {
+      ctx2d.fillStyle = "#888888";
+      ctx2d.fillText("Loading...", cellPaddingLeft * CPR, 15 * CPR);
+    } else {
+      ctx2d.fillStyle = foregroundColor || "black";
+      switch (type) {
+        case "CheckBox":
+          ctx2d.font = `${14 * CPR}px "Font Awesome 5 Free"`;
+          ctx2d.textAlign = "center";
+          ctx2d.textBaseline = "middle";
+
+          ctx2d.fillText(
+            !!currentCellText() ? "\uf14a" : "\uf0c8",
+            CPR * (currentColumnLeft() + 2),
+            CPR * (currentRowTop() + 17));
+          break;
+        case "Date":
+          if (currentCellText() !== null) {
+            ctx2d.fillText(
+              moment(currentCellText()).format(property.formatterPattern),
+                CPR * (currentColumnLeft() + 2),
+                CPR * (currentRowTop() + 17));
+         }
+          break;
+        case "ComboBox":
+        case "TagInput":
+          if (isLink) {
+            ctx2d.save();
+            ctx2d.fillStyle = "blue";
+          }
+          if (currentCellText() !== null) {
+            ctx2d.fillText("" + currentCellText()!,                   
+              CPR * (currentColumnLeft() + 2),
+              CPR * (currentRowTop() + 17));
+          }
+          if (isLink) {
+            ctx2d.restore();
+          }
+          break;
+        case "Number":
+          if (currentCellText() !== null) {
+            ctx2d.save();
+            ctx2d.textAlign = "right";
+            ctx2d.fillText("" + currentCellText()!,                
+              CPR * (currentColumnLeft() + currentColumnWidth() - cellPaddingLeft),
+              CPR * (currentRowTop() + 17));
+            ctx2d.restore();
+          }
+          break;
+        default:
+          if (currentCellText() !== null) {
+            if (!property.isPassword) {
+                ctx2d.fillText(
+                  "" + currentCellText()!,
+                  CPR * (currentColumnLeft() + 2),
+                  CPR * (currentRowTop() + 17));
+            } else {
+              ctx2d.fillText("*******", cellPaddingLeft * CPR, 15 * CPR);
+            }
+          }
+      }
+    }
   });
 }
 
@@ -52,7 +135,7 @@ export function drawDataCellBackground() {
   );
 }
 
-function getUnderLineColor(){ return "#e5e5e5";}
+function getUnderLineColor() { return "#e5e5e5"; }
 
 function getBackGroundColor() {
   const ctx = context()
