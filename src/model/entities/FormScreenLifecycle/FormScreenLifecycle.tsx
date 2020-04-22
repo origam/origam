@@ -30,7 +30,6 @@ import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGroupingConfiguration";
 import { IDataView } from "../types/IDataView";
-import { IRowGroup } from "../types/IRowGroup";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,

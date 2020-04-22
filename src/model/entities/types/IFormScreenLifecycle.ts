@@ -1,6 +1,5 @@
 import { IAction } from "model/entities/types/IAction";
 import { IDataView } from "./IDataView";
-import { IRowGroup } from "./IRowGroup";
 export interface IFormScreenLifecycleData {}
 
 export interface IFormScreenLifecycle extends IFormScreenLifecycleData {

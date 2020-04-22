@@ -7,8 +7,8 @@ import { AdditionalRowData } from "./AdditionalRowData";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IDataSourceField } from "./types/IDataSourceField";
-import { IRowGroup } from "./types/IRowGroup";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
+import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -19,7 +19,7 @@ export class DataTable implements IDataTable {
 
   @observable.shallow allRows: any[][] = [];
 
-  @computed get groups(): IRowGroup[]{
+  @computed get groups(): IGroupRow[]{
     return getGrouper(this).getTopLevelGroups()
   }
 

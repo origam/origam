@@ -1,13 +1,14 @@
-import { IRowGroup } from "./types/IRowGroup";
+
 import { IGrouper } from "./types/IGrouper";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export class ClientSideGrouper implements IGrouper {
 
-  topLevelGroups: IRowGroup[] = []
+  topLevelGroups: IGroupRow[] = []
 
-  getTopLevelGroups(): IRowGroup[] {
+  getTopLevelGroups(): IGroupRow[] {
     return this.topLevelGroups;
   }
 
@@ -16,7 +17,8 @@ export class ClientSideGrouper implements IGrouper {
     this.topLevelGroups = this.makeGroups(dataTable.allRows, firstGroupingColumn)
   }
 
-  makeGroups(rows: any[][], groupingColumn: string): IRowGroup[] {
+
+  makeGroups(rows: any[][], groupingColumn: string): IGroupRow[] {
     const level = this.findGroupLevel(groupingColumn)
     const index = this.findDataIndex(groupingColumn)
     return rows
@@ -26,11 +28,17 @@ export class ClientSideGrouper implements IGrouper {
         const groupRows = rows.filter(row => row[index] === groupName);
         return {
           isExpanded: false,
-          level: level,
-          groupColumnName: groupingColumn,
-          groupValue: groupName,
-          groupCaption: groupName,
-          rowCount: groupRows.length,
+          groupLevel: level,
+          columnLabel: groupingColumn,
+          columnValue: groupName,
+          sourceGroup: {
+            childGroups: [],
+            childRows: groupRows,
+            columnLabel: groupingColumn,
+            groupLabel: groupName,
+            isExpanded: false,
+            rowCount: groupRows.length
+          },
           groupChildren: [],
           rowChildren: groupRows,
           parent: undefined
@@ -56,12 +64,12 @@ export class ClientSideGrouper implements IGrouper {
     return property.dataIndex
   }
 
-  loadChildren(groupHeader: IRowGroup): void {
+  loadChildren(groupHeader: IGroupRow): void {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.groupColumnName);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnValue);
 
     if (nextColumnName) {
-      groupHeader.groupChildren = this.makeGroups(groupHeader.rowChildren, nextColumnName)
+      groupHeader.sourceGroup.childGroups = [];//this.makeGroups(groupHeader.rowChildren, nextColumnName)
     }
   }
 }

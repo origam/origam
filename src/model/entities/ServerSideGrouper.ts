@@ -1,16 +1,16 @@
-import { IRowGroup } from "./types/IRowGroup";
 import { getGroupingConfiguration } from "../selectors/TablePanelView/getGroupingConfiguration";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IGrouper } from "./types/IGrouper";
 import { observable } from "mobx";
+import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export class ServerSideGrouper implements IGrouper {
 
   @observable.shallow groupData: any[] = [];
-  topLevelGroups: IRowGroup[] = []
+  topLevelGroups: IGroupRow[] = []
 
-  getTopLevelGroups(): IRowGroup[] {
+  getTopLevelGroups(): IGroupRow[] {
     return this.topLevelGroups
   }
 
@@ -22,25 +22,25 @@ export class ServerSideGrouper implements IGrouper {
       .then(() => this.topLevelGroups = this.group(this.groupData, firstGroupingColumn));
   }
 
-  loadChildren(groupHeader: IRowGroup) {
+  loadChildren(groupHeader: IGroupRow) {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.groupColumnName);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnLabel);
     const dataView = getDataView(this);
     const filter = this.composeGroupingFilter(groupHeader)
     const lifeCycle = getFormScreenLifecycle(this)
     if (nextColumnName) {
       lifeCycle
         .loadChildGroups(dataView, filter, nextColumnName)
-        .then(groupData => groupHeader.groupChildren = this.group(groupData, nextColumnName));
+        .then(groupData => groupHeader.sourceGroup.childRows = []); // = this.group(groupData, nextColumnName));
     }
     else {
       lifeCycle
         .loadChildRows(dataView, filter)
-        .then(rows => groupHeader.rowChildren = rows)
+        .then(rows => groupHeader.sourceGroup.childRows = rows)
     }
   }
 
-  getAllParents(rowGroup: IRowGroup) {
+  getAllParents(rowGroup: IGroupRow) {
     let parent = rowGroup.parent
     const parents = []
     while (parent) {
@@ -50,16 +50,16 @@ export class ServerSideGrouper implements IGrouper {
     return parents;
   }
 
-  composeGroupingFilter(rowGroup: IRowGroup) {
+  composeGroupingFilter(rowGroup: IGroupRow) {
     const filterStrings = this.getAllParents(rowGroup)
       .concat([rowGroup])
-      .map(row => "[" + row.groupColumnName + ", eq, " + row.groupValue + "]")
+      .map(row => "[" + row.columnValue + ", eq, " + row.sourceGroup.groupLabel + "]")
       .join(", ")
 
     return "[ AND, " + filterStrings + "]"
   }
 
-  group(groupData: any[], columnName: string): IRowGroup[] {
+  group(groupData: any[], columnName: string): IGroupRow[] {
     const groupingConfiguration = getGroupingConfiguration(this);
     const level = groupingConfiguration.groupingIndices.get(columnName)
 
@@ -70,15 +70,19 @@ export class ServerSideGrouper implements IGrouper {
     return groupData
       .map(groupDataItem => {
         return {
+          groupLevel: level,
+          columnLabel: columnName,
+          columnValue: groupDataItem[columnName],
           isExpanded: false,
-          level: level,
-          groupColumnName: columnName,
-          groupValue: groupDataItem[columnName],
-          groupCaption: groupDataItem["groupCaption"],
-          rowCount: groupDataItem["groupCount"],
-          groupChildren: [],
-          rowChildren: [],
-          parent: undefined
+          sourceGroup:{
+            childGroups: [],
+            childRows: [], 
+            columnLabel: columnName,
+            groupLabel:  groupDataItem["groupCaption"],
+            rowCount: groupDataItem["groupCount"],
+            isExpanded: false,
+          },
+          parent: undefined,
         };
       });
   }

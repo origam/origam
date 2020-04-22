@@ -4,6 +4,7 @@ import { IGroupItem, IGroupRow, ITableRow } from "./types";
 
 export class TableGroupRow implements IGroupRow {
   constructor(public groupLevel: number, public sourceGroup: IGroupItem) {}
+  parent: IGroupRow | undefined;
   get columnLabel(): string {
     return this.sourceGroup.columnLabel;
   }

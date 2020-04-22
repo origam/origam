@@ -10,6 +10,7 @@ export interface IGroupRow {
   columnValue: string;
   isExpanded: boolean;
   sourceGroup: IGroupItem;
+  parent: IGroupRow | undefined;
 }
 
 export interface IGroupItem {
@@ -18,6 +19,7 @@ export interface IGroupItem {
   columnLabel: string;
   groupLabel: string;
   isExpanded: boolean;
+  rowCount: number;
 }
 
 export type ITableRow = any[] | IGroupRow;

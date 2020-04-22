@@ -1,6 +1,7 @@
-import { IRowGroup } from "./IRowGroup";
+import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
+
 export interface IGrouper {
-  getTopLevelGroups(): IRowGroup[];
+  getTopLevelGroups(): IGroupRow[];
   apply(firstGroupingColumn: string): void;
-  loadChildren(groupHeader: IRowGroup): void;
+  loadChildren(groupHeader: IGroupRow): void;
 }

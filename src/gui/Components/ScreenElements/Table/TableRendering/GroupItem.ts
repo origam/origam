@@ -7,8 +7,10 @@ export class GroupItem implements IGroupItem {
     public childGroups: GroupItem[],
     public childRows: any[][],
     public columnLabel: string,
-    public groupLabel: string
+    public groupLabel: string,
+    public rowCount: number,
   ) {}
+  
 
   @observable isExpanded = true;
 }

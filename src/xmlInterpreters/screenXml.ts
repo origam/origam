@@ -27,6 +27,7 @@ import { flf2mof } from "../utils/flashDateFormat";
 import { findStopping } from "./xmlUtils";
 import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
 import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
+import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -302,7 +303,8 @@ export function interpretScreenXml(
         formPanelView: new FormPanelView(),
         lookupLoader: new LookupLoader(),
         properties,
-        actions
+        actions,
+        clientSideGrouper: new ClientSideGrouper()
       });
 
       configuration.forEach(conf => {

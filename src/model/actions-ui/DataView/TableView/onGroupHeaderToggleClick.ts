@@ -1,11 +1,11 @@
 import { flow } from "mobx";
-import { IRowGroup } from "model/entities/types/IRowGroup";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
+import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export function onGroupHeaderToggleClick(ctx: any) {
   return flow(function* onTableCellClick(
     event: any,
-    groupHeader: IRowGroup
+    groupHeader: IGroupRow
   ) {
      getGrouper(ctx).loadChildren(groupHeader)
   });
