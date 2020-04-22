@@ -1,4 +1,4 @@
-import { tableColumnIds, columnWidths, context2d, context, columnIndex, rowHeight, rowIndex } from "../renderingValues";
+import { tableColumnIds, columnWidths, context2d, columnIndex, rowHeight, rowIndex, tablePanelView, recordId, property } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -8,10 +8,6 @@ import {
 } from "../currentCell";
 import { applyScrollTranslation, clipCell } from "./cellsCommon";
 import { CPR } from "utils/canvas";
-import { getTableViewPropertyByIdx } from "model/selectors/TablePanelView/getTableViewPropertyByIdx";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
@@ -31,23 +27,16 @@ export function dataColumnsDraws() {
     clipCell();
     drawDataCellBackground();
 
-    const ctx = context();
-    const tablePanelView = getTablePanelView(ctx);
-    const property = getTableViewPropertyByIdx(tablePanelView, columnIndex());
-    const dataTable = getDataTable(tablePanelView);
-    const record = getTableViewRecordByExistingIdx(tablePanelView, rowIndex());
-    const recordId = dataTable.getRowId(record);
-
-    const isHidden = !getRowStateAllowRead(tablePanelView, recordId, property.id)
-    const foregroundColor = getRowStateForegroundColor(tablePanelView, recordId, "")
-    const type = property.column;
+    const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), property().id)
+    const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId(), "")
+    const type = property().column;
     const cellPaddingLeft = columnIndex() === 0 ? 25 : 15;
 
     let isLink = false;
     let isLoading = false;
-    if (property.isLookup) {
-      isLoading =property.lookup!.isLoading(currentCellText());
-      isLink = selectors.column.isLinkToForm(property);
+    if (property().isLookup) {
+      isLoading = property().lookup!.isLoading(currentCellText());
+      isLink = selectors.column.isLinkToForm(property());
     }
 
     ctx2d.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
@@ -73,10 +62,10 @@ export function dataColumnsDraws() {
         case "Date":
           if (currentCellText() !== null) {
             ctx2d.fillText(
-              moment(currentCellText()).format(property.formatterPattern),
-                CPR * (currentColumnLeft() + 2),
-                CPR * (currentRowTop() + 17));
-         }
+              moment(currentCellText()).format(property().formatterPattern),
+              CPR * (currentColumnLeft() + 2),
+              CPR * (currentRowTop() + 17));
+          }
           break;
         case "ComboBox":
         case "TagInput":
@@ -105,11 +94,11 @@ export function dataColumnsDraws() {
           break;
         default:
           if (currentCellText() !== null) {
-            if (!property.isPassword) {
-                ctx2d.fillText(
-                  "" + currentCellText()!,
-                  CPR * (currentColumnLeft() + 2),
-                  CPR * (currentRowTop() + 17));
+            if (!property().isPassword) {
+              ctx2d.fillText(
+                "" + currentCellText()!,
+                CPR * (currentColumnLeft() + 2),
+                CPR * (currentRowTop() + 17));
             } else {
               ctx2d.fillText("*******", cellPaddingLeft * CPR, 15 * CPR);
             }
@@ -138,22 +127,17 @@ export function drawDataCellBackground() {
 function getUnderLineColor() { return "#e5e5e5"; }
 
 function getBackGroundColor() {
-  const ctx = context()
-  const tablePanelView = getTablePanelView(ctx);
-  const property = getTableViewPropertyByIdx(tablePanelView, columnIndex());
-  const isColumnOrderChangeSource = tablePanelView.columnOrderChangingSourceId === property.id;
-  const selectedColumnId = tableColumnIds()[columnIndex()];
-  const dataTable = getDataTable(tablePanelView);
-  const record = getTableViewRecordByExistingIdx(tablePanelView, rowIndex());
-  const recordId = dataTable.getRowId(record);
-  const selectedRowId = getSelectedRowId(tablePanelView);
 
-  const isCellCursor = property.id === selectedColumnId && recordId === selectedRowId;
-  const isRowCursor = recordId === selectedRowId;
+  const isColumnOrderChangeSource = tablePanelView().columnOrderChangingSourceId === property().id;
+  const selectedColumnId = tableColumnIds()[columnIndex()];
+  const selectedRowId = getSelectedRowId(tablePanelView());
+
+  const isCellCursor = property().id === selectedColumnId && recordId() === selectedRowId;
+  const isRowCursor = recordId() === selectedRowId;
 
   const backgroundColor =
-    getRowStateColumnBgColor(tablePanelView, recordId, "") ||
-    getRowStateRowBgColor(tablePanelView, recordId);
+    getRowStateColumnBgColor(tablePanelView(), recordId(), "") ||
+    getRowStateRowBgColor(tablePanelView(), recordId());
 
   if (isColumnOrderChangeSource) {
     return "#eeeeff";

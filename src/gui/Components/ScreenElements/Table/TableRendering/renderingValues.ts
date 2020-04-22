@@ -1,6 +1,10 @@
 import { ValueBox } from "./common/ValueBox";
 import { ITableRow, IGroupRow, IProperty, IClickSubsItem } from "./types";
 import { Memoized } from "./common/Memoized";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getTableViewPropertyByIdx } from "model/selectors/TablePanelView/getTableViewPropertyByIdx";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 
 export const scRenderTable: Array<() => void> = [];
 export const scRenderRow: Array<() => void> = [];
@@ -82,3 +86,11 @@ export const tableRowsCount = () => tableRows().length
 
 export const clickSubscriptions = ValueBox<IClickSubsItem[]>();
 scRenderTable.push(clickSubscriptions.clear)
+
+export const tablePanelView = () => getTablePanelView(context());
+export const property = () => getTableViewPropertyByIdx(tablePanelView(), columnIndex());
+export const dataTable = () => getDataTable(tablePanelView());
+export const recordId = () => {
+  const record = getTableViewRecordByExistingIdx(tablePanelView(), rowIndex());
+  return dataTable().getRowId(record);
+} 
