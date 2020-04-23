@@ -1224,7 +1224,12 @@ namespace Origam.Workflow.WorkQueue
 
         private object GetDataDocumentFactory(DataSet dataSet)
         {
-            return DataDocumentFactory.New(dataSet);
+            var val = dataSet.ExtendedProperties["IDataDocument"] ?? DataDocumentFactory.New(dataSet);
+            if (dataSet.ExtendedProperties["IDataDocument"] == null)
+            {
+                dataSet.ExtendedProperties.Add("IDataDocument", val);
+            }
+            return val;
         }
 
         private void HandleRemove(string queueClass, DataTable selectedRows, string transactionId)
