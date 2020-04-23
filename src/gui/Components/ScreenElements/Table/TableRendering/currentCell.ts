@@ -7,11 +7,14 @@ import {
   gridLeadCellDimensions,
   propertyById,
   scRenderCell,
+  context,
+  dataTable,
 } from "./renderingValues";
 import { currentRowCellsDraws, currentRowCellsDimensions } from "./currentRowCells";
 import { ITableRow } from "./types";
 import { Memoized } from "./common/Memoized";
 import { dataRowColumnIds } from "./rowCells/dataRowCells";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export function drawCurrentCell() {
   const colIdx = columnIndex();
@@ -74,7 +77,9 @@ export function currentColumnId() {
 
 export const currentCellText = Memoized(
   () => {
-    return currentDataRow()[propertyById().get(currentColumnId() as any)!.dataIndex]
+    const property = propertyById().get(currentColumnId() as any)!;
+    const value = currentDataRow()[property.dataIndex];
+    return dataTable().resolveCellText(property, value)
   }
 );
 scRenderCell.push(() => currentCellText.clear());

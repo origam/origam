@@ -13,7 +13,7 @@ import { ITableProps } from "./types";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 import { GroupItem } from "./TableRendering/GroupItem";
 import { tableRows } from "./TableRendering/tableRows";
-import { IProperty, IClickSubsItem } from "./TableRendering/types";
+import { IClickSubsItem } from "./TableRendering/types";
 import { renderTable } from "./TableRendering/renderTable";
 import { handleTableClick } from "./TableRendering/onClick";
 import { getProperties } from "model/selectors/DataView/getProperties";
@@ -21,6 +21,7 @@ import { getTableViewProperties } from "model/selectors/TablePanelView/getTableV
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { IProperty } from "model/entities/types/IProperty";
 
 function createTableRenderer(ctx: any) {
   /*const rootGroupsObs = observable([

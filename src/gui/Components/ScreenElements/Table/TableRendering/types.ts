@@ -1,8 +1,3 @@
-export interface IProperty {
-  id: string;
-  column: string;
-  dataIndex: number;
-}
 
 export interface IGroupRow {
   groupLevel: number;

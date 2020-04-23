@@ -27,8 +27,9 @@ import {
 import { firstDrawableRowIndex, lastDrawableRowIndex } from "./drawableRowIndex";
 import { drawCurrentCell, currentRow } from "./currentCell";
 import { firstDrawableColumnIndex, lastDrawableColumnIndex } from "./drawableColumnIndex";
-import { IProperty, ITableRow, IClickSubsItem } from "./types";
+import { ITableRow, IClickSubsItem } from "./types";
 import { CPR } from "utils/canvas";
+import { IProperty } from "model/entities/types/IProperty";
 
 export function renderTable(
   aCtx: any,
