@@ -217,11 +217,7 @@ export class CellRenderer implements ICellRenderer {
     const property = getTableViewPropertyByIdx(this.tablePanelView, columnIndex);
 
     if (property.isLookup) {
-      if (property.column === "TagInput") {
-        text = (this.getCellText(rowIndex, columnIndex) || []).join(", ");
-      } else {
-        text = this.getCellText(rowIndex, columnIndex);
-      }
+      text = this.getCellText(rowIndex, columnIndex);
       isLoading = property.lookup!.isLoading(value);
       isLink = selectors.column.isLinkToForm(property);
     }
