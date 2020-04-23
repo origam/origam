@@ -76,8 +76,8 @@ function drawCellValue(){
 
         ctx2d.fillText(
           !!currentCellText() ? "\uf14a" : "\uf0c8",
-          CPR * (currentColumnLeft() + 2),
-          CPR * (currentRowTop() + 17));
+          CPR * (currentColumnLeft() + (currentColumnWidth() / 2)),
+          CPR * (currentRowTop() + (rowHeight() / 2)));
         break;
       case "Date":
         if (currentCellText() !== null) {
