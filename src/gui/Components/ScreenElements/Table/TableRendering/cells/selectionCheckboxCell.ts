@@ -1,4 +1,4 @@
-import { isCheckboxedTable, context2d } from "../renderingValues";
+import { isCheckboxedTable, context2d, context, rowIndex, columnIndex } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -7,6 +7,13 @@ import {
 } from "../currentCell";
 import { applyScrollTranslation } from "./cellsCommon";
 import { CPR } from "utils/canvas";
+import { onClick } from "../onClick";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import actions from "model/actions-tree";
+import { flow } from "mobx";
 
 export function selectionCheckboxCellsWidths() {
   return isCheckboxedTable() ? [20] : [];
@@ -27,9 +34,43 @@ export function selectionCheckboxCellsDraws() {
             CPR * (currentColumnLeft() + 2),
             CPR * (currentRowTop() + 17)
           );
+          registerClickHandler();
         },
       ]
     : [];
+}
+
+function registerClickHandler(){
+  const ctx = context();
+  const cellRowIndex = rowIndex();
+
+  onClick({
+    x: currentColumnLeft(),
+    y: currentRowTop(),
+    w: currentColumnWidth(),
+    h: currentRowHeight(),
+    handler(event: any) { flow(function* (){
+      console.log("click");
+
+        // TODO: Move to tablepanelview
+        const dataTable = getDataTable(ctx);
+        const selectionMember = getSelectionMember(ctx);
+        const row = dataTable.getRowByExistingIdx(cellRowIndex);
+        if (!!selectionMember) {
+          const dsField = getDataSourceFieldByName(ctx, selectionMember);
+          if (dsField) {
+            const value = dataTable.getCellValueByDataSourceField(row, dsField);
+            dataTable.setDirtyValue(row, selectionMember, !value);
+            yield* getFormScreenLifecycle(ctx).onFlushData();
+          }
+        } else {
+            yield*  actions.selectionCheckboxes.toggleSelectedId(ctx)(
+            dataTable.getRowId(row)
+          );
+        return;
+      }
+    })},
+  });
 }
 
 export function selectionCheckboxEmptyCellsWidths() {

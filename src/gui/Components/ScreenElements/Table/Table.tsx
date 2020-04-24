@@ -355,6 +355,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
           event.clientY - this.contentBounds.top + this.props.scrollState.scrollTop
         );
     }*/
+    this.tableRenderer.handleClick(event);
   }
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {

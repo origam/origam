@@ -1,4 +1,4 @@
-import { tableColumnIds, columnWidths, context2d, columnIndex, rowHeight, rowIndex, tablePanelView, recordId, property } from "../renderingValues";
+import { tableColumnIds, columnWidths, context2d, columnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -15,6 +15,12 @@ import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowR
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import selectors from "model/selectors-tree";
 import moment from "moment";
+import { onClick } from "../onClick";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { flow } from "mobx";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -26,6 +32,30 @@ export function dataColumnsDraws() {
     clipCell();
     drawDataCellBackground();
     drawCellValue();
+    registerClickHandler();
+  });
+}
+
+function registerClickHandler(){
+  const ctx = context();
+  const cellRowIndex = rowIndex();
+  const cellColumnIndex = columnIndex();
+
+  onClick({
+    x: currentColumnLeft(),
+    y: currentRowTop(),
+    w: currentColumnWidth(),
+    h: currentRowHeight(),
+    handler(event: any) { flow(function* (){
+      console.log("click");
+
+      yield* getTablePanelView(ctx).onCellClick(event, cellRowIndex, cellColumnIndex);
+      yield onPossibleSelectedRowChange(ctx)(
+        getMenuItemId(ctx),
+        getDataStructureEntityId(ctx),
+        getSelectedRowId(ctx));
+    })();
+    },
   });
 }
 
