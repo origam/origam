@@ -15,8 +15,10 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import actions from "model/actions-tree";
 import { flow } from "mobx";
 
+export const selectionCheckBoxColumnWidth = 20;
+
 export function selectionCheckboxCellsWidths() {
-  return isCheckboxedTable() ? [20] : [];
+  return isCheckboxedTable() ? [selectionCheckBoxColumnWidth] : [];
 }
 
 export function selectionCheckboxCellsDraws() {
@@ -74,7 +76,7 @@ function registerClickHandler(){
 }
 
 export function selectionCheckboxEmptyCellsWidths() {
-  return isCheckboxedTable() ? [20] : [];
+  return isCheckboxedTable() ? [selectionCheckBoxColumnWidth] : [];
 }
 
 export function selectionCheckboxEmptyCellsDraws() {
