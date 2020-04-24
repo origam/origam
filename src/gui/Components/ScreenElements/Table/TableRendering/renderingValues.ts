@@ -6,6 +6,7 @@ import { getTableViewPropertyByIdx } from "model/selectors/TablePanelView/getTab
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { IProperty } from "model/entities/types/IProperty";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 
 export const scRenderTable: Array<() => void> = [];
 export const scRenderRow: Array<() => void> = [];
@@ -19,6 +20,8 @@ scRenderTable.push(() => context2d.clear());
 
 export const rowIndex = ValueBox<number>();
 scRenderRow.push(() => rowIndex.clear());
+
+export const selectionColumnShown = () =>  getIsSelectionCheckboxesShown(context());
 
 export const columnIndex = ValueBox<number>();
 scRenderCell.push(() => columnIndex.clear());

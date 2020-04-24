@@ -1,4 +1,4 @@
-import { tableColumnIds, columnWidths, context2d, columnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context } from "../renderingValues";
+import { tableColumnIds, columnWidths, context2d, columnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, selectionColumnShown } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -40,8 +40,7 @@ export function dataColumnsDraws() {
 function registerClickHandler(){
   const ctx = context();
   const cellRowIndex = rowIndex();
-  const selectionColumnShown = getIsSelectionCheckboxesShown(ctx);
-  const cellColumnIndex = selectionColumnShown
+  const cellColumnIndex = selectionColumnShown()
     ? columnIndex() - 1
     : columnIndex() ;
 
