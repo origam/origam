@@ -73,9 +73,8 @@ export interface IDataView extends IDataViewData {
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
-
-
-
+  
+  isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
   selectedRowIds: string[];
   isAnyRowIdSelected: boolean;

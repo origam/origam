@@ -7,6 +7,7 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { IProperty } from "model/entities/types/IProperty";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export const scRenderTable: Array<() => void> = [];
 export const scRenderRow: Array<() => void> = [];
@@ -20,6 +21,11 @@ scRenderTable.push(() => context2d.clear());
 
 export const rowIndex = ValueBox<number>();
 scRenderRow.push(() => rowIndex.clear());
+
+export const rowId = () =>{
+  const row = dataTable().getRowByExistingIdx(rowIndex());
+  return dataTable().getRowId(row);
+}
 
 export const selectionColumnShown = () =>  getIsSelectionCheckboxesShown(context());
 
@@ -94,6 +100,7 @@ scRenderTable.push(clickSubscriptions.clear)
 export const tablePanelView = () => getTablePanelView(context());
 export const property = () => getTableViewPropertyByIdx(tablePanelView(), columnIndex());
 export const dataTable = () => getDataTable(tablePanelView());
+export const dataView = () => getDataView(context());
 export const recordId = () => {
   const record = getTableViewRecordByExistingIdx(tablePanelView(), rowIndex());
   return dataTable().getRowId(record);

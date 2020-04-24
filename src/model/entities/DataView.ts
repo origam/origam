@@ -106,6 +106,11 @@ export class DataView implements IDataView {
     return Array.from(this.selectedRowIdsMap.keys());
   }
 
+  isSelected(id: string): boolean {
+    if(!this.selectedRowIdsMap.has(id)) return false;
+    return this.selectedRowIdsMap.get(id)!;
+  }
+
   @action.bound addSelectedRowId(id: string) {
     this.selectedRowIdsMap.set(id, true);
   }

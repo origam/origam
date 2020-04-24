@@ -1,4 +1,4 @@
-import { isCheckboxedTable, context2d, context, rowIndex, columnIndex } from "../renderingValues";
+import { isCheckboxedTable, context2d, context, rowIndex, columnIndex, dataTable, rowId, dataView } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -14,6 +14,7 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import actions from "model/actions-tree";
 import { flow } from "mobx";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export const selectionCheckBoxColumnWidth = 20;
 
@@ -24,25 +25,25 @@ export function selectionCheckboxCellsWidths() {
 export function selectionCheckboxCellsDraws() {
   return isCheckboxedTable()
     ? [
-        () => {
-          applyScrollTranslation();
-          drawSelectionCheckboxBackground();
-          const ctx2d = context2d();
-          ctx2d.fillStyle = "black";
-          ctx2d.font = `${CPR*15}px "Font Awesome 5 Free"`;
-          const state = true;
-          ctx2d.fillText(
-            state ? "\uf14a" : "\uf0c8",
-            CPR * (currentColumnLeft() + 2),
-            CPR * (currentRowTop() + 17)
-          );
-          registerClickHandler();
-        },
-      ]
+      () => {
+        applyScrollTranslation();
+        drawSelectionCheckboxBackground();
+        const ctx2d = context2d();
+        ctx2d.fillStyle = "black";
+        ctx2d.font = `${CPR * 15}px "Font Awesome 5 Free"`;
+        const state = dataView().isSelected(rowId());
+        ctx2d.fillText(
+          state ? "\uf14a" : "\uf0c8",
+          CPR * (currentColumnLeft() + 2),
+          CPR * (currentRowTop() + 17)
+        );
+        registerClickHandler();
+      },
+    ]
     : [];
 }
 
-function registerClickHandler(){
+function registerClickHandler() {
   const ctx = context();
   const cellRowIndex = rowIndex();
 
@@ -51,8 +52,9 @@ function registerClickHandler(){
     y: currentRowTop(),
     w: currentColumnWidth(),
     h: currentRowHeight(),
-    handler(event: any) { flow(function* (){
-      console.log("click");
+    handler(event: any) {
+      flow(function* () {
+        console.log("click");
 
         // TODO: Move to tablepanelview
         const dataTable = getDataTable(ctx);
@@ -66,12 +68,13 @@ function registerClickHandler(){
             yield* getFormScreenLifecycle(ctx).onFlushData();
           }
         } else {
-            yield*  actions.selectionCheckboxes.toggleSelectedId(ctx)(
+          yield* actions.selectionCheckboxes.toggleSelectedId(ctx)(
             dataTable.getRowId(row)
           );
-        return;
-      }
-    })},
+          return;
+        }
+      })();
+    },
   });
 }
 
@@ -82,11 +85,11 @@ export function selectionCheckboxEmptyCellsWidths() {
 export function selectionCheckboxEmptyCellsDraws() {
   return isCheckboxedTable()
     ? [
-        () => {
-          applyScrollTranslation();
-          drawSelectionCheckboxBackground();
-        },
-      ]
+      () => {
+        applyScrollTranslation();
+        drawSelectionCheckboxBackground();
+      },
+    ]
     : [];
 }
 
@@ -106,7 +109,7 @@ export function drawSelectionCheckboxContent() {
   applyScrollTranslation();
   drawSelectionCheckboxBackground();
   ctx2d.fillStyle = "black";
-  ctx2d.font = `${CPR*15}px "Font Awesome 5 Free"`;
+  ctx2d.font = `${CPR * 15}px "Font Awesome 5 Free"`;
   const state = true;
   ctx2d.fillText(
     state ? "\uf14a" : "\uf0c8",
