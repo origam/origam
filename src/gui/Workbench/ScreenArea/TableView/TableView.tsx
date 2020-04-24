@@ -34,7 +34,6 @@ import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSel
 import { onColumnWidthChanged } from "model/actions-ui/DataView/TableView/onColumnWidthChanged";
 import { onColumnWidthChangeFinished } from "model/actions-ui/DataView/TableView/onColumnWidthChangeFinished";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
-import { selectionCheckBoxColumnWidth } from "gui/Components/ScreenElements/Table/TableRendering/cells/selectionCheckboxCell";
 
 @inject(({ dataView }) => {
   return {
@@ -226,11 +225,11 @@ class GridDimensions implements IGridDimensions {
   }
 
   getRowTop(rowIndex: number): number {
-    return rowIndex * 24;
+    return rowIndex * this.getRowHeight(rowIndex);
   }
 
   getRowHeight(rowIndex: number): number {
-    return 24;
+    return 20;
   }
 
   getRowBottom(rowIndex: number): number {
