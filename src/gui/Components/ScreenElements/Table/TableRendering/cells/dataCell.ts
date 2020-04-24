@@ -21,6 +21,7 @@ import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelected
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { flow } from "mobx";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -39,7 +40,10 @@ export function dataColumnsDraws() {
 function registerClickHandler(){
   const ctx = context();
   const cellRowIndex = rowIndex();
-  const cellColumnIndex = columnIndex();
+  const selectionColumnShown = getIsSelectionCheckboxesShown(ctx);
+  const cellColumnIndex = selectionColumnShown
+    ? columnIndex() - 1
+    : columnIndex() ;
 
   onClick({
     x: currentColumnLeft(),
