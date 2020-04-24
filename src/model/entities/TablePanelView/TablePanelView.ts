@@ -49,7 +49,11 @@ export class TablePanelView implements ITablePanelView {
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
 
-
+  @computed get propertyMap() {
+    return new Map(
+      this.allTableProperties.map(x => [x.id, x] as [string, IProperty])
+    );
+  }
 
   @computed get allTableProperties() {
     return this.tablePropertyIds.map(id =>
@@ -111,10 +115,10 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  *onCellClick(event: any, rowIndex: number, columnIndex: number) {
+  *onCellClick(event: any, rowIndex: number, columnId: string) {
     // console.log("CellClicked:", rowIndex, columnIndex);
     const row = this.dataTable.getRowByExistingIdx(rowIndex);
-    const property = this.tableProperties[columnIndex];
+    const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {
         const menuId = selectors.column.getLinkMenuId(property);

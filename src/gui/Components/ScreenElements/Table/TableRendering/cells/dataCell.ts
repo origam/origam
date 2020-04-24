@@ -32,16 +32,13 @@ export function dataColumnsDraws() {
     clipCell();
     drawDataCellBackground();
     drawCellValue();
-    registerClickHandler();
+    registerClickHandler(id);
   });
 }
 
-function registerClickHandler(){
+function registerClickHandler(columnId: string){
   const ctx = context();
   const cellRowIndex = rowIndex();
-  const cellColumnIndex = selectionColumnShown()
-    ? columnIndex() - 1
-    : columnIndex() ;
 
   onClick({
     x: currentColumnLeft(),
@@ -51,7 +48,7 @@ function registerClickHandler(){
     handler(event: any) { flow(function* (){
       console.log("click");
 
-      yield* getTablePanelView(ctx).onCellClick(event, cellRowIndex, cellColumnIndex);
+      yield* getTablePanelView(ctx).onCellClick(event, cellRowIndex, columnId);
       yield onPossibleSelectedRowChange(ctx)(
         getMenuItemId(ctx),
         getDataStructureEntityId(ctx),

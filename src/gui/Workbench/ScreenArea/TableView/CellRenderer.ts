@@ -15,7 +15,6 @@ import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePane
 import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { CPR } from "../../../../utils/canvas";
 import { IRenderCellArgs, IRenderedCell } from "../../../Components/ScreenElements/Table/types";
-import { onTableCellClick } from "model/actions-ui/DataView/TableView/onTableCellClick";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
@@ -38,13 +37,13 @@ export class CellRenderer implements ICellRenderer {
   @bind
   renderCell({ rowIndex, columnIndex, rowHeight, columnWidth, onCellClick, ctx }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
-    onCellClick.subscribe((event: any) => {
-      onTableCellClick(this.tablePanelView)(
-        event,
-        rowIndex,
-        this.isSelectionCheckboxes ? columnIndex - 1 : columnIndex
-      );
-    });
+    // onCellClick.subscribe((event: any) => {
+    //   onTableCellClick(this.tablePanelView)(
+    //     event,
+    //     rowIndex,
+    //     this.isSelectionCheckboxes ? columnIndex - 1 : columnIndex
+    //   );
+    // });
 
     const cellPaddingLeft = columnIndex === 0 ? 25 : 15;
 
