@@ -68,6 +68,7 @@ export interface IGridDimensions {
   getRowTop(rowIndex: number): number;
   getRowHeight(rowIndex: number): number;
   getRowBottom(rowIndex: number): number;
+  columnWidths: Map<string, number>;
 }
 
 export type IListenForScrollToCell = (
