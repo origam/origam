@@ -1,4 +1,4 @@
-import { isCheckboxedTable, context2d, context, rowIndex, columnIndex, dataTable, rowId, dataView } from "../renderingValues";
+import { isCheckBoxedTable, context2d, context, rowIndex, columnIndex, dataTable, rowId, dataView } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -21,11 +21,11 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 export const selectionCheckBoxColumnWidth = 20;
 
 export function selectionCheckboxCellsWidths() {
-  return isCheckboxedTable() ? [selectionCheckBoxColumnWidth] : [];
+  return isCheckBoxedTable() ? [selectionCheckBoxColumnWidth] : [];
 }
 
 export function selectionCheckboxCellsDraws() {
-  return isCheckboxedTable()
+  return isCheckBoxedTable()
     ? [
       () => {
         applyScrollTranslation();
@@ -58,7 +58,7 @@ function registerClickHandler() {
       flow(function* () {
         console.log("click");
 
-        // TODO: Move to tablepanelview
+        // TODO: Move to tablePanelView
         const dataTable = getDataTable(ctx);
         const selectionMember = getSelectionMember(ctx);
         const row = dataTable.getRowByExistingIdx(cellRowIndex);
@@ -81,11 +81,11 @@ function registerClickHandler() {
 }
 
 export function selectionCheckboxEmptyCellsWidths() {
-  return isCheckboxedTable() ? [selectionCheckBoxColumnWidth] : [];
+  return isCheckBoxedTable() ? [selectionCheckBoxColumnWidth] : [];
 }
 
 export function selectionCheckboxEmptyCellsDraws() {
-  return isCheckboxedTable()
+  return isCheckBoxedTable()
     ? [
       () => {
         applyScrollTranslation();

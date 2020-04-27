@@ -13,7 +13,7 @@ import {
   scrollTop,
   viewportWidth,
   viewportHeight,
-  isCheckboxedTable,
+  isCheckBoxedTable,
   gridLeadCellDimensions,
   rowHeight,
   columnWidths,
@@ -42,7 +42,7 @@ export function renderTable(
   aScrollTop: number,
   aViewportWidth: number,
   aViewportHeight: number,
-  aIsCheckboxedTable: boolean,
+  aIsCheckBoxedTable: boolean,
   aGridLeadCellDimensions: { left: number; width: number; right: number }[],
   aColumnWidths: Map<string, number>,
   aFixedColumnCount: number,
@@ -58,7 +58,7 @@ export function renderTable(
   scrollTop.set(aScrollTop);
   viewportWidth.set(aViewportWidth);
   viewportHeight.set(aViewportHeight);
-  isCheckboxedTable.set(aIsCheckboxedTable);
+  isCheckBoxedTable.set(aIsCheckBoxedTable);
   gridLeadCellDimensions.set(aGridLeadCellDimensions);
   rowHeight.set(20);
   columnWidths.set(aColumnWidths);

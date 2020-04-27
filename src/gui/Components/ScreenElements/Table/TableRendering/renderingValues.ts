@@ -74,8 +74,10 @@ export const groupingColumnCount = () => groupingColumnIds().length;
 
 export const isGrouping = () => groupingColumnIds().length > 0;
 
-export const isCheckboxedTable = ValueBox<boolean>();
-scRenderTable.push(isCheckboxedTable.clear);
+
+
+export const isCheckBoxedTable = ValueBox<boolean>();
+scRenderTable.push(isCheckBoxedTable.clear);
 
 export const fixedColumnCount = ValueBox<number>();
 scRenderTable.push(fixedColumnCount.clear);
@@ -84,7 +86,7 @@ export const columnWidths = ValueBox<Map<string, number>>();
 scRenderTable.push(columnWidths.clear);
 
 export const realFixedColumnCount = () =>
-  isCheckboxedTable() ? fixedColumnCount() + 1 : fixedColumnCount();
+  isCheckBoxedTable() ? fixedColumnCount() + 1 : fixedColumnCount();
 
 export const gridLeadCellDimensions = ValueBox<{ left: number; width: number; right: number }[]>();
 scRenderTable.push(gridLeadCellDimensions.clear);
