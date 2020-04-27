@@ -82,12 +82,12 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 
   const clickSubscriptions: IClickSubsItem[] = [];
 
-    const isCheckboxedTable = getIsSelectionCheckboxesShown(ctx);
+    const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
 
   const gridLeadCellsDimensionsCom = computed(() => {
     const widths = Array.from(
       (function* () {
-        if (isCheckboxedTable) yield 20;
+        if (isCheckBoxedTable) yield 20;
         yield* groupedColumnIds.get().map((id) => 20);
         yield* tableColumnIds.get()
           .map((id) => gridDimensions.columnWidths.get(id))
@@ -121,7 +121,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       scrollTopObs.get(),
       viewportWidthObs.get(),
       viewportHeightObs.get(),
-      isCheckboxedTable,
+      isCheckBoxedTable,
       gridLeadCellsDimensionsCom.get(),
       gridDimensions.columnWidths,
       fixedColumnCountObs.get(),
