@@ -5,6 +5,8 @@ import {
   currentCellText,
   currentColumnWidth,
   currentRowHeight,
+  currentColumnLeftVisible,
+  currentColumnWidthVisible,
 } from "../currentCell";
 import { applyScrollTranslation, clipCell } from "./cellsCommon";
 import { CPR } from "utils/canvas";
@@ -41,9 +43,9 @@ function registerClickHandler(columnId: string){
   const cellRowIndex = rowIndex();
 
   onClick({
-    x: currentColumnLeft(),
+    x: currentColumnLeftVisible(),
     y: currentRowTop(),
-    w: currentColumnWidth(),
+    w: currentColumnWidthVisible(),
     h: currentRowHeight(),
     handler(event: any) { flow(function* (){
       console.log("click");

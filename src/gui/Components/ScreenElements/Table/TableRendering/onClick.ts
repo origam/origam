@@ -13,12 +13,10 @@ export function handleTableClick(
   scrollTop: number,
   clickSubscriptions: IClickSubsItem[]
 ) {
-  
-  const worldX = canvasX;// + scrollLeft;
-  const worldY = canvasY;// + scrollTop;
+ 
   for (let h of clickSubscriptions) {
-    if (h.x <= worldX && h.x + h.w >= worldX && h.y <= worldY && h.y + h.h >= worldY) {
-      h.handler(event, worldX, worldY, canvasX, canvasY);
+    if (h.x <= canvasX && h.x + h.w >= canvasX && h.y <= canvasY && h.y + h.h >= canvasY) {
+      h.handler(event, canvasX, canvasY, canvasX, canvasY);
     }
   }
 }

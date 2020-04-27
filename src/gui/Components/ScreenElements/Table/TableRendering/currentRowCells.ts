@@ -1,5 +1,5 @@
 import { Memoized } from "./common/Memoized";
-import { scRenderRow } from "./renderingValues";
+import { scRenderRow, isCheckboxedTable, scrollLeft } from "./renderingValues";
 import { dataRowCellsDraws, dataRowCellsWidths, isCurrentDataRow } from "./rowCells/dataRowCells";
 import {
   groupRowCellsDraws,
@@ -8,14 +8,27 @@ import {
 } from "./rowCells/groupRowCells";
 
 function computeDimensions(cellWidths: number[]) {
-  const result: { left: number; width: number; right: number }[] = [];
+  const result: { left: number; width: number; right: number; leftVisible: number; widthVisible: number; }[] = [];
+
   let acc = 0;
   for (let i = 0; i < cellWidths.length; i++) {
     const left = acc;
     const width = cellWidths[i];
+    let leftVisible = left;
+    let widthVisible = width;
+    if(isCheckboxedTable() && scrollLeft() > left){
+      if(i > 0){
+        const fixedColumnWidth = cellWidths[0] 
+        leftVisible = scrollLeft() + fixedColumnWidth
+        widthVisible = width - (leftVisible - left)
+      }
+      else if(i === 0){
+        leftVisible = scrollLeft()
+      }
+    }
     acc = acc + width;
     const right = acc;
-    result.push({ left, width, right });
+    result.push({ left, width, right, leftVisible, widthVisible});
   }
   return result;
 }

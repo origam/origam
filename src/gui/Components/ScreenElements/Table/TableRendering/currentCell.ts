@@ -35,6 +35,14 @@ export function currentColumnLeft() {
   return currentRowCellsDimensions()[columnIndex()].left;
 }
 
+export function currentColumnLeftVisible() {
+  return currentRowCellsDimensions()[columnIndex()].leftVisible;
+}
+
+export function currentColumnWidthVisible() {
+  return currentRowCellsDimensions()[columnIndex()].widthVisible;
+}
+
 export function currentColumnWidth() {
   return currentRowCellsDimensions()[columnIndex()].width;
 }
