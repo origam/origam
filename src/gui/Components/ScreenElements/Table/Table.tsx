@@ -287,25 +287,26 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   @action.bound scrollToCellShortest(rowIdx: number, columnIdx: number) {
     // TODO: Refactor to take real scrollbar sizes
+    const freeColIndex = this.fixedColumnCount === 0 
+      ? columnIdx 
+      : columnIdx + this.fixedColumnCount
     const { gridDimensions } = this.props;
     const SCROLLBAR_SIZE = 20;
     if (this.elmScroller) {
       const top = gridDimensions.getRowTop(rowIdx);
       const bottom = gridDimensions.getRowBottom(rowIdx);
-      if (columnIdx >= this.fixedColumnCount) {
-        const left = gridDimensions.getColumnLeft(columnIdx);
-        const right = gridDimensions.getColumnRight(columnIdx);
+      const left = gridDimensions.getColumnLeft(freeColIndex);
+      const right = gridDimensions.getColumnRight(freeColIndex);
 
-        if (left - this.elmScroller.scrollLeft < this.fixedColumnsWidth) {
-          this.elmScroller.scrollTo({
-            scrollLeft: left - this.fixedColumnsWidth,
-          });
-        }
-        if (right - this.elmScroller.scrollLeft > this.contentBounds.width - SCROLLBAR_SIZE) {
-          this.elmScroller.scrollTo({
-            scrollLeft: right - this.contentBounds.width + SCROLLBAR_SIZE,
-          });
-        }
+      if (left - this.elmScroller.scrollLeft < this.fixedColumnsWidth) {
+        this.elmScroller.scrollTo({
+          scrollLeft: left - this.fixedColumnsWidth,
+        });
+      }
+      if (right - this.elmScroller.scrollLeft > this.contentBounds.width - SCROLLBAR_SIZE) {
+        this.elmScroller.scrollTo({
+          scrollLeft: right - this.contentBounds.width + SCROLLBAR_SIZE,
+        });
       }
       if (top - this.elmScroller.scrollTop < 0) {
         this.elmScroller.scrollTo({ scrollTop: top });
