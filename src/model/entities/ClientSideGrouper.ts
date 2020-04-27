@@ -7,6 +7,7 @@ import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/ty
 export class ClientSideGrouper implements IGrouper {
 
   topLevelGroups: IGroupRow[] = []
+  parent?: any = null;
 
   getTopLevelGroups(): IGroupRow[] {
     return this.topLevelGroups;

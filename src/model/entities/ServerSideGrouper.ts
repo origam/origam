@@ -9,6 +9,7 @@ export class ServerSideGrouper implements IGrouper {
 
   @observable.shallow groupData: any[] = [];
   topLevelGroups: IGroupRow[] = []
+  parent?: any = null;
 
   getTopLevelGroups(): IGroupRow[] {
     return this.topLevelGroups

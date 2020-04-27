@@ -45,6 +45,8 @@ export class DataView implements IDataView {
     this.tablePanelView.parent = this;
     this.formPanelView.parent = this;
     this.lookupLoader.parent = this;
+    this.clientSideGrouper.parent = this;
+    this.serverSideGrouper.parent = this;
   }
 
   isReorderedOnClient: boolean = true;
