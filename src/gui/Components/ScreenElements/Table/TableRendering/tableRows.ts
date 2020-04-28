@@ -1,9 +1,9 @@
 import { computed, IObservable, IObservableArray, IComputedValue } from "mobx";
 
-import { IGroupItem, IGroupRow, ITableRow } from "./types";
+import { IGroupTreeNode, IGroupRow, ITableRow } from "./types";
 
 export class TableGroupRow implements IGroupRow {
-  constructor(public groupLevel: number, public sourceGroup: IGroupItem) {}
+  constructor(public groupLevel: number, public sourceGroup: IGroupTreeNode) {}
   parent: IGroupRow | undefined;
   get columnLabel(): string {
     return this.sourceGroup.columnLabel;
@@ -18,11 +18,11 @@ export class TableGroupRow implements IGroupRow {
 
 
 
-export function tableRows(rootGroups: IComputedValue<IGroupItem[]>) {
+export function tableRows(rootGroups: IComputedValue<IGroupTreeNode[]>) {
   return computed<ITableRow[]>(() => {
     const result: ITableRow[] = [];
     let level = 0;
-    function recursive(group: IGroupItem) {
+    function recursive(group: IGroupTreeNode) {
       result.push(new TableGroupRow(level, group));
       if (!group.isExpanded) return;
       for (let g of group.childGroups) {

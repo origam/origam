@@ -1,8 +1,8 @@
 
 import { observable } from "mobx";
-import { IGroupItem } from "./types";
+import { IGroupTreeNode } from "./types";
 
-export class GroupItem implements IGroupItem {
+export class GroupItem implements IGroupTreeNode {
   constructor(
     public childGroups: GroupItem[],
     public childRows: any[][],

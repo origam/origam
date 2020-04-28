@@ -4,12 +4,12 @@ export interface IGroupRow {
   columnLabel: string;
   columnValue: string;
   isExpanded: boolean;
-  sourceGroup: IGroupItem;
+  sourceGroup: IGroupTreeNode;
   parent: IGroupRow | undefined;
 }
 
-export interface IGroupItem {
-  childGroups: IGroupItem[];
+export interface IGroupTreeNode {
+  childGroups: IGroupTreeNode[];
   childRows: any[][];
   columnLabel: string;
   groupLabel: string;

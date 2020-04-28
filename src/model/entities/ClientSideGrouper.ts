@@ -2,7 +2,7 @@
 import { IGrouper } from "./types/IGrouper";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IGroupRow, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export class ClientSideGrouper implements IGrouper {
 
@@ -18,10 +18,11 @@ export class ClientSideGrouper implements IGrouper {
     this.topLevelGroups = this.makeGroups(dataTable.allRows, firstGroupingColumn)
   }
 
-
   makeGroups(rows: any[][], groupingColumn: string): IGroupRow[] {
     const level = this.findGroupLevel(groupingColumn)
     const index = this.findDataIndex(groupingColumn)
+
+    this.makeChildGroups(rows, groupingColumn);
     return rows
       .map(row => row[index])
       .filter((v, i, a) => a.indexOf(v) === i) // distinct
@@ -47,6 +48,32 @@ export class ClientSideGrouper implements IGrouper {
       });
   }
 
+
+  makeChildGroups(rows: any[][], groupingColumn: string): IGroupTreeNode[] {
+    const index = this.findDataIndex(groupingColumn)
+    return rows
+      .map(row => row[index])
+      .filter((v, i, a) => a.indexOf(v) === i) // distinct
+      .map(groupName => {
+        const groupRows = rows.filter(row => row[index] === groupName);
+        return {
+            childGroups: [],
+            childRows: groupRows,
+            columnLabel: groupingColumn,
+            groupLabel: groupName,
+            isExpanded: false,
+            rowCount: groupRows.length
+        };
+      });
+  }
+
+  // childGroups: IGroupItem[];
+  // childRows: any[][];
+  // columnLabel: string;
+  // groupLabel: string;
+  // isExpanded: boolean;
+  // rowCount: number;
+
   findGroupLevel(groupingColumn: string) {
     const groupingConfiguration = getGroupingConfiguration(this);
     const level = groupingConfiguration.groupingIndices.get(groupingColumn)
@@ -70,7 +97,7 @@ export class ClientSideGrouper implements IGrouper {
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnValue);
 
     if (nextColumnName) {
-      groupHeader.sourceGroup.childGroups = [];//this.makeGroups(groupHeader.rowChildren, nextColumnName)
+      groupHeader.sourceGroup.childGroups = this.makeChildGroups(groupHeader.sourceGroup.childRows, nextColumnName)
     }
   }
 }
