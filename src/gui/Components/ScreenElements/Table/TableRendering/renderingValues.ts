@@ -8,6 +8,9 @@ import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/
 import { IProperty } from "model/entities/types/IProperty";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getTableViewPropertyById } from "model/selectors/TablePanelView/getTableViewPropertyById";
+import { currentColumnId } from "./currentCell";
+import { dataRowColumnIds } from "./rowCells/dataRowCells";
 
 export const scRenderTable: Array<() => void> = [];
 export const scRenderRow: Array<() => void> = [];
@@ -100,7 +103,9 @@ export const clickSubscriptions = ValueBox<IClickSubsItem[]>();
 scRenderTable.push(clickSubscriptions.clear)
 
 export const tablePanelView = () => getTablePanelView(context());
-export const property = () => getTableViewPropertyByIdx(tablePanelView(), drawingColumnIndex());
+// export const property = () => getTableViewPropertyById(tablePanelView(),  dataRowColumnIds()[drawingColumnIndex()]!);// currentColumnId()!);
+export const property = () => getTableViewPropertyByIdx(tablePanelView(), drawingColumnIndex() - realFixedColumnCount());// currentColumnId()!);
+ 
 export const dataTable = () => getDataTable(tablePanelView());
 export const dataView = () => getDataView(context());
 export const recordId = () => {

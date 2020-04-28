@@ -33,6 +33,7 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   tableProperties: IProperty[];
   allTableProperties: IProperty[];
+  propertyMap: Map<string, IProperty>;
 
   hiddenPropertyIds: Map<string, boolean>;
 
