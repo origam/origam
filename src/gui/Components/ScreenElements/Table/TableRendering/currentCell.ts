@@ -1,5 +1,5 @@
 import {
-  columnIndex,
+  drawingColumnIndex,
   rowIndex,
   tableRows,
   rowHeight,
@@ -17,10 +17,10 @@ import { dataRowColumnIds } from "./rowCells/dataRowCells";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export function drawCurrentCell() {
-  const colIdx = columnIndex();
+  const colIdx = drawingColumnIndex();
   const cellDraws = currentRowCellsDraws();
   if(colIdx >= cellDraws.length) return
-  currentRowCellsDraws()[columnIndex()]();
+  currentRowCellsDraws()[drawingColumnIndex()]();
 }
 
 export function currentRow(): ITableRow {
@@ -32,23 +32,23 @@ export function currentDataRow(): any[] {
 }
 
 export function currentColumnLeft() {
-  return currentRowCellsDimensions()[columnIndex()].left;
+  return currentRowCellsDimensions()[drawingColumnIndex()].left;
 }
 
 export function currentColumnLeftVisible() {
-  return currentRowCellsDimensions()[columnIndex()].leftVisible;
+  return currentRowCellsDimensions()[drawingColumnIndex()].leftVisible;
 }
 
 export function currentColumnWidthVisible() {
-  return currentRowCellsDimensions()[columnIndex()].widthVisible;
+  return currentRowCellsDimensions()[drawingColumnIndex()].widthVisible;
 }
 
 export function currentColumnWidth() {
-  return currentRowCellsDimensions()[columnIndex()].width;
+  return currentRowCellsDimensions()[drawingColumnIndex()].width;
 }
 
 export function currentColumnRight() {
-  return currentRowCellsDimensions()[columnIndex()].right;
+  return currentRowCellsDimensions()[drawingColumnIndex()].right;
 }
 
 export function currentRowTop() {
@@ -64,23 +64,23 @@ export function currentRowBottom() {
 }
 
 export function isCurrentCellFixed() {
-  return columnIndex() < realFixedColumnCount();
+  return drawingColumnIndex() < realFixedColumnCount();
 }
 
 export function currentGridLeadCellLeft() {
-  return gridLeadCellDimensions()[columnIndex()].left;
+  return gridLeadCellDimensions()[drawingColumnIndex()].left;
 }
 
 export function currentGridLeadCellWidth() {
-  return gridLeadCellDimensions()[columnIndex()].width;
+  return gridLeadCellDimensions()[drawingColumnIndex()].width;
 }
 
 export function currentGridLeadCellRight() {
-  return gridLeadCellDimensions()[columnIndex()].right;
+  return gridLeadCellDimensions()[drawingColumnIndex()].right;
 }
 
 export function currentColumnId() {
-  return dataRowColumnIds()[columnIndex()];
+  return dataRowColumnIds()[drawingColumnIndex()];
 }
 
 export const currentCellText = Memoized(

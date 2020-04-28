@@ -1,4 +1,4 @@
-import { isCheckBoxedTable, context2d, context, rowIndex, columnIndex, dataTable, rowId, dataView } from "../renderingValues";
+import { isCheckBoxedTable, context2d, context, rowIndex, drawingColumnIndex, dataTable, rowId, dataView } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,

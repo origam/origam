@@ -3,7 +3,7 @@ import {
   context2d,
   rowIndex,
   scRenderRow,
-  columnIndex,
+  drawingColumnIndex,
   scRenderCell,
   tableRows,
   groupingColumnIds,
@@ -103,7 +103,7 @@ export function renderRow(rowIdx: number) {
 }
 
 export function renderCell(columnIdx: number) {
-  columnIndex.set(columnIdx);
+  drawingColumnIndex.set(columnIdx);
   try {
     const ctx2d = context2d();
     ctx2d.save();

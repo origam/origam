@@ -1,4 +1,4 @@
-import { tableColumnIds, columnWidths, context2d, columnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, selectionColumnShown } from "../renderingValues";
+import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, selectionColumnShown } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -81,7 +81,7 @@ function drawCellValue(){
   const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), property().id)
   const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId(), "")
   const type = property().column;
-  const cellPaddingLeft = columnIndex() === 0 ? 25 : 15;
+  const cellPaddingLeft = drawingColumnIndex() === 0 ? 25 : 15;
 
   let isLink = false;
   let isLoading = false;
@@ -163,7 +163,7 @@ function getUnderLineColor() { return "#e5e5e5"; }
 function getBackGroundColor() {
 
   const isColumnOrderChangeSource = tablePanelView().columnOrderChangingSourceId === property().id;
-  const selectedColumnId = tableColumnIds()[columnIndex()];
+  const selectedColumnId = tableColumnIds()[drawingColumnIndex()];
   const selectedRowId = getSelectedRowId(tablePanelView());
 
   const isCellCursor = property().id === selectedColumnId && recordId() === selectedRowId;

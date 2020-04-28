@@ -29,8 +29,8 @@ export const rowId = () =>{
 
 export const selectionColumnShown = () =>  getIsSelectionCheckboxesShown(context());
 
-export const columnIndex = ValueBox<number>();
-scRenderCell.push(() => columnIndex.clear());
+export const drawingColumnIndex = ValueBox<number>();
+scRenderCell.push(() => drawingColumnIndex.clear());
 
 export const tableRows = ValueBox<ITableRow[]>();
 scRenderTable.push(() => tableRows.clear());
@@ -100,7 +100,7 @@ export const clickSubscriptions = ValueBox<IClickSubsItem[]>();
 scRenderTable.push(clickSubscriptions.clear)
 
 export const tablePanelView = () => getTablePanelView(context());
-export const property = () => getTableViewPropertyByIdx(tablePanelView(), columnIndex());
+export const property = () => getTableViewPropertyByIdx(tablePanelView(), drawingColumnIndex());
 export const dataTable = () => getDataTable(tablePanelView());
 export const dataView = () => getDataView(context());
 export const recordId = () => {
