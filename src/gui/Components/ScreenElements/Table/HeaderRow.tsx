@@ -19,6 +19,6 @@ export class HeaderRow extends React.Component<IHeaderRowProps> {
         })
       );
     }
-    return <div className={S.headerRow}>{headers}</div>;
+    return <div className={S.headerRow} style={{zIndex: this.props.zIndex}}>{headers}</div>;
   }
 }

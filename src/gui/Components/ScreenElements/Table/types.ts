@@ -175,6 +175,7 @@ export interface IHeaderRowProps {
   gridDimensions: IGridDimensions;
   columnStartIndex: number;
   columnEndIndex: number;
+  zIndex: number | undefined;
   renderHeader: IRenderHeader;
 }
 

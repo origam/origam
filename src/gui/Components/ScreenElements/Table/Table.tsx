@@ -398,6 +398,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                 renderHeader={this.props.renderHeader}
                                 columnStartIndex={0}
                                 columnEndIndex={this.fixedColumnCount}
+                                zIndex={100}
                               />
                             </Scrollee>
                             <Scrollee
@@ -410,6 +411,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                 renderHeader={this.props.renderHeader}
                                 columnStartIndex={this.fixedColumnCount}
                                 columnEndIndex={this.props.gridDimensions.columnCount}
+                                zIndex={0}
                               />
                             </Scrollee>
                           </>
@@ -424,6 +426,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               renderHeader={this.props.renderHeader}
                               columnStartIndex={0}
                               columnEndIndex={this.props.gridDimensions.columnCount}
+                              zIndex={0}
                             />
                           </Scrollee>
                         )}
