@@ -20,6 +20,7 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { IProperty } from "model/entities/types/IProperty";
+import { flattenToTableRows } from "./TableRendering/tableRows";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   /*const rootGroupsObs = observable([
@@ -60,9 +61,13 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     new GroupItem([], [], "Column 1", "Value 4"),
     new GroupItem([], [], "Column 1", "Value 5"),
   ]);*/
-  /*const tableRowsCom = tableRows(computed(() => rootGroupsObs));*/
-  const tableRowsCom = computed(() => getDataTable(ctx).rows)
   const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds)
+
+  const tableRowsCom = computed(() =>
+    groupedColumnIds.get().length === 0 
+      ? getDataTable(ctx).rows
+      : flattenToTableRows(getDataTable(ctx).groups));
+
   // const tableColumnIds = observable<string>(["m", "a", "l", "k", "c", "b"]);
   const properties = observable<IProperty>(getProperties(ctx));
   const propertyById = computed(

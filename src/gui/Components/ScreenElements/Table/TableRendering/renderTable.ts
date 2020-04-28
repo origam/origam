@@ -23,9 +23,10 @@ import {
   realFixedColumnCount,
   clickSubscriptions,
   context,
+  currentRow,
 } from "./renderingValues";
 import { firstDrawableRowIndex, lastDrawableRowIndex } from "./drawableRowIndex";
-import { drawCurrentCell, currentRow } from "./currentCell";
+import { drawCurrentCell} from "./currentCell";
 import { firstDrawableColumnIndex, lastDrawableColumnIndex } from "./drawableColumnIndex";
 import { ITableRow, IClickSubsItem } from "./types";
 import { CPR } from "utils/canvas";

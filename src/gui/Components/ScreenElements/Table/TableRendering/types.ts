@@ -1,3 +1,4 @@
+import { IObservable } from "mobx";
 
 export interface IGroupRow {
   groupLevel: number;
@@ -9,12 +10,14 @@ export interface IGroupRow {
 }
 
 export interface IGroupTreeNode {
+  parent: IGroupTreeNode | undefined;
   childGroups: IGroupTreeNode[];
   childRows: any[][];
   columnLabel: string;
   groupLabel: string;
   isExpanded: boolean;
   rowCount: number;
+  columnValue: string;
 }
 
 export type ITableRow = any[] | IGroupRow;

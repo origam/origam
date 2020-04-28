@@ -1,4 +1,4 @@
-import { isCheckBoxedTable, context2d, context, rowIndex, drawingColumnIndex, dataTable, rowId, dataView } from "../renderingValues";
+import { isCheckBoxedTable, context2d, context, rowIndex, drawingColumnIndex, dataTable, rowId, dataView, currentDataRow } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -47,8 +47,8 @@ export function selectionCheckboxCellsDraws() {
 
 function registerClickHandler() {
   const ctx = context();
-  const cellRowIndex = rowIndex();
-
+  //const cellRowIndex = rowIndex();
+  const row = currentDataRow();
   onClick({
     x: currentColumnLeftVisible(),
     y: currentRowTop(),
@@ -61,7 +61,6 @@ function registerClickHandler() {
         // TODO: Move to tablePanelView
         const dataTable = getDataTable(ctx);
         const selectionMember = getSelectionMember(ctx);
-        const row = dataTable.getRowByExistingIdx(cellRowIndex);
         if (!!selectionMember) {
           const dsField = getDataSourceFieldByName(ctx, selectionMember);
           if (dsField) {

@@ -115,9 +115,7 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  *onCellClick(event: any, rowIndex: number, columnId: string) {
-    // console.log("CellClicked:", rowIndex, columnIndex);
-    const row = this.dataTable.getRowByExistingIdx(rowIndex);
+  *onCellClick(event: any, row: any[], columnId: string) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {

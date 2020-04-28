@@ -18,8 +18,7 @@ export class TableGroupRow implements IGroupRow {
 
 
 
-export function tableRows(rootGroups: IComputedValue<IGroupTreeNode[]>) {
-  return computed<ITableRow[]>(() => {
+export function flattenToTableRows(rootGroups: IGroupTreeNode[]) {
     const result: ITableRow[] = [];
     let level = 0;
     function recursive(group: IGroupTreeNode) {
@@ -32,10 +31,9 @@ export function tableRows(rootGroups: IComputedValue<IGroupTreeNode[]>) {
       }
       result.push(...group.childRows);
     }
-    for (let group of rootGroups.get()) {
+    for (let group of rootGroups) {
       recursive(group);
     }
     console.log(result)
     return result;
-  });
 }

@@ -4,9 +4,9 @@ import {
   context2d,
   worldWidth,
   gridLeadCellDimensions,
+  currentRow,
 } from "../renderingValues";
 import {
-  currentRow,
   currentColumnLeft,
   currentRowTop,
   currentColumnWidth,

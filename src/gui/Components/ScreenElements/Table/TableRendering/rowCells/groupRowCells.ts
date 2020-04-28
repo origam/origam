@@ -1,11 +1,11 @@
 import { ITableRow, IGroupRow } from "../types";
-import { currentRow } from "../currentCell";
 import {
   selectionCheckboxCellsWidths,
   selectionCheckboxEmptyCellsWidths,
   selectionCheckboxEmptyCellsDraws,
 } from "../cells/selectionCheckboxCell";
 import { groupRowContentCellsWidths, groupRowContentCellsDraws } from "../cells/groupCell";
+import { currentRow } from "../renderingValues";
 
 export function groupRowCellsWidths() {
   return [...selectionCheckboxEmptyCellsWidths(), ...groupRowContentCellsWidths()];

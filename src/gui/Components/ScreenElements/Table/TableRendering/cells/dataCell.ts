@@ -1,4 +1,4 @@
-import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, selectionColumnShown } from "../renderingValues";
+import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, selectionColumnShown, currentDataRow } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -40,7 +40,7 @@ export function dataColumnsDraws() {
 
 function registerClickHandler(columnId: string){
   const ctx = context();
-  const cellRowIndex = rowIndex();
+  const row = currentDataRow();
 
   onClick({
     x: currentColumnLeftVisible(),
@@ -50,7 +50,7 @@ function registerClickHandler(columnId: string){
     handler(event: any) { flow(function* (){
       console.log("click");
 
-      yield* getTablePanelView(ctx).onCellClick(event, cellRowIndex, columnId);
+      yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
       yield onPossibleSelectedRowChange(ctx)(
         getMenuItemId(ctx),
         getDataStructureEntityId(ctx),

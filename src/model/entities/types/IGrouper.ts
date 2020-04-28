@@ -1,8 +1,8 @@
-import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export interface IGrouper {
-  getTopLevelGroups(): IGroupRow[];
+  getTopLevelGroups(): IGroupTreeNode[];
   apply(firstGroupingColumn: string): void;
-  loadChildren(groupHeader: IGroupRow): void;
+  loadChildren(groupHeader: IGroupTreeNode): void;
   parent?: any;
 }

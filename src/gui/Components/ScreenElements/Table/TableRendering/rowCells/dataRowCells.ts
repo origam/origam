@@ -2,8 +2,7 @@ import { dataColumnsDraws, dataColumnsWidths } from "../cells/dataCell";
 import { groupRowEmptyCellsDraws, groupRowEmptyCellsWidths } from "../cells/groupCell";
 import { selectionCheckboxCellsDraws, selectionCheckboxCellsWidths } from "../cells/selectionCheckboxCell";
 import { Memoized } from "../common/Memoized";
-import { currentRow } from "../currentCell";
-import { scRenderRow, tableColumnIds, scRenderTable } from "../renderingValues";
+import { scRenderRow, tableColumnIds, scRenderTable, currentRow } from "../renderingValues";
 import { ITableRow } from "../types";
 
 

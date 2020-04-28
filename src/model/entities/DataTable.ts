@@ -1,5 +1,5 @@
 import { IDataTable, IDataTableData } from "./types/IDataTable";
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, IComputedValue } from "mobx";
 import { IProperty } from "./types/IProperty";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
@@ -8,7 +8,7 @@ import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IDataSourceField } from "./types/IDataSourceField";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
-import { IGroupRow } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IGroupRow, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -19,7 +19,7 @@ export class DataTable implements IDataTable {
 
   @observable.shallow allRows: any[][] = [];
 
-  @computed get groups(): IGroupRow[]{
+  get groups(): IGroupTreeNode[]{
     return getGrouper(this).getTopLevelGroups()
   }
 

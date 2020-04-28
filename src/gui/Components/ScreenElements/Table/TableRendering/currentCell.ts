@@ -9,6 +9,7 @@ import {
   scRenderCell,
   context,
   dataTable,
+  currentDataRow,
 } from "./renderingValues";
 import { currentRowCellsDraws, currentRowCellsDimensions } from "./currentRowCells";
 import { ITableRow } from "./types";
@@ -21,14 +22,6 @@ export function drawCurrentCell() {
   const cellDraws = currentRowCellsDraws();
   if(colIdx >= cellDraws.length) return
   currentRowCellsDraws()[drawingColumnIndex()]();
-}
-
-export function currentRow(): ITableRow {
-  return tableRows()[rowIndex()];
-}
-
-export function currentDataRow(): any[] {
-  return currentRow() as any[];
 }
 
 export function currentColumnLeft() {

@@ -25,10 +25,7 @@ scRenderTable.push(() => context2d.clear());
 export const rowIndex = ValueBox<number>();
 scRenderRow.push(() => rowIndex.clear());
 
-export const rowId = () =>{
-  const row = dataTable().getRowByExistingIdx(rowIndex());
-  return dataTable().getRowId(row);
-}
+export const rowId = () => dataTable().getRowId(currentDataRow());
 
 export const selectionColumnShown = () =>  getIsSelectionCheckboxesShown(context());
 
@@ -77,7 +74,13 @@ export const groupingColumnCount = () => groupingColumnIds().length;
 
 export const isGrouping = () => groupingColumnIds().length > 0;
 
+export function currentRow(): ITableRow {
+  return tableRows()[rowIndex()];
+}
 
+export function currentDataRow(): any[] {
+  return currentRow() as any[];
+}
 
 export const isCheckBoxedTable = ValueBox<boolean>();
 scRenderTable.push(isCheckBoxedTable.clear);
@@ -108,7 +111,4 @@ export const property = () => getTableViewPropertyByIdx(tablePanelView(), drawin
  
 export const dataTable = () => getDataTable(tablePanelView());
 export const dataView = () => getDataView(context());
-export const recordId = () => {
-  const record = getTableViewRecordByExistingIdx(tablePanelView(), rowIndex());
-  return dataTable().getRowId(record);
-} 
+export const recordId = () =>  dataTable().getRowId(currentDataRow()); 

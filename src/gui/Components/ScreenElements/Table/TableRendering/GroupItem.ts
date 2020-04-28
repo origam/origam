@@ -9,8 +9,9 @@ export class GroupItem implements IGroupTreeNode {
     public columnLabel: string,
     public groupLabel: string,
     public rowCount: number,
+    public parent: IGroupTreeNode | undefined,
+    public columnValue: string
   ) {}
-  
 
   @observable isExpanded = true;
 }

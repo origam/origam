@@ -1,6 +1,7 @@
 import { IProperty } from "./IProperty";
 import { IAdditionalRowData } from "./IAdditionalRecordData";
 import { IDataSourceField } from "./IDataSourceField";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export interface IDataTableData {}
 
@@ -11,6 +12,7 @@ export interface IDataTable extends IDataTableData {
   allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
   visibleRowCount: number;
+  groups: IGroupTreeNode[];
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;

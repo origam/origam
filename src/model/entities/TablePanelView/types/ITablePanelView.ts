@@ -40,7 +40,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;
 
-  onCellClick(event: any, rowIndex: number, columnId: string): Generator;
+  onCellClick(event: any, row: any[], columnId: string): Generator;
   onNoCellClick(): Generator;
   onOutsideTableClick(): Generator;
 
