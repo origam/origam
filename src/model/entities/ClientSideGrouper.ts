@@ -78,7 +78,8 @@ export class ClientSideGrouper implements IGrouper {
     const groupingConfiguration = getGroupingConfiguration(this);
     const level = groupingConfiguration.groupingIndices.get(groupingColumn)
     if (!level) {
-      throw new Error("Cannot find grouping index for column: " + groupingColumn)
+      return 0;
+      //throw new Error("Cannot find grouping index for column: " + groupingColumn)
     }
     return level;
   }
@@ -87,6 +88,7 @@ export class ClientSideGrouper implements IGrouper {
     const dataTable = getDataTable(this);
     const property = dataTable.getPropertyById(columnName)
     if (!property) {
+      return 0;
       throw new Error("Cannot find property named: " + columnName)
     }
     return property.dataIndex
