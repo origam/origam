@@ -155,6 +155,7 @@ export interface IScrollerProps {
   isVisible: boolean;
   contentWidth: number;
   contentHeight: number;
+  scrollingDisabled: boolean;
   // scrollOffsetTarget: IScrollOffsetTarget;
   onScroll: (event: any, scrollLeft: number, scrollTop: number) => void;
   onClick?: (event: any, contentLeft: number, contentTop: number) => void;
