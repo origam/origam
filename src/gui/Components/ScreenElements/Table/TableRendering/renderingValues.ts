@@ -4,13 +4,10 @@ import { Memoized } from "./common/Memoized";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getTableViewPropertyByIdx } from "model/selectors/TablePanelView/getTableViewPropertyByIdx";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { IProperty } from "model/entities/types/IProperty";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { getTableViewPropertyById } from "model/selectors/TablePanelView/getTableViewPropertyById";
-import { currentColumnId } from "./currentCell";
-import { dataRowColumnIds } from "./rowCells/dataRowCells";
+
 
 export const scRenderTable: Array<() => void> = [];
 export const scRenderRow: Array<() => void> = [];

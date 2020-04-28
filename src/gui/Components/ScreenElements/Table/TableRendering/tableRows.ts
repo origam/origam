@@ -1,5 +1,3 @@
-import { computed, IObservable, IObservableArray, IComputedValue } from "mobx";
-
 import { IGroupTreeNode, IGroupRow, ITableRow } from "./types";
 
 export class TableGroupRow implements IGroupRow {

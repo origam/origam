@@ -18,8 +18,6 @@ import {
   rowHeight,
   columnWidths,
   fixedColumnCount,
-  worldWidth,
-  worldHeight,
   realFixedColumnCount,
   clickSubscriptions,
   context,

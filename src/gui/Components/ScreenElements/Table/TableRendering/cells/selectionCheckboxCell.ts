@@ -1,4 +1,4 @@
-import { isCheckBoxedTable, context2d, context, rowIndex, drawingColumnIndex, dataTable, rowId, dataView, currentDataRow } from "../renderingValues";
+import { isCheckBoxedTable, context2d, context, rowId, dataView, currentDataRow } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -16,7 +16,6 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import actions from "model/actions-tree";
 import { flow } from "mobx";
-import { getDataView } from "model/selectors/DataView/getDataView";
 
 export const selectionCheckBoxColumnWidth = 20;
 

@@ -1,21 +1,17 @@
 import {
   drawingColumnIndex,
   rowIndex,
-  tableRows,
   rowHeight,
   realFixedColumnCount,
   gridLeadCellDimensions,
   propertyById,
   scRenderCell,
-  context,
   dataTable,
   currentDataRow,
 } from "./renderingValues";
 import { currentRowCellsDraws, currentRowCellsDimensions } from "./currentRowCells";
-import { ITableRow } from "./types";
 import { Memoized } from "./common/Memoized";
 import { dataRowColumnIds } from "./rowCells/dataRowCells";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export function drawCurrentCell() {
   const colIdx = drawingColumnIndex();

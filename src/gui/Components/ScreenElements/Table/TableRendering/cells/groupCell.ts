@@ -11,7 +11,6 @@ import {
   currentRowTop,
   currentColumnWidth,
   currentRowHeight,
-  currentGridLeadCellLeft,
 } from "../currentCell";
 import { ITableRow, IGroupRow } from "../types";
 import { applyScrollTranslation, clipCell } from "./cellsCommon";

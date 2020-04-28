@@ -1,4 +1,4 @@
-import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, selectionColumnShown, currentDataRow } from "../renderingValues";
+import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, currentDataRow } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,

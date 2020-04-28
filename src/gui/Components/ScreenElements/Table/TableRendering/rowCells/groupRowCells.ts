@@ -1,6 +1,5 @@
 import { ITableRow, IGroupRow } from "../types";
 import {
-  selectionCheckboxCellsWidths,
   selectionCheckboxEmptyCellsWidths,
   selectionCheckboxEmptyCellsDraws,
 } from "../cells/selectionCheckboxCell";

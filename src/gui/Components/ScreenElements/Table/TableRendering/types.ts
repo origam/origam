@@ -1,4 +1,3 @@
-import { IObservable } from "mobx";
 
 export interface IGroupRow {
   groupLevel: number;
