@@ -69,6 +69,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       : flattenToTableRows(getDataTable(ctx).groups));
 
   // const tableColumnIds = observable<string>(["m", "a", "l", "k", "c", "b"]);
+  const rowHeight = 20;
   const properties = observable<IProperty>(getProperties(ctx));
   const propertyById = computed(
     () => new Map(properties.map((property) => [property.id, property]))
@@ -130,7 +131,8 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       gridLeadCellsDimensionsCom.get(),
       gridDimensions.columnWidths,
       fixedColumnCountObs.get(),
-      clickSubscriptions
+      clickSubscriptions,
+      rowHeight
     );
   }
 

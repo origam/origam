@@ -45,7 +45,8 @@ export function renderTable(
   aGridLeadCellDimensions: { left: number; width: number; right: number }[],
   aColumnWidths: Map<string, number>,
   aFixedColumnCount: number,
-  aClickSubscriptions: IClickSubsItem[]
+  aClickSubscriptions: IClickSubsItem[],
+  aRowHeight: number
 ) {
   context.set(aCtx);
   context2d.set(aCtx2d);
@@ -59,7 +60,7 @@ export function renderTable(
   viewportHeight.set(aViewportHeight);
   isCheckBoxedTable.set(aIsCheckBoxedTable);
   gridLeadCellDimensions.set(aGridLeadCellDimensions);
-  rowHeight.set(20);
+  rowHeight.set(aRowHeight);
   columnWidths.set(aColumnWidths);
   fixedColumnCount.set(aFixedColumnCount);
   clickSubscriptions.set(aClickSubscriptions);
