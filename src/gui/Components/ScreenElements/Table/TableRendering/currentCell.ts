@@ -72,11 +72,12 @@ export function currentColumnId() {
   return dataRowColumnIds()[drawingColumnIndex()];
 }
 
+export const currentProperty = () => propertyById().get(currentColumnId() as any)!;
+
 export const currentCellText = Memoized(
   () => {
-    const property = propertyById().get(currentColumnId() as any)!;
-    const value = currentDataRow()[property.dataIndex];
-    return dataTable().resolveCellText(property, value)
+    const value = currentDataRow()[currentProperty().dataIndex];
+    return dataTable().resolveCellText(currentProperty(), value)
   }
 );
 scRenderCell.push(() => currentCellText.clear());

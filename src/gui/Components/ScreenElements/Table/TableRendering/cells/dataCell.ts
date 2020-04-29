@@ -1,4 +1,4 @@
-import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, property, context, currentDataRow } from "../renderingValues";
+import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, context, currentDataRow } from "../renderingValues";
 import {
   currentColumnLeft,
   currentRowTop,
@@ -7,6 +7,7 @@ import {
   currentRowHeight,
   currentColumnLeftVisible,
   currentColumnWidthVisible,
+  currentProperty,
 } from "../currentCell";
 import { applyScrollTranslation, clipCell } from "./cellsCommon";
 import { CPR } from "utils/canvas";
@@ -78,16 +79,16 @@ export function drawDataCellBackground() {
 
 function drawCellValue(){
   const ctx2d = context2d();
-  const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), property().id)
+  const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), currentProperty().id)
   const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId(), "")
-  const type = property().column;
+  const type = currentProperty().column;
   const cellPaddingLeft = drawingColumnIndex() === 0 ? 25 : 15;
 
   let isLink = false;
   let isLoading = false;
-  if (property().isLookup) {
-    isLoading = property().lookup!.isLoading(currentCellText());
-    isLink = selectors.column.isLinkToForm(property());
+  if (currentProperty().isLookup) {
+    isLoading = currentProperty().lookup!.isLoading(currentCellText());
+    isLink = selectors.column.isLinkToForm(currentProperty());
   }
 
   ctx2d.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
@@ -113,7 +114,7 @@ function drawCellValue(){
       case "Date":
         if (currentCellText() !== null) {
           ctx2d.fillText(
-            moment(currentCellText()).format(property().formatterPattern),
+            moment(currentCellText()).format(currentProperty().formatterPattern),
             CPR * (currentColumnLeft() + 2),
             CPR * (currentRowTop() + 17));
         }
@@ -145,7 +146,7 @@ function drawCellValue(){
         break;
       default:
         if (currentCellText() !== null) {
-          if (!property().isPassword) {
+          if (!currentProperty().isPassword) {
             ctx2d.fillText(
               "" + currentCellText()!,
               CPR * (currentColumnLeft() + 2),
@@ -162,11 +163,11 @@ function getUnderLineColor() { return "#e5e5e5"; }
 
 function getBackGroundColor() {
 
-  const isColumnOrderChangeSource = tablePanelView().columnOrderChangingSourceId === property().id;
+  const isColumnOrderChangeSource = tablePanelView().columnOrderChangingSourceId === currentProperty().id;
   const selectedColumnId = tableColumnIds()[drawingColumnIndex()];
   const selectedRowId = getSelectedRowId(tablePanelView());
 
-  const isCellCursor = property().id === selectedColumnId && recordId() === selectedRowId;
+  const isCellCursor = currentProperty().id === selectedColumnId && recordId() === selectedRowId;
   const isRowCursor = recordId() === selectedRowId;
 
   const backgroundColor =

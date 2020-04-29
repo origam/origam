@@ -104,7 +104,7 @@ scRenderTable.push(clickSubscriptions.clear)
 
 export const tablePanelView = () => getTablePanelView(context());
 // export const property = () => getTableViewPropertyById(tablePanelView(),  dataRowColumnIds()[drawingColumnIndex()]!);// currentColumnId()!);
-export const property = () => getTableViewPropertyByIdx(tablePanelView(), drawingColumnIndex() - realFixedColumnCount());// currentColumnId()!);
+//export const property = () => getTableViewPropertyByIdx(tablePanelView(), drawingColumnIndex() - realFixedColumnCount());// currentColumnId()!);
  
 export const dataTable = () => getDataTable(tablePanelView());
 export const dataView = () => getDataView(context());
