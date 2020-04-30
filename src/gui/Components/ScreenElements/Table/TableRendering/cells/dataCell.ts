@@ -29,6 +29,13 @@ export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
 }
 
+export let lastClickedCellRectangle:  { columnLeft: number; columnWidth: number;  rowTop: number; rowHeight: number} = {
+  columnLeft: 0,
+  columnWidth: 0,
+  rowTop:0,
+  rowHeight:0
+}
+
 export function dataColumnsDraws() {
   return tableColumnIds().map((id) => () => {
     applyScrollTranslation();
@@ -43,6 +50,13 @@ function registerClickHandler(columnId: string){
   const ctx = context();
   const row = currentDataRow();
 
+  const thisCellRectangle = {
+    columnLeft: currentColumnLeft(),
+    columnWidth: currentColumnWidth(),
+    rowTop: currentRowTop(),
+    rowHeight: currentRowHeight()
+  }
+
   onClick({
     x: currentColumnLeftVisible(),
     y: currentRowTop(),
@@ -50,7 +64,7 @@ function registerClickHandler(columnId: string){
     h: currentRowHeight(),
     handler(event: any) { flow(function* (){
       console.log("click");
-
+      lastClickedCellRectangle = thisCellRectangle;
       yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
       yield onPossibleSelectedRowChange(ctx)(
         getMenuItemId(ctx),
