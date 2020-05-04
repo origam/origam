@@ -9,6 +9,7 @@ import { Icon } from "gui02/components/Icon/Icon";
 import { IMapPerspective } from "./MapPerspective";
 import { Observer } from "mobx-react";
 import { IPerspective } from "../Perspective";
+import { MapPerspectiveCom } from "./MapPerspectiveUI";
 
 export class MapPerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -26,7 +27,7 @@ export class MapPerspectiveDirector implements IIId {
       $iid: this.$iid,
       render: () => (
         <Observer key={this.$iid}>
-          {() => (!this.mapPerspective.isActive ? <></> : <div>Hello</div>)}
+          {() => (!this.mapPerspective.isActive ? <></> : <MapPerspectiveCom />)}
         </Observer>
       ),
     });
