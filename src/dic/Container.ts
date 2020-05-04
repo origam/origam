@@ -93,7 +93,7 @@ export class Container implements IContainer {
       this.registrations.set(sym, []);
     }
     const registrations = this.registrations.get(sym);
-    registrations?.push(registration);
+    if (registrations) registrations.push(registration);
     const registrator = new Registrator(registration);
     return registrator;
   }
@@ -109,7 +109,7 @@ export class Container implements IContainer {
       this.registrations.set(sym, []);
     }
     const registrations = this.registrations.get(sym);
-    registrations?.push(registration);
+    if (registrations) registrations.push(registration);
     const registrator = new Registrator(registration);
     return registrator;
   }
@@ -244,6 +244,7 @@ export class Container implements IContainer {
       return container.instances.get(registration.typeSymbol!)!;
     } else {
       let instance = this.newFromRegistration(registration);
+      _registeredScopes.set(instance, this);
       for (let h of registration.onActivating)
         h({
           container: this,
@@ -285,10 +286,12 @@ export class Container implements IContainer {
       if (disposeEvent) {
         for (let h of disposeEvent) h();
       }
+      console.log('Disposing cached', instance)
       if (instance.dispose) instance.dispose();
     }
     this.instances.clear();
     for (let instance of this.transientInstances) {
+      console.log('Disposing transient', instance)
       if (instance.dispose) instance.dispose();
     }
     this.transientInstances.length = 0;
