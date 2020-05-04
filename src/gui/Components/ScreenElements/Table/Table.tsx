@@ -21,6 +21,8 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { IProperty } from "model/entities/types/IProperty";
 import { flattenToTableRows } from "./TableRendering/tableRows";
+import { isDataRow } from "./TableRendering/rowCells/dataRowCells";
+import { isGroupRow } from "./TableRendering/rowCells/groupRowCells";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   /*const rootGroupsObs = observable([
@@ -88,32 +90,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 
   const clickSubscriptions: IClickSubsItem[] = [];
 
-    const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
-
-  const gridLeadCellsDimensionsCom = computed(() => {
-    const widths = Array.from(
-      (function* () {
-        if (isCheckBoxedTable) yield 20;
-        yield* groupedColumnIds.get().map((id) => 20);
-        yield* tableColumnIds.get()
-          .map((id) => gridDimensions.columnWidths.get(id))
-          .filter((width) => width !== undefined) as number[];
-      })()
-    );
-    let acc = 0;
-    return Array.from(
-      (function* () {
-        for (let w of widths) {
-          yield {
-            left: acc,
-            width: w,
-            right: acc + w,
-          };
-          acc = acc + w;
-        }
-      })()
-    );
-  });
+  const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
 
   function drawTable(ctx2d: CanvasRenderingContext2D) {
     renderTable(
@@ -128,7 +105,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       viewportWidthObs.get(),
       viewportHeightObs.get(),
       isCheckBoxedTable,
-      gridLeadCellsDimensionsCom.get(),
+      gridDimensions.gridLeadCellsDimensionsCom,
       gridDimensions.columnWidths,
       fixedColumnCountObs.get(),
       clickSubscriptions,
@@ -325,21 +302,37 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   get fixedColumnCount() {
-    return this.props.fixedColumnCount || 0;
+    return this.fixedHeaderContainers.length
   }
 
   get hasFixedColumns() {
-    return this.fixedColumnCount !== 0;
+    return this.fixedHeaderContainers.length !== 0;
   }
 
   @computed get fixedColumnsWidth() {
-    if (!this.hasFixedColumns) {
-      return 0;
-    }
-    return (
-      this.props.gridDimensions.getColumnRight(this.fixedColumnCount - 1) -
-      this.props.gridDimensions.getColumnLeft(0)
-    );
+    return this.fixedHeaderContainers
+      .map(container => container.width)
+      .reduce((x,y) => x+y, 0)
+  }
+
+  @computed get freeHeaderContainers(){
+    return this.props.headerContainers
+      .filter(container => !container.isFixed)
+  }
+
+  @computed get freeHeaders(){
+    return this.freeHeaderContainers
+      .map(container => container.header)
+  }
+
+  @computed get fixedHeaderContainers(){
+    return this.props.headerContainers
+      .filter(container => container.isFixed)
+  }
+
+  @computed get fixedHeaders(){
+    return this.fixedHeaderContainers
+      .map(container => container.header)
   }
 
   @action.bound handleScrollerClick(event: any) {
@@ -389,54 +382,32 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
             <Observer>
               {() => (
                 <>
-                  {this.props.renderHeader &&
+                  {this.props.headerContainers &&
                     (contentRect.bounds!.width ? (
                       <div className={S.headers}>
                         {this.hasFixedColumns ? (
-                          <>
-                            <Scrollee
-                              scrollOffsetSource={this.props.scrollState}
-                              fixedHoriz={true}
-                              fixedVert={true}
-                              width={this.fixedColumnsWidth}
-                            >
-                              <HeaderRow
-                                gridDimensions={this.props.gridDimensions}
-                                renderHeader={this.props.renderHeader}
-                                columnStartIndex={0}
-                                columnEndIndex={this.fixedColumnCount}
-                                zIndex={100}
-                              />
-                            </Scrollee>
-                            <Scrollee
-                              scrollOffsetSource={this.props.scrollState}
-                              fixedVert={true}
-                              width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
-                            >
-                              <HeaderRow
-                                gridDimensions={this.props.gridDimensions}
-                                renderHeader={this.props.renderHeader}
-                                columnStartIndex={this.fixedColumnCount}
-                                columnEndIndex={this.props.gridDimensions.columnCount}
-                                zIndex={0}
-                              />
-                            </Scrollee>
-                          </>
-                        ) : (
                           <Scrollee
                             scrollOffsetSource={this.props.scrollState}
+                            fixedHoriz={true}
                             fixedVert={true}
-                            width={contentRect.bounds!.width - 10}
+                            width={this.fixedColumnsWidth}
                           >
                             <HeaderRow
-                              gridDimensions={this.props.gridDimensions}
-                              renderHeader={this.props.renderHeader}
-                              columnStartIndex={0}
-                              columnEndIndex={this.props.gridDimensions.columnCount}
-                              zIndex={0}
+                              headerElements={this.fixedHeaders}
+                              zIndex={100}
                             />
                           </Scrollee>
-                        )}
+                        ) : (null)}
+                        <Scrollee
+                          scrollOffsetSource={this.props.scrollState}
+                          fixedVert={true}
+                          width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
+                        >
+                          <HeaderRow
+                            headerElements={this.freeHeaders}
+                            zIndex={0}
+                          />
+                        </Scrollee>
                       </div>
                     ) : null)}
                   <div ref={measureRef} className={S.cellAreaContainer}>

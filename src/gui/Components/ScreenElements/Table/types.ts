@@ -1,4 +1,5 @@
 import { PubSub } from "../../../../utils/events";
+import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
 
 export enum IOrderByDirection {
   NONE = "NONE",
@@ -20,7 +21,7 @@ export interface ITableProps {
 
   isLoading?: boolean;
 
-  renderHeader?: IRenderHeader;
+  headerContainers: IHeaderContainer[];
 
   renderEditor?: IRenderEditor;
 
@@ -69,6 +70,7 @@ export interface IGridDimensions {
   getRowHeight(rowIndex: number): number;
   getRowBottom(rowIndex: number): number;
   columnWidths: Map<string, number>;
+  gridLeadCellsDimensionsCom: {left: number, width: number, right: number}[]
 }
 
 export type IListenForScrollToCell = (
@@ -172,11 +174,8 @@ export interface IScrolleeProps {
 }
 
 export interface IHeaderRowProps {
-  gridDimensions: IGridDimensions;
-  columnStartIndex: number;
-  columnEndIndex: number;
   zIndex: number | undefined;
-  renderHeader: IRenderHeader;
+  headerElements: JSX.Element[];
 }
 
 export interface IRenderedCell {
