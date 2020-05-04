@@ -3,10 +3,7 @@ import { LookupLoader } from "model/entities/LookupLoader";
 import { RowState } from "model/entities/RowState";
 import { Action } from "../model/entities/Action";
 import { ActionParameter } from "../model/entities/ActionParameter";
-import {
-  ComponentBinding,
-  ComponentBindingPair
-} from "../model/entities/ComponentBinding";
+import { ComponentBinding, ComponentBindingPair } from "../model/entities/ComponentBinding";
 import { DataSource } from "../model/entities/DataSource";
 import { DataSourceField } from "../model/entities/DataSourceField";
 import { DataTable } from "../model/entities/DataTable";
@@ -25,32 +22,42 @@ import { IFormScreenLifecycle02 } from "../model/entities/types/IFormScreenLifec
 import { IPanelViewType } from "../model/entities/types/IPanelViewType";
 import { flf2mof } from "../utils/flashDateFormat";
 import { findStopping } from "./xmlUtils";
+import $root from "rootContainer";
+import { SCOPE_Screen } from "modules/Screen/ScreenModule";
+import { SCOPE_DataView } from "modules/DataView/DataViewModule";
+import { TypeSymbol, scopeFor } from "dic/Container";
+import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
+import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
+import { SCOPE_FormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
+import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
+import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
+import { ITablePerspectiveDirector } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
+import { IPerspective } from "modules/DataView/Perspective/Perspective";
+import { flow } from "mobx";
+import { ViewConfiguration, IViewConfiguration } from "modules/DataView/ViewConfiguration";
+import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 
-export const findUIRoot = (node: any) =>
-  findStopping(node, n => n.name === "UIRoot")[0];
+export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
 export const findUIChildren = (node: any) =>
-  findStopping(node, n => n.parent.name === "UIChildren");
+  findStopping(node, (n) => n.parent.name === "UIChildren");
 
 export const findBoxes = (node: any) =>
-  findStopping(node, n => n.attributes && n.attributes.Type === "Box");
+  findStopping(node, (n) => n.attributes && n.attributes.Type === "Box");
 
-export const findChildren = (node: any) =>
-  findStopping(node, n => n.name === "Children")[0];
+export const findChildren = (node: any) => findStopping(node, (n) => n.name === "Children")[0];
 
 export const findActions = (node: any) =>
-  findStopping(node, n => n.parent.name === "Actions" && n.name === "Action");
+  findStopping(node, (n) => n.parent.name === "Actions" && n.name === "Action");
 
-export const findParameters = (node: any) =>
-  findStopping(node, n => n.name === "Parameter");
+export const findParameters = (node: any) => findStopping(node, (n) => n.name === "Parameter");
 
 export const findStrings = (node: any) =>
-  findStopping(node, n => n.name === "string").map(
-    n => findStopping(n, n2 => n2.type === "text")[0].text
+  findStopping(node, (n) => n.name === "string").map(
+    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
   );
 
-export const findFormRoot = (node: any) =>
-  findStopping(node, n => n.name === "FormRoot")[0];
+export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];
 
 export function interpretScreenXml(
   screenDoc: any,
@@ -63,22 +70,17 @@ export function interpretScreenXml(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
       {
-        position: pcr.position
-      }
+        position: pcr.position,
+      },
     ])
   );
-  const dataSourcesXml = findStopping(
-    screenDoc,
-    n => n.name === "DataSources"
-  )[0];
+  const dataSourcesXml = findStopping(screenDoc, (n) => n.name === "DataSources")[0];
 
-  const windowXml = findStopping(screenDoc, n => n.name === "Window")[0];
+  const windowXml = findStopping(screenDoc, (n) => n.name === "Window")[0];
 
   const dataViews = findStopping(
     screenDoc,
-    n =>
-      (n.name === "UIElement" || n.name === "UIRoot") &&
-      n.attributes.Type === "Grid"
+    (n) => (n.name === "UIElement" || n.name === "UIRoot") && n.attributes.Type === "Grid"
   );
 
   function panelViewFromNumber(pvn: number) {
@@ -93,20 +95,20 @@ export function interpretScreenXml(
 
   const xmlComponentBindings = findStopping(
     screenDoc,
-    n => n.name === "Binding" && n.parent.name === "ComponentBindings"
+    (n) => n.name === "Binding" && n.parent.name === "ComponentBindings"
   );
 
   const componentBindings: IComponentBinding[] = [];
 
   for (let xmlBinding of xmlComponentBindings) {
     let existingBinding = componentBindings.find(
-      item =>
+      (item) =>
         item.parentId === xmlBinding.attributes.ParentId &&
         item.childId === xmlBinding.attributes.ChildId
     );
     const componentBindingPair = new ComponentBindingPair({
       parentPropertyId: xmlBinding.attributes.ParentProperty,
-      childPropertyId: xmlBinding.attributes.ChildProperty
+      childPropertyId: xmlBinding.attributes.ChildProperty,
     });
     if (existingBinding) {
       existingBinding.bindingPairs.push(componentBindingPair);
@@ -118,7 +120,7 @@ export function interpretScreenXml(
           parentEntity: xmlBinding.attributes.ParentEntity,
           childEntity: xmlBinding.attributes.ChildEntity,
           bindingPairs: [componentBindingPair],
-          childPropertyType: xmlBinding.attributes.ChildPropertyType
+          childPropertyType: xmlBinding.attributes.ChildPropertyType,
         })
       );
     }
@@ -134,10 +136,8 @@ export function interpretScreenXml(
     autoRefreshInterval: parseInt(windowXml.attributes.AutoRefreshInterval, 10),
     refreshOnFocus: windowXml.attributes.RefreshOnFocus === "true",
     cacheOnClient: windowXml.attributes.CacheOnClient === "true",
-    autoSaveOnListRecordChange:
-      windowXml.attributes.AutoSaveOnListRecordChange === "true",
-    requestSaveAfterUpdate:
-      windowXml.attributes.RequestSaveAfterUpdate === "true",
+    autoSaveOnListRecordChange: windowXml.attributes.AutoSaveOnListRecordChange === "true",
+    requestSaveAfterUpdate: windowXml.attributes.RequestSaveAfterUpdate === "true",
     screenUI: screenDoc,
     panelConfigurations,
     formScreenLifecycle,
@@ -149,22 +149,19 @@ export function interpretScreenXml(
         dataStructureEntityId: dataSource.attributes.DataStructureEntityId,
         identifier: dataSource.attributes.Identifier,
         lookupCacheKey: dataSource.attributes.LookupCacheKey,
-        fields: findStopping(dataSource, n => n.name === "Field").map(field => {
+        fields: findStopping(dataSource, (n) => n.name === "Field").map((field) => {
           return new DataSourceField({
             index: parseInt(field.attributes.Index, 10),
-            name: field.attributes.Name
+            name: field.attributes.Name,
           });
-        })
+        }),
       });
     }),
 
-    dataViews: dataViews.map(dataView => {
-      const configuration = findStopping(
-        dataView,
-        n => n.name === "Configuration"
-      );
+    dataViews: dataViews.map((dataView) => {
+      const configuration = findStopping(dataView, (n) => n.name === "Configuration");
 
-      const properties = findStopping(dataView, n => n.name === "Property").map(
+      const properties = findStopping(dataView, (n) => n.name === "Property").map(
         (property, idx) => {
           return new Property({
             id: property.attributes.Id,
@@ -189,54 +186,52 @@ export function interpretScreenXml(
               : "",
             customNumericFormat: property.attributes.CustomNumericFormat,
             identifier: property.attributes.Identifier,
-            gridColumnWidth: property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100,
-            columnWidth: property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100,
+            gridColumnWidth: property.attributes.GridColumnWidth
+              ? parseInt(property.attributes.GridColumnWidth)
+              : 100,
+            columnWidth: property.attributes.GridColumnWidth
+              ? parseInt(property.attributes.GridColumnWidth)
+              : 100,
             lookup: !property.attributes.LookupId
               ? undefined
               : new Lookup({
-                  dropDownShowUniqueValues:
-                    property.attributes.DropDownShowUniqueValues === "true",
+                  dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
                   lookupId: property.attributes.LookupId,
                   identifier: property.attributes.Identifier,
-                  identifierIndex: parseInt(
-                    property.attributes.IdentifierIndex,
-                    10
-                  ),
+                  identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
                   dropDownType: property.attributes.DropDownType,
                   cached: property.attributes.Cached === "true",
-                  searchByFirstColumnOnly:
-                    property.attributes.SearchByFirstColumnOnly === "true",
-                  dropDownColumns: findStopping(
-                    property,
-                    n => n.name === "Property"
-                  ).map(ddProperty => {
-                    return new DropDownColumn({
-                      id: ddProperty.attributes.Id,
-                      name: ddProperty.attributes.Name,
-                      column: ddProperty.attributes.Column,
-                      entity: ddProperty.attributes.Entity,
-                      index: parseInt(ddProperty.attributes.Index, 10)
-                    });
-                  }),
+                  searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
+                  dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
+                    (ddProperty) => {
+                      return new DropDownColumn({
+                        id: ddProperty.attributes.Id,
+                        name: ddProperty.attributes.Name,
+                        column: ddProperty.attributes.Column,
+                        entity: ddProperty.attributes.Entity,
+                        index: parseInt(ddProperty.attributes.Index, 10),
+                      });
+                    }
+                  ),
                   dropDownParameters: findStopping(
                     property,
-                    n => n.name === "ComboBoxParameterMapping"
-                  ).map(ddParam => {
+                    (n) => n.name === "ComboBoxParameterMapping"
+                  ).map((ddParam) => {
                     return {
                       parameterName: ddParam.attributes.ParameterName,
-                      fieldName: ddParam.attributes.FieldName
+                      fieldName: ddParam.attributes.FieldName,
                     };
-                  })
+                  }),
                 }),
 
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
-            isTree: property.attributes.IsTree === "true"
+            isTree: property.attributes.IsTree === "true",
           });
         }
       );
 
       const actions = findActions(dataView).map(
-        action =>
+        (action) =>
           new Action({
             id: action.attributes.Id,
             caption: action.attributes.Caption,
@@ -247,12 +242,12 @@ export function interpretScreenXml(
             isDefault: action.attributes.IsDefault === "true",
             placement: action.attributes.Placement,
             parameters: findParameters(action).map(
-              parameter =>
+              (parameter) =>
                 new ActionParameter({
                   name: parameter.attributes.Name,
-                  fieldName: parameter.attributes.FieldName
+                  fieldName: parameter.attributes.FieldName,
                 })
-            )
+            ),
           })
       );
       const dataViewInstance = new DataView({
@@ -260,19 +255,13 @@ export function interpretScreenXml(
         modelInstanceId: dataView.attributes.ModelInstanceId,
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
-        defaultPanelView: panelViewFromNumber(
-          parseInt(dataView.attributes.DefaultPanelView)
-        ),
-        activePanelView: panelViewFromNumber(
-          parseInt(dataView.attributes.DefaultPanelView)
-        ),
+        defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
+        activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         isHeadless: dataView.attributes.IsHeadless === "true",
-        disableActionButtons:
-          dataView.attributes.DisableActionButtons === "true",
+        disableActionButtons: dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
         showDeleteButton: dataView.attributes.ShowDeleteButton === "true",
-        showSelectionCheckboxesSetting:
-          dataView.attributes.ShowSelectionCheckboxes === "true",
+        showSelectionCheckboxesSetting: dataView.attributes.ShowSelectionCheckboxes === "true",
         isGridHeightDynamic: dataView.attributes.IsGridHeightDynamic === "true",
         selectionMember: dataView.attributes.SelectionMember,
         orderMember: dataView.attributes.OrderMember,
@@ -284,39 +273,33 @@ export function interpretScreenXml(
         isPreloaded: dataView.attributes.IsPreloaded === "true",
         requestDataAfterSelectionChange:
           dataView.attributes.RequestDataAfterSelectionChange === "true",
-        confirmSelectionChange:
-          dataView.attributes.ConfirmSelectionChange === "true",
+        confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
         dataTable: new DataTable({}),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
-          tablePropertyIds: properties.slice(1).map(prop => prop.id),
+          tablePropertyIds: properties.slice(1).map((prop) => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
           filterConfiguration: new FilterConfiguration(),
-          orderingConfiguration: new OrderingConfiguration()
+          orderingConfiguration: new OrderingConfiguration(),
         }),
         formPanelView: new FormPanelView(),
         lookupLoader: new LookupLoader(),
         properties,
-        actions
+        actions,
       });
 
-      configuration.forEach(conf => {
-        const columns = findStopping(conf, n => n.name === "column");
+      configuration.forEach((conf) => {
+        const columns = findStopping(conf, (n) => n.name === "column");
         columns.forEach((column, columnIndex) => {
           if (column.attributes.property) {
             // COLUMN WIDTH
-            const prop = properties.find(
-              prop => prop.id === column.attributes.property
-            );
+            const prop = properties.find((prop) => prop.id === column.attributes.property);
             prop && prop.setColumnWidth(+column.attributes.width);
 
             // COLUMN HIDING
             if (column.attributes.isHidden === "true") {
-              dataViewInstance.tablePanelView.setPropertyHidden(
-                column.attributes.property,
-                true
-              );
+              dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
             }
           } else if (column.attributes.groupingField) {
             // TODO
@@ -325,29 +308,22 @@ export function interpretScreenXml(
         dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds
           .slice()
           .sort((a, b) => {
-            const colIdxA = columns.findIndex(
-              column => column.attributes.property === a
-            );
+            const colIdxA = columns.findIndex((column) => column.attributes.property === a);
             if (colIdxA === -1) return 0;
-            const colIdxB = columns.findIndex(
-              column => column.attributes.property === b
-            );
+            const colIdxB = columns.findIndex((column) => column.attributes.property === b);
             if (colIdxB === -1) return 0;
             return colIdxA - colIdxB;
           });
-        const defaultView = findStopping(conf, n => n.name === "view");
-        defaultView.forEach(element => {
+        const defaultView = findStopping(conf, (n) => n.name === "view");
+        defaultView.forEach((element) => {
           dataViewInstance.activePanelView = element.attributes.id;
         });
       });
 
       lookupMenuMappings.forEach((mapping: any) => {
         if (mapping.lookupId && mapping.menuId) {
-          properties.forEach(property => {
-            if (
-              property.lookup &&
-              property.lookup.lookupId === mapping.lookupId
-            ) {
+          properties.forEach((property) => {
+            if (property.lookup && property.lookup.lookupId === mapping.lookupId) {
               property.linkToMenuId = mapping.menuId;
             }
           });
@@ -358,7 +334,36 @@ export function interpretScreenXml(
 
       return dataViewInstance;
     }),
-    componentBindings
+    componentBindings,
   });
+
+  const $screen = $root.beginLifetimeScope(SCOPE_Screen);
+  const IFormScreen = TypeSymbol<FormScreen>("IFormScreen");
+  const IDataView = TypeSymbol<DataView>("IDataView");
+  $screen.register(IFormScreen, () => scr).scopedInstance(SCOPE_Screen);
+
+  for (let dv of scr.dataViews) {
+    const $dataView = $screen.beginLifetimeScope(SCOPE_DataView);
+    $dataView.register(IDataView, () => dv).scopedInstance(SCOPE_DataView);
+    $dataView.register(
+      IViewConfiguration,
+      () => new ViewConfiguration(saveColumnConfigurations(dv), () => dv.activePanelView)
+    );
+
+    $dataView.resolve(IDataView);
+
+    const $tablePerspective = $dataView.beginLifetimeScope(SCOPE_TablePerspective);
+    $tablePerspective.resolve(ITablePerspectiveDirector).setup();
+
+    const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
+    $formPerspective.resolve(IFormPerspectiveDirector).setup();
+
+    const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
+    $mapPerspective.resolve(IMapPerspectiveDirector).setup();
+
+    flow($dataView.resolve(IPerspective).activateDefault)();
+  }
+
+  const rscr = $screen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
   return scr;
 }

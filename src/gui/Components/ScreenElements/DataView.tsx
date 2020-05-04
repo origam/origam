@@ -10,11 +10,13 @@ import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
 import { TableView } from "../../Workbench/ScreenArea/TableView/TableView";
 import S from "./DataView.module.css";
 import { DataViewLoading } from "./DataViewLoading";
+import { scopeFor } from "dic/Container";
+import { IDataViewBodyUI } from "modules/DataView/DataViewUI";
 
 @inject(({ formScreen }, { id }) => {
   const dataView = getDataViewById(formScreen, id);
   return {
-    dataView
+    dataView,
   };
 })
 @observer
@@ -28,12 +30,12 @@ export class DataView extends React.Component<{
     if (this.props.height !== undefined) {
       return {
         flexGrow: 0,
-        height: this.props.height
+        height: this.props.height,
       };
     } else {
       return {
         flexGrow: 1,
-        flexShrink: 0
+        flexShrink: 0,
         // width: "100%",
         // height: "100%"
       };
@@ -43,45 +45,19 @@ export class DataView extends React.Component<{
   render() {
     // TODO: Move styling to stylesheet
     const isWorking = getIsDataViewOrFormScreenWorking(this.props.dataView);
+    const $cont = scopeFor(this.props.dataView);
+    const uiBody = $cont && $cont.resolve(IDataViewBodyUI);
     return (
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
           <CDataViewHeader isVisible={!this.props.isHeadless} />
 
-          <div
-            style={{
-              // width: "100%",
-              // height: "100%",
-              flexGrow: 1,
-              flexDirection: "column",
-              position: "relative",
-              display:
-                this.props.dataView!.activePanelView !== IPanelViewType.Table
-                  ? "none"
-                  : "flex"
-            }}
-          >
-            <TableView />
-          </div>
+          {uiBody && uiBody.render()}
+          {/*
+
           {this.props.dataView!.activePanelView === IPanelViewType.Form && (
-            <div
-              style={{
-                // width: "100%",
-                // height: "100%",
-                flexGrow: 1,
-                flexDirection: "column",
-                position: "relative",
-                display:
-                  this.props.dataView!.activePanelView !== IPanelViewType.Form
-                    ? "none"
-                    : "flex"
-              }}
-            >
-              <FormView>
-                <FormBuilder />
-              </FormView>
-            </div>
-          )}
+
+            )}*/}
           {isWorking && <DataViewLoading />}
         </div>
       </Provider>

@@ -34,6 +34,9 @@ import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButton
 import uiActions from "model/actions-ui-tree";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
 import { onRecordAuditClick } from "model/actions-ui/RecordInfo/onRecordAuditClick";
+import { scopeFor } from "dic/Container";
+import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
+import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -63,6 +66,9 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
+
+    const $cont = scopeFor(dataView);
+    const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
 
     return (
       <DataViewHeader isVisible={this.props.isVisible}>
@@ -136,18 +142,9 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
               </span>
             </DataViewHeaderGroup>
             <DataViewHeaderGroup>
-              <DataViewHeaderAction
-                onClick={onTableViewButtonClickEvt}
-                isActive={activePanelView === IPanelViewType.Table}
-              >
-                <Icon src="./icons/table-view.svg" />
-              </DataViewHeaderAction>
-              <DataViewHeaderAction
-                onClick={onFormViewButtonClickEvt}
-                isActive={activePanelView === IPanelViewType.Form}
-              >
-                <Icon src="./icons/detail-view.svg" />
-              </DataViewHeaderAction>
+              
+              {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
+              
             </DataViewHeaderGroup>
             <DataViewHeaderGroup>
               <DataViewHeaderAction
