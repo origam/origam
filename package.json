@@ -130,7 +130,6 @@
     "winston": "^3.2.1"
   },
   "jest": {
-    "preset": "jest-puppeteer",
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
