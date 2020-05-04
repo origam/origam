@@ -166,11 +166,12 @@ export interface IScrolleeProps {
   height?: number | string;
   fixedHoriz?: boolean;
   fixedVert?: boolean;
+  zIndex?: number | undefined;
   scrollOffsetSource: IScrollOffsetSource;
 }
 
 export interface IHeaderRowProps {
-  zIndex: number | undefined;
+  zIndex?: number | undefined;
   headerElements: JSX.Element[];
 }
 

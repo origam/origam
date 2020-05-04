@@ -6,6 +6,6 @@ import S from "./HeaderRow.module.css";
 @observer
 export class HeaderRow extends React.Component<IHeaderRowProps> {
   render() {
-    return <div className={S.headerRow} style={{zIndex: this.props.zIndex}}>{this.props.headerElements}</div>;
+    return <div className={S.headerRow} style={{zIndex: this.props.zIndex || 0}}>{this.props.headerElements}</div>;
   }
 }
