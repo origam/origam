@@ -500,7 +500,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               rowIndex={this.props.editingRowIndex}
                               columnIndex={this.props.editingColumnIndex}
                               scrollOffsetSource={this.props.scrollState}
-                              gridDimensions={this.props.gridDimensions}
                               worldBounds={contentRect.bounds!}
                             >
                               {this.props.renderEditor && this.props.renderEditor()}

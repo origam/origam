@@ -17,8 +17,6 @@ export interface ITableProps {
   editingColumnIndex?: number;
   isEditorMounted: boolean;
 
-  fixedColumnCount?: number;
-
   isLoading?: boolean;
 
   headerContainers: IHeaderContainer[];
@@ -140,7 +138,6 @@ export interface IPositionedFieldProps {
   fixedColumnsCount: number;
 
   scrollOffsetSource: IScrollOffsetSource;
-  gridDimensions: IGridDimensions;
   worldBounds: {
     width: number;
     height: number;

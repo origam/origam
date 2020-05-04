@@ -135,7 +135,6 @@ export class TableView extends React.Component<{
             editingRowIndex={editingRowIndex}
             editingColumnIndex={editingColumnIndex}
             isEditorMounted={getIsEditing(this.props.tablePanelView)}
-            fixedColumnCount={getFixedColumnsCount(this.props.tablePanelView) + this.getLeadingColumnCount()}
             isLoading={false}
             headerContainers = {self.headerRenderer.makeHeaderContainers}
             renderCell={self.cellRenderer.renderCell}
