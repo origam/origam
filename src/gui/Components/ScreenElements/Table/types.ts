@@ -61,14 +61,13 @@ export interface IGridDimensions {
   columnCount: number;
   contentWidth: number;
   contentHeight: number;
-  getColumnLeft(columnIndex: number): number;
-  getColumnWidth(columnIndex: number): number;
-  getColumnRight(columnIndex: number): number;
+  getColumnLeft(dataColumnIndex: number): number;
+  getColumnRight(dataColumnIndex: number): number;
   getRowTop(rowIndex: number): number;
   getRowHeight(rowIndex: number): number;
   getRowBottom(rowIndex: number): number;
   columnWidths: Map<string, number>;
-  gridLeadCellsDimensionsCom: {left: number, width: number, right: number}[]
+  displayedColumnDimensionsCom: {left: number, width: number, right: number}[]
 }
 
 export type IListenForScrollToCell = (

@@ -36,6 +36,7 @@ import { onColumnWidthChangeFinished } from "model/actions-ui/DataView/TableView
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
 import { selectionCheckBoxColumnWidth } from "gui/Components/ScreenElements/Table/TableRendering/cells/selectionCheckboxCell";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getLeadingColumnCount } from "model/selectors/TablePanelView/getLeadingColumnCount";
 
 @inject(({ dataView }) => {
   return {
@@ -88,7 +89,7 @@ export class TableView extends React.Component<{
     getFixedColumnCount: () => getFixedColumnsCount(this.props.tablePanelView),
     getIsSelectionCheckboxes: () =>
       getIsSelectionCheckboxesShown(this.props.tablePanelView),
-    getLeadingColumnCount: ()=> this.getLeadingColumnCount(),
+    ctx: this.props.dataView,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     onColumnWidthChange: (cid, nw) =>
@@ -108,12 +109,6 @@ export class TableView extends React.Component<{
   cellRenderer = new CellRenderer({
     tablePanelView: this.props.tablePanelView!
   });
-
-  getLeadingColumnCount(){
-    const isCheckBoxedTable = getIsSelectionCheckboxesShown(this.props.dataView);
-    const groupedColumnIds = getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds;
-    return groupedColumnIds.length + (isCheckBoxedTable ? 1 : 0);
-  }
 
   render() {
     const self = this;
@@ -196,7 +191,7 @@ class GridDimensions implements IGridDimensions {
 
   @computed get columnCount() {
     return (
-      this.tableViewProperties.length + (this.isSelectionCheckboxes ? 1 : 0)
+      this.tableViewProperties.length
     );
   }
 
@@ -208,29 +203,18 @@ class GridDimensions implements IGridDimensions {
     return this.getRowBottom(this.rowCount - 1);
   }
 
-  getColumnLeft(columnIndex: number): number {
-    return columnIndex <= 0 ? 0 : this.getColumnRight(columnIndex - 1);
+  getColumnLeft(dataColumnIndex: number): number {
+    const displayedColumnIndex = this.dataColumnIndexToDisplayedIndex(dataColumnIndex);
+    return this.displayedColumnDimensionsCom[displayedColumnIndex].left;
   }
 
-  getColumnWidth(columnIndex: number): number {
-    let colIdx = columnIndex;
-    if (this.isSelectionCheckboxes) {
-      if (colIdx === 0) {
-        return selectionCheckBoxColumnWidth;
-      }
-      colIdx--;
-    }
-
-    const property = this.tableViewProperties[colIdx];
-    if (!property) debugger;
-    return this.columnWidths.has(property.id)
-      ? this.columnWidths.get(property.id)!
-      : 100;
+  getColumnRight(dataColumnIndex: number): number {
+    const displayedColumnIndex = this.dataColumnIndexToDisplayedIndex(dataColumnIndex);
+    return this.displayedColumnDimensionsCom[displayedColumnIndex].right;
   }
 
-  getColumnRight(columnIndex: number): number {
-    if (columnIndex < 0) return 0;
-    return this.getColumnLeft(columnIndex) + this.getColumnWidth(columnIndex);
+  dataColumnIndexToDisplayedIndex(dataColumnIndex: number){
+    return dataColumnIndex + getLeadingColumnCount(this.ctx);
   }
 
   getRowTop(rowIndex: number): number {
@@ -249,7 +233,7 @@ class GridDimensions implements IGridDimensions {
     this.columnWidths.set(columnId, Math.max(newWidth, 20));
   }
 
-  @computed get gridLeadCellsDimensionsCom():{left: number; width: number; right: number;}[] {
+  @computed get displayedColumnDimensionsCom():{left: number; width: number; right: number;}[] {
     const isCheckBoxedTable = getIsSelectionCheckboxesShown(this.ctx);
     const groupedColumnIds = getGroupingConfiguration(this.ctx).orderedGroupingColumnIds;
     const tableColumnIds =  getTableViewProperties(this.ctx).map(prop => prop.id)
@@ -293,7 +277,7 @@ interface IHeaderRendererData {
     idSource: string | undefined,
     idTarget: string | undefined
   ) => void;
-  getLeadingColumnCount: () => number;
+  ctx: any;
   gridDimensions: IGridDimensions;
   getFixedColumnCount: () => number;
 }
@@ -305,7 +289,7 @@ class HeaderRenderer implements IHeaderRendererData {
   gridDimensions: IGridDimensions  = null as any;
   getTableViewProperties: () => IProperty[] = null as any;
   getIsSelectionCheckboxes: () => boolean = null as any;
-  getLeadingColumnCount: () => number = null as any;
+  ctx: any = null as any;
   getFixedColumnCount = null as any;
 
   @computed get tableViewPropertiesOriginal() {
@@ -374,8 +358,8 @@ class HeaderRenderer implements IHeaderRendererData {
   }
 
   get makeHeaderContainers(){
-    const columnDimensions = this.gridDimensions.gridLeadCellsDimensionsCom;
-    const leadingColumnCount = this.getLeadingColumnCount();
+    const columnDimensions = this.gridDimensions.displayedColumnDimensionsCom;
+    const leadingColumnCount = getLeadingColumnCount(this.ctx);
     const standardColumnCount = columnDimensions.length - leadingColumnCount;
     const headerContainers = []
 

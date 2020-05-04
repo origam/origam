@@ -214,7 +214,7 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
     const dim = this.props.gridDimensions;
     const columnLeft = dim.getColumnLeft(columnIndex) + this.props.leftOffset;
     const columnRight = dim.getColumnRight(columnIndex) + this.props.leftOffset;
-    const columnWidth = dim.getColumnWidth(columnIndex);
+    const columnWidth = 20//dim.getColumnWidth(columnIndex);
     const rowTop = dim.getRowTop(rowIndex);
     const rowBottom = dim.getRowBottom(rowIndex);
     const rowHeight = dim.getRowHeight(rowIndex);

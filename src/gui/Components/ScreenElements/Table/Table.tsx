@@ -105,7 +105,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       viewportWidthObs.get(),
       viewportHeightObs.get(),
       isCheckBoxedTable,
-      gridDimensions.gridLeadCellsDimensionsCom,
+      gridDimensions.displayedColumnDimensionsCom,
       gridDimensions.columnWidths,
       fixedColumnCountObs.get(),
       clickSubscriptions,
@@ -269,16 +269,16 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     this.elmScroller && this.elmScroller.focus();
   }
 
-  @action.bound scrollToCellShortest(rowIdx: number, columnIdx: number) {
+  @action.bound scrollToCellShortest(rowIdx: number, dataColumnIndex: number) {
     // TODO: Refactor to take real scrollbar sizes
-    const freeColIndex = columnIdx + this.fixedColumnCount
+    //const freeColIndex = columnIdx + this.fixedColumnCount;
     const { gridDimensions } = this.props;
     const SCROLLBAR_SIZE = 20;
     if (this.elmScroller) {
       const top = gridDimensions.getRowTop(rowIdx);
       const bottom = gridDimensions.getRowBottom(rowIdx);
-      const left = gridDimensions.getColumnLeft(freeColIndex);
-      const right = gridDimensions.getColumnRight(freeColIndex);
+      const left = gridDimensions.getColumnLeft(dataColumnIndex);
+      const right = gridDimensions.getColumnRight(dataColumnIndex);
 
       if (left - this.elmScroller.scrollLeft < this.fixedColumnsWidth) {
         this.elmScroller.scrollTo({
