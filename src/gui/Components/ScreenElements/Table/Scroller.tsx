@@ -18,6 +18,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         this.elmScrollerDiv.scrollTop = coords.scrollTop;
       }
       if (coords.scrollLeft !== undefined) {
+        this.forceScrollLeft(coords.scrollLeft); // will scroll even if this.props.scrollingDisabled is true
         this.elmScrollerDiv.scrollLeft = coords.scrollLeft;
       }
     }
@@ -37,6 +38,10 @@ export default class Scroller extends React.Component<IScrollerProps> {
       event.target.scrollLeft,
       event.target.scrollTop
     );
+  }
+
+  forceScrollLeft(left: number){
+    this.lastScrollLeft = left;
   }
 
   set scrollTop(value: number) {
