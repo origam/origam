@@ -383,9 +383,9 @@ class HeaderRenderer implements IHeaderRendererData {
     for(let i=0; i < leadingColumnCount; i++){
       headerContainers.push(
         new HeaderContainer({
-          header: this.renderDummyHeader(),
+          header: this.renderDummyHeader(columnDimensions[i].width),
           isFixed: true,
-          width: 20,
+          width: columnDimensions[i].width,
         }));
     }
 
@@ -404,8 +404,8 @@ class HeaderRenderer implements IHeaderRendererData {
     return headerContainers;
   }
 
-  renderDummyHeader(){
-    return <div style={{minWidth: "20px"}}></div>;
+  renderDummyHeader(columnWidth: number){
+    return <div style={{minWidth: columnWidth+"px"}}></div>;
   }
 
   @bind
