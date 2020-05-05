@@ -18,7 +18,6 @@ export default class Scrollee extends React.Component<IScrolleeProps> {
           width: this.props.width,
           height: this.props.height,
           zIndex: this.props.zIndex || 0,
-          backgroundColor: "#E9E8F0",
         }}
       >
         <div
