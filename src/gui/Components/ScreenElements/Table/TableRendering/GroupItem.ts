@@ -13,5 +13,5 @@ export class GroupItem implements IGroupTreeNode {
     public columnValue: string
   ) {}
 
-  @observable isExpanded = false;
+  @observable isExpanded = true;
 }

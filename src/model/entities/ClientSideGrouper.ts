@@ -17,6 +17,16 @@ export class ClientSideGrouper implements IGrouper {
   apply(firstGroupingColumn: string): void {
     const dataTable = getDataTable(this);
     this.topLevelGroups = this.makeGroups(dataTable.allRows, firstGroupingColumn)
+    this.loadRecursively(this.topLevelGroups);
+  }
+
+  loadRecursively(groups: IGroupTreeNode[]){
+    for(let group of groups){
+      if(group.isExpanded){
+        this.loadChildren(group)
+      }
+      this.loadRecursively(group.childGroups);
+    }
   }
 
   makeGroups(rows: any[][], groupingColumn: string): IGroupTreeNode[] {
