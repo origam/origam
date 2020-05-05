@@ -3,10 +3,19 @@ import { PubSub } from "../../../../utils/events";
 export enum IOrderByDirection {
   NONE = "NONE",
   ASC = "ASC",
-  DESC = "DESC"
+  DESC = "DESC",
 }
 
-export type ICellType = "Text" | "ComboBox" | "Date" | "Number" | "CheckBox" | "TagInput" | "Checklist"; 
+export type ICellType =
+  | "Text"
+  | "ComboBox"
+  | "Date"
+  | "Number"
+  | "CheckBox"
+  | "TagInput"
+  | "Checklist"
+  | "Image"
+  | "Blob";
 
 export interface ITableProps {
   gridDimensions: IGridDimensions;
@@ -50,10 +59,7 @@ export type IRenderCellArgs = {
   onCellClick: PubSub<any>;
 };
 
-export type IRenderHeader = (args: {
-  columnIndex: number;
-  columnWidth: number;
-}) => React.ReactNode;
+export type IRenderHeader = (args: { columnIndex: number; columnWidth: number }) => React.ReactNode;
 
 export type IRenderEditor = () => React.ReactNode;
 
@@ -70,13 +76,9 @@ export interface IGridDimensions {
   getRowBottom(rowIndex: number): number;
 }
 
-export type IListenForScrollToCell = (
-  cb: (rowIdx: number, colIdx: number) => void
-) => () => void;
+export type IListenForScrollToCell = (cb: (rowIdx: number, colIdx: number) => void) => () => void;
 
-export interface IScrollState
-  extends IScrollOffsetSource,
-    IScrollOffsetTarget {}
+export interface IScrollState extends IScrollOffsetSource, IScrollOffsetTarget {}
 
 export interface IScrollOffsetSource {
   scrollTop: number;
@@ -128,7 +130,6 @@ export interface IGridCanvasProps {
     lastVisibleRowIndex: number
   ): void;
   onNoCellClick?(event: any): void;
-  
 }
 
 export interface IPositionedFieldProps {

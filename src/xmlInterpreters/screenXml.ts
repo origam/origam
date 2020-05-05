@@ -93,6 +93,15 @@ export function interpretScreenXml(
     }
   }
 
+  function getPropertyParameters(node: any) {
+    const parameters = findParameters(node);
+    const result: {[key: string]: any} = {};
+    for(let p of parameters) {
+      result[p.attributes.Name] = p.attributes.Value;
+    }
+    return result;
+  }
+
   const xmlComponentBindings = findStopping(
     screenDoc,
     (n) => n.name === "Binding" && n.parent.name === "ComponentBindings"
@@ -176,6 +185,7 @@ export function interpretScreenXml(
             captionPosition: property.attributes.CaptionPosition,
             entity: property.attributes.Entity,
             column: property.attributes.Column,
+            parameters: getPropertyParameters(property),
             dock: property.attributes.Dock,
             multiline: property.attributes.Multiline === "true",
             isPassword: property.attributes.IsPassword === "true",

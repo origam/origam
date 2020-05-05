@@ -43,10 +43,7 @@ export interface IApi {
     }[]
   ): Promise<{ [key: string]: { [key: string]: string } }>;
 
-  newEntity(data: {
-    DataStructureEntityId: string;
-    MenuId: string;
-  }): Promise<any>;
+  newEntity(data: { DataStructureEntityId: string; MenuId: string }): Promise<any>;
 
   putEntity(data: {
     DataStructureEntityId: string;
@@ -165,11 +162,7 @@ export interface IApi {
     RequestingGridId: string;
   }): Promise<any>;
 
-  deleteObject(data: {
-    SessionFormIdentifier: string;
-    Entity: string;
-    Id: string;
-  }): Promise<any>;
+  deleteObject(data: { SessionFormIdentifier: string; Entity: string; Id: string }): Promise<any>;
 
   executeActionQuery(data: {
     SessionFormIdentifier: string;
@@ -228,10 +221,7 @@ export interface IApi {
     defaultView: string;
   }): Promise<any>;
 
-  saveSplitPanelConfiguration(data: {
-    InstanceId: string;
-    Position: number;
-  }): Promise<any>;
+  saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any>;
 
   workflowAbort(data: { sessionFormIdentifier: string }): Promise<any>;
 
@@ -260,4 +250,18 @@ export interface IApi {
   >;
 
   getReport(data: { reportUrl: string }): Promise<any>;
+
+  getDownloadToken(data: {
+    SessionFormIdentifier: string;
+    MenuId: string;
+    DataStructureEntityId: string;
+    Entity: string;
+    RowId: string;
+    Property: string;
+    FileName: string;
+    parameters: any;
+  }): Promise<any>;
+
+  getBlob(data: {downloadToken: string}): Promise<any>;
+
 }

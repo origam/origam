@@ -5,5 +5,7 @@ export enum IPropertyColumn {
   Date = "Date",
   Number = "Number",
   CheckBox = "CheckBox",
-  CheckList = "Checklist"
+  CheckList = "Checklist",
+  Image = "Image",
+  Blob = "Blob"
 }
