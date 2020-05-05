@@ -1,4 +1,4 @@
-import { AxiosPromise } from "axios";
+import Axios, { AxiosPromise } from "axios";
 
 export interface IApi {
   accessToken: string;
@@ -262,6 +262,23 @@ export interface IApi {
     parameters: any;
   }): Promise<any>;
 
-  getBlob(data: {downloadToken: string}): Promise<any>;
+  getBlob(data: { downloadToken: string }): Promise<any>;
 
+  getUploadToken(data: {
+    SessionFormIdentifier: string;
+    MenuId: string;
+    DataStructureEntityId: string;
+    Entity: string;
+    RowId: string;
+    Property: string;
+    FileName: string;
+    DateCreated: string;
+    DateLastModified: string;
+    parameters: any;
+  }): Promise<any>;
+
+  putBlob(
+    data: { uploadToken: string; fileName: string; file: any },
+    onUploadProgress?: (event: any) => void
+  ): Promise<any>;
 }

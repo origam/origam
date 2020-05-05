@@ -618,6 +618,50 @@ export class OrigamAPI implements IApi {
       })
     ).data;*/
   }
+
+  async getUploadToken(data: {
+    SessionFormIdentifier: string;
+    MenuId: string;
+    DataStructureEntityId: string;
+    Entity: string;
+    RowId: string;
+    Property: string;
+    FileName: string;
+    DateCreated: string;
+    DateLastModified: string;
+    parameters: any;
+  }): Promise<any> {
+    return (
+      await axios.post(
+        `${this.urlPrefix}/Blob/UploadToken`,
+        {
+          SessionFormIdentifier: data.SessionFormIdentifier,
+          MenuId: data.MenuId,
+          DataStructureEntityId: data.DataStructureEntityId,
+          Entity: data.Entity,
+          RowId: data.RowId,
+          Property: data.Property,
+          IsPreview: false,
+          Parameters: data.parameters,
+        },
+        {
+          headers: this.httpAuthHeader,
+        }
+      )
+    ).data;
+  }
+
+  async putBlob(
+    data: { uploadToken: string; fileName: string; file: any },
+    onUploadProgress?: (event: any) => void
+  ): Promise<any> {
+    return (
+      await axios.post(`${this.urlPrefix}/Blob/${data.uploadToken}/${data.fileName}`, data.file, {
+        headers: { ...this.httpAuthHeader, "content-type": "application/octet-stream" },
+        onUploadProgress,
+      })
+    ).data;
+  }
 }
 
 export enum IAuditLogColumnIndices {
