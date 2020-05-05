@@ -237,7 +237,7 @@ class GridDimensions implements IGridDimensions {
     const isCheckBoxedTable = getIsSelectionCheckboxesShown(this.ctx);
     const groupedColumnIds = getGroupingConfiguration(this.ctx).orderedGroupingColumnIds;
     const tableColumnIds =  getTableViewProperties(this.ctx).map(prop => prop.id)
-    const columnWidths = this.columnWidths; 
+    const columnWidths = this.columnWidths;
 
     const widths = Array.from(
       (function* () {
@@ -360,7 +360,7 @@ class HeaderRenderer implements IHeaderRendererData {
   get makeHeaderContainers(){
     const columnDimensions = this.gridDimensions.displayedColumnDimensionsCom;
     const leadingColumnCount = getLeadingColumnCount(this.ctx);
-    const standardColumnCount = columnDimensions.length - leadingColumnCount;
+    const dataColumnCount = columnDimensions.length - leadingColumnCount;
     const headerContainers = []
 
     for(let i=0; i < leadingColumnCount; i++){
@@ -372,12 +372,12 @@ class HeaderRenderer implements IHeaderRendererData {
         }));
     }
 
-    for(let i=0; i < standardColumnCount; i++){
+    for(let i=0; i < dataColumnCount; i++){
       const columnWidth = columnDimensions[i + leadingColumnCount].width;
       headerContainers.push(
         new HeaderContainer({
-          header:  this.renderStandardHeader({
-            columnIndex: i , 
+          header:  this.renderDataHeader({
+            columnIndex: i ,
             columnWidth: columnWidth}),
           isFixed: this.getFixedColumnCount() > i,
           width: columnWidth,
@@ -392,10 +392,10 @@ class HeaderRenderer implements IHeaderRendererData {
   }
 
   @bind
-  renderStandardHeader(args:{columnIndex: number, columnWidth: number}) {
+  renderDataHeader(args:{columnIndex: number, columnWidth: number}) {
     const property = this.tableViewProperties[args.columnIndex];
     const header = this.columnHeaders[args.columnIndex];
-    
+
     return (
       <Provider key={property.id} property={property}>
         <Header
@@ -446,5 +446,5 @@ interface IColumnDriver {
 }
 
 interface IRowDriver {
-  
+
 }
