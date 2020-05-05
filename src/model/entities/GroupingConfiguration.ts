@@ -32,7 +32,7 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     }
     const nextIndex = currentIndex + 1;
     const nextEntry = Array.from(this.groupingIndices.entries())
-      .find((columnId, index) => index === nextIndex);
+      .find(entry => entry[1] === nextIndex);
     return nextEntry ? nextEntry[0] : undefined 
   }  
 

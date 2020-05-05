@@ -27,7 +27,9 @@ export function flattenToTableRows(rootGroups: IGroupTreeNode[]) {
         recursive(g);
         level--;
       }
-      result.push(...group.childRows);
+      if(group.childGroups.length === 0){
+          result.push(...group.childRows);
+      }
     }
     for (let group of rootGroups) {
       recursive(group);

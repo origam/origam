@@ -7,6 +7,7 @@ export function onGroupHeaderToggleClick(ctx: any) {
     event: any,
     groupHeader: IGroupRow
   ) {
-     getGrouper(ctx).loadChildren(groupHeader.sourceGroup);
+      console.log("Bla");
+      getGrouper(ctx).loadChildren(groupHeader.sourceGroup);
   });
 }

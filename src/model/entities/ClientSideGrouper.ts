@@ -60,7 +60,7 @@ export class ClientSideGrouper implements IGrouper {
 
   loadChildren(groupHeader: IGroupTreeNode): void {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnValue);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnLabel);
 
     if (nextColumnName) {
       groupHeader.childGroups = this.makeGroups(groupHeader.childRows, nextColumnName)
