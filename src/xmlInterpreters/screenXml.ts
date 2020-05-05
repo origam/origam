@@ -345,10 +345,12 @@ export function interpretScreenXml(
   for (let dv of scr.dataViews) {
     const $dataView = $screen.beginLifetimeScope(SCOPE_DataView);
     $dataView.register(IDataView, () => dv).scopedInstance(SCOPE_DataView);
-    $dataView.register(
-      IViewConfiguration,
-      () => new ViewConfiguration(saveColumnConfigurations(dv), () => dv.activePanelView)
-    );
+    $dataView
+      .register(
+        IViewConfiguration,
+        () => new ViewConfiguration(saveColumnConfigurations(dv), () => dv.activePanelView)
+      )
+      .scopedInstance(SCOPE_DataView);
 
     $dataView.resolve(IDataView);
 
