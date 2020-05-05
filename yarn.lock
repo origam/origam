@@ -1333,7 +1333,14 @@
   dependencies:
     "@types/node" "*"
 
-"@types/leaflet@^1.5.12":
+"@types/leaflet-draw@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/leaflet-draw/-/leaflet-draw-1.0.2.tgz#57c6749bf9ee265a544b410fb0f7ef644a1f9d69"
+  integrity sha512-rHlpibY3yXJ1g/ArFMR++y3HvTh5s58KwpsNKSxQT49e64ODzLPesTLhkbFF8Fhs3CbHm0qfeEIcw0oFRMP43w==
+  dependencies:
+    "@types/leaflet" "*"
+
+"@types/leaflet@*", "@types/leaflet@^1.5.12":
   version "1.5.12"
   resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.5.12.tgz#9953b7e47a53e0a70cdd7a903a43dc3c343cf623"
   integrity sha512-61HRMIng+bWvnnAIqUWLBlrd/TQZc4gU+gN1JL4K47EDtwIrcMEhWgi7PdcpbG1YmpH4F0EfOimkvV82gJIl9w==
@@ -6498,6 +6505,11 @@ lcid@^2.0.0:
   integrity sha512-avPEb8P8EGnwXKClwsNUgryVjllcRqtMYa49NTsbQagYuT1DcXnl1915oxWjoyGrXR6zH/Y0Zc96xWsPcoDKeA==
   dependencies:
     invert-kv "^2.0.0"
+
+leaflet-draw@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/leaflet-draw/-/leaflet-draw-1.0.4.tgz#45be92f378ed253e7202fdeda1fcc71885198d46"
+  integrity sha512-rsQ6saQO5ST5Aj6XRFylr5zvarWgzWnrg46zQ1MEOEIHsppdC/8hnN8qMoFvACsPvTioAuysya/TVtog15tyAQ==
 
 leaflet@^1.6.0:
   version "1.6.0"

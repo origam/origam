@@ -1,4 +1,28 @@
 .mapDiv {
   width: 100%;
   height: 100%;
+
+  :global(.leaflet-draw-actions) {
+    overflow: hidden;
+    margin-left: 2px;
+    margin-top: -1px;
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+    li {
+      border-left: 1px solid #cccccc;
+    }
+    li:first-of-type {
+      border-left: none;
+    }
+    a {
+      background: transparent;
+      border: none;
+
+      &:hover {
+        background-color: #eeeeee;
+      }
+    }
+  }
 }
