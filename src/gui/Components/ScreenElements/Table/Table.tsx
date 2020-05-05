@@ -86,13 +86,10 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const viewportWidthObs = observable.box<number>(500);
   const viewportHeightObs = observable.box<number>(300);
 
-  const fixedColumnCountObs = observable.box<number>(0);
-
   const clickSubscriptions: IClickSubsItem[] = [];
 
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
-
-  function drawTable(ctx2d: CanvasRenderingContext2D) {
+  function drawTable(ctx2d: CanvasRenderingContext2D, fixedColumnCount: number) {
     renderTable(
       ctx,
       ctx2d,
@@ -107,7 +104,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       isCheckBoxedTable,
       gridDimensions.displayedColumnDimensionsCom,
       gridDimensions.columnWidths,
-      fixedColumnCountObs.get(),
+      fixedColumnCount,
       clickSubscriptions,
       rowHeight
     );
@@ -157,7 +154,7 @@ export const Table: React.FC<
 @observer
 export class RawTable extends React.Component<ITableProps & { isVisible: boolean }> {
   static contextType = MobXProviderContext;
-  
+
   tableRenderer = createTableRenderer(this.context.tablePanelView, this.props.gridDimensions);
 
   @observable _contentBounds: BoundingRect = {
@@ -231,7 +228,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
       autorun(
         () => {
           if (this.ctxCanvas) {
-            this.tableRenderer.drawTable(this.ctxCanvas);
+            this.tableRenderer.drawTable(this.ctxCanvas, this.props.fixedColumnCount);
           }
         },
         {
@@ -398,7 +395,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               zIndex={100}
                             />
                           </Scrollee>
-                        ) : (null)}
+                        ) : null}
                         <Scrollee
                           scrollOffsetSource={this.props.scrollState}
                           fixedVert={true}

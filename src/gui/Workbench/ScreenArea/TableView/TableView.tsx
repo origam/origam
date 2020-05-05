@@ -120,6 +120,7 @@ export class TableView extends React.Component<{
     if (editingColumnIndex !== undefined && isSelectionCheckboxes) {
       editingColumnIndex++;
     }
+   const fixedColumnCount = this.props.tablePanelView ? this.props.tablePanelView.fixedColumnCount || 0 : 0;
 
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
@@ -131,6 +132,7 @@ export class TableView extends React.Component<{
             editingColumnIndex={editingColumnIndex}
             isEditorMounted={getIsEditing(this.props.tablePanelView)}
             isLoading={false}
+            fixedColumnCount={fixedColumnCount}
             headerContainers = {self.headerRenderer.makeHeaderContainers}
             renderCell={self.cellRenderer.renderCell}
             renderEditor={() => (
@@ -360,18 +362,31 @@ class HeaderRenderer implements IHeaderRendererData {
   get makeHeaderContainers(){
     const columnDimensions = this.gridDimensions.displayedColumnDimensionsCom;
     const leadingColumnCount = getLeadingColumnCount(this.ctx);
+    const selectionCheckBoxesShown = getIsSelectionCheckboxesShown(this.ctx);
+    const groupingColumnCount = leadingColumnCount - (selectionCheckBoxesShown ? 1 : 0)
     const dataColumnCount = columnDimensions.length - leadingColumnCount;
     const headerContainers = []
 
-    for(let i=0; i < leadingColumnCount; i++){
+    if(selectionCheckBoxesShown){
+      headerContainers.push(
+        new HeaderContainer({
+          header: this.renderDummyHeader(columnDimensions[0].width),
+          isFixed: true,
+          width: columnDimensions[0].width,
+        }));
+    }
+
+    let columnsToFix = this.getFixedColumnCount();
+    for(let i=0; i < groupingColumnCount; i++){
       headerContainers.push(
         new HeaderContainer({
           header: this.renderDummyHeader(columnDimensions[i].width),
-          isFixed: true,
+          isFixed: columnsToFix > i,
           width: columnDimensions[i].width,
         }));
     }
 
+    columnsToFix -= groupingColumnCount;
     for(let i=0; i < dataColumnCount; i++){
       const columnWidth = columnDimensions[i + leadingColumnCount].width;
       headerContainers.push(
@@ -379,7 +394,7 @@ class HeaderRenderer implements IHeaderRendererData {
           header:  this.renderDataHeader({
             columnIndex: i ,
             columnWidth: columnWidth}),
-          isFixed: this.getFixedColumnCount() > i,
+          isFixed: columnsToFix > i,
           width: columnWidth,
         }));
     }

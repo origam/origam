@@ -16,7 +16,7 @@ export interface ITableProps {
   editingRowIndex?: number;
   editingColumnIndex?: number;
   isEditorMounted: boolean;
-
+  fixedColumnCount: number;
   isLoading?: boolean;
 
   headerContainers: IHeaderContainer[];
