@@ -1,5 +1,6 @@
 import { PubSub } from "../../../../utils/events";
 import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
+import { ITableRow} from "./TableRendering/types";
 
 export enum IOrderByDirection {
   NONE = "NONE",
@@ -13,6 +14,7 @@ export interface ITableProps {
   gridDimensions: IGridDimensions;
   scrollState: IScrollState;
 
+  tableRows:  ITableRow[]
   editingRowIndex?: number;
   editingColumnIndex?: number;
   isEditorMounted: boolean;

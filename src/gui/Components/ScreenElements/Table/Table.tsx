@@ -11,16 +11,14 @@ import Scroller from "./Scroller";
 import S from "./Table.module.css";
 import { ITableProps, IGridDimensions } from "./types";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
-import { IClickSubsItem } from "./TableRendering/types";
+import {IClickSubsItem, ITableRow} from "./TableRendering/types";
 import { renderTable } from "./TableRendering/renderTable";
 import { handleTableClick } from "./TableRendering/onClick";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { IProperty } from "model/entities/types/IProperty";
-import { flattenToTableRows } from "./TableRendering/tableRows";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   /*const rootGroupsObs = observable([
@@ -63,10 +61,10 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   ]);*/
   const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds)
 
-  const tableRowsCom = computed(() =>
-    groupedColumnIds.get().length === 0 
-      ? getDataTable(ctx).rows
-      : flattenToTableRows(getDataTable(ctx).groups));
+  // const tableRowsCom = computed(() =>
+  //   groupedColumnIds.get().length === 0
+  //     ? getDataTable(ctx).rows
+  //     : flattenToTableRows(getDataTable(ctx).groups));
 
   // const tableColumnIds = observable<string>(["m", "a", "l", "k", "c", "b"]);
   const rowHeight = 20;
@@ -87,11 +85,11 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const clickSubscriptions: IClickSubsItem[] = [];
 
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
-  function drawTable(ctx2d: CanvasRenderingContext2D, fixedColumnCount: number) {
+  function drawTable(ctx2d: CanvasRenderingContext2D, fixedColumnCount: number, tableRows:  ITableRow[]) {
     renderTable(
       ctx,
       ctx2d,
-      tableRowsCom.get(),
+      tableRows,
       groupedColumnIds.get(),
       tableColumnIds.get(),
       propertyById.get(),
@@ -226,7 +224,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
       autorun(
         () => {
           if (this.ctxCanvas) {
-            this.tableRenderer.drawTable(this.ctxCanvas, this.props.fixedColumnCount);
+            this.tableRenderer.drawTable(this.ctxCanvas, this.props.fixedColumnCount, this.props.tableRows);
           }
         },
         {

@@ -9,7 +9,6 @@ import { IDataView } from "../../../../model/entities/types/IDataView";
 import { IProperty } from "../../../../model/entities/types/IProperty";
 import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
 import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
-import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
@@ -24,8 +23,6 @@ import {
 import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
 import { CellRenderer } from "./CellRenderer";
 import { TableViewEditor } from "./TableViewEditor";
-import { getPropertyOrdering } from "../../../../model/selectors/DataView/getPropertyOrdering";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { onNoCellClick } from "model/actions-ui/DataView/TableView/onNoCellClick";
 import { onOutsideTableClick } from "model/actions-ui/DataView/TableView/onOutsideTableClick";
@@ -34,9 +31,10 @@ import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSel
 import { onColumnWidthChanged } from "model/actions-ui/DataView/TableView/onColumnWidthChanged";
 import { onColumnWidthChangeFinished } from "model/actions-ui/DataView/TableView/onColumnWidthChangeFinished";
 import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
-import { selectionCheckBoxColumnWidth } from "gui/Components/ScreenElements/Table/TableRendering/cells/selectionCheckboxCell";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getLeadingColumnCount } from "model/selectors/TablePanelView/getLeadingColumnCount";
+import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
+import {flattenToTableRows} from "../../../Components/ScreenElements/Table/TableRendering/tableRows";
 
 @inject(({ dataView }) => {
   return {
@@ -74,10 +72,19 @@ export class TableView extends React.Component<{
       this.refTableDisposer && this.refTableDisposer();
     }
   };
+
+  @computed get tableRows(){
+    const groupedColumnIds = getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds;
+    return groupedColumnIds.length === 0
+        ? getDataTable(this.props.dataView).rows
+        : flattenToTableRows(getDataTable(this.props.dataView).groups);
+  }
+
+
   elmTable: RawTable | null = null;
   gDim = new GridDimensions({
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    getRowCount: () => getRowCount(this.props.dataView),
+    getRowCount: () => this.tableRows.length,
     getIsSelectionCheckboxes: () =>
       getIsSelectionCheckboxesShown(this.props.tablePanelView),
     ctx: this.props.dataView
@@ -126,6 +133,7 @@ export class TableView extends React.Component<{
       <Provider tablePanelView={this.props.tablePanelView}>
         <>
           <Table
+            tableRows={this.tableRows}
             gridDimensions={self.gDim}
             scrollState={self.scrollState}
             editingRowIndex={editingRowIndex}
