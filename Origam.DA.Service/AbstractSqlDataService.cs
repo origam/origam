@@ -2436,7 +2436,14 @@ namespace Origam.DA.Service
 			newDataQuery.DataSourceType = QueryDataSourceType.DataStructureEntity;
 			foreach(DataColumn col in row.Table.PrimaryKey)
 			{
-				newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col]));
+				if (row.RowState == DataRowState.Deleted)
+				{
+					newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col, DataRowVersion.Original]));
+				}
+				else
+				{
+					newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col]));
+				}
 			}
 
 			this.LoadDataSet(newDataQuery, userProfile, newData, transactionId);
