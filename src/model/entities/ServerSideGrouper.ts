@@ -1,10 +1,10 @@
-import { getGroupingConfiguration } from "../selectors/TablePanelView/getGroupingConfiguration";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { IGrouper } from "./types/IGrouper";
-import { observable } from "mobx";
-import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
-import { GroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
+import {getGroupingConfiguration} from "../selectors/TablePanelView/getGroupingConfiguration";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {IGrouper} from "./types/IGrouper";
+import {observable} from "mobx";
+import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
 
 export class ServerSideGrouper implements IGrouper {
@@ -18,8 +18,10 @@ export class ServerSideGrouper implements IGrouper {
 
   apply(firstGroupingColumn: string) {
     const dataView = getDataView(this);
+    const property = getDataTable(this).getPropertyById(firstGroupingColumn);
+    const lookupId = property && property.lookup && property.lookup.lookupId;
     getFormScreenLifecycle(this)
-      .loadGroups(dataView, firstGroupingColumn)
+      .loadGroups(dataView, firstGroupingColumn, lookupId )
       .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn));
   }
 
@@ -70,8 +72,8 @@ export class ServerSideGrouper implements IGrouper {
       throw new Error("Cannot find grouping index for column: " + columnId)
     }
 
-    const property = getDataTable(this).getPropertyById(columnId);
-    const groupLabel = property ? property.name || "" : "";
+    let dataTable = getDataTable(this);
+    const property = dataTable.getPropertyById(columnId);
 
     return groupData
       .map(groupDataItem => {
@@ -79,10 +81,10 @@ export class ServerSideGrouper implements IGrouper {
           childGroups: [] as IGroupTreeNode[],
           childRows: [] as any[][],
           columnId: columnId,
-          groupLabel: groupLabel,
+          groupLabel: property!.name ,
           rowCount: groupDataItem["groupCount"] as number,
           parent: undefined,
-          columnValue: groupDataItem[columnId] as string}
+          columnValue: groupDataItem["groupCaption"] || groupDataItem[columnId]}
       )});
   }
 }

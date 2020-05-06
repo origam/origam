@@ -272,7 +272,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })
   }
 
-  loadGroups(rootDataView: IDataView, groupBy: string){
+  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
@@ -282,7 +282,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       Ordering: [],
       RowLimit: 999999,
       GroupBy: groupBy,
-      GroupByLookupId: undefined,
+      GroupByLookupId: groupByLookupId,
       MasterRowId: undefined,
       AggregatedColumn: undefined
     });

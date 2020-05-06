@@ -20,7 +20,7 @@ export class GroupItem implements IGroupTreeNode {
   @observable childGroups: IGroupTreeNode[] = null as any;
   @observable childRows: any[][] = null as any;
   columnId: string = null as any;
-  columnValue: string = null as any;
+  @observable columnValue: string = null as any;
   groupLabel: string = null as any;
   parent: IGroupTreeNode | undefined = null as any;
   rowCount: number = null as any;
