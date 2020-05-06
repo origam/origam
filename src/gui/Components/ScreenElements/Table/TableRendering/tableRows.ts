@@ -4,10 +4,10 @@ export class TableGroupRow implements IGroupRow {
   constructor(public groupLevel: number, public sourceGroup: IGroupTreeNode) {}
   parent: IGroupRow | undefined;
   get columnLabel(): string {
-    return this.sourceGroup.columnId;
+    return this.sourceGroup.groupLabel;
   }
   get columnValue(): string {
-    return this.sourceGroup.groupLabel;
+    return this.sourceGroup.columnValue;
   }
   get isExpanded(): boolean {
     return this.sourceGroup.isExpanded;

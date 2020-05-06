@@ -70,7 +70,8 @@ export class ServerSideGrouper implements IGrouper {
       throw new Error("Cannot find grouping index for column: " + columnId)
     }
 
-    const bal = getDataTable(this).getPropertyById(columnId)
+    const property = getDataTable(this).getPropertyById(columnId);
+    const groupLabel = property ? property.name || "" : "";
 
     return groupData
       .map(groupDataItem => {
@@ -78,7 +79,7 @@ export class ServerSideGrouper implements IGrouper {
           childGroups: [] as IGroupTreeNode[],
           childRows: [] as any[][],
           columnId: columnId,
-          groupLabel:  groupDataItem["groupCaption"] as string,
+          groupLabel: groupLabel,
           rowCount: groupDataItem["groupCount"] as number,
           parent: undefined,
           columnValue: groupDataItem[columnId] as string}
