@@ -9,8 +9,7 @@ import {getDataTable} from "../selectors/DataView/getDataTable";
 
 export class ServerSideGrouper implements IGrouper {
 
-  @observable.shallow groupData: any[] = [];
-  topLevelGroups: IGroupTreeNode[] = []
+  @observable.shallow topLevelGroups: IGroupTreeNode[] = []
   parent?: any = null;
 
   getTopLevelGroups(): IGroupTreeNode[] {
@@ -21,8 +20,7 @@ export class ServerSideGrouper implements IGrouper {
     const dataView = getDataView(this);
     getFormScreenLifecycle(this)
       .loadGroups(dataView, firstGroupingColumn)
-      .then(groupData => this.groupData = groupData)
-      .then(() => this.topLevelGroups = this.group(this.groupData, firstGroupingColumn));
+      .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn));
   }
 
   loadChildren(groupHeader: IGroupTreeNode) {
@@ -53,13 +51,15 @@ export class ServerSideGrouper implements IGrouper {
     return parents;
   }
 
+  toFilterValueForm(value: any){
+    return typeof value === "string" ? "'" + value + "'" : value
+  }
+
   composeGroupingFilter(rowGroup: IGroupTreeNode) {
     return this.getAllParents(rowGroup)
       .concat([rowGroup])
-      .map(row => "[" + row.columnValue + ", eq, " + row.groupLabel + "]")
+      .map(row => "[" + this.toFilterValueForm(row.columnValue) + ", eq, " + row.columnId + "]")
       .join(", ")
-
-    // return "[ AND$, " + filterStrings + "]"
   }
 
   group(groupData: any[], columnId: string): IGroupTreeNode[] {

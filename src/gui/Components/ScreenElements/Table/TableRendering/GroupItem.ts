@@ -17,8 +17,8 @@ export class GroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
     Object.assign(this, data);
   }
-  childGroups: IGroupTreeNode[] = null as any;
-  childRows: any[][] = null as any;
+  @observable childGroups: IGroupTreeNode[] = null as any;
+  @observable childRows: any[][] = null as any;
   columnId: string = null as any;
   columnValue: string = null as any;
   groupLabel: string = null as any;
