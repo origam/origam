@@ -17,6 +17,7 @@ export interface IGroupTreeNode {
   isExpanded: boolean;
   rowCount: number;
   columnValue: string;
+  columnDisplayValue: string;
 }
 
 export type ITableRow = any[] | IGroupRow;

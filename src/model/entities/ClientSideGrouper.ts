@@ -43,7 +43,8 @@ export class ClientSideGrouper implements IGrouper {
           groupLabel:  groupName,
           rowCount: groupRows.length,
           parent: undefined,
-          columnValue: groupName
+          columnValue: groupName,
+          columnDisplayValue: groupName
         }
         );
       });

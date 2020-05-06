@@ -84,7 +84,8 @@ export class ServerSideGrouper implements IGrouper {
           groupLabel: property!.name ,
           rowCount: groupDataItem["groupCount"] as number,
           parent: undefined,
-          columnValue: groupDataItem["groupCaption"] || groupDataItem[columnId]}
+          columnValue: groupDataItem[columnId],
+          columnDisplayValue: groupDataItem["groupCaption"] || groupDataItem[columnId]}
       )});
   }
 }
