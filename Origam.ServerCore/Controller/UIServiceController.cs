@@ -667,6 +667,11 @@ namespace Origam.ServerCore.Controller
 
         private Result<List<Ordering>, IActionResult> GetOrderings(List<List<string>> orderingList)
         {
+            if (orderingList == null)
+            {
+                return Result.Ok<List<Ordering>, IActionResult>(new List<Ordering>());
+            }
+
             var orderingsResult = orderingList
                 .Where(x=> x.Count > 0)
                 .Select(Create)
