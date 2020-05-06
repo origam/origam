@@ -19,12 +19,6 @@ import { onClick } from "../onClick";
 import { CPR } from "utils/canvas";
 import {onGroupHeaderToggleClick} from "../../../../../../model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
 import {flow} from "mobx";
-import {getTablePanelView} from "../../../../../../model/selectors/TablePanelView/getTablePanelView";
-import {onPossibleSelectedRowChange} from "../../../../../../model/actions-ui/onPossibleSelectedRowChange";
-import {getMenuItemId} from "../../../../../../model/selectors/getMenuItemId";
-import {getDataStructureEntityId} from "../../../../../../model/selectors/DataView/getDataStructureEntityId";
-import {getSelectedRowId} from "../../../../../../model/selectors/TablePanelView/getSelectedRowId";
-import {lastClickedCellRectangle} from "./dataCell";
 
 export function groupRowEmptyCellsWidths() {
   return groupingColumnIds().map(() => 20);
