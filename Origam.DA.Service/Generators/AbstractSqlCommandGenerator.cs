@@ -1716,7 +1716,7 @@ namespace Origam.DA.Service
             
             DataStructureColumn groupByColumn = null;
             int i = 0;
-            ArrayList group = new ArrayList();
+            List<string> group = new List<string>();
             SortedList order = new SortedList();
             bool groupByNeeded = false;
             if (concatScalarColumns && columnsInfo != null && columnsInfo.Count > 1)
@@ -1796,7 +1796,7 @@ namespace Origam.DA.Service
                 }
 
                 groupByNeeded = true;
-                if (!group.Contains(customGrouping.GroupBy))
+                if (!group.Any(columnName => columnName.Contains(customGrouping.GroupBy)))
                 {
                     group.Add(customGrouping.GroupBy);
                 }
@@ -1927,7 +1927,7 @@ namespace Origam.DA.Service
             Hashtable replaceParameterTexts,
             Hashtable dynamicParameters, DataStructureSortSet sortSet,
             Hashtable selectParameterReferences, bool isInRecursion,
-            bool forceDatabaseCalculation, ArrayList @group, SortedList order,
+            bool forceDatabaseCalculation, List<string> group, SortedList order,
             ref bool groupByNeeded, ColumnsInfo columnsInfo,
             DataStructureColumn column, LookupOrderingInfo orderingInfo)
         {
