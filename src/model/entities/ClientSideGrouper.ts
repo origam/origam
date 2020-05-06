@@ -36,14 +36,15 @@ export class ClientSideGrouper implements IGrouper {
       .filter((v, i, a) => a.indexOf(v) === i) // distinct
       .map(groupName => {
         const groupRows = rows.filter(row => row[index] === groupName);
-        return new GroupItem(
-             [],
-             groupRows,
-             groupingColumn,
-             groupName,
-             groupRows.length,
-             undefined,
-             groupName,
+        return new GroupItem({
+          childGroups: [] as IGroupTreeNode[],
+          childRows: groupRows,
+          columnId: groupingColumn,
+          groupLabel:  groupName,
+          rowCount: groupRows.length,
+          parent: undefined,
+          columnValue: groupName
+        }
         );
       });
   }
@@ -70,7 +71,7 @@ export class ClientSideGrouper implements IGrouper {
 
   loadChildren(groupHeader: IGroupTreeNode): void {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnLabel);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
 
     if (nextColumnName) {
       groupHeader.childGroups = this.makeGroups(groupHeader.childRows, nextColumnName)

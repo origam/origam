@@ -265,6 +265,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 
+    console.log("portalInfo:");
     console.log(portalInfo);
     const menuUI = findMenu(portalInfo.menu);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));

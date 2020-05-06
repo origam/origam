@@ -21,8 +21,6 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { IProperty } from "model/entities/types/IProperty";
 import { flattenToTableRows } from "./TableRendering/tableRows";
-import { isDataRow } from "./TableRendering/rowCells/dataRowCells";
-import { isGroupRow } from "./TableRendering/rowCells/groupRowCells";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   /*const rootGroupsObs = observable([

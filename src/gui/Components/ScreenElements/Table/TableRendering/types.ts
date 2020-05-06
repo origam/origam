@@ -12,7 +12,7 @@ export interface IGroupTreeNode {
   parent: IGroupTreeNode | undefined;
   childGroups: IGroupTreeNode[];
   childRows: any[][];
-  columnLabel: string;
+  columnId: string;
   groupLabel: string;
   isExpanded: boolean;
   rowCount: number;

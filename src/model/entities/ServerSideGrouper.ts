@@ -5,6 +5,7 @@ import { IGrouper } from "./types/IGrouper";
 import { observable } from "mobx";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { GroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
+import {getDataTable} from "../selectors/DataView/getDataTable";
 
 export class ServerSideGrouper implements IGrouper {
 
@@ -26,7 +27,7 @@ export class ServerSideGrouper implements IGrouper {
 
   loadChildren(groupHeader: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnLabel);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
     const dataView = getDataView(this);
     const filter = this.composeGroupingFilter(groupHeader)
     const lifeCycle = getFormScreenLifecycle(this)
@@ -53,32 +54,34 @@ export class ServerSideGrouper implements IGrouper {
   }
 
   composeGroupingFilter(rowGroup: IGroupTreeNode) {
-    const filterStrings = this.getAllParents(rowGroup)
+    return this.getAllParents(rowGroup)
       .concat([rowGroup])
       .map(row => "[" + row.columnValue + ", eq, " + row.groupLabel + "]")
       .join(", ")
 
-    return "[ AND, " + filterStrings + "]"
+    // return "[ AND$, " + filterStrings + "]"
   }
 
-  group(groupData: any[], columnName: string): IGroupTreeNode[] {
+  group(groupData: any[], columnId: string): IGroupTreeNode[] {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const level = groupingConfiguration.groupingIndices.get(columnName)
+    const level = groupingConfiguration.groupingIndices.get(columnId)
 
     if (!level) {
-      throw new Error("Cannot find grouping index for column: " + columnName)
+      throw new Error("Cannot find grouping index for column: " + columnId)
     }
+
+    const bal = getDataTable(this).getPropertyById(columnId)
 
     return groupData
       .map(groupDataItem => {
-        return new GroupItem(
-          [],
-          [], 
-          columnName,
-          groupDataItem["groupCaption"],
-          groupDataItem["groupCount"],
-          undefined,
-          groupDataItem[columnName],
+        return new GroupItem({
+          childGroups: [] as IGroupTreeNode[],
+          childRows: [] as any[][],
+          columnId: columnId,
+          groupLabel:  groupDataItem["groupCaption"] as string,
+          rowCount: groupDataItem["groupCount"] as number,
+          parent: undefined,
+          columnValue: groupDataItem[columnId] as string}
       )});
   }
 }

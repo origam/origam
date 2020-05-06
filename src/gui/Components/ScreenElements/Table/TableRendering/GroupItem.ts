@@ -1,17 +1,29 @@
 
 import { observable } from "mobx";
 import { IGroupTreeNode } from "./types";
+import {IHeaderContainer} from "../../../../Workbench/ScreenArea/TableView/TableView";
+
+export interface IGroupItemData{
+  childGroups: IGroupTreeNode[];
+  childRows: any[][];
+  columnId: string;
+  columnValue: string ;
+  groupLabel: string;
+  parent: IGroupTreeNode | undefined;
+  rowCount: number;
+}
 
 export class GroupItem implements IGroupTreeNode {
-  constructor(
-    public childGroups: GroupItem[],
-    public childRows: any[][],
-    public columnLabel: string,
-    public groupLabel: string,
-    public rowCount: number,
-    public parent: IGroupTreeNode | undefined,
-    public columnValue: string
-  ) {}
+  constructor(data: IGroupItemData) {
+    Object.assign(this, data);
+  }
+  childGroups: IGroupTreeNode[] = null as any;
+  childRows: any[][] = null as any;
+  columnId: string = null as any;
+  columnValue: string = null as any;
+  groupLabel: string = null as any;
+  parent: IGroupTreeNode | undefined = null as any;
+  rowCount: number = null as any;
 
-  @observable isExpanded = true;
+  @observable isExpanded = false;
 }

@@ -4,7 +4,7 @@ export class TableGroupRow implements IGroupRow {
   constructor(public groupLevel: number, public sourceGroup: IGroupTreeNode) {}
   parent: IGroupRow | undefined;
   get columnLabel(): string {
-    return this.sourceGroup.columnLabel;
+    return this.sourceGroup.columnId;
   }
   get columnValue(): string {
     return this.sourceGroup.groupLabel;
