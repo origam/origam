@@ -1253,6 +1253,9 @@ namespace Origam.Workflow.WorkQueue
             }
             catch (DBConcurrencyException)
             {
+                core.DataService.StoreData(
+                    new Guid("fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"),
+                    selectedRows.DataSet, false, transactionId);
             }
 
             if (log.IsInfoEnabled)
@@ -1680,15 +1683,6 @@ namespace Origam.Workflow.WorkQueue
             queueRow["ErrorText"] = DateTime.Now.ToString() + ": " + message;
             StoreQueueItems(wqc, queueRow.Table, null);
         }
-
-        private void StoreQueueError(WorkQueueClass wqc, DataRowCollection rows, string message)
-        {
-            foreach(DataRow row in rows)
-            {
-                StoreQueueError(wqc, row, message);
-            }
-        }
-
         private void ProcessExternalQueue(WorkQueueData.WorkQueueRow q)
         {
             string transactionId = Guid.NewGuid().ToString();

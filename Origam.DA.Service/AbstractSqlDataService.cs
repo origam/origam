@@ -704,7 +704,7 @@ namespace Origam.DA.Service
                 DataTable storedTable = storedData.Tables[currentEntityName];
                 if (storedTable.Rows.Count == 0)
                 {
-                    errorString = ResourceUtils.GetString("DataChangedByOtherUserException", rowName, lastTableName);
+                    errorString = ResourceUtils.GetString("DataDeletedByOtherUserException", rowName, lastTableName);
                 }
                 else
                 {
