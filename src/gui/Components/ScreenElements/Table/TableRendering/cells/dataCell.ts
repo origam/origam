@@ -126,9 +126,13 @@ function drawCellValue(){
           CPR * (currentRowTop() + (rowHeight() / 2)));
         break;
       case "Date":
-        if (currentCellText() !== null) {
+        if (currentCellText() !== null && currentCellText() !== "") {
+          let momentValue = moment(currentCellText());
+          if(!momentValue.isValid()){
+            break;
+          }
           ctx2d.fillText(
-            moment(currentCellText()).format(currentProperty().formatterPattern),
+            momentValue.format(currentProperty().formatterPattern),
             CPR * (currentColumnLeft() + 2),
             CPR * (currentRowTop() + 17));
         }
