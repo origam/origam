@@ -1614,14 +1614,43 @@ namespace Origam.DA.Service
 		        .Select(line
 			        => line.Select(pair => pair.Value));
         }
-        
+
         public override IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
         {
 	        return ExecuteDataReaderInternal(query)
-		        .Select(line
-			        => line.ToDictionary(
-				        pair => pair.Key, 
-				        pair => pair.Value));
+		        .Select(line => ExpandAggregationData(line, query))
+		        .Select( line=> line.ToDictionary(
+			        pair => pair.Key, 
+			        pair => pair.Value));
+        }
+
+        private List<KeyValuePair<string, object>> ExpandAggregationData(
+	        IEnumerable<KeyValuePair<string, object>> line, DataStructureQuery query)
+        {
+	        var processedItems = new List<KeyValuePair<string, object>>();
+	        var aggregationData = new List<object>();
+	        foreach (var pair in line)
+	        {
+		        var aggregatedColumn = query.AggregatedColumns
+			        .FirstOrDefault(column => column.SqlQueryColumnName == pair.Key);
+		        if (aggregatedColumn != null)
+		        {
+			        aggregationData.Add(
+				        new
+				        {
+					        Column = aggregatedColumn.ColumnName,
+					        Type = aggregatedColumn.AggregationType.ToString(),
+					        Value = pair.Value
+				        }
+			        );
+		        }
+		        else
+		        {
+			        processedItems.Add(pair);
+		        }
+	        }
+	        processedItems.Add(new KeyValuePair<string, object>("aggregations", aggregationData));
+	        return processedItems;
         }
 
         private IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderInternal(DataStructureQuery query)
