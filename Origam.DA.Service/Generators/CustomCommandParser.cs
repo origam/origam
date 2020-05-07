@@ -233,7 +233,7 @@ namespace Origam.DA.Service.Generators
                 return renderer.In(LeftOperand, options);
             }
 
-            throw new Exception("Cannot parse filter node: " + Value);
+            throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
         }
 
         private string OperatorToRendererName(string operatorName)
