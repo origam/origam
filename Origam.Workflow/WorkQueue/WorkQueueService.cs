@@ -1681,7 +1681,16 @@ namespace Origam.Workflow.WorkQueue
         private void StoreQueueError(WorkQueueClass wqc, DataRow queueRow, string message)
         {
             queueRow["ErrorText"] = DateTime.Now.ToString() + ": " + message;
-            StoreQueueItems(wqc, queueRow.Table, null);
+            try
+            {
+                StoreQueueItems(wqc, queueRow.Table, null);
+            } catch (DBConcurrencyException)
+            {
+                core.DataService.StoreData(
+                   new Guid("7a18149a-2faa-471b-a43e-9533d7321b44"),
+                   new Guid("ea139b9a-3048-4cd5-bf9a-04a91590624a"),
+                   queueRow.Table.DataSet, false, null);
+            }
         }
         private void ProcessExternalQueue(WorkQueueData.WorkQueueRow q)
         {
