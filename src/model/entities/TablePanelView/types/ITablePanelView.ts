@@ -36,6 +36,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   propertyMap: Map<string, IProperty>;
 
   hiddenPropertyIds: Map<string, boolean>;
+  aggregations: Map<string, string>;
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;

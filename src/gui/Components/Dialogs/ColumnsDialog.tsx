@@ -1,5 +1,5 @@
 import S from "./ColumnsDialog.module.css";
-import React from "react";
+import React, {SyntheticEvent} from "react";
 import { ModalWindowOverlay, ModalWindow, CloseButton } from "../Dialog/Dialog";
 import { AutoSizer, MultiGrid } from "react-virtualized";
 import { bind } from "bind-decorator";
@@ -17,7 +17,8 @@ export interface ITableColumnConf {
   name: string;
   isVisible: boolean;
   groupingIndex: number;
-  aggregation: "";
+  aggregation: string;
+  entity: string;
 }
 
 @observer
@@ -61,6 +62,12 @@ export class ColumnsDialog extends React.Component<{
           } 
         }
       }
+    });
+  }
+
+  @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
+    this.configuration = produce(this.configuration, (draft) => {
+      draft.columnConf[rowIndex].aggregation = selectedAggregation as string;
     });
   }
 
@@ -130,7 +137,7 @@ export class ColumnsDialog extends React.Component<{
   }
 
   getCell(rowIndex: number, columnIndex: number) {
-    const { isVisible, name, aggregation, groupingIndex } = this.configuration.columnConf[rowIndex];
+    const { isVisible, name, aggregation, groupingIndex, entity } = this.configuration.columnConf[rowIndex];
     switch (columnIndex) {
       case 0:
         return (
@@ -155,8 +162,20 @@ export class ColumnsDialog extends React.Component<{
             {groupingIndex > 0 ? groupingIndex : ""}
           </span>
         );
-      case 4:
-        return "";
+      case 3:
+        if(entity === "Currency" || entity === "Integer"){
+          return(
+              <select onChange={(event:any) => this.setAggregation(rowIndex, event.target.value)}>
+                <option value=""/>
+                <option value="SUM" selected={aggregation === "SUM"}>SUM</option>
+                <option value="AVG" selected={aggregation === "AVG"}>AVG</option>
+                <option value="MIN" selected={aggregation === "MIN"}>MIN</option>
+                <option value="MAX" selected={aggregation === "MAX"}>MAX</option>
+              </select>
+          );
+        }else{
+          return "";
+        }
       default:
         return "";
     }

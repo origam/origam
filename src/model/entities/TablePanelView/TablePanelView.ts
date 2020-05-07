@@ -310,4 +310,5 @@ export class TablePanelView implements ITablePanelView {
   }
 
   parent?: any;
+  aggregations: Map<string, string> = new Map<string, string>();
 }
