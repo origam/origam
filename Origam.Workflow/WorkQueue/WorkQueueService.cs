@@ -1253,6 +1253,9 @@ namespace Origam.Workflow.WorkQueue
             }
             catch (DBConcurrencyException)
             {
+                core.DataService.StoreData(
+                    new Guid("fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"),
+                    selectedRows.DataSet, false, transactionId);
             }
 
             if (log.IsInfoEnabled)
