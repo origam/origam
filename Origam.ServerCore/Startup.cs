@@ -49,6 +49,7 @@ using Origam.ServerCore.Resources;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Origam.ServerCore
 {
@@ -73,6 +74,17 @@ namespace Origam.ServerCore
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
+            // If using IIS:
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
             var builder = services.AddMvc()
                 .AddNewtonsoftJson();
