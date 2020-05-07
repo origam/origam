@@ -60,7 +60,7 @@ namespace Origam.ServerCore
         private readonly PasswordConfiguration passwordConfiguration;
         private readonly IdentityServerConfig identityServerConfig;
         private readonly UserLockoutConfig lockoutConfig;
-        private LanguageConfig languageConfig;
+        private readonly LanguageConfig languageConfig;
 
         public Startup(IConfiguration configuration)
         {
