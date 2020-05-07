@@ -214,7 +214,7 @@ export interface IApi {
     MasterRowId: string | undefined,
     GroupByLookupId: string | undefined,
     SessionFormIdentifier: string | undefined,
-    AggregatedColumn: IAggregation[] | undefined
+    AggregatedColumns: IAggregation[] | undefined
   }): Promise<any[]>;
 
   getAggregations(data :{

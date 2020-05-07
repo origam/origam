@@ -21,7 +21,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         name: prop.name,
         isVisible: !this.tablePanelView.hiddenPropertyIds.get(prop.id),
         groupingIndex: groupingConf.groupingIndices.get(prop.id) || 0,
-        aggregation: this.tablePanelView.aggregations.get(prop.id) as string,
+        aggregationType: this.tablePanelView.aggregations.getType(prop.id)!,
         entity:prop.entity,
       });
     }
@@ -59,7 +59,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       if (column.groupingIndex) {
         groupingConf.setGrouping(column.id, column.groupingIndex);
       }
-      this.tablePanelView.aggregations.set(column.id, column.aggregation)
+      this.tablePanelView.aggregations.setType(column.id, column.aggregationType)
     }
     groupingConf.applyGrouping();
     getDialogStack(this).closeDialog(this.dialogKey);

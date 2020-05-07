@@ -1,5 +1,6 @@
 import { IAction } from "model/entities/types/IAction";
 import { IDataView } from "./IDataView";
+import {IAggregation} from "./IAggregation";
 export interface IFormScreenLifecycleData {}
 
 export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
@@ -54,8 +55,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   start(initUIResult: any): Generator;
 
-  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined):  Promise<any[]>;
-  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string): Promise<any[]>;
+  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregation[] | undefined):  Promise<any[]>;
+  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string, aggregations: IAggregation[] | undefined): Promise<any[]>;
   loadChildRows(rootDataView: IDataView, filter: string): Promise<any[]>;
 
   parent?: any;

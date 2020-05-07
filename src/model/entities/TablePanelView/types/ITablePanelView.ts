@@ -3,6 +3,7 @@ import { IProperty } from "../../types/IProperty";
 import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
+import {AggregationContainer} from "../TablePanelView";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
@@ -36,7 +37,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   propertyMap: Map<string, IProperty>;
 
   hiddenPropertyIds: Map<string, boolean>;
-  aggregations: Map<string, string>;
+  aggregations: AggregationContainer;
 
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;

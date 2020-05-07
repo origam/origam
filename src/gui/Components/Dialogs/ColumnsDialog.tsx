@@ -6,6 +6,7 @@ import { bind } from "bind-decorator";
 import { observable, action } from "mobx";
 import { observer, Observer } from "mobx-react";
 import produce, { finishDraft } from "immer";
+import {aggregationTypeParse, AggregationType} from "../../../model/entities/types/IAggregation";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -17,7 +18,7 @@ export interface ITableColumnConf {
   name: string;
   isVisible: boolean;
   groupingIndex: number;
-  aggregation: string;
+  aggregationType: AggregationType | undefined;
   entity: string;
 }
 
@@ -67,7 +68,7 @@ export class ColumnsDialog extends React.Component<{
 
   @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
     this.configuration = produce(this.configuration, (draft) => {
-      draft.columnConf[rowIndex].aggregation = selectedAggregation as string;
+      draft.columnConf[rowIndex].aggregationType = aggregationTypeParse(selectedAggregation);
     });
   }
 
@@ -137,7 +138,7 @@ export class ColumnsDialog extends React.Component<{
   }
 
   getCell(rowIndex: number, columnIndex: number) {
-    const { isVisible, name, aggregation, groupingIndex, entity } = this.configuration.columnConf[rowIndex];
+    const { isVisible, name, aggregationType, groupingIndex, entity } = this.configuration.columnConf[rowIndex];
     switch (columnIndex) {
       case 0:
         return (
@@ -167,10 +168,10 @@ export class ColumnsDialog extends React.Component<{
           return(
               <select onChange={(event:any) => this.setAggregation(rowIndex, event.target.value)}>
                 <option value=""/>
-                <option value="SUM" selected={aggregation === "SUM"}>SUM</option>
-                <option value="AVG" selected={aggregation === "AVG"}>AVG</option>
-                <option value="MIN" selected={aggregation === "MIN"}>MIN</option>
-                <option value="MAX" selected={aggregation === "MAX"}>MAX</option>
+                <option value="SUM" selected={aggregationType === AggregationType.SUM}>SUM</option>
+                <option value="AVG" selected={aggregationType === AggregationType.AVG}>AVG</option>
+                <option value="MIN" selected={aggregationType === AggregationType.MIN}>MIN</option>
+                <option value="MAX" selected={aggregationType === AggregationType.MAX}>MAX</option>
               </select>
           );
         }else{

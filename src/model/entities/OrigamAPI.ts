@@ -441,7 +441,7 @@ export class OrigamAPI implements IApi {
     MasterRowId: string | undefined;
     GroupByLookupId: string | undefined;
     SessionFormIdentifier: string | undefined;
-    AggregatedColumn: IAggregation[] | undefined;
+    AggregatedColumns: IAggregation[] | undefined;
   }): Promise<any[]> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetGroups`, data, {

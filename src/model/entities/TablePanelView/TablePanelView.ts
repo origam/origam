@@ -22,6 +22,7 @@ import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemCli
 
 import selectors from "model/selectors-tree";
 import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
+import {AggregationType, IAggregation} from "../types/IAggregation";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -310,5 +311,28 @@ export class TablePanelView implements ITablePanelView {
   }
 
   parent?: any;
-  aggregations: Map<string, string> = new Map<string, string>();
+  aggregations: AggregationContainer = new AggregationContainer();
+}
+
+export class AggregationContainer{
+  private aggregationTypes: Map<string, AggregationType> = new Map<string, AggregationType>();
+
+  getType(columnId: string){
+    return this.aggregationTypes.get(columnId)
+  }
+
+  setType(columnId: string, aggregationType: AggregationType | undefined){
+    if(!aggregationType) return;
+    this.aggregationTypes.set(columnId, aggregationType)
+  }
+
+  get(): IAggregation[]{
+    return Array.from(this.aggregationTypes.entries())
+      .map(entry => {
+        return  {
+          "ColumnName": entry[0],
+          "AggregationType": entry[1]
+        }
+      });
+  }
 }

@@ -6,6 +6,7 @@ import {observable} from "mobx";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
+import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 
 export class ServerSideGrouper implements IGrouper {
 
@@ -20,8 +21,9 @@ export class ServerSideGrouper implements IGrouper {
     const dataView = getDataView(this);
     const property = getDataTable(this).getPropertyById(firstGroupingColumn);
     const lookupId = property && property.lookup && property.lookup.lookupId;
+    const aggregations = getTablePanelView(this).aggregations.get();
     getFormScreenLifecycle(this)
-      .loadGroups(dataView, firstGroupingColumn, lookupId )
+      .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
       .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn));
   }
 
@@ -31,9 +33,10 @@ export class ServerSideGrouper implements IGrouper {
     const dataView = getDataView(this);
     const filter = this.composeGroupingFilter(groupHeader)
     const lifeCycle = getFormScreenLifecycle(this)
+    const aggregations = getTablePanelView(this).aggregations.get();
     if (nextColumnName) {
       lifeCycle
-        .loadChildGroups(dataView, filter, nextColumnName)
+        .loadChildGroups(dataView, filter, nextColumnName, aggregations)
         .then(groupData => groupHeader.childGroups = this.group(groupData, nextColumnName));
     }
     else {
