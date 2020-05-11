@@ -643,6 +643,7 @@ export class OrigamAPI implements IApi {
           Property: data.Property,
           IsPreview: false,
           Parameters: data.parameters,
+          SubmitImmediately: "true"
         },
         {
           headers: this.httpAuthHeader,
