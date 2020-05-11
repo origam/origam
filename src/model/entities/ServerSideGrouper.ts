@@ -24,7 +24,7 @@ export class ServerSideGrouper implements IGrouper {
     const aggregations = getTablePanelView(this).aggregations.get();
     getFormScreenLifecycle(this)
       .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
-      .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn));
+      .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
   }
 
   loadChildren(groupHeader: IGroupTreeNode) {
@@ -37,7 +37,7 @@ export class ServerSideGrouper implements IGrouper {
     if (nextColumnName) {
       lifeCycle
         .loadChildGroups(dataView, filter, nextColumnName, aggregations)
-        .then(groupData => groupHeader.childGroups = this.group(groupData, nextColumnName));
+        .then(groupData => groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader));
     }
     else {
       lifeCycle
@@ -51,7 +51,7 @@ export class ServerSideGrouper implements IGrouper {
     const parents = []
     while (parent) {
       parents.push(parent);
-      parent = rowGroup.parent
+      parent = parent.parent
     }
     return parents;
   }
@@ -61,13 +61,23 @@ export class ServerSideGrouper implements IGrouper {
   }
 
   composeGroupingFilter(rowGroup: IGroupTreeNode) {
-    return this.getAllParents(rowGroup)
-      .concat([rowGroup])
-      .map(row => "[\"" + row.columnId  + "\", \"eq\", " + this.toFilterValueForm(row.columnValue)+ "]")
-      .join(", ")
+    const parents = this.getAllParents(rowGroup);
+    if(parents.length === 0){
+      return this.rowToFilterItem(rowGroup);
+    }else{
+      const andOperands =  this.getAllParents(rowGroup)
+          .concat([rowGroup])
+          .map(row => this.rowToFilterItem(row))
+          .join(", ")
+      return "[\"$AND\", " + andOperands + "]"
+    }
   }
 
-  group(groupData: any[], columnId: string): IGroupTreeNode[] {
+  rowToFilterItem(row: IGroupTreeNode){
+    return "[\"" + row.columnId  + "\", \"eq\", " + this.toFilterValueForm(row.columnValue)+ "]";
+  }
+
+  group(groupData: any[], columnId: string, parent: IGroupTreeNode | undefined): IGroupTreeNode[] {
     const groupingConfiguration = getGroupingConfiguration(this);
     const level = groupingConfiguration.groupingIndices.get(columnId)
 
@@ -86,7 +96,7 @@ export class ServerSideGrouper implements IGrouper {
               columnId: columnId,
               groupLabel: property!.name,
               rowCount: groupDataItem["groupCount"] as number,
-              parent: undefined,
+              parent: parent,
               columnValue: groupDataItem[columnId],
               columnDisplayValue: groupDataItem["groupCaption"] || groupDataItem[columnId],
               aggregations: parseAggregations(groupDataItem["aggregations"])
