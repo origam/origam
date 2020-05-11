@@ -57,13 +57,13 @@ export class ServerSideGrouper implements IGrouper {
   }
 
   toFilterValueForm(value: any){
-    return typeof value === "string" ? "'" + value + "'" : value
+    return typeof value === "string" ? "\"" + value + "\"" : value
   }
 
   composeGroupingFilter(rowGroup: IGroupTreeNode) {
     return this.getAllParents(rowGroup)
       .concat([rowGroup])
-      .map(row => "[" + this.toFilterValueForm(row.columnValue) + ", eq, " + row.columnId + "]")
+      .map(row => "[\"" + row.columnId  + "\", \"eq\", " + this.toFilterValueForm(row.columnValue)+ "]")
       .join(", ")
   }
 
