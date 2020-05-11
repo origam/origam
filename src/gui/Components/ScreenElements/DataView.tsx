@@ -23,14 +23,16 @@ import { IDataViewBodyUI } from "modules/DataView/DataViewUI";
 export class DataView extends React.Component<{
   id: string;
   height?: number;
+  width?: number;
   isHeadless: boolean;
   dataView?: IDataView;
 }> {
   getDataViewStyle() {
-    if (this.props.height !== undefined) {
+    if (this.props.height !== undefined || this.props.width !== undefined) {
       return {
         flexGrow: 0,
         height: this.props.height,
+        width: this.props.width,
       };
     } else {
       return {
