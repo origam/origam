@@ -82,7 +82,7 @@ namespace Origam.DA.Service.Generators
                 {
                     currentNode = currentNode.Parent;
                 }
-                else if (c == ' ' || currentNode.IsBinaryOperator && c == ',')
+                else if (currentNode.IsBinaryOperator && c == ',')
                 {
                     continue;
                 }
@@ -183,11 +183,33 @@ namespace Origam.DA.Service.Generators
         public List<Node> Children { get; } = new List<Node>();
         public string Value { get; set; } = "";
         public bool IsBinaryOperator => Value.Contains("$");
-        public string[] SplitValue => splitValue ?? (splitValue = Value.Split(','));
+
+        private string[] SplitValue => splitValue ??
+                                       (splitValue = Value
+                                           .Split(',')
+                                           .Select(x => x.Trim())
+                                           .ToArray()
+                                       );
         private string LeftOperand => SplitValue[0].Replace("\"","");
         private string Operator => SplitValue[1].Replace("\"","");
-        private string RightOperand => SplitValue[2].Replace("\"", "'");
+        private string RightOperand => SplitValue[2]
+            .Replace("'", "''")
+            .Replace("\"", "'");
+        
         private readonly FilterRenderer renderer = new FilterRenderer();
+
+        private string ValueToOperand(string value)
+        {
+            // if (string.IsNullOrWhiteSpace(value)) return value;
+            // string valueWithoutDoubleQuotes = value.Replace("\"", "");
+            // char firstChar = valueWithoutDoubleQuotes.First();
+            // char lastChar = valueWithoutDoubleQuotes.Last();
+            // return value.First() + value.Substring(1,value.Length - 2).Replace("'","''") + value.Last();
+
+            return value
+                .Replace("\"", "")
+                .Replace("'", "''");
+        }
 
         public string SqlRepresentation()
         {
@@ -211,9 +233,9 @@ namespace Origam.DA.Service.Generators
 
         private string GetLogicalOperator()
         {
-            if (Value == "\"$AND\"") return "AND";
-            if (Value == "\"$OR\"") return "OR";
-            throw new Exception("Could not parse node value to logical operator: " + Value);
+            if (Value.Trim() == "\"$AND\"") return "AND";
+            if (Value.Trim() == "\"$OR\"") return "OR";
+            throw new Exception("Could not parse node value to logical operator: \"" + Value+"\"");
         }
 
         private string GetSqlOfLeafNode()
