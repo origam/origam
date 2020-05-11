@@ -29,6 +29,14 @@ import { firstDrawableColumnIndex, lastDrawableColumnIndex } from "./drawableCol
 import { ITableRow, IClickSubsItem } from "./types";
 import { CPR } from "utils/canvas";
 import { IProperty } from "model/entities/types/IProperty";
+import {
+  cellLayerCount,
+  currentRowCellsDimensions,
+  currentRowCellsDraws,
+  incrementLayerNumber,
+  resetLayerNumber
+} from "./currentRowCells";
+import {dataRowColumnIds} from "./rowCells/dataRowCells";
 
 export function renderTable(
   aCtx: any,
@@ -80,22 +88,33 @@ export function renderTable(
   }
 }
 
+function renderRowInternal() {
+  const fixColC = realFixedColumnCount();
+  const firstDrCI = firstDrawableColumnIndex();
+  const lastDrCI = lastDrawableColumnIndex();
+  if (firstDrCI !== undefined && lastDrCI !== undefined) {
+    const i0 = Math.max(fixColC, firstDrCI);
+    const i1 = lastDrCI;
+    for (let i = i1; i >= i0; i--) {
+      renderCell(i);
+    }
+  }
+  for (let i = 0; i < fixColC; i++) {
+    renderCell(i);
+  }
+}
+
 export function renderRow(rowIdx: number) {
   rowIndex.set(rowIdx);
   try {
     if (!currentRow()) return;
-    const fixColC = realFixedColumnCount();
-    const firstDrCI = firstDrawableColumnIndex();
-    const lastDrCI = lastDrawableColumnIndex();
-    if (firstDrCI !== undefined && lastDrCI !== undefined) {
-      const i0 = Math.max(fixColC, firstDrCI);
-      const i1 = lastDrCI;
-      for (let i = i1; i >= i0; i--) {
-        renderCell(i);
-      }
-    }
-    for (let i = 0; i < fixColC; i++) {
-      renderCell(i);
+    renderRowInternal();
+    if(cellLayerCount() === 2) {
+      incrementLayerNumber();
+      currentRowCellsDimensions.clear();
+      currentRowCellsDraws.clear()
+      renderRowInternal();
+      resetLayerNumber();
     }
   } finally {
     for (let d of scRenderRow) d();

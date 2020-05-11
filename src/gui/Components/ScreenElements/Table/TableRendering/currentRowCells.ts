@@ -37,18 +37,33 @@ export const currentRowCellsDimensions = Memoized(() => {
   if (isCurrentDataRow()) {
     return computeDimensions(dataRowCellsWidths());
   } else if (isCurrentGroupRow()) {
-    return computeDimensions(groupRowCellsWidths());
+    return computeDimensions(groupRowCellsWidths()[currentCellLayer]);
   } else {
     return [];
   }
 });
 scRenderRow.push(() => currentRowCellsDimensions.clear());
 
+export function cellLayerCount(){
+  return  isCurrentGroupRow() ? 2 : 1;
+}
+
+export function resetLayerNumber(){
+  currentCellLayer = 0;
+}
+
+export function incrementLayerNumber(){
+  currentCellLayer += 1;
+}
+
+let currentCellLayer = 0;
+
+
 export const currentRowCellsDraws = Memoized(() => {
   if (isCurrentDataRow()) {
     return dataRowCellsDraws();
   } else if (isCurrentGroupRow()) {
-    return groupRowCellsDraws();
+    return groupRowCellsDraws()[currentCellLayer];
   } else {
     return [];
   }
