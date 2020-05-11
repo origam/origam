@@ -44,9 +44,9 @@ export class ClientSideGrouper implements IGrouper {
           rowCount: groupRows.length,
           parent: undefined,
           columnValue: groupName,
-          columnDisplayValue: groupName
-        }
-        );
+          columnDisplayValue: groupName,
+          aggregations: undefined
+        });
       });
   }
 

@@ -1,3 +1,4 @@
+import {AggregationType} from "../../../../../model/entities/types/IAggregationInfo";
 
 export interface IGroupRow {
   groupLevel: number;
@@ -18,6 +19,13 @@ export interface IGroupTreeNode {
   rowCount: number;
   columnValue: string;
   columnDisplayValue: string;
+  aggregations: IAggregation[] | undefined;
+}
+
+export interface IAggregation {
+  columnId: string;
+  type: AggregationType
+  value: number;
 }
 
 export type ITableRow = any[] | IGroupRow;

@@ -4,7 +4,7 @@ import {getDataView} from "model/selectors/DataView/getDataView";
 import {IGrouper} from "./types/IGrouper";
 import {observable} from "mobx";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
+import {GroupItem, parseAggregations} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 
@@ -81,14 +81,16 @@ export class ServerSideGrouper implements IGrouper {
     return groupData
       .map(groupDataItem => {
         return new GroupItem({
-          childGroups: [] as IGroupTreeNode[],
-          childRows: [] as any[][],
-          columnId: columnId,
-          groupLabel: property!.name ,
-          rowCount: groupDataItem["groupCount"] as number,
-          parent: undefined,
-          columnValue: groupDataItem[columnId],
-          columnDisplayValue: groupDataItem["groupCaption"] || groupDataItem[columnId]}
-      )});
+              childGroups: [] as IGroupTreeNode[],
+              childRows: [] as any[][],
+              columnId: columnId,
+              groupLabel: property!.name,
+              rowCount: groupDataItem["groupCount"] as number,
+              parent: undefined,
+              columnValue: groupDataItem[columnId],
+              columnDisplayValue: groupDataItem["groupCaption"] || groupDataItem[columnId],
+              aggregations: parseAggregations(groupDataItem["aggregations"])
+            }
+        )});
   }
 }

@@ -1,22 +1,18 @@
 import {
-  groupingColumnIds,
-  groupingColumnCount,
+  context,
   context2d,
-  worldWidth,
+  currentRow,
   gridLeadCellDimensions,
-  currentRow, context,
+  groupingColumnCount,
+  groupingColumnIds,
+  worldWidth,
 } from "../renderingValues";
-import {
-  currentColumnLeft,
-  currentRowTop,
-  currentColumnWidth,
-  currentRowHeight,
-} from "../currentCell";
-import { ITableRow, IGroupRow } from "../types";
-import { applyScrollTranslation, clipCell } from "./cellsCommon";
-import { isGroupRow } from "../rowCells/groupRowCells";
-import { onClick } from "../onClick";
-import { CPR } from "utils/canvas";
+import {currentColumnLeft, currentColumnWidth, currentRowHeight, currentRowTop,} from "../currentCell";
+import {IGroupRow} from "../types";
+import {applyScrollTranslation, clipCell} from "./cellsCommon";
+import {isGroupRow} from "../rowCells/groupRowCells";
+import {onClick} from "../onClick";
+import {CPR} from "utils/canvas";
 import {onGroupHeaderToggleClick} from "../../../../../../model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
 import {flow} from "mobx";
 

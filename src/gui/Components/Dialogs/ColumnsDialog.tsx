@@ -6,7 +6,7 @@ import { bind } from "bind-decorator";
 import { observable, action } from "mobx";
 import { observer, Observer } from "mobx-react";
 import produce, { finishDraft } from "immer";
-import {aggregationTypeParse, AggregationType} from "../../../model/entities/types/IAggregation";
+import {aggregationTypeParse, AggregationType} from "../../../model/entities/types/IAggregationInfo";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;

@@ -1,7 +1,8 @@
 
 import { observable } from "mobx";
-import { IGroupTreeNode } from "./types";
+import {IAggregation, IGroupTreeNode} from "./types";
 import {IHeaderContainer} from "../../../../Workbench/ScreenArea/TableView/TableView";
+import {aggregationTypeParse} from "../../../../../model/entities/types/IAggregationInfo";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];
@@ -12,6 +13,7 @@ export interface IGroupItemData{
   groupLabel: string;
   parent: IGroupTreeNode | undefined;
   rowCount: number;
+  aggregations: IAggregation[] | undefined;
 }
 
 export class GroupItem implements IGroupTreeNode {
@@ -26,6 +28,19 @@ export class GroupItem implements IGroupTreeNode {
   parent: IGroupTreeNode | undefined = null as any;
   rowCount: number = null as any;
   columnDisplayValue: string = null as any;
+  aggregations: IAggregation[] | undefined = undefined;
 
   @observable isExpanded = false;
+}
+
+export function parseAggregations(objectArray: any[] | undefined){
+  if(!objectArray) return undefined;
+  return objectArray.map(object =>
+    {
+      return {
+        columnId: object["column"],
+        type: aggregationTypeParse(object["type"]),
+        value: object["value"]
+      }
+    });
 }

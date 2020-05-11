@@ -30,7 +30,7 @@ import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGroupingConfiguration";
 import { IDataView } from "../types/IDataView";
-import {IAggregation} from "../types/IAggregation";
+import {IAggregationInfo} from "../types/IAggregationInfo";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -257,7 +257,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string, aggregations: IAggregation[] | undefined){
+  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string, aggregations: IAggregationInfo[] | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
@@ -273,7 +273,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })
   }
 
-  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregation[] | undefined){
+  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
