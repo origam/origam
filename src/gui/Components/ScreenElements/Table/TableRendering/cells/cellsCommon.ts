@@ -1,4 +1,11 @@
-import { context2d, scrollLeft, scrollTop } from "../renderingValues";
+import {
+  context2d,
+  drawingColumnIndex,
+  gridLeadCellDimensions,
+  scRenderCell,
+  scrollLeft,
+  scrollTop
+} from "../renderingValues";
 import {
   isCurrentCellFixed,
   currentColumnLeft,
@@ -7,6 +14,8 @@ import {
   currentRowHeight,
 } from "../currentCell";
 import { CPR } from "utils/canvas";
+import {ValueBox} from "../common/ValueBox";
+import {Memoized} from "../common/Memoized";
 
 export function applyScrollTranslation() {
   const ctx2d = context2d();
@@ -24,3 +33,6 @@ export function clipCell() {
   );
   ctx2d.clip();
 }
+
+export const cellPaddingLeft = Memoized(() =>  drawingColumnIndex() === 0 ? 25 : 15)
+scRenderCell.push(() => cellPaddingLeft.clear());

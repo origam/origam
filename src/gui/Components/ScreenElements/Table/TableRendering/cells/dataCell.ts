@@ -9,7 +9,7 @@ import {
   currentColumnWidthVisible,
   currentProperty,
 } from "../currentCell";
-import { applyScrollTranslation, clipCell } from "./cellsCommon";
+import {applyScrollTranslation, cellPaddingLeft, clipCell} from "./cellsCommon";
 import { CPR } from "utils/canvas";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
@@ -96,7 +96,6 @@ function drawCellValue(){
   const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), currentProperty().id)
   const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId(), "")
   const type = currentProperty().column;
-  const cellPaddingLeft = drawingColumnIndex() === 0 ? 25 : 15;
 
   let isLink = false;
   let isLoading = false;
@@ -111,7 +110,7 @@ function drawCellValue(){
   }
   if (isLoading) {
     ctx2d.fillStyle = "#888888";
-    ctx2d.fillText("Loading...", cellPaddingLeft * CPR, 15 * CPR);
+    ctx2d.fillText("Loading...", cellPaddingLeft() * CPR, 15 * CPR);
   } else {
     ctx2d.fillStyle = foregroundColor || "black";
     switch (type) {
@@ -157,7 +156,7 @@ function drawCellValue(){
           ctx2d.save();
           ctx2d.textAlign = "right";
           ctx2d.fillText("" + currentCellText()!,                
-            CPR * (currentColumnLeft() + currentColumnWidth() - cellPaddingLeft),
+            CPR * (currentColumnLeft() + currentColumnWidth() - cellPaddingLeft()),
             CPR * (currentRowTop() + 17));
           ctx2d.restore();
         }
@@ -170,7 +169,7 @@ function drawCellValue(){
               CPR * (currentColumnLeft() + 2),
               CPR * (currentRowTop() + 17));
           } else {
-            ctx2d.fillText("*******", cellPaddingLeft * CPR, 15 * CPR);
+            ctx2d.fillText("*******", cellPaddingLeft() * CPR, 15 * CPR);
           }
         }
     }
