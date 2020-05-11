@@ -21,52 +21,8 @@ import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSel
 import { IProperty } from "model/entities/types/IProperty";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
-  /*const rootGroupsObs = observable([
-    new GroupItem([], [], "Column 1", "Value 1"),
-    new GroupItem(
-      [
-        new GroupItem(
-          [],
-          [
-            [1, 2, 3, "A", "B", "C"],
-            [4, 5, 6, "D", "E", "F"],
-            [7, 8, 9, "G", "H", "I"],
-            [10, 11, 12, "J", "K", "L"],
-          ],
-          "Column 2",
-          "Value 1"
-        ),
-        new GroupItem([], [], "Column 2", "Value 2"),
-        new GroupItem([], [], "Column 2", "Value 3"),
-        new GroupItem(
-          [],
-          [
-            [1, 2, 3, "A", "B", "C"],
-            [4, 5, 6, "D", "E", "F"],
-            [7, 8, 9, "G", "H", "I"],
-            [10, 11, 12, "J", "K", "L"],
-          ],
-          "Column 2",
-          "Value 4"
-        ),
-        new GroupItem([], [], "Column 2", "Value 5"),
-      ],
-      [],
-      "Column 1",
-      "Value 2"
-    ),
-    new GroupItem([], [], "Column 1", "Value 3"),
-    new GroupItem([], [], "Column 1", "Value 4"),
-    new GroupItem([], [], "Column 1", "Value 5"),
-  ]);*/
+
   const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds)
-
-  // const tableRowsCom = computed(() =>
-  //   groupedColumnIds.get().length === 0
-  //     ? getDataTable(ctx).rows
-  //     : flattenToTableRows(getDataTable(ctx).groups));
-
-  // const tableColumnIds = observable<string>(["m", "a", "l", "k", "c", "b"]);
   const rowHeight = 20;
   const properties = observable<IProperty>(getProperties(ctx));
   const propertyById = computed(
@@ -329,24 +285,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @action.bound handleScrollerClick(event: any) {
-    /*if (event.clientX > this.fixedColumnsWidth) {
-      this.elmCanvasMoving &&
-        this.elmCanvasMoving.triggerCellClick(
-          event,
-          event.clientX -
-            this.contentBounds.left +
-            this.props.scrollState.scrollLeft -
-            this.fixedColumnsWidth,
-          event.clientY - this.contentBounds.top + this.props.scrollState.scrollTop
-        );
-    } else {
-      this.elmCanvasFixed &&
-        this.elmCanvasFixed.triggerCellClick(
-          event,
-          event.clientX - this.contentBounds.left,
-          event.clientY - this.contentBounds.top + this.props.scrollState.scrollTop
-        );
-    }*/
     this.tableRenderer.handleClick(event);
   }
 
@@ -412,78 +350,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                             width={contentRect.bounds!.width - 20}
                             height={contentRect.bounds!.height - 20}
                           />
-                          {/* {this.hasFixedColumns && (
-                            <>
-                              <Canvas
-                                ref={this.refCanvasFixed}
-                                columnStartIndex={0}
-                                leftOffset={0}
-                                isHorizontalScroll={false}
-                                width={this.fixedColumnsWidth}
-                                contentWidth={this.fixedColumnsWidth}
-                                height={contentRect.bounds!.height - 20}
-                                contentHeight={
-                                  this.props.gridDimensions.contentHeight
-                                }
-                                scrollOffsetSource={this.props.scrollState}
-                                gridDimensions={this.props.gridDimensions}
-                                renderCell={this.props.renderCell}
-                                onNoCellClick={this.props.onNoCellClick}
-                              />
-                              <Canvas
-                                ref={this.refCanvasMoving}
-                                columnStartIndex={this.fixedColumnCount}
-                                leftOffset={-this.fixedColumnsWidth}
-                                isHorizontalScroll={true}
-                                width={
-                                  contentRect.bounds!.width -
-                                  20 -
-                                  this.fixedColumnsWidth
-                                }
-                                contentWidth={
-                                  this.props.gridDimensions.contentWidth
-                                }
-                                contentHeight={
-                                  this.props.gridDimensions.contentHeight
-                                }
-                                height={contentRect.bounds!.height - 20}
-                                scrollOffsetSource={this.props.scrollState}
-                                gridDimensions={this.props.gridDimensions}
-                                renderCell={this.props.renderCell}
-                                onNoCellClick={this.props.onNoCellClick}
-                              />
-                            </>
-                          )}
-                          {!this.hasFixedColumns && (
-                            <Canvas
-                              ref={this.refCanvasMoving}
-                              columnStartIndex={0}
-                              leftOffset={0}
-                              isHorizontalScroll={true}
-                              width={contentRect.bounds!.width - 20}
-                              contentWidth={
-                                this.props.gridDimensions.contentWidth
-                              }
-                              contentHeight={
-                                this.props.gridDimensions.contentHeight
-                              }
-                              height={contentRect.bounds!.height - 20}
-                              scrollOffsetSource={this.props.scrollState}
-                              gridDimensions={this.props.gridDimensions}
-                              renderCell={this.props.renderCell}
-                              onVisibleDataChanged={(
-                                fvci,
-                                lvci,
-                                fvri,
-                                lvri
-                              ) => {
-                                // console.log("VDC", fvci, lvci, fvri, lvri);
-                              }}
-                              onBeforeRender={undefined}
-                              onAfterRender={undefined}
-                              onNoCellClick={this.props.onNoCellClick}
-                            />
-                            )}*/}
                         </div>
                         {this.props.isEditorMounted &&
                           this.props.editingRowIndex !== undefined &&
