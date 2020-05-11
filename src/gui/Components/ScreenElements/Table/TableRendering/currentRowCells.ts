@@ -6,6 +6,7 @@ import {
   groupRowCellsWidths,
   isCurrentGroupRow,
 } from "./rowCells/groupRowCells";
+import {currentCellLayerIndex} from "./currentCellLayerIndex";
 
 function computeDimensions(cellWidths: number[]) {
   const result: { left: number; width: number; right: number; leftVisible: number; widthVisible: number; }[] = [];
@@ -37,33 +38,18 @@ export const currentRowCellsDimensions = Memoized(() => {
   if (isCurrentDataRow()) {
     return computeDimensions(dataRowCellsWidths());
   } else if (isCurrentGroupRow()) {
-    return computeDimensions(groupRowCellsWidths()[currentCellLayer]);
+    return computeDimensions(groupRowCellsWidths()[currentCellLayerIndex()]);
   } else {
     return [];
   }
 });
 scRenderRow.push(() => currentRowCellsDimensions.clear());
 
-export function cellLayerCount(){
-  return  isCurrentGroupRow() ? 2 : 1;
-}
-
-export function resetLayerNumber(){
-  currentCellLayer = 0;
-}
-
-export function incrementLayerNumber(){
-  currentCellLayer += 1;
-}
-
-let currentCellLayer = 0;
-
-
 export const currentRowCellsDraws = Memoized(() => {
   if (isCurrentDataRow()) {
     return dataRowCellsDraws();
   } else if (isCurrentGroupRow()) {
-    return groupRowCellsDraws()[currentCellLayer];
+    return groupRowCellsDraws()[currentCellLayerIndex()];
   } else {
     return [];
   }

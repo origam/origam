@@ -30,13 +30,11 @@ import { ITableRow, IClickSubsItem } from "./types";
 import { CPR } from "utils/canvas";
 import { IProperty } from "model/entities/types/IProperty";
 import {
-  cellLayerCount,
   currentRowCellsDimensions,
   currentRowCellsDraws,
-  incrementLayerNumber,
-  resetLayerNumber
-} from "./currentRowCells";
+  } from "./currentRowCells";
 import {dataRowColumnIds} from "./rowCells/dataRowCells";
+import {cellLayerCount, setLayerIndex} from "./currentCellLayerIndex";
 
 export function renderTable(
   aCtx: any,
@@ -104,17 +102,21 @@ function renderRowInternal() {
   }
 }
 
+function renderSecondLayerCells() {
+  setLayerIndex(1);
+  currentRowCellsDimensions.clear();
+  currentRowCellsDraws.clear()
+  renderRowInternal();
+  setLayerIndex(0);
+}
+
 export function renderRow(rowIdx: number) {
   rowIndex.set(rowIdx);
   try {
     if (!currentRow()) return;
     renderRowInternal();
     if(cellLayerCount() === 2) {
-      incrementLayerNumber();
-      currentRowCellsDimensions.clear();
-      currentRowCellsDraws.clear()
-      renderRowInternal();
-      resetLayerNumber();
+      renderSecondLayerCells();
     }
   } finally {
     for (let d of scRenderRow) d();
