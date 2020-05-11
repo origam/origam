@@ -7,7 +7,7 @@ import {
   currentColumnLeftVisible,
   currentColumnWidthVisible,
 } from "../currentCell";
-import { applyScrollTranslation } from "./cellsCommon";
+import {applyScrollTranslation, cellPaddingLeft, topTextOffset} from "./cellsCommon";
 import { CPR } from "utils/canvas";
 import { onClick } from "../onClick";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
@@ -18,6 +18,7 @@ import actions from "model/actions-tree";
 import { flow } from "mobx";
 
 export const selectionCheckBoxColumnWidth = 20;
+const checkSymbolFontSize = 15;
 
 export function selectionCheckboxCellsWidths() {
   return isCheckBoxedTable() ? [selectionCheckBoxColumnWidth] : [];
@@ -31,12 +32,12 @@ export function selectionCheckboxCellsDraws() {
         drawSelectionCheckboxBackground();
         const ctx2d = context2d();
         ctx2d.fillStyle = "black";
-        ctx2d.font = `${CPR * 15}px "Font Awesome 5 Free"`;
+        ctx2d.font = `${CPR * checkSymbolFontSize}px "Font Awesome 5 Free"`;
         const state = dataView().isSelected(rowId());
         ctx2d.fillText(
           state ? "\uf14a" : "\uf0c8",
-          CPR * (currentColumnLeft() + 2),
-          CPR * (currentRowTop() + 17)
+          CPR * (currentColumnLeft() + cellPaddingLeft),
+          CPR * (currentRowTop() + topTextOffset)
         );
         registerClickHandler();
       },
@@ -109,11 +110,11 @@ export function drawSelectionCheckboxContent() {
   applyScrollTranslation();
   drawSelectionCheckboxBackground();
   ctx2d.fillStyle = "black";
-  ctx2d.font = `${CPR * 15}px "Font Awesome 5 Free"`;
+  ctx2d.font = `${CPR * checkSymbolFontSize}px "Font Awesome 5 Free"`;
   const state = true;
   ctx2d.fillText(
     state ? "\uf14a" : "\uf0c8",
-    CPR * (currentColumnLeft() + 2),
-    CPR * (currentRowTop() + 17)
+    CPR * (currentColumnLeft() + cellPaddingLeft),
+    CPR * (currentRowTop() + topTextOffset)
   );
 }

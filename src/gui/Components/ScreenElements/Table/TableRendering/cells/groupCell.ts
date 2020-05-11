@@ -9,15 +9,18 @@ import {
 } from "../renderingValues";
 import {currentColumnLeft, currentColumnWidth, currentRowHeight, currentRowTop,} from "../currentCell";
 import {IGroupRow} from "../types";
-import {applyScrollTranslation, clipCell} from "./cellsCommon";
+import {applyScrollTranslation, cellPaddingLeft, clipCell, fontSize, topTextOffset} from "./cellsCommon";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {onClick} from "../onClick";
 import {CPR} from "utils/canvas";
 import {onGroupHeaderToggleClick} from "../../../../../../model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
 import {flow} from "mobx";
 
+const groupCellWidth = 20;
+const expandSymbolFontSize = 15;
+
 export function groupRowEmptyCellsWidths() {
-  return groupingColumnIds().map(() => 20);
+  return groupingColumnIds().map(() => groupCellWidth);
 }
 
 export function groupRowEmptyCellsDraws() {
@@ -32,7 +35,7 @@ export function groupRowContentCellsWidths() {
     const grpCnt = groupingColumnCount();
     const result: number[] = [];
     for (let i = 0; i < grpCnt; i++) {
-      if (i < row.groupLevel) result.push(20);
+      if (i < row.groupLevel) result.push(groupCellWidth);
       else {
         result.push(worldWidth() - gridLeadCellDimensions()[i].left);
         break;
@@ -74,25 +77,25 @@ export function drawGroupCell() {
   if (isGroupRow(row)) {
     const groupRow = row as IGroupRow;
     ctx2d.fillStyle = "black";
-    ctx2d.font = `${CPR * 15}px "Font Awesome 5 Free"`;
+    ctx2d.font = `${CPR * expandSymbolFontSize}px "Font Awesome 5 Free"`;
     const state = row.isExpanded;
     ctx2d.fillText(
         state ? "\uf146" : "\uf0fe",
-        CPR * (currentColumnLeft() + 2),
-        CPR * (currentRowTop() + 17)
+        CPR * (currentColumnLeft() + cellPaddingLeft),
+        CPR * (currentRowTop() + topTextOffset)
     );
-    ctx2d.font = `${CPR * 12}px "IBM Plex Sans", Arial, sans-serif`;
+    ctx2d.font = `${CPR * fontSize}px "IBM Plex Sans", Arial, sans-serif`;
     ctx2d.fillText(
         `${row.columnLabel} : ${row.columnValue}`,
-        CPR * (currentColumnLeft() + 2 + 20),
-        CPR * (currentRowTop() + 17)
+        CPR * (currentColumnLeft() + cellPaddingLeft + groupCellWidth),
+        CPR * (currentRowTop() + topTextOffset)
     );
 
     const ctx = context();
     onClick({
       x: currentColumnLeft(),
       y: currentRowTop(),
-      w: 20,
+      w: groupCellWidth,
       h: 20,
       handler(event: any) {
         flow(function* () {

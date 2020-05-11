@@ -7,7 +7,7 @@ import {
     tableColumnIds,
     tablePanelView
 } from "../renderingValues";
-import {applyScrollTranslation, cellPaddingLeft, clipCell} from "./cellsCommon";
+import {applyScrollTranslation, numberCellPaddingLeft, clipCell, topTextOffset, fontSize} from "./cellsCommon";
 import {getRowStateAllowRead} from "../../../../../../model/selectors/RowState/getRowStateAllowRead";
 import {
     currentColumnId,
@@ -61,12 +61,12 @@ function drawAggregationText(){
         return;
     }
 
-    ctx2d.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
+    ctx2d.font = `${fontSize * CPR}px "IBM Plex Sans", sans-serif`;
     ctx2d.fillStyle = "black";
     ctx2d.textAlign = "right";
     ctx2d.fillText(
         aggregation.type+": "+aggregation.value,
-        CPR * (currentColumnLeft() + currentColumnWidth() - cellPaddingLeft()),
-        CPR * (currentRowTop() + 17));
+        CPR * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
+        CPR * (currentRowTop() + topTextOffset));
 }
 

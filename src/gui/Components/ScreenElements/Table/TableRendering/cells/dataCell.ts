@@ -9,7 +9,14 @@ import {
   currentColumnWidthVisible,
   currentProperty,
 } from "../currentCell";
-import {applyScrollTranslation, cellPaddingLeft, clipCell} from "./cellsCommon";
+import {
+  applyScrollTranslation,
+  numberCellPaddingLeft,
+  clipCell,
+  cellPaddingLeft,
+  topTextOffset,
+  fontSize
+} from "./cellsCommon";
 import { CPR } from "utils/canvas";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
@@ -104,13 +111,13 @@ function drawCellValue(){
     isLink = selectors.column.isLinkToForm(currentProperty());
   }
 
-  ctx2d.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
+  ctx2d.font = `${fontSize * CPR}px "IBM Plex Sans", sans-serif`;
   if (isHidden) {
     return;
   }
   if (isLoading) {
     ctx2d.fillStyle = "#888888";
-    ctx2d.fillText("Loading...", cellPaddingLeft() * CPR, 15 * CPR);
+    ctx2d.fillText("Loading...", numberCellPaddingLeft() * CPR, 15 * CPR);
   } else {
     ctx2d.fillStyle = foregroundColor || "black";
     switch (type) {
@@ -132,8 +139,8 @@ function drawCellValue(){
           }
           ctx2d.fillText(
             momentValue.format(currentProperty().formatterPattern),
-            CPR * (currentColumnLeft() + 2),
-            CPR * (currentRowTop() + 17));
+            CPR * (currentColumnLeft() + cellPaddingLeft),
+            CPR * (currentRowTop() + topTextOffset));
         }
         break;
       case "ComboBox":
@@ -144,8 +151,8 @@ function drawCellValue(){
         }
         if (currentCellText() !== null) {
           ctx2d.fillText("" + currentCellText()!,                   
-            CPR * (currentColumnLeft() + 2),
-            CPR * (currentRowTop() + 17));
+            CPR * (currentColumnLeft() + cellPaddingLeft),
+            CPR * (currentRowTop() + topTextOffset));
         }
         if (isLink) {
           ctx2d.restore();
@@ -156,8 +163,8 @@ function drawCellValue(){
           ctx2d.save();
           ctx2d.textAlign = "right";
           ctx2d.fillText("" + currentCellText()!,                
-            CPR * (currentColumnLeft() + currentColumnWidth() - cellPaddingLeft()),
-            CPR * (currentRowTop() + 17));
+            CPR * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
+            CPR * (currentRowTop() + topTextOffset));
           ctx2d.restore();
         }
         break;
@@ -166,10 +173,10 @@ function drawCellValue(){
           if (!currentProperty().isPassword) {
             ctx2d.fillText(
               "" + currentCellText()!,
-              CPR * (currentColumnLeft() + 2),
-              CPR * (currentRowTop() + 17));
+              CPR * (currentColumnLeft() + cellPaddingLeft),
+              CPR * (currentRowTop() + topTextOffset));
           } else {
-            ctx2d.fillText("*******", cellPaddingLeft() * CPR, 15 * CPR);
+            ctx2d.fillText("*******", numberCellPaddingLeft() * CPR, 15 * CPR);
           }
         }
     }
