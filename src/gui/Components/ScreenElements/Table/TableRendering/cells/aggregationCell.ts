@@ -1,4 +1,5 @@
 import {
+    columnWidths,
     context2d,
     currentRow,
     drawingColumnIndex,
@@ -18,6 +19,12 @@ import {
 import {CPR} from "../../../../../../utils/canvas";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {IGroupRow} from "../types";
+import {dataColumnsWidths} from "./dataCell";
+
+
+export function aggregationColumnsWidths() {
+    return  dataColumnsWidths();
+}
 
 export function aggregationCellDraws() {
     const row = currentRow();

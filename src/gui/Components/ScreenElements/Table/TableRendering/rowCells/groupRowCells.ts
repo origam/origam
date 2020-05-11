@@ -5,13 +5,13 @@ import {
 } from "../cells/selectionCheckboxCell";
 import {groupRowContentCellsWidths, groupRowContentCellsDraws, groupRowEmptyCellsWidths} from "../cells/groupCell";
 import { currentRow } from "../renderingValues";
-import {aggregationCellDraws} from "../cells/aggregationCell";
+import {aggregationCellDraws, aggregationColumnsWidths} from "../cells/aggregationCell";
 import {dataColumnsWidths} from "../cells/dataCell";
 
 export function groupRowCellsWidths() {
   return [
       [...selectionCheckboxEmptyCellsWidths(), ...groupRowContentCellsWidths()],
-      [...selectionCheckboxEmptyCellsWidths(), ...groupRowEmptyCellsWidths(), ...dataColumnsWidths()]
+      [...selectionCheckboxEmptyCellsWidths(), ...groupRowEmptyCellsWidths(), ...aggregationColumnsWidths()]
   ];
 }
 
