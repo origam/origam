@@ -190,9 +190,9 @@ namespace Origam.DA.Service.Generators
                                            .Select(x => x.Trim())
                                            .ToArray()
                                        );
-        private string LeftOperand => SplitValue[0].Replace("\"","");
+        private string ColumnName => "["+SplitValue[0].Replace("\"","")+"]";
         private string Operator => SplitValue[1].Replace("\"","");
-        private string RightOperand => SplitValue[2]
+        private string ColumnValue => SplitValue[2]
             .Replace("'", "''")
             .Replace("\"", "'");
         
@@ -244,7 +244,7 @@ namespace Origam.DA.Service.Generators
             {
                 if (SplitValue.Length != 3) throw new ArgumentException("could not parse: "+Value+" to a filter node");
                 string operatorName = OperatorToRendererName(Operator);
-                return renderer.BinaryOperator(LeftOperand, RightOperand, operatorName);
+                return renderer.BinaryOperator(ColumnName, ColumnValue, operatorName);
             }
 
             if (Children.Count == 1 && Operator == "in")
@@ -252,7 +252,7 @@ namespace Origam.DA.Service.Generators
                 IEnumerable<string> options = Children.First()
                     .SplitValue
                     .Select(val => val.Replace("\"", "'"));
-                return renderer.In(LeftOperand, options);
+                return renderer.In(ColumnName, options);
             }
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
