@@ -80,15 +80,15 @@ export function drawGroupCell() {
     ctx2d.font = `${CPR * expandSymbolFontSize}px "Font Awesome 5 Free"`;
     const state = row.isExpanded;
     ctx2d.fillText(
-        state ? "\uf146" : "\uf0fe",
-        CPR * (currentColumnLeft() + cellPaddingLeft),
-        CPR * (currentRowTop() + topTextOffset)
+      state ? "\uf146" : "\uf0fe",
+      CPR * (currentColumnLeft() + cellPaddingLeft),
+      CPR * (currentRowTop() + topTextOffset)
     );
     ctx2d.font = `${CPR * fontSize}px "IBM Plex Sans", Arial, sans-serif`;
     ctx2d.fillText(
-        `${row.columnLabel} : ${row.columnValue}`,
-        CPR * (currentColumnLeft() + cellPaddingLeft + groupCellWidth),
-        CPR * (currentRowTop() + topTextOffset)
+      `${row.columnLabel} : ${formatColumnValue(row.columnValue)}`,
+      CPR * (currentColumnLeft() + cellPaddingLeft + groupCellWidth),
+      CPR * (currentRowTop() + topTextOffset)
     );
 
     const ctx = context();
@@ -100,7 +100,7 @@ export function drawGroupCell() {
       handler(event: any) {
         flow(function* () {
           console.log("click");
-          if(! row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0){
+          if (!row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0) {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
           row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
@@ -108,6 +108,10 @@ export function drawGroupCell() {
       },
     });
   }
+}
+
+function formatColumnValue(value: string){
+  return value || "<empty>"
 }
 
 export function drawGroupCellBackground() {
