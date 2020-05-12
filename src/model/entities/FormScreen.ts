@@ -33,6 +33,8 @@ export class FormScreen implements IFormScreen {
   menuId: string = "";
   openingOrder: number = 0;
   showInfoPanel: boolean = false;
+  showWorkflowCancelButton: boolean = false;
+  showWorkflowNextButton: boolean = false;
   autoRefreshInterval: number = 0;
   refreshOnFocus: boolean = false;
   cacheOnClient: boolean = false;

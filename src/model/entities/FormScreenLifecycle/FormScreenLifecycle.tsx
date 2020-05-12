@@ -502,6 +502,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *workflowNext() {
+
+  }
+
+  *workflowCancel() {
+    
+  }
+
   get isReadData() {
     return !getOpenedScreen(this).dontRequestData;
   }

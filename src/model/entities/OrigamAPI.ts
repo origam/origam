@@ -548,6 +548,35 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
+  async workflowNext(data: {
+    sessionFormIdentifier: string;
+    CachedFormIds: string[];
+  }): Promise<any> {
+    return (
+      await axios.post(
+        `${this.urlPrefix}/UIService/WorkflowNext`,
+        {
+          SessionFormIdentifier: data.sessionFormIdentifier,
+          CachedFormIds: data.CachedFormIds,
+        },
+        {
+          headers: this.httpAuthHeader,
+        }
+      )
+    ).data;
+  }
+
+  async workflowNextQuery(data: { sessionFormIdentifier: string }): Promise<any> {
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/WorkflowNextQuery/${data.sessionFormIdentifier}`,
+        {
+          headers: this.httpAuthHeader,
+        }
+      )
+    ).data;
+  }
+
   async getRecordInfo(data: { MenuId: string; DataStructureEntityId: string; RowId: string }) {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetRecordTooltip`, data, {
@@ -643,7 +672,7 @@ export class OrigamAPI implements IApi {
           Property: data.Property,
           IsPreview: false,
           Parameters: data.parameters,
-          SubmitImmediately: "true"
+          SubmitImmediately: "true",
         },
         {
           headers: this.httpAuthHeader,

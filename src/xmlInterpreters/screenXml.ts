@@ -95,8 +95,8 @@ export function interpretScreenXml(
 
   function getPropertyParameters(node: any) {
     const parameters = findParameters(node);
-    const result: {[key: string]: any} = {};
-    for(let p of parameters) {
+    const result: { [key: string]: any } = {};
+    for (let p of parameters) {
       result[p.attributes.Name] = p.attributes.Value;
     }
     return result;
@@ -142,6 +142,8 @@ export function interpretScreenXml(
     openingOrder: 0,
     suppressSave: windowXml.attributes.SuppressSave === "true",
     showInfoPanel: windowXml.attributes.ShowInfoPanel === "true",
+    showWorkflowNextButton: windowXml.attributes.ShowWorkflowNextButton === "true",
+    showWorkflowCancelButton: windowXml.attributes.ShowWorkflowCancelButton === "true",
     autoRefreshInterval: parseInt(windowXml.attributes.AutoRefreshInterval, 10),
     refreshOnFocus: windowXml.attributes.RefreshOnFocus === "true",
     cacheOnClient: windowXml.attributes.CacheOnClient === "true",

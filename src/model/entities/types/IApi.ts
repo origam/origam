@@ -227,6 +227,10 @@ export interface IApi {
 
   workflowRepeat(data: { sessionFormIdentifier: string }): Promise<any>;
 
+  workflowNext(data: { sessionFormIdentifier: string; CachedFormIds: string[] }): Promise<any>;
+
+  workflowNextQuery(data: { sessionFormIdentifier: string }): Promise<any>;
+
   getRecordInfo(data: {
     MenuId: string;
     DataStructureEntityId: string;

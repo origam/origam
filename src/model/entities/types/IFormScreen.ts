@@ -91,6 +91,8 @@ export interface IFormScreenData {
   menuId: string;
   openingOrder: number;
   showInfoPanel: boolean;
+  showWorkflowCancelButton: boolean;
+  showWorkflowNextButton: boolean;
   autoRefreshInterval: number;
   refreshOnFocus: boolean;
   cacheOnClient: boolean;
