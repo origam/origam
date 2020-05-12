@@ -31,24 +31,40 @@ export class ClientSideGrouper implements IGrouper {
   }
 
   makeGroups(rows: any[][], groupingColumn: string): IGroupTreeNode[] {
-    const index = this.findDataIndex(groupingColumn)
-    return rows
-      .map(row => row[index])
-      .filter((v, i, a) => a.indexOf(v) === i) // distinct
-      .map(groupName => {
-        const groupRows = rows.filter(row => row[index] === groupName);
+    const groupMap = this.makeGroupMap(groupingColumn, rows);
+
+    let dataTable = getDataTable(this);
+    const property = dataTable.getPropertyById(groupingColumn);
+
+    return Array.from(groupMap.entries())
+      .map((entry) => {
+        const groupName = entry[0];
+        const rows = entry[1];
         return new GroupItem({
           childGroups: [] as IGroupTreeNode[],
-          childRows: groupRows,
+          childRows: rows,
           columnId: groupingColumn,
-          groupLabel: groupName,
-          rowCount: groupRows.length,
+          groupLabel: property!.name,
+          rowCount: rows.length,
           parent: undefined,
           columnValue: groupName,
           columnDisplayValue: groupName,
-          aggregations: this.calcAggregations(groupRows)
+          aggregations: this.calcAggregations(rows)
         });
       });
+  }
+
+  private makeGroupMap(groupingColumn: string, rows: any[][]) {
+    const index = this.findDataIndex(groupingColumn)
+    const groupMap = new Map<string, any[][]>();
+    for (let row of rows) {
+      const groupName = row[index];
+      if (!groupMap.has(groupName)) {
+        groupMap.set(groupName, []);
+      }
+      groupMap.get(groupName)!.push(row)
+    }
+    return groupMap;
   }
 
   calcAggregations(rows: any[][]) {
