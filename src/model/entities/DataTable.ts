@@ -17,9 +17,7 @@ export class DataTable implements IDataTable {
 
   @observable.shallow allRows: any[][] = [];
 
-  @computed get filteringFn():
-    | ((dataTable: IDataTable) => (row: any[]) => boolean)
-    | undefined {
+  @computed get filteringFn(): ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined {
     return getFilterConfiguration(this).filteringFunction;
   }
 
@@ -31,11 +29,9 @@ export class DataTable implements IDataTable {
     let rows = this.allRows;
     if (this.filteringFn) {
       const filt = this.filteringFn!(this);
-      rows = this.allRows.filter(
-        row => !this.isRowDirtyDeleted(row) && filt(row)
-      );
+      rows = this.allRows.filter((row) => !this.isRowDirtyDeleted(row) && filt(row));
     } else {
-      rows = this.allRows.filter(row => !this.isRowDirtyDeleted(row));
+      rows = this.allRows.filter((row) => !this.isRowDirtyDeleted(row));
     }
     if (this.sortingFn) {
       rows.sort(this.sortingFn(this));
@@ -54,7 +50,7 @@ export class DataTable implements IDataTable {
   }
 
   @computed get identifierProperty() {
-    return this.properties.find(prop => prop.id === this.dataSource.identifier);
+    return this.properties.find((prop) => prop.id === this.dataSource.identifier);
   }
 
   @computed get visibleRowCount() {
@@ -92,7 +88,7 @@ export class DataTable implements IDataTable {
   }
 
   getAllValuesOfProp(property: IProperty): any[] {
-    return this.allRows.map(row => this.getCellValue(row, property));
+    return this.allRows.map((row) => this.getCellValue(row, property));
   }
 
   getCellText(row: any[], property: IProperty) {
@@ -101,12 +97,10 @@ export class DataTable implements IDataTable {
   }
 
   resolveCellText(property: IProperty, value: any): any {
-    if (value === null) return "";
+    if (value === null || value === undefined) return "";
     if (property.isLookup) {
       if (property.column === "TagInput") {
-        return value.map((valueItem: any) =>
-          property.lookup!.getValue(`${valueItem}`)
-        );
+        return value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
       } else {
         return property.lookup!.getValue(`${value}`);
       }
@@ -121,16 +115,16 @@ export class DataTable implements IDataTable {
   }
 
   getRowById(id: string): any[] | undefined {
-    return this.allRows.find(row => this.getRowId(row) === id);
+    return this.allRows.find((row) => this.getRowId(row) === id);
   }
 
   getExistingRowIdxById(id: string) {
-    const idx = this.rows.findIndex(row => this.getRowId(row) === id);
+    const idx = this.rows.findIndex((row) => this.getRowId(row) === id);
     return idx > -1 ? idx : undefined;
   }
 
   getPropertyById(id: string) {
-    return this.properties.find(prop => prop.id === id);
+    return this.properties.find((prop) => prop.id === id);
   }
 
   getFirstRow(): any[] | undefined {
@@ -151,7 +145,7 @@ export class DataTable implements IDataTable {
   }
 
   getNextExistingRowId(id: string): string | undefined {
-    const idx = this.rows.findIndex(r => this.getRowId(r) === id);
+    const idx = this.rows.findIndex((r) => this.getRowId(r) === id);
     if (idx > -1) {
       const newRow = this.rows[idx + 1];
       return newRow ? this.getRowId(newRow) : undefined;
@@ -159,7 +153,7 @@ export class DataTable implements IDataTable {
   }
 
   getPrevExistingRowId(id: string): string | undefined {
-    const idx = this.rows.findIndex(r => this.getRowId(r) === id);
+    const idx = this.rows.findIndex((r) => this.getRowId(r) === id);
     if (idx > 0) {
       const newRow = this.rows[idx - 1];
       return newRow ? this.getRowId(newRow) : undefined;
@@ -200,15 +194,15 @@ export class DataTable implements IDataTable {
   }
 
   getDirtyValueRows(): any[][] {
-    return this.rows.filter(row => this.hasRowDirtyValues(row));
+    return this.rows.filter((row) => this.hasRowDirtyValues(row));
   }
 
   getDirtyDeletedRows(): any[][] {
-    return this.allRows.filter(row => this.isRowDirtyDeleted(row));
+    return this.allRows.filter((row) => this.isRowDirtyDeleted(row));
   }
 
   getDirtyNewRows(): any[][] {
-    return this.rows.filter(row => this.isRowDirtyNew(row));
+    return this.rows.filter((row) => this.isRowDirtyNew(row));
   }
 
   @action.bound
@@ -220,9 +214,7 @@ export class DataTable implements IDataTable {
   @action.bound
   setFormDirtyValue(row: any[], propertyId: string, value: any) {
     this.createAdditionalData(row);
-    this.additionalRowData
-      .get(this.getRowId(row))!
-      .dirtyFormValues.set(propertyId, value);
+    this.additionalRowData.get(this.getRowId(row))!.dirtyFormValues.set(propertyId, value);
   }
 
   @action.bound
@@ -286,9 +278,7 @@ export class DataTable implements IDataTable {
   @action.bound
   deleteRow(row: any[]): void {
     this.deleteAdditionalRowData(row);
-    const idx = this.allRows.findIndex(
-      r => this.getRowId(r) === this.getRowId(row)
-    );
+    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
     if (idx > -1) {
       this.allRows.splice(idx, 1);
     }
@@ -306,9 +296,7 @@ export class DataTable implements IDataTable {
 
   @action.bound
   substituteRecord(row: any[]): void {
-    const idx = this.allRows.findIndex(
-      r => this.getRowId(r) === this.getRowId(row)
-    );
+    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
     if (idx > -1) {
       this.allRows.splice(idx, 1, row);
     }
@@ -316,9 +304,7 @@ export class DataTable implements IDataTable {
 
   @action.bound
   insertRecord(index: number, row: any[]): void {
-    const idx = this.allRows.findIndex(
-      r => this.getRowId(r) === this.getRowId(row)
-    );
+    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
     if (idx > -1) {
       this.allRows.splice(idx, 0, row);
     } else {
@@ -334,9 +320,7 @@ export class DataTable implements IDataTable {
 
   @action.bound
   setSortingFn(
-    fn:
-      | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
-      | undefined
+    fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined
   ): void {
     this.sortingFn = fn;
   }
