@@ -65,8 +65,11 @@ function drawAggregationText(){
     ctx2d.fillStyle = "black";
     ctx2d.textAlign = "right";
     ctx2d.fillText(
-        aggregation.type+": "+aggregation.value,
+        aggregation.type + ": " + round(aggregation.value) ,
         CPR * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
         CPR * (currentRowTop() + topTextOffset));
+}
+function round(value: number){
+    return Math.round(value * 100)/100
 }
 
