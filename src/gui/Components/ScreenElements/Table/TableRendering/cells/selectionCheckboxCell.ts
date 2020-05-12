@@ -47,7 +47,6 @@ export function selectionCheckboxCellsDraws() {
 
 function registerClickHandler() {
   const ctx = context();
-  //const cellRowIndex = rowIndex();
   const row = currentDataRow();
   onClick({
     x: currentColumnLeftVisible(),
