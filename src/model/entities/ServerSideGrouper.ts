@@ -7,11 +7,13 @@ import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering
 import {GroupItem, parseAggregations} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
+import {IDataTable} from "./types/IDataTable";
 
 export class ServerSideGrouper implements IGrouper {
 
   @observable.shallow topLevelGroups: IGroupTreeNode[] = []
   parent?: any = null;
+  @observable sortingFunction: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined = undefined;
 
   getTopLevelGroups(): IGroupTreeNode[] {
     return this.topLevelGroups
@@ -99,7 +101,8 @@ export class ServerSideGrouper implements IGrouper {
               parent: parent,
               columnValue: groupDataItem[columnId],
               columnDisplayValue: groupDataItem["groupCaption"] || groupDataItem[columnId],
-              aggregations: parseAggregations(groupDataItem["aggregations"])
+              aggregations: parseAggregations(groupDataItem["aggregations"]),
+              grouper: this
             }
         )});
   }

@@ -5,8 +5,12 @@ export interface IAggregationInfo {
 
 export enum AggregationType{ SUM="SUM", AVG="AVG", MIN="MIN", MAX="MAX"}
 
-export function aggregationTypeParse(candidate: any){
+export function tryParseAggregationType(candidate: any | undefined){
+  if(!candidate) return undefined;
+  return parseAggregationType(candidate);
+}
 
+export function parseAggregationType(candidate: any | undefined){
   if(typeof candidate !== 'string'){
     throw new Error("Cannot map \""+candidate+"\" to AggregationType")
   }

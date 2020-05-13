@@ -5,11 +5,13 @@ import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering
 import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {AggregationType, IAggregationInfo} from "./types/IAggregationInfo";
+import {IDataTable} from "./types/IDataTable";
 
 export class ClientSideGrouper implements IGrouper {
 
   topLevelGroups: IGroupTreeNode[] = []
   parent?: any = null;
+  sortingFunction: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined = undefined;
 
   getTopLevelGroups(): IGroupTreeNode[] {
     return this.topLevelGroups;
@@ -49,7 +51,8 @@ export class ClientSideGrouper implements IGrouper {
           parent: undefined,
           columnValue: groupName,
           columnDisplayValue: groupName,
-          aggregations: this.calcAggregations(rows)
+          aggregations: this.calcAggregations(rows),
+          grouper: this
         });
       });
   }
@@ -128,6 +131,3 @@ export class ClientSideGrouper implements IGrouper {
   }
 }
 
-class AggregationCalculator {
-
-}

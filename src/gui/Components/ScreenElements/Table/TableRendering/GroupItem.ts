@@ -1,8 +1,10 @@
 
-import { observable } from "mobx";
+import {computed, observable} from "mobx";
 import {IAggregation, IGroupTreeNode} from "./types";
 import {IHeaderContainer} from "../../../../Workbench/ScreenArea/TableView/TableView";
-import {aggregationTypeParse} from "../../../../../model/entities/types/IAggregationInfo";
+import {parseAggregationType} from "../../../../../model/entities/types/IAggregationInfo";
+import {IGrouper} from "../../../../../model/entities/types/IGrouper";
+import {getDataTable} from "../../../../../model/selectors/DataView/getDataTable";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];
@@ -14,6 +16,7 @@ export interface IGroupItemData{
   parent: IGroupTreeNode | undefined;
   rowCount: number;
   aggregations: IAggregation[] | undefined;
+  grouper: IGrouper;
 }
 
 export class GroupItem implements IGroupTreeNode {
@@ -21,7 +24,7 @@ export class GroupItem implements IGroupTreeNode {
     Object.assign(this, data);
   }
   @observable childGroups: IGroupTreeNode[] = null as any;
-  @observable childRows: any[][] = null as any;
+  @observable _childRows: any[][] = null as any;
   columnId: string = null as any;
   columnValue: string = null as any;
   groupLabel: string = null as any;
@@ -29,8 +32,20 @@ export class GroupItem implements IGroupTreeNode {
   rowCount: number = null as any;
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
+  grouper: IGrouper = null as any;
 
   @observable isExpanded = false;
+
+  @computed get childRows(){
+    if(this.grouper.sortingFunction){
+      const dataTable = getDataTable(this.grouper);
+      return this._childRows.slice().sort(this.grouper.sortingFunction(dataTable));
+    }
+    return this._childRows;
+  }
+  set childRows(rows: any[][]){
+    this._childRows = rows;
+  }
 }
 
 export function parseAggregations(objectArray: any[] | undefined){
@@ -39,7 +54,7 @@ export function parseAggregations(objectArray: any[] | undefined){
     {
       return {
         columnId: object["column"],
-        type: aggregationTypeParse(object["type"]),
+        type: parseAggregationType(object["type"]),
         value: object["value"]
       }
     });

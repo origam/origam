@@ -344,6 +344,7 @@ export class DataTable implements IDataTable {
       | undefined
   ): void {
     this.sortingFn = fn;
+    getGrouper(this).sortingFunction = fn;
   }
 
   /* @action.bound

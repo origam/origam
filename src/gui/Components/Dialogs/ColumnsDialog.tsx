@@ -6,7 +6,7 @@ import { bind } from "bind-decorator";
 import { observable, action } from "mobx";
 import { observer, Observer } from "mobx-react";
 import produce, { finishDraft } from "immer";
-import {aggregationTypeParse, AggregationType} from "../../../model/entities/types/IAggregationInfo";
+import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/IAggregationInfo";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -68,7 +68,7 @@ export class ColumnsDialog extends React.Component<{
 
   @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
     this.configuration = produce(this.configuration, (draft) => {
-      draft.columnConf[rowIndex].aggregationType = aggregationTypeParse(selectedAggregation);
+      draft.columnConf[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
     });
   }
 
