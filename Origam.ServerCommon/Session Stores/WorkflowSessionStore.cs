@@ -138,11 +138,11 @@ namespace Origam.Server
                         break;
 
                     case ACTION_NEXT:
-                        result = HandleWorkflowNextAsync(cachedFormIds);
+                        result = HandleWorkflowNextAsync(cachedFormIds).Result;
                         break;
 
                     case ACTION_ABORT:
-                        result = HandleAbortAsync();
+                        result = HandleAbortAsync().Result;
                         break;
 
                     case ACTION_SAVE:
