@@ -9,10 +9,11 @@ export interface IGroupingConfiguration extends IGroupingConfigurationData {
   isGrouping: boolean;
   groupingColumnCount: number;
   orderedGroupingColumnIds: string[];
+  firstGroupingColumn: string;
 
   setGrouping(columnId: string, groupingIndex: number): void;
   clearGrouping(): void;
-  applyGrouping(): void;
+  // applyGrouping(): void;
 
   parent?: any;
 }

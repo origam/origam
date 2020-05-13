@@ -2,9 +2,9 @@ import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRenderi
 import {IDataTable} from "./IDataTable";
 
 export interface IGrouper {
-  getTopLevelGroups(): IGroupTreeNode[];
-  apply(firstGroupingColumn: string): void;
+  topLevelGroups: IGroupTreeNode[];
   loadChildren(groupHeader: IGroupTreeNode): void;
   parent?: any;
   sortingFunction: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined;
+  start(): void;
 }

@@ -354,6 +354,7 @@ export class DataView implements IDataView {
 
   @action.bound start() {
     this.lifecycle.start();
+    this.serverSideGrouper.start();
   }
 
   parent?: any;

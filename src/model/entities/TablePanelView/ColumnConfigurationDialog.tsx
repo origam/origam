@@ -61,7 +61,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       }
       this.tablePanelView.aggregations.setType(column.id, column.aggregationType)
     }
-    groupingConf.applyGrouping();
+    //groupingConf.applyGrouping();
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 

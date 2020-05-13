@@ -46,10 +46,10 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     this.groupingIndices.clear();
   }
 
-  @action.bound
-  applyGrouping(): void {
-    getGrouper(this).apply(this.firstGroupingColumn)
-  }
+  // @action.bound
+  // applyGrouping(): void {
+  //   getGrouper(this).apply(this.firstGroupingColumn)
+  // }
 
   parent?: any;
 }

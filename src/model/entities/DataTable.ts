@@ -19,8 +19,8 @@ export class DataTable implements IDataTable {
 
   @observable.shallow allRows: any[][] = [];
 
-  get groups(): IGroupTreeNode[]{
-    return getGrouper(this).getTopLevelGroups()
+  @computed get groups(): IGroupTreeNode[]{
+    return getGrouper(this).topLevelGroups;
   }
 
   @computed get filteringFn():

@@ -2,7 +2,7 @@ import {getGroupingConfiguration} from "../selectors/TablePanelView/getGroupingC
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import {getDataView} from "model/selectors/DataView/getDataView";
 import {IGrouper} from "./types/IGrouper";
-import {observable} from "mobx";
+import {autorun, computed, IReactionDisposer, observable} from "mobx";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {GroupItem, parseAggregations} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
@@ -13,20 +13,20 @@ export class ServerSideGrouper implements IGrouper {
 
   @observable.shallow topLevelGroups: IGroupTreeNode[] = []
   parent?: any = null;
+  disposers: IReactionDisposer[] = [];
   @observable sortingFunction: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined = undefined;
 
-  getTopLevelGroups(): IGroupTreeNode[] {
-    return this.topLevelGroups
-  }
-
-  apply(firstGroupingColumn: string) {
-    const dataView = getDataView(this);
-    const property = getDataTable(this).getPropertyById(firstGroupingColumn);
-    const lookupId = property && property.lookup && property.lookup.lookupId;
-    const aggregations = getTablePanelView(this).aggregations.get();
-    getFormScreenLifecycle(this)
-      .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
-      .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
+  start(){
+    this.disposers.push(autorun(()=>{
+      const dataView = getDataView(this);
+      const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
+      const property = getDataTable(this).getPropertyById(firstGroupingColumn);
+      const lookupId = property && property.lookup && property.lookup.lookupId;
+      const aggregations = getTablePanelView(this).aggregations.get();
+      getFormScreenLifecycle(this)
+        .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
+        .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
+    }));
   }
 
   loadChildren(groupHeader: IGroupTreeNode) {
@@ -105,5 +105,11 @@ export class ServerSideGrouper implements IGrouper {
               grouper: this
             }
         )});
+  }
+
+  dispose() {
+    for (let disposer of this.disposers) {
+      disposer();
+    }
   }
 }

@@ -482,6 +482,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *closeForm() {
     try {
+      for (let dataView of getDataViewList(this)) {
+        dataView.serverSideGrouper.dispose();
+      }
       this.inFlow++;
       this.clearAutorefreshInterval();
       this.disposers.forEach(disposer => disposer());

@@ -6,28 +6,24 @@ import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/Grou
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {AggregationType, IAggregationInfo} from "./types/IAggregationInfo";
 import {IDataTable} from "./types/IDataTable";
+import { computed } from "mobx";
 
 export class ClientSideGrouper implements IGrouper {
 
-  topLevelGroups: IGroupTreeNode[] = []
   parent?: any = null;
   sortingFunction: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined = undefined;
 
-  getTopLevelGroups(): IGroupTreeNode[] {
-    return this.topLevelGroups;
-  }
-
-  apply(firstGroupingColumn: string): void {
+  @computed get topLevelGroups(){
+    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     const dataTable = getDataTable(this);
-    this.topLevelGroups = this.makeGroups(dataTable.allRows, firstGroupingColumn)
-    this.loadRecursively(this.topLevelGroups);
+    const groups = this.makeGroups(dataTable.allRows, firstGroupingColumn)
+    this.loadRecursively(groups);
+    return groups;
   }
 
   loadRecursively(groups: IGroupTreeNode[]) {
     for (let group of groups) {
-      if (group.isExpanded) {
-        this.loadChildren(group)
-      }
+      this.loadChildren(group)
       this.loadRecursively(group.childGroups);
     }
   }
@@ -128,6 +124,9 @@ export class ClientSideGrouper implements IGrouper {
     if (nextColumnName) {
       groupHeader.childGroups = this.makeGroups(groupHeader.childRows, nextColumnName)
     }
+  }
+
+  start(): void {
   }
 }
 
