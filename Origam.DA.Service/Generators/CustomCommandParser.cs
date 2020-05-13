@@ -82,7 +82,7 @@ namespace Origam.DA.Service.Generators
                 {
                     currentNode = currentNode.Parent;
                 }
-                else if (c == ' ' || currentNode.IsBinaryOperator && c == ',')
+                else if (currentNode.IsBinaryOperator && c == ',')
                 {
                     continue;
                 }
@@ -183,11 +183,33 @@ namespace Origam.DA.Service.Generators
         public List<Node> Children { get; } = new List<Node>();
         public string Value { get; set; } = "";
         public bool IsBinaryOperator => Value.Contains("$");
-        public string[] SplitValue => splitValue ?? (splitValue = Value.Split(','));
-        private string LeftOperand => SplitValue[0].Replace("\"","");
+
+        private string[] SplitValue => splitValue ??
+                                       (splitValue = Value
+                                           .Split(',')
+                                           .Select(x => x.Trim())
+                                           .ToArray()
+                                       );
+        private string ColumnName => "["+SplitValue[0].Replace("\"","")+"]";
         private string Operator => SplitValue[1].Replace("\"","");
-        private string RightOperand => SplitValue[2].Replace("\"", "'");
+        private string ColumnValue => SplitValue[2]
+            .Replace("'", "''")
+            .Replace("\"", "'");
+        
         private readonly FilterRenderer renderer = new FilterRenderer();
+
+        private string ValueToOperand(string value)
+        {
+            // if (string.IsNullOrWhiteSpace(value)) return value;
+            // string valueWithoutDoubleQuotes = value.Replace("\"", "");
+            // char firstChar = valueWithoutDoubleQuotes.First();
+            // char lastChar = valueWithoutDoubleQuotes.Last();
+            // return value.First() + value.Substring(1,value.Length - 2).Replace("'","''") + value.Last();
+
+            return value
+                .Replace("\"", "")
+                .Replace("'", "''");
+        }
 
         public string SqlRepresentation()
         {
@@ -211,9 +233,9 @@ namespace Origam.DA.Service.Generators
 
         private string GetLogicalOperator()
         {
-            if (Value == "\"$AND\"") return "AND";
-            if (Value == "\"$OR\"") return "OR";
-            throw new Exception("Could not parse node value to logical operator: " + Value);
+            if (Value.Trim() == "\"$AND\"") return "AND";
+            if (Value.Trim() == "\"$OR\"") return "OR";
+            throw new Exception("Could not parse node value to logical operator: \"" + Value+"\"");
         }
 
         private string GetSqlOfLeafNode()
@@ -222,7 +244,7 @@ namespace Origam.DA.Service.Generators
             {
                 if (SplitValue.Length != 3) throw new ArgumentException("could not parse: "+Value+" to a filter node");
                 string operatorName = OperatorToRendererName(Operator);
-                return renderer.BinaryOperator(LeftOperand, RightOperand, operatorName);
+                return renderer.BinaryOperator(ColumnName, ColumnValue, operatorName);
             }
 
             if (Children.Count == 1 && Operator == "in")
@@ -230,7 +252,7 @@ namespace Origam.DA.Service.Generators
                 IEnumerable<string> options = Children.First()
                     .SplitValue
                     .Select(val => val.Replace("\"", "'"));
-                return renderer.In(LeftOperand, options);
+                return renderer.In(ColumnName, options);
             }
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");

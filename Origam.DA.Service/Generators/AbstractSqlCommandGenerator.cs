@@ -1878,7 +1878,7 @@ namespace Origam.DA.Service
                         break;
                     case CustomAggregationType.Avg:
                         sqlExpression.Append(
-                            $"AVG({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                            $"AVG(Cast ({renderedColumn} as Float)) as {aggregation.SqlQueryColumnName} ");
                         break;
                     case CustomAggregationType.Min:
                         sqlExpression.Append(
