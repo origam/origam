@@ -174,7 +174,6 @@ export class ColumnsDialog extends React.Component<{
         if ((entity === "Currency" || entity === "Integer") && canAggregate) {
           return (
               <Dropdowner
-                style={{zIndex :2}}
                 trigger={({refTrigger, setDropped}) => (
                   <DataViewHeaderAction
                     refDom={refTrigger}
