@@ -185,17 +185,24 @@ export class Container implements IContainer {
 
   newFromRegistration<TInstance>(registration: Registration<TInstance>) {
     // console.log("NewFromRegistration", this.scopeName, registration.typeSymbol);
-    if (registration.regClass) {
-      return new registration.regClass();
+    try {
+      if (registration.regClass) {
+        pushCreator(registration.regClass);
+        return new registration.regClass();
+      }
+      if (registration.regCreator) {
+        pushCreator(registration.regCreator);
+        return registration.regCreator();
+      }
+      if (registration.regCreatorEx) {
+        pushCreator(registration.regCreatorEx);
+        return registration.regCreatorEx(this);
+      }
+      debugger;
+      throw new Error("Neither class nor creator registered.");
+    } finally {
+      popCreator();
     }
-    if (registration.regCreator) {
-      return registration.regCreator();
-    }
-    if (registration.regCreatorEx) {
-      return registration.regCreatorEx(this);
-    }
-    debugger;
-    throw new Error("Neither class nor creator registered.");
   }
 
   providePerDependency<TInstance>(registration: Registration<TInstance>) {
@@ -286,12 +293,12 @@ export class Container implements IContainer {
       if (disposeEvent) {
         for (let h of disposeEvent) h();
       }
-      console.log('Disposing cached', instance)
+      console.log("Disposing cached", instance);
       if (instance.dispose) instance.dispose();
     }
     this.instances.clear();
     for (let instance of this.transientInstances) {
-      console.log('Disposing transient', instance)
+      console.log("Disposing transient", instance);
       if (instance.dispose) instance.dispose();
     }
     this.transientInstances.length = 0;
@@ -425,6 +432,34 @@ export function popCurrentContainer() {
     container.resolveFlowFinished();
   }
   return container;
+}
+
+export function getScopePath() {
+  let container = getTopContainer();
+  const result: Container[] = [];
+  while(container) {
+    result.push(container);
+    container = (container as any).parent;
+  }
+  return result;
+}
+
+let _creatorStack: any[] = new Array(10);
+let _creatorStackTop = -1;
+
+function pushCreator(creator: any) {
+  _creatorStackTop++;
+  _creatorStack[_creatorStackTop] = creator;
+}
+
+function popCreator() {
+  const creator = _creatorStack[_creatorStackTop];
+  _creatorStack[_creatorStackTop] = undefined;
+  _creatorStackTop--;
+}
+
+export function getCreatorStack() {
+  return _creatorStack.slice(0, _creatorStackTop + 1).reverse();
 }
 
 export function TypeSymbol<TInstance>(symName: string): ITypeSymbol<TInstance> {

@@ -5,6 +5,8 @@ import {
   pushCurrentContainer,
   popCurrentContainer,
   Func,
+  getCreatorStack,
+  getScopePath,
 } from "./Container";
 
 interface IDog {
@@ -105,6 +107,9 @@ interface IPlugin {
 }
 
 const IPlugin = TypeSymbol<{ k: number }>("IPlugin");
+const IPluginA = TypeSymbol<any>("IPluginA");
+const IPluginB = TypeSymbol<any>("IPluginB");
+const IPluginC = TypeSymbol<any>("IPluginC");
 
 const IPluginEnumeration = TypeSymbol<IPlugin[]>("IPluginEnumeration");
 
@@ -198,6 +203,8 @@ describe("Container", () => {
     const container3 = container2.beginLifetimeScope("myScope");
     const container4 = container3.beginLifetimeScope();
 
+    const d = container4.resolve(IDog);
+
     expect(() => container1.resolve(IDog)).toThrowError();
     expect(() => container2.resolve(IDog)).toThrowError();
 
@@ -216,6 +223,22 @@ describe("Container", () => {
     expect(dogs[0]).toBe(dogs[1]);
     expect(dogs[0]).toBe(dogs[2]);
     expect(dogs[0]).toBe(dogs[3]);
+  });
+
+  it("allows obtaining current scope path", () => {
+    class K {
+      constructor() {
+        expect(getScopePath()).toEqual([c4, c3, c2, c1]);
+      }
+    }
+    const IK = TypeSymbol<K>("IK");
+
+    const c1 = new Container({ defaultLifetime: ILifetime.Single });
+    c1.registerClass(IK, K);
+    const c2 = c1.beginLifetimeScope("l1");
+    const c3 = c2.beginLifetimeScope("l2");
+    const c4 = c3.beginLifetimeScope("l3");
+    c4.resolve(IK);
   });
 
   it("resolves instances by calling their symbol", () => {
@@ -265,6 +288,25 @@ describe("Container", () => {
     container.registerClass(IPlugin, PluginA).transientInstance();
     container.registerClass(IPlugin, PluginB).transientInstance();
     container.registerClass(IPlugin, PluginC).transientInstance();
+
+    const pc = container.resolve(IPluginConsumer);
+
+    expect(pc.plugins[0].k).toBe(0);
+    expect(pc.plugins[1].k).toBe(1);
+    expect(pc.plugins[2].k).toBe(2);
+  });
+
+  it("resolves can resolve all instances for all registrations of one symbol - allows symbol redirect", () => {
+    const container = new Container({ defaultLifetime: ILifetime.Single });
+    container.registerClass(IPluginConsumer, PluginConsumer);
+    container.register(IPluginEnumeration, undefined, (cont) => cont.resolveAll(IPlugin));
+    container.register(IPlugin, IPluginA).transientInstance();
+    container.register(IPlugin, IPluginB).transientInstance();
+    container.register(IPlugin, IPluginC).transientInstance();
+
+    container.registerClass(IPluginA, PluginA);
+    container.registerClass(IPluginB, PluginB);
+    container.registerClass(IPluginC, PluginC);
 
     const pc = container.resolve(IPluginConsumer);
 
@@ -414,5 +456,88 @@ describe("Container lifecycle event", () => {
     container.resolve(IA);
 
     expect(callOrder).toEqual(["CA", "CB", "CC", "AB", "AC", "AA"]);
+  });
+});
+
+describe("Creator stack", () => {
+  it("keeps track of creators to be used for current dependency chain", () => {
+    class A {
+      constructor(public b = IB()) {}
+    }
+
+    class B {
+      constructor(public c = IC()) {}
+    }
+
+    class C {
+      constructor() {
+        expect(getCreatorStack()).toEqual([C, B, A]);
+      }
+    }
+
+    const IA = TypeSymbol<A>("IA");
+    const IB = TypeSymbol<B>("IB");
+    const IC = TypeSymbol<C>("IC");
+
+    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    cont.registerClass(IA, A);
+    cont.registerClass(IB, B);
+    cont.registerClass(IC, C);
+    cont.resolve(IA);
+  });
+
+  it("allows to supply different implementations based on creator stack content", () => {
+    class A {
+      constructor(public b = IB(), public c = IC(), public d = ID()) {}
+      v = "a";
+    }
+
+    class B {
+      constructor(public c = IC()) {}
+      v = "b";
+    }
+
+    class C1 {
+      constructor(public c = IC()) {}
+      v = "c1";
+    }
+
+    class C2 {
+      v = "c2";
+    }
+
+    class D {
+      v = "d";
+    }
+
+    const IA = TypeSymbol<A>("IA");
+    const IB = TypeSymbol<B>("IB");
+    const IC = TypeSymbol<any>("IC");
+    const IC1 = TypeSymbol<C1>("IC1");
+    const IC2 = TypeSymbol<C2>("IC1");
+    const ID = TypeSymbol<D>("ID");
+
+    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    cont.registerClass(IA, A);
+    cont.registerClass(IB, B);
+    cont
+      .register(IC, () => {
+        const consumer = getCreatorStack()[1];
+        if (consumer === A) return IC1();
+        if (consumer === B) return IC2();
+        return ID();
+      })
+      .transientInstance();
+    cont.registerClass(IC1, C1);
+    cont.registerClass(IC2, C2);
+    cont.registerClass(ID, D);
+    const a = cont.resolve(IA);
+
+    expect(a.v).toBe("a");
+    expect(a.b.v).toBe("b");
+    expect(a.b.c.v).toBe("c2");
+    expect(a.c.v).toBe("c1");
+    expect(a.c.c.v).toBe("d");
+    expect(a.d.v).toBe("d");
   });
 });
