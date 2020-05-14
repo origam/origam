@@ -107,9 +107,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				var columnInstance = ServiceManager.Services
 					.GetService<IPersistenceService>()
 					.SchemaProvider
-					.RetrieveInstance(typeof(AbstractSchemaItem), new Key(id));
-				bool isAggregated = columnInstance is AggregatedColumn;
-				return isAggregated;
+					.RetrieveInstance(
+						type: typeof(AggregatedColumn),
+						primaryKey: new Key(id),
+						useCache: false);
+				return columnInstance != null;
 			}
 	}
 }
