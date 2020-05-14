@@ -2,6 +2,7 @@ import { IProperty } from "./IProperty";
 import { IAdditionalRowData } from "./IAdditionalRecordData";
 import { IDataSourceField } from "./IDataSourceField";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {observable} from "mobx";
 
 export interface IDataTableData {}
 
@@ -13,6 +14,9 @@ export interface IDataTable extends IDataTableData {
   additionalRowData: Map<string, IAdditionalRowData>;
   visibleRowCount: number;
   groups: IGroupTreeNode[];
+  sortingFn:
+    | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
+    | undefined;
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;

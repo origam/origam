@@ -37,9 +37,9 @@ export class GroupItem implements IGroupTreeNode {
   @observable isExpanded = false;
 
   @computed get childRows(){
-    if(this.grouper.sortingFunction){
-      const dataTable = getDataTable(this.grouper);
-      return this._childRows.slice().sort(this.grouper.sortingFunction(dataTable));
+    const dataTable = getDataTable(this.grouper);
+    if(dataTable.sortingFn){
+      return this._childRows.slice().sort(dataTable.sortingFn(dataTable));
     }
     return this._childRows;
   }

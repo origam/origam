@@ -5,13 +5,11 @@ import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering
 import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {AggregationType, IAggregationInfo} from "./types/IAggregationInfo";
-import {IDataTable} from "./types/IDataTable";
 import { computed } from "mobx";
 
 export class ClientSideGrouper implements IGrouper {
 
   parent?: any = null;
-  sortingFunction: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined = undefined;
 
   @computed get topLevelGroups(){
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;

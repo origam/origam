@@ -7,14 +7,12 @@ import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering
 import {GroupItem, parseAggregations} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
-import {IDataTable} from "./types/IDataTable";
 
 export class ServerSideGrouper implements IGrouper {
 
   @observable.shallow topLevelGroups: IGroupTreeNode[] = []
   parent?: any = null;
   disposers: IReactionDisposer[] = [];
-  @observable sortingFunction: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined = undefined;
 
   start(){
     this.disposers.push(autorun(()=>{
