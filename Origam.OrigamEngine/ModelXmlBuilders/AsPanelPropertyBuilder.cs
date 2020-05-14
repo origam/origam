@@ -22,7 +22,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Data;
-
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 
@@ -93,7 +94,22 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 propertyElement.SetAttribute("Style", style.StyleDefinition());
             }
 
+			if (IsAggregatedColumn(id))
+			{
+				propertyElement.SetAttribute("Aggregated", "true");
+			}
+
 			return propertyElement;
 		}
+
+			private static bool IsAggregatedColumn(Guid id)
+			{
+				var columnInstance = ServiceManager.Services
+					.GetService<IPersistenceService>()
+					.SchemaProvider
+					.RetrieveInstance(typeof(AbstractSchemaItem), new Key(id));
+				bool isAggregated = columnInstance is AggregatedColumn;
+				return isAggregated;
+			}
 	}
 }
