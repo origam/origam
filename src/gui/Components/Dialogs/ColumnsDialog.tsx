@@ -7,6 +7,10 @@ import {action, observable} from "mobx";
 import {observer, Observer} from "mobx-react";
 import produce from "immer";
 import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/IAggregationInfo";
+import {Dropdowner} from "../Dropdowner/Dropdowner";
+import {DataViewHeaderAction} from "../../../gui02/components/DataViewHeader/DataViewHeaderAction";
+import {Dropdown} from "../../../gui02/components/Dropdown/Dropdown";
+import {DropdownItem} from "../../../gui02/components/Dropdown/DropdownItem";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -167,17 +171,58 @@ export class ColumnsDialog extends React.Component<{
           </span>
         );
       case 3:
-        if (entity === "Currency" || entity === "Integer") {
+        if ((entity === "Currency" || entity === "Integer") && canAggregate) {
           return (
-            <select
-              onChange={(event: any) => this.setAggregation(rowIndex, event.target.value)}
-              disabled={!canAggregate}>
-              <option value=""/>
-              <option value="SUM" selected={aggregationType === AggregationType.SUM}>SUM</option>
-              <option value="AVG" selected={aggregationType === AggregationType.AVG}>AVG</option>
-              <option value="MIN" selected={aggregationType === AggregationType.MIN}>MIN</option>
-              <option value="MAX" selected={aggregationType === AggregationType.MAX}>MAX</option>
-            </select>
+              <Dropdowner
+                style={{zIndex :2}}
+                trigger={({refTrigger, setDropped}) => (
+                  <DataViewHeaderAction
+                    refDom={refTrigger}
+                    onClick={() => setDropped(true)}
+                    isActive={false}
+                  >
+                    {this.configuration.columnConf[rowIndex].aggregationType}
+                  </DataViewHeaderAction>
+                )}
+                content={({setDropped}) => (
+                  <Dropdown>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, undefined);
+                      }}>
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.SUM)
+                      }}>
+                      SUM
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.AVG)
+                      }}>
+                      AVG
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.MIN)
+                      }}>
+                      MIN
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.MAX)
+                      }}>
+                      MAX
+                    </DropdownItem>
+                  </Dropdown>
+                )}
+              />
           );
         } else {
           return "";
