@@ -31,6 +31,7 @@ import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGroupingConfiguration";
 import { IDataView } from "../types/IDataView";
 import {IAggregationInfo} from "../types/IAggregationInfo";
+import {IGroupChildrenOrdering} from "../types/IOrderingConfiguration";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -243,14 +244,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     getDataViewList(this).forEach(dv => dv.start());
   }
 
-  loadChildRows(rootDataView: IDataView, filter: string){
+  loadChildRows(rootDataView: IDataView, filter: string, ordering: IGroupChildrenOrdering | undefined){
     const api = getApi(this);
     return api.getRows({
       MenuId: getMenuItemId(rootDataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: filter,
-      Ordering: [],
+      Ordering: ordering ? [[ordering.columnId, ordering.direction]] : [],
       RowLimit: 999999,
       ColumnNames: getColumnNamesToLoad(rootDataView),
       MasterRowId: undefined

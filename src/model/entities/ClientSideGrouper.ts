@@ -2,7 +2,7 @@ import {IGrouper} from "./types/IGrouper";
 import {getDataTable} from "model/selectors/DataView/getDataTable";
 import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
+import {ClientSideGroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {AggregationType, IAggregationInfo} from "./types/IAggregationInfo";
 import { computed } from "mobx";
@@ -36,7 +36,7 @@ export class ClientSideGrouper implements IGrouper {
       .map((entry) => {
         const groupName = entry[0];
         const rows = entry[1];
-        return new GroupItem({
+        return new ClientSideGroupItem({
           childGroups: [] as IGroupTreeNode[],
           childRows: rows,
           columnId: groupingColumn,

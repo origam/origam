@@ -19,7 +19,7 @@ export interface IGroupItemData{
   grouper: IGrouper;
 }
 
-export class GroupItem implements IGroupTreeNode {
+export class ClientSideGroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
     Object.assign(this, data);
   }
@@ -46,6 +46,24 @@ export class GroupItem implements IGroupTreeNode {
   set childRows(rows: any[][]){
     this._childRows = rows;
   }
+}
+
+export class GroupItem implements IGroupTreeNode {
+  constructor(data: IGroupItemData) {
+    Object.assign(this, data);
+  }
+  @observable childGroups: IGroupTreeNode[] = null as any;
+  @observable childRows: any[][] = null as any;
+  columnId: string = null as any;
+  columnValue: string = null as any;
+  groupLabel: string = null as any;
+  parent: IGroupTreeNode | undefined = null as any;
+  rowCount: number = null as any;
+  columnDisplayValue: string = null as any;
+  aggregations: IAggregation[] | undefined = undefined;
+  grouper: IGrouper = null as any;
+
+  @observable isExpanded = false;
 }
 
 export function parseAggregations(objectArray: any[] | undefined){

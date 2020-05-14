@@ -7,6 +7,7 @@ import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering
 import {GroupItem, parseAggregations} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
+import {getOrderingConfiguration} from "../selectors/DataView/getOrderingConfiguration";
 
 export class ServerSideGrouper implements IGrouper {
 
@@ -28,22 +29,25 @@ export class ServerSideGrouper implements IGrouper {
   }
 
   loadChildren(groupHeader: IGroupTreeNode) {
-    const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
-    const dataView = getDataView(this);
-    const filter = this.composeGroupingFilter(groupHeader)
-    const lifeCycle = getFormScreenLifecycle(this)
-    const aggregations = getTablePanelView(this).aggregations.get();
-    if (nextColumnName) {
-      lifeCycle
-        .loadChildGroups(dataView, filter, nextColumnName, aggregations)
-        .then(groupData => groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader));
-    }
-    else {
-      lifeCycle
-        .loadChildRows(dataView, filter)
-        .then(rows => groupHeader.childRows = rows)
-    }
+    this.disposers.push(autorun(()=>{
+      const groupingConfiguration = getGroupingConfiguration(this);
+      const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
+      const dataView = getDataView(this);
+      const filter = this.composeGroupingFilter(groupHeader)
+      const lifeCycle = getFormScreenLifecycle(this)
+      const aggregations = getTablePanelView(this).aggregations.get();
+      const orderingConfiguration = getOrderingConfiguration(this);
+      if (nextColumnName) {
+        lifeCycle
+          .loadChildGroups(dataView, filter, nextColumnName, aggregations)
+          .then(groupData => groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader));
+      }
+      else {
+        lifeCycle
+          .loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
+          .then(rows => groupHeader.childRows = rows)
+      }
+    }));
   }
 
   getAllParents(rowGroup: IGroupTreeNode) {

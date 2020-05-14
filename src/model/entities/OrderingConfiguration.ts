@@ -1,6 +1,7 @@
 import { action, comparer, computed, observable, flow } from "mobx";
 import { IDataTable } from "./types/IDataTable";
 import {
+  IGroupChildrenOrdering,
   IOrderByColumnSetting,
   IOrderByDirection,
   IOrderingConfiguration
@@ -9,6 +10,7 @@ import _ from "lodash";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import {getProperties} from "../selectors/DataView/getProperties";
 
 interface IDataOrdering {
   column: string;
@@ -29,6 +31,18 @@ function cycleOrdering(direction: IOrderByDirection) {
 
 export class OrderingConfiguration implements IOrderingConfiguration {
   @observable ordering: IDataOrdering[] = [];
+
+  @computed get groupChildrenOrdering(): IGroupChildrenOrdering | undefined {
+    if(this.ordering.length === 0 || !this.ordering[0]) return undefined;
+    const property = getProperties(this)
+      .find(prop => prop.id === this.ordering[0].column);
+    const lookupId = property &&  property.lookup && property.lookup.lookupId;
+    return {
+      columnId: this.ordering[0].column,
+      direction: this.ordering[0].direction,
+      lookupId: lookupId
+    };
+  }
 
   getOrdering(column: string): IOrderByColumnSetting {
     const ordIndex = this.ordering.findIndex(item => item.column === column);
