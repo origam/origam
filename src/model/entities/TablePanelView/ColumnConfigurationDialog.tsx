@@ -1,12 +1,12 @@
 import React from "react";
-import { action, computed } from "mobx";
+import {action, computed} from "mobx";
 
-import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
-import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
-import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableColumnsConf, ColumnsDialog } from "gui/Components/Dialogs/ColumnsDialog";
-import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import {getDialogStack} from "../../selectors/DialogStack/getDialogStack";
+import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
+import {ColumnsDialog, ITableColumnsConf} from "gui/Components/Dialogs/ColumnsDialog";
+import {onColumnConfigurationSubmit} from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {
@@ -22,7 +22,9 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         isVisible: !this.tablePanelView.hiddenPropertyIds.get(prop.id),
         groupingIndex: groupingConf.groupingIndices.get(prop.id) || 0,
         aggregationType: this.tablePanelView.aggregations.getType(prop.id)!,
-        entity:prop.entity,
+        entity: prop.entity,
+        canGroup: !prop.isAggregatedColumn,
+        canAggregate: !prop.isAggregatedColumn,
       });
     }
     return conf;
@@ -61,7 +63,6 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       }
       this.tablePanelView.aggregations.setType(column.id, column.aggregationType)
     }
-    //groupingConf.applyGrouping();
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 

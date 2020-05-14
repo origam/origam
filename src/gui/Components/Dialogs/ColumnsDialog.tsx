@@ -1,11 +1,11 @@
 import S from "./ColumnsDialog.module.css";
-import React, {SyntheticEvent} from "react";
-import { ModalWindowOverlay, ModalWindow, CloseButton } from "../Dialog/Dialog";
-import { AutoSizer, MultiGrid } from "react-virtualized";
-import { bind } from "bind-decorator";
-import { observable, action } from "mobx";
-import { observer, Observer } from "mobx-react";
-import produce, { finishDraft } from "immer";
+import React from "react";
+import {CloseButton, ModalWindow} from "../Dialog/Dialog";
+import {AutoSizer, MultiGrid} from "react-virtualized";
+import {bind} from "bind-decorator";
+import {action, observable} from "mobx";
+import {observer, Observer} from "mobx-react";
+import produce from "immer";
 import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/IAggregationInfo";
 
 export interface ITableColumnsConf {
@@ -20,6 +20,8 @@ export interface ITableColumnConf {
   groupingIndex: number;
   aggregationType: AggregationType | undefined;
   entity: string;
+  canGroup: boolean;
+  canAggregate: boolean;
 }
 
 @observer
@@ -57,10 +59,10 @@ export class ColumnsDialog extends React.Component<{
         draft.columnConf[rowIndex].groupingIndex = 0;
         let groupingIndex = 1;
         columnConfCopy.reverse();
-        for(let columnConfItem of columnConfCopy) {
-          if(columnConfItem.groupingIndex > 0) {
+        for (let columnConfItem of columnConfCopy) {
+          if (columnConfItem.groupingIndex > 0) {
             columnConfItem.groupingIndex = groupingIndex++;
-          } 
+          }
         }
       }
     });
@@ -83,7 +85,7 @@ export class ColumnsDialog extends React.Component<{
     return (
       <ModalWindow
         title="Columns"
-        titleButtons={<CloseButton onClick={this.props.onCloseClick} />}
+        titleButtons={<CloseButton onClick={this.props.onCloseClick}/>}
         buttonsCenter={
           <>
             <button
@@ -102,7 +104,7 @@ export class ColumnsDialog extends React.Component<{
       >
         <div className={S.columnTable}>
           <AutoSizer>
-            {({ width, height }) => (
+            {({width, height}) => (
               <Observer>
                 {() => (
                   <MultiGrid
@@ -111,7 +113,7 @@ export class ColumnsDialog extends React.Component<{
                     cellRenderer={this.renderCell}
                     columnCount={4}
                     rowCount={1 + this.configuration.columnConf.length}
-                    columnWidth={({ index }: { index: number }) => {
+                    columnWidth={({index}: { index: number }) => {
                       return this.columnWidths[index];
                     }}
                     rowHeight={20}
@@ -138,7 +140,7 @@ export class ColumnsDialog extends React.Component<{
   }
 
   getCell(rowIndex: number, columnIndex: number) {
-    const { isVisible, name, aggregationType, groupingIndex, entity } = this.configuration.columnConf[rowIndex];
+    const {isVisible, name, aggregationType, groupingIndex, entity, canGroup, canAggregate} = this.configuration.columnConf[rowIndex];
     switch (columnIndex) {
       case 0:
         return (
@@ -159,22 +161,25 @@ export class ColumnsDialog extends React.Component<{
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
               onClick={(event: any) => this.setGrouping(rowIndex, event.target.checked)}
+              disabled={!canGroup}
             />{" "}
             {groupingIndex > 0 ? groupingIndex : ""}
           </span>
         );
       case 3:
-        if(entity === "Currency" || entity === "Integer"){
-          return(
-              <select onChange={(event:any) => this.setAggregation(rowIndex, event.target.value)}>
-                <option value=""/>
-                <option value="SUM" selected={aggregationType === AggregationType.SUM}>SUM</option>
-                <option value="AVG" selected={aggregationType === AggregationType.AVG}>AVG</option>
-                <option value="MIN" selected={aggregationType === AggregationType.MIN}>MIN</option>
-                <option value="MAX" selected={aggregationType === AggregationType.MAX}>MAX</option>
-              </select>
+        if (entity === "Currency" || entity === "Integer") {
+          return (
+            <select
+              onChange={(event: any) => this.setAggregation(rowIndex, event.target.value)}
+              disabled={!canAggregate}>
+              <option value=""/>
+              <option value="SUM" selected={aggregationType === AggregationType.SUM}>SUM</option>
+              <option value="AVG" selected={aggregationType === AggregationType.AVG}>AVG</option>
+              <option value="MIN" selected={aggregationType === AggregationType.MIN}>MIN</option>
+              <option value="MAX" selected={aggregationType === AggregationType.MAX}>MAX</option>
+            </select>
           );
-        }else{
+        } else {
           return "";
         }
       default:
@@ -263,7 +268,7 @@ export class TableHeader extends React.Component<{
     const newWidth = this.width0 + vec;
     console.log(this.props.columnIndex, newWidth);
     this.props.onColumnWidthChange &&
-      this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
+    this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
   }
 
   @action.bound handleWindowMouseUp(event: any) {
@@ -275,7 +280,7 @@ export class TableHeader extends React.Component<{
     return (
       <div style={this.props.style} className={S.columnTableCell + " header"}>
         {this.getHeader(this.props.columnIndex)}
-        <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown} />
+        <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown}/>
       </div>
     );
   }

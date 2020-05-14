@@ -233,7 +233,8 @@ export function interpretScreenXml(
                 }),
 
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
-            isTree: property.attributes.IsTree === "true"
+            isTree: property.attributes.IsTree === "true",
+            isAggregatedColumn: property.attributes.Aggregated || false,
           });
         }
       );

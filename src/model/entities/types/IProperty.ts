@@ -30,6 +30,7 @@ export interface IPropertyData {
   columnWidth: number;
   formatterPattern: string;
   customNumericFormat?: string;
+  isAggregatedColumn: boolean;
 
   allowReturnToForm?: boolean;
   isTree?: boolean;
