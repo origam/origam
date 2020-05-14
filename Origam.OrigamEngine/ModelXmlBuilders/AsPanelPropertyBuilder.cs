@@ -111,7 +111,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						type: typeof(AggregatedColumn),
 						primaryKey: new Key(id),
 						useCache: false);
-				return columnInstance != null;
+				return columnInstance is AggregatedColumn;
 			}
 	}
 }
