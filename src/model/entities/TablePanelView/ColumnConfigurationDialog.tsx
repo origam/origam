@@ -7,6 +7,7 @@ import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
 import {ColumnsDialog, ITableColumnsConf} from "gui/Components/Dialogs/ColumnsDialog";
 import {onColumnConfigurationSubmit} from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
 import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {getDontRequestData} from "../../selectors/getDontRequestData";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {
@@ -15,6 +16,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       columnConf: [],
     };
     const groupingConf = getGroupingConfiguration(this);
+    const groupingOnClient = !getDontRequestData(this);
     for (let prop of this.tablePanelView.allTableProperties) {
       conf.columnConf.push({
         id: prop.id,
@@ -23,8 +25,8 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         groupingIndex: groupingConf.groupingIndices.get(prop.id) || 0,
         aggregationType: this.tablePanelView.aggregations.getType(prop.id)!,
         entity: prop.entity,
-        canGroup: !prop.isAggregatedColumn,
-        canAggregate: !prop.isAggregatedColumn,
+        canGroup: groupingOnClient || !prop.isAggregatedColumn,
+        canAggregate: groupingOnClient || !prop.isAggregatedColumn,
       });
     }
     return conf;
