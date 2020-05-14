@@ -106,6 +106,7 @@
     "start-selenium": "set BROWSER=node none.js && set REACT_APP_SELENIUM_KICK=1 && concurrently --kill-others \"node-dev --respawn --no-deps --dedupe ./tests/fixture-server01\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "test:debug": "node  --inspect-brk scripts/test.js test --runInBand --no-cache ",
     "test-endtoend": "set REACT_APP_TESTS_ENDTOEND_RUNNING=1 && node scripts/start.js",
     "start-server": "node-dev --respawn --no-deps --dedupe ./src-server/index-server.js"
   },
