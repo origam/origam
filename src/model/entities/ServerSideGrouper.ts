@@ -38,8 +38,10 @@ export class ServerSideGrouper implements IGrouper {
       const aggregations = getTablePanelView(this).aggregations.get();
       const orderingConfiguration = getOrderingConfiguration(this);
       if (nextColumnName) {
+        const property = getDataTable(this).getPropertyById(nextColumnName);
+        const lookupId = property && property.lookup && property.lookup.lookupId;
         lifeCycle
-          .loadChildGroups(dataView, filter, nextColumnName, aggregations)
+          .loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
           .then(groupData => groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader));
       }
       else {

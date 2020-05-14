@@ -258,7 +258,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string, aggregations: IAggregationInfo[] | undefined){
+  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string,
+                  aggregations: IAggregationInfo[] | undefined, lookupId: string | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
@@ -268,7 +269,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       Ordering: [],
       RowLimit: 999999,
       GroupBy: groupByColumn,
-      GroupByLookupId: undefined,
+      GroupByLookupId: lookupId,
       MasterRowId: undefined,
       AggregatedColumns: aggregations
     })

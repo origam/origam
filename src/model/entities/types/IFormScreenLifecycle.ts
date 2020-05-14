@@ -57,7 +57,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   start(initUIResult: any): Generator;
 
   loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined):  Promise<any[]>;
-  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string, aggregations: IAggregationInfo[] | undefined): Promise<any[]>;
+  loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string,
+                  aggregations: IAggregationInfo[] | undefined, lookupId: string | undefined): Promise<any[]>;
   loadChildRows(rootDataView: IDataView, filter: string, ordering: IGroupChildrenOrdering | undefined): Promise<any[]>;
 
   parent?: any;
