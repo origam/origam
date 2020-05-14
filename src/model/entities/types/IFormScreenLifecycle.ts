@@ -51,6 +51,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   clearAutorefreshInterval(): void;
 
+  killForm(): void;
   start(initUIResult: any): Generator;
   parent?: any;
 }

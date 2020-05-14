@@ -533,26 +533,42 @@ export class OrigamAPI implements IApi {
   }
 
   async workflowAbort(data: { sessionFormIdentifier: string }): Promise<any> {
-    return (
+    const result =  (
       await axios.get(`${this.urlPrefix}/UIService/WorkflowAbort/${data.sessionFormIdentifier}`, {
         headers: this.httpAuthHeader,
       })
     ).data;
+
+    return {
+      ...result,
+      formDefinition: xmlJs.xml2js(result.formDefinition, {
+        addParent: true,
+        alwaysChildren: true,
+      }),
+    };
   }
 
   async workflowRepeat(data: { sessionFormIdentifier: string }): Promise<any> {
-    return (
+    const result =  (
       await axios.get(`${this.urlPrefix}/UIService/WorkflowRepeat/${data.sessionFormIdentifier}`, {
         headers: this.httpAuthHeader,
       })
-    ).data;
+    ).data.result;
+
+    return {
+      ...result,
+      formDefinition: xmlJs.xml2js(result.formDefinition, {
+        addParent: true,
+        alwaysChildren: true,
+      }),
+    };
   }
 
   async workflowNext(data: {
     sessionFormIdentifier: string;
     CachedFormIds: string[];
   }): Promise<any> {
-    return (
+    const result = (
       await axios.post(
         `${this.urlPrefix}/UIService/WorkflowNext`,
         {
@@ -564,6 +580,14 @@ export class OrigamAPI implements IApi {
         }
       )
     ).data;
+
+    return {
+      ...result,
+      formDefinition: xmlJs.xml2js(result.formDefinition, {
+        addParent: true,
+        alwaysChildren: true,
+      }),
+    };
   }
 
   async workflowNextQuery(data: { sessionFormIdentifier: string }): Promise<any> {

@@ -3,7 +3,20 @@
 .root {
   background: white;
   padding: 20px;
+  display: flex;
+  flex-direction: row;
   button {
     @include dialogButton();
+  }
+  .message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 15px;
+    p {
+      font-size: 16px;
+      margin: 0px;
+      padding: 0px;
+    }
   }
 }
