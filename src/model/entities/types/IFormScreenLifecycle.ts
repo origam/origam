@@ -2,6 +2,7 @@ import { IAction } from "model/entities/types/IAction";
 import { IDataView } from "./IDataView";
 import {Aggregation} from "./Aggregation";
 import {IGroupChildrenOrdering} from "./IOrderingConfiguration";
+import {IReactionDisposer} from "mobx";
 export interface IFormScreenLifecycleData {}
 
 export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
@@ -62,6 +63,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   loadChildRows(rootDataView: IDataView, filter: string, ordering: IGroupChildrenOrdering | undefined): Promise<any[]>;
   loadAggregations(rootDataView: IDataView, aggregations: Aggregation[]): Promise<any[]> ;
   parent?: any;
+
+  registerDisposer(disposer: any): void;
 }
 
 export const isIFormScreenLifecycle = (o: any): o is IFormScreenLifecycle =>

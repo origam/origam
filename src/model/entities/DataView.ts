@@ -25,6 +25,7 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { ServerSideGrouper } from "./ServerSideGrouper";
 import { ClientSideGrouper } from "./ClientSideGrouper";
+import {getFormScreenLifecycle} from "../selectors/FormScreen/getFormScreenLifecycle";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -355,6 +356,8 @@ export class DataView implements IDataView {
   @action.bound start() {
     this.lifecycle.start();
     this.serverSideGrouper.start();
+    getFormScreenLifecycle(this)
+      .registerDisposer(() => this.serverSideGrouper.dispose());
   }
 
   parent?: any;

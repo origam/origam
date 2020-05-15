@@ -1,6 +1,6 @@
 import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, autorun, computed, flow, observable, reaction, when } from "mobx";
+import {action, autorun, computed, flow, IReactionDisposer, observable, reaction, when} from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -56,6 +56,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
   @observable inFlow = 0;
   disposers: any[] = [];
+
+  registerDisposer(disposer: any){
+    this.disposers.push(disposer);
+  }
 
   *onFlushData(): Generator<unknown, any, unknown> {
     yield* this.flushData();
@@ -496,9 +500,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *closeForm() {
     try {
-      for (let dataView of getDataViewList(this)) {
-        dataView.serverSideGrouper.dispose();
-      }
       this.inFlow++;
       this.clearAutorefreshInterval();
       this.disposers.forEach(disposer => disposer());

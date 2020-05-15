@@ -2,7 +2,7 @@ import {getGroupingConfiguration} from "../selectors/TablePanelView/getGroupingC
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import {getDataView} from "model/selectors/DataView/getDataView";
 import {IGrouper} from "./types/IGrouper";
-import {autorun, computed, IReactionDisposer, observable} from "mobx";
+import {autorun, IReactionDisposer, observable} from "mobx";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";

@@ -302,6 +302,7 @@ class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
     Object.assign(this, data);
     const disposer = this.start();
+    getFormScreenLifecycle(this.dataView).registerDisposer(disposer);
   }
   gridDimensions: IGridDimensions  = null as any;
   getTableViewProperties: () => IProperty[] = null as any;
