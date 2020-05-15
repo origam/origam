@@ -2,7 +2,7 @@
 import {computed, observable} from "mobx";
 import {IAggregation, IGroupTreeNode} from "./types";
 import {IHeaderContainer} from "../../../../Workbench/ScreenArea/TableView/TableView";
-import {parseAggregationType} from "../../../../../model/entities/types/IAggregationInfo";
+import {parseAggregationType} from "../../../../../model/entities/types/Aggregation";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {getDataTable} from "../../../../../model/selectors/DataView/getDataTable";
 
@@ -64,16 +64,4 @@ export class GroupItem implements IGroupTreeNode {
   grouper: IGrouper = null as any;
 
   @observable isExpanded = false;
-}
-
-export function parseAggregations(objectArray: any[] | undefined){
-  if(!objectArray) return undefined;
-  return objectArray.map(object =>
-    {
-      return {
-        columnId: object["column"],
-        type: parseAggregationType(object["type"]),
-        value: object["value"]
-      }
-    });
 }

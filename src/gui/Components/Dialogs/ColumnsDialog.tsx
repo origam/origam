@@ -6,7 +6,7 @@ import {bind} from "bind-decorator";
 import {action, observable} from "mobx";
 import {observer, Observer} from "mobx-react";
 import produce from "immer";
-import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/IAggregationInfo";
+import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/Aggregation";
 import {Dropdowner} from "../Dropdowner/Dropdowner";
 import {DataViewHeaderAction} from "../../../gui02/components/DataViewHeader/DataViewHeaderAction";
 import {Dropdown} from "../../../gui02/components/Dropdown/Dropdown";

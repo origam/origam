@@ -1,4 +1,4 @@
-import {AggregationType} from "../../../../../model/entities/types/IAggregationInfo";
+import {AggregationType} from "../../../../../model/entities/types/Aggregation";
 
 export interface IGroupRow {
   groupLevel: number;

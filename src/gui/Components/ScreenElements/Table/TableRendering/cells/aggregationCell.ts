@@ -20,6 +20,7 @@ import {CPR} from "../../../../../../utils/canvas";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {IGroupRow} from "../types";
 import {dataColumnsWidths} from "./dataCell";
+import {aggregationToString} from "../../../../../../model/entities/types/Aggregation";
 
 
 export function aggregationColumnsWidths() {
@@ -65,11 +66,7 @@ function drawAggregationText(){
     ctx2d.fillStyle = "black";
     ctx2d.textAlign = "right";
     ctx2d.fillText(
-        aggregation.type + ": " + round(aggregation.value) ,
+      aggregationToString(aggregation) ,
         CPR * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
         CPR * (currentRowTop() + topTextOffset));
 }
-function round(value: number){
-    return Math.round(value * 100)/100
-}
-

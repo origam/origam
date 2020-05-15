@@ -10,6 +10,7 @@ import { IAction } from "./IAction";
 import { ILookupLoader } from "./ILookupLoader";
 import { ServerSideGrouper } from "../ServerSideGrouper";
 import { ClientSideGrouper } from "../ClientSideGrouper";
+import {IReactionDisposer} from "mobx";
 
 export interface IDataViewData {
   id: string;

@@ -4,10 +4,11 @@ import {getDataView} from "model/selectors/DataView/getDataView";
 import {IGrouper} from "./types/IGrouper";
 import {autorun, computed, IReactionDisposer, observable} from "mobx";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {GroupItem, parseAggregations} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
+import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getDataTable} from "../selectors/DataView/getDataTable";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {getOrderingConfiguration} from "../selectors/DataView/getOrderingConfiguration";
+import {parseAggregations} from "./types/Aggregation";
 
 export class ServerSideGrouper implements IGrouper {
 
@@ -17,11 +18,14 @@ export class ServerSideGrouper implements IGrouper {
 
   start(){
     this.disposers.push(autorun(()=>{
-      const dataView = getDataView(this);
       const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
+      if(!firstGroupingColumn){
+        return;
+      }
+      const dataView = getDataView(this);
       const property = getDataTable(this).getPropertyById(firstGroupingColumn);
       const lookupId = property && property.lookup && property.lookup.lookupId;
-      const aggregations = getTablePanelView(this).aggregations.get();
+      const aggregations = getTablePanelView(this).aggregations.aggregationList;
       getFormScreenLifecycle(this)
         .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
         .then(groupData =>this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
@@ -35,7 +39,7 @@ export class ServerSideGrouper implements IGrouper {
       const dataView = getDataView(this);
       const filter = this.composeGroupingFilter(groupHeader)
       const lifeCycle = getFormScreenLifecycle(this)
-      const aggregations = getTablePanelView(this).aggregations.get();
+      const aggregations = getTablePanelView(this).aggregations.aggregationList;
       const orderingConfiguration = getOrderingConfiguration(this);
       if (nextColumnName) {
         const property = getDataTable(this).getPropertyById(nextColumnName);

@@ -1,5 +1,5 @@
 import { AxiosPromise } from "axios";
-import { IAggregationInfo } from "./IAggregationInfo";
+import { Aggregation } from "./Aggregation";
 
 export interface IApi {
   accessToken: string;
@@ -214,14 +214,14 @@ export interface IApi {
     MasterRowId: string | undefined,
     GroupByLookupId: string | undefined,
     SessionFormIdentifier: string | undefined,
-    AggregatedColumns: IAggregationInfo[] | undefined
+    AggregatedColumns: Aggregation[] | undefined
   }): Promise<any[]>;
 
   getAggregations(data :{
     MenuId: string
     DataStructureEntityId: string,
     Filter: string | undefined,
-    AggregatedColumn: IAggregationInfo[]
+    AggregatedColumns: Aggregation[]
     SessionFormIdentifier: string | undefined,
     MasterRowId: string | undefined,
   }): Promise<any[]>

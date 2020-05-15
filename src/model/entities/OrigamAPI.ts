@@ -4,7 +4,7 @@ import axios from "axios";
 import _ from "lodash";
 import { IApi } from "./types/IApi";
 import { userManager } from "oauth";
-import { IAggregationInfo } from "./types/IAggregationInfo";
+import { Aggregation } from "./types/Aggregation";
 
 export class OrigamAPI implements IApi {
   constructor() {
@@ -441,7 +441,7 @@ export class OrigamAPI implements IApi {
     MasterRowId: string | undefined;
     GroupByLookupId: string | undefined;
     SessionFormIdentifier: string | undefined;
-    AggregatedColumns: IAggregationInfo[] | undefined;
+    AggregatedColumns: Aggregation[] | undefined;
   }): Promise<any[]> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetGroups`, data, {
@@ -453,7 +453,7 @@ export class OrigamAPI implements IApi {
     MenuId: string;
     DataStructureEntityId: string;
     Filter: string | undefined;
-    AggregatedColumn: IAggregationInfo[];
+    AggregatedColumns: Aggregation[];
     SessionFormIdentifier: string | undefined;
     MasterRowId: string | undefined;
   }): Promise<any[]> {

@@ -1,5 +1,5 @@
 import bind from "bind-decorator";
-import { action, computed, observable } from "mobx";
+import {action, autorun, computed, IReactionDisposer, observable} from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
@@ -35,6 +35,11 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getLeadingColumnCount } from "model/selectors/TablePanelView/getLeadingColumnCount";
 import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
 import {flattenToTableRows} from "../../../Components/ScreenElements/Table/TableRendering/tableRows";
+import {getTablePanelView} from "../../../../model/selectors/TablePanelView/getTablePanelView";
+import {getDataView} from "../../../../model/selectors/DataView/getDataView";
+import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
+import {aggregationToString, parseAggregations} from "../../../../model/entities/types/Aggregation";
+import {IAggregation} from "../../../Components/ScreenElements/Table/TableRendering/types";
 
 @inject(({ dataView }) => {
   return {
@@ -96,7 +101,7 @@ export class TableView extends React.Component<{
     getFixedColumnCount: () => getFixedColumnsCount(this.props.tablePanelView),
     getIsSelectionCheckboxes: () =>
       getIsSelectionCheckboxesShown(this.props.tablePanelView),
-    ctx: this.props.dataView,
+    dataView: this.props.dataView!,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     onColumnWidthChange: (cid, nw) =>
@@ -112,6 +117,7 @@ export class TableView extends React.Component<{
         idTarget
       )
   });
+
   scrollState = new SimpleScrollState(0, 0);
   cellRenderer = new CellRenderer({
     tablePanelView: this.props.tablePanelView!
@@ -141,7 +147,7 @@ export class TableView extends React.Component<{
             isEditorMounted={getIsEditing(this.props.tablePanelView)}
             isLoading={false}
             fixedColumnCount={fixedColumnCount}
-            headerContainers = {self.headerRenderer.makeHeaderContainers}
+            headerContainers = {self.headerRenderer.headerContainers}
             renderCell={self.cellRenderer.renderCell}
             renderEditor={() => (
               <TableViewEditor
@@ -287,7 +293,7 @@ interface IHeaderRendererData {
     idSource: string | undefined,
     idTarget: string | undefined
   ) => void;
-  ctx: any;
+  dataView: IDataView;
   gridDimensions: IGridDimensions;
   getFixedColumnCount: () => number;
 }
@@ -295,12 +301,14 @@ interface IHeaderRendererData {
 class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
     Object.assign(this, data);
+    const disposer = this.start();
   }
   gridDimensions: IGridDimensions  = null as any;
   getTableViewProperties: () => IProperty[] = null as any;
   getIsSelectionCheckboxes: () => boolean = null as any;
-  ctx: any = null as any;
+  dataView: IDataView = null as any;
   getFixedColumnCount = null as any;
+  @observable aggregationData: IAggregation[] = []
 
   @computed get tableViewPropertiesOriginal() {
     return this.getTableViewProperties();
@@ -367,10 +375,10 @@ class HeaderRenderer implements IHeaderRendererData {
     );
   }
 
-  get makeHeaderContainers(){
+  @computed get headerContainers(){
     const columnDimensions = this.gridDimensions.displayedColumnDimensionsCom;
-    const leadingColumnCount = getLeadingColumnCount(this.ctx);
-    const selectionCheckBoxesShown = getIsSelectionCheckboxesShown(this.ctx);
+    const leadingColumnCount = getLeadingColumnCount(this.dataView);
+    const selectionCheckBoxesShown = getIsSelectionCheckboxesShown(this.dataView);
     const groupingColumnCount = leadingColumnCount - (selectionCheckBoxesShown ? 1 : 0)
     const dataColumnCount = columnDimensions.length - leadingColumnCount;
     const headerContainers = []
@@ -438,14 +446,45 @@ class HeaderRenderer implements IHeaderRendererData {
           onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
           onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
           onClick={onColumnHeaderClick(this.tablePanelView)}
-          additionalHeaderContent={
-            this.tablePanelView.filterConfiguration.isFilterControlsDisplayed
-              ? () => <FilterSettings />
-              : undefined
-          }
+          additionalHeaderContent={this.makeAdditionalHeaderContent(header.id)}
         />
       </Provider>
     );
+  }
+
+  makeAdditionalHeaderContent(columnId: string){
+    const filterControlsDisplayed = this.tablePanelView.filterConfiguration.isFilterControlsDisplayed;
+    if(!filterControlsDisplayed && this.aggregationData.length === 0){
+      return undefined;
+    }
+    const headerContent: JSX.Element[] =[]
+    if(filterControlsDisplayed){
+      headerContent.push(<FilterSettings />)
+    }
+    if(this.aggregationData.length !== 0){
+      const aggregation = this.aggregationData.find(agg => agg.columnId === columnId)
+      if(aggregation){
+        headerContent.push(<div>{aggregationToString(aggregation)}</div>)
+      }
+    }
+    return(() =>
+        <>
+          {headerContent}
+        </>);
+  }
+
+  start(){
+   return autorun(()=>{
+      const dataView = getDataView(this.dataView);
+      const aggregations = getTablePanelView(this.dataView).aggregations.aggregationList;
+      if(aggregations.length === 0){
+        this.aggregationData.length = 0;
+        return
+      }
+      getFormScreenLifecycle(this.dataView)
+        .loadAggregations(dataView, aggregations)
+        .then(data => this.aggregationData = parseAggregations(data) || []);
+    });
   }
 }
 

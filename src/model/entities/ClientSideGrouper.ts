@@ -4,7 +4,7 @@ import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupi
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {ClientSideGroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
-import {AggregationType, IAggregationInfo} from "./types/IAggregationInfo";
+import {AggregationType, Aggregation} from "./types/Aggregation";
 import { computed } from "mobx";
 
 export class ClientSideGrouper implements IGrouper {
@@ -66,7 +66,7 @@ export class ClientSideGrouper implements IGrouper {
 
   calcAggregations(rows: any[][]) {
     return getTablePanelView(this)
-      .aggregations.get()
+      .aggregations.aggregationList
       .map(aggregationInfo => {
         return {
           columnId: aggregationInfo.ColumnName,
@@ -77,7 +77,7 @@ export class ClientSideGrouper implements IGrouper {
   }
 
 
-  private calcAggregation(aggregationInfo: IAggregationInfo, rows: any[][]) {
+  private calcAggregation(aggregationInfo: Aggregation, rows: any[][]) {
     const index = this.findDataIndex(aggregationInfo.ColumnName);
     const valuesToAggregate = rows.map(row => row[index]);
 

@@ -30,7 +30,7 @@ import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGroupingConfiguration";
 import { IDataView } from "../types/IDataView";
-import {IAggregationInfo} from "../types/IAggregationInfo";
+import {Aggregation} from "../types/Aggregation";
 import {IGroupChildrenOrdering} from "../types/IOrderingConfiguration";
 
 enum IQuestionSaveDataAnswer {
@@ -259,7 +259,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string,
-                  aggregations: IAggregationInfo[] | undefined, lookupId: string | undefined){
+                  aggregations: Aggregation[] | undefined, lookupId: string | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
@@ -275,7 +275,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })
   }
 
-  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined){
+  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: Aggregation[] | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
@@ -286,6 +286,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       RowLimit: 999999,
       GroupBy: groupBy,
       GroupByLookupId: groupByLookupId,
+      MasterRowId: undefined,
+      AggregatedColumns: aggregations
+    });
+  }
+
+  loadAggregations(rootDataView: IDataView, aggregations: Aggregation[]){
+    const api = getApi(this);
+    return api.getAggregations({
+      MenuId: getMenuItemId(rootDataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(rootDataView),
+      Filter: "",
       MasterRowId: undefined,
       AggregatedColumns: aggregations
     });

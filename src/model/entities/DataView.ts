@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import {action, computed, IReactionDisposer, observable} from "mobx";
 import { getParentRow } from "model/selectors/DataView/getParentRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
