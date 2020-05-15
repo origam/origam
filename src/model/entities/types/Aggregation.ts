@@ -51,7 +51,9 @@ export function aggregationToString(aggregation: IAggregation){
   function round(value: number){
     return Math.round(value * 100)/100
   }
-
+ if(aggregation.type === AggregationType.SUM){
+  return "Σ " + round(aggregation.value)
+ }
   return aggregation.type + ": " + round(aggregation.value)
 }
 
