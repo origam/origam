@@ -1,6 +1,6 @@
 import { IAction } from "model/entities/types/IAction";
 import { IDataView } from "./IDataView";
-import {Aggregation} from "./Aggregation";
+import {IAggregationInfo} from "./IAggregationInfo";
 import {IGroupChildrenOrdering} from "./IOrderingConfiguration";
 export interface IFormScreenLifecycleData {}
 
@@ -56,11 +56,11 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   start(initUIResult: any): Generator;
 
-  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: Aggregation[] | undefined):  Promise<any[]>;
+  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined):  Promise<any[]>;
   loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string,
-                  aggregations: Aggregation[] | undefined, lookupId: string | undefined): Promise<any[]>;
+                  aggregations: IAggregationInfo[] | undefined, lookupId: string | undefined): Promise<any[]>;
   loadChildRows(rootDataView: IDataView, filter: string, ordering: IGroupChildrenOrdering | undefined): Promise<any[]>;
-  loadAggregations(rootDataView: IDataView, aggregations: Aggregation[]): Promise<any[]> ;
+  loadAggregations(rootDataView: IDataView, aggregations: IAggregationInfo[]): Promise<any[]> ;
   parent?: any;
 
   registerDisposer(disposer: any): void;

@@ -1,10 +1,9 @@
 
 import {computed, observable} from "mobx";
-import {IAggregation, IGroupTreeNode} from "./types";
-import {IHeaderContainer} from "../../../../Workbench/ScreenArea/TableView/TableView";
-import {parseAggregationType} from "../../../../../model/entities/types/Aggregation";
+import {IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {getDataTable} from "../../../../../model/selectors/DataView/getDataTable";
+import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];

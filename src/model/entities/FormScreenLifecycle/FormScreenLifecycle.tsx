@@ -30,7 +30,7 @@ import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGroupingConfiguration";
 import { IDataView } from "../types/IDataView";
-import {Aggregation} from "../types/Aggregation";
+import {IAggregationInfo} from "../types/IAggregationInfo";
 import {IGroupChildrenOrdering} from "../types/IOrderingConfiguration";
 
 enum IQuestionSaveDataAnswer {
@@ -263,7 +263,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string,
-                  aggregations: Aggregation[] | undefined, lookupId: string | undefined){
+                  aggregations: IAggregationInfo[] | undefined, lookupId: string | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
@@ -279,7 +279,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })
   }
 
-  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: Aggregation[] | undefined){
+  loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined){
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
@@ -295,7 +295,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  loadAggregations(rootDataView: IDataView, aggregations: Aggregation[]){
+  loadAggregations(rootDataView: IDataView, aggregations: IAggregationInfo[]){
     const api = getApi(this);
     return api.getAggregations({
       MenuId: getMenuItemId(rootDataView),

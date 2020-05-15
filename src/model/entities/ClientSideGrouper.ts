@@ -4,8 +4,9 @@ import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupi
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {ClientSideGroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
-import {AggregationType, Aggregation} from "./types/Aggregation";
+import {IAggregationInfo} from "./types/IAggregationInfo";
 import { computed } from "mobx";
+import {AggregationType} from "./types/AggregationType";
 
 export class ClientSideGrouper implements IGrouper {
 
@@ -77,7 +78,7 @@ export class ClientSideGrouper implements IGrouper {
   }
 
 
-  private calcAggregation(aggregationInfo: Aggregation, rows: any[][]) {
+  private calcAggregation(aggregationInfo: IAggregationInfo, rows: any[][]) {
     const index = this.findDataIndex(aggregationInfo.ColumnName);
     const valuesToAggregate = rows.map(row => row[index]);
 

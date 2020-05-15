@@ -1,5 +1,5 @@
 import bind from "bind-decorator";
-import {action, autorun, computed, IReactionDisposer, observable} from "mobx";
+import {action, autorun, computed, observable} from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
@@ -38,8 +38,7 @@ import {flattenToTableRows} from "../../../Components/ScreenElements/Table/Table
 import {getTablePanelView} from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import {getDataView} from "../../../../model/selectors/DataView/getDataView";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
-import {aggregationToString, parseAggregations} from "../../../../model/entities/types/Aggregation";
-import {IAggregation} from "../../../Components/ScreenElements/Table/TableRendering/types";
+import {aggregationToString, IAggregation, parseAggregations} from "model/entities/types/IAggregation";
 
 @inject(({ dataView }) => {
   return {

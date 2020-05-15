@@ -22,7 +22,8 @@ import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemCli
 
 import selectors from "model/selectors-tree";
 import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
-import {AggregationType, Aggregation} from "../types/Aggregation";
+import {IAggregationInfo} from "../types/IAggregationInfo";
+import {AggregationType} from "../types/AggregationType";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -326,7 +327,7 @@ export class AggregationContainer{
     this.aggregationTypes.set(columnId, aggregationType);
   }
 
-  @computed get aggregationList(): Aggregation[]{
+  @computed get aggregationList(): IAggregationInfo[]{
     // @ts-ignore
     return Array.from(this.aggregationTypes.entries())
       .filter(entry => entry[1])

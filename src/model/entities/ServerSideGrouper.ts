@@ -8,7 +8,7 @@ import {GroupItem} from "gui/Components/ScreenElements/Table/TableRendering/Grou
 import {getDataTable} from "../selectors/DataView/getDataTable";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {getOrderingConfiguration} from "../selectors/DataView/getOrderingConfiguration";
-import {parseAggregations} from "./types/Aggregation";
+import {parseAggregations} from "./types/IAggregation";
 
 export class ServerSideGrouper implements IGrouper {
 
