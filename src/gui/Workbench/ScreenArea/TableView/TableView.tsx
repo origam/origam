@@ -503,11 +503,3 @@ class HeaderContainer implements IHeaderContainer {
   isFixed: boolean = null as any;
   width: number = null as any;
 }
-
-interface IColumnDriver {
-
-}
-
-interface IRowDriver {
-
-}

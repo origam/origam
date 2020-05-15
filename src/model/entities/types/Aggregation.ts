@@ -1,13 +1,4 @@
 import {IAggregation} from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
-import {CPR} from "../../../utils/canvas";
-import {
-  currentColumnLeft,
-  currentColumnWidth, currentRowTop
-} from "../../../gui/Components/ScreenElements/Table/TableRendering/currentCell";
-import {
-  numberCellPaddingLeft,
-  topTextOffset
-} from "../../../gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 export interface Aggregation {
   ColumnName: string;

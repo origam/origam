@@ -1,8 +1,6 @@
 import {
-    columnWidths,
     context2d,
     currentRow,
-    drawingColumnIndex,
     recordId,
     tableColumnIds,
     tablePanelView

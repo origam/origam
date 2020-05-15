@@ -1,4 +1,4 @@
-import {action, computed, IReactionDisposer, observable} from "mobx";
+import {action, computed, observable} from "mobx";
 import { getParentRow } from "model/selectors/DataView/getParentRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
@@ -17,7 +17,6 @@ import { getBindingToParent } from "model/selectors/DataView/getBindingToParent"
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
-import { IRowState } from "./types/IRowState";
 import { ILookupLoader } from "./types/ILookupLoader";
 import bind from "bind-decorator";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";

@@ -2,7 +2,6 @@ import { IAction } from "model/entities/types/IAction";
 import { IDataView } from "./IDataView";
 import {Aggregation} from "./Aggregation";
 import {IGroupChildrenOrdering} from "./IOrderingConfiguration";
-import {IReactionDisposer} from "mobx";
 export interface IFormScreenLifecycleData {}
 
 export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
