@@ -273,9 +273,10 @@ namespace Origam.ServerCore.Controller
                         dataStructureQuery: dataStructureQuery, 
                         methodId: input.MenuId, 
                         returnKeyValuePairs: true))
+                    .Bind(ExtractAggregationList)
                     .Finally(UnwrapReturnValue);
             });
-        }  
+        }
 
         [HttpPost("[action]")]
         public IActionResult GetGroups([FromBody]GetGroupsInput input)
@@ -476,6 +477,23 @@ namespace Origam.ServerCore.Controller
             });
         }
         #endregion
+        
+        private Result<IActionResult, IActionResult> ExtractAggregationList(IActionResult fullReaderResult)
+        {
+            var outerResultList = ((fullReaderResult as OkObjectResult)?.Value as List<IEnumerable<KeyValuePair<string, object>>>);
+            if (outerResultList == null || outerResultList.Count == 0)
+            {
+                return Result.Ok<IActionResult, IActionResult>(fullReaderResult);
+            }
+
+            var innerDictionary = outerResultList[0] as Dictionary<string, object>;
+            if (innerDictionary == null || !innerDictionary.ContainsKey("aggregations"))
+            {
+                return Result.Ok<IActionResult, IActionResult>(fullReaderResult);
+            }
+
+            return Result.Ok<IActionResult, IActionResult>(Ok(innerDictionary["aggregations"]));
+        }
         private Dictionary<object, string> GetLookupLabelsInternal(
             LookupLabelsInput input)
         {
