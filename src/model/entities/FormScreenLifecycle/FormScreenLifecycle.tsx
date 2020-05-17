@@ -75,7 +75,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     entity: string,
     action: IAction,
     selectedItems: string[]
-  ): Generator<unknown, any, unknown> {
+  ): Generator<any, any, any> {
     yield* this.executeAction(gridId, entity, action, selectedItems);
   }
 
@@ -130,7 +130,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         sessionFormIdentifier: sessionId,
       })) as IQueryInfo[];
       const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo);
-      if(!processQueryInfoResult.canContinue) return;
+      if (!processQueryInfoResult.canContinue) return;
       const uiResult = yield api.workflowNext({
         sessionFormIdentifier: sessionId,
         CachedFormIds: [],
@@ -459,7 +459,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         parameters[parameter.name] = parameter.fieldName;
       }
       const api = getApi(this);
-      const queryResult = yield api.executeActionQuery({
+      const queryResult = (yield api.executeActionQuery({
         SessionFormIdentifier: getSessionId(this),
         Entity: entity,
         ActionType: action.type,
@@ -467,8 +467,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ParameterMappings: parameters,
         SelectedItems: selectedItems,
         InputParameters: {},
-      });
-      console.log("EAQ", queryResult);
+      })) as IQueryInfo[];
+      const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
+      if (!processQueryInfoResult.canContinue) return;
 
       const result = yield api.executeAction({
         SessionFormIdentifier: getSessionId(this),

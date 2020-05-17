@@ -30,7 +30,7 @@ export function processActionQueryInfo(ctx: any) {
           const closeDialog = getDialogStack(ctx).pushDialog(
             "",
             <ModalWindow
-              title="Workflow error"
+              title="Action error"
               titleButtons={null}
               buttonsCenter={
                 <>
