@@ -28,6 +28,7 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
+import { processActionQueryInfo, IQueryInfo } from "model/actions/Actions/processActionQueryInfo";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -125,7 +126,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       const api = getApi(this);
       const sessionId = getSessionId(this);
-      yield api.workflowNextQuery({ sessionFormIdentifier: sessionId });
+      const actionQueryInfo = (yield api.workflowNextQuery({
+        sessionFormIdentifier: sessionId,
+      })) as IQueryInfo[];
+      const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo);
+      if(!processQueryInfoResult.canContinue) return;
       const uiResult = yield api.workflowNext({
         sessionFormIdentifier: sessionId,
         CachedFormIds: [],
