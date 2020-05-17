@@ -120,6 +120,57 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *onWorkflowNextClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      const api = getApi(this);
+      const sessionId = getSessionId(this);
+      yield api.workflowNextQuery({ sessionFormIdentifier: sessionId });
+      const uiResult = yield api.workflowNext({
+        sessionFormIdentifier: sessionId,
+        CachedFormIds: [],
+      });
+      this.killForm();
+      yield* this.start(uiResult);
+    } finally {
+      this.inFlow--;
+    }
+  }
+
+  *onWorkflowAbortClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      const api = getApi(this);
+      const uiResult = yield api.workflowAbort({ sessionFormIdentifier: getSessionId(this) });
+      this.killForm();
+      yield* this.start(uiResult);
+    } finally {
+      this.inFlow--;
+    }
+  }
+
+  *onWorkflowRepeatClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      const api = getApi(this);
+      const sessionId = getSessionId(this);
+      const uiResult = yield api.workflowRepeat({ sessionFormIdentifier: sessionId });
+      this.killForm();
+      yield* this.start(uiResult);
+    } finally {
+      this.inFlow--;
+    }
+  }
+
+  *onWorkflowCloseClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      yield* this.onRequestScreenClose();
+    } finally {
+      this.inFlow--;
+    }
+  }
+
   _autorefreshTimerHandle: any;
 
   *startAutorefreshIfNeeded() {

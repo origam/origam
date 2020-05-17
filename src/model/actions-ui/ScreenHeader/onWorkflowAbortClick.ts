@@ -7,11 +7,8 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 export function onWorkflowAbortClick(ctx: any) {
   return flow(function* onWorkflowAbortClick(event: any) {
     try {
-      const api = getApi(ctx);
-      const uiResult = yield api.workflowAbort({ sessionFormIdentifier: getSessionId(ctx) });
       const lifecycle = getFormScreenLifecycle(ctx);
-      lifecycle.killForm();
-      yield* lifecycle.start(uiResult);
+      yield* lifecycle.onWorkflowAbortClick(event);
     } catch (e) {
       yield* handleError(ctx)(e);
       throw e;

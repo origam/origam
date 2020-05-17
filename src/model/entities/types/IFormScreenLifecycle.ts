@@ -51,6 +51,11 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   clearAutorefreshInterval(): void;
 
+  onWorkflowNextClick(event: any): Generator;
+  onWorkflowAbortClick(event: any): Generator;
+  onWorkflowRepeatClick(event: any): Generator;
+  onWorkflowCloseClick(event: any): Generator;
+
   killForm(): void;
   start(initUIResult: any): Generator;
   parent?: any;

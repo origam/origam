@@ -76,7 +76,7 @@ export class FormScreenBuilder extends React.Component<{
               isCloseButton={xso.attributes.showWorkflowCloseButton}
               isRepeatButton={xso.attributes.showWorkflowRepeatButton}
               message={xso.attributes.Message}
-              onCloseClick={actions.workflow.onCancelClick(self.formScreen)}
+              onCloseClick={actions.workflow.onCloseClick(self.formScreen)}
               onRepeatClick={actions.workflow.onRepeatClick(self.formScreen)}
             />
           );
