@@ -372,8 +372,8 @@ export function interpretScreenXml(
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
 
-    const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
-    $mapPerspective.resolve(IMapPerspectiveDirector).setup();
+    /*const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
+    $mapPerspective.resolve(IMapPerspectiveDirector).setup();*/
 
     flow($dataView.resolve(IPerspective).activateDefault)();
   }
