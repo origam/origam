@@ -15,6 +15,8 @@ import { ScreenheaderDivider } from "gui02/components/ScreenHeader/ScreenHeaderD
 import { onWorkflowAbortClick } from "model/actions-ui/ScreenHeader/onWorkflowAbortClick";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 
+import S from "gui02/components/ScreenHeader/ScreenHeader.module.scss";
+
 @observer
 export class CScreenHeader extends React.Component {
   static contextType = MobXProviderContext;
@@ -48,20 +50,32 @@ export class CScreenHeader extends React.Component {
         <h1>{this.getLabel(activeScreen)}</h1>
         {(isCancelButton || isNextButton) && <ScreenheaderDivider />}
         {isCancelButton && (
-          <ScreenHeaderAction
+          /*<ScreenHeaderAction
             className="isOrangeOnHover"
             onClick={onWorkflowAbortClick(content.formScreen!)}
           >
             <Icon src="./icons/close.svg" />
-          </ScreenHeaderAction>
+          </ScreenHeaderAction>*/
+          <button
+            className={S.workflowActionBtn}
+            onClick={onWorkflowAbortClick(content.formScreen!)}
+          >
+            Cancel
+          </button>
         )}
         {isNextButton && (
-          <ScreenHeaderAction
+          /*<ScreenHeaderAction
             className="isGreenOnHover"
             onClick={onWorkflowNextClick(content.formScreen!)}
           >
             <Icon src="./icons/list-arrow-next.svg" />
-          </ScreenHeaderAction>
+          </ScreenHeaderAction>*/
+          <button
+            className={S.workflowActionBtn}
+            onClick={onWorkflowNextClick(content.formScreen!)}
+          >
+            Next
+          </button>
         )}
         {/*<ScreenheaderDivider />
           <ScreenHeaderAction className="isGreenOnHover">

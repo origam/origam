@@ -553,7 +553,7 @@ export class OrigamAPI implements IApi {
       await axios.get(`${this.urlPrefix}/UIService/WorkflowRepeat/${data.sessionFormIdentifier}`, {
         headers: this.httpAuthHeader,
       })
-    ).data.result;
+    ).data;
 
     return {
       ...result,
