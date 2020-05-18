@@ -471,6 +471,7 @@ export class OrigamAPI implements IApi {
     Filter: string;
     Ordering: string[][];
     RowLimit: number;
+    RowOffset: number;
     ColumnNames: string[];
     MasterRowId: string | undefined;
   }): Promise<any> {

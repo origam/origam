@@ -257,6 +257,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       Filter: filter,
       Ordering: ordering ? [[ordering.columnId, ordering.direction]] : [],
       RowLimit: 999999,
+      RowOffset: 0,
       ColumnNames: getColumnNamesToLoad(rootDataView),
       MasterRowId: undefined
     });
@@ -330,6 +331,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             Filter: "",
             Ordering: [],
             RowLimit: 999999,
+            RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(rootDataView),
             MasterRowId: undefined
           });
