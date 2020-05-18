@@ -766,7 +766,10 @@ namespace Origam.ServerCore.Controller
             {
                 return Result.Failure<DataStructureQuery, IActionResult>(customOrdering.Error);
             }
-            
+            if (input.RowOffset != 0 && customOrdering.Value.Count == 0)
+            {
+                return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
+            }
             var query = new DataStructureQuery
             {
                 Entity = entityData.Entity.Name,
@@ -775,6 +778,7 @@ namespace Origam.ServerCore.Controller
                     : input.Filter,
                 CustomOrdering = customOrdering.Value,
                 RowLimit = input.RowLimit,
+                RowOffset = input.RowOffset,
                 ColumnsInfo = new ColumnsInfo(input.ColumnNames
                     .Select(colName =>
                     {

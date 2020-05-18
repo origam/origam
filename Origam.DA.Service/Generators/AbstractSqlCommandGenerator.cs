@@ -964,6 +964,8 @@ namespace Origam.DA.Service
             var customOrdering = selectParameters.CustomOrdering;
             var filter = selectParameters.Filter;
             var rowLimit = selectParameters.RowLimit;
+            var rowOffset = selectParameters.RowOffset;
+            bool rowOffsetSpecified = rowOffset.HasValue && rowOffset != 0;
             
             if (!(entity.EntityDefinition is TableMappingItem))
             {
@@ -1002,7 +1004,7 @@ namespace Origam.DA.Service
                 isInRecursion: isInRecursion, 
                 concatScalarColumns: restrictScalarToTop1,
                 forceDatabaseCalculation: forceDatabaseCalculation);
-
+            bool orderBySpecified = (!string.IsNullOrWhiteSpace(customCommandParser?.OrderByClause) || orderByBuilder.Length > 0);
             // paging column
             if (paging)
             {
@@ -1176,7 +1178,7 @@ namespace Origam.DA.Service
             {
                 finalString = SelectClause(finalString, 1);
             }
-            else if (rowLimit.HasValue)
+            else if (rowLimit.HasValue && (!rowOffset.HasValue || rowOffset == 0))
             {
                 finalString = SelectClause(finalString, rowLimit.Value);
             }
@@ -1184,13 +1186,22 @@ namespace Origam.DA.Service
             {
                 finalString = SelectClause(finalString, 0);
             }
-
+            
             if (paging)
             {
+                if (rowOffsetSpecified)
+                {
+                    throw new ArgumentException("Cannot render SQL with \"WHERE\" pagination and \"OFFSET-FETCH\" pagination together");
+                }
                 finalString = string.Format(
                     "SELECT * FROM ({0}) _page WHERE _page.{1} BETWEEN (({2} - 1) * {3}) + 1 AND {3} * {2}",
                     finalString, RowNumColumnName, _pageNumberParameterName, _pageSizeParameterName);
             }
+            else if (rowOffsetSpecified && orderBySpecified)
+            {
+                finalString += $" OFFSET {rowOffset} ROWS FETCH NEXT {rowLimit} ROWS ONLY;";
+            }
+
             return finalString;
         }
 
@@ -1754,7 +1765,7 @@ namespace Origam.DA.Service
                         sortSet, selectParameterReferences, isInRecursion,
                         forceDatabaseCalculation, group, order, ref groupByNeeded,
                         columnsInfo ?? ColumnsInfo.Empty, column,
-                        customOrderingInfo);
+                        customOrderingInfo, selectParameters.RowOffset);
                 if (expression != null)
                 {
                     if (i > 0) sqlExpression.Append(",");
@@ -1929,7 +1940,8 @@ namespace Origam.DA.Service
             Hashtable selectParameterReferences, bool isInRecursion,
             bool forceDatabaseCalculation, List<string> group, SortedList order,
             ref bool groupByNeeded, ColumnsInfo columnsInfo,
-            DataStructureColumn column, LookupOrderingInfo orderingInfo)
+            DataStructureColumn column, LookupOrderingInfo orderingInfo,
+            int? rowOffset = null)
         {
             string result = null;
             bool processColumn = false;
@@ -2023,7 +2035,7 @@ namespace Origam.DA.Service
                 {
                     sortExpression = RenderLookupColumnExpression(ds, entity, column,
                         replaceParameterTexts, dynamicParameters, 
-                        selectParameterReferences, orderingInfo?.Lookup);
+                        selectParameterReferences, orderingInfo?.Lookup, rowOffset);
                 }
                 sortOrder.Expression = sortExpression;
                 if (orderingInfo == null)
@@ -2179,7 +2191,7 @@ namespace Origam.DA.Service
 
         private string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity,
             DataStructureColumn column, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
-            Hashtable parameterReferences, DataServiceDataLookup customLookup = null)
+            Hashtable parameterReferences, DataServiceDataLookup customLookup = null, int? rowOffset = null)
         {
             if (column.Aggregation != AggregationType.None)
             {
@@ -2188,21 +2200,21 @@ namespace Origam.DA.Service
 
             return RenderLookupColumnExpression(ds, column.Entity == null ? entity : column.Entity, column.Field,
                 column.FinalLookup ?? customLookup,
-                replaceParameterTexts, dynamicParameters, parameterReferences);
+                replaceParameterTexts, dynamicParameters, parameterReferences, rowOffset);
         }
 
 
         private string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity, IDataEntityColumn field,
             IDataLookup lookup, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
-            Hashtable parameterReferences)
+            Hashtable parameterReferences, int? rowOffset = null)
         {
             return RenderLookupColumnExpression(ds, entity, field, lookup, replaceParameterTexts, dynamicParameters,
-                parameterReferences, false);
+                parameterReferences, false, rowOffset);
         }
 
         internal string RenderLookupColumnExpression(DataStructure ds, DataStructureEntity entity, IDataEntityColumn field,
             IDataLookup lookup, Hashtable replaceParameterTexts, Hashtable dynamicParameters,
-            Hashtable parameterReferences, bool isInRecursion)
+            Hashtable parameterReferences, bool isInRecursion, int? rowOffset = null)
         {
             DataServiceDataLookup dataServiceLookup = lookup as DataServiceDataLookup;
 
@@ -2277,7 +2289,8 @@ namespace Origam.DA.Service
                             SortSet = dataServiceLookup.ValueSortSet,
                             ColumnsInfo =  new ColumnsInfo(dataServiceLookup.ValueDisplayMember),
                             Parameters = dynamicParameters,
-                            Paging = false
+                            Paging = false,
+                            RowOffset = rowOffset
                         },
                         replaceParameterTexts: replaceTexts,
                         selectParameterReferences: parameterReferences,

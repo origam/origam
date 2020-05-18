@@ -61,6 +61,7 @@ namespace Origam.DA
 		}
 
 	    public int RowLimit { get; set; }
+	    public int RowOffset { get; set; }
 	    public Guid DataSourceId;
 		public Guid MethodId;
 		public Guid DefaultSetId;
