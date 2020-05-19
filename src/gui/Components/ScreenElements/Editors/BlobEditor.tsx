@@ -144,7 +144,8 @@ class ImageEditorCom extends React.Component<{ imageUrl: any }> {
   elmImageEditor: HTMLDivElement | null = null;
 
   componentDidMount() {
-    var instance = new ImageEditor(this.elmImageEditor as any, {
+    const instance = new ImageEditor(this.elmImageEditor as any, {
+      usageStatistics: false,
       //cssMaxWidth: 700,
       //cssMaxHeight: 500,
       selectionStyle: {
