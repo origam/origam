@@ -10,6 +10,8 @@ import { IApi } from "model/entities/types/IApi";
 import { IProperty } from "model/entities/types/IProperty";
 import { observable } from "mobx";
 import S from "./BlobEditor.module.scss";
+import ImageEditor from "tui-image-editor";
+import "tui-image-editor/dist/tui-image-editor.css";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -60,6 +62,14 @@ export class BlobEditor extends React.Component<{
   async upload() {
     if (this.fileList && this.fileList.length > 0) {
       for (let file of this.fileList) {
+        console.log(file);
+        /*if (file.type.startsWith("image")) {
+          this.imageObjectUrl = URL.createObjectURL(file);
+          this.displayImageEditor = true;
+
+          return;
+        }
+        return;*/
         const token = await this.props.api!.getUploadToken({
           SessionFormIdentifier: this.props.SessionFormIdentifier!,
           MenuId: this.props.menuItemId!,
@@ -92,9 +102,13 @@ export class BlobEditor extends React.Component<{
     }
   }
 
+  @observable displayImageEditor = false;
+  imageObjectUrl: any;
+
   render() {
     return (
       <div className={S.blobEditor}>
+        {this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />}
         <input readOnly={true} className="fileName" value={this.props.value} />
         <div className="controls">
           {this.props.value && (
@@ -111,6 +125,7 @@ export class BlobEditor extends React.Component<{
               className="btnChooseFile"
               name="file"
               type="file"
+              multiple={false}
               onChange={(event) => this.handleFileChange(event)}
             />
             <i className="fas fa-upload"></i>
@@ -119,6 +134,40 @@ export class BlobEditor extends React.Component<{
           Upload file...
     </button>*/}
         </div>
+      </div>
+    );
+  }
+}
+
+class ImageEditorCom extends React.Component<{ imageUrl: any }> {
+  refImageEditor = (elm: any) => (this.elmImageEditor = elm);
+  elmImageEditor: HTMLDivElement | null = null;
+
+  componentDidMount() {
+    var instance = new ImageEditor(this.elmImageEditor as any, {
+      //cssMaxWidth: 700,
+      //cssMaxHeight: 500,
+      selectionStyle: {
+        cornerSize: 20,
+        rotatingPointOffset: 70,
+      },
+      includeUI: {
+        loadImage: { path: this.props.imageUrl, name: "Loaded image" },
+        /*loadImage: {
+            path: 'img/sampleImage2.png',
+            name: 'SampleImage'
+        },*/
+        // theme: blackTheme, // or whiteTheme
+        initMenu: "filter",
+        menuBarPosition: "bottom",
+      },
+    });
+  }
+
+  render() {
+    return (
+      <div className={S.imageEditor}>
+        <div ref={this.refImageEditor} className="imageEditorMountpoint" />
       </div>
     );
   }
