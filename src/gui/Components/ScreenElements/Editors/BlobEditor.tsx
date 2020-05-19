@@ -9,6 +9,7 @@ import { getSessionId } from "model/selectors/getSessionId";
 import { IApi } from "model/entities/types/IApi";
 import { IProperty } from "model/entities/types/IProperty";
 import { observable } from "mobx";
+import S from "./BlobEditor.module.scss";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -36,6 +37,7 @@ export class BlobEditor extends React.Component<{
 }> {
   handleFileChange(event: any) {
     this.fileList = event.target.files;
+    this.upload();
   }
 
   @observable.ref fileList: any = [];
@@ -92,10 +94,31 @@ export class BlobEditor extends React.Component<{
 
   render() {
     return (
-      <div className="blobEditor">
-        <button onClick={() => this.download()}>{this.props.value}</button>
-        <input type="file" name="file" onChange={(event) => this.handleFileChange(event)} />
-        <button onClick={() => this.upload()}>Upload file...</button>
+      <div className={S.blobEditor}>
+        <input readOnly={true} className="fileName" value={this.props.value} />
+        <div className="controls">
+          {this.props.value && (
+            <button
+              className="btnDownload"
+              onClick={() => this.download()}
+              title={`Download: ${this.props.value}`}
+            >
+              <i className="fas fa-download"></i>
+            </button>
+          )}
+          <label className="customBtnChoose" title={"Upload new file."}>
+            <input
+              className="btnChooseFile"
+              name="file"
+              type="file"
+              onChange={(event) => this.handleFileChange(event)}
+            />
+            <i className="fas fa-upload"></i>
+          </label>
+          {/*<button className="btnStartUpload" onClick={() => this.upload()}>
+          Upload file...
+    </button>*/}
+        </div>
       </div>
     );
   }
