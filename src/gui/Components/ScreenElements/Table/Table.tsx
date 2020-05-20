@@ -290,6 +290,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
     this.contentBounds = contentRect.bounds;
+    this.props.onContentBoundsChanged(contentRect.bounds);
     this.tableRenderer.setViewportSize(this.contentBounds.width, this.contentBounds.height);
   }
 

@@ -1,14 +1,14 @@
-import { IDataTable, IDataTableData } from "./types/IDataTable";
-import { observable, action, computed, IComputedValue } from "mobx";
-import { IProperty } from "./types/IProperty";
-import { getDataView } from "../selectors/DataView/getDataView";
-import { IAdditionalRowData } from "./types/IAdditionalRecordData";
-import { AdditionalRowData } from "./AdditionalRowData";
-import { getDataSource } from "../selectors/DataSources/getDataSource";
-import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
-import { IDataSourceField } from "./types/IDataSourceField";
-import { getGrouper } from "model/selectors/DataView/getGrouper";
-import { IGroupRow, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {IDataTable, IDataTableData} from "./types/IDataTable";
+import {action, computed, observable} from "mobx";
+import {IProperty} from "./types/IProperty";
+import {getDataView} from "../selectors/DataView/getDataView";
+import {IAdditionalRowData} from "./types/IAdditionalRecordData";
+import {AdditionalRowData} from "./AdditionalRowData";
+import {getDataSource} from "../selectors/DataSources/getDataSource";
+import {getFilterConfiguration} from "model/selectors/DataView/getFilterConfiguration";
+import {IDataSourceField} from "./types/IDataSourceField";
+import {getGrouper} from "model/selectors/DataView/getGrouper";
+import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -19,7 +19,7 @@ export class DataTable implements IDataTable {
 
   @observable.shallow allRows: any[][] = [];
 
-  @computed get groups(): IGroupTreeNode[]{
+  @computed get groups(): IGroupTreeNode[] {
     return getGrouper(this).topLevelGroups;
   }
 
@@ -110,7 +110,7 @@ export class DataTable implements IDataTable {
     if (value === null) return "";
     if (property.isLookup) {
       if (property.column === "TagInput") {
-        const textArray = value.map((valueItem: any) =>property.lookup!.getValue(`${valueItem}`));
+        const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
         return (textArray || []).join(", ");
       } else {
         return property.lookup!.getValue(`${value}`);
@@ -216,10 +216,77 @@ export class DataTable implements IDataTable {
     return this.rows.filter(row => this.isRowDirtyNew(row));
   }
 
+  @observable
+  firstRowOffset: number = 0;
+  lastRowOffset: number = 0;
+  rowChunkSize: number = 100;
+  maxRowsSize = 300;
+
+  @observable
+  lastRowChunkSize: number = 0;
+
+  @observable
+  isEndLoaded=false;
+
+  get nextEndOffset(){
+    return this.lastRowOffset + this.rowChunkSize;
+  }
+
+  get nextStartOffset(){
+    return this.firstRowOffset - this.rowChunkSize;
+  }
+
   @action.bound
   setRecords(rows: any[][]) {
+    this.firstRowOffset = 0;
+    this.lastRowOffset = 0;
+    this.lastRowChunkSize = rows.length;
     this.clear();
     this.allRows.push(...rows);
+  }
+
+  @action.bound
+  prependRecords(rows: any[][]) {
+    this.firstRowOffset -= this.rowChunkSize;
+    this.allRows.unshift(...rows);
+    if(this.allRows.length > this.maxRowsSize){
+      this.removeRowsFromEnd();
+      this.isEndLoaded = false;
+    }
+  }
+
+  private removeRowsFromEnd() {
+    this.allRows.splice(this.allRows.length - this.lastRowChunkSize, this.lastRowChunkSize);
+    this.lastRowOffset -=  this.lastRowChunkSize;
+    this.lastRowChunkSize = this.rowChunkSize;
+  }
+
+  @action.bound
+  appendRecords(rows: any[][]) {
+    this.lastRowOffset += rows.length;
+    this.lastRowChunkSize = rows.length;
+    this.allRows.push(...rows);
+    if(this.allRows.length > this.maxRowsSize){
+      this.removeRowsFromStart();
+    }
+    if(rows.length < this.rowChunkSize){
+      this.isEndLoaded = true;
+    }
+  }
+
+  private removeRowsFromStart() {
+    this.allRows.splice(0, this.rowChunkSize);
+    this.firstRowOffset += this.rowChunkSize;
+  }
+
+  @computed
+  get isLastLoaded(){
+    return this.isEndLoaded;
+  }
+
+  @computed
+  get isFirstLoaded(){
+    return this.firstRowOffset === 0;
   }
 
   @action.bound

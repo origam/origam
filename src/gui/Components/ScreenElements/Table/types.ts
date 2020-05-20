@@ -1,6 +1,7 @@
 import { PubSub } from "../../../../utils/events";
 import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
 import { ITableRow} from "./TableRendering/types";
+import {BoundingRect} from "react-measure";
 
 export enum IOrderByDirection {
   NONE = "NONE",
@@ -32,6 +33,7 @@ export interface ITableProps {
   onNoCellClick?(event: any): void;
   onKeyDown?(event: any): void;
   refCanvasMovingComponent?(elm: IGridCanvas | null): void;
+  onContentBoundsChanged(bounds: BoundingRect): void;
 }
 
 export type IRenderCell = (args: IRenderCellArgs) => void;
