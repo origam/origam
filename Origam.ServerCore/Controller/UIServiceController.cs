@@ -385,7 +385,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() 
                 => Ok(sessionObjects.UIService.WorkflowRepeat(
-                    sessionFormIdentifier, localizer)));
+                    sessionFormIdentifier, localizer).Result));
         }
         [HttpPost("[action]")]
         public IActionResult AttachmentCount(
@@ -641,8 +641,14 @@ namespace Origam.ServerCore.Controller
             }
             else
             {
-                return sessionObjects.UIService.GetRow(
-                    input.SessionFormIdentifier, input.Entity, input.Id);
+                //  return sessionObjects.UIService.GetRow(
+                //     input.SessionFormIdentifier, input.Entity, input.Id);
+
+                return FindEntity(input.DataStructureEntityId)
+                    .Bind(dataStructureEntity =>
+                        sessionObjects.UIService.GetRow(
+                            input.SessionFormIdentifier, input.Entity,
+                            dataStructureEntity, input.Id));
             }
         }
         private static Hashtable DictionaryToHashtable(IDictionary<string, object> source)
