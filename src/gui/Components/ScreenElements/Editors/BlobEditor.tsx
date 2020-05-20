@@ -84,7 +84,9 @@ export class BlobEditor extends React.Component<{
         });
 
         console.log("Uploading ", file.name, file.size);
-        await this.props.api!.putBlob({ uploadToken: token, fileName: file.name, file });
+        const actionResult = await this.props.api!.putBlob({ uploadToken: token, fileName: file.name, file });
+        console.log(actionResult)
+        debugger
         /*const result = await axios.post(`http://localhost:8910/file-upload/${file.name}`, file, {
           headers: { "content-type": "application/octet-stream" },
           onUploadProgress(event) {
