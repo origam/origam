@@ -1,5 +1,5 @@
 import bind from "bind-decorator";
-import {action, autorun, computed, flow, observable, reaction, when} from "mobx";
+import {action, autorun, computed, observable} from "mobx";
 import {inject, observer, Provider} from "mobx-react";
 import {onTableKeyDown} from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
@@ -35,16 +35,7 @@ import {flattenToTableRows} from "../../../Components/ScreenElements/Table/Table
 import {getTablePanelView} from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {aggregationToString, IAggregation, parseAggregations} from "model/entities/types/IAggregation";
-import {rangeQuery} from "../../../../utils/arrays";
-import {BoundingRect} from "react-measure";
-import {getApi} from "../../../../model/selectors/getApi";
-import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
-import {getSessionId} from "../../../../model/selectors/getSessionId";
-import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
-import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColumnNamesToLoad";
-import {getOrderingConfiguration} from "../../../../model/selectors/DataView/getOrderingConfiguration";
-import {getProperties} from "../../../../model/selectors/DataView/getProperties";
-import {IOrderByDirection} from "../../../../model/entities/types/IOrderingConfiguration";
+import {InfiniteScrollLoader, IInfiniteScrollLoader} from "./InfiniteScrollLoader";
 
 @inject(({ dataView }) => {
   return {
@@ -65,9 +56,16 @@ export class TableView extends React.Component<{
   onTableKeyDown?: (event: any) => void;
 }> {
 
+  infiniteScrollLoader: IInfiniteScrollLoader;
+
   constructor(props: any) {
     super(props);
-    getFormScreenLifecycle(this.props.dataView).registerDisposer(this.start());
+    this.infiniteScrollLoader = new InfiniteScrollLoader({
+      dataView: this.props.dataView!,
+      gridDimensions: this.gDim,
+      scrollState: this.scrollState,
+    });
+    getFormScreenLifecycle(this.props.dataView).registerDisposer(this.infiniteScrollLoader.start());
   }
 
   refTableDisposer: any;
@@ -88,7 +86,6 @@ export class TableView extends React.Component<{
       this.refTableDisposer && this.refTableDisposer();
     }
   };
-  @observable contentBounds: BoundingRect | undefined;
 
   @computed get tableRows(){
     const groupedColumnIds = getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds;
@@ -135,159 +132,6 @@ export class TableView extends React.Component<{
     tablePanelView: this.props.tablePanelView!
   });
 
-
-
-  lastRequestedStartOffset: number = -1;
-  lastRequestedEndOffset: number = 0;
-
-  @computed
-  get visibleRowsRange() {
-    return rangeQuery(
-      (i) => this.gDim.getRowBottom(i),
-      (i) => this.gDim.getRowTop(i),
-      this.gDim.rowCount,
-      this.scrollState.scrollTop,
-      this.scrollState.scrollTop + (this.contentBounds && this.contentBounds.height || 0)
-    );
-  }
-
-  @computed
-  get visibleRowsFirstIndex() {
-    return this.visibleRowsRange.fgte;
-  }
-
-  @computed
-  get visibleRowsLastIndex() {
-    return this.visibleRowsRange.llte;
-  }
-
-  @computed
-  get distanceToStart() {
-    return this.visibleRowsFirstIndex;
-  }
-
-  @computed
-  get distanceToEnd() {
-    return getDataTable(this.props.dataView).rows.length - this.visibleRowsLastIndex;
-  }
-
-  @computed
-  get headLoadingNeeded() {
-    const LOADING_THRESHOLD = 100;
-    return this.distanceToStart <= LOADING_THRESHOLD && !getDataTable(this.props.dataView).isFirstLoaded;
-  }
-
-  @computed
-  get tailLoadingNeeded() {
-    const LOADING_THRESHOLD = 100;
-    return this.distanceToEnd <= LOADING_THRESHOLD && !getDataTable(this.props.dataView).isLastLoaded;
-  }
-
-  @computed
-  get incrementLoadingNeeded() {
-    return this.headLoadingNeeded || this.tailLoadingNeeded;
-  }
-
-  @action.bound
-  public start() {
-    autorun(()=>{
-      console.log("firstLine: "+this.visibleRowsRange.fgte);
-      console.log("lastLine: "+this.visibleRowsRange.llte);
-      console.log("headLoadingNeeded(): "+this.headLoadingNeeded);
-      console.log("tailLoadingNeeded(): "+this.tailLoadingNeeded);
-    });
-    return reaction(
-      () => {
-        return [
-          this.visibleRowsFirstIndex,
-          this.visibleRowsLastIndex,
-          this.headLoadingNeeded,
-          this.tailLoadingNeeded
-        ];
-      },
-      () => {
-        if (this.headLoadingNeeded) {
-          this.prependLines();
-        }
-        if (this.tailLoadingNeeded) {
-          this.appendLines();
-        }
-      }
-    );
-  }
-
-  @observable
-  public inLoading = 0;
-
-  @computed
-  public get isLoading() {
-    return this.inLoading > 0;
-  }
-
-  private appendLines = flow(function*(
-    this: TableView
-  ) {
-    console.log("appendLines!");
-    const dataView = this.props.dataView;
-    const api = getApi(dataView);
-    const dataTable = getDataTable(dataView);
-    const formScreenLifecycle = getFormScreenLifecycle(dataView);
-    const orderingConfiguration = getOrderingConfiguration(dataView);
-    const firstProperty = getProperties(dataView)[0];
-    const ordering = orderingConfiguration.groupChildrenOrdering
-      ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
-      : [[firstProperty.id, IOrderByDirection.ASC]];
-
-    if(this.lastRequestedEndOffset === dataTable.nextEndOffset){
-      return;
-    }
-    this.lastRequestedEndOffset = dataTable.nextEndOffset;
-    this.lastRequestedStartOffset = -1;
-    api.getRows({
-      MenuId: getMenuItemId(dataView),
-      SessionFormIdentifier: getSessionId(formScreenLifecycle),
-      DataStructureEntityId: getDataStructureEntityId(dataView),
-      Filter: "",
-      Ordering: ordering,
-      RowLimit: 100,
-      RowOffset: dataTable.nextEndOffset,
-      ColumnNames: getColumnNamesToLoad(dataView),
-      MasterRowId: undefined
-    }).then(data => dataTable.appendRecords(data));
-  });
-
-  private prependLines = flow(function*(
-    this: TableView
-  ) {
-    console.log("prependLines!");
-    const dataView = this.props.dataView;
-    const api = getApi(dataView);
-    const dataTable = getDataTable(dataView);
-    const formScreenLifecycle = getFormScreenLifecycle(dataView);
-    const orderingConfiguration = getOrderingConfiguration(dataView);
-    const firstProperty = getProperties(dataView)[0];
-    const ordering = orderingConfiguration.groupChildrenOrdering
-      ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
-      : [[firstProperty.id, IOrderByDirection.ASC]];
-
-    if(this.lastRequestedStartOffset === dataTable.nextStartOffset){
-      return;
-    }
-    this.lastRequestedStartOffset = dataTable.nextStartOffset;
-    this.lastRequestedEndOffset = 0;
-    api.getRows({
-      MenuId: getMenuItemId(dataView),
-      SessionFormIdentifier: getSessionId(formScreenLifecycle),
-      DataStructureEntityId: getDataStructureEntityId(dataView),
-      Filter: "",
-      Ordering: ordering,
-      RowLimit: 100,
-      RowOffset: dataTable.nextStartOffset,
-      ColumnNames: getColumnNamesToLoad(dataView),
-      MasterRowId: undefined
-    }).then(data => dataTable.prependRecords(data));
-  });
-
   render() {
     const self = this;
     const isSelectionCheckboxes = getIsSelectionCheckboxesShown(
@@ -321,7 +165,7 @@ export class TableView extends React.Component<{
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
-            onContentBoundsChanged={bounds => this.contentBounds=bounds}
+            onContentBoundsChanged={bounds => this.infiniteScrollLoader.contentBounds=bounds}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.props.onTableKeyDown}
             refTable={this.refTable}
