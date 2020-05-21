@@ -35,7 +35,8 @@ import {flattenToTableRows} from "../../../Components/ScreenElements/Table/Table
 import {getTablePanelView} from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {aggregationToString, IAggregation, parseAggregations} from "model/entities/types/IAggregation";
-import {InfiniteScrollLoader, IInfiniteScrollLoader} from "./InfiniteScrollLoader";
+import {InfiniteScrollLoader, IInfiniteScrollLoader, NullIScrollLoader} from "./InfiniteScrollLoader";
+import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
 
 @inject(({ dataView }) => {
   return {
@@ -60,12 +61,22 @@ export class TableView extends React.Component<{
 
   constructor(props: any) {
     super(props);
-    this.infiniteScrollLoader = new InfiniteScrollLoader({
-      dataView: this.props.dataView!,
-      gridDimensions: this.gDim,
-      scrollState: this.scrollState,
-    });
+    this.infiniteScrollLoader = this.getScrollLoader();
     getFormScreenLifecycle(this.props.dataView).registerDisposer(this.infiniteScrollLoader.start());
+  }
+
+  getScrollLoader(){
+    const rowsContainer = getDataTable(this.props.dataView).rowsContainer;
+    if(rowsContainer instanceof ScrollRowContainer){
+      return new InfiniteScrollLoader({
+        dataView: this.props.dataView!,
+        gridDimensions: this.gDim,
+        scrollState: this.scrollState,
+        rowsContainer: rowsContainer as ScrollRowContainer
+      });
+    }else{
+      return new NullIScrollLoader();
+    }
   }
 
   refTableDisposer: any;

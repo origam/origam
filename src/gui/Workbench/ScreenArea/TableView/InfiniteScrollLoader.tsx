@@ -14,11 +14,13 @@ import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
 import {getSessionId} from "../../../../model/selectors/getSessionId";
 import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
 import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColumnNamesToLoad";
+import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
 
 export interface IInfiniteScrollLoaderData{
   gridDimensions: IGridDimensions;
   scrollState: SimpleScrollState;
   dataView: IDataView;
+  rowsContainer: ScrollRowContainer;
 }
 
 export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
@@ -27,6 +29,16 @@ export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
 }
 
 export const SCROLL_DATA_INCREMENT_SIZE = 100;
+
+export class NullIScrollLoader implements IInfiniteScrollLoader{
+  contentBounds: BoundingRect | undefined;
+  dataView: IDataView = null as any;
+  gridDimensions: IGridDimensions = null as any;
+  scrollState: SimpleScrollState = null as any;
+  rowsContainer: ScrollRowContainer =  null as any;
+  start(): any {
+  }
+}
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
@@ -39,6 +51,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
   dataView: IDataView = null as any;
+  rowsContainer: ScrollRowContainer = null as any;
   @observable contentBounds: BoundingRect | undefined;
 
   @computed
@@ -50,10 +63,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       this.scrollState.scrollTop,
       this.scrollState.scrollTop + (this.contentBounds && this.contentBounds.height || 0)
     );
-  }
-
-  get dataTable(){
-    return getDataTable(this.dataView);
   }
 
   @computed
@@ -73,7 +82,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @computed
   get distanceToEnd() {
-    return this.dataTable.rows.length - this.visibleRowsLastIndex;
+    return this.rowsContainer.rows.length - this.visibleRowsLastIndex;
   }
 
   @computed
@@ -133,7 +142,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     console.log("appendLines!");
     const dataView = this.dataView;
     const api = getApi(dataView);
-    const dataTable = getDataTable(dataView);
     const formScreenLifecycle = getFormScreenLifecycle(dataView);
     const orderingConfiguration = getOrderingConfiguration(dataView);
     const firstProperty = getProperties(dataView)[0];
@@ -165,7 +173,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     console.log("prependLines!");
     const dataView = this.dataView;
     const api = getApi(dataView);
-    const dataTable = getDataTable(dataView);
     const formScreenLifecycle = getFormScreenLifecycle(dataView);
     const orderingConfiguration = getOrderingConfiguration(dataView);
     const firstProperty = getProperties(dataView)[0];
@@ -216,21 +223,21 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.firstRowOffset = 0;
     this.lastRowOffset = 0;
     this.lastRowChunkSize = rows.length;
-    this.dataTable.rowsContainer.set(rows);
+    this.rowsContainer.set(rows);
   }
 
   @action.bound
   prependRecords(rows: any[][]) {
     this.firstRowOffset -= this.rowChunkSize;
-    this.dataTable.rowsContainer.rows.unshift(...rows);
-    if(this.dataTable.rowsContainer.rows.length > this.maxRowsSize){
+    this.rowsContainer.rows.unshift(...rows);
+    if(this.rowsContainer.rows.length > this.maxRowsSize){
       this.removeRowsFromEnd();
       this.isEndLoaded = false;
     }
   }
 
   private removeRowsFromEnd() {
-    this.dataTable.rowsContainer.rows.splice(this.dataTable.rowsContainer.rows.length - this.lastRowChunkSize, this.lastRowChunkSize);
+    this.rowsContainer.rows.splice(this.rowsContainer.rows.length - this.lastRowChunkSize, this.lastRowChunkSize);
     this.lastRowOffset -=  this.lastRowChunkSize;
     this.lastRowChunkSize = this.rowChunkSize;
   }
@@ -240,8 +247,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   appendRecords(rows: any[][]) {
     this.lastRowOffset += rows.length;
     this.lastRowChunkSize = rows.length;
-    this.dataTable.rowsContainer.rows.push(...rows);
-    if(this.dataTable.rowsContainer.rows.length > this.maxRowsSize){
+    this.rowsContainer.rows.push(...rows);
+    if(this.rowsContainer.rows.length > this.maxRowsSize){
       this.removeRowsFromStart();
     }
     if(rows.length < this.rowChunkSize){
@@ -250,7 +257,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   }
 
   private removeRowsFromStart() {
-    this.dataTable.rowsContainer.rows.splice(0, this.rowChunkSize);
+    this.rowsContainer.rows.splice(0, this.rowChunkSize);
     this.firstRowOffset += this.rowChunkSize;
   }
 
@@ -264,10 +271,3 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     return this.firstRowOffset === 0;
   }
 }
-
-// prependRecords(rows: any[][]): void;
-// appendRecords(rows: any[][]): void;
-// isLastLoaded: boolean;
-// isFirstLoaded: boolean;
-// nextEndOffset: number;
-// nextStartOffset: number;

@@ -28,7 +28,7 @@ import { findStopping } from "./xmlUtils";
 import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
 import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
 import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
-import {ListRowContainer} from "../model/entities/RowsContainer";
+import {ListRowContainer, ScrollRowContainer} from "../model/entities/RowsContainer";
 
 export const findUIRoot = (node: any) =>
   findStopping(node, n => n.name === "UIRoot")[0];
@@ -292,7 +292,7 @@ export function interpretScreenXml(
         confirmSelectionChange:
           dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable({rowsContainer: new ListRowContainer()}),
+        dataTable: new DataTable({rowsContainer: new ScrollRowContainer()}), //new ListRowContainer()}),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
