@@ -10,6 +10,7 @@ import {IDataSourceField} from "./types/IDataSourceField";
 import {getGrouper} from "model/selectors/DataView/getGrouper";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {IRowsContainer} from "./RowsContainer";
+import {SCROLL_DATA_INCREMENT_SIZE} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -224,8 +225,8 @@ export class DataTable implements IDataTable {
   @observable
   firstRowOffset: number = 0;
   lastRowOffset: number = 0;
-  rowChunkSize: number = 100;
-  maxRowsSize = 300;
+  rowChunkSize: number = SCROLL_DATA_INCREMENT_SIZE;
+  maxRowsSize = 3 * SCROLL_DATA_INCREMENT_SIZE;
 
   @observable
   lastRowChunkSize: number = 0;

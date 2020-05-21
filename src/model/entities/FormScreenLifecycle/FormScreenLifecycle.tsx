@@ -32,6 +32,7 @@ import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGrou
 import { IDataView } from "../types/IDataView";
 import {IAggregationInfo} from "../types/IAggregationInfo";
 import {IGroupChildrenOrdering} from "../types/IOrderingConfiguration";
+import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -330,7 +331,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             DataStructureEntityId: getDataStructureEntityId(rootDataView),
             Filter: "",
             Ordering: [],
-            RowLimit: 100,
+            RowLimit: SCROLL_DATA_INCREMENT_SIZE, // 999999 - to load everything and avoid infinite scroll
             RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(rootDataView),
             MasterRowId: undefined

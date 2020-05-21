@@ -26,6 +26,8 @@ export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
   start(): any;
 }
 
+export const SCROLL_DATA_INCREMENT_SIZE = 100;
+
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   constructor(data: IInfiniteScrollLoaderData) {
@@ -72,14 +74,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @computed
   get headLoadingNeeded() {
-    const LOADING_THRESHOLD = 100;
-    return this.distanceToStart <= LOADING_THRESHOLD && !getDataTable(this.dataView).isFirstLoaded;
+    return this.distanceToStart <= SCROLL_DATA_INCREMENT_SIZE && !getDataTable(this.dataView).isFirstLoaded;
   }
 
   @computed
   get tailLoadingNeeded() {
-    const LOADING_THRESHOLD = 100;
-    return this.distanceToEnd <= LOADING_THRESHOLD && !getDataTable(this.dataView).isLastLoaded;
+    return this.distanceToEnd <= SCROLL_DATA_INCREMENT_SIZE && !getDataTable(this.dataView).isLastLoaded;
   }
 
   @computed
@@ -148,7 +148,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       DataStructureEntityId: getDataStructureEntityId(dataView),
       Filter: "",
       Ordering: ordering,
-      RowLimit: 100,
+      RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: dataTable.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(dataView),
       MasterRowId: undefined
@@ -180,7 +180,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       DataStructureEntityId: getDataStructureEntityId(dataView),
       Filter: "",
       Ordering: ordering,
-      RowLimit: 100,
+      RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: dataTable.nextStartOffset,
       ColumnNames: getColumnNamesToLoad(dataView),
       MasterRowId: undefined
