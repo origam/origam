@@ -86,7 +86,7 @@ export function drawGroupCell() {
     );
     ctx2d.font = `${CPR * fontSize}px "IBM Plex Sans", Arial, sans-serif`;
     ctx2d.fillText(
-      `${row.columnLabel} : ${formatColumnValue(row.columnValue)}`,
+      `${row.columnLabel} : ${formatColumnValue(row.columnValue)} [${row.sourceGroup.rowCount}]`,
       CPR * (currentColumnLeft() + cellPaddingLeft + groupCellWidth),
       CPR * (currentRowTop() + topTextOffset)
     );
