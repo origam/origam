@@ -2,7 +2,6 @@ import { IProperty } from "./IProperty";
 import { IAdditionalRowData } from "./IAdditionalRecordData";
 import { IDataSourceField } from "./IDataSourceField";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {observable} from "mobx";
 import {IRowsContainer} from "../RowsContainer";
 
 export interface IDataTableData {
@@ -10,8 +9,6 @@ export interface IDataTableData {
 }
 
 export interface IDataTable extends IDataTableData {
-  nextEndOffset: number;
-  nextStartOffset: number;
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
@@ -50,10 +47,6 @@ export interface IDataTable extends IDataTableData {
 
   
   setRecords(rows: any[][]): void;
-  prependRecords(rows: any[][]): void;
-  appendRecords(rows: any[][]): void;
-  isLastLoaded: boolean;
-  isFirstLoaded: boolean;
   setFormDirtyValue(row: any[], propertyId: string, value: any): void;
   setDirtyValue(row: any[], columnId: string, value: any): void;
   flushFormToTable(row: any[]): void;

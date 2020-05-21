@@ -10,7 +10,6 @@ import {IDataSourceField} from "./types/IDataSourceField";
 import {getGrouper} from "model/selectors/DataView/getGrouper";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {IRowsContainer} from "./RowsContainer";
-import {SCROLL_DATA_INCREMENT_SIZE} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -222,78 +221,10 @@ export class DataTable implements IDataTable {
     return this.rows.filter(row => this.isRowDirtyNew(row));
   }
 
-  @observable
-  firstRowOffset: number = 0;
-  lastRowOffset: number = 0;
-  rowChunkSize: number = SCROLL_DATA_INCREMENT_SIZE;
-  maxRowsSize = 3 * SCROLL_DATA_INCREMENT_SIZE;
-
-  @observable
-  lastRowChunkSize: number = 0;
-
-  @observable
-  isEndLoaded=false;
-
-  get nextEndOffset(){
-    return this.lastRowOffset + this.rowChunkSize;
-  }
-
-  get nextStartOffset(){
-    return this.firstRowOffset - this.rowChunkSize;
-  }
-
   @action.bound
   setRecords(rows: any[][]) {
-    this.firstRowOffset = 0;
-    this.lastRowOffset = 0;
-    this.lastRowChunkSize = rows.length;
     this.rowsContainer.set(rows);
   }
-
-  @action.bound
-  prependRecords(rows: any[][]) {
-    this.firstRowOffset -= this.rowChunkSize;
-    this.rowsContainer.rows.unshift(...rows);
-    if(this.rowsContainer.rows.length > this.maxRowsSize){
-      this.removeRowsFromEnd();
-      this.isEndLoaded = false;
-    }
-  }
-
-  private removeRowsFromEnd() {
-    this.rowsContainer.rows.splice(this.rowsContainer.rows.length - this.lastRowChunkSize, this.lastRowChunkSize);
-    this.lastRowOffset -=  this.lastRowChunkSize;
-    this.lastRowChunkSize = this.rowChunkSize;
-  }
-
-  @action.bound
-  appendRecords(rows: any[][]) {
-    this.lastRowOffset += rows.length;
-    this.lastRowChunkSize = rows.length;
-    this.rowsContainer.rows.push(...rows);
-    if(this.rowsContainer.rows.length > this.maxRowsSize){
-      this.removeRowsFromStart();
-    }
-    if(rows.length < this.rowChunkSize){
-      this.isEndLoaded = true;
-    }
-  }
-
-  private removeRowsFromStart() {
-    this.rowsContainer.rows.splice(0, this.rowChunkSize);
-    this.firstRowOffset += this.rowChunkSize;
-  }
-
-  @computed
-  get isLastLoaded(){
-    return this.isEndLoaded;
-  }
-
-  @computed
-  get isFirstLoaded(){
-    return this.firstRowOffset === 0;
-  }
-
   @action.bound
   setFormDirtyValue(row: any[], propertyId: string, value: any) {
     this.createAdditionalData(row);
