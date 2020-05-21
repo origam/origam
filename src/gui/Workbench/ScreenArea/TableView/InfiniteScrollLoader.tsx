@@ -87,12 +87,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @computed
   get headLoadingNeeded() {
-    return this.distanceToStart <= SCROLL_DATA_INCREMENT_SIZE && !this.isFirstLoaded;
+    return this.distanceToStart <= SCROLL_DATA_INCREMENT_SIZE && !this.rowsContainer.isFirstLoaded;
   }
 
   @computed
   get tailLoadingNeeded() {
-    return this.distanceToEnd <= SCROLL_DATA_INCREMENT_SIZE && !this.isLastLoaded;
+    return this.distanceToEnd <= SCROLL_DATA_INCREMENT_SIZE && !this.rowsContainer.isLastLoaded;
   }
 
   @computed
@@ -149,10 +149,10 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
       : [[firstProperty.id, IOrderByDirection.ASC]];
 
-    if (this.lastRequestedEndOffset === this.nextEndOffset) {
+    if (this.lastRequestedEndOffset === this.rowsContainer.nextEndOffset) {
       return;
     }
-    this.lastRequestedEndOffset = this.nextEndOffset;
+    this.lastRequestedEndOffset = this.rowsContainer.nextEndOffset;
     this.lastRequestedStartOffset = -1;
     api.getRows({
       MenuId: getMenuItemId(dataView),
@@ -161,10 +161,10 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Filter: "",
       Ordering: ordering,
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
-      RowOffset: this.nextEndOffset,
+      RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(dataView),
       MasterRowId: undefined
-    }).then(data => this.appendRecords(data));
+    }).then(data => this.rowsContainer.appendRecords(data));
   });
 
   private prependLines = flow(function* (
@@ -180,10 +180,10 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
       : [[firstProperty.id, IOrderByDirection.ASC]];
 
-    if (this.lastRequestedStartOffset === this.nextStartOffset) {
+    if (this.lastRequestedStartOffset === this.rowsContainer.nextStartOffset) {
       return;
     }
-    this.lastRequestedStartOffset = this.nextStartOffset;
+    this.lastRequestedStartOffset = this.rowsContainer.nextStartOffset;
     this.lastRequestedEndOffset = 0;
     api.getRows({
       MenuId: getMenuItemId(dataView),
@@ -192,82 +192,9 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Filter: "",
       Ordering: ordering,
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
-      RowOffset: this.nextStartOffset,
+      RowOffset: this.rowsContainer.nextStartOffset,
       ColumnNames: getColumnNamesToLoad(dataView),
       MasterRowId: undefined
-    }).then(data => this.prependRecords(data));
+    }).then(data => this.rowsContainer.prependRecords(data));
   });
-
-  @observable
-  firstRowOffset: number = 0;
-  lastRowOffset: number = 0;
-  rowChunkSize: number = SCROLL_DATA_INCREMENT_SIZE;
-  maxRowsSize = 3 * SCROLL_DATA_INCREMENT_SIZE;
-
-  @observable
-  lastRowChunkSize: number = 0;
-
-  @observable
-  isEndLoaded=false;
-
-  get nextEndOffset(){
-    return this.lastRowOffset + this.rowChunkSize;
-  }
-
-  get nextStartOffset(){
-    return this.firstRowOffset - this.rowChunkSize;
-  }
-
-  @action.bound
-  setRecords(rows: any[][]) {
-    this.firstRowOffset = 0;
-    this.lastRowOffset = 0;
-    this.lastRowChunkSize = rows.length;
-    this.rowsContainer.set(rows);
-  }
-
-  @action.bound
-  prependRecords(rows: any[][]) {
-    this.firstRowOffset -= this.rowChunkSize;
-    this.rowsContainer.rows.unshift(...rows);
-    if(this.rowsContainer.rows.length > this.maxRowsSize){
-      this.removeRowsFromEnd();
-      this.isEndLoaded = false;
-    }
-  }
-
-  private removeRowsFromEnd() {
-    this.rowsContainer.rows.splice(this.rowsContainer.rows.length - this.lastRowChunkSize, this.lastRowChunkSize);
-    this.lastRowOffset -=  this.lastRowChunkSize;
-    this.lastRowChunkSize = this.rowChunkSize;
-  }
-
-
-  @action.bound
-  appendRecords(rows: any[][]) {
-    this.lastRowOffset += rows.length;
-    this.lastRowChunkSize = rows.length;
-    this.rowsContainer.rows.push(...rows);
-    if(this.rowsContainer.rows.length > this.maxRowsSize){
-      this.removeRowsFromStart();
-    }
-    if(rows.length < this.rowChunkSize){
-      this.isEndLoaded = true;
-    }
-  }
-
-  private removeRowsFromStart() {
-    this.rowsContainer.rows.splice(0, this.rowChunkSize);
-    this.firstRowOffset += this.rowChunkSize;
-  }
-
-  @computed
-  get isLastLoaded(){
-    return this.isEndLoaded;
-  }
-
-  @computed
-  get isFirstLoaded(){
-    return this.firstRowOffset === 0;
-  }
 }
