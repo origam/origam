@@ -4,7 +4,6 @@ import {IDataView} from "../../../../model/entities/types/IDataView";
 import {action, autorun, computed, flow, observable, reaction} from "mobx";
 import {BoundingRect} from "react-measure";
 import {rangeQuery} from "../../../../utils/arrays";
-import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
 import {getApi} from "../../../../model/selectors/getApi";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {getOrderingConfiguration} from "../../../../model/selectors/DataView/getOrderingConfiguration";
@@ -67,12 +66,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @computed
   get visibleRowsFirstIndex() {
-    return this.visibleRowsRange.fgte;
+    return this.visibleRowsRange.firstGreaterThanNumber;
   }
 
   @computed
   get visibleRowsLastIndex() {
-    return this.visibleRowsRange.llte;
+    return this.visibleRowsRange.lastLessThanNumber;
   }
 
   @computed
@@ -103,8 +102,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   @action.bound
   public start() {
     autorun(() => {
-      console.log("firstLine: " + this.visibleRowsRange.fgte);
-      console.log("lastLine: " + this.visibleRowsRange.llte);
+      console.log("firstLine: " + this.visibleRowsRange.firstGreaterThanNumber);
+      console.log("lastLine: " + this.visibleRowsRange.lastLessThanNumber);
       console.log("headLoadingNeeded(): " + this.headLoadingNeeded);
       console.log("tailLoadingNeeded(): " + this.tailLoadingNeeded);
     });
@@ -140,61 +139,60 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this: InfiniteScrollLoader
   ) {
     console.log("appendLines!");
-    const dataView = this.dataView;
-    const api = getApi(dataView);
-    const formScreenLifecycle = getFormScreenLifecycle(dataView);
-    const orderingConfiguration = getOrderingConfiguration(dataView);
-    const firstProperty = getProperties(dataView)[0];
-    const ordering = orderingConfiguration.groupChildrenOrdering
-      ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
-      : [[firstProperty.id, IOrderByDirection.ASC]];
+    const api = getApi(this.dataView);
+    const formScreenLifecycle = getFormScreenLifecycle(this.dataView);
 
     if (this.lastRequestedEndOffset === this.rowsContainer.nextEndOffset) {
       return;
     }
     this.lastRequestedEndOffset = this.rowsContainer.nextEndOffset;
     this.lastRequestedStartOffset = -1;
+
     api.getRows({
-      MenuId: getMenuItemId(dataView),
+      MenuId: getMenuItemId(this.dataView),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
-      DataStructureEntityId: getDataStructureEntityId(dataView),
+      DataStructureEntityId: getDataStructureEntityId(this.dataView),
       Filter: "",
-      Ordering: ordering,
+      Ordering: this.getOrdering(this.dataView),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextEndOffset,
-      ColumnNames: getColumnNamesToLoad(dataView),
+      ColumnNames: getColumnNamesToLoad(this.dataView),
       MasterRowId: undefined
     }).then(data => this.rowsContainer.appendRecords(data));
   });
+
 
   private prependLines = flow(function* (
     this: InfiniteScrollLoader
   ) {
     console.log("prependLines!");
-    const dataView = this.dataView;
-    const api = getApi(dataView);
-    const formScreenLifecycle = getFormScreenLifecycle(dataView);
-    const orderingConfiguration = getOrderingConfiguration(dataView);
-    const firstProperty = getProperties(dataView)[0];
-    const ordering = orderingConfiguration.groupChildrenOrdering
-      ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
-      : [[firstProperty.id, IOrderByDirection.ASC]];
+    const api = getApi(this.dataView);
+    const formScreenLifecycle = getFormScreenLifecycle(this.dataView);
 
     if (this.lastRequestedStartOffset === this.rowsContainer.nextStartOffset) {
       return;
     }
     this.lastRequestedStartOffset = this.rowsContainer.nextStartOffset;
     this.lastRequestedEndOffset = 0;
+
     api.getRows({
-      MenuId: getMenuItemId(dataView),
+      MenuId: getMenuItemId(this.dataView),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
-      DataStructureEntityId: getDataStructureEntityId(dataView),
+      DataStructureEntityId: getDataStructureEntityId(this.dataView),
       Filter: "",
-      Ordering: ordering,
+      Ordering: this.getOrdering(this.dataView),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextStartOffset,
-      ColumnNames: getColumnNamesToLoad(dataView),
+      ColumnNames: getColumnNamesToLoad(this.dataView),
       MasterRowId: undefined
     }).then(data => this.rowsContainer.prependRecords(data));
   });
+
+  private getOrdering(dataView: IDataView) {
+    const orderingConfiguration = getOrderingConfiguration(dataView);
+    const firstProperty = getProperties(dataView)[0];
+    return orderingConfiguration.groupChildrenOrdering
+      ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
+      : [[firstProperty.id, IOrderByDirection.ASC]];
+  }
 }

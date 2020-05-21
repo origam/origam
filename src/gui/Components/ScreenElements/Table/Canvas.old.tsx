@@ -117,11 +117,11 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
   }
 
   @computed public get firstVisibleRowIndex(): number {
-    return this.visibleRowsRange.fgte;
+    return this.visibleRowsRange.firstGreaterThanNumber;
   }
 
   @computed public get lastVisibleRowIndex(): number {
-    return this.visibleRowsRange.llte;
+    return this.visibleRowsRange.lastLessThanNumber;
   }
 
   @computed
@@ -136,11 +136,11 @@ export default class Canvas extends React.Component<IGridCanvasProps> {
   }
 
   @computed public get firstVisibleColumnIndex(): number {
-    return this.visibleColumnsRange.fgte;
+    return this.visibleColumnsRange.firstGreaterThanNumber;
   }
 
   @computed public get lastVisibleColumnIndex(): number {
-    return this.visibleColumnsRange.llte;
+    return this.visibleColumnsRange.lastLessThanNumber;
   }
 
   @action.bound private handleRefCanvas(element: HTMLCanvasElement) {

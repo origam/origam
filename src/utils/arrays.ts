@@ -51,7 +51,7 @@ export function rangeQuery(
   start: number,
   end: number
 ) {
-  const fgte = firstGTE(elementGetterL, n, start);
-  const llte = lastLTE(elementGetterR, n, end);
-  return { llte, fgte };
+  const firstGreaterThanNumber = firstGTE(elementGetterL, n, start);
+  const lastLessThanNumber = lastLTE(elementGetterR, n, end);
+  return { lastLessThanNumber, firstGreaterThanNumber };
 }
