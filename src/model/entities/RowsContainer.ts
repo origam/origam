@@ -75,6 +75,13 @@ export class ScrollRowContainer implements IRowsContainer {
 
   rowIdGetter: (row: any[]) => string = null as any
 
+  @computed
+  get maxRowNumberSeen(){
+    return this.rowChunks.length === 0
+      ? 0
+      : this.rowChunks[this.rowChunks.length - 1].rowOffset + this.rowChunks[this.rowChunks.length - 1].length;
+  }
+
   get rows() {
     return this.rowChunks.flatMap(chunk => chunk.rows);
   }
@@ -172,6 +179,10 @@ class RowChunk {
   }
   get isFinal(){
     return this.rows.length < ROW_CHUNK_SIZE;
+  }
+
+  get length(){
+    return this.rows.length;
   }
 
   trySubstitute(row: any[], rowIdGetter: (row: any[]) => string) {
