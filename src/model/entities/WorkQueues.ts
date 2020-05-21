@@ -9,7 +9,7 @@ export class WorkQueues implements IWorkQueues {
   *getWorkQueueList() {
     const api = getApi(this);
     const workQueues = yield api.getWorkQueueList();
-    console.log(workQueues);
+    // console.log(workQueues);
     this.items = workQueues;
   }
 

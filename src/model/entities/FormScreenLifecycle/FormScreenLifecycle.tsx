@@ -252,36 +252,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.startAutorefreshIfNeeded();
   }
 
-  /*
-  *initUI() {
-    try {
-      this.inFlow++;
-      const api = getApi(this);
-      const openedScreen = getOpenedScreen(this);
-      const menuItemId = getMenuItemId(this);
-      const menuItemType = getMenuItemType(this);
-      const parameters = getScreenParameters(this);
-      const initUIResult = yield api.initUI({
-        Type: menuItemType,
-        ObjectId: menuItemId,
-        FormSessionId: undefined,
-        IsNewSession: true,
-        RegisterSession: true,
-        DataRequested: !openedScreen.dontRequestData,
-        Parameters: parameters
-      });
-      console.log(initUIResult);
-      yield* this.applyInitUIResult({ initUIResult });
-    } catch (error) {
-      yield* handleError(this)(error);
-      yield* closeForm(this)();
-      throw error;
-      // TODO: Error handling !
-    } finally {
-      this.inFlow--;
-    }
-  }*/
-
   *applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
 
@@ -404,7 +374,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Entity: entity,
         Id: rowId,
       });
-      console.log(deleteObjectResult);
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, deleteObjectResult);
     } finally {
@@ -445,9 +414,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } finally {
       this.inFlow--;
       setTimeout(async () => {
-        console.log(getFormScreen(this).dataViews.map((dv) => !dv.isWorking));
         await when(() => this.allDataViewsSteady);
-        console.log("Refreshing view state.");
       }, 10);
     }
     yield* clearRowStates(this)();
@@ -484,7 +451,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         InputParameters: {},
         RequestingGrid: gridId,
       });
-      console.log("EA", result);
       yield* refreshWorkQueues(this)();
       yield* new_ProcessActionResult(action)(result);
     } finally {
@@ -558,7 +524,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *applyData(data: any, selectFirstRow: boolean): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
-      console.log(entityKey, entityValue);
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         dataView.dataTable.clear();

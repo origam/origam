@@ -70,8 +70,6 @@ class DroppedBox extends React.Component<{
       style.left = tBounds.left + tBounds.width - dBounds.width || 0;
     }
 
-    console.log(tBounds, dBounds, style);
-
     return ReactDOM.createPortal(
       <div ref={this.refDropdown} style={style} className={S.droppedBox}>
         {this.props.children}
