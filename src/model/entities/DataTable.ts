@@ -9,15 +9,20 @@ import {getFilterConfiguration} from "model/selectors/DataView/getFilterConfigur
 import {IDataSourceField} from "./types/IDataSourceField";
 import {getGrouper} from "model/selectors/DataView/getGrouper";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {IRowsContainer} from "./RowsContainer";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
+  rowsContainer: IRowsContainer = null as any;
 
   constructor(data: IDataTableData) {
     Object.assign(this, data);
+    this.rowsContainer.rowIdGetter = (row: any[]) => this.getRowId(row);
   }
 
-  @observable.shallow allRows: any[][] = [];
+  get allRows(){
+    return this.rowsContainer.rows;
+  }
 
   @computed get groups(): IGroupTreeNode[] {
     return getGrouper(this).topLevelGroups;
@@ -34,14 +39,14 @@ export class DataTable implements IDataTable {
     | undefined;
 
   @computed get rows(): any[][] {
-    let rows = this.allRows;
+    let rows = this.rowsContainer.rows;
     if (this.filteringFn) {
       const filt = this.filteringFn!(this);
-      rows = this.allRows.filter(
+      rows = this.rowsContainer.rows.filter(
         row => !this.isRowDirtyDeleted(row) && filt(row)
       );
     } else {
-      rows = this.allRows.filter(row => !this.isRowDirtyDeleted(row));
+      rows = this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
     }
     if (this.sortingFn) {
       rows.sort(this.sortingFn(this));
@@ -98,7 +103,7 @@ export class DataTable implements IDataTable {
   }
 
   getAllValuesOfProp(property: IProperty): any[] {
-    return this.allRows.map(row => this.getCellValue(row, property));
+    return this.rowsContainer.rows.map(row => this.getCellValue(row, property));
   }
 
   getCellText(row: any[], property: IProperty) {
@@ -126,7 +131,7 @@ export class DataTable implements IDataTable {
   }
 
   getRowById(id: string): any[] | undefined {
-    return this.allRows.find(row => this.getRowId(row) === id);
+    return this.rowsContainer.rows.find(row => this.getRowId(row) === id);
   }
 
   getExistingRowIdxById(id: string) {
@@ -209,7 +214,7 @@ export class DataTable implements IDataTable {
   }
 
   getDirtyDeletedRows(): any[][] {
-    return this.allRows.filter(row => this.isRowDirtyDeleted(row));
+    return this.rowsContainer.rows.filter(row => this.isRowDirtyDeleted(row));
   }
 
   getDirtyNewRows(): any[][] {
@@ -241,22 +246,21 @@ export class DataTable implements IDataTable {
     this.firstRowOffset = 0;
     this.lastRowOffset = 0;
     this.lastRowChunkSize = rows.length;
-    this.clear();
-    this.allRows.push(...rows);
+    this.rowsContainer.set(rows);
   }
 
   @action.bound
   prependRecords(rows: any[][]) {
     this.firstRowOffset -= this.rowChunkSize;
-    this.allRows.unshift(...rows);
-    if(this.allRows.length > this.maxRowsSize){
+    this.rowsContainer.rows.unshift(...rows);
+    if(this.rowsContainer.rows.length > this.maxRowsSize){
       this.removeRowsFromEnd();
       this.isEndLoaded = false;
     }
   }
 
   private removeRowsFromEnd() {
-    this.allRows.splice(this.allRows.length - this.lastRowChunkSize, this.lastRowChunkSize);
+    this.rowsContainer.rows.splice(this.rowsContainer.rows.length - this.lastRowChunkSize, this.lastRowChunkSize);
     this.lastRowOffset -=  this.lastRowChunkSize;
     this.lastRowChunkSize = this.rowChunkSize;
   }
@@ -265,8 +269,8 @@ export class DataTable implements IDataTable {
   appendRecords(rows: any[][]) {
     this.lastRowOffset += rows.length;
     this.lastRowChunkSize = rows.length;
-    this.allRows.push(...rows);
-    if(this.allRows.length > this.maxRowsSize){
+    this.rowsContainer.rows.push(...rows);
+    if(this.rowsContainer.rows.length > this.maxRowsSize){
       this.removeRowsFromStart();
     }
     if(rows.length < this.rowChunkSize){
@@ -275,7 +279,7 @@ export class DataTable implements IDataTable {
   }
 
   private removeRowsFromStart() {
-    this.allRows.splice(0, this.rowChunkSize);
+    this.rowsContainer.rows.splice(0, this.rowChunkSize);
     this.firstRowOffset += this.rowChunkSize;
   }
 
@@ -358,12 +362,7 @@ export class DataTable implements IDataTable {
   @action.bound
   deleteRow(row: any[]): void {
     this.deleteAdditionalRowData(row);
-    const idx = this.allRows.findIndex(
-      r => this.getRowId(r) === this.getRowId(row)
-    );
-    if (idx > -1) {
-      this.allRows.splice(idx, 1);
-    }
+    this.rowsContainer.delete(row);
   }
 
   @action.bound
@@ -378,29 +377,17 @@ export class DataTable implements IDataTable {
 
   @action.bound
   substituteRecord(row: any[]): void {
-    const idx = this.allRows.findIndex(
-      r => this.getRowId(r) === this.getRowId(row)
-    );
-    if (idx > -1) {
-      this.allRows.splice(idx, 1, row);
-    }
+   this.rowsContainer.substitute(row);
   }
 
   @action.bound
   insertRecord(index: number, row: any[]): void {
-    const idx = this.allRows.findIndex(
-      r => this.getRowId(r) === this.getRowId(row)
-    );
-    if (idx > -1) {
-      this.allRows.splice(idx, 0, row);
-    } else {
-      this.allRows.push(row);
-    }
+    this.rowsContainer.insert(index, row);
   }
 
   @action.bound
   clear(): void {
-    this.allRows.length = 0;
+    this.rowsContainer.clear();
     this.additionalRowData.clear();
   }
 
@@ -422,3 +409,6 @@ export class DataTable implements IDataTable {
 
   parent?: any;
 }
+
+
+

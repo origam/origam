@@ -3,8 +3,11 @@ import { IAdditionalRowData } from "./IAdditionalRecordData";
 import { IDataSourceField } from "./IDataSourceField";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {observable} from "mobx";
+import {IRowsContainer} from "../RowsContainer";
 
-export interface IDataTableData {}
+export interface IDataTableData {
+  rowsContainer: IRowsContainer;
+}
 
 export interface IDataTable extends IDataTableData {
   nextEndOffset: number;
