@@ -29,6 +29,7 @@ import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
 import { processActionQueryInfo, IQueryInfo } from "model/actions/Actions/processActionQueryInfo";
+import { assignIIds } from "xmlInterpreters/xmlUtils";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -283,6 +284,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
+
+    assignIIds(args.initUIResult.formDefinition);
 
     const screen = interpretScreenXml(
       args.initUIResult.formDefinition,
