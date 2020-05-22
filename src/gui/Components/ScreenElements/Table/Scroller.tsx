@@ -10,7 +10,8 @@ import S from "./Scroller.module.css";
 @observer
 export default class Scroller extends React.Component<IScrollerProps> {
   @observable.ref private elmScrollerDiv: HTMLDivElement | null = null;
-  lastScrollLeft: number = 0;
+  private lastScrollLeft: number = 0;
+  private lastScrollTop: number = 0;
 
   @action.bound scrollTo(coords: { scrollLeft?: number; scrollTop?: number }) {
     if (this.elmScrollerDiv) {
@@ -27,10 +28,12 @@ export default class Scroller extends React.Component<IScrollerProps> {
   @action.bound private handleScroll(event: any) {
 
     if(this.props.scrollingDisabled){
-      event.target.scrollLeft = this.lastScrollLeft
+      event.target.scrollLeft = this.lastScrollLeft;
+      event.target.scrollTop = this.lastScrollTop;
     }
     else{
       this.lastScrollLeft =  event.target.scrollLeft
+      this.lastScrollTop =  event.target.scrollTop
     }
 
     this.props.onScroll(
