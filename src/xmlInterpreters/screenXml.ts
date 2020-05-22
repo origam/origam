@@ -40,6 +40,8 @@ import { IPerspective } from "modules/DataView/Perspective/Perspective";
 import { flow } from "mobx";
 import { ViewConfiguration, IViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
+import {getDontRequestData} from "../model/selectors/getDontRequestData";
+import {getRowContainer} from "../model/selectors/getRowContainer";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -292,7 +294,7 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable({rowsContainer: new ScrollRowContainer()}), //new ListRowContainer()}),
+        dataTable: new DataTable({rowsContainer: getRowContainer(formScreenLifecycle)}),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
