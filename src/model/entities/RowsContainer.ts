@@ -15,6 +15,8 @@ export interface IRowsContainer {
 
   substitute(row: any[]): void;
 
+  maxRowCountSeen: number;
+
   rows: any[];
 }
 
@@ -63,6 +65,10 @@ export class ListRowContainer implements IRowsContainer {
       this.allRows.splice(idx, 1, row);
     }
   }
+
+  get maxRowCountSeen(){
+    return this.allRows.length;
+  }
 }
 
 const ROW_CHUNK_SIZE: number = SCROLL_DATA_INCREMENT_SIZE;
@@ -74,12 +80,18 @@ export class ScrollRowContainer implements IRowsContainer {
   maxChunksToHold = 3;
 
   rowIdGetter: (row: any[]) => string = null as any
+  _maxRowNumberSeen = 0;
 
   @computed
-  get maxRowNumberSeen(){
-    return this.rowChunks.length === 0
+  get maxRowCountSeen(){
+    const maxRowsNow = this.rowChunks.length === 0
       ? 0
       : this.rowChunks[this.rowChunks.length - 1].rowOffset + this.rowChunks[this.rowChunks.length - 1].length;
+    if(maxRowsNow > this._maxRowNumberSeen){
+      this._maxRowNumberSeen = maxRowsNow;
+    }
+
+    return this._maxRowNumberSeen;
   }
 
   get rows() {

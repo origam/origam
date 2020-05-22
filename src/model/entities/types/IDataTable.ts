@@ -14,7 +14,7 @@ export interface IDataTable extends IDataTableData {
   rows: any[][];
   allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
-  visibleRowCount: number;
+  maxRowCountSeen: number;
   groups: IGroupTreeNode[];
   sortingFn:
     | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)

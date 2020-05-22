@@ -68,8 +68,8 @@ export class DataTable implements IDataTable {
     return this.properties.find(prop => prop.id === this.dataSource.identifier);
   }
 
-  @computed get visibleRowCount() {
-    return this.rows.length;
+  @computed get maxRowCountSeen() {
+    return this.rowsContainer.maxRowCountSeen;
   }
 
   getRowId(row: any[]): string {

@@ -135,8 +135,8 @@ export class DataView implements IDataView {
       : undefined;
   }
 
-  @computed get visibleRowCount() {
-    return this.dataTable.visibleRowCount;
+  @computed get maxRowCountSeen() {
+    return this.dataTable.maxRowCountSeen;
   }
 
   @computed get selectedRow(): any[] | undefined {
