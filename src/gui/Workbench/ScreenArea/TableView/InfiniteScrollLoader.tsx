@@ -127,14 +127,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     );
   }
 
-  @observable
-  public inLoading = 0;
-
-  @computed
-  public get isLoading() {
-    return this.inLoading > 0;
-  }
-
   private appendLines = flow(function* (
     this: InfiniteScrollLoader
   ) {
