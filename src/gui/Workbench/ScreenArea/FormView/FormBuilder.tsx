@@ -36,16 +36,14 @@ export class FormBuilder extends React.Component<{
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
         return (
-          <FormRoot style={{ backgroundColor }}>
+          <FormRoot key={xfo.$iid} style={{ backgroundColor }}>
             {xfo.elements.map((child: any) => recursive(child))}
           </FormRoot>
         );
-      } else if (
-        xfo.name === "FormElement" &&
-        xfo.attributes.Type === "FormSection"
-      ) {
+      } else if (xfo.name === "FormElement" && xfo.attributes.Type === "FormSection") {
         return (
           <FormSection
+            key={xfo.$iid}
             width={parseInt(xfo.attributes.Width, 10)}
             height={parseInt(xfo.attributes.Height, 10)}
             left={parseInt(xfo.attributes.X, 10)}
@@ -55,12 +53,10 @@ export class FormBuilder extends React.Component<{
             {xfo.elements.map((child: any) => recursive(child))}
           </FormSection>
         );
-      } else if (
-        xfo.name === "FormElement" &&
-        xfo.attributes.Type === "Label"
-      ) {
+      } else if (xfo.name === "FormElement" && xfo.attributes.Type === "Label") {
         return (
           <FormLabel
+            key={xfo.$iid}
             title={xfo.attributes.Title}
             left={+xfo.attributes.X}
             top={+xfo.attributes.Y}
@@ -70,14 +66,11 @@ export class FormBuilder extends React.Component<{
         );
       } else if (xfo.name === "PropertyNames") {
         const propertyNames = findStrings(xfo);
-        return propertyNames.map(propertyId => {
+        return propertyNames.map((propertyId) => {
           return (
-            <Observer>
+            <Observer key={propertyId}>
               {() => {
-                const property = getDataViewPropertyById(
-                  self.props.dataView,
-                  propertyId
-                );
+                const property = getDataViewPropertyById(self.props.dataView, propertyId);
                 let value;
                 let textualValue = value;
                 if (row && property) {
@@ -102,12 +95,7 @@ export class FormBuilder extends React.Component<{
                       left={property.x}
                       top={property.y}
                       isCheckbox={property.column === "CheckBox"}
-                      editor={
-                        <FormViewEditor
-                          value={value}
-                          textualValue={textualValue}
-                        />
-                      }
+                      editor={<FormViewEditor value={value} textualValue={textualValue} />}
                     />
                   </Provider>
                 ) : (

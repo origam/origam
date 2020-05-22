@@ -24,7 +24,7 @@ export class OrigamAPI implements IApi {
 
   get httpAuthHeader() {
     return {
-      Authorization: `Bearer ${this.accessToken}`
+      Authorization: `Bearer ${this.accessToken}`,
     };
   }
 
@@ -51,7 +51,7 @@ export class OrigamAPI implements IApi {
       `${this.urlPrefix}/User/Logout`,
       {},
       {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       }
     );
   }
@@ -71,7 +71,7 @@ export class OrigamAPI implements IApi {
       (
         await axios.get(`${this.urlPrefix}/UI/GetUI`, {
           params: { id },
-          headers: this.httpAuthHeader
+          headers: this.httpAuthHeader,
         })
       ).data,
       { addParent: true, alwaysChildren: true }
@@ -90,22 +90,22 @@ export class OrigamAPI implements IApi {
   }) {
     const result = (
       await axios.post(`${this.urlPrefix}/UIService/InitUI`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
     return {
       ...result,
       formDefinition: xmlJs.xml2js(result.formDefinition, {
         addParent: true,
-        alwaysChildren: true
-      })
+        alwaysChildren: true,
+      }),
     };
   }
 
   async destroyUI(data: { FormSessionId: string }) {
     return (
       await axios.get(`${this.urlPrefix}/UIService/DestroyUI/${data.FormSessionId}`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -120,7 +120,7 @@ export class OrigamAPI implements IApi {
     MasterRowId?: string;
   }) {
     const response = await axios.post(`${this.urlPrefix}/Data/GetRows`, query, {
-      headers: this.httpAuthHeader
+      headers: this.httpAuthHeader,
     });
     if (_.isString(response.data)) {
       return [];
@@ -136,7 +136,7 @@ export class OrigamAPI implements IApi {
   }) {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetLookupLabels`, query, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -150,7 +150,7 @@ export class OrigamAPI implements IApi {
   ) {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetLookupLabelsEx`, query, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -158,7 +158,7 @@ export class OrigamAPI implements IApi {
   async newEntity(data: { DataStructureEntityId: string; MenuId: string }) {
     return (
       await axios.post(`${this.urlPrefix}/Data/NewEmptyRow`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -171,7 +171,7 @@ export class OrigamAPI implements IApi {
   }) {
     return (
       await axios.put(`${this.urlPrefix}/Data/Row`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -183,7 +183,7 @@ export class OrigamAPI implements IApi {
   }) {
     return (
       await axios.post(`${this.urlPrefix}/Data/Row`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -198,7 +198,7 @@ export class OrigamAPI implements IApi {
         url: `${this.urlPrefix}/Data/Row`,
         method: "DELETE",
         data,
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -214,7 +214,7 @@ export class OrigamAPI implements IApi {
   }) {
     return (
       await axios.post(`${this.urlPrefix}/Session/CreateSession`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -224,7 +224,7 @@ export class OrigamAPI implements IApi {
   async saveSession(sessionFormIdentifier: string) {
     return (
       await axios.get(`${this.urlPrefix}/UIService/SaveData/${sessionFormIdentifier}`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -232,7 +232,7 @@ export class OrigamAPI implements IApi {
   async saveSessionQuery(sessionFormIdentifier: string) {
     return (
       await axios.get(`${this.urlPrefix}/UIService/SaveDataQuery/${sessionFormIdentifier}`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -240,7 +240,7 @@ export class OrigamAPI implements IApi {
   async refreshSession(sessionFormIdentifier: string) {
     return (
       await axios.get(`${this.urlPrefix}/UIService/RefreshData/${sessionFormIdentifier}`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -252,7 +252,7 @@ export class OrigamAPI implements IApi {
   }) {
     return (
       await axios.post(`${this.urlPrefix}/Session/ChangeMasterRecord`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -264,7 +264,7 @@ export class OrigamAPI implements IApi {
   }) {
     return (
       await axios.post(`${this.urlPrefix}/Session/DeleteRow`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -278,7 +278,7 @@ export class OrigamAPI implements IApi {
   }) {
     return (
       await axios.post(`${this.urlPrefix}/Session/CreateRow`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -292,7 +292,7 @@ export class OrigamAPI implements IApi {
     return (
       await axios.get(`${this.urlPrefix}/Session/Rows`, {
         params: data,
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -307,7 +307,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/Session/UpdateRow`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -329,18 +329,18 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetLookupList`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
 
   async initPortal(): Promise<any> {
     const { data } = await axios.get(`${this.urlPrefix}/UIService/InitPortal`, {
-      headers: this.httpAuthHeader
+      headers: this.httpAuthHeader,
     });
     return {
       ...data,
-      menu: xmlJs.xml2js(data.menu, { addParent: true, alwaysChildren: true })
+      menu: xmlJs.xml2js(data.menu, { addParent: true, alwaysChildren: true }),
     };
   }
 
@@ -355,7 +355,7 @@ export class OrigamAPI implements IApi {
     return (
       await axios.post(`${this.urlPrefix}/UIService/MasterRecord`, data, {
         headers: this.httpAuthHeader,
-        cancelToken: canceller && canceller.token
+        cancelToken: canceller && canceller.token,
       })
     ).data;
   }
@@ -368,7 +368,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/UpdateObject`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -382,7 +382,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/CreateObject`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -394,7 +394,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/DeleteObject`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -410,7 +410,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/ExecuteActionQuery`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -427,7 +427,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/ExecuteAction`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -477,7 +477,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetRows`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -490,7 +490,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetData`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -502,7 +502,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/RowStates`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -510,7 +510,7 @@ export class OrigamAPI implements IApi {
   async getWorkQueueList(): Promise<any> {
     return (
       await axios.get(`${this.urlPrefix}/UIService/WorkQueueList`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -531,7 +531,7 @@ export class OrigamAPI implements IApi {
         Section: "columnWidths",
         SettingsData: data.columnSettings
           .map(
-            setting =>
+            (setting) =>
               `<column 
                   property="${setting.propertyId}" 
                   isHidden="${setting.isHidden ? "true" : "false"}" 
@@ -539,10 +539,10 @@ export class OrigamAPI implements IApi {
                   aggregationType="0" 
                 />`
           )
-          .join("")
+          .join(""),
       },
       {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       }
     );
     await axios.post(
@@ -550,10 +550,10 @@ export class OrigamAPI implements IApi {
       {
         ObjectinstanceId: data.instanceId,
         Section: "defaultView",
-        SettingsData: `<view id="${data.defaultView}" />`
+        SettingsData: `<view id="${data.defaultView}" />`,
       },
       {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       }
     );
   }
@@ -561,31 +561,84 @@ export class OrigamAPI implements IApi {
   async saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/SaveSplitPanelConfig`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
 
   async workflowAbort(data: { sessionFormIdentifier: string }): Promise<any> {
-    return (
+    const result =  (
       await axios.get(`${this.urlPrefix}/UIService/WorkflowAbort/${data.sessionFormIdentifier}`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
+
+    return {
+      ...result,
+      formDefinition: xmlJs.xml2js(result.formDefinition, {
+        addParent: true,
+        alwaysChildren: true,
+      }),
+    };
   }
 
   async workflowRepeat(data: { sessionFormIdentifier: string }): Promise<any> {
-    return (
+    const result =  (
       await axios.get(`${this.urlPrefix}/UIService/WorkflowRepeat/${data.sessionFormIdentifier}`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
+    ).data;
+
+    return {
+      ...result,
+      formDefinition: xmlJs.xml2js(result.formDefinition, {
+        addParent: true,
+        alwaysChildren: true,
+      }),
+    };
+  }
+
+  async workflowNext(data: {
+    sessionFormIdentifier: string;
+    CachedFormIds: string[];
+  }): Promise<any> {
+    const result = (
+      await axios.post(
+        `${this.urlPrefix}/UIService/WorkflowNext`,
+        {
+          SessionFormIdentifier: data.sessionFormIdentifier,
+          CachedFormIds: data.CachedFormIds,
+        },
+        {
+          headers: this.httpAuthHeader,
+        }
+      )
+    ).data;
+
+    return {
+      ...result,
+      formDefinition: xmlJs.xml2js(result.formDefinition, {
+        addParent: true,
+        alwaysChildren: true,
+      }),
+    };
+  }
+
+  async workflowNextQuery(data: { sessionFormIdentifier: string }): Promise<any> {
+    return (
+      await axios.get(
+        `${this.urlPrefix}/UIService/WorkflowNextQuery/${data.sessionFormIdentifier}`,
+        {
+          headers: this.httpAuthHeader,
+        }
+      )
     ).data;
   }
 
   async getRecordInfo(data: { MenuId: string; DataStructureEntityId: string; RowId: string }) {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetRecordTooltip`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data.tooltip;
   }
@@ -593,7 +646,7 @@ export class OrigamAPI implements IApi {
   async getRecordAudit(data: { MenuId: string; DataStructureEntityId: string; RowId: string }) {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetAudit`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data.data.map((row: any[]) => ({
       id: row[IAuditLogColumnIndices.Id],
@@ -602,14 +655,98 @@ export class OrigamAPI implements IApi {
       fieldName: row[IAuditLogColumnIndices.FieldName],
       oldValue: row[IAuditLogColumnIndices.OldValue],
       newValue: row[IAuditLogColumnIndices.NewValue],
-      actionType: row[IAuditLogColumnIndices.ActionType]
+      actionType: row[IAuditLogColumnIndices.ActionType],
     }));
   }
 
   async getReport(data: { reportUrl: string }): Promise<any> {
     return (
       await axios.get(`${data.reportUrl}`, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
+      })
+    ).data;
+  }
+
+  async getDownloadToken(data: {
+    SessionFormIdentifier: string;
+    MenuId: string;
+    DataStructureEntityId: string;
+    RowId: string;
+    Property: string;
+    FileName: string;
+    Entity: string;
+    parameters: any;
+  }): Promise<any> {
+    return (
+      await axios.post(
+        `${this.urlPrefix}/Blob/DownloadToken`,
+        {
+          SessionFormIdentifier: data.SessionFormIdentifier,
+          MenuId: data.MenuId,
+          DataStructureEntityId: data.DataStructureEntityId,
+          Entity: data.Entity,
+          RowId: data.RowId,
+          Property: data.Property,
+          IsPreview: false,
+          Parameters: data.parameters,
+        },
+        {
+          headers: this.httpAuthHeader,
+        }
+      )
+    ).data;
+  }
+
+  async getBlob(data: { downloadToken: string }) {
+    window.open(`${this.urlPrefix}/Blob/${data.downloadToken}`);
+    /*return (
+      await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
+        headers: this.httpAuthHeader,
+      })
+    ).data;*/
+  }
+
+  async getUploadToken(data: {
+    SessionFormIdentifier: string;
+    MenuId: string;
+    DataStructureEntityId: string;
+    Entity: string;
+    RowId: string;
+    Property: string;
+    FileName: string;
+    DateCreated: string;
+    DateLastModified: string;
+    parameters: any;
+  }): Promise<any> {
+    return (
+      await axios.post(
+        `${this.urlPrefix}/Blob/UploadToken`,
+        {
+          SessionFormIdentifier: data.SessionFormIdentifier,
+          MenuId: data.MenuId,
+          DataStructureEntityId: data.DataStructureEntityId,
+          Entity: data.Entity,
+          RowId: data.RowId,
+          Property: data.Property,
+          IsPreview: false,
+          Parameters: data.parameters,
+          SubmitImmediately: "true",
+        },
+        {
+          headers: this.httpAuthHeader,
+        }
+      )
+    ).data;
+  }
+
+  async putBlob(
+    data: { uploadToken: string; fileName: string; file: any },
+    onUploadProgress?: (event: any) => void
+  ): Promise<any> {
+    return (
+      await axios.post(`${this.urlPrefix}/Blob/${data.uploadToken}/${data.fileName}`, data.file, {
+        headers: { ...this.httpAuthHeader, "content-type": "application/octet-stream" },
+        onUploadProgress,
       })
     ).data;
   }
@@ -622,5 +759,5 @@ export enum IAuditLogColumnIndices {
   FieldName = 3,
   OldValue = 4,
   NewValue = 5,
-  ActionType = 6
+  ActionType = 6,
 }

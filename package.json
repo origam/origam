@@ -8,6 +8,8 @@
     "@types/classnames": "^2.2.9",
     "@types/jest": "24.0.15",
     "@types/jsonwebtoken": "^8.3.2",
+    "@types/leaflet": "^1.5.12",
+    "@types/leaflet-draw": "^1.0.2",
     "@types/lodash": "^4.14.135",
     "@types/lunr": "^2.3.2",
     "@types/node": "12.0.10",
@@ -58,6 +60,8 @@
     "jest-resolve": "24.7.1",
     "jest-watch-typeahead": "0.3.0",
     "jsonwebtoken": "^8.5.1",
+    "leaflet": "^1.6.0",
+    "leaflet-draw": "^1.0.4",
     "lodash": "^4.17.11",
     "mini-css-extract-plugin": "0.5.0",
     "mobx": "^5.10.1",
@@ -102,6 +106,7 @@
     "start-selenium": "set BROWSER=node none.js && set REACT_APP_SELENIUM_KICK=1 && concurrently --kill-others \"node-dev --respawn --no-deps --dedupe ./tests/fixture-server01\" \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "test:debug": "node  --inspect-brk scripts/test.js test --runInBand --no-cache ",
     "test-endtoend": "set REACT_APP_TESTS_ENDTOEND_RUNNING=1 && node scripts/start.js",
     "start-server": "node-dev --respawn --no-deps --dedupe ./src-server/index-server.js"
   },
@@ -130,7 +135,6 @@
     "winston": "^3.2.1"
   },
   "jest": {
-    "preset": "jest-puppeteer",
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"

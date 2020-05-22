@@ -18,12 +18,14 @@ import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
 import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 import { WebScreen } from "../WebScreen";
 import { getSessionId } from "model/selectors/getSessionId";
+import { scopeFor } from "dic/Container";
+import { assignIIds } from "xmlInterpreters/xmlUtils";
 
 export enum IRefreshOnReturnType {
   None = "None",
   ReloadActualRecord = "ReloadActualRecord",
   RefreshCompleteForm = "RefreshCompleteForm",
-  MergeModalDialogChanges = "MergeModalDialogChanges"
+  MergeModalDialogChanges = "MergeModalDialogChanges",
 }
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
@@ -176,6 +178,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
 
     yield* this.destroyUI(openedScreen);
+
+    if (openedScreen.content && openedScreen.content.formScreen) {
+      const scope = scopeFor(openedScreen.content.formScreen);
+      if (scope) scope.disposeWithChildren();
+    }
   }
 
   *destroyUI(openedScreen: IOpenedScreen) {
@@ -247,7 +254,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       IsNewSession: isNewSession,
       RegisterSession: true, //!!registerSession,
       DataRequested: !screen.dontRequestData,
-      Parameters: screen.parameters
+      Parameters: screen.parameters,
     });
     console.log(initUIResult);
     return initUIResult;
@@ -268,6 +275,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     console.log("portalInfo:");
     console.log(portalInfo);
     const menuUI = findMenu(portalInfo.menu);
+    assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
 

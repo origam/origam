@@ -39,13 +39,13 @@ function itemForNode(node: any, level: number, isOpen: boolean) {
   switch (node.name) {
     case "Submenu":
       return (
-        <MainMenuLI>
+        <MainMenuLI key={node.$iid}>
           <CMainMenuFolderItem node={node} level={level} isOpen={isOpen} />
         </MainMenuLI>
       );
     case "Command":
       return (
-        <MainMenuLI>
+        <MainMenuLI key={node.$iid}>
           <CMainMenuCommandItem node={node} level={level} isOpen={isOpen} />
         </MainMenuLI>
       );
@@ -89,7 +89,7 @@ class CMainMenuCommandItem extends React.Component<{
 
   render() {
     const { props } = this;
-    const activeScreen = getActiveScreen(this.workbench)
+    const activeScreen = getActiveScreen(this.workbench);
     const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
     return (
       <MainMenuItem
@@ -101,7 +101,7 @@ class CMainMenuCommandItem extends React.Component<{
         // TODO: Implements selector for this idset
         isOpenedScreen={this.workbench.openedScreenIdSet.has(props.node.attributes.id)}
         isActiveScreen={activeMenuItemId === props.node.attributes.id}
-        onClick={event => onMainMenuItemClick(this.workbench)({ event, item: props.node })}
+        onClick={(event) => onMainMenuItemClick(this.workbench)({ event, item: props.node })}
       />
     );
   }

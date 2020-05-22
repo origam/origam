@@ -32,6 +32,7 @@ export interface IPropertyData {
   customNumericFormat?: string;
   isAggregatedColumn: boolean;
 
+  parameters?: any;
   allowReturnToForm?: boolean;
   isTree?: boolean;
 

@@ -28,9 +28,7 @@ export class DataTable implements IDataTable {
     return getGrouper(this).topLevelGroups;
   }
 
-  @computed get filteringFn():
-    | ((dataTable: IDataTable) => (row: any[]) => boolean)
-    | undefined {
+  @computed get filteringFn(): ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined {
     return getFilterConfiguration(this).filteringFunction;
   }
 
@@ -65,7 +63,7 @@ export class DataTable implements IDataTable {
   }
 
   @computed get identifierProperty() {
-    return this.properties.find(prop => prop.id === this.dataSource.identifier);
+    return this.properties.find((prop) => prop.id === this.dataSource.identifier);
   }
 
   @computed get maxRowCountSeen() {
@@ -112,7 +110,7 @@ export class DataTable implements IDataTable {
   }
 
   resolveCellText(property: IProperty, value: any): any {
-    if (value === null) return "";
+    if (value === null || value === undefined) return "";
     if (property.isLookup) {
       if (property.column === "TagInput") {
         const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
@@ -135,12 +133,12 @@ export class DataTable implements IDataTable {
   }
 
   getExistingRowIdxById(id: string) {
-    const idx = this.rows.findIndex(row => this.getRowId(row) === id);
+    const idx = this.rows.findIndex((row) => this.getRowId(row) === id);
     return idx > -1 ? idx : undefined;
   }
 
   getPropertyById(id: string) {
-    return this.properties.find(prop => prop.id === id);
+    return this.properties.find((prop) => prop.id === id);
   }
 
   getFirstRow(): any[] | undefined {
@@ -161,7 +159,7 @@ export class DataTable implements IDataTable {
   }
 
   getNextExistingRowId(id: string): string | undefined {
-    const idx = this.rows.findIndex(r => this.getRowId(r) === id);
+    const idx = this.rows.findIndex((r) => this.getRowId(r) === id);
     if (idx > -1) {
       const newRow = this.rows[idx + 1];
       return newRow ? this.getRowId(newRow) : undefined;
@@ -169,7 +167,7 @@ export class DataTable implements IDataTable {
   }
 
   getPrevExistingRowId(id: string): string | undefined {
-    const idx = this.rows.findIndex(r => this.getRowId(r) === id);
+    const idx = this.rows.findIndex((r) => this.getRowId(r) === id);
     if (idx > 0) {
       const newRow = this.rows[idx - 1];
       return newRow ? this.getRowId(newRow) : undefined;
@@ -210,7 +208,7 @@ export class DataTable implements IDataTable {
   }
 
   getDirtyValueRows(): any[][] {
-    return this.rows.filter(row => this.hasRowDirtyValues(row));
+    return this.rows.filter((row) => this.hasRowDirtyValues(row));
   }
 
   getDirtyDeletedRows(): any[][] {
@@ -218,7 +216,7 @@ export class DataTable implements IDataTable {
   }
 
   getDirtyNewRows(): any[][] {
-    return this.rows.filter(row => this.isRowDirtyNew(row));
+    return this.rows.filter((row) => this.isRowDirtyNew(row));
   }
 
   @action.bound
@@ -228,9 +226,7 @@ export class DataTable implements IDataTable {
   @action.bound
   setFormDirtyValue(row: any[], propertyId: string, value: any) {
     this.createAdditionalData(row);
-    this.additionalRowData
-      .get(this.getRowId(row))!
-      .dirtyFormValues.set(propertyId, value);
+    this.additionalRowData.get(this.getRowId(row))!.dirtyFormValues.set(propertyId, value);
   }
 
   @action.bound
@@ -325,9 +321,7 @@ export class DataTable implements IDataTable {
 
   @action.bound
   setSortingFn(
-    fn:
-      | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
-      | undefined
+    fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined
   ): void {
     this.sortingFn = fn;
   }
@@ -341,6 +335,3 @@ export class DataTable implements IDataTable {
 
   parent?: any;
 }
-
-
-

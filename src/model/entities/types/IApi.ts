@@ -1,5 +1,5 @@
-import { AxiosPromise } from "axios";
 import { IAggregationInfo } from "./IAggregationInfo";
+import Axios, { AxiosPromise } from "axios";
 
 export interface IApi {
   accessToken: string;
@@ -44,10 +44,7 @@ export interface IApi {
     }[]
   ): Promise<{ [key: string]: { [key: string]: string } }>;
 
-  newEntity(data: {
-    DataStructureEntityId: string;
-    MenuId: string;
-  }): Promise<any>;
+  newEntity(data: { DataStructureEntityId: string; MenuId: string }): Promise<any>;
 
   putEntity(data: {
     DataStructureEntityId: string;
@@ -166,11 +163,7 @@ export interface IApi {
     RequestingGridId: string;
   }): Promise<any>;
 
-  deleteObject(data: {
-    SessionFormIdentifier: string;
-    Entity: string;
-    Id: string;
-  }): Promise<any>;
+  deleteObject(data: { SessionFormIdentifier: string; Entity: string; Id: string }): Promise<any>;
 
   executeActionQuery(data: {
     SessionFormIdentifier: string;
@@ -252,14 +245,15 @@ export interface IApi {
     defaultView: string;
   }): Promise<any>;
 
-  saveSplitPanelConfiguration(data: {
-    InstanceId: string;
-    Position: number;
-  }): Promise<any>;
+  saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any>;
 
   workflowAbort(data: { sessionFormIdentifier: string }): Promise<any>;
 
   workflowRepeat(data: { sessionFormIdentifier: string }): Promise<any>;
+
+  workflowNext(data: { sessionFormIdentifier: string; CachedFormIds: string[] }): Promise<any>;
+
+  workflowNextQuery(data: { sessionFormIdentifier: string }): Promise<any>;
 
   getRecordInfo(data: {
     MenuId: string;
@@ -284,4 +278,35 @@ export interface IApi {
   >;
 
   getReport(data: { reportUrl: string }): Promise<any>;
+
+  getDownloadToken(data: {
+    SessionFormIdentifier: string;
+    MenuId: string;
+    DataStructureEntityId: string;
+    Entity: string;
+    RowId: string;
+    Property: string;
+    FileName: string;
+    parameters: any;
+  }): Promise<any>;
+
+  getBlob(data: { downloadToken: string }): Promise<any>;
+
+  getUploadToken(data: {
+    SessionFormIdentifier: string;
+    MenuId: string;
+    DataStructureEntityId: string;
+    Entity: string;
+    RowId: string;
+    Property: string;
+    FileName: string;
+    DateCreated: string;
+    DateLastModified: string;
+    parameters: any;
+  }): Promise<any>;
+
+  putBlob(
+    data: { uploadToken: string; fileName: string; file: any },
+    onUploadProgress?: (event: any) => void
+  ): Promise<any>;
 }

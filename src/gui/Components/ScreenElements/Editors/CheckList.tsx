@@ -60,7 +60,6 @@ export class CheckListControler {
         PageSize: 10000,
         PageNumber: 1
       });
-      console.log(lookupList);
       self.lookupList = lookupList;
     })();
   }

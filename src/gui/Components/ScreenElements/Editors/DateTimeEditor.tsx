@@ -95,7 +95,6 @@ class CalendarWidget extends React.Component<{
   }
 
   @action.bound handleDayClick(event: any, day: moment.Moment) {
-    console.log("Day clicked: ", day.format("DD.MM.YYYY"));
     this.props.onDayClick && this.props.onDayClick(event, day);
   }
 
@@ -224,7 +223,6 @@ export class DateTimeEditor extends React.Component<{
   @action.bound
   makeFocusedIfNeeded() {
     if (this.props.isFocused) {
-      console.log("--- MAKE FOCUSED ---");
       this.elmInput && this.elmInput.focus();
       setTimeout(() => {
         this.elmInput && this.elmInput.select();

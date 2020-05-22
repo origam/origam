@@ -16,18 +16,16 @@ import { IProperty } from "../../../../model/entities/types/IProperty";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
-import {
-  CheckList,
-  CheckListItem
-} from "gui/Components/ScreenElements/Editors/CheckList";
+import { CheckList, CheckListItem } from "gui/Components/ScreenElements/Editors/CheckList";
+import { ImageEditor } from "gui/Components/ScreenElements/Editors/ImageEditor";
+import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
   return {
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
-    onChange: (event: any, value: any) =>
-      onFieldChange(formPanelView)(event, row, property, value)
+    onChange: (event: any, value: any) => onFieldChange(formPanelView)(event, row, property, value),
   };
 })
 @observer
@@ -53,19 +51,12 @@ export class FormViewEditor extends React.Component<{
     );
     const readOnly =
       this.props.property!.readOnly ||
-      !getRowStateAllowUpdate(
-        this.props.property,
-        rowId || "",
-        this.props.property!.id
-      );
+      !getRowStateAllowUpdate(this.props.property, rowId || "", this.props.property!.id);
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;
     if (row) {
       const dataView = getDataTable(this.props.property);
-      const dsFieldErrors = getDataSourceFieldByName(
-        this.props.property,
-        "__Errors"
-      );
+      const dsFieldErrors = getDataSourceFieldByName(this.props.property, "__Errors");
       const errors = dsFieldErrors
         ? dataView.getCellValueByDataSourceField(row, dsFieldErrors)
         : null;
@@ -74,17 +65,12 @@ export class FormViewEditor extends React.Component<{
         ? new Map(
             Object.entries<string>(
               errors.fieldErrors
-            ).map(([dsIndexStr, errMsg]: [string, string]) => [
-              parseInt(dsIndexStr, 10),
-              errMsg
-            ])
+            ).map(([dsIndexStr, errMsg]: [string, string]) => [parseInt(dsIndexStr, 10), errMsg])
           )
         : undefined;
 
       const errMsg =
-        dsFieldErrors && errMap
-          ? errMap.get(this.props.property!.dataSourceIndex)
-          : undefined;
+        dsFieldErrors && errMap ? errMap.get(this.props.property!.dataSourceIndex) : undefined;
       if (errMsg) {
         isInvalid = true;
         invalidMessage = errMsg;
@@ -202,11 +188,13 @@ export class FormViewEditor extends React.Component<{
         return (
           <CheckList
             value={this.props.value}
-            onChange={newValue =>
-              this.props.onChange && this.props.onChange({}, newValue)
-            }
+            onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
           />
         );
+      case "Image":
+        return <ImageEditor value={this.props.value} />;
+      case "Blob":
+        return <BlobEditor value={this.props.value} />
       default:
         return "Unknown field";
     }

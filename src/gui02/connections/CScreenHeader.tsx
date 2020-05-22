@@ -11,6 +11,11 @@ import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialo
 import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
 import React from "react";
 import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
+import { ScreenheaderDivider } from "gui02/components/ScreenHeader/ScreenHeaderDivider";
+import { onWorkflowAbortClick } from "model/actions-ui/ScreenHeader/onWorkflowAbortClick";
+import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
+
+import S from "gui02/components/ScreenHeader/ScreenHeader.module.scss";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -26,7 +31,7 @@ export class CScreenHeader extends React.Component {
 
   render() {
     const openedScreenItems = getOpenedNonDialogScreenItems(this.workbench);
-    const activeScreen = openedScreenItems.find(item => getIsTopmostNonDialogScreen(item));
+    const activeScreen = openedScreenItems.find((item) => getIsTopmostNonDialogScreen(item));
     if (!activeScreen) {
       return null;
     }
@@ -36,11 +41,42 @@ export class CScreenHeader extends React.Component {
     }*/
     const isFullscreen = getIsCurrentScreenFull(activeScreen);
     if (!content) return null;
+    const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
+    const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
     return (
       <ScreenHeader
         isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
       >
         <h1>{this.getLabel(activeScreen)}</h1>
+        {(isCancelButton || isNextButton) && <ScreenheaderDivider />}
+        {isCancelButton && (
+          /*<ScreenHeaderAction
+            className="isOrangeOnHover"
+            onClick={onWorkflowAbortClick(content.formScreen!)}
+          >
+            <Icon src="./icons/close.svg" />
+          </ScreenHeaderAction>*/
+          <button
+            className={S.workflowActionBtn}
+            onClick={onWorkflowAbortClick(content.formScreen!)}
+          >
+            Cancel
+          </button>
+        )}
+        {isNextButton && (
+          /*<ScreenHeaderAction
+            className="isGreenOnHover"
+            onClick={onWorkflowNextClick(content.formScreen!)}
+          >
+            <Icon src="./icons/list-arrow-next.svg" />
+          </ScreenHeaderAction>*/
+          <button
+            className={S.workflowActionBtn}
+            onClick={onWorkflowNextClick(content.formScreen!)}
+          >
+            Next
+          </button>
+        )}
         {/*<ScreenheaderDivider />
           <ScreenHeaderAction className="isGreenOnHover">
           <Icon src="./icons/add.svg" />

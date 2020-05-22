@@ -1,16 +1,16 @@
-import { CMain } from "gui02/connections/CMain";
+import axios from "axios";
 import { flow } from "mobx";
-import { Provider } from "mobx-react";
+import { getApi } from "model/selectors/getApi";
+import { ensureLogin, userManager } from "oauth";
 import React from "react";
 import ReactDOM from "react-dom";
 import "react-tippy/dist/tippy.css";
+import { Root } from "Root";
 import "./index.scss";
 import { createApplication } from "./model/factories/createApplication";
+import "./rootContainer";
 import * as serviceWorker from "./serviceWorker";
-import axios from "axios";
-import { Root } from "Root";
-import { ensureLogin, userManager } from "oauth";
-import { getApi } from "model/selectors/getApi";
+
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -29,10 +29,10 @@ async function main() {
   if (user) {
     const application = createApplication();
     getApi(application).setAccessToken(user.access_token);
-    sessionStorage.setItem('origamAuthToken', user.access_token);
-    userManager.events.addUserLoaded(user => {
+    sessionStorage.setItem("origamAuthToken", user.access_token);
+    userManager.events.addUserLoaded((user) => {
       getApi(application).setAccessToken(user.access_token);
-      sessionStorage.setItem('origamAuthToken', user.access_token);
+      sessionStorage.setItem("origamAuthToken", user.access_token);
     });
     flow(application.run.bind(application))();
 
@@ -48,6 +48,3 @@ main();
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
-
-

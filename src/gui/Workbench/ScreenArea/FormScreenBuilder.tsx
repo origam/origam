@@ -7,23 +7,16 @@ import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSp
 import { IFormScreen } from "model/entities/types/IFormScreen";
 import React from "react";
 import SSplitter from "styles/CustomSplitter.module.scss";
-import {
-  findBoxes,
-  findUIChildren,
-  findUIRoot
-} from "../../../xmlInterpreters/screenXml";
+import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
 import { Box } from "../../Components/ScreenElements/Box";
 import { DataView } from "../../Components/ScreenElements/DataView";
 import { Label } from "../../Components/ScreenElements/Label";
-import {
-  TabbedPanel,
-  TabBody,
-  TabHandle
-} from "../../Components/ScreenElements/TabbedPanel";
+import { TabbedPanel, TabBody, TabHandle } from "../../Components/ScreenElements/TabbedPanel";
 import { VBox } from "../../Components/ScreenElements/VBox";
 import { WorkflowFinishedPanel } from "gui02/components/WorkflowFinishedPanel/WorkflowFinishedPanel";
 
-import actions from 'model/actions-ui-tree'
+import actions from "model/actions-ui-tree";
+import { HBox } from "gui/Components/ScreenElements/HBox";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -41,7 +34,7 @@ class TabbedPanelHelper extends React.Component<{
     const { boxes, nextNode } = this.props;
     return (
       <TabbedPanel
-        handles={boxes.map(box => (
+        handles={boxes.map((box) => (
           <TabHandle
             isActive={this.activePanelId === box.attributes.Id}
             label={box.attributes.Name}
@@ -49,15 +42,11 @@ class TabbedPanelHelper extends React.Component<{
           />
         ))}
       >
-        {boxes.map(box => (
+        {boxes.map((box) => (
           <Observer>
             {() => (
-              <TabBody
-                isActive={computed(
-                  () => this.activePanelId === box.attributes.Id
-                ).get()}
-              >
-                {findUIChildren(box).map(child => nextNode(child))}
+              <TabBody isActive={computed(() => this.activePanelId === box.attributes.Id).get()}>
+                {findUIChildren(box).map((child) => nextNode(child))}
               </TabBody>
             )}
           </Observer>
@@ -82,23 +71,23 @@ export class FormScreenBuilder extends React.Component<{
     function recursive(xso: any) {
       switch (xso.attributes.Type) {
         case "WorkflowFinishedPanel": {
-          return <WorkflowFinishedPanel
-            isCloseButton={xso.attributes.showWorkflowCloseButton}
-            isRepeatButton={xso.attributes.showWorkflowRepeatButton}
-            message={xso.attributes.Message}
-            onCloseClick={actions.workflow.onCancelClick(self.formScreen)}
-            onRepeatClick={actions.workflow.onRepeatClick(self.formScreen)}
-          />
+          return (
+            <WorkflowFinishedPanel
+              key={xso.$iid}
+              isCloseButton={xso.attributes.showWorkflowCloseButton}
+              isRepeatButton={xso.attributes.showWorkflowRepeatButton}
+              message={xso.attributes.Message}
+              onCloseClick={actions.workflow.onCloseClick(self.formScreen)}
+              onRepeatClick={actions.workflow.onRepeatClick(self.formScreen)}
+            />
+          );
           break;
         }
         case "HSplit": {
-          const panels = findUIChildren(xso).map((child, idx) => [
-            idx,
-            1,
-            recursive(child)
-          ]);
+          const panels = findUIChildren(xso).map((child, idx) => [idx, 1, recursive(child)]);
           return (
             <Splitter
+              key={xso.$iid}
               STYLE={SSplitter}
               type="isHoriz"
               id={xso.attributes.ModelInstanceId}
@@ -129,13 +118,10 @@ export class FormScreenBuilder extends React.Component<{
           );
         }
         case "VSplit": {
-          const panels = findUIChildren(xso).map((child, idx) => [
-            idx,
-            1,
-            recursive(child)
-          ]);
+          const panels = findUIChildren(xso).map((child, idx) => [idx, 1, recursive(child)]);
           return (
             <Splitter
+              key={xso.$iid}
               STYLE={SSplitter}
               type="isVert"
               id={xso.attributes.ModelInstanceId}
@@ -169,6 +155,7 @@ export class FormScreenBuilder extends React.Component<{
           console.log(xso);
           return (
             <Label
+              key={xso.$iid}
               height={parseInt(xso.attributes.Height, 10)}
               text={xso.attributes.Name}
             />
@@ -176,54 +163,47 @@ export class FormScreenBuilder extends React.Component<{
         case "VBox":
           return (
             <VBox
-              height={
-                xso.attributes.Height
-                  ? parseInt(xso.attributes.Height, 10)
-                  : undefined
-              }
+              key={xso.$iid}
+              height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
             >
-              {findUIChildren(xso).map(child => recursive(child))}
+              {findUIChildren(xso).map((child) => recursive(child))}
             </VBox>
           );
+        case "HBox":
+          return (
+            <HBox
+              key={xso.$iid}
+              width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
+            >
+              {findUIChildren(xso).map((child) => recursive(child))}
+            </HBox>
+          );
         case "Grid":
-          if (
-            xso.attributes.ModelInstanceId !==
-            "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE"
-          ) {
+          if (xso.attributes.ModelInstanceId !== "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE") {
             return (
               <DataView
+                key={xso.$iid}
                 id={xso.attributes.Id}
-                height={
-                  xso.attributes.Height
-                    ? parseInt(xso.attributes.Height, 10)
-                    : undefined
-                }
+                height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
+                width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
                 isHeadless={xso.attributes.IsHeadless === "true"}
               />
             );
           } else {
             return (
               <EmbeddedWebpage
+                key={xso.$iid}
                 id={xso.attributes.ModelInstanceId}
-                height={
-                  xso.attributes.Height
-                    ? parseInt(xso.attributes.Height, 10)
-                    : undefined
-                }
+                height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
               />
             );
           }
         case "Tab":
           return (
-            <CScreenSectionTabbedView
-              boxes={findBoxes(xso)}
-              nextNode={recursive}
-            />
+            <CScreenSectionTabbedView key={xso.$iid} boxes={findBoxes(xso)} nextNode={recursive} />
           );
         case "Box":
-          return (
-            <Box>{findUIChildren(xso).map(child => recursive(child))}</Box>
-          );
+          return <Box key={xso.$iid}>{findUIChildren(xso).map((child) => recursive(child))}</Box>;
         default:
           console.log("Unknown node:", xso);
           return null;

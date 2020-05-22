@@ -27,3 +27,7 @@
     @include progressIndicator;
   }
 }
+
+.workflowActionBtn {
+  @include dialogButton();
+}

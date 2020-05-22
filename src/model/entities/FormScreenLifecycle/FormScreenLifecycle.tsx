@@ -33,16 +33,18 @@ import { IDataView } from "../types/IDataView";
 import {IAggregationInfo} from "../types/IAggregationInfo";
 import {IGroupChildrenOrdering} from "../types/IOrderingConfiguration";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { processActionQueryInfo, IQueryInfo } from "model/actions/Actions/processActionQueryInfo";
+import { assignIIds } from "xmlInterpreters/xmlUtils";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
   NoSave = 1,
-  Save = 2
+  Save = 2,
 }
 
 enum IQuestionDeleteDataAnswer {
   No = 0,
-  Yes = 1
+  Yes = 1,
 }
 
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
@@ -83,7 +85,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     entity: string,
     action: IAction,
     selectedItems: string[]
-  ): Generator<unknown, any, unknown> {
+  ): Generator<any, any, any> {
     yield* this.executeAction(gridId, entity, action, selectedItems);
   }
 
@@ -129,6 +131,61 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *onWorkflowNextClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      const api = getApi(this);
+      const sessionId = getSessionId(this);
+      const actionQueryInfo = (yield api.workflowNextQuery({
+        sessionFormIdentifier: sessionId,
+      })) as IQueryInfo[];
+      const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo);
+      if (!processQueryInfoResult.canContinue) return;
+      const uiResult = yield api.workflowNext({
+        sessionFormIdentifier: sessionId,
+        CachedFormIds: [],
+      });
+      this.killForm();
+      yield* this.start(uiResult);
+    } finally {
+      this.inFlow--;
+    }
+  }
+
+  *onWorkflowAbortClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      const api = getApi(this);
+      const uiResult = yield api.workflowAbort({ sessionFormIdentifier: getSessionId(this) });
+      this.killForm();
+      yield* this.start(uiResult);
+    } finally {
+      this.inFlow--;
+    }
+  }
+
+  *onWorkflowRepeatClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      const api = getApi(this);
+      const sessionId = getSessionId(this);
+      const uiResult = yield api.workflowRepeat({ sessionFormIdentifier: sessionId });
+      this.killForm();
+      yield* this.start(uiResult);
+    } finally {
+      this.inFlow--;
+    }
+  }
+
+  *onWorkflowCloseClick(event: any): Generator {
+    this.inFlow++;
+    try {
+      yield* this.onRequestScreenClose();
+    } finally {
+      this.inFlow--;
+    }
+  }
+
   _autorefreshTimerHandle: any;
 
   *startAutorefreshIfNeeded() {
@@ -161,7 +218,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   performAutoreload() {
     const self = this;
-    flow(function*() {
+    flow(function* () {
       try {
         yield* self.refreshSession();
       } catch (e) {
@@ -173,26 +230,29 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *start(initUIResult: any): Generator {
     let _steadyDebounceTimeout: any;
-    reaction(
-      () => getFormScreen(this).dataViews.every(dv => !dv.isWorking) && !this.isWorking,
-      allDataViewsSteady => {
-        if (allDataViewsSteady) {
-          _steadyDebounceTimeout = setTimeout(() => {
-            _steadyDebounceTimeout = undefined;
-            this.allDataViewsSteady = true;
-          }, 100);
-        } else {
-          this.allDataViewsSteady = false;
-          if (_steadyDebounceTimeout) {
-            clearTimeout(_steadyDebounceTimeout);
-            _steadyDebounceTimeout = undefined;
+    this.disposers.push(
+      reaction(
+        () => getFormScreen(this).dataViews.every((dv) => !dv.isWorking) && !this.isWorking,
+        (allDataViewsSteady) => {
+          if (allDataViewsSteady) {
+            _steadyDebounceTimeout = setTimeout(() => {
+              _steadyDebounceTimeout = undefined;
+              this.allDataViewsSteady = true;
+            }, 100);
+          } else {
+            this.allDataViewsSteady = false;
+            if (_steadyDebounceTimeout) {
+              clearTimeout(_steadyDebounceTimeout);
+              _steadyDebounceTimeout = undefined;
+            }
           }
         }
+      ),
+      () => {
+        clearTimeout(_steadyDebounceTimeout);
+        _steadyDebounceTimeout = undefined;
       }
     );
-    autorun(() => {
-      console.log("ALL DATA VIEWS STEADY:", this.allDataViewsSteady);
-    });
     // yield* this.initUI();
     yield* this.applyInitUIResult({ initUIResult });
     if (!this.isReadData) {
@@ -201,40 +261,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.startAutorefreshIfNeeded();
   }
 
-  /*
-  *initUI() {
-    try {
-      this.inFlow++;
-      const api = getApi(this);
-      const openedScreen = getOpenedScreen(this);
-      const menuItemId = getMenuItemId(this);
-      const menuItemType = getMenuItemType(this);
-      const parameters = getScreenParameters(this);
-      const initUIResult = yield api.initUI({
-        Type: menuItemType,
-        ObjectId: menuItemId,
-        FormSessionId: undefined,
-        IsNewSession: true,
-        RegisterSession: true,
-        DataRequested: !openedScreen.dontRequestData,
-        Parameters: parameters
-      });
-      console.log(initUIResult);
-      yield* this.applyInitUIResult({ initUIResult });
-    } catch (error) {
-      yield* handleError(this)(error);
-      yield* closeForm(this)();
-      throw error;
-      // TODO: Error handling !
-    } finally {
-      this.inFlow--;
-    }
-  }*/
-
-
-
   *applyInitUIResult(args: { initUIResult: any }) {
     const openedScreen = getOpenedScreen(this);
+
+    assignIIds(args.initUIResult.formDefinition);
 
     const screen = interpretScreenXml(
       args.initUIResult.formDefinition,
@@ -246,7 +276,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     openedScreen.content.setFormScreen(screen);
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data, true);
-    getDataViewList(this).forEach(dv => dv.start());
+    getDataViewList(this).forEach((dv) => dv.start());
   }
 
   loadChildRows(rootDataView: IDataView, filter: string, ordering: IGroupChildrenOrdering | undefined){
@@ -334,7 +364,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             RowLimit: SCROLL_DATA_INCREMENT_SIZE, // 999999 - to load everything and avoid infinite scroll
             RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(rootDataView),
-            MasterRowId: undefined
+            MasterRowId: undefined,
           });
           rootDataView.dataTable.setRecords(loadedData);
           if (selectFirstRow) {
@@ -373,7 +403,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
               SessionFormIdentifier: getSessionId(this),
               Entity: dataView.entity,
               Id: dataView.dataTable.getRowId(row),
-              Values: map2obj(dataView.dataTable.getDirtyValues(row))
+              Values: map2obj(dataView.dataTable.getDirtyValues(row)),
             });
             yield* refreshWorkQueues(this)();
             yield* processCRUDResult(dataView, updateObjectResult);
@@ -396,7 +426,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Entity: entity,
         RequestingGridId: gridId,
         Values: {},
-        Parameters: { ...getBindingParametersFromParent(targetDataView) }
+        Parameters: { ...getBindingParametersFromParent(targetDataView) },
       });
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
@@ -412,9 +442,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const deleteObjectResult = yield api.deleteObject({
         SessionFormIdentifier: getSessionId(this),
         Entity: entity,
-        Id: rowId
+        Id: rowId,
       });
-      console.log(deleteObjectResult);
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, deleteObjectResult);
     } finally {
@@ -443,21 +472,19 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.inFlow++;
       if (this.isReadData) {
-        getFormScreen(this).dataViews.forEach(dv => dv.saveViewState());
+        getFormScreen(this).dataViews.forEach((dv) => dv.saveViewState());
         const api = getApi(this);
         const result = yield api.refreshSession(getSessionId(this));
         yield* this.applyData(result, false);
         getFormScreen(this).setDirty(false);
-        getFormScreen(this).dataViews.forEach(dv => dv.restoreViewState());
+        getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
       } else {
         yield* this.loadData(false);
       }
     } finally {
       this.inFlow--;
       setTimeout(async () => {
-        console.log(getFormScreen(this).dataViews.map(dv => !dv.isWorking));
         await when(() => this.allDataViewsSteady);
-        console.log("Refreshing view state.");
       }, 10);
     }
     yield* clearRowStates(this)();
@@ -472,16 +499,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         parameters[parameter.name] = parameter.fieldName;
       }
       const api = getApi(this);
-      const queryResult = yield api.executeActionQuery({
+      const queryResult = (yield api.executeActionQuery({
         SessionFormIdentifier: getSessionId(this),
         Entity: entity,
         ActionType: action.type,
         ActionId: action.id,
         ParameterMappings: parameters,
         SelectedItems: selectedItems,
-        InputParameters: {}
-      });
-      console.log("EAQ", queryResult);
+        InputParameters: {},
+      })) as IQueryInfo[];
+      const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
+      if (!processQueryInfoResult.canContinue) return;
 
       const result = yield api.executeAction({
         SessionFormIdentifier: getSessionId(this),
@@ -491,9 +519,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ParameterMappings: parameters,
         SelectedItems: selectedItems,
         InputParameters: {},
-        RequestingGrid: gridId
+        RequestingGrid: gridId,
       });
-      console.log("EA", result);
       yield* refreshWorkQueues(this)();
       yield* new_ProcessActionResult(action)(result);
     } finally {
@@ -501,11 +528,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  @action.bound
+  killForm() {
+    this.clearAutorefreshInterval();
+    this.disposers.forEach((disposer) => disposer());
+    const openedScreen = getOpenedScreen(this);
+    openedScreen.content.setFormScreen(undefined);
+  }
+
   *closeForm() {
     try {
       this.inFlow++;
-      this.clearAutorefreshInterval();
-      this.disposers.forEach(disposer => disposer());
+      this.killForm();
       yield* closeForm(this)();
     } finally {
       this.inFlow--;
@@ -560,7 +594,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *applyData(data: any, selectFirstRow: boolean): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
-      console.log(entityKey, entityValue);
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         dataView.dataTable.clear();
@@ -571,6 +604,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     }
   }
+
+  *workflowNext() {}
+
+  *workflowCancel() {}
 
   get isReadData() {
     return !getOpenedScreen(this).dontRequestData;
