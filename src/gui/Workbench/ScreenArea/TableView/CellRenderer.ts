@@ -35,11 +35,14 @@ export class CellRenderer implements ICellRenderer {
 
   tablePanelView: ITablePanelView = null as any;
 
+  onTableCellClick = onTableCellClick(this.tablePanelView);
+
   @bind
   renderCell({ rowIndex, columnIndex, rowHeight, columnWidth, onCellClick, ctx }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
     onCellClick.subscribe((event: any) => {
-      onTableCellClick(this.tablePanelView)(
+      //console.log("click", event.isDouble);
+      this.onTableCellClick(
         event,
         rowIndex,
         this.isSelectionCheckboxes ? columnIndex - 1 : columnIndex
@@ -203,7 +206,7 @@ export class CellRenderer implements ICellRenderer {
             getRowStateColumnBgColor(this.tablePanelView, recordId, "") ||
             getRowStateRowBgColor(this.tablePanelView, recordId),
 
-          foregroundColor: getRowStateForegroundColor(this.tablePanelView, recordId, "")
+          foregroundColor: getRowStateForegroundColor(this.tablePanelView, recordId, ""),
         };
       }
       columnIndex--;
@@ -268,7 +271,7 @@ export class CellRenderer implements ICellRenderer {
         getRowStateColumnBgColor(this.tablePanelView, recordId, property.id) ||
         getRowStateRowBgColor(this.tablePanelView, recordId),
       isHidden: !getRowStateAllowRead(this.tablePanelView, recordId, property.id),
-      foregroundColor: getRowStateForegroundColor(this.tablePanelView, recordId, property.id)
+      foregroundColor: getRowStateForegroundColor(this.tablePanelView, recordId, property.id),
     };
   }
 }

@@ -12,14 +12,16 @@ import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
+import _ from 'lodash';
+
 export function onTableCellClick(ctx: any) {
-  return flow(function* onTableCellClick(
+  return _.debounce(flow(function* onTableCellClick(
     event: any,
     rowIndex: number,
     columnIndex: number
   ) {
     try {
-      console.log("click", rowIndex, columnIndex);
+      console.log("click", rowIndex, columnIndex, event.isDouble);
       if (getIsSelectionCheckboxesShown(ctx) && columnIndex === -1) {
         // TODO: Move to tablepanelview
         const dataTable = getDataTable(ctx);
@@ -51,5 +53,5 @@ export function onTableCellClick(ctx: any) {
       yield* handleError(ctx)(e);
       throw e;
     }
-  });
+  }), 200);
 }

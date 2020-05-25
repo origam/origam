@@ -377,6 +377,7 @@ export class RawTable extends React.Component<
                           }
                           scrollOffsetTarget={this.props.scrollState}
                           onClick={this.handleScrollerClick}
+                          
                           onKeyDown={this.props.onKeyDown}
                         />
                       </>
