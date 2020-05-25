@@ -73,6 +73,7 @@ export class FormScreenBuilder extends React.Component<{
         case "WorkflowFinishedPanel": {
           return (
             <WorkflowFinishedPanel
+              key={xso.$iid}
               isCloseButton={xso.attributes.showWorkflowCloseButton}
               isRepeatButton={xso.attributes.showWorkflowRepeatButton}
               message={xso.attributes.Message}
@@ -86,6 +87,7 @@ export class FormScreenBuilder extends React.Component<{
           const panels = findUIChildren(xso).map((child, idx) => [idx, 1, recursive(child)]);
           return (
             <Splitter
+              key={xso.$iid}
               STYLE={SSplitter}
               type="isHoriz"
               id={xso.attributes.ModelInstanceId}
@@ -119,6 +121,7 @@ export class FormScreenBuilder extends React.Component<{
           const panels = findUIChildren(xso).map((child, idx) => [idx, 1, recursive(child)]);
           return (
             <Splitter
+              key={xso.$iid}
               STYLE={SSplitter}
               type="isVert"
               id={xso.attributes.ModelInstanceId}
@@ -150,16 +153,28 @@ export class FormScreenBuilder extends React.Component<{
         }
         case "Label":
           console.log(xso);
-          return <Label height={parseInt(xso.attributes.Height, 10)} text={xso.attributes.Name} />;
+          return (
+            <Label
+              key={xso.$iid}
+              height={parseInt(xso.attributes.Height, 10)}
+              text={xso.attributes.Name}
+            />
+          );
         case "VBox":
           return (
-            <VBox height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}>
+            <VBox
+              key={xso.$iid}
+              height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
+            >
               {findUIChildren(xso).map((child) => recursive(child))}
             </VBox>
           );
         case "HBox":
           return (
-            <HBox width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}>
+            <HBox
+              key={xso.$iid}
+              width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
+            >
               {findUIChildren(xso).map((child) => recursive(child))}
             </HBox>
           );
@@ -167,24 +182,28 @@ export class FormScreenBuilder extends React.Component<{
           if (xso.attributes.ModelInstanceId !== "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE") {
             return (
               <DataView
+                key={xso.$iid}
                 id={xso.attributes.Id}
                 height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
-                width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10): undefined}
+                width={xso.attributes.Width ? parseInt(xso.attributes.Width, 10) : undefined}
                 isHeadless={xso.attributes.IsHeadless === "true"}
               />
             );
           } else {
             return (
               <EmbeddedWebpage
+                key={xso.$iid}
                 id={xso.attributes.ModelInstanceId}
                 height={xso.attributes.Height ? parseInt(xso.attributes.Height, 10) : undefined}
               />
             );
           }
         case "Tab":
-          return <CScreenSectionTabbedView boxes={findBoxes(xso)} nextNode={recursive} />;
+          return (
+            <CScreenSectionTabbedView key={xso.$iid} boxes={findBoxes(xso)} nextNode={recursive} />
+          );
         case "Box":
-          return <Box>{findUIChildren(xso).map((child) => recursive(child))}</Box>;
+          return <Box key={xso.$iid}>{findUIChildren(xso).map((child) => recursive(child))}</Box>;
         default:
           console.log("Unknown node:", xso);
           return null;

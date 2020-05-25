@@ -19,6 +19,7 @@ import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
 import { WebScreen } from "../WebScreen";
 import { getSessionId } from "model/selectors/getSessionId";
 import { scopeFor } from "dic/Container";
+import { assignIIds } from "xmlInterpreters/xmlUtils";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -273,6 +274,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     console.log(portalInfo);
     const menuUI = findMenu(portalInfo.menu);
+    assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
 

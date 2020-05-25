@@ -18,7 +18,7 @@ class Registration<TInstance> {
   onPreparing: Array<(args: IOnPreparingArgs) => void> = [];
   onActivating: Array<(args: IOnActivatingArgs<TInstance>) => void> = [];
   onActivated: Array<(args: IOnActivatedArgs<TInstance>) => void> = [];
-  onRelease: Array<() => void> = [];
+  onRelease: Array<(args: IOnReleaseArgs<TInstance>) => void> = [];
 }
 
 class Registrator<TInstance> implements IRegistrator<TInstance> {
@@ -58,9 +58,15 @@ class Registrator<TInstance> implements IRegistrator<TInstance> {
     return this;
   }
 
-  onRelease(handler: () => void): IRegistrator<TInstance> {
+  onRelease(handler: (args: IOnReleaseArgs<TInstance>) => void): IRegistrator<TInstance> {
     this.registration.onRelease.push(handler);
     return this;
+  }
+
+  forward(
+    fn: (registrator: Registrator<TInstance>) => Registrator<TInstance>
+  ): Registrator<TInstance> {
+    return fn(this);
   }
 }
 
@@ -70,7 +76,7 @@ export class Container implements IContainer {
   private registrations: Map<ITypeSymbol<any>, Array<Registration<any>>> = new Map();
   private instances: Map<ITypeSymbol<any>, any> = new Map();
   private transientInstances: any[] = [];
-  private disposeEvents = new WeakMap<any, Array<() => void>>();
+  private disposeEvents = new WeakMap<any, Array<(args: IOnReleaseArgs<any>) => void>>();
 
   private parent?: Container;
   private children: Container[] = [];
@@ -208,6 +214,9 @@ export class Container implements IContainer {
   providePerDependency<TInstance>(registration: Registration<TInstance>) {
     let instance = this.newFromRegistration(registration);
     _registeredScopes.set(instance, this);
+    if (registration.onRelease.length > 0) {
+      this.disposeEvents.set(instance, registration.onRelease);
+    }
     for (let h of registration.onActivating)
       h({
         container: this,
@@ -219,10 +228,8 @@ export class Container implements IContainer {
     for (let h of registration.onActivated) {
       getBottomContainer().scheduledOnActivated.push(() => h({ container: this, instance }));
     }
-    // this.transientInstances.push(instance);
-    if (registration.onRelease.length > 0) {
-      this.disposeEvents.set(instance, registration.onRelease);
-    }
+    this.transientInstances.push(instance);
+
     return instance;
   }
 
@@ -252,6 +259,9 @@ export class Container implements IContainer {
     } else {
       let instance = this.newFromRegistration(registration);
       _registeredScopes.set(instance, this);
+      if (registration.onRelease.length > 0) {
+        this.disposeEvents.set(instance, registration.onRelease);
+      }
       for (let h of registration.onActivating)
         h({
           container: this,
@@ -284,31 +294,41 @@ export class Container implements IContainer {
   dispose() {
     // TODO: Dispose registered objects
     //console.log("Disposing lifetime scope:", this.scopeName);
-    const parent = this.parent;
-    if (this.children.length > 0) {
-      console.log("Disposing container with children?");
-    }
-    for (let instance of this.instances.values()) {
-      const disposeEvent = this.disposeEvents.get(instance);
-      if (disposeEvent) {
-        for (let h of disposeEvent) h();
+    // You might want to use TypeSymbol instance call to resolve something during disposal.
+    pushCurrentContainer(this);
+    try {
+      const parent = this.parent;
+      if (this.children.length > 0) {
+        console.log("Disposing container with children?");
       }
-      console.log("Disposing cached", instance);
-      if (instance.dispose) instance.dispose();
+      for (let instance of this.instances.values()) {
+        const disposeEvent = this.disposeEvents.get(instance);
+        if (disposeEvent) {
+          for (let h of disposeEvent) h({ instance, container: this });
+        }
+        console.log("Disposing cached", instance);
+        if (instance.dispose) instance.dispose();
+      }
+      this.instances.clear();
+      for (let instance of this.transientInstances) {
+        const disposeEvent = this.disposeEvents.get(instance);
+        if (disposeEvent) {
+          for (let h of disposeEvent) h({ instance, container: this });
+        }
+        console.log("Disposing transient", instance);
+        if (instance.dispose) instance.dispose();
+      }
+      this.transientInstances.length = 0;
+      this.isDisposed = true;
+      if (this.parent) {
+        const idx = this.parent.children.findIndex((item) => item === this);
+        if (idx > -1) this.parent.children.splice(idx, 1);
+        this.parent = undefined;
+      }
+      return parent;
+    } finally {
+      popCurrentContainer();
     }
-    this.instances.clear();
-    for (let instance of this.transientInstances) {
-      console.log("Disposing transient", instance);
-      if (instance.dispose) instance.dispose();
-    }
-    this.transientInstances.length = 0;
-    this.isDisposed = true;
-    if (this.parent) {
-      const idx = this.parent.children.findIndex((item) => item === this);
-      if (idx > -1) this.parent.children.splice(idx, 1);
-      this.parent = undefined;
-    }
-    return parent;
   }
 
   disposeWithChildren() {
@@ -380,11 +400,19 @@ export interface IRegistrator<TInstance> {
   onActivated(handler: (args: IOnActivatedArgs<TInstance>) => void): IRegistrator<TInstance>;
   onActivating(handler: (args: IOnActivatingArgs<TInstance>) => void): IRegistrator<TInstance>;
   onPreparing(handler: (args: IOnPreparingArgs) => void): IRegistrator<TInstance>;
-  onRelease(handler: () => void): IRegistrator<TInstance>;
+  onRelease(handler: (args: IOnReleaseArgs<TInstance>) => void): IRegistrator<TInstance>;
+  forward(
+    fn: (registrator: IRegistrator<TInstance>) => IRegistrator<TInstance>
+  ): IRegistrator<TInstance>;
 }
 
 export interface IOnPreparingArgs {
   container: IContainer;
+}
+
+export interface IOnReleaseArgs<TInstance> {
+  container: IContainer;
+  instance: TInstance;
 }
 
 export interface IOnActivatingArgs<TInstance> {
@@ -437,7 +465,7 @@ export function popCurrentContainer() {
 export function getScopePath() {
   let container = getTopContainer();
   const result: Container[] = [];
-  while(container) {
+  while (container) {
     result.push(container);
     container = (container as any).parent;
   }

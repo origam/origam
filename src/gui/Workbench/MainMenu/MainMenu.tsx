@@ -129,7 +129,7 @@ export class MainMenuRecursiveItem extends React.Component<{
           >
             {this.props.node.elements.map((child: any, idx: number) => (
               <MainMenuRecursiveItem
-                key={idx}
+                key={child.$iid}
                 node={child}
                 level={this.props.level + 1}
                 onItemClick={this.props.onItemClick}
@@ -170,7 +170,7 @@ export class MainMenu extends React.Component<{
         <div className={S.mainMenuSectionItem}>
           {this.props.menuUI.elements.map((item: any, idx: number) => (
             <MainMenuRecursiveItem
-              key={idx}
+              key={item.$iid}
               node={item}
               level={0}
               onItemClick={this.props.onItemClick}

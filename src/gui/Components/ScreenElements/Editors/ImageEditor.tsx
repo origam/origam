@@ -34,11 +34,11 @@ export class ImageEditor extends React.Component<{
   value: string;
 }> {
   render() {
-    return (
+    return this.props.value ? (
       <img
         className={S.image}
         src={`data:image/${IMAGE_TYPE[this.props.value.charAt(0)]};base64,${this.props.value}`}
       />
-    );
+    ) : null;
   }
 }

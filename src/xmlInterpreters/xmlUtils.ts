@@ -1,3 +1,4 @@
+import { getIdent } from "utils/common";
 
 export function find(xmlObj: any, pred: (node: any) => boolean) {
   function recursive(n: any) {
@@ -30,4 +31,14 @@ export function findStopping(xmlObj: any, pred: (node: any) => boolean) {
   const result: any[] = [];
   recursive(xmlObj);
   return result;
+}
+
+export function assignIIds(xmlTree: any) {
+  function recursive(node: any) {
+    node.$iid = getIdent();
+    if (node.elements) {
+      for (let e of node.elements) recursive(e);
+    }
+  }
+  recursive(xmlTree);
 }

@@ -7,6 +7,8 @@ import {
   Func,
   getCreatorStack,
   getScopePath,
+  ITypeSymbol,
+  IRegistrator,
 } from "./Container";
 
 interface IDog {
@@ -456,6 +458,101 @@ describe("Container lifecycle event", () => {
     container.resolve(IA);
 
     expect(callOrder).toEqual(["CA", "CB", "CC", "AB", "AC", "AA"]);
+  });
+
+  it("runs onRelease when scope gets disposed.", () => {
+    class K {
+      id = "k";
+      constructor(public l = IL(), public m = IM()) {}
+    }
+    const IK = TypeSymbol<K>("IK");
+
+    class L {
+      id = "l";
+      constructor(m = IM()) {}
+    }
+    const IL = TypeSymbol<K>("IL");
+
+    class M {
+      id = "m";
+    }
+    const IM = TypeSymbol<K>("IM");
+    const callOrder: any = [];
+
+    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    cont.registerClass(IK, K).onRelease(({ instance }) => {
+      callOrder.push(instance.id);
+    });
+    cont.registerClass(IL, L).onRelease(({ instance }) => {
+      callOrder.push(instance.id);
+    });
+    cont.registerClass(IM, M).onRelease(({ instance }) => {
+      callOrder.push(instance.id);
+    });
+    cont.resolve(IK);
+
+    cont.disposeWithChildren();
+
+    expect(callOrder).toEqual(["m", "l", "k"]);
+  });
+
+  it("allows maintaining reference to an instance in some collection.", () => {
+    let idgen = 1;
+    class K {
+      id = idgen++;
+      constructor() {}
+    }
+
+    class KCollection {
+      items = new Map<number, K>();
+
+      put(k: K) {
+        this.items.set(k.id, k);
+      }
+
+      del(k: K) {
+        this.items.delete(k.id);
+      }
+    }
+    const IKCollection = TypeSymbol<KCollection>("IKCollection");
+    const IK = TypeSymbol<K>("IK");
+
+    interface ICollection<TInstance> {
+      put(obj: TInstance): void;
+      del(obj: TInstance): void;
+    }
+
+    function maintainInCollection<TInstance>(collectionSym: ITypeSymbol<ICollection<TInstance>>) {
+      return (reg: IRegistrator<TInstance>) => {
+        return reg
+          .onActivating(({ instance, container }) => {
+            collectionSym().put(instance);
+          })
+          .onRelease(({ instance }) => {
+            collectionSym().del(instance);
+          });
+      };
+    }
+
+    const cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    cont.registerClass(IKCollection, KCollection).singleInstance();
+    const chcont = cont.beginLifetimeScope();
+    chcont.registerClass(IK, K).transientInstance().forward(maintainInCollection(IKCollection));
+
+    const col = cont.resolve(IKCollection);
+    expect(col.items.size).toBe(0);
+
+    chcont.resolve(IK);
+    chcont.resolve(IK);
+    chcont.resolve(IK);
+
+    expect(col.items.size).toBe(3);
+    expect(col.items.get(1)!.id).toBe(1);
+    expect(col.items.get(2)!.id).toBe(2);
+    expect(col.items.get(3)!.id).toBe(3);
+
+    chcont.disposeWithChildren();
+    expect(col.items.size).toBe(0);
   });
 });
 
