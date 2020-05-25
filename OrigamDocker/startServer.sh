@@ -17,6 +17,9 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 		fullgiturl="http://$gitcredentials${gitUrl//http:\/\//}"
 		git clone $fullgiturl
 	   fi
+	   if [[ -n ${gitBranch} ]]; then
+	    git checkout ${gitBranch}
+	   fi
 	   cd ..
 	fi
 fi
