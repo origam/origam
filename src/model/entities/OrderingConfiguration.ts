@@ -1,7 +1,6 @@
 import { action, computed, observable, flow } from "mobx";
 import { IDataTable } from "./types/IDataTable";
 import {
-  IGroupChildrenOrdering,
   IOrderByColumnSetting,
   IOrderByDirection, IOrdering,
   IOrderingConfiguration
@@ -34,16 +33,10 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     return getFormScreen(this).getPanelDefaultOrdering(modelInstanceId);
   }
 
-  @computed get groupChildrenOrdering(): IGroupChildrenOrdering | undefined {
-    if(this.ordering.length === 0 || !this.ordering[0]) return undefined;
-    const property = getProperties(this)
-      .find(prop => prop.id === this.ordering[0].columnId);
-    const lookupId = property &&  property.lookup && property.lookup.lookupId;
-    return {
-      columnId: this.ordering[0].columnId,
-      direction: this.ordering[0].direction,
-      lookupId: lookupId
-    };
+  @computed get groupChildrenOrdering(): IOrdering | undefined {
+    return this.ordering.length === 0 || !this.ordering[0]
+      ? undefined
+      : this.ordering[0];
   }
 
   getOrdering(column: string): IOrderByColumnSetting {
@@ -61,18 +54,27 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     }
   }
 
+  private newOrdering(columnId: string, direction: IOrderByDirection): IOrdering{
+    const property = getProperties(this)
+      .find(prop => prop.id === columnId);
+    const lookupId = property &&  property.lookup && property.lookup.lookupId;
+    return {
+      columnId: columnId,
+      direction: direction,
+      lookupId: lookupId
+    };
+  }
+
   @action.bound
   setOrdering(columnId: string): void {
     const orderingClone = _.cloneDeep(this.ordering);
     const curOrd = this.ordering.find(item => item.columnId === columnId);
     this.ordering.length = 0;
     if (!curOrd) {
-      this.ordering.push({ columnId, direction: IOrderByDirection.ASC });
+      this.ordering.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
-      this.ordering.push({
-        columnId,
-        direction: cycleOrdering(curOrd.direction)
-      });
+      this.ordering.push(this.newOrdering(columnId, cycleOrdering(curOrd.direction)
+      ));
       this.ordering = this.ordering.filter(
         item => item.direction !== IOrderByDirection.NONE
       );
@@ -88,7 +90,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     const orderingClone = _.cloneDeep(this.ordering);
     const curOrd = this.ordering.find(item => item.columnId === columnId);
     if (!curOrd) {
-      this.ordering.push({ columnId, direction: IOrderByDirection.ASC });
+      this.ordering.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
       curOrd.direction = cycleOrdering(curOrd.direction);
       /*this.ordering = this.ordering.filter(

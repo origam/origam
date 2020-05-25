@@ -28,14 +28,13 @@ import { getMenuItemId } from "../../selectors/getMenuItemId";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { getSessionId } from "../../selectors/getSessionId";
 import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
-import { getGroupingConfiguration } from "../../selectors/TablePanelView/getGroupingConfiguration";
 import { IDataView } from "../types/IDataView";
 import {IAggregationInfo} from "../types/IAggregationInfo";
-import {IGroupChildrenOrdering} from "../types/IOrderingConfiguration";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { processActionQueryInfo, IQueryInfo } from "model/actions/Actions/processActionQueryInfo";
 import { assignIIds } from "xmlInterpreters/xmlUtils";
 import {getDontRequestData} from "../../selectors/getDontRequestData";
+import {IOrdering} from "../types/IOrderingConfiguration";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -280,7 +279,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     getDataViewList(this).forEach((dv) => dv.start());
   }
 
-  loadChildRows(rootDataView: IDataView, filter: string, ordering: IGroupChildrenOrdering | undefined){
+  loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined){
     const api = getApi(this);
     return api.getRows({
       MenuId: getMenuItemId(rootDataView),

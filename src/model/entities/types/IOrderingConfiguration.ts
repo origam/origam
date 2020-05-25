@@ -15,17 +15,12 @@ export interface IOrderingConfiguration {
   getOrdering(column: string): IOrderByColumnSetting;
   setOrdering(column: string): void;
   addOrdering(column: string): void;
-  groupChildrenOrdering: IGroupChildrenOrdering | undefined;
+  groupChildrenOrdering: IOrdering | undefined;
   getDefaultOrdering(): IOrdering | undefined;
   parent?: any;
 }
 
 export interface IOrdering {
-  columnId: string;
-  direction: IOrderByDirection;
-}
-
-export interface IGroupChildrenOrdering {
   columnId: string;
   direction: IOrderByDirection;
   lookupId: string | undefined;
@@ -45,5 +40,6 @@ export function parseToOrdering(candidate: any): IOrdering | undefined{
   return {
     columnId: candidate.field,
     direction: parseToIOrderByDirection(candidate.direction),
+    lookupId: undefined
   };
 }
