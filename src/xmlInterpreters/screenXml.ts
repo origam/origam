@@ -40,6 +40,7 @@ import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveC
 import {getRowContainer} from "../model/selectors/getRowContainer";
 import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
 import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
+import {getDontRequestData} from "../model/selectors/getDontRequestData";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -79,6 +80,9 @@ export function interpretScreenXml(
       },
     ])
   );
+
+  checkInfiniteScrollWillWork(formScreenLifecycle, panelConfigurations);
+
   const dataSourcesXml = findStopping(screenDoc, (n) => n.name === "DataSources")[0];
 
   const windowXml = findStopping(screenDoc, (n) => n.name === "Window")[0];
@@ -389,4 +393,19 @@ export function interpretScreenXml(
 
   const rscr = $screen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
   return scr;
+}
+
+function checkInfiniteScrollWillWork(formScreenLifecycle:  IFormScreenLifecycle02,
+                                     panelConfigurations: Map<string, IPanelConfiguration>){
+
+  const infiniteScrollingActive = getDontRequestData(formScreenLifecycle);
+  if(infiniteScrollingActive){
+    const undefinedOrderingEntry = Array.from(
+      panelConfigurations
+        .entries())
+        .find(entry => !entry[1].defaultOrdering)
+    if(undefinedOrderingEntry){
+      throw new Error(`Table in: ${undefinedOrderingEntry[0]} has undefined default ordering while infinite scrolling is on. Make sure the underlying DataStructure has a SortSet defined.`);
+    }
+  }
 }
