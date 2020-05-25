@@ -11,6 +11,8 @@ import {
   IFormScreenEnvelope,
   IFormScreenEnvelopeData
 } from "./types/IFormScreen";
+import {IPanelConfiguration} from "./types/IPanelConfiguration";
+import {IOrderByDirection, IOrdering} from "./types/IOrderingConfiguration";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -41,7 +43,7 @@ export class FormScreen implements IFormScreen {
   autoSaveOnListRecordChange: boolean = false;
   requestSaveAfterUpdate: boolean = false;
   screenUI: any;
-  panelConfigurations: Map<string, { position: number | undefined }> = new Map();
+  panelConfigurations: Map<string, IPanelConfiguration> = new Map();
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
 
@@ -109,6 +111,11 @@ export class FormScreen implements IFormScreen {
   getPanelPosition(id: string): number | undefined {
     const conf = this.panelConfigurations.get(id);
     return conf ? conf.position : undefined;
+  }
+
+  getPanelDefaultOrdering(id: string): IOrdering | undefined {
+    const conf = this.panelConfigurations.get(id);
+    return conf ? conf.defaultOrdering : undefined;
   }
 
   @action.bound

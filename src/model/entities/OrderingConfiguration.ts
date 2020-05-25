@@ -11,6 +11,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import {getProperties} from "../selectors/DataView/getProperties";
+import {getFormScreen} from "../selectors/FormScreen/getFormScreen";
 
 interface IDataOrdering {
   column: string;
@@ -31,6 +32,11 @@ function cycleOrdering(direction: IOrderByDirection) {
 
 export class OrderingConfiguration implements IOrderingConfiguration {
   @observable ordering: IDataOrdering[] = [];
+
+  getDefaultOrdering(){
+    const modelInstanceId = getDataView(this).modelInstanceId;
+    return getFormScreen(this).getPanelDefaultOrdering(modelInstanceId);
+  }
 
   @computed get groupChildrenOrdering(): IGroupChildrenOrdering | undefined {
     if(this.ordering.length === 0 || !this.ordering[0]) return undefined;

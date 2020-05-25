@@ -1,9 +1,9 @@
 import React from "react";
 import { observer } from "mobx-react";
 import S from "./Header.module.scss";
-import { IOrderByDirection } from "./types";
 import { action } from "mobx";
 import _ from "lodash";
+import {IOrderByDirection} from "../../../../model/entities/types/IOrderingConfiguration";
 
 @observer
 export class Header extends React.Component<{

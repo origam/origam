@@ -1,5 +1,5 @@
 import { getTableViewProperties } from "./getTableViewProperties";
-import { IColumnHeader, IOrderByDirection } from './types';
+import { IColumnHeader } from './types';
 import { getPropertyOrdering } from "../DataView/getPropertyOrdering";
 
 

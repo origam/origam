@@ -3,12 +3,6 @@ import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
 import { ITableRow} from "./TableRendering/types";
 import {BoundingRect} from "react-measure";
 
-export enum IOrderByDirection {
-  NONE = "NONE",
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 export type ICellType =
   | "Text"
   | "ComboBox"

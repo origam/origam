@@ -4,6 +4,8 @@ import { IComponentBinding } from "./IComponentBinding";
 import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
 import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
+import {IPanelConfiguration} from "./IPanelConfiguration";
+import {IOrderByDirection, IOrdering} from "./IOrderingConfiguration";
 
 /*
 export interface ILoadedFormScreenData {
@@ -103,7 +105,7 @@ export interface IFormScreenData {
   dataSources: IDataSource[];
   componentBindings: IComponentBinding[];
   screenUI: any;
-  panelConfigurations: Map<string, { position: number | undefined }>;
+  panelConfigurations: Map<string, IPanelConfiguration>;
   formScreenLifecycle: IFormScreenLifecycle02;
   sessionId: string;
 }
@@ -121,6 +123,7 @@ export interface IFormScreen extends IFormScreenData {
   dialogActions: IAction[];
 
   getPanelPosition(id: string): number | undefined;
+  getPanelDefaultOrdering(id: string): IOrdering | undefined;
 
   getBindingsByChildId(childId: string): IComponentBinding[];
   getBindingsByParentId(parentId: string): IComponentBinding[];

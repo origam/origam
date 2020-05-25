@@ -182,9 +182,13 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   private getOrdering(dataView: IDataView) {
     const orderingConfiguration = getOrderingConfiguration(dataView);
-    const firstProperty = getProperties(dataView)[0];
+    const defaultOrdering = orderingConfiguration.getDefaultOrdering();
+    if(!defaultOrdering){
+      const dataStructureEntityId = getDataStructureEntityId(this.dataView);
+      throw new Error(`Cannot infinitely scroll on dataStructureEntity: ${dataStructureEntityId} because it has no default ordering. Is there a SortSet in it's parent DataStructure?`)
+    }
     return orderingConfiguration.groupChildrenOrdering
       ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
-      : [[firstProperty.id, IOrderByDirection.ASC]];
+      : [[defaultOrdering.columnId, defaultOrdering.direction]];
   }
 }

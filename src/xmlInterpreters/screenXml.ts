@@ -42,6 +42,8 @@ import { ViewConfiguration, IViewConfiguration } from "modules/DataView/ViewConf
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import {getDontRequestData} from "../model/selectors/getDontRequestData";
 import {getRowContainer} from "../model/selectors/getRowContainer";
+import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
+import {parseToIOrderByDirection, parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -72,11 +74,12 @@ export function interpretScreenXml(
   lookupMenuMappings: any,
   sessionId: string
 ) {
-  const panelConfigurations = new Map<string, { position: number | undefined }>(
+  const panelConfigurations = new Map<string, IPanelConfiguration>(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
       {
         position: pcr.position,
+        defaultOrdering: parseToOrdering(pcr.defaultSort[0])
       },
     ])
   );
