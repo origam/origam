@@ -35,6 +35,7 @@ import {IGroupChildrenOrdering} from "../types/IOrderingConfiguration";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { processActionQueryInfo, IQueryInfo } from "model/actions/Actions/processActionQueryInfo";
 import { assignIIds } from "xmlInterpreters/xmlUtils";
+import {getDontRequestData} from "../../selectors/getDontRequestData";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -361,7 +362,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             DataStructureEntityId: getDataStructureEntityId(rootDataView),
             Filter: "",
             Ordering: [],
-            RowLimit: SCROLL_DATA_INCREMENT_SIZE, // 999999 - to load everything and avoid infinite scroll
+            RowLimit: getDontRequestData(this) ? SCROLL_DATA_INCREMENT_SIZE : 999999,
             RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(rootDataView),
             MasterRowId: undefined,
