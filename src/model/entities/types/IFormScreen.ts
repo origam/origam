@@ -1,11 +1,11 @@
 import { IDataView } from "./IDataView";
 import { IDataSource } from "./IDataSource";
 import { IComponentBinding } from "./IComponentBinding";
-import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
+import { IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
 import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
-import {IPanelConfiguration} from "./IPanelConfiguration";
-import {IOrderByDirection, IOrdering} from "./IOrderingConfiguration";
+import { IPanelConfiguration } from "./IPanelConfiguration";
+import { IOrdering } from "./IOrderingConfiguration";
 
 /*
 export interface ILoadedFormScreenData {

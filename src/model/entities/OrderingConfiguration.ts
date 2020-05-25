@@ -1,4 +1,4 @@
-import { action, comparer, computed, observable, flow } from "mobx";
+import { action, computed, observable, flow } from "mobx";
 import { IDataTable } from "./types/IDataTable";
 import {
   IGroupChildrenOrdering,

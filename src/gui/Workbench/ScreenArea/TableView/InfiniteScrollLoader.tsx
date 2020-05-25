@@ -7,8 +7,6 @@ import {rangeQuery} from "../../../../utils/arrays";
 import {getApi} from "../../../../model/selectors/getApi";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {getOrderingConfiguration} from "../../../../model/selectors/DataView/getOrderingConfiguration";
-import {getProperties} from "../../../../model/selectors/DataView/getProperties";
-import {IOrderByDirection} from "../../../../model/entities/types/IOrderingConfiguration";
 import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
 import {getSessionId} from "../../../../model/selectors/getSessionId";
 import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";

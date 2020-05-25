@@ -3,7 +3,6 @@ import axios from "axios";
 
 import _ from "lodash";
 import { IApi } from "./types/IApi";
-import { userManager } from "oauth";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 
 export class OrigamAPI implements IApi {

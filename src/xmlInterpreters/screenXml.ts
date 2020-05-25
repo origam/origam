@@ -25,13 +25,10 @@ import { findStopping } from "./xmlUtils";
 import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
 import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
 import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
-import {ListRowContainer, ScrollRowContainer} from "../model/entities/RowsContainer";
 import $root from "rootContainer";
 import { SCOPE_Screen } from "modules/Screen/ScreenModule";
 import { SCOPE_DataView } from "modules/DataView/DataViewModule";
-import { TypeSymbol, scopeFor } from "dic/Container";
-import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
-import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
+import { TypeSymbol } from "dic/Container";
 import { SCOPE_FormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
 import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
@@ -40,10 +37,9 @@ import { IPerspective } from "modules/DataView/Perspective/Perspective";
 import { flow } from "mobx";
 import { ViewConfiguration, IViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
-import {getDontRequestData} from "../model/selectors/getDontRequestData";
 import {getRowContainer} from "../model/selectors/getRowContainer";
 import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
-import {parseToIOrderByDirection, parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
+import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
