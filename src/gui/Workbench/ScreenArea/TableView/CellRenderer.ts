@@ -31,17 +31,19 @@ export interface ICellRenderer extends ICellRendererData {}
 export class CellRenderer implements ICellRenderer {
   constructor(data: ICellRendererData) {
     Object.assign(this, data);
+    this.onTableCellClick = onTableCellClick(this.tablePanelView);
   }
 
   tablePanelView: ITablePanelView = null as any;
 
-  onTableCellClick = onTableCellClick(this.tablePanelView);
+  onTableCellClick: any;
 
   @bind
   renderCell({ rowIndex, columnIndex, rowHeight, columnWidth, onCellClick, ctx }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
     onCellClick.subscribe((event: any) => {
       //console.log("click", event.isDouble);
+
       this.onTableCellClick(
         event,
         rowIndex,

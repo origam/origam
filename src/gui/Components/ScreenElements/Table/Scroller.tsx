@@ -73,6 +73,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
 
   @action.bound private handleClick(event: any, double: boolean) {
     event.persist();
+    event.preventDefault();
     event.isDouble = double;
     const scrollerRect = this.elmScrollerDiv!.getBoundingClientRect();
     this.props.onClick &&
@@ -111,6 +112,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         onScroll={this.handleScroll}
         onClick={(e) => this.handleClick(e, false)}
         onDoubleClick={(e) => this.handleClick(e, true)}
+        onMouseDown={(e) => e.preventDefault()} // To prevent selection when double clicking
         onKeyDown={this.props.onKeyDown}
         ref={this.refScrollerDiv}
       >
