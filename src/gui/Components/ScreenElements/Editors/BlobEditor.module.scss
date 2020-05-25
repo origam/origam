@@ -27,6 +27,31 @@
       opacity: 1;
     }
   }
+
+  :global(.progress) {
+    position: absolute;
+    top: 0px;
+    left: -2px;
+    width: 101%;
+    height: 101%;
+    background-color: white;
+    overflow: hidden;
+    border: 1px solid #b0afb7;
+    border-radius: 3px;
+  }
+
+  :global(.progressBar) {
+    border-radius: 3px;
+    border: none;
+    height: 100%;
+    background-color: #71a2fe;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
   :global(.btnDownload),
   :global(.customBtnChoose) {
     height: 100%;

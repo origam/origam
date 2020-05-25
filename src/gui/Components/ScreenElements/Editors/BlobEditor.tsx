@@ -8,14 +8,17 @@ import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 import { IApi } from "model/entities/types/IApi";
 import { IProperty } from "model/entities/types/IProperty";
-import { observable } from "mobx";
+import { observable, action, flow } from "mobx";
 import S from "./BlobEditor.module.scss";
 import ImageEditor from "tui-image-editor";
 import "tui-image-editor/dist/tui-image-editor.css";
+import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
+import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
     api: getApi(property),
+    processCRUDResult: (result: any) => processCRUDResult(property, result),
     DataStructureEntityId: getDataStructureEntityId(property),
     Property: property.id,
     RowId: getSelectedRowId(property),
@@ -29,6 +32,7 @@ import "tui-image-editor/dist/tui-image-editor.css";
 export class BlobEditor extends React.Component<{
   value: string;
   api?: IApi;
+  processCRUDResult?: IProcessCRUDResult;
   DataStructureEntityId?: string;
   Property?: string;
   RowId?: string;
@@ -39,14 +43,17 @@ export class BlobEditor extends React.Component<{
 }> {
   handleFileChange(event: any) {
     this.fileList = event.target.files;
-    this.upload();
+    flow(this.upload.bind(this))();
   }
 
   @observable.ref fileList: any = [];
+  @observable progressValue = 0;
+  @observable speedValue = 0;
+  @observable isUploading = false;
 
-  async download() {
+  *download() {
     console.log(this.props.parameters);
-    const token = await this.props.api!.getDownloadToken({
+    const token = yield this.props.api!.getDownloadToken({
       SessionFormIdentifier: this.props.SessionFormIdentifier!,
       MenuId: this.props.menuItemId!,
       DataStructureEntityId: this.props.DataStructureEntityId!,
@@ -59,35 +66,57 @@ export class BlobEditor extends React.Component<{
     this.props.api!.getBlob({ downloadToken: token });
   }
 
-  async upload() {
-    if (this.fileList && this.fileList.length > 0) {
-      for (let file of this.fileList) {
-        console.log(file);
-        /*if (file.type.startsWith("image")) {
+  *upload() {
+    this.progressValue = 0;
+    this.speedValue = 0;
+    this.isUploading = true;
+    try {
+      if (this.fileList && this.fileList.length > 0) {
+        for (let file of this.fileList) {
+          console.log(file);
+          /*if (file.type.startsWith("image")) {
           this.imageObjectUrl = URL.createObjectURL(file);
           this.displayImageEditor = true;
 
           return;
         }
         return;*/
-        const token = await this.props.api!.getUploadToken({
-          SessionFormIdentifier: this.props.SessionFormIdentifier!,
-          MenuId: this.props.menuItemId!,
-          DataStructureEntityId: this.props.DataStructureEntityId!,
-          Entity: this.props.Entity!,
-          RowId: this.props.RowId!,
-          Property: this.props.Property!,
-          FileName: this.props.value,
-          parameters: this.props.parameters,
-          DateCreated: "2010-01-01",
-          DateLastModified: "2010-01-01",
-        });
+          const token = yield this.props.api!.getUploadToken({
+            SessionFormIdentifier: this.props.SessionFormIdentifier!,
+            MenuId: this.props.menuItemId!,
+            DataStructureEntityId: this.props.DataStructureEntityId!,
+            Entity: this.props.Entity!,
+            RowId: this.props.RowId!,
+            Property: this.props.Property!,
+            FileName: this.props.value,
+            parameters: this.props.parameters,
+            DateCreated: "2010-01-01",
+            DateLastModified: "2010-01-01",
+          });
 
-        console.log("Uploading ", file.name, file.size);
-        const actionResult = await this.props.api!.putBlob({ uploadToken: token, fileName: file.name, file });
-        console.log(actionResult)
-        debugger
-        /*const result = await axios.post(`http://localhost:8910/file-upload/${file.name}`, file, {
+          console.log("Uploading ", file.name, file.size);
+          let lastTime: number | undefined;
+          let lastSize: number = 0;
+          const crudResult = yield this.props.api!.putBlob(
+            {
+              uploadToken: token,
+              fileName: file.name,
+              file,
+            },
+            action((event: any) => {
+              this.progressValue = event.loaded / event.total;
+              if (lastTime !== undefined) {
+                this.speedValue = ((event.loaded - lastSize) / (event.timeStamp - lastTime)) * 1000;
+                console.log(event.loaded - lastSize, event.timeStamp - lastTime);
+              }
+              lastTime = event.timeStamp;
+              lastSize = event.loaded;
+            })
+          );
+          console.log(crudResult);
+          yield* this.props.processCRUDResult!(crudResult);
+
+          /*const result = await axios.post(`http://localhost:8910/file-upload/${file.name}`, file, {
           headers: { "content-type": "application/octet-stream" },
           onUploadProgress(event) {
             setProgress(event.loaded / event.total);
@@ -100,7 +129,10 @@ export class BlobEditor extends React.Component<{
           }
         });
         console.log(result)*/
+        }
       }
+    } finally {
+      this.isUploading = false;
     }
   }
 
@@ -116,7 +148,7 @@ export class BlobEditor extends React.Component<{
           {this.props.value && (
             <button
               className="btnDownload"
-              onClick={() => this.download()}
+              onClick={flow(this.download.bind(this))}
               title={`Download: ${this.props.value}`}
             >
               <i className="fas fa-download"></i>
@@ -132,10 +164,14 @@ export class BlobEditor extends React.Component<{
             />
             <i className="fas fa-upload"></i>
           </label>
-          {/*<button className="btnStartUpload" onClick={() => this.upload()}>
-          Upload file...
-    </button>*/}
         </div>
+        {this.isUploading && (
+          <div className="progress">
+            <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
+              {(this.progressValue * 100).toFixed(0)}%
+            </div>
+          </div>
+        )}
       </div>
     );
   }
