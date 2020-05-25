@@ -14,11 +14,21 @@ import ImageEditor from "tui-image-editor";
 import "tui-image-editor/dist/tui-image-editor.css";
 import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
+import { IDialogStack } from "model/entities/types/IDialogStack";
+import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import { handleError } from "model/actions/handleError";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
     api: getApi(property),
     processCRUDResult: (result: any) => processCRUDResult(property, result),
+    changeManyFields: changeManyFields(property),
+    flushCurrentRowData: flushCurrentRowData(property),
+    handleError: handleError(property),
+    dialogStack: getDialogStack(property),
     DataStructureEntityId: getDataStructureEntityId(property),
     Property: property.id,
     RowId: getSelectedRowId(property),
@@ -33,6 +43,10 @@ export class BlobEditor extends React.Component<{
   value: string;
   api?: IApi;
   processCRUDResult?: IProcessCRUDResult;
+  changeManyFields?: (values: Array<{ fieldId: string; value: any }>) => Generator;
+  flushCurrentRowData?: () => Generator;
+  handleError?: (error: any) => Generator;
+  dialogStack?: IDialogStack;
   DataStructureEntityId?: string;
   Property?: string;
   RowId?: string;
@@ -52,18 +66,21 @@ export class BlobEditor extends React.Component<{
   @observable isUploading = false;
 
   *download() {
-    console.log(this.props.parameters);
-    const token = yield this.props.api!.getDownloadToken({
-      SessionFormIdentifier: this.props.SessionFormIdentifier!,
-      MenuId: this.props.menuItemId!,
-      DataStructureEntityId: this.props.DataStructureEntityId!,
-      Entity: this.props.Entity!,
-      RowId: this.props.RowId!,
-      Property: this.props.Property!,
-      FileName: this.props.value,
-      parameters: this.props.parameters,
-    });
-    this.props.api!.getBlob({ downloadToken: token });
+    try {
+      const token = yield this.props.api!.getDownloadToken({
+        SessionFormIdentifier: this.props.SessionFormIdentifier!,
+        MenuId: this.props.menuItemId!,
+        DataStructureEntityId: this.props.DataStructureEntityId!,
+        Entity: this.props.Entity!,
+        RowId: this.props.RowId!,
+        Property: this.props.Property!,
+        FileName: this.props.value,
+        parameters: this.props.parameters,
+      });
+      this.props.api!.getBlob({ downloadToken: token });
+    } catch (e) {
+      yield* this.props.handleError!(e);
+    }
   }
 
   *upload() {
@@ -131,8 +148,88 @@ export class BlobEditor extends React.Component<{
         console.log(result)*/
         }
       }
+    } catch (e) {
+      yield* this.props.handleError!(e);
     } finally {
       this.isUploading = false;
+    }
+  }
+
+  *delete() {
+    try {
+      if (
+        yield new Promise(
+          action((resolve: (value: boolean) => void) => {
+            const closeDialog = this.props.dialogStack!.pushDialog(
+              "",
+              <ModalWindow
+                title="Question"
+                titleButtons={null}
+                buttonsCenter={
+                  <>
+                    <button
+                      onClick={() => {
+                        closeDialog();
+                        resolve(true);
+                      }}
+                    >
+                      OK
+                    </button>
+                    <button
+                      onClick={() => {
+                        closeDialog();
+                        resolve(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                }
+                buttonsLeft={null}
+                buttonsRight={null}
+              >
+                <div className={S.dialogContent}>Do you wish to delete {this.props.value} ?</div>
+              </ModalWindow>
+            );
+          })
+        )
+      ) {
+        const { parameters } = this.props;
+        console.log(parameters);
+        const changeSet: Array<{ fieldId: string; value: any }> = [];
+        changeSet.push({ fieldId: this.props.Property!, value: null });
+        if (parameters["AuthorMember"]) {
+          changeSet.push({ fieldId: parameters["AuthorMember"], value: null });
+        }
+        if (parameters["BlobMember"]) {
+          changeSet.push({ fieldId: parameters["BlobMember"], value: null });
+        }
+        if (parameters["CompressionStateMember"]) {
+          changeSet.push({ fieldId: parameters["CompressionStateMember"], value: null });
+        }
+        if (parameters["DateCreatedMember"]) {
+          changeSet.push({ fieldId: parameters["DateCreatedMember"], value: null });
+        }
+        if (parameters["DateLastModifiedMember"]) {
+          changeSet.push({ fieldId: parameters["DateLastModifiedMember"], value: null });
+        }
+        if (parameters["FileSizeMember"]) {
+          changeSet.push({ fieldId: parameters["FileSizeMember"], value: null });
+        }
+        if (parameters["OriginalPathMember"]) {
+          changeSet.push({ fieldId: parameters["OriginalPathMember"], value: null });
+        }
+        if (parameters["RemarkMember"]) {
+          changeSet.push({ fieldId: parameters["RemarkMember"], value: null });
+        }
+        if (parameters["ThumbnailMember"]) {
+          changeSet.push({ fieldId: parameters["ThumbnailMember"], value: null });
+        }
+        yield* this.props.changeManyFields!(changeSet);
+        yield* this.props.flushCurrentRowData!();
+      }
+    } catch (e) {
+      yield* this.props.handleError!(e);
     }
   }
 
@@ -143,16 +240,25 @@ export class BlobEditor extends React.Component<{
     return (
       <div className={S.blobEditor}>
         {this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />}
-        <input readOnly={true} className="fileName" value={this.props.value} />
+        <input readOnly={true} className="fileName" value={this.props.value || ""} />
         <div className="controls">
           {this.props.value && (
-            <button
-              className="btnDownload"
-              onClick={flow(this.download.bind(this))}
-              title={`Download: ${this.props.value}`}
-            >
-              <i className="fas fa-download"></i>
-            </button>
+            <>
+              <button
+                className="btnDownload"
+                onClick={flow(this.download.bind(this))}
+                title={`Download: ${this.props.value}`}
+              >
+                <i className="fas fa-download"></i>
+              </button>
+              <button
+                onClick={flow(this.delete.bind(this))}
+                className="btnDelete"
+                title={`Delete: ${this.props.value}`}
+              >
+                <i className="far fa-trash-alt"></i>
+              </button>
+            </>
           )}
           <label className="customBtnChoose" title={"Upload new file."}>
             <input
