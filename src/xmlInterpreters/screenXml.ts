@@ -41,6 +41,8 @@ import {getRowContainer} from "../model/selectors/getRowContainer";
 import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
 import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
 import {getDontRequestData} from "../model/selectors/getDontRequestData";
+import {isInfiniteScrollingActive} from "../model/selectors/isInfiniteScrollingActive";
+import {getFormScreen} from "../model/selectors/FormScreen/getFormScreen";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -81,7 +83,6 @@ export function interpretScreenXml(
     ])
   );
 
-  checkInfiniteScrollWillWork(formScreenLifecycle, panelConfigurations);
 
   const dataSourcesXml = findStopping(screenDoc, (n) => n.name === "DataSources")[0];
 
@@ -91,6 +92,8 @@ export function interpretScreenXml(
     screenDoc,
     (n) => (n.name === "UIElement" || n.name === "UIRoot") && n.attributes.Type === "Grid"
   );
+
+  checkInfiniteScrollWillWork(dataViews, formScreenLifecycle, panelConfigurations);
 
   function panelViewFromNumber(pvn: number) {
     switch (pvn) {
@@ -297,7 +300,7 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable({rowsContainer: getRowContainer(formScreenLifecycle)}),
+        dataTable: new DataTable({rowsContainer: getRowContainer(formScreenLifecycle, dataView.attributes)}),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
@@ -395,17 +398,15 @@ export function interpretScreenXml(
   return scr;
 }
 
-function checkInfiniteScrollWillWork(formScreenLifecycle:  IFormScreenLifecycle02,
+function checkInfiniteScrollWillWork(dataViews: any[],
+                                     formScreenLifecycle: IFormScreenLifecycle02,
                                      panelConfigurations: Map<string, IPanelConfiguration>){
 
-  const infiniteScrollingActive = getDontRequestData(formScreenLifecycle);
-  if(infiniteScrollingActive){
-    const undefinedOrderingEntry = Array.from(
-      panelConfigurations
-        .entries())
-        .find(entry => !entry[1].defaultOrdering)
-    if(undefinedOrderingEntry){
-      throw new Error(`Table in: ${undefinedOrderingEntry[0]} has undefined default ordering while infinite scrolling is on. Make sure the underlying DataStructure has a SortSet defined.`);
+  for (let dataView of dataViews) {
+    const id = dataView.attributes.ModelInstanceId
+    const panelConfig = panelConfigurations.get(id);
+    if(isInfiniteScrollingActive(formScreenLifecycle, dataView.attributes) && !panelConfig){
+      throw new Error(`Table in: ${id} has undefined default ordering while infinite scrolling is on. Make sure the underlying DataStructure has a SortSet defined.`);
     }
   }
 }
