@@ -2,7 +2,12 @@
 
 .input {
   @include input;
-  text-align: right;
+
+  &:global(.isRightAligned) {
+    text-align: right;
+    padding-left: 3px;
+    padding-right: 14px;
+  }
 }
 
 .editorContainer {

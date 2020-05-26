@@ -4,6 +4,7 @@ import * as React from "react";
 import { Tooltip } from "react-tippy";
 import S from "./NumberEditor.module.scss";
 import numeral from "numeral";
+import cx from "classnames";
 
 @observer
 export class NumberEditor extends React.Component<{
@@ -31,9 +32,7 @@ export class NumberEditor extends React.Component<{
 
   get numeralFormat() {
     return (
-      (this.props.customNumberFormat
-        ? this.props.customNumberFormat.replace("#", "0")
-        : "") || "0"
+      (this.props.customNumberFormat ? this.props.customNumberFormat.replace("#", "0") : "") || "0"
     );
   }
 
@@ -53,13 +52,12 @@ export class NumberEditor extends React.Component<{
   }
 
   componentDidMount() {
-    this.props.refocuser &&
-      this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+    this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
   }
 
   componentWillUnmount() {
-    this.disposers.forEach(d => d());
+    this.disposers.forEach((d) => d());
   }
 
   componentDidUpdate(prevProps: { isFocused: boolean }) {
@@ -137,17 +135,13 @@ export class NumberEditor extends React.Component<{
           <input
             style={{
               color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor
+              backgroundColor: this.props.backgroundColor,
             }}
             title={this.props.customNumberFormat || ""}
-            className={S.input}
+            className={cx(S.input, "isRightAligned")}
             type={this.props.isPassword ? "password" : "text"}
             autoComplete={this.props.isPassword ? "new-password" : undefined}
-            value={
-              this.editValue !== undefined && this.editValue !== null
-                ? this.editValue
-                : ""
-            }
+            value={this.editValue !== undefined && this.editValue !== null ? this.editValue : ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={this.handleChange}
@@ -160,7 +154,7 @@ export class NumberEditor extends React.Component<{
           <textarea
             style={{
               color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor
+              backgroundColor: this.props.backgroundColor,
             }}
             className={S.input}
             value={this.props.value || ""}
