@@ -76,7 +76,7 @@ export function interpretScreenXml(
       pcr.panel.instanceId,
       {
         position: pcr.position,
-        defaultOrdering: parseToOrdering(pcr.defaultSort[0])
+        defaultOrdering: parseToOrdering(pcr.defaultSort && pcr.defaultSort[0])
       },
     ])
   );
