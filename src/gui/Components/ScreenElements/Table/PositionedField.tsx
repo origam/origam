@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import { IPositionedFieldProps } from "./types";
 import { observer } from "mobx-react";
 import S from "./PositionedField.module.css";
+import cx from "classnames";
 
 @observer
 export class PositionedField extends React.Component<IPositionedFieldProps> {
@@ -16,7 +17,7 @@ export class PositionedField extends React.Component<IPositionedFieldProps> {
     const { scrollTop, scrollLeft } = this.props.scrollOffsetSource;
     return ReactDOM.createPortal(
       <div
-        className={S.positionedField}
+        className={cx(S.positionedField, { isFirstColumn: columnIndex === 0 })}
         onClick={(event: any) => event.stopPropagation()}
         style={{
           top: worldBounds.top + rowTop - scrollTop,
@@ -25,7 +26,7 @@ export class PositionedField extends React.Component<IPositionedFieldProps> {
               ? worldBounds.left + columnLeft
               : worldBounds.left + columnLeft - scrollLeft,
           width: columnWidth,
-          height: rowHeight
+          height: rowHeight,
         }}
       >
         {this.props.children}
