@@ -225,7 +225,10 @@ export class DateTimeEditor extends React.Component<{
     if (this.props.isFocused) {
       this.elmInput && this.elmInput.focus();
       setTimeout(() => {
-        this.elmInput && this.elmInput.select();
+        if (this.elmInput) {
+          this.elmInput.select();
+          this.elmInput.scrollLeft = 0;
+        }
       }, 10);
     }
   }
@@ -314,7 +317,10 @@ export class DateTimeEditor extends React.Component<{
   @action.bound
   handleFocus(event: any) {
     setTimeout(() => {
-      this.elmInput && this.elmInput.select();
+      if (this.elmInput) {
+        this.elmInput.select();
+        this.elmInput.scrollLeft = 0;
+      }
     }, 10);
   }
 

@@ -74,7 +74,10 @@ export class NumberEditor extends React.Component<{
       console.log("--- MAKE FOCUSED ---");
       this.elmInput && this.elmInput.focus();
       setTimeout(() => {
-        this.elmInput && this.elmInput.select();
+        if (this.elmInput) {
+          this.elmInput.select();
+          this.elmInput.scrollLeft = 0;
+        }
       }, 10);
     }
   }
@@ -84,7 +87,10 @@ export class NumberEditor extends React.Component<{
     this.hasFocus = true;
     this.editingValue = this.numeralFormattedValue;
     setTimeout(() => {
-      this.elmInput && this.elmInput.select();
+      if (this.elmInput) {
+        this.elmInput.select();
+        this.elmInput.scrollLeft = 0;
+      }
     }, 10);
   }
 
