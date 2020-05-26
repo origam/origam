@@ -17,16 +17,14 @@ export class QuestionDeleteData extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={this.props.onNoClick}>No</button>
             <button onClick={this.props.onYesClick}>Yes</button>
+            <button onClick={this.props.onNoClick}>No</button>
           </>
         }
         buttonsLeft={null}
         buttonsRight={null}
       >
-        <div className={CS.dialogContent}>
-          Are you sure you want to delete this record?
-        </div>
+        <div className={CS.dialogContent}>Are you sure you want to delete this record?</div>
       </ModalWindow>
     );
   }
