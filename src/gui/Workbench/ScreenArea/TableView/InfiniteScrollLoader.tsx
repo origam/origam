@@ -34,6 +34,7 @@ export class NullIScrollLoader implements IInfiniteScrollLoader{
   scrollState: SimpleScrollState = null as any;
   rowsContainer: ScrollRowContainer =  null as any;
   start(): any {
+    return ()=>{};
   }
 }
 
