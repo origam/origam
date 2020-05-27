@@ -1,5 +1,6 @@
 import { IAggregationInfo } from "./IAggregationInfo";
 import Axios, { AxiosPromise } from "axios";
+import {IOrdering} from "./IOrderingConfiguration";
 
 export interface IApi {
   accessToken: string;
@@ -191,7 +192,7 @@ export interface IApi {
     SessionFormIdentifier: string;
     DataStructureEntityId: string;
     Filter: string;
-    Ordering: string[][];
+    Ordering: IOrdering[];
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];

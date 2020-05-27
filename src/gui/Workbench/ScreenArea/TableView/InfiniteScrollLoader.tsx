@@ -187,7 +187,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       throw new Error(`Cannot infinitely scroll on dataStructureEntity: ${dataStructureEntityId} because it has no default ordering. Is there a SortSet in it's parent DataStructure?`)
     }
     return orderingConfiguration.groupChildrenOrdering
-      ? [[orderingConfiguration.groupChildrenOrdering.columnId, orderingConfiguration.groupChildrenOrdering.direction]]
-      : [[defaultOrdering.columnId, defaultOrdering.direction]];
+      ? [orderingConfiguration.groupChildrenOrdering]
+      : [defaultOrdering];
   }
 }

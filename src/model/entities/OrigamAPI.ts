@@ -4,6 +4,7 @@ import axios from "axios";
 import _ from "lodash";
 import { IApi } from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
+import {IOrdering} from "./types/IOrderingConfiguration";
 
 export class OrigamAPI implements IApi {
   constructor() {
@@ -468,7 +469,7 @@ export class OrigamAPI implements IApi {
     SessionFormIdentifier: string;
     DataStructureEntityId: string;
     Filter: string;
-    Ordering: string[][];
+    Ordering: IOrdering[];
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];
