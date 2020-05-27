@@ -184,6 +184,9 @@ class RowChunk {
   rows: any[];
 
   constructor(rowOffset: number, rows: any[]) {
+    if(rowOffset < 0){
+      throw new Error("Offset cannot be less than 0");
+    }
     this.rowOffset = rowOffset;
     this.rows = rows;
   }

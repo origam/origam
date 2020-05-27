@@ -43,7 +43,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     Object.assign(this, data);
   }
 
-  lastRequestedStartOffset: number = -1;
+  lastRequestedStartOffset: number = 0;
   lastRequestedEndOffset: number = 0;
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
