@@ -69,7 +69,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   loadAggregations(rootDataView: IDataView, aggregations: IAggregationInfo[]): Promise<any[]> ;
   parent?: any;
 
-  registerDisposer(disposer: any): void;
+  registerDisposer(disposer: ()=>void): void;
 }
 
 export const isIFormScreenLifecycle = (o: any): o is IFormScreenLifecycle =>

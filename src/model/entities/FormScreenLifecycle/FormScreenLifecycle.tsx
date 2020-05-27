@@ -58,9 +58,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     return this.inFlow > 0;
   }
   @observable inFlow = 0;
-  disposers: any[] = [];
+  disposers: (()=>void)[] = [];
 
-  registerDisposer(disposer: any){
+  registerDisposer(disposer: ()=>void){
     this.disposers.push(disposer);
   }
 

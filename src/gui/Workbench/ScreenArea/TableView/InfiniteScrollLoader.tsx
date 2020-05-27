@@ -22,7 +22,7 @@ export interface IInfiniteScrollLoaderData{
 
 export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
   contentBounds: BoundingRect | undefined;
-  start(): any;
+  start(): ()=>void;
 }
 
 export const SCROLL_DATA_INCREMENT_SIZE = 100;
@@ -33,7 +33,7 @@ export class NullIScrollLoader implements IInfiniteScrollLoader{
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
   rowsContainer: ScrollRowContainer =  null as any;
-  start(): any {
+  start(): ()=>void {
     return ()=>{};
   }
 }
