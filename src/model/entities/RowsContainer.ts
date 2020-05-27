@@ -132,7 +132,9 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   get nextStartOffset() {
-    return this.rowChunks[0].rowOffset - ROW_CHUNK_SIZE;
+    return this.rowChunks.length === 0
+      ? 0
+      : this.rowChunks[0].rowOffset - ROW_CHUNK_SIZE;
   }
 
   @action.bound
