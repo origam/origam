@@ -21,6 +21,7 @@ import {getMenuItemId} from "../../selectors/getMenuItemId";
 import {getDataStructureEntityId} from "../../selectors/DataView/getDataStructureEntityId";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {getColumnNamesToLoad} from "../../selectors/DataView/getColumnNamesToLoad";
+import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -163,21 +164,10 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         if (!childDsField) {
           continue;
         }
-        filterItems.push(this.toFilterItem(childDsField.name, parentValue));
+        filterItems.push(toFilterItem(childDsField.name, parentValue));
       }
     }
-    if(filterItems.length === 0) return "";
-    if(filterItems.length === 1) return filterItems[0];
-    return "[\"$AND\", " + filterItems.join(", ") + "]"
-  }
-
-
-  toFilterValueForm(value: any){
-    return typeof value === "string" ? "\"" + value + "\"" : value
-  }
-
-  toFilterItem(columnId: string, value: any){
-    return "[\"" + columnId  + "\", \"eq\", " + this.toFilterValueForm(value)+ "]";
+    return joinWithAND(filterItems);
   }
 
 

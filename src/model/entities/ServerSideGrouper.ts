@@ -9,6 +9,7 @@ import {getDataTable} from "../selectors/DataView/getDataTable";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {getOrderingConfiguration} from "../selectors/DataView/getOrderingConfiguration";
 import {parseAggregations} from "./types/IAggregation";
+import {joinWithAND, toFilterItem} from "./OrigamApiHelpers";
 
 export class ServerSideGrouper implements IGrouper {
 
@@ -66,25 +67,16 @@ export class ServerSideGrouper implements IGrouper {
     return parents;
   }
 
-  toFilterValueForm(value: any){
-    return typeof value === "string" ? "\"" + value + "\"" : value
-  }
-
   composeGroupingFilter(rowGroup: IGroupTreeNode) {
     const parents = this.getAllParents(rowGroup);
     if(parents.length === 0){
-      return this.rowToFilterItem(rowGroup);
+      return toFilterItem(rowGroup.columnId, rowGroup.columnValue)
     }else{
-      const andOperands =  this.getAllParents(rowGroup)
+      const andOperands = parents
           .concat([rowGroup])
-          .map(row => this.rowToFilterItem(row))
-          .join(", ")
-      return "[\"$AND\", " + andOperands + "]"
+          .map(row => toFilterItem(row.columnId, row.columnValue))
+      return joinWithAND(andOperands);
     }
-  }
-
-  rowToFilterItem(row: IGroupTreeNode){
-    return "[\"" + row.columnId  + "\", \"eq\", " + this.toFilterValueForm(row.columnValue)+ "]";
   }
 
   group(groupData: any[], columnId: string, parent: IGroupTreeNode | undefined): IGroupTreeNode[] {
