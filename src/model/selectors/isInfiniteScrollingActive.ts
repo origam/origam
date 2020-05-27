@@ -2,5 +2,6 @@ import {IDataView} from "../entities/types/IDataView";
 import {getDontRequestData} from "./getDontRequestData";
 
 export function isInfiniteScrollingActive(ctx: any, dataViewAttributes: any) {
-  return getDontRequestData(ctx) && dataViewAttributes.IsRootGrid; // !(dataViewAttributes.isRootEntity &&
+  const isNonRootGridWithRootEntity = dataViewAttributes.IsRootEntity && !dataViewAttributes.IsRootGrid && getDontRequestData(ctx);
+  return getDontRequestData(ctx) && dataViewAttributes.IsRootGrid && !isNonRootGridWithRootEntity;
 }

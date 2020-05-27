@@ -1,22 +1,26 @@
 import Axios from "axios";
-import _ from "lodash";
-import { action, computed, flow, observable, reaction, comparer } from "mobx";
-import { navigateAsChild } from "model/actions/DataView/navigateAsChild";
-import { handleError } from "model/actions/handleError";
-import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { getIsBindingParent } from "model/selectors/DataView/getIsBindingParent";
-import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
-import { getMasterRowId } from "model/selectors/DataView/getMasterRowId";
-import { getParentRowId } from "model/selectors/DataView/getParentRowId";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
-import { getSessionId } from "model/selectors/getSessionId";
-import { getApi } from "../../selectors/getApi";
-import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
-import { IDataViewLifecycle } from "./types/IDataViewLifecycle";
-import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import {action, comparer, computed, flow, observable, reaction} from "mobx";
+import {navigateAsChild} from "model/actions/DataView/navigateAsChild";
+import {handleError} from "model/actions/handleError";
+import {getBindingChildren} from "model/selectors/DataView/getBindingChildren";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {getDataViewLabel} from "model/selectors/DataView/getDataViewLabel";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {getIsBindingParent} from "model/selectors/DataView/getIsBindingParent";
+import {getIsBindingRoot} from "model/selectors/DataView/getIsBindingRoot";
+import {getMasterRowId} from "model/selectors/DataView/getMasterRowId";
+import {getParentRowId} from "model/selectors/DataView/getParentRowId";
+import {getDontRequestData} from "model/selectors/getDontRequestData";
+import {getSessionId} from "model/selectors/getSessionId";
+import {getApi} from "../../selectors/getApi";
+import {getSelectedRowId} from "../../selectors/TablePanelView/getSelectedRowId";
+import {IDataViewLifecycle} from "./types/IDataViewLifecycle";
+import {processCRUDResult} from "model/actions/DataLoading/processCRUDResult";
+import {IDataView} from "../types/IDataView";
+import {getMenuItemId} from "../../selectors/getMenuItemId";
+import {getDataStructureEntityId} from "../../selectors/DataView/getDataStructureEntityId";
+import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {getColumnNamesToLoad} from "../../selectors/DataView/getColumnNamesToLoad";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -135,17 +139,74 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }
   }
 
+  buildDetailFilter(dataView: IDataView){
+    const filterItems =[];
+    for (let binding of dataView.parentBindings) {
+      const selectedRow = binding.parentDataView.selectedRow;
+      if (!selectedRow) {
+        continue;
+      }
+      for (let bindingPair of binding.bindingPairs) {
+        const parentDsField = binding.parentDataView.dataSource.getFieldByName(
+          bindingPair.parentPropertyId
+        );
+        if (!parentDsField) {
+          continue;
+        }
+        const parentValue = binding.parentDataView.dataTable.getCellValueByDataSourceField(
+          selectedRow,
+          parentDsField
+        );
+        const childDsField = binding.childDataView.dataSource.getFieldByName(
+          bindingPair.childPropertyId
+        );
+        if (!childDsField) {
+          continue;
+        }
+        filterItems.push(this.toFilterItem(childDsField.name, parentValue));
+      }
+    }
+    if(filterItems.length === 0) return "";
+    if(filterItems.length === 1) return filterItems[0];
+    return "[\"$AND\", " + filterItems.join(", ") + "]"
+  }
+
+
+  toFilterValueForm(value: any){
+    return typeof value === "string" ? "\"" + value + "\"" : value
+  }
+
+  toFilterItem(columnId: string, value: any){
+    return "[\"" + columnId  + "\", \"eq\", " + this.toFilterValueForm(value)+ "]";
+  }
+
+
   *loadGetData() {
     try {
       this.inFlow++;
-      const api = getApi(this);
-      const data = yield api.getData({
-        SessionFormIdentifier: getSessionId(this),
-        ChildEntity: getEntity(this),
-        ParentRecordId: getParentRowId(this)!,
-        RootRecordId: getMasterRowId(this)!
-      });
       const dataView = getDataView(this);
+      const api = getApi(this);
+      let data;
+      if(dataView.isRootEntity && !dataView.isRootGrid && getDontRequestData(this)){
+        data = yield api.getRows({
+          MenuId: getMenuItemId(dataView),
+          SessionFormIdentifier: getSessionId(this),
+          DataStructureEntityId: getDataStructureEntityId(dataView),
+          Filter: this.buildDetailFilter(dataView),
+          Ordering: [],
+          RowLimit: SCROLL_DATA_INCREMENT_SIZE,
+          RowOffset: 0,
+          ColumnNames: getColumnNamesToLoad(dataView),
+          MasterRowId: undefined,
+        });
+      }else{
+        data = yield api.getData({
+          SessionFormIdentifier: getSessionId(this),
+          ChildEntity: getEntity(this),
+          ParentRecordId: getParentRowId(this)!,
+          RootRecordId: getMasterRowId(this)!
+        });
+      }
       dataView.dataTable.clear();
       dataView.dataTable.setRecords(data);
       dataView.selectFirstRow();
