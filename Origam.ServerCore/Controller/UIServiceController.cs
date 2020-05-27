@@ -683,63 +683,18 @@ namespace Origam.ServerCore.Controller
                 .All(colName => actualColumnNames.Contains(colName));
         }
 
-        private Result<List<Ordering>, IActionResult> GetOrderings(List<List<string>> orderingList)
+        private List<Ordering> GetOrderings(List<InputRowOrdering> orderingList)
         {
-            if (orderingList == null)
-            {
-                return Result.Ok<List<Ordering>, IActionResult>(new List<Ordering>());
-            }
-
-            var orderingsResult = orderingList
-                .Where(x=> x.Count > 0)
-                .Select(Create)
-                .ToList();
-            var failures = orderingsResult
-                .Where(result => result.IsFailure)
-                .Select(result => result.Error.GetMessage())
-                .ToList();
-            if (failures.Count > 0)
-            {
-                Result.Failure<List<Ordering>, IActionResult>(BadRequest(string.Join("\n",failures)));
-            }
-
-            List<Ordering> orderings = orderingsResult.Select(result => result.Value).ToList();
-            return Result.Ok<List<Ordering>, IActionResult>(orderings);
+            return orderingList
+                .Select((inputOrdering, i) => 
+                    new Ordering(
+                        columnName: inputOrdering.ColumnId, 
+                        direction: inputOrdering.Direction, 
+                        lookupId: inputOrdering.LookupId, 
+                        sortOrder: i + 1000)
+                ).ToList();
         }
-
-        private Result<Ordering, IActionResult> Create(
-            List<string> orderingData, int customSortOrder)
-        {
-            switch (orderingData.Count)
-            {
-                case 0:
-                    return Result.Failure<Ordering, IActionResult>(
-                        BadRequest("Cannot create Ordering from an empty list"));
-                case 1:
-                    return Result.Ok<Ordering, IActionResult>(
-                        new Ordering(orderingData[0], "ASC", customSortOrder + 1000));
-                case 2:
-                    return Result.Ok<Ordering, IActionResult>(
-                        new Ordering(orderingData[0], orderingData[1], customSortOrder + 1000));
-                case 3:
-                    bool isGuid = Guid.TryParse(orderingData[2], out Guid lookupId);
-                    if (!isGuid)
-                    {
-                        return Result.Failure<Ordering, IActionResult>(
-                            BadRequest($"lookupId {orderingData[2]} cannot be parsed to Guid"));
-                    }
-                    return
-                        Result.Ok<Ordering, IActionResult>(
-                            new Ordering(
-                               columnName: orderingData[0], 
-                               direction: orderingData[1],
-                               lookupId: lookupId, 
-                               sortOrder: customSortOrder + 1000));
-                default:
-                    return Result.Failure<Ordering, IActionResult>(
-                        BadRequest("Too many parameters for an Ordering item"));
-            }
-        }
+        
         private Result<DataStructureQuery, IActionResult> GetRowsGetAggregationQuery(
             GetGroupsAggregations input, EntityData entityData)
         {
@@ -762,11 +717,8 @@ namespace Origam.ServerCore.Controller
             GetRowsInput input, EntityData entityData)
         {
             var customOrdering = GetOrderings(input.Ordering);
-            if (customOrdering.IsFailure)
-            {
-                return Result.Failure<DataStructureQuery, IActionResult>(customOrdering.Error);
-            }
-            if (input.RowOffset != 0 && customOrdering.Value.Count == 0)
+
+            if (input.RowOffset != 0 && customOrdering.Count == 0)
             {
                 return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
             }
@@ -776,7 +728,7 @@ namespace Origam.ServerCore.Controller
                 CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
                     ? null
                     : input.Filter,
-                CustomOrdering = customOrdering.Value,
+                CustomOrdering = customOrdering,
                 RowLimit = input.RowLimit,
                 RowOffset = input.RowOffset,
                 ColumnsInfo = new ColumnsInfo(input.ColumnNames
@@ -803,10 +755,6 @@ namespace Origam.ServerCore.Controller
             GetGroupsInput input, EntityData entityData)
         {
             var customOrdering = GetOrderings(input.Ordering);
-            if (customOrdering.IsFailure)
-            {
-                return Result.Failure<DataStructureQuery, IActionResult>(customOrdering.Error);
-            }
             
             var field = entityData.Entity.Column(input.GroupBy).Field;
             var columnData = new ColumnData(
@@ -831,7 +779,7 @@ namespace Origam.ServerCore.Controller
                 CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
                     ? null
                     : input.Filter,
-                CustomOrdering = customOrdering.Value,
+                CustomOrdering = customOrdering,
                 RowLimit = input.RowLimit,
                 ColumnsInfo = new ColumnsInfo(
                     columns: columns, 

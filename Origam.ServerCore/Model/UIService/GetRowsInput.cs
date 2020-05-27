@@ -35,7 +35,7 @@ namespace Origam.ServerCore.Model.UIService
         [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
         public string Filter { get; set; }
-        public List<List<string>> Ordering { get; set; }
+        public List<InputRowOrdering> Ordering { get; set; }
         [Required]
         public int RowLimit { get; set; }        
         public int RowOffset { get; set; }
