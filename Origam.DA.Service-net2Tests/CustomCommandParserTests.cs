@@ -41,7 +41,7 @@ namespace Origam.DA.Service_net2Tests
         [TestCase(
             "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
             "((([city_name] LIKE '%Wash%') OR ([name] LIKE '%Smith%')) AND ([age] >= 18) AND [id] IN ('f2', 'f3', 'f4'))")]
-        [TestCase("", "")]
+        [TestCase("", null)]
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
             var sqlWhere = new CustomCommandParser("","")
@@ -49,8 +49,7 @@ namespace Origam.DA.Service_net2Tests
                 .WhereClause;
             Assert.That(sqlWhere, Is.EqualTo(expectedSqlWhere));
         }
-
-        [TestCase(null)]
+        
         [TestCase("bla")]
         [TestCase("\"name\",\"gt\",\"John Doe\"]")] // "[" is missing
         [TestCase("[\"name\",\"gt\",\"John Doe\"")] // "]" is missing
@@ -72,8 +71,7 @@ namespace Origam.DA.Service_net2Tests
             string orderBy = new CustomCommandParser("","").OrderBy(ordering).OrderByClause;
             Assert.That(orderBy, Is.EqualTo("col1 DESC, col2 ASC"));
         }
-
-        [TestCase(null)]
+        
         [TestCase("col1, ")]
         [TestCase("col1,")]
         [TestCase(" ,desc")]
