@@ -5,8 +5,8 @@ export enum ILifetime {
 }
 
 class Registration<TInstance> {
-  regCreator?: () => TInstance;
-  regCreatorEx?: (container: Container) => TInstance;
+  regCreator?: (...args: any[]) => TInstance;
+  regCreatorEx?: (container: Container, ...args: any[]) => TInstance;
   regClass?: new (...args: any[]) => TInstance;
 
   typeSymbol?: ITypeSymbol<TInstance>;
@@ -127,24 +127,26 @@ export class Container implements IContainer {
     }
   }
 
-  resolveAll<TInstance>(sym: ITypeSymbol<TInstance>): TInstance[] {
+  resolveAll<TInstance>(sym: ITypeSymbol<TInstance>, creatorArgs?: any[]): TInstance[] {
     this.checkDisposed();
     pushCurrentContainer(this);
     try {
       const registrations = this.findAllRegistrations(sym);
-      return registrations.map((registration) => this.resolveByRegistration(registration));
+      return registrations.map((registration) =>
+        this.resolveByRegistration(registration, creatorArgs || [])
+      );
     } finally {
       popCurrentContainer();
     }
   }
 
-  resolve<TInstance>(sym: ITypeSymbol<TInstance>): TInstance {
+  resolve<TInstance>(sym: ITypeSymbol<TInstance>, creatorArgs?: any[]): TInstance {
     this.checkDisposed();
     pushCurrentContainer(this);
     try {
       const registration = this.findRegistration(sym);
       if (registration) {
-        return this.resolveByRegistration(registration);
+        return this.resolveByRegistration(registration, creatorArgs || []);
       } else {
         debugger;
         throw new Error("No registration for symbol " + sym.symName);
@@ -154,25 +156,25 @@ export class Container implements IContainer {
     }
   }
 
-  resolveByRegistration<TInstance>(registration: Registration<TInstance>) {
+  resolveByRegistration<TInstance>(registration: Registration<TInstance>, creatorArgs: any[]) {
     for (let h of registration.onPreparing) h({ container: this });
     if (registration.instancePerDependency) {
-      return this.providePerDependency(registration);
+      return this.providePerDependency(registration, creatorArgs);
     } else if (registration.singleInstance) {
-      return this.provideSingle(registration);
+      return this.provideSingle(registration, creatorArgs);
     } else if (registration.instancePerLifetimeScope) {
-      return this.providePerLifetimeScope(registration);
-    } else if (registration.instancePerNamedLifetimeScope) {
-      return this.providePerNamedLifetimeScope(registration);
+      return this.providePerLifetimeScope(registration, creatorArgs);
+    } else if ((registration.instancePerNamedLifetimeScope, creatorArgs)) {
+      return this.providePerNamedLifetimeScope(registration, creatorArgs);
     } else if (this.options.defaultLifetime === ILifetime.PerDependency) {
-      return this.providePerDependency(registration);
+      return this.providePerDependency(registration, creatorArgs);
     } else if (this.options.defaultLifetime === ILifetime.PerLifetimeScope) {
-      return this.providePerLifetimeScope(registration);
+      return this.providePerLifetimeScope(registration, creatorArgs);
     } else if (this.options.defaultLifetime === ILifetime.Single) {
-      return this.provideSingle(registration);
+      return this.provideSingle(registration, creatorArgs);
     } else {
       // This branch never entered?
-      return this.providePerDependency(registration);
+      return this.providePerDependency(registration, creatorArgs);
     }
   }
 
@@ -189,20 +191,20 @@ export class Container implements IContainer {
     }
   }
 
-  newFromRegistration<TInstance>(registration: Registration<TInstance>) {
+  newFromRegistration<TInstance>(registration: Registration<TInstance>, creatorArgs: any[]) {
     // console.log("NewFromRegistration", this.scopeName, registration.typeSymbol);
     try {
       if (registration.regClass) {
         pushCreator(registration.regClass);
-        return new registration.regClass();
+        return new registration.regClass(...creatorArgs);
       }
       if (registration.regCreator) {
         pushCreator(registration.regCreator);
-        return registration.regCreator();
+        return registration.regCreator(...creatorArgs);
       }
       if (registration.regCreatorEx) {
         pushCreator(registration.regCreatorEx);
-        return registration.regCreatorEx(this);
+        return registration.regCreatorEx(this, ...creatorArgs);
       }
       debugger;
       throw new Error("Neither class nor creator registered.");
@@ -211,8 +213,8 @@ export class Container implements IContainer {
     }
   }
 
-  providePerDependency<TInstance>(registration: Registration<TInstance>) {
-    let instance = this.newFromRegistration(registration);
+  providePerDependency<TInstance>(registration: Registration<TInstance>, creatorArgs: any[]) {
+    let instance = this.newFromRegistration(registration, creatorArgs);
     _registeredScopes.set(instance, this);
     if (registration.onRelease.length > 0) {
       this.disposeEvents.set(instance, registration.onRelease);
@@ -233,31 +235,35 @@ export class Container implements IContainer {
     return instance;
   }
 
-  provideSingle(registration: Registration<any>) {
+  provideSingle(registration: Registration<any>, creatorArgs: any[]) {
     const container = this.findRootContainer();
-    return this.provideFromContainer(container, registration);
+    return this.provideFromContainer(container, registration, creatorArgs);
   }
 
-  providePerLifetimeScope(registration: Registration<any>) {
+  providePerLifetimeScope(registration: Registration<any>, creatorArgs: any[]) {
     const container = this;
-    return this.provideFromContainer(container, registration);
+    return this.provideFromContainer(container, registration, creatorArgs);
   }
 
-  providePerNamedLifetimeScope(registration: Registration<any>) {
+  providePerNamedLifetimeScope(registration: Registration<any>, creatorArgs: any[]) {
     const container = this.findFirstNamedContainer(registration.instancePerNamedLifetimeScope!);
     if (container) {
-      return this.provideFromContainer(container, registration);
+      return this.provideFromContainer(container, registration, creatorArgs);
     } else {
       throw new Error(`Scope named ${registration.instancePerNamedLifetimeScope} not opened.`);
     }
   }
 
-  provideFromContainer<TInstance>(container: Container, registration: Registration<TInstance>) {
+  provideFromContainer<TInstance>(
+    container: Container,
+    registration: Registration<TInstance>,
+    creatorArgs: any[]
+  ) {
     // console.log("ProvideFromContainer", container.scopeName, registration.typeSymbol);
     if (container.instances.has(registration.typeSymbol!)) {
       return container.instances.get(registration.typeSymbol!)!;
     } else {
-      let instance = this.newFromRegistration(registration);
+      let instance = this.newFromRegistration(registration, creatorArgs);
       _registeredScopes.set(instance, this);
       if (registration.onRelease.length > 0) {
         this.disposeEvents.set(instance, registration.onRelease);
@@ -505,11 +511,32 @@ export function TypeSymbol<TInstance>(symName: string): ITypeSymbol<TInstance> {
 export function Func<TInstance>(tys: ITypeSymbol<TInstance>) {
   const container = getTopContainer();
   if (!container) throw new Error("No resolution flow active.");
-  const resolve = (): (() => TInstance) => {
-    return () => container.resolve<TInstance>(tys as any);
+  const resolve = (): ((creatorArgs?: any[]) => TInstance) => {
+    return (creatorArgs?: any[]) => container.resolve<TInstance>(tys as any, creatorArgs);
   };
   resolve.symName = tys.symName;
   resolve.toString = () => `Func <${tys.toString()}>`;
+  return resolve;
+}
+
+export function Owned<TInstance>(tys: ITypeSymbol<TInstance>, scopeName?: string) {
+  const container = getTopContainer();
+  if (!container) throw new Error("No resolution flow active.");
+  const resolve = (): ((creatorArgs?: any[]) => TInstance) => {
+    let scope: Container | undefined;
+    const creator = (creatorArgs?: any[]) => {
+      scope = container.beginLifetimeScope(scopeName);
+      return scope.resolve<TInstance>(tys as any, creatorArgs);
+    };
+    creator.dispose = () => {
+      if (scope) {
+        scope.dispose();
+      }
+    };
+    return creator;
+  };
+  resolve.symName = tys.symName;
+  resolve.toString = () => `Owned <${tys.toString()}>`;
   return resolve;
 }
 
