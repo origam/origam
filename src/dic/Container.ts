@@ -13,6 +13,7 @@ class Registration<TInstance> {
   instancePerDependency?: boolean;
   instancePerLifetimeScope?: boolean;
   instancePerNamedLifetimeScope?: string;
+  instancePerSwitchedLifetimeScope?: ($cont: Container) => Container | undefined;
   singleInstance?: boolean;
 
   onPreparing: Array<(args: IOnPreparingArgs) => void> = [];
@@ -34,9 +35,15 @@ class Registrator<TInstance> implements IRegistrator<TInstance> {
     return this;
   }
 
-  scopedInstance(name?: string): IRegistrator<TInstance> {
-    if (name) {
-      this.registration.instancePerNamedLifetimeScope = name;
+  scopedInstance(
+    nameOrSwitchingFunction?: string | (($cont: Container) => Container | undefined)
+  ): IRegistrator<TInstance> {
+    if (nameOrSwitchingFunction) {
+      if (typeof nameOrSwitchingFunction === "function") {
+        this.registration.instancePerSwitchedLifetimeScope = nameOrSwitchingFunction;
+      } else {
+        this.registration.instancePerNamedLifetimeScope = nameOrSwitchingFunction;
+      }
     } else {
       this.registration.instancePerLifetimeScope = true;
     }
@@ -74,13 +81,13 @@ export class Container implements IContainer {
   constructor(private options: { defaultLifetime: ILifetime }) {}
 
   private registrations: Map<ITypeSymbol<any>, Array<Registration<any>>> = new Map();
-  private instances: Map<ITypeSymbol<any>, any> = new Map();
+  public instances: Map<ITypeSymbol<any>, any> = new Map();
   private transientInstances: any[] = [];
   private disposeEvents = new WeakMap<any, Array<(args: IOnReleaseArgs<any>) => void>>();
 
   private parent?: Container;
   private children: Container[] = [];
-  private scopeName?: string;
+  public scopeName?: string;
 
   private isDisposed = false;
 
@@ -88,8 +95,8 @@ export class Container implements IContainer {
 
   register<TInstance>(
     sym: ITypeSymbol<TInstance>,
-    creator?: () => TInstance,
-    creatorEx?: (container: Container) => TInstance
+    creator?: (...creatorArgs: any[]) => TInstance,
+    creatorEx?: (container: Container, ...creatorArgs: any[]) => TInstance
   ): IRegistrator<TInstance> {
     const registration = new Registration<TInstance>();
     registration.typeSymbol = sym;
@@ -140,7 +147,7 @@ export class Container implements IContainer {
     }
   }
 
-  resolve<TInstance>(sym: ITypeSymbol<TInstance>, creatorArgs?: any[]): TInstance {
+  resolve<TInstance>(sym: ITypeSymbol<TInstance>, ...creatorArgs: any[]): TInstance {
     this.checkDisposed();
     pushCurrentContainer(this);
     try {
@@ -164,7 +171,9 @@ export class Container implements IContainer {
       return this.provideSingle(registration, creatorArgs);
     } else if (registration.instancePerLifetimeScope) {
       return this.providePerLifetimeScope(registration, creatorArgs);
-    } else if ((registration.instancePerNamedLifetimeScope, creatorArgs)) {
+    } else if (registration.instancePerSwitchedLifetimeScope) {
+      return this.providePerSwitchedLifetimeScope(registration, creatorArgs);
+    } else if (registration.instancePerNamedLifetimeScope) {
       return this.providePerNamedLifetimeScope(registration, creatorArgs);
     } else if (this.options.defaultLifetime === ILifetime.PerDependency) {
       return this.providePerDependency(registration, creatorArgs);
@@ -243,6 +252,15 @@ export class Container implements IContainer {
   providePerLifetimeScope(registration: Registration<any>, creatorArgs: any[]) {
     const container = this;
     return this.provideFromContainer(container, registration, creatorArgs);
+  }
+
+  providePerSwitchedLifetimeScope(registration: Registration<any>, creatorArgs: any[]) {
+    const container = registration.instancePerSwitchedLifetimeScope!(this);
+    if (container) {
+      return this.provideFromContainer(container, registration, creatorArgs);
+    } else {
+      throw new Error(`Scope named ${registration.instancePerNamedLifetimeScope} not opened.`);
+    }
   }
 
   providePerNamedLifetimeScope(registration: Registration<any>, creatorArgs: any[]) {
@@ -402,7 +420,9 @@ export interface IContainer {
 export interface IRegistrator<TInstance> {
   transientInstance(): IRegistrator<TInstance>;
   singleInstance(): IRegistrator<TInstance>;
-  scopedInstance(name?: string): IRegistrator<TInstance>;
+  scopedInstance(
+    name?: string | (($cont: Container) => Container | undefined)
+  ): IRegistrator<TInstance>;
   onActivated(handler: (args: IOnActivatedArgs<TInstance>) => void): IRegistrator<TInstance>;
   onActivating(handler: (args: IOnActivatingArgs<TInstance>) => void): IRegistrator<TInstance>;
   onPreparing(handler: (args: IOnPreparingArgs) => void): IRegistrator<TInstance>;
@@ -445,6 +465,10 @@ export interface ITypeSymbol<TInstance> {
 let _currentContainerStack: Container[] = new Array(10);
 let _currentContainerStackTop = -1;
 
+export function isContainerFlow() {
+  return _currentContainerStackTop > -1;
+}
+
 export function getTopContainer() {
   return _currentContainerStack[_currentContainerStackTop];
 }
@@ -468,8 +492,8 @@ export function popCurrentContainer() {
   return container;
 }
 
-export function getScopePath() {
-  let container = getTopContainer();
+export function getScopePath(container?: Container) {
+  if (!container) container = getTopContainer();
   const result: Container[] = [];
   while (container) {
     result.push(container);
@@ -511,8 +535,11 @@ export function TypeSymbol<TInstance>(symName: string): ITypeSymbol<TInstance> {
 export function Func<TInstance>(tys: ITypeSymbol<TInstance>) {
   const container = getTopContainer();
   if (!container) throw new Error("No resolution flow active.");
-  const resolve = (): ((creatorArgs?: any[]) => TInstance) => {
-    return (creatorArgs?: any[]) => container.resolve<TInstance>(tys as any, creatorArgs);
+  const resolve = (): ((...creatorArgs: any[]) => TInstance) => {
+    return (...creatorArgs: any[]) => {
+      const overrideContainer = getTopContainer();
+      return (overrideContainer || container).resolve<TInstance>(tys as any, ...creatorArgs);
+    };
   };
   resolve.symName = tys.symName;
   resolve.toString = () => `Func <${tys.toString()}>`;

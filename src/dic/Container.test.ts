@@ -9,6 +9,7 @@ import {
   getScopePath,
   ITypeSymbol,
   IRegistrator,
+  InjectContainer,
 } from "./Container";
 
 interface IDog {
@@ -361,6 +362,133 @@ describe("Container", () => {
     expect(callOrder).toEqual(["CX", "AX", "CA", "CB", "CC", "AB", "AC", "AA"]);
     x.a();
     expect(callOrder).toEqual(["CX", "AX", "CA", "CB", "CC", "AB", "AC", "AA"]);
+  });
+
+  it("passes given args to func creator", () => {
+    class X {
+      constructor(public y = Func(IY)()) {}
+    }
+
+    class Y {
+      constructor(public k: number, public l: number) {}
+    }
+
+    const IX = TypeSymbol<X>("IX");
+    const IY = TypeSymbol<Y>("IY");
+
+    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    $cont.register(IY, (k: number, l: number) => new Y(k, l));
+    $cont.registerClass(IX, X);
+
+    const x = $cont.resolve(IX);
+    const y = x.y(10, 13);
+    expect(y.k).toBe(10);
+    expect(y.l).toBe(13);
+  });
+
+  it("holds instance created by automatic factory with arguments", () => {
+    class X {
+      constructor(public y = Func(IY)()) {}
+    }
+
+    class Y {
+      constructor(public k: number, public l: number, public z = IZ()) {}
+    }
+
+    class Z {
+      constructor(public y = Func(IY)()) {}
+    }
+
+    const IX = TypeSymbol<X>("IX");
+    const IY = TypeSymbol<Y>("IY");
+    const IZ = TypeSymbol<Z>("IZ");
+
+    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    $cont.register(IY, (k: number, l: number) => new Y(k, l));
+    $cont.registerClass(IX, X);
+    $cont.registerClass(IZ, Z);
+
+    const x = $cont.resolve(IX);
+    const y = x.y(10, 13);
+    expect(y.z.y().k).toBe(10);
+    expect(y.z.y().l).toBe(13);
+  });
+
+  it("allows for using factories which open new lifetime scopes.", () => {
+    class X {
+      constructor(public y = INewY()) {}
+    }
+
+    class Y {
+      constructor(public k: number, public l: number, public z = IZ()) {}
+    }
+
+    class Z {
+      constructor(public y = Func(IY)()) {}
+    }
+
+    function NewY($cont: Container) {
+      return (k: number, l: number) => $cont.beginLifetimeScope("YScope").resolve(IY, k, l);
+    }
+
+    const IX = TypeSymbol<X>("IX");
+    const IY = TypeSymbol<Y>("IY");
+    const INewY = TypeSymbol<(k: number, l: number) => Y>("INewY");
+    const IZ = TypeSymbol<Z>("IZ");
+
+    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+    $cont.registerClass(IZ, Z).scopedInstance("YScope");
+    $cont.registerClass(IY, Y);
+    $cont.register(INewY, undefined, NewY);
+    $cont.registerClass(IX, X);
+
+    const x = $cont.resolve(IX);
+    const y1 = x.y(10, 13);
+    expect(y1.z.y().k).toBe(10);
+    expect(y1.z.y().l).toBe(13);
+
+    const y2 = x.y(19, 17);
+    expect(y2.z.y().k).toBe(19);
+    expect(y2.z.y().l).toBe(17);
+  });
+
+  it("can switch scopes by a function provided during registration.", () => {
+    class X {
+      constructor() {}
+    }
+    const IX1 = TypeSymbol<X>("IX1");
+    const IX2 = TypeSymbol<X>("IX2");
+
+    const $cont = new Container({ defaultLifetime: ILifetime.PerLifetimeScope });
+
+    function topmostScope(scopeName: string) {
+      return ($cont: Container) => {
+        const scopePath = getScopePath($cont);
+        scopePath.reverse();
+        return scopePath.find((item) => item.scopeName === scopeName);
+      };
+    }
+
+    const x1 = new X();
+    const x2 = new X();
+
+    $cont.register(IX1, () => x1).scopedInstance("Scope1");
+    // IX2 resolves in topmost Scope1 regardless how many times the scope is nested
+    $cont.register(IX2, () => x2).scopedInstance(topmostScope("Scope1"));
+
+    const $c1 = $cont.beginLifetimeScope("Scope1");
+    const $c2 = $c1.beginLifetimeScope("Scope1");
+    const $c3 = $c2.beginLifetimeScope("Scope1");
+
+    const rx1a = $c3.resolve(IX1);
+    const rx1b = $c3.resolve(IX1);
+    const rx2a = $c3.resolve(IX2);
+    const rx2b = $c3.resolve(IX2);
+    expect(rx1a).not.toBe(rx2a);
+    expect(rx1a).toBe(rx1b);
+    expect(rx2a).toBe(rx2b);
+    expect($c1.instances.get(IX2)).toBe(rx2a);
+    expect($c3.instances.get(IX1)).toBe(rx1a);
   });
 });
 
