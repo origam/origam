@@ -42,6 +42,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   constructor(data: IInfiniteScrollLoaderData) {
     Object.assign(this, data);
+    this.rowsContainer.registerResetListener(() => this.handleRowContainerReset());
   }
 
   lastRequestedStartOffset: number = 0;
@@ -124,6 +125,11 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
         }
       }
     );
+  }
+
+  handleRowContainerReset(){
+    this.lastRequestedStartOffset = 0;
+    this.lastRequestedEndOffset = 0;
   }
 
   private appendLines = flow(function* (

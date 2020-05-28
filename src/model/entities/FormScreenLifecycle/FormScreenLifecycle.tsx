@@ -1,40 +1,40 @@
-import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
-import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
+import {QuestionDeleteData} from "gui/Components/Dialogs/QuestionDeleteData";
+import {QuestionSaveData} from "gui/Components/Dialogs/QuestionSaveData";
 import {action, autorun, computed, flow, observable, reaction, when} from "mobx";
-import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
-import { closeForm } from "model/actions/closeForm";
-import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
-import { handleError } from "model/actions/handleError";
-import { clearRowStates } from "model/actions/RowStates/clearRowStates";
-import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
-import { IAction } from "model/entities/types/IAction";
-import { getBindingParametersFromParent } from "model/selectors/DataView/getBindingParametersFromParent";
-import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
-import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
-import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
-import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
-import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
-import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
-import { getDialogStack } from "model/selectors/getDialogStack";
-import { getIsActiveScreen } from "model/selectors/getIsActiveScreen";
+import {new_ProcessActionResult} from "model/actions/Actions/processActionResult";
+import {closeForm} from "model/actions/closeForm";
+import {processCRUDResult} from "model/actions/DataLoading/processCRUDResult";
+import {handleError} from "model/actions/handleError";
+import {clearRowStates} from "model/actions/RowStates/clearRowStates";
+import {refreshWorkQueues} from "model/actions/WorkQueues/refreshWorkQueues";
+import {IAction} from "model/entities/types/IAction";
+import {getBindingParametersFromParent} from "model/selectors/DataView/getBindingParametersFromParent";
+import {getColumnNamesToLoad} from "model/selectors/DataView/getColumnNamesToLoad";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getDataViewByGridId} from "model/selectors/DataView/getDataViewByGridId";
+import {getDataViewsByEntity} from "model/selectors/DataView/getDataViewsByEntity";
+import {getAutorefreshPeriod} from "model/selectors/FormScreen/getAutorefreshPeriod";
+import {getDataViewList} from "model/selectors/FormScreen/getDataViewList";
+import {getIsFormScreenDirty} from "model/selectors/FormScreen/getisFormScreenDirty";
+import {getIsSuppressSave} from "model/selectors/FormScreen/getIsSuppressSave";
+import {getDialogStack} from "model/selectors/getDialogStack";
+import {getIsActiveScreen} from "model/selectors/getIsActiveScreen";
 import React from "react";
-import { map2obj } from "utils/objects";
-import { interpretScreenXml } from "xmlInterpreters/screenXml";
-import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
-import { getApi } from "../../selectors/getApi";
-import { getMenuItemId } from "../../selectors/getMenuItemId";
-import { getOpenedScreen } from "../../selectors/getOpenedScreen";
-import { getSessionId } from "../../selectors/getSessionId";
-import { IFormScreenLifecycle02 } from "../types/IFormScreenLifecycle";
-import { IDataView } from "../types/IDataView";
+import {map2obj} from "utils/objects";
+import {interpretScreenXml} from "xmlInterpreters/screenXml";
+import {getFormScreen} from "../../selectors/FormScreen/getFormScreen";
+import {getApi} from "../../selectors/getApi";
+import {getMenuItemId} from "../../selectors/getMenuItemId";
+import {getOpenedScreen} from "../../selectors/getOpenedScreen";
+import {getSessionId} from "../../selectors/getSessionId";
+import {IFormScreenLifecycle02} from "../types/IFormScreenLifecycle";
+import {IDataView} from "../types/IDataView";
 import {IAggregationInfo} from "../types/IAggregationInfo";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import { processActionQueryInfo, IQueryInfo } from "model/actions/Actions/processActionQueryInfo";
-import { assignIIds } from "xmlInterpreters/xmlUtils";
-import {getDontRequestData} from "../../selectors/getDontRequestData";
+import {IQueryInfo, processActionQueryInfo} from "model/actions/Actions/processActionQueryInfo";
+import {assignIIds} from "xmlInterpreters/xmlUtils";
 import {IOrdering} from "../types/IOrderingConfiguration";
+import {getOrderingConfiguration} from "../../selectors/DataView/getOrderingConfiguration";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -257,6 +257,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.applyInitUIResult({ initUIResult });
     if (!this.isReadData) {
       yield* this.loadData(true);
+      const formScreen = getFormScreen(this);
+      for (let rootDataView of formScreen.rootDataViews) {
+      const orderingConfiguration = getOrderingConfiguration(rootDataView);
+      this.disposers.push(
+        reaction(
+          () => orderingConfiguration.ordering.map(x => x.direction),
+          flow(() => this.readFirstChunkOfRows(rootDataView, true))));
+      }
     }
     yield* this.startAutorefreshIfNeeded();
   }
@@ -286,7 +294,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: filter,
-      Ordering: ordering ? [[ordering.columnId, ordering.direction]] : [],
+      Ordering: ordering ? [ordering] : [],
       RowLimit: 999999,
       RowOffset: 0,
       ColumnNames: getColumnNamesToLoad(rootDataView),
@@ -340,7 +348,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *loadData(selectFirstRow: boolean) {
-    const api = getApi(this);
     const formScreen = getFormScreen(this);
     try {
       this.inFlow++;
@@ -351,30 +358,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       for (let rootDataView of formScreen.rootDataViews) {
         rootDataView.saveViewState();
-        rootDataView.dataTable.clear();
-        rootDataView.setSelectedRowId(undefined);
-        rootDataView.lifecycle.stopSelectedRowReaction();
-        try {
-          const loadedData = yield api.getRows({
-            MenuId: getMenuItemId(rootDataView),
-            SessionFormIdentifier: getSessionId(this),
-            DataStructureEntityId: getDataStructureEntityId(rootDataView),
-            Filter: "",
-            Ordering: [],
-            RowLimit: getDontRequestData(this) ? SCROLL_DATA_INCREMENT_SIZE : 999999,
-            RowOffset: 0,
-            ColumnNames: getColumnNamesToLoad(rootDataView),
-            MasterRowId: undefined,
-          });
-          rootDataView.dataTable.setRecords(loadedData);
-          if (selectFirstRow) {
-            rootDataView.selectFirstRow();
-          }
-          //debugger
-          rootDataView.restoreViewState();
-        } finally {
-          rootDataView.lifecycle.startSelectedRowReaction(true);
-        }
+        yield* this.readFirstChunkOfRows(rootDataView, selectFirstRow);
       }
     } finally {
       for (let dataView of formScreen.nonRootDataViews) {
@@ -413,6 +397,35 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } finally {
       this._flushDataRunning = false;
       this.inFlow--;
+    }
+  }
+
+  *readFirstChunkOfRows(rootDataView: IDataView, selectFirstRow: boolean){
+    const orderingConfiguration = getOrderingConfiguration(rootDataView);
+    const api = getApi(this);
+    rootDataView.setSelectedRowId(undefined);
+    rootDataView.lifecycle.stopSelectedRowReaction();
+    try {
+      const loadedData = yield api.getRows({
+        MenuId: getMenuItemId(rootDataView),
+        SessionFormIdentifier: getSessionId(this),
+        DataStructureEntityId: getDataStructureEntityId(rootDataView),
+        Filter: "",
+        Ordering: orderingConfiguration.ordering,
+        RowLimit: SCROLL_DATA_INCREMENT_SIZE,
+        RowOffset: 0,
+        ColumnNames: getColumnNamesToLoad(rootDataView),
+        MasterRowId: undefined,
+      });
+      rootDataView.dataTable.setRecords(loadedData);
+
+      if (selectFirstRow) {
+        rootDataView.selectFirstRow();
+      }
+      //debugger
+      rootDataView.restoreViewState();
+    } finally {
+      rootDataView.lifecycle.startSelectedRowReaction(true);
     }
   }
 
@@ -596,7 +609,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
-        dataView.dataTable.clear();
         dataView.dataTable.setRecords((entityValue as any).data);
         if (selectFirstRow) {
           dataView.selectFirstRow();

@@ -46,9 +46,9 @@ export class DataTable implements IDataTable {
     } else {
       rows = this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
     }
-    if (this.sortingFn) {
-      rows.sort(this.sortingFn(this));
-    }
+    // if (this.sortingFn) {
+    //   rows.sort(this.sortingFn(this));
+    // }
     return rows;
   }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
@@ -221,6 +221,7 @@ export class DataTable implements IDataTable {
 
   @action.bound
   setRecords(rows: any[][]) {
+    this.clear();
     this.rowsContainer.set(rows);
   }
   @action.bound

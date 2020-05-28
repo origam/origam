@@ -15,6 +15,8 @@ export interface IRowsContainer {
 
   substitute(row: any[]): void;
 
+  registerResetListener(listener: ()=>void): void;
+
   maxRowCountSeen: number;
 
   rows: any[];
@@ -69,6 +71,9 @@ export class ListRowContainer implements IRowsContainer {
   get maxRowCountSeen(){
     return this.allRows.length;
   }
+
+  registerResetListener(listener: () => void): void {
+  }
 }
 
 const ROW_CHUNK_SIZE: number = SCROLL_DATA_INCREMENT_SIZE;
@@ -114,6 +119,7 @@ export class ScrollRowContainer implements IRowsContainer {
   set(rows: any[][]) {
     this.clear();
     this.rowChunks.push(new RowChunk(0, rows));
+    this.notifyResetListeners()
   }
 
   substitute(row: any[]): void {
@@ -122,6 +128,18 @@ export class ScrollRowContainer implements IRowsContainer {
       if(foundAndSubstituted){
         return;
       }
+    }
+  }
+
+  resetListeners: (()=>void)[] = [];
+
+  registerResetListener(listener: ()=>void){
+    this.resetListeners.push(listener);
+  }
+
+  notifyResetListeners(){
+    for (let resetListener of this.resetListeners) {
+      resetListener();
     }
   }
 
@@ -140,10 +158,11 @@ export class ScrollRowContainer implements IRowsContainer {
   @action.bound
   prependRecords(rows: any[][]) {
     if(this.rowChunks.length === 0){
-      this.set(rows);
+      this.rowChunks.push(new RowChunk(0, rows));
       return;
     }
     const rowOffset = this.rowChunks[0].rowOffset - ROW_CHUNK_SIZE;
+    // if(rowOffset < 0) return;
     this.rowChunks.unshift(new RowChunk(rowOffset, rows))
     if (this.rowChunks.length > this.maxChunksToHold) {
       this.rowChunks.pop();
@@ -153,7 +172,7 @@ export class ScrollRowContainer implements IRowsContainer {
   @action.bound
   appendRecords(rows: any[][]) {
     if(this.rowChunks.length === 0){
-      this.set(rows);
+      this.rowChunks.push(new RowChunk(0, rows));
       return;
     }
     const rowOffset = this.rowChunks[this.rowChunks.length - 1].rowOffset + ROW_CHUNK_SIZE;
