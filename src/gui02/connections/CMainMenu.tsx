@@ -96,7 +96,7 @@ class CMainMenuCommandItem extends React.Component<{
         level={props.level}
         isActive={false}
         icon={<Icon src={iconUrl(props.node.attributes.icon)} />}
-        label={props.node.attributes.label + (props.node.attributes.dontRequestData === "true" ? "(DRD)" : "")}
+        label={props.node.attributes.label /*+ (props.node.attributes.dontRequestData === "true" ? "(DRD)" : "")*/}
         isHidden={!props.isOpen}
         // TODO: Implements selector for this idset
         isOpenedScreen={this.workbench.openedScreenIdSet.has(props.node.attributes.id)}
