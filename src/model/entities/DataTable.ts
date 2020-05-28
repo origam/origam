@@ -32,10 +32,6 @@ export class DataTable implements IDataTable {
     return getFilterConfiguration(this).filteringFunction;
   }
 
-  @observable.ref sortingFn:
-    | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
-    | undefined;
-
   @computed get rows(): any[][] {
     let rows = this.rowsContainer.rows;
     if (this.filteringFn) {
@@ -46,9 +42,6 @@ export class DataTable implements IDataTable {
     } else {
       rows = this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
     }
-    // if (this.sortingFn) {
-    //   rows.sort(this.sortingFn(this));
-    // }
     return rows;
   }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
@@ -318,13 +311,6 @@ export class DataTable implements IDataTable {
   clear(): void {
     this.rowsContainer.clear();
     this.additionalRowData.clear();
-  }
-
-  @action.bound
-  setSortingFn(
-    fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined
-  ): void {
-    this.sortingFn = fn;
   }
 
   /* @action.bound

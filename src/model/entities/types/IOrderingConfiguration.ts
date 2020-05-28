@@ -19,6 +19,7 @@ export interface IOrderingConfiguration {
   groupChildrenOrdering: IOrdering | undefined;
   getDefaultOrdering(): IOrdering | undefined;
   parent?: any;
+  orderingFunction: () => (row1: any[], row2: any[]) => number;
 }
 
 export interface IOrdering {

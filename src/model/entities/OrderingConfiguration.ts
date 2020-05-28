@@ -1,5 +1,4 @@
 import { action, computed, observable, flow } from "mobx";
-import { IDataTable } from "./types/IDataTable";
 import {
   IOrderByColumnSetting,
   IOrderByDirection, IOrdering,
@@ -119,16 +118,13 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             )
           )
         );
-
-        dataTable.setSortingFn(this.orderingFunction);
       }
     }.bind(this)
   );
 
-  get orderingFunction(): (
-    dataTable: IDataTable
-  ) => (row1: any[], row2: any[]) => number {
-    return (dataTable: IDataTable) => (row1: any[], row2: any) => {
+  @computed get orderingFunction(): () => (row1: any[], row2: any[]) => number {
+    return () => (row1: any[], row2: any) => {
+      const dataTable = getDataTable(this);
       let mul = 10 * this.ordering.length;
       let res = 0;
       for (let term of this.ordering) {

@@ -1,6 +1,6 @@
 import {action, computed, observable} from "mobx";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-
+import {OrderingConfiguration} from "./OrderingConfiguration";
 
 export interface IRowsContainer {
   clear(): void;
@@ -15,7 +15,7 @@ export interface IRowsContainer {
 
   substitute(row: any[]): void;
 
-  registerResetListener(listener: ()=>void): void;
+  registerResetListener(listener: () => void): void;
 
   maxRowCountSeen: number;
 
@@ -23,11 +23,21 @@ export interface IRowsContainer {
 }
 
 export class ListRowContainer implements IRowsContainer {
+  private orderingConfiguration: OrderingConfiguration;
+
+  constructor(orderingConfiguration: OrderingConfiguration) {
+    this.orderingConfiguration = orderingConfiguration;
+  }
+
   @observable.shallow allRows: any[][] = [];
   rowIdGetter: (row: any[]) => string = null as any
 
-  get rows() {
-    return this.allRows;
+  @computed get rows() {
+    if(this.orderingConfiguration.ordering.length === 0){
+      return this.allRows;
+    }else{
+      return this.allRows.sort(this.orderingConfiguration.orderingFunction());
+    }
   }
 
   clear(): void {
@@ -68,7 +78,7 @@ export class ListRowContainer implements IRowsContainer {
     }
   }
 
-  get maxRowCountSeen(){
+  get maxRowCountSeen() {
     return this.allRows.length;
   }
 
@@ -88,11 +98,11 @@ export class ScrollRowContainer implements IRowsContainer {
   _maxRowNumberSeen = 0;
 
   @computed
-  get maxRowCountSeen(){
+  get maxRowCountSeen() {
     const maxRowsNow = this.rowChunks.length === 0
       ? 0
       : this.rowChunks[this.rowChunks.length - 1].rowOffset + this.rowChunks[this.rowChunks.length - 1].length;
-    if(maxRowsNow > this._maxRowNumberSeen){
+    if (maxRowsNow > this._maxRowNumberSeen) {
       this._maxRowNumberSeen = maxRowsNow;
     }
 
@@ -125,19 +135,19 @@ export class ScrollRowContainer implements IRowsContainer {
   substitute(row: any[]): void {
     for (let chunk of this.rowChunks) {
       const foundAndSubstituted = chunk.trySubstitute(row, this.rowIdGetter);
-      if(foundAndSubstituted){
+      if (foundAndSubstituted) {
         return;
       }
     }
   }
 
-  resetListeners: (()=>void)[] = [];
+  resetListeners: (() => void)[] = [];
 
-  registerResetListener(listener: ()=>void){
+  registerResetListener(listener: () => void) {
     this.resetListeners.push(listener);
   }
 
-  notifyResetListeners(){
+  notifyResetListeners() {
     for (let resetListener of this.resetListeners) {
       resetListener();
     }
@@ -157,7 +167,7 @@ export class ScrollRowContainer implements IRowsContainer {
 
   @action.bound
   prependRecords(rows: any[][]) {
-    if(this.rowChunks.length === 0){
+    if (this.rowChunks.length === 0) {
       this.rowChunks.push(new RowChunk(0, rows));
       return;
     }
@@ -171,7 +181,7 @@ export class ScrollRowContainer implements IRowsContainer {
 
   @action.bound
   appendRecords(rows: any[][]) {
-    if(this.rowChunks.length === 0){
+    if (this.rowChunks.length === 0) {
       this.rowChunks.push(new RowChunk(0, rows));
       return;
     }
@@ -203,21 +213,22 @@ class RowChunk {
   rows: any[];
 
   constructor(rowOffset: number, rows: any[]) {
-    if(rowOffset < 0){
+    if (rowOffset < 0) {
       throw new Error("Offset cannot be less than 0");
     }
     this.rowOffset = rowOffset;
     this.rows = rows;
   }
 
-  get isInitial(){
+  get isInitial() {
     return this.rowOffset === 0;
   }
-  get isFinal(){
+
+  get isFinal() {
     return this.rows.length < ROW_CHUNK_SIZE;
   }
 
-  get length(){
+  get length() {
     return this.rows.length;
   }
 
@@ -227,7 +238,7 @@ class RowChunk {
     if (index > -1) {
       this.rows.splice(index, 1, row);
       return true;
-    }else{
+    } else {
       return false;
     }
   }

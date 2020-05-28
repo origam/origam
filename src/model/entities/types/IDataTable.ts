@@ -16,9 +16,6 @@ export interface IDataTable extends IDataTableData {
   additionalRowData: Map<string, IAdditionalRowData>;
   maxRowCountSeen: number;
   groups: IGroupTreeNode[];
-  sortingFn:
-    | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
-    | undefined;
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
@@ -40,8 +37,6 @@ export interface IDataTable extends IDataTableData {
   getDirtyNewRows(): any[][];
   getAllValuesOfProp(property: IProperty): any[];
 
-  setSortingFn(fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
-  | undefined): void;
   /*setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
   | undefined): void;*/
 

@@ -2,8 +2,8 @@
 import {computed, observable} from "mobx";
 import {IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
-import {getDataTable} from "../../../../../model/selectors/DataView/getDataTable";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
+import {getOrderingConfiguration} from "../../../../../model/selectors/DataView/getOrderingConfiguration";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];
@@ -36,11 +36,13 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   @observable isExpanded = false;
 
   @computed get childRows(){
-    const dataTable = getDataTable(this.grouper);
-    if(dataTable.sortingFn){
-      return this._childRows.slice().sort(dataTable.sortingFn(dataTable));
+    const orderingConfiguration = getOrderingConfiguration(this.grouper);
+
+    if(orderingConfiguration.ordering.length === 0){
+      return this._childRows;
+    }else{
+      return this._childRows.slice().sort(orderingConfiguration.orderingFunction());
     }
-    return this._childRows;
   }
   set childRows(rows: any[][]){
     this._childRows = rows;

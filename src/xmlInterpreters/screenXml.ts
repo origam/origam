@@ -275,6 +275,7 @@ export function interpretScreenXml(
             ),
           })
       );
+      const orderingConfiguration = new OrderingConfiguration();
       const dataViewInstance = new DataView({
         id: dataView.attributes.Id,
         modelInstanceId: dataView.attributes.ModelInstanceId,
@@ -300,14 +301,14 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable({rowsContainer: getRowContainer(formScreenLifecycle, dataView.attributes)}),
+        dataTable: new DataTable({rowsContainer: getRowContainer(formScreenLifecycle, dataView.attributes, orderingConfiguration)}),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
           filterConfiguration: new FilterConfiguration(),
-          orderingConfiguration: new OrderingConfiguration(),
+          orderingConfiguration: orderingConfiguration,
           groupingConfiguration: new GroupingConfiguration(),
         }),
         formPanelView: new FormPanelView(),
