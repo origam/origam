@@ -18,7 +18,9 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 		git clone $fullgiturl
 	   fi
 	   if [[ -n ${gitBranch} ]]; then
+	    cd `ls`
 	    git checkout ${gitBranch}
+		cd ..
 	   fi
 	   cd ..
 	fi

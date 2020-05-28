@@ -3,7 +3,7 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 RUN apt-get update
-RUN apt-get -y install wget unzip git
+RUN apt-get -y install git
 RUN useradd -ms /bin/bash origam
 RUN su origam
 USER origam
