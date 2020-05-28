@@ -183,7 +183,7 @@ export class Container implements IContainer {
       const instance = creator();
       _registeredScopes.set(instance, this);
       // this.transientInstances.push(instance);
-      return creator();
+      return instance;
     } finally {
       popCurrentContainer();
     }
