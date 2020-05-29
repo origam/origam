@@ -30,24 +30,13 @@ export interface ICellRenderer extends ICellRendererData {}
 export class CellRenderer implements ICellRenderer {
   constructor(data: ICellRendererData) {
     Object.assign(this, data);
-    this.onTableCellClick = onTableCellClick(this.tablePanelView);
   }
 
   tablePanelView: ITablePanelView = null as any;
 
-  onTableCellClick: any;
-
   @bind
   renderCell({ rowIndex, columnIndex, rowHeight, columnWidth, onCellClick, ctx }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
-    // onCellClick.subscribe((event: any) => {
-    //   onTableCellClick(this.tablePanelView)(
-    //     event,
-    //     rowIndex,
-    //     this.isSelectionCheckboxes ? columnIndex - 1 : columnIndex
-    //   );
-    // });
-
     const cellPaddingLeft = columnIndex === 0 ? 25 : 15;
 
     /* BACKGROUND FILL - to make a line under the row */
