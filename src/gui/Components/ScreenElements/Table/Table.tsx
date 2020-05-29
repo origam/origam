@@ -375,6 +375,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           contentHeight={this.props.gridDimensions.contentHeight}
                           onScroll={this.handleScroll}
                           onClick={this.handleScrollerClick}
+                          
                           onKeyDown={this.props.onKeyDown}
                         />
                       </>

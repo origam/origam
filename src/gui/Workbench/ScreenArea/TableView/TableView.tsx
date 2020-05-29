@@ -45,7 +45,7 @@ import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
     onColumnDialogCancel: dataView.tablePanelView.onColumnConfCancel,
     onColumnDialogOk: dataView.tablePanelView.onColumnConfSubmit,
 
-    onTableKeyDown: onTableKeyDown(dataView)
+    onTableKeyDown: onTableKeyDown(dataView),
   };
 })
 @observer
@@ -83,9 +83,7 @@ export class TableView extends React.Component<{
   refTable = (elmTable: RawTable | null) => {
     this.elmTable = elmTable;
     if (elmTable) {
-      const d1 = this.props.tablePanelView!.subOnFocusTable(
-        elmTable.focusTable
-      );
+      const d1 = this.props.tablePanelView!.subOnFocusTable(elmTable.focusTable);
       const d2 = this.props.tablePanelView!.subOnScrollToCellShortest(
         elmTable.scrollToCellShortest
       );
@@ -124,30 +122,21 @@ export class TableView extends React.Component<{
     dataView: this.props.dataView!,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    onColumnWidthChange: (cid, nw) =>
-      onColumnWidthChanged(this.props.tablePanelView)(cid, nw),
+    onColumnWidthChange: (cid, nw) => onColumnWidthChanged(this.props.tablePanelView)(cid, nw),
     onColumnOrderChange: (id1, id2) =>
       onColumnOrderChangeFinished(this.props.tablePanelView)(id1, id2),
-    onColumnOrderAttendantsChange: (
-      idSource: string | undefined,
-      idTarget: string | undefined
-    ) =>
-      this.props.tablePanelView!.setColumnOrderChangeAttendants(
-        idSource,
-        idTarget
-      )
+    onColumnOrderAttendantsChange: (idSource: string | undefined, idTarget: string | undefined) =>
+      this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget),
   });
 
   scrollState = new SimpleScrollState(0, 0);
   cellRenderer = new CellRenderer({
-    tablePanelView: this.props.tablePanelView!
+    tablePanelView: this.props.tablePanelView!,
   });
 
   render() {
     const self = this;
-    const isSelectionCheckboxes = getIsSelectionCheckboxesShown(
-      this.props.tablePanelView
-    );
+    const isSelectionCheckboxes = getIsSelectionCheckboxesShown(this.props.tablePanelView);
     const editingRowIndex = getSelectedRowIndex(this.props.tablePanelView);
     let editingColumnIndex = getSelectedColumnIndex(this.props.tablePanelView);
     if (editingColumnIndex !== undefined && isSelectionCheckboxes) {
@@ -200,9 +189,7 @@ class GridDimensions implements IGridDimensions {
   }
 
   @computed get columnWidths(): Map<string, number> {
-    return new Map(
-      this.tableViewProperties.map(prop => [prop.id, prop.columnWidth])
-    );
+    return new Map(this.tableViewProperties.map((prop) => [prop.id, prop.columnWidth]));
   }
 
   getTableViewProperties: () => IProperty[] = null as any;
@@ -459,9 +446,7 @@ class HeaderRenderer implements IHeaderRendererData {
           orderingDirection={header.ordering}
           orderingOrder={header.order}
           onColumnWidthChange={this.onColumnWidthChange}
-          onColumnWidthChangeFinished={onColumnWidthChangeFinished(
-            this.tablePanelView
-          )}
+          onColumnWidthChangeFinished={onColumnWidthChangeFinished(this.tablePanelView)}
           isColumnOrderChanging={this.isColumnOrderChanging}
           onColumnOrderDrop={this.handleColumnOrderDrop}
           onStartColumnOrderChanging={this.handleStartColumnOrderChanging}

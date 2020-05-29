@@ -130,7 +130,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       console.log("--- MAKE FOCUSED ---");
       this.elmInput && this.elmInput.focus();
       setTimeout(() => {
-        this.elmInput && this.elmInput.select();
+        if (this.elmInput) {
+          this.elmInput.select();
+          this.elmInput.scrollLeft = 0;
+        }
       }, 10);
     }
   }
@@ -138,7 +141,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   @action.bound
   handleFocus(event: any) {
     setTimeout(() => {
-      this.elmInput && this.elmInput.select();
+      if (this.elmInput) {
+        this.elmInput.select();
+        this.elmInput.scrollLeft = 0;
+      }
     }, 10);
   }
 

@@ -24,13 +24,12 @@ export class TextEditor extends React.Component<{
   disposers: any[] = [];
 
   componentDidMount() {
-    this.props.refocuser &&
-      this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+    this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
   }
 
   componentWillUnmount() {
-    this.disposers.forEach(d => d());
+    this.disposers.forEach((d) => d());
   }
 
   componentDidUpdate(prevProps: { isFocused: boolean }) {
@@ -45,7 +44,10 @@ export class TextEditor extends React.Component<{
       console.log("--- MAKE FOCUSED ---");
       this.elmInput && this.elmInput.focus();
       setTimeout(() => {
-        this.elmInput && this.elmInput.select();
+        if (this.elmInput) {
+          this.elmInput.select();
+          this.elmInput.scrollLeft = 0;
+        }
       }, 10);
     }
   }
@@ -53,7 +55,10 @@ export class TextEditor extends React.Component<{
   @action.bound
   handleFocus(event: any) {
     setTimeout(() => {
-      this.elmInput && this.elmInput.select();
+      if (this.elmInput) {
+        this.elmInput.select();
+        this.elmInput.scrollLeft = 0;
+      }
     }, 10);
   }
 
@@ -69,7 +74,7 @@ export class TextEditor extends React.Component<{
           <input
             style={{
               color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor
+              backgroundColor: this.props.backgroundColor,
             }}
             className={S.input}
             type={this.props.isPassword ? "password" : "text"}
@@ -78,8 +83,7 @@ export class TextEditor extends React.Component<{
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={(event: any) =>
-              this.props.onChange &&
-              this.props.onChange(event, event.target.value)
+              this.props.onChange && this.props.onChange(event, event.target.value)
             }
             onKeyDown={this.props.onKeyDown}
             onClick={this.props.onClick}
@@ -90,15 +94,14 @@ export class TextEditor extends React.Component<{
           <textarea
             style={{
               color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor
+              backgroundColor: this.props.backgroundColor,
             }}
             className={S.input}
             value={this.props.value || ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={(event: any) =>
-              this.props.onChange &&
-              this.props.onChange(event, event.target.value)
+              this.props.onChange && this.props.onChange(event, event.target.value)
             }
             onKeyDown={this.props.onKeyDown}
             onClick={this.props.onClick}

@@ -88,7 +88,10 @@ export default class Scroller extends React.Component<IScrollerProps> {
     this.elmScrollerDiv = elm;
   }
 
-  @action.bound private handleClick(event: any) {
+  @action.bound private handleClick(event: any, double: boolean) {
+    event.persist();
+    event.preventDefault();
+    event.isDouble = double;
     const scrollerRect = this.elmScrollerDiv!.getBoundingClientRect();
     this.props.onClick &&
       this.props.onClick(
@@ -124,7 +127,9 @@ export default class Scroller extends React.Component<IScrollerProps> {
         tabIndex={1}
         style={{ width: this.props.width, height: this.props.height }}
         onScroll={this.handleScroll}
-        onClick={this.handleClick}
+        onClick={(e) => this.handleClick(e, false)}
+        onDoubleClick={(e) => this.handleClick(e, true)}
+        onMouseDown={(e) => e.preventDefault()} // To prevent selection when double clicking
         onKeyDown={this.props.onKeyDown}
         ref={this.refScrollerDiv}
       >
@@ -132,7 +137,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
           className={S.fakeContent}
           style={{
             width: this.props.contentWidth + this.horizontalScrollbarSize,
-            height: this.props.contentHeight + this.verticalScrollbarSize
+            height: this.props.contentHeight + this.verticalScrollbarSize,
           }}
         />
       </div>

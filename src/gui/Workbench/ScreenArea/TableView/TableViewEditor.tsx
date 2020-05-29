@@ -17,6 +17,7 @@ import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEdito
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
 import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
+import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -27,7 +28,7 @@ import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor
     onChange: (event: any, value: any) =>
       onFieldChange(tablePanelView)(event, row, property, value),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
-    onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event)
+    onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event),
   };
 })
 @observer
@@ -52,11 +53,7 @@ export class TableViewEditor extends React.Component<{
     );
     const readOnly =
       this.props.property!.readOnly ||
-      !getRowStateAllowUpdate(
-        this.props.property,
-        rowId || "",
-        this.props.property!.id
-      );
+      !getRowStateAllowUpdate(this.props.property, rowId || "", this.props.property!.id);
 
     switch (this.props.property!.column) {
       case "Number":
@@ -69,7 +66,7 @@ export class TableViewEditor extends React.Component<{
             isPassword={this.props.property!.isPassword}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
-            customNumberFormat={ this.props.property!.customNumericFormat}
+            customNumberFormat={this.props.property!.customNumericFormat}
             refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
@@ -160,14 +157,14 @@ export class TableViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
           />
         );
+      case "Blob":
+        return <BlobEditor value={this.props.getCellValue!()} />;
       default:
         return "Unknown field";
     }
   }
 
   render() {
-    return (
-      <Provider property={this.props.property}>{this.getEditor()}</Provider>
-    );
+    return <Provider property={this.props.property}>{this.getEditor()}</Provider>;
   }
 }
