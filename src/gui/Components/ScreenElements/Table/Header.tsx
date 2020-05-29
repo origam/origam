@@ -65,6 +65,7 @@ export class Header extends React.Component<{
   }
 
   @action.bound handleHeaderMouseDown(event: any) {
+    this.isMouseIn = true;
     event.preventDefault();
     this.mouseX0 = event.screenX;
     this.mouseY0 = event.screenY;
