@@ -1,6 +1,7 @@
 import {action, computed, observable} from "mobx";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {OrderingConfiguration} from "./OrderingConfiguration";
+import {FilterConfiguration} from "./FilterConfiguration";
 
 export interface IRowsContainer {
   clear(): void;
@@ -24,19 +25,25 @@ export interface IRowsContainer {
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: OrderingConfiguration;
+  private filterConfiguration: FilterConfiguration;
 
-  constructor(orderingConfiguration: OrderingConfiguration) {
+  constructor(orderingConfiguration: OrderingConfiguration, filterConfiguration: FilterConfiguration) {
     this.orderingConfiguration = orderingConfiguration;
+    this.filterConfiguration = filterConfiguration;
   }
 
   @observable.shallow allRows: any[][] = [];
   rowIdGetter: (row: any[]) => string = null as any
 
   @computed get rows() {
+    let rows = this.allRows;
+    if (this.filterConfiguration.filteringFunction) {
+      rows = rows.filter(row => this.filterConfiguration.filteringFunction()(row));
+    }
     if(this.orderingConfiguration.ordering.length === 0){
-      return this.allRows;
+      return rows;
     }else{
-      return this.allRows.sort(this.orderingConfiguration.orderingFunction());
+      return rows.sort(this.orderingConfiguration.orderingFunction());
     }
   }
 

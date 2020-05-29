@@ -5,7 +5,6 @@ import {getDataView} from "../selectors/DataView/getDataView";
 import {IAdditionalRowData} from "./types/IAdditionalRecordData";
 import {AdditionalRowData} from "./AdditionalRowData";
 import {getDataSource} from "../selectors/DataSources/getDataSource";
-import {getFilterConfiguration} from "model/selectors/DataView/getFilterConfiguration";
 import {IDataSourceField} from "./types/IDataSourceField";
 import {getGrouper} from "model/selectors/DataView/getGrouper";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
@@ -28,21 +27,8 @@ export class DataTable implements IDataTable {
     return getGrouper(this).topLevelGroups;
   }
 
-  @computed get filteringFn(): ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined {
-    return getFilterConfiguration(this).filteringFunction;
-  }
-
   @computed get rows(): any[][] {
-    let rows = this.rowsContainer.rows;
-    // if (this.filteringFn) {
-    //   const filt = this.filteringFn!(this);
-    //   rows = this.rowsContainer.rows.filter(
-    //     row => !this.isRowDirtyDeleted(row) && filt(row)
-    //   );
-    // } else {
-      rows = this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
-    // }
-    return rows;
+    return this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
   }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
 
@@ -312,13 +298,6 @@ export class DataTable implements IDataTable {
     this.rowsContainer.clear();
     this.additionalRowData.clear();
   }
-
-  /* @action.bound
-  setFilteringFn(
-    fn: ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined
-  ): void {
-    this.filteringFn = fn;
-  }*/
 
   parent?: any;
 }
