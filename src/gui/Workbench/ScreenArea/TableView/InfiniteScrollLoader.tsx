@@ -203,8 +203,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       const dataStructureEntityId = getDataStructureEntityId(this.dataView);
       throw new Error(`Cannot infinitely scroll on dataStructureEntity: ${dataStructureEntityId} because it has no default ordering on the displayed form.`)
     }
-    return orderingConfiguration.groupChildrenOrdering
-      ? [orderingConfiguration.groupChildrenOrdering]
-      : [defaultOrdering];
+    return orderingConfiguration.ordering.length === 0
+      ? [defaultOrdering]
+      : orderingConfiguration.ordering;
   }
 }
