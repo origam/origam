@@ -37,6 +37,8 @@ import {IOrdering} from "../types/IOrderingConfiguration";
 import {getOrderingConfiguration} from "../../selectors/DataView/getOrderingConfiguration";
 import {getFilterConfiguration} from "../../selectors/DataView/getFilterConfiguration";
 import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
+import {getApiFilters} from "../../selectors/DataView/getApiFilters";
+import {getOrdering} from "../../selectors/DataView/getOrdering";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -408,12 +410,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *readFirstChunkOfRows(rootDataView: IDataView, selectFirstRow: boolean){
-    const orderingConfiguration = getOrderingConfiguration(rootDataView);
-    const filterConfiguration = getFilterConfiguration(rootDataView);
-    const filterList = filterConfiguration.filtering.map(filterItem =>{
-      return toFilterItem(filterItem.propertyId, filterItem.setting.type, filterItem.setting.val1);
-    });
-    const filters = joinWithAND(filterList);
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
@@ -422,8 +418,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MenuId: getMenuItemId(rootDataView),
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: joinWithAND(filterList),
-        Ordering: orderingConfiguration.ordering,
+        Filter: getApiFilters(rootDataView),
+        Ordering: getOrdering(rootDataView),
         RowLimit: SCROLL_DATA_INCREMENT_SIZE,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),

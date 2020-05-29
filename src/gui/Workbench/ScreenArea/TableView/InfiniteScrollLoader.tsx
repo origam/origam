@@ -14,6 +14,8 @@ import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColu
 import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
 import {getFilterConfiguration} from "../../../../model/selectors/DataView/getFilterConfiguration";
 import {joinWithAND, toFilterItem} from "../../../../model/entities/OrigamApiHelpers";
+import {getApiFilters} from "../../../../model/selectors/DataView/getApiFilters";
+import {getOrdering} from "../../../../model/selectors/DataView/getOrdering";
 
 export interface IInfiniteScrollLoaderData{
   gridDimensions: IGridDimensions;
@@ -151,8 +153,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MenuId: getMenuItemId(this.dataView),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.dataView),
-      Filter: this.getFilters(this.dataView),
-      Ordering: this.getOrdering(this.dataView),
+      Filter: getApiFilters(this.dataView),
+      Ordering: getOrdering(this.dataView),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.dataView),
@@ -178,33 +180,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MenuId: getMenuItemId(this.dataView),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.dataView),
-      Filter: this.getFilters(this.dataView),
-      Ordering: this.getOrdering(this.dataView),
+      Filter: getApiFilters(this.dataView),
+      Ordering: getOrdering(this.dataView),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextStartOffset,
       ColumnNames: getColumnNamesToLoad(this.dataView),
       MasterRowId: undefined
     }).then(data => this.rowsContainer.prependRecords(data));
   });
-
-  private getFilters(dataView: IDataView){
-    const filterConfiguration = getFilterConfiguration(dataView);
-    const filterList = filterConfiguration.filtering.map(filterItem =>{
-      return toFilterItem(filterItem.propertyId, filterItem.setting.type, filterItem.setting.val1);
-    });
-    return joinWithAND(filterList);
-  }
-
-
-  private getOrdering(dataView: IDataView) {
-    const orderingConfiguration = getOrderingConfiguration(dataView);
-    const defaultOrdering = orderingConfiguration.getDefaultOrdering();
-    if(!defaultOrdering){
-      const dataStructureEntityId = getDataStructureEntityId(this.dataView);
-      throw new Error(`Cannot infinitely scroll on dataStructureEntity: ${dataStructureEntityId} because it has no default ordering on the displayed form.`)
-    }
-    return orderingConfiguration.ordering.length === 0
-      ? [defaultOrdering]
-      : orderingConfiguration.ordering;
-  }
 }
