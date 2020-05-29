@@ -198,8 +198,12 @@ namespace Origam.ServerCore.Controller
             }
             else
             {
-                return sessionObjects.UIService.GetRow(
-                    input.SessionFormIdentifier, input.Entity, input.RowId);
+                return
+                    FindEntity(input.DataStructureEntityId)
+                        .Bind(dataStructureEntity =>
+                            sessionObjects.UIService.GetRow(
+                                input.SessionFormIdentifier, input.Entity,
+                                dataStructureEntity, input.RowId));
             }
         }
         protected Result<Guid, IActionResult> AmbiguousInputToEntityId(

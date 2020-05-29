@@ -27,7 +27,7 @@ using System.Xml.Xsl;
 using System.IO;
 using System.Xml.XPath;
 
-#if !NETSTANDARD
+
 namespace Origam.Rule
 {
     class OldXsltEngine : MicrosoftXsltEngine
@@ -45,7 +45,11 @@ namespace Origam.Rule
         internal override object GetTransform(IXmlContainer xslt)
         {
             XslTransform engine = new XslTransform();
+#if NETSTANDARD
+            engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver());
+#else
             engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+#endif
             return engine;
         }
 
@@ -54,7 +58,11 @@ namespace Origam.Rule
             XslTransform engine = new XslTransform();
             StringReader xslReader = new StringReader(xsl);
             XPathDocument xslDoc = new XPathDocument(xslReader);
+#if NETSTANDARD
+            engine.Load(xslDoc, new ModelXmlResolver());
+#else
             engine.Load(xslDoc, new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+#endif
             return engine;
         }
 
@@ -111,5 +119,3 @@ namespace Origam.Rule
 
     }
 }
-
-#endif

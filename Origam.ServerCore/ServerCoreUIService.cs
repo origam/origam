@@ -454,7 +454,8 @@ namespace Origam.ServerCore
                 input.InputParameters);
         }
         public Result<RowData, IActionResult> GetRow(
-            Guid sessionFormIdentifier, string entity, Guid rowId)
+            Guid sessionFormIdentifier, string entity, 
+            DataStructureEntity dataStructureEntity, Guid rowId)
         {
             SessionStore sessionStore = null;
             try
@@ -475,7 +476,7 @@ namespace Origam.ServerCore
                 {
                     var row = sessionStore.GetSessionRow(entity, rowId);
                     return Result.Ok<RowData, IActionResult>(
-                        new RowData{Row = row, Entity = null});
+                        new RowData{Row = row, Entity = dataStructureEntity});
                 }
             }
         }

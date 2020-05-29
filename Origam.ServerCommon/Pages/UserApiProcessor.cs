@@ -51,7 +51,6 @@ namespace Origam.ServerCommon.Pages
             new Lazy<UrlApiPageCache>(() => new UrlApiPageCache(                    
                  (ServiceManager.Services.GetService<SchemaService>())
                     .GetProvider<PagesSchemaItemProvider>()
-                    .ChildItems.ToList()
                 ));
 
         public UserApiProcessor(IHttpTools httpTools)
