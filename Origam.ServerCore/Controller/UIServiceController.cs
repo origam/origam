@@ -657,17 +657,19 @@ namespace Origam.ServerCore.Controller
                         entityData.Entity, input.DataStructureEntityId,
                         Guid.Empty, input.Id));
             }
-            else
+            if (input.DataStructureEntityId == Guid.Empty)
             {
-                //  return sessionObjects.UIService.GetRow(
-                //     input.SessionFormIdentifier, input.Entity, input.Id);
-
-                return FindEntity(input.DataStructureEntityId)
-                    .Bind(dataStructureEntity =>
-                        sessionObjects.UIService.GetRow(
-                            input.SessionFormIdentifier, input.Entity,
-                            dataStructureEntity, input.Id));
+                return sessionObjects.UIService.GetRow(
+                   sessionFormIdentifier: input.SessionFormIdentifier,
+                   entity: input.Entity,
+                   dataStructureEntity: null, 
+                   rowId: input.Id); 
             }
+            return FindEntity(input.DataStructureEntityId)
+                .Bind(dataStructureEntity =>
+                    sessionObjects.UIService.GetRow(
+                        input.SessionFormIdentifier, input.Entity,
+                        dataStructureEntity, input.Id));
         }
         private static Hashtable DictionaryToHashtable(IDictionary<string, object> source)
         {
