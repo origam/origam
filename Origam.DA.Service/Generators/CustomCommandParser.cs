@@ -243,8 +243,9 @@ namespace Origam.DA.Service.Generators
             if (Children.Count == 0)
             {
                 if (SplitValue.Length != 3) throw new ArgumentException("could not parse: "+Value+" to a filter node");
-                string operatorName = OperatorToRendererName(Operator);
-                return renderer.BinaryOperator(ColumnName, ColumnValue, operatorName);
+                var (operatorName, modifiedColumnValue) = GetRendererInput(Operator, ColumnValue);
+                
+                return renderer.BinaryOperator(ColumnName, modifiedColumnValue, operatorName);
             }
 
             if (Children.Count == 1 && Operator == "in")
@@ -257,20 +258,43 @@ namespace Origam.DA.Service.Generators
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
         }
-
-        private string OperatorToRendererName(string operatorName)
+        
+        private (string,string) GetRendererInput(string operatorName, string value)
         {
             switch (operatorName)
             {
-                case "gt": return "GreaterThan";
-                case "lt": return "LessThan";
-                case "gte": return "GreaterThanOrEqual";
-                case "lte": return "LessThanOrEqual";
-                case "eq": return "Equal";
-                case "neq": return "NotEqual";
-                case "like": return "Like";
+                case "gt": return ("GreaterThan", value);
+                case "lt": return ("LessThan", value);
+                case "gte": return ("GreaterThanOrEqual", value);
+                case "lte": return ("LessThanOrEqual", value);
+                case "eq": return ("Equal", value);
+                case "neq": return ("NotEqual", value);
+                case "starts": return ("Like", appendWildCard(value));
+                case "nstarts": return ("NotLike", appendWildCard(value));
+                case "ends": return ("Like", prependWildCard(value));
+                case "nends": return ("NotLike",  prependWildCard(value));
+                case "contains": return ("Like", prependWildCard(appendWildCard(value)));
+                case "ncontains": return ("NotLike", prependWildCard(appendWildCard(value)));
+                case "like": return ("Like", value);
                 default: throw new NotImplementedException(operatorName);
             }
+        }
+
+        private string prependWildCard(string value)
+        {
+            if (!value.StartsWith("'"))
+            {
+                throw new ArgumentException("Cannot prepend \"%\" to a value which does not start with \"'\" (is not string)");
+            }
+            return value.Substring(0,1) + "%" +value.Substring(1);
+        } 
+        private string appendWildCard(string value)
+        {
+            if (!value.EndsWith("'"))
+            {
+                throw new ArgumentException("Cannot prepend \"%\" to a value which does not end with \"'\" (is not string)");
+            }
+            return value.Substring(0,value.Length-1) + "%" +value.Substring(value.Length-1);
         }
     }
 }

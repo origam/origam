@@ -36,6 +36,24 @@ namespace Origam.DA.Service_net2Tests
             "[\"name\",\"gt\",\"John Doe\"]",
             "([name] > 'John Doe')")]
         [TestCase(
+            "[\"name\",\"starts\",\"John Doe\"]",
+            "([name] LIKE 'John Doe%')")]
+        [TestCase(
+            "[\"name\",\"nstarts\",\"John Doe\"]",
+            "([name] NOT LIKE 'John Doe%')")]
+        [TestCase(
+            "[\"name\",\"ends\",\"John Doe\"]",
+            "([name] LIKE '%John Doe')")]
+        [TestCase(
+            "[\"name\",\"nends\",\"John Doe\"]",
+            "([name] NOT LIKE '%John Doe')")]
+        [TestCase(
+            "[\"name\",\"contains\",\"John Doe\"]",
+            "([name] LIKE '%John Doe%')")]
+        [TestCase(
+            "[\"name\",\"ncontains\",\"John Doe\"]",
+    "([name] NOT LIKE '%John Doe%')")]
+        [TestCase(
             "[\"name\",\"gt\",\"John' Doe\"]",
             "([name] > 'John'' Doe')")]
         [TestCase(
