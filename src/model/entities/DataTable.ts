@@ -34,14 +34,14 @@ export class DataTable implements IDataTable {
 
   @computed get rows(): any[][] {
     let rows = this.rowsContainer.rows;
-    if (this.filteringFn) {
-      const filt = this.filteringFn!(this);
-      rows = this.rowsContainer.rows.filter(
-        row => !this.isRowDirtyDeleted(row) && filt(row)
-      );
-    } else {
+    // if (this.filteringFn) {
+    //   const filt = this.filteringFn!(this);
+    //   rows = this.rowsContainer.rows.filter(
+    //     row => !this.isRowDirtyDeleted(row) && filt(row)
+    //   );
+    // } else {
       rows = this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
-    }
+    // }
     return rows;
   }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();

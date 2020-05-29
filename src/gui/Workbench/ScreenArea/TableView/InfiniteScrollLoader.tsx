@@ -12,6 +12,8 @@ import {getSessionId} from "../../../../model/selectors/getSessionId";
 import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
 import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColumnNamesToLoad";
 import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
+import {getFilterConfiguration} from "../../../../model/selectors/DataView/getFilterConfiguration";
+import {joinWithAND, toFilterItem} from "../../../../model/entities/OrigamApiHelpers";
 
 export interface IInfiniteScrollLoaderData{
   gridDimensions: IGridDimensions;
@@ -149,7 +151,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MenuId: getMenuItemId(this.dataView),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.dataView),
-      Filter: "",
+      Filter: this.getFilters(this.dataView),
       Ordering: this.getOrdering(this.dataView),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextEndOffset,
@@ -176,7 +178,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MenuId: getMenuItemId(this.dataView),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.dataView),
-      Filter: "",
+      Filter: this.getFilters(this.dataView),
       Ordering: this.getOrdering(this.dataView),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextStartOffset,
@@ -184,6 +186,15 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MasterRowId: undefined
     }).then(data => this.rowsContainer.prependRecords(data));
   });
+
+  private getFilters(dataView: IDataView){
+    const filterConfiguration = getFilterConfiguration(dataView);
+    const filterList = filterConfiguration.filtering.map(filterItem =>{
+      return toFilterItem(filterItem.propertyId, filterItem.setting.type, filterItem.setting.val1);
+    });
+    return joinWithAND(filterList);
+  }
+
 
   private getOrdering(dataView: IDataView) {
     const orderingConfiguration = getOrderingConfiguration(dataView);

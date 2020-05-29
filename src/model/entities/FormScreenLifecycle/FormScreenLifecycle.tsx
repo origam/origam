@@ -35,6 +35,8 @@ import {IQueryInfo, processActionQueryInfo} from "model/actions/Actions/processA
 import {assignIIds} from "xmlInterpreters/xmlUtils";
 import {IOrdering} from "../types/IOrderingConfiguration";
 import {getOrderingConfiguration} from "../../selectors/DataView/getOrderingConfiguration";
+import {getFilterConfiguration} from "../../selectors/DataView/getFilterConfiguration";
+import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -259,11 +261,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* this.loadData(true);
       const formScreen = getFormScreen(this);
       for (let rootDataView of formScreen.rootDataViews) {
-      const orderingConfiguration = getOrderingConfiguration(rootDataView);
-      this.disposers.push(
-        reaction(
-          () => orderingConfiguration.ordering.map(x => x.direction),
-          flow(() => this.readFirstChunkOfRows(rootDataView, true))));
+        const orderingConfiguration = getOrderingConfiguration(rootDataView);
+        const filterConfiguration = getFilterConfiguration(rootDataView);
+        this.disposers.push(
+          reaction(
+            () => {
+              orderingConfiguration.ordering.map(x => x.direction);
+              filterConfiguration.filtering.map(x=>[x.propertyId, x.setting.type, x.setting.val1]);
+              return [];
+            },
+            flow(() => this.readFirstChunkOfRows(rootDataView, true))));
       }
     }
     yield* this.startAutorefreshIfNeeded();
@@ -402,6 +409,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *readFirstChunkOfRows(rootDataView: IDataView, selectFirstRow: boolean){
     const orderingConfiguration = getOrderingConfiguration(rootDataView);
+    const filterConfiguration = getFilterConfiguration(rootDataView);
+    const filterList = filterConfiguration.filtering.map(filterItem =>{
+      return toFilterItem(filterItem.propertyId, filterItem.setting.type, filterItem.setting.val1);
+    });
+    const filters = joinWithAND(filterList);
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
@@ -410,7 +422,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MenuId: getMenuItemId(rootDataView),
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: "",
+        Filter: joinWithAND(filterList),
         Ordering: orderingConfiguration.ordering,
         RowLimit: SCROLL_DATA_INCREMENT_SIZE,
         RowOffset: 0,
