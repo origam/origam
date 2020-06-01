@@ -91,7 +91,7 @@ namespace Origam.DA.Service
         public string Equal(string leftValue, string rightValue)
         {
             CheckArgumentEmpty("leftValue", leftValue);
-            if (rightValue == null)
+            if (rightValue == null || rightValue.ToLower() == "null")
             {
                 return string.Format("{0} IS NULL", leftValue);
             }

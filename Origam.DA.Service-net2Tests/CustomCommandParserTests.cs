@@ -55,7 +55,10 @@ namespace Origam.DA.Service_net2Tests
     "([name] NOT LIKE '%John Doe%')")]
         [TestCase(
             "[\"name\",\"gt\",\"John' Doe\"]",
-            "([name] > 'John'' Doe')")]
+            "([name] > 'John'' Doe')")]        
+        [TestCase(
+            "[\"name\",\"eq\",null]",
+            "[name] IS NULL")]
         [TestCase(
             "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
             "((([city_name] LIKE '%Wash%') OR ([name] LIKE '%Smith%')) AND ([age] >= 18) AND [id] IN ('f2', 'f3', 'f4'))")]
