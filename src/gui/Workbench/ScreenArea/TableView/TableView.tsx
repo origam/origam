@@ -69,7 +69,7 @@ export class TableView extends React.Component<{
     const rowsContainer = getDataTable(this.props.dataView).rowsContainer;
     if(rowsContainer instanceof ScrollRowContainer){
       return new InfiniteScrollLoader({
-        dataView: this.props.dataView!,
+        ctx: this.props.dataView!,
         gridDimensions: this.gDim,
         scrollState: this.scrollState,
         rowsContainer: rowsContainer as ScrollRowContainer

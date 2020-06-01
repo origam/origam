@@ -20,7 +20,7 @@ import {getOrdering} from "../../../../model/selectors/DataView/getOrdering";
 export interface IInfiniteScrollLoaderData{
   gridDimensions: IGridDimensions;
   scrollState: SimpleScrollState;
-  dataView: IDataView;
+  ctx: any;
   rowsContainer: ScrollRowContainer;
 }
 
@@ -33,7 +33,7 @@ export const SCROLL_DATA_INCREMENT_SIZE = 100;
 
 export class NullIScrollLoader implements IInfiniteScrollLoader{
   contentBounds: BoundingRect | undefined;
-  dataView: IDataView = null as any;
+  ctx: any = null as any;
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
   rowsContainer: ScrollRowContainer =  null as any;
@@ -53,7 +53,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   lastRequestedEndOffset: number = 0;
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
-  dataView: IDataView = null as any;
+  ctx: any = null as any;
   rowsContainer: ScrollRowContainer = null as any;
   @observable contentBounds: BoundingRect | undefined;
 
@@ -140,8 +140,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this: InfiniteScrollLoader
   ) {
     console.log("appendLines!");
-    const api = getApi(this.dataView);
-    const formScreenLifecycle = getFormScreenLifecycle(this.dataView);
+    const api = getApi(this.ctx);
+    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
 
     if (this.lastRequestedEndOffset === this.rowsContainer.nextEndOffset) {
       return;
@@ -150,14 +150,14 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.lastRequestedStartOffset = -1;
 
     api.getRows({
-      MenuId: getMenuItemId(this.dataView),
+      MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
-      DataStructureEntityId: getDataStructureEntityId(this.dataView),
-      Filter: getApiFilters(this.dataView),
-      Ordering: getOrdering(this.dataView),
+      DataStructureEntityId: getDataStructureEntityId(this.ctx),
+      Filter: getApiFilters(this.ctx),
+      Ordering: getOrdering(this.ctx),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextEndOffset,
-      ColumnNames: getColumnNamesToLoad(this.dataView),
+      ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
     }).then(data => this.rowsContainer.appendRecords(data));
   });
@@ -167,8 +167,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this: InfiniteScrollLoader
   ) {
     console.log("prependLines!");
-    const api = getApi(this.dataView);
-    const formScreenLifecycle = getFormScreenLifecycle(this.dataView);
+    const api = getApi(this.ctx);
+    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
 
     if (this.lastRequestedStartOffset === this.rowsContainer.nextStartOffset) {
       return;
@@ -177,14 +177,14 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.lastRequestedEndOffset = 0;
 
     api.getRows({
-      MenuId: getMenuItemId(this.dataView),
+      MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
-      DataStructureEntityId: getDataStructureEntityId(this.dataView),
-      Filter: getApiFilters(this.dataView),
-      Ordering: getOrdering(this.dataView),
+      DataStructureEntityId: getDataStructureEntityId(this.ctx),
+      Filter: getApiFilters(this.ctx),
+      Ordering: getOrdering(this.ctx),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextStartOffset,
-      ColumnNames: getColumnNamesToLoad(this.dataView),
+      ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
     }).then(data => this.rowsContainer.prependRecords(data));
   });
