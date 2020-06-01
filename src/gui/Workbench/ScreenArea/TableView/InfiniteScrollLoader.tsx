@@ -1,7 +1,7 @@
 import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
 import {SimpleScrollState} from "../../../Components/ScreenElements/Table/SimpleScrollState";
 import {IDataView} from "../../../../model/entities/types/IDataView";
-import {action, autorun, computed, flow, observable, reaction} from "mobx";
+import {action, autorun, computed, flow, IReactionDisposer, observable, reaction} from "mobx";
 import {BoundingRect} from "react-measure";
 import {rangeQuery} from "../../../../utils/arrays";
 import {getApi} from "../../../../model/selectors/getApi";
@@ -27,6 +27,8 @@ export interface IInfiniteScrollLoaderData{
 export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
   contentBounds: BoundingRect | undefined;
   start(): ()=>void;
+
+  dispose(): void;
 }
 
 export const SCROLL_DATA_INCREMENT_SIZE = 100;
@@ -40,9 +42,14 @@ export class NullIScrollLoader implements IInfiniteScrollLoader{
   start(): ()=>void {
     return ()=>{};
   }
+
+  dispose(): void {
+  }
 }
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
+  private debugDisposer: IReactionDisposer | undefined;
+  private reactionDisposer: IReactionDisposer | undefined;
 
   constructor(data: IInfiniteScrollLoaderData) {
     Object.assign(this, data);
@@ -105,13 +112,13 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @action.bound
   public start() {
-    autorun(() => {
+    this.debugDisposer =  autorun(() => {
       console.log("firstLine: " + this.visibleRowsRange.firstGreaterThanNumber);
       console.log("lastLine: " + this.visibleRowsRange.lastLessThanNumber);
       console.log("headLoadingNeeded(): " + this.headLoadingNeeded);
       console.log("tailLoadingNeeded(): " + this.tailLoadingNeeded);
     });
-    return reaction(
+    this.reactionDisposer = reaction(
       () => {
         return [
           this.visibleRowsFirstIndex,
@@ -129,6 +136,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
         }
       }
     );
+    return this.reactionDisposer;
   }
 
   handleRowContainerReset(){
@@ -188,4 +196,13 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MasterRowId: undefined
     }).then(data => this.rowsContainer.prependRecords(data));
   });
+
+  dispose(): void {
+    if(this.reactionDisposer){
+      this.reactionDisposer();
+    }
+    if(this.debugDisposer){
+      this.debugDisposer();
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import bind from "bind-decorator";
-import {action, autorun, computed, observable} from "mobx";
+import {action, autorun, computed, observable, reaction} from "mobx";
 import {inject, observer, Provider} from "mobx-react";
 import {onTableKeyDown} from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
@@ -57,17 +57,29 @@ export class TableView extends React.Component<{
   onTableKeyDown?: (event: any) => void;
 }> {
 
-  infiniteScrollLoader: IInfiniteScrollLoader;
+  infiniteScrollLoader: IInfiniteScrollLoader | undefined;
 
   constructor(props: any) {
     super(props);
+
+    this.initializeNewScrollLoader();
+    getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
+      this.initializeNewScrollLoader();
+    });
+  }
+
+  private initializeNewScrollLoader() {
+    if(this.infiniteScrollLoader){
+      this.infiniteScrollLoader.dispose();
+    }
     this.infiniteScrollLoader = this.getScrollLoader();
     getFormScreenLifecycle(this.props.dataView).registerDisposer(this.infiniteScrollLoader.start());
   }
 
   getScrollLoader(){
+    const isGroupingOff = getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds.length === 0;
     const rowsContainer = getDataTable(this.props.dataView).rowsContainer;
-    if(rowsContainer instanceof ScrollRowContainer){
+    if(rowsContainer instanceof ScrollRowContainer && isGroupingOff){
       return new InfiniteScrollLoader({
         ctx: this.props.dataView!,
         gridDimensions: this.gDim,
@@ -165,7 +177,7 @@ export class TableView extends React.Component<{
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
-            onContentBoundsChanged={bounds => this.infiniteScrollLoader.contentBounds=bounds}
+            onContentBoundsChanged={bounds => this.infiniteScrollLoader!.contentBounds=bounds}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.props.onTableKeyDown}
             refTable={this.refTable}

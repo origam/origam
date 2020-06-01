@@ -11,6 +11,8 @@ export interface IGroupingConfiguration extends IGroupingConfigurationData {
   orderedGroupingColumnIds: string[];
   firstGroupingColumn: string;
 
+  registerGroupingOnOffHandler(handler: ()=>void): void;
+
   setGrouping(columnId: string, groupingIndex: number): void;
   clearGrouping(): void;
   // applyGrouping(): void;

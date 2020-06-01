@@ -6,6 +6,7 @@ import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export class GroupingConfiguration implements IGroupingConfiguration {
   @observable groupingIndices: Map<string, number> = new Map();
+  onOffHandlers: (()=>void)[] = [];
 
   @computed get isGrouping() {
     return this.groupingIndices.size > 0;
@@ -38,12 +39,17 @@ export class GroupingConfiguration implements IGroupingConfiguration {
 
   @action.bound
   setGrouping(columnId: string, groupingIndex: number): void {
+    const wasEmpty = this.groupingIndices.size === 0
     this.groupingIndices.set(columnId, groupingIndex);
+    if(wasEmpty){
+      this.notifyOnOffHandlers();
+    }
   }
 
   @action.bound
   clearGrouping(): void {
     this.groupingIndices.clear();
+    this.notifyOnOffHandlers();
   }
 
   // @action.bound
@@ -52,4 +58,14 @@ export class GroupingConfiguration implements IGroupingConfiguration {
   // }
 
   parent?: any;
+
+  notifyOnOffHandlers(){
+    for (let handler of this.onOffHandlers) {
+      handler();
+    }
+  }
+
+  registerGroupingOnOffHandler(handler: () => void): void {
+    this.onOffHandlers.push(handler);
+  }
 }
