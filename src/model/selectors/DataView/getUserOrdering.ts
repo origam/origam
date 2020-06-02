@@ -3,7 +3,7 @@ import {getOrderingConfiguration} from "./getOrderingConfiguration";
 import {getDataStructureEntityId} from "./getDataStructureEntityId";
 import {getDataView} from "./getDataView";
 
-export function getOrdering(ctx: any) {
+export function getUserOrdering(ctx: any) {
   const dataView =  getDataView(ctx);
   const orderingConfiguration = getOrderingConfiguration(dataView);
   const defaultOrdering = orderingConfiguration.getDefaultOrdering();

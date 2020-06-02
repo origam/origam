@@ -64,7 +64,7 @@ export class GroupItem implements IGroupTreeNode {
       gridDimensions: dataView.gridDimensions,
       scrollState: dataView.scrollState,
       rowsContainer: this._childRows,
-      defaultFilter: this.composeGroupingFilter(),
+      groupFilter: this.composeGroupingFilter(),
       visibleRowsMonitor: new OpenGroupVisibleRowsMonitor(this.grouper, dataView.gridDimensions, dataView.scrollState)
     })
   }

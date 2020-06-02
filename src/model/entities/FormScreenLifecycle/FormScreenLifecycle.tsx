@@ -37,8 +37,8 @@ import {IOrdering} from "../types/IOrderingConfiguration";
 import {getOrderingConfiguration} from "../../selectors/DataView/getOrderingConfiguration";
 import {getFilterConfiguration} from "../../selectors/DataView/getFilterConfiguration";
 import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
-import {getApiFilters} from "../../selectors/DataView/getApiFilters";
-import {getOrdering} from "../../selectors/DataView/getOrdering";
+import {getUserFilters} from "../../selectors/DataView/getUserFilters";
+import {getUserOrdering} from "../../selectors/DataView/getUserOrdering";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -418,8 +418,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MenuId: getMenuItemId(rootDataView),
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: getApiFilters(rootDataView),
-        Ordering: getOrdering(rootDataView),
+        Filter: getUserFilters(rootDataView),
+        Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_DATA_INCREMENT_SIZE,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),

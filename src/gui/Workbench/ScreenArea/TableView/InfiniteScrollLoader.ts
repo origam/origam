@@ -9,8 +9,8 @@ import {getDataStructureEntityId} from "../../../../model/selectors/DataView/get
 import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColumnNamesToLoad";
 import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
 import {joinWithAND} from "../../../../model/entities/OrigamApiHelpers";
-import {getApiFilters} from "../../../../model/selectors/DataView/getApiFilters";
-import {getOrdering} from "../../../../model/selectors/DataView/getOrdering";
+import {getUserFilters} from "../../../../model/selectors/DataView/getUserFilters";
+import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrdering";
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 
 export interface IInfiniteScrollLoaderData{
@@ -18,7 +18,7 @@ export interface IInfiniteScrollLoaderData{
   scrollState: SimpleScrollState;
   ctx: any;
   rowsContainer: ScrollRowContainer;
-  defaultFilter: string | undefined;
+  groupFilter: string | undefined;
   visibleRowsMonitor: IVisibleRowsMonitor;
 }
 
@@ -41,7 +41,7 @@ export class NullIScrollLoader implements IInfiniteScrollLoader{
   dispose(): void {
   }
 
-  defaultFilter: string | undefined;
+  groupFilter: string | undefined;
   visibleRowsMonitor: IVisibleRowsMonitor = null as any;
 }
 
@@ -56,7 +56,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.visibleRowsMonitor = new OpenGroupVisibleRowsMonitor(this.ctx, this.gridDimensions, this.scrollState);
   }
 
-  defaultFilter: string | undefined;
+  groupFilter: string | undefined;
   lastRequestedStartOffset: number = 0;
   lastRequestedEndOffset: number = 0;
   gridDimensions: IGridDimensions = null as any;
@@ -125,12 +125,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   getFilters(){
     const filters=[];
-    if(this.defaultFilter){
-      filters.push(this.defaultFilter);
+    if(this.groupFilter){
+      filters.push(this.groupFilter);
     }
-    const apiFilters = getApiFilters(this.ctx);
-    if(apiFilters) {
-      filters.push(apiFilters);
+    const userFilters = getUserFilters(this.ctx);
+    if(userFilters) {
+      filters.push(userFilters);
     }
     return joinWithAND(filters);
   }
@@ -153,7 +153,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       Filter: this.getFilters(),
-      Ordering: getOrdering(this.ctx),
+      Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
@@ -180,7 +180,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       Filter: this.getFilters(),
-      Ordering: getOrdering(this.ctx),
+      Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextStartOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),

@@ -86,7 +86,7 @@ export class TableView extends React.Component<{
         gridDimensions: dataView.gridDimensions,
         scrollState: dataView.scrollState,
         rowsContainer: rowsContainer as ScrollRowContainer,
-        defaultFilter: undefined,
+        groupFilter: undefined,
         visibleRowsMonitor: new VisibleRowsMonitor(dataView, dataView.gridDimensions, dataView.scrollState)
       });
     }else{
