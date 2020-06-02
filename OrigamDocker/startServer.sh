@@ -44,25 +44,25 @@ if [[ -n ${OrigamSettings_SetOnStart} && ${OrigamSettings_SetOnStart} == true ]]
 	rm -f OrigamSettings.config
 fi
 if [[ ! -f "OrigamSettings.config" ]]; then
-	if [[ -z ${OrigamSettings_SchemaExtensionGuid} || -z ${OrigamSettings_DbHost}  || -z ${OrigamSettings_DbPort}  || -z ${OrigamSettings_DbUsername}  || -z ${OrigamSettings_DbPassword}  || -z ${OrigamSettings_NameDatabase}  || -z ${OrigamSettings_ModelName}  ]];then
+	if [[ -z ${OrigamSettings_SchemaExtensionGuid} || -z ${OrigamSettings_DbHost}  || -z ${OrigamSettings_DbPort}  || -z ${OrigamSettings_DbUsername}  || -z ${OrigamSettings_DbPassword}  || -z ${DatabaseName}  || -z ${OrigamSettings_ModelName}  ]];then
 		echo "OrigamSettings.config not exists!!"
 		echo "one or more variables are undefined"
 		echo "Please check if environment variables are set properly."
-		echo "OrigamSettings_SchemaExtensionGuid, OrigamSettings_DbHost, OrigamSettings_DbPort, OrigamSettings_DbUsername, OrigamSettings_DbPassword, OrigamSettings_NameDatabase,OrigamSettings_ModelName"
+		echo "OrigamSettings_SchemaExtensionGuid, OrigamSettings_DbHost, OrigamSettings_DbPort, OrigamSettings_DbUsername, OrigamSettings_DbPassword, DatabaseName,OrigamSettings_ModelName"
 		exit 1
 	fi
-	if [[ -z ${OrigamSettings_TypeDatabase} ]]; then
+	if [[ -z ${DatabaseType} ]]; then
 		echo "Please set Type of Database (mssql/postgresql)"
 		exit 1
 	else
-		if [[ ${OrigamSettings_TypeDatabase} == mssql ]]; then
+		if [[ ${DatabaseType} == mssql ]]; then
 			cp _OrigamSettings.mssql.template OrigamSettings.config
 		fi
-		if [[ ${OrigamSettings_TypeDatabase} == postgresql ]]; then
+		if [[ ${DatabaseType} == postgresql ]]; then
 			cp _OrigamSettings.postgres.template OrigamSettings.config
 		fi
 		if [[ ! -f "OrigamSettings.config" ]]; then
-			echo "Please set OrigamSettings_TypeDatabase Type of Database (mssql/postgresql)"
+			echo "Please set 'DatabaseType' Type of Database (mssql/postgresql)"
 			exit 1
 		fi
 		sed -i "s/OrigamSettings_SchemaExtensionGuid/${OrigamSettings_SchemaExtensionGuid}/" OrigamSettings.config
@@ -70,7 +70,7 @@ if [[ ! -f "OrigamSettings.config" ]]; then
 		sed -i "s/OrigamSettings_DbPort/${OrigamSettings_DbPort}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_DbUsername/${OrigamSettings_DbUsername}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
-		sed -i "s/OrigamSettings_NameDatabase/${OrigamSettings_NameDatabase}/" OrigamSettings.config
+		sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_ModelName/data\/${OrigamSettings_ModelName}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_Title/${OrigamSettings_ModelName}/" OrigamSettings.config
 	fi
