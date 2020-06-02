@@ -31,12 +31,12 @@ import {onColumnOrderChangeFinished} from "model/actions-ui/DataView/TableView/o
 import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {getLeadingColumnCount} from "model/selectors/TablePanelView/getLeadingColumnCount";
 import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
-import {flattenToTableRows} from "../../../Components/ScreenElements/Table/TableRendering/tableRows";
 import {getTablePanelView} from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {aggregationToString, IAggregation, parseAggregations} from "model/entities/types/IAggregation";
-import {InfiniteScrollLoader, IInfiniteScrollLoader, NullIScrollLoader} from "./InfiniteScrollLoader";
+import {IInfiniteScrollLoader, InfiniteScrollLoader, NullIScrollLoader} from "./InfiniteScrollLoader";
 import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
+import {VisibleRowsMonitor} from "./VisibleRowsMonitor";
 
 @inject(({ dataView }) => {
   return {
@@ -80,11 +80,14 @@ export class TableView extends React.Component<{
     const isGroupingOff = getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds.length === 0;
     const rowsContainer = getDataTable(this.props.dataView).rowsContainer;
     if(rowsContainer instanceof ScrollRowContainer && isGroupingOff){
+      const dataView = this.props.dataView!;
       return new InfiniteScrollLoader({
-        ctx: this.props.dataView!,
-        gridDimensions: this.gDim,
-        scrollState: this.scrollState,
-        rowsContainer: rowsContainer as ScrollRowContainer
+        ctx: dataView,
+        gridDimensions: dataView.gridDimensions,
+        scrollState: dataView.scrollState,
+        rowsContainer: rowsContainer as ScrollRowContainer,
+        defaultFilter: undefined,
+        visibleRowsMonitor: new VisibleRowsMonitor(dataView, dataView.gridDimensions, dataView.scrollState)
       });
     }else{
       return new NullIScrollLoader();
@@ -108,25 +111,10 @@ export class TableView extends React.Component<{
     }
   };
 
-  @computed get tableRows(){
-    const groupedColumnIds = getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds;
-    return groupedColumnIds.length === 0
-        ? getDataTable(this.props.dataView).rows
-        : flattenToTableRows(getDataTable(this.props.dataView).groups);
-  }
-
-
   elmTable: RawTable | null = null;
-  gDim = new GridDimensions({
-    getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    getRowCount: () => this.tableRows.length,
-    getIsSelectionCheckboxes: () =>
-      getIsSelectionCheckboxesShown(this.props.tablePanelView),
-    ctx: this.props.dataView
-  });
 
   headerRenderer = new HeaderRenderer({
-    gridDimensions: this.gDim,
+    gridDimensions: this.props.dataView!.gridDimensions,
     tablePanelView: this.props.tablePanelView!,
     getFixedColumnCount: () => getFixedColumnsCount(this.props.tablePanelView),
     getIsSelectionCheckboxes: () =>
@@ -141,7 +129,6 @@ export class TableView extends React.Component<{
       this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget),
   });
 
-  scrollState = new SimpleScrollState(0, 0);
   cellRenderer = new CellRenderer({
     tablePanelView: this.props.tablePanelView!,
   });
@@ -160,9 +147,9 @@ export class TableView extends React.Component<{
       <Provider tablePanelView={this.props.tablePanelView}>
         <>
           <Table
-            tableRows={this.tableRows}
-            gridDimensions={self.gDim}
-            scrollState={self.scrollState}
+            tableRows={this.props.dataView!.tableRows}
+            gridDimensions={self.props.dataView!.gridDimensions}
+            scrollState={self.props.dataView!.scrollState}
             editingRowIndex={editingRowIndex}
             editingColumnIndex={editingColumnIndex}
             isEditorMounted={getIsEditing(this.props.tablePanelView)}
@@ -177,7 +164,7 @@ export class TableView extends React.Component<{
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
-            onContentBoundsChanged={bounds => this.infiniteScrollLoader!.contentBounds=bounds}
+            onContentBoundsChanged={bounds => this.props.dataView!.contentBounds=bounds}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.props.onTableKeyDown}
             refTable={this.refTable}
@@ -186,119 +173,6 @@ export class TableView extends React.Component<{
       </Provider>
     );
   }
-}
-
-interface IGridDimensionsData {
-  getTableViewProperties: () => IProperty[];
-  getRowCount: () => number;
-  getIsSelectionCheckboxes: () => boolean;
-  ctx: any;
-}
-
-class GridDimensions implements IGridDimensions {
-  constructor(data: IGridDimensionsData) {
-    Object.assign(this, data);
-  }
-
-  @computed get columnWidths(): Map<string, number> {
-    return new Map(this.tableViewProperties.map((prop) => [prop.id, prop.columnWidth]));
-  }
-
-  getTableViewProperties: () => IProperty[] = null as any;
-  getRowCount: () => number = null as any;
-  getIsSelectionCheckboxes: () => boolean = null as any;
-  ctx: any;
-
-  @computed get isSelectionCheckboxes() {
-    return this.getIsSelectionCheckboxes();
-  }
-
-  @computed get tableViewPropertiesOriginal() {
-    return this.getTableViewProperties();
-  }
-
-  @computed get tableViewProperties() {
-    return this.tableViewPropertiesOriginal;
-  }
-
-  @computed get rowCount() {
-    return this.getRowCount();
-  }
-
-  @computed get columnCount() {
-    return (
-      this.tableViewProperties.length
-    );
-  }
-
-  get contentWidth() {
-    return this.getColumnRight(this.columnCount - 1);
-  }
-
-  get contentHeight() {
-    return this.getRowBottom(this.rowCount - 1);
-  }
-
-  getColumnLeft(dataColumnIndex: number): number {
-    const displayedColumnIndex = this.dataColumnIndexToDisplayedIndex(dataColumnIndex);
-    return this.displayedColumnDimensionsCom[displayedColumnIndex].left;
-  }
-
-  getColumnRight(dataColumnIndex: number): number {
-    const displayedColumnIndex = this.dataColumnIndexToDisplayedIndex(dataColumnIndex);
-    return this.displayedColumnDimensionsCom[displayedColumnIndex].right;
-  }
-
-  dataColumnIndexToDisplayedIndex(dataColumnIndex: number){
-    return dataColumnIndex + getLeadingColumnCount(this.ctx);
-  }
-
-  getRowTop(rowIndex: number): number {
-    return rowIndex * this.getRowHeight(rowIndex);
-  }
-
-  getRowHeight(rowIndex: number): number {
-    return 20;
-  }
-
-  getRowBottom(rowIndex: number): number {
-    return this.getRowTop(rowIndex) + this.getRowHeight(rowIndex);
-  }
-
-  @action.bound setColumnWidth(columnId: string, newWidth: number) {
-    this.columnWidths.set(columnId, Math.max(newWidth, 20));
-  }
-
-  @computed get displayedColumnDimensionsCom():{left: number; width: number; right: number;}[] {
-    const isCheckBoxedTable = getIsSelectionCheckboxesShown(this.ctx);
-    const groupedColumnIds = getGroupingConfiguration(this.ctx).orderedGroupingColumnIds;
-    const tableColumnIds =  getTableViewProperties(this.ctx).map(prop => prop.id)
-    const columnWidths = this.columnWidths;
-
-    const widths = Array.from(
-      (function* () {
-        if (isCheckBoxedTable) yield 20;
-        yield* groupedColumnIds.map((id) => 20);
-        yield* tableColumnIds
-          .map((id) => columnWidths.get(id))
-          .filter((width) => width !== undefined) as number[];
-      })()
-    );
-    let acc = 0;
-    return Array.from(
-      (function* () {
-        for (let w of widths) {
-          yield {
-            left: acc,
-            width: w,
-            right: acc + w,
-          };
-          acc = acc + w;
-        }
-      })()
-    );
-  }
-
 }
 
 interface IHeaderRendererData {

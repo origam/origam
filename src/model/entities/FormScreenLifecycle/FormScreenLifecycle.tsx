@@ -304,7 +304,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: filter,
       Ordering: ordering ? [ordering] : [],
-      RowLimit: 999999,
+      RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: 0,
       ColumnNames: getColumnNamesToLoad(rootDataView),
       MasterRowId: undefined

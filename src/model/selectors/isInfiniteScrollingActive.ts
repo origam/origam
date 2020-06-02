@@ -1,6 +1,11 @@
-import {IDataView} from "../entities/types/IDataView";
 import {getDontRequestData} from "./getDontRequestData";
+import {getDataView} from "./DataView/getDataView";
 
 export function isInfiniteScrollingActive(ctx: any, dataViewAttributes: any) {
-  return getDontRequestData(ctx) && dataViewAttributes.IsRootGrid === "true";
+
+  const isRootGrid = dataViewAttributes
+    ? dataViewAttributes.IsRootGrid === "true"
+    : getDataView(ctx).isRootGrid
+
+    return getDontRequestData(ctx) && isRootGrid;
 }

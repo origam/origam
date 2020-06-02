@@ -14,7 +14,9 @@ import {isGroupRow} from "../rowCells/groupRowCells";
 import {onClick} from "../onClick";
 import {CPR} from "utils/canvas";
 import {onGroupHeaderToggleClick} from "../../../../../../model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
-import {flow} from "mobx";
+import {flow, runInAction} from "mobx";
+import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTable";
+import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInfiniteScrollingActive";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -103,7 +105,14 @@ export function drawGroupCell() {
           if (!row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0) {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
-          row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
+          runInAction(()=> {
+            if (!row.sourceGroup.isExpanded && isInfiniteScrollingActive(ctx, undefined)){
+              for (let group of getDataTable(ctx).groups) {
+                group.isExpanded = false;
+              }
+            }
+            row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
+          });
         })();
       },
     });

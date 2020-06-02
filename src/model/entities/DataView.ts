@@ -25,6 +25,13 @@ import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { ServerSideGrouper } from "./ServerSideGrouper";
 import { ClientSideGrouper } from "./ClientSideGrouper";
 import {getFormScreenLifecycle} from "../selectors/FormScreen/getFormScreenLifecycle";
+import {getTableViewProperties} from "../selectors/TablePanelView/getTableViewProperties";
+import {getIsSelectionCheckboxesShown} from "../selectors/DataView/getIsSelectionCheckboxesShown";
+import {getGroupingConfiguration} from "../selectors/TablePanelView/getGroupingConfiguration";
+import {flattenToTableRows} from "../../gui/Components/ScreenElements/Table/TableRendering/tableRows";
+import {GridDimensions} from "../../gui/Workbench/ScreenArea/TableView/GridDimensions";
+import {SimpleScrollState} from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
+import {BoundingRect} from "react-measure";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -358,6 +365,25 @@ export class DataView implements IDataView {
     getFormScreenLifecycle(this)
       .registerDisposer(() => this.serverSideGrouper.dispose());
   }
+
+  @computed get tableRows(){
+    const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnIds;
+    return groupedColumnIds.length === 0
+      ? getDataTable(this).rows
+      : flattenToTableRows(getDataTable(this).groups);
+  }
+
+  gridDimensions = new GridDimensions({
+    getTableViewProperties: () => getTableViewProperties(this),
+    getRowCount: () => this.tableRows.length,
+    getIsSelectionCheckboxes: () =>
+      getIsSelectionCheckboxesShown(this.tablePanelView),
+    ctx: this
+  });
+
+  scrollState = new SimpleScrollState(0, 0);
+
+  @observable contentBounds: BoundingRect | undefined;
 
   parent?: any;
 }

@@ -4,6 +4,11 @@ import {IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 import {getOrderingConfiguration} from "../../../../../model/selectors/DataView/getOrderingConfiguration";
+import {ScrollRowContainer} from "../../../../../model/entities/RowsContainer";
+import {InfiniteScrollLoader} from "../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {getDataView} from "../../../../../model/selectors/DataView/getDataView";
+import {joinWithAND, toFilterItem} from "../../../../../model/entities/OrigamApiHelpers";
+import {OpenGroupVisibleRowsMonitor} from "../../../../Workbench/ScreenArea/TableView/VisibleRowsMonitor";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];
@@ -52,9 +57,18 @@ export class ClientSideGroupItem implements IGroupTreeNode {
 export class GroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
     Object.assign(this, data);
+
+    const dataView = getDataView(this.grouper);
+    this.scrollLoader = new InfiniteScrollLoader({
+      ctx: this.grouper,
+      gridDimensions: dataView.gridDimensions,
+      scrollState: dataView.scrollState,
+      rowsContainer: this._childRows,
+      defaultFilter: this.composeGroupingFilter(),
+      visibleRowsMonitor: new OpenGroupVisibleRowsMonitor(this.grouper, dataView.gridDimensions, dataView.scrollState)
+    })
   }
   @observable childGroups: IGroupTreeNode[] = null as any;
-  @observable childRows: any[][] = null as any;
   columnId: string = null as any;
   columnValue: string = null as any;
   groupLabel: string = null as any;
@@ -63,6 +77,42 @@ export class GroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
+
+  scrollLoader: InfiniteScrollLoader;
+
+  _childRows: ScrollRowContainer = new ScrollRowContainer();
+
+  @computed get childRows(){
+      return this._childRows.rows;
+  }
+  set childRows(rows: any[][]){
+    if(rows.length > 0){
+      this.scrollLoader.start();
+    }
+    this._childRows.set(rows);
+  }
+
+  getAllParents() {
+    let parent = this.parent
+    const parents = []
+    while (parent) {
+      parents.push(parent);
+      parent = parent.parent
+    }
+    return parents;
+  }
+
+  composeGroupingFilter() {
+    const parents = this.getAllParents();
+    if(parents.length === 0){
+      return toFilterItem(this.columnId, "eq" ,this.columnValue)
+    }else{
+      const andOperands = parents
+        .concat([this])
+        .map(row => toFilterItem(row.columnId, "eq", row.columnValue))
+      return joinWithAND(andOperands);
+    }
+  }
 
   @observable isExpanded = false;
 }

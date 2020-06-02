@@ -116,6 +116,7 @@ export class ScrollRowContainer implements IRowsContainer {
     return this._maxRowNumberSeen;
   }
 
+  @computed
   get rows() {
     return this.rowChunks.flatMap(chunk => chunk.rows);
   }

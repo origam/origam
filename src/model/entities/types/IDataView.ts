@@ -10,6 +10,9 @@ import { IAction } from "./IAction";
 import { ILookupLoader } from "./ILookupLoader";
 import { ServerSideGrouper } from "../ServerSideGrouper";
 import { ClientSideGrouper } from "../ClientSideGrouper";
+import {IGridDimensions, IScrollState} from "../../../gui/Components/ScreenElements/Table/types";
+import {ITableRow} from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
+import {BoundingRect} from "react-measure";
 
 export interface IDataViewData {
   id: string;
@@ -100,6 +103,11 @@ export interface IDataView extends IDataViewData {
   restoreViewState(): void;
 
   start(): void;
+
+  scrollState: IScrollState;
+  tableRows: ITableRow[];
+  gridDimensions: IGridDimensions;
+  contentBounds: BoundingRect | undefined;
 
   parent?: any;
 }

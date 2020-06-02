@@ -1,40 +1,35 @@
 import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
 import {SimpleScrollState} from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import {IDataView} from "../../../../model/entities/types/IDataView";
-import {action, autorun, computed, flow, IReactionDisposer, observable, reaction} from "mobx";
-import {BoundingRect} from "react-measure";
-import {rangeQuery} from "../../../../utils/arrays";
+import {action, autorun, computed, flow, IReactionDisposer, reaction} from "mobx";
 import {getApi} from "../../../../model/selectors/getApi";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
-import {getOrderingConfiguration} from "../../../../model/selectors/DataView/getOrderingConfiguration";
 import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
 import {getSessionId} from "../../../../model/selectors/getSessionId";
 import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
 import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColumnNamesToLoad";
 import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
-import {getFilterConfiguration} from "../../../../model/selectors/DataView/getFilterConfiguration";
-import {joinWithAND, toFilterItem} from "../../../../model/entities/OrigamApiHelpers";
+import {joinWithAND} from "../../../../model/entities/OrigamApiHelpers";
 import {getApiFilters} from "../../../../model/selectors/DataView/getApiFilters";
 import {getOrdering} from "../../../../model/selectors/DataView/getOrdering";
+import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 
 export interface IInfiniteScrollLoaderData{
   gridDimensions: IGridDimensions;
   scrollState: SimpleScrollState;
   ctx: any;
   rowsContainer: ScrollRowContainer;
+  defaultFilter: string | undefined;
+  visibleRowsMonitor: IVisibleRowsMonitor;
 }
 
 export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
-  contentBounds: BoundingRect | undefined;
   start(): ()=>void;
-
   dispose(): void;
 }
 
 export const SCROLL_DATA_INCREMENT_SIZE = 100;
 
 export class NullIScrollLoader implements IInfiniteScrollLoader{
-  contentBounds: BoundingRect | undefined;
   ctx: any = null as any;
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
@@ -45,54 +40,38 @@ export class NullIScrollLoader implements IInfiniteScrollLoader{
 
   dispose(): void {
   }
+
+  defaultFilter: string | undefined;
+  visibleRowsMonitor: IVisibleRowsMonitor = null as any;
 }
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   private debugDisposer: IReactionDisposer | undefined;
   private reactionDisposer: IReactionDisposer | undefined;
+  visibleRowsMonitor: IVisibleRowsMonitor;
 
   constructor(data: IInfiniteScrollLoaderData) {
     Object.assign(this, data);
     this.rowsContainer.registerResetListener(() => this.handleRowContainerReset());
+    this.visibleRowsMonitor = new OpenGroupVisibleRowsMonitor(this.ctx, this.gridDimensions, this.scrollState);
   }
 
+  defaultFilter: string | undefined;
   lastRequestedStartOffset: number = 0;
   lastRequestedEndOffset: number = 0;
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
   ctx: any = null as any;
   rowsContainer: ScrollRowContainer = null as any;
-  @observable contentBounds: BoundingRect | undefined;
-
-  @computed
-  get visibleRowsRange() {
-    return rangeQuery(
-      (i) => this.gridDimensions.getRowBottom(i),
-      (i) => this.gridDimensions.getRowTop(i),
-      this.gridDimensions.rowCount,
-      this.scrollState.scrollTop,
-      this.scrollState.scrollTop + (this.contentBounds && this.contentBounds.height || 0)
-    );
-  }
-
-  @computed
-  get visibleRowsFirstIndex() {
-    return this.visibleRowsRange.firstGreaterThanNumber;
-  }
-
-  @computed
-  get visibleRowsLastIndex() {
-    return this.visibleRowsRange.lastLessThanNumber;
-  }
 
   @computed
   get distanceToStart() {
-    return this.visibleRowsFirstIndex;
+    return this.visibleRowsMonitor.firstIndex;
   }
 
   @computed
   get distanceToEnd() {
-    return this.rowsContainer.rows.length - this.visibleRowsLastIndex;
+    return this.rowsContainer.rows.length - this.visibleRowsMonitor.lastIndex;
   }
 
   @computed
@@ -113,16 +92,16 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   @action.bound
   public start() {
     this.debugDisposer =  autorun(() => {
-      console.log("firstLine: " + this.visibleRowsRange.firstGreaterThanNumber);
-      console.log("lastLine: " + this.visibleRowsRange.lastLessThanNumber);
+      console.log("distanceToStart: " + this.distanceToStart);
+      console.log("distanceToEnd: " + this.distanceToEnd);
       console.log("headLoadingNeeded(): " + this.headLoadingNeeded);
       console.log("tailLoadingNeeded(): " + this.tailLoadingNeeded);
     });
     this.reactionDisposer = reaction(
       () => {
         return [
-          this.visibleRowsFirstIndex,
-          this.visibleRowsLastIndex,
+          this.visibleRowsMonitor.firstIndex,
+          this.visibleRowsMonitor.lastIndex,
           this.headLoadingNeeded,
           this.tailLoadingNeeded
         ];
@@ -144,6 +123,18 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.lastRequestedEndOffset = 0;
   }
 
+  getFilters(){
+    const filters=[];
+    if(this.defaultFilter){
+      filters.push(this.defaultFilter);
+    }
+    const apiFilters = getApiFilters(this.ctx);
+    if(apiFilters) {
+      filters.push(apiFilters);
+    }
+    return joinWithAND(filters);
+  }
+
   private appendLines = flow(function* (
     this: InfiniteScrollLoader
   ) {
@@ -161,7 +152,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
-      Filter: getApiFilters(this.ctx),
+      Filter: this.getFilters(),
       Ordering: getOrdering(this.ctx),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextEndOffset,
@@ -188,7 +179,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
-      Filter: getApiFilters(this.ctx),
+      Filter: this.getFilters(),
       Ordering: getOrdering(this.ctx),
       RowLimit: SCROLL_DATA_INCREMENT_SIZE,
       RowOffset: this.rowsContainer.nextStartOffset,
