@@ -112,6 +112,7 @@ namespace Origam.ServerCore
             services.AddScoped<SignInManager<IOrigamUser>>();
             services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
             services.AddScoped<UserManager<IOrigamUser>>();
+            services.AddSingleton<LanguageConfig>();
             services.AddLocalization();
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
@@ -164,9 +165,9 @@ namespace Origam.ServerCore
             
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.DefaultRequestCulture = languageConfig.Default;
-                options.SupportedCultures = languageConfig.Allowed;
-                options.SupportedUICultures = languageConfig.Allowed;
+                options.DefaultRequestCulture = languageConfig.DefaultCulture;
+                options.SupportedCultures = languageConfig.AllowedCultures;
+                options.SupportedUICultures = languageConfig.AllowedCultures;
                 options.RequestCultureProviders.Insert(0,
                     new CookieRequestCultureProvider{CookieName = "origamCurrentLocale"});
             });

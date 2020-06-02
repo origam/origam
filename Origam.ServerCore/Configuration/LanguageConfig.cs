@@ -25,28 +25,44 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
+using Origam.Extensions;
 
 namespace Origam.ServerCore.Configuration
 {
     public class LanguageConfig
     {
-        public RequestCulture Default { get; }
-        public CultureInfo[] Allowed { get; }
-        
+        public RequestCulture DefaultCulture { get; }
+        public CultureInfo[] AllowedCultures { get; }
+        public CultureItem[] CultureItems { get; }
+
         public LanguageConfig(IConfiguration configuration)
         {
             IConfigurationSection languageSection = configuration
                 .GetSection("LanguageConfig");
             string defaultCulture = languageSection
                 .GetValue<string>("Default");
-            Default = new RequestCulture(defaultCulture);
+            DefaultCulture = new RequestCulture(defaultCulture);
+            
+            CultureItems = languageSection
+                .GetSection("Allowed")
+                .GetChildren()
+                .Select(section => 
+                    new CultureItem
+                    {
+                        CultureName = section.GetValue<string>("Culture"),
+                        Caption = section.GetValue<string>("Caption"),
+                    })
+                .ToArray();
 
-            string[] allowedCultures = languageSection
-                .GetSection("Allowed").Get<string[]>() 
-                                       ?? new []{ defaultCulture};
-            Allowed = allowedCultures 
-                .Select(x => new CultureInfo(x))
+            AllowedCultures = CultureItems
+                .Select(item => new CultureInfo(item.CultureName))
                 .ToArray();
         }
+    }
+
+    public class CultureItem
+    {
+        public string CultureName { get; set; }
+        public string Caption { get; set; }
     }
 }

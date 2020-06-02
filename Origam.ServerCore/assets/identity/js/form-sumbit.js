@@ -15,14 +15,21 @@ Array.prototype.forEach.call(
         });
 });
 
+const languageForm = document.getElementById("languageSelectForm");
+const languageLinks = document.getElementsByClassName("languageLink");
+Array.prototype.forEach.call(
+    languageLinks, element => {
+        element.addEventListener("click",function(event){
+            const input = document.createElement("input");
+            input.type = "hidden"
+            input.name = "culture"
+            input.value = element.getAttribute("value");
+            languageForm.append(input)
+            languageForm.submit();
+            event.preventDefault();
+        });
+});
 
-const languageSelect = document.getElementById("languageSelect");
-const languageSelectForm = document.getElementById("languageSelectForm");
-if(languageSelect){
-    languageSelect.addEventListener("click",function(event){
-        languageSelectForm.submit();
-    });
-}
 
 function onLoginEnter(e) {
     if (e.key === "Enter") {
