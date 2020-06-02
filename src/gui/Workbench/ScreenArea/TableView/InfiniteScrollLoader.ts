@@ -27,7 +27,7 @@ export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
   dispose(): void;
 }
 
-export const SCROLL_DATA_INCREMENT_SIZE = 100;
+export const SCROLL_DATA_INCREMENT_SIZE = 1000;
 
 export class NullIScrollLoader implements IInfiniteScrollLoader{
   ctx: any = null as any;
