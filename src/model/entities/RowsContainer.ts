@@ -136,13 +136,13 @@ export class ScrollRowContainer implements IRowsContainer {
   @action.bound
   set(rows: any[][]) {
     this.clear();
-    this.rowChunks.push(new RowChunk(0, rows));
+    this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
     this.notifyResetListeners()
   }
 
   substitute(row: any[]): void {
     for (let chunk of this.rowChunks) {
-      const foundAndSubstituted = chunk.trySubstitute(row, this.rowIdGetter);
+      const foundAndSubstituted = chunk.trySubstitute(row);
       if (foundAndSubstituted) {
         return;
       }
@@ -176,12 +176,11 @@ export class ScrollRowContainer implements IRowsContainer {
   @action.bound
   prependRecords(rows: any[][]) {
     if (this.rowChunks.length === 0) {
-      this.rowChunks.push(new RowChunk(0, rows));
+      this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
       return;
     }
     const rowOffset = this.rowChunks[0].rowOffset - ROW_CHUNK_SIZE;
-    // if(rowOffset < 0) return;
-    this.rowChunks.unshift(new RowChunk(rowOffset, rows))
+    this.rowChunks.unshift(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined))
     if (this.rowChunks.length > this.maxChunksToHold) {
       this.rowChunks.pop();
     }
@@ -190,14 +189,25 @@ export class ScrollRowContainer implements IRowsContainer {
   @action.bound
   appendRecords(rows: any[][]) {
     if (this.rowChunks.length === 0) {
-      this.rowChunks.push(new RowChunk(0, rows));
+      this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
       return;
     }
     const rowOffset = this.rowChunks[this.rowChunks.length - 1].rowOffset + ROW_CHUNK_SIZE;
-    this.rowChunks.push(new RowChunk(rowOffset, rows))
+    const filteredRows = this.filterDuplicateRecords(rows);
+    const isFinal = rows.length < ROW_CHUNK_SIZE;
+    this.rowChunks.push(new RowChunk(rowOffset, filteredRows, this.rowIdGetter, isFinal))
     if (this.rowChunks.length > this.maxChunksToHold) {
       this.rowChunks.shift();
     }
+  }
+
+  filterDuplicateRecords(rows: any[][]){
+    return rows.filter(row => !this.isAlreadyInAChunk(row))
+  }
+
+  isAlreadyInAChunk(row: any[]){
+    return this.rowChunks
+      .some(rowChunk => rowChunk.has(row));
   }
 
   @computed
@@ -219,8 +229,14 @@ export class ScrollRowContainer implements IRowsContainer {
 class RowChunk {
   rowOffset: number;
   rows: any[];
+  private rowIdGetter: (row: any[]) => string;
+  isFinal: boolean;
 
-  constructor(rowOffset: number, rows: any[]) {
+  constructor(rowOffset: number, rows: any[], rowIdGetter: (row: any[]) => string, isFinal: boolean | undefined) {
+    this.rowIdGetter = rowIdGetter;
+    this.isFinal = isFinal === undefined
+      ? rows.length < ROW_CHUNK_SIZE
+      :isFinal  ;
     if (rowOffset < 0) {
       throw new Error("Offset cannot be less than 0");
     }
@@ -232,16 +248,12 @@ class RowChunk {
     return this.rowOffset === 0;
   }
 
-  get isFinal() {
-    return this.rows.length < ROW_CHUNK_SIZE;
-  }
-
   get length() {
     return this.rows.length;
   }
 
-  trySubstitute(row: any[], rowIdGetter: (row: any[]) => string) {
-    const index = this.rows.findIndex(row => rowIdGetter(row) === rowIdGetter(row)
+  trySubstitute(row: any[]) {
+    const index = this.rows.findIndex(row => this.rowIdGetter(row) === this.rowIdGetter(row)
     );
     if (index > -1) {
       this.rows.splice(index, 1, row);
@@ -249,6 +261,10 @@ class RowChunk {
     } else {
       return false;
     }
+  }
+
+  has(row: any[]) {
+    return this.rows.some(chunkRow => this.rowIdGetter(chunkRow) === this.rowIdGetter(row));
   }
 }
 
