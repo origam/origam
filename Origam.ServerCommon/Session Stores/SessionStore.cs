@@ -1956,13 +1956,16 @@ namespace Origam.Server
                 // merge to the list
                 if (IsLazyLoadedEntity(newRow.Table.TableName))
                 {
-                    DataTable listTable = this.DataList.Tables[this.DataListEntity];
-                    DataRow newListRow = listTable.NewRow();
-                    MergeRow(newRow, newListRow);
-                    listTable.Rows.Add(newListRow);
-                    newListRow.AcceptChanges();
+                    if (this.DataList != null)
+                    {
+                        DataTable listTable = this.DataList.Tables[this.DataListEntity];
+                        DataRow newListRow = listTable.NewRow();
+                        MergeRow(newRow, newListRow);
+                        listTable.Rows.Add(newListRow);
+                        newListRow.AcceptChanges();
 
-                    OnNewRecord(newRow.Table.TableName, DatasetTools.PrimaryKey(newRow)[0]);
+                        OnNewRecord(newRow.Table.TableName, DatasetTools.PrimaryKey(newRow)[0]);
+                    }
                 }
             }
         }
