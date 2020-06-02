@@ -54,7 +54,7 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   }
 }
 
-export class GroupItem implements IGroupTreeNode {
+export class ServerSideGroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
     Object.assign(this, data);
 
