@@ -63,6 +63,18 @@
 	"BehindProxy":  "true",
     "LanguageConfig":{
         "Default": "en-US",
-        "Allowed":["en-US", "cs-CZ", "de-DE"]
+        "Allowed":[
+            {
+                "Culture": "en-US",
+                "Caption": "English"
+            },
+            {
+                "Culture": "cs-CZ",
+                "Caption": "Cesky"
+            },      {
+                "Culture": "de-DE",
+                "Caption": "Deutch"
+            }
+        ]
     }
 }
