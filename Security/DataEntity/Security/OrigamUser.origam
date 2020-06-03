@@ -51,6 +51,8 @@
       dataType="UniqueIdentifier"
       excludeFromAllFields="false"
       excludeFromAuditing="false"
+      foreignKeyEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
       x:id="2ecb3314-77d4-477c-9d2e-38d7b28cfaec"
       isPrimaryKey="false"
       mappedColumnName="refBusinessPartnerId"
