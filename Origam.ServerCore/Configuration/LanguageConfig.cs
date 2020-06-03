@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
+using System;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Localization;
@@ -38,19 +39,20 @@ namespace Origam.ServerCore.Configuration
         public LanguageConfig(IConfiguration configuration)
         {
             IConfigurationSection languageSection = configuration
-                .GetSection("LanguageConfig");
+                .GetSectionOrThrow("LanguageConfig");
+            
             string defaultCulture = languageSection
-                .GetValue<string>("Default");
+                .GetStringOrThrow("Default");
             DefaultCulture = new RequestCulture(defaultCulture);
             
             CultureItems = languageSection
-                .GetSection("Allowed")
+                .GetSectionOrThrow("Allowed")
                 .GetChildren()
                 .Select(section => 
                     new CultureItem
                     {
-                        CultureName = section.GetValue<string>("Culture"),
-                        Caption = section.GetValue<string>("Caption"),
+                        CultureName = section.GetStringOrThrow("Culture"),
+                        Caption = section.GetStringOrThrow("Caption"),
                     })
                 .ToArray();
 

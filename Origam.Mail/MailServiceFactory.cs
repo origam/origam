@@ -43,10 +43,10 @@ namespace Origam.Mail
 #if NETSTANDARD
             var mailConfig = configuration.GetSection("MailConfig");
             string userName = mailConfig["UserName"];
-            bool useSsl = mailConfig.GetBool("UseSsl");
+            bool useSsl = mailConfig.GetBoolOrThrow("UseSsl");
             string password = mailConfig["Password"];
             string server = mailConfig["Server"];
-            int port = mailConfig.GetInt("Port");
+            int port = mailConfig.GetIntOrThrow("Port");
 
             return new SystemNetMailService(
                 server:server, port:port, userName: userName, password:password, useSsl:useSsl);            
