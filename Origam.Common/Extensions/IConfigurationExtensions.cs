@@ -14,5 +14,15 @@ namespace Origam.Extensions
             }
             return section;
         }
+        
+        public static string[] GetStringArrayOrThrow(this IConfiguration section)
+        {
+            string[] stringArray = section.Get<string[]>();
+            if (stringArray == null || stringArray.Length == 0)
+            {
+                throw new ArgumentException($"String array in section \"{section}\" was not found in configuration or was empty. Check your appsettings.json");
+            }
+            return stringArray;
+        }
     }
 }

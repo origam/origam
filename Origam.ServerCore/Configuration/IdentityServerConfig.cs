@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Origam.Extensions;
 
 namespace Origam.ServerCore.Configuration
 {
@@ -42,13 +43,8 @@ namespace Origam.ServerCore.Configuration
 
         public IdentityServerConfig(IConfiguration configuration)
         {
-            IConfigurationSection identityServerSection = configuration.GetSection("IdentityServerConfig");
-            PathToJwtCertificate = identityServerSection.GetValue<string>("PathToJwtCertificate");
-            if (string.IsNullOrWhiteSpace(PathToJwtCertificate))
-            {
-                throw new ArgumentException($"{nameof(PathToJwtCertificate)} mut be specified.");
-            }
-
+            IConfigurationSection identityServerSection = configuration.GetSectionOrThrow("IdentityServerConfig");
+            PathToJwtCertificate = identityServerSection.GetStringOrThrow("PathToJwtCertificate");
             PasswordForJwtCertificate = identityServerSection.GetValue<string>("PasswordForJwtCertificate");
             UseGoogleLogin = identityServerSection.GetValue("UseGoogleLogin", false);
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
@@ -61,11 +57,11 @@ namespace Origam.ServerCore.Configuration
                 WebClient = new WebClient
                 {
                     PostLogoutRedirectUris = webClientSection
-                        .GetSection("PostLogoutRedirectUris")
-                        .Get<string[]>(),
+                        .GetSectionOrThrow("PostLogoutRedirectUris")
+                        .GetStringArrayOrThrow(),
                     RedirectUris = webClientSection
-                        .GetSection("RedirectUris")
-                        .Get<string[]>()
+                        .GetSectionOrThrow("RedirectUris")
+                        .GetStringArrayOrThrow()
                 };
             }
             
@@ -77,14 +73,12 @@ namespace Origam.ServerCore.Configuration
                 MobileClient = new MobileClient
                 {
                     PostLogoutRedirectUris = mobileClientSection
-                        .GetSection("PostLogoutRedirectUris")
-                        .Get<string[]>(),
+                        .GetSectionOrThrow("PostLogoutRedirectUris")
+                        .GetStringArrayOrThrow(),
                     RedirectUris = mobileClientSection
-                        .GetSection("RedirectUris")
-                        .Get<string[]>(),
-                    ClientSecret= mobileClientSection
-                                      .GetValue<string>("ClientSecret") 
-                                  ?? throw new Exception("ClientSecret not found in config")
+                        .GetSectionOrThrow("RedirectUris")
+                        .GetStringArrayOrThrow(),
+                    ClientSecret= mobileClientSection.GetStringOrThrow("ClientSecret")
                 }; 
             }
             
@@ -92,9 +86,9 @@ namespace Origam.ServerCore.Configuration
                 .GetSection("ServerClient");
             if (identityServerSection.GetChildren().Count() != 0)
             {
-                ServerClient = new ServerClient()
+                ServerClient = new ServerClient
                 {
-                    ClientSecret = serverClientSection.GetValue<string>("ClientSecret")
+                    ClientSecret = serverClientSection.GetStringOrThrow("ClientSecret")
                 };
             }
         }

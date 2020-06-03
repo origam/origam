@@ -37,7 +37,7 @@ namespace Origam.Extensions
             }
             return stringValue;
         }
-        
+
         public static bool GetBoolOrThrow(this IConfigurationSection section, string key)
         {
             string stringValue = section.GetStringOrThrow(key);
@@ -64,7 +64,7 @@ namespace Origam.Extensions
             var subSection = section.GetSection(key);
             if (!subSection.Exists())
             {
-                throw new ArgumentException($"Sub section \"{key}\" was not found in \"{section.Path}\". Check your appsettings.json");
+                throw new ArgumentException($"Sub section \"{key}\" was not found in \"{section.Path}\" or it was empty. Check your appsettings.json");
             }
             return subSection;
         }        
