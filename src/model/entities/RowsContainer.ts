@@ -94,12 +94,12 @@ export class ListRowContainer implements IRowsContainer {
 }
 
 const ROW_CHUNK_SIZE: number = SCROLL_DATA_INCREMENT_SIZE;
+const MAX_CHUNKS_TO_HOLD = 20;
 
 export class ScrollRowContainer implements IRowsContainer {
 
   @observable
   rowChunks: RowChunk[] = [];
-  maxChunksToHold = 3;
 
   rowIdGetter: (row: any[]) => string = null as any
   _maxRowNumberSeen = 0;
@@ -181,7 +181,7 @@ export class ScrollRowContainer implements IRowsContainer {
     }
     const rowOffset = this.rowChunks[0].rowOffset - ROW_CHUNK_SIZE;
     this.rowChunks.unshift(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined))
-    if (this.rowChunks.length > this.maxChunksToHold) {
+    if (this.rowChunks.length > MAX_CHUNKS_TO_HOLD) {
       this.rowChunks.pop();
     }
   }
@@ -196,7 +196,7 @@ export class ScrollRowContainer implements IRowsContainer {
     const filteredRows = this.filterDuplicateRecords(rows);
     const isFinal = rows.length < ROW_CHUNK_SIZE;
     this.rowChunks.push(new RowChunk(rowOffset, filteredRows, this.rowIdGetter, isFinal))
-    if (this.rowChunks.length > this.maxChunksToHold) {
+    if (this.rowChunks.length > MAX_CHUNKS_TO_HOLD) {
       this.rowChunks.shift();
     }
   }
