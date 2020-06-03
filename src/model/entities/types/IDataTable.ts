@@ -3,12 +3,18 @@ import { IAdditionalRowData } from "./IAdditionalRecordData";
 import { IDataSourceField } from "./IDataSourceField";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {IRowsContainer} from "../RowsContainer";
+import {IFormScreenLifecycle02} from "./IFormScreenLifecycle";
+import {IOrderingConfiguration} from "./IOrderingConfiguration";
+import {IFilterConfiguration} from "./IFilterConfiguration";
 
 export interface IDataTableData {
-  rowsContainer: IRowsContainer;
+  formScreenLifecycle: IFormScreenLifecycle02;
+  dataViewAttributes: any;
+  orderingConfiguration: IOrderingConfiguration;
+  filterConfiguration: IFilterConfiguration;
 }
 
-export interface IDataTable extends IDataTableData {
+export interface IDataTable {
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
@@ -16,6 +22,7 @@ export interface IDataTable extends IDataTableData {
   additionalRowData: Map<string, IAdditionalRowData>;
   maxRowCountSeen: number;
   groups: IGroupTreeNode[];
+  rowsContainer: IRowsContainer;
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;

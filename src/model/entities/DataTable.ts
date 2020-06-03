@@ -9,6 +9,7 @@ import {IDataSourceField} from "./types/IDataSourceField";
 import {getGrouper} from "model/selectors/DataView/getGrouper";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {IRowsContainer} from "./RowsContainer";
+import {getRowContainer} from "../selectors/getRowContainer";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -16,7 +17,12 @@ export class DataTable implements IDataTable {
 
   constructor(data: IDataTableData) {
     Object.assign(this, data);
-    this.rowsContainer.rowIdGetter = (row: any[]) => this.getRowId(row);
+    this.rowsContainer = getRowContainer(
+      data.formScreenLifecycle,
+      data.dataViewAttributes,
+      data.orderingConfiguration,
+      data.filterConfiguration,
+      (row: any[]) => this.getRowId(row))
   }
 
   get allRows(){

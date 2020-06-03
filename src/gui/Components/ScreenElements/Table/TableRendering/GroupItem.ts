@@ -9,6 +9,7 @@ import {InfiniteScrollLoader} from "../../../../Workbench/ScreenArea/TableView/I
 import {getDataView} from "../../../../../model/selectors/DataView/getDataView";
 import {joinWithAND, toFilterItem} from "../../../../../model/entities/OrigamApiHelpers";
 import {OpenGroupVisibleRowsMonitor} from "../../../../Workbench/ScreenArea/TableView/VisibleRowsMonitor";
+import {getDataTable} from "../../../../../model/selectors/DataView/getDataTable";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];
@@ -56,6 +57,8 @@ export class ClientSideGroupItem implements IGroupTreeNode {
 
 export class ServerSideGroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
+    const dataTable = getDataTable(data.grouper);
+    this._childRows = new ScrollRowContainer((row: any[]) => dataTable.getRowId(row));
     Object.assign(this, data);
 
     const dataView = getDataView(this.grouper);
@@ -80,7 +83,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
 
   scrollLoader: InfiniteScrollLoader;
 
-  _childRows: ScrollRowContainer = new ScrollRowContainer();
+  _childRows: ScrollRowContainer;
 
   @computed get childRows(){
       return this._childRows.rows;

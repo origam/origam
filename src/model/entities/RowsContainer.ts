@@ -1,12 +1,10 @@
 import {action, computed, observable} from "mobx";
 import {SCROLL_DATA_INCREMENT_SIZE} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {OrderingConfiguration} from "./OrderingConfiguration";
-import {FilterConfiguration} from "./FilterConfiguration";
+import {IFilterConfiguration} from "./types/IFilterConfiguration";
+import {IOrderingConfiguration} from "./types/IOrderingConfiguration";
 
 export interface IRowsContainer {
   clear(): void;
-
-  rowIdGetter(row: any[]): string
 
   delete(row: any[]): void;
 
@@ -24,10 +22,10 @@ export interface IRowsContainer {
 }
 
 export class ListRowContainer implements IRowsContainer {
-  private orderingConfiguration: OrderingConfiguration;
-  private filterConfiguration: FilterConfiguration;
+  private orderingConfiguration: IOrderingConfiguration;
+  private filterConfiguration: IFilterConfiguration;
 
-  constructor(orderingConfiguration: OrderingConfiguration, filterConfiguration: FilterConfiguration) {
+  constructor(orderingConfiguration: IOrderingConfiguration, filterConfiguration: IFilterConfiguration) {
     this.orderingConfiguration = orderingConfiguration;
     this.filterConfiguration = filterConfiguration;
   }
@@ -97,11 +95,14 @@ const ROW_CHUNK_SIZE: number = SCROLL_DATA_INCREMENT_SIZE;
 const MAX_CHUNKS_TO_HOLD = 20;
 
 export class ScrollRowContainer implements IRowsContainer {
+  constructor(rowIdGetter: (row: any[]) => string) {
+    this.rowIdGetter=rowIdGetter;
+  }
+
 
   @observable
   rowChunks: RowChunk[] = [];
-
-  rowIdGetter: (row: any[]) => string = null as any
+  private readonly rowIdGetter: (row: any[]) => string;
   _maxRowNumberSeen = 0;
 
   @computed

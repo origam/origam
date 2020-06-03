@@ -1,11 +1,13 @@
 import {ListRowContainer, ScrollRowContainer} from "../entities/RowsContainer";
 import {isInfiniteScrollingActive} from "./isInfiniteScrollingActive";
-import {OrderingConfiguration} from "../entities/OrderingConfiguration";
-import {FilterConfiguration} from "../entities/FilterConfiguration";
+import {IOrderingConfiguration} from "../entities/types/IOrderingConfiguration";
+import {IFilterConfiguration} from "../entities/types/IFilterConfiguration";
 
 export function getRowContainer(ctx: any, dataViewAttributes: any,
-                                orderingConfiguration: OrderingConfiguration, filterConfiguration: FilterConfiguration) {
+                                orderingConfiguration: IOrderingConfiguration,
+                                filterConfiguration: IFilterConfiguration,
+                                rowIdGetter: (row: any[]) => string) {
   return isInfiniteScrollingActive(ctx, dataViewAttributes)
-    ? new ScrollRowContainer()
+    ? new ScrollRowContainer(rowIdGetter)
     : new ListRowContainer(orderingConfiguration, filterConfiguration);
 }
