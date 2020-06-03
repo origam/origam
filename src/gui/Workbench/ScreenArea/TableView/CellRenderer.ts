@@ -15,7 +15,6 @@ import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePane
 import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
 import { CPR } from "../../../../utils/canvas";
 import { IRenderCellArgs, IRenderedCell } from "../../../Components/ScreenElements/Table/types";
-import { onTableCellClick } from "model/actions-ui/DataView/TableView/onTableCellClick";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
@@ -31,26 +30,13 @@ export interface ICellRenderer extends ICellRendererData {}
 export class CellRenderer implements ICellRenderer {
   constructor(data: ICellRendererData) {
     Object.assign(this, data);
-    this.onTableCellClick = onTableCellClick(this.tablePanelView);
   }
 
   tablePanelView: ITablePanelView = null as any;
 
-  onTableCellClick: any;
-
   @bind
   renderCell({ rowIndex, columnIndex, rowHeight, columnWidth, onCellClick, ctx }: IRenderCellArgs) {
     const cell = this.getCell(rowIndex, columnIndex);
-    onCellClick.subscribe((event: any) => {
-      //console.log("click", event.isDouble);
-
-      this.onTableCellClick(
-        event,
-        rowIndex,
-        this.isSelectionCheckboxes ? columnIndex - 1 : columnIndex
-      );
-    });
-
     const cellPaddingLeft = columnIndex === 0 ? 25 : 15;
 
     /* BACKGROUND FILL - to make a line under the row */
@@ -222,11 +208,7 @@ export class CellRenderer implements ICellRenderer {
     const property = getTableViewPropertyByIdx(this.tablePanelView, columnIndex);
 
     if (property.isLookup) {
-      if (property.column === "TagInput") {
-        text = (this.getCellText(rowIndex, columnIndex) || []).join(", ");
-      } else {
-        text = this.getCellText(rowIndex, columnIndex);
-      }
+      text = this.getCellText(rowIndex, columnIndex);
       isLoading = property.lookup!.isLoading(value);
       isLink = selectors.column.isLinkToForm(property);
     }

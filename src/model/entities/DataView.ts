@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import {action, computed, observable} from "mobx";
 import { getParentRow } from "model/selectors/DataView/getParentRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
@@ -17,12 +17,21 @@ import { getBindingToParent } from "model/selectors/DataView/getBindingToParent"
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getBindingParent } from "model/selectors/DataView/getBindingParent";
-import { IRowState } from "./types/IRowState";
 import { ILookupLoader } from "./types/ILookupLoader";
 import bind from "bind-decorator";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { ServerSideGrouper } from "./ServerSideGrouper";
+import { ClientSideGrouper } from "./ClientSideGrouper";
+import {getFormScreenLifecycle} from "../selectors/FormScreen/getFormScreenLifecycle";
+import {getTableViewProperties} from "../selectors/TablePanelView/getTableViewProperties";
+import {getIsSelectionCheckboxesShown} from "../selectors/DataView/getIsSelectionCheckboxesShown";
+import {getGroupingConfiguration} from "../selectors/TablePanelView/getGroupingConfiguration";
+import {flattenToTableRows} from "../../gui/Components/ScreenElements/Table/TableRendering/tableRows";
+import {GridDimensions} from "../../gui/Workbench/ScreenArea/TableView/GridDimensions";
+import {SimpleScrollState} from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
+import {BoundingRect} from "react-measure";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -43,6 +52,8 @@ export class DataView implements IDataView {
     this.tablePanelView.parent = this;
     this.formPanelView.parent = this;
     this.lookupLoader.parent = this;
+    this.clientSideGrouper.parent = this;
+    this.serverSideGrouper.parent = this;
   }
 
   isReorderedOnClient: boolean = true;
@@ -78,6 +89,8 @@ export class DataView implements IDataView {
   tablePanelView: ITablePanelView = null as any;
   formPanelView: IFormPanelView = null as any;
   lookupLoader: ILookupLoader = null as any;
+  serverSideGrouper: ServerSideGrouper = null as any;
+  clientSideGrouper: ClientSideGrouper = null as any;
 
   @observable selectedRowIdsMap: Map<string, boolean> = new Map();
 
@@ -102,6 +115,11 @@ export class DataView implements IDataView {
     return Array.from(this.selectedRowIdsMap.keys());
   }
 
+  isSelected(id: string): boolean {
+    if(!this.selectedRowIdsMap.has(id)) return false;
+    return this.selectedRowIdsMap.get(id)!;
+  }
+
   @action.bound addSelectedRowId(id: string) {
     this.selectedRowIdsMap.set(id, true);
   }
@@ -124,8 +142,8 @@ export class DataView implements IDataView {
       : undefined;
   }
 
-  @computed get visibleRowCount() {
-    return this.dataTable.visibleRowCount;
+  @computed get maxRowCountSeen() {
+    return this.dataTable.maxRowCountSeen;
   }
 
   @computed get selectedRow(): any[] | undefined {
@@ -343,7 +361,29 @@ export class DataView implements IDataView {
 
   @action.bound start() {
     this.lifecycle.start();
+    this.serverSideGrouper.start();
+    getFormScreenLifecycle(this)
+      .registerDisposer(() => this.serverSideGrouper.dispose());
   }
+
+  @computed get tableRows(){
+    const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnIds;
+    return groupedColumnIds.length === 0
+      ? getDataTable(this).rows
+      : flattenToTableRows(getDataTable(this).groups);
+  }
+
+  gridDimensions = new GridDimensions({
+    getTableViewProperties: () => getTableViewProperties(this),
+    getRowCount: () => this.tableRows.length,
+    getIsSelectionCheckboxes: () =>
+      getIsSelectionCheckboxesShown(this.tablePanelView),
+    ctx: this
+  });
+
+  scrollState = new SimpleScrollState(0, 0);
+
+  @observable contentBounds: BoundingRect | undefined;
 
   parent?: any;
 }

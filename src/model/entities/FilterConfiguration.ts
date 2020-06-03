@@ -49,9 +49,10 @@ export class FilterConfiguration implements IFilterConfiguration {
     }
   }
 
-  get filteringFunction(): (dataTable: IDataTable) => (row: any[]) => boolean {
-    return (dataTable: IDataTable) => (row: any[]) => {
+  get filteringFunction(): () => (row: any[]) => boolean {
+    return () => (row: any[]) => {
       const termFn = (term: any) => {
+        const dataTable = getDataTable(this);
         const prop = dataTable.getPropertyById(term.propertyId)!;
         /*if(term.setting.val1 === undefined) return true;
         if(term.setting.val2 === undefined) return true;
@@ -419,17 +420,6 @@ export class FilterConfiguration implements IFilterConfiguration {
           this.applyNewFiltering();
         },
         { equals: comparer.structural }
-      ),
-      reaction(
-        () => {
-          return [this.dataView.selectedRow, this.dataView.dataTable.rows.length];
-        },
-        () => {
-          if (!this.dataView.selectedRow && this.dataView.dataTable.rows.length > 0) {
-            this.dataView.selectFirstRow();
-            console.log("sfr", this.dataView.modelInstanceId, this.dataView.selectedRow);
-          }
-        }
       )
     );
   }
@@ -449,9 +439,6 @@ export class FilterConfiguration implements IFilterConfiguration {
             prop.lookup!.resolveList(new Set(dataTable.getAllValuesOfProp(prop)))
           )
         );
-        //dataTable.setFilteringFn(this.filteringFunction);
-      } else {
-        //dataTable.setFilteringFn(undefined);
       }
     }
   });

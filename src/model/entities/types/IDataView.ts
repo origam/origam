@@ -7,8 +7,12 @@ import { IDataViewLifecycle } from "../DataViewLifecycle/types/IDataViewLifecycl
 import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
 import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
 import { IAction } from "./IAction";
-import { IRowState } from "./IRowState";
 import { ILookupLoader } from "./ILookupLoader";
+import { ServerSideGrouper } from "../ServerSideGrouper";
+import { ClientSideGrouper } from "../ClientSideGrouper";
+import {IGridDimensions, IScrollState} from "../../../gui/Components/ScreenElements/Table/types";
+import {ITableRow} from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
+import {BoundingRect} from "react-measure";
 
 export interface IDataViewData {
   id: string;
@@ -42,10 +46,12 @@ export interface IDataViewData {
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
   lookupLoader: ILookupLoader;
-  
+  serverSideGrouper: ServerSideGrouper; 
+  clientSideGrouper: ClientSideGrouper;
 }
 
 export interface IDataView extends IDataViewData {
+ 
   $type_IDataView: 1;
 
   isBindingRoot: boolean;
@@ -60,7 +66,7 @@ export interface IDataView extends IDataViewData {
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
-  visibleRowCount: number;
+  maxRowCountSeen: number;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
   bindingParametersFromParent: {[key: string]: string};
@@ -70,9 +76,8 @@ export interface IDataView extends IDataViewData {
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
-
-
-
+  
+  isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
   selectedRowIds: string[];
   isAnyRowIdSelected: boolean;
@@ -98,6 +103,11 @@ export interface IDataView extends IDataViewData {
   restoreViewState(): void;
 
   start(): void;
+
+  scrollState: IScrollState;
+  tableRows: ITableRow[];
+  gridDimensions: IGridDimensions;
+  contentBounds: BoundingRect | undefined;
 
   parent?: any;
 }

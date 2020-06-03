@@ -16,7 +16,8 @@ export default class Scrollee extends React.Component<IScrolleeProps> {
         className={S.scrollee}
         style={{
           width: this.props.width,
-          height: this.props.height
+          height: this.props.height,
+          zIndex: this.props.zIndex || 0,
         }}
       >
         <div

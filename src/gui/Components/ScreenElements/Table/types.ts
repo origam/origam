@@ -1,10 +1,7 @@
 import { PubSub } from "../../../../utils/events";
-
-export enum IOrderByDirection {
-  NONE = "NONE",
-  ASC = "ASC",
-  DESC = "DESC",
-}
+import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
+import { ITableRow} from "./TableRendering/types";
+import {BoundingRect} from "react-measure";
 
 export type ICellType =
   | "Text"
@@ -21,15 +18,14 @@ export interface ITableProps {
   gridDimensions: IGridDimensions;
   scrollState: IScrollState;
 
+  tableRows:  ITableRow[]
   editingRowIndex?: number;
   editingColumnIndex?: number;
   isEditorMounted: boolean;
-
-  fixedColumnCount?: number;
-
+  fixedColumnCount: number;
   isLoading?: boolean;
 
-  renderHeader?: IRenderHeader;
+  headerContainers: IHeaderContainer[];
 
   renderEditor?: IRenderEditor;
 
@@ -40,6 +36,7 @@ export interface ITableProps {
   onNoCellClick?(event: any): void;
   onKeyDown?(event: any): void;
   refCanvasMovingComponent?(elm: IGridCanvas | null): void;
+  onContentBoundsChanged(bounds: BoundingRect): void;
 }
 
 export type IRenderCell = (args: IRenderCellArgs) => void;
@@ -68,12 +65,13 @@ export interface IGridDimensions {
   columnCount: number;
   contentWidth: number;
   contentHeight: number;
-  getColumnLeft(columnIndex: number): number;
-  getColumnWidth(columnIndex: number): number;
-  getColumnRight(columnIndex: number): number;
+  getColumnLeft(dataColumnIndex: number): number;
+  getColumnRight(dataColumnIndex: number): number;
   getRowTop(rowIndex: number): number;
   getRowHeight(rowIndex: number): number;
   getRowBottom(rowIndex: number): number;
+  columnWidths: Map<string, number>;
+  displayedColumnDimensionsCom: {left: number, width: number, right: number}[]
 }
 
 export type IListenForScrollToCell = (cb: (rowIdx: number, colIdx: number) => void) => () => void;
@@ -138,7 +136,6 @@ export interface IPositionedFieldProps {
   fixedColumnsCount: number;
 
   scrollOffsetSource: IScrollOffsetSource;
-  gridDimensions: IGridDimensions;
   worldBounds: {
     width: number;
     height: number;
@@ -155,7 +152,9 @@ export interface IScrollerProps {
   isVisible: boolean;
   contentWidth: number;
   contentHeight: number;
-  scrollOffsetTarget: IScrollOffsetTarget;
+  scrollingDisabled: boolean;
+  // scrollOffsetTarget: IScrollOffsetTarget;
+  onScroll: (event: any, scrollLeft: number, scrollTop: number) => void;
   onClick?: (event: any, contentLeft: number, contentTop: number) => void;
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
@@ -166,14 +165,13 @@ export interface IScrolleeProps {
   height?: number | string;
   fixedHoriz?: boolean;
   fixedVert?: boolean;
+  zIndex?: number | undefined;
   scrollOffsetSource: IScrollOffsetSource;
 }
 
 export interface IHeaderRowProps {
-  gridDimensions: IGridDimensions;
-  columnStartIndex: number;
-  columnEndIndex: number;
-  renderHeader: IRenderHeader;
+  zIndex?: number | undefined;
+  headerElements: JSX.Element[];
 }
 
 export interface IRenderedCell {

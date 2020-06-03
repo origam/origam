@@ -1,15 +1,21 @@
 import { IProperty } from "./IProperty";
 import { IAdditionalRowData } from "./IAdditionalRecordData";
 import { IDataSourceField } from "./IDataSourceField";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {IRowsContainer} from "../RowsContainer";
 
-export interface IDataTableData {}
+export interface IDataTableData {
+  rowsContainer: IRowsContainer;
+}
 
 export interface IDataTable extends IDataTableData {
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
+  allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
-  visibleRowCount: number;
+  maxRowCountSeen: number;
+  groups: IGroupTreeNode[];
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
@@ -31,8 +37,6 @@ export interface IDataTable extends IDataTableData {
   getDirtyNewRows(): any[][];
   getAllValuesOfProp(property: IProperty): any[];
 
-  setSortingFn(fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
-  | undefined): void;
   /*setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
   | undefined): void;*/
 

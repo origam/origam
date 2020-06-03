@@ -3,7 +3,8 @@ import axios from "axios";
 
 import _ from "lodash";
 import { IApi } from "./types/IApi";
-import { userManager } from "oauth";
+import { IAggregationInfo } from "./types/IAggregationInfo";
+import {IOrdering} from "./types/IOrderingConfiguration";
 
 export class OrigamAPI implements IApi {
   constructor() {
@@ -218,7 +219,7 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
-  async deleteSession() {}
+  async deleteSession() { }
 
   async saveSession(sessionFormIdentifier: string) {
     return (
@@ -431,13 +432,46 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
+  async getGroups(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    Filter: string | undefined;
+    Ordering: string[] | undefined;
+    RowLimit: number; GroupBy: string;
+    MasterRowId: string | undefined;
+    GroupByLookupId: string | undefined;
+    SessionFormIdentifier: string | undefined;
+    AggregatedColumns: IAggregationInfo[] | undefined;
+  }): Promise<any[]> {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetGroups`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
+  }
+  async getAggregations(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    Filter: string | undefined;
+    AggregatedColumns: IAggregationInfo[];
+    SessionFormIdentifier: string | undefined;
+    MasterRowId: string | undefined;
+  }): Promise<any[]> {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/GetAggregations`, data, {
+        headers: this.httpAuthHeader
+      })
+    ).data;
+  }
+
   async getRows(data: {
     MenuId: string;
     SessionFormIdentifier: string;
     DataStructureEntityId: string;
     Filter: string;
-    Ordering: string[][];
+    Ordering: IOrdering[];
     RowLimit: number;
+    RowOffset: number;
     ColumnNames: string[];
     MasterRowId: string | undefined;
   }): Promise<any> {

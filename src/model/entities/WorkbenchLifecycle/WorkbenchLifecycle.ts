@@ -272,6 +272,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 
+    console.log("portalInfo:");
     console.log(portalInfo);
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
@@ -302,10 +303,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       openedScreens.activateItem(openedScreens.items[0].menuItemId, openedScreens.items[0].order);
       openedScreens.items[0].isSleeping = false;
       const initUIResult = yield* this.initUIForScreen(openedScreens.items[0], false);
-      yield* openedScreens.items[0].content!.start(
-        initUIResult,
-        openedScreens.items[0].isSleepingDirty
-      );
+      if(openedScreens.items[0].content){
+        yield* openedScreens.items[0].content.start(
+          initUIResult,
+          openedScreens.items[0].isSleepingDirty
+        );
+      }
     }
 
     const workQueues = getWorkQueues(this);

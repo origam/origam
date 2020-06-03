@@ -1,11 +1,16 @@
 import S from "./ColumnsDialog.module.css";
 import React from "react";
-import { ModalWindowOverlay, ModalWindow, CloseButton } from "../Dialog/Dialog";
-import { AutoSizer, MultiGrid } from "react-virtualized";
-import { bind } from "bind-decorator";
-import { observable, action } from "mobx";
-import { observer, Observer } from "mobx-react";
-import produce, { finishDraft } from "immer";
+import {CloseButton, ModalWindow} from "../Dialog/Dialog";
+import {AutoSizer, MultiGrid} from "react-virtualized";
+import {bind} from "bind-decorator";
+import {action, observable} from "mobx";
+import {observer, Observer} from "mobx-react";
+import produce from "immer";
+import {Dropdowner} from "../Dropdowner/Dropdowner";
+import {DataViewHeaderAction} from "../../../gui02/components/DataViewHeader/DataViewHeaderAction";
+import {Dropdown} from "../../../gui02/components/Dropdown/Dropdown";
+import {DropdownItem} from "../../../gui02/components/Dropdown/DropdownItem";
+import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/AggregationType";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -17,7 +22,10 @@ export interface ITableColumnConf {
   name: string;
   isVisible: boolean;
   groupingIndex: number;
-  aggregation: "";
+  aggregationType: AggregationType | undefined;
+  entity: string;
+  canGroup: boolean;
+  canAggregate: boolean;
 }
 
 @observer
@@ -40,13 +48,38 @@ export class ColumnsDialog extends React.Component<{
   refGrid = React.createRef<MultiGrid>();
 
   @action.bound setVisible(rowIndex: number, state: boolean) {
-    this.configuration = produce(this.configuration, draft => {
+    this.configuration = produce(this.configuration, (draft) => {
       draft.columnConf[rowIndex].isVisible = state;
     });
   }
 
+  @action.bound setGrouping(rowIndex: number, state: boolean) {
+    this.configuration = produce(this.configuration, (draft) => {
+      const columnConfCopy = [...draft.columnConf];
+      columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
+      if (draft.columnConf[rowIndex].groupingIndex === 0) {
+        draft.columnConf[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
+      } else {
+        draft.columnConf[rowIndex].groupingIndex = 0;
+        let groupingIndex = 1;
+        columnConfCopy.reverse();
+        for (let columnConfItem of columnConfCopy) {
+          if (columnConfItem.groupingIndex > 0) {
+            columnConfItem.groupingIndex = groupingIndex++;
+          }
+        }
+      }
+    });
+  }
+
+  @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
+    this.configuration = produce(this.configuration, (draft) => {
+      draft.columnConf[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
+    });
+  }
+
   @action.bound handleFixedColumnsCountChange(event: any) {
-    this.configuration = produce(this.configuration, draft => {
+    this.configuration = produce(this.configuration, (draft) => {
       draft.fixedColumnCount = parseInt(event.target.value, 10);
     });
     console.log(this.configuration);
@@ -56,13 +89,12 @@ export class ColumnsDialog extends React.Component<{
     return (
       <ModalWindow
         title="Columns"
-        titleButtons={<CloseButton onClick={this.props.onCloseClick} />}
+        titleButtons={<CloseButton onClick={this.props.onCloseClick}/>}
         buttonsCenter={
           <>
             <button
               onClick={(event: any) =>
-                this.props.onOkClick &&
-                this.props.onOkClick(event, this.configuration)
+                this.props.onOkClick && this.props.onOkClick(event, this.configuration)
               }
             >
               OK
@@ -76,7 +108,7 @@ export class ColumnsDialog extends React.Component<{
       >
         <div className={S.columnTable}>
           <AutoSizer>
-            {({ width, height }) => (
+            {({width, height}) => (
               <Observer>
                 {() => (
                   <MultiGrid
@@ -85,7 +117,7 @@ export class ColumnsDialog extends React.Component<{
                     cellRenderer={this.renderCell}
                     columnCount={4}
                     rowCount={1 + this.configuration.columnConf.length}
-                    columnWidth={({ index }: { index: number }) => {
+                    columnWidth={({index}: { index: number }) => {
                       return this.columnWidths[index];
                     }}
                     rowHeight={20}
@@ -112,21 +144,14 @@ export class ColumnsDialog extends React.Component<{
   }
 
   getCell(rowIndex: number, columnIndex: number) {
-    const {
-      isVisible,
-      name,
-      aggregation,
-      groupingIndex
-    } = this.configuration.columnConf[rowIndex];
+    const {isVisible, name, aggregationType, groupingIndex, entity, canGroup, canAggregate} = this.configuration.columnConf[rowIndex];
     switch (columnIndex) {
       case 0:
         return (
           <input
             type="checkbox"
             key={`${rowIndex}@${columnIndex}`}
-            onChange={(event: any) =>
-              this.setVisible(rowIndex, event.target.checked)
-            }
+            onChange={(event: any) => this.setVisible(rowIndex, event.target.checked)}
             checked={isVisible}
           />
         );
@@ -139,12 +164,68 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
+              onClick={(event: any) => this.setGrouping(rowIndex, event.target.checked)}
+              disabled={!canGroup}
             />{" "}
             {groupingIndex > 0 ? groupingIndex : ""}
           </span>
         );
-      case 4:
-        return "";
+      case 3:
+        if ((entity === "Currency" || entity === "Integer") && canAggregate) {
+          return (
+              <Dropdowner
+                trigger={({refTrigger, setDropped}) => (
+                  <DataViewHeaderAction
+                    refDom={refTrigger}
+                    onClick={() => setDropped(true)}
+                    isActive={false}
+                  >
+                    {this.configuration.columnConf[rowIndex].aggregationType}
+                  </DataViewHeaderAction>
+                )}
+                content={({setDropped}) => (
+                  <Dropdown>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, undefined);
+                      }}>
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.SUM)
+                      }}>
+                      SUM
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.AVG)
+                      }}>
+                      AVG
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.MIN)
+                      }}>
+                      MIN
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(event: any) => {
+                        setDropped(false);
+                        this.setAggregation(rowIndex, AggregationType.MAX)
+                      }}>
+                      MAX
+                    </DropdownItem>
+                  </Dropdown>
+                )}
+              />
+          );
+        } else {
+          return "";
+        }
       default:
         return "";
     }
@@ -161,10 +242,7 @@ export class ColumnsDialog extends React.Component<{
       return (
         <Observer>
           {() => (
-            <div
-              style={args.style}
-              className={S.columnTableCell + " " + rowClassName}
-            >
+            <div style={args.style} className={S.columnTableCell + " " + rowClassName}>
               {this.getCell(args.rowIndex - 1, args.columnIndex)}
             </div>
           )}
@@ -234,7 +312,7 @@ export class TableHeader extends React.Component<{
     const newWidth = this.width0 + vec;
     console.log(this.props.columnIndex, newWidth);
     this.props.onColumnWidthChange &&
-      this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
+    this.props.onColumnWidthChange(this.props.columnIndex, newWidth);
   }
 
   @action.bound handleWindowMouseUp(event: any) {
@@ -246,10 +324,7 @@ export class TableHeader extends React.Component<{
     return (
       <div style={this.props.style} className={S.columnTableCell + " header"}>
         {this.getHeader(this.props.columnIndex)}
-        <div
-          className={S.columnWidthHandle}
-          onMouseDown={this.handleColumnWidthHandleMouseDown}
-        />
+        <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown}/>
       </div>
     );
   }

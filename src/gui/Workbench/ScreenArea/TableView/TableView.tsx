@@ -1,36 +1,42 @@
 import bind from "bind-decorator";
-import { action, computed, observable } from "mobx";
-import { inject, observer, Provider } from "mobx-react";
-import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
+import {action, autorun, computed, observable, reaction} from "mobx";
+import {inject, observer, Provider} from "mobx-react";
+import {onTableKeyDown} from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
-import { onColumnHeaderClick } from "../../../../model/actions-ui/DataView/TableView/onColumnHeaderClick";
-import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
-import { IDataView } from "../../../../model/entities/types/IDataView";
-import { IProperty } from "../../../../model/entities/types/IProperty";
-import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
-import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
-import { getRowCount } from "../../../../model/selectors/TablePanelView/getRowCount";
-import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
-import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
-import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
-import { ITableColumnsConf } from "../../../Components/Dialogs/ColumnsDialog";
-import { FilterSettings } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
-import { Header } from "../../../Components/ScreenElements/Table/Header";
-import { SimpleScrollState } from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import { Table, RawTable } from "../../../Components/ScreenElements/Table/Table";
-import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
-import { CellRenderer } from "./CellRenderer";
-import { TableViewEditor } from "./TableViewEditor";
-import { getPropertyOrdering } from "../../../../model/selectors/DataView/getPropertyOrdering";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
-import { onNoCellClick } from "model/actions-ui/DataView/TableView/onNoCellClick";
-import { onOutsideTableClick } from "model/actions-ui/DataView/TableView/onOutsideTableClick";
-import { getFixedColumnsCount } from "model/selectors/TablePanelView/getFixedColumnsCount";
-import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import { onColumnWidthChanged } from "model/actions-ui/DataView/TableView/onColumnWidthChanged";
-import { onColumnWidthChangeFinished } from "model/actions-ui/DataView/TableView/onColumnWidthChangeFinished";
-import { onColumnOrderChangeFinished } from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
+import {onColumnHeaderClick} from "../../../../model/actions-ui/DataView/TableView/onColumnHeaderClick";
+import {ITablePanelView} from "../../../../model/entities/TablePanelView/types/ITablePanelView";
+import {IDataView} from "../../../../model/entities/types/IDataView";
+import {IProperty} from "../../../../model/entities/types/IProperty";
+import {getColumnHeaders} from "../../../../model/selectors/TablePanelView/getColumnHeaders";
+import {getIsEditing} from "../../../../model/selectors/TablePanelView/getIsEditing";
+import {getSelectedColumnIndex} from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
+import {getTableViewProperties} from "../../../../model/selectors/TablePanelView/getTableViewProperties";
+import {IColumnHeader} from "../../../../model/selectors/TablePanelView/types";
+import {ITableColumnsConf} from "../../../Components/Dialogs/ColumnsDialog";
+import {FilterSettings} from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
+import {Header} from "../../../Components/ScreenElements/Table/Header";
+import {SimpleScrollState} from "../../../Components/ScreenElements/Table/SimpleScrollState";
+import {RawTable, Table} from "../../../Components/ScreenElements/Table/Table";
+import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
+import {CellRenderer} from "./CellRenderer";
+import {TableViewEditor} from "./TableViewEditor";
+import {getSelectedRowIndex} from "model/selectors/DataView/getSelectedRowIndex";
+import {onNoCellClick} from "model/actions-ui/DataView/TableView/onNoCellClick";
+import {onOutsideTableClick} from "model/actions-ui/DataView/TableView/onOutsideTableClick";
+import {getFixedColumnsCount} from "model/selectors/TablePanelView/getFixedColumnsCount";
+import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import {onColumnWidthChanged} from "model/actions-ui/DataView/TableView/onColumnWidthChanged";
+import {onColumnWidthChangeFinished} from "model/actions-ui/DataView/TableView/onColumnWidthChangeFinished";
+import {onColumnOrderChangeFinished} from "model/actions-ui/DataView/TableView/onColumnOrderChangeFinished";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {getLeadingColumnCount} from "model/selectors/TablePanelView/getLeadingColumnCount";
+import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
+import {getTablePanelView} from "../../../../model/selectors/TablePanelView/getTablePanelView";
+import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
+import {aggregationToString, IAggregation, parseAggregations} from "model/entities/types/IAggregation";
+import {IInfiniteScrollLoader, InfiniteScrollLoader, NullIScrollLoader} from "./InfiniteScrollLoader";
+import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
+import {VisibleRowsMonitor} from "./VisibleRowsMonitor";
 
 @inject(({ dataView }) => {
   return {
@@ -50,6 +56,44 @@ export class TableView extends React.Component<{
   onColumnDialogOk?: (event: any, configuration: ITableColumnsConf) => void;
   onTableKeyDown?: (event: any) => void;
 }> {
+
+  infiniteScrollLoader: IInfiniteScrollLoader | undefined;
+
+  constructor(props: any) {
+    super(props);
+
+    this.initializeNewScrollLoader();
+    getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
+      this.initializeNewScrollLoader();
+    });
+  }
+
+  private initializeNewScrollLoader() {
+    if(this.infiniteScrollLoader){
+      this.infiniteScrollLoader.dispose();
+    }
+    this.infiniteScrollLoader = this.getScrollLoader();
+    getFormScreenLifecycle(this.props.dataView).registerDisposer(this.infiniteScrollLoader.start());
+  }
+
+  getScrollLoader(){
+    const isGroupingOff = getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds.length === 0;
+    const rowsContainer = getDataTable(this.props.dataView).rowsContainer;
+    if(rowsContainer instanceof ScrollRowContainer && isGroupingOff){
+      const dataView = this.props.dataView!;
+      return new InfiniteScrollLoader({
+        ctx: dataView,
+        gridDimensions: dataView.gridDimensions,
+        scrollState: dataView.scrollState,
+        rowsContainer: rowsContainer as ScrollRowContainer,
+        groupFilter: undefined,
+        visibleRowsMonitor: new VisibleRowsMonitor(dataView, dataView.gridDimensions, dataView.scrollState)
+      });
+    }else{
+      return new NullIScrollLoader();
+    }
+  }
+
   refTableDisposer: any;
   refTable = (elmTable: RawTable | null) => {
     this.elmTable = elmTable;
@@ -66,17 +110,16 @@ export class TableView extends React.Component<{
       this.refTableDisposer && this.refTableDisposer();
     }
   };
+
   elmTable: RawTable | null = null;
 
-  gDim = new GridDimensions({
-    getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    getRowCount: () => getRowCount(this.props.dataView),
-    getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(this.props.tablePanelView),
-  });
-
   headerRenderer = new HeaderRenderer({
+    gridDimensions: this.props.dataView!.gridDimensions,
     tablePanelView: this.props.tablePanelView!,
-    getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(this.props.tablePanelView),
+    getFixedColumnCount: () => getFixedColumnsCount(this.props.tablePanelView),
+    getIsSelectionCheckboxes: () =>
+      getIsSelectionCheckboxesShown(this.props.tablePanelView),
+    dataView: this.props.dataView!,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
     onColumnWidthChange: (cid, nw) => onColumnWidthChanged(this.props.tablePanelView)(cid, nw),
@@ -85,7 +128,7 @@ export class TableView extends React.Component<{
     onColumnOrderAttendantsChange: (idSource: string | undefined, idTarget: string | undefined) =>
       this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget),
   });
-  scrollState = new SimpleScrollState(0, 0);
+
   cellRenderer = new CellRenderer({
     tablePanelView: this.props.tablePanelView!,
   });
@@ -98,21 +141,21 @@ export class TableView extends React.Component<{
     if (editingColumnIndex !== undefined && isSelectionCheckboxes) {
       editingColumnIndex++;
     }
+   const fixedColumnCount = this.props.tablePanelView ? this.props.tablePanelView.fixedColumnCount || 0 : 0;
 
     return (
       <Provider tablePanelView={this.props.tablePanelView}>
         <>
           <Table
-            gridDimensions={self.gDim}
-            scrollState={self.scrollState}
+            tableRows={this.props.dataView!.tableRows}
+            gridDimensions={self.props.dataView!.gridDimensions}
+            scrollState={self.props.dataView!.scrollState}
             editingRowIndex={editingRowIndex}
             editingColumnIndex={editingColumnIndex}
             isEditorMounted={getIsEditing(this.props.tablePanelView)}
-            fixedColumnCount={
-              getFixedColumnsCount(this.props.tablePanelView) + (isSelectionCheckboxes ? 1 : 0)
-            }
             isLoading={false}
-            renderHeader={self.headerRenderer.renderHeader}
+            fixedColumnCount={fixedColumnCount}
+            headerContainers = {self.headerRenderer.headerContainers}
             renderCell={self.cellRenderer.renderCell}
             renderEditor={() => (
               <TableViewEditor
@@ -121,6 +164,7 @@ export class TableView extends React.Component<{
             )}
             onNoCellClick={onNoCellClick(this.props.tablePanelView)}
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
+            onContentBoundsChanged={bounds => this.props.dataView!.contentBounds=bounds}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
             onKeyDown={this.props.onTableKeyDown}
             refTable={this.refTable}
@@ -128,93 +172,6 @@ export class TableView extends React.Component<{
         </>
       </Provider>
     );
-  }
-}
-
-interface IGridDimensionsData {
-  getTableViewProperties: () => IProperty[];
-  getRowCount: () => number;
-  getIsSelectionCheckboxes: () => boolean;
-}
-
-class GridDimensions implements IGridDimensions {
-  constructor(data: IGridDimensionsData) {
-    Object.assign(this, data);
-  }
-
-  @computed get columnWidths(): Map<string, number> {
-    return new Map(this.tableViewProperties.map((prop) => [prop.id, prop.columnWidth]));
-  }
-
-  getTableViewProperties: () => IProperty[] = null as any;
-  getRowCount: () => number = null as any;
-  getIsSelectionCheckboxes: () => boolean = null as any;
-
-  @computed get isSelectionCheckboxes() {
-    return this.getIsSelectionCheckboxes();
-  }
-
-  @computed get tableViewPropertiesOriginal() {
-    return this.getTableViewProperties();
-  }
-
-  @computed get tableViewProperties() {
-    return this.tableViewPropertiesOriginal;
-  }
-
-  @computed get rowCount() {
-    return this.getRowCount();
-  }
-
-  @computed get columnCount() {
-    return this.tableViewProperties.length + (this.isSelectionCheckboxes ? 1 : 0);
-  }
-
-  get contentWidth() {
-    return this.getColumnRight(this.columnCount - 1);
-  }
-
-  get contentHeight() {
-    return this.getRowBottom(this.rowCount - 1);
-  }
-
-  getColumnLeft(columnIndex: number): number {
-    return columnIndex <= 0 ? 0 : this.getColumnRight(columnIndex - 1);
-  }
-
-  getColumnWidth(columnIndex: number): number {
-    let colIdx = columnIndex;
-    if (this.isSelectionCheckboxes) {
-      if (colIdx === 0) {
-        return 30;
-      }
-      colIdx--;
-    }
-
-    const property = this.tableViewProperties[colIdx];
-    if (!property) debugger;
-    return this.columnWidths.has(property.id) ? this.columnWidths.get(property.id)! : 100;
-  }
-
-  getColumnRight(columnIndex: number): number {
-    if (columnIndex < 0) return 0;
-    return this.getColumnLeft(columnIndex) + this.getColumnWidth(columnIndex);
-  }
-
-  getRowTop(rowIndex: number): number {
-    return rowIndex * 24;
-  }
-
-  getRowHeight(rowIndex: number): number {
-    return 24;
-  }
-
-  getRowBottom(rowIndex: number): number {
-    return this.getRowTop(rowIndex) + this.getRowHeight(rowIndex);
-  }
-
-  @action.bound setColumnWidth(columnId: string, newWidth: number) {
-    this.columnWidths.set(columnId, Math.max(newWidth, 20));
   }
 }
 
@@ -230,15 +187,23 @@ interface IHeaderRendererData {
     idSource: string | undefined,
     idTarget: string | undefined
   ) => void;
+  dataView: IDataView;
+  gridDimensions: IGridDimensions;
+  getFixedColumnCount: () => number;
 }
 
 class HeaderRenderer implements IHeaderRendererData {
   constructor(data: IHeaderRendererData) {
     Object.assign(this, data);
+    const disposer = this.start();
+    getFormScreenLifecycle(this.dataView).registerDisposer(disposer);
   }
-
+  gridDimensions: IGridDimensions  = null as any;
   getTableViewProperties: () => IProperty[] = null as any;
   getIsSelectionCheckboxes: () => boolean = null as any;
+  dataView: IDataView = null as any;
+  getFixedColumnCount = null as any;
+  @observable aggregationData: IAggregation[] = []
 
   @computed get tableViewPropertiesOriginal() {
     return this.getTableViewProperties();
@@ -305,21 +270,58 @@ class HeaderRenderer implements IHeaderRendererData {
     );
   }
 
-  @bind
-  renderHeader(args: { columnIndex: number; columnWidth: number }) {
-    let property;
-    let header;
-    if (this.isSelectionCheckboxes) {
-      if (args.columnIndex === 0) {
-        return null;
-      } else {
-        property = this.tableViewProperties[args.columnIndex - 1];
-        header = this.columnHeaders[args.columnIndex - 1];
-      }
-    } else {
-      property = this.tableViewProperties[args.columnIndex];
-      header = this.columnHeaders[args.columnIndex];
+  @computed get headerContainers(){
+    const columnDimensions = this.gridDimensions.displayedColumnDimensionsCom;
+    const leadingColumnCount = getLeadingColumnCount(this.dataView);
+    const selectionCheckBoxesShown = getIsSelectionCheckboxesShown(this.dataView);
+    const groupingColumnCount = leadingColumnCount - (selectionCheckBoxesShown ? 1 : 0)
+    const dataColumnCount = columnDimensions.length - leadingColumnCount;
+    const headerContainers = []
+
+    if(selectionCheckBoxesShown){
+      headerContainers.push(
+        new HeaderContainer({
+          header: this.renderDummyHeader(columnDimensions[0].width),
+          isFixed: true,
+          width: columnDimensions[0].width,
+        }));
     }
+
+    let columnsToFix = this.getFixedColumnCount();
+    for(let i=0; i < groupingColumnCount; i++){
+      headerContainers.push(
+        new HeaderContainer({
+          header: this.renderDummyHeader(columnDimensions[i].width),
+          isFixed: columnsToFix > i,
+          width: columnDimensions[i].width,
+        }));
+    }
+
+    columnsToFix -= groupingColumnCount;
+    for(let i=0; i < dataColumnCount; i++){
+      const columnWidth = columnDimensions[i + leadingColumnCount].width;
+      headerContainers.push(
+        new HeaderContainer({
+          header:  this.renderDataHeader({
+            columnIndex: i ,
+            columnWidth: columnWidth}),
+          isFixed: columnsToFix > i,
+          width: columnWidth,
+        }));
+    }
+
+    return headerContainers;
+  }
+
+  renderDummyHeader(columnWidth: number){
+    return <div style={{minWidth: columnWidth+"px"}}></div>;
+  }
+
+  @bind
+  renderDataHeader(args:{columnIndex: number, columnWidth: number}) {
+    const property = this.tableViewProperties[args.columnIndex];
+    const header = this.columnHeaders[args.columnIndex];
+
     return (
       <Provider key={property.id} property={property}>
         <Header
@@ -337,13 +339,58 @@ class HeaderRenderer implements IHeaderRendererData {
           onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
           onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
           onClick={onColumnHeaderClick(this.tablePanelView)}
-          additionalHeaderContent={
-            this.tablePanelView.filterConfiguration.isFilterControlsDisplayed
-              ? () => <FilterSettings />
-              : undefined
-          }
+          additionalHeaderContent={this.makeAdditionalHeaderContent(header.id)}
         />
       </Provider>
     );
   }
+
+  makeAdditionalHeaderContent(columnId: string){
+    const filterControlsDisplayed = this.tablePanelView.filterConfiguration.isFilterControlsDisplayed;
+    if(!filterControlsDisplayed && this.aggregationData.length === 0){
+      return undefined;
+    }
+    const headerContent: JSX.Element[] =[]
+    if(filterControlsDisplayed){
+      headerContent.push(<FilterSettings />)
+    }
+    if(this.aggregationData.length !== 0){
+      const aggregation = this.aggregationData.find(agg => agg.columnId === columnId)
+      if(aggregation){
+        headerContent.push(<div>{aggregationToString(aggregation)}</div>)
+      }
+    }
+    return(() =>
+        <>
+          {headerContent}
+        </>);
+  }
+
+  start(){
+   return autorun(()=>{
+      const aggregations = getTablePanelView(this.dataView).aggregations.aggregationList;
+      if(aggregations.length === 0){
+        this.aggregationData.length = 0;
+        return
+      }
+      getFormScreenLifecycle(this.dataView)
+        .loadAggregations(this.dataView, aggregations)
+        .then(data => this.aggregationData = parseAggregations(data) || []);
+    });
+  }
+}
+
+export interface IHeaderContainer {
+  header: JSX.Element;
+  isFixed: boolean;
+  width: number;
+}
+
+class HeaderContainer implements IHeaderContainer {
+  constructor(data: IHeaderContainer) {
+    Object.assign(this, data);
+  }
+  header: JSX.Element  = null as any;
+  isFixed: boolean = null as any;
+  width: number = null as any;
 }

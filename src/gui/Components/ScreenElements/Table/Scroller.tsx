@@ -10,6 +10,8 @@ import S from "./Scroller.module.css";
 @observer
 export default class Scroller extends React.Component<IScrollerProps> {
   @observable.ref private elmScrollerDiv: HTMLDivElement | null = null;
+  private lastScrollLeft: number = 0;
+  private lastScrollTop: number = 0;
 
   @action.bound scrollTo(coords: { scrollLeft?: number; scrollTop?: number }) {
     if (this.elmScrollerDiv) {
@@ -17,17 +19,32 @@ export default class Scroller extends React.Component<IScrollerProps> {
         this.elmScrollerDiv.scrollTop = coords.scrollTop;
       }
       if (coords.scrollLeft !== undefined) {
+        this.forceScrollLeft(coords.scrollLeft); // will scroll even if this.props.scrollingDisabled is true
         this.elmScrollerDiv.scrollLeft = coords.scrollLeft;
       }
     }
   }
 
   @action.bound private handleScroll(event: any) {
-    this.props.scrollOffsetTarget.setScrollOffset(
+
+    if(this.props.scrollingDisabled){
+      event.target.scrollLeft = this.lastScrollLeft;
+      event.target.scrollTop = this.lastScrollTop;
+    }
+    else{
+      this.lastScrollLeft =  event.target.scrollLeft
+      this.lastScrollTop =  event.target.scrollTop
+    }
+
+    this.props.onScroll(
       event,
-      event.target.scrollTop,
-      event.target.scrollLeft
+      event.target.scrollLeft,
+      event.target.scrollTop
     );
+  }
+
+  forceScrollLeft(left: number){
+    this.lastScrollLeft = left;
   }
 
   set scrollTop(value: number) {

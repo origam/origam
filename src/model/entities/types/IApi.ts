@@ -1,4 +1,6 @@
+import { IAggregationInfo } from "./IAggregationInfo";
 import Axios, { AxiosPromise } from "axios";
+import {IOrdering} from "./IOrderingConfiguration";
 
 export interface IApi {
   accessToken: string;
@@ -190,11 +192,34 @@ export interface IApi {
     SessionFormIdentifier: string;
     DataStructureEntityId: string;
     Filter: string;
-    Ordering: string[][];
+    Ordering: IOrdering[];
     RowLimit: number;
+    RowOffset: number;
     ColumnNames: string[];
     MasterRowId: string | undefined;
   }): Promise<any>;
+
+  getGroups(data: {
+    MenuId: string
+    DataStructureEntityId: string,
+    Filter: string | undefined,
+    Ordering: string[] | undefined,
+    RowLimit: number,
+    GroupBy: string,
+    MasterRowId: string | undefined,
+    GroupByLookupId: string | undefined,
+    SessionFormIdentifier: string | undefined,
+    AggregatedColumns: IAggregationInfo[] | undefined
+  }): Promise<any[]>;
+
+  getAggregations(data :{
+    MenuId: string
+    DataStructureEntityId: string,
+    Filter: string | undefined,
+    AggregatedColumns: IAggregationInfo[]
+    SessionFormIdentifier: string | undefined,
+    MasterRowId: string | undefined,
+  }): Promise<any[]>
 
   getData(data: {
     SessionFormIdentifier: string;

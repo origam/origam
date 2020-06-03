@@ -17,7 +17,7 @@ import { getActivePanelView } from "model/selectors/DataView/getActivePanelView"
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
-import { getVisibleRowCount } from "model/selectors/DataView/getVisibleRowCount";
+import { getMaxRowCountSeen } from "model/selectors/DataView/getMaxRowCountSeen";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import React from "react";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
@@ -49,7 +49,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
   render() {
     const { dataView } = this;
     const selectedRowIndex = getSelectedRowIndex(dataView);
-    const visibleRowCount = getVisibleRowCount(dataView);
+    const maxRowCountSeen = getMaxRowCountSeen(dataView);
     const activePanelView = getActivePanelView(dataView);
     const label = getDataViewLabel(dataView);
     const isFilterSettingsVisible = getIsFilterControlsDisplayed(dataView);
@@ -138,7 +138,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
               {" "}
               <span>
                 {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-                &nbsp;/&nbsp;{visibleRowCount}
+                &nbsp;/&nbsp;{maxRowCountSeen}
               </span>
             </DataViewHeaderGroup>
             <DataViewHeaderGroup>

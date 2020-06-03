@@ -3,17 +3,18 @@ import * as ReactDOM from "react-dom";
 import { IPositionedFieldProps } from "./types";
 import { observer } from "mobx-react";
 import S from "./PositionedField.module.css";
+import { currentRowCellsDimensions } from "./TableRendering/currentRowCells";
+import { lastClickedCellRectangle } from "./TableRendering/cells/dataCell";
 import cx from "classnames";
 
 @observer
 export class PositionedField extends React.Component<IPositionedFieldProps> {
   render() {
-    const dim = this.props.gridDimensions;
-    const { columnIndex, rowIndex, worldBounds } = this.props;
-    const columnLeft = dim.getColumnLeft(columnIndex);
-    const columnWidth = dim.getColumnWidth(columnIndex);
-    const rowTop = dim.getRowTop(rowIndex);
-    const rowHeight = dim.getRowHeight(rowIndex);
+    const { columnIndex, worldBounds } = this.props;
+    const columnLeft = lastClickedCellRectangle.columnLeft;
+    const columnWidth = lastClickedCellRectangle.columnWidth;
+    const rowTop = lastClickedCellRectangle.rowTop;
+    const rowHeight = lastClickedCellRectangle.rowHeight;
     const { scrollTop, scrollLeft } = this.props.scrollOffsetSource;
     return ReactDOM.createPortal(
       <div

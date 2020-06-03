@@ -46,6 +46,7 @@ export class Property implements IProperty {
   @observable columnWidth: number = 100;
   identifier?: string;
   lookup?: ILookup;
+  isAggregatedColumn: boolean = false;
 
   linkToMenuId?: string = undefined;
 

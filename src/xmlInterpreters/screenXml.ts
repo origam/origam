@@ -22,12 +22,13 @@ import { IFormScreenLifecycle02 } from "../model/entities/types/IFormScreenLifec
 import { IPanelViewType } from "../model/entities/types/IPanelViewType";
 import { flf2mof } from "../utils/flashDateFormat";
 import { findStopping } from "./xmlUtils";
+import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
+import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
+import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
 import $root from "rootContainer";
 import { SCOPE_Screen } from "modules/Screen/ScreenModule";
 import { SCOPE_DataView } from "modules/DataView/DataViewModule";
-import { TypeSymbol, scopeFor } from "dic/Container";
-import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
-import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
+import { TypeSymbol } from "dic/Container";
 import { SCOPE_FormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
 import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
@@ -36,6 +37,12 @@ import { IPerspective } from "modules/DataView/Perspective/Perspective";
 import { flow } from "mobx";
 import { ViewConfiguration, IViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
+import {getRowContainer} from "../model/selectors/getRowContainer";
+import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
+import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
+import {getDontRequestData} from "../model/selectors/getDontRequestData";
+import {isInfiniteScrollingActive} from "../model/selectors/isInfiniteScrollingActive";
+import {getFormScreen} from "../model/selectors/FormScreen/getFormScreen";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -66,14 +73,17 @@ export function interpretScreenXml(
   lookupMenuMappings: any,
   sessionId: string
 ) {
-  const panelConfigurations = new Map<string, { position: number | undefined }>(
+  const panelConfigurations = new Map<string, IPanelConfiguration>(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
       {
         position: pcr.position,
+        defaultOrdering: parseToOrdering(pcr.defaultSort && pcr.defaultSort[0])
       },
     ])
   );
+
+
   const dataSourcesXml = findStopping(screenDoc, (n) => n.name === "DataSources")[0];
 
   const windowXml = findStopping(screenDoc, (n) => n.name === "Window")[0];
@@ -82,6 +92,8 @@ export function interpretScreenXml(
     screenDoc,
     (n) => (n.name === "UIElement" || n.name === "UIRoot") && n.attributes.Type === "Grid"
   );
+
+  checkInfiniteScrollWillWork(dataViews, formScreenLifecycle, panelConfigurations);
 
   function panelViewFromNumber(pvn: number) {
     switch (pvn) {
@@ -238,6 +250,7 @@ export function interpretScreenXml(
 
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
             isTree: property.attributes.IsTree === "true",
+            isAggregatedColumn: property.attributes.Aggregated || false,
           });
         }
       );
@@ -262,6 +275,8 @@ export function interpretScreenXml(
             ),
           })
       );
+      const orderingConfiguration = new OrderingConfiguration();
+      const filterConfiguration = new FilterConfiguration();
       const dataViewInstance = new DataView({
         id: dataView.attributes.Id,
         modelInstanceId: dataView.attributes.ModelInstanceId,
@@ -287,18 +302,21 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable({}),
+        dataTable: new DataTable({rowsContainer: getRowContainer(formScreenLifecycle, dataView.attributes, orderingConfiguration, filterConfiguration)}),
+        serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
-          filterConfiguration: new FilterConfiguration(),
-          orderingConfiguration: new OrderingConfiguration(),
+          filterConfiguration: filterConfiguration,
+          orderingConfiguration: orderingConfiguration,
+          groupingConfiguration: new GroupingConfiguration(),
         }),
         formPanelView: new FormPanelView(),
         lookupLoader: new LookupLoader(),
         properties,
         actions,
+        clientSideGrouper: new ClientSideGrouper()
       });
 
       configuration.forEach((conf) => {
@@ -380,4 +398,17 @@ export function interpretScreenXml(
 
   const rscr = $screen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
   return scr;
+}
+
+function checkInfiniteScrollWillWork(dataViews: any[],
+                                     formScreenLifecycle: IFormScreenLifecycle02,
+                                     panelConfigurations: Map<string, IPanelConfiguration>){
+
+  for (let dataView of dataViews) {
+    const id = dataView.attributes.ModelInstanceId
+    const panelConfig = panelConfigurations.get(id);
+    if(isInfiniteScrollingActive(formScreenLifecycle, dataView.attributes) && !panelConfig){
+      throw new Error(`Table in: ${id} has undefined default ordering while infinite scrolling is on. Make sure the underlying DataStructure has a SortSet defined.`);
+    }
+  }
 }

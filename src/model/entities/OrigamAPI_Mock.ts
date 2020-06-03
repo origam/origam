@@ -977,7 +977,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [{ field: "Name", direction: "Ascending" }],
+          defaultOrdering: [{ field: "Name", direction: "Ascending" }],
           allowCreate: true,
           panel: {
             defaultPanelView: 1,
@@ -990,7 +990,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,
@@ -1003,7 +1003,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,
@@ -1016,7 +1016,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,
@@ -1029,7 +1029,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,
@@ -1042,7 +1042,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,
@@ -1055,7 +1055,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,
@@ -1068,7 +1068,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,
@@ -1081,7 +1081,7 @@ export function performMock(axios: any, originalAxios: any) {
           initialFilter: null,
           filters: [],
           columnConfigurations: [],
-          defaultSort: [],
+          defaultOrdering: [],
           allowCreate: true,
           panel: {
             defaultPanelView: 0,

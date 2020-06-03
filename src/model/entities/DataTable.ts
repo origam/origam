@@ -1,42 +1,34 @@
-import { IDataTable, IDataTableData } from "./types/IDataTable";
-import { observable, action, computed } from "mobx";
-import { IProperty } from "./types/IProperty";
-import { getDataView } from "../selectors/DataView/getDataView";
-import { IAdditionalRowData } from "./types/IAdditionalRecordData";
-import { AdditionalRowData } from "./AdditionalRowData";
-import { getDataSource } from "../selectors/DataSources/getDataSource";
-import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
-import { IDataSourceField } from "./types/IDataSourceField";
+import {IDataTable, IDataTableData} from "./types/IDataTable";
+import {action, computed, observable} from "mobx";
+import {IProperty} from "./types/IProperty";
+import {getDataView} from "../selectors/DataView/getDataView";
+import {IAdditionalRowData} from "./types/IAdditionalRecordData";
+import {AdditionalRowData} from "./AdditionalRowData";
+import {getDataSource} from "../selectors/DataSources/getDataSource";
+import {IDataSourceField} from "./types/IDataSourceField";
+import {getGrouper} from "model/selectors/DataView/getGrouper";
+import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {IRowsContainer} from "./RowsContainer";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
+  rowsContainer: IRowsContainer = null as any;
 
   constructor(data: IDataTableData) {
     Object.assign(this, data);
+    this.rowsContainer.rowIdGetter = (row: any[]) => this.getRowId(row);
   }
 
-  @observable.shallow allRows: any[][] = [];
-
-  @computed get filteringFn(): ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined {
-    return getFilterConfiguration(this).filteringFunction;
+  get allRows(){
+    return this.rowsContainer.rows;
   }
 
-  @observable.ref sortingFn:
-    | ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number)
-    | undefined;
+  @computed get groups(): IGroupTreeNode[] {
+    return getGrouper(this).topLevelGroups;
+  }
 
   @computed get rows(): any[][] {
-    let rows = this.allRows;
-    if (this.filteringFn) {
-      const filt = this.filteringFn!(this);
-      rows = this.allRows.filter((row) => !this.isRowDirtyDeleted(row) && filt(row));
-    } else {
-      rows = this.allRows.filter((row) => !this.isRowDirtyDeleted(row));
-    }
-    if (this.sortingFn) {
-      rows.sort(this.sortingFn(this));
-    }
-    return rows;
+    return this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
   }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
 
@@ -53,8 +45,8 @@ export class DataTable implements IDataTable {
     return this.properties.find((prop) => prop.id === this.dataSource.identifier);
   }
 
-  @computed get visibleRowCount() {
-    return this.rows.length;
+  @computed get maxRowCountSeen() {
+    return this.rowsContainer.maxRowCountSeen;
   }
 
   getRowId(row: any[]): string {
@@ -88,7 +80,7 @@ export class DataTable implements IDataTable {
   }
 
   getAllValuesOfProp(property: IProperty): any[] {
-    return this.allRows.map((row) => this.getCellValue(row, property));
+    return this.rowsContainer.rows.map(row => this.getCellValue(row, property));
   }
 
   getCellText(row: any[], property: IProperty) {
@@ -100,7 +92,8 @@ export class DataTable implements IDataTable {
     if (value === null || value === undefined) return "";
     if (property.isLookup) {
       if (property.column === "TagInput") {
-        return value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
+        const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
+        return (textArray || []).join(", ");
       } else {
         return property.lookup!.getValue(`${value}`);
       }
@@ -115,7 +108,7 @@ export class DataTable implements IDataTable {
   }
 
   getRowById(id: string): any[] | undefined {
-    return this.allRows.find((row) => this.getRowId(row) === id);
+    return this.rowsContainer.rows.find(row => this.getRowId(row) === id);
   }
 
   getExistingRowIdxById(id: string) {
@@ -198,7 +191,7 @@ export class DataTable implements IDataTable {
   }
 
   getDirtyDeletedRows(): any[][] {
-    return this.allRows.filter((row) => this.isRowDirtyDeleted(row));
+    return this.rowsContainer.rows.filter(row => this.isRowDirtyDeleted(row));
   }
 
   getDirtyNewRows(): any[][] {
@@ -208,9 +201,8 @@ export class DataTable implements IDataTable {
   @action.bound
   setRecords(rows: any[][]) {
     this.clear();
-    this.allRows.push(...rows);
+    this.rowsContainer.set(rows);
   }
-
   @action.bound
   setFormDirtyValue(row: any[], propertyId: string, value: any) {
     this.createAdditionalData(row);
@@ -278,10 +270,7 @@ export class DataTable implements IDataTable {
   @action.bound
   deleteRow(row: any[]): void {
     this.deleteAdditionalRowData(row);
-    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
-    if (idx > -1) {
-      this.allRows.splice(idx, 1);
-    }
+    this.rowsContainer.delete(row);
   }
 
   @action.bound
@@ -296,41 +285,19 @@ export class DataTable implements IDataTable {
 
   @action.bound
   substituteRecord(row: any[]): void {
-    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
-    if (idx > -1) {
-      this.allRows.splice(idx, 1, row);
-    }
+   this.rowsContainer.substitute(row);
   }
 
   @action.bound
   insertRecord(index: number, row: any[]): void {
-    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
-    if (idx > -1) {
-      this.allRows.splice(idx, 0, row);
-    } else {
-      this.allRows.push(row);
-    }
+    this.rowsContainer.insert(index, row);
   }
 
   @action.bound
   clear(): void {
-    this.allRows.length = 0;
+    this.rowsContainer.clear();
     this.additionalRowData.clear();
   }
-
-  @action.bound
-  setSortingFn(
-    fn: ((dataTable: IDataTable) => (row1: any[], row2: any[]) => number) | undefined
-  ): void {
-    this.sortingFn = fn;
-  }
-
-  /* @action.bound
-  setFilteringFn(
-    fn: ((dataTable: IDataTable) => (row: any[]) => boolean) | undefined
-  ): void {
-    this.filteringFn = fn;
-  }*/
 
   parent?: any;
 }

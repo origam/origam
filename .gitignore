@@ -23,3 +23,12 @@ http-client.env.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.ionide/symbolCache.db
+src/.ionide/symbolCache.db
+/.idea/.gitignore
+/.idea/dictionaries/jindr.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/origam-html5.iml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml

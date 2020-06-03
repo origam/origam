@@ -21,6 +21,9 @@ import {
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 import selectors from "model/selectors-tree";
+import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
+import {IAggregationInfo} from "../types/IAggregationInfo";
+import {AggregationType} from "../types/AggregationType";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -30,21 +33,29 @@ export class TablePanelView implements ITablePanelView {
     this.columnConfigurationDialog.parent = this;
     this.filterConfiguration.parent = this;
     this.orderingConfiguration.parent = this;
+    this.groupingConfiguration.parent = this;
   }
 
   columnConfigurationDialog: IColumnConfigurationDialog = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   orderingConfiguration: IOrderingConfiguration = null as any;
+  groupingConfiguration: IGroupingConfiguration = null as any;
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
   @observable tablePropertyIds: string[] = [];
 
   @observable hiddenPropertyIds: Map<string, boolean> = new Map();
-  @observable groupingIndices: Map<string, number> = new Map();
+
 
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
+
+  @computed get propertyMap() {
+    return new Map(
+      this.allTableProperties.map(x => [x.id, x] as [string, IProperty])
+    );
+  }
 
   @computed get allTableProperties() {
     return this.tablePropertyIds.map(id =>
@@ -106,10 +117,8 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  *onCellClick(event: any, rowIndex: number, columnIndex: number) {
-    // console.log("CellClicked:", rowIndex, columnIndex);
-    const row = this.dataTable.getRowByExistingIdx(rowIndex);
-    const property = this.tableProperties[columnIndex];
+  *onCellClick(event: any, row: any[], columnId: string) {
+    const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {
         const menuId = selectors.column.getLinkMenuId(property);
@@ -303,4 +312,30 @@ export class TablePanelView implements ITablePanelView {
   }
 
   parent?: any;
+  aggregations: AggregationContainer = new AggregationContainer();
+}
+
+export class AggregationContainer{
+  @observable aggregationTypes: Map<string, AggregationType | undefined> = new Map<string, AggregationType | undefined>();
+
+  getType(columnId: string){
+    return this.aggregationTypes.get(columnId)
+  }
+
+  setType(columnId: string, aggregationType: AggregationType | undefined){
+    if(!aggregationType && !this.aggregationTypes.has(columnId)) return;
+    this.aggregationTypes.set(columnId, aggregationType);
+  }
+
+  @computed get aggregationList(): IAggregationInfo[]{
+    // @ts-ignore
+    return Array.from(this.aggregationTypes.entries())
+      .filter(entry => entry[1])
+      .map(entry => {
+        return  {
+          "ColumnName": entry[0],
+          "AggregationType": entry[1]
+        }
+      });
+  }
 }

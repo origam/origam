@@ -1,19 +1,16 @@
-import { action, comparer, computed, observable, flow } from "mobx";
-import { IDataTable } from "./types/IDataTable";
+import { action, computed, observable, flow } from "mobx";
 import {
   IOrderByColumnSetting,
-  IOrderByDirection,
+  IOrderByDirection, IOrdering,
   IOrderingConfiguration
 } from "./types/IOrderingConfiguration";
 import _ from "lodash";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import {getProperties} from "../selectors/DataView/getProperties";
+import {getFormScreen} from "../selectors/FormScreen/getFormScreen";
 
-interface IDataOrdering {
-  column: string;
-  direction: IOrderByDirection;
-}
 
 function cycleOrdering(direction: IOrderByDirection) {
   switch (direction) {
@@ -28,10 +25,21 @@ function cycleOrdering(direction: IOrderByDirection) {
 }
 
 export class OrderingConfiguration implements IOrderingConfiguration {
-  @observable ordering: IDataOrdering[] = [];
+  @observable ordering: IOrdering[] = [];
+
+  getDefaultOrdering(){
+    const modelInstanceId = getDataView(this).modelInstanceId;
+    return getFormScreen(this).getPanelDefaultOrdering(modelInstanceId);
+  }
+
+  @computed get groupChildrenOrdering(): IOrdering | undefined {
+    return this.ordering.length === 0 || !this.ordering[0]
+      ? undefined
+      : this.ordering[0];
+  }
 
   getOrdering(column: string): IOrderByColumnSetting {
-    const ordIndex = this.ordering.findIndex(item => item.column === column);
+    const ordIndex = this.ordering.findIndex(item => item.columnId === column);
     if (ordIndex === -1) {
       return {
         order: 0,
@@ -45,18 +53,27 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     }
   }
 
+  private newOrdering(columnId: string, direction: IOrderByDirection): IOrdering{
+    const property = getProperties(this)
+      .find(prop => prop.id === columnId);
+    const lookupId = property &&  property.lookup && property.lookup.lookupId;
+    return {
+      columnId: columnId,
+      direction: direction,
+      lookupId: lookupId
+    };
+  }
+
   @action.bound
-  setOrdering(column: string): void {
+  setOrdering(columnId: string): void {
     const orderingClone = _.cloneDeep(this.ordering);
-    const curOrd = this.ordering.find(item => item.column === column);
+    const curOrd = this.ordering.find(item => item.columnId === columnId);
     this.ordering.length = 0;
     if (!curOrd) {
-      this.ordering.push({ column, direction: IOrderByDirection.ASC });
+      this.ordering.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
-      this.ordering.push({
-        column,
-        direction: cycleOrdering(curOrd.direction)
-      });
+      this.ordering.push(this.newOrdering(columnId, cycleOrdering(curOrd.direction)
+      ));
       this.ordering = this.ordering.filter(
         item => item.direction !== IOrderByDirection.NONE
       );
@@ -68,11 +85,11 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   }
 
   @action.bound
-  addOrdering(column: string): void {
+  addOrdering(columnId: string): void {
     const orderingClone = _.cloneDeep(this.ordering);
-    const curOrd = this.ordering.find(item => item.column === column);
+    const curOrd = this.ordering.find(item => item.columnId === columnId);
     if (!curOrd) {
-      this.ordering.push({ column, direction: IOrderByDirection.ASC });
+      this.ordering.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
       curOrd.direction = cycleOrdering(curOrd.direction);
       /*this.ordering = this.ordering.filter(
@@ -91,7 +108,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
       const dataTable = getDataTable(dataView);
       if (dataView.isReorderedOnClient) {
         const comboProps = this.ordering
-          .map(term => getDataViewPropertyById(this, term.column)!)
+          .map(term => getDataViewPropertyById(this, term.columnId)!)
           .filter(prop => prop.column === "ComboBox");
 
         yield Promise.all(
@@ -101,20 +118,17 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             )
           )
         );
-
-        dataTable.setSortingFn(this.orderingFunction);
       }
     }.bind(this)
   );
 
-  get orderingFunction(): (
-    dataTable: IDataTable
-  ) => (row1: any[], row2: any[]) => number {
-    return (dataTable: IDataTable) => (row1: any[], row2: any) => {
+  @computed get orderingFunction(): () => (row1: any[], row2: any[]) => number {
+    return () => (row1: any[], row2: any) => {
+      const dataTable = getDataTable(this);
       let mul = 10 * this.ordering.length;
       let res = 0;
       for (let term of this.ordering) {
-        const prop = dataTable.getPropertyById(term.column)!;
+        const prop = dataTable.getPropertyById(term.columnId)!;
         let cmpSign = 0;
         switch (prop.column) {
           case "Text":
