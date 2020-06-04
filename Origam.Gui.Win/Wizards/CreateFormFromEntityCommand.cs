@@ -20,21 +20,31 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
+using Origam.Services;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
+using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateFormFromEntityCommand.
-	/// </summary>
-	public class CreateFormFromEntityCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateFormFromEntityCommand.
+    /// </summary>
+    public class CreateFormFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ScreenWizardForm wizardForm;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -48,29 +58,66 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
+            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
+            ArrayList list = new ArrayList();
+            DataStructure dd = new DataStructure();
+            PanelControlSet pp = new PanelControlSet();
+            FormControlSet ff = new FormControlSet();
+            list.Add(new ListViewItem(dd.ItemType, dd.Icon));
+            list.Add(new ListViewItem(pp.ItemType, pp.Icon));
+            list.Add(new ListViewItem(ff.ItemType, ff.Icon));
+            
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.ScreenForm);
+            if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
+            stackPage.Push(PagesList.StartPage);
 
-			wiz.Entity = Owner as IDataEntity;
-			wiz.IsRoleVisible = false;
+            wizardForm = new ScreenWizardForm
+            {
+                ItemTypeList = list,
+                Title = ResourceUtils.GetString("ScreenWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("ScreenWizardDescription"),
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                IsRoleVisible = false,
+                textColumnsOnly = false,
+                StructureList = listdsName,
+                NameOfEntity = (Owner as IDataEntity).Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
 
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				string groupName = null;
-				if(wiz.Entity.Group != null) groupName = wiz.Entity.Group.Name;
-
-				DataStructure dataStructure = EntityHelper.CreateDataStructure(wiz.Entity, wiz.Entity.Name, true);
-                GeneratedModelElements.Add(dataStructure);
-                PanelControlSet panel = GuiHelper.CreatePanel(groupName, wiz.Entity, wiz.SelectedFieldNames);
-                GeneratedModelElements.Add(panel);
-                FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-                GeneratedModelElements.Add(form);
+            Wizard wiz = new Wizard(wizardForm);
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
             }
         }
-	}
+
+        public override void Execute()
+        {
+            string groupName = null;
+            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
+            GeneratedModelElements.Add(dataStructure);
+            PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames, wizardForm.NameOfEntity);
+            GeneratedModelElements.Add(panel);
+            FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
+            GeneratedModelElements.Add(form);
+        }
+    }
 
 	public class CreateCompleteUICommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ScreenWizardForm wizardForm;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -84,38 +131,82 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
-			wiz.IsRoleVisible = true;
-			wiz.Entity = Owner as IDataEntity;
-			wiz.Role = wiz.Entity.Name;
+            IDataEntity entity = Owner as IDataEntity;
+            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
 
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				string groupName = null;
-				if(wiz.Entity.Group != null) groupName = wiz.Entity.Group.Name;
+            ArrayList list = new ArrayList();
+            DataStructure ds = new DataStructure();
+            PanelControlSet panel1 = new PanelControlSet();
+            FormControlSet frmSet = new FormControlSet();
+            FormReferenceMenuItem form1 = new FormReferenceMenuItem();
+            ServiceCommandUpdateScriptActivity activity1 = new ServiceCommandUpdateScriptActivity();
 
-				DataStructure dataStructure = EntityHelper.CreateDataStructure(wiz.Entity, wiz.Entity.Name, true);
-				PanelControlSet panel = GuiHelper.CreatePanel(groupName, wiz.Entity, wiz.SelectedFieldNames);
-				FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-				FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Entity.Caption == null || wiz.Entity.Caption == ""
-					? wiz.Entity.Name : wiz.Entity.Caption, wiz.Role, form);
-                GeneratedModelElements.Add(dataStructure);
-                GeneratedModelElements.Add(dataStructure);
-                GeneratedModelElements.Add(panel);
-                GeneratedModelElements.Add(form);
-                GeneratedModelElements.Add(menu);
-				if(wiz.Role != "*" && wiz.Role != "")
-				{
-					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-				}
-			}
+            list.Add(new ListViewItem(ds.ItemType, ds.Icon));
+            list.Add(new ListViewItem(panel1.ItemType, panel1.Icon));
+            list.Add(new ListViewItem(frmSet.ItemType, frmSet.Icon));
+            list.Add(new ListViewItem(form1.ItemType, form1.Icon));
+            list.Add(new ListViewItem(activity1.ItemType, activity1.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.ScreenForm);
+            if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
+            stackPage.Push(PagesList.StartPage);
+
+            wizardForm = new ScreenWizardForm
+            {
+                ItemTypeList = list,
+                Title = ResourceUtils.GetString("CreateCompleteUIWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreateCompleteUIWizardDescription"),
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                IsRoleVisible = true,
+                textColumnsOnly = false,
+                StructureList = listdsName,
+                NameOfEntity = (Owner as IDataEntity).Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this,
+                Role = entity.Name
+            };
+
+            Wizard wiz = new Wizard(wizardForm);
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+
+        public override void Execute()
+        {
+            string groupName = null;
+            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
+            PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames,wizardForm.NameOfEntity);
+            FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
+            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
+                ? wizardForm.NameOfEntity : wizardForm.Entity.Caption, wizardForm.Role, form);
+            GeneratedModelElements.Add(dataStructure);
+            GeneratedModelElements.Add(panel);
+            GeneratedModelElements.Add(form);
+            GeneratedModelElements.Add(menu);
+            if (wizardForm.Role != "*" && wizardForm.Role != "")
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(wizardForm.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
+    }
 
 	public class CreateFormFromPanelCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        PanelWizardForm panelWizard;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -129,23 +220,60 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			PanelControlSet panel = Owner as PanelControlSet;
-			string groupName = null;
-			if(panel.Group != null) groupName = panel.Group.Name;
+            PanelControlSet panel = Owner as PanelControlSet;
+           
+            List<string> listdsName = GetListDatastructure(PanelControlSet.ItemTypeConst); 
+            ArrayList list = new ArrayList();
+            list.Add(new ListViewItem(panel.ItemType, panel.Icon));
 
-			DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panel.DataEntity.Name, true);
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            if (listdsName.Any(name => name == panel.Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
+            stackPage.Push(PagesList.StartPage);
+            panelWizard = new PanelWizardForm
+            {
+                ItemTypeList = list,
+                Title = ResourceUtils.GetString("CreateFormFromPanelWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreateFormFromPanelWizardDescription."),
+                StructureList= listdsName,
+                NameOfEntity = panel.Name,
+                Pages = stackPage,
+                Entity = panel,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(panelWizard);
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
+
+        }
+
+        public override void Execute()
+        {
+            PanelControlSet panel = ((PanelControlSet)panelWizard.Entity);
+            string groupName = null;
+            if (panelWizard.Entity.Group != null) groupName = panelWizard.Entity.Group.Name;
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(panel.DataEntity, panelWizard.NameOfEntity, true);
             GeneratedModelElements.Add(dataStructure);
-			FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
+            FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
             GeneratedModelElements.Add(form);
             Origam.Workbench.Commands.EditSchemaItem edit = new Origam.Workbench.Commands.EditSchemaItem();
-			edit.Owner = form;
-			edit.Run();
-		}
-	}
+            edit.Owner = form;
+            edit.Run();
+        }
+    }
 
-	public class CreateMenuFromFormCommand : AbstractMenuCommand
+        public class CreateMenuFromFormCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        MenuFromForm menuFrom;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -159,26 +287,54 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			FormControlSet form = Owner as FormControlSet;
-			CreateMenuFromFormWizard wiz = new CreateMenuFromFormWizard();
-			wiz.Role = form.Name;
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Caption, wiz.Role, form);
-                GeneratedModelElements.Add(menu);
-				bool createRole = wiz.Role != "*" && wiz.Role != "";
-				if(createRole)
-				{
-					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-                }
-			}
+            FormControlSet form = Owner as FormControlSet;
+
+            ArrayList list = new ArrayList();
+            list.Add(new ListViewItem(form.ItemType, form.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.MenuPage);
+            stackPage.Push(PagesList.StartPage);
+
+            menuFrom = new MenuFromForm
+            {
+                ItemTypeList = list,
+                Title = ResourceUtils.GetString("CreateMenuFromFormWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreateMenuFromFormWizardDescription"),
+                Pages = stackPage,
+                Entity = form,
+                Role = form.Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(menuFrom);
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+
+        public override void Execute()
+        {
+            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(menuFrom.Entity.Name == null || menuFrom.Entity.Name == ""
+                    ? menuFrom.NameOfEntity : menuFrom.Entity.Name, menuFrom.Role, (FormControlSet)menuFrom.Entity);
+            GeneratedModelElements.Add(menu);
+            bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
+            if (createRole)
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
+}
 
 	public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        MenuFromForm menuFrom;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -193,25 +349,53 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
 			DataConstant constant = Owner as DataConstant;
-			CreateMenuFromFormWizard wiz = new CreateMenuFromFormWizard();
-			wiz.Role = constant.Name;
-			if(wiz.ShowDialog() == DialogResult.OK)
+
+            ArrayList list = new ArrayList();
+            DataConstantReferenceMenuItem dataconstant = new DataConstantReferenceMenuItem();
+            list.Add(new ListViewItem(dataconstant.ItemType, dataconstant.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.MenuPage);
+            stackPage.Push(PagesList.StartPage);
+
+            menuFrom = new MenuFromForm
+            {
+                ItemTypeList = list,
+                Title = ResourceUtils.GetString("CreateMenuFromDataConstantWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreateMenuFromDataConstantWizardDescription"),
+                Pages = stackPage,
+                Entity = constant,
+                Role = constant.Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(menuFrom);
+			if(wiz.ShowDialog() != DialogResult.OK)
 			{
-				DataConstantReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Caption, wiz.Role, constant);
-                GeneratedModelElements.Add(menu);
-                bool createRole = wiz.Role != "*" && wiz.Role != "";
-				if(createRole)
-				{
-                    ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-				}
-			}
+                GeneratedModelElements.Clear();
+            }
 		}
+
+        public override void Execute()
+        {
+            DataConstantReferenceMenuItem menu = MenuHelper.CreateMenuItem(menuFrom.Caption, menuFrom.Role, menuFrom.Entity as DataConstant);
+            GeneratedModelElements.Add(menu);
+            bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
+            if (createRole)
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
     }
 
 	public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        MenuFromForm menuFrom;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -226,19 +410,45 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
 			Schema.WorkflowModel.Workflow wf = Owner as Schema.WorkflowModel.Workflow;
-			CreateMenuFromFormWizard wiz = new CreateMenuFromFormWizard();
-			wiz.Role = wf.Name;
-			if(wiz.ShowDialog() == DialogResult.OK)
+
+            ArrayList list = new ArrayList();
+            WorkflowReferenceMenuItem workflowReference = new WorkflowReferenceMenuItem();
+            list.Add(new ListViewItem(workflowReference.ItemType, workflowReference.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.MenuPage);
+            stackPage.Push(PagesList.StartPage);
+
+            menuFrom = new MenuFromForm
+            {
+                ItemTypeList = list,
+                Title = ResourceUtils.GetString("CreateMenuFromSequentialWorkflowWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreateMenuFromSequentialWorkflowWizardTitle"),
+                Pages = stackPage,
+                Entity = wf,
+                Role = wf.Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+            Wizard wiz = new Wizard(menuFrom);
+            if (wiz.ShowDialog() != DialogResult.OK)
 			{
-				WorkflowReferenceMenuItem menu = MenuHelper.CreateMenuItem(wiz.Caption, wiz.Role, wf);
-                GeneratedModelElements.Add(menu);
-				bool createRole = wiz.Role != "*" && wiz.Role != "";
-				if(createRole)
-				{
-					ServiceCommandUpdateScriptActivity activity = CreateRole(wiz.Role);
-                    GeneratedModelElements.Add(activity);
-				}
-			}
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+        public override void Execute()
+        {
+            WorkflowReferenceMenuItem menu = MenuHelper
+                .CreateMenuItem(menuFrom.Caption, menuFrom.Role, menuFrom.Entity as Schema.WorkflowModel.Workflow);
+            GeneratedModelElements.Add(menu);
+            bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
+            if (createRole)
+            {
+                ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
+                GeneratedModelElements.Add(activity);
+            }
+        }
+    }
 }

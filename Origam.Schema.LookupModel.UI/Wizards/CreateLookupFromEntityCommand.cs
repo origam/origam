@@ -20,19 +20,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Windows.Forms;
 
 using Origam.Schema.EntityModel;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
 
 namespace Origam.Schema.LookupModel.UI.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateLookupFromEntityCommand.
-	/// </summary>
-	public class CreateLookupFromEntityCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateLookupFromEntityCommand.
+    /// </summary>
+    public class CreateLookupFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        LookupForm lookupForm;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -46,16 +51,46 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 
 		public override void Run()
 		{
-			CreateLookupFromEntityWizard wiz = new CreateLookupFromEntityWizard();
-			wiz.Entity = Owner as IDataEntity;
-			if(wiz.ShowDialog() == DialogResult.OK)
+            DataServiceDataLookup dd = new DataServiceDataLookup();
+            ArrayList list = new ArrayList();
+            list.Add(new ListViewItem(dd.ItemType, dd.Icon));
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.LookupForm);
+            stackPage.Push(PagesList.StartPage);
+
+            lookupForm = new LookupForm
+            {
+                Title = ResourceUtils.GetString("CreateLookupWiz"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreateLookupWizDescription"),
+                Pages = stackPage,
+                Entity = Owner as IDataEntity,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                ItemTypeList = list,
+                Command = this
+            };
+
+            Wizard wiz = new Wizard(lookupForm);
+             //CreateLookupFromEntityWizard wizz = new CreateLookupFromEntityWizard();
+            //wiz.Entity = Owner as IDataEntity;
+            if (wiz.ShowDialog() != DialogResult.OK)
 			{
-				var result = LookupHelper.CreateDataServiceLookup(
-                    wiz.LookupName, wiz.Entity, wiz.IdColumn, wiz.NameColumn, 
-                    null, wiz.IdFilter, wiz.ListFilter, null);
-                GeneratedModelElements.Add(result.ListDataStructure);
-                GeneratedModelElements.Add(result);
+                GeneratedModelElements.Clear();
             }
         }
-	}
+
+        public override void Execute()
+        {
+            var result = LookupHelper.CreateDataServiceLookup(
+                    lookupForm.LookupName, lookupForm.Entity, lookupForm.IdColumn, lookupForm.NameColumn,
+                    null, lookupForm.IdFilter, lookupForm.ListFilter, null);
+            //var result = LookupHelper.CreateDataServiceLookup(
+            //    wiz.LookupName, wiz.Entity, wiz.IdColumn, wiz.NameColumn,
+            //    null, wiz.IdFilter, wiz.ListFilter, null);
+            GeneratedModelElements.Add(result.ListDataStructure);
+            GeneratedModelElements.Add(result);
+        }
+    }
 }

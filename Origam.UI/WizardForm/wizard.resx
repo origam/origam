@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,67 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ErrorDataLookupUnknownType" xml:space="preserve">
-    <value>This type is not supported by DataLookup</value>
-  </data>
-  <data name="NameLabel" xml:space="preserve">
-    <value>Name:</value>
-  </data>
-  <data name="CaptionLabel" xml:space="preserve">
-    <value>Caption</value>
-  </data>
-  <data name="ButtonOK" xml:space="preserve">
-    <value>&amp;OK</value>
-  </data>
-  <data name="ButtonCancel" xml:space="preserve">
-    <value>&amp;Cancel</value>
-  </data>
-  <data name="AllowNullsLabel" xml:space="preserve">
-    <value>Allow Nulls</value>
-  </data>
-  <data name="CreateLookupWiz" xml:space="preserve">
-    <value>Create Lookup Wizard</value>
-  </data>
-  <data name="EnterAllInfo" xml:space="preserve">
-    <value>Please, enter all information.</value>
-  </data>
-  <data name="LookupWiz" xml:space="preserve">
-    <value>Lookup Wizard</value>
-  </data>
-  <data name="ErrorSetProperty" xml:space="preserve">
-    <value>Cannot set this property</value>
-  </data>
-  <data name="DisplayFieldLabel" xml:space="preserve">
-    <value>Display Field:</value>
-  </data>
-  <data name="ListFilterLabel" xml:space="preserve">
-    <value>List Filter:</value>
-  </data>
-  <data name="IdFilterLabel" xml:space="preserve">
-    <value>Id Filter:</value>
-  </data>
-  <data name="LookupWizardNameFieldLabel" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="LookupWizardCodeFieldLabel" xml:space="preserve">
-    <value>Code</value>
-  </data>
-  <data name="DefaultValueNotSet" xml:space="preserve">
-    <value>New field is mandatory but you did not provide a default value. The deployment script will fail in case there are existing data in the database. Do you want to proceed?</value>
-  </data>
-  <data name="CreateFieldWithLookupEntityWizard" xml:space="preserve">
-    <value>Create Field With Lookup Entity</value>
-  </data>
-  <data name="CreateFieldWithLookupEntityWizardDescription" xml:space="preserve">
-    <value>Create Field With Lookup Entity</value>
-  </data>
-  <data name="CreateFieldWithRelationshipEntityWizardDescription" xml:space="preserve">
-    <value>This Wizzard create Field With Relationship Entity.</value>
-  </data>
-  <data name="CreateFieldWithRelationshipEntityWizardTitle" xml:space="preserve">
-    <value>Create Field With Relationship Entity.</value>
-  </data>
-  <data name="CreateLookupWizDescription" xml:space="preserve">
-    <value>This Wizzard create Lookup on Entity.</value>
-  </data>
+  <metadata name="colDefault.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

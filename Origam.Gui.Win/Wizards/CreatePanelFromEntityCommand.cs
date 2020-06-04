@@ -20,10 +20,19 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Wizards;
 using Origam.Schema.GuiModel;
+using Origam.Services;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
+using Origam.Workbench.Commands;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -32,7 +41,11 @@ namespace Origam.Gui.Win.Wizards
 	/// </summary>
 	public class CreatePanelFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        ScreenWizardForm wizardForm;
+        PanelControlSet panel;
+
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -46,20 +59,55 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-			CreateFormFromEntityWizard wiz = new CreateFormFromEntityWizard();
+            List<string> listdsName = GetListDatastructure(PanelControlSet.ItemTypeConst);
 
-			wiz.Entity = Owner as IDataEntity;
-			if(wiz.ShowDialog() == DialogResult.OK)
-			{
-				string groupName = null;
-				if(wiz.Entity.Group != null) groupName = wiz.Entity.Group.Name;
+            ArrayList list = new ArrayList();
+            PanelControlSet pp = new PanelControlSet();
+            list.Add(new ListViewItem(pp.ItemType, pp.Icon));
+            
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.ScreenForm);
+            if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
+            stackPage.Push(PagesList.StartPage);
 
-				PanelControlSet panel = GuiHelper.CreatePanel(groupName, wiz.Entity, wiz.SelectedFieldNames);
+            wizardForm = new ScreenWizardForm
+            {
+                ItemTypeList = list,
+                Title = ResourceUtils.GetString("CreatePanelFromEntityWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreatePanelFromEntityWizardDescription"),
+                Pages = stackPage,
+                StructureList = listdsName,
+                Entity = Owner as IDataEntity,
+                NameOfEntity = (Owner as IDataEntity).Name,
+                IsRoleVisible = false,
+                textColumnsOnly = false,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
 
-				Origam.Workbench.Commands.EditSchemaItem edit = new Origam.Workbench.Commands.EditSchemaItem();
-				edit.Owner = panel;
-				edit.Run();
-			}
-		}
-	}
+            Wizard wiz = new Wizard(wizardForm);
+            if (wiz.ShowDialog() == DialogResult.OK)
+            {
+                EditSchemaItem edit = new EditSchemaItem
+                {
+                    Owner = panel
+                };
+                edit.Run();
+                _schemaBrowser.EbrSchemaBrowser.SelectItem(panel);
+            }
+        }
+
+        public override void Execute()
+        {
+            string groupName = null;
+            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+
+            panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames,wizardForm.NameOfEntity);
+        }
+    }
 }

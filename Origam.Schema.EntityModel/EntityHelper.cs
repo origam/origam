@@ -101,7 +101,12 @@ namespace Origam.Schema.EntityModel
 			return ds;
 		}
 
-		public static DataStructureColumn CreateDataStructureField(DataStructureEntity dataSturctureEntity, IDataEntityColumn field, bool persist)
+        public static DataStructure CreateDataStructure(IDataEntity entity, object nameOfEntity, bool v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static DataStructureColumn CreateDataStructureField(DataStructureEntity dataSturctureEntity, IDataEntityColumn field, bool persist)
 		{
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
