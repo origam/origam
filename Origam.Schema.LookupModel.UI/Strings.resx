@@ -165,4 +165,19 @@
   <data name="DefaultValueNotSet" xml:space="preserve">
     <value>New field is mandatory but you did not provide a default value. The deployment script will fail in case there are existing data in the database. Do you want to proceed?</value>
   </data>
+  <data name="CreateFieldWithLookupEntityWizard" xml:space="preserve">
+    <value>Create Field With Lookup Entity</value>
+  </data>
+  <data name="CreateFieldWithLookupEntityWizardDescription" xml:space="preserve">
+    <value>Create Field With Lookup Entity</value>
+  </data>
+  <data name="CreateFieldWithRelationshipEntityWizardDescription" xml:space="preserve">
+    <value>This Wizzard create Field With Relationship Entity.</value>
+  </data>
+  <data name="CreateFieldWithRelationshipEntityWizardTitle" xml:space="preserve">
+    <value>Create Field With Relationship Entity.</value>
+  </data>
+  <data name="CreateLookupWizDescription" xml:space="preserve">
+    <value>This Wizzard create Lookup on Entity.</value>
+  </data>
 </root>

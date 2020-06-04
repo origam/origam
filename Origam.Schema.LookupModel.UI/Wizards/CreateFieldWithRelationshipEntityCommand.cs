@@ -77,9 +77,9 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 
             wizardForm = new CreateFieldWithRelationshipEntityWizardForm
             {
-                Title = "Create Field With Relationship Entity.",
+                Title = ResourceUtils.GetString("CreateFieldWithRelationshipEntityWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateFieldWithRelationshipEntityWizardDescription"),
                 Entity = baseEntity,
                 ItemTypeList = list,
                 Pages = stackPage,

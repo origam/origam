@@ -27,6 +27,9 @@ using Origam.Schema.DeploymentModel;
 using System.Text;
 using System.Collections.Generic;
 using Origam.DA.Service;
+using Origam.Workbench;
+using Origam.UI.WizardForm;
+using System.Collections;
 
 namespace Origam.Schema.LookupModel.UI.Wizards
 {
@@ -69,9 +72,9 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 
             createFieldWith = new CreateFieldWithLookupEntityWizardForm
             {
-                Title = "Create Field With Lookup Entity.",
+                Title = ResourceUtils.GetString("CreateFieldWithLookupEntityWizard"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateFieldWithLookupEntityWizardDescription"),
                 ItemTypeList = list,
                 Pages = stackPage,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
