@@ -76,7 +76,10 @@ export interface IGridDimensions {
 
 export type IListenForScrollToCell = (cb: (rowIdx: number, colIdx: number) => void) => () => void;
 
-export interface IScrollState extends IScrollOffsetSource, IScrollOffsetTarget {}
+export interface IScrollState extends IScrollOffsetSource, IScrollOffsetTarget {
+  scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
+  scrollTo(coords: { scrollLeft?: number; scrollTop?: number }): void;
+}
 
 export interface IScrollOffsetSource {
   scrollTop: number;

@@ -2,9 +2,16 @@ import { IScrollState } from "./types";
 import { observable, action } from "mobx";
 
 export class SimpleScrollState implements IScrollState {
+  scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;
   constructor(scrollTop: number, scrollLeft: number) {
     this.scrollTop = scrollTop;
     this.scrollLeft = scrollLeft;
+  }
+
+  scrollTo(coords: { scrollLeft?: number; scrollTop?: number }){
+    if(this.scrollToFunction){
+      this.scrollToFunction(coords);
+    }
   }
   
   @observable scrollTop = 0;

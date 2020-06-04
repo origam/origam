@@ -167,6 +167,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   @action.bound refScroller(elm: Scroller | null) {
     this.elmScroller = elm;
     if (elm) {
+      this.props.scrollState.scrollToFunction = elm.scrollTo;
       window.addEventListener("click", this.handleWindowClick);
     } else {
       window.removeEventListener("click", this.handleWindowClick);

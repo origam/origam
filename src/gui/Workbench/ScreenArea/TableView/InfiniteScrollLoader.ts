@@ -27,7 +27,8 @@ export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
   dispose(): void;
 }
 
-export const SCROLL_DATA_INCREMENT_SIZE = 1000;
+export const SCROLL_ROW_CHUNK = 1000;
+export const MAX_CHUNKS_TO_HOLD = 20;
 
 export class NullIScrollLoader implements IInfiniteScrollLoader{
   ctx: any = null as any;
@@ -76,12 +77,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @computed
   get headLoadingNeeded() {
-    return this.distanceToStart <= SCROLL_DATA_INCREMENT_SIZE && !this.rowsContainer.isFirstLoaded;
+    return this.distanceToStart <= SCROLL_ROW_CHUNK && !this.rowsContainer.isFirstRowLoaded;
   }
 
   @computed
   get tailLoadingNeeded() {
-    return this.distanceToEnd <= SCROLL_DATA_INCREMENT_SIZE && !this.rowsContainer.isLastLoaded;
+    return this.distanceToEnd <= SCROLL_ROW_CHUNK && !this.rowsContainer.isLastRowLoaded;
   }
 
   @computed
@@ -154,11 +155,17 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       Filter: this.getFilters(),
       Ordering: getUserOrdering(this.ctx),
-      RowLimit: SCROLL_DATA_INCREMENT_SIZE,
+      RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
-    }).then(data => this.rowsContainer.appendRecords(data));
+    }).then(data => this.rowsContainer.appendRecords(data))
+      .then(() => {
+        if(this.rowsContainer.isFull && !this.rowsContainer.isLastRowLoaded){
+          const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD * (MAX_CHUNKS_TO_HOLD - 1);
+          this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
+        }
+      });
   });
 
 
@@ -169,10 +176,11 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
 
-    if (this.lastRequestedStartOffset === this.rowsContainer.nextStartOffset) {
+    const nextStartOffset = this.rowsContainer.nextStartOffset;
+    if (this.lastRequestedStartOffset === nextStartOffset || nextStartOffset < 0) {
       return;
     }
-    this.lastRequestedStartOffset = this.rowsContainer.nextStartOffset;
+    this.lastRequestedStartOffset = nextStartOffset;
     this.lastRequestedEndOffset = 0;
 
     api.getRows({
@@ -181,11 +189,17 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       Filter: this.getFilters(),
       Ordering: getUserOrdering(this.ctx),
-      RowLimit: SCROLL_DATA_INCREMENT_SIZE,
-      RowOffset: this.rowsContainer.nextStartOffset,
+      RowLimit: SCROLL_ROW_CHUNK,
+      RowOffset: nextStartOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
-    }).then(data => this.rowsContainer.prependRecords(data));
+    }).then(data => this.rowsContainer.prependRecords(data))
+      .then(() => {
+        if(this.rowsContainer.isFull && !this.rowsContainer.isFirstRowLoaded){
+          const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD;
+          this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
+        }
+      });
   });
 
   dispose(): void {

@@ -17,7 +17,7 @@ import {onGroupHeaderToggleClick} from "../../../../../../model/actions-ui/DataV
 import {flow, runInAction} from "mobx";
 import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTable";
 import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInfiniteScrollingActive";
-import {SCROLL_DATA_INCREMENT_SIZE} from "../../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {SCROLL_ROW_CHUNK} from "../../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -123,10 +123,10 @@ export function drawGroupCell() {
 function shouldCloseOtherGroups(clickedGroup: IGroupTreeNode, ctx: any){
   const groups = getDataTable(ctx).groups;
   const someInfinitelyScrolledGroupsAreExpanded = groups
-    .some(group => group.rowCount >= SCROLL_DATA_INCREMENT_SIZE && group.isExpanded);
+    .some(group => group.rowCount >= SCROLL_ROW_CHUNK && group.isExpanded);
   return !clickedGroup.isExpanded
     && isInfiniteScrollingActive(ctx, undefined)
-    && (clickedGroup.rowCount >= SCROLL_DATA_INCREMENT_SIZE || someInfinitelyScrolledGroupsAreExpanded);
+    && (clickedGroup.rowCount >= SCROLL_ROW_CHUNK || someInfinitelyScrolledGroupsAreExpanded);
 }
 
 function formatColumnValue(value: string){
