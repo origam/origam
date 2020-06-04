@@ -79,9 +79,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Title = "Create Screen Wizard",
+                Title = ResourceUtils.GetString("ScreenWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("ScreenWizardDescription"),
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = false,
@@ -159,9 +159,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Title = "Create Complete UI Wizard",
+                Title = ResourceUtils.GetString("CreateCompleteUIWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateCompleteUIWizardDescription"),
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,
                 IsRoleVisible = true,
@@ -236,9 +236,9 @@ namespace Origam.Gui.Win.Wizards
             panelWizard = new PanelWizardForm
             {
                 ItemTypeList = list,
-                Title = "Create Screen Command Wizard",
+                Title = ResourceUtils.GetString("CreateFormFromPanelWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateFormFromPanelWizardDescription."),
                 StructureList= listdsName,
                 NameOfEntity = panel.Name,
                 Pages = stackPage,
@@ -300,9 +300,9 @@ namespace Origam.Gui.Win.Wizards
             menuFrom = new MenuFromForm
             {
                 ItemTypeList = list,
-                Title = "Create Menu from Form Command Wizard",
+                Title = ResourceUtils.GetString("CreateMenuFromFormWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateMenuFromFormWizardDescription"),
                 Pages = stackPage,
                 Entity = form,
                 Role = form.Name,
@@ -362,9 +362,9 @@ namespace Origam.Gui.Win.Wizards
             menuFrom = new MenuFromForm
             {
                 ItemTypeList = list,
-                Title = "Create Menu from Dataconstant Wizard",
+                Title = ResourceUtils.GetString("CreateMenuFromDataConstantWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateMenuFromDataConstantWizardDescription"),
                 Pages = stackPage,
                 Entity = constant,
                 Role = constant.Name,
@@ -423,9 +423,9 @@ namespace Origam.Gui.Win.Wizards
             menuFrom = new MenuFromForm
             {
                 ItemTypeList = list,
-                Title = "Create Menu from Sequential Workflow Wizard",
+                Title = ResourceUtils.GetString("CreateMenuFromSequentialWorkflowWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateMenuFromSequentialWorkflowWizardTitle"),
                 Pages = stackPage,
                 Entity = wf,
                 Role = wf.Name,
