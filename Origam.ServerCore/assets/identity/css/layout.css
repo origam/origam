@@ -57,6 +57,6 @@ iframe
     justify-content: center;
 }
 
-#reset-link{
+.in-page-link{
   text-decoration: underline;
 }
