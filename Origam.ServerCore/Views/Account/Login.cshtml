@@ -24,12 +24,12 @@
                     <form asp-route="Login">
                         <input type="hidden" asp-for="ReturnUrl"/>
                         <div class="input-row">
-                            <label asp-for="Username"></label>
-                            <input id="userNameInput" placeholder="Username" asp-for="Username" autofocus>
+                            <label asp-for="Username">@SharedLocalizer["UserName"]</label>
+                            <input id="userNameInput" placeholder="@SharedLocalizer["UserName"]" asp-for="Username" autofocus>
                         </div>
                         <div class="input-row">
-                            <label asp-for="Password"></label>
-                            <input id="passInput" type="password" placeholder="Password" asp-for="Password" autocomplete="off">
+                            <label asp-for="Password">@SharedLocalizer["Password"]</label>
+                            <input id="passInput" type="password" placeholder="@SharedLocalizer["Password"]" asp-for="Password" autocomplete="off">
                         </div>
 
                         @if (Model.AllowRememberLogin)
@@ -81,7 +81,7 @@
 @if (Model.VisibleExternalProviders.Any())
 {
     <div class="detailview-module with-title">
-        <h2>External Login</h2>
+        <h2>@SharedLocalizer["ExternalLogin"]</h2>
         <div class="input-form">
             <div class="input-row">
                 @foreach (var provider in Model.VisibleExternalProviders)

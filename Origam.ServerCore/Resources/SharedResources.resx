@@ -208,7 +208,7 @@
     <value>Create a new account</value>
   </data>
   <data name="EmailSent" xml:space="preserve">
-    <value>Please click confirmation link in the email we sent you to activate yout account.</value>
+    <value>Please click confirmation link in the email we sent you to activate your account.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
     <value>Origam Login</value>
@@ -278,5 +278,14 @@
   </data>
   <data name="ToResetPassword3" xml:space="preserve">
     <value>to reset your password.</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ExternalLogin" xml:space="preserve">
+    <value>External Login</value>
   </data>
 </root>
