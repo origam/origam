@@ -76,9 +76,9 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 
             structureForm = new StructureForm
             {
-                Title = "Create Data Structure Wizard",
+                Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
                 ItemTypeList = list,
                 Pages = stackPage,
                 StructureList = listdsName,

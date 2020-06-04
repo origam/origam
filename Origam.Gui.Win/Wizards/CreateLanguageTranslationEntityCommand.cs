@@ -22,11 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.Schema.GuiModel;
 using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
@@ -35,10 +33,9 @@ using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
-	class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
+    class CreateLanguageTranslationEntityCommand : AbstractMenuCommand
 	{
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
         ScreenWizardForm wizardForm;
         public override bool IsEnabled
 		{
@@ -67,9 +64,9 @@ namespace Origam.Gui.Win.Wizards
             wizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
-                Title = "Create Language Translation Entity Wizard",
+                Title = ResourceUtils.GetString("CreateLanguageTranslationEntityWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateLanguageTranslationEntityWizardDescription"),
                 Pages = stackPage,
                 Entity = Owner as TableMappingItem,
                 IsRoleVisible = false,

@@ -531,4 +531,22 @@
   <data name="ScreenWizardTitle" xml:space="preserve">
     <value>Create Screen Wizard</value>
   </data>
+  <data name="CreateLanguageTranslationEntityWizardDescription" xml:space="preserve">
+    <value>This wizard create language translation Entity.</value>
+  </data>
+  <data name="CreateLanguageTranslationEntityWizardTitle" xml:space="preserve">
+    <value>Create Language Translation Entity Wizard</value>
+  </data>
+  <data name="CreatePanelFromEntityWizardDescription" xml:space="preserve">
+    <value>This Wizard create panel from Entity.</value>
+  </data>
+  <data name="CreatePanelFromEntityWizardTitle" xml:space="preserve">
+    <value>Create Panel From Entity</value>
+  </data>
+  <data name="CreateWorkQueueClassFromEntityWizardDescription" xml:space="preserve">
+    <value>This Wizard create Work Queue class from entity.</value>
+  </data>
+  <data name="CreateWorkQueueClassFromEntityWizardTitle" xml:space="preserve">
+    <value>Create Work Queue Class From Entity Wizard</value>
+  </data>
 </root>

@@ -65,9 +65,9 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             keyForm = new ForeignKeyForm
             {
                 ItemTypeList = list,
-                Title = "Create Foreign Key Wizard",
+                Title = ResourceUtils.GetString("CreateForeignKeyWizardTitle"),
                 PageTitle = "",
-                Description = "Create Some Description.",
+                Description = ResourceUtils.GetString("CreateForeignKeyWizardDescription"),
                 Pages = stackPage,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
                 Command = this,
