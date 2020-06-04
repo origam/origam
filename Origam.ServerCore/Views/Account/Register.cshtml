@@ -9,27 +9,27 @@
         <div class="input-form">
             <form asp-controller="Account" asp-action="Register">
                 <div class="input-row">
-                    <label asp-for="UserName"></label>
+                    <label asp-for="UserName">@SharedLocalizer["UserName"]</label>
                     <input asp-for="UserName" autofocus>
                 </div>                  
                 <div class="input-row">
-                    <label asp-for="Name"></label>
+                    <label asp-for="Name">@SharedLocalizer["Name"]</label>
                     <input asp-for="Name">
                 </div>                  
                 <div class="input-row">
-                    <label asp-for="FirstName"></label>
+                    <label asp-for="FirstName">@SharedLocalizer["FirstName"]</label>
                     <input asp-for="FirstName">
                 </div>                
                 <div class="input-row">
-                    <label asp-for="Email"></label>
+                    <label asp-for="Email">@SharedLocalizer["Email"]</label>
                     <input asp-for="Email">
                 </div>
                 <div class="input-row">
-                    <label asp-for="Password"></label>
+                    <label asp-for="Password">@SharedLocalizer["Password"]</label>
                     <input type="password" asp-for="Password" autocomplete="off">
                 </div>                
                 <div class="input-row">
-                    <label asp-for="ConfirmPassword"></label>
+                    <label asp-for="ConfirmPassword">@SharedLocalizer["ConfirmPassword"]</label>
                     <input type="password" asp-for="ConfirmPassword" autocomplete="off">
                 </div>
                 

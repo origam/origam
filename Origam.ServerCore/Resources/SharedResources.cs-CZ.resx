@@ -282,6 +282,18 @@
   <data name="UserName" xml:space="preserve">
     <value>Uživatel</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>Příjmení</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Jméno</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Potvrzení hesla</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Heslo</value>
   </data>
