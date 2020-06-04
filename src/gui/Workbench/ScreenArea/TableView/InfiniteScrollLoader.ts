@@ -1,6 +1,6 @@
 import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
 import {SimpleScrollState} from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import {action, autorun, computed, flow, IReactionDisposer, reaction} from "mobx";
+import {action, autorun, computed, flow, IReactionDisposer, reaction, runInAction} from "mobx";
 import {getApi} from "../../../../model/selectors/getApi";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
@@ -149,7 +149,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.lastRequestedEndOffset = this.rowsContainer.nextEndOffset;
     this.lastRequestedStartOffset = -1;
 
-    api.getRows({
+    const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
@@ -159,13 +159,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
-    }).then(data => this.rowsContainer.appendRecords(data))
-      .then(() => {
-        if(this.rowsContainer.isFull && !this.rowsContainer.isLastRowLoaded){
-          const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD * (MAX_CHUNKS_TO_HOLD - 1);
-          this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
-        }
-      });
+    })
+    this.rowsContainer.appendRecords(data)
+    if(this.rowsContainer.isFull && !this.rowsContainer.isLastRowLoaded){
+      const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD * (MAX_CHUNKS_TO_HOLD - 1);
+      this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
+    }
   });
 
 
@@ -183,7 +182,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.lastRequestedStartOffset = nextStartOffset;
     this.lastRequestedEndOffset = 0;
 
-    api.getRows({
+    const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
@@ -193,13 +192,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       RowOffset: nextStartOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
-    }).then(data => this.rowsContainer.prependRecords(data))
-      .then(() => {
-        if(this.rowsContainer.isFull && !this.rowsContainer.isFirstRowLoaded){
-          const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD;
-          this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
-        }
-      });
+    })
+    this.rowsContainer.prependRecords(data);
+    if(this.rowsContainer.isFull && !this.rowsContainer.isFirstRowLoaded){
+      const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD;
+      this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
+    }
   });
 
   dispose(): void {
