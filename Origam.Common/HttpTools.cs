@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -247,7 +247,7 @@ namespace Origam
 					headers, authenticationType, userName, password, timeout, null, false))
 				{
 					HttpWebResponse httpResponse = response as HttpWebResponse;
-					string encodingString = httpResponse.ContentEncoding.ToLower();
+					string encodingString = string.IsNullOrEmpty(httpResponse.ContentEncoding)?"":httpResponse.ContentEncoding.ToLower();
 					using (Stream responseStream =
 						encodingString.Contains("gzip") ?
 							new GZipStream(response.GetResponseStream(), CompressionMode.Decompress)
@@ -421,7 +421,7 @@ namespace Origam
 		public static string ReadResponseTextRespectionContentEncoding(HttpWebResponse httpResponse)
 		{
 			//HttpWebResponse httpResponse = response as HttpWebResponse;
-			string encodingString = httpResponse.ContentEncoding.ToLower();
+			string encodingString = httpResponse.ContentEncoding==null?"": httpResponse.ContentEncoding.ToLower();
 			using (Stream responseStream =
 				encodingString.Contains("gzip") ?
 					new GZipStream(httpResponse.GetResponseStream(), CompressionMode.Decompress)
@@ -446,7 +446,7 @@ namespace Origam
 			}
 			*/
 
-			if (response.CharacterSet != String.Empty)
+			if (response.CharacterSet != String.Empty && response.CharacterSet != null)
 			{
 				return Encoding.GetEncoding(response.CharacterSet);
 			}
@@ -537,11 +537,11 @@ namespace Origam
 	{
 		public MyUri(string url) : base (url)  {}
 
-		public static string EscapeUriString(string stringToEscape)
+		public static new string EscapeUriString(string stringToEscape)
 		{
-			return EscapeString(stringToEscape);
+			return Uri.EscapeUriString(stringToEscape);
 		}
-		public static string EscapeDataString(string stringToEscape)
+		public static new string EscapeDataString(string stringToEscape)
 		{
 			return Uri.EscapeDataString(stringToEscape);
 		}

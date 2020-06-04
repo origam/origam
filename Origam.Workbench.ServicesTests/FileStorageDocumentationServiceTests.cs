@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -210,7 +210,11 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
-        public event EventHandler<IPersistent> InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted
+        {
+            add { }
+            remove { }
+        }
         public void OnTransactionEnded(object sender)
         {
             throw new NotImplementedException();

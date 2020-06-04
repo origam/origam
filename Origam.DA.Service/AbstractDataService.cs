@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -147,7 +147,8 @@ namespace Origam.DA.Service
             bool hasDynamicFilter = selectParameters.Filter != null && selectParameters.Filter.IsDynamic;
             bool hasCustomFilters = !string.IsNullOrWhiteSpace(selectParameters.CustomFilters);
             bool hasCustomOrdering = selectParameters.CustomOrdering != null && selectParameters.CustomOrdering.Count > 0;
-            if (hasDynamicFilter || hasCustomFilters || hasCustomOrdering)
+            bool hasAggregateColumns = selectParameters.AggregatedColumns != null && selectParameters.AggregatedColumns.Count > 0;
+            if (hasDynamicFilter || hasCustomFilters || hasCustomOrdering || hasAggregateColumns)
             {
                 return GetAdapterNonCached(selectParameters);
             }
@@ -811,9 +812,13 @@ namespace Origam.DA.Service
             DataStructureQuery dataStructureQuery, 
             IPrincipal userProfile, 
             string transactionId);
+        
+        public abstract IEnumerable<IEnumerable<object>> ExecuteDataReader
+	        (DataStructureQuery dataStructureQuery);
 
-        public abstract IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery);
-
+        public abstract IEnumerable<IEnumerable<KeyValuePair<string, object>>>
+	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
+        
         #endregion
 
         #region IDisposable Members

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -64,6 +64,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			parentNode.SetAttribute("IsHeadless", XmlConvert.ToString(renderData.HideNavigationPanel));
 			parentNode.SetAttribute("DisableActionButtons", XmlConvert.ToString(renderData.DisableActionButtons));
 			parentNode.SetAttribute("ShowAddButton", XmlConvert.ToString(renderData.ShowNewButton));
+			parentNode.SetAttribute("HideCopyButton", XmlConvert.ToString(renderData.HideCopyButton));
 			parentNode.SetAttribute("ShowDeleteButton", XmlConvert.ToString(renderData.ShowDeleteButton));
 			parentNode.SetAttribute("ShowSelectionCheckboxes", XmlConvert.ToString(showSelectionCheckboxes));
 			parentNode.SetAttribute("IsGridHeightDynamic", XmlConvert.ToString(renderData.IsGridHeightDynamic));

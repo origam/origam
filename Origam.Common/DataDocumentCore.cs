@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,8 +19,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Data;
 using System.Xml;
+using System.Linq;
+using Origam.Extensions;
+using System.IO;
 
 namespace Origam
 {
@@ -45,9 +49,10 @@ namespace Origam
 
         private void WriteToDataSet(XmlDocument xmlDocument)
         {
+            dataSet.Clear();
             using (XmlReader xmlReader = new XmlNodeReader(xmlDocument))
             {
-                dataSet.ReadXml(xmlReader);
+                Load(xmlReader,true);
             }
         }
 
@@ -56,10 +61,8 @@ namespace Origam
             get
             {
                 XmlDocument xmlDocument = new XmlDocument();
-                if (dataSet.Tables.Count != 0 && dataSet.Tables[0].Rows.Count > 0)
-                {
-                    xmlDocument.LoadXml(dataSet.GetXml());
-                }
+                // dataSet always returns xml, so it's always safe to convert to xml
+                xmlDocument.LoadXml(dataSet.GetXml());                
                 return xmlDocument;
             }
         }
@@ -89,9 +92,9 @@ namespace Origam
             WriteToDataSet(newDocument);
         }
 
-        public void Load(XmlReader xmlReader)
+        public void Load(XmlReader xmlReader, bool doProcessing)
         {
-            dataSet.ReadXml(xmlReader);
+            dataSet.ReadXml(doProcessing ? new XmlReaderCore(xmlReader) : xmlReader);
         }
 
         public void LoadXml(string xmlString)

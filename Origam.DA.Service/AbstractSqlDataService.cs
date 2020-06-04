@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -83,6 +83,7 @@ namespace Origam.DA.Service
 					        Parameters = Query.Parameters.ToHashtable(),
 					        Paging = Query.Paging,
 					        ColumnsInfo = Query.ColumnsInfo,
+					        AggregatedColumns = Query.AggregatedColumns
 					    };
                         adapter = DataService.GetAdapter(selectParameters, CurrentProfile);
 						break;
@@ -703,7 +704,7 @@ namespace Origam.DA.Service
                 DataTable storedTable = storedData.Tables[currentEntityName];
                 if (storedTable.Rows.Count == 0)
                 {
-                    errorString = ResourceUtils.GetString("DataChangedByOtherUserException", rowName, lastTableName);
+                    errorString = ResourceUtils.GetString("DataDeletedByOtherUserException", rowName, lastTableName);
                 }
                 else
                 {
@@ -1589,8 +1590,11 @@ namespace Origam.DA.Service
                 ColumnsInfo = query.ColumnsInfo,
                 CustomFilters = query.CustomFilters,
                 CustomOrdering = query.CustomOrdering,
+                CustomGrouping = query.CustomGrouping,
                 RowLimit = query.RowLimit,
-                ForceDatabaseCalculation = query.ForceDatabaseCalculation
+                RowOffset = query.RowOffset,
+                ForceDatabaseCalculation = query.ForceDatabaseCalculation,
+                AggregatedColumns = query.AggregatedColumns
             };
             DbDataAdapter adapter = GetAdapter(
                 adapterParameters, currentProfile);
@@ -1605,30 +1609,77 @@ namespace Origam.DA.Service
             return adapter.SelectCommand.ExecuteReader(commandBehavior);
         }
         
-        public override IEnumerable<object> ExecuteDataReader(DataStructureQuery query)
+        public override IEnumerable<IEnumerable<object>> ExecuteDataReader(DataStructureQuery query)
+        {
+	        return ExecuteDataReaderInternal(query)
+		        .Select(line
+			        => line.Select(pair => pair.Value));
+        }
+
+        public override IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
+        {
+	        return ExecuteDataReaderInternal(query)
+		        .Select(line => ExpandAggregationData(line, query))
+		        .Select( line=> line.ToDictionary(
+			        pair => pair.Key, 
+			        pair => pair.Value));
+        }
+
+        private List<KeyValuePair<string, object>> ExpandAggregationData(
+	        IEnumerable<KeyValuePair<string, object>> line, DataStructureQuery query)
+        {
+	        var processedItems = new List<KeyValuePair<string, object>>();
+	        var aggregationData = new List<object>();
+	        foreach (var pair in line)
+	        {
+		        var aggregatedColumn = query.AggregatedColumns
+			        .FirstOrDefault(column => column.SqlQueryColumnName == pair.Key);
+		        if (aggregatedColumn != null)
+		        {
+			        aggregationData.Add(
+				        new
+				        {
+					        Column = aggregatedColumn.ColumnName,
+					        Type = aggregatedColumn.AggregationType.ToString(),
+					        Value = pair.Value
+				        }
+			        );
+		        }
+		        else
+		        {
+			        processedItems.Add(pair);
+		        }
+	        }
+	        processedItems.Add(new KeyValuePair<string, object>("aggregations", aggregationData));
+	        return processedItems;
+        }
+
+        private IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderInternal(DataStructureQuery query)
         {
 	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
+		        var queryColumns = query.GetAllQueryColumns();
 		        while(reader.Read())
 		        {
-			        object[] values = new object[query.ColumnsInfo.Count];
-                    for (int i = 0, index = 0; i < query.ColumnsInfo.Count; i++)
-                    {
-                        if (query.ColumnsInfo.Columns[i].IsVirtual)
-                        {
-                            continue;
-                        }
-                        values[i] = reader.GetValue(reader.GetOrdinal(query.ColumnsInfo.Columns[i].Name));
-                        index++;
-                    }
+			        var values = new KeyValuePair<string, object>[queryColumns.Count];
+			        for (int i = 0; i < queryColumns.Count; i++)
+			        {
+				        if (queryColumns[i].IsVirtual)
+				        {
+					        continue;
+				        }
+				        object value = reader.GetValue(reader.GetOrdinal(queryColumns[i].Name));
+				        values[i] = new KeyValuePair<string, object>(
+					        queryColumns[i].Name , value);
+			        }
 			        yield return detachedFieldPacker.ProcessReaderOutput(
-                        values, query.ColumnsInfo);
+				        values, queryColumns);
 		        }
 	        }
         }
 
-	    private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
+        private static DataStructureEntity GetEntity(DataStructureQuery query, DataStructure dataStructure)
 	    {
 	        DataStructureEntity entity;
 	        switch (query.DataSourceType)
@@ -2415,7 +2466,14 @@ namespace Origam.DA.Service
 			newDataQuery.DataSourceType = QueryDataSourceType.DataStructureEntity;
 			foreach(DataColumn col in row.Table.PrimaryKey)
 			{
-				newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col]));
+				if (row.RowState == DataRowState.Deleted)
+				{
+					newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col, DataRowVersion.Original]));
+				}
+				else
+				{
+					newDataQuery.Parameters.Add(new QueryParameter(col.ColumnName, row[col]));
+				}
 			}
 
 			this.LoadDataSet(newDataQuery, userProfile, newData, transactionId);

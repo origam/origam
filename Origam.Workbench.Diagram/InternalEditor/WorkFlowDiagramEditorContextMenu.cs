@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -24,7 +24,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
-using MoreLinq.Extensions;
+using MoreLinq;
 using Origam.Extensions;
 using Origam.Gui.Win.Commands;
 using Origam.Schema;

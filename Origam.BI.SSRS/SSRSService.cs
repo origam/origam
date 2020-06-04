@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -84,7 +84,6 @@ namespace Origam.BI.SSRS
             string reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(report.ReportPath, parameters);
             string historyID = null;
             string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
-            string showHideToggle = null;
             string encoding;
             string mimeType;
             string extension;

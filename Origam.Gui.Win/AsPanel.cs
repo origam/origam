@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -537,6 +537,16 @@ namespace Origam.Gui.Win
 
 		[Browsable(false)]
 		public bool OriginalShowNewButton { get; private set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the Copy button 
+		/// will be hidden.
+		/// </summary>
+		/// <value>True if the Copy button is hidden. The default is false.</value>
+		/// 
+		[DefaultValue(false), Category("Behavior"), 
+		Description("Indicates whether Copy Button will be hidden.")]
+		public bool HideCopyButton { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the Delete button 

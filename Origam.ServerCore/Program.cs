@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -44,7 +44,9 @@ namespace Origam.ServerCore
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.AddLog4Net();
-                    logging.SetMinimumLevel(LogLevel.Debug);
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.AddConsole();
+                    logging.AddDebug();
                 });
     }
 }

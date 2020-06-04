@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Origam.ServerCommon.Pages;
+using Origam.ServerCore.Pages;
 
 namespace Origam.ServerCore
 {
@@ -33,9 +34,10 @@ namespace Origam.ServerCore
 
         public async Task Invoke(HttpContext context)
         {
-            UserApiProcessor userApiProcessor = new UserApiProcessor(new CoreHttpTools());
+            CoreUserApiProcessor userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
             var contextWrapper = new StandardHttpContextWrapper(context);
             userApiProcessor.Process(contextWrapper);
+            await Task.CompletedTask;
         }
     }
 }

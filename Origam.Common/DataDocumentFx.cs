@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -70,7 +70,7 @@ namespace Origam
             xmlDataDocument.DocumentElement.AppendChild(newNode);
         }
 
-        public void Load(XmlReader xmlReader)
+        public void Load(XmlReader xmlReader,bool doProcessing)
         {
             xmlDataDocument.Load(xmlReader);
         }

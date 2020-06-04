@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,10 +21,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -34,62 +34,65 @@ using Origam.BI;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Server;
+using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore.Controller
 {
-    [Authorize]
-    [ApiController]
+    [AllowAnonymous]
+    [Controller]
     [Route("internalApi/[controller]")]
     public class ReportController : AbstractController
     {
-        private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly CoreHttpTools httpTools = new CoreHttpTools();
         public ReportController(
             SessionObjects sessionObjects, 
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log)
+            ILogger<AbstractController> log) : base(log, sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
             this.localizer = localizer;
         }
-
         [HttpGet("{reportRequestId:guid}")]
         public IActionResult Get(Guid reportRequestId)
         {
             try
             {
-                ReportRequest reportRequest = sessionObjects.SessionManager
+                var reportRequest = sessionObjects.SessionManager
                     .GetReportRequest(reportRequestId);
                 if(reportRequest == null)
                 {
-                    return NotFound(localizer["ErrorReportNotAvailable"]);
+                    return NotFound(localizer["ErrorReportNotAvailable"]
+                        .ToString());
                 }
-                else
+                reportRequest.TimesRequested++;
+                // get report model data
+                var persistenceService = ServiceManager
+                    .Services.GetService<IPersistenceService>();
+                var report = persistenceService.SchemaProvider.RetrieveInstance(
+                    typeof(AbstractReport), 
+                    new ModelElementKey(new Guid(reportRequest.ReportId))) 
+                    as AbstractReport;
+                switch(report)
                 {
-                    reportRequest.TimesRequested++;
-                    // get report model data
-                    IPersistenceService persistenceService = ServiceManager
-                        .Services.GetService<IPersistenceService>();
-                    AbstractReport report 
-                        = persistenceService.SchemaProvider.RetrieveInstance(
-                        typeof(AbstractReport), 
-                        new ModelElementKey(new Guid(reportRequest.ReportId))) 
-                        as AbstractReport;
-                    if(report is WebReport webReport)
+                    case WebReport webReport:
                     {
                         return HandleWebReport(reportRequest, webReport);
                     }
-                    else if(report is FileSystemReport fileSystemReport)
+                    case FileSystemReport fileSystemReport:
                     {
                         return HandleFileSystemReport(
                             reportRequest, fileSystemReport);
                     }
-                    else 
+                    default:
                     {
-                        return HandleReport(reportRequest, report.Name);
+                        if(report != null)
+                        {
+                            return HandleReport(reportRequest, report.Name);
+                        }
+                        return NotFound(localizer["ErrorReportNotAvailable"]
+                            .ToString());
                     }
                 }
             }
@@ -105,7 +108,7 @@ namespace Origam.ServerCore.Controller
         private IActionResult HandleReport(
             ReportRequest reportRequest, string reportName)
         {
-            byte[] report = ReportService.GetReport(
+            var report = ReportService.GetReport(
                 new Guid(reportRequest.ReportId),
                 null,
                 reportRequest.DataReportExportFormatType.GetString(),
@@ -125,7 +128,7 @@ namespace Origam.ServerCore.Controller
         {
             ReportHelper.PopulateDefaultValues(
                 webReport, reportRequest.Parameters);
-            string url = HttpTools.BuildUrl(
+            var url = HttpTools.BuildUrl(
                 webReport.Url, reportRequest.Parameters, 
                 webReport.ForceExternalUrl,
                 webReport.ExternalUrlScheme, webReport.IsUrlEscaped);
@@ -137,53 +140,49 @@ namespace Origam.ServerCore.Controller
         {
             ReportHelper.PopulateDefaultValues(
                 report, reportRequest.Parameters);
-            string filePath = BuildFileSystemReportFilePath(
+            var filePath = BuildFileSystemReportFilePath(
                 report.ReportPath, reportRequest.Parameters);
-            string mimeType = HttpTools.GetMimeType(filePath);
+            var mimeType = HttpTools.GetMimeType(filePath);
             Response.Headers.Add(
                 HeaderNames.ContentDisposition,
                 httpTools.GetFileDisposition(
                     new CoreRequestWrapper(Request), 
                     Path.GetFileName(filePath)));
-            using (Stream stream = new FileStream(filePath, FileMode.Open))
-            {
-                return File(stream, mimeType);
-            }
+            var stream = new FileStream(filePath, FileMode.Open);
+            return File(stream, mimeType);
         }
-
         private string BuildFileSystemReportFilePath(
-            string filePath, Hashtable parameters)
+            string filePath, IEnumerable parameters)
         {
-            foreach (DictionaryEntry entry in parameters)
+            foreach(DictionaryEntry entry in parameters)
             {
-                string sKey = entry.Key.ToString();
+                var sKey = entry.Key.ToString();
                 string sValue = null;
                 if (entry.Value != null)
                 {
                     sValue = entry.Value.ToString();
                 }
-                string replacement = "{" + sKey + "}";
-                if (filePath.IndexOf(replacement) > -1)
+                var replacement = "{" + sKey + "}";
+                if(filePath.IndexOf(replacement, StringComparison.Ordinal) <=
+                   -1) continue;
+                if(sValue == null)
                 {
-                    if (sValue == null)
-                    {
-                        throw new Exception(
-                            localizer["FilePathPartParameterNull"]);
-                    }
-                    filePath = filePath.Replace(replacement, sValue);
+                    throw new Exception(
+                        localizer["FilePathPartParameterNull"]);
                 }
+                filePath = filePath.Replace(replacement, sValue);
             }
             return filePath;
         }
         private void RemoveRequest(Guid reportRequestId)
         {
-            ReportRequest reportRequest = sessionObjects.SessionManager
+            var reportRequest = sessionObjects.SessionManager
                 .GetReportRequest(reportRequestId);
             if((reportRequest == null) 
             || (reportRequest.TimesRequested >= 2)
             || (Request.Headers.ContainsKey(HeaderNames.UserAgent)
             && (Request.Headers[HeaderNames.UserAgent].ToString()
-            .IndexOf("Edge") == -1)))
+                    .IndexOf("Edge", StringComparison.Ordinal) == -1)))
             {
                 sessionObjects.SessionManager.RemoveReportRequest(
                     reportRequestId);

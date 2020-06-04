@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -359,7 +359,7 @@ namespace Origam.Mail
             {
                 return popClient.GetMessage(index);
             }
-            catch (Pop3CommandException ex)
+            catch (Pop3CommandException)
             {
                 return null; // message with this number was already deleted
             }

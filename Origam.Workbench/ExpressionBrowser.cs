@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -30,6 +30,8 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Schema;
+using Origam.Schema.Attributes;
+using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -64,7 +66,7 @@ namespace Origam.Workbench
         private Timer watcherTimer;
         private Hashtable _customImages = new Hashtable();
         private bool _fileChangesPending = false;
-        private bool _supportsGit = false;
+        protected bool _supportsGit = false;
         
 
 		public ExpressionBrowser()
@@ -693,7 +695,7 @@ namespace Origam.Workbench
 				if(bnode != null && HasChildNodes(bnode))
 				{
 					ArrayList childNodes = new ArrayList(bnode.ChildNodes());
-					childNodes.Sort();
+					Sort(childNodes);
 
 					foreach(IBrowserNode2 child in childNodes)
 					{
@@ -734,6 +736,23 @@ namespace Origam.Workbench
 			finally
 			{
 				tvwExpressionBrowser.EndUpdate();
+			}
+		}
+
+		private void Sort(ArrayList childNodes)
+		{
+			if (childNodes.Count > 0)
+			{
+				object[] attributes = childNodes[0].GetType().GetCustomAttributes(typeof(ExpressionBrowserTreeSortAtribute), true);
+				if (attributes != null && attributes.Length > 0)
+				{
+					ExpressionBrowserTreeSortAtribute treeSortAtribute = attributes[0] as ExpressionBrowserTreeSortAtribute;
+					childNodes.Sort(treeSortAtribute.GetComparator());
+				}
+				else
+				{
+					childNodes.Sort();
+				}
 			}
 		}
 

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -38,6 +38,9 @@ namespace Origam.ServerCore
                 portalSessions: new Dictionary<Guid, PortalSessionStore>(),
                 formSessions: new Dictionary<Guid, SessionStore>(),
                 reportRequests: new Dictionary<Guid, ReportRequest>(),
+                blobDownloadRequests: new Dictionary<Guid, 
+                    BlobDownloadRequest>(),
+                blobUploadRequests: new Dictionary<Guid, BlobUploadRequest>(),
                 analytics: analytics);
             UIManager = new UIManager(50, SessionManager, analytics);
             UIService = new ServerCoreUIService(UIManager, SessionManager);

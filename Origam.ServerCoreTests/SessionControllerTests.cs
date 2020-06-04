@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using Origam.Server;
+using Origam.ServerCommon;
 using Origam.ServerCore.Controllers;
 using Origam.ServerCore.Model.Session;
 
@@ -39,13 +40,13 @@ namespace Origam.ServerCoreTests
 
         public SessionControllerTests()
         {
-            sut = new SessionController(sessionObjects, null);
+            sut = new SessionController(sessionObjects);
         }
 
         [Test, Order(301)]
-        public void ShouldCreateNewEmptySession()
+        public async void ShouldCreateNewEmptySession()
         {
-            var actionResult = sut.CreateSession(new CreateSessionData
+            var actionResult = await sut.CreateSessionAsync(new CreateSessionData
             {
                 MenuId = new Guid("f38fdadb-4bba-4bb7-8184-c9109d5d40cd"),
                 Parameters = new Dictionary<string, string>()

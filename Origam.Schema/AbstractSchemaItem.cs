@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,13 +21,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
+using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.UI;
-using System.Xml.Serialization;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Origam.DA;
 
 namespace Origam.Schema
 {
@@ -91,7 +91,7 @@ namespace Origam.Schema
 
 		[Category("(Info)")]
 		[Description("Unique ID of this model element. Model elements are internally identified by ID's, not names.")]
-		public Guid Id
+		public new Guid Id
 		{
 			get
 			{
@@ -309,6 +309,7 @@ namespace Origam.Schema
 				CheckLicense();
 			}
             AbstractSchemaItem _rootItemForRefresh = GetRootItem(this);
+			var schemaItemCollection = ChildItems;
             if(!IsDeleted)
             {
                 // PERSIST THE ELEMENT
@@ -319,7 +320,7 @@ namespace Origam.Schema
 			if(PersistChildItems)
 			{
 				// We persist all child items
-				foreach(AbstractSchemaItem item in ChildItems)
+				foreach(AbstractSchemaItem item in schemaItemCollection)
 				{
 					if(item.DerivedFrom == null && IsPersistable)
 					{

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace Origam.Schema.EntityModel
 {
@@ -282,6 +283,19 @@ namespace Origam.Schema.EntityModel
 				if(pk.Fields.Count > 0) result.Add(pk);
 				return result;
 			}
+		}
+		[Browsable(false)]
+		public  bool HasEntityAFieldDenyReadRule()
+		{
+				if (ChildItemsByTypeRecursive(EntityFieldSecurityRule.ItemTypeConst)
+				.ToArray().Cast<EntityFieldSecurityRule>()
+				.Where(rule => rule.Type == PermissionType.Deny && rule.ReadCredential)
+				.Count() > 0)
+				{
+					return true;
+				}
+			
+			return false;
 		}
 		#endregion
 

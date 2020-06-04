@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -39,17 +39,8 @@ namespace Origam
         {
 #if NETSTANDARD
             return new DataDocumentCore(dataSet);
-# else
+#else
             return new DataDocumentFx(dataSet);
-#endif
-        }
-
-        public static IDataDocument New(XmlContainer xmlContainer)
-        {
-#if NETSTANDARD
-            return new DataDocumentCore(xmlContainer.Xml);
-# else
-            return new DataDocumentFx(xmlContainer.Xml);
 #endif
         }
     }

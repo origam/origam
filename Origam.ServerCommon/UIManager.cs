@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -47,9 +47,11 @@ namespace Origam.Server
 {
     public class UIManager
     {
+        internal static readonly log4net.ILog log 
+            = log4net.LogManager.GetLogger(System.Reflection.MethodBase
+                .GetCurrentMethod().DeclaringType);
         private readonly int initialPageNumberOfRecords;
         private readonly SessionManager sessionManager;
-        private static readonly AsThreadPool threadPool = new AsThreadPool();
         private readonly Analytics analytics;
 
         public UIManager(int initialPageNumberOfRecords,
@@ -63,11 +65,11 @@ namespace Origam.Server
         public UIResult InitUI(UIRequest request, bool addChildSession, 
             SessionStore parentSession, IBasicUIService basicUIService)
         {
-            IAsyncResult asyncFormXmlResult = null;
+            Task getFormXmlTask = null;
             // Stack can't handle resending DataDocumentFx, 
             // it needs to be converted to XmlDocument 
             // and then converted back to DataDocumentFx
-            foreach(object key in request.Parameters.Keys.ToList<object>())
+            foreach (object key in request.Parameters.Keys.ToList<object>())
             {
                 object value = request.Parameters[key];
                 if (value is XmlDocument xmlDoc)
@@ -136,12 +138,10 @@ namespace Origam.Server
                 analytics.SetProperty("OrigamFormId", ss.FormId);
                 analytics.SetProperty("OrigamFormName", ss.Name);
                 analytics.Log("UI_OPENFORM");
-                if (ss.SupportsFormXmlAsync &&
-                    IsFormXmlNotCachedOnClient(request, ss))
+                if (ss.SupportsFormXmlAsync 
+                && IsFormXmlNotCachedOnClient(request, ss))
                 {
-                    asyncFormXmlResult =
-                        threadPool.QueueUserWorkItemResult(
-                            new ThreadStart(ss.PrepareFormXml), null);
+                    getFormXmlTask = Task.Run(() => ss.PrepareFormXml());
                 }
                 ss.Init();
                 ss.IsExclusive = isExclusive;
@@ -188,9 +188,17 @@ namespace Origam.Server
             if(IsFormXmlNotCachedOnClient(request, ss))
             {
                 // wait for asynchronously loaded form xml
-                if (asyncFormXmlResult != null)
+                if(getFormXmlTask != null)
                 {
-                    asyncFormXmlResult.AsyncWaitHandle.WaitOne();
+                    if(log.IsDebugEnabled)
+                    {
+                        log.Debug("Waiting for XML...");
+                    }
+                    Task.WaitAll(getFormXmlTask);
+                    if(log.IsDebugEnabled)
+                    {
+                        log.Debug("Waiting for XML is over...");
+                    }
                 }
                 // FORM XML
                 SetFormXml(result, profile, ss);

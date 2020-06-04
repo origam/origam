@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -2626,7 +2626,7 @@ namespace Origam.Rule
 					}
 					else
 					{
-						result = resultDoc;
+						result = new Origam.XmlContainer(resultDoc);
 					}
 				}
 			}
@@ -2839,7 +2839,7 @@ namespace Origam.Rule
 				}
 			}
 
-			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data.Xml};
+			object[] queueEntry = new object[4] {rowChanged, ruleSet, columns, data};
 			_ruleQueue.Enqueue(queueEntry);
 		}
 
@@ -2986,7 +2986,7 @@ namespace Origam.Rule
 					DataRow row = queueEntry[0] as DataRow;
 					DataStructureRuleSet rs = queueEntry[1] as DataStructureRuleSet;
 					Hashtable changedColumns = queueEntry[2] as Hashtable;
-					IDataDocument data = new DataDocumentCore(queueEntry[3] as XmlDocument);
+                    IDataDocument data = queueEntry[3] as IDataDocument;
 
 					row.BeginEdit();
 
@@ -3078,7 +3078,7 @@ namespace Origam.Rule
 					_ruleColumnChanges[ColumnKey(columnChanged)] = columnChanged;
 				}
 
-				rules.Sort();
+				rules.Sort(new ProcessRuleComparer());
 
 				if(rules.Count > 0)
 				{
@@ -4020,56 +4020,66 @@ namespace Origam.Rule
 			if(xmlDocument != null)
 			{
 				doc = xmlDocument;
+                return doc;
+			}
+            
+            System.Xml.XmlDocument xmlDoc = data as XmlDocument;
+            if (xmlDoc != null)
+            {
+                // this shouldn't happen. XmlContainer should be as and input all the time.
+                // But if it was XmlDocument, we convert it here and log it.
+                log.ErrorFormat("GetXmlDocumentFromData called with System.Xml.XmlDataDocuement." +
+                    "This isn't expected. Refactor code to be called with IXmlContainer. (documentElement:{0})",
+                    xmlDoc.DocumentElement.Name);
+                return new Origam.XmlContainer(xmlDoc);
+            }            
+			
+			if(data is int)
+			{
+				data = XmlConvert.ToString((int)data);
+			}
+			else if(data is Guid)
+			{
+				data = XmlConvert.ToString((Guid)data);
+			}
+			else if(data is long)
+			{
+				data = XmlConvert.ToString((long)data);
+			}
+			else if(data is decimal)
+			{
+				data = XmlConvert.ToString((decimal)data);
+			}
+			else if(data is bool)
+			{
+				data = XmlConvert.ToString((bool)data);
+			}
+			else if(data is DateTime)
+			{
+				data = XmlConvert.ToString((DateTime)data);
+			}
+			else if(data == null)
+			{
+				return  new XmlContainer("<ROOT/>");
+			}
+			else if (data is ArrayList)
+			{
+				doc = new XmlContainer();
+				XmlElement root = (XmlElement)doc.Xml.AppendChild(doc.Xml.CreateElement("ROOT"));
+				foreach (object item in data as ArrayList)
+				{
+					root.AppendChild(doc.Xml.CreateElement("value")).InnerText = item.ToString();
+				}
+				return doc;
 			}
 			else
 			{
-				if(data is int)
-				{
-					data = XmlConvert.ToString((int)data);
-				}
-				else if(data is Guid)
-				{
-					data = XmlConvert.ToString((Guid)data);
-				}
-				else if(data is long)
-				{
-					data = XmlConvert.ToString((long)data);
-				}
-				else if(data is decimal)
-				{
-					data = XmlConvert.ToString((decimal)data);
-				}
-				else if(data is bool)
-				{
-					data = XmlConvert.ToString((bool)data);
-				}
-				else if(data is DateTime)
-				{
-					data = XmlConvert.ToString((DateTime)data);
-				}
-				else if(data == null)
-				{
-					return  new XmlContainer("<ROOT/>");
-				}
-				else if (data is ArrayList)
-				{
-					doc = new XmlContainer();
-					XmlElement root = (XmlElement)doc.Xml.AppendChild(doc.Xml.CreateElement("ROOT"));
-					foreach (object item in data as ArrayList)
-					{
-						root.AppendChild(doc.Xml.CreateElement("value")).InnerText = item.ToString();
-					}
-					return doc;
-				}
-				else
-				{
-					data = data.ToString();
-				}
-
-				doc = new XmlContainer();
-				doc.Xml.LoadXml("<ROOT><value /></ROOT>");
-                doc.Xml.FirstChild.FirstChild.InnerText = (string)data;
+				data = data.ToString();
 			}
+
+			doc = new XmlContainer();
+			doc.Xml.LoadXml("<ROOT><value /></ROOT>");
+            doc.Xml.FirstChild.FirstChild.InnerText = (string)data;
 
 			return doc;
 		}
@@ -6129,5 +6139,23 @@ namespace Origam.Rule
 		private bool valid;
 	}
 
-#endregion
+	#endregion
+
+	#region IComparer Members
+	public class ProcessRuleComparer : IComparer
+	{
+		int IComparer.Compare(Object x, Object y)
+		{
+			if ((x as DataStructureRule) != null && (y as DataStructureRule) != null)
+			{
+				return (x as DataStructureRule).Priority.CompareTo((y as DataStructureRule).Priority);
+			}
+			else
+			{
+				// rulesets are always an top, so rules are greater
+				return 1;
+			}
+		}
+	}
+    #endregion
 }

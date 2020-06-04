@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -35,9 +35,12 @@ namespace Origam.DA.Service
         public Hashtable Parameters { get; set; }
         public bool Paging { get; set; }
         public string CustomFilters { get; set; } = "";
-        public int RowLimit { get; set; }
-        public List<Tuple<string, string>> CustomOrdering { get; set; }
+        public int? RowLimit { get; set; }
+        public int? RowOffset { get; set; }
+        public List<Ordering> CustomOrdering { get; set; }
         public bool ForceDatabaseCalculation { get; set; }
         public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
+        public Grouping CustomGrouping { get; set; }
+        public List<Aggregation> AggregatedColumns { get; set; }
     }
 }

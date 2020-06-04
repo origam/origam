@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -43,14 +43,14 @@ namespace Origam.Gui.UI
             try
             {
                 return textParseFunc.Invoke(text);
-            } catch (OverflowException ex) 
+            } catch (OverflowException) 
             {
                 // TODO: fix error message tooltip which does not show up above 
                 // the textBox (commented lines below)
 //                errorReporter.NotifyInputError($"The value {text} " +
 //                                 $"is too big or too small for {ValueType.Name}");
                 throw;
-            } catch (FormatException ex)
+            } catch (FormatException)
             {
                 errorReporter.NotifyInputError($"Cannot parse \"{text}\" to" +
                                                $" {ValueType.Name}");

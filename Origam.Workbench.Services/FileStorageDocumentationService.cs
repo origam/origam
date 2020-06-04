@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -186,9 +186,17 @@ namespace Origam.Workbench.Services
         {
         }
 
-        public override event EventHandler Initialize;
+        public override event EventHandler Initialize
+        {
+            add { }
+            remove { }
+        }
 
-        public override event EventHandler Unload;
+        public override event EventHandler Unload
+        {
+            add { }
+            remove { }
+        }
     }
 
     abstract class DocumentationXmlDocument : XmlDocument

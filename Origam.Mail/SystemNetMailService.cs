@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -31,8 +31,31 @@ namespace Origam.Mail
 {
     public class SystemNetMailService : AbstractMailService
     {
+        private readonly string userName;
+        private readonly string password;
+        private readonly bool useSsl;
+        private readonly string defaultServer;
+        private readonly int defaultPort;
+
         public SystemNetMailService()
         {
+        }
+
+        public SystemNetMailService(string server, int port, 
+           string userName = null, string password = null, bool useSsl = true)
+        {
+            if (string.IsNullOrWhiteSpace(password) &&
+                !string.IsNullOrWhiteSpace(userName))
+            {
+                throw new ArgumentException(nameof(password)+" cannot be empty if fromAddress is not empty");
+            }
+            if(string.IsNullOrWhiteSpace(server)) throw new ArgumentException(nameof(server)+" cannot be empty");
+
+            this.userName = userName;
+            this.password = password;
+            this.useSsl = useSsl;
+            defaultServer = server;
+            defaultPort = port;
         }
 
         public override int SendMail1(IXmlContainer mailDocument, string server, int port)
@@ -40,16 +63,7 @@ namespace Origam.Mail
             //return Value positive number (include 0zero) indicates OK result, negative -1 means error
             int retVal = 0;
 
-            //local variables
-            SmtpClient s = new SmtpClient();
-
-            //configure smtp server parameters if given, otherwise use web config settings
-            if (server != null)
-            {
-                s.Host = server;
-                s.Port = port;
-                s.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
-            }
+            var smtpClient = BuildSmtpClient(server, port);
 
             //get root (Mails) element
             XmlElement root = mailDocument.Xml.DocumentElement;
@@ -90,7 +104,7 @@ namespace Origam.Mail
 
                 try
                 {
-                    s.Send(m);
+                    smtpClient.Send(m);
                     retVal++;
                 }
                 catch
@@ -106,22 +120,13 @@ namespace Origam.Mail
             }
             return retVal;
         }
-          
+
         public override int SendMail2(MailData mailData, string server, int port)
         {
             //return Value positive number (include 0zero) indicates OK result, negative -1 means error
             int retVal = 0;
 
-            //local variables
-            SmtpClient s = new SmtpClient();
-
-            //configure smtp server parameters if given, otherwise use web config settings
-            if (! string.IsNullOrEmpty(server))
-            {
-                s.Host = server;
-                s.Port = port;
-                s.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
-            }
+            var smtpClient = BuildSmtpClient(server, port);
 
             //send one mail per Mail section
             foreach (MailData.MailRow mailrow in mailData.Mail.Rows)
@@ -203,7 +208,7 @@ namespace Origam.Mail
                     m.Attachments.Add(att);
                 }
 
-                s.Send(m);
+                smtpClient.Send(m);
                 retVal++;
 
                 /// po uspesnem odeslani mailu posleme zpet domluveny fragment s klicem,
@@ -213,6 +218,31 @@ namespace Origam.Mail
                 /// proveden update.
             }
             return retVal;
+        }
+
+        private SmtpClient BuildSmtpClient(string server, int port)
+        {
+            //local variables
+            SmtpClient smtpClient = new SmtpClient();
+
+            //configure smtp server parameters if given, otherwise use web config settings
+            if (server != null)
+            {
+                smtpClient.Host = server;
+                smtpClient.Port = port;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            }
+            else
+            {
+                smtpClient.Host = defaultServer;
+                smtpClient.Port = defaultPort;
+                smtpClient.EnableSsl = useSsl;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential(userName, password);
+            }
+
+            return smtpClient;
         }
     }
 }

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,6 +28,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema;
@@ -34,12 +37,14 @@ using Origam.Schema.EntityModel;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
+using Origam.ServerCore.Configuration;
+using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
 {
-    public class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigamUser>,
+    public sealed class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigamUser>,
         IUserTwoFactorStore<IOrigamUser>, IUserPasswordStore<IOrigamUser>,IUserLockoutStore<IOrigamUser>
     {
         public static readonly Guid ORIGAM_USER_DATA_STRUCTURE
@@ -48,8 +53,6 @@ namespace Origam.ServerCore
             = new Guid("982f45a9-b610-4e2f-8d7f-2b1eebe93390");
         public static readonly Guid GET_ORIGAM_USER_BY_USER_NAME
             = new Guid("a60c9817-ae18-465c-a91f-d4b8a25f15a4");
-        public static readonly Guid CREATE_USER_WORKFLOW 
-            = new Guid("2bd4dbcc-d01e-4c5d-bedb-a4150dcefd54");
         public static readonly Guid BUSINESS_PARTNER_DATA_STRUCTURE
             = new Guid("f4c92dce-d634-4179-adb4-98876b870cc7");
         public static readonly Guid GET_BUSINESS_PARTNER_BY_USER_NAME
@@ -58,39 +61,39 @@ namespace Origam.ServerCore
             = new Guid("4e46424b-349f-4314-bc75-424206cd35b0");
         public static readonly Guid GET_BUSINESS_PARTNER_BY_USER_EMAIL
             = new Guid("46fd2484-4506-45a2-8a96-7855ea116210");
+        
+        private readonly IStringLocalizer<SharedResources> localizer;
+        private readonly UserLockoutConfig lockoutConfig;
+
+        public UserStore(IOptions<UserLockoutConfig> userLockoutConfig,
+            IStringLocalizer<SharedResources> localizer)
+        {
+            this.localizer = localizer;
+            lockoutConfig = userLockoutConfig.Value;
+        }
 
         public Task<IdentityResult> CreateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "origam_server"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("name", "origam_server"),
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
-     
+            DatasetGenerator dataSetGenerator = new DatasetGenerator(true);
+            IPersistenceService persistenceService = ServiceManager.Services
+                .GetService(typeof(IPersistenceService)) as IPersistenceService;
+            DataStructure dataStructure = (DataStructure) persistenceService
+                .SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
+                    new ModelElementKey(ORIGAM_USER_DATA_STRUCTURE));
+            DataSet origamUserDataSet = dataSetGenerator.CreateDataSet(
+                dataStructure);
+            DataRow origamUserRow
+                = origamUserDataSet.Tables["OrigamUser"].NewRow();
+            UserTools.AddToOrigamUserRow(user ,origamUserRow);
+            origamUserDataSet.Tables["OrigamUser"].Rows.Add(origamUserRow);
 
-            user.BusinessPartnerId = Guid.NewGuid().ToString();
-
-            QueryParameterCollection parameters = new QueryParameterCollection();
-            parameters.Add(new QueryParameter("Id", user.BusinessPartnerId));
-            parameters.Add(new QueryParameter("UserName", user.UserName));
-            parameters.Add(new QueryParameter("Password", user.PasswordHash));
-            parameters.Add(new QueryParameter("FirstName", user.FirstName));
-            parameters.Add(new QueryParameter("Name", user.Name));
-            parameters.Add(new QueryParameter("Email", user.Email));
-            parameters.Add(new QueryParameter("RoleId", user.RoleId));
-            parameters.Add(new QueryParameter("RequestEmailConfirmation",
-                !user.EmailConfirmed));
-             // Will create new line in BusinessPartner and OrigamUser
-            WorkflowService.ExecuteWorkflow(
-                CREATE_USER_WORKFLOW, parameters, null);
+            DataService.StoreData(ORIGAM_USER_DATA_STRUCTURE,
+                origamUserDataSet, false, user.TransactionId);
 
             return Task.FromResult(IdentityResult.Success);
         }
      
-        public async Task<IdentityResult> DeleteAsync(IOrigamUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> DeleteAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
             DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName);
             if (origamUserRow == null)
@@ -103,34 +106,35 @@ namespace Origam.ServerCore
                 origamUserRow.Table.DataSet, 
                 false, 
                 user.TransactionId);
-            return IdentityResult.Success;
+            return Task.FromResult(IdentityResult.Success);
         }
      
-        public async Task<IOrigamUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public Task<IOrigamUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             DataRow origamUserRow = FindOrigamUserRowById(userId);
-            if (origamUserRow == null) return null;
+            if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
 
             DataRow businessPartnerRow = FindBusinessPartnerRowById(userId);
-            if (businessPartnerRow == null) return null;
-
-            return UserTools.Create(
+            if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
+            return Task.FromResult(
+                UserTools.Create(
                 origamUserRow: origamUserRow, 
-                businessPartnerRow: businessPartnerRow);
+                businessPartnerRow: businessPartnerRow));
         }
 
-        public async Task<IOrigamUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public Task<IOrigamUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             var origamUserRow = FindOrigamUserRowByUserName(normalizedUserName);
-            if (origamUserRow == null) return null;
+            if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
 
 
             var businessPartnerRow = FindBusinessPartnerRowByUserName(normalizedUserName);
-            if (businessPartnerRow == null) return null;
+            if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
-            return UserTools.Create(
+            return Task.FromResult(
+                UserTools.Create(
                 origamUserRow: origamUserRow, 
-                businessPartnerRow: businessPartnerRow);
+                businessPartnerRow: businessPartnerRow));
         }
 
         public Task<string> GetNormalizedUserNameAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -150,34 +154,36 @@ namespace Origam.ServerCore
      
         public Task SetNormalizedUserNameAsync(IOrigamUser user, string normalizedName, CancellationToken cancellationToken)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
      
         public Task SetUserNameAsync(IOrigamUser user, string userName, CancellationToken cancellationToken)
         {
             user.UserName = userName;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
      
-        public async Task<IdentityResult> UpdateAsync(IOrigamUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> UpdateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
             DataRow origamUserRow = FindOrigamUserRowByUserName(user.UserName);
             if(origamUserRow == null)
             {
-                return IdentityResult.Failed( 
-                    new IdentityError{Description = Resources.ErrorUserNotFound});
+                return 
+                    Task.FromResult(
+                        IdentityResult.Failed( 
+                             new IdentityError{Description = localizer["ErrorUserNotFound"]}));
             }
             UserTools.UpdateOrigamUserRow(user, origamUserRow);
             DataService.StoreData(ORIGAM_USER_DATA_STRUCTURE,
                 origamUserRow.Table.DataSet,
                 false, null);
-            return IdentityResult.Success;
+            return Task.FromResult(IdentityResult.Success);
         }
 
         public Task SetEmailAsync(IOrigamUser user, string email, CancellationToken cancellationToken)
         {
             user.Email = email;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
      
         public Task<string> GetEmailAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -193,21 +199,23 @@ namespace Origam.ServerCore
         public Task SetEmailConfirmedAsync(IOrigamUser user, bool confirmed, CancellationToken cancellationToken)
         {
             user.EmailConfirmed = confirmed;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
      
-        public async Task<IOrigamUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public Task<IOrigamUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             DataRow businessPartnerRow = FindBusinessPartnerRowByEmail(normalizedEmail);
-            if (businessPartnerRow == null) return null;
+            if (businessPartnerRow == null) return Task.FromResult<IOrigamUser>(null);
 
             string userName = (string)businessPartnerRow["UserName"];
             DataRow origamUserRow = FindOrigamUserRowByUserName(userName);
-            if (origamUserRow == null) return null;
+            if (origamUserRow == null) return Task.FromResult<IOrigamUser>(null);
             
-            return UserTools.Create(
+            return Task.FromResult(
+                UserTools.Create(
                 origamUserRow: origamUserRow, 
-                businessPartnerRow: businessPartnerRow); 
+                businessPartnerRow: businessPartnerRow)); 
+            
         }
 
         public Task<string> GetNormalizedEmailAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -217,13 +225,13 @@ namespace Origam.ServerCore
      
         public Task SetNormalizedEmailAsync(IOrigamUser user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
      
         public Task SetTwoFactorEnabledAsync(IOrigamUser user, bool enabled, CancellationToken cancellationToken)
         {
             user.TwoFactorEnabled = enabled;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
      
         public Task<bool> GetTwoFactorEnabledAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -234,7 +242,7 @@ namespace Origam.ServerCore
         public Task SetPasswordHashAsync(IOrigamUser user, string passwordHash, CancellationToken cancellationToken)
         {
             user.PasswordHash = passwordHash;
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
      
         public Task<string> GetPasswordHashAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -335,14 +343,14 @@ namespace Origam.ServerCore
                 paramValue);
         }
         
-        public static DataSet GetBusinessPartnerDataSet(
+        private static DataSet GetBusinessPartnerDataSet(
             Guid methodId, string paramName, object paramValue)
         {
             return GetBusinessPartnerDataSet(
                 methodId, paramName, paramValue, null);
         }
-          
-        internal static DataSet GetBusinessPartnerDataSet(
+
+        private static DataSet GetBusinessPartnerDataSet(
             Guid methodId, string paramName, object paramValue,
             string transactionId)
         {
@@ -357,34 +365,55 @@ namespace Origam.ServerCore
         }
 
        
-
+        // Gets the last DateTimeOffset a user's last lockout expired, if any. A time value in the past indicates a user is not currently locked out.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.getlockoutenddateasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_GetLockoutEndDateAsync__0_
         public Task<DateTimeOffset?> GetLockoutEndDateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (lockoutConfig.AutoUnlockAfterSpecifiedTime)
+            {
+                if (!user.LastLockoutDate.HasValue)
+                {
+                    return Task.FromResult<DateTimeOffset?>(null);
+                }
+
+                if (user.LastLockoutDate.Value == DateTime.MinValue)
+                {
+                    return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(new DateTime(1900,1,1)));
+                }
+
+                return
+                    Task.FromResult<DateTimeOffset?>(
+                        new DateTimeOffset(user.LastLockoutDate.Value)
+                            .AddMinutes(lockoutConfig.LockoutTimeMinutes));
+            }
+            return 
+                Task.FromResult<DateTimeOffset?>(user.IsLockedOut
+                    ? new DateTimeOffset(new DateTime(9999, 1, 1))
+                    : new DateTimeOffset(new DateTime(10, 1, 1)));
         }
 
         public Task SetLockoutEndDateAsync(IOrigamUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
-            if (!lockoutEnd.HasValue)
+            user.LastLockoutDate = null;
+            if (lockoutEnd.HasValue)
             {
-                throw new NotImplementedException();
+                user.LastLockoutDate = lockoutEnd.Value
+                    .AddMinutes(-lockoutConfig.LockoutTimeMinutes)
+                    .LocalDateTime;
             }
-            if (lockoutEnd.Value < DateTimeOffset.Now)
-            {
-                user.IsLockedOut = false;
-                return Task.CompletedTask;
-            }
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
-        public Task<int> IncrementAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
+        public  Task<int> IncrementAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.FailedPasswordAttemptCount++);
+            user.FailedPasswordAttemptCount++; 
+            return  Task.FromResult(user.FailedPasswordAttemptCount);
         }
 
         public Task ResetAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.FailedPasswordAttemptCount=0);
+            user.FailedPasswordAttemptCount = 0;
+            return Task.CompletedTask;
         }
 
         public Task<int> GetAccessFailedCountAsync(IOrigamUser user, CancellationToken cancellationToken)
@@ -392,15 +421,19 @@ namespace Origam.ServerCore
             return Task.FromResult(user.FailedPasswordAttemptCount);
         }
 
+        // Retrieves a flag indicating whether user lockout can be enabled for the specified user.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.getlockoutenabledasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_GetLockoutEnabledAsync__0_
         public Task<bool> GetLockoutEnabledAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-           
-            return Task.Factory.StartNew(() =>  user.IsLockedOut);
+            return Task.FromResult(true);
         }
 
+        // Sets a flag indicating whether the specified user is locked out, as an asynchronous operation.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.setlockoutenabledasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_SetLockoutEnabledAsync__0_System_Boolean_
         public Task SetLockoutEnabledAsync(IOrigamUser user, bool enabled, CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(() =>  user.IsLockedOut = enabled);
+            user.IsLockedOut = enabled;
+            return Task.CompletedTask;
         }
     }
 }

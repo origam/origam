@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -215,7 +215,12 @@ namespace Origam.DA.Service
             throw new NotImplementedException();
         }
 
-        public IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery)
+        public IEnumerable<IEnumerable<object>> ExecuteDataReader(DataStructureQuery dataStructureQuery)
+        {
+	        throw new NotImplementedException();
+        }
+
+        public IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
         {
 	        throw new NotImplementedException();
         }

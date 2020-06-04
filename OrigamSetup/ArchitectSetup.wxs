@@ -215,9 +215,6 @@
                         <Component Id="OFFICE.DLL" DiskId="1" Guid="C1BDD342-F8B5-491F-9E3B-7DE4B20D82E5">
                             <File Id="OFFICE.DLL" Name="office.dll" Source="source\office.dll" />
                         </Component>
-                        <Component Id="OPENSMTP.DLL" DiskId="1" Guid="66CD1DBC-C1F7-4314-B26C-D4FE963FD495">
-                            <File Id="OPENSMTP.DLL" Name="OpenSmtp.dll" Source="source\OpenSmtp.dll" />
-                        </Component>
                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL" DiskId="1" Guid="065D8E2C-762C-4C16-B760-4B896DA3BF9F">
                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL" Name="Origam.ProjectAutomation.dll" Source="source\Origam.ProjectAutomation.dll" />
                         </Component>
@@ -270,9 +267,6 @@
                         </Component>
                         <Component Id="GIT2_6311E88.DLL" DiskId="1" Guid="4243d3ae-23f2-4c4e-b69e-873c8cc307f6">
                             <File Id="GIT2_6311E88" Name="GIT2-6311E88.DLL" Source="source\GIT2-6311E88.DLL" />
-                        </Component>
-                        <Component Id="SYSTEM.VALUETUPLE.DLL" DiskId="1" Guid="f7011fc9-6960-4778-9e03-56627b323adb">
-                            <File Id="SYSTEM.VALUETUPLE" Name="SYSTEM.VALUETUPLE.DLL" Source="source\SYSTEM.VALUETUPLE.DLL" />
                         </Component>
                         <Component Id="EDIFACT2XML.DLL" Guid="6018bc7d-9913-4782-847a-94bef17c21b4" DiskId="1">
                             <File Id="EDIFACT2XML" Name="EDIFACT2XML.dll" Source="source\EDIFACT2XML.dll">
@@ -1244,9 +1238,6 @@
                                         <Component Id="OFFICE.DLL_1" DiskId="1" Guid="54EC1EC1-33C6-4B49-9082-1ADEF758040D">
                                             <File Id="OFFICE.DLL_1" Name="office.dll" Source="server_source\bin\office.dll" />
                                         </Component>
-                                        <Component Id="OPENSMTP.DLL_1" DiskId="1" Guid="6D1F8526-EFB0-4369-B100-FFAAAECA4DBC">
-                                            <File Id="OPENSMTP.DLL_1" Name="OpenSmtp.dll" Source="server_source\bin\OpenSmtp.dll" />
-                                        </Component>
                                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL_1" DiskId="1" Guid="A836EDF8-89F6-4B88-B20E-8F68BE589260">
                                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL_1" Name="Origam.ProjectAutomation.dll" Source="server_source\bin\Origam.ProjectAutomation.dll" />
                                         </Component>
@@ -1355,12 +1346,6 @@
                                         </Component>
                                         <Component Id="PROTOBUFNET.DLL_1" DiskId="1" Guid="c9bae7be-661c-458b-b9a2-d841688bb014">
                                             <File Id="PROTOBUFNET" Name="protobuf-net.dll" Source="server_source\bin\protobuf-net.dll" />
-                                        </Component>
-                                        <Component Id="SYSTEM.VALUETUPLE.DLL_1" DiskId="1" Guid="37e139d4-a320-42ba-aa9e-d92b9faba4f1">
-                                            <File Id="SYSTEM.VALUETUPLE_1" Name="System.ValueTuple.dll" Source="server_source\bin\SYSTEM.VALUETUPLE.DLL" />
-                                        </Component>
-                                        <Component Id="ORIGAM_UTILS.EXE" DiskId="1" Guid="CF8D2ED7-4B3A-485C-BBF4-A6CDA926754B">
-                                            <File Id="ORIGAM_UTILS.EXE" Name="origam-utils.exe" Source="server_source\bin\origam-utils.exe" />
                                         </Component>
                                         <Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" DiskId="1" Guid="E42358D4-5F5F-4A15-B58B-94CD19CE2DEB">
                                             <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" Name="System.Threading.Tasks.Extensions.dll" Source="server_source\bin\System.Threading.Tasks.Extensions.dll" />
@@ -1693,7 +1678,6 @@
             <ComponentRef Id="CSHARPFUNCTIONALEXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.DRAWING.COMMON.DLL" />
             <ComponentRef Id="CSHARPFUNCTIONALEXTENSIONS.DLL_1" />
-            <ComponentRef Id="OPENSMTP.DLL" />
             <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL" />
             <ComponentRef Id="SCHEDULETIMER.DLL" />
             <ComponentRef Id="WEIFENLUO.WINFORMSUI.DOCKING.DLL" />
@@ -1996,7 +1980,6 @@
             <ComponentRef Id="NPOI.OPENXML4NET.DLL_1" />
             <ComponentRef Id="NPOI.OPENXMLFORMATS.DLL_1" />
             <ComponentRef Id="OFFICE.DLL_1" />
-            <ComponentRef Id="OPENSMTP.DLL_1" />
             <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL_1" />
             <ComponentRef Id="ORIGAM.SECURITY.IDENTITY.DLL" />
             <ComponentRef Id="ORIGAM.SECURITY.NETFX.DLL" />
@@ -2124,9 +2107,6 @@
             <ComponentRef Id="MORELINQ.DLL_1" />
             <ComponentRef Id="LIBGIT2SHARP.DLL" />
             <ComponentRef Id="GIT2_6311E88.DLL" />
-            <ComponentRef Id="SYSTEM.VALUETUPLE.DLL" />
-            <ComponentRef Id="SYSTEM.VALUETUPLE.DLL_1" />
-            <ComponentRef Id="ORIGAM_UTILS.EXE" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />

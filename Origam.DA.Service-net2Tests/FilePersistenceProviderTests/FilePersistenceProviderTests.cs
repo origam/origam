@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -369,8 +369,16 @@ namespace Origam.DA.Service_net2Tests
             
         }
 
-        public event EventHandler Changed;
-        public event EventHandler Deleted;
+        public event EventHandler Changed
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler Deleted
+        {
+            add { }
+            remove { }
+        }
         public IPersistenceProvider PersistenceProvider { get; set; }
         public Key PrimaryKey { get; private set; }
         public Guid Id

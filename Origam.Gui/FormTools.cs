@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -27,6 +27,7 @@ using System.Text;
 using System.Xml;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Rule;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
@@ -275,7 +276,7 @@ namespace Origam.Gui
 
                 transformer.Run();
 
-                XmlDocument transformationResult = transformer.Result as XmlDocument;
+                XmlContainer transformationResult = transformer.Result as XmlContainer;
 
                 if (transformationResult != null)
                 {
@@ -283,7 +284,7 @@ namespace Origam.Gui
                     DataSet resultData = gen.CreateDataSet(entity);
                     resultData.EnforceConstraints = false;
                     IDataDocument resultDoc = DataDocumentFactory.New(resultData);
-                    resultDoc.Load(new XmlNodeReader(transformationResult));
+                    resultDoc.Load(new XmlNodeReader(transformationResult.Xml));
                     DatasetTools.MergeDataSet(
                         dataDoc.DataSet, resultDoc.DataSet, null,
                         new MergeParams(profileId));

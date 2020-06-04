@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -52,6 +52,8 @@ namespace Origam.Schema
 		{
 			if(! (instance is SchemaItemAncestor))
 				throw new ArgumentOutOfRangeException("instance", instance, ResourceUtils.GetString("ErrorSchemaItemAncestorOnly"));
+			if(!(instance as SchemaItemAncestor).IsPersisted)
+				throw new Exception(ResourceUtils.GetString("ErrorSchemaItemAncestorPersistOnly"));
 
 			(instance as SchemaItemAncestor).IsDeleted = true;
 			(instance as SchemaItemAncestor).Persist();

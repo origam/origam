@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Net.Mime;
 using System.Xml;
 
 namespace Origam
@@ -47,7 +46,7 @@ namespace Origam
 
         public XmlDocument Xml { get; }
 
-        public void Load(XmlReader xmlReader)
+        public void Load(XmlReader xmlReader,bool doProcessing)
         {
             Xml.Load(xmlReader);
         }
@@ -60,6 +59,11 @@ namespace Origam
         public object Clone()
         {
             return Xml.Clone();
+        }
+        public void DocumentElementAppendChild(XmlNode node)
+        {
+            var newNode = Xml.ImportNode(node, true);
+            Xml.DocumentElement.AppendChild(newNode);
         }
     }
 }

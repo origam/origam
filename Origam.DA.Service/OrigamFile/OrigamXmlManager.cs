@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -26,7 +26,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using CSharpFunctionalExtensions;
-using MoreLinq.Extensions;
+using MoreLinq;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 //using MoreLinq;

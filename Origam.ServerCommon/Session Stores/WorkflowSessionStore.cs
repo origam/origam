@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,10 +17,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM.
 
@@ -137,11 +138,11 @@ namespace Origam.Server
                         break;
 
                     case ACTION_NEXT:
-                        result = HandleWorkflowNext(cachedFormIds);
+                        result = HandleWorkflowNextAsync(cachedFormIds).Result;
                         break;
 
                     case ACTION_ABORT:
-                        result = HandleAbort();
+                        result = HandleAbortAsync().Result;
                         break;
 
                     case ACTION_SAVE:
@@ -288,7 +289,7 @@ namespace Origam.Server
             set { _endRule = value; }
         }
 
-        public AbstractDataStructure DataStructure
+        public new AbstractDataStructure DataStructure
         {
             get { return _dataStructure; }
             set { _dataStructure = value; }
@@ -531,7 +532,7 @@ namespace Origam.Server
             return new RuleExceptionDataCollection() ;
         }
 
-        private UIResult HandleWorkflowNext(IList<string> cachedWorkflowTaskIds)
+        private async System.Threading.Tasks.Task<UIResult> HandleWorkflowNextAsync(IList<string> cachedWorkflowTaskIds)
         {
             RuleExceptionDataCollection results = EvaluateEndRule();
             if (results != null)
@@ -558,6 +559,7 @@ namespace Origam.Server
             UIRequest request = GetRequest(cachedWorkflowTaskIds);
             UIResult result = this.Service.InitUI(request);
             result.WorkflowTaskId = this.TaskId.ToString();
+            await System.Threading.Tasks.Task.CompletedTask; //CS1998
             return result;
         }
 
@@ -572,7 +574,7 @@ namespace Origam.Server
             return data;
         }
 
-        private UIResult HandleAbort()
+        private async System.Threading.Tasks.Task<UIResult> HandleAbortAsync()
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
 
@@ -586,7 +588,7 @@ namespace Origam.Server
             handler.Event.WaitOne();
 
             HandleWorkflow(handler);
-
+            await System.Threading.Tasks.Task.CompletedTask; //CS1998
             // call InitUI
             UIRequest request = GetRequest(null);
             return Service.InitUI(request);

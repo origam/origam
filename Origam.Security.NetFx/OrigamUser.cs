@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -42,7 +42,7 @@ namespace Origam.Security.Identity
         public bool IsLockedOut { get; set; }
         public bool IsOnline { get; set; }
         public DateTime LastActivityDate { get; set; }
-        public DateTime LastLockoutDate { get; set; }
+        public DateTime? LastLockoutDate { get; set; }
         public DateTime LastLoginDate { get; set; }
         public DateTime LastPasswordChangedDate { get; set; }
         public string PasswordQuestion { get; set; }

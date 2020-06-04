@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -87,7 +87,7 @@ namespace Origam.DA.Service
         }
 
         #region UNUSED
-        public ICompiledModel CompiledModel
+        public override ICompiledModel CompiledModel
         {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();
@@ -444,7 +444,9 @@ namespace Origam.DA.Service
         {
             object retrieveInstance = RetrieveInstance(
                 type: null,
-                primaryKey: new Key {{"Id", id}});
+                primaryKey: new Key {{"Id", id}}, 
+                useCache: true, 
+                throwNotFoundException: false);
             return retrieveInstance != null;
         }
 

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -41,6 +41,8 @@ namespace Origam
         {
             _DIServiceProvider = diServiceProvider;
         }
+
+        public static IServiceProvider DIServiceProvider => _DIServiceProvider;
 
         public static IOrigamAuthorizationProvider GetAuthorizationProvider()
 		{
@@ -104,13 +106,13 @@ namespace Origam
             get
             {
                 // if there is a IPrincipal service in the DI, use it first.
-                IPrincipal res = _DIServiceProvider?.GetService<IPrincipal>();
-                if (res != null)
+                IPrincipal ress = _DIServiceProvider?.GetService<IPrincipal>();
+				if (ress != null)
                 {
-                    return res;
-                }                    
+                    return ress;
+                }
                 // fallback to the old approach
-                res = Thread.CurrentPrincipal;
+                IPrincipal res = Thread.CurrentPrincipal;
                 if (res == null)
                 {
                     throw new UserNotLoggedInException();

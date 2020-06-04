@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -47,6 +47,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 		public string Text = "";
 
 		public bool ShowNewButton = false;
+
+		public bool HideCopyButton = false;
 
 		public bool ShowDeleteButton = false;
 
@@ -225,6 +227,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						break;
 					case "ShowNewButton":			
 						renderData.ShowNewButton = (forceReadOnly ? false : property.BoolValue);	
+						break;
+					case "HideCopyButton":			
+						renderData.HideCopyButton = property.BoolValue;	
 						break;
 					case "ShowDeleteButton":		
 						renderData.ShowDeleteButton = (forceReadOnly ? false : property.BoolValue); 

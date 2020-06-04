@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -36,19 +36,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
-using Origam.Security.Common;
+using Origam.ServerCore.Resources;
 using core = Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
 {
+    // ReSharper disable once InconsistentNaming
     public class ServerCoreUIService : IBasicUIService
     {
         private const int INITIAL_PAGE_NUMBER_OF_RECORDS = 50;
+        // ReSharper disable once InconsistentNaming
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly UIManager uiManager;
@@ -83,10 +89,10 @@ namespace Origam.ServerCore
         }
         public PortalResult InitPortal(int maxRequestLength)
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
-            PortalResult result = new PortalResult(MenuXmlBuilder.GetMenu());
-            OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration();
+            OrigamUserContext.Reset();
+            var profile = SecurityTools.CurrentUserProfile();
+            var result = new PortalResult(MenuXmlBuilder.GetMenu());
+            var settings = ConfigurationManager.GetActiveConfiguration();
             if(settings != null)
             {
                 result.WorkQueueListRefreshInterval 
@@ -95,14 +101,14 @@ namespace Origam.ServerCore
                 result.HelpUrl = settings.HelpUrl;
             }
             result.MaxRequestLength = maxRequestLength;
-            NotificationBox logoNotificationBox = LogoNotificationBox();
+            var logoNotificationBox = LogoNotificationBox();
             if(logoNotificationBox != null)
             {
                 result.NotificationBoxRefreshInterval 
                     = logoNotificationBox.RefreshInterval * 1000;
             }
             // load favorites
-            DataSet favorites = core.DataService.LoadData(
+            var favorites = core.DataService.LoadData(
                 dataStructureId: new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
                 methodId: new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"), 
                 defaultSetId: Guid.Empty, 
@@ -119,11 +125,10 @@ namespace Origam.ServerCore
             {
                 var portalSessionStore = sessionManager.GetPortalSession(
                     profile.Id);
-                bool clearAll = portalSessionStore.ShouldBeCleared();
+                var clearAll = portalSessionStore.ShouldBeCleared();
                 // running session, we get all the form sessions
-                ArrayList sessionsToDestroy = new ArrayList();
-                foreach(SessionStore mainSessionStore 
-                    in portalSessionStore.FormSessions)
+                var sessionsToDestroy = new ArrayList();
+                foreach(var mainSessionStore in portalSessionStore.FormSessions)
                 {
                     if(clearAll)
                     {
@@ -131,8 +136,8 @@ namespace Origam.ServerCore
                     }
                     else if(sessionManager.HasFormSession(mainSessionStore.Id))
                     {
-                        SessionStore sessionStore 
-                            = mainSessionStore.ActiveSession ?? mainSessionStore;
+                        var sessionStore = mainSessionStore.ActiveSession 
+                            ?? mainSessionStore;
                         if((sessionStore is SelectionDialogSessionStore)
                             || sessionStore.IsModalDialog)
                         {
@@ -140,14 +145,14 @@ namespace Origam.ServerCore
                         }
                         else
                         {
-                            bool askWorkflowClose = false;
+                            var askWorkflowClose = false;
                             if(sessionStore 
                                 is WorkflowSessionStore workflowSessionStore)
                             {
                                 askWorkflowClose 
                                     = workflowSessionStore.AskWorkflowClose;
                             }
-                            bool hasChanges = HasChanges(sessionStore);
+                            var hasChanges = HasChanges(sessionStore);
                             result.Sessions.Add(
                                 new PortalResultSession(
                                     sessionStore.Id, 
@@ -191,10 +196,8 @@ namespace Origam.ServerCore
             else
             {
                 // new session
-                PortalSessionStore portalSessionStore 
-                    = new PortalSessionStore(profile.Id);
-                sessionManager.AddPortalSession(
-                    profile.Id, portalSessionStore);
+                var portalSessionStore = new PortalSessionStore(profile.Id);
+                sessionManager.AddPortalSession(profile.Id, portalSessionStore);
             }
             result.UserName = profile.FullName 
                 + " (" + sessionManager.PortalSessionCount + ")";
@@ -202,6 +205,38 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return result;
         }
+        
+        public void Logout()
+        {
+            PortalSessionStore pss;
+            try
+            {
+                pss = sessionManager.GetPortalSession();
+            }
+            catch(SessionExpiredException)
+            {
+                return;
+            }
+
+            if (pss == null)
+            {
+                return;
+            }
+
+            while(pss.FormSessions.Count > 0)
+            {
+                DestroyUI(pss.FormSessions[0].Id);
+            }
+
+            Analytics.Instance.Log("UI_LOGOUT");
+
+            sessionManager.RemovePortalSession(SecurityTools.CurrentUserProfile().Id);
+            Task.Run(() => SecurityTools.RemoveOrigamOnlineUser(
+                SecurityManager.CurrentPrincipal.Identity.Name));
+            OrigamUserContext.Reset();
+        }
+
+        // ReSharper disable once InconsistentNaming
         public void DestroyUI(Guid sessionFormIdentifier)
         {
             sessionHelper.DeleteSession(sessionFormIdentifier);
@@ -211,80 +246,74 @@ namespace Origam.ServerCore
             Guid sessionFormIdentifier,
             IStringLocalizer<SharedResources> localizer)
         {
-            SessionStore sessionStore 
-                = sessionManager.GetSession(sessionFormIdentifier);
-            object result = sessionStore.ExecuteAction(
+            var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            var result = sessionStore.ExecuteAction(
                 SessionStore.ACTION_REFRESH);
             CreateUpdateOrigamOnlineUser();
-            if (result is DataSet)
+            if(!(result is DataSet))
             {
-                IList<string> columns = null;
-                if (sessionStore.IsPagedLoading)
-                {
-                    // for lazily-loaded data we provide all the preloaded columns
-                    // (primary keys + all the initial sort columns)
-                    columns = sessionStore.DataListLoadedColumns;
-                }
-                return DataTools.DatasetToHashtable(result as DataSet, columns, 
-                    INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
-                    sessionStore.DataListEntity, sessionStore);
+                throw new Exception(localizer["ErrorRefreshReturnInvalid",
+                    sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]);
             }
-            throw new Exception(localizer["ErrorRefreshReturnInvalid", 
-                sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]);
-        }
-        public RuleExceptionDataCollection SaveDataQuery(Guid sessionFormIdentifier)
-        {
-            SessionStore sessionStore = sessionManager.GetSession(
-                sessionFormIdentifier);
-            if((sessionStore.ConfirmationRule != null) 
-                && sessionStore.Data.HasChanges())
+            IList<string> columns = null;
+            if (sessionStore.IsPagedLoading)
             {
-                bool hasRows = false;
-                DataSet clone = DatasetTools.CloneDataSet(sessionStore.Data);
-                List<DataTable> rootTables = new List<DataTable>();
-                foreach(DataTable table in sessionStore.Data.Tables)
-                {
-                    if(table.ParentRelations.Count == 0)
-                    {
-                        rootTables.Add(table);
-                    }
-                }
-                foreach(DataTable rootTable in rootTables)
-                {
-                    foreach(DataRow row in rootTable.Rows)
-                    {
-                        if((row.RowState != DataRowState.Deleted) 
-                            && IsRowDirty(row))
-                        {
-                            DatasetTools.GetDataSlice(
-                                clone, new List<DataRow>{row});
-                            hasRows = true;
-                        }
-                    }
-                }
-                if(hasRows)
-                {
-                    IDataDocument xmlDoc = DataDocumentFactory.New(clone);
-                    return sessionStore.RuleEngine.EvaluateEndRule(
-                        sessionStore.ConfirmationRule, xmlDoc);
-                }
+                // for lazily-loaded data we provide all the preloaded columns
+                // (primary keys + all the initial sort columns)
+                columns = sessionStore.DataListLoadedColumns;
+            }
+            return DataTools.DatasetToHashtable(result as DataSet, columns, 
+                INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
+                sessionStore.DataListEntity, sessionStore);
+        }
+        public RuleExceptionDataCollection SaveDataQuery(
+            Guid sessionFormIdentifier)
+        {
+            var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            if((sessionStore.ConfirmationRule == null) ||
+               !sessionStore.Data.HasChanges())
+            {
                 return new RuleExceptionDataCollection();
             }
-            return new RuleExceptionDataCollection();
+            var hasRows = false;
+            var clone = DatasetTools.CloneDataSet(sessionStore.Data);
+            var rootTables = sessionStore.Data.Tables
+                .Cast<DataTable>()
+                .Where(table => table.ParentRelations.Count == 0).ToList();
+            foreach(var rootTable in rootTables)
+            {
+                foreach(DataRow row in rootTable.Rows)
+                {
+                    if((row.RowState == DataRowState.Deleted) ||
+                       !IsRowDirty(row))
+                    {
+                        continue;
+                    }
+                    DatasetTools.GetDataSlice(
+                        clone, new List<DataRow>{row});
+                    hasRows = true;
+                }
+            }
+            if(!hasRows)
+            {
+                return new RuleExceptionDataCollection();
+            }
+            var xmlDoc = DataDocumentFactory.New(clone);
+            return sessionStore.RuleEngine.EvaluateEndRule(
+                sessionStore.ConfirmationRule, xmlDoc);
         }
         public IList SaveData(Guid sessionFormIdentifier)
         {
-            SessionStore sessionStore = sessionManager.GetSession(
-                sessionFormIdentifier);
-            IList output = (IList)sessionStore.ExecuteAction(
+            var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            var output = (IList)sessionStore.ExecuteAction(
                 SessionStore.ACTION_SAVE);
             CreateUpdateOrigamOnlineUser();
             return output;
         }
         public IList CreateObject(CreateObjectInput input)
         {
-            SessionStore sessionStore 
-                = sessionManager.GetSession(input.SessionFormIdentifier);
+            var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
             // todo: propagate requesting grid as guid?
             IList output = sessionStore.CreateObject(
                 input.Entity, input.Values, input.Parameters, 
@@ -294,8 +323,8 @@ namespace Origam.ServerCore
         }
         public IList UpdateObject(UpdateObjectInput input)
         {
-            SessionStore sessionStore 
-                = sessionManager.GetSession(input.SessionFormIdentifier);
+            var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
             IList output = sessionStore.UpdateObjectEx(
                 input.Entity, input.Id, input.Values);
             CreateUpdateOrigamOnlineUser();
@@ -303,8 +332,8 @@ namespace Origam.ServerCore
         }
         public IList DeleteObject(DeleteObjectInput input)
         {
-            SessionStore sessionStore 
-                = sessionManager.GetSession(input.SessionFormIdentifier);
+            var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
             IList output = sessionStore.DeleteObject(input.Entity, input.Id);
             CreateUpdateOrigamOnlineUser();
             return output;
@@ -319,6 +348,7 @@ namespace Origam.ServerCore
             }
             catch
             {
+                // ignored
             }
             if(sessionStore == null)
             {
@@ -326,6 +356,24 @@ namespace Origam.ServerCore
             }
             return sessionStore.GetRowData(
                 input.Entity, input.RowId, false);
+        }
+        public IDictionary GetParameters(Guid sessionFormIdentifier)
+        {
+            if (sessionFormIdentifier == Guid.Empty)
+            {
+                return new Hashtable();
+            }
+            SessionStore sessionStore = null;
+            try
+            {
+                sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            }
+            catch
+            {
+                // ignored
+            }
+            return sessionStore == null 
+                ? new Hashtable() : sessionStore.Request.Parameters;
         }
         public ArrayList GetData(GetDataInput input)
         {
@@ -337,6 +385,7 @@ namespace Origam.ServerCore
             }
             catch
             {
+                // ignored
             }
             if (sessionStore == null)
             {
@@ -349,7 +398,8 @@ namespace Origam.ServerCore
         }
         public IList RowStates(RowStatesInput input)
         {
-		    var sessionStore = sessionManager.GetSession(input.SessionFormIdentifier);
+		    var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
             return sessionStore.RowStates(input.Entity, input.Ids);
         }
         public RuleExceptionDataCollection ExecuteActionQuery(
@@ -362,25 +412,25 @@ namespace Origam.ServerCore
             }
             catch
             {
+                // ignored
             }
-            if((action != null) && (action.ConfirmationRule != null))
+            if (action?.ConfirmationRule == null)
             {
-                SessionStore sessionStore 
-                    = sessionManager.GetSession(input.SessionFormIdentifier);
-                DataRow[] rows = new DataRow[input.SelectedItems.Count];
-                for(int i = 0; i < input.SelectedItems.Count; i++)
-                {
-                    rows[i] = sessionStore.GetSessionRow(
-                        input.Entity, input.SelectedItems[i]);
-                }
-                XmlDocument xml 
-                    = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
-                RuleExceptionDataCollection result 
-                    = sessionStore.RuleEngine.EvaluateEndRule(
-                    action.ConfirmationRule, xml);
-                return result ?? new RuleExceptionDataCollection();
+                return new RuleExceptionDataCollection();
             }
-            return new RuleExceptionDataCollection();
+            var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
+            var rows = new DataRow[input.SelectedItems.Count];
+            for(var i = 0; i < input.SelectedItems.Count; i++)
+            {
+                rows[i] = sessionStore.GetSessionRow(
+                    input.Entity, input.SelectedItems[i]);
+            }
+            IXmlContainer xml 
+                = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
+            var result = sessionStore.RuleEngine.EvaluateEndRule(
+                    action.ConfirmationRule, xml);
+            return result ?? new RuleExceptionDataCollection();
         }
         public IList ExecuteAction(ExecuteActionInput input)
         {
@@ -404,7 +454,8 @@ namespace Origam.ServerCore
                 input.InputParameters);
         }
         public Result<RowData, IActionResult> GetRow(
-            Guid sessionFormIdentifier, string entity, Guid rowId)
+            Guid sessionFormIdentifier, string entity, 
+            DataStructureEntity dataStructureEntity, Guid rowId)
         {
             SessionStore sessionStore = null;
             try
@@ -414,45 +465,79 @@ namespace Origam.ServerCore
             }
             catch
             {
+                // ignored
             }
-            if(sessionStore == null)
+            switch(sessionStore)
             {
-                return Result.Ok<RowData, IActionResult>(
-                    new RowData{Row = null, Entity = null});
+                case null:
+                    return Result.Ok<RowData, IActionResult>(
+                        new RowData{Row = null, Entity = null});
+                default:
+                {
+                    var row = sessionStore.GetSessionRow(entity, rowId);
+                    return Result.Ok<RowData, IActionResult>(
+                        new RowData{Row = row, Entity = dataStructureEntity});
+                }
             }
-            else
+        }
+        public Result<Guid, IActionResult> GetEntityId(
+            Guid sessionFormIdentifier, string entity)
+        {
+            SessionStore sessionStore = null;
+            try
             {
-                DataRow row = sessionStore.GetSessionRow(entity, rowId);
-                return Result.Ok<RowData, IActionResult>(
-                    new RowData{Row = row, Entity = null});
+                sessionStore 
+                    = sessionManager.GetSession(sessionFormIdentifier);
+            }
+            catch
+            {
+                // ignored
+            }
+            switch(sessionStore)
+            {
+                case null:
+                    return Result.Ok<Guid, IActionResult>(Guid.Empty);
+                default:
+                {
+                    var table = sessionStore.GetTable(entity, sessionStore.Data);
+                    var entityId = Guid.Empty;
+                    if (table.ExtendedProperties.Contains("EntityId"))
+                    {
+                        entityId = (Guid)table.ExtendedProperties["EntityId"];
+                    }
+                    return Result.Ok<Guid, IActionResult>(entityId);
+                }
             }
         }
         public UIResult WorkflowNext(WorkflowNextInput workflowNextInput)
         {
-            WorkflowSessionStore workflowSessionStore 
-                = sessionManager.GetSession(
-                    workflowNextInput.SessionFormIdentifier) 
-                as WorkflowSessionStore;
-            return (UIResult)workflowSessionStore.ExecuteAction(
-                SessionStore.ACTION_NEXT, workflowNextInput.CachedFormIds);
+            if(sessionManager.GetSession(
+                    workflowNextInput.SessionFormIdentifier)
+                is WorkflowSessionStore workflowSessionStore)
+            {
+                return (UIResult) workflowSessionStore.ExecuteAction(
+                    SessionStore.ACTION_NEXT, workflowNextInput.CachedFormIds);
+            }
+            return null;
         }
         public RuleExceptionDataCollection WorkflowNextQuery(
             Guid sessionFormIdentifier)
         {
-            SessionStore sessionStore = sessionManager.GetSession(
+            var sessionStore = sessionManager.GetSession(
                 sessionFormIdentifier);
             return (RuleExceptionDataCollection)sessionStore.ExecuteAction(
                 SessionStore.ACTION_QUERYNEXT);
         }
-        public UIResult WorkflowAbort(
-            Guid sessionFormIdentifier)
+        public UIResult WorkflowAbort(Guid sessionFormIdentifier)
         {
-            SessionStore sessionStore = sessionManager.GetSession(
+            var sessionStore = sessionManager.GetSession(
                 sessionFormIdentifier);
             return (UIResult)sessionStore.ExecuteAction(
                 SessionStore.ACTION_ABORT); 
         }
-        public UIResult WorkflowRepeat(
+#pragma warning disable 1998
+        public async Task<UIResult> WorkflowRepeat(
+#pragma warning restore 1998
             Guid sessionFormIdentifier,
             IStringLocalizer<SharedResources> localizer)
         {
@@ -461,15 +546,15 @@ namespace Origam.ServerCore
             {
                 throw new Exception(localizer["ErrorWorkflowSessionInvalid"]);
             }
-            UIRequest request = new UIRequest
-                {
-                    FormSessionId = null,
-                    IsStandalone = workflowSessionStore.Request.IsStandalone,
-                    ObjectId = workflowSessionStore.Request.ObjectId,
-                    Type = workflowSessionStore.Request.Type,
-                    Icon = workflowSessionStore.Request.Icon,
-                    Caption = workflowSessionStore.Request.Caption
-                };
+            var request = new UIRequest
+            {
+                FormSessionId = null,
+                IsStandalone = workflowSessionStore.Request.IsStandalone,
+                ObjectId = workflowSessionStore.Request.ObjectId,
+                Type = workflowSessionStore.Request.Type,
+                Icon = workflowSessionStore.Request.Icon,
+                Caption = workflowSessionStore.Request.Caption
+            };
             DestroyUI(sessionFormIdentifier);
             return InitUI(request);
         }
@@ -484,13 +569,14 @@ namespace Origam.ServerCore
             }
             catch
             {
+                // ignored
             }
             if(sessionStore == null)
             {
                 return 0;
             }
-            int result = 0;
-            List<object> idList = new List<object>();
+            var result = 0;
+            var idList = new List<object>();
             // We catch any problems with reading record ids 
             // (they could have been unloaded by another request
             // and we don't want to hear messages about this).
@@ -507,11 +593,11 @@ namespace Origam.ServerCore
             {
                 return -1;
             }
-            foreach(object recordId in idList)
+            foreach(var recordId in idList)
             {
-                IDataLookupService lookupService 
+                var lookupService 
                     = ServiceManager.Services.GetService<IDataLookupService>();
-                int oneRecordCount = (int)lookupService.GetDisplayText(
+                var oneRecordCount = (int)lookupService.GetDisplayText(
                     lookupId: new Guid("fbf2cadd-e529-401d-80ce-d68de0a89f13"), 
                     lookupValue: recordId, 
                     useCache: false, 
@@ -524,15 +610,15 @@ namespace Origam.ServerCore
         public IList<Attachment> AttachmentList(AttachmentListInput input)
         {
             SecurityTools.CurrentUserProfile();
-            SessionStore sessionStore = sessionManager.GetSession(
+            var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
-            List<Attachment> result = new List<Attachment>();
-            List<object> idList = new List<object>();
+            var result = new List<Attachment>();
+            var idList = new List<object>();
             ChildrenRecordsIds(idList, sessionStore.GetSessionRow(
                 input.Entity, input.Id));
-            foreach(object recordId in idList)
+            foreach(var recordId in idList)
             {
-                DataSet oneRecordList = core.DataService.LoadData(
+                var oneRecordList = core.DataService.LoadData(
                     dataStructureId: new Guid("44a25061-750f-4b42-a6de-09f3363f8621"), 
                     methodId: new Guid("0fda540f-e5de-4ab6-93d2-76b0abe6fd77"), 
                     defaultSetId: Guid.Empty, 
@@ -542,15 +628,16 @@ namespace Origam.ServerCore
                     paramValue1: recordId);
                 foreach(DataRow row in oneRecordList.Tables[0].Rows)
                 {
-                    string user = "";
+                    var user = "";
                     if(!row.IsNull("RecordCreatedBy"))
                     {
                         try
                         {
-                            IOrigamProfileProvider profileProvider 
+                            var profileProvider 
                                 = SecurityManager.GetProfileProvider();
-                            UserProfile profile = profileProvider.GetProfile(
+                            var profile = profileProvider.GetProfile(
                                 (Guid)row["RecordCreatedBy"]) as UserProfile;
+                            // ReSharper disable once PossibleNullReferenceException
                             user = profile.FullName;
                         }
                         catch (Exception ex)
@@ -558,7 +645,7 @@ namespace Origam.ServerCore
                             user = ex.Message;
                         }
                     }
-                    Attachment att = new Attachment
+                    var attachment = new Attachment
                     {
                         Id = row["Id"].ToString(),
                         CreatorName = user,
@@ -567,16 +654,17 @@ namespace Origam.ServerCore
                     };
                     if(!row.IsNull("Note"))
                     {
-                        att.Description = (string)row["Note"];
+                        attachment.Description = (string)row["Note"];
                     }
-                    string extension = Path.GetExtension(att.FileName).ToLower();
-                    att.Icon = "extensions/" + extension + ".png";
-                    result.Add(att);
+                    var extension 
+                        = Path.GetExtension(attachment.FileName).ToLower();
+                    attachment.Icon = "extensions/" + extension + ".png";
+                    result.Add(attachment);
                 }
             }
             return result;
         }
-        public IList<WorkQueueInfo> WorkQueueList(
+        public static IList<WorkQueueInfo> WorkQueueList(
             IStringLocalizer<SharedResources> localizer)
         {
             try
@@ -596,21 +684,20 @@ namespace Origam.ServerCore
                     = ServiceManager.Services.GetService<IWorkQueueService>();
                 var lookupService 
                     = ServiceManager.Services.GetService<IDataLookupService>();
-                DataSet data = workQueueService.UserQueueList();
-                DataTable queueList = data.Tables["WorkQueue"];
+                var data = workQueueService.UserQueueList();
+                var queueList = data.Tables["WorkQueue"];
                 foreach (DataRow row in queueList.Rows)
                 {
-                    object workQueueId = row["Id"];
+                    var workQueueId = row["Id"];
                     var workQueueClassName = (string)row["WorkQueueClass"];
                     long cnt = 0;
-                    if ((bool)row["IsMessageCountDisplayed"])
+                    if((bool)row["IsMessageCountDisplayed"])
                     {
-                        var workQueueClass 
-                            = workQueueService.WQClass(workQueueClassName) 
-                                as WorkQueueClass;
-                        cnt = (long)lookupService.GetDisplayText(
-                            workQueueClass.WorkQueueItemCountLookupId, 
-                            workQueueId, false, false, null);
+                        if(workQueueService.WQClass(workQueueClassName) 
+                            is WorkQueueClass workQueueClass)
+                            cnt = (long) lookupService.GetDisplayText(
+                                workQueueClass.WorkQueueItemCountLookupId,
+                                workQueueId, false, false, null);
                     }
                     var workQueueInfo = new WorkQueueInfo(
                         workQueueId.ToString(), (string)row["Name"], cnt);
@@ -625,42 +712,33 @@ namespace Origam.ServerCore
         }
         public void SaveObjectConfig(SaveObjectConfigInput input)
         {
-            Guid profileId = SecurityTools.CurrentUserProfile().Id;
-            Guid workflowId;
+            var profileId = SecurityTools.CurrentUserProfile().Id;
             WorkflowSessionStore workflowSessionStore = null;
             if (input.SessionFormIdentifier != Guid.Empty)
             {
                 workflowSessionStore = sessionManager.GetSession(
                     input.SessionFormIdentifier) as WorkflowSessionStore;
             }
-            if (workflowSessionStore == null)
-            {
-                workflowId = Guid.Empty;
-            }
-            else
-            {
-                workflowId = workflowSessionStore.WorkflowId;
-            }
-            DataSet userConfig = OrigamPanelConfigDA.LoadConfigData(
+            var workflowId = workflowSessionStore?.WorkflowId ?? Guid.Empty;
+            var userConfig = OrigamPanelConfigDA.LoadConfigData(
                 input.ObjectInstanceId, workflowId, profileId);
-            if (userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            if(userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
             {
                 OrigamPanelConfigDA.CreatePanelConfigRow(
                     userConfig.Tables["OrigamFormPanelConfig"], 
                     input.ObjectInstanceId, workflowId, profileId, 
                     OrigamPanelViewMode.Grid);
             }
-            XmlDocument currentSettings = new XmlDocument();
-            XmlDocumentFragment newSettings 
-                = currentSettings.CreateDocumentFragment();
-            XmlElement newSettingsNode = currentSettings.CreateElement(
+            var currentSettings = new XmlDocument();
+            var newSettings = currentSettings.CreateDocumentFragment();
+            var newSettingsNode = currentSettings.CreateElement(
                 input.Section);
             newSettingsNode.InnerXml = input.SettingsData;
             newSettings.AppendChild(newSettingsNode);
             XmlNode configNode;
-            DataRow settingsRow 
+            var settingsRow 
                 = userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
-            if (settingsRow.IsNull("SettingsData"))
+            if(settingsRow.IsNull("SettingsData"))
             {
                 configNode = currentSettings.CreateElement("Configuration");
                 currentSettings.AppendChild(configNode);
@@ -679,14 +757,191 @@ namespace Origam.ServerCore
             OrigamPanelConfigDA.SaveUserConfig(
                 userConfig, input.ObjectInstanceId, workflowId, profileId);
         }
-        public void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
+        public static void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
         {
             SecurityTools.CurrentUserProfile();
             OrigamPanelColumnConfigDA.PersistColumnConfig(
                 input.InstanceId, "splitPanel", 0, 
                 input.Position, false);
         }
-        private bool IsRowDirty(DataRow row)
+        public static void SaveFavorites(SaveFavoritesInput input)
+        {
+            var profile = SecurityTools.CurrentUserProfile();
+            // save favorites
+            var favorites = core.DataService.LoadData(
+                new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
+                new Guid("e468076e-a641-4b7d-b9b4-7d80ff312b1c"), 
+                Guid.Empty, 
+                Guid.Empty, 
+                null, 
+                "OrigamFavoritesUserConfig_parBusinessPartnerId", 
+                profile.Id);
+            if(favorites.Tables["OrigamFavoritesUserConfig"].Rows.Count > 0)
+            {
+                var row = favorites.Tables["OrigamFavoritesUserConfig"].Rows[0];
+                row["ConfigXml"] = input.ConfigXml;
+                row["RecordUpdated"] = DateTime.Now;
+                row["RecordUpdatedBy"] = profile.Id;
+                row["refBusinessPartnerId"] = profile.Id;
+            }
+            else
+            {
+                var row = favorites.Tables["OrigamFavoritesUserConfig"]
+                    .NewRow();
+                row["Id"] = Guid.NewGuid();
+                row["RecordCreated"] = DateTime.Now;
+                row["RecordCreatedBy"] = profile.Id;
+                row["ConfigXml"] = input.ConfigXml;
+                row["refBusinessPartnerId"] = profile.Id;
+                favorites.Tables["OrigamFavoritesUserConfig"].Rows.Add(row);
+            }
+            core.DataService.StoreData(
+                new Guid("e564c554-ca83-47eb-980d-95b4faba8fb8"), 
+                favorites, false, null);
+        }
+        public ArrayList GetPendingChanges(Guid sessionFormIdentifier)
+        {
+            var sessionStore = sessionManager.GetSession(sessionFormIdentifier);
+            var changes = sessionStore.PendingChanges;
+            sessionStore.PendingChanges = null;
+            return changes ?? new ArrayList();
+        }
+        public static Result<Guid, IActionResult> SaveFilter(
+            DataStructureEntity entity, SaveFilterInput input)
+        {
+            var profileId = SecurityTools.CurrentUserProfile().Id;
+            var storedFilter = new OrigamPanelFilter();
+            var filterRow = storedFilter.PanelFilter.NewPanelFilterRow();
+            filterRow.Id = Guid.NewGuid();
+            filterRow.Name = input.Filter.Name;
+            filterRow.IsGlobal = input.Filter.IsGlobal;
+            filterRow.IsDefault = input.IsDefault;
+            filterRow.PanelId = input.PanelId;
+            filterRow.ProfileId = profileId;
+            filterRow.RecordCreated = DateTime.Now;
+            filterRow.RecordCreatedBy = profileId;
+            storedFilter.PanelFilter.Rows.Add(filterRow);
+            foreach(var filterDetail in input.Filter.Details)
+            {
+                if(entity.Column(filterDetail.Property) == null)
+                {
+                    continue;
+                }
+                if(entity.Column(filterDetail.Property).DataType 
+                == OrigamDataType.UniqueIdentifier)
+                {
+                    var filterOperator = (FilterOperator)filterDetail.Operator;
+                    if(filterDetail.Value1 is string value1)
+                    {
+                        if(Guid.TryParse(value1, out var parsedValue))
+                        {
+                            filterDetail.Value1 = parsedValue;
+                        }
+                    }
+                    if((filterDetail.Value2 != null) 
+                    && (filterDetail.Value1 is string) 
+                    && (filterOperator != FilterOperator.Equals)
+                    && (filterOperator != FilterOperator.NotEquals))
+                    {
+                        if(filterDetail.Value2 is string value2)
+                        {
+                            if(Guid.TryParse(value2, out var parsedValue))
+                            {
+                                filterDetail.Value2 = parsedValue;
+                            }
+                        }
+                    }
+                }
+                OrigamPanelFilterDA.AddPanelFilterDetailRow(
+                    storedFilter, profileId, filterRow.Id, 
+                    filterDetail.Property, filterDetail.Operator, 
+                    filterDetail.Value1, filterDetail.Value2);
+            }
+            OrigamPanelFilterDA.PersistFilter(storedFilter);
+            return Result.Ok<Guid, IActionResult>(filterRow.Id);
+        }
+        public static void DeleteFilter(Guid filterId)
+        {
+            var filter = OrigamPanelFilterDA.LoadFilter(filterId);
+            filter.PanelFilter.Rows[0].Delete();
+            OrigamPanelFilterDA.PersistFilter(filter);
+        }
+        public void SetDefaultFilter(
+            SetDefaultFilterInput input, DataStructureEntity entity)
+        {
+            var profileId = SecurityTools.CurrentUserProfile().Id;
+            Guid workflowId;
+            if(!(sessionManager.GetSession(input.SessionFormIdentifier) 
+                is WorkflowSessionStore workflowSessionStore))
+            {
+                workflowId = Guid.Empty;
+            }
+            else
+            {
+                workflowId = workflowSessionStore.WorkflowId;
+            }
+            var userConfig = OrigamPanelConfigDA.LoadConfigData(
+                input.PanelInstanceId, workflowId, profileId);
+            if(userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            {
+                OrigamPanelConfigDA.CreatePanelConfigRow(
+                    userConfig.Tables["OrigamFormPanelConfig"], 
+                    input.PanelInstanceId, 
+                    workflowId, 
+                    profileId, 
+                    OrigamPanelViewMode.Form);
+            }
+            var shouldDeleteFilter = false;
+            var oldFilterId = Guid.Empty;
+            if(userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] 
+            != DBNull.Value)
+            {
+                shouldDeleteFilter = true;
+                oldFilterId = (Guid)userConfig.Tables["OrigamFormPanelConfig"]
+                    .Rows[0]["refOrigamPanelFilterId"];
+            }
+            var filterId = SaveFilter(entity, input).Value;
+            userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] = filterId;
+            OrigamPanelConfigDA.SaveUserConfig(
+                userConfig, input.PanelInstanceId, workflowId, profileId);
+            if (shouldDeleteFilter)
+            {
+                DeleteFilter(oldFilterId);
+            }
+        }
+        public void ResetDefaultFilter(ResetDefaultFilterInput input)
+        {
+            var profileId = SecurityTools.CurrentUserProfile().Id;
+            Guid workflowId;
+            if(!(sessionManager.GetSession(input.SessionFormIdentifier) 
+                is WorkflowSessionStore workflowSessionStore))
+            {
+                workflowId = Guid.Empty;
+            }
+            else
+            {
+                workflowId = workflowSessionStore.WorkflowId;
+            }
+            var userConfig = OrigamPanelConfigDA.LoadConfigData(
+                input.PanelInstanceId, workflowId, profileId);
+            if ((userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            || (userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] 
+            == DBNull.Value))
+            {
+                return;
+            }
+            var filterId = (Guid)userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"];
+            userConfig.Tables["OrigamFormPanelConfig"]
+                .Rows[0]["refOrigamPanelFilterId"] = DBNull.Value;
+            OrigamPanelConfigDA.SaveUserConfig(
+                userConfig, input.PanelInstanceId, workflowId, profileId);
+            DeleteFilter(filterId);
+        }
+        private static bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)
             {
@@ -694,35 +949,30 @@ namespace Origam.ServerCore
             }
             foreach(DataRelation childRelation in row.Table.ChildRelations)
             {
-                foreach(DataRow childRow in row.GetChildRows(childRelation))
+                if(row.GetChildRows(childRelation).Any(IsRowDirty))
                 {
-                    if(IsRowDirty(childRow))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-				// look for deleted children. They aren't returned by
+                // look for deleted children. They aren't returned by
 				// previous ChetChildRows call. 
-				foreach(DataRow childRow in row.GetChildRows(childRelation,
-					DataRowVersion.Original))
-				{
-					if(childRow.RowState == DataRowState.Deleted)
-					{
-						return true;
-					}
-				}
-			}
+                if (row.GetChildRows(childRelation,
+                    DataRowVersion.Original).Any(
+                    childRow => childRow.RowState == DataRowState.Deleted))
+                {
+                    return true;
+                }
+            }
             return false;
         }
         private static NotificationBox LogoNotificationBox()
         {
-            SchemaService schema 
-                = ServiceManager.Services.GetService<SchemaService>();
-            NotificationBoxSchemaItemProvider provider 
+            var schema = ServiceManager.Services.GetService<SchemaService>();
+            var provider 
                 = schema.GetProvider<NotificationBoxSchemaItemProvider>();
             NotificationBox logoNotificationBox = null;
-            foreach(NotificationBox box in provider.ChildItems)
+            foreach(var abstractSchemaItem in provider.ChildItems)
             {
+                var box = (NotificationBox) abstractSchemaItem;
                 if(box.Type == NotificationBoxType.Logo)
                 {
                     logoNotificationBox = box;
@@ -732,20 +982,14 @@ namespace Origam.ServerCore
         }
         private static bool HasChanges(SessionStore sessionStore)
         {
-            bool hasChanges = false;
-            if((sessionStore is FormSessionStore) 
+            var hasChanges 
+                = ((sessionStore is FormSessionStore) 
                 && (sessionStore.Data != null) 
-                && sessionStore.Data.HasChanges())
-            {
-                hasChanges = true;
-            }
-            if((sessionStore is WorkflowSessionStore workflowSessionStore)
-                && workflowSessionStore.AllowSave &&
-                (sessionStore.Data != null)
-                && sessionStore.Data.HasChanges())
-            {
-                hasChanges = true;
-            }
+                && sessionStore.Data.HasChanges()) 
+                || ((sessionStore is WorkflowSessionStore workflowSessionStore)
+                && workflowSessionStore.AllowSave 
+                && (sessionStore.Data != null) 
+                && sessionStore.Data.HasChanges());
             return hasChanges;
         }
         private void CreateUpdateOrigamOnlineUser()
@@ -759,20 +1003,99 @@ namespace Origam.ServerCore
                     sessionManager.GetSessionStats());
             });
         }
-        private void ChildrenRecordsIds(List<object> list, DataRow row)
+        private static void ChildrenRecordsIds(List<object> list, DataRow row)
         {
-            if((row.Table.PrimaryKey.Length == 1) 
-            && (row.Table.PrimaryKey[0].DataType == typeof(Guid)))
+            if((row.Table.PrimaryKey.Length != 1) ||
+                (row.Table.PrimaryKey[0].DataType != typeof(Guid))) return;
+            list.Add(row[row.Table.PrimaryKey[0]]);
+            foreach(DataRelation childRelation in row.Table.ChildRelations)
             {
-                list.Add(row[row.Table.PrimaryKey[0]]);
-                foreach(DataRelation childRelation in row.Table.ChildRelations)
+                foreach(var childRow in row.GetChildRows(childRelation))
                 {
-                    foreach(DataRow childRow in row.GetChildRows(childRelation))
-                    {
-                        ChildrenRecordsIds(list, childRow);
-                    }
+                    ChildrenRecordsIds(list, childRow);
                 }
             }
+        } 
+        public static XmlDocument DataRowToRecordTooltip(
+            DataRow row, 
+            CultureInfo cultureInfo,
+            IStringLocalizer<SharedResources> localizer)
+        {
+            var xmlDocument = new XmlDocument();
+            var tooltipElement = xmlDocument.CreateElement("tooltip");
+            tooltipElement.SetAttribute("title", row.Table.DisplayExpression);
+            xmlDocument.AppendChild(tooltipElement);
+            var y = 1;
+            if(row.Table.Columns.Contains("Id"))
+            {
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, "Id " + row["Id"]);
+                y++;
+            }
+            var profileProvider = SecurityManager.GetProfileProvider();
+            if(row.Table.Columns.Contains("RecordCreated") 
+                && !row.IsNull("RecordCreated"))
+            {
+                string profileName;
+                try
+                {
+                    profileName = ((UserProfile)profileProvider.GetProfile(
+                            (Guid)row["RecordCreatedBy"])).FullName;
+                }
+                catch
+                {
+                    profileName = row["RecordCreatedBy"].ToString();
+                }
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, 
+                    string.Format(
+                        localizer["DefaultTooltipRecordCreated"], profileName, 
+                        ((DateTime)row["RecordCreated"]).ToString(
+                            cultureInfo)));
+                y++;
+            }
+            if(!row.Table.Columns.Contains("RecordUpdated"))
+            {
+                return xmlDocument;
+            }
+            if(row.IsNull("RecordUpdated"))
+            {
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, 
+                    localizer["DefaultTooltipNoChange"]);
+            }
+            else
+            {
+                string profileName;
+                try
+                {
+                    profileName = ((UserProfile)profileProvider.GetProfile(
+                        (Guid)row["RecordUpdatedBy"])).FullName;
+                }
+                catch
+                {
+                    profileName = row["RecordUpdatedBy"].ToString();
+                }
+                CreateGenericRecordTooltipCell(
+                    xmlDocument, tooltipElement, y, 
+                    string.Format(localizer["DefaultTooltipRecordUpdated"], 
+                    profileName, ((DateTime)row["RecordUpdated"]).ToString(
+                        cultureInfo)));
+            }
+            return xmlDocument;
+        }
+        private static void CreateGenericRecordTooltipCell(
+            XmlDocument xmlDocument, XmlElement parentElement, 
+            int y, string text)
+        {
+            var gridElement = xmlDocument.CreateElement("cell");
+            gridElement.SetAttribute("type", "text");
+            gridElement.SetAttribute("x", "0");
+            gridElement.SetAttribute("y", y.ToString());
+            gridElement.SetAttribute("height", "1");
+            gridElement.SetAttribute("width", "1");
+            gridElement.InnerText = text;
+            parentElement.AppendChild(gridElement);
         }
     }
 }

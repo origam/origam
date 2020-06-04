@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -37,7 +37,11 @@ namespace Origam.DA.Service
 
     public class NullWatchDog : IFileChangesWatchDog
     {
-        public event EventHandler<FileSystemChangeEventArgs> FileChanged;
+        public event EventHandler<FileSystemChangeEventArgs> FileChanged
+        {
+            add { }
+            remove { }
+        }
         public void Start()
         {
         }

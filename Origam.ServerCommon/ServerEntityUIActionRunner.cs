@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -196,7 +196,7 @@ namespace Origam.Server
             resultList.Add(result);
         }
 
-        private void ExecuteChangeUIAction(ExecuteActionProcessData processData)
+        private async void ExecuteChangeUIAction(ExecuteActionProcessData processData)
         {
             if (processData.Action == null
                 || processData.Action.Mode != PanelActionMode.Always)
@@ -218,6 +218,7 @@ namespace Origam.Server
                 parentSession: sessionManager.GetSession(processData),
                 basicUIService: basicUIService);
             resultList.Add(result);
+            await System.Threading.Tasks.Task.CompletedTask; //CS1998
         }
 
         protected override void ExecuteOpenFormAction(

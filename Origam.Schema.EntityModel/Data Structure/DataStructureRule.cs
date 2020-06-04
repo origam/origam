@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -221,21 +221,6 @@ namespace Origam.Schema.EntityModel
 
 			return item;
 		}
-
-		public override int CompareTo(object obj)
-		{
-
-            if ((obj as DataStructureRule) != null)
-            {
-                return this.Priority.CompareTo((obj as DataStructureRule).Priority);
-            }
-            else
-            {
-                // rulesets are always an top, so rules are greater
-                return 1;
-            }
-		}
-
-		#endregion
+	#endregion
 	}
 }

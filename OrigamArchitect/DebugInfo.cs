@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -222,16 +222,24 @@ namespace Origam.Workflow
 			// role info
 			AddHeader("Role Information", result);
 
-			IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
+			try
+			{
+				IOrigamAuthorizationProvider authorizationProvider = SecurityManager.GetAuthorizationProvider();
+				if (authorizationProvider == null)
+				{
+					AddInfo("Authorization Provider", "None", result);
+				}
+				else
+				{
+					AddInfo("Authorization Provider", authorizationProvider.GetType().ToString(), result);
+				}
+			}
+			catch(Exception ex)
+			{
+				result.AppendFormat("The following exception occured while loading Authorization:  {0}{1}{2}", Environment.NewLine, ex.Message, Environment.NewLine);
+			}
 
-			if(authorizationProvider == null)
-			{
-				AddInfo("Authorization Provider", "None", result);
-			}
-			else
-			{
-				AddInfo("Authorization Provider", authorizationProvider.GetType().ToString(), result);
-			}
+			
 
 			// resource info (from rule engine)
 			AddHeader("Resource Management Information", result);

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -30,13 +30,13 @@ namespace Origam
         DataSet DataSet { get; }
         void AppendChild(XmlNodeType element, string prefix, string name);
         void AppendChild(XmlElement documentElement, bool deep);
-        void DocumentElementAppendChild(XmlNode node);
     }
 
     public interface IXmlContainer: ICloneable
     {
         XmlDocument Xml { get; }
-        void Load(XmlReader xmlReader);
+        void Load(XmlReader xmlReader,bool doProcessing = true);
         void LoadXml(string xmlString);
+        void DocumentElementAppendChild(XmlNode node);
     }
 }

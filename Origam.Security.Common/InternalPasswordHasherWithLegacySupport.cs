@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -27,7 +28,7 @@ namespace Origam.Security.Common
 {
       public class InternalPasswordHasherWithLegacySupport : AdaptivePasswordHasher
     {
-        public VerificationResult VerifyHashedPassword(
+        public override VerificationResult VerifyHashedPassword(
             string hashedPassword, string providedPassword)
         {
             if (String.IsNullOrWhiteSpace(hashedPassword))

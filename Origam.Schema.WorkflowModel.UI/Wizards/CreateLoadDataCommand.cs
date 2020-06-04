@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -23,7 +23,7 @@ using System;
 using Origam.UI;
 
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel.UI
 {
 	/// <summary>
 	/// Summary description for CreateDataStructureFromEntityCommand.
@@ -38,7 +38,7 @@ namespace Origam.Schema.WorkflowModel
 			}
 			set
 			{
-				throw new ArgumentException(Origam.Schema.WorkflowModel.ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
+				throw new ArgumentException(ResourceUtils.GetString("ErrorSetProperty"), "IsEnabled");
 			}
 		}
 

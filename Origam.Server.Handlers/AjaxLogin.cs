@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -72,12 +72,21 @@ namespace Origam.Server.Handlers
 					OrigamUser user = task.Result;
 					if (user == null)
 					{
-						context.Authentication.SignOut();
-						context.Response.Write(
-							"{\"Status\":204,\"Message\":"
-							+ JsonConvert.ToString(Origam.Security.Common.Resources.InvalidUsernameOrPassword)
-							+ "}");
-					}
+                        // get password attempts
+                        int? attemptedCount = userManager.GetFailedPasswordAttemptCount(username);
+                        context.Authentication.SignOut();
+                        context.Response.Write(
+                            "{\"Status\":204,\"Message\":"
+                            + JsonConvert.ToString(userManager.ExposeLoginAttemptsInfo && attemptedCount != null ?
+                                    String.Format(Origam.Security.Common.Resources.InvalidUsernameOrPasswordWithAttemptInfo,
+                                        userManager.MaxFailedAccessAttemptsBeforeLockout - attemptedCount)
+                                    : Origam.Security.Common.Resources.InvalidUsernameOrPassword)
+                            + ((userManager.ExposeLoginAttemptsInfo && attemptedCount != null) ?
+                                (",\"FailedAttemptCount\" : " + attemptedCount.ToString()
+                                 + ",\"MaxFailedAttemptCount\" : " + userManager.MaxFailedAccessAttemptsBeforeLockout.ToString())
+                                : "")
+                            + "}");
+                    }
 					else
 					{
 						var claims = new List<Claim>();

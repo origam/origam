@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -27,7 +27,7 @@ using System.Xml.Xsl;
 using System.IO;
 using System.Xml.XPath;
 
-#if !NETSTANDARD
+
 namespace Origam.Rule
 {
     class OldXsltEngine : MicrosoftXsltEngine
@@ -45,7 +45,11 @@ namespace Origam.Rule
         internal override object GetTransform(IXmlContainer xslt)
         {
             XslTransform engine = new XslTransform();
+#if NETSTANDARD
+            engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver());
+#else
             engine.Load(new XmlNodeReader(xslt.Xml), new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+#endif
             return engine;
         }
 
@@ -54,7 +58,11 @@ namespace Origam.Rule
             XslTransform engine = new XslTransform();
             StringReader xslReader = new StringReader(xsl);
             XPathDocument xslDoc = new XPathDocument(xslReader);
+#if NETSTANDARD
+            engine.Load(xslDoc, new ModelXmlResolver());
+#else
             engine.Load(xslDoc, new ModelXmlResolver(), this.GetType().Assembly.Evidence);
+#endif
             return engine;
         }
 
@@ -66,7 +74,7 @@ namespace Origam.Rule
             {
                 resultDoc.Xml.Load(reader);
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 // WORKAROUND: when loading data to a predefined DataSet (using XmlDataDocument)
                 // and the result of the transformation is nothing (completely empty, not even a root node),
@@ -111,5 +119,3 @@ namespace Origam.Rule
 
     }
 }
-
-#endif

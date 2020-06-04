@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM.
 
@@ -54,6 +54,8 @@ using Origam.Gui;
 using Origam.Schema.GuiModel;
 using Origam.Rule;
 using Origam.ServerCommon;
+using Origam.ServerCommon.Session_Stores;
+using Origam.Schema.MenuModel;
 
 namespace Origam.Server
 {
@@ -62,6 +64,7 @@ namespace Origam.Server
         private Dictionary<Guid, Dictionary<Guid,IList<Guid>>> 
                _entityFieldDependencies = new Dictionary<Guid,Dictionary<Guid,IList<Guid>>>();
         private bool _dependenciesInitialized = false;
+        private DataSetBuilder datasetbuilder = new DataSetBuilder();
 
         public SaveableSessionStore(IBasicUIService service, UIRequest request, string name, Analytics analytics)
             : base(service, request, name, analytics)
@@ -96,13 +99,18 @@ namespace Origam.Server
         {
             return DataStructure(DataStructureId);
         }
+        internal DataSet InitializeFullStructure(DataStructureDefaultSet defaultSet)
+        {
+            return datasetbuilder.InitializeFullStructure(DataStructureId, defaultSet);// new DatasetGenerator(true).CreateDataSet(DataStructure(), true, _menuItem.DefaultSet);
+        }
 
+        internal DataSetBuilder GetDataSetBuilder()
+        {
+            return datasetbuilder;
+        }
         public DataStructure DataStructure(Guid id)
         {
-            IPersistenceService persistence = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-            return persistence.SchemaProvider.RetrieveInstance(typeof(DataStructure),
-                new ModelElementKey(id)) as DataStructure;
+            return datasetbuilder.DataStructure(id);
         }
 
         private DataStructureTemplate _template;
@@ -160,7 +168,7 @@ namespace Origam.Server
                 foreach (DataRow r in changedRows)
                 {
                     listOfChanges.AddRange(GetChangesByRow(
-                        null, r, 0, changedKeys, true, false, false));
+                        null, r, 0, changedKeys, true, false, false, false));
                     // if there is a list, we update the list, so it has the actual changed data
                     if ((DataList != null) 
                     && DataList.Tables.Contains(r.Table.TableName))
@@ -216,7 +224,9 @@ namespace Origam.Server
 
                 DataRow newRow = table.Rows.Find(key);
                 NewRowToDataList(newRow);
-                ArrayList listOfChanges = GetChangesByRow(requestingGrid, newRow, Operation.Create, this.Data.HasErrors, this.Data.HasChanges());
+                ArrayList listOfChanges = GetChangesByRow(requestingGrid, 
+                    newRow, Operation.Create, this.Data.HasErrors, 
+                    this.Data.HasChanges(), true);
 
                 return listOfChanges;
             }

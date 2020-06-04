@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -32,6 +32,9 @@ namespace Origam.DA.Service.Generators
         private Node currentNode = null;
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
 
+        public string WhereClause { get; private set; }
+        public string OrderByClause { get; private set; }
+
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket)
         {
             columnOrderingRenderer 
@@ -41,11 +44,14 @@ namespace Origam.DA.Service.Generators
         /// <summary>
         /// returns ORDER BY clause without the "ORDER BY" keyword
         /// </summary>
-        /// <param name="ordering"> [[columnName, "asc"|"desc"],...] </param>
         /// <returns></returns>
-        public string ToSqlOrderBy(List<Tuple<string,string>> ordering)
+        public CustomCommandParser OrderBy(List<Ordering> orderings)
         {
-            return columnOrderingRenderer.ToSqlOrderBy(ordering);
+            if (orderings != null)
+            {
+                OrderByClause = columnOrderingRenderer.ToSqlOrderBy(orderings);
+            }
+            return this;
         }
 
         /// <summary>
@@ -53,12 +59,13 @@ namespace Origam.DA.Service.Generators
         /// </summary>
         /// <param name="strFilter">input example: "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]";
         /// </param>
-        public string ToSqlWhere(string strFilter)
+        public CustomCommandParser Where(string strFilter)
         {
-            if (string.IsNullOrWhiteSpace(strFilter)) return "";
+            if (string.IsNullOrWhiteSpace(strFilter)) return this;
             var inpValue = GetCheckedInput(strFilter);
             ParseToNodeTree(inpValue);
-            return root.SqlRepresentation();
+            WhereClause = root.SqlRepresentation();
+            return this;
         }
 
         private void ParseToNodeTree(string filter)
@@ -75,7 +82,7 @@ namespace Origam.DA.Service.Generators
                 {
                     currentNode = currentNode.Parent;
                 }
-                else if (c == ' ' || currentNode.IsBinaryOperator && c == ',')
+                else if (currentNode.IsBinaryOperator && c == ',')
                 {
                     continue;
                 }
@@ -141,28 +148,21 @@ namespace Origam.DA.Service.Generators
             this.nameRightBracket = nameRightBracket;
         }
 
-        internal string ToSqlOrderBy(List<Tuple<string, string>> ordering)
+        internal string ToSqlOrderBy(List<Ordering> orderings)
         {
-            if (ordering == null) return "";
-            return string.Join(", ",
-                ordering
-                    .Select(x => ToSql(x.Item1, x.Item2))
+            if (orderings == null) return "";
+                return string.Join(", ", orderings.Select(ToSql)
             );
         }
 
-        private string ToSql(string column, string orderingName)
+        private string ToSql(Ordering ordering)
         {
-            if (string.IsNullOrWhiteSpace(column))
+            if (ordering.LookupId == Guid.Empty)
             {
-                throw new ArgumentException(nameof(column) + " cannot be empty");
+                string orderingSql = OrderingToSQLName(ordering.Direction);
+                return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
             }
-            if (string.IsNullOrWhiteSpace(orderingName))
-            {
-                throw new ArgumentException(nameof(orderingName) + " cannot be empty");
-            }
-
-            string orderingSql = OrderingToSQLName(orderingName);
-            return $"{nameLeftBracket}{column}{nameRightBracket} {orderingSql}";
+            return "";
         }
 
         private string OrderingToSQLName(string orderingName)
@@ -183,11 +183,33 @@ namespace Origam.DA.Service.Generators
         public List<Node> Children { get; } = new List<Node>();
         public string Value { get; set; } = "";
         public bool IsBinaryOperator => Value.Contains("$");
-        public string[] SplitValue => splitValue ?? (splitValue = Value.Split(','));
-        private string LeftOperand => SplitValue[0].Replace("\"","");
+
+        private string[] SplitValue => splitValue ??
+                                       (splitValue = Value
+                                           .Split(',')
+                                           .Select(x => x.Trim())
+                                           .ToArray()
+                                       );
+        private string ColumnName => "["+SplitValue[0].Replace("\"","")+"]";
         private string Operator => SplitValue[1].Replace("\"","");
-        private string RightOperand => SplitValue[2].Replace("\"", "'");
+        private string ColumnValue => SplitValue[2]
+            .Replace("'", "''")
+            .Replace("\"", "'");
+        
         private readonly FilterRenderer renderer = new FilterRenderer();
+
+        private string ValueToOperand(string value)
+        {
+            // if (string.IsNullOrWhiteSpace(value)) return value;
+            // string valueWithoutDoubleQuotes = value.Replace("\"", "");
+            // char firstChar = valueWithoutDoubleQuotes.First();
+            // char lastChar = valueWithoutDoubleQuotes.Last();
+            // return value.First() + value.Substring(1,value.Length - 2).Replace("'","''") + value.Last();
+
+            return value
+                .Replace("\"", "")
+                .Replace("'", "''");
+        }
 
         public string SqlRepresentation()
         {
@@ -211,9 +233,9 @@ namespace Origam.DA.Service.Generators
 
         private string GetLogicalOperator()
         {
-            if (Value == "\"$AND\"") return "AND";
-            if (Value == "\"$OR\"") return "OR";
-            throw new Exception("Could not parse node value to logical operator: " + Value);
+            if (Value.Trim() == "\"$AND\"") return "AND";
+            if (Value.Trim() == "\"$OR\"") return "OR";
+            throw new Exception("Could not parse node value to logical operator: \"" + Value+"\"");
         }
 
         private string GetSqlOfLeafNode()
@@ -221,8 +243,9 @@ namespace Origam.DA.Service.Generators
             if (Children.Count == 0)
             {
                 if (SplitValue.Length != 3) throw new ArgumentException("could not parse: "+Value+" to a filter node");
-                string operatorName = OperatorToRendererName(Operator);
-                return renderer.BinaryOperator(LeftOperand, RightOperand, operatorName);
+                var (operatorName, modifiedColumnValue) = GetRendererInput(Operator, ColumnValue);
+                
+                return renderer.BinaryOperator(ColumnName, modifiedColumnValue, operatorName);
             }
 
             if (Children.Count == 1 && Operator == "in")
@@ -230,25 +253,48 @@ namespace Origam.DA.Service.Generators
                 IEnumerable<string> options = Children.First()
                     .SplitValue
                     .Select(val => val.Replace("\"", "'"));
-                return renderer.In(LeftOperand, options);
+                return renderer.In(ColumnName, options);
             }
 
-            throw new Exception("Cannot parse filter node: " + Value);
+            throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
         }
-
-        private string OperatorToRendererName(string operatorName)
+        
+        private (string,string) GetRendererInput(string operatorName, string value)
         {
             switch (operatorName)
             {
-                case "gt": return "GreaterThan";
-                case "lt": return "LessThan";
-                case "gte": return "GreaterThanOrEqual";
-                case "lte": return "LessThanOrEqual";
-                case "eq": return "Equal";
-                case "neq": return "NotEqual";
-                case "like": return "Like";
+                case "gt": return ("GreaterThan", value);
+                case "lt": return ("LessThan", value);
+                case "gte": return ("GreaterThanOrEqual", value);
+                case "lte": return ("LessThanOrEqual", value);
+                case "eq": return ("Equal", value);
+                case "neq": return ("NotEqual", value);
+                case "starts": return ("Like", appendWildCard(value));
+                case "nstarts": return ("NotLike", appendWildCard(value));
+                case "ends": return ("Like", prependWildCard(value));
+                case "nends": return ("NotLike",  prependWildCard(value));
+                case "contains": return ("Like", prependWildCard(appendWildCard(value)));
+                case "ncontains": return ("NotLike", prependWildCard(appendWildCard(value)));
+                case "like": return ("Like", value);
                 default: throw new NotImplementedException(operatorName);
             }
+        }
+
+        private string prependWildCard(string value)
+        {
+            if (!value.StartsWith("'"))
+            {
+                throw new ArgumentException("Cannot prepend \"%\" to a value which does not start with \"'\" (is not string)");
+            }
+            return value.Substring(0,1) + "%" +value.Substring(1);
+        } 
+        private string appendWildCard(string value)
+        {
+            if (!value.EndsWith("'"))
+            {
+                throw new ArgumentException("Cannot prepend \"%\" to a value which does not end with \"'\" (is not string)");
+            }
+            return value.Substring(0,value.Length-1) + "%" +value.Substring(value.Length-1);
         }
     }
 }

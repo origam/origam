@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,18 +32,21 @@ using Origam.Workbench.Services;
 
 namespace Origam.ServerCore.Controller
 {
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     public class UIController: AbstractController
     {
         private readonly IPersistenceService persistenceService;
 
-        public UIController(ILogger<UIController> log) : base(log)
+        public UIController(ILogger<UIController> log, SessionObjects sessionObjects) 
+            : base(log, sessionObjects)
         {
             persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         }
 
         [HttpGet("[action]")]
         public IActionResult GetMenu()
-        {    
+        {
+            var claimsPrincipal = User;
             return Ok(MenuXmlBuilder.GetMenu());
         }
 

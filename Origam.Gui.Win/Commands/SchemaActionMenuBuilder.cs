@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -28,9 +28,10 @@ using Origam.Gui.Win.Wizards;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel.UI.Wizards;
 using Origam.Schema.EntityModel.Wizards;
-using Origam.Schema.LookupModel.Wizards;
+using Origam.Schema.LookupModel.UI.Wizards;
 using Origam.Schema.Wizards;
-using Origam.Schema.WorkflowModel;
+using Origam.Schema.WorkflowModel.UI;
+using Origam.Schema.WorkflowModel.UI.Wizards;
 using Origam.UI;
 using Origam.Workbench;
 using Origam.Workbench.Pads;

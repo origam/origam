@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -142,7 +142,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                         el.GetAttribute("type") + "_WithSelection");
                     SetSelectionDialogSize(el, formRef.SelectionDialogPanel);
                 }
-                if (formRef.ListDataStructure != null)
+                if (formRef.ListDataStructure != null && formRef.SelectionDialogPanel == null)
                 {
                     el.SetAttribute("dontRequestData", "true");
                 }

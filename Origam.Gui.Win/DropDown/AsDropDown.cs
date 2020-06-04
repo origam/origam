@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -560,26 +560,21 @@ namespace Origam.Gui.Win
 
 			if(this.DataLookup != null)
 			{
-                AbstractSqlDataService abstractSqlDataService = DataService.GetDataService() as AbstractSqlDataService;
-                AbstractSqlCommandGenerator cmdGenerator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory;
-                AbstractDataLookup l = this.DataLookup;
-				DataServiceDataLookup dl = this.DataLookup as DataServiceDataLookup;
-
-				ArrayList parameters = cmdGenerator.Parameters(
-					l.ListDataStructure, 
-					l.ListDataStructure.Entities[0] as DataStructureEntity,
-					dl == null || !(dl.ListMethod is DataStructureFilterSet) ? null : dl.ListMethod as DataStructureFilterSet,
-					dl == null ? null : dl.ListSortSet, 
-					false, null);
-
-				foreach(string parameterName in parameters)
+				try
 				{
-					ColumnParameterMapping mapping = this._origamMetadata.NewItem(
-						typeof(ColumnParameterMapping),
-						this._origamMetadata.SchemaExtensionId, null) as ColumnParameterMapping;
-					
-					mapping.Name = parameterName;
+					 var _dataServiceAgent = ServiceManager.Services.GetService<IBusinessServicesService>()
+																	.GetAgent("DataService", null, null);
+					var parameters = _dataServiceAgent.ExpectedParameterNames(this.DataLookup, "LoadData", "Parameters");
+					foreach (string parameterName in parameters)
+					{
+						ColumnParameterMapping mapping = this._origamMetadata.NewItem(
+							typeof(ColumnParameterMapping),
+							this._origamMetadata.SchemaExtensionId, null) as ColumnParameterMapping;
+
+						mapping.Name = parameterName;
+					}
 				}
+				finally {}
 			}
 
 			//Refill Parameter collection (and dictionary)

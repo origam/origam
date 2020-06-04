@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -29,7 +29,7 @@ namespace Origam.ServerCore.Model.UIService
         [RequiredNonDefault]
         public Guid LookupId { get; set; }
         [Required]
-        public Guid[] LabelIds { get; set; }
+        public object[] LabelIds { get; set; }
         public Guid MenuId { get; set; } = Guid.Empty;
     }
 }

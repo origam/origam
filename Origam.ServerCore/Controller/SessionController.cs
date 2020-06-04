@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -26,6 +26,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
@@ -40,23 +41,22 @@ using Origam.ServerCore.Model.Session;
 
 namespace Origam.ServerCore.Controllers
 {
-    [Authorize]
+    [Authorize(IdentityServerConstants.LocalApi.PolicyName)]
     [ApiController]
     [Route("internalApi/[controller]")]
     public class SessionController : ControllerBase
     {
         private readonly SessionObjects sessionObjects;
 
-        public SessionController(SessionObjects sessionObjects, IServiceProvider serviceProvider)
+        public SessionController(SessionObjects sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
-            IdentityServiceAgent.ServiceProvider = serviceProvider;
+            this.sessionObjects = sessionObjects;            
         }
 
         [HttpPost("[action]")]
-        public IActionResult CreateSession([FromBody]CreateSessionData sessionData)
+        public async Task<IActionResult> CreateSessionAsync([FromBody]CreateSessionData sessionData)
         {
-            return RunWithErrorHandler(() =>
+            return await RunWithErrorHandlerAsync(async () =>
             {
                 UserProfile profile = SecurityTools.CurrentUserProfile();
                 if (!sessionObjects.SessionManager.HasPortalSession(profile.Id))
@@ -77,6 +77,7 @@ namespace Origam.ServerCore.Controllers
                     addChildSession: false,
                     parentSession: null,
                     basicUIService: sessionObjects.UIService);
+                await Task.CompletedTask; //CS1998
                 return Ok(newSessionId);
             });
         }
@@ -210,6 +211,17 @@ namespace Origam.ServerCore.Controllers
             }
         }
 
+        private async Task<IActionResult> RunWithErrorHandlerAsync(Func<Task<IActionResult>> func)
+        {
+            try
+            {
+                return await func();
+            }
+            catch (UIException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         private void CallOrigamUserUpdate()
         {

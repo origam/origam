@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Origam.DA
 {
@@ -60,6 +61,7 @@ namespace Origam.DA
 		}
 
 	    public int RowLimit { get; set; }
+	    public int RowOffset { get; set; }
 	    public Guid DataSourceId;
 		public Guid MethodId;
 		public Guid DefaultSetId;
@@ -67,7 +69,7 @@ namespace Origam.DA
 		public QueryParameterCollection Parameters = new QueryParameterCollection();
 		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
 
-	    public List<Tuple<string, string>> CustomOrdering { get; set; }
+	    public List<Ordering> CustomOrdering { get; set; }
 	    public string CustomFilters { get; set; }
 
 	    public bool Paging
@@ -108,5 +110,17 @@ namespace Origam.DA
 
 	    public string Entity { get; set; }
 	    public bool ForceDatabaseCalculation { get; set; }
+	    public Grouping CustomGrouping { get; set; }
+	    public List<Aggregation> AggregatedColumns { get; set; }
+	    
+	    public List<ColumnData> GetAllQueryColumns()
+	    {
+		    var aggregationColData =
+			    (AggregatedColumns ?? new List<Aggregation>())
+			    .Select(x => new ColumnData(x.SqlQueryColumnName));
+		    return ColumnsInfo.Columns
+			    .Concat(aggregationColData)
+			    .ToList();
+	    }
 	}
 }

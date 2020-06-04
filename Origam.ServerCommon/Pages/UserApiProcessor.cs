@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -51,7 +51,6 @@ namespace Origam.ServerCommon.Pages
             new Lazy<UrlApiPageCache>(() => new UrlApiPageCache(                    
                  (ServiceManager.Services.GetService<SchemaService>())
                     .GetProvider<PagesSchemaItemProvider>()
-                    .ChildItems.ToList()
                 ));
 
         public UserApiProcessor(IHttpTools httpTools)
@@ -88,7 +87,7 @@ namespace Origam.ServerCommon.Pages
                 var (code, page) = ResolvePage(context, out var urlParameters);
                 if (code == 404)
                 {
-                    // nothing found, let others handle it
+                    Handle404(context);
                     return;
                 }
                 if (code != 200)
@@ -186,6 +185,11 @@ namespace Origam.ServerCommon.Pages
                 context.Response.Write(message);
                 context.Response.End();
             }
+        }
+
+        protected virtual void Handle404(IHttpContextWrapper context)
+        { 
+            // nothing found, let others handle it
         }
 
         private static void PageAnalytics(
@@ -776,6 +780,9 @@ namespace Origam.ServerCommon.Pages
                 }
                 default:
                 {
+                    log.ErrorFormat("Multiple routes detected '{0}' for request '{1}'",
+                        validPagesByVerbAndPath.Select(x => x.Id.ToString() + ":" + x.Url ).Aggregate((res, i) => res + "," + i),
+                        path);
                     return (500, null);
                 }
             }

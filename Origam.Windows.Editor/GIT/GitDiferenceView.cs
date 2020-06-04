@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Origam.Git;
 using Origam.UI;
 using WeifenLuo.WinFormsUI.Docking;
@@ -97,13 +89,31 @@ namespace Origam.Windows.Editor.GIT
         public object LoadedObject { get; }
         public string Test() => "";
 
-        public event EventHandler TitleNameChanged;
-        public event EventHandler DirtyChanged;
-        public event EventHandler Saving;
-        public event SaveEventHandler Saved;
-        public event EventHandler StatusTextChanged;
-        public void Dispose()
+        public event EventHandler TitleNameChanged
         {
+            add { }
+            remove { }
+        }
+        public event EventHandler DirtyChanged
+        {
+            add { }
+            remove { }
+        }
+
+        public event EventHandler Saving
+        {
+            add { }
+            remove { }
+        }
+        public event SaveEventHandler Saved
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler StatusTextChanged
+        {
+            add { }
+            remove { }
         }
     }
 }

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -24,7 +24,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-namespace Origam.Schema.LookupModel.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateLookupFromEntityWizard.

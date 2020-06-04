@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -22,6 +22,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
 
@@ -31,6 +32,7 @@ namespace Origam.DA.Service
     {
         private static readonly List<IPersistent> temporaryAction = new List<IPersistent>();
         private static object obj = new object();
+        private static string pattern = @"([a-z0-9]{8}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{4}[-][a-z0-9]{12})";
         public static bool UseIndex { get; private set; } = false;
         private static bool blockAddTemporaryAction = false;
         private static readonly List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex
@@ -111,11 +113,48 @@ namespace Origam.DA.Service
         private static void Addreference(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
         {
             CheckDependencies(retrievedObj, referenceIndex);
+            GetGuidFromText(retrievedObj, referenceIndex);
+            GetGuidFromReferences(retrievedObj, referenceIndex);
             foreach (AbstractSchemaItem item in retrievedObj.ChildItems)
             {
                 CheckDependencies(item, referenceIndex);
+                GetGuidFromText(item, referenceIndex);
+                GetGuidFromReferences(item, referenceIndex);
             }
         }
+
+        private static void GetGuidFromReferences(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+        {
+             if (retrievedObj is Schema.GuiModel.EntityUIAction)
+            {
+                AddToIndex(((Schema.GuiModel.EntityUIAction)retrievedObj).ConfirmationRuleId, retrievedObj, referenceIndex);
+            }
+        }
+
+        private static void GetGuidFromText(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+        {
+            MatchCollection mc = null;
+            if (retrievedObj is Schema.EntityModel.XslTransformation)
+            {
+                mc = Regex.Matches(((Schema.EntityModel.XslTransformation)retrievedObj).TextStore, pattern);
+            }
+            if (retrievedObj is Schema.RuleModel.XslRule)
+            {
+                mc = Regex.Matches(((Schema.RuleModel.XslRule)retrievedObj).Xsl, pattern);
+            }
+            if (retrievedObj is Schema.RuleModel.XPathRule)
+            {
+                mc = Regex.Matches(((Schema.RuleModel.XPathRule)retrievedObj).XPath, pattern);
+            }
+            if (mc != null)
+            {
+                foreach (var id in mc)
+                {
+                    AddToIndex(new Guid(id.ToString()), retrievedObj, referenceIndex);
+                }
+            }
+        }
+
         private static void CheckDependencies(AbstractSchemaItem item, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
         {
                 ArrayList dependencies = item.GetDependencies(false);
@@ -123,14 +162,20 @@ namespace Origam.DA.Service
                 {
                     if (item1 != null)
                     {
-                        lock (obj)
-                        {
-                            referenceIndex.Add
-                                (new KeyValuePair<Guid, KeyValuePair<Guid, Type>>(item1.Id, new KeyValuePair<Guid, Type>(item.Id, item.GetType())));
-                        }
+                        AddToIndex(item1.Id,item, referenceIndex);
                     }
                 }
         }
+
+        private static void AddToIndex(Guid guid, AbstractSchemaItem item,  List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
+        {
+            lock (obj)
+            {
+                referenceIndex.Add
+                    (new KeyValuePair<Guid, KeyValuePair<Guid, Type>>(guid, new KeyValuePair<Guid, Type>(item.Id, item.GetType())));
+            }
+        }
+
         public static void AddToBuildIndex(IFilePersistent item)
         {
             AbstractSchemaItem schemaItem = (AbstractSchemaItem)item;

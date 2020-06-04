@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using Origam.Security.Common;
 
@@ -33,7 +34,7 @@ namespace Origam.ServerCore.Authorization
         public bool IsLockedOut { get; set; }
         public bool IsOnline { get; set; }
         public DateTime LastActivityDate { get; set; }
-        public DateTime LastLockoutDate { get; set; }
+        public DateTime? LastLockoutDate { get; set; }
         public DateTime LastLoginDate { get; set; }
         public DateTime LastPasswordChangedDate { get; set; }
         public string PasswordQuestion { get; set; }

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -97,6 +97,24 @@ namespace Origam.Security.Identity
             set { _Is2FAUsed = value; }
         }
 
+        protected bool _exposeLoginAttemptsInfo = false;
+        public bool ExposeLoginAttemptsInfo
+        {
+            get { return GetExposeLoginAttemptsInfo(); }
+            set { SetExposeLoginAttemptsInfo(value); }
+        }
+        // the getter can't be overriden
+        private bool GetExposeLoginAttemptsInfo()
+        {
+            return _exposeLoginAttemptsInfo;
+        }
+        // by default, user managers doesn't allow this functionality
+        // (unless they correctly implement GetAccessFailedCountAsync)
+        protected virtual void SetExposeLoginAttemptsInfo(bool value)
+        {
+            throw new NotSupportedException();
+        }
+
         private bool _IsPasswordRecoverySupported = false;
 
         public bool IsPasswordRecoverySupported
@@ -109,17 +127,16 @@ namespace Origam.Security.Identity
             : base(store)
         {
             var appSettings = System.Configuration.ConfigurationManager.AppSettings;
-            accountMailSender = new AccountMailSender(
-                fromAddress: appSettings["mailFrom"],
-                resetPwdSubject: appSettings["ResetPasswordMail_Subject"],
-                resetPwdBodyFilename: appSettings["ResetPasswordMail_BodyFileName"],
-                userUnlockNotificationSubject: appSettings["UserUnlockNotification_Subject"],
-                userUnlockNotificationBodyFilename: appSettings["UserUnlockNotification_BodyFileName"],
+            accountMailSender = new AccountMailSender(portalBaseUrl: appSettings["PortalBaseUrl"],
+                registerNewUserFilename: appSettings["userRegistration_MailBodyFileName"], 
+                fromAddress: appSettings["mailFrom"], 
                 registerNewUserSubject: appSettings["userRegistration_MailSubject"],
-                registerNewUserFilename: appSettings["userRegistration_MailBodyFileName"],
-                mailQueueName: appSettings["MailQueue_Name"],
-                portalBaseUrl: appSettings["PortalBaseUrl"],
-                applicationBasePath: AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
+                userUnlockNotificationBodyFilename: appSettings["UserUnlockNotification_BodyFileName"], 
+                userUnlockNotificationSubject: appSettings["UserUnlockNotification_Subject"], 
+                resetPwdBodyFilename: appSettings["ResetPasswordMail_BodyFileName"], 
+                resetPwdSubject: appSettings["ResetPasswordMail_Subject"],
+                applicationBasePath: AppDomain.CurrentDomain.SetupInformation.ApplicationBase, 
+                mailQueueName: appSettings["MailQueue_Name"]);
         }
 
         /// <summary>
@@ -552,6 +569,33 @@ namespace Origam.Security.Identity
         protected virtual void CheckEmailUniqueness()
         {
             emailUniquenessChecked = true;
+        }
+
+
+        /// <summary>
+        /// Returns user's failed password attempt count
+        /// </summary>
+        /// <param name="username">user's username</param>
+        /// <returns>null when exposing is not switched on, or user not found</returns>
+        public int? GetFailedPasswordAttemptCount(string username)
+        {
+            int? attemptedCount = null;
+            if (ExposeLoginAttemptsInfo)
+            {
+                // resolve user id from username
+                Task<OrigamUser> findByNameTask = FindByNameAsync(username);
+                if (!findByNameTask.IsFaulted && findByNameTask.Result != null)
+                {
+                    Task<int> failedCountTask = GetAccessFailedCountAsync(findByNameTask.Result.Id);
+                    // get current count
+                    if (!failedCountTask.IsFaulted && failedCountTask.Result != -1)
+                    {
+                        attemptedCount = failedCountTask.Result;
+                    }
+                }
+            }
+
+            return attemptedCount;
         }
     }
 }

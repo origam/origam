@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -27,16 +27,13 @@ using Origam.Schema.DeploymentModel;
 using System.Text;
 using System.Collections.Generic;
 using Origam.DA.Service;
-using Origam.UI.WizardForm;
-using System.Collections;
-using Origam.Workbench;
 
-namespace Origam.Schema.LookupModel.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateLookupFromEntityCommand.
-	/// </summary>
-	public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateLookupFromEntityCommand.
+    /// </summary>
+    public class CreateFieldWithLookupEntityCommand : AbstractMenuCommand
 	{
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         CreateFieldWithLookupEntityWizardForm createFieldWith;
@@ -230,10 +227,14 @@ namespace Origam.Schema.LookupModel.Wizards
                         defaultConstant = c;
                     }
                 }
-                fk.DefaultValue = defaultConstant;
-                fk.Persist();
-                var script2 = CreateDatabaseScript(table.Name + "_values", dict);
-                GeneratedModelElements.Add(script2);
+                // 7. new field script (after values because of a default value
+                // only if it's not a virtual detached entity
+                if (!(baseEntity is DetachedEntity))
+                {
+                    FieldsScripts(fk,
+                                  baseField,
+                                  baseEntity);
+                }
             }
             // 7. new field script (after values because of a default value
             FieldsScripts(fk,

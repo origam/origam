@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -36,17 +36,17 @@ namespace Origam.Security.Identity
 			= LogManager.GetLogger(typeof(IdentityServiceAgent));
 
 #if NETSTANDARD
-        public static IServiceProvider ServiceProvider { get; set; }
+          private IManager userManager;
 
-        private IManager userManager;
 
           public IdentityServiceAgent()
           {
-              if (ServiceProvider == null)
-              {
-                  throw new InvalidOperationException("ServiceProvider was not set");
-              }
-              userManager = ServiceProvider.GetService<IManager>();
+            // according to
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1
+            // we can get scoped RequestServices collection from HttpContext
+            userManager = SecurityManager.DIServiceProvider
+                .GetService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
+                .HttpContext.RequestServices.GetService<IManager>();
           }
 #else
         private IManager userManager
@@ -591,7 +591,7 @@ namespace Origam.Security.Identity
                 throw new InvalidCastException(
                     Resources.ErrorPasswordAnswerNotString);
             }
-			bool emailConfirmed = true;
+			bool emailConfirmed = false;
 			if (Parameters.ContainsKey("EmailConfirmed"))
 			{
 				if (!(Parameters["EmailConfirmed"] is bool))
@@ -619,7 +619,7 @@ namespace Origam.Security.Identity
             {
                 user.ProviderUserKey = (Guid)Parameters["ProviderUserKey"];
             }
-            user.IsApproved = emailConfirmed;            
+            user.EmailConfirmed = emailConfirmed;            
             user.TransactionId = TransactionId;
             Task<InternalIdentityResult> task = userManager.CreateAsync(
                 user, Parameters["Password"].ToString().TrimEnd());
@@ -693,7 +693,7 @@ namespace Origam.Security.Identity
                 tokenResultNode.Attributes.Append(errorMessageAttr);
 
                 rootNode.AppendChild(tokenResultNode);
-                result = xmlDoc;
+                result = new Origam.XmlContainer(xmlDoc);
             }
         }
 

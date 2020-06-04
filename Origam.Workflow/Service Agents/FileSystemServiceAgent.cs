@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -43,10 +43,9 @@ namespace Origam.Workflow
 
 		public void LoadXml(string path)
 		{
-			XmlDocument doc = new XmlDocument();
-			doc.Load(path);
-
-			_result = doc;
+			var xmlDocument = new XmlDocument();
+			xmlDocument.Load(path);
+			_result = new XmlContainer(xmlDocument);
 		}
 
         public void LoadText(string path, string encodingName)
@@ -137,7 +136,12 @@ namespace Origam.Workflow
             File.Delete(path);
 			_result = null;
         }
-
+        
+        public void CreateDirectory(string path)
+        {
+            Directory.CreateDirectory(path);
+            _result = null;
+        }
 
 		public string[] GetFileList(string path, string searchPattern)
 		{
@@ -299,18 +303,18 @@ namespace Origam.Workflow
                         throw new InvalidCastException(
                             ResourceUtils.GetString("ErrorPathNotString"));
                     }
-					XmlDocument outXml = Parameters["Data"] as XmlDocument;
+					XmlContainer outXml = Parameters["Data"] as XmlContainer;
 					if (outXml == null)
                     {
                         throw new InvalidCastException(
-                            ResourceUtils.GetString("ErrorNotXmlDocument"));
+                            ResourceUtils.GetString("ErrorNotXmlContainer"));
                     }
 					encoding = Parameters["Encoding"] as string;
                     if (Parameters.Contains("CreateDirectory"))
                     {
                         createDirectory = (bool)Parameters["CreateDirectory"];
                     }
-					SaveXml(outPath, outXml, encoding, createDirectory);
+					SaveXml(outPath, outXml.Xml, encoding, createDirectory);
 					break;
 				case "SaveText":
 					outPath = Parameters["Path"] as string;
@@ -406,7 +410,15 @@ namespace Origam.Workflow
                     }
                     MoveFile(inPath, outPath, createDirectory, overwrite);
                     break;
-				default:
+                case "CreateDirectory":
+                    if (!(Parameters["Path"] is string))
+                    {
+                        throw new InvalidCastException(
+                            ResourceUtils.GetString("ErrorPathNotString"));
+                    }
+                    CreateDirectory((string)Parameters["Path"]);
+                    break;
+                default:
 					throw new ArgumentOutOfRangeException(
                         "MethodName", MethodName, 
                         ResourceUtils.GetString("InvalidMethodName"));

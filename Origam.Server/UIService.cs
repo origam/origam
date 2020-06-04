@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -93,6 +93,8 @@ namespace Origam.Server
                 portalSessions: portalSessions,
                 formSessions: formSessions,
                 reportRequests: null,
+                blobDownloadRequests: null,
+                blobUploadRequests: null,
                 analytics: Analytics.Instance);
             uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, Analytics.Instance);
             reportManager = new ReportManager(sessionManager);
@@ -310,7 +312,7 @@ namespace Origam.Server
                 {
                     rows[i] = ss.GetSessionRow(entity, selectedItems[i]);
                 }
-                XmlDocument xml 
+                IXmlContainer xml 
                     = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
                 RuleExceptionDataCollection result 
                     = ss.RuleEngine.EvaluateEndRule(

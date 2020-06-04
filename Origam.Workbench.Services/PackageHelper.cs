@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -30,6 +30,7 @@ namespace Origam.Workbench.Services
         public static void CreatePackage(string packageName, Guid packageId, Guid referencePackageId)
         {
             IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            StopFileEventQueue(persistenceService);
             string versionNumber = "1.0.0";
             SchemaExtension newExtension = new SchemaExtension(new ModelElementKey(packageId));
             newExtension.PersistenceProvider = persistenceService.SchemaListProvider;
@@ -72,6 +73,23 @@ namespace Origam.Workbench.Services
             }
             IDeploymentService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
             deployment.Deploy();
+            StartFileEventQueue(persistenceService);
+        }
+
+        private static void StopFileEventQueue(IPersistenceService persistenceService)
+        {
+            if (persistenceService is FilePersistenceService)
+            {
+                ((FilePersistenceService)persistenceService).FileEventQueue.Stop();
+            }
+        }
+
+        private static void StartFileEventQueue(IPersistenceService persistenceService)
+        {
+            if (persistenceService is FilePersistenceService)
+            {
+                ((FilePersistenceService)persistenceService).FileEventQueue.Start();
+            }
         }
     }
 }

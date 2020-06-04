@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -258,6 +258,11 @@ namespace Origam.Schema.GuiModel
 		[EntityColumn("B06")]
 		[XmlAttribute ("disableConstraintForInputValidation")]
 		public bool DisableConstraintForInputValidation { get; set; }
+		[Category("Security")]
+		[XmlAttribute("processGetReadRowLevelRules")]
+		[Description("Enable checking of field-based row level security rules on the output data for GET requests." +
+			". Actually only DENY READ field based rules will be checked and applied if this is turned on.")]
+		public bool ProcessReadFieldRowLevelRulesForGETRequests { get; set; } = false;
 		#endregion
 	}
 }

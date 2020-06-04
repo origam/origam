@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -106,11 +106,11 @@ namespace OrigamArchitect
 		DocumentationPad _documentationPad;
 		FindSchemaItemResultsPad _findSchemaItemResultsPad;
         FindRulesPad _findRulesPad;
+		LogPad _logPad;
 #endif
         PropertyPad _propertyPad;
 		WorkflowPlayerPad _workflowPad;
 		OutputPad _outputPad;
-		LogPad _logPad;
         ServerLogPad _serverLogPad;
         ExtensionPad _extensionPad;
 
@@ -2600,7 +2600,7 @@ namespace OrigamArchitect
 					}
 				}
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				// continue if auto-upgrade fails
 			}

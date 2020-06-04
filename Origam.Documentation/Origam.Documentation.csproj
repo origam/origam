@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Origam.Gui\Origam.Gui.csproj" />
+    <ProjectReference Include="..\Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj" />
+    <ProjectReference Include="..\Origam.Services\Origam.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Mvp.Xml">
+      <HintPath>..\EnterpriseLibrary\Mvp.Xml.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

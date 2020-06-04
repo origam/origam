@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM.
 
@@ -44,9 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Origam.Schema.GuiModel;
-using System.Web;
 using System.Xml.XPath;
-using System.Xml;
 using Origam.Rule;
 using System.Data;
 using Origam.Workbench.Services;
@@ -54,16 +52,16 @@ using Origam.DA;
 using Origam.JSON;
 using core = Origam.Workbench.Services.CoreServices;
 using System.Collections;
-using Microsoft.AspNetCore.Http;
-using Origam;
 using Origam.Server;
-using Origam.ServerCommon;
+using System.Linq;
+using Origam.Schema.EntityModel;
+using Origam.Schema;
 
 namespace Origam.ServerCommon.Pages
 {
     class XsltPageRequestHandler : AbstractPageRequestHandler
     {
-        private const string  MIME_JSON = "application/json";
+        private const string MIME_JSON = "application/json";
         private const string MIME_HTML = "text/html";
         private const string MIME_OCTET_STREAM = "application/octet-stream";
 
@@ -116,6 +114,13 @@ namespace Origam.ServerCommon.Pages
             else
             {
                 data = core.DataService.LoadData(xsltPage.DataStructureId, xsltPage.DataStructureMethodId, Guid.Empty, xsltPage.DataStructureSortSetId, null, qparams);
+                if(request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
+                {
+                    if (xsltPage.ProcessReadFieldRowLevelRulesForGETRequests)
+                    {
+                        ProcessReadFieldRuleState(data, ruleEngine);
+                    }
+                }
                 if (xsltPage.Transformation == null && !xpath && page.MimeType == MIME_JSON 
                     && request.HttpMethod != "DELETE" && request.HttpMethod != "PUT")
                 {
@@ -171,42 +176,44 @@ namespace Origam.ServerCommon.Pages
                         isProcessed = true;
                     }
                 }
-
-                if (xpath)
+                if (!isProcessed)
                 {
-                    // subset of the returned xml - json | html not supported
-                    // it is mainly used for extracting pure text out of the result xml
-                    // so json | html serialization would have to be produced by the
-                    // xslt or stored directly in the resulting data
-                    XPathNavigator nav = result.Xml.CreateNavigator();
-                    nav.Select(xsltPage.ResultXPath);
+                    if (xpath)
+                    {
+                        // subset of the returned xml - json | html not supported
+                        // it is mainly used for extracting pure text out of the result xml
+                        // so json | html serialization would have to be produced by the
+                        // xslt or stored directly in the resulting data
+                        XPathNavigator nav = result.Xml.CreateNavigator();
+                        nav.Select(xsltPage.ResultXPath);
 
-                    if (page.MimeType == MIME_OCTET_STREAM)
-                    {
-                        byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
-                        response.AddHeader("Content-Length", bytes.LongLength.ToString());
-                        response.BinaryWrite(bytes);
-                    }
-                    else
-                    {
-                        response.AddHeader("Content-Length", nav.Value.Length.ToString());
-                        response.Write(nav.Value);
-                    }
-                }
-                else
-                {
-                    if (page.MimeType == MIME_JSON)
-                    {
-                        response.WriteToOutput(textWriter =>
-                            JsonUtils.SerializeToJson(textWriter, result.Xml, xsltPage.OmitJsonRootElement));
-                    }
-                    else
-                    {
-                        if (page.MimeType == MIME_HTML)
+                        if (page.MimeType == MIME_OCTET_STREAM)
                         {
-                            response.Write("<!DOCTYPE html>");
+                            byte[] bytes = UTF8Encoding.UTF8.GetBytes(nav.Value);
+                            response.AddHeader("Content-Length", bytes.LongLength.ToString());
+                            response.BinaryWrite(bytes);
                         }
-                        response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
+                        else
+                        {
+                            response.AddHeader("Content-Length", nav.Value.Length.ToString());
+                            response.Write(nav.Value);
+                        }
+                    }
+                    else
+                    {
+                        if (page.MimeType == MIME_JSON)
+                        {
+                            response.WriteToOutput(textWriter =>
+                                JsonUtils.SerializeToJson(textWriter, result.Xml, xsltPage.OmitJsonRootElement));
+                        }
+                        else
+                        {
+                            if (page.MimeType == MIME_HTML)
+                            {
+                                response.Write("<!DOCTYPE html>");
+                            }
+                            response.WriteToOutput(textWriter => result.Xml.Save(textWriter));
+                        }
                     }
                 }
             }
@@ -247,6 +254,38 @@ namespace Origam.ServerCommon.Pages
             }
         }
 
+        private void ProcessReadFieldRuleState(DataSet data, RuleEngine ruleEngine)
+        {
+            DataTableCollection datatables = data.Tables;
+            object profileId = SecurityTools.CurrentUserProfile().Id;
+            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+
+            foreach (DataTable dt in datatables)
+            {
+                Guid entityId = (Guid)dt.ExtendedProperties["EntityId"];
+                IDataEntity entity = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(entityId)) as IDataEntity;
+
+                if (entity.HasEntityAFieldDenyReadRule())
+                {
+                    //we do this for disable contrains if column is AllowDBNull = false.
+                    //for allow field set Dbnull if has Deny Read rule. 
+                    dt.Columns.Cast<DataColumn>().ToList().ForEach(columnD => columnD.AllowDBNull = true );
+                    foreach (DataRow dataRow in dt.Rows)
+                    {
+                        RowSecurityState rowSecurity = ruleEngine.RowLevelSecurityState(dataRow, profileId);
+                        if (rowSecurity != null)
+                        {
+                            List<FieldSecurityState> listState = rowSecurity.Columns.Cast<FieldSecurityState>().Where(columnState => !columnState.AllowRead).ToList();
+                            foreach (FieldSecurityState securityState in listState)
+                            {
+                                dataRow[securityState.Name] = DBNull.Value;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private static void HandlePUT(Dictionary<string, object> parameters, XsltDataPage xsltPage, IDataDocument data, Hashtable transformParams, RuleEngine ruleEngine)
         {
             Validate(data, transformParams, ruleEngine, xsltPage.SaveValidationBeforeMerge);
@@ -254,7 +293,7 @@ namespace Origam.ServerCommon.Pages
             string bodyKey = null;
             foreach (string key in parameters.Keys)
             {
-                if (parameters[key] is XmlDocument)
+                if (parameters[key] is IDataDocument)
                 {
                     bodyKey = key;
                     break;

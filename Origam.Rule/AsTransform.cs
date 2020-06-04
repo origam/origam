@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -34,14 +34,7 @@ namespace Origam.Rule
             switch(xsltEngineType)
             {
                 case XsltEngineType.XslTransform:
-#if NETSTANDARD
-                    throw new Exception(
-                        xsltEngineType 
-                        + " is not supported in netstandard implementation of " 
-                        + typeof(AsTransform).Name);
-#else
                     return new OldXsltEngine(persistence);
-#endif 
                 case XsltEngineType.XslCompiledTransform:
                     return new CompiledXsltEngine(persistence);
                 default:

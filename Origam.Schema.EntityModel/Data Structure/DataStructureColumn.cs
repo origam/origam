@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -25,6 +25,8 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence.Attributes;
+using System.Collections;
+using Origam.Schema.Attributes;
 
 namespace Origam.Schema.EntityModel
 {
@@ -39,6 +41,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Field", "Fields", 22)]
     [HelpTopic("Data+Structure+Field")]
+	[ExpressionBrowserTreeSortAtribute(typeof(ComparerSortByName))]
 	[XmlModelRoot(ItemTypeConst)]
     [DefaultProperty("Field")]
     public class DataStructureColumn : AbstractSchemaItem
@@ -592,5 +595,24 @@ namespace Origam.Schema.EntityModel
 		}
 
 		#endregion
+	}
+
+	public class ComparerSortByName : IComparer
+	{
+		public int Compare(object a, object obj)
+		{
+
+			DataStructureColumn compared = obj as DataStructureColumn;
+			DataStructureColumn compare = a as DataStructureColumn;
+
+			if (compared != null && compare != null)
+			{
+				return compare.Name.CompareTo(compared.Name);
+			}
+			else
+			{
+				return 0;
+			}
+		}
 	}
 }

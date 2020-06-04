@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -103,8 +103,8 @@ namespace Origam.DA.Service
                 .Select(res => res.Value);
                 
             return errors.Count == 0
-                ? Result.Ok<List<XmlFileData>, XmlLoadError>(data.ToList())
-                : Result.Fail<List<XmlFileData>, XmlLoadError>(errors[0].Error);
+                ? Result.Success<List<XmlFileData>, XmlLoadError>(data.ToList())
+                : Result.Failure<List<XmlFileData>, XmlLoadError>(errors[0].Error);
         }
 
         private INamespaceFinder GetNamespaceFinder(List<XmlFileData> filesToLoad,
@@ -145,7 +145,7 @@ namespace Origam.DA.Service
             Result<OrigamXmlDocument> documentResult = LoadXmlDoc(fileInfo);
             if (documentResult.IsFailure)
             {
-                return Result.Fail<XmlFileData, XmlLoadError>(
+                return Result.Failure<XmlFileData, XmlLoadError>(
                     new XmlLoadError(documentResult.Error));
             }
 
@@ -153,8 +153,8 @@ namespace Origam.DA.Service
                 .Select(fixer =>fixer.UpdateVersion(documentResult.Value, tryUpdate))
                 .Cast<Result<int, XmlLoadError>?>()
                 .FirstOrDefault(res => res.Value.IsFailure)
-                ?? Result.Ok<int, XmlLoadError>(0);
-            return result.OnSuccess(res =>
+                ?? Result.Success<int, XmlLoadError>(0);
+            return result.Map(res =>
                 new XmlFileData(documentResult.Value, fileInfo));
         }
 
@@ -166,10 +166,10 @@ namespace Origam.DA.Service
                 xmlDocument.Load(fileInfo.FullName);
             } catch (XmlException ex)
             {
-                return Result.Fail<OrigamXmlDocument>(
+                return Result.Failure<OrigamXmlDocument>(
                     $"Could not read file: {fileInfo.FullName}{Environment.NewLine}{ex.Message}");
             }
-            return Result.Ok(xmlDocument);
+            return Result.Success(xmlDocument);
         }
     }
 
@@ -224,8 +224,8 @@ namespace Origam.DA.Service
                 return UpdateVersion(xmlDoc, nameSpace, tryUpdate);
             }
             return failIfNamespaceNotFound 
-                ? Result.Fail<int,XmlLoadError>( new XmlLoadError(ErrType.XmlGeneralError, xmlNameSpaceName+" namespace not found in: "+xmlDoc.BaseURI)) 
-                : Result.Ok<int, XmlLoadError>(0);
+                ? Result.Failure<int,XmlLoadError>( new XmlLoadError(ErrType.XmlGeneralError, xmlNameSpaceName+" namespace not found in: "+xmlDoc.BaseURI)) 
+                : Result.Success<int, XmlLoadError>(0);
         }
 
         private Result<int,XmlLoadError> UpdateVersion(OrigamXmlDocument xmlDoc,string nameSpace, bool tryUpdate)
@@ -233,7 +233,7 @@ namespace Origam.DA.Service
             Version version = ElementNameFactory.Create(nameSpace).Version;
             if ( version > currentVersion)
             {
-                return Result.Fail<int,XmlLoadError>( new XmlLoadError(ErrType.XmlGeneralError, $"Cannot work with file: {xmlDoc.BaseURI} because it's version of namespace \"{nameSpace}\" is newer than the current version: {currentVersion}"));
+                return Result.Failure<int,XmlLoadError>( new XmlLoadError(ErrType.XmlGeneralError, $"Cannot work with file: {xmlDoc.BaseURI} because it's version of namespace \"{nameSpace}\" is newer than the current version: {currentVersion}"));
             }
             if( version < currentVersion &&
                !version.DiffersOnlyInBuildFrom(currentVersion))
@@ -243,7 +243,7 @@ namespace Origam.DA.Service
                     throw new NotImplementedException();
                 } else
                 {
-                    return Result.Fail<int,XmlLoadError>( 
+                    return Result.Failure<int,XmlLoadError>( 
                         new XmlLoadError( ErrType.XmlVersionIsOlderThanCurrent,
                         $"{xmlDoc.BaseURI} has old version of: {nameSpace}, current version: {currentVersion}"));
                 }

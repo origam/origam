@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -21,7 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateForeignKeyWizard.

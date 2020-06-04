@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -618,6 +618,7 @@ namespace Origam.Workflow
 			FormReferenceMenuItem formMenu = item as FormReferenceMenuItem;
 			AbstractReport report = item as AbstractReport;
 			EntityFilterLookupReference filterLookup = item as EntityFilterLookupReference;
+			AbstractDataLookup abstractDataLookup = item as AbstractDataLookup;
 			string prefix = null;
 
 			if(method == "LoadData" && parameter == "Parameters")
@@ -651,6 +652,10 @@ namespace Origam.Workflow
 					// add "lookup" prefix to all parameters because as sub-queries they will
 					// be prefixed 
 					prefix = "lookup";
+				}
+				else if(abstractDataLookup != null)
+				{
+					ResolveLookup(abstractDataLookup, out ds, out dsMethod);
 				}
 
 				if(ds != null)
@@ -744,6 +749,18 @@ namespace Origam.Workflow
 			method = null;
 			DataServiceDataLookup dl = reference.Lookup as DataServiceDataLookup;
 			if(dl != null)
+			{
+				method = dl.ListMethod;
+			}
+		}
+
+		private void ResolveLookup(AbstractDataLookup reference,
+			out DataStructure ds, out DataStructureMethod method)
+		{
+			ds = reference.ListDataStructure;
+			method = null;
+			DataServiceDataLookup dl = reference as DataServiceDataLookup;
+			if (dl != null)
 			{
 				method = dl.ListMethod;
 			}

@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -32,6 +32,7 @@ using Mvp.Xml.Exslt;
 using System.Data;
 using Origam.Workbench.Services;
 using Origam.Services;
+using Origam.Extensions;
 
 namespace Origam.Rule
 {

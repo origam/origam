@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -274,9 +274,21 @@ namespace Origam.Workbench.Editors
 			gViewer.Invalidate();
 		}
 		
-		public event EventHandler ToolStripsLoaded;
-		public event EventHandler AllToolStripsRemoved;
-		public event EventHandler ToolStripsNeedUpdate;
+		public event EventHandler ToolStripsLoaded
+		{
+			add { }
+			remove { }
+		}
+		public event EventHandler AllToolStripsRemoved
+		{
+			add { }
+			remove { }
+		}
+		public event EventHandler ToolStripsNeedUpdate
+		{
+			add { }
+			remove { }
+		}
 
 		private void HScrollBar_Scroll(object sender, ScrollEventArgs e)
         {

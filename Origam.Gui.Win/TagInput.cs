@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -285,7 +285,11 @@ namespace Origam.Gui.Win
 
 		#region ILookupControl Members
 
-		public event System.EventHandler LookupShowSourceListRequested;
+		public event System.EventHandler LookupShowSourceListRequested
+		{
+			add { }
+			remove { }
+		}
 
 		public bool ShowUniqueValues
 		{
@@ -313,7 +317,11 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public event System.EventHandler lookupValueChanged;
+		public event System.EventHandler lookupValueChanged
+		{
+			add { }
+			remove { }
+		}
 
 		public string ColumnName
 		{
@@ -367,7 +375,11 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public event System.EventHandler LookupEditSourceRecordRequested;
+		public event System.EventHandler LookupEditSourceRecordRequested
+		{
+			add { }
+			remove { }
+		}
 
 		public Guid EntityId
 		{
@@ -378,7 +390,11 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public event System.EventHandler LookupListRefreshRequested;
+		public event System.EventHandler LookupListRefreshRequested
+		{
+			add { }
+			remove { }
+		}
 
 		public DataView LookupList
 		{
@@ -481,9 +497,17 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public event System.EventHandler LookupValueChangingByUser;
+		public event System.EventHandler LookupValueChangingByUser
+		{
+			add { }
+			remove { }
+		}
 
-		public event System.EventHandler LookupDisplayTextRequested;
+		public event System.EventHandler LookupDisplayTextRequested
+		{
+			add { }
+			remove { }
+		}
 
 		public string LookupListTreeParentMember
 		{

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -303,7 +303,7 @@ namespace Origam.Schema.EntityModel
 						break;
 
 					case OrigamDataType.Date:
-						if(value == null || value == "")
+						if (string.IsNullOrEmpty(Convert.ToString(value)))
 						{
 							this.DateValue = null;
 						}

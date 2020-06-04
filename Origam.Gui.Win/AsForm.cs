@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -51,7 +51,11 @@ namespace Origam.Gui.Win
 		
 		public event EventHandler ToolStripsLoaded;
 		public event EventHandler AllToolStripsRemoved;
-		public event EventHandler ToolStripsNeedUpdate;
+		public event EventHandler ToolStripsNeedUpdate
+		{
+			add { }
+			remove { }
+		}
 
 		public List<ToolStrip> GetToolStrips(int maxWidth = -1)
 	    {
@@ -317,7 +321,11 @@ namespace Origam.Gui.Win
 
 		public bool SaveOnClose { get; set; } = true;
 
-		public event SaveEventHandler Saved;
+		public event SaveEventHandler Saved
+		{
+			add { }
+			remove { }
+		}
 
 		string _titleName = "";
 		public string TitleName
@@ -478,7 +486,11 @@ namespace Origam.Gui.Win
 			}
 		}
 
-		public event EventHandler Saving;
+		public event EventHandler Saving
+		{
+			add { }
+			remove { }
+		}
 
 		public string UntitledName
 		{

@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -78,7 +78,11 @@ namespace Origam.DA
             IPrincipal userProfile, 
             string transactionId);
 
-        IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery);
+        IEnumerable<IEnumerable<object>> ExecuteDataReader
+	        (DataStructureQuery dataStructureQuery);
+
+        IEnumerable<IEnumerable<KeyValuePair<string, object>>>
+	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
 	}
 }
 

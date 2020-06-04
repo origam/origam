@@ -627,4 +627,7 @@
   <data name="ErrorNoLastRowMarker" xml:space="preserve">
     <value>Last row marker not specified.</value>
   </data>
+  <data name="ErrorNotXmlContainer" xml:space="preserve">
+    <value>Data is not of type XmlContainer.</value>
+  </data>
 </root>

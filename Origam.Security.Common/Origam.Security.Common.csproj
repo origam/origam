@@ -6,7 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="CSharpFunctionalExtensions">
-        <Version>1.16.1</Version>
+        <Version>2.4.1</Version>
       </PackageReference>
     </ItemGroup>
 
@@ -16,6 +16,22 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Origam.Workbench.Services\Origam.Workbench.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources.resx">
+        <CustomToolNamespace></CustomToolNamespace>
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

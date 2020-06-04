@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Origam.ServerCore.Resources
+@inject IHtmlLocalizer<SharedResources> SharedLocalizer
+@using IdentityServer4.Extensions
+@using Microsoft.Extensions.Options
+@using Origam.ServerCore.Configuration
+@inject IOptions<IdentityGuiConfig> ConfigOptions;
+@{
+    string name = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        name = Context.User?.GetDisplayName();
+    }
+    IdentityGuiConfig config = ConfigOptions.Value;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@SharedLocalizer["IdentityServerTitle"]</title>
+    <link rel="stylesheet" href="~/assets/identity/lib/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/assets/identity/css/css.css" />
+    <link rel="stylesheet" href="~/assets/identity/css/main.css" />
+    <link rel="stylesheet" href="~/assets/identity/css/login.css" />
+    <link rel="stylesheet" href="~/assets/identity/css/layout.css" />
+    <link rel="stylesheet" href="~/assets/identity/css/views.css" />
+</head>
+<body>
+
+    <div class="navigation-bar">
+
+        @if (!string.IsNullOrWhiteSpace(name))
+        {
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="~/assets/identity/icons/user.svg" class="svg"/>
+                        @name
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-action="Logout" asp-controller="Account">@SharedLocalizer["Logout"]</a></li>
+                    </ul>
+                </li>
+            </ul>
+        }
+    </div>
+
+<div id="page-container" class="page-content">
+        <div class="logo-container centered">
+            <img src="~/assets/identity/@config.PathToBrandIcon"/>
+        </div>
+    @RenderBody()
+</div>
+
+<script src="~/assets/identity/lib/jquery/jquery.js"></script>
+<script src="~/assets/identity/lib/bootstrap/js/bootstrap.js"></script>
+<script src="~/assets/identity/js/svg-load.js"></script>
+<script src="~/assets/identity/js/form-sumbit.js"></script>
+<script src="~/assets/identity/js/custom.js"></script>
+@RenderSection("scripts", required: false)
+</body>
+</html>

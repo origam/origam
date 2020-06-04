@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -28,25 +28,21 @@ using Origam.Extensions;
 namespace Origam.ServerCore.Model.UIService
 
 {
-    public class GetRowsInput
+    public class GetRowsInput: IEntityIdentification
     {
         [RequiredNonDefault]
         public Guid MenuId { get; set; }
         [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
         public string Filter { get; set; }
-        public List<List<string>> Ordering { get; set; }
+        public List<InputRowOrdering> Ordering { get; set; }
         [Required]
-        public int RowLimit { get; set; }
+        public int RowLimit { get; set; }        
+        public int RowOffset { get; set; }
         [Required]
         public string[] ColumnNames { get; set; }
-
         public Guid MasterRowId { get; set; }
-
-        public List<Tuple<string, string>> OrderingAsTuples =>
-            Ordering
-                .Where(x=> x.Count > 0)
-                .Select(x => new Tuple<string, string>(x[0], x[1]))
-                .ToList();
+        
+        public Guid SessionFormIdentifier { get; set; }
     }
 }

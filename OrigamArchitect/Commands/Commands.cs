@@ -1,6 +1,6 @@
 #region license
 /*
-Copyright 2005 - 2019 Advantage Solutions, s. r. o.
+Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -226,7 +226,7 @@ namespace OrigamArchitect.Commands
                 if(sfd.ShowDialog() == DialogResult.OK)
                 {
                     byte[] report = core.ReportService.GetReport(abstractReport.Id,
-                        null, DataReportExportFormatType.MSExcel.ToString(), null, null);
+                        null, DataReportExportFormatType.PDF.ToString(), this.Parameters, null);
                     File.WriteAllBytes(sfd.FileName, report);
                 }
             }
@@ -1410,7 +1410,7 @@ namespace OrigamArchitect.Commands
 	            newPersistenceService =
 	                filePersistenceBuilder.GetPersistenceService(
                         watchFileChanges: false,
-                        checkRules: false);
+                        checkRules: false,useBinFile: false);
                 
 	            PersistAllData();
 
@@ -1432,11 +1432,11 @@ namespace OrigamArchitect.Commands
 			    false, false, null);
 		    statusBar.SetStatusText("Converting documentation");
 
-		    DocumentationComplete allDocumenatation = ServiceManager.Services
+		    DocumentationComplete allDocumentation = ServiceManager.Services
 			    .GetService<IDocumentationService>()
 			    .GetAllDocumentation();
 		    
-		    docService.SaveDocumentation(allDocumenatation);
+		    docService.SaveDocumentation(allDocumentation);
 	    }
     }
 	
