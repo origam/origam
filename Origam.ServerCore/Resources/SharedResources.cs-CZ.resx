@@ -160,93 +160,132 @@
     <value>Last updated by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;</value>
   </data>
   <data name="RegistrationNotAllowed" xml:space="preserve">
-    <value>User registration is not allowed on this site.</value>
+    <value>Registrace na této stránce není povolena.</value>
   </data>
   <data name="AlreadySetUp" xml:space="preserve">
-    <value>The application has been already set up.</value>
+    <value>Aplikace již byla nastavena.</value>
   </data>
   <data name="InvalidLogin" xml:space="preserve">
-    <value>Invalid username or password</value>
+    <value>Nesprávné jméno nebo heslo</value>
   </data>
   <data name="UserLockedOut" xml:space="preserve">
-    <value>User is locked out</value>
+    <value>Přístup uživateli byl zablokován</value>
   </data>
   <data name="ErrorUserNotFound" xml:space="preserve">
-    <value>User was not found</value>
+    <value>Uživatel nebyl nalezen</value>
   </data>
   <data name="EmailInvalid" xml:space="preserve">
-    <value>Email is invalid</value>
+    <value>Nesprávný e-mail</value>
   </data>
   <data name="StringTooShort" xml:space="preserve">
-    <value>The {0} must be at least {2} characters long.</value>
+    <value>{0} musí mít nejméně {2} znaky.</value>
   </data>
   <data name="AccountCreated" xml:space="preserve">
-    <value>New account has been created and activated.</value>
+    <value>Nový účet byl vytvořen a aktivován.</value>
   </data>
   <data name="ActivateAccount" xml:space="preserve">
-    <value>A new account has been created. Please click confirmation link in an email, we just sent you to activate the account.</value>
+    <value>Nový účet byl vytvořen. Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme ván právě odeslali na e-mail.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Zrušit</value>
   </data>
   <data name="CheckEmail" xml:space="preserve">
-    <value>Please check your email to reset your password.</value>
+    <value>Pro resetování hesla postupujte podle instrukcí, které jsme vám odeslali na e-mail.</value>
   </data>
   <data name="ConfirmationOk1" xml:space="preserve">
-    <value>Thank you for confirming your email. Please </value>
+    <value>Děkujeme za potvrzení e-mailu.</value>
   </data>
   <data name="ConfirmationOk2" xml:space="preserve">
-    <value>Click here to Log in</value>
+    <value>Pro přihlášení klikněte zde.</value>
   </data>
   <data name="ConfirmLogout" xml:space="preserve">
-    <value>Would you like to logout?</value>
+    <value>Chcete se odhlásit?</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Vytvořit</value>
   </data>
   <data name="CreateAccount" xml:space="preserve">
-    <value>Create a new account</value>
+    <value>Vytvořit nový účet</value>
   </data>
   <data name="EmailSent" xml:space="preserve">
-    <value>Please click confirmation link in the email we sent you to activate yout account.</value>
+    <value>Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme ván právě odeslali na e-mail.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
-    <value>Origam Login</value>
+    <value>Origam přihlášení</value>
   </data>
   <data name="InvalidLoginRequest" xml:space="preserve">
-    <value>Invalid login request</value>
+    <value>Nesprávný přihlašovací požadavek</value>
   </data>
   <data name="LocalLogin" xml:space="preserve">
-    <value>Přihlášení Origam</value>
+    <value>Lokální přihlášení</value>
   </data>
   <data name="LoggedOut" xml:space="preserve">
-    <value>You are now logged out.</value>
+    <value>Odhlášení proběhlo úspěšně.</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Login</value>
+    <value>Přihlásit</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+    <value>Odhlásit</value>
   </data>
   <data name="NoAccessToResource" xml:space="preserve">
-    <value>You do not have access to that resource.</value>
+    <value>Sem nemáte povolený přistup.</value>
   </data>
   <data name="NoLoginSchemes" xml:space="preserve">
-    <value>There are no login schemes configured for this client.</value>
+    <value>Není nastaven žádný způsob přihlášení.</value>
   </data>
   <data name="RememberLogin" xml:space="preserve">
-    <value>Remember My Login</value>
+    <value>Zapamatovat přihlášení</value>
   </data>
   <data name="ResetPassword" xml:space="preserve">
-    <value>Reset Password</value>
+    <value>Resetovat heslo</value>
   </data>
   <data name="ResetPasswordTitle" xml:space="preserve">
-    <value>Reset your password</value>
+    <value>Reset hesla</value>
   </data>
   <data name="Submit" xml:space="preserve">
-    <value>Submit</value>
+    <value>Odeslat</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Ano</value>
+  </data>
+  <data name="ReturnToApplication1" xml:space="preserve">
+    <value>Klikněte </value>
+  </data>
+  <data name="ReturnToApplication2" xml:space="preserve">
+    <value>sem</value>
+  </data>
+  <data name="ReturnToApplication3" xml:space="preserve">
+    <value> pro návrat do</value>
+  </data>
+  <data name="ReturnToApplication4" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ToLogin1" xml:space="preserve">
+    <value>Klikněte</value>
+  </data>
+  <data name="ToLogin2" xml:space="preserve">
+    <value>sem</value>
+  </data>
+  <data name="ToLogin3" xml:space="preserve">
+    <value>pro opětovné přihlášení.</value>
+  </data>
+  <data name="ToResetPassword1" xml:space="preserve">
+    <value>Klikněte</value>
+  </data>
+  <data name="ToResetPassword2" xml:space="preserve">
+    <value>sem</value>
+  </data>
+  <data name="ToResetPassword3" xml:space="preserve">
+    <value>pro reset hesla.</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Uživatel</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="ExternalLogin" xml:space="preserve">
+    <value>Externí přihlášení</value>
   </data>
 </root>
