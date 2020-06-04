@@ -28,7 +28,7 @@ using Origam.UI.WizardForm;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
 	/// <summary>
 	/// Summary description for CreateNtoNEntityCommand.
