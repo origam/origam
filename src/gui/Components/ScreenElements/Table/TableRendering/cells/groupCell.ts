@@ -8,7 +8,7 @@ import {
   worldWidth,
 } from "../renderingValues";
 import {currentColumnLeft, currentColumnWidth, currentRowHeight, currentRowTop,} from "../currentCell";
-import {IGroupRow} from "../types";
+import {IGroupRow, IGroupTreeNode} from "../types";
 import {applyScrollTranslation, cellPaddingLeft, clipCell, fontSize, topTextOffset} from "./cellsCommon";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {onClick} from "../onClick";
@@ -17,6 +17,7 @@ import {onGroupHeaderToggleClick} from "../../../../../../model/actions-ui/DataV
 import {flow, runInAction} from "mobx";
 import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTable";
 import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInfiniteScrollingActive";
+import {SCROLL_ROW_CHUNK} from "../../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -106,7 +107,7 @@ export function drawGroupCell() {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
           runInAction(()=> {
-            if (!row.sourceGroup.isExpanded && isInfiniteScrollingActive(ctx, undefined)){
+            if (shouldCloseOtherGroups(row.sourceGroup, ctx)){
               for (let group of getDataTable(ctx).groups) {
                 group.isExpanded = false;
               }
@@ -117,6 +118,15 @@ export function drawGroupCell() {
       },
     });
   }
+}
+
+function shouldCloseOtherGroups(clickedGroup: IGroupTreeNode, ctx: any){
+  const groups = getDataTable(ctx).groups;
+  const someInfinitelyScrolledGroupsAreExpanded = groups
+    .some(group => group.rowCount >= SCROLL_ROW_CHUNK && group.isExpanded);
+  return !clickedGroup.isExpanded
+    && isInfiniteScrollingActive(ctx, undefined)
+    && (clickedGroup.rowCount >= SCROLL_ROW_CHUNK || someInfinitelyScrolledGroupsAreExpanded);
 }
 
 function formatColumnValue(value: string){

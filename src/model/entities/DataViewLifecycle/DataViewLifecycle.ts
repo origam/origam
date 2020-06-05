@@ -19,7 +19,7 @@ import {processCRUDResult} from "model/actions/DataLoading/processCRUDResult";
 import {IDataView} from "../types/IDataView";
 import {getMenuItemId} from "../../selectors/getMenuItemId";
 import {getDataStructureEntityId} from "../../selectors/DataView/getDataStructureEntityId";
-import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {SCROLL_ROW_CHUNK} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {getColumnNamesToLoad} from "../../selectors/DataView/getColumnNamesToLoad";
 import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
 
@@ -184,7 +184,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           DataStructureEntityId: getDataStructureEntityId(dataView),
           Filter: this.buildDetailFilter(dataView),
           Ordering: [],
-          RowLimit: SCROLL_DATA_INCREMENT_SIZE,
+          RowLimit: SCROLL_ROW_CHUNK,
           RowOffset: 0,
           ColumnNames: getColumnNamesToLoad(dataView),
           MasterRowId: undefined,

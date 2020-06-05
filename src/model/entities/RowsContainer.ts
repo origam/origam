@@ -1,12 +1,13 @@
 import {action, computed, observable} from "mobx";
-import {SCROLL_DATA_INCREMENT_SIZE} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {OrderingConfiguration} from "./OrderingConfiguration";
-import {FilterConfiguration} from "./FilterConfiguration";
+import {
+  MAX_CHUNKS_TO_HOLD,
+  SCROLL_ROW_CHUNK
+} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {IFilterConfiguration} from "./types/IFilterConfiguration";
+import {IOrderingConfiguration} from "./types/IOrderingConfiguration";
 
 export interface IRowsContainer {
   clear(): void;
-
-  rowIdGetter(row: any[]): string
 
   delete(row: any[]): void;
 
@@ -24,10 +25,10 @@ export interface IRowsContainer {
 }
 
 export class ListRowContainer implements IRowsContainer {
-  private orderingConfiguration: OrderingConfiguration;
-  private filterConfiguration: FilterConfiguration;
+  private orderingConfiguration: IOrderingConfiguration;
+  private filterConfiguration: IFilterConfiguration;
 
-  constructor(orderingConfiguration: OrderingConfiguration, filterConfiguration: FilterConfiguration) {
+  constructor(orderingConfiguration: IOrderingConfiguration, filterConfiguration: IFilterConfiguration) {
     this.orderingConfiguration = orderingConfiguration;
     this.filterConfiguration = filterConfiguration;
   }
@@ -93,15 +94,15 @@ export class ListRowContainer implements IRowsContainer {
   }
 }
 
-const ROW_CHUNK_SIZE: number = SCROLL_DATA_INCREMENT_SIZE;
 
 export class ScrollRowContainer implements IRowsContainer {
+  constructor(rowIdGetter: (row: any[]) => string) {
+    this.rowIdGetter=rowIdGetter;
+  }
 
   @observable
   rowChunks: RowChunk[] = [];
-  maxChunksToHold = 3;
-
-  rowIdGetter: (row: any[]) => string = null as any
+  private readonly rowIdGetter: (row: any[]) => string;
   _maxRowNumberSeen = 0;
 
   @computed
@@ -163,14 +164,14 @@ export class ScrollRowContainer implements IRowsContainer {
 
   get nextEndOffset() {
     return this.rowChunks.length === 0
-      ? ROW_CHUNK_SIZE
-      : this.rowChunks[this.rowChunks.length - 1].rowOffset + ROW_CHUNK_SIZE
+      ? SCROLL_ROW_CHUNK
+      : this.rowChunks[this.rowChunks.length - 1].rowOffset + SCROLL_ROW_CHUNK
   }
 
   get nextStartOffset() {
-    return this.rowChunks.length === 0 || this.rowChunks[0].rowOffset < ROW_CHUNK_SIZE
+    return this.rowChunks.length === 0 || this.rowChunks[0].rowOffset < SCROLL_ROW_CHUNK
       ? 0
-      : this.rowChunks[0].rowOffset - ROW_CHUNK_SIZE;
+      : this.rowChunks[0].rowOffset - SCROLL_ROW_CHUNK;
   }
 
   @action.bound
@@ -179,9 +180,9 @@ export class ScrollRowContainer implements IRowsContainer {
       this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
       return;
     }
-    const rowOffset = this.rowChunks[0].rowOffset - ROW_CHUNK_SIZE;
+    const rowOffset = this.rowChunks[0].rowOffset - SCROLL_ROW_CHUNK;
     this.rowChunks.unshift(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined))
-    if (this.rowChunks.length > this.maxChunksToHold) {
+    if (this.rowChunks.length > MAX_CHUNKS_TO_HOLD) {
       this.rowChunks.pop();
     }
   }
@@ -192,17 +193,18 @@ export class ScrollRowContainer implements IRowsContainer {
       this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
       return;
     }
-    const rowOffset = this.rowChunks[this.rowChunks.length - 1].rowOffset + ROW_CHUNK_SIZE;
+    const rowOffset = this.rowChunks[this.rowChunks.length - 1].rowOffset + SCROLL_ROW_CHUNK;
     const filteredRows = this.filterDuplicateRecords(rows);
-    const isFinal = rows.length < ROW_CHUNK_SIZE;
+    const isFinal = rows.length < SCROLL_ROW_CHUNK;
     this.rowChunks.push(new RowChunk(rowOffset, filteredRows, this.rowIdGetter, isFinal))
-    if (this.rowChunks.length > this.maxChunksToHold) {
+    if (this.rowChunks.length > MAX_CHUNKS_TO_HOLD) {
       this.rowChunks.shift();
     }
   }
 
   filterDuplicateRecords(rows: any[][]){
-    return rows.filter(row => !this.isAlreadyInAChunk(row))
+    return rows;
+    // return rows.filter(row => !this.isAlreadyInAChunk(row))
   }
 
   isAlreadyInAChunk(row: any[]){
@@ -211,18 +213,24 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   @computed
-  get isLastLoaded() {
+  get isLastRowLoaded() {
     return this.rowChunks.length === 0
       ? false
       : this.rowChunks[this.rowChunks.length - 1].isFinal;
   }
 
   @computed
-  get isFirstLoaded() {
+  get isFirstRowLoaded() {
     return this.rowChunks.length === 0
       ? false
       : this.rowChunks[0].isInitial;
   }
+
+  @computed
+  get isFull(){
+    return this.rows.length === MAX_CHUNKS_TO_HOLD * SCROLL_ROW_CHUNK;
+  }
+
 }
 
 
@@ -235,7 +243,7 @@ class RowChunk {
   constructor(rowOffset: number, rows: any[], rowIdGetter: (row: any[]) => string, isFinal: boolean | undefined) {
     this.rowIdGetter = rowIdGetter;
     this.isFinal = isFinal === undefined
-      ? rows.length < ROW_CHUNK_SIZE
+      ? rows.length < SCROLL_ROW_CHUNK
       :isFinal  ;
     if (rowOffset < 0) {
       throw new Error("Offset cannot be less than 0");

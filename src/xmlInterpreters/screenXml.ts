@@ -302,7 +302,12 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable({rowsContainer: getRowContainer(formScreenLifecycle, dataView.attributes, orderingConfiguration, filterConfiguration)}),
+        dataTable: new DataTable({
+          formScreenLifecycle: formScreenLifecycle,
+          dataViewAttributes: dataView.attributes,
+          orderingConfiguration: orderingConfiguration,
+          filterConfiguration: filterConfiguration
+        }),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({

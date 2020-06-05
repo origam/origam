@@ -12,7 +12,7 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
 
   isFilterControlsDisplayed: boolean;
   filtering: any[];
-  filteringFunction: (dataTable: IDataTable) => (row: any[]) => boolean;
+  filteringFunction: () => (row: any[]) => boolean ;
   getSettingByPropertyId(propertyId: string): any;
   setFilter(term: any): void;
   clearFilters(): void;

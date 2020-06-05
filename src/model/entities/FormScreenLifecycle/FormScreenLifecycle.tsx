@@ -30,7 +30,7 @@ import {getSessionId} from "../../selectors/getSessionId";
 import {IFormScreenLifecycle02} from "../types/IFormScreenLifecycle";
 import {IDataView} from "../types/IDataView";
 import {IAggregationInfo} from "../types/IAggregationInfo";
-import {SCROLL_DATA_INCREMENT_SIZE} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {SCROLL_ROW_CHUNK} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {IQueryInfo, processActionQueryInfo} from "model/actions/Actions/processActionQueryInfo";
 import {assignIIds} from "xmlInterpreters/xmlUtils";
 import {IOrdering} from "../types/IOrderingConfiguration";
@@ -304,7 +304,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: filter,
       Ordering: ordering ? [ordering] : [],
-      RowLimit: SCROLL_DATA_INCREMENT_SIZE,
+      RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: 0,
       ColumnNames: getColumnNamesToLoad(rootDataView),
       MasterRowId: undefined
@@ -420,7 +420,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
         Filter: getUserFilters(rootDataView),
         Ordering: getUserOrdering(rootDataView),
-        RowLimit: SCROLL_DATA_INCREMENT_SIZE,
+        RowLimit: SCROLL_ROW_CHUNK,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
         MasterRowId: undefined,
