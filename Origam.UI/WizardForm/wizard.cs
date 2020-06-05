@@ -496,6 +496,18 @@ namespace Origam.UI.WizardForm
             if(iwizard.PageTitle!=null)
                 ((WizardPage)sender).Text = iwizard.PageTitle;
         }
+
+        private void tbDataStructureName_TextChanged(object sender, EventArgs e)
+        {
+            if (iwizard.IsExistsNameInDataStructure(tbDataStructureName.Text))
+            {
+                this.label1.Text = "Name of Structure already exists.";
+            }
+            else
+            {
+                this.label1.Text = "";
+            }
+        }
     }
     #endregion
 }

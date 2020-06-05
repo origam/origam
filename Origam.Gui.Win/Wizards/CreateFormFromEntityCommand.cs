@@ -80,7 +80,7 @@ namespace Origam.Gui.Win.Wizards
             {
                 ItemTypeList = list,
                 Title = ResourceUtils.GetString("ScreenWizardTitle"),
-                PageTitle = "",
+                
                 Description = ResourceUtils.GetString("ScreenWizardDescription"),
                 Pages = stackPage,
                 Entity = Owner as IDataEntity,

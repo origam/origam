@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using AeroWizard;
 
@@ -137,6 +138,7 @@ namespace Origam.UI.WizardForm
             // listView1
             // 
             this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(17, 72);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(504, 153);
@@ -233,6 +235,7 @@ namespace Origam.UI.WizardForm
             this.tbDataStructureName.Name = "tbDataStructureName";
             this.tbDataStructureName.Size = new System.Drawing.Size(228, 23);
             this.tbDataStructureName.TabIndex = 0;
+            this.tbDataStructureName.TextChanged += new System.EventHandler(this.tbDataStructureName_TextChanged);
             // 
             // ScreenFormPage
             // 
@@ -243,7 +246,7 @@ namespace Origam.UI.WizardForm
             this.ScreenFormPage.Name = "ScreenFormPage";
             this.ScreenFormPage.Size = new System.Drawing.Size(541, 343);
             this.ScreenFormPage.TabIndex = 3;
-            this.ScreenFormPage.Text = "Page Title";
+            this.ScreenFormPage.Text = "Please Select Fields";
             this.ScreenFormPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.ScreenFormPage_Commit);
             this.ScreenFormPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.ScreenFormPage_Initialize);
             // 
@@ -558,6 +561,7 @@ namespace Origam.UI.WizardForm
             this.finishPage.Text = "Finish";
             this.finishPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.FinishPage_Commit);
             this.finishPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.FinishPage_Initialize);
+            this.finishPage.AllowBack = false;
             // 
             // label5
             // 
@@ -607,7 +611,7 @@ namespace Origam.UI.WizardForm
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(45, 97);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 15);
+            this.label6.Size = new System.Drawing.Size(34, 15);
             this.label6.TabIndex = 28;
             this.label6.Text = "Table";
             // 
