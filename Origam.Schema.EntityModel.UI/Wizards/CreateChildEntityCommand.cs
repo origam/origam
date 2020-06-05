@@ -59,9 +59,9 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             DataEntityIndex entityIndex = new DataEntityIndex();
             EntityRelationItem entityRelation = new EntityRelationItem();
 
-            list.Add(new ListViewItem(table.ItemType, table.Icon));
-            list.Add(new ListViewItem(entityIndex.ItemType, entityIndex.Icon));
-            list.Add(new ListViewItem(entityRelation.ItemType, entityRelation.Icon));
+            list.Add(new ListViewItem(table.GetType().SchemaItemDescription().Name, table.Icon));
+            list.Add(new ListViewItem(entityIndex.GetType().SchemaItemDescription().Name, entityIndex.Icon));
+            list.Add(new ListViewItem(entityRelation.GetType().SchemaItemDescription().Name, entityRelation.Icon));
            
 
             Stack stackPage = new Stack();

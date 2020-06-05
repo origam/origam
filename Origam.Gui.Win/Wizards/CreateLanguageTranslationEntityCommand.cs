@@ -54,7 +54,7 @@ namespace Origam.Gui.Win.Wizards
 		{
             ArrayList list = new ArrayList();
             TableMappingItem mappingItem = new TableMappingItem();
-            list.Add(new ListViewItem(mappingItem.ItemType, mappingItem.Icon));
+            list.Add(new ListViewItem(mappingItem.GetType().SchemaItemDescription().Name, mappingItem.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);

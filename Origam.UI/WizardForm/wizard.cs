@@ -186,6 +186,7 @@ namespace Origam.UI.WizardForm
                 e.Cancel = true;
             }
             this.aerowizard1.FinishButtonText = "Show Result";
+            this.aerowizard1.CancelButtonText = "Close";
         }
 
         private void FinishPage_Commit(object sender, WizardPageConfirmEventArgs e)

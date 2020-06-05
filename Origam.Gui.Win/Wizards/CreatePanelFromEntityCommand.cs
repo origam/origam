@@ -63,7 +63,7 @@ namespace Origam.Gui.Win.Wizards
 
             ArrayList list = new ArrayList();
             PanelControlSet pp = new PanelControlSet();
-            list.Add(new ListViewItem(pp.ItemType, pp.Icon));
+            list.Add(new ListViewItem(pp.GetType().SchemaItemDescription().Name, pp.Icon));
             
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);

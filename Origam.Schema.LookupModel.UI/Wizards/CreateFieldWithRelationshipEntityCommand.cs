@@ -65,8 +65,8 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             ArrayList list = new ArrayList();
             TableMappingItem table1 = new TableMappingItem();
             EntityRelationItem entityRelation = new EntityRelationItem();
-            list.Add(new ListViewItem(table1.ItemType, table1.Icon));
-            list.Add(new ListViewItem(entityRelation.ItemType, entityRelation.Icon));
+            list.Add(new ListViewItem(table1.GetType().SchemaItemDescription().Name, table1.Icon));
+            list.Add(new ListViewItem(entityRelation.GetType().SchemaItemDescription().Name, entityRelation.Icon));
             
 
             Stack stackPage = new Stack();

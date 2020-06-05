@@ -53,7 +53,7 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 		{
             DataServiceDataLookup dd = new DataServiceDataLookup();
             ArrayList list = new ArrayList();
-            list.Add(new ListViewItem(dd.ItemType, dd.Icon));
+            list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);

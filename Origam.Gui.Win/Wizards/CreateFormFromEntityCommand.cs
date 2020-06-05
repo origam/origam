@@ -63,9 +63,9 @@ namespace Origam.Gui.Win.Wizards
             DataStructure dd = new DataStructure();
             PanelControlSet pp = new PanelControlSet();
             FormControlSet ff = new FormControlSet();
-            list.Add(new ListViewItem(dd.ItemType, dd.Icon));
-            list.Add(new ListViewItem(pp.ItemType, pp.Icon));
-            list.Add(new ListViewItem(ff.ItemType, ff.Icon));
+            list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
+            list.Add(new ListViewItem(pp.GetType().SchemaItemDescription().Name, pp.Icon));
+            list.Add(new ListViewItem(ff.GetType().SchemaItemDescription().Name, ff.Icon));
             
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
@@ -141,11 +141,11 @@ namespace Origam.Gui.Win.Wizards
             FormReferenceMenuItem form1 = new FormReferenceMenuItem();
             ServiceCommandUpdateScriptActivity activity1 = new ServiceCommandUpdateScriptActivity();
 
-            list.Add(new ListViewItem(ds.ItemType, ds.Icon));
-            list.Add(new ListViewItem(panel1.ItemType, panel1.Icon));
-            list.Add(new ListViewItem(frmSet.ItemType, frmSet.Icon));
-            list.Add(new ListViewItem(form1.ItemType, form1.Icon));
-            list.Add(new ListViewItem(activity1.ItemType, activity1.Icon));
+            list.Add(new ListViewItem(ds.GetType().SchemaItemDescription().Name, ds.Icon));
+            list.Add(new ListViewItem(panel1.GetType().SchemaItemDescription().Name, panel1.Icon));
+            list.Add(new ListViewItem(frmSet.GetType().SchemaItemDescription().Name, frmSet.Icon));
+            list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
+            list.Add(new ListViewItem(activity1.GetType().SchemaItemDescription().Name, activity1.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
@@ -224,7 +224,7 @@ namespace Origam.Gui.Win.Wizards
            
             List<string> listdsName = GetListDatastructure(PanelControlSet.ItemTypeConst); 
             ArrayList list = new ArrayList();
-            list.Add(new ListViewItem(panel.ItemType, panel.Icon));
+            list.Add(new ListViewItem(panel.GetType().SchemaItemDescription().Name, panel.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
@@ -290,7 +290,7 @@ namespace Origam.Gui.Win.Wizards
             FormControlSet form = Owner as FormControlSet;
 
             ArrayList list = new ArrayList();
-            list.Add(new ListViewItem(form.ItemType, form.Icon));
+            list.Add(new ListViewItem(form.GetType().SchemaItemDescription().Name, form.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
@@ -352,7 +352,7 @@ namespace Origam.Gui.Win.Wizards
 
             ArrayList list = new ArrayList();
             DataConstantReferenceMenuItem dataconstant = new DataConstantReferenceMenuItem();
-            list.Add(new ListViewItem(dataconstant.ItemType, dataconstant.Icon));
+            list.Add(new ListViewItem(dataconstant.GetType().SchemaItemDescription().Name, dataconstant.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
@@ -413,7 +413,7 @@ namespace Origam.Gui.Win.Wizards
 
             ArrayList list = new ArrayList();
             WorkflowReferenceMenuItem workflowReference = new WorkflowReferenceMenuItem();
-            list.Add(new ListViewItem(workflowReference.ItemType, workflowReference.Icon));
+            list.Add(new ListViewItem(workflowReference.GetType().SchemaItemDescription().Name, workflowReference.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);

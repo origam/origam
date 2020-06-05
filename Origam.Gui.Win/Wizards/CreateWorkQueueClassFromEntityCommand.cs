@@ -21,7 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Linq;
 using System.Windows.Forms;
+using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
@@ -53,7 +55,7 @@ namespace Origam.Gui.Win.Wizards
 		{
             ArrayList list = new ArrayList();
             WorkQueueClass workQueue = new WorkQueueClass();
-            list.Add(new ListViewItem(workQueue.ItemType, workQueue.Icon));
+            list.Add(new ListViewItem(workQueue.GetType().SchemaItemDescription().Name, workQueue.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
