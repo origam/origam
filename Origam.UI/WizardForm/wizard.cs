@@ -1,12 +1,8 @@
 ﻿using AeroWizard;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.UI;
 using Origam.UI.Interfaces;
-using Origam.UI.WizardForm;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Origam.UI.WizardForm
@@ -175,11 +171,9 @@ namespace Origam.UI.WizardForm
                 iwizard.Command.Execute();
                 foreach(ListViewItem listView in iwizard.ItemTypeList)
                 {
-                    tbProgres.Text += listView.Text;
-                    tbProgres.Text += Environment.NewLine;
+                    progresslistview.Items.Add(new ListViewItem(new string[] { listView.Text, "OK" }));
                 }
-                tbProgres.Text += "Done ...";
-            }
+             }
             catch (Exception ex)
             {
                 tbProgres.Text = ex.Message;
@@ -507,6 +501,11 @@ namespace Origam.UI.WizardForm
             {
                 this.label1.Text = "";
             }
+        }
+
+        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
     #endregion
