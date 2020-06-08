@@ -10,5 +10,5 @@ export function getRowContainer(ctx: any, dataViewAttributes: any,
                                 rowIdGetter: (row: any[]) => string) {
   return isInfiniteScrollingActive(ctx, dataViewAttributes)
     ? new ScrollRowContainer(rowIdGetter)
-    : new ListRowContainer(orderingConfiguration, filterConfiguration);
+    : new ListRowContainer(orderingConfiguration, filterConfiguration, rowIdGetter);
 }

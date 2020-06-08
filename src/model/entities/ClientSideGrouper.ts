@@ -52,7 +52,10 @@ export class ClientSideGrouper implements IGrouper {
       });
   }
 
-  private makeGroupMap(groupingColumn: string, rows: any[][]) {
+  private makeGroupMap(groupingColumn: string | undefined, rows: any[][]) {
+    if(!groupingColumn){
+      return new Map<string, any[][]>();
+    }
     const index = this.findDataIndex(groupingColumn)
     const groupMap = new Map<string, any[][]>();
     for (let row of rows) {

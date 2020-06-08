@@ -7,13 +7,15 @@ export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
   private filterConfiguration: IFilterConfiguration;
 
-  constructor(orderingConfiguration: IOrderingConfiguration, filterConfiguration: IFilterConfiguration) {
+  constructor(orderingConfiguration: IOrderingConfiguration, filterConfiguration: IFilterConfiguration,
+              rowIdGetter: (row: any[]) => string) {
     this.orderingConfiguration = orderingConfiguration;
     this.filterConfiguration = filterConfiguration;
+    this.rowIdGetter = rowIdGetter;
   }
 
   @observable.shallow allRows: any[][] = [];
-  rowIdGetter: (row: any[]) => string = null as any
+  rowIdGetter: (row: any[]) => string;
 
   @computed get rows() {
     let rows = this.allRows;
