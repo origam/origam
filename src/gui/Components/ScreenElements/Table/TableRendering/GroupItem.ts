@@ -4,12 +4,12 @@ import {IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 import {getOrderingConfiguration} from "../../../../../model/selectors/DataView/getOrderingConfiguration";
-import {ScrollRowContainer} from "../../../../../model/entities/RowsContainer";
 import {InfiniteScrollLoader} from "../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {getDataView} from "../../../../../model/selectors/DataView/getDataView";
 import {joinWithAND, toFilterItem} from "../../../../../model/entities/OrigamApiHelpers";
 import {OpenGroupVisibleRowsMonitor} from "../../../../Workbench/ScreenArea/TableView/VisibleRowsMonitor";
 import {getDataTable} from "../../../../../model/selectors/DataView/getDataTable";
+import {ScrollRowContainer} from "../../../../../model/entities/ScrollRowContainer";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];

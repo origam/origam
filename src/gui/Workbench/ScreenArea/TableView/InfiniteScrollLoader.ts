@@ -7,11 +7,11 @@ import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
 import {getSessionId} from "../../../../model/selectors/getSessionId";
 import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
 import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColumnNamesToLoad";
-import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
 import {joinWithAND} from "../../../../model/entities/OrigamApiHelpers";
 import {getUserFilters} from "../../../../model/selectors/DataView/getUserFilters";
 import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrdering";
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
+import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
 
 export interface IInfiniteScrollLoaderData{
   gridDimensions: IGridDimensions;

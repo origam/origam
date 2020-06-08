@@ -35,8 +35,8 @@ import {getTablePanelView} from "../../../../model/selectors/TablePanelView/getT
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {aggregationToString, IAggregation, parseAggregations} from "model/entities/types/IAggregation";
 import {IInfiniteScrollLoader, InfiniteScrollLoader, NullIScrollLoader} from "./InfiniteScrollLoader";
-import {ScrollRowContainer} from "../../../../model/entities/RowsContainer";
 import {VisibleRowsMonitor} from "./VisibleRowsMonitor";
+import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
 
 @inject(({ dataView }) => {
   return {

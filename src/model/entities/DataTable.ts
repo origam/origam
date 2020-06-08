@@ -8,8 +8,8 @@ import {getDataSource} from "../selectors/DataSources/getDataSource";
 import {IDataSourceField} from "./types/IDataSourceField";
 import {getGrouper} from "model/selectors/DataView/getGrouper";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {IRowsContainer} from "./RowsContainer";
 import {getRowContainer} from "../selectors/getRowContainer";
+import {IRowsContainer} from "./types/IRowsContainer";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;

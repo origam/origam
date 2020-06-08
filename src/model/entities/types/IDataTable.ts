@@ -2,10 +2,10 @@ import { IProperty } from "./IProperty";
 import { IAdditionalRowData } from "./IAdditionalRecordData";
 import { IDataSourceField } from "./IDataSourceField";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {IRowsContainer} from "../RowsContainer";
 import {IFormScreenLifecycle02} from "./IFormScreenLifecycle";
 import {IOrderingConfiguration} from "./IOrderingConfiguration";
 import {IFilterConfiguration} from "./IFilterConfiguration";
+import {IRowsContainer} from "./IRowsContainer";
 
 export interface IDataTableData {
   formScreenLifecycle: IFormScreenLifecycle02;
