@@ -1,8 +1,8 @@
-import DateCompleter from "../DateCompleter"
 import moment from "moment";
+import DateCompleter from "../gui/Components/ScreenElements/Editors/DateCompleter";
 
 function format(dateTime: moment.Moment, expectedFormat: string): string {
-  if (dateTime.hour() == 0 && dateTime.minute() == 0 && dateTime.second() == 0) {
+  if (dateTime.hour() === 0 && dateTime.minute() === 0 && dateTime.second() === 0) {
     const expectedDateFormat = expectedFormat.split(" ")[0]
     return dateTime.format(expectedDateFormat)
   }
@@ -28,7 +28,7 @@ test.each([
   ["5/5/16", "5/5/2016"],
 ])('Should auto complete %s to: %s', (incompleteDate, expected) => {
   const momentValue = dateCompleterUs.autoComplete(incompleteDate)
-  expect(format(momentValue, "M/D/YYYY h:mm:ss A")).toBe(expected);
+  expect(format(momentValue!, "M/D/YYYY h:mm:ss A")).toBe(expected);
 });
 
 
@@ -47,5 +47,5 @@ test.each([
   ["05 ", "05.12.2017"],
 ])('Should auto complete %s to: %s', (incompleteDate, expected) => {
   const momentValue = dateCompleterCz.autoComplete(incompleteDate)
-  expect(format(momentValue, "DD.MM.YYYY h:mm:ss")).toBe(expected);
+  expect(format(momentValue!, "DD.MM.YYYY h:mm:ss")).toBe(expected);
 });
