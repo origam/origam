@@ -52,7 +52,13 @@ export class DataTable implements IDataTable {
   }
 
   @computed get maxRowCountSeen() {
-    return this.rowsContainer.maxRowCountSeen;
+    if(this.groups.length > 0){
+      return this.groups
+        .map(group => group.rowCount)
+        .reduce((x, y) => x + y);
+    }else{
+      return this.rowsContainer.maxRowCountSeen;
+    }
   }
 
   getRowId(row: any[]): string {
