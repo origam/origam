@@ -53,21 +53,24 @@
         <form id="languageSelectForm" asp-controller="Account"
               asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
               method="post" class="form-horizontal" role="form">
-            <div id="languageLinkContainer">
-                @for (int i = 0; i < languageConfig.CultureItems.Length; i++)
-                {
-                    @if (i != 0)
+            @if (languageConfig.CultureItems.Length > 1)
+            {
+                <div id="languageLinkContainer">
+                    @for (int i = 0; i < languageConfig.CultureItems.Length; i++)
                     {
-                        <div class="languageLinkSeparator">|</div>
+                        @if (i != 0)
+                        {
+                            <div class="languageLinkSeparator">|</div>
+                        }
+                        var inactiveClass = languageConfig.CultureItems[i].CultureName == currentCulture ? "inactiveLanguageLink" : "";
+                        <a class="languageLink @inactiveClass"
+                           value=@languageConfig.CultureItems[i].CultureName
+                           href="#">
+                            @languageConfig.CultureItems[i].Caption
+                        </a>
                     }
-                    var inactiveClass = languageConfig.CultureItems[i].CultureName == currentCulture ? "inactiveLanguageLink" : "";
-                    <a class="languageLink @inactiveClass"
-                       value=@languageConfig.CultureItems[i].CultureName
-                       href="#">
-                        @languageConfig.CultureItems[i].Caption
-                    </a>
-                }
-            </div>
+                </div>  
+            }
         </form>
     </div>
         

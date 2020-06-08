@@ -221,7 +221,7 @@ namespace Origam.UI.WizardForm
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(130, 102);
+            this.label1.Location = new System.Drawing.Point(87, 42);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(228, 34);
             this.label1.TabIndex = 2;
@@ -230,7 +230,7 @@ namespace Origam.UI.WizardForm
             // lbName
             // 
             this.lbName.AutoSize = true;
-            this.lbName.Location = new System.Drawing.Point(44, 63);
+            this.lbName.Location = new System.Drawing.Point(1, 3);
             this.lbName.Name = "lbName";
             this.lbName.Size = new System.Drawing.Size(39, 15);
             this.lbName.TabIndex = 1;
@@ -238,7 +238,7 @@ namespace Origam.UI.WizardForm
             // 
             // tbDataStructureName
             // 
-            this.tbDataStructureName.Location = new System.Drawing.Point(130, 60);
+            this.tbDataStructureName.Location = new System.Drawing.Point(87, 0);
             this.tbDataStructureName.Name = "tbDataStructureName";
             this.tbDataStructureName.Size = new System.Drawing.Size(228, 23);
             this.tbDataStructureName.TabIndex = 0;
@@ -260,7 +260,7 @@ namespace Origam.UI.WizardForm
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 17);
+            this.label2.Location = new System.Drawing.Point(3, 1);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(302, 15);
             this.label2.TabIndex = 13;
@@ -269,7 +269,7 @@ namespace Origam.UI.WizardForm
             // lstFields
             // 
             this.lstFields.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lstFields.Location = new System.Drawing.Point(19, 52);
+            this.lstFields.Location = new System.Drawing.Point(3, 36);
             this.lstFields.Name = "lstFields";
             this.lstFields.Size = new System.Drawing.Size(207, 236);
             this.lstFields.Sorted = true;
@@ -277,7 +277,7 @@ namespace Origam.UI.WizardForm
             // 
             // lblRole
             // 
-            this.lblRole.Location = new System.Drawing.Point(262, 55);
+            this.lblRole.Location = new System.Drawing.Point(246, 39);
             this.lblRole.Name = "lblRole";
             this.lblRole.Size = new System.Drawing.Size(40, 16);
             this.lblRole.TabIndex = 11;
@@ -286,7 +286,7 @@ namespace Origam.UI.WizardForm
             // 
             // txtRole
             // 
-            this.txtRole.Location = new System.Drawing.Point(321, 52);
+            this.txtRole.Location = new System.Drawing.Point(305, 36);
             this.txtRole.Name = "txtRole";
             this.txtRole.Size = new System.Drawing.Size(188, 23);
             this.txtRole.TabIndex = 2;
@@ -311,7 +311,7 @@ namespace Origam.UI.WizardForm
             // 
             // lblIdFilter
             // 
-            this.lblIdFilter.Location = new System.Drawing.Point(47, 207);
+            this.lblIdFilter.Location = new System.Drawing.Point(1, 90);
             this.lblIdFilter.Name = "lblIdFilter";
             this.lblIdFilter.Size = new System.Drawing.Size(72, 16);
             this.lblIdFilter.TabIndex = 15;
@@ -320,15 +320,15 @@ namespace Origam.UI.WizardForm
             // cboIdFilter
             // 
             this.cboIdFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboIdFilter.Location = new System.Drawing.Point(135, 207);
+            this.cboIdFilter.Location = new System.Drawing.Point(99, 90);
             this.cboIdFilter.Name = "cboIdFilter";
             this.cboIdFilter.Size = new System.Drawing.Size(272, 23);
             this.cboIdFilter.Sorted = true;
-            this.cboIdFilter.TabIndex = 14;
+            this.cboIdFilter.TabIndex = 3;
             // 
             // lblListFilter
             // 
-            this.lblListFilter.Location = new System.Drawing.Point(47, 157);
+            this.lblListFilter.Location = new System.Drawing.Point(1, 61);
             this.lblListFilter.Name = "lblListFilter";
             this.lblListFilter.Size = new System.Drawing.Size(72, 16);
             this.lblListFilter.TabIndex = 13;
@@ -337,33 +337,33 @@ namespace Origam.UI.WizardForm
             // cboListFilter
             // 
             this.cboListFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboListFilter.Location = new System.Drawing.Point(135, 157);
+            this.cboListFilter.Location = new System.Drawing.Point(99, 61);
             this.cboListFilter.Name = "cboListFilter";
             this.cboListFilter.Size = new System.Drawing.Size(272, 23);
             this.cboListFilter.Sorted = true;
-            this.cboListFilter.TabIndex = 12;
+            this.cboListFilter.TabIndex = 2;
             // 
             // lblDisplayField
             // 
-            this.lblDisplayField.Location = new System.Drawing.Point(47, 105);
+            this.lblDisplayField.Location = new System.Drawing.Point(1, 32);
             this.lblDisplayField.Name = "lblDisplayField";
-            this.lblDisplayField.Size = new System.Drawing.Size(72, 16);
+            this.lblDisplayField.Size = new System.Drawing.Size(92, 23);
             this.lblDisplayField.TabIndex = 11;
             this.lblDisplayField.Text = "Display Field:";
             // 
             // cboDisplayField
             // 
             this.cboDisplayField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDisplayField.Location = new System.Drawing.Point(135, 105);
+            this.cboDisplayField.Location = new System.Drawing.Point(99, 32);
             this.cboDisplayField.Name = "cboDisplayField";
             this.cboDisplayField.Size = new System.Drawing.Size(272, 23);
             this.cboDisplayField.Sorted = true;
-            this.cboDisplayField.TabIndex = 10;
+            this.cboDisplayField.TabIndex = 1;
             this.cboDisplayField.SelectedIndexChanged += new System.EventHandler(this.CboDisplayField_SelectedIndexChanged);
             // 
             // lblName
             // 
-            this.lblName.Location = new System.Drawing.Point(47, 54);
+            this.lblName.Location = new System.Drawing.Point(1, 3);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(72, 16);
             this.lblName.TabIndex = 9;
@@ -371,10 +371,10 @@ namespace Origam.UI.WizardForm
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(135, 54);
+            this.txtName.Location = new System.Drawing.Point(99, 3);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(272, 23);
-            this.txtName.TabIndex = 8;
+            this.txtName.TabIndex = 0;
             // 
             // FieldLookupEntity
             // 
@@ -405,16 +405,16 @@ namespace Origam.UI.WizardForm
             // 
             this.txtKeyFieldCaption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtKeyFieldCaption.Location = new System.Drawing.Point(295, 136);
+            this.txtKeyFieldCaption.Location = new System.Drawing.Point(270, 128);
             this.txtKeyFieldCaption.Name = "txtKeyFieldCaption";
             this.txtKeyFieldCaption.Size = new System.Drawing.Size(186, 23);
-            this.txtKeyFieldCaption.TabIndex = 29;
+            this.txtKeyFieldCaption.TabIndex = 7;
             this.txtKeyFieldCaption.Visible = false;
             this.txtKeyFieldCaption.TextChanged += new System.EventHandler(this.TxtKeyFieldCaption_TextChanged);
             // 
             // lblKeyFieldCaption
             // 
-            this.lblKeyFieldCaption.Location = new System.Drawing.Point(248, 139);
+            this.lblKeyFieldCaption.Location = new System.Drawing.Point(223, 131);
             this.lblKeyFieldCaption.Name = "lblKeyFieldCaption";
             this.lblKeyFieldCaption.Size = new System.Drawing.Size(51, 20);
             this.lblKeyFieldCaption.TabIndex = 28;
@@ -425,15 +425,15 @@ namespace Origam.UI.WizardForm
             // 
             this.txtNameFieldCaption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtNameFieldCaption.Location = new System.Drawing.Point(295, 105);
+            this.txtNameFieldCaption.Location = new System.Drawing.Point(270, 97);
             this.txtNameFieldCaption.Name = "txtNameFieldCaption";
             this.txtNameFieldCaption.Size = new System.Drawing.Size(186, 23);
-            this.txtNameFieldCaption.TabIndex = 25;
+            this.txtNameFieldCaption.TabIndex = 5;
             this.txtNameFieldCaption.TextChanged += new System.EventHandler(this.TxtNameFieldCaption_TextChanged);
             // 
             // lblNameFieldCaption
             // 
-            this.lblNameFieldCaption.Location = new System.Drawing.Point(248, 108);
+            this.lblNameFieldCaption.Location = new System.Drawing.Point(223, 100);
             this.lblNameFieldCaption.Name = "lblNameFieldCaption";
             this.lblNameFieldCaption.Size = new System.Drawing.Size(51, 20);
             this.lblNameFieldCaption.TabIndex = 24;
@@ -441,15 +441,15 @@ namespace Origam.UI.WizardForm
             // 
             // txtKeyFieldName
             // 
-            this.txtKeyFieldName.Location = new System.Drawing.Point(141, 136);
+            this.txtKeyFieldName.Location = new System.Drawing.Point(116, 128);
             this.txtKeyFieldName.Name = "txtKeyFieldName";
             this.txtKeyFieldName.Size = new System.Drawing.Size(101, 23);
-            this.txtKeyFieldName.TabIndex = 27;
+            this.txtKeyFieldName.TabIndex = 6;
             this.txtKeyFieldName.Visible = false;
             // 
             // lblKeyFieldName
             // 
-            this.lblKeyFieldName.Location = new System.Drawing.Point(26, 139);
+            this.lblKeyFieldName.Location = new System.Drawing.Point(1, 131);
             this.lblKeyFieldName.Name = "lblKeyFieldName";
             this.lblKeyFieldName.Size = new System.Drawing.Size(116, 20);
             this.lblKeyFieldName.TabIndex = 26;
@@ -458,14 +458,14 @@ namespace Origam.UI.WizardForm
             // 
             // txtNameFieldName
             // 
-            this.txtNameFieldName.Location = new System.Drawing.Point(141, 105);
+            this.txtNameFieldName.Location = new System.Drawing.Point(116, 97);
             this.txtNameFieldName.Name = "txtNameFieldName";
             this.txtNameFieldName.Size = new System.Drawing.Size(101, 23);
-            this.txtNameFieldName.TabIndex = 23;
+            this.txtNameFieldName.TabIndex = 4;
             // 
             // lblNameFieldName
             // 
-            this.lblNameFieldName.Location = new System.Drawing.Point(26, 108);
+            this.lblNameFieldName.Location = new System.Drawing.Point(1, 100);
             this.lblNameFieldName.Name = "lblNameFieldName";
             this.lblNameFieldName.Size = new System.Drawing.Size(116, 20);
             this.lblNameFieldName.TabIndex = 22;
@@ -475,17 +475,17 @@ namespace Origam.UI.WizardForm
             // 
             this.chkTwoColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkTwoColumn.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkTwoColumn.Location = new System.Drawing.Point(295, 75);
+            this.chkTwoColumn.Location = new System.Drawing.Point(270, 67);
             this.chkTwoColumn.Name = "chkTwoColumn";
             this.chkTwoColumn.Size = new System.Drawing.Size(186, 24);
-            this.chkTwoColumn.TabIndex = 21;
+            this.chkTwoColumn.TabIndex = 3;
             this.chkTwoColumn.Text = "Two-Column (Key, Name)";
             this.chkTwoColumn.CheckedChanged += new System.EventHandler(this.ChkTwoColumn_CheckedChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 172);
+            this.label3.Location = new System.Drawing.Point(1, 164);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(75, 15);
             this.label3.TabIndex = 30;
@@ -500,13 +500,14 @@ namespace Origam.UI.WizardForm
             this.grdInitialValues.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
             this.colDefault});
-            this.grdInitialValues.Location = new System.Drawing.Point(26, 200);
+            this.grdInitialValues.Location = new System.Drawing.Point(1, 192);
             this.grdInitialValues.Name = "grdInitialValues";
             this.grdInitialValues.Size = new System.Drawing.Size(455, 128);
-            this.grdInitialValues.TabIndex = 31;
+            this.grdInitialValues.TabIndex = 8;
             // 
             // colName
             // 
+            this.colName.DataPropertyName = "Name";
             this.colName.Name = "colName";
             // 
             // colDefault
@@ -518,33 +519,33 @@ namespace Origam.UI.WizardForm
             // chkAllowNulls
             // 
             this.chkAllowNulls.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkAllowNulls.Location = new System.Drawing.Point(26, 75);
+            this.chkAllowNulls.Location = new System.Drawing.Point(1, 67);
             this.chkAllowNulls.Name = "chkAllowNulls";
             this.chkAllowNulls.Size = new System.Drawing.Size(129, 24);
-            this.chkAllowNulls.TabIndex = 20;
+            this.chkAllowNulls.TabIndex = 2;
             this.chkAllowNulls.Text = "Allow Nulls";
             // 
             // txtCaption
             // 
             this.txtCaption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCaption.Location = new System.Drawing.Point(141, 40);
+            this.txtCaption.Location = new System.Drawing.Point(116, 32);
             this.txtCaption.Name = "txtCaption";
             this.txtCaption.Size = new System.Drawing.Size(340, 23);
-            this.txtCaption.TabIndex = 19;
+            this.txtCaption.TabIndex = 1;
             // 
             // lookupname
             // 
             this.lookupname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lookupname.Location = new System.Drawing.Point(141, 8);
+            this.lookupname.Location = new System.Drawing.Point(116, 0);
             this.lookupname.Name = "lookupname";
             this.lookupname.Size = new System.Drawing.Size(340, 23);
-            this.lookupname.TabIndex = 17;
+            this.lookupname.TabIndex = 0;
             // 
             // lblCaption
             // 
-            this.lblCaption.Location = new System.Drawing.Point(26, 43);
+            this.lblCaption.Location = new System.Drawing.Point(1, 35);
             this.lblCaption.Name = "lblCaption";
             this.lblCaption.Size = new System.Drawing.Size(116, 20);
             this.lblCaption.TabIndex = 18;
@@ -552,7 +553,7 @@ namespace Origam.UI.WizardForm
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(26, 11);
+            this.label4.Location = new System.Drawing.Point(1, 3);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(116, 20);
             this.label4.TabIndex = 16;
@@ -613,10 +614,10 @@ namespace Origam.UI.WizardForm
             // checkParentChild
             // 
             this.checkParentChild.AutoSize = true;
-            this.checkParentChild.Location = new System.Drawing.Point(172, 62);
+            this.checkParentChild.Location = new System.Drawing.Point(132, 26);
             this.checkParentChild.Name = "checkParentChild";
             this.checkParentChild.Size = new System.Drawing.Size(96, 19);
-            this.checkParentChild.TabIndex = 29;
+            this.checkParentChild.TabIndex = 1;
             this.checkParentChild.Text = "isParentChild";
             this.checkParentChild.UseVisualStyleBackColor = true;
             this.checkParentChild.CheckedChanged += new System.EventHandler(this.CheckParentChild_CheckedChanged);
@@ -624,20 +625,20 @@ namespace Origam.UI.WizardForm
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(45, 97);
+            this.label6.Location = new System.Drawing.Point(5, 61);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(34, 15);
+            this.label6.Size = new System.Drawing.Size(35, 15);
             this.label6.TabIndex = 28;
             this.label6.Text = "Table";
             // 
             // tableRelation
             // 
             this.tableRelation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.tableRelation.Location = new System.Drawing.Point(172, 97);
+            this.tableRelation.Location = new System.Drawing.Point(132, 61);
             this.tableRelation.Name = "tableRelation";
             this.tableRelation.Size = new System.Drawing.Size(298, 23);
             this.tableRelation.Sorted = true;
-            this.tableRelation.TabIndex = 26;
+            this.tableRelation.TabIndex = 2;
             this.tableRelation.SelectedIndexChanged += new System.EventHandler(this.TableRelation_SelectedIndexChanged);
             // 
             // groupBoxKey
@@ -648,7 +649,7 @@ namespace Origam.UI.WizardForm
             this.groupBoxKey.Controls.Add(this.txtKeyName);
             this.groupBoxKey.Controls.Add(this.label9);
             this.groupBoxKey.Enabled = false;
-            this.groupBoxKey.Location = new System.Drawing.Point(44, 139);
+            this.groupBoxKey.Location = new System.Drawing.Point(4, 103);
             this.groupBoxKey.Name = "groupBoxKey";
             this.groupBoxKey.Size = new System.Drawing.Size(426, 179);
             this.groupBoxKey.TabIndex = 27;
@@ -713,7 +714,7 @@ namespace Origam.UI.WizardForm
             this.txtKeyName.Location = new System.Drawing.Point(128, 28);
             this.txtKeyName.Name = "txtKeyName";
             this.txtKeyName.Size = new System.Drawing.Size(292, 23);
-            this.txtKeyName.TabIndex = 22;
+            this.txtKeyName.TabIndex = 3;
             // 
             // label9
             // 
@@ -727,14 +728,14 @@ namespace Origam.UI.WizardForm
             // 
             this.txtRelationName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtRelationName.Location = new System.Drawing.Point(173, 36);
+            this.txtRelationName.Location = new System.Drawing.Point(133, 0);
             this.txtRelationName.Name = "txtRelationName";
             this.txtRelationName.Size = new System.Drawing.Size(292, 23);
-            this.txtRelationName.TabIndex = 25;
+            this.txtRelationName.TabIndex = 0;
             // 
             // label10
             // 
-            this.label10.Location = new System.Drawing.Point(41, 39);
+            this.label10.Location = new System.Drawing.Point(1, 3);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(116, 20);
             this.label10.TabIndex = 24;
@@ -758,7 +759,7 @@ namespace Origam.UI.WizardForm
             // 
             // label11
             // 
-            this.label11.Location = new System.Drawing.Point(52, 132);
+            this.label11.Location = new System.Drawing.Point(1, 72);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(360, 16);
             this.label11.TabIndex = 17;
@@ -766,7 +767,7 @@ namespace Origam.UI.WizardForm
             // 
             // lblEntity2
             // 
-            this.lblEntity2.Location = new System.Drawing.Point(52, 164);
+            this.lblEntity2.Location = new System.Drawing.Point(1, 101);
             this.lblEntity2.Name = "lblEntity2";
             this.lblEntity2.Size = new System.Drawing.Size(96, 16);
             this.lblEntity2.TabIndex = 16;
@@ -775,16 +776,16 @@ namespace Origam.UI.WizardForm
             // cboEntity2
             // 
             this.cboEntity2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboEntity2.Location = new System.Drawing.Point(164, 164);
+            this.cboEntity2.Location = new System.Drawing.Point(113, 101);
             this.cboEntity2.Name = "cboEntity2";
             this.cboEntity2.Size = new System.Drawing.Size(248, 23);
             this.cboEntity2.Sorted = true;
-            this.cboEntity2.TabIndex = 11;
+            this.cboEntity2.TabIndex = 2;
             this.cboEntity2.SelectedIndexChanged += new System.EventHandler(this.CboEntity2_SelectedIndexChanged);
             // 
             // lblEntity1
             // 
-            this.lblEntity1.Location = new System.Drawing.Point(52, 78);
+            this.lblEntity1.Location = new System.Drawing.Point(1, 32);
             this.lblEntity1.Name = "lblEntity1";
             this.lblEntity1.Size = new System.Drawing.Size(96, 16);
             this.lblEntity1.TabIndex = 15;
@@ -793,16 +794,16 @@ namespace Origam.UI.WizardForm
             // cboEntity1
             // 
             this.cboEntity1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboEntity1.Location = new System.Drawing.Point(164, 78);
+            this.cboEntity1.Location = new System.Drawing.Point(113, 32);
             this.cboEntity1.Name = "cboEntity1";
             this.cboEntity1.Size = new System.Drawing.Size(248, 23);
             this.cboEntity1.Sorted = true;
-            this.cboEntity1.TabIndex = 14;
+            this.cboEntity1.TabIndex = 1;
             this.cboEntity1.SelectedIndexChanged += new System.EventHandler(this.CboEntity1_SelectedIndexChanged);
             // 
             // label12
             // 
-            this.label12.Location = new System.Drawing.Point(52, 42);
+            this.label12.Location = new System.Drawing.Point(1, 3);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(104, 16);
             this.label12.TabIndex = 12;
@@ -810,10 +811,10 @@ namespace Origam.UI.WizardForm
             // 
             // txtchildEntityName
             // 
-            this.txtchildEntityName.Location = new System.Drawing.Point(164, 42);
+            this.txtchildEntityName.Location = new System.Drawing.Point(113, 3);
             this.txtchildEntityName.Name = "txtchildEntityName";
             this.txtchildEntityName.Size = new System.Drawing.Size(248, 23);
-            this.txtchildEntityName.TabIndex = 13;
+            this.txtchildEntityName.TabIndex = 0;
             // 
             // foreignKeyPage
             // 
@@ -837,7 +838,7 @@ namespace Origam.UI.WizardForm
             // 
             // label13
             // 
-            this.label13.Location = new System.Drawing.Point(15, 186);
+            this.label13.Location = new System.Drawing.Point(0, 162);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(93, 23);
             this.label13.TabIndex = 20;
@@ -847,14 +848,14 @@ namespace Origam.UI.WizardForm
             // 
             this.txtfkCaptionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtfkCaptionName.Location = new System.Drawing.Point(127, 186);
+            this.txtfkCaptionName.Location = new System.Drawing.Point(112, 162);
             this.txtfkCaptionName.Name = "txtfkCaptionName";
             this.txtfkCaptionName.Size = new System.Drawing.Size(399, 23);
-            this.txtfkCaptionName.TabIndex = 21;
+            this.txtfkCaptionName.TabIndex = 5;
             // 
             // label14
             // 
-            this.label14.Location = new System.Drawing.Point(15, 85);
+            this.label14.Location = new System.Drawing.Point(0, 61);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(93, 22);
             this.label14.TabIndex = 15;
@@ -865,23 +866,23 @@ namespace Origam.UI.WizardForm
             this.cboLookup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboLookup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboLookup.Location = new System.Drawing.Point(127, 85);
+            this.cboLookup.Location = new System.Drawing.Point(112, 61);
             this.cboLookup.Name = "cboLookup";
             this.cboLookup.Size = new System.Drawing.Size(399, 23);
             this.cboLookup.Sorted = true;
-            this.cboLookup.TabIndex = 16;
+            this.cboLookup.TabIndex = 2;
             // 
             // checkBox1
             // 
-            this.checkBox1.Location = new System.Drawing.Point(15, 117);
+            this.checkBox1.Location = new System.Drawing.Point(0, 93);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(106, 28);
-            this.checkBox1.TabIndex = 17;
+            this.checkBox1.TabIndex = 3;
             this.checkBox1.Text = "Allow Nulls";
             // 
             // lblField
             // 
-            this.lblField.Location = new System.Drawing.Point(15, 61);
+            this.lblField.Location = new System.Drawing.Point(0, 32);
             this.lblField.Name = "lblField";
             this.lblField.Size = new System.Drawing.Size(93, 23);
             this.lblField.TabIndex = 13;
@@ -892,16 +893,16 @@ namespace Origam.UI.WizardForm
             this.cboField.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboField.Location = new System.Drawing.Point(127, 61);
+            this.cboField.Location = new System.Drawing.Point(112, 32);
             this.cboField.Name = "cboField";
             this.cboField.Size = new System.Drawing.Size(399, 23);
             this.cboField.Sorted = true;
-            this.cboField.TabIndex = 14;
+            this.cboField.TabIndex = 1;
             this.cboField.SelectedIndexChanged += new System.EventHandler(this.CboField_SelectedIndexChanged);
             // 
             // lblEntity
             // 
-            this.lblEntity.Location = new System.Drawing.Point(15, 37);
+            this.lblEntity.Location = new System.Drawing.Point(0, 3);
             this.lblEntity.Name = "lblEntity";
             this.lblEntity.Size = new System.Drawing.Size(106, 23);
             this.lblEntity.TabIndex = 11;
@@ -912,16 +913,16 @@ namespace Origam.UI.WizardForm
             this.cboEntity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cboEntity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboEntity.Location = new System.Drawing.Point(127, 37);
+            this.cboEntity.Location = new System.Drawing.Point(112, 3);
             this.cboEntity.Name = "cboEntity";
             this.cboEntity.Size = new System.Drawing.Size(399, 23);
             this.cboEntity.Sorted = true;
-            this.cboEntity.TabIndex = 12;
+            this.cboEntity.TabIndex = 0;
             this.cboEntity.SelectedIndexChanged += new System.EventHandler(this.CboEntity_SelectedIndexChanged);
             // 
             // label15
             // 
-            this.label15.Location = new System.Drawing.Point(15, 157);
+            this.label15.Location = new System.Drawing.Point(0, 133);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(93, 23);
             this.label15.TabIndex = 18;
@@ -931,10 +932,10 @@ namespace Origam.UI.WizardForm
             // 
             this.txtFkFieldName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFkFieldName.Location = new System.Drawing.Point(127, 157);
+            this.txtFkFieldName.Location = new System.Drawing.Point(112, 133);
             this.txtFkFieldName.Name = "txtFkFieldName";
             this.txtFkFieldName.Size = new System.Drawing.Size(399, 23);
-            this.txtFkFieldName.TabIndex = 19;
+            this.txtFkFieldName.TabIndex = 4;
             // 
             // menuFromPage
             // 
@@ -951,14 +952,14 @@ namespace Origam.UI.WizardForm
             // 
             // txtMenuCaption
             // 
-            this.txtMenuCaption.Location = new System.Drawing.Point(150, 50);
+            this.txtMenuCaption.Location = new System.Drawing.Point(83, 3);
             this.txtMenuCaption.Name = "txtMenuCaption";
             this.txtMenuCaption.Size = new System.Drawing.Size(277, 23);
-            this.txtMenuCaption.TabIndex = 13;
+            this.txtMenuCaption.TabIndex = 0;
             // 
             // label16
             // 
-            this.label16.Location = new System.Drawing.Point(69, 50);
+            this.label16.Location = new System.Drawing.Point(2, 3);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(65, 23);
             this.label16.TabIndex = 16;
@@ -966,14 +967,14 @@ namespace Origam.UI.WizardForm
             // 
             // txtMenuRole
             // 
-            this.txtMenuRole.Location = new System.Drawing.Point(150, 88);
+            this.txtMenuRole.Location = new System.Drawing.Point(83, 32);
             this.txtMenuRole.Name = "txtMenuRole";
             this.txtMenuRole.Size = new System.Drawing.Size(277, 23);
-            this.txtMenuRole.TabIndex = 14;
+            this.txtMenuRole.TabIndex = 1;
             // 
             // label17
             // 
-            this.label17.Location = new System.Drawing.Point(69, 88);
+            this.label17.Location = new System.Drawing.Point(2, 32);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(65, 16);
             this.label17.TabIndex = 15;
@@ -1019,6 +1020,7 @@ namespace Origam.UI.WizardForm
             // 
             // colCode
             // 
+            this.colCode.DataPropertyName = "Code";
             this.colCode.Name = "colCode";
             // 
             // Wizard
