@@ -47,7 +47,7 @@ namespace Origam.ServerCore
             }
             catch (Exception e)
             {
-                startupLogger.LogError($"{e.Message}\n{e.StackTrace}");
+                startupLogger.LogCritical($"{e.Message}\n{e.StackTrace}");
                 throw;
             }
         }
