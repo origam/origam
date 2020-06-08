@@ -217,7 +217,7 @@ namespace Origam.Schema.LookupModel.UI.Wizards
                     {
                         foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
                         {
-                            item.Value.AppendFormat(item.Key.CreateInsert(2),
+                            item.Value.Clear().AppendFormat(item.Key.CreateInsert(2),
                             table.Name, idField.Name, nameField.Name, pkValue, initialValue.Name);
                         }
                     }
@@ -229,20 +229,34 @@ namespace Origam.Schema.LookupModel.UI.Wizards
                     {
                         defaultConstant = c;
                     }
+                    fk.DefaultValue = defaultConstant;
+                    fk.Persist();
+                    foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
+                    {
+                        var script2 = DeploymentHelper
+                            .CreateDatabaseScript(table.Name + "_values", item.Value.ToString(), item.Key.PlatformName);
+                        GeneratedModelElements.Add(script2);
+                    }
                 }
                 // 7. new field script (after values because of a default value
                 // only if it's not a virtual detached entity
-                if (!(baseEntity is DetachedEntity))
+                foreach (KeyValuePair<AbstractSqlDataService, StringBuilder> item in dict)
                 {
-                    FieldsScripts(fk,
-                                  baseField,
-                                  baseEntity);
+                    string[] fkDdl = item.Key.FieldDdl(fk.Id);
+                    int i = 0;
+                    foreach (var ddl in fkDdl)
+                    {
+                        // if the foreign key is based on an existing field 
+                        // take only the foreign key ddl
+                        if (baseField == null || i == 1)
+                        {
+                            var script3 = DeploymentHelper.CreateDatabaseScript(baseEntity.Name + "_" + fk.Name, ddl,item.Key.PlatformName);
+                            GeneratedModelElements.Add(script3);
+                        }
+                        i++;
+                    }
                 }
             }
-            // 7. new field script (after values because of a default value
-            FieldsScripts(fk,
-                          baseField,
-                          baseEntity);
         }
 
         private TableMappingItem CreateLookupEntity(
