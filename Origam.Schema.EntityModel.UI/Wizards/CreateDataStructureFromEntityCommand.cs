@@ -62,7 +62,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 
             ArrayList list = new ArrayList();
             DataStructure dd = new DataStructure();
-            list.Add(new ListViewItem(dd.ItemType, dd.Icon));
+            list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
 
             Stack stackPage = new Stack();
 
@@ -77,7 +77,6 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             structureForm = new StructureForm
             {
                 Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
-                PageTitle = "",
                 Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
                 ItemTypeList = list,
                 Pages = stackPage,

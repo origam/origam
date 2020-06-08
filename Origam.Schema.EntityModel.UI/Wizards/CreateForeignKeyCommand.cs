@@ -55,7 +55,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 			IDataEntity entity = Owner as IDataEntity;
             ArrayList list = new ArrayList();
             FieldMappingItem fmItem = new FieldMappingItem();
-            list.Add(new ListViewItem(fmItem.ItemType, fmItem.Icon));
+            list.Add(new ListViewItem(fmItem.GetType().SchemaItemDescription().Name, fmItem.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);

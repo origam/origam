@@ -61,9 +61,9 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             TableMappingItem table1 = new TableMappingItem();
             FieldMappingItem fieldMapping = new FieldMappingItem();
             DataServiceDataLookup data = new DataServiceDataLookup();
-            list.Add(new ListViewItem(table1.ItemType, table1.Icon));
-            list.Add(new ListViewItem(fieldMapping.ItemType, fieldMapping.Icon));
-            list.Add(new ListViewItem(data.ItemType, data.Icon));
+            list.Add(new ListViewItem(table1.GetType().SchemaItemDescription().Name, table1.Icon));
+            list.Add(new ListViewItem(fieldMapping.GetType().SchemaItemDescription().Name, fieldMapping.Icon));
+            list.Add(new ListViewItem(data.GetType().SchemaItemDescription().Name, data.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);

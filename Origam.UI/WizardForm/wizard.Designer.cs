@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using AeroWizard;
 
@@ -76,8 +77,9 @@ namespace Origam.UI.WizardForm
             this.lblCaption = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.finishPage = new AeroWizard.WizardPage();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbProgres = new System.Windows.Forms.TextBox();
+            this.progresslistview = new System.Windows.Forms.ListView();
+            this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.RelationShipEntityPage = new AeroWizard.WizardPage();
             this.checkParentChild = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -117,6 +119,8 @@ namespace Origam.UI.WizardForm
             this.label16 = new System.Windows.Forms.Label();
             this.txtMenuRole = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbProgres = new System.Windows.Forms.TextBox();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
             this.StartPage.SuspendLayout();
@@ -137,6 +141,7 @@ namespace Origam.UI.WizardForm
             // listView1
             // 
             this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(17, 72);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(504, 153);
@@ -233,6 +238,7 @@ namespace Origam.UI.WizardForm
             this.tbDataStructureName.Name = "tbDataStructureName";
             this.tbDataStructureName.Size = new System.Drawing.Size(228, 23);
             this.tbDataStructureName.TabIndex = 0;
+            this.tbDataStructureName.TextChanged += new System.EventHandler(this.tbDataStructureName_TextChanged);
             // 
             // ScreenFormPage
             // 
@@ -243,7 +249,7 @@ namespace Origam.UI.WizardForm
             this.ScreenFormPage.Name = "ScreenFormPage";
             this.ScreenFormPage.Size = new System.Drawing.Size(541, 343);
             this.ScreenFormPage.TabIndex = 3;
-            this.ScreenFormPage.Text = "Page Title";
+            this.ScreenFormPage.Text = "Please Select Fields";
             this.ScreenFormPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.ScreenFormPage_Commit);
             this.ScreenFormPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.ScreenFormPage_Initialize);
             // 
@@ -550,31 +556,40 @@ namespace Origam.UI.WizardForm
             // 
             // finishPage
             // 
-            this.finishPage.Controls.Add(this.label5);
-            this.finishPage.Controls.Add(this.tbProgres);
+            this.finishPage.AllowBack = false;
+            this.finishPage.Controls.Add(this.progresslistview);
             this.finishPage.Name = "finishPage";
             this.finishPage.Size = new System.Drawing.Size(541, 343);
             this.finishPage.TabIndex = 6;
-            this.finishPage.Text = "Finish";
+            this.finishPage.Text = "Progress";
             this.finishPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.FinishPage_Commit);
             this.finishPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.FinishPage_Initialize);
             // 
-            // label5
+            // progresslistview
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(23, 15);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(52, 15);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Progress";
+            this.progresslistview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colText,
+            this.colStatus});
+            this.progresslistview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progresslistview.FullRowSelect = true;
+            this.progresslistview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.progresslistview.HideSelection = false;
+            this.progresslistview.Location = new System.Drawing.Point(0, 0);
+            this.progresslistview.Name = "listView2";
+            this.progresslistview.Size = new System.Drawing.Size(541, 343);
+            this.progresslistview.TabIndex = 0;
+            this.progresslistview.UseCompatibleStateImageBehavior = false;
+            this.progresslistview.View = System.Windows.Forms.View.Details;
             // 
-            // tbProgres
+            // colText
             // 
-            this.tbProgres.Location = new System.Drawing.Point(23, 47);
-            this.tbProgres.Multiline = true;
-            this.tbProgres.Name = "tbProgres";
-            this.tbProgres.Size = new System.Drawing.Size(495, 260);
-            this.tbProgres.TabIndex = 0;
+            this.colText.Text = "Task";
+            this.colText.Width = 405;
+            // 
+            // colStatus
+            // 
+            this.colStatus.Text = "Status";
+            this.colStatus.Width = 124;
             // 
             // RelationShipEntityPage
             // 
@@ -607,7 +622,7 @@ namespace Origam.UI.WizardForm
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(45, 97);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 15);
+            this.label6.Size = new System.Drawing.Size(34, 15);
             this.label6.TabIndex = 28;
             this.label6.Text = "Table";
             // 
@@ -960,6 +975,23 @@ namespace Origam.UI.WizardForm
             this.label17.TabIndex = 15;
             this.label17.Text = "Role:";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(23, 15);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(52, 15);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Progress";
+            // 
+            // tbProgres
+            // 
+            this.tbProgres.Location = new System.Drawing.Point(23, 47);
+            this.tbProgres.Multiline = true;
+            this.tbProgres.Name = "tbProgres";
+            this.tbProgres.Size = new System.Drawing.Size(495, 260);
+            this.tbProgres.TabIndex = 0;
+            // 
             // colCode
             // 
             this.colCode.Name = "colCode";
@@ -988,7 +1020,6 @@ namespace Origam.UI.WizardForm
             this.FieldLookupEntity.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdInitialValues)).EndInit();
             this.finishPage.ResumeLayout(false);
-            this.finishPage.PerformLayout();
             this.RelationShipEntityPage.ResumeLayout(false);
             this.RelationShipEntityPage.PerformLayout();
             this.groupBoxKey.ResumeLayout(false);
@@ -1048,6 +1079,9 @@ namespace Origam.UI.WizardForm
         private Label lblCaption;
         private Label label4;
         private WizardPage finishPage;
+        public ListView progressListview;
+        private ColumnHeader colText;
+        private ColumnHeader colStatus;
         private Label label5;
         private TextBox tbProgres;
         private WizardPage RelationShipEntityPage;
@@ -1090,6 +1124,7 @@ namespace Origam.UI.WizardForm
         private TextBox txtMenuRole;
         private Label label17;
         private TextBox txtLabel;
+        private ListView progresslistview;
     }
 }
 

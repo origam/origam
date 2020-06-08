@@ -1,12 +1,8 @@
 ﻿using AeroWizard;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
-using Origam.UI;
 using Origam.UI.Interfaces;
-using Origam.UI.WizardForm;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Origam.UI.WizardForm
@@ -175,17 +171,16 @@ namespace Origam.UI.WizardForm
                 iwizard.Command.Execute();
                 foreach(ListViewItem listView in iwizard.ItemTypeList)
                 {
-                    tbProgres.Text += listView.Text;
-                    tbProgres.Text += Environment.NewLine;
+                    progresslistview.Items.Add(new ListViewItem(new string[] { listView.Text, "OK" }));
                 }
-                tbProgres.Text += "Done ...";
-            }
+             }
             catch (Exception ex)
             {
                 tbProgres.Text = ex.Message;
                 e.Cancel = true;
             }
             this.aerowizard1.FinishButtonText = "Show Result";
+            this.aerowizard1.CancelButtonText = "Close";
         }
 
         private void FinishPage_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -494,6 +489,23 @@ namespace Origam.UI.WizardForm
         {
             if(iwizard.PageTitle!=null)
                 ((WizardPage)sender).Text = iwizard.PageTitle;
+        }
+
+        private void tbDataStructureName_TextChanged(object sender, EventArgs e)
+        {
+            if (iwizard.IsExistsNameInDataStructure(tbDataStructureName.Text))
+            {
+                this.label1.Text = "Name of Structure already exists.";
+            }
+            else
+            {
+                this.label1.Text = "";
+            }
+        }
+
+        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
     #endregion
