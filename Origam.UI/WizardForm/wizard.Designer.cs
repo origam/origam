@@ -119,6 +119,8 @@ namespace Origam.UI.WizardForm
             this.label16 = new System.Windows.Forms.Label();
             this.txtMenuRole = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.SummaryPage = new AeroWizard.WizardPage();
+            this.richTextBoxSummary = new System.Windows.Forms.RichTextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.tbProgres = new System.Windows.Forms.TextBox();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -136,6 +138,7 @@ namespace Origam.UI.WizardForm
             this.childEntityPage.SuspendLayout();
             this.foreignKeyPage.SuspendLayout();
             this.menuFromPage.SuspendLayout();
+            this.SummaryPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView1
@@ -166,6 +169,7 @@ namespace Origam.UI.WizardForm
             this.aerowizard1.Pages.Add(this.childEntityPage);
             this.aerowizard1.Pages.Add(this.foreignKeyPage);
             this.aerowizard1.Pages.Add(this.menuFromPage);
+            this.aerowizard1.Pages.Add(this.SummaryPage);
             this.aerowizard1.Size = new System.Drawing.Size(588, 497);
             this.aerowizard1.TabIndex = 0;
             this.aerowizard1.Title = "wiztitle";
@@ -575,7 +579,7 @@ namespace Origam.UI.WizardForm
             this.progresslistview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.progresslistview.HideSelection = false;
             this.progresslistview.Location = new System.Drawing.Point(0, 0);
-            this.progresslistview.Name = "listView2";
+            this.progresslistview.Name = "progresslistview";
             this.progresslistview.Size = new System.Drawing.Size(541, 343);
             this.progresslistview.TabIndex = 0;
             this.progresslistview.UseCompatibleStateImageBehavior = false;
@@ -975,6 +979,27 @@ namespace Origam.UI.WizardForm
             this.label17.TabIndex = 15;
             this.label17.Text = "Role:";
             // 
+            // SummaryPage
+            // 
+            this.SummaryPage.Controls.Add(this.richTextBoxSummary);
+            this.SummaryPage.Name = "SummaryPage";
+            this.SummaryPage.Size = new System.Drawing.Size(541, 343);
+            this.SummaryPage.TabIndex = 11;
+            this.SummaryPage.Text = "Summary";
+            this.SummaryPage.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.SummaryPage_Commit);
+            this.SummaryPage.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.SummaryPage_Initialize);
+            // 
+            // richTextBoxSummary
+            // 
+            this.richTextBoxSummary.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.richTextBoxSummary.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxSummary.Location = new System.Drawing.Point(4, 4);
+            this.richTextBoxSummary.Margin = new System.Windows.Forms.Padding(0);
+            this.richTextBoxSummary.Name = "richTextBoxSummary";
+            this.richTextBoxSummary.Size = new System.Drawing.Size(534, 336);
+            this.richTextBoxSummary.TabIndex = 0;
+            this.richTextBoxSummary.Text = "";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -1032,6 +1057,7 @@ namespace Origam.UI.WizardForm
             this.foreignKeyPage.PerformLayout();
             this.menuFromPage.ResumeLayout(false);
             this.menuFromPage.PerformLayout();
+            this.SummaryPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1125,6 +1151,8 @@ namespace Origam.UI.WizardForm
         private Label label17;
         private TextBox txtLabel;
         private ListView progresslistview;
+        private WizardPage SummaryPage;
+        private RichTextBox richTextBoxSummary;
     }
 }
 
