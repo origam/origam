@@ -3,6 +3,10 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.UI.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Origam.UI.WizardForm
@@ -290,6 +294,18 @@ namespace Origam.UI.WizardForm
             menufrom.Caption = txtMenuCaption.Text;
             IsFinish(sender, e);
         }
+        private void SummaryPage_Initialize(object sender, WizardPageInitEventArgs e)
+        {
+            SetPageTitle(sender);
+            this.aerowizard1.NextButtonText = "Start";
+            SetSummaryText();
+            GetNextPage(PagesList.SummaryPage, sender);
+        }
+
+        private void SummaryPage_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            IsFinish(sender, e);
+        }
         #endregion
 
         #region support
@@ -387,6 +403,8 @@ namespace Origam.UI.WizardForm
                     return childEntityPage;
                 case PagesList.ForeignForm:
                     return foreignKeyPage;
+                case PagesList.SummaryPage:
+                    return SummaryPage;
                 case PagesList.MenuPage:
                     return menuFromPage;
                 default:
@@ -503,10 +521,20 @@ namespace Origam.UI.WizardForm
             }
         }
 
-        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
+        private void SetSummaryText()
         {
-
+            if(iwizard is StructureForm)
+            {
+                StructureForm structureForm = (StructureForm)iwizard;
+                richTextBoxSummary.Text = "";
+                richTextBoxSummary.AppendText("");
+                richTextBoxSummary.AppendText("Create Data Structure: ");
+                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+                richTextBoxSummary.AppendText(structureForm.NameOfEntity);
+                richTextBoxSummary.AppendText("");
+            }
         }
+
     }
     #endregion
 }

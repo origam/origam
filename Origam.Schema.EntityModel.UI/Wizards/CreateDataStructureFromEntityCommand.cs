@@ -67,6 +67,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             Stack stackPage = new Stack();
 
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             if (listdsName.Any(name => name == entity.Name))
             {
                 stackPage.Push(PagesList.StructureNamePage);
