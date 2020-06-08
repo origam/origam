@@ -504,6 +504,7 @@ namespace Origam.UI.WizardForm
             // colName
             // 
             this.colName.Name = "colName";
+            this.colName.DataPropertyName = "Name";
             // 
             // colDefault
             // 
@@ -994,6 +995,7 @@ namespace Origam.UI.WizardForm
             // 
             // colCode
             // 
+            this.colCode.DataPropertyName = "Code";
             this.colCode.Name = "colCode";
             // 
             // Wizard
