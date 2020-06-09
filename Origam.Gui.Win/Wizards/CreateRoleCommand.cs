@@ -32,7 +32,7 @@ namespace Origam.Gui.Win.Wizards
 {
     class CreateRoleCommand : AbstractMenuCommand
     {
-		StructureForm structureForm;
+		RoleForm roleForm;
 		SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
 		public override bool IsEnabled
 		{
@@ -55,19 +55,21 @@ namespace Origam.Gui.Win.Wizards
 			list.Add(new ListViewItem(scriptActivity.ModelDescription(), scriptActivity.Icon));
 			Stack stackPage = new Stack();
 			stackPage.Push(PagesList.Finish);
+			stackPage.Push(PagesList.SummaryPage);
 			stackPage.Push(PagesList.StartPage);
 
-			structureForm = new StructureForm()
+			roleForm = new RoleForm()
 			{
 				Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
 				Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
 				ItemTypeList = list,
 				Pages = stackPage,
-				NameOfEntity = ((AbstractMenuItem)Owner).Name,
 				ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
-				Command = this
+				Command = this,
+				Roles = ((AbstractMenuItem)Owner).Roles,
+				NameOfMenu = ((AbstractMenuItem)Owner).DisplayName
 			};
-			Wizard wizardscreen = new Wizard(structureForm);
+			Wizard wizardscreen = new Wizard(roleForm);
 			if (wizardscreen.ShowDialog() != DialogResult.OK)
 			{
 				GeneratedModelElements.Clear();

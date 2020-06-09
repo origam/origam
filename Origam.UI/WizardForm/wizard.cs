@@ -543,6 +543,18 @@ namespace Origam.UI.WizardForm
                 richTextBoxSummary.AppendText(structureForm.NameOfEntity);
                 richTextBoxSummary.AppendText("");
             }
+            if (iwizard is RoleForm roleForm)
+            {
+                richTextBoxSummary.Text = "";
+                richTextBoxSummary.AppendText("");
+                richTextBoxSummary.AppendText("Create Role ");
+                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+                richTextBoxSummary.AppendText(roleForm.Roles);
+                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Regular);
+                richTextBoxSummary.AppendText(" for ");
+                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Italic);
+                richTextBoxSummary.AppendText(roleForm.NameOfMenu);
+            }
         }
 
     }
