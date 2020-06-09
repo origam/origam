@@ -1,0 +1,1 @@
+export interface ICellRectangle{ columnLeft: number; columnWidth: number;  rowTop: number; rowHeight: number};

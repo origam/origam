@@ -2,6 +2,7 @@ import { PubSub } from "../../../../utils/events";
 import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
 import { ITableRow} from "./TableRendering/types";
 import {BoundingRect} from "react-measure";
+import {ITablePanelView} from "../../../../model/entities/TablePanelView/types/ITablePanelView";
 
 export type ICellType =
   | "Text"
@@ -147,6 +148,8 @@ export interface IPositionedFieldProps {
     bottom: number;
     right: number;
   };
+
+  tablePanelView: ITablePanelView;
 }
 
 export interface IScrollerProps {

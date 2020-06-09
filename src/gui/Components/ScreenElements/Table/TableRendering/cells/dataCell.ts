@@ -31,16 +31,10 @@ import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelected
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { flow } from "mobx";
+import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTable";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
-}
-
-export let lastClickedCellRectangle:  { columnLeft: number; columnWidth: number;  rowTop: number; rowHeight: number} = {
-  columnLeft: 0,
-  columnWidth: 0,
-  rowTop:0,
-  rowHeight:0
 }
 
 export function dataColumnsDraws() {
@@ -63,6 +57,7 @@ function registerClickHandler(columnId: string){
     rowTop: currentRowTop(),
     rowHeight: currentRowHeight()
   }
+  getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
 
   onClick({
     x: currentColumnLeftVisible(),
@@ -71,7 +66,6 @@ function registerClickHandler(columnId: string){
     h: currentRowHeight(),
     handler(event: any) { flow(function* (){
       console.log("click");
-      lastClickedCellRectangle = thisCellRectangle;
       yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
       yield onPossibleSelectedRowChange(ctx)(
         getMenuItemId(ctx),

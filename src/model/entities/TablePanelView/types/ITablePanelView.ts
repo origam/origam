@@ -4,6 +4,7 @@ import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
 import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
 import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
 import {AggregationContainer} from "../TablePanelView";
+import {ICellRectangle} from "./ICellRectangle";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
@@ -69,6 +70,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   triggerOnFocusTable(): void;
   triggerOnScrollToCellShortest(rowIdx: number, columnIdx: number): void;
   setPropertyHidden(propertyId: string, state: boolean): void;
-
+  getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle;
+  setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle): void;
   parent?: any;
 }

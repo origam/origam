@@ -24,6 +24,7 @@ import selectors from "model/selectors-tree";
 import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
 import {IAggregationInfo} from "../types/IAggregationInfo";
 import {AggregationType} from "../types/AggregationType";
+import {ICellRectangle} from "./types/ICellRectangle";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -41,15 +42,17 @@ export class TablePanelView implements ITablePanelView {
   orderingConfiguration: IOrderingConfiguration = null as any;
   groupingConfiguration: IGroupingConfiguration = null as any;
 
+  rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number, Map<number, ICellRectangle>>();
+
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
   @observable tablePropertyIds: string[] = [];
-
   @observable hiddenPropertyIds: Map<string, boolean> = new Map();
-
-
   @observable columnOrderChangingTargetId: string | undefined;
   @observable columnOrderChangingSourceId: string | undefined;
+
+  parent?: any;
+  aggregations: AggregationContainer = new AggregationContainer();
 
   @computed get propertyMap() {
     return new Map(
@@ -311,8 +314,16 @@ export class TablePanelView implements ITablePanelView {
     return getDataTable(this);
   }
 
-  parent?: any;
-  aggregations: AggregationContainer = new AggregationContainer();
+  getCellRectangle(rowIndex: number, columnIndex: number){
+    return this.rectangleMap.get(rowIndex)!.get(columnIndex)!;
+  }
+
+  setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {
+    if(!this.rectangleMap.has(rowId)){
+      this.rectangleMap.set(rowId, new Map<number, ICellRectangle>());
+    }
+    this.rectangleMap.get(rowId)!.set(columnId, rectangle);
+  }
 }
 
 export class AggregationContainer{

@@ -362,6 +362,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               columnIndex={this.props.editingColumnIndex}
                               scrollOffsetSource={this.props.scrollState}
                               worldBounds={contentRect.bounds!}
+                              tablePanelView={this.context.tablePanelView}
                             >
                               {this.props.renderEditor && this.props.renderEditor()}
                             </PositionedField>
