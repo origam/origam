@@ -22,11 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Schema.WorkflowModel;
 using Origam.UI;
+using Origam.Workbench;
 
 namespace Origam.Gui.Win.Commands
 {
     public class GenerateWorkQueueClassEntityMappings : AbstractMenuCommand
     {
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         public override bool IsEnabled
         {
             get
@@ -43,6 +45,10 @@ namespace Origam.Gui.Win.Commands
         {
             Origam.Schema.WorkflowModel.WorkflowHelper.GenerateWorkQueueClassEntityMappings(
                 Owner as WorkQueueClass);
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }

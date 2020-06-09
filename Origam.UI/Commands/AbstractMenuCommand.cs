@@ -153,6 +153,11 @@ namespace Origam.UI
         {
         }
 
+        public virtual int GetImageIndex(string icon)
+        {
+            return 0;
+        }
+
         #endregion
     }
 }

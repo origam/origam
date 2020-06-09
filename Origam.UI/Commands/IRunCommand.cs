@@ -23,5 +23,6 @@ namespace Origam.UI.Commands
     public interface IRunCommand
     {
         void Execute();
+        int GetImageIndex(string icon);
     }
 }

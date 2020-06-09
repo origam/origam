@@ -100,6 +100,10 @@ namespace Origam.Gui.Win.Wizards
                 edit.Run();
                 _schemaBrowser.EbrSchemaBrowser.SelectItem(panel);
             }
+            else
+            {
+                GeneratedModelElements.Clear();
+            }
         }
 
         public override void Execute()
@@ -108,6 +112,11 @@ namespace Origam.Gui.Win.Wizards
             if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
 
             panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames,wizardForm.NameOfEntity);
+            GeneratedModelElements.Add(panel);
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }

@@ -94,7 +94,7 @@ namespace Origam.UI.WizardForm
         public string EnterAllInfo { get; set; }
         public string LookupWiz { get; set; }
         public string LookupName { get; internal set; }
-
+        public string LookupKeyName { get; internal set; }
         internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
         {
             tableRelation.Items.Clear();

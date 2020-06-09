@@ -99,5 +99,11 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             DataStructure ds = EntityHelper.CreateDataStructure(Owner as IDataEntity, structureForm.NameOfEntity, true);
             GeneratedModelElements.Add(ds);
         }
-	}
+
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+
+    }
 }

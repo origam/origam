@@ -93,5 +93,9 @@ namespace Origam.Gui.Win.Wizards
                 table.Name, table.Id);
             GeneratedModelElements.Add(script);
         }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
     }
 }

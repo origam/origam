@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 using Origam.Schema.EntityModel;
@@ -91,6 +93,11 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             //    null, wiz.IdFilter, wiz.ListFilter, null);
             GeneratedModelElements.Add(result.ListDataStructure);
             GeneratedModelElements.Add(result);
+        }
+
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }
