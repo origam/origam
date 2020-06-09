@@ -24,13 +24,15 @@ export function onFieldKeyDown(ctx: any) {
           break;
         }
         case "Enter": {
+          getTablePanelView(ctx).setEditing(false);
           if (event.shiftKey) {
-            selectPrevRow(ctx)();
-            event.preventDefault();
+            yield* selectPrevRow(ctx)();
           } else {
-            selectNextRow(ctx)();
-            event.preventDefault();
+            yield* selectNextRow(ctx)();
           }
+          getTablePanelView(ctx).setEditing(true);
+          getTablePanelView(ctx).triggerOnFocusTable();
+          event.preventDefault();
           getTablePanelView(ctx).scrollToCurrentCell();
           yield* flushCurrentRowData(ctx)();
           break;
