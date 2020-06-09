@@ -2,6 +2,9 @@ import {action, computed, observable} from "mobx";
 import {MAX_CHUNKS_TO_HOLD, SCROLL_ROW_CHUNK} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {IRowsContainer} from "./types/IRowsContainer";
 
+// The constants have to be defined here for the unit tests to work.
+// const MAX_CHUNKS_TO_HOLD = 20;
+// const SCROLL_ROW_CHUNK = 1000;
 
 export class ScrollRowContainer implements IRowsContainer {
   constructor(rowIdGetter: (row: any[]) => string) {
@@ -35,11 +38,41 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   delete(row: any[]): void {
-    throw new Error("Method not implemented");
+    const rowId = this.rowIdGetter(row);
+    const chunk = this.findChunkByRowId(rowId);
+    chunk.delete(rowId);
+  }
+
+  findChunkByRowId(rowId: string){
+    const chunk = this.rowChunks.find(chunk => chunk.has(rowId))
+    if(!chunk){
+      throw new Error(`Row with id "${rowId}" was not found`);
+    }
+    return chunk;
+  }
+
+  findChunkByRowIndex(indexInContainer: number){
+    let rowCounter = 0;
+    for (let rowChunk of this.rowChunks) {
+      const indexInChunk = indexInContainer - rowCounter;
+      if(indexInChunk < rowChunk.rows.length){
+        return {
+          chunk: rowChunk,
+          indexInChunk: indexInChunk
+        };
+      }
+      rowCounter += rowChunk.rows.length;
+    }
+    const lastChunk = this.rowChunks[this.rowChunks.length - 1];
+    return {
+      chunk: lastChunk,
+      indexInChunk: lastChunk.rows.length
+    };
   }
 
   insert(index: number, row: any[]): void {
-    throw new Error("Method not implemented");
+    const {chunk, indexInChunk} = this.findChunkByRowIndex(index);
+    chunk.insert(indexInChunk, row);
   }
 
   @action.bound
@@ -216,8 +249,42 @@ class RowChunk {
     }
   }
 
-  private getIndex(id: string) {
-    return this.idMap.get(id);
+  private getIndex(rowId: string) {
+    return this.idMap.get(rowId);
+  }
+
+  has(rowId: string) {
+    return this.getIndex(rowId) !== undefined;
+  }
+
+  delete(rowId: string) {
+    const index = this.getIndex(rowId)!;
+    this.idMap.delete(rowId);
+    this.rows.splice(index, 1);
+    this.shiftIdMapDown(index);
+  }
+
+  insert(index: number, row: any[]) {
+    this.rows.splice(index, 0, row)
+    const rowId = this.rowIdGetter(row);
+    this.shiftIdMapUp(index);
+    this.idMap.set(rowId, index);
+  }
+
+  private shiftIdMapDown(index: number) {
+    for (let entry of Array.from(this.idMap.entries())) {
+      if (entry[1] > index) {
+        this.idMap.set(entry[0], entry[1] - 1)
+      }
+    }
+  }
+
+  private shiftIdMapUp(index: number) {
+    for (let entry of Array.from(this.idMap.entries())) {
+      if (entry[1] > index - 1) {
+        this.idMap.set(entry[0], entry[1] + 1)
+      }
+    }
   }
 }
 
