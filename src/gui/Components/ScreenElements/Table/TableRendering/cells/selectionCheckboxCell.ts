@@ -7,7 +7,7 @@ import {
   currentColumnLeftVisible,
   currentColumnWidthVisible,
 } from "../currentCell";
-import {applyScrollTranslation, cellPaddingLeft, topTextOffset} from "./cellsCommon";
+import {applyScrollTranslation, topTextOffset} from "./cellsCommon";
 import { CPR } from "utils/canvas";
 import { onClick } from "../onClick";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
@@ -19,6 +19,7 @@ import { flow } from "mobx";
 
 export const selectionCheckBoxColumnWidth = 20;
 const checkSymbolFontSize = 15;
+const paddingLeft = 2;
 
 export function selectionCheckboxCellsWidths() {
   return isCheckBoxedTable() ? [selectionCheckBoxColumnWidth] : [];
@@ -36,7 +37,7 @@ export function selectionCheckboxCellsDraws() {
         const state = dataView().isSelected(rowId());
         ctx2d.fillText(
           state ? "\uf14a" : "\uf0c8",
-          CPR * (currentColumnLeft() + cellPaddingLeft),
+          CPR * (currentColumnLeft() + paddingLeft),
           CPR * (currentRowTop() + topTextOffset)
         );
         registerClickHandler();
@@ -113,7 +114,7 @@ export function drawSelectionCheckboxContent() {
   const state = true;
   ctx2d.fillText(
     state ? "\uf14a" : "\uf0c8",
-    CPR * (currentColumnLeft() + cellPaddingLeft),
+    CPR * (currentColumnLeft() + paddingLeft),
     CPR * (currentRowTop() + topTextOffset)
   );
 }

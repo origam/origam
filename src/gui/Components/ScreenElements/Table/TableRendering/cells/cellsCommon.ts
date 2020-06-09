@@ -35,7 +35,7 @@ export function clipCell() {
 export const numberCellPaddingLeft = Memoized(() =>  drawingColumnIndex() === 0 ? 25 : 15)
 scRenderCell.push(() => numberCellPaddingLeft.clear());
 
-export const cellPaddingLeft = 2;
+export const cellPaddingLeft = 14;
 
 export const topTextOffset = 17;
 
