@@ -35,6 +35,7 @@ export function onFieldKeyDown(ctx: any) {
           yield* flushCurrentRowData(ctx)();
           break;
         }
+        case "F2":
         case "Escape": {
           getTablePanelView(ctx).setEditing(false);
           getTablePanelView(ctx).triggerOnFocusTable();
