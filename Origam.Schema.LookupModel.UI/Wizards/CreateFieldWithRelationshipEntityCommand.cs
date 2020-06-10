@@ -90,7 +90,10 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             };
 
             Wizard wiz = new Wizard(wizardForm);
-            wiz.Show();
+            if (wiz.ShowDialog() != DialogResult.OK)
+            {
+                GeneratedModelElements.Clear();
+            }
         }
 
         public override void Execute()
@@ -103,10 +106,16 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             }
             // 1. entity
             TableMappingItem table = (TableMappingItem)baseEntity;
+            GeneratedModelElements.Add(table);
             EntityRelationItem relation = EntityHelper.CreateRelation(table, (IDataEntity)wizardForm.RelatedEntity, wizardForm.ParentChildCheckbox, true);
             EntityHelper.CreateRelationKey(relation,
                 (AbstractDataEntityColumn)wizardForm.BaseEntityFieldSelect,
-                (AbstractDataEntityColumn)wizardForm.RelatedEntityFieldSelect, true);
+                (AbstractDataEntityColumn)wizardForm.RelatedEntityFieldSelect, true,wizardForm.LookupKeyName);
+            GeneratedModelElements.Add(relation);
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }

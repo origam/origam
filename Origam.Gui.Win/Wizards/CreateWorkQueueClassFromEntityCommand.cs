@@ -89,5 +89,10 @@ namespace Origam.Gui.Win.Wizards
             WorkQueueClass result = WorkflowHelper.CreateWorkQueueClass(
                     wizardForm.Entity, wizardForm.SelectedFields, GeneratedModelElements);
         }
+
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
     }
 }

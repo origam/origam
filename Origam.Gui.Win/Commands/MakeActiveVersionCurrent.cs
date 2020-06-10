@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using Origam.Schema.DeploymentModel;
 using Origam.UI;
+using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Commands
@@ -32,7 +33,7 @@ namespace Origam.Gui.Win.Commands
     public class MakeActiveVersionCurrent : AbstractMenuCommand
     {
         WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
-
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         public override bool IsEnabled
         {
             get
@@ -58,6 +59,10 @@ namespace Origam.Gui.Win.Commands
         public override void Dispose()
         {
             _schemaService = null;
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }

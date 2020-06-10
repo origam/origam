@@ -29,11 +29,9 @@ using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
-using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
-using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -110,6 +108,10 @@ namespace Origam.Gui.Win.Wizards
             GeneratedModelElements.Add(panel);
             FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
             GeneratedModelElements.Add(form);
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 
@@ -200,6 +202,10 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Add(activity);
             }
         }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
     }
 
 	public class CreateFormFromPanelCommand : AbstractMenuCommand
@@ -267,6 +273,10 @@ namespace Origam.Gui.Win.Wizards
             edit.Owner = form;
             edit.Run();
         }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
     }
 
         public class CreateMenuFromFormCommand : AbstractMenuCommand
@@ -328,7 +338,11 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Add(activity);
             }
         }
-}
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+    }
 
 	public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
 	{
@@ -388,6 +402,10 @@ namespace Origam.Gui.Win.Wizards
                 ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
                 GeneratedModelElements.Add(activity);
             }
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 
@@ -449,6 +467,10 @@ namespace Origam.Gui.Win.Wizards
                 ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
                 GeneratedModelElements.Add(activity);
             }
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }

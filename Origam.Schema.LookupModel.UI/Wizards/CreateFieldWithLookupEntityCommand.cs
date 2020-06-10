@@ -259,6 +259,11 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             }
         }
 
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+
         private TableMappingItem CreateLookupEntity(
            string LookupName, IDataEntity baseEntity,
             IDataEntityColumn baseField)

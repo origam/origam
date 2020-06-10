@@ -180,6 +180,12 @@
     <_ContentIncludedByDefault Remove="wwwroot\js\svg-load.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="assets\identity\css\login.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties assets_4identity_4lib_4bootstrap_4css_4bootstrap_1css_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
