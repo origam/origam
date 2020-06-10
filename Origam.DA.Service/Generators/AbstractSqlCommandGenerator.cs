@@ -27,6 +27,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using Origam.DA.Service.Generators;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
@@ -1730,6 +1731,7 @@ namespace Origam.DA.Service
             List<string> group = new List<string>();
             SortedList order = new SortedList();
             bool groupByNeeded = false;
+            string orderByExpression="";
             if (concatScalarColumns && columnsInfo != null && columnsInfo.Count > 1)
             {
                 List<ColumnRenderItem> columnRenderData = new List<ColumnRenderItem>();
@@ -1772,6 +1774,10 @@ namespace Origam.DA.Service
                     PrettyIndent(sqlExpression);
                     i++;
                     sqlExpression.Append(expression);
+                    if (customGrouping != null && customGrouping.GroupBy == column.Name)
+                    {
+                        orderByExpression = expression.Split("AS")[0].Trim();
+                    }
                 }
             }
 
@@ -1807,7 +1813,9 @@ namespace Origam.DA.Service
                 }
 
                 groupByNeeded = true;
-                if (!group.Any(columnName => columnName.Contains(customGrouping.GroupBy)))
+                if (!group.Any(groupByExpression => 
+                        groupByExpression.Contains(customGrouping.GroupBy) ||
+                        groupByExpression == orderByExpression))
                 {
                     group.Add(customGrouping.GroupBy);
                 }
