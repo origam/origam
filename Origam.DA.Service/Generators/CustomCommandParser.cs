@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MoreLinq;
 using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
@@ -184,12 +185,32 @@ namespace Origam.DA.Service.Generators
         public string Value { get; set; } = "";
         public bool IsBinaryOperator => Value.Contains("$");
 
-        private string[] SplitValue => splitValue ??
-                                       (splitValue = Value
-                                           .Split(',')
-                                           .Select(x => x.Trim())
-                                           .ToArray()
-                                       );
+        private string[] SplitValue
+        {
+            get
+            {
+                if (splitValue == null)
+                {
+                    splitValue = Value
+                        .Split(',');
+                    if (splitValue.Length > 3 && Value.Contains(","))
+                    {
+                        splitValue = new []
+                        {
+                            splitValue[0],
+                            splitValue[1],
+                            string.Join(",", splitValue.Skip(2))
+                        };
+                    }
+                    splitValue = splitValue
+                        .Select(x => x.Trim())
+                        .ToArray();
+                }
+
+                return splitValue;
+            }
+        }
+
         private string ColumnName => "["+SplitValue[0].Replace("\"","")+"]";
         private string Operator => SplitValue[1].Replace("\"","");
         private string ColumnValue => SplitValue[2]
