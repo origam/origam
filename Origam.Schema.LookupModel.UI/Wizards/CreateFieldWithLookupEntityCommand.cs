@@ -30,6 +30,7 @@ using Origam.DA.Service;
 using Origam.Workbench;
 using Origam.UI.WizardForm;
 using System.Collections;
+using System.Drawing;
 
 namespace Origam.Schema.LookupModel.UI.Wizards
 {
@@ -67,6 +68,7 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.FieldLookup);
             stackPage.Push(PagesList.StartPage);
 
@@ -275,5 +277,42 @@ namespace Origam.Schema.LookupModel.UI.Wizards
             GeneratedModelElements.Add(table);
             return table;
         }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create lookup with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Lookup Entity Name: \t\t");
+            richTextBoxSummary.AppendText(createFieldWith.NameFieldName);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Caption: \t\t\t");
+            richTextBoxSummary.AppendText(createFieldWith.LookupCaption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Allow nulls: \t\t\t");
+            richTextBoxSummary.AppendText(createFieldWith.AllowNulls.ToString());
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Two-column: \t\t\t");
+            richTextBoxSummary.AppendText(createFieldWith.TwoColumns.ToString()); 
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Name Field Name: \t\t");
+            richTextBoxSummary.AppendText(createFieldWith.NameFieldName);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Name Field Name Caption: \t");
+            richTextBoxSummary.AppendText(createFieldWith.NameFieldCaption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Initial Values:");
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("\t\tName\t\tDefault");
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            foreach (var row in createFieldWith.InitialValues)
+            {
+                richTextBoxSummary.AppendText("\t\t" + row.Name+"\t\t"+row.IsDefault.ToString());
+                richTextBoxSummary.AppendText(Environment.NewLine);
+            }
+        }
     }
 }
+

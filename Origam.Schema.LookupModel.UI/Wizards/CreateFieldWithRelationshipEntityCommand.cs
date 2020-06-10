@@ -71,6 +71,7 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.FieldEntity);
             stackPage.Push(PagesList.StartPage);
 
@@ -98,12 +99,7 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 
         public override void Execute()
         {
-            FieldMappingItem baseField = Owner as FieldMappingItem;
-            IDataEntity baseEntity = Owner as IDataEntity;
-            if (baseField != null)
-            {
-                baseEntity = baseField.ParentItem as IDataEntity;
-            }
+            IDataEntity baseEntity = GetIDataEntity();
             // 1. entity
             TableMappingItem table = (TableMappingItem)baseEntity;
             GeneratedModelElements.Add(table);
@@ -113,9 +109,46 @@ namespace Origam.Schema.LookupModel.UI.Wizards
                 (AbstractDataEntityColumn)wizardForm.RelatedEntityFieldSelect, true,wizardForm.LookupKeyName);
             GeneratedModelElements.Add(relation);
         }
+
+        private IDataEntity GetIDataEntity()
+        {
+            FieldMappingItem baseField = Owner as FieldMappingItem;
+            IDataEntity baseEntity = Owner as IDataEntity;
+            if (baseField != null)
+            {
+                baseEntity = baseField.ParentItem as IDataEntity;
+            }
+            return baseEntity;
+        }
+
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Table: \t\t\t");
+            richTextBoxSummary.AppendText(GetIDataEntity().Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Parent Child:");
+            richTextBoxSummary.AppendText("\t\t" + wizardForm.ParentChildCheckbox.ToString());
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Related Entity:");
+            richTextBoxSummary.AppendText("\t\t" + ((IDataEntity)wizardForm.RelatedEntity).Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Lookup Key Name:");
+            richTextBoxSummary.AppendText("\t" + wizardForm.LookupKeyName);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Base Entity Field:");
+            richTextBoxSummary.AppendText("\t\t" + wizardForm.BaseEntityFieldSelect.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Related Entity Field:");
+            richTextBoxSummary.AppendText("\t" + wizardForm.RelatedEntityFieldSelect.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
         }
     }
 }

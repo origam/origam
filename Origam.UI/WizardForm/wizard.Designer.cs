@@ -696,7 +696,7 @@ namespace Origam.UI.WizardForm
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(101, 15);
             this.label7.TabIndex = 3;
-            this.label7.Text = "RelatedEntityFiled";
+            this.label7.Text = "RelatedEntityField";
             // 
             // label8
             // 

@@ -42,7 +42,7 @@ namespace Origam.Gui.Win.Wizards
 	public class CreatePanelFromEntityCommand : AbstractMenuCommand
 	{
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ScreenWizardForm wizardForm;
+        ScreenWizardForm screenwizardForm;
         PanelControlSet panel;
 
         public override bool IsEnabled
@@ -67,6 +67,7 @@ namespace Origam.Gui.Win.Wizards
             
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
@@ -74,7 +75,7 @@ namespace Origam.Gui.Win.Wizards
             }
             stackPage.Push(PagesList.StartPage);
 
-            wizardForm = new ScreenWizardForm
+            screenwizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
                 Title = ResourceUtils.GetString("CreatePanelFromEntityWizardTitle"),
@@ -90,7 +91,7 @@ namespace Origam.Gui.Win.Wizards
                 Command = this
             };
 
-            Wizard wiz = new Wizard(wizardForm);
+            Wizard wiz = new Wizard(screenwizardForm);
             if (wiz.ShowDialog() == DialogResult.OK)
             {
                 EditSchemaItem edit = new EditSchemaItem
@@ -109,14 +110,31 @@ namespace Origam.Gui.Win.Wizards
         public override void Execute()
         {
             string groupName = null;
-            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+            if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
 
-            panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames,wizardForm.NameOfEntity);
+            panel = GuiHelper.CreatePanel(groupName, screenwizardForm.Entity, screenwizardForm.SelectedFieldNames,screenwizardForm.NameOfEntity);
             GeneratedModelElements.Add(panel);
         }
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Datastructure: \t\t");
+            richTextBoxSummary.AppendText(screenwizardForm.NameOfEntity);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List of fields:");
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            foreach (DictionaryEntry row in screenwizardForm.SelectedFieldNames)
+            {
+                richTextBoxSummary.AppendText("\t" + row.Key);
+                richTextBoxSummary.AppendText(Environment.NewLine);
+            }
         }
     }
 }
