@@ -59,6 +59,7 @@ namespace Origam.Schema.LookupModel.UI.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.LookupForm);
             stackPage.Push(PagesList.StartPage);
 
@@ -98,6 +99,26 @@ namespace Origam.Schema.LookupModel.UI.Wizards
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create lookup with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Name: \t\t");
+            richTextBoxSummary.AppendText(lookupForm.LookupName);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Display Field: \t");
+            richTextBoxSummary.AppendText(lookupForm.NameColumn.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List Filter: \t");
+            richTextBoxSummary.AppendText(lookupForm.ListFilter==null?"none": lookupForm.ListFilter.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Id Filter: \t\t");
+            richTextBoxSummary.AppendText(lookupForm.IdFilter.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
         }
     }
 }

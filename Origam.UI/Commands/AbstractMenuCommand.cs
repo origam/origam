@@ -159,6 +159,12 @@ namespace Origam.UI
         {
             return 0;
         }
+
+        public virtual void SetSummaryText(object summary)
+        {
+            RichTextBox box = (RichTextBox)summary;
+            box.Text = "Not implemented";
+        }
         #endregion
     }
 }

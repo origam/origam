@@ -105,5 +105,16 @@ namespace Origam.Schema.EntityModel.UI.Wizards
         {
             return _schemaBrowser.ImageIndex(icon);
         }
+
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "";
+            richTextBoxSummary.AppendText("");
+            richTextBoxSummary.AppendText("Create Data Structure: ");
+            richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+            richTextBoxSummary.AppendText(structureForm.NameOfEntity);
+            richTextBoxSummary.AppendText("");
+        }
     }
 }

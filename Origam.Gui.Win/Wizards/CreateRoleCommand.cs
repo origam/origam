@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Drawing;
 using System.Windows.Forms;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.MenuModel;
@@ -86,6 +87,20 @@ namespace Origam.Gui.Win.Wizards
 		public override int GetImageIndex(string icon)
 		{
 			return _schemaBrowser.ImageIndex(icon);
+		}
+
+		public override void SetSummaryText(object summary)
+		{
+			RichTextBox richTextBoxSummary = (RichTextBox)summary;
+			richTextBoxSummary.Text = "";
+			richTextBoxSummary.AppendText("");
+			richTextBoxSummary.AppendText("Create Role ");
+			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+			richTextBoxSummary.AppendText(roleForm.Roles);
+			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Regular);
+			richTextBoxSummary.AppendText(" for ");
+			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Italic);
+			richTextBoxSummary.AppendText(roleForm.NameOfMenu);
 		}
 	}
 }

@@ -309,7 +309,7 @@ namespace Origam.UI.WizardForm
         {
             SetPageTitle(sender);
             this.aerowizard1.NextButtonText = "Start";
-            SetSummaryText();
+            iwizard.Command.SetSummaryText(richTextBoxSummary);
             GetNextPage(PagesList.SummaryPage, sender);
         }
 
@@ -531,32 +531,6 @@ namespace Origam.UI.WizardForm
                 this.label1.Text = "";
             }
         }
-
-        private void SetSummaryText()
-        {
-            if (iwizard is StructureForm structureForm)
-            {
-                richTextBoxSummary.Text = "";
-                richTextBoxSummary.AppendText("");
-                richTextBoxSummary.AppendText("Create Data Structure: ");
-                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
-                richTextBoxSummary.AppendText(structureForm.NameOfEntity);
-                richTextBoxSummary.AppendText("");
-            }
-            if (iwizard is RoleForm roleForm)
-            {
-                richTextBoxSummary.Text = "";
-                richTextBoxSummary.AppendText("");
-                richTextBoxSummary.AppendText("Create Role ");
-                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
-                richTextBoxSummary.AppendText(roleForm.Roles);
-                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Regular);
-                richTextBoxSummary.AppendText(" for ");
-                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Italic);
-                richTextBoxSummary.AppendText(roleForm.NameOfMenu);
-            }
-        }
-
     }
     #endregion
 }

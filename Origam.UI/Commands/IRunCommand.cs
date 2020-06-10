@@ -18,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using Origam.UI.WizardForm;
-using System.Windows.Forms;
 
 namespace Origam.UI.Commands
 {
@@ -27,5 +25,6 @@ namespace Origam.UI.Commands
     {
         void Execute();
         int GetImageIndex(string icon);
+        void SetSummaryText(object summary);
     }
 }
