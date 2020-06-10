@@ -113,15 +113,14 @@ namespace Origam.ServerCommon.Pages
             {
                 parameters.Add(keyValuePair.Key, keyValuePair.Value);
             }
-
-            if (request.ContentType != null)
+            if ((request.ContentType != null) 
+            && (request.ContentType != "application/json"))
             {
                 foreach (var keyValuePair in request.Form)
                 {
                     parameters.Add(keyValuePair.Key, keyValuePair.Value);
                 }
             }
-
             return new Parameters(parameters);
         }
     }
