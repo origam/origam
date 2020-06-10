@@ -76,12 +76,14 @@ namespace Origam.UI.WizardForm
             lstFields.CheckOnClick = screenWizard.checkOnClick;
             lblRole.Visible = screenWizard.IsRoleVisible;
             txtRole.Visible = screenWizard.IsRoleVisible;
+            txtRole.Text = screenWizard.Role;
         }
 
         private void ScreenFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
             screenWizard.SelectedFields = lstFields.CheckedItems;
+            screenWizard.Role = txtRole.Text;
             IsFinish(sender, e);
         }
 

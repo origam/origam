@@ -169,6 +169,7 @@ namespace Origam.Gui.Win.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
@@ -223,6 +224,32 @@ namespace Origam.Gui.Win.Wizards
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Datastructure: \t");
+            richTextBoxSummary.AppendText(wizardForm.NameOfEntity);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Menu: \t\t");
+            richTextBoxSummary.AppendText(wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
+                ? wizardForm.NameOfEntity : wizardForm.Entity.Caption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Role: \t\t");
+            richTextBoxSummary.AppendText(wizardForm.Role);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List of fields:");
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            foreach (DictionaryEntry row in wizardForm.SelectedFieldNames)
+            {
+                richTextBoxSummary.AppendText("\t" + row.Key);
+                richTextBoxSummary.AppendText(Environment.NewLine);
+            }
         }
     }
 
