@@ -588,13 +588,13 @@ namespace Origam.UI.WizardForm
             // 
             // colText
             // 
-            this.colText.Text = "Task";
-            this.colText.Width = 405;
+            this.colText.Text = "Found In";
+            this.colText.Width = 301;
             // 
             // colStatus
             // 
-            this.colStatus.Text = "Status";
-            this.colStatus.Width = 124;
+            this.colStatus.Text = "Type";
+            this.colStatus.Width = 228;
             // 
             // RelationShipEntityPage
             // 
@@ -627,7 +627,7 @@ namespace Origam.UI.WizardForm
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(5, 61);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 15);
+            this.label6.Size = new System.Drawing.Size(34, 15);
             this.label6.TabIndex = 28;
             this.label6.Text = "Table";
             // 
@@ -696,7 +696,7 @@ namespace Origam.UI.WizardForm
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(101, 15);
             this.label7.TabIndex = 3;
-            this.label7.Text = "RelatedEntityFiled";
+            this.label7.Text = "RelatedEntityField";
             // 
             // label8
             // 

@@ -29,11 +29,9 @@ using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.MenuModel;
-using Origam.Services;
 using Origam.UI;
 using Origam.UI.WizardForm;
 using Origam.Workbench;
-using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Wizards
 {
@@ -43,7 +41,7 @@ namespace Origam.Gui.Win.Wizards
     public class CreateFormFromEntityCommand : AbstractMenuCommand
 	{
         SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
-        ScreenWizardForm wizardForm;
+        ScreenWizardForm screenwizardForm;
         public override bool IsEnabled
 		{
 			get
@@ -69,6 +67,7 @@ namespace Origam.Gui.Win.Wizards
             
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
@@ -76,7 +75,7 @@ namespace Origam.Gui.Win.Wizards
             }
             stackPage.Push(PagesList.StartPage);
 
-            wizardForm = new ScreenWizardForm
+            screenwizardForm = new ScreenWizardForm
             {
                 ItemTypeList = list,
                 Title = ResourceUtils.GetString("ScreenWizardTitle"),
@@ -92,7 +91,7 @@ namespace Origam.Gui.Win.Wizards
                 Command = this
             };
 
-            Wizard wiz = new Wizard(wizardForm);
+            Wizard wiz = new Wizard(screenwizardForm);
             if (wiz.ShowDialog() != DialogResult.OK)
             {
                 GeneratedModelElements.Clear();
@@ -102,14 +101,35 @@ namespace Origam.Gui.Win.Wizards
         public override void Execute()
         {
             string groupName = null;
-            if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
+            if (screenwizardForm.Entity.Group != null) groupName = screenwizardForm.Entity.Group.Name;
 
-            DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
+            DataStructure dataStructure = EntityHelper.CreateDataStructure(screenwizardForm.Entity, screenwizardForm.NameOfEntity, true);
             GeneratedModelElements.Add(dataStructure);
-            PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames, wizardForm.NameOfEntity);
+            PanelControlSet panel = GuiHelper.CreatePanel(groupName, screenwizardForm.Entity, screenwizardForm.SelectedFieldNames, screenwizardForm.NameOfEntity);
             GeneratedModelElements.Add(panel);
             FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
             GeneratedModelElements.Add(form);
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Datastructure: \t\t");
+            richTextBoxSummary.AppendText(screenwizardForm.NameOfEntity);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List of fields:");
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            foreach (DictionaryEntry row in screenwizardForm.SelectedFieldNames)
+            {
+                richTextBoxSummary.AppendText("\t" + row.Key);
+                richTextBoxSummary.AppendText(Environment.NewLine);
+            }
         }
     }
 
@@ -149,6 +169,7 @@ namespace Origam.Gui.Win.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ScreenForm);
             if (listdsName.Any(name => name == (Owner as IDataEntity).Name))
             {
@@ -198,6 +219,36 @@ namespace Origam.Gui.Win.Wizards
             {
                 ServiceCommandUpdateScriptActivity activity = CreateRole(wizardForm.Role);
                 GeneratedModelElements.Add(activity);
+            }
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Datastructure: \t");
+            richTextBoxSummary.AppendText(wizardForm.NameOfEntity);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Menu: \t\t");
+            richTextBoxSummary.AppendText(wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
+                ? wizardForm.NameOfEntity : wizardForm.Entity.Caption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Role: \t\t");
+            richTextBoxSummary.AppendText(wizardForm.Role);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List of fields:");
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            foreach (DictionaryEntry row in wizardForm.SelectedFieldNames)
+            {
+                richTextBoxSummary.AppendText("\t" + row.Key);
+                richTextBoxSummary.AppendText(Environment.NewLine);
             }
         }
     }
@@ -267,6 +318,10 @@ namespace Origam.Gui.Win.Wizards
             edit.Owner = form;
             edit.Run();
         }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
     }
 
         public class CreateMenuFromFormCommand : AbstractMenuCommand
@@ -328,7 +383,11 @@ namespace Origam.Gui.Win.Wizards
                 GeneratedModelElements.Add(activity);
             }
         }
-}
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+    }
 
 	public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
 	{
@@ -388,6 +447,10 @@ namespace Origam.Gui.Win.Wizards
                 ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
                 GeneratedModelElements.Add(activity);
             }
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 
@@ -449,6 +512,10 @@ namespace Origam.Gui.Win.Wizards
                 ServiceCommandUpdateScriptActivity activity = CreateRole(menuFrom.Role);
                 GeneratedModelElements.Add(activity);
             }
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }

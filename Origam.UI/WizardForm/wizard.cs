@@ -29,6 +29,9 @@ namespace Origam.UI.WizardForm
             listView1.View = View.List;
             listView1.SmallImageList = iwizard.ImageList;
             listView1.StateImageList = iwizard.ImageList;
+            progresslistview.SmallImageList = iwizard.ImageList;
+            progresslistview.StateImageList = iwizard.ImageList;
+
         }
 
 
@@ -73,12 +76,14 @@ namespace Origam.UI.WizardForm
             lstFields.CheckOnClick = screenWizard.checkOnClick;
             lblRole.Visible = screenWizard.IsRoleVisible;
             txtRole.Visible = screenWizard.IsRoleVisible;
+            txtRole.Text = screenWizard.Role;
         }
 
         private void ScreenFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
             screenWizard.SelectedFields = lstFields.CheckedItems;
+            screenWizard.Role = txtRole.Text;
             IsFinish(sender, e);
         }
 
@@ -87,7 +92,7 @@ namespace Origam.UI.WizardForm
             SetPageTitle(sender);
             LookupForm form = (LookupForm)iwizard;
             form.SetUpForm(cboIdFilter, cboListFilter, cboDisplayField, txtName);
-            GetNextPage(PagesList.StructureNamePage, sender);
+            GetNextPage(PagesList.LookupForm, sender);
         }
 
         private void LookupFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -173,11 +178,18 @@ namespace Origam.UI.WizardForm
             try
             {
                 iwizard.Command.Execute();
-                foreach(ListViewItem listView in iwizard.ItemTypeList)
+                AbstractSchemaItem[] results = ((AbstractMenuCommand)iwizard.Command).GeneratedModelElements.ToArray();
+                ListViewItem[] resultListItems = new ListViewItem[results.LongLength];
+                for (int i = 0; i < results.LongLength; i++)
                 {
-                    progresslistview.Items.Add(new ListViewItem(new string[] { listView.Text, "OK" }));
-                }
-             }
+                    AbstractSchemaItem item = results[i];
+                        ListViewItem newItem = new ListViewItem(new string[] { item.Path, item.ModelDescription() })
+                        {
+                            ImageIndex = iwizard.Command.GetImageIndex(item.RootItem.Icon)
+                        };
+                        progresslistview.Items.Add(newItem);
+                 }
+            }
             catch (Exception ex)
             {
                 tbProgres.Text = ex.Message;
@@ -204,6 +216,7 @@ namespace Origam.UI.WizardForm
         {
             CreateFieldWithRelationshipEntityWizardForm wizardForm = (CreateFieldWithRelationshipEntityWizardForm)iwizard;
             wizardForm.LookupName = txtRelationName.Text;
+            wizardForm.LookupKeyName = txtKeyName.Text;
 
             if (wizardForm.LookupName == ""
                 || wizardForm.RelatedEntity == null
@@ -298,7 +311,7 @@ namespace Origam.UI.WizardForm
         {
             SetPageTitle(sender);
             this.aerowizard1.NextButtonText = "Start";
-            SetSummaryText();
+            iwizard.Command.SetSummaryText(richTextBoxSummary);
             GetNextPage(PagesList.SummaryPage, sender);
         }
 
@@ -520,21 +533,6 @@ namespace Origam.UI.WizardForm
                 this.label1.Text = "";
             }
         }
-
-        private void SetSummaryText()
-        {
-            if(iwizard is StructureForm)
-            {
-                StructureForm structureForm = (StructureForm)iwizard;
-                richTextBoxSummary.Text = "";
-                richTextBoxSummary.AppendText("");
-                richTextBoxSummary.AppendText("Create Data Structure: ");
-                richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
-                richTextBoxSummary.AppendText(structureForm.NameOfEntity);
-                richTextBoxSummary.AppendText("");
-            }
-        }
-
     }
     #endregion
 }

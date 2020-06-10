@@ -19,12 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.UI.Commands
+namespace Origam.UI.WizardForm
 {
-    public interface IRunCommand
+    public class RoleForm : AbstractWizardForm
     {
-        void Execute();
-        int GetImageIndex(string icon);
-        void SetSummaryText(object summary);
+        public string Roles { get; set; }
+        public string NameOfMenu { get; set; }
     }
 }

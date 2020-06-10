@@ -84,12 +84,22 @@ namespace Origam.Schema.EntityModel.UI.Wizards
                 cmd.Owner = fk;
                 cmd.Run();
             }
+            else
+            {
+                GeneratedModelElements.Clear();
+            }
 		}
         public override void Execute()
         {
             fk = EntityHelper.CreateForeignKey(
                     keyForm.ForeignKeyName, keyForm.Caption, keyForm.AllowNulls, keyForm.MasterEntity,
                     keyForm.ForeignEntity, keyForm.ForeignField, keyForm.Lookup, false);
+            GeneratedModelElements.Add(fk);
+        }
+
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }

@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Origam.Services;
@@ -99,5 +100,21 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             DataStructure ds = EntityHelper.CreateDataStructure(Owner as IDataEntity, structureForm.NameOfEntity, true);
             GeneratedModelElements.Add(ds);
         }
-	}
+
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "";
+            richTextBoxSummary.AppendText("");
+            richTextBoxSummary.AppendText("Create Data Structure: ");
+            richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+            richTextBoxSummary.AppendText(structureForm.NameOfEntity);
+            richTextBoxSummary.AppendText("");
+        }
+    }
 }

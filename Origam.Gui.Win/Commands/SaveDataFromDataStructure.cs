@@ -25,6 +25,7 @@ using System.Windows.Forms;
 using Origam.DA;
 using Origam.Schema.EntityModel;
 using Origam.UI;
+using Origam.Workbench;
 using Origam.Workbench.Services;
 
 namespace Origam.Gui.Win.Commands
@@ -32,6 +33,7 @@ namespace Origam.Gui.Win.Commands
     public class SaveDataFromDataStructure : AbstractMenuCommand
     {
         WorkbenchSchemaService _schemaService = ServiceManager.Services.GetService(typeof(WorkbenchSchemaService)) as WorkbenchSchemaService;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
         IServiceAgent _dataServiceAgent;
 
         public override bool IsEnabled
@@ -112,6 +114,9 @@ namespace Origam.Gui.Win.Commands
             _schemaService = null;
             _dataServiceAgent = null;
         }
-
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
     }
 }

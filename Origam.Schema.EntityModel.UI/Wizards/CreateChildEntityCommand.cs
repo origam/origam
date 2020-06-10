@@ -100,6 +100,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             DataEntityIndex index = newEntity.NewItem(typeof(DataEntityIndex), _schema.ActiveSchemaExtensionId, null) as DataEntityIndex;
             index.Name = "ix_" + entity1.Name;
             index.Persist();
+            GeneratedModelElements.Add(index);
             // Create relation from the parent entity
             EntityRelationItem parentRelation = EntityHelper.CreateRelation(entity1, newEntity, true, true);
             GeneratedModelElements.Add(parentRelation);
@@ -136,6 +137,10 @@ namespace Origam.Schema.EntityModel.UI.Wizards
             }
             newEntity.Persist();
             (entity1 as AbstractSchemaItem).Persist();
+        }
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
         }
     }
 }
