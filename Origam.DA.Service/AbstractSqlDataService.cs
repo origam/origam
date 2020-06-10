@@ -1665,13 +1665,14 @@ namespace Origam.DA.Service
 			        var values = new KeyValuePair<string, object>[queryColumns.Count];
 			        for (int i = 0; i < queryColumns.Count; i++)
 			        {
-				        if (queryColumns[i].IsVirtual)
+				        ColumnData queryColumn = queryColumns[i];
+				        if (queryColumn.IsVirtual && !queryColumn.HasRelation)
 				        {
 					        continue;
 				        }
-				        object value = reader.GetValue(reader.GetOrdinal(queryColumns[i].Name));
+				        object value = reader.GetValue(reader.GetOrdinal(queryColumn.Name));
 				        values[i] = new KeyValuePair<string, object>(
-					        queryColumns[i].Name , value);
+					        queryColumn.Name , value);
 			        }
 			        yield return detachedFieldPacker.ProcessReaderOutput(
 				        values, queryColumns);
