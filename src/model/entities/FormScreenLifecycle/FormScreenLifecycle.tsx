@@ -33,10 +33,9 @@ import {IAggregationInfo} from "../types/IAggregationInfo";
 import {SCROLL_ROW_CHUNK} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {IQueryInfo, processActionQueryInfo} from "model/actions/Actions/processActionQueryInfo";
 import {assignIIds} from "xmlInterpreters/xmlUtils";
-import {IOrdering} from "../types/IOrderingConfiguration";
+import {IOrderByDirection, IOrdering} from "../types/IOrderingConfiguration";
 import {getOrderingConfiguration} from "../../selectors/DataView/getOrderingConfiguration";
 import {getFilterConfiguration} from "../../selectors/DataView/getFilterConfiguration";
-import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
 import {getUserFilters} from "../../selectors/DataView/getUserFilters";
 import {getUserOrdering} from "../../selectors/DataView/getUserOrdering";
 
@@ -313,13 +312,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   loadChildGroups(rootDataView: IDataView, filter: string, groupByColumn: string,
                   aggregations: IAggregationInfo[] | undefined, lookupId: string | undefined){
+    const ordering = {
+      columnId: groupByColumn,
+      direction: IOrderByDirection.ASC,
+      lookupId: lookupId
+    };
     const api = getApi(this);
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: filter,
-      Ordering: [],
+      Ordering: [ordering],
       RowLimit: 999999,
       GroupBy: groupByColumn,
       GroupByLookupId: lookupId,
@@ -330,12 +334,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   loadGroups(rootDataView: IDataView, groupBy: string, groupByLookupId: string | undefined, aggregations: IAggregationInfo[] | undefined){
     const api = getApi(this);
+    const ordering = {
+      columnId: groupBy,
+      direction: IOrderByDirection.ASC,
+      lookupId: groupByLookupId
+    };
+
     return api.getGroups({
       MenuId: getMenuItemId(rootDataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: "",
-      Ordering: [],
+      Ordering: [ordering],
       RowLimit: 999999,
       GroupBy: groupBy,
       GroupByLookupId: groupByLookupId,

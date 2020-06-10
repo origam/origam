@@ -203,7 +203,7 @@ export interface IApi {
     MenuId: string
     DataStructureEntityId: string,
     Filter: string | undefined,
-    Ordering: string[] | undefined,
+    Ordering: IOrdering[];
     RowLimit: number,
     GroupBy: string,
     MasterRowId: string | undefined,
