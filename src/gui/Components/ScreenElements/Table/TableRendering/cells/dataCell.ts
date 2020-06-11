@@ -15,7 +15,7 @@ import {
   clipCell,
   cellPaddingLeft,
   topTextOffset,
-  fontSize
+  fontSize, cellPaddingLeftFirstCell
 } from "./cellsCommon";
 import { CPR } from "utils/canvas";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
@@ -133,7 +133,7 @@ function drawCellValue(){
           }
           ctx2d.fillText(
             momentValue.format(currentProperty().formatterPattern),
-            CPR * (currentColumnLeft() + cellPaddingLeft),
+            CPR * (currentColumnLeft() + getPaddingLeft()),
             CPR * (currentRowTop() + topTextOffset));
         }
         break;
@@ -145,7 +145,7 @@ function drawCellValue(){
         }
         if (currentCellText() !== null) {
           ctx2d.fillText("" + currentCellText()!,                   
-            CPR * (currentColumnLeft() + cellPaddingLeft),
+            CPR * (currentColumnLeft() + getPaddingLeft()),
             CPR * (currentRowTop() + topTextOffset));
         }
         if (isLink) {
@@ -167,7 +167,7 @@ function drawCellValue(){
           if (!currentProperty().isPassword) {
             ctx2d.fillText(
               "" + currentCellText()!,
-              CPR * (currentColumnLeft() + cellPaddingLeft),
+              CPR * (currentColumnLeft() + getPaddingLeft()),
               CPR * (currentRowTop() + topTextOffset));
           } else {
             ctx2d.fillText("*******", numberCellPaddingLeft() * CPR, 15 * CPR);
@@ -175,6 +175,13 @@ function drawCellValue(){
         }
     }
   }
+}
+
+function getPaddingLeft(){
+  const number = drawingColumnIndex();
+  return drawingColumnIndex() === 0
+    ? cellPaddingLeftFirstCell
+    : cellPaddingLeft
 }
 
 function getUnderLineColor() { return "#e5e5e5"; }
