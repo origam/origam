@@ -314,10 +314,10 @@ namespace Origam.UI.WizardForm
         private void SummaryPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
             SetPageTitle(sender);
-            this.aerowizard1.NextButtonText = "Start";
             iwizard.Command.SetSummaryText(richTextBoxSummary);
             richTextBoxSummary.BackColor = Color.White;
             GetNextPage(PagesList.SummaryPage, sender);
+            this.aerowizard1.NextButtonText = "Start";
         }
 
         private void SummaryPage_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -388,6 +388,7 @@ namespace Origam.UI.WizardForm
         }
         private void GetNextPage(PagesList actualPage, object sender)
         {
+            this.aerowizard1.NextButtonText = "Next";
             WizardPage wizardPage = (WizardPage)sender;
             bool findPage = false;
             foreach (PagesList pglist in iwizard.Pages)
