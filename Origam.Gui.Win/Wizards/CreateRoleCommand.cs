@@ -92,7 +92,7 @@ namespace Origam.Gui.Win.Wizards
 		public override void SetSummaryText(object summary)
 		{
 			RichTextBox richTextBoxSummary = (RichTextBox)summary;
-			richTextBoxSummary.Text = "";
+			richTextBoxSummary.Text = "This Wizard create Role with this parameters:";
 			richTextBoxSummary.AppendText("");
 			richTextBoxSummary.AppendText("Create Role ");
 			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);

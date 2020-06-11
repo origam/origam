@@ -59,6 +59,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ForeignForm);
             stackPage.Push(PagesList.StartPage);
 
@@ -100,6 +101,33 @@ namespace Origam.Schema.EntityModel.UI.Wizards
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = ResourceUtils.GetString("CreateForeignKeyWizardDescription") + " with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Master Entity: \t");
+            richTextBoxSummary.AppendText(keyForm.MasterEntity.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Foreign Entity: \t");
+            richTextBoxSummary.AppendText(keyForm.ForeignEntity.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Foreign Field: \t");
+            richTextBoxSummary.AppendText(keyForm.ForeignField.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Foreign Key: \t");
+            richTextBoxSummary.AppendText(keyForm.ForeignKeyName);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Lookup: \t\t");
+            richTextBoxSummary.AppendText(keyForm.Lookup.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Caption : \t");
+            richTextBoxSummary.AppendText(keyForm.Caption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Allow null : \t");
+            richTextBoxSummary.AppendText(keyForm.AllowNulls.ToString());
         }
     }
 }

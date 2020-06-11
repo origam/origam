@@ -89,9 +89,6 @@
     <Content Include="assets\identity\js\signin-redirect.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="assets\identity\js\signout-redirect.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="assets\identity\js\svg-load.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -63,7 +63,7 @@ namespace Origam.DA.Service
             {
                 if (columnData[i].IsVirtual)
                 {
-                    if (columnData[i].HasRelation && values[i].Value != null)
+                    if (columnData[i].HasRelation && values[i].Value != null && values[i].Value != DBNull.Value)
                     {
                         updatedValues.Add(new KeyValuePair<string, object>(
                             values[i].Key, ((string) values[i].Value).Split((char) 1)));

@@ -34,7 +34,10 @@ namespace Origam.DA.Service_net2Tests
     {
         [TestCase(
             "[\"name\",\"gt\",\"John Doe\"]",
-            "([name] > 'John Doe')")]
+            "([name] > 'John Doe')")]        
+        [TestCase(
+            "[\"name\",\"gt\",\"John, Doe\"]",
+            "([name] > 'John, Doe')")]
         [TestCase(
             "[\"name\",\"starts\",\"John Doe\"]",
             "([name] LIKE 'John Doe%')")]

@@ -76,12 +76,14 @@ namespace Origam.UI.WizardForm
             lstFields.CheckOnClick = screenWizard.checkOnClick;
             lblRole.Visible = screenWizard.IsRoleVisible;
             txtRole.Visible = screenWizard.IsRoleVisible;
+            txtRole.Text = screenWizard.Role;
         }
 
         private void ScreenFormPage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
             screenWizard.SelectedFields = lstFields.CheckedItems;
+            screenWizard.Role = txtRole.Text;
             IsFinish(sender, e);
         }
 
@@ -90,6 +92,10 @@ namespace Origam.UI.WizardForm
             SetPageTitle(sender);
             LookupForm form = (LookupForm)iwizard;
             form.SetUpForm(cboIdFilter, cboListFilter, cboDisplayField, txtName);
+            txtName.Text = form.LookupName;
+            cboDisplayField.SelectedItem = form.NameColumn;
+            cboIdFilter.SelectedItem = form.IdFilter;
+            cboListFilter.SelectedItem = form.ListFilter;
             GetNextPage(PagesList.LookupForm, sender);
         }
 
@@ -308,9 +314,10 @@ namespace Origam.UI.WizardForm
         private void SummaryPage_Initialize(object sender, WizardPageInitEventArgs e)
         {
             SetPageTitle(sender);
-            this.aerowizard1.NextButtonText = "Start";
             iwizard.Command.SetSummaryText(richTextBoxSummary);
+            richTextBoxSummary.BackColor = Color.White;
             GetNextPage(PagesList.SummaryPage, sender);
+            this.aerowizard1.NextButtonText = "Start";
         }
 
         private void SummaryPage_Commit(object sender, WizardPageConfirmEventArgs e)
@@ -362,10 +369,13 @@ namespace Origam.UI.WizardForm
          private void CboDisplayField_SelectedIndexChanged(object sender, EventArgs e)
         {
             LookupForm form = (LookupForm)iwizard;
-            var selectName = (cboDisplayField.SelectedItem as IDataEntityColumn).Name;
-            if (selectName != "Name")
+            if (cboDisplayField.SelectedItem != null)
             {
-                this.txtName.Text = form.Entity.Name + "_" + selectName;
+                var selectName = (cboDisplayField.SelectedItem as IDataEntityColumn).Name;
+                if (selectName != "Name")
+                {
+                    this.txtName.Text = form.Entity.Name + "_" + selectName;
+                }
             }
         }
 
@@ -378,6 +388,7 @@ namespace Origam.UI.WizardForm
         }
         private void GetNextPage(PagesList actualPage, object sender)
         {
+            this.aerowizard1.NextButtonText = "Next";
             WizardPage wizardPage = (WizardPage)sender;
             bool findPage = false;
             foreach (PagesList pglist in iwizard.Pages)
