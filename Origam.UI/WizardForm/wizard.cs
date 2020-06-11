@@ -92,6 +92,10 @@ namespace Origam.UI.WizardForm
             SetPageTitle(sender);
             LookupForm form = (LookupForm)iwizard;
             form.SetUpForm(cboIdFilter, cboListFilter, cboDisplayField, txtName);
+            txtName.Text = form.LookupName;
+            cboDisplayField.SelectedItem = form.NameColumn;
+            cboIdFilter.SelectedItem = form.IdFilter;
+            cboListFilter.SelectedItem = form.ListFilter;
             GetNextPage(PagesList.LookupForm, sender);
         }
 
@@ -312,6 +316,7 @@ namespace Origam.UI.WizardForm
             SetPageTitle(sender);
             this.aerowizard1.NextButtonText = "Start";
             iwizard.Command.SetSummaryText(richTextBoxSummary);
+            richTextBoxSummary.BackColor = Color.White;
             GetNextPage(PagesList.SummaryPage, sender);
         }
 
@@ -364,10 +369,13 @@ namespace Origam.UI.WizardForm
          private void CboDisplayField_SelectedIndexChanged(object sender, EventArgs e)
         {
             LookupForm form = (LookupForm)iwizard;
-            var selectName = (cboDisplayField.SelectedItem as IDataEntityColumn).Name;
-            if (selectName != "Name")
+            if (cboDisplayField.SelectedItem != null)
             {
-                this.txtName.Text = form.Entity.Name + "_" + selectName;
+                var selectName = (cboDisplayField.SelectedItem as IDataEntityColumn).Name;
+                if (selectName != "Name")
+                {
+                    this.txtName.Text = form.Entity.Name + "_" + selectName;
+                }
             }
         }
 
