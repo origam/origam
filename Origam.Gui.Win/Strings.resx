@@ -514,7 +514,7 @@
     <value>Create Menu from Dataconstant Wizard</value>
   </data>
   <data name="CreateMenuFromFormWizardDescription" xml:space="preserve">
-    <value>This Wirzard create Menu Item from Entity.</value>
+    <value>This Wizard create Menu Item from Screen.</value>
   </data>
   <data name="CreateMenuFromFormWizardTitle" xml:space="preserve">
     <value>Create Menu from Form Command Wizard</value>

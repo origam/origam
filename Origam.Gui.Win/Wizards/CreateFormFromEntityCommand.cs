@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Office.Interop.Excel;
 using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
@@ -117,7 +118,7 @@ namespace Origam.Gui.Win.Wizards
         public override void SetSummaryText(object summary)
         {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
-            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.Text = "This Wizard create Screen from Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText("Datastructure: \t\t");
@@ -229,7 +230,7 @@ namespace Origam.Gui.Win.Wizards
         public override void SetSummaryText(object summary)
         {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
-            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.Text = "This Wizard create Menu from Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText("Datastructure: \t");
@@ -272,13 +273,16 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
             PanelControlSet panel = Owner as PanelControlSet;
-           
-            List<string> listdsName = GetListDatastructure(PanelControlSet.ItemTypeConst); 
+            DataStructure ds = new DataStructure();
+            FormControlSet frmSet = new FormControlSet();
+            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst); 
             ArrayList list = new ArrayList();
-            list.Add(new ListViewItem(panel.GetType().SchemaItemDescription().Name, panel.Icon));
+            list.Add(new ListViewItem(ds.GetType().SchemaItemDescription().Name, ds.Icon));
+            list.Add(new ListViewItem(frmSet.GetType().SchemaItemDescription().Name, frmSet.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             if (listdsName.Any(name => name == panel.Name))
             {
                 stackPage.Push(PagesList.StructureNamePage);
@@ -322,6 +326,18 @@ namespace Origam.Gui.Win.Wizards
         {
             return _schemaBrowser.ImageIndex(icon);
         }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Screen from ScreenSection with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Datastructure: \t");
+            richTextBoxSummary.AppendText(panelWizard.NameOfEntity);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Screen: \t\t");
+            richTextBoxSummary.AppendText(panelWizard.NameOfEntity);
+        }
     }
 
         public class CreateMenuFromFormCommand : AbstractMenuCommand
@@ -345,10 +361,12 @@ namespace Origam.Gui.Win.Wizards
             FormControlSet form = Owner as FormControlSet;
 
             ArrayList list = new ArrayList();
-            list.Add(new ListViewItem(form.GetType().SchemaItemDescription().Name, form.Icon));
+            FormReferenceMenuItem form1 = new FormReferenceMenuItem();
+            list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.MenuPage);
             stackPage.Push(PagesList.StartPage);
 
@@ -387,6 +405,19 @@ namespace Origam.Gui.Win.Wizards
         {
             return _schemaBrowser.ImageIndex(icon);
         }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Menu for Screen with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Menu: \t");
+            richTextBoxSummary.AppendText(menuFrom.Caption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Role: \t");
+            richTextBoxSummary.AppendText(menuFrom.Role);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+        }
     }
 
 	public class CreateMenuFromDataConstantCommand : AbstractMenuCommand
@@ -410,11 +441,12 @@ namespace Origam.Gui.Win.Wizards
 			DataConstant constant = Owner as DataConstant;
 
             ArrayList list = new ArrayList();
-            DataConstantReferenceMenuItem dataconstant = new DataConstantReferenceMenuItem();
-            list.Add(new ListViewItem(dataconstant.GetType().SchemaItemDescription().Name, dataconstant.Icon));
+            DataConstantReferenceMenuItem form1 = new DataConstantReferenceMenuItem();
+            list.Add(new ListViewItem(form1.GetType().SchemaItemDescription().Name, form1.Icon));
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.MenuPage);
             stackPage.Push(PagesList.StartPage);
 
@@ -452,6 +484,19 @@ namespace Origam.Gui.Win.Wizards
         {
             return _schemaBrowser.ImageIndex(icon);
         }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Menu for DataConstant with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Menu: \t");
+            richTextBoxSummary.AppendText(menuFrom.Caption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Role: \t");
+            richTextBoxSummary.AppendText(menuFrom.Role);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+        }
     }
 
 	public class CreateMenuFromSequentialWorkflowCommand : AbstractMenuCommand
@@ -480,6 +525,7 @@ namespace Origam.Gui.Win.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.MenuPage);
             stackPage.Push(PagesList.StartPage);
 
@@ -516,6 +562,19 @@ namespace Origam.Gui.Win.Wizards
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Menu for Workflow with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Menu: \t");
+            richTextBoxSummary.AppendText(menuFrom.Caption);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Role: \t");
+            richTextBoxSummary.AppendText(menuFrom.Role);
+            richTextBoxSummary.AppendText(Environment.NewLine);
         }
     }
 }

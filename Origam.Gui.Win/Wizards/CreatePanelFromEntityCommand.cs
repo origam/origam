@@ -122,7 +122,7 @@ namespace Origam.Gui.Win.Wizards
         public override void SetSummaryText(object summary)
         {
             RichTextBox richTextBoxSummary = (RichTextBox)summary;
-            richTextBoxSummary.Text = "This Wizard create Form from Entity with this parameters:";
+            richTextBoxSummary.Text = "This Wizard create Screen from Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText("Datastructure: \t\t");
