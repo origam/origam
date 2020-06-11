@@ -86,8 +86,7 @@ export interface IDataView extends IDataViewData {
   toggleSelectedRowId(id: string): void;
 
 
-  onFormPanelViewButtonClick(event: any): void;
-  onTablePanelViewButtonClick(event: any): void;
+
   
   selectNextRow(): void;
   selectPrevRow(): void;

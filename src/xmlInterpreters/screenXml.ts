@@ -388,7 +388,14 @@ export function interpretScreenXml(
     $dataView
       .register(
         IViewConfiguration,
-        () => new ViewConfiguration(saveColumnConfigurations(dv), () => dv.activePanelView)
+        () =>
+          new ViewConfiguration(
+            function* (perspectiveTag) {
+              dv.activePanelView = perspectiveTag as any;
+              yield* saveColumnConfigurations(dv)();
+            },
+            () => dv.activePanelView
+          )
       )
       .scopedInstance(SCOPE_DataView);
 
