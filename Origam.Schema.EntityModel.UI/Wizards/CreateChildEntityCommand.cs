@@ -66,6 +66,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ChildEntity);
             stackPage.Push(PagesList.StartPage);
 
@@ -141,6 +142,15 @@ namespace Origam.Schema.EntityModel.UI.Wizards
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = ResourceUtils.GetString("CreateChildEntityWizardDescription") + " with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Child Entity: \t");
+            richTextBoxSummary.AppendText(childEntityForm.EntityName);
         }
     }
 }
