@@ -160,93 +160,144 @@
     <value>Last updated by &lt;b&gt;{0}&lt;/b&gt; on &lt;b&gt;{1}&lt;/b&gt;</value>
   </data>
   <data name="RegistrationNotAllowed" xml:space="preserve">
-    <value>User registration is not allowed on this site.</value>
+    <value>Die Registration ist auf dieser Seite nicht erlaubt.</value>
   </data>
   <data name="AlreadySetUp" xml:space="preserve">
-    <value>The application has been already set up.</value>
+    <value>Die Applikation wurde schon installiert.</value>
   </data>
   <data name="InvalidLogin" xml:space="preserve">
-    <value>Invalid username or password</value>
+    <value>Ungültiger Benutzername oder Passwort</value>
   </data>
   <data name="UserLockedOut" xml:space="preserve">
-    <value>User is locked out</value>
+    <value>Der Benutzer ist gesperrt.</value>
   </data>
   <data name="ErrorUserNotFound" xml:space="preserve">
-    <value>User was not found</value>
+    <value>Der Benutzer wurde nicht gefunden.</value>
   </data>
   <data name="EmailInvalid" xml:space="preserve">
-    <value>Email is invalid</value>
+    <value>Ungültige E-Mailadresse</value>
   </data>
   <data name="StringTooShort" xml:space="preserve">
-    <value>The {0} must be at least {2} characters long.</value>
+    <value>{0} muss mindestens {2} Zeichen lang sein.</value>
   </data>
   <data name="AccountCreated" xml:space="preserve">
-    <value>New account has been created and activated.</value>
+    <value>Neues Konto wurde erstellt und aktiviert.</value>
   </data>
   <data name="ActivateAccount" xml:space="preserve">
-    <value>A new account has been created. Please click confirmation link in an email, we just sent you to activate the account.</value>
+    <value>Neues Konto wurde erstellt. Bitte klicken Sie den Link in Ihrer E-Mail um Ihr Konto zu aktivieren.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Stornieren</value>
   </data>
   <data name="CheckEmail" xml:space="preserve">
-    <value>Please check your email to reset your password.</value>
+    <value>Bitte überprüfen Sie Ihre E-Mail Adresse um Ihres Passwort zurückzusetzen.</value>
   </data>
   <data name="ConfirmationOk1" xml:space="preserve">
-    <value>Thank you for confirming your email. Please </value>
+    <value>Danke für die Bestätigung Ihrer E-Mail Adresse. Bitte </value>
   </data>
   <data name="ConfirmationOk2" xml:space="preserve">
-    <value>Click here to Log in</value>
+    <value>klicken Sie hier um sich anzumelden.</value>
   </data>
   <data name="ConfirmLogout" xml:space="preserve">
-    <value>Would you like to logout?</value>
+    <value>Möchten Sie sich abmelden?</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Erstellen</value>
   </data>
   <data name="CreateAccount" xml:space="preserve">
-    <value>Create a new account</value>
+    <value>Neues Konto erstellen</value>
   </data>
   <data name="EmailSent" xml:space="preserve">
-    <value>Please click confirmation link in the email we sent you to activate yout account.</value>
+    <value>Bitte klicken Sie den Link in Ihrer E-Mail um Ihr Konto zu aktivieren.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
-    <value>Origam Login</value>
+    <value>Origam Anmelden</value>
   </data>
   <data name="InvalidLoginRequest" xml:space="preserve">
-    <value>Invalid login request</value>
+    <value>Ungültige Anmeldeanforderung</value>
   </data>
   <data name="LocalLogin" xml:space="preserve">
-    <value>Origam Login</value>
+    <value>Lokal anmelden</value>
   </data>
   <data name="LoggedOut" xml:space="preserve">
-    <value>You are now logged out.</value>
+    <value>Sie sind jetzt abgemeldet.</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Login</value>
+    <value>Anmelden</value>
   </data>
   <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+    <value>Abmelden</value>
   </data>
   <data name="NoAccessToResource" xml:space="preserve">
-    <value>You do not have access to that resource.</value>
+    <value>Sie haben kein Zutritt zu diesem Mittel.</value>
   </data>
   <data name="NoLoginSchemes" xml:space="preserve">
-    <value>There are no login schemes configured for this client.</value>
+    <value>Keine Anmeldeschemen erstellt für diesen Kunden.</value>
   </data>
   <data name="RememberLogin" xml:space="preserve">
-    <value>Remember My Login</value>
+    <value>Meine Anmeldung speichern</value>
   </data>
   <data name="ResetPassword" xml:space="preserve">
-    <value>Reset Password</value>
+    <value>Passwort zurücksetzen</value>
   </data>
   <data name="ResetPasswordTitle" xml:space="preserve">
-    <value>Reset your password</value>
+    <value>Setzen Sie Ihr Passwort zurück.</value>
   </data>
   <data name="Submit" xml:space="preserve">
-    <value>Submit</value>
+    <value>Einreichen</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Ja</value>
+  </data>
+  <data name="ReturnToApplication1" xml:space="preserve">
+    <value>Klicken Sie</value>
+  </data>
+  <data name="ReturnToApplication2" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="ReturnToApplication3" xml:space="preserve">
+    <value>um zu der Applikation </value>
+  </data>
+  <data name="ReturnToApplication4" xml:space="preserve">
+    <value>zurückzukehren.</value>
+  </data>
+  <data name="ToLogin1" xml:space="preserve">
+    <value>Klicken Sie</value>
+  </data>
+  <data name="ToLogin2" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="ToLogin3" xml:space="preserve">
+    <value>um sich wieder anzumelden.</value>
+  </data>
+  <data name="ToResetPassword1" xml:space="preserve">
+    <value>Klicken Sie</value>
+  </data>
+  <data name="ToResetPassword2" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="ToResetPassword3" xml:space="preserve">
+    <value>um Ihres Passwort zurückzusetzen.</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Passwort bestätigen</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="ExternalLogin" xml:space="preserve">
+    <value>Extern Anmelden</value>
   </data>
 </root>
