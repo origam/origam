@@ -59,6 +59,7 @@ namespace Origam.Gui.Win.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ScreenForm);
             stackPage.Push(PagesList.StartPage);
 
@@ -93,6 +94,25 @@ namespace Origam.Gui.Win.Wizards
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = ResourceUtils.GetString("CreateWorkQueueClassFromEntityWizardDescription") + " with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Worqueue Entity : \t");
+            richTextBoxSummary.AppendText(wizardForm.Entity.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List of fields: \t\t");
+            foreach (DictionaryEntry row in wizardForm.SelectedFieldNames)
+            {
+                richTextBoxSummary.AppendText(row.Key.ToString());
+                richTextBoxSummary.AppendText(Environment.NewLine);
+                richTextBoxSummary.AppendText("\t\t\t");
+            }
         }
     }
 }

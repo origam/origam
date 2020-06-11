@@ -58,6 +58,7 @@ namespace Origam.Gui.Win.Wizards
 
             Stack stackPage = new Stack();
             stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
             stackPage.Push(PagesList.ScreenForm);
             stackPage.Push(PagesList.StartPage);
 
@@ -96,6 +97,15 @@ namespace Origam.Gui.Win.Wizards
         public override int GetImageIndex(string icon)
         {
             return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = ResourceUtils.GetString("CreateLanguageTranslationEntityWizardDescription") + " with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Language Entity: \t");
+            richTextBoxSummary.AppendText(string.Format("{0}_l10n", (wizardForm.Entity as TableMappingItem).Name));
         }
     }
 }
