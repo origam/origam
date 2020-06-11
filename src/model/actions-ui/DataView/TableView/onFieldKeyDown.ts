@@ -25,6 +25,7 @@ export function onFieldKeyDown(ctx: any) {
         }
         case "Enter": {
           getTablePanelView(ctx).setEditing(false);
+          yield* flushCurrentRowData(ctx)();
           if (event.shiftKey) {
             yield* selectPrevRow(ctx)();
           } else {
@@ -34,7 +35,6 @@ export function onFieldKeyDown(ctx: any) {
           getTablePanelView(ctx).triggerOnFocusTable();
           event.preventDefault();
           getTablePanelView(ctx).scrollToCurrentCell();
-          yield* flushCurrentRowData(ctx)();
           break;
         }
         case "F2":
