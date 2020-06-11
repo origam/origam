@@ -354,7 +354,9 @@ export function interpretScreenXml(
           (n) => n.name === "view" && n.parent.name === "defaultView"
         );
         defaultView.forEach((element) => {
-          dataViewInstance.activePanelView = element.attributes.id;
+          if (element.attributes.id.length <= 2) {
+            dataViewInstance.activePanelView = element.attributes.id;
+          }
         });
       });
 
