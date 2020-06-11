@@ -354,7 +354,9 @@ export function interpretScreenXml(
           (n) => n.name === "view" && n.parent.name === "defaultView"
         );
         defaultView.forEach((element) => {
-          dataViewInstance.activePanelView = element.attributes.id;
+          if (element.attributes.id.length <= 2) {
+            dataViewInstance.activePanelView = element.attributes.id;
+          }
         });
       });
 
@@ -386,7 +388,14 @@ export function interpretScreenXml(
     $dataView
       .register(
         IViewConfiguration,
-        () => new ViewConfiguration(saveColumnConfigurations(dv), () => dv.activePanelView)
+        () =>
+          new ViewConfiguration(
+            function* (perspectiveTag) {
+              dv.activePanelView = perspectiveTag as any;
+              yield* saveColumnConfigurations(dv)();
+            },
+            () => dv.activePanelView
+          )
       )
       .scopedInstance(SCOPE_DataView);
 

@@ -16,6 +16,5 @@ export function saveColumnConfigurations(ctx: any) {
       })),
       defaultView: getActivePanelView(ctx)
     });
-    yield;
   };
 }

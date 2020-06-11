@@ -269,15 +269,6 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound
-  onFormPanelViewButtonClick(event: any) {
-    this.activePanelView = IPanelViewType.Form;
-  }
-
-  @action.bound
-  onTablePanelViewButtonClick(event: any) {
-    this.activePanelView = IPanelViewType.Table;
-  }
 
   @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
