@@ -37,12 +37,12 @@ import { IPerspective } from "modules/DataView/Perspective/Perspective";
 import { flow } from "mobx";
 import { ViewConfiguration, IViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
-import {getRowContainer} from "../model/selectors/getRowContainer";
-import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
-import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
-import {getDontRequestData} from "../model/selectors/getDontRequestData";
-import {isInfiniteScrollingActive} from "../model/selectors/isInfiniteScrollingActive";
-import {getFormScreen} from "../model/selectors/FormScreen/getFormScreen";
+import { getRowContainer } from "../model/selectors/getRowContainer";
+import { IPanelConfiguration } from "../model/entities/types/IPanelConfiguration";
+import { parseToOrdering } from "../model/entities/types/IOrderingConfiguration";
+import { getDontRequestData } from "../model/selectors/getDontRequestData";
+import { isInfiniteScrollingActive } from "../model/selectors/isInfiniteScrollingActive";
+import { getFormScreen } from "../model/selectors/FormScreen/getFormScreen";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -78,11 +78,10 @@ export function interpretScreenXml(
       pcr.panel.instanceId,
       {
         position: pcr.position,
-        defaultOrdering: parseToOrdering(pcr.defaultSort && pcr.defaultSort[0])
+        defaultOrdering: parseToOrdering(pcr.defaultSort && pcr.defaultSort[0]),
       },
     ])
   );
-
 
   const dataSourcesXml = findStopping(screenDoc, (n) => n.name === "DataSources")[0];
 
@@ -306,7 +305,7 @@ export function interpretScreenXml(
           formScreenLifecycle: formScreenLifecycle,
           dataViewAttributes: dataView.attributes,
           orderingConfiguration: orderingConfiguration,
-          filterConfiguration: filterConfiguration
+          filterConfiguration: filterConfiguration,
         }),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
@@ -321,7 +320,7 @@ export function interpretScreenXml(
         lookupLoader: new LookupLoader(),
         properties,
         actions,
-        clientSideGrouper: new ClientSideGrouper()
+        clientSideGrouper: new ClientSideGrouper(),
       });
 
       configuration.forEach((conf) => {
@@ -349,7 +348,11 @@ export function interpretScreenXml(
             if (colIdxB === -1) return 0;
             return colIdxA - colIdxB;
           });
-        const defaultView = findStopping(conf, (n) => n.name === "view");
+
+        const defaultView = findStopping(
+          conf,
+          (n) => n.name === "view" && n.parent.name === "defaultView"
+        );
         defaultView.forEach((element) => {
           dataViewInstance.activePanelView = element.attributes.id;
         });
@@ -405,15 +408,18 @@ export function interpretScreenXml(
   return scr;
 }
 
-function checkInfiniteScrollWillWork(dataViews: any[],
-                                     formScreenLifecycle: IFormScreenLifecycle02,
-                                     panelConfigurations: Map<string, IPanelConfiguration>){
-
+function checkInfiniteScrollWillWork(
+  dataViews: any[],
+  formScreenLifecycle: IFormScreenLifecycle02,
+  panelConfigurations: Map<string, IPanelConfiguration>
+) {
   for (let dataView of dataViews) {
-    const id = dataView.attributes.ModelInstanceId
+    const id = dataView.attributes.ModelInstanceId;
     const panelConfig = panelConfigurations.get(id);
-    if(isInfiniteScrollingActive(formScreenLifecycle, dataView.attributes) && !panelConfig){
-      throw new Error(`Table in: ${id} has undefined default ordering while infinite scrolling is on. Make sure the underlying DataStructure has a SortSet defined.`);
+    if (isInfiniteScrollingActive(formScreenLifecycle, dataView.attributes) && !panelConfig) {
+      throw new Error(
+        `Table in: ${id} has undefined default ordering while infinite scrolling is on. Make sure the underlying DataStructure has a SortSet defined.`
+      );
     }
   }
 }
