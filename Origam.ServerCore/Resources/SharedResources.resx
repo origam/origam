@@ -163,7 +163,7 @@
     <value>User registration is not allowed on this site.</value>
   </data>
   <data name="AlreadySetUp" xml:space="preserve">
-    <value>The application has been already set up.</value>
+    <value>The application has already been set up.</value>
   </data>
   <data name="InvalidLogin" xml:space="preserve">
     <value>Invalid username or password</value>
@@ -184,7 +184,7 @@
     <value>New account has been created and activated.</value>
   </data>
   <data name="ActivateAccount" xml:space="preserve">
-    <value>A new account has been created. Please click confirmation link in an email, we just sent you to activate the account.</value>
+    <value>A new account has been created. Please click the confirmation link in the email we just sent you to activate the account.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -196,7 +196,7 @@
     <value>Thank you for confirming your email. Please </value>
   </data>
   <data name="ConfirmationOk2" xml:space="preserve">
-    <value>Click here to Log in</value>
+    <value>click here to log in.</value>
   </data>
   <data name="ConfirmLogout" xml:space="preserve">
     <value>Would you like to logout?</value>
@@ -208,7 +208,7 @@
     <value>Create a new account</value>
   </data>
   <data name="EmailSent" xml:space="preserve">
-    <value>Please click confirmation link in the email we sent you to activate your account.</value>
+    <value>Please click the confirmation link in the email we sent you to activate your account.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
     <value>Origam Login</value>
@@ -235,7 +235,7 @@
     <value>There are no login schemes configured for this client.</value>
   </data>
   <data name="RememberLogin" xml:space="preserve">
-    <value>Remember My Login</value>
+    <value>Remember my Login</value>
   </data>
   <data name="ResetPassword" xml:space="preserve">
     <value>Reset Password</value>
@@ -250,16 +250,16 @@
     <value>Yes</value>
   </data>
   <data name="ReturnToApplication1" xml:space="preserve">
-    <value>Click </value>
+    <value>Click</value>
   </data>
   <data name="ReturnToApplication2" xml:space="preserve">
     <value>here</value>
   </data>
   <data name="ReturnToApplication3" xml:space="preserve">
-    <value> to return to the</value>
+    <value>to return to the</value>
   </data>
   <data name="ReturnToApplication4" xml:space="preserve">
-    <value>application</value>
+    <value>application.</value>
   </data>
   <data name="ToLogin1" xml:space="preserve">
     <value>Click</value>

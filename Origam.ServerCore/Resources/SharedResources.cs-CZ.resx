@@ -250,13 +250,13 @@
     <value>Ano</value>
   </data>
   <data name="ReturnToApplication1" xml:space="preserve">
-    <value>Klikněte </value>
+    <value>Klikněte</value>
   </data>
   <data name="ReturnToApplication2" xml:space="preserve">
     <value>sem</value>
   </data>
   <data name="ReturnToApplication3" xml:space="preserve">
-    <value> pro návrat do</value>
+    <value>pro návrat do</value>
   </data>
   <data name="ReturnToApplication4" xml:space="preserve">
     <value></value>
