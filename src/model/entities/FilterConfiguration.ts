@@ -305,10 +305,8 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (val1.findIndex((item: any) => item.value === txt1) > -1) {
               return true;
             }
-
             return false;
           }
-            break;
           case "neq": {
             const txt1 = dataTable.getCellValue(row, prop);
             const val1 = term.setting.val1 || [];
@@ -317,20 +315,16 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (val1.findIndex((item: any) => item.value === txt1) > -1) {
               return false;
             }
-
             return true;
           }
-            break;
           case "null": {
             const txt1 = dataTable.getCellValue(row, prop);
             return txt1 === null;
           }
-            break;
           case "nnull": {
             const txt1 = dataTable.getCellValue(row, prop);
             return txt1 !== null;
           }
-            break;
           case "contains": {
             const txt1 = dataTable.getCellText(row, prop);
             const val2 = term.setting.val2 || "";
@@ -338,7 +332,6 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (txt1 === null) return false;
             return txt1.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
           }
-            break;
           case "ncontains": {
             const txt1 = dataTable.getCellText(row, prop);
             const val2 = term.setting.val2 || "";
@@ -346,7 +339,6 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (txt1 === null) return false;
             return !txt1.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
           }
-            break;
         }
       }
       case "CheckBox": {
