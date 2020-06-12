@@ -256,10 +256,10 @@
     <value>here</value>
   </data>
   <data name="ReturnToApplication3" xml:space="preserve">
-    <value>to return to the</value>
+    <value>to return to</value>
   </data>
   <data name="ReturnToApplication4" xml:space="preserve">
-    <value>application.</value>
+    <value></value>
   </data>
   <data name="ToLogin1" xml:space="preserve">
     <value>Click</value>
