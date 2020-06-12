@@ -105,14 +105,7 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText("Worqueue Entity : \t");
             richTextBoxSummary.AppendText(wizardForm.Entity.Name);
             richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("List of fields: \t\t");
-            foreach (DictionaryEntry row in wizardForm.SelectedFieldNames)
-            {
-                richTextBoxSummary.AppendText(row.Key.ToString());
-                richTextBoxSummary.AppendText(Environment.NewLine);
-                richTextBoxSummary.AppendText("\t\t\t");
-            }
+            ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
         }
     }
 }
