@@ -20,35 +20,38 @@ namespace Origam.UI.WizardForm
 
         internal void SetUpForm(TextBox txtFieldName, ComboBox cboEntity, ComboBox cboLookup, ComboBox cboField, CheckBox chkAllowNulls)
         {
-            txtFieldName.Text = "";
-
-            cboEntity.Items.Clear();
-            cboLookup.Items.Clear();
-            cboField.Items.Clear();
-            chkAllowNulls.Checked = true;
-
-            try
+            if (cboEntity.Items.Count == 0)
             {
-                cboEntity.BeginUpdate();
-                cboLookup.BeginUpdate();
+                txtFieldName.Text = "";
 
-                foreach (IDataEntity entity in this.MasterEntity.RootProvider.ChildItems)
+                cboEntity.Items.Clear();
+                cboLookup.Items.Clear();
+                cboField.Items.Clear();
+                chkAllowNulls.Checked = true;
+
+                try
                 {
-                    cboEntity.Items.Add(entity);
+                    cboEntity.BeginUpdate();
+                    cboLookup.BeginUpdate();
+
+                    foreach (IDataEntity entity in this.MasterEntity.RootProvider.ChildItems)
+                    {
+                        cboEntity.Items.Add(entity);
+                    }
+
+                    Workbench.Services.SchemaService schema = Workbench.Services.ServiceManager.Services.GetService(typeof(Workbench.Services.SchemaService)) as Workbench.Services.SchemaService;
+                    IDataLookupSchemaItemProvider lookups = schema.GetProvider(typeof(IDataLookupSchemaItemProvider)) as IDataLookupSchemaItemProvider;
+
+                    foreach (object lookup in lookups.ChildItems)
+                    {
+                        cboLookup.Items.Add(lookup);
+                    }
                 }
-
-                Workbench.Services.SchemaService schema = Workbench.Services.ServiceManager.Services.GetService(typeof(Workbench.Services.SchemaService)) as Workbench.Services.SchemaService;
-                IDataLookupSchemaItemProvider lookups = schema.GetProvider(typeof(IDataLookupSchemaItemProvider)) as IDataLookupSchemaItemProvider;
-
-                foreach (object lookup in lookups.ChildItems)
+                finally
                 {
-                    cboLookup.Items.Add(lookup);
+                    cboEntity.EndUpdate();
+                    cboLookup.EndUpdate();
                 }
-            }
-            finally
-            {
-                cboEntity.EndUpdate();
-                cboLookup.EndUpdate();
             }
         }
     }

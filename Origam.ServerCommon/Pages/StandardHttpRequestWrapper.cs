@@ -49,7 +49,7 @@ namespace Origam.ServerCommon.Pages
             clientInfo = GetClientInfo();
             Params = GetParameters();
             mediaTypeHeader = request.ContentType != null 
-                ? new MediaTypeHeaderValue(request.ContentType) 
+                ? MediaTypeHeaderValue.Parse(request.ContentType) 
                 : null;
         }
 
@@ -114,7 +114,7 @@ namespace Origam.ServerCommon.Pages
                 parameters.Add(keyValuePair.Key, keyValuePair.Value);
             }
             if ((request.ContentType != null) 
-            && (request.ContentType != "application/json"))
+            && !request.ContentType.Contains("application/json"))
             {
                 foreach (var keyValuePair in request.Form)
                 {

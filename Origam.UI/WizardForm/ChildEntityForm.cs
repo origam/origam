@@ -35,25 +35,28 @@ namespace Origam.UI.WizardForm
 
         internal void SetUpForm(TextBox txtchildEntityName,ComboBox cboEntity1, ComboBox cboEntity2)
         {
-            txtchildEntityName.Text = "";
-
-            cboEntity1.Items.Clear();
-            cboEntity2.Items.Clear();
-
-            if (this.Entity1 == null) return;
-
-            object selectedItem = null;
-            foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
+            if (cboEntity1.Items.Count == 0)
             {
-                cboEntity1.Items.Add(entity);
-                cboEntity2.Items.Add(entity);
+                txtchildEntityName.Text = "";
 
-                if (entity.PrimaryKey.Equals(this.Entity1.PrimaryKey))
+                cboEntity1.Items.Clear();
+                cboEntity2.Items.Clear();
+
+                if (this.Entity1 == null) return;
+
+                object selectedItem = null;
+                foreach (IDataEntity entity in this.Entity1.RootProvider.ChildItems)
                 {
-                    selectedItem = entity;
+                    cboEntity1.Items.Add(entity);
+                    cboEntity2.Items.Add(entity);
+
+                    if (entity.PrimaryKey.Equals(this.Entity1.PrimaryKey))
+                    {
+                        selectedItem = entity;
+                    }
                 }
+                cboEntity1.SelectedItem = selectedItem;
             }
-            cboEntity1.SelectedItem = selectedItem;
         }
     }
 }

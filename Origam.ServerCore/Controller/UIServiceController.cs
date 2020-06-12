@@ -61,7 +61,6 @@ namespace Origam.ServerCore.Controller
         private readonly IDataLookupService lookupService;
         private readonly IDataService dataService;
 
-        #region Endpoints
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
@@ -72,6 +71,7 @@ namespace Origam.ServerCore.Controller
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
         }
+        #region Endpoints
         [HttpGet("[action]")]
         // ReSharper disable once UnusedParameter.Global
         public IActionResult InitPortal()

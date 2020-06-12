@@ -128,13 +128,7 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText("Datastructure: \t\t");
             richTextBoxSummary.AppendText(screenwizardForm.NameOfEntity);
             richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("List of fields:");
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            foreach (DictionaryEntry row in screenwizardForm.SelectedFieldNames)
-            {
-                richTextBoxSummary.AppendText("\t" + row.Key);
-                richTextBoxSummary.AppendText(Environment.NewLine);
-            }
+            ShowListItems(richTextBoxSummary, screenwizardForm.SelectedFieldNames);
         }
     }
 }

@@ -997,6 +997,7 @@ namespace Origam.UI.WizardForm
             this.richTextBoxSummary.Location = new System.Drawing.Point(4, 4);
             this.richTextBoxSummary.Margin = new System.Windows.Forms.Padding(0);
             this.richTextBoxSummary.Name = "richTextBoxSummary";
+            this.richTextBoxSummary.ReadOnly = true;
             this.richTextBoxSummary.Size = new System.Drawing.Size(534, 336);
             this.richTextBoxSummary.TabIndex = 0;
             this.richTextBoxSummary.Text = "";

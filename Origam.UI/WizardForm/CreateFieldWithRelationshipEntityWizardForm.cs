@@ -97,13 +97,14 @@ namespace Origam.UI.WizardForm
         public string LookupKeyName { get; internal set; }
         internal void SetUpForm(ComboBox tableRelation, TextBox txtRelationName)
         {
-            tableRelation.Items.Clear();
-
-            if (this.Entity == null) return;
-            txtRelationName.Text = "Transaction " + this.Entity.Name;
-            foreach (AbstractSchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
+            if (tableRelation.Items.Count == 0)
             {
-                tableRelation.Items.Add(abstractSchemaIttem);
+                if (this.Entity == null) return;
+                txtRelationName.Text = "Transaction " + this.Entity.Name;
+                foreach (AbstractSchemaItem abstractSchemaIttem in this.Entity.RootProvider.ChildItems)
+                {
+                    tableRelation.Items.Add(abstractSchemaIttem);
+                }
             }
         }
         internal void SetUpFormKey(ComboBox BaseEntityField, ComboBox RelatedEntityField, TextBox txtKeyName)
