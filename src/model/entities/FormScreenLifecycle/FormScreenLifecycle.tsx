@@ -268,7 +268,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           reaction(
             () => {
               orderingConfiguration.ordering.map(x => x.direction);
-              filterConfiguration.filtering.map(x=>[x.propertyId, x.setting.type, x.setting.val1]);
+              filterConfiguration.filters.map(x=>[x.propertyId, x.setting.type, x.setting.val1]);
               return [];
             },
             flow(() => this.readFirstChunkOfRows(rootDataView, true))));

@@ -11,7 +11,7 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
   $type_IFilterConfigurationData: 1;
 
   isFilterControlsDisplayed: boolean;
-  filtering: any[];
+  filters: any[];
   filteringFunction: () => (row: any[]) => boolean ;
   getSettingByPropertyId(propertyId: string): any;
   setFilter(term: any): void;

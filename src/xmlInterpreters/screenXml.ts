@@ -275,7 +275,8 @@ export function interpretScreenXml(
           })
       );
       const orderingConfiguration = new OrderingConfiguration();
-      const filterConfiguration = new FilterConfiguration();
+      const implicitFilters = getImplicitFilters(dataView);
+      const filterConfiguration = new FilterConfiguration(implicitFilters);
       const dataViewInstance = new DataView({
         id: dataView.attributes.Id,
         modelInstanceId: dataView.attributes.ModelInstanceId,
@@ -417,6 +418,21 @@ export function interpretScreenXml(
   return scr;
 }
 
+function getImplicitFilters(dataViewXml: any){
+  const filterNodes = findStopping(dataViewXml, node => node.name === "Filter");
+  if (filterNodes.length === 0) {
+    return [];
+  }
+  return filterNodes
+    .flatMap(node => node.elements
+      .map((element: any) => {
+        return {
+          propertyId: element.attributes.Property,
+          operatorCode: element.attributes.Operator,
+          value: element.attributes.RightSideValue
+        }
+      }));
+}
 function checkInfiniteScrollWillWork(
   dataViews: any[],
   formScreenLifecycle: IFormScreenLifecycle02,

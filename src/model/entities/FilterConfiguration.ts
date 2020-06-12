@@ -3,27 +3,28 @@ import { action, comparer, flow, observable, reaction, toJS, computed } from "mo
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
-import { IDataTable } from "./types/IDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import produce from "immer";
+import {getDataSource} from "../selectors/DataSources/getDataSource";
 
 export class FilterConfiguration implements IFilterConfiguration {
-  constructor() {
+  constructor(implicitFilters: IImplicitFilter[]) {
+    this.implicitFilters = implicitFilters;
     this.start();
   }
 
   $type_IFilterConfigurationData: 1 = 1;
 
-  @observable.ref filtering: any[] = [];
+  implicitFilters: IImplicitFilter[];
+  @observable.ref filters: any[] = [];
 
   getSettingByPropertyId(propertyId: string): any {
-    return this.filtering.find(item => item.propertyId === propertyId);
+    return this.filters.find(item => item.propertyId === propertyId);
   }
 
   @action.bound
   setFilter(term: any): void {
-    //debugger
-    this.filtering = produce(this.filtering, (draft: any) => {
+    this.filters = produce(this.filters, (draft: any) => {
       const oldIdx = draft.findIndex((item: any) => item.propertyId === term.propertyId);
       if (oldIdx > -1) {
         draft.splice(oldIdx, 1);
@@ -34,7 +35,7 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   clearFilters(): void {
-    this.filtering = [];
+    this.filters = [];
   }
 
   @observable isFilterControlsDisplayed: boolean = false;
@@ -357,7 +358,12 @@ export class FilterConfiguration implements IFilterConfiguration {
         return false;
       }
 
-      for (let term of this.filtering) {
+      for (let term of this.implicitFilters) {
+        if (!this.implicitTermFn(row, term)) {
+          return false;
+        }
+      }
+      for (let term of this.filters) {
         if (!termFn(term)) {
           return false;
         }
@@ -365,6 +371,21 @@ export class FilterConfiguration implements IFilterConfiguration {
       return true;
     };
   }
+
+  implicitTermFn(row: any[], implicitFilter: IImplicitFilter){
+    const dataTable = getDataTable(this);
+    const dataSource = getDataSource(dataTable);
+    const sourceField = dataSource.getFieldByName(implicitFilter.propertyId)!;
+    const cellValue = dataTable.getCellValueByDataSourceField(row, sourceField);
+
+    switch(parseInt(implicitFilter.operatorCode)){
+      case 1: return implicitFilter.value === String(cellValue)
+      case 10: return implicitFilter.value !== String(cellValue)
+      case 15: return cellValue === null;
+      case 16: return cellValue !== null;
+      default: throw new Error(`Operator code ${implicitFilter.operatorCode} not implemented.`)
+    }
+  };
 
   isPresentInDetail(row: any[]): boolean {
     if (this.dataView.isBindingRoot) return true;
@@ -412,7 +433,7 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.disposers.push(
       reaction(
         () => {
-          const data = toJS(this.filtering);
+          const data = toJS(this.filters);
           data.forEach(item => delete item.setting.human);
           return data;
         },
@@ -425,12 +446,12 @@ export class FilterConfiguration implements IFilterConfiguration {
   }
 
   @action.bound applyNewFilteringImm = flow(function*(this: FilterConfiguration) {
-    console.log("New filtering:", toJS(this.filtering));
+    console.log("New filtering:", toJS(this.filters));
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (dataView.isReorderedOnClient) {
-      if (this.filtering.length > 0) {
-        const comboProps = this.filtering
+      if (this.filters.length > 0) {
+        const comboProps = this.filters
           .map(term => getDataViewPropertyById(this, term.propertyId)!)
           .filter(prop => prop.column === "ComboBox");
 
@@ -450,4 +471,10 @@ export class FilterConfiguration implements IFilterConfiguration {
   }
 
   parent?: any;
+}
+
+interface IImplicitFilter{
+  propertyId: string;
+  operatorCode: string,
+  value: any
 }
