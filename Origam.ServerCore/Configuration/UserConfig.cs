@@ -34,5 +34,7 @@ namespace Origam.ServerCore.Configuration
         public string MailQueueName { get; set; }
         public bool UserRegistrationAllowed { get; set; }
         public string PortalBaseUrl { get; set; }
+        public string MultiFactorMailSubject { get; set; }
+        public string MultiFactorMailBodyFileName { get; set; }
     }
 }

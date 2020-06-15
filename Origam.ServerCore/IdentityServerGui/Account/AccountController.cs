@@ -345,9 +345,9 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                var user = await _userManager.FindByNameAsync(model.Username);
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.FindByNameAsync(model.Username);
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {
                         return View("EmailNotConfirmed");
@@ -392,11 +392,75 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                     await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
                     ModelState.AddModelError(string.Empty, _localizer["InvalidLogin"]);
                 }
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToAction(nameof(LoginTwoStep), new { user.Email, model.RememberLogin, model.ReturnUrl });
+                }
             }
 
             // something went wrong, show form with error
             var vm = await BuildLoginViewModelAsync(model);
             return View(vm);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> LoginTwoStep(string email, bool rememberMe, string returnUrl = null)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return View(nameof(Error));
+            }
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return View("EmailNotConfirmed");
+            }
+
+            var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
+            if (!providers.Contains("Email"))
+            {
+                return View(nameof(Error));
+            }
+
+            var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            _mailService.SendMultiFactorAuthCode(user, token);
+
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginTwoStep(TwoStepModel twoStepModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(twoStepModel);
+            }
+
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if(user == null)
+            {
+                // return RedirectToAction(nameof(Error));
+            }
+
+            var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, twoStepModel.RememberMe, rememberClient: false);
+            if(result.Succeeded)
+            {
+                return Redirect("~/");
+            }
+            else if(result.IsLockedOut)
+            {
+                //Same logic as in the Login action
+                ModelState.AddModelError("", "The account is locked out");
+                return View();
+            }
+            else
+            {
+                ModelState.AddModelError("", "Invalid Login Attempt");
+                return View();
+            }
         }
 
         

@@ -1,4 +1,5 @@
 #region license
+
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -17,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -33,9 +35,9 @@ namespace Origam.Security.Common
 {
     public class AccountMailSender
     {
-        protected static readonly ILog log 
+        protected static readonly ILog log
             = LogManager.GetLogger(typeof(AccountMailSender));
-        
+
         private static readonly Guid LANGUAGE_TAGIETF_LOOKUP
             = new Guid("7823d8af-4968-48c3-a772-287475d429e1");
 
@@ -47,6 +49,8 @@ namespace Origam.Security.Common
         private readonly string userUnlockNotificationSubject;
         private readonly string resetPwdBodyFilename;
         private readonly string resetPwdSubject;
+        private readonly string mfaTemplateFileName;
+        private readonly string mfaSubject;
         private readonly string mailQueueName;
         private readonly string applicationBasePath;
 
@@ -55,8 +59,8 @@ namespace Origam.Security.Common
             string fromAddress, string registerNewUserSubject,
             string userUnlockNotificationBodyFilename,
             string userUnlockNotificationSubject, string resetPwdBodyFilename,
-            string resetPwdSubject, string applicationBasePath,
-            string mailQueueName = null)
+            string resetPwdSubject, string applicationBasePath, string mfaTemplateFileName,
+            string mfaSubject, string mailQueueName = null)
         {
             this.portalBaseUrl = portalBaseUrl;
             this.registerNewUserFilename = registerNewUserFilename;
@@ -68,8 +72,10 @@ namespace Origam.Security.Common
             this.resetPwdSubject = resetPwdSubject;
             this.mailQueueName = mailQueueName;
             this.applicationBasePath = applicationBasePath;
+            this.mfaTemplateFileName = mfaTemplateFileName;
+            this.mfaSubject = mfaSubject;
         }
-        
+
 
         public void SendNewUserToken(string userId, string email,
             string username, string name, string firstName, string token)
@@ -227,6 +233,55 @@ namespace Origam.Security.Common
 
             return userLangIETF;
         }
+        
+        public void SendMultiFactorAuthCode(string email, string code)
+        {
+            List<KeyValuePair<string, string>> replacements
+                = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("<%AuthenticationCode%>",
+                        Uri.EscapeDataString(code)),
+                    new KeyValuePair<string, string>("<%UserEmail%>", email),
+                };
+            // PORTAL_BASE_URL is mandatory if using default template
+            if (string.IsNullOrWhiteSpace(portalBaseUrl) &&
+                string.IsNullOrEmpty(registerNewUserFilename))
+            {
+                log.Error("'PortalBaseUrl' not configured while default template"
+                          + "is used. Can't send a new registration email confirmation.");
+                throw new Exception(
+                    Resources.RegisterNewUser_PortalBaseUrlNotConfigured);
+            }
+
+            MailMessage mail;
+            string userLangIETF = System.Threading.Thread.CurrentThread.CurrentUICulture
+                .IetfLanguageTag;
+            using (new LanguageSwitcher(userLangIETF))
+            {
+                mail = GenerateMail(email, fromAddress,
+                    mfaTemplateFileName,
+                    Resources.RegisterNewUserTemplate,
+                    mfaSubject, userLangIETF, replacements);
+            }
+
+            try
+            {
+                SendMailByAWorkflow(mail);
+            }
+            catch (Exception ex)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Failed to send multi factor authentication mail", ex);
+                }
+
+                throw new Exception(Resources.FailedToSendNewUserRegistrationMail);
+            }
+            finally
+            {
+                mail.Dispose();
+            }
+        }
 
         public bool SendPasswordResetToken(string username,
             string name,
@@ -379,10 +434,10 @@ namespace Origam.Security.Common
             MailMessage passwordRecoveryMail = new MailMessage(fromAddress,
                 userEmail);
             string templateContent =
-                (String.IsNullOrEmpty(templateFilename)) ?
-                    templateFromResources
+                (String.IsNullOrEmpty(templateFilename))
+                    ? templateFromResources
                     : GetLocalizedMailTemplateText(templateFilename,
-                         userLangIETF);
+                        userLangIETF);
 
             string[] subjectAndBody = processMailTemplate(templateContent,
                 replacements);
@@ -488,16 +543,18 @@ namespace Origam.Security.Common
                 else
                 {
                     candidate = String.Format("{0}.{1}{2}", filePath.Substring(
-                        0, lastDotIndex), splittedIETF[0],
+                            0, lastDotIndex), splittedIETF[0],
                         filePath.Substring(lastDotIndex));
                 }
+
                 if (File.Exists(candidate)) return candidate;
             }
+
             // fallback
-            return filePath;            
+            return filePath;
         }
-        
-        
+
+
         private void SendMailByAWorkflow(MailMessage mail)
         {
             // send mail - by a workflow located at root package			
@@ -510,6 +567,7 @@ namespace Origam.Security.Common
             {
                 pms.Add(new QueryParameter("senderName", mail.From.DisplayName));
             }
+
             if (!string.IsNullOrWhiteSpace(mailQueueName))
             {
                 pms.Add(new QueryParameter("MailWorkQueueName", mailQueueName));
@@ -517,7 +575,7 @@ namespace Origam.Security.Common
 #if DEBUG
             SaveToDebugMailLog(pms);
 #endif
-            WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
+            // WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
         }
 
         private static void SaveToDebugMailLog(QueryParameterCollection pms)

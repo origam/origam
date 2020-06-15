@@ -45,7 +45,8 @@ using Origam.Workbench.Services.CoreServices;
 namespace Origam.ServerCore
 {
     public sealed class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigamUser>,
-        IUserTwoFactorStore<IOrigamUser>, IUserPasswordStore<IOrigamUser>,IUserLockoutStore<IOrigamUser>
+        IUserTwoFactorStore<IOrigamUser>, IUserPasswordStore<IOrigamUser>,IUserLockoutStore<IOrigamUser>,
+        IUserPhoneNumberStore<IOrigamUser>, IUserAuthenticatorKeyStore<IOrigamUser>, IUserSecurityStampStore<IOrigamUser>
     {
         public static readonly Guid ORIGAM_USER_DATA_STRUCTURE
             = new Guid("43b67a51-68f3-4696-b08d-de46ae0223ce");
@@ -434,6 +435,46 @@ namespace Origam.ServerCore
         {
             user.IsLockedOut = enabled;
             return Task.CompletedTask;
+        }
+
+        public Task<string> GetPhoneNumberAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult("1");
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task SetPhoneNumberAsync(IOrigamUser user, string phoneNumber, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(IOrigamUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetAuthenticatorKeyAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult("");
+        }
+
+        public Task SetAuthenticatorKeyAsync(IOrigamUser user, string key, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetSecurityStampAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult("");
+        }
+
+        public Task SetSecurityStampAsync(IOrigamUser user, string stamp, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Origam.Security.Common;
@@ -28,5 +29,6 @@ namespace Origam.ServerCore
     {
         void SendPasswordResetToken(IOrigamUser user, string token, int tokenValidityHours);
         void SendNewUserToken(IOrigamUser user, string token);
+        void SendMultiFactorAuthCode(IOrigamUser user, string token);
     }
 }

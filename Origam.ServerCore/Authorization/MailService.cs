@@ -49,6 +49,8 @@ namespace Origam.ServerCore.Authorization
                 userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject, 
                 resetPwdBodyFilename: userConfig.Value.ResetPasswordMailBodyFileName,
                 resetPwdSubject: userConfig.Value.ResetPasswordMailSubject, 
+                mfaTemplateFileName: userConfig.Value.MultiFactorMailBodyFileName,
+                mfaSubject: userConfig.Value.MultiFactorMailSubject,
                 applicationBasePath: AppContext.BaseDirectory, 
                 mailQueueName: userConfig.Value.MailQueueName);
         }
@@ -76,6 +78,13 @@ namespace Origam.ServerCore.Authorization
                 name: user.Name,
                 firstName: user.FirstName,
                 token: token);
+        }
+
+        public void SendMultiFactorAuthCode(IOrigamUser user, string token)
+        {
+            mailSender.SendMultiFactorAuthCode(
+                email: user.Email,
+                code: token);
         }
     }
 }
