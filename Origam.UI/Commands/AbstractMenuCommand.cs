@@ -30,6 +30,7 @@ using Origam.UI.WizardForm;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -164,6 +165,17 @@ namespace Origam.UI
         {
             RichTextBox box = (RichTextBox)summary;
             box.Text = "Not implemented";
+        }
+        public static void ShowListItems(RichTextBox richTextBoxSummary, Hashtable selectedFieldNames)
+        {
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List of fields: \t\t");
+            foreach (DictionaryEntry row in selectedFieldNames)
+            {
+                richTextBoxSummary.AppendText(row.Key.ToString());
+                richTextBoxSummary.AppendText(Environment.NewLine);
+                richTextBoxSummary.AppendText("\t\t\t");
+            }
         }
         #endregion
     }

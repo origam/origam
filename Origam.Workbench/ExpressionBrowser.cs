@@ -870,7 +870,8 @@ namespace Origam.Workbench
                 else if (parentNode != null
                     && parentNode.Tag is IPersistent  parentItem
                     && parentItem.Files.Count > 0
-                    && parentItem.Files.First() == item.Files.First())
+                    && parentItem.Files.First() == item.Files.First()
+					&& parentNode.ForeColor != OrigamColorScheme.TabActiveForeColor)
                 {
                     // same file as parent
                     node.ForeColor = parentNode.ForeColor;

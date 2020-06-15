@@ -124,13 +124,7 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.AppendText("Datastructure: \t\t");
             richTextBoxSummary.AppendText(screenwizardForm.NameOfEntity);
             richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("List of fields:");
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            foreach (DictionaryEntry row in screenwizardForm.SelectedFieldNames)
-            {
-                richTextBoxSummary.AppendText("\t" + row.Key);
-                richTextBoxSummary.AppendText(Environment.NewLine);
-            }
+            ShowListItems(richTextBoxSummary,screenwizardForm.SelectedFieldNames);
         }
     }
 
@@ -233,24 +227,17 @@ namespace Origam.Gui.Win.Wizards
             richTextBoxSummary.Text = "This Wizard create Menu from Entity with this parameters:";
             richTextBoxSummary.AppendText(Environment.NewLine);
             richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("Datastructure: \t");
+            richTextBoxSummary.AppendText("Datastructure: \t\t");
             richTextBoxSummary.AppendText(wizardForm.NameOfEntity);
             richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("Menu: \t\t");
+            richTextBoxSummary.AppendText("Menu: \t\t\t");
             richTextBoxSummary.AppendText(wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
                 ? wizardForm.NameOfEntity : wizardForm.Entity.Caption);
             richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("Role: \t\t");
+            richTextBoxSummary.AppendText("Role: \t\t\t");
             richTextBoxSummary.AppendText(wizardForm.Role);
             richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            richTextBoxSummary.AppendText("List of fields:");
-            richTextBoxSummary.AppendText(Environment.NewLine);
-            foreach (DictionaryEntry row in wizardForm.SelectedFieldNames)
-            {
-                richTextBoxSummary.AppendText("\t" + row.Key);
-                richTextBoxSummary.AppendText(Environment.NewLine);
-            }
+            ShowListItems(richTextBoxSummary, wizardForm.SelectedFieldNames);
         }
     }
 

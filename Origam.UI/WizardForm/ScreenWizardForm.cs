@@ -14,19 +14,19 @@ namespace Origam.UI.WizardForm
 
         public void SetUpForm(CheckedListBox lstField)
         {
-            _lstFields = lstField;
-            _lstFields.Items.Clear();
-
-            if (this.Entity == null) return;
-
-            foreach (IDataEntityColumn column in this.Entity.EntityColumns)
+            if (_lstFields == null)
             {
-                if (string.IsNullOrEmpty(column.ToString())) continue;
-                if (!this.textColumnsOnly
-                    || (column.DataType == Origam.Schema.OrigamDataType.String
-                    || column.DataType == Origam.Schema.OrigamDataType.Memo))
+                _lstFields = lstField;
+                if (this.Entity == null) return;
+                foreach (IDataEntityColumn column in this.Entity.EntityColumns)
                 {
-                    _lstFields.Items.Add(column);
+                    if (string.IsNullOrEmpty(column.ToString())) continue;
+                    if (!this.textColumnsOnly
+                        || (column.DataType == Origam.Schema.OrigamDataType.String
+                        || column.DataType == Origam.Schema.OrigamDataType.Memo))
+                    {
+                        _lstFields.Items.Add(column);
+                    }
                 }
             }
         }
@@ -44,9 +44,7 @@ namespace Origam.UI.WizardForm
                 return result;
             }
         }
-
         public ICollection SelectedFields { get; set; }
-        
         public string Role { get; set; }
     }
 }
