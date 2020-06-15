@@ -113,11 +113,6 @@ export class FormScreen implements IFormScreen {
     return conf ? conf.position : undefined;
   }
 
-  getPanelDefaultOrdering(id: string): IOrdering | undefined {
-    const conf = this.panelConfigurations.get(id);
-    return conf ? conf.defaultOrdering : undefined;
-  }
-
   @action.bound
   setDirty(state: boolean): void {
     this.isDirty = state;

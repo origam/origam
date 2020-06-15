@@ -123,7 +123,6 @@ export interface IFormScreen extends IFormScreenData {
   dialogActions: IAction[];
 
   getPanelPosition(id: string): number | undefined;
-  getPanelDefaultOrdering(id: string): IOrdering | undefined;
 
   getBindingsByChildId(childId: string): IComponentBinding[];
   getBindingsByParentId(parentId: string): IComponentBinding[];

@@ -25,11 +25,17 @@ function cycleOrdering(direction: IOrderByDirection) {
 }
 
 export class OrderingConfiguration implements IOrderingConfiguration {
-  @observable ordering: IOrdering[] = [];
+  @observable ordering: IOrdering[];
+  private defaultOrdering: IOrdering | undefined;
+
+  constructor(defaultOrdering: IOrdering | undefined) {
+    this.ordering = defaultOrdering ? [defaultOrdering] : [];
+    this.defaultOrdering = defaultOrdering;
+  }
+
 
   getDefaultOrdering(){
-    const modelInstanceId = getDataView(this).modelInstanceId;
-    return getFormScreen(this).getPanelDefaultOrdering(modelInstanceId);
+    return this.defaultOrdering;
   }
 
   @computed get groupChildrenOrdering(): IOrdering | undefined {
