@@ -470,7 +470,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             }
             else
             {
-                ModelState.AddModelError("", resourceManager.GetString("LoginFailedUnknown"));
+                ModelState.AddModelError("", resourceManager.GetString("LoginFailedWrongCode"));
                 return View();
             }
         }

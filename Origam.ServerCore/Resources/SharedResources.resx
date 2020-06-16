@@ -321,4 +321,7 @@
   <data name="LoginFailedUnknown" xml:space="preserve">
     <value>Login Failed</value>
   </data>
+  <data name="LoginFailedWrongCode" xml:space="preserve">
+    <value>Login Failed. Check the code please.</value>
+  </data>
 </root>

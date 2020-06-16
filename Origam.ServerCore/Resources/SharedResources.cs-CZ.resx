@@ -321,4 +321,7 @@
   <data name="LoginFailedUnknown" xml:space="preserve">
     <value>Přihlášení se nazdařilo</value>
   </data>
+  <data name="LoginFailedWrongCode" xml:space="preserve">
+    <value>Přihlášení se nazdařilo. Zkontrolujte prosím kód.</value>
+  </data>
 </root>
