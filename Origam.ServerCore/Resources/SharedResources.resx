@@ -318,4 +318,7 @@
   <data name="EnterAuthenticationCode" xml:space="preserve">
     <value>Please enter authentication code we sent to your email</value>
   </data>
+  <data name="LoginFailedUnknown" xml:space="preserve">
+    <value>Login Failed</value>
+  </data>
 </root>

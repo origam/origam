@@ -318,4 +318,7 @@
   <data name="EnterAuthenticationCode" xml:space="preserve">
     <value>Sem opište autorizační kód, který jeme odeslali na Váš e-mail</value>
   </data>
+  <data name="LoginFailedUnknown" xml:space="preserve">
+    <value>Přihlášení se nazdařilo</value>
+  </data>
 </root>

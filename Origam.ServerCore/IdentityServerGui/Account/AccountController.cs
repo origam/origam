@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,6 +53,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IPersistedGrantStore _persistedGrantStore;
         private readonly SessionObjects _sessionObjects;
         private readonly RequestLocalizationOptions _requestLocalizationOptions;
+        private readonly ResourceManager resourceManager = new ResourceManager("Origam.ServerCore.Resources.SharedResources", Assembly.GetExecutingAssembly());
 
         public AccountController(
             UserManager<IOrigamUser> userManager,
@@ -404,7 +407,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         }
         
         [HttpGet]
-        public async Task<IActionResult> LoginTwoStep(string email, bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> LoginTwoStep(string email, bool rememberLogin, string returnUrl = null)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
@@ -426,6 +429,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _mailService.SendMultiFactorAuthCode(user, token);
 
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["RememberLogin"] = rememberLogin;
             return View();
         }
 
@@ -442,23 +446,31 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if(user == null)
             {
-                // return RedirectToAction(nameof(Error));
+                return View("Error", new Error(_localizer["LoginFailedUnknown"]));
             }
 
             var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, twoStepModel.RememberLogin, rememberClient: false);
             if(result.Succeeded)
             {
-                return Redirect("~/");
+                if (Url.IsLocalUrl(twoStepModel.ReturnUrl))
+                {
+                    return Redirect(twoStepModel.ReturnUrl);
+                }
+                if (string.IsNullOrEmpty(twoStepModel.ReturnUrl))
+                {
+                    return Redirect("~/");
+                }
+                throw new Exception("invalid return URL");
             }
             else if(result.IsLockedOut)
             {
                 //Same logic as in the Login action
-                ModelState.AddModelError("", "The account is locked out");
+                ModelState.AddModelError("", resourceManager.GetString("UserLockedOut"));
                 return View();
             }
             else
             {
-                ModelState.AddModelError("", "Invalid Login Attempt");
+                ModelState.AddModelError("", resourceManager.GetString("LoginFailedUnknown"));
                 return View();
             }
         }
