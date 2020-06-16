@@ -445,7 +445,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 // return RedirectToAction(nameof(Error));
             }
 
-            var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, twoStepModel.RememberMe, rememberClient: false);
+            var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, twoStepModel.RememberLogin, rememberClient: false);
             if(result.Succeeded)
             {
                 return Redirect("~/");

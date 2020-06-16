@@ -312,4 +312,10 @@
   <data name="EmailConfirmation3" xml:space="preserve">
     <value>to log in.</value>
   </data>
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Two Factor Authentication</value>
+  </data>
+  <data name="EnterAuthenticationCode" xml:space="preserve">
+    <value>Please enter authentication code we sent to your email</value>
+  </data>
 </root>

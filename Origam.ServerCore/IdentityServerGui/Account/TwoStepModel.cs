@@ -30,6 +30,6 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [Required]
         [DataType(DataType.Text)]
         public string TwoFactorCode { get; set; }
-        public bool RememberMe { get; set; }
+        public bool RememberLogin { get; set; }
     }
 }

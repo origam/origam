@@ -312,4 +312,10 @@
   <data name="EmailConfirmation3" xml:space="preserve">
     <value>.</value>
   </data>
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Dvou faktorové přihlášení</value>
+  </data>
+  <data name="EnterAuthenticationCode" xml:space="preserve">
+    <value>Sem opište autorizační kód, který jeme odeslali na Váš e-mail</value>
+  </data>
 </root>
