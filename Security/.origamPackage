@@ -6,7 +6,7 @@
     x:isFolder="true"
     name="Security"
     x:type="Origam.Schema.SchemaExtension"
-    version="5.1" xmlns="http://schemas.origam.com/1.0.0/package">
+    version="5.2" xmlns="http://schemas.origam.com/1.0.0/package">
     <packageReference
       x:id="6b99e793-23bb-47fb-873e-2962679bd9d2"
       referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609"

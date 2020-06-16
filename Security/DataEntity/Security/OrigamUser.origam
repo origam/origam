@@ -164,6 +164,21 @@
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.FieldMappingItem"
       xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="100"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="d9212fed-9421-4cf6-b091-e0b5b452d422"
+      isPrimaryKey="false"
+      mappedColumnName="SecurityStamp"
+      name="SecurityStamp"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
       abstract="false"
       generateDeploymentScript="false"
