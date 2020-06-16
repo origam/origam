@@ -231,6 +231,9 @@
   <data name="OldPasswordIncorrect" xml:space="preserve">
     <value>Old password incorrect.</value>
   </data>
+  <data name="FailedToSendMultiFactorAuthCode" xml:space="preserve">
+    <value>Failed to send multi factor authentication code. Please contact the support.</value>
+  </data>
   <data name="FailedToSendNewUserRegistrationMail" xml:space="preserve">
     <value>User registration succeeded but registration e-mail sending failed. Please contact the support.</value>
   </data>

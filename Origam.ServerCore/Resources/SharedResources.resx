@@ -300,4 +300,13 @@
   <data name="ExternalLogin" xml:space="preserve">
     <value>External Login</value>
   </data>
+  <data name="ResetPasswordConfirmation1" xml:space="preserve">
+    <value>Your password was reset. Please click</value>
+  </data>
+  <data name="ResetPasswordConfirmation2" xml:space="preserve">
+    <value>here</value>
+  </data>
+  <data name="ResetPasswordConfirmation3" xml:space="preserve">
+    <value>to log in.</value>
+  </data>
 </root>

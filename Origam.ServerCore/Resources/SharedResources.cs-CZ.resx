@@ -300,4 +300,13 @@
   <data name="ExternalLogin" xml:space="preserve">
     <value>Externí přihlášení</value>
   </data>
+  <data name="ResetPasswordConfirmation1" xml:space="preserve">
+    <value>Vaše heslo bylo resetováno. Pro přihlášení klikněte</value>
+  </data>
+  <data name="ResetPasswordConfirmation2" xml:space="preserve">
+    <value>sem</value>
+  </data>
+  <data name="ResetPasswordConfirmation3" xml:space="preserve">
+    <value>.</value>
+  </data>
 </root>
