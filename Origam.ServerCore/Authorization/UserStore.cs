@@ -457,9 +457,10 @@ namespace Origam.ServerCore
             return Task.CompletedTask;
         }
 
+        //https://chsakell.com/2019/08/18/asp-net-core-identity-series-two-factor-authentication/
         public Task<string> GetAuthenticatorKeyAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult("");
+            return Task.FromResult<string>(null);
         }
 
         public Task SetAuthenticatorKeyAsync(IOrigamUser user, string key, CancellationToken cancellationToken)
@@ -467,14 +468,15 @@ namespace Origam.ServerCore
             throw new NotImplementedException();
         }
 
+        //https://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
         public Task<string> GetSecurityStampAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult("");
+            return Task.FromResult(user.SecurityStamp ?? "");
         }
-
         public Task SetSecurityStampAsync(IOrigamUser user, string stamp, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            user.SecurityStamp = stamp;
+            return Task.CompletedTask;
         }
     }
 }

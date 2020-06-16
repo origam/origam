@@ -50,5 +50,6 @@ namespace Origam.Security.Common
         string Name { get;  }
         int FailedPasswordAttemptCount { get; set; }
         Guid LanguageId { get; set; }
+        string SecurityStamp { get; set; }
     }
 }
