@@ -192,12 +192,6 @@
   <data name="CheckEmail" xml:space="preserve">
     <value>Please check your email to reset your password.</value>
   </data>
-  <data name="ConfirmationOk1" xml:space="preserve">
-    <value>Thank you for confirming your email. Please </value>
-  </data>
-  <data name="ConfirmationOk2" xml:space="preserve">
-    <value>click here to log in.</value>
-  </data>
   <data name="ConfirmLogout" xml:space="preserve">
     <value>Would you like to logout?</value>
   </data>
@@ -307,6 +301,15 @@
     <value>here</value>
   </data>
   <data name="ResetPasswordConfirmation3" xml:space="preserve">
+    <value>to log in.</value>
+  </data>
+  <data name="EmailConfirmation1" xml:space="preserve">
+    <value>Thank you for confirming your email. Please click</value>
+  </data>
+  <data name="EmailConfirmation2" xml:space="preserve">
+    <value>here</value>
+  </data>
+  <data name="EmailConfirmation3" xml:space="preserve">
     <value>to log in.</value>
   </data>
 </root>

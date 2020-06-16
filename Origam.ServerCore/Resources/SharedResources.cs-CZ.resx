@@ -192,12 +192,6 @@
   <data name="CheckEmail" xml:space="preserve">
     <value>Pro resetování hesla postupujte podle instrukcí, které jsme vám odeslali na e-mail.</value>
   </data>
-  <data name="ConfirmationOk1" xml:space="preserve">
-    <value>Děkujeme za potvrzení e-mailu.</value>
-  </data>
-  <data name="ConfirmationOk2" xml:space="preserve">
-    <value>Pro přihlášení klikněte zde.</value>
-  </data>
   <data name="ConfirmLogout" xml:space="preserve">
     <value>Chcete se odhlásit?</value>
   </data>
@@ -262,22 +256,22 @@
     <value></value>
   </data>
   <data name="ToLogin1" xml:space="preserve">
-    <value>Klikněte</value>
+    <value>Pro opětovné přihlášení klikněte</value>
   </data>
   <data name="ToLogin2" xml:space="preserve">
     <value>sem</value>
   </data>
   <data name="ToLogin3" xml:space="preserve">
-    <value>pro opětovné přihlášení.</value>
+    <value>.</value>
   </data>
   <data name="ToResetPassword1" xml:space="preserve">
-    <value>Klikněte</value>
+    <value>Pro reset hesla klikněte</value>
   </data>
   <data name="ToResetPassword2" xml:space="preserve">
     <value>sem</value>
   </data>
   <data name="ToResetPassword3" xml:space="preserve">
-    <value>pro reset hesla.</value>
+    <value>.</value>
   </data>
   <data name="UserName" xml:space="preserve">
     <value>Uživatel</value>
@@ -307,6 +301,15 @@
     <value>sem</value>
   </data>
   <data name="ResetPasswordConfirmation3" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="EmailConfirmation1" xml:space="preserve">
+    <value>Váš e-mail byl potvrzen. Pro přihlášení klikněte</value>
+  </data>
+  <data name="EmailConfirmation2" xml:space="preserve">
+    <value>sem</value>
+  </data>
+  <data name="EmailConfirmation3" xml:space="preserve">
     <value>.</value>
   </data>
 </root>
