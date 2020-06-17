@@ -49,7 +49,7 @@
       abstract="false"
       allowNulls="true"
       autoIncrement="false"
-      dataLength="7"
+      dataLength="20"
       dataType="String"
       excludeFromAllFields="false"
       x:id="366e0b38-1cdf-4153-b9aa-930647f79bc0"
@@ -116,6 +116,19 @@
       x:id="0d804bc2-cd22-4798-814d-e1c9d68c693c"
       isPrimaryKey="true"
       name="Id"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Long"
+      excludeFromAllFields="false"
+      x:id="a0ae9e91-721e-467e-8953-3e5105bfc9c5"
+      isPrimaryKey="false"
+      label="Length of file"
+      name="Length"
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.DetachedField"
       xmlMappingType="Attribute" />
