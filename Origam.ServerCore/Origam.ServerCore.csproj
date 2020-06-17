@@ -52,9 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="_log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Remove="wwwroot\css\site.less" />
     <Content Remove="wwwroot\css\site.css" />
     <Content Remove="wwwroot\css\site.min.css" />
@@ -131,6 +128,16 @@
     <Content Include="assets\identity\lib\jquery\jquery.min.map" />
     <Content Update="Views\Account\LoginTwoStep.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="TemplateFiles\_appsettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="TemplateFiles\_log4net.config">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
