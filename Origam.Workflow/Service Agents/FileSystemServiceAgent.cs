@@ -196,6 +196,7 @@ namespace Origam.Workflow
                 row["CreationTime"] = fileInfo.CreationTime;
                 row["LastAccessTime"] = fileInfo.LastAccessTime;
                 row["LastWriteTime"] = fileInfo.LastWriteTime;
+                row["Length"] = fileInfo.Length;
                 if (!string.IsNullOrEmpty(fileInfo.Extension))
                 {
                     row["Extension"] = fileInfo.Extension.Replace(".", "");
