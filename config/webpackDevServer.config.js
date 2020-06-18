@@ -14,6 +14,61 @@ const sockHost = process.env.WDS_SOCKET_HOST;
 const sockPath = process.env.WDS_SOCKET_PATH; // default: '/sockjs-node'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
+const proxyTarget = "https://localhost:44356";
+//const proxyTarget = "http://admintesth5.wy.by/";
+
+const customProxy = {
+  "/internalApi/*": {
+    target: proxyTarget,
+    secure: false,
+  },
+  "/api/*": {
+    target: proxyTarget,
+    secure: false,
+  },
+  "/connect/*": {
+    target: proxyTarget,
+    secure: false,
+  },
+  "/assets/*": {
+    target: proxyTarget,
+    secure: false,
+  },
+  /*"/home/*": {
+    target: proxyTarget,
+    secure: false
+  },*/
+  /*"/icons/*": {
+    target: proxyTarget,
+    secure: false
+  },*/
+  /*"/lib/*": {
+    target: proxyTarget,
+    secure: false
+  },*/
+  /* "/js/*": {
+    target: proxyTarget,
+    secure: false
+  },*/
+  /*"/css/*": {
+    target: proxyTarget,
+    secure: false
+  },*/
+  "/Account/*": {
+    target: proxyTarget,
+    secure: false,
+  },
+  "/account/*": {
+    target: proxyTarget,
+    secure: false,
+  },
+  "/.well-known/*": {
+    target: proxyTarget,
+    secure: false,
+  },
+}
+
+
 module.exports = function(proxy, allowedHost) {
   return {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
@@ -102,56 +157,7 @@ module.exports = function(proxy, allowedHost) {
     public: allowedHost,
     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
     proxy,
-    proxy: {
-      "/internalApi/*": {
-        target: "https://localhost:44356",
-        secure: false,
-      },
-      "/api/*": {
-        target: "https://localhost:44356",
-        secure: false,
-      },
-      "/connect/*": {
-        target: "https://localhost:44356",
-        secure: false,
-      },
-      "/assets/*": {
-        target: "https://localhost:44356",
-        secure: false,
-      },
-      /*"/home/*": {
-        target: "https://localhost:44356",
-        secure: false
-      },*/
-      /*"/icons/*": {
-        target: "https://localhost:44356",
-        secure: false
-      },*/
-      /*"/lib/*": {
-        target: "https://localhost:44356",
-        secure: false
-      },*/
-      /* "/js/*": {
-        target: "https://localhost:44356",
-        secure: false
-      },*/
-      /*"/css/*": {
-        target: "https://localhost:44356",
-        secure: false
-      },*/
-      "/Account/*": {
-        target: "https://localhost:44356",
-        secure: false,
-      },
-      "/account/*": {
-        target: "https://localhost:44356",
-        secure: false,
-      },
-      "/.well-known/*": {
-        target: "https://localhost:44356",
-        secure: false,
-      },
-    },
+    proxy: customProxy,
     before(app, server) {
       // Keep `evalSourceMapMiddleware` and `errorOverlayMiddleware`
       // middlewares before `redirectServedPath` otherwise will not have any effect
