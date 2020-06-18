@@ -32,6 +32,10 @@ export class OpenedScreen implements IOpenedScreen {
   @observable content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
 
+  get label(){
+      return this.content.formScreen?.dynamicTitle ?? this.title;
+  }
+
   @computed get isDialog() {
     return this.dialogInfo !== undefined;
   }

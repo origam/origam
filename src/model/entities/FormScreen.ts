@@ -1,18 +1,12 @@
-import { IDataView } from "./types/IDataView";
-import { IDataSource } from "./types/IDataSource";
-import { IComponentBinding } from "./types/IComponentBinding";
-import { IFormScreenLifecycle, IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
-import { computed, action, observable } from "mobx";
-import { IAction } from "./types/IAction";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
-import {
-  IFormScreen,
-  IFormScreenData,
-  IFormScreenEnvelope,
-  IFormScreenEnvelopeData
-} from "./types/IFormScreen";
+import {IDataView} from "./types/IDataView";
+import {IDataSource} from "./types/IDataSource";
+import {IComponentBinding} from "./types/IComponentBinding";
+import {IFormScreenLifecycle02} from "./types/IFormScreenLifecycle";
+import {action, computed, observable} from "mobx";
+import {IAction} from "./types/IAction";
+import {getDontRequestData} from "model/selectors/getDontRequestData";
+import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData} from "./types/IFormScreen";
 import {IPanelConfiguration} from "./types/IPanelConfiguration";
-import {IOrderByDirection, IOrdering} from "./types/IOrderingConfiguration";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -28,7 +22,7 @@ export class FormScreen implements IFormScreen {
   parent?: any;
 
   @observable isDirty: boolean = false;
-
+  dynamicTitleSource: string | undefined;
   sessionId: string = "";
   @observable title: string = "";
   suppressSave: boolean = false;
@@ -50,6 +44,24 @@ export class FormScreen implements IFormScreen {
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
+
+  get dynamicTitle(){
+    if(!this.dynamicTitleSource){
+      return undefined;
+    }
+    const splitSource = this.dynamicTitleSource.split(".");
+    const dataSourceName = splitSource[0];
+    const columnName = splitSource[1];
+
+    const dataView = this.dataViews
+      .find(view => view.name === dataSourceName);
+    const dataSource = this.dataSources
+      .find(view => view.entity === dataSourceName);
+    const dataSourceField = dataSource!.getFieldByName(columnName);
+    const dataTable = dataView!.dataTable;
+
+    return dataTable.getCellValueByDataSourceField(dataTable.rows[0], dataSourceField!);
+  }
 
   @computed get dontRequestData() {
     return getDontRequestData(this);

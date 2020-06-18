@@ -1,19 +1,19 @@
-import { Icon } from "gui02/components/Icon/Icon";
-import { ScreenHeader } from "gui02/components/ScreenHeader/ScreenHeader";
-import { ScreenHeaderAction } from "gui02/components/ScreenHeader/ScreenHeaderAction";
-import { ScreenHeaderPusher } from "gui02/components/ScreenHeader/ScreenHeaderPusher";
-import { MobXProviderContext, observer } from "mobx-react";
-import { onFullscreenClick } from "model/actions-ui/ScreenHeader/onFullscreenClick";
-import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
-import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
+import {Icon} from "gui02/components/Icon/Icon";
+import {ScreenHeader} from "gui02/components/ScreenHeader/ScreenHeader";
+import {ScreenHeaderAction} from "gui02/components/ScreenHeader/ScreenHeaderAction";
+import {ScreenHeaderPusher} from "gui02/components/ScreenHeader/ScreenHeaderPusher";
+import {MobXProviderContext, observer} from "mobx-react";
+import {onFullscreenClick} from "model/actions-ui/ScreenHeader/onFullscreenClick";
+import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {getIsScreenOrAnyDataViewWorking} from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
+import {getOpenedNonDialogScreenItems} from "model/selectors/getOpenedNonDialogScreenItems";
+import {getIsCurrentScreenFull} from "model/selectors/Workbench/getIsCurrentScreenFull";
 import React from "react";
-import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
-import { ScreenheaderDivider } from "gui02/components/ScreenHeader/ScreenHeaderDivider";
-import { onWorkflowAbortClick } from "model/actions-ui/ScreenHeader/onWorkflowAbortClick";
-import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
+import {getIsTopmostNonDialogScreen} from "model/selectors/getIsTopmostNonDialogScreen";
+import {ScreenheaderDivider} from "gui02/components/ScreenHeader/ScreenHeaderDivider";
+import {onWorkflowAbortClick} from "model/actions-ui/ScreenHeader/onWorkflowAbortClick";
+import {onWorkflowNextClick} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 
 import S from "gui02/components/ScreenHeader/ScreenHeader.module.scss";
 
@@ -23,10 +23,6 @@ export class CScreenHeader extends React.Component {
 
   get workbench(): IWorkbench {
     return this.context.workbench;
-  }
-
-  getLabel(openedScreen: IOpenedScreen) {
-    return openedScreen.title;
   }
 
   render() {
@@ -47,7 +43,7 @@ export class CScreenHeader extends React.Component {
       <ScreenHeader
         isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
       >
-        <h1>{this.getLabel(activeScreen)}</h1>
+        <h1>{activeScreen.label}</h1>
         {(isCancelButton || isNextButton) && <ScreenheaderDivider />}
         {isCancelButton && (
           /*<ScreenHeaderAction
