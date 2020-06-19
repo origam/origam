@@ -122,6 +122,30 @@ namespace Origam.BI
             }
         }
 
+        public static string BuildFileSystemReportFilePath(string filePath, Hashtable parameters)
+        {
+            foreach (DictionaryEntry entry in parameters)
+            {
+                string sKey = entry.Key.ToString();
+                string sValue = null;
+                if (entry.Value != null)
+                {
+                    sValue = entry.Value.ToString();
+                }
+                string replacement = "{" + sKey + "}";
+                if (filePath.IndexOf(replacement) > -1)
+                {
+                    if (sValue == null)
+                    {
+                        throw new Exception(
+                            "parametry nesedi");
+                    }
+                    filePath = filePath.Replace(replacement, sValue);
+                }
+            }
+            return filePath;
+        }
+
         public static string ExpandCurlyBracketPlaceholdersWithParameters(string input, Hashtable parameters)
         {
             string output = input;
