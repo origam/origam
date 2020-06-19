@@ -91,6 +91,7 @@ export interface IFormScreenEnvelope extends IFormScreenEnvelopeData {
 export interface IFormScreenData {
   title: string;
   menuId: string;
+  dynamicTitleSource: string | undefined;
   openingOrder: number;
   showInfoPanel: boolean;
   showWorkflowCancelButton: boolean;
@@ -121,6 +122,7 @@ export interface IFormScreen extends IFormScreenData {
   dontRequestData: boolean;
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];
+  dynamicTitle: string | undefined;
 
   getPanelPosition(id: string): number | undefined;
 

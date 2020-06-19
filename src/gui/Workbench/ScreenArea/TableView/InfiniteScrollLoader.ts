@@ -12,6 +12,7 @@ import {getUserFilters} from "../../../../model/selectors/DataView/getUserFilter
 import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrdering";
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
+import {Root} from "../../../../Root";
 
 export interface IInfiniteScrollLoaderData{
   gridDimensions: IGridDimensions;
@@ -28,7 +29,7 @@ export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
 }
 
 export const SCROLL_ROW_CHUNK = 1000;
-export const MAX_CHUNKS_TO_HOLD = 20;
+export const MAX_CHUNKS_TO_HOLD = 6;
 
 export class NullIScrollLoader implements IInfiniteScrollLoader{
   ctx: any = null as any;
@@ -160,10 +161,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
     })
+    const oldDistanceToStart = this.distanceToStart;
     this.rowsContainer.appendRecords(data)
     if(this.rowsContainer.isFull && !this.rowsContainer.isLastRowLoaded){
-      const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD * (MAX_CHUNKS_TO_HOLD - 1);
-      this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
+      const newDistanceToStart = oldDistanceToStart - SCROLL_ROW_CHUNK
+      const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
+      this.scrollState.scrollTo({scrollTop: newTop});
     }
   });
 
@@ -193,10 +196,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       ColumnNames: getColumnNamesToLoad(this.ctx),
       MasterRowId: undefined
     })
+    const oldDistanceToStart = this.distanceToStart;
     this.rowsContainer.prependRecords(data);
     if(this.rowsContainer.isFull && !this.rowsContainer.isFirstRowLoaded){
-      const correctScrollTopPosition = this.gridDimensions.contentHeight / MAX_CHUNKS_TO_HOLD;
-      this.scrollState.scrollTo({scrollTop: correctScrollTopPosition});
+      const newDistanceToStart = oldDistanceToStart + SCROLL_ROW_CHUNK
+      const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
+      this.scrollState.scrollTo({scrollTop: newTop});
     }
   });
 

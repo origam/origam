@@ -26,6 +26,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   isActive: boolean;
   isDialog: boolean;
   stackPosition: number;
+  label: string;
 
   setActive(state: boolean): void;
   setContent(screen: IFormScreenEnvelope): void;

@@ -142,10 +142,10 @@ export function interpretScreenXml(
       );
     }
   }
-
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
     menuId: windowXml.attributes.MenuId,
+    dynamicTitleSource: screenDoc.elements[0].attributes.DynamicFormLabelSource,
     sessionId,
     openingOrder: 0,
     suppressSave: windowXml.attributes.SuppressSave === "true",

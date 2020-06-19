@@ -10,6 +10,7 @@ import {getGrouper} from "model/selectors/DataView/getGrouper";
 import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {getRowContainer} from "../selectors/getRowContainer";
 import {IRowsContainer} from "./types/IRowsContainer";
+import {formatNumber} from "./NumberFormating";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -109,9 +110,11 @@ export class DataTable implements IDataTable {
       } else {
         return property.lookup!.getValue(`${value}`);
       }
-    } else {
-      return value;
     }
+    if(property.column === "Number"){
+      return formatNumber(property.customNumericFormat, value);
+    }
+    return value;
   }
 
   getRowByExistingIdx(idx: number): any[] {

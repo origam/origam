@@ -15,6 +15,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
     public order: number
   ) {
     this.title = title;
+    this.label = title;
   }
 
   reloader: IReloader | null = null;
@@ -22,6 +23,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   @observable title = "";
   @observable isActive = false;
   isDialog = false;
+  label: string;
 
   @action.bound
   setActive(state: boolean): void {
