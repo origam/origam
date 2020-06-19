@@ -43,7 +43,7 @@ export class CScreenHeader extends React.Component {
       <ScreenHeader
         isLoading={content.isLoading || getIsScreenOrAnyDataViewWorking(content.formScreen!)}
       >
-        <h1>{activeScreen.label}</h1>
+        <h1>{activeScreen.title}</h1>
         {(isCancelButton || isNextButton) && <ScreenheaderDivider />}
         {isCancelButton && (
           /*<ScreenHeaderAction
