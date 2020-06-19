@@ -1,14 +1,16 @@
 @import "src/styles/common_styles.scss";
+@import "src/styles/definitions.scss";
 
 .root {
-  height: 20px;
+  height: auto;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding-left: (0.9em/2);
-  padding-right: (0.9em/2);
   cursor: pointer;
+  padding: 0 0.5em;
+
+
 
   &:hover {
     svg {
@@ -45,8 +47,13 @@
   }
 
   svg {
-    height: (1.6667em/1.5);
-    width: (1.6667em/1.5);
+    height: 1.5em;
+    width: 1.5em;
+    stroke: $grey4;
+    &:hover {
+      stroke: $black;
+    }
     @include hoverItemAnimation;
   }
 }
+

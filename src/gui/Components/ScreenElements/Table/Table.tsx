@@ -8,7 +8,7 @@ import { HeaderRow } from "./HeaderRow";
 import { PositionedField } from "./PositionedField";
 import Scrollee from "./Scrollee";
 import Scroller from "./Scroller";
-import S from "./Table.module.css";
+import S from "./Table.module.scss";
 import { ITableProps, IGridDimensions } from "./types";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 import {IClickSubsItem, ITableRow} from "./TableRendering/types";
