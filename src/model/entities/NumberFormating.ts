@@ -15,8 +15,11 @@ export function formatNumberWithLocale(customNumericFormat: string | undefined, 
   }
 }
 
-export function formatNumber(customNumericFormat: string | undefined, value: number){
+export function formatNumber(customNumericFormat: string | undefined, dataType: string, value: number){
   const locale = getLocaleFromCookie();
+  if(dataType === "Currency" && !customNumericFormat){
+    return formatNumberWithLocale("#.00", value, locale);
+  }
   return formatNumberWithLocale(customNumericFormat, value, locale);
 }
 

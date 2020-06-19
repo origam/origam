@@ -112,7 +112,7 @@ export class DataTable implements IDataTable {
       }
     }
     if(property.column === "Number"){
-      return formatNumber(property.customNumericFormat, value);
+      return formatNumber(property.customNumericFormat, property.entity,  value);
     }
     return value;
   }
