@@ -15,6 +15,23 @@ export function formatNumberWithLocale(customNumericFormat: string | undefined, 
   }
 }
 
+export function getCurrentDecimalSeparator() {
+  return getSeparator("decimal");
+}
+
+export function getCurrentGroupSeparator() {
+  return getSeparator("group");
+}
+
+function getSeparator(separatorType: string) {
+  const locale = getLocaleFromCookie();
+  const numberWithDecimalSeparator = 1000.1;
+  return Intl.NumberFormat(locale)
+    .formatToParts(numberWithDecimalSeparator)
+    .find(part => part.type === separatorType)!
+    .value;
+}
+
 export function formatNumber(customNumericFormat: string | undefined, dataType: string, value: number){
   const locale = getLocaleFromCookie();
   if(dataType === "Currency" && !customNumericFormat){

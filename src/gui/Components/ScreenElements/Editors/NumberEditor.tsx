@@ -5,6 +5,11 @@ import { Tooltip } from "react-tippy";
 import S from "./NumberEditor.module.scss";
 import numeral from "numeral";
 import cx from "classnames";
+import {
+  formatNumber,
+  getCurrentDecimalSeparator,
+  getCurrentGroupSeparator
+} from "../../../../model/entities/NumberFormating";
 
 @observer
 export class NumberEditor extends React.Component<{
@@ -30,17 +35,11 @@ export class NumberEditor extends React.Component<{
   @observable editingValue: null | string = "";
   @observable wasChanged = false;
 
-  get numeralFormat() {
-    return (
-      (this.props.customNumberFormat ? this.props.customNumberFormat.replace("#", "0") : "") || "0"
-    );
-  }
-
   @computed get numeralFormattedValue() {
     if (this.props.value === null) {
       return "";
     }
-    return numeral(this.props.value).format(this.numeralFormat);
+    return formatNumber(this.props.customNumberFormat, "", Number(this.props.value));
   }
 
   @computed get editValue() {
@@ -103,7 +102,7 @@ export class NumberEditor extends React.Component<{
       this.props.onChange && this.props.onChange(null, null);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     } else {
-      const value = numeral(this.editValue).format(this.numeralFormat);
+      const value =  ""+Number(this.editValue);
       this.hasFocus = false;
       this.props.onChange && this.props.onChange(null, value);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
@@ -112,8 +111,8 @@ export class NumberEditor extends React.Component<{
 
   @action.bound handleChange(event: any) {
     this.wasChanged = true;
-    this.editingValue = (event.target.value || "").replace(/[^\d.\-,'\s]/g, "");
-    // this.props.onChange && this.props.onChange(event, event.target.value);
+    const invalidChars = new RegExp("[^\\d"+getCurrentDecimalSeparator()+getCurrentGroupSeparator()+"]", "g");
+    this.editingValue = (event.target.value || "").replace(invalidChars, "");
   }
 
   @action.bound handleKeyDown(event: any) {
