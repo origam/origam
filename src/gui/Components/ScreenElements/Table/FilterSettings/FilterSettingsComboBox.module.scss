@@ -1,0 +1,67 @@
+.container {
+  width: 100%;
+  position: relative;
+}
+
+.trigger {
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  height: 25px;
+  padding: 0.25em 0.3em;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  @include border-radius(2px);
+  @extend %transition;
+  background: $blue;
+  border: 1px solid $blue;
+  color: $white;
+  cursor: pointer;
+  margin: 0 0 0.5em 0;
+  &:hover {
+    background: $white;
+    color: $blue;
+  }
+}
+
+.dropdownSymbol {
+  position: absolute;
+  right: 0px;
+  padding-right: 5px;
+}
+
+.dropdown {
+  position: absolute;
+  left: 0px;
+  top: 21px;
+  z-index: 1000;
+  background-color: white;
+  color: black;
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0.5em 1.5em 0 rgba($black, 0.25);
+  border: 1px solid $grey3;
+  box-sizing: border-box;
+  @include border-radius(4px);
+}
+
+.dropdownItem {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  color: $blue;
+  cursor: pointer;
+  font-weight: 400;
+  height: 25px;
+  padding: 0 0.5em;
+  &:hover {
+    background: $blue;
+    color: $white;
+  }
+}
+
+

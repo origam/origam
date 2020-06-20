@@ -1,0 +1,47 @@
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 25px;
+  padding: 0.25em 0.3em;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  @include border-radius(2px);
+  @extend %transition;
+  background: $white;
+  border: 1px solid $grey3;
+  color: $black;
+  margin: 0 0 0.25em 0;
+  &:hover, &:focus {
+    background: $white;
+    border-color: $blue;
+    color: $black;
+    font-size: 1em;
+  }
+  &:last-of-type {
+    margin-bottom: 0.5em;
+  }
+}
+
+.tagEditorDropdown {
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  background-color: white;
+  border: 1px solid #cccccc;
+}
+
+.tagEditorDropdownItem {
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 0px 10px;
+  &:hover {
+    cursor: pointer;
+    background-color: #8998c5;
+    color: white;
+  }
+}
+

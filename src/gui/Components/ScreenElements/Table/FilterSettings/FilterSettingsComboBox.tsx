@@ -1,6 +1,6 @@
 import React from "react";
 
-import S from "./FilterSettingsComboBox.module.css";
+import S from "./FilterSettingsComboBox.module.scss";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 
