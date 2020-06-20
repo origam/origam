@@ -191,7 +191,7 @@ namespace Origam.ServerCore.Controller
             {
                 // todo: unify approach
                 var checkResult = CheckLookup(input);
-                if (checkResult != null)
+                if(checkResult != null)
                 {
                     return checkResult;
                 }
@@ -207,7 +207,7 @@ namespace Origam.ServerCore.Controller
             {
                 var dependencies 
                     = new Dictionary<string, object>(input.LookupIds.Length);
-                foreach (var lookupId in input.LookupIds)
+                foreach(var lookupId in input.LookupIds)
                 {
                     dependencies.Add((string)lookupId, 
                         GetLookupCacheDependencies((string)lookupId));
@@ -247,10 +247,10 @@ namespace Origam.ServerCore.Controller
             return RunWithErrorHandler(() =>
             {
                 var result = new Dictionary<Guid, Dictionary<object, string>>();
-                foreach (var input in inputs)
+                foreach(var input in inputs)
                 {
                     var checkResult = CheckLookup(input);
-                    if (checkResult != null)
+                    if(checkResult != null)
                     {
                         return checkResult;
                     }
@@ -504,13 +504,13 @@ namespace Origam.ServerCore.Controller
         private Result<IActionResult, IActionResult> ExtractAggregationList(IActionResult fullReaderResult)
         {
             var outerResultList = ((fullReaderResult as OkObjectResult)?.Value as List<IEnumerable<KeyValuePair<string, object>>>);
-            if (outerResultList == null || outerResultList.Count == 0)
+            if(outerResultList == null || outerResultList.Count == 0)
             {
                 return Result.Ok<IActionResult, IActionResult>(fullReaderResult);
             }
 
             var innerDictionary = outerResultList[0] as Dictionary<string, object>;
-            if (innerDictionary == null || !innerDictionary.ContainsKey("aggregations"))
+            if(innerDictionary == null || !innerDictionary.ContainsKey("aggregations"))
             {
                 return Result.Ok<IActionResult, IActionResult>(fullReaderResult);
             }
@@ -554,7 +554,7 @@ namespace Origam.ServerCore.Controller
                     .ChildItemsByType(DataStructureEntity.ItemTypeConst)[0])
                 .Name];
             var tableName = FormXmlBuilder.DatabaseTableName(comboListTable);
-            if (tableName != null)
+            if(tableName != null)
             {
                 result.Add(tableName);
             }
@@ -562,7 +562,7 @@ namespace Origam.ServerCore.Controller
         }
         private IActionResult CheckLookup(LookupLabelsInput input)
         {
-            if (input.MenuId == Guid.Empty)
+            if(input.MenuId == Guid.Empty)
             {
                 SecurityTools.CurrentUserProfile();
             }
@@ -574,7 +574,7 @@ namespace Origam.ServerCore.Controller
                     .Bind(menuItem
                         => CheckLookupIsAllowedInMenu(
                             menuItem, input.LookupId));
-                if (menuResult.IsFailure)
+                if(menuResult.IsFailure)
                 {
                     return menuResult.Error;
                 }
@@ -586,10 +586,10 @@ namespace Origam.ServerCore.Controller
         {
             Result<DataStructureMethod, IActionResult> method 
                 = FindItem<DataStructureMethod>(dataStructureQuery.MethodId);
-            if (method.IsSuccess)
+            if(method.IsSuccess)
             {
                 var structureMethod = method.Value;
-                if (structureMethod is DataStructureWorkflowMethod)
+                if(structureMethod is DataStructureWorkflowMethod)
                 {
                     var menuItem = FindItem<FormReferenceMenuItem>(methodId)
                         .Value;
@@ -599,7 +599,7 @@ namespace Origam.ServerCore.Controller
                 }
             }
 
-            if (returnKeyValuePairs)
+            if(returnKeyValuePairs)
             {
                 var linesAsPairs = dataService
                     .ExecuteDataReaderReturnPairs(dataStructureQuery)
@@ -707,7 +707,7 @@ namespace Origam.ServerCore.Controller
                         entityData.Entity, input.DataStructureEntityId,
                         Guid.Empty, input.Id));
             }
-            if (input.DataStructureEntityId == Guid.Empty)
+            if(input.DataStructureEntityId == Guid.Empty)
             {
                 return sessionObjects.UIService.GetRow(
                    sessionFormIdentifier: input.SessionFormIdentifier,
@@ -776,7 +776,7 @@ namespace Origam.ServerCore.Controller
         {
             var customOrdering = GetOrderings(input.Ordering);
 
-            if (input.RowOffset != 0 && customOrdering.Count == 0)
+            if(input.RowOffset != 0 && customOrdering.Count == 0)
             {
                 return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
             }
@@ -826,7 +826,7 @@ namespace Origam.ServerCore.Controller
             List<ColumnData> columns = new List<ColumnData>
                 {columnData, ColumnData.GroupByCountColumn};
 
-            if (input.GroupByLookupId != Guid.Empty)
+            if(input.GroupByLookupId != Guid.Empty)
             {
                 columns.Add(ColumnData.GroupByCaptionColumn);
             }
@@ -951,10 +951,10 @@ namespace Origam.ServerCore.Controller
             DataSet dataSet, DataStructureQuery query)
         {
             var table = dataSet.Tables[0];
-            foreach (DataRow dataRow in table.Rows)
+            foreach(DataRow dataRow in table.Rows)
             {
                 var values = new object[query.ColumnsInfo.Count];
-                for (var i = 0; i < query.ColumnsInfo.Count; i++)
+                for(var i = 0; i < query.ColumnsInfo.Count; i++)
                 {
                     values[i] = dataRow.Field<object>(query.ColumnsInfo.Columns[i].Name);
                 }

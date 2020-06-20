@@ -257,10 +257,10 @@ namespace Origam.ServerCore.Controller
             DataStructureQuery query)
         {
             bool isLazyLoaded = entityData.MenuItem.ListDataStructure != null;
-            if (isLazyLoaded)
+            if(isLazyLoaded)
             {
-                if (entityData.MenuItem.ListEntity.Name
-                    == entityData.Entity.Name)
+                if(entityData.MenuItem.ListEntity.Name
+                == entityData.Entity.Name)
                 {
                     query.MethodId = entityData.MenuItem.ListMethodId;
                     query.DataSourceId
@@ -268,7 +268,7 @@ namespace Origam.ServerCore.Controller
                     // get parameters from session store
                     var parameters = sessionObjects.UIService.GetParameters(
                         sessionFormIdentifier);
-                    foreach (var key in parameters.Keys)
+                    foreach(var key in parameters.Keys)
                     {
                         query.Parameters.Add(
                             new QueryParameter(key.ToString(),
@@ -285,7 +285,7 @@ namespace Origam.ServerCore.Controller
                                 = entityData.Entity.RootEntity.ParentItemId;
                             query.Parameters.Add(new QueryParameter(
                                 parameterName, masterRowId));
-                            if (masterRowId == Guid.Empty)
+                            if(masterRowId == Guid.Empty)
                             {
                                 return Result
                                     .Failure<DataStructureQuery, IActionResult>(

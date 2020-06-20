@@ -218,7 +218,7 @@ namespace Origam.ServerCore
                 return;
             }
 
-            if (pss == null)
+            if(pss == null)
             {
                 return;
             }
@@ -256,7 +256,7 @@ namespace Origam.ServerCore
                     sessionStore.GetType().Name, SessionStore.ACTION_REFRESH]);
             }
             IList<string> columns = null;
-            if (sessionStore.IsPagedLoading)
+            if(sessionStore.IsPagedLoading)
             {
                 // for lazily-loaded data we provide all the preloaded columns
                 // (primary keys + all the initial sort columns)
@@ -370,7 +370,7 @@ namespace Origam.ServerCore
         }
         public IDictionary GetParameters(Guid sessionFormIdentifier)
         {
-            if (sessionFormIdentifier == Guid.Empty)
+            if(sessionFormIdentifier == Guid.Empty)
             {
                 return new Hashtable();
             }
@@ -398,7 +398,7 @@ namespace Origam.ServerCore
             {
                 // ignored
             }
-            if (sessionStore == null)
+            if(sessionStore == null)
             {
                 return new ArrayList();
             }
@@ -425,7 +425,7 @@ namespace Origam.ServerCore
             {
                 // ignored
             }
-            if (action?.ConfirmationRule == null)
+            if(action?.ConfirmationRule == null)
             {
                 return new RuleExceptionDataCollection();
             }
@@ -512,7 +512,7 @@ namespace Origam.ServerCore
                 {
                     var table = sessionStore.GetTable(entity, sessionStore.Data);
                     var entityId = Guid.Empty;
-                    if (table.ExtendedProperties.Contains("EntityId"))
+                    if(table.ExtendedProperties.Contains("EntityId"))
                     {
                         entityId = (Guid)table.ExtendedProperties["EntityId"];
                     }
@@ -697,7 +697,7 @@ namespace Origam.ServerCore
                     = ServiceManager.Services.GetService<IDataLookupService>();
                 var data = workQueueService.UserQueueList();
                 var queueList = data.Tables["WorkQueue"];
-                foreach (DataRow row in queueList.Rows)
+                foreach(DataRow row in queueList.Rows)
                 {
                     var workQueueId = row["Id"];
                     var workQueueClassName = (string)row["WorkQueueClass"];
@@ -725,7 +725,7 @@ namespace Origam.ServerCore
         {
             var profileId = SecurityTools.CurrentUserProfile().Id;
             WorkflowSessionStore workflowSessionStore = null;
-            if (input.SessionFormIdentifier != Guid.Empty)
+            if(input.SessionFormIdentifier != Guid.Empty)
             {
                 workflowSessionStore = sessionManager.GetSession(
                     input.SessionFormIdentifier) as WorkflowSessionStore;
@@ -917,7 +917,7 @@ namespace Origam.ServerCore
                 .Rows[0]["refOrigamPanelFilterId"] = filterId;
             OrigamPanelConfigDA.SaveUserConfig(
                 userConfig, input.PanelInstanceId, workflowId, profileId);
-            if (shouldDeleteFilter)
+            if(shouldDeleteFilter)
             {
                 DeleteFilter(oldFilterId);
             }
@@ -937,7 +937,7 @@ namespace Origam.ServerCore
             }
             var userConfig = OrigamPanelConfigDA.LoadConfigData(
                 input.PanelInstanceId, workflowId, profileId);
-            if ((userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
+            if((userConfig.Tables["OrigamFormPanelConfig"].Rows.Count == 0)
             || (userConfig.Tables["OrigamFormPanelConfig"]
                 .Rows[0]["refOrigamPanelFilterId"] 
             == DBNull.Value))
@@ -966,7 +966,7 @@ namespace Origam.ServerCore
                 }
                 // look for deleted children. They aren't returned by
 				// previous ChetChildRows call. 
-                if (row.GetChildRows(childRelation,
+                if(row.GetChildRows(childRelation,
                     DataRowVersion.Original).Any(
                     childRow => childRow.RowState == DataRowState.Deleted))
                 {
