@@ -1,0 +1,551 @@
+/*  ---------------------------------------------------------------------- */
+/*  
+Name: origam.app
+Date: June 2020
+Version: 1.0
+Author: Daniel Baumgartner
+Autor URI: icontel.com
+*/
+/*  ---------------------------------------------------------------------- */
+/*  ---------------------------------------------------------------------- */
+/*  settings */
+/*  ---------------------------------------------------------------------- */
+/*  ---------------------------------------------------------------------- */
+.Table_table .Table_headers .Header_header, .Table_table .Table_headers .Header_header .Header_order, .Table_table .Table_headers .Header_columnWidthHandle, .Table_table .Table_headers .FilterSettingsComboBox_trigger, .Table_table .Table_headers .FilterSettingsCommon_input, .Table_table .Table_headers .TagInput_root .Dropdowner_dropdownerContainer .TagInput_input, #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetMonthControls button, #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetYearControls button, .CustomSplitter_divider .dividerLine {
+  -webkit-transition: all 200ms linear;
+  -moz-transition: all 200ms linear;
+  -ms-transition: all 200ms linear;
+  -o-transition: all 200ms linear;
+  transition: all 200ms linear; }
+
+/*  ---------------------------------------------------------------------- */
+/*  screen toolbar */
+.ScreenToolbarActionGroup_root {
+  border-color: #E9E8F0; }
+
+.CustomSplitter_panel .MainBar_root .ScreenToolbar_root {
+  padding: 0 1em 0 0; }
+  .CustomSplitter_panel .MainBar_root .ScreenToolbar_root .Dropdowner_dropdownerContainer .ScreenToolbarAction_root {
+    padding: 1.2em .9em; }
+
+/*  ---------------------------------------------------------------------- */
+/*  screen header */
+.ScreenHeader_root {
+  margin-bottom: 1em; }
+  .ScreenHeader_root h1 {
+    margin: 0; }
+  .ScreenHeader_root .ScreenHeaderDivider_root {
+    border-color: #E9E8F0;
+    margin: 0 2em; }
+  .ScreenHeader_root .ScreenHeader_workflowActionBtn {
+    background: #E9E8F0;
+    border: 1px solid #B0AFB7;
+    box-sizing: border-box;
+    color: #0D0D0D;
+    font-size: 12px;
+    height: 2em;
+    margin: 0 0.5em;
+    padding: 0 1.5em;
+    -webkit-border-radius: 3em;
+    -moz-border-radius: 3em;
+    -ms-border-radius: 3em;
+    -o-border-radius: 3em;
+    border-radius: 3em; }
+    .ScreenHeader_root .ScreenHeader_workflowActionBtn:first-of-type {
+      margin-left: 0; }
+    .ScreenHeader_root .ScreenHeader_workflowActionBtn:last-of-type {
+      margin-right: 0; }
+    .ScreenHeader_root .ScreenHeader_workflowActionBtn:hover {
+      background: #B0AFB7;
+      color: #0D0D0D; }
+
+/*  ---------------------------------------------------------------------- */
+/*  data view header */
+.DataViewHeader_root {
+  border-style: solid;
+  border-color: #E9E8F0 !important;
+  border-width: 0 0 1px 0; }
+  .DataViewHeader_root h2 {
+    font-size: 1.25em;
+    line-height: 1.4em;
+    margin: 0 1.5em 0 0;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal; }
+  .DataViewHeader_root .DataViewHeaderGroup_root {
+    border-right: 1px solid #E9E8F0;
+    padding: 0 1.5em; }
+    .DataViewHeader_root .DataViewHeaderGroup_root .DataViewHeaderAction_root {
+      height: auto;
+      padding: 0 0.5em; }
+      .DataViewHeader_root .DataViewHeaderGroup_root .DataViewHeaderAction_root svg {
+        height: 1.5em;
+        width: 1.5em;
+        stroke: #77767E; }
+        .DataViewHeader_root .DataViewHeaderGroup_root .DataViewHeaderAction_root svg:hover {
+          stroke: #0D0D0D; }
+    .DataViewHeader_root .DataViewHeaderGroup_root:first-of-type {
+      border-left: 1px solid #E9E8F0;
+      border-right: none; }
+    .DataViewHeader_root .DataViewHeaderGroup_root:last-of-type {
+      border-right: none;
+      padding-right: 0; }
+
+/*  ---------------------------------------------------------------------- */
+/*  table view */
+.Table_table .Table_headers .Scrollee_scrollee {
+  background: #F7F6FA; }
+
+.Table_table .Table_headers .Header_header {
+  background: #F7F6FA;
+  border: none;
+  min-height: 25px;
+  padding: 0 0.1em 0 0.3em; }
+  .Table_table .Table_headers .Header_header .Header_inHeaderRow {
+    justify-content: left;
+    min-height: 25px; }
+    .Table_table .Table_headers .Header_header .Header_inHeaderRow .Header_label {
+      display: block;
+      line-height: 25px;
+      margin: 0;
+      justify-content: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      word-wrap: normal;
+      width: 100%; }
+  .Table_table .Table_headers .Header_header:first-of-type {
+    padding-left: 0.6em; }
+  .Table_table .Table_headers .Header_header:hover {
+    background: #E9E8F0; }
+    .Table_table .Table_headers .Header_header:hover .Header_order {
+      background: #E9E8F0; }
+  .Table_table .Table_headers .Header_header.changing-order {
+    color: #0D0D0D; }
+  .Table_table .Table_headers .Header_header .Header_order {
+    background: #F7F6FA;
+    color: #4C84FF;
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 0.5em;
+    right: -3px; }
+
+.Table_table .Table_headers .Header_columnWidthHandle {
+  background: #E9E8F0;
+  border-color: #F7F6FA;
+  border-style: solid;
+  border-width: 0 4px;
+  cursor: ew-resize;
+  margin: 0;
+  padding: 0;
+  width: 9px; }
+  .Table_table .Table_headers .Header_columnWidthHandle:hover, .Table_table .Table_headers .Header_columnWidthHandle:focus {
+    background: #4C84FF; }
+  .Table_table .Table_headers .Header_columnWidthHandle:last-of-type {
+    border-right-color: #E9E8F0; }
+
+.Table_table .Table_headers .FilterSettingsComboBox_trigger, .Table_table .Table_headers .FilterSettingsCommon_input {
+  box-sizing: border-box;
+  height: 25px;
+  padding: 0.25em 0.3em;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px; }
+
+.Table_table .Table_headers .FilterSettingsComboBox_trigger {
+  background: #4C84FF;
+  border: 1px solid #4C84FF;
+  color: #FFFFFF;
+  cursor: pointer;
+  margin: 0 0 0.5em 0; }
+  .Table_table .Table_headers .FilterSettingsComboBox_trigger:hover {
+    background: #FFFFFF;
+    color: #4C84FF; }
+
+.Table_table .Table_headers .FilterSettingsComboBox_dropdown {
+  box-shadow: 0 0.5em 1.5em 0 rgba(13, 13, 13, 0.25);
+  border: 1px solid #B0AFB7;
+  box-sizing: border-box;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
+  .Table_table .Table_headers .FilterSettingsComboBox_dropdown .FilterSettingsComboBox_dropdownItem {
+    color: #4C84FF;
+    cursor: pointer;
+    font-weight: 400;
+    height: 25px;
+    padding: 0 0.5em; }
+    .Table_table .Table_headers .FilterSettingsComboBox_dropdown .FilterSettingsComboBox_dropdownItem:hover {
+      background: #4C84FF;
+      color: #FFFFFF; }
+
+.Table_table .Table_headers .FilterSettingsCommon_input {
+  background: #FFFFFF;
+  border: 1px solid #B0AFB7;
+  color: #0D0D0D;
+  margin: 0 0 0.25em 0; }
+  .Table_table .Table_headers .FilterSettingsCommon_input:hover, .Table_table .Table_headers .FilterSettingsCommon_input:focus {
+    background: #FFFFFF;
+    border-color: #4C84FF;
+    color: #0D0D0D;
+    font-size: 1em; }
+  .Table_table .Table_headers .FilterSettingsCommon_input:last-of-type {
+    margin-bottom: 0.5em; }
+
+.Table_table .Table_headers .TagInput_root .Dropdowner_dropdownerContainer {
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0 0 0.5em 0; }
+  .Table_table .Table_headers .TagInput_root .Dropdowner_dropdownerContainer .TagInput_plus {
+    align-items: center;
+    background: #B0AFB7;
+    border: 1px solid #B0AFB7;
+    color: #FFFFFF;
+    display: flex;
+    height: 25px;
+    justify-content: center;
+    text-align: center;
+    width: 25px;
+    -webkit-border-radius: 2px 0 0 2px;
+    -moz-border-radius: 2px 0 0 2px;
+    -ms-border-radius: 2px 0 0 2px;
+    -o-border-radius: 2px 0 0 2px;
+    border-radius: 2px 0 0 2px; }
+  .Table_table .Table_headers .TagInput_root .Dropdowner_dropdownerContainer .TagInput_input {
+    background: #FFFFFF;
+    border: 1px solid #B0AFB7;
+    box-sizing: border-box;
+    height: 25px;
+    padding: 0.25em 0.3em;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: calc(100% - 25px);
+    word-wrap: normal;
+    -webkit-border-radius: 0 2px 2px 0;
+    -moz-border-radius: 0 2px 2px 0;
+    -ms-border-radius: 0 2px 2px 0;
+    -o-border-radius: 0 2px 2px 0;
+    border-radius: 0 2px 2px 0; }
+    .Table_table .Table_headers .TagInput_root .Dropdowner_dropdownerContainer .TagInput_input:focus {
+      border-color: #4C84FF; }
+
+.Table_table .Table_headers .TagInput_root .TagInput_fakeInput {
+  background: #FE5461; }
+
+.Table_table .Table_headers .TagInput_root .TagInput_item {
+  background: #FFFFFF;
+  border: 1px solid #B0AFB7;
+  color: #0D0D0D;
+  height: 22px;
+  margin: 0 0.25em 0.25em 0;
+  padding: 0 0.2em 0 0.75em;
+  -webkit-border-radius: 3em;
+  -moz-border-radius: 3em;
+  -ms-border-radius: 3em;
+  -o-border-radius: 3em;
+  border-radius: 3em; }
+  .Table_table .Table_headers .TagInput_root .TagInput_item .TagInput_closeBtn {
+    background: none;
+    color: #77767E;
+    position: relative;
+    right: 0;
+    width: 20px; }
+    .Table_table .Table_headers .TagInput_root .TagInput_item .TagInput_closeBtn:hover {
+      color: #FE5461; }
+
+.Table_table .Table_headers .TagInput_root:hover .Dropdowner_dropdownerContainer .TagInput_plus {
+  background: #4C84FF;
+  border-color: #4C84FF;
+  color: #FFFFFF; }
+  .Table_table .Table_headers .TagInput_root:hover .Dropdowner_dropdownerContainer .TagInput_plus:hover {
+    background: #FFFFFF;
+    color: #4C84FF; }
+
+.Table_table .Table_headers .TagInput_root:hover .Dropdowner_dropdownerContainer .TagInput_input {
+  border-color: #4C84FF; }
+  .Table_table .Table_headers .TagInput_root:hover .Dropdowner_dropdownerContainer .TagInput_input:focus {
+    border-color: #4C84FF; }
+
+/*  ---------------------------------------------------------------------- */
+/*  detail view */
+label.FormField_caption {
+  display: block;
+  overflow: hidden;
+  padding: 0 0.5em 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal; }
+
+input.TextEditor_input, input.DropdownEditor_input, input.DateTimeEditor_input, input.NumberEditor_input, textarea.TextEditor_input, textarea.DropdownEditor_input, textarea.DateTimeEditor_input, textarea.NumberEditor_input {
+  background: #F7F6FA;
+  border: 1px solid #B0AFB7;
+  color: #0D0D0D;
+  padding: 0.25em 0.4em; }
+  input.TextEditor_input:read-only, input.DropdownEditor_input:read-only, input.DateTimeEditor_input:read-only, input.NumberEditor_input:read-only, textarea.TextEditor_input:read-only, textarea.DropdownEditor_input:read-only, textarea.DateTimeEditor_input:read-only, textarea.NumberEditor_input:read-only {
+    background: #E9E8F0;
+    border: 1px solid #E9E8F0;
+    color: #3E3D45; }
+  input.TextEditor_input.isRightAligned, input.DropdownEditor_input.isRightAligned, input.DateTimeEditor_input.isRightAligned, input.NumberEditor_input.isRightAligned, textarea.TextEditor_input.isRightAligned, textarea.DropdownEditor_input.isRightAligned, textarea.DateTimeEditor_input.isRightAligned, textarea.NumberEditor_input.isRightAligned {
+    padding: 0.25em 0.4em; }
+
+.DropdownEditor_editorContainer .DropdownEditor_dropdownSymbol, .DropdownEditor_editorContainer .DateTimeEditor_dropdownSymbol, .DateTimeEditor_editorContainer .DropdownEditor_dropdownSymbol, .DateTimeEditor_editorContainer .DateTimeEditor_dropdownSymbol {
+  color: #0D0D0D; }
+
+.DropdownEditor_editorContainer:hover .DropdownEditor_dropdownSymbol, .DropdownEditor_editorContainer:hover .DateTimeEditor_dropdownSymbol, .DateTimeEditor_editorContainer:hover .DropdownEditor_dropdownSymbol, .DateTimeEditor_editorContainer:hover .DateTimeEditor_dropdownSymbol {
+  color: #4C84FF; }
+
+/*  ---------------------------------------------------------------------- */
+/*  dropdown */
+#dropdown-portal .Dropdowner_droppedBox .Dropdown_root {
+  box-shadow: 0 0.5em 1.5em 0 rgba(13, 13, 13, 0.25);
+  border: 1px solid #B0AFB7;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
+  #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root {
+    min-width: 250px; }
+    #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .avatarSection {
+      padding: 1em; }
+      #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .avatarSection .pictureSection {
+        margin: 0 1em 0 0;
+        width: 3em; }
+        #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .avatarSection .pictureSection .avatarContainer {
+          /*background: $grey2;*/
+          background-image: url("https://www.icontel.com/portals/0/Skins/Icontel/content/images/werner-mattes.png");
+          background-size: cover;
+          background-position: center;
+          border: 1px solid #E9E8F0;
+          height: 3em;
+          width: 3em; }
+          #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .avatarSection .pictureSection .avatarContainer img.avatar {
+            display: none;
+            width: 2em; }
+      #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .avatarSection .infoSection {
+        font-size: 1.25em;
+        line-height: 1.4em;
+        font-weight: 700;
+        margin: 0; }
+    #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection {
+      border-top: 1px solid #E9E8F0;
+      margin: 0;
+      padding: 0; }
+      #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection .menuItemDivider {
+        display: none; }
+      #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection .DropdownItem_root {
+        color: #4C84FF;
+        height: 30px;
+        padding: 0 1em; }
+        #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection .DropdownItem_root:last-of-type {
+          color: #FE5461; }
+          #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection .DropdownItem_root:last-of-type:hover {
+            background: #FE5461; }
+        #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection .DropdownItem_root:hover {
+          background: #4C84FF;
+          color: #FFFFFF; }
+        #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection .DropdownItem_root.isDisabled {
+          color: #B0AFB7; }
+          #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .UserMenuDropdown_root .actionSection .DropdownItem_root.isDisabled:hover {
+            background: #F7F6FA; }
+  #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .DropdownItem_root {
+    color: #4C84FF;
+    height: 30px;
+    padding: 0 1em; }
+    #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .DropdownItem_root:hover {
+      background: #4C84FF;
+      color: #FFFFFF; }
+    #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .DropdownItem_root.isDisabled {
+      color: #B0AFB7; }
+      #dropdown-portal .Dropdowner_droppedBox .Dropdown_root .DropdownItem_root.isDisabled:hover {
+        background: #F7F6FA; }
+
+#dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer {
+  box-shadow: 0 0.5em 1.5em 0 rgba(13, 13, 13, 0.25);
+  border: 1px solid #B0AFB7;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
+  #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow {
+    border: none;
+    height: 30px; }
+    #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader, #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetDayHeaderCell, #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetCell {
+      height: auto; }
+    #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader {
+      background: #E9E8F0;
+      border-bottom: 1px solid #B0AFB7; }
+      #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetTitle {
+        font-size: 1.1em;
+        font-weight: 700; }
+      #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetMonthControls button, #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetYearControls button {
+        box-sizing: content-box;
+        color: #4C84FF;
+        height: 1em;
+        line-height: 0.8em;
+        margin: 0 0.25em;
+        padding: 0.5em;
+        width: 1em; }
+        #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetMonthControls button:hover, #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetYearControls button:hover {
+          background: #4C84FF;
+          color: #FFFFFF;
+          -webkit-border-radius: 5em;
+          -moz-border-radius: 5em;
+          -ms-border-radius: 5em;
+          -o-border-radius: 5em;
+          border-radius: 5em; }
+        #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetMonthControls button i, #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetHeader .DateTimeEditor_calendarWidgetYearControls button i {
+          font-size: 1.25em;
+          line-height: 0.8em; }
+    #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetDayHeaderCell {
+      border: none;
+      background: #FFFFFF;
+      color: #0D0D0D;
+      font-size: 0.9em;
+      font-weight: 700; }
+    #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetCell {
+      border: none;
+      background: #FFFFFF;
+      color: #0D0D0D; }
+      #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetCell.DateTimeEditor_calendarWidgetNeighbourMonthCell {
+        color: #E9E8F0; }
+      #dropdown-portal .Dropdowner_droppedBox .DateTimeEditor_droppedPanelContainer .DateTimeEditor_calendarWidgetRow .DateTimeEditor_calendarWidgetCell.DateTimeEditor_calendarWidgetSelectedDay {
+        background: #4C84FF;
+        color: #FFFFFF;
+        font-weight: 700;
+        -webkit-border-radius: 5em;
+        -moz-border-radius: 5em;
+        -ms-border-radius: 5em;
+        -o-border-radius: 5em;
+        border-radius: 5em; }
+
+#dropdown-portal .Dropdowner_droppedBox .FilterSettingsLookup_droppedPanel {
+  box-shadow: 0 0.5em 1.5em 0 rgba(13, 13, 13, 0.25);
+  border: 1px solid #B0AFB7;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
+  #dropdown-portal .Dropdowner_droppedBox .FilterSettingsLookup_droppedPanel .FilterSettingsLookup_optionGridCell {
+    background: #FFFFFF !important;
+    color: #4C84FF;
+    padding: 0 0.25em; }
+    #dropdown-portal .Dropdowner_droppedBox .FilterSettingsLookup_droppedPanel .FilterSettingsLookup_optionGridCell:hover {
+      background: #4C84FF !important;
+      color: #FFFFFF; }
+
+/*  ---------------------------------------------------------------------- */
+/*  splitter divider */
+.CustomSplitter_divider {
+  background: #FFFFFF; }
+  .CustomSplitter_divider:not(.isDragging):hover {
+    background: #FFFFFF; }
+    .CustomSplitter_divider:not(.isDragging):hover .dividerLine {
+      border-color: #4C84FF !important; }
+  .CustomSplitter_divider.isDragging {
+    background: #4C84FF;
+    opacity: 0.8;
+    filter: alpha(opacity=80); }
+    .CustomSplitter_divider.isDragging.isVert .dividerLine, .CustomSplitter_divider.isDragging.isHoriz .dividerLine {
+      border-color: #4C84FF !important; }
+  .CustomSplitter_divider.isVert .dividerLine {
+    border-width: 1px 0 1px 0 !important; }
+  .CustomSplitter_divider.isHoriz .dividerLine {
+    border-width: 0 1px 0 1px !important; }
+  .CustomSplitter_divider .dividerLine {
+    border-color: #FFFFFF !important;
+    border-style: solid !important; }
+
+/*  ---------------------------------------------------------------------- */
+/*  modal box */
+.Dialog_modalWindowOverlay {
+  background: rgba(255, 255, 255, 0.66); }
+
+.toplevelContainer.isBlurred {
+  filter: blur(0.2em);
+  -webkit-filter: blur(0.2em);
+  -moz-filter: blur(0.2em); }
+
+.Dialog_modalWindow {
+  box-shadow: 0 0.5em 1.5em 0 rgba(13, 13, 13, 0.25);
+  border: 1px solid #B0AFB7;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
+  .Dialog_modalWindow .Dialog_title {
+    background: #E9E8F0;
+    height: 40px;
+    font-size: 1.5em;
+    line-height: 1.3em;
+    padding: 0 0 0 0.65em;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -ms-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0; }
+    .Dialog_modalWindow .Dialog_title .Dialog_label .Dialog_labelText {
+      padding: 0; }
+    .Dialog_modalWindow .Dialog_title .Dialog_buttons button.Dialog_btnClose .Dialog_btnIconContainer {
+      background: none;
+      height: 40px;
+      padding: 0;
+      width: 40px; }
+      .Dialog_modalWindow .Dialog_title .Dialog_buttons button.Dialog_btnClose .Dialog_btnIconContainer svg {
+        background: none;
+        height: 2em;
+        stroke: #FE5461;
+        stroke-width: 1.5px;
+        top: calc(20px - 1em);
+        width: 2em; }
+    .Dialog_modalWindow .Dialog_title .Dialog_buttons button.Dialog_btnClose:hover {
+      background: none; }
+      .Dialog_modalWindow .Dialog_title .Dialog_buttons button.Dialog_btnClose:hover .Dialog_btnIconContainer {
+        background: none; }
+        .Dialog_modalWindow .Dialog_title .Dialog_buttons button.Dialog_btnClose:hover .Dialog_btnIconContainer svg {
+          stroke: #0D0D0D;
+          stroke-width: 2px; }
+  .Dialog_modalWindow .Dialog_body .ErrorDialog_dialogContent {
+    padding: 1.5em 1em; }
+  .Dialog_modalWindow .Dialog_footer {
+    border-top: 1px solid #E9E8F0;
+    padding: 1em; }
+    .Dialog_modalWindow .Dialog_footer button {
+      background: #4C84FF;
+      color: #FFFFFF;
+      border: 1px solid #4C84FF;
+      box-sizing: border-box;
+      font-weight: 700;
+      margin: 0 0.5em;
+      min-width: 75px;
+      padding: 0 1.5em;
+      -webkit-border-radius: 3em;
+      -moz-border-radius: 3em;
+      -ms-border-radius: 3em;
+      -o-border-radius: 3em;
+      border-radius: 3em; }
+      .Dialog_modalWindow .Dialog_footer button:first-of-type {
+        margin-left: 0; }
+      .Dialog_modalWindow .Dialog_footer button:last-of-type {
+        margin-right: 0; }
+      .Dialog_modalWindow .Dialog_footer button:hover {
+        background: #E9E8F0;
+        color: #4C84FF; }
