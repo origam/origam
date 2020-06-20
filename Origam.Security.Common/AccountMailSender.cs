@@ -575,7 +575,7 @@ namespace Origam.Security.Common
 #if DEBUG
             SaveToDebugMailLog(pms);
 #endif
-           // WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
+            WorkflowService.ExecuteWorkflow(new Guid("6e6d4e02-812a-4c95-afd1-eb2428802e2b"), pms, null);
         }
 
         private static void SaveToDebugMailLog(QueryParameterCollection pms)

@@ -138,7 +138,7 @@ namespace Origam.Server
         {
             ReportHelper.PopulateDefaultValues(
                 report, reportRequest.Parameters);
-            string filePath = BuildFileSystemReportFilePath(
+            string filePath = ReportHelper.BuildFileSystemReportFilePath(
                 report.ReportPath, reportRequest.Parameters);
             string mimeType = HttpTools.GetMimeType(filePath);
             context.Response.ContentType = mimeType;
@@ -148,32 +148,6 @@ namespace Origam.Server
                     new FxHttpRequestWrapper(context.Request), Path.GetFileName(filePath)));
             context.Response.WriteFile(filePath);
         }
-
-        private string BuildFileSystemReportFilePath(
-            string filePath, Hashtable parameters)
-        {
-            foreach (DictionaryEntry entry in parameters)
-            {
-                string sKey = entry.Key.ToString();
-                string sValue = null;
-                if (entry.Value != null)
-                {
-                    sValue = entry.Value.ToString();
-                }
-                string replacement = "{" + sKey + "}";
-                if (filePath.IndexOf(replacement) > -1)
-                {
-                    if (sValue == null)
-                    {
-                        throw new Exception(
-                            Properties.Resources.FilePathPartParameterNull);
-                    }
-                    filePath = filePath.Replace(replacement, sValue);
-                }
-            }
-            return filePath;
-        }
-
         private void HandleWebReport(
             HttpContext context, ReportRequest reportRequest, 
             WebReport webReport)

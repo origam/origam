@@ -9,6 +9,8 @@
         "UserUnlockNotificationBodyFileName": "",
         "UserRegistrationMailSubject": "Register",
         "UserRegistrationMailBodyFileName": "testNewUserFile.txt",
+        "MultiFactorMailSubject": "Register",
+        "MultiFactorMailBodyFileName":"testMultiFactorFile.txt",
         "MailQueueName": "",
         "UserRegistrationAllowed": "true"
     },
