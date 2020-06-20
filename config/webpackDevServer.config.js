@@ -1,5 +1,6 @@
 'use strict';
 
+
 const fs = require('fs');
 const errorOverlayMiddleware = require('react-dev-utils/errorOverlayMiddleware');
 const evalSourceMapMiddleware = require('react-dev-utils/evalSourceMapMiddleware');
@@ -15,24 +16,32 @@ const sockPath = process.env.WDS_SOCKET_PATH; // default: '/sockjs-node'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
 const proxyTarget = "https://localhost:44356";
-//const proxyTarget = "http://admintesth5.wy.by/";
+//const proxyTarget = "http://admintesth5.wy.by";
+const proxyCommon = {
+  //logLevel: 'debug',
+  changeOrigin: true
+}
 
 const customProxy = {
   "/internalApi/*": {
     target: proxyTarget,
     secure: false,
+    ...proxyCommon
   },
   "/api/*": {
     target: proxyTarget,
     secure: false,
+    ...proxyCommon
   },
   "/connect/*": {
     target: proxyTarget,
     secure: false,
+    ...proxyCommon
   },
   "/assets/*": {
     target: proxyTarget,
     secure: false,
+    ...proxyCommon
   },
   /*"/home/*": {
     target: proxyTarget,
@@ -57,14 +66,17 @@ const customProxy = {
   "/Account/*": {
     target: proxyTarget,
     secure: false,
+    ...proxyCommon
   },
   "/account/*": {
     target: proxyTarget,
     secure: false,
+    ...proxyCommon
   },
   "/.well-known/*": {
     target: proxyTarget,
     secure: false,
+    ...proxyCommon
   },
 }
 
