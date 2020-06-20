@@ -148,6 +148,13 @@ namespace Origam.ServerCore.Controller
                 => Ok(sessionObjects.UIService.CreateObject(input)));
         }
         [HttpPost("[action]")]
+        public IActionResult CopyObject(
+            [FromBody][Required]CopyObjectInput input)
+        {
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.CopyObject(input)));
+        }
+        [HttpPost("[action]")]
         public IActionResult UpdateObject(
             [FromBody][Required]UpdateObjectInput input)
         {

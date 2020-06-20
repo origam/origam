@@ -321,6 +321,17 @@ namespace Origam.ServerCore
             CreateUpdateOrigamOnlineUser();
             return output;
         }
+        public IList CopyObject(CopyObjectInput input)
+        {
+            var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
+            IList output = sessionStore.CopyObject(
+                input.Entity, input.OriginalId, 
+                input.RequestingGridId.ToString(), input.Entities, 
+                input.ForcedValues);
+            CreateUpdateOrigamOnlineUser();
+            return output;
+        }
         public IList UpdateObject(UpdateObjectInput input)
         {
             var sessionStore = sessionManager.GetSession(
