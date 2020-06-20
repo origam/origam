@@ -19,19 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace Origam.ServerCore.Model.UIService
 {
-    public class CopyObjectInput
+    public class GetLookupCacheDependenciesInput
     {
-        public Guid SessionFormIdentifier { get; set; }
-        public string Entity { get; set; }
-        public Guid OriginalId { get; set; }
-        public Guid RequestingGridId { get; set; }
-        public ArrayList Entities  { get; set; }
-        public IDictionary<string, object> ForcedValues { get; set; }
+        public object[] LookupIds { get; set; }
     }
 }

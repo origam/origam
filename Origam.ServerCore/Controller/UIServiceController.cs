@@ -45,9 +45,9 @@ using System.Globalization;
 using System.Linq;
 using IdentityServer4;
 using Microsoft.AspNetCore.Localization;
+using Origam.Schema;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
-using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Controller
@@ -197,6 +197,22 @@ namespace Origam.ServerCore.Controller
                 }
                 var labelDictionary = GetLookupLabelsInternal(input);
                 return Ok(labelDictionary);
+            });
+        }
+        [HttpPost("[action]")]
+        public IActionResult GetLookupCacheDependencies(
+            [FromBody][Required]GetLookupCacheDependenciesInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                var dependencies 
+                    = new Dictionary<string, object>(input.LookupIds.Length);
+                foreach (var lookupId in input.LookupIds)
+                {
+                    dependencies.Add((string)lookupId, 
+                        GetLookupCacheDependencies((string)lookupId));
+                }
+                return Ok(dependencies);
             });
         }
         [HttpGet("[action]")]
@@ -516,6 +532,33 @@ namespace Origam.ServerCore.Controller
                             : lookupResult.ToString();
                     });
             return labelDictionary;
+        }
+        private IList<string> GetLookupCacheDependencies(string lookupId)
+        {
+            // TODO: Later we can implement multiple dependencies e.g. for entities based on views where we
+            // could name all the source entities/tables on which the view is dependent so even view based
+            // lookups could be handled correctly and reset when source table change.
+            var result = new List<string>();
+            var persistenceService 
+                = ServiceManager.Services.GetService<IPersistenceService>();
+            var dataServiceDataLookup 
+                = persistenceService.SchemaProvider.RetrieveInstance(
+                    typeof(DataServiceDataLookup), 
+                    new ModelElementKey(new Guid(lookupId))) 
+                    as DataServiceDataLookup;
+            var datasetGenerator = new DatasetGenerator(true);
+            var comboListDataset = datasetGenerator.CreateDataSet(
+                dataServiceDataLookup.ListDataStructure);
+            var comboListTable = comboListDataset.Tables[
+                ((DataStructureEntity) dataServiceDataLookup.ListDataStructure
+                    .ChildItemsByType(DataStructureEntity.ItemTypeConst)[0])
+                .Name];
+            var tableName = FormXmlBuilder.DatabaseTableName(comboListTable);
+            if (tableName != null)
+            {
+                result.Add(tableName);
+            }
+            return result;
         }
         private IActionResult CheckLookup(LookupLabelsInput input)
         {
