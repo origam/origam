@@ -81,14 +81,14 @@ export function drawDataCellBackground() {
   const ctx2d = context2d();
 
   ctx2d.fillStyle = getUnderLineColor();
-  ctx2d.fillRect(0, 0, currentColumnWidth() * CPR, rowHeight() * CPR);
+  ctx2d.fillRect(0, 0, currentColumnWidth() * CPR(), rowHeight() * CPR());
 
   ctx2d.fillStyle = getBackGroundColor();
   ctx2d.fillRect(
-    CPR * currentColumnLeft(),
-    CPR * currentRowTop(),
-    CPR * currentColumnWidth(),
-    CPR * currentRowHeight()
+    CPR() * currentColumnLeft(),
+    CPR() * currentRowTop(),
+    CPR() * currentColumnWidth(),
+    CPR() * currentRowHeight()
   );
 }
 
@@ -105,25 +105,25 @@ function drawCellValue(){
     isLink = selectors.column.isLinkToForm(currentProperty());
   }
 
-  ctx2d.font = `${fontSize * CPR}px "IBM Plex Sans", sans-serif`;
+  ctx2d.font = `${fontSize * CPR()}px "IBM Plex Sans", sans-serif`;
   if (isHidden) {
     return;
   }
   if (isLoading) {
     ctx2d.fillStyle = "#888888";
-    ctx2d.fillText("Loading...", numberCellPaddingLeft() * CPR, 15 * CPR);
+    ctx2d.fillText("Loading...", numberCellPaddingLeft() * CPR(), 15 * CPR());
   } else {
     ctx2d.fillStyle = foregroundColor || "black";
     switch (type) {
       case "CheckBox":
-        ctx2d.font = `${14 * CPR}px "Font Awesome 5 Free"`;
+        ctx2d.font = `${14 * CPR()}px "Font Awesome 5 Free"`;
         ctx2d.textAlign = "center";
         ctx2d.textBaseline = "middle";
 
         ctx2d.fillText(
           !!currentCellText() ? "\uf14a" : "\uf0c8",
-          CPR * (currentColumnLeft() + (currentColumnWidth() / 2)),
-          CPR * (currentRowTop() + (rowHeight() / 2)));
+          CPR() * (currentColumnLeft() + (currentColumnWidth() / 2)),
+          CPR() * (currentRowTop() + (rowHeight() / 2)));
         break;
       case "Date":
         if (currentCellText() !== null && currentCellText() !== "") {
@@ -133,8 +133,8 @@ function drawCellValue(){
           }
           ctx2d.fillText(
             momentValue.format(currentProperty().formatterPattern),
-            CPR * (currentColumnLeft() + getPaddingLeft()),
-            CPR * (currentRowTop() + topTextOffset));
+            CPR() * (currentColumnLeft() + getPaddingLeft()),
+            CPR() * (currentRowTop() + topTextOffset));
         }
         break;
       case "ComboBox":
@@ -145,8 +145,8 @@ function drawCellValue(){
         }
         if (currentCellText() !== null) {
           ctx2d.fillText("" + currentCellText()!,                   
-            CPR * (currentColumnLeft() + getPaddingLeft()),
-            CPR * (currentRowTop() + topTextOffset));
+            CPR() * (currentColumnLeft() + getPaddingLeft()),
+            CPR() * (currentRowTop() + topTextOffset));
         }
         if (isLink) {
           ctx2d.restore();
@@ -157,8 +157,8 @@ function drawCellValue(){
           ctx2d.save();
           ctx2d.textAlign = "right";
           ctx2d.fillText("" + currentCellText()!,                
-            CPR * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
-            CPR * (currentRowTop() + topTextOffset));
+            CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
+            CPR() * (currentRowTop() + topTextOffset));
           ctx2d.restore();
         }
         break;
@@ -167,10 +167,10 @@ function drawCellValue(){
           if (!currentProperty().isPassword) {
             ctx2d.fillText(
               "" + currentCellText()!,
-              CPR * (currentColumnLeft() + getPaddingLeft()),
-              CPR * (currentRowTop() + topTextOffset));
+              CPR() * (currentColumnLeft() + getPaddingLeft()),
+              CPR() * (currentRowTop() + topTextOffset));
           } else {
-            ctx2d.fillText("*******", numberCellPaddingLeft() * CPR, 15 * CPR);
+            ctx2d.fillText("*******", numberCellPaddingLeft() * CPR(), 15 * CPR());
           }
         }
     }

@@ -80,18 +80,18 @@ export function drawGroupCell() {
   if (isGroupRow(row)) {
     const groupRow = row as IGroupRow;
     ctx2d.fillStyle = "black";
-    ctx2d.font = `${CPR * expandSymbolFontSize}px "Font Awesome 5 Free"`;
+    ctx2d.font = `${CPR() * expandSymbolFontSize}px "Font Awesome 5 Free"`;
     const state = row.isExpanded;
     ctx2d.fillText(
       state ? "\uf146" : "\uf0fe",
-      CPR * (currentColumnLeft() + cellPaddingLeft),
-      CPR * (currentRowTop() + topTextOffset)
+      CPR() * (currentColumnLeft() + cellPaddingLeft),
+      CPR() * (currentRowTop() + topTextOffset)
     );
-    ctx2d.font = `${CPR * fontSize}px "IBM Plex Sans", Arial, sans-serif`;
+    ctx2d.font = `${CPR() * fontSize}px "IBM Plex Sans", Arial, sans-serif`;
     ctx2d.fillText(
       `${row.columnLabel} : ${formatColumnValue(row.columnValue)} [${row.sourceGroup.rowCount}]`,
-      CPR * (currentColumnLeft() + cellPaddingLeft + groupCellWidth),
-      CPR * (currentRowTop() + topTextOffset)
+      CPR() * (currentColumnLeft() + cellPaddingLeft + groupCellWidth),
+      CPR() * (currentRowTop() + topTextOffset)
     );
 
     const ctx = context();
@@ -137,10 +137,10 @@ export function drawGroupCellBackground() {
   const ctx2d = context2d();
   ctx2d.fillStyle = "#cccccc";
   ctx2d.fillRect(
-    CPR * currentColumnLeft(),
-    CPR * currentRowTop(),
-    CPR * currentColumnWidth(),
-    CPR * currentRowHeight()
+    CPR() * currentColumnLeft(),
+    CPR() * currentRowTop(),
+    CPR() * currentColumnWidth(),
+    CPR() * currentRowHeight()
   );
 }
 
@@ -148,9 +148,9 @@ export function drawEmptyGroupCellBackground() {
   const ctx2d = context2d();
   ctx2d.fillStyle = "#ffffff";
   ctx2d.fillRect(
-    CPR * currentColumnLeft(),
-    CPR * currentRowTop(),
-    CPR * currentColumnWidth(),
-    CPR * currentRowHeight()
+    CPR() * currentColumnLeft(),
+    CPR() * currentRowTop(),
+    CPR() * currentColumnWidth(),
+    CPR() * currentRowHeight()
   );
 }

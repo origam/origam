@@ -6,7 +6,7 @@ import {
     tablePanelView
 } from "../renderingValues";
 import {applyScrollTranslation, numberCellPaddingLeft, clipCell, topTextOffset, fontSize} from "./cellsCommon";
-import {getRowStateAllowRead} from "../../../../../../model/selectors/RowState/getRowStateAllowRead";
+import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
 import {
     currentColumnId,
     currentColumnLeft,
@@ -14,11 +14,11 @@ import {
     currentProperty,
     currentRowTop
 } from "../currentCell";
-import {CPR} from "../../../../../../utils/canvas";
+import {CPR} from "utils/canvas";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {IGroupRow} from "../types";
 import {dataColumnsWidths} from "./dataCell";
-import {aggregationToString} from "../../../../../../model/entities/types/IAggregation";
+import {aggregationToString} from "model/entities/types/IAggregation";
 
 
 
@@ -61,11 +61,11 @@ function drawAggregationText(){
         return;
     }
 
-    ctx2d.font = `${fontSize * CPR}px "IBM Plex Sans", sans-serif`;
+    ctx2d.font = `${fontSize * CPR()}px "IBM Plex Sans", sans-serif`;
     ctx2d.fillStyle = "black";
     ctx2d.textAlign = "right";
     ctx2d.fillText(
       aggregationToString(aggregation) ,
-        CPR * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
-        CPR * (currentRowTop() + topTextOffset));
+        CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
+        CPR() * (currentRowTop() + topTextOffset));
 }

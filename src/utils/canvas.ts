@@ -1,6 +1,7 @@
+
+const canvas = document.createElement("canvas");
+const context = canvas.getContext("2d") as any;
 export function getCanvasPixelRatio() {
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d") as any;
   const devicePixelRatio = window.devicePixelRatio || 1;
   const backingStoreRatio =
     context!.webkitBackingStorePixelRatio ||
@@ -14,4 +15,5 @@ export function getCanvasPixelRatio() {
   return ratio;
 }
 
-export const CPR = getCanvasPixelRatio();
+
+export const CPR = () =>  getCanvasPixelRatio();

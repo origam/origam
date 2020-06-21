@@ -21,22 +21,22 @@ export class Canvas extends React.Component<{ width: number; height: number, ref
 
   @computed
   public get canvasWidthPX() {
-    return Math.ceil(this.props.width * CPR) || 0;
+    return Math.ceil(this.props.width * CPR()) || 0;
   }
 
   @computed
   public get canvasHeightPX() {
-    return Math.ceil(this.props.height * CPR) || 0;
+    return Math.ceil(this.props.height * CPR()) || 0;
   }
 
   @computed
   public get canvasWidthCSS() {
-    return Math.ceil(this.props.width * CPR) / CPR || 0;
+    return Math.ceil(this.props.width * CPR()) / CPR() || 0;
   }
 
   @computed
   public get canvasHeightCSS() {
-    return Math.ceil(this.props.height * CPR) / CPR || 0;
+    return Math.ceil(this.props.height * CPR()) / CPR() || 0;
   }
 
   @computed

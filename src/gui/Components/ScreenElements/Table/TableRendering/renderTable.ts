@@ -74,7 +74,7 @@ export function renderTable(
     clickSubscriptions().length = 0;
     const ctx2d = context2d();
     ctx2d.fillStyle = "white";
-    ctx2d.fillRect(0, 0, CPR*viewportWidth(), CPR*viewportHeight());
+    ctx2d.fillRect(0, 0, CPR()*viewportWidth(), CPR()*viewportHeight());
     const i0 = firstDrawableRowIndex();
     const i1 = lastDrawableRowIndex();
     if (i0 === undefined || i1 === undefined) return;

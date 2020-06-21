@@ -17,17 +17,17 @@ import {Memoized} from "../common/Memoized";
 
 export function applyScrollTranslation() {
   const ctx2d = context2d();
-  ctx2d.translate(!isCurrentCellFixed() ? -CPR * scrollLeft() : 0, -CPR * scrollTop());
+  ctx2d.translate(!isCurrentCellFixed() ? -CPR() * scrollLeft() : 0, -CPR() * scrollTop());
 }
 
 export function clipCell() {
   const ctx2d = context2d();
   ctx2d.beginPath();
   ctx2d.rect(
-    CPR * currentColumnLeft(),
-    CPR * currentRowTop(),
-    CPR * currentColumnWidth(),
-    CPR * currentRowHeight()
+    CPR() * currentColumnLeft(),
+    CPR() * currentRowTop(),
+    CPR() * currentColumnWidth(),
+    CPR() * currentRowHeight()
   );
   ctx2d.clip();
 }

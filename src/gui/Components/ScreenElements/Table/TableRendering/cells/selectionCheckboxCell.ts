@@ -33,12 +33,12 @@ export function selectionCheckboxCellsDraws() {
         drawSelectionCheckboxBackground();
         const ctx2d = context2d();
         ctx2d.fillStyle = "black";
-        ctx2d.font = `${CPR * checkSymbolFontSize}px "Font Awesome 5 Free"`;
+        ctx2d.font = `${CPR() * checkSymbolFontSize}px "Font Awesome 5 Free"`;
         const state = dataView().isSelected(rowId());
         ctx2d.fillText(
           state ? "\uf14a" : "\uf0c8",
-          CPR * (currentColumnLeft() + paddingLeft),
-          CPR * (currentRowTop() + topTextOffset)
+          CPR() * (currentColumnLeft() + paddingLeft),
+          CPR() * (currentRowTop() + topTextOffset)
         );
         registerClickHandler();
       },
@@ -98,10 +98,10 @@ export function drawSelectionCheckboxBackground() {
   const ctx2d = context2d();
   ctx2d.fillStyle = "#ffffff";
   ctx2d.fillRect(
-    CPR * currentColumnLeft(),
-    CPR * currentRowTop(),
-    CPR * currentColumnWidth(),
-    CPR * currentRowHeight()
+    CPR() * currentColumnLeft(),
+    CPR() * currentRowTop(),
+    CPR() * currentColumnWidth(),
+    CPR() * currentRowHeight()
   );
 }
 
@@ -110,11 +110,11 @@ export function drawSelectionCheckboxContent() {
   applyScrollTranslation();
   drawSelectionCheckboxBackground();
   ctx2d.fillStyle = "black";
-  ctx2d.font = `${CPR * checkSymbolFontSize}px "Font Awesome 5 Free"`;
+  ctx2d.font = `${CPR() * checkSymbolFontSize}px "Font Awesome 5 Free"`;
   const state = true;
   ctx2d.fillText(
     state ? "\uf14a" : "\uf0c8",
-    CPR * (currentColumnLeft() + paddingLeft),
-    CPR * (currentRowTop() + topTextOffset)
+    CPR() * (currentColumnLeft() + paddingLeft),
+    CPR() * (currentRowTop() + topTextOffset)
   );
 }

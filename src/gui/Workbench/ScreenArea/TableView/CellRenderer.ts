@@ -5,15 +5,15 @@ import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateCo
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import moment from "moment";
-import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
-import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
-import { getCellTextByIdx } from "../../../../model/selectors/TablePanelView/getCellText";
-import { getCellValueByIdx } from "../../../../model/selectors/TablePanelView/getCellValue";
-import { getSelectedColumnId } from "../../../../model/selectors/TablePanelView/getSelectedColumnId";
-import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
-import { getTableViewPropertyByIdx } from "../../../../model/selectors/TablePanelView/getTableViewPropertyByIdx";
-import { getTableViewRecordByExistingIdx } from "../../../../model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
-import { CPR } from "../../../../utils/canvas";
+import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getCellTextByIdx } from "model/selectors/TablePanelView/getCellText";
+import { getCellValueByIdx } from "model/selectors/TablePanelView/getCellValue";
+import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTableViewPropertyByIdx } from "model/selectors/TablePanelView/getTableViewPropertyByIdx";
+import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
+import { CPR } from "utils/canvas";
 import { IRenderCellArgs, IRenderedCell } from "../../../Components/ScreenElements/Table/types";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
@@ -41,7 +41,7 @@ export class CellRenderer implements ICellRenderer {
 
     /* BACKGROUND FILL - to make a line under the row */
     ctx.fillStyle = "#e5e5e5";
-    ctx.fillRect(0, 0, columnWidth * CPR, rowHeight * CPR);
+    ctx.fillRect(0, 0, columnWidth * CPR(), rowHeight * CPR());
     /* BACKGROUND FILL */
     if (cell.isColumnOrderChangeSource) {
       ctx.fillStyle = "#eeeeff";
@@ -57,30 +57,30 @@ export class CellRenderer implements ICellRenderer {
         ctx.fillStyle = rowIndex % 2 === 0 ? "#f7f6fa" : "#ffffff";
       }
     }
-    ctx.fillRect(0, 0, columnWidth * CPR, (rowHeight - 0) * CPR);
+    ctx.fillRect(0, 0, columnWidth * CPR(), (rowHeight - 0) * CPR());
 
     // TODO: background color ?
     // TODO: Read only for bool fields in grid
 
     /* CONTENT */
-    ctx.font = `${12 * CPR}px "IBM Plex Sans", sans-serif`;
+    ctx.font = `${12 * CPR()}px "IBM Plex Sans", sans-serif`;
     if (cell.isHidden) {
       return;
     }
     if (cell.isLoading) {
       ctx.fillStyle = "#888888";
-      ctx.fillText("Loading...", cellPaddingLeft * CPR, 15 * CPR);
+      ctx.fillText("Loading...", cellPaddingLeft * CPR(), 15 * CPR());
     } else {
       ctx.fillStyle = cell.foregroundColor || "black";
       switch (cell.type) {
         case "CheckBox":
-          ctx.font = `${14 * CPR}px "Font Awesome 5 Free"`;
+          ctx.font = `${14 * CPR()}px "Font Awesome 5 Free"`;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.fillText(
             !!cell.value ? "\uf14a" : "\uf0c8",
-            (columnWidth / 2) * CPR,
-            (rowHeight / 2) * CPR
+            (columnWidth / 2) * CPR(),
+            (rowHeight / 2) * CPR()
           );
 
           break;
@@ -88,8 +88,8 @@ export class CellRenderer implements ICellRenderer {
           if (cell.value !== null) {
             ctx.fillText(
               moment(cell.value).format(cell.formatterPattern),
-              cellPaddingLeft * CPR,
-              15 * CPR
+              cellPaddingLeft * CPR(),
+              15 * CPR()
             );
           }
           break;
@@ -100,7 +100,7 @@ export class CellRenderer implements ICellRenderer {
             ctx.fillStyle = "blue";
           }
           if (cell.value !== null) {
-            ctx.fillText("" + cell.text!, cellPaddingLeft * CPR, 15 * CPR);
+            ctx.fillText("" + cell.text!, cellPaddingLeft * CPR(), 15 * CPR());
           }
           if (cell.isLink) {
             ctx.restore();
@@ -110,16 +110,16 @@ export class CellRenderer implements ICellRenderer {
           if (cell.value !== null) {
             ctx.save();
             ctx.textAlign = "right";
-            ctx.fillText("" + cell.value!, (columnWidth - cellPaddingLeft) * CPR, 15 * CPR);
+            ctx.fillText("" + cell.value!, (columnWidth - cellPaddingLeft) * CPR(), 15 * CPR());
             ctx.restore();
           }
           break;
         default:
           if (cell.value !== null) {
             if (!cell.isPassword) {
-              ctx.fillText("" + cell.value!, cellPaddingLeft * CPR, 15 * CPR);
+              ctx.fillText("" + cell.value!, cellPaddingLeft * CPR(), 15 * CPR());
             } else {
-              ctx.fillText("*******", cellPaddingLeft * CPR, 15 * CPR);
+              ctx.fillText("*******", cellPaddingLeft * CPR(), 15 * CPR());
             }
           }
       }
