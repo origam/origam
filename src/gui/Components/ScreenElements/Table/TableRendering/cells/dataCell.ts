@@ -210,7 +210,7 @@ function getBackGroundColor() {
     if (backgroundColor) {
       return backgroundColor;
     } else {
-      return rowIndex() % 2 === 0 ? "#f7f6fa" : "#ffffff";
+      return rowIndex() % 2 === 1 ? "#f7f6fa" : "#ffffff";
     }
   }
 }
