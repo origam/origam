@@ -7,7 +7,8 @@ import moment from "moment";
 import { Tooltip } from "react-tippy";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import DateCompleter from "./DateCompleter"
-import { getLocaleFromCookie } from "../../../../utils/cookies"
+import { getLocaleFromCookie } from "../../../../utils/cookies";
+import cx from 'classnames';
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -37,6 +38,7 @@ class CalendarWidget extends React.Component<{
 
   getDates(weekInc: number) {
     const result: any[] = [];
+    const today = moment();
     for (
       let day = moment(this.displayedMonth)
           .startOf("week")
@@ -47,14 +49,16 @@ class CalendarWidget extends React.Component<{
     ) {
       const isNeighbourMonth = day.month() !== this.displayedMonth.month();
       const isSelectedDay = day.isSame(this.props.selectedDay, "day");
+      const isToday = day.isSame(today, 'days');
       const dayCopy = moment(day);
       result.push(
         <div
-          className={
-            S.calendarWidgetCell +
-            (isNeighbourMonth ? ` ${S.calendarWidgetNeighbourMonthCell}` : "") +
-            (isSelectedDay ? ` ${S.calendarWidgetSelectedDay}` : "")
-          }
+          className={cx(
+            S.calendarWidgetCell,
+            {[S.calendarWidgetNeighbourMonthCell]: isNeighbourMonth,
+            [S.calendarWidgetSelectedDay]:isSelectedDay,
+            isToday}
+          )}
           onClick={(event: any) => this.handleDayClick(event, dayCopy)}
         >
           {day.format("D")}
