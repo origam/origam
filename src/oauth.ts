@@ -1,6 +1,6 @@
 import Oidc from "oidc-client";
 
-const [windowLocation, _rest] = window.location.href.split('#');
+const [windowLocation, _rest] = window.location.href.split("#");
 
 const config = {
   authority: `${windowLocation}`,
@@ -11,16 +11,17 @@ const config = {
   post_logout_redirect_uri: `${windowLocation}`,
   response_mode: "query",
   automaticSilentRenew: true,
-  silent_redirect_uri: `${windowLocation}#origamClientCallbackRenew/`
+  silent_redirect_uri: `${windowLocation}#origamClientCallbackRenew/`,
 };
-
-console.log(config)
-
-console.log(window.location)
 
 export const userManager = new Oidc.UserManager(config);
 
 export async function ensureLogin() {
+  const authOvr = sessionStorage.getItem("origamAuthTokenOverride");
+  if (authOvr) {
+    sessionStorage.setItem("origamAuthTokenOverride", authOvr);
+    return { access_token: authOvr };
+  }
   if (window.location.hash.startsWith("#origamClientCallback/")) {
     const user = await userManager.signinRedirectCallback(
       window.location.hash.replace("#origamClientCallback/", "")
