@@ -19,7 +19,7 @@ const proxyTarget = "https://localhost:44356";
 //const proxyTarget = "http://admintesth5.wy.by";
 const proxyCommon = {
   //logLevel: 'debug',
-  changeOrigin: true
+  // changeOrigin: true
 }
 
 const customProxy = {
