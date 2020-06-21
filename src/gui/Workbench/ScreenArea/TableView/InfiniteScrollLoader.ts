@@ -94,10 +94,10 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   @action.bound
   public start() {
     this.debugDisposer =  autorun(() => {
-      console.log("distanceToStart: " + this.distanceToStart);
-      console.log("distanceToEnd: " + this.distanceToEnd);
-      console.log("headLoadingNeeded(): " + this.headLoadingNeeded);
-      console.log("tailLoadingNeeded(): " + this.tailLoadingNeeded);
+      //console.log("distanceToStart: " + this.distanceToStart);
+      //console.log("distanceToEnd: " + this.distanceToEnd);
+      //console.log("headLoadingNeeded(): " + this.headLoadingNeeded);
+      //console.log("tailLoadingNeeded(): " + this.tailLoadingNeeded);
     });
     this.reactionDisposer = reaction(
       () => {
@@ -140,7 +140,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   private appendLines = flow(function* (
     this: InfiniteScrollLoader
   ) {
-    console.log("appendLines!");
+    //console.log("appendLines!");
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
 
@@ -174,7 +174,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   private prependLines = flow(function* (
     this: InfiniteScrollLoader
   ) {
-    console.log("prependLines!");
+    //console.log("prependLines!");
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
 
