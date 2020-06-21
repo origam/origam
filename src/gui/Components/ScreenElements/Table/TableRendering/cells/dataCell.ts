@@ -203,9 +203,9 @@ function getBackGroundColor() {
     return "#eeeeff";
     //} else if(cell.isColumnOrderChangeTarget){
   } else if (isCellCursor) {
-    return "#bbbbbb";
+    return "#eaf0f9";
   } else if (isRowCursor) {
-    return "#dddddd";
+    return "#ebf3ff";
   } else {
     if (backgroundColor) {
       return backgroundColor;
