@@ -3,7 +3,7 @@ import React from "react";
 import cx from "classnames";
 
 export class ScreenToolbarAction extends React.Component<{
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   label?: React.ReactNode;
   rootRef?: any;
   onClick?(event: any): void;
@@ -15,7 +15,7 @@ export class ScreenToolbarAction extends React.Component<{
         className={cx(S.root, { isLabelless: !this.props.label })}
         onClick={this.props.onClick}
       >
-        <div className={S.icon}>{this.props.icon}</div>
+        {this.props.icon && <div className={S.icon}>{this.props.icon}</div>}
         {this.props.label && <div className={S.label}>{this.props.label}</div>}
       </div>
     );

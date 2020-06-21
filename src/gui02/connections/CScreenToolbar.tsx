@@ -76,7 +76,7 @@ export class CScreenToolbar extends React.Component<{}> {
                     .filter((action) => getIsEnabledAction(action))
                     .map((action) => (
                       <ScreenToolbarAction
-                        icon={<Icon src="./icons/settings.svg" />}
+                        /*icon={<Icon src="./icons/settings.svg" />}*/
                         label={action.caption}
                         onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
                       />
