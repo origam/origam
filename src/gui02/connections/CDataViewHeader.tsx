@@ -158,7 +158,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                     onClick={() => setDropped(true)}
                     isActive={false}
                   >
-                    <Icon src="./icons/settings.svg" />
+                    <Icon src="./icons/dot-menu.svg" />
                   </DataViewHeaderAction>
                 )}
                 content={({ setDropped }) => (
