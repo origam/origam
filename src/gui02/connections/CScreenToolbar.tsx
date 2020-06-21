@@ -52,29 +52,33 @@ export class CScreenToolbar extends React.Component<{}> {
         {formScreen ? (
           <>
             <ScreenToolbarActionGroup>
-              {!getIsSuppressSave(formScreen) && <ScreenToolbarAction
-                onClick={onSaveSessionClick(formScreen)}
-                icon={
-                  <Icon src="./icons/save.svg" className={isDirty ? "isRed isHoverGreen" : ""} />
-                }
-              />}
+              {!getIsSuppressSave(formScreen) && (
+                <ScreenToolbarAction
+                  onClick={onSaveSessionClick(formScreen)}
+                  icon={
+                    <Icon src="./icons/save.svg" className={isDirty ? "isRed isHoverGreen" : ""} />
+                  }
+                  label="Save"
+                />
+              )}
               <ScreenToolbarAction
                 onClick={onRefreshSessionClick(formScreen)}
                 icon={<Icon src="./icons/refresh.svg" />}
+                label="Refresh"
               />
             </ScreenToolbarActionGroup>
             {toolbarActions
-              .filter(actionGroup => actionGroup.actions.length > 0)
-              .map(actionGroup => (
+              .filter((actionGroup) => actionGroup.actions.length > 0)
+              .map((actionGroup) => (
                 <ScreenToolbarActionGroup>
                   {/*actionGroup.section*/}
                   {actionGroup.actions
-                    .filter(action => getIsEnabledAction(action))
-                    .map(action => (
+                    .filter((action) => getIsEnabledAction(action))
+                    .map((action) => (
                       <ScreenToolbarAction
                         icon={<Icon src="./icons/settings.svg" />}
                         label={action.caption}
-                        onClick={event => uiActions.actions.onActionClick(action)(event, action)}
+                        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
                       />
                     ))}
                 </ScreenToolbarActionGroup>
