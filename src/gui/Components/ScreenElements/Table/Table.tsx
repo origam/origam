@@ -23,7 +23,7 @@ import { IProperty } from "model/entities/types/IProperty";
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 
   const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds)
-  const rowHeight = 20;
+  const rowHeight = 25;
   const properties = observable<IProperty>(getProperties(ctx));
   const propertyById = computed(
     () => new Map(properties.map((property) => [property.id, property]))
