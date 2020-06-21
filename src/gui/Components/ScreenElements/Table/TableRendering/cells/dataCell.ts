@@ -141,7 +141,7 @@ function drawCellValue(){
       case "TagInput":
         if (isLink) {
           ctx2d.save();
-          ctx2d.fillStyle = "blue";
+          ctx2d.fillStyle = "#4c84ff";
         }
         if (currentCellText() !== null) {
           ctx2d.fillText("" + currentCellText()!,                   
