@@ -8,8 +8,17 @@
   border-style: solid;
   border-width: 0 0 0 1px;
   padding: 0 0.9em;
+  overflow: hidden;
+  
   &:first-of-type {
     border-left: 0;
     padding-left: 0;
+  }
+
+  &:global(.grovable) {
+    flex: 1 1;
+    display: flex;
+    flex-direction: row;
+    
   }
 }
