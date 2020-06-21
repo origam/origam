@@ -173,6 +173,8 @@ export interface IScrolleeProps {
   fixedVert?: boolean;
   zIndex?: number | undefined;
   scrollOffsetSource: IScrollOffsetSource;
+  offsetLeft?: number;
+  offsetTop?: number;
 }
 
 export interface IHeaderRowProps {

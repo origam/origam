@@ -23,12 +23,12 @@ export default class Scrollee extends React.Component<IScrolleeProps> {
         <div
           className={S.scrolleeShifted}
           style={{
-            top: this.props.fixedVert
-              ? 0
-              : -this.props.scrollOffsetSource.scrollTop,
-            left: this.props.fixedHoriz
-              ? 0
-              : -this.props.scrollOffsetSource.scrollLeft
+            top:
+              (this.props.fixedVert ? 0 : -this.props.scrollOffsetSource.scrollTop) +
+              (this.props.offsetTop || 0),
+            left:
+              (this.props.fixedHoriz ? 0 : -this.props.scrollOffsetSource.scrollLeft) +
+              (this.props.offsetLeft || 0),
           }}
         >
           {this.props.children}

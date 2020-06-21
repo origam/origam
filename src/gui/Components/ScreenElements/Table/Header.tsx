@@ -144,8 +144,8 @@ export class Header extends React.Component<{
             (this.props.isColumnOrderChanging ? " changing-order" : "")
           }
           style={{
-            minWidth: this.props.width - 4,
-            maxWidth: this.props.width - 4
+            minWidth: this.props.width - 9,
+            maxWidth: this.props.width - 9
           }}
           onMouseUp={this.handleMouseUp}
           onMouseEnter={this.handleMouseEnter}

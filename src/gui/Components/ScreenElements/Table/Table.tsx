@@ -315,6 +315,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
             <Observer>
               {() => (
                 <>
+
+
                   {this.props.headerContainers &&
                     (contentRect.bounds!.width ? (
                       <div className={S.headers}>
@@ -325,6 +327,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                             fixedVert={true}
                             width={this.fixedColumnsWidth}
                             zIndex={100}
+                            offsetLeft={3}
                           >
                             <HeaderRow
                               headerElements={this.fixedHeaders}
@@ -336,6 +339,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           scrollOffsetSource={this.props.scrollState}
                           fixedVert={true}
                           width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
+                          offsetLeft={3}
                         >
                           <HeaderRow
                             headerElements={this.freeHeaders}
@@ -343,6 +347,9 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         </Scrollee>
                       </div>
                     ) : null)}
+
+
+
                   <div ref={measureRef} className={S.cellAreaContainer}>
                     {contentRect.bounds!.height && this.props.renderCell ? (
                       <>
