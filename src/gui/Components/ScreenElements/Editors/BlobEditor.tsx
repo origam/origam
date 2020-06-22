@@ -10,8 +10,8 @@ import { IApi } from "model/entities/types/IApi";
 import { IProperty } from "model/entities/types/IProperty";
 import { observable, action, flow } from "mobx";
 import S from "./BlobEditor.module.scss";
-import ImageEditor from "tui-image-editor";
-import "tui-image-editor/dist/tui-image-editor.css";
+/*import ImageEditor from "tui-image-editor";
+import "tui-image-editor/dist/tui-image-editor.css";*/
 import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
@@ -239,7 +239,7 @@ export class BlobEditor extends React.Component<{
   render() {
     return (
       <div className={S.blobEditor}>
-        {this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />}
+        {/*this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />*/}
         <input readOnly={true} className="fileName" value={this.props.value || ""} />
         <div className="controls">
           {this.props.value && (
@@ -282,7 +282,7 @@ export class BlobEditor extends React.Component<{
     );
   }
 }
-
+/*
 class ImageEditorCom extends React.Component<{ imageUrl: any }> {
   refImageEditor = (elm: any) => (this.elmImageEditor = elm);
   elmImageEditor: HTMLDivElement | null = null;
@@ -298,10 +298,10 @@ class ImageEditorCom extends React.Component<{ imageUrl: any }> {
       },
       includeUI: {
         loadImage: { path: this.props.imageUrl, name: "Loaded image" },
-        /*loadImage: {
-            path: 'img/sampleImage2.png',
-            name: 'SampleImage'
-        },*/
+        //loadImage: {
+        //    path: 'img/sampleImage2.png',
+        //    name: 'SampleImage'
+        //},
         // theme: blackTheme, // or whiteTheme
         initMenu: "filter",
         menuBarPosition: "bottom",
@@ -316,4 +316,4 @@ class ImageEditorCom extends React.Component<{ imageUrl: any }> {
       </div>
     );
   }
-}
+}*/
