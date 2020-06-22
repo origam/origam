@@ -1,3 +1,5 @@
+import "mobx-react-lite/batchingForReactDom";
+
 import axios from "axios";
 import { flow } from "mobx";
 import { getApi } from "model/selectors/getApi";
@@ -25,7 +27,6 @@ if (process.env.NODE_ENV === "development") {
 
 async function main() {
   const locationHash = window.location.hash;
-  debugger;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";
   if (locationHash.startsWith(TOKEN_OVR_HASH)) {
     console.log("Set auth token to:", locationHash.replace(TOKEN_OVR_HASH, ""));
@@ -37,7 +38,7 @@ async function main() {
     const newUrl =
       locationHash.replace(BACKEND_OVR_HASH, "") +
       `#origamBackendOverrideReturn=${window.location.origin}`;
-      debugger;
+    // debugger;
     window.location.assign(newUrl);
     return;
   }
@@ -49,8 +50,13 @@ async function main() {
       locationHash.replace(BACKEND_OVR_RETURN_HASH, "")
     );
     window.location.hash = "";
+    for (let k of Object.keys(window.sessionStorage)) {
+      if (k.startsWith("oidc.user")) {
+        window.sessionStorage.removeItem(k);
+      }
+    }
   }
-
+  // debugger;
   const user = await ensureLogin();
   if (user) {
     if (window.sessionStorage.getItem("teleportAfterLogin")) {
@@ -59,7 +65,7 @@ async function main() {
         `#origamAuthTokenOverride=${user.access_token}`;
       window.sessionStorage.removeItem("teleportAfterLogin");
       window.location.assign(newUrl);
-      return
+      return;
     }
     const application = createApplication();
     getApi(application).setAccessToken(user.access_token);
