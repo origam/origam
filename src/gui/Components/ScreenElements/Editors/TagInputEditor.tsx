@@ -35,7 +35,6 @@ export class TagInputEditor extends React.Component<{
 }> {
   render() {
     return (
-      // TODO: Proper keys for tag input items...?
       <div className={CS.editorContainer}>
         <TagInput className={S.tagInput}>
           {this.props.value
