@@ -94,7 +94,9 @@ function getClientEnvironment(publicUrl) {
       return env;
     }, {}),
   };
-
+  //stringified['process.env']['NODE_ENV'] = `"development"`
+  //console.log(stringified);
+  //throw new Error('')
   return { raw, stringified };
 }
 
