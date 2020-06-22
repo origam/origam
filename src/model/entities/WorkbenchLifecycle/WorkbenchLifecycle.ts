@@ -20,6 +20,7 @@ import { WebScreen } from "../WebScreen";
 import { getSessionId } from "model/selectors/getSessionId";
 import { scopeFor } from "dic/Container";
 import { assignIIds } from "xmlInterpreters/xmlUtils";
+import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -279,22 +280,28 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
 
-    for (let session of portalInfo.sessions) {
-      const menuItem = getMainMenuItemById(this, session.objectId);
-      if (menuItem) {
-        yield* this.openNewForm(
-          session.objectId,
-          session.type,
-          menuItem.attributes.label, // TODO: Find in menu
-          menuItem.attributes.dontRequestData === "true", // TODO: Find in menu
-          undefined, // TODO: Find in... menu?
-          {},
-          session.formSessionId,
-          true,
-          session.isDirty
-        );
-      } else {
-        console.log("No menu item for menuId", session.objectId);
+    if (!DEBUG_CLOSE_ALL_FORMS()) {
+      for (let session of portalInfo.sessions) {
+        const menuItem = getMainMenuItemById(this, session.objectId);
+        if (menuItem) {
+          yield* this.openNewForm(
+            session.objectId,
+            session.type,
+            menuItem.attributes.label, // TODO: Find in menu
+            menuItem.attributes.dontRequestData === "true", // TODO: Find in menu
+            undefined, // TODO: Find in... menu?
+            {},
+            session.formSessionId,
+            true,
+            session.isDirty
+          );
+        } else {
+          console.log("No menu item for menuId", session.objectId);
+        }
+      }
+    } else {
+      for (let session of portalInfo.sessions) {
+        yield api.destroyUI({ FormSessionId: session.formSessionId });
       }
     }
 
@@ -303,7 +310,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       openedScreens.activateItem(openedScreens.items[0].menuItemId, openedScreens.items[0].order);
       openedScreens.items[0].isSleeping = false;
       const initUIResult = yield* this.initUIForScreen(openedScreens.items[0], false);
-      if(openedScreens.items[0].content){
+      if (openedScreens.items[0].content) {
         yield* openedScreens.items[0].content.start(
           initUIResult,
           openedScreens.items[0].isSleepingDirty

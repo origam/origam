@@ -17,9 +17,10 @@ const sockPort = process.env.WDS_SOCKET_PORT;
 
 const proxyTarget = "https://localhost:44356";
 //const proxyTarget = "http://admintesth5.wy.by";
+//const proxyTarget = "http://admindevh5.wy.by";
 const proxyCommon = {
   //logLevel: 'debug',
-  // changeOrigin: true
+  //changeOrigin: true
 }
 
 const customProxy = {

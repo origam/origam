@@ -25,13 +25,42 @@ if (process.env.NODE_ENV === "development") {
 
 async function main() {
   const locationHash = window.location.hash;
+  debugger;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";
   if (locationHash.startsWith(TOKEN_OVR_HASH)) {
     console.log("Set auth token to:", locationHash.replace(TOKEN_OVR_HASH, ""));
     sessionStorage.setItem("origamAuthTokenOverride", locationHash.replace(TOKEN_OVR_HASH, ""));
+    window.location.hash = "";
   }
+  const BACKEND_OVR_HASH = "#origamBackendOverride=";
+  if (locationHash.startsWith(BACKEND_OVR_HASH)) {
+    const newUrl =
+      locationHash.replace(BACKEND_OVR_HASH, "") +
+      `#origamBackendOverrideReturn=${window.location.origin}`;
+      debugger;
+    window.location.assign(newUrl);
+    return;
+  }
+
+  const BACKEND_OVR_RETURN_HASH = "#origamBackendOverrideReturn=";
+  if (locationHash.startsWith(BACKEND_OVR_RETURN_HASH)) {
+    window.sessionStorage.setItem(
+      "teleportAfterLogin",
+      locationHash.replace(BACKEND_OVR_RETURN_HASH, "")
+    );
+    window.location.hash = "";
+  }
+
   const user = await ensureLogin();
   if (user) {
+    if (window.sessionStorage.getItem("teleportAfterLogin")) {
+      const newUrl =
+        window.sessionStorage.getItem("teleportAfterLogin") +
+        `#origamAuthTokenOverride=${user.access_token}`;
+      window.sessionStorage.removeItem("teleportAfterLogin");
+      window.location.assign(newUrl);
+      return
+    }
     const application = createApplication();
     getApi(application).setAccessToken(user.access_token);
     sessionStorage.setItem("origamAuthToken", user.access_token);

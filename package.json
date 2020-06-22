@@ -45,6 +45,7 @@
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-react": "7.19.0",
     "eslint-plugin-react-hooks": "^1.6.1",
+    "file-cli": "^1.2.0",
     "file-loader": "4.3.0",
     "flexsearch": "^0.6.32",
     "fs-extra": "^8.1.0",
@@ -106,7 +107,11 @@
     "test": "node scripts/test.js",
     "test:debug": "node  --inspect-brk scripts/test.js test --runInBand --no-cache ",
     "test-endtoend": "set REACT_APP_TESTS_ENDTOEND_RUNNING=1 && node scripts/start.js",
-    "start-server": "node-dev --respawn --no-deps --dedupe ./src-server/index-server.js"
+    "start-server": "node-dev --respawn --no-deps --dedupe ./src-server/index-server.js",
+
+    "postinstall": "cd ./server && yarn",
+    "start-prod": "cd ./server/build && node ./main.js",
+    "heroku-postbuild": "node scripts/build.js && cd ./server && yarn build"
   },
   "eslintConfig": {
     "extends": "react-app"
