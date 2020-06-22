@@ -12,6 +12,7 @@ import "./index.scss";
 import { createApplication } from "./model/factories/createApplication";
 import "./rootContainer";
 import * as serviceWorker from "./serviceWorker";
+import Cookie from "js-cookie";
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -35,10 +36,10 @@ async function main() {
   }
   const BACKEND_OVR_HASH = "#origamBackendOverride=";
   if (locationHash.startsWith(BACKEND_OVR_HASH)) {
-    const newUrl =
-      locationHash.replace(BACKEND_OVR_HASH, "") +
-      `#origamBackendOverrideReturn=${window.location.origin}`;
+    const backendUrl = locationHash.replace(BACKEND_OVR_HASH, "");
+    const newUrl = backendUrl + `#origamBackendOverrideReturn=${window.location.origin}`;
     // debugger;
+    Cookie.set('backendUrl', backendUrl);
     window.location.assign(newUrl);
     return;
   }

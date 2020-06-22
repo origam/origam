@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/classnames": "^2.2.10",
     "@types/jest": "^24.0.0",
+    "@types/js-cookie": "^2.2.6",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/leaflet": "^1.5.12",
     "@types/leaflet-draw": "^1.0.2",
@@ -56,6 +57,7 @@
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
+    "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
@@ -108,7 +110,6 @@
     "test:debug": "node  --inspect-brk scripts/test.js test --runInBand --no-cache ",
     "test-endtoend": "set REACT_APP_TESTS_ENDTOEND_RUNNING=1 && node scripts/start.js",
     "start-server": "node-dev --respawn --no-deps --dedupe ./src-server/index-server.js",
-
     "postinstall": "cd ./server && yarn",
     "start-prod": "cd ./server/build && node ./main.js",
     "heroku-postbuild": "node scripts/build.js && cd ./server && yarn build"

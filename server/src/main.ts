@@ -1,30 +1,31 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import path from "path";
-import cors from "cors";
-import {createProxyMiddleware} from 'http-proxy-middleware';
+import { createProxyMiddleware } from "http-proxy-middleware";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = process.env.PORT || 8080;
 
 app.use(express.static(path.join(__dirname, "../../build")));
+app.use(cookieParser());
 
 /*app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../../build/index.html"));
 });*/
 
-
 app.use(
   "*",
   createProxyMiddleware({
     // logProvider: () => winston,
-    logLevel: 'debug',
-    target: "https://localhost:44356/",
+    //logLevel: "debug",
+    target: "http://",
     //target: "http://admindevh5.wy.by/",
+    router: (req) => {
+      //console.log('Targetting', req.cookies.backendUrl)
+      return req.cookies.backendUrl || "http://"
+    },
     secure: false,
-    //changeOrigin: true,
-    router: {
-      // 'localhost:5566/internalApi': 'https://localhost:44356'
-    }
+    changeOrigin: true,
   })
 );
 
