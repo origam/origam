@@ -15,6 +15,7 @@
         <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
         <WorkQueueListRefreshPeriod>60</WorkQueueListRefreshPeriod>
         <HelpUrl>doc.aspx</HelpUrl>
+		<ExecuteUpgradeScriptsOnStart>true</ExecuteUpgradeScriptsOnStart>
         <ModelSourceControlLocation>OrigamSettings_ModelLocation</ModelSourceControlLocation>
 		<AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
         <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
