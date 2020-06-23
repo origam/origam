@@ -17,12 +17,11 @@ app.use(
   "*",
   createProxyMiddleware({
     // logProvider: () => winston,
-    //logLevel: "debug",
+    logLevel: "debug",
     target: "http://",
     //target: "http://admindevh5.wy.by/",
     router: (req) => {
-      console.log('Targetting', req.cookies.backendUrl)
-      return req.cookies.backendUrl || "http://"
+      return req.cookies.backendUrl || "";
     },
     secure: false,
     changeOrigin: true,
