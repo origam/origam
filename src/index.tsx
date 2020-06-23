@@ -65,7 +65,7 @@ async function main() {
         window.sessionStorage.getItem("teleportAfterLogin") +
         `#origamAuthTokenOverride=${user.access_token}`;
       window.sessionStorage.removeItem("teleportAfterLogin");
-      window.location.assign(newUrl);
+      //window.location.assign(newUrl);
       return;
     }
     const application = createApplication();
