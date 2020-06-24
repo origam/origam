@@ -48,12 +48,6 @@ namespace OrigamArchitect
 {
     public partial class NewProjectWizard : Form
     {
-        enum DeploymentType
-        {
-            Local,
-            Azure
-        }
-
         [DllImport("user32")]
         public static extern UInt32 SendMessage
             (IntPtr hWnd, UInt32 msg, UInt32 wParam, UInt32 lParam);
@@ -92,7 +86,7 @@ namespace OrigamArchitect
                     case 0:
                         return DeploymentType.Local;
                     case 1:
-                        return DeploymentType.Azure;
+                        return DeploymentType.Docker;
                     default:
                         throw new ArgumentOutOfRangeException("DeploymentType",
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
@@ -212,7 +206,15 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-
+            if(Deployment == DeploymentType.Docker)
+            {
+                if(chkIntegratedAuthentication.Checked)
+                {
+                    AsMessageBox.ShowError(this, strings.CheckIntegratedAuthentication_Message, strings.NewProjectWizard_Title, null);
+                    e.Cancel = true;
+                    return;
+                }
+            }
             _project.Name = txtName.Text.ToLower().Replace("\\s+", "_");
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
@@ -235,6 +237,8 @@ namespace OrigamArchitect
             txtDatabaseUserName.Enabled = !chkIntegratedAuthentication.Checked;
             lblDatabaseUserName.Enabled = !chkIntegratedAuthentication.Checked;
             lblDatabasePassword.Enabled = !chkIntegratedAuthentication.Checked;
+            txtPort.Visible = !chkIntegratedAuthentication.Checked;
+            labelPort.Visible = !chkIntegratedAuthentication.Checked;
         }
 
         private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
@@ -245,6 +249,15 @@ namespace OrigamArchitect
             if (cboWebRoot.Items.Count > 0)
             {
                 cboWebRoot.SelectedIndex = 0;
+            }
+            cboWebRoot.Visible = false;
+            lblWebRoot.Visible = false;
+            label2.Visible = false;
+            if (Deployment == DeploymentType.Local )
+            {
+                cboWebRoot.Visible = true;
+                lblWebRoot.Visible = true;
+                label2.Visible = true;
             }
             if (txtDatabaseType.SelectedIndex == -1)
             {
@@ -261,7 +274,7 @@ namespace OrigamArchitect
         {
             if (DatabaseType == DatabaseType.MsSql)
             {
-                txtPort.Text = "0";
+                txtPort.Text = "1433";
             }
             if (DatabaseType == DatabaseType.PgSql)
             {
@@ -332,6 +345,17 @@ namespace OrigamArchitect
             txtSourcesFolder.Text = _settings.SourcesFolder;
             txtBinFolderRoot.Text = _settings.BinFolder;
             txtTemplateFolder.Text = Path.Combine(Application.StartupPath, @"Project Templates\Default");
+            txtBinFolderRoot.Visible = false;
+            btnSelectBinFolderRoot.Visible = false;
+            lblBinFolderRoot.Visible = false;
+            lblBinFolderRootDescription.Visible = false;
+            if (Deployment == DeploymentType.Local)
+            {
+                txtBinFolderRoot.Visible = true;
+                btnSelectBinFolderRoot.Visible = false;
+                lblBinFolderRoot.Visible = true;
+                lblBinFolderRootDescription.Visible = true;
+            }
         }
 
         private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
@@ -400,6 +424,7 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
+            _project.Deployment = Deployment;
             switch (Deployment)
             {
                 case DeploymentType.Local:
@@ -407,6 +432,9 @@ namespace OrigamArchitect
                     break;
                 case DeploymentType.Azure:
                     pageDeploymentType.NextPage = pageAzureDeploymentSettings;
+                    break;
+                case DeploymentType.Docker:
+                    pageDeploymentType.NextPage = pageTemplateType;
                     break;
             }
         }
@@ -457,6 +485,14 @@ namespace OrigamArchitect
             _project.GitRepository = gitrepo.Checked;
             _project.Gitusername = txtGitUser.Text;
             _project.Gitemail = txtGitEmail.Text;
+            if( Deployment != DeploymentType.Docker)
+            {
+                pageGit.NextPage = pageReview;
+            }
+            else
+            {
+                pageGit.NextPage = pageDocker;
+            }
         }
 
         private void Gitrepo_CheckedChanged(object sender, EventArgs e)
@@ -479,8 +515,8 @@ namespace OrigamArchitect
             else
             {
                 chkIntegratedAuthentication.Enabled = true;
-                txtPort.Visible = false;
-                labelPort.Visible = false;
+                txtPort.Visible = !chkIntegratedAuthentication.Checked;
+                labelPort.Visible = !chkIntegratedAuthentication.Checked;
                 chkIntegratedAuthentication.Visible = true;
                 IntegratedLabel.Visible = true;
             }
@@ -642,6 +678,42 @@ namespace OrigamArchitect
                 rdCopy.Checked = true;
             }
             gitrepo.Enabled = true;
+        }
+        private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
+        {
+            label21.Text = "It will create file env.file and put there this:";
+            label21.Text += Environment.NewLine;
+            label21.Text += Environment.NewLine;
+            string Dockerenviroment= "gitPullOnStart=false";
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "OrigamSettings_SetOnStart=true";
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "OrigamSettings_SchemaExtensionGuid=" + _project.NewPackageId;
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "OrigamSettings_DbHost=" + _project.DatabaseServerName;
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "OrigamSettings_DbPort=" + (_project.Port);
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "OrigamSettings_DbUsername=" + _project.DatabaseUserName;
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "OrigamSettings_DbPassword=" + _project.DatabasePassword;
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "DatabaseName=" + _project.DataDatabaseName.ToLower();
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "OrigamSettings_ModelName=" + _project.Url;
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "DatabaseType=" + _project.DatabaseType.ToString().ToLower();
+            Dockerenviroment += Environment.NewLine;
+            Dockerenviroment += "ExternalDomain_SetOnStart=http://localhost:8080";
+            label21.Text += Dockerenviroment;
+            label21.Text += Environment.NewLine;
+            label21.Text += Environment.NewLine;
+            label21.Text += "Run: ";
+            string dockerRun = "docker run --env-file env.list -it --name " + txtName.Text + " -v " +txtSourcesFolder.Text + Path.DirectorySeparatorChar + txtName.Text + ":/home/origam/HTML5/data -p 8080:8080 origam/server";
+            label21.Text += dockerRun;
+            _project.DockerEnviroment = Dockerenviroment;
+            _project.DockerRun = dockerRun;
+
         }
     }
 }

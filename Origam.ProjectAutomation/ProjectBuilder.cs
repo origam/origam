@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.ProjectAutomation.Builders;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using static Origam.DA.Common.Enums;
 using static Origam.NewProjectEnums;
 
@@ -85,9 +86,12 @@ namespace Origam.ProjectAutomation
                 tasks.Add(new FileModelInitBuilder());
                 tasks.Add(new DataDatabaseStructureBuilder());
                 tasks.Add(new SettingsFinalConnectionStringBuilder());
-                tasks.Add(new CopyServerFilesBuilder());
-                tasks.Add(new ModifyConfigurationFilesBuilder());
-                tasks.Add(configureWebServerBuilder);
+                if (_project.Deployment == DeploymentType.Local)
+                {
+                    tasks.Add(new CopyServerFilesBuilder());
+                    tasks.Add(new ModifyConfigurationFilesBuilder());
+                    tasks.Add(configureWebServerBuilder);
+                }
                 tasks.Add(new ApplyDatabasePermissionsBuilder());
                 tasks.Add(new NewPackageBuilder());
             }
@@ -100,10 +104,17 @@ namespace Origam.ProjectAutomation
                 tasks.Add(new FileModelInitBuilder());
                 tasks.Add(new DataDatabaseStructureBuilder());
                 tasks.Add(new SettingsFinalConnectionStringBuilder());
-                tasks.Add(new CopyServerFilesBuilder());
-                tasks.Add(new ModifyConfigurationFilesBuilder());
-                tasks.Add(configureWebServerBuilder);
+                if (_project.Deployment == DeploymentType.Local)
+                {
+                    tasks.Add(new CopyServerFilesBuilder());
+                    tasks.Add(new ModifyConfigurationFilesBuilder());
+                    tasks.Add(configureWebServerBuilder);
+                }
                 tasks.Add(new NewPackageBuilder());
+            }
+            if(_project.Deployment == DeploymentType.Docker)
+            {
+                tasks.Add(new DockerBuilder());
             }
             AddGitTasks(_project);
         }

@@ -738,4 +738,7 @@
   <data name="Disconnected" xml:space="preserve">
     <value> [disconnected]</value>
   </data>
+  <data name="CheckIntegratedAuthentication_Message" xml:space="preserve">
+    <value>Please Uncheck Integrated Authentication. And fill Username and Password.</value>
+  </data>
 </root>

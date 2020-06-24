@@ -339,6 +339,15 @@ namespace Origam.ProjectAutomation
         public TypeDoTemplate TypeDoTemplate { get; set; }
         public string RepositoryUsername { get; set; }
         public string RepositoryPassword { get; set; }
+        public DeploymentType Deployment { get;  set; }
+        public string DockerEnviroment { get; set; }
+        public string DockerRun { get; set; }
         #endregion
+    }
+    public enum DeploymentType
+    {
+        Local,
+        Azure,
+        Docker
     }
 }

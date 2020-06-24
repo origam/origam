@@ -88,6 +88,10 @@ namespace Origam.DA.Service
             builder.DataSource = serverName;
             builder.InitialCatalog = databaseName;
             builder.Pooling = pooling;
+            if(!integratedAuthentication && port!=1433)
+            {
+                builder.DataSource = serverName+","+port;
+            }
             return builder.ConnectionString;
         }
         

@@ -205,6 +205,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please Uncheck Integrated Authentication. And fill Username and Password..
+        /// </summary>
+        internal static string CheckIntegratedAuthentication_Message {
+            get {
+                return ResourceManager.GetString("CheckIntegratedAuthentication_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Close.
         /// </summary>
         internal static string Close_MenuItem {

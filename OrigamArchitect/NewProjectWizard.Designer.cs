@@ -81,6 +81,9 @@ namespace OrigamArchitect
             this.btnSelectSourcesFolder = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.gitrepo = new System.Windows.Forms.CheckBox();
+            this.pageDocker = new AeroWizard.WizardPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.pageReview = new AeroWizard.WizardPage();
             this.lstTasks = new System.Windows.Forms.ListView();
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -127,6 +130,7 @@ namespace OrigamArchitect
             this.pageAzureDeploymentSettings.SuspendLayout();
             this.pagePaths.SuspendLayout();
             this.pageGit.SuspendLayout();
+            this.pageDocker.SuspendLayout();
             this.pageReview.SuspendLayout();
             this.pageTemplateType.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -154,6 +158,7 @@ namespace OrigamArchitect
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pagePaths);
             this.wizard1.Pages.Add(this.pageGit);
+            this.wizard1.Pages.Add(this.pageDocker);
             this.wizard1.Pages.Add(this.pageReview);
             this.wizard1.Size = new System.Drawing.Size(784, 561);
             this.wizard1.TabIndex = 0;
@@ -290,11 +295,10 @@ namespace OrigamArchitect
             // cboDeploymentType
             // 
             this.cboDeploymentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDeploymentType.Enabled = false;
             this.cboDeploymentType.FormattingEnabled = true;
             this.cboDeploymentType.Items.AddRange(new object[] {
             "Local (IIS Server)",
-            "Cloud (Microsoft Azure)"});
+            "Docker"});
             this.cboDeploymentType.Location = new System.Drawing.Point(164, 97);
             this.cboDeploymentType.Name = "cboDeploymentType";
             this.cboDeploymentType.Size = new System.Drawing.Size(241, 23);
@@ -306,7 +310,7 @@ namespace OrigamArchitect
             this.lblDeploymentType.Enabled = false;
             this.lblDeploymentType.Location = new System.Drawing.Point(4, 100);
             this.lblDeploymentType.Name = "lblDeploymentType";
-            this.lblDeploymentType.Size = new System.Drawing.Size(134, 15);
+            this.lblDeploymentType.Size = new System.Drawing.Size(133, 15);
             this.lblDeploymentType.TabIndex = 3;
             this.lblDeploymentType.Text = "Select Deployment Type";
             // 
@@ -391,7 +395,7 @@ namespace OrigamArchitect
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(3, 73);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(56, 15);
+            this.label11.Size = new System.Drawing.Size(55, 15);
             this.label11.TabIndex = 4;
             this.label11.Text = "Tenant Id";
             // 
@@ -484,7 +488,7 @@ namespace OrigamArchitect
             this.lblTemplateFolder.AutoSize = true;
             this.lblTemplateFolder.Location = new System.Drawing.Point(4, 114);
             this.lblTemplateFolder.Name = "lblTemplateFolder";
-            this.lblTemplateFolder.Size = new System.Drawing.Size(92, 15);
+            this.lblTemplateFolder.Size = new System.Drawing.Size(91, 15);
             this.lblTemplateFolder.TabIndex = 7;
             this.lblTemplateFolder.Text = "Template Folder";
             // 
@@ -538,7 +542,7 @@ namespace OrigamArchitect
             this.pageGit.Controls.Add(this.label15);
             this.pageGit.Controls.Add(this.gitrepo);
             this.pageGit.Name = "pageGit";
-            this.pageGit.NextPage = this.pageReview;
+            this.pageGit.NextPage = this.pageDocker;
             this.pageGit.Size = new System.Drawing.Size(737, 407);
             this.pageGit.TabIndex = 6;
             this.pageGit.Text = "Configure Source Control";
@@ -620,7 +624,7 @@ namespace OrigamArchitect
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(3, 33);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(118, 15);
+            this.label15.Size = new System.Drawing.Size(117, 15);
             this.label15.TabIndex = 13;
             this.label15.Text = "Create GIT repository";
             // 
@@ -635,6 +639,35 @@ namespace OrigamArchitect
             this.gitrepo.TabIndex = 12;
             this.gitrepo.UseVisualStyleBackColor = true;
             this.gitrepo.CheckedChanged += new System.EventHandler(this.Gitrepo_CheckedChanged);
+            // 
+            // pageDocker
+            // 
+            this.pageDocker.Controls.Add(this.label21);
+            this.pageDocker.Controls.Add(this.label19);
+            this.pageDocker.Name = "pageDocker";
+            this.pageDocker.NextPage = this.pageReview;
+            this.pageDocker.Size = new System.Drawing.Size(737, 407);
+            this.pageDocker.TabIndex = 7;
+            this.pageDocker.Text = "Docker start script";
+            this.pageDocker.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageDocker_Initialize);
+            // 
+            // label21
+            // 
+            this.label21.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label21.Location = new System.Drawing.Point(16, 49);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(694, 333);
+            this.label21.TabIndex = 16;
+            // 
+            // label19
+            // 
+            this.label19.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label19.Location = new System.Drawing.Point(16, 17);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(705, 17);
+            this.label19.TabIndex = 14;
+            this.label19.Text = "This wizard create start script for start docker with new project.All files are i" +
+    "n OrigamModel subdirectory scripts.";
             // 
             // pageReview
             // 
@@ -656,6 +689,7 @@ namespace OrigamArchitect
             this.lstTasks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstTasks.FullRowSelect = true;
             this.lstTasks.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lstTasks.HideSelection = false;
             this.lstTasks.Location = new System.Drawing.Point(0, 0);
             this.lstTasks.Name = "lstTasks";
             this.lstTasks.Size = new System.Drawing.Size(737, 407);
@@ -708,6 +742,7 @@ namespace OrigamArchitect
             this.listViewTemplate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewTemplate.ForeColor = System.Drawing.Color.Black;
             this.listViewTemplate.FullRowSelect = true;
+            this.listViewTemplate.HideSelection = false;
             this.listViewTemplate.Location = new System.Drawing.Point(0, 0);
             this.listViewTemplate.Name = "listViewTemplate";
             this.listViewTemplate.Size = new System.Drawing.Size(295, 388);
@@ -1049,6 +1084,7 @@ namespace OrigamArchitect
             this.pagePaths.PerformLayout();
             this.pageGit.ResumeLayout(false);
             this.pageGit.PerformLayout();
+            this.pageDocker.ResumeLayout(false);
             this.pageReview.ResumeLayout(false);
             this.pageTemplateType.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -1155,5 +1191,8 @@ namespace OrigamArchitect
         private System.Windows.Forms.RadioButton rdClone;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RadioButton rdNone;
+        private WizardPage pageDocker;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label21;
     }
 }
