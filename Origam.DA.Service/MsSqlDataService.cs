@@ -583,5 +583,10 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "RoleId").Select(param => param.Value).FirstOrDefault());
         }
+
+        public override string AlreadyCreatedUser(QueryParameterCollection parameters)
+        {
+            return string.Format("UPDATE [dbo].[OrigamParameters] SET [BooleanValue] = 1 WHERE [Id] = 'e42f864f-5018-4967-abdc-5910439adc9a'");
+        }
     }
 }

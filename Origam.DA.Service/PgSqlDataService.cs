@@ -485,5 +485,9 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "RoleId").Select(param => param.Value).FirstOrDefault());
         }
+        public override string AlreadyCreatedUser(QueryParameterCollection parameters)
+        {
+            return string.Format("UPDATE \"OrigamParameters\" SET \"BooleanValue\" = true WHERE \"Id\" = 'e42f864f-5018-4967-abdc-5910439adc9a'");
+        }
     }
 }

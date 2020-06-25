@@ -2545,6 +2545,7 @@ namespace Origam.DA.Service
 				ExecuteUpdate(CreateBusinessPartnerInsert(parameters), transaction1);
 				ExecuteUpdate(CreateOrigamUserInsert(parameters), transaction1);
 				ExecuteUpdate(CreateBusinessPartnerRoleIdInsert(parameters),transaction1);
+				ExecuteUpdate(AlreadyCreatedUser(parameters), transaction1);
 				ResourceMonitor.Commit(transaction1);
 			}
 			catch (Exception)
@@ -2556,6 +2557,7 @@ namespace Origam.DA.Service
 		public abstract string CreateBusinessPartnerInsert(QueryParameterCollection parameters);
 		public abstract string CreateOrigamUserInsert(QueryParameterCollection parameters);
 		public abstract string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters);
+		public abstract string AlreadyCreatedUser(QueryParameterCollection parameters);
 		#endregion
 	}
     // version of log4net for NetStandard 1.3 does not have the method
