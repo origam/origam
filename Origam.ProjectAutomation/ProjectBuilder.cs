@@ -112,7 +112,8 @@ namespace Origam.ProjectAutomation
                 }
                 tasks.Add(new NewPackageBuilder());
             }
-            if(_project.Deployment == DeploymentType.Docker)
+            tasks.Add(new NewUserBuilder());
+            if (_project.Deployment == DeploymentType.Docker)
             {
                 tasks.Add(new DockerBuilder());
             }

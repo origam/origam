@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Origam.Schema;
@@ -249,7 +250,7 @@ namespace Origam.DA.Service
             return Enum.GetNames(typeof(SqlDbType));
         }
 
-        public override void CreateUser(string _loginName, string password, string name, bool DatabaseIntegratedAuthentication)
+        public override void CreateDatabaseUser(string _loginName, string password, string name, bool DatabaseIntegratedAuthentication)
         {
             if (DatabaseIntegratedAuthentication)
             {
@@ -549,6 +550,38 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
             }
             dt.EndLoadData();
             return dt;
+        }
+
+        public override string CreateBusinessPartnerInsert(QueryParameterCollection parameters)
+        {
+            return string.Format("INSERT INTO [dbo].[BusinessPartner] ([FirstName],[UserName],[Name],[Id],[UserEmail]) " +
+                "VALUES ('{0}','{1}','{2}','{3}','{4}')",
+                parameters.Cast<QueryParameter>().Where(param => param.Name== "FirstName").Select(param =>param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Name").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Email").Select(param => param.Value).FirstOrDefault());
+        }
+
+        public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
+        {
+            return string.Format("INSERT INTO [dbo].[OrigamUser] " +
+                "([Username],[IsLockedOut],[EmailConfirmed],[refBusinessPartnerId],[Password],[Id],[FailedPasswordAttemptCount],[Is2FAEnforced]) " +
+                "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')", 
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
+                1,1,
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
+               Guid.NewGuid().ToString(),0,0);
+        }
+
+        public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
+        {
+            return string.Format("INSERT INTO [dbo].[BusinessPartnerOrigamRole] ([Id],[refBusinessPartnerId],[refOrigamRoleId]) " +
+                "VALUES ('{0}','{1}','{2}')",
+                Guid.NewGuid().ToString(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "RoleId").Select(param => param.Value).FirstOrDefault());
         }
     }
 }

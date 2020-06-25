@@ -37,6 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Schema.EntityModel",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrigamArchitect", "OrigamArchitect\OrigamArchitect.csproj", "{A4E0A953-DAE4-4920-BC2B-062B5A0DF40F}"
 	ProjectSection(ProjectDependencies) = postProject
+		{01708BD3-093A-42BF-BAF9-0A4CD1E69107} = {01708BD3-093A-42BF-BAF9-0A4CD1E69107}
 		{DD8ADCE0-1A65-412B-A09B-0D139D1CD7AB} = {DD8ADCE0-1A65-412B-A09B-0D139D1CD7AB}
 	EndProjectSection
 EndProject

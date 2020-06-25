@@ -741,4 +741,19 @@
   <data name="CheckIntegratedAuthentication_Message" xml:space="preserve">
     <value>Please Uncheck Integrated Authentication. And fill Username and Password.</value>
   </data>
+  <data name="EnterWebPassword_Message" xml:space="preserve">
+    <value>Please enter the web password.</value>
+  </data>
+  <data name="EnterWebUserName_Message" xml:space="preserve">
+    <value>Please enter the web Username.</value>
+  </data>
+  <data name="EnterWebEmail_Message" xml:space="preserve">
+    <value>Please enter Email.</value>
+  </data>
+  <data name="EnterWebFirstName_Message" xml:space="preserve">
+    <value>Please enter First Name.</value>
+  </data>
+  <data name="EnterWebSurename_Message" xml:space="preserve">
+    <value>Please enter Surename.</value>
+  </data>
 </root>

@@ -70,6 +70,18 @@ namespace OrigamArchitect
             this.lblBinFolderRootDescription = new System.Windows.Forms.Label();
             this.lblBinFolderRoot = new System.Windows.Forms.Label();
             this.txtBinFolderRoot = new System.Windows.Forms.TextBox();
+            this.pageWebUser = new AeroWizard.WizardPage();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtWebEmail = new System.Windows.Forms.TextBox();
+            this.txtWebSurename = new System.Windows.Forms.TextBox();
+            this.txtWebFirstname = new System.Windows.Forms.TextBox();
+            this.txtWebUserPassword = new System.Windows.Forms.TextBox();
+            this.txtWebUserLoginName = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
             this.pageGit = new AeroWizard.WizardPage();
             this.lblgitemail = new System.Windows.Forms.Label();
             this.lblgituser = new System.Windows.Forms.Label();
@@ -82,6 +94,10 @@ namespace OrigamArchitect
             this.label15 = new System.Windows.Forms.Label();
             this.gitrepo = new System.Windows.Forms.CheckBox();
             this.pageDocker = new AeroWizard.WizardPage();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.txtDockerPort = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.pageReview = new AeroWizard.WizardPage();
@@ -129,6 +145,7 @@ namespace OrigamArchitect
             this.pageDeploymentType.SuspendLayout();
             this.pageAzureDeploymentSettings.SuspendLayout();
             this.pagePaths.SuspendLayout();
+            this.pageWebUser.SuspendLayout();
             this.pageGit.SuspendLayout();
             this.pageDocker.SuspendLayout();
             this.pageReview.SuspendLayout();
@@ -157,6 +174,7 @@ namespace OrigamArchitect
             this.wizard1.Pages.Add(this.wizOpenRepository);
             this.wizard1.Pages.Add(this.pageLocalDeploymentSettings);
             this.wizard1.Pages.Add(this.pagePaths);
+            this.wizard1.Pages.Add(this.pageWebUser);
             this.wizard1.Pages.Add(this.pageGit);
             this.wizard1.Pages.Add(this.pageDocker);
             this.wizard1.Pages.Add(this.pageReview);
@@ -444,7 +462,7 @@ namespace OrigamArchitect
             this.pagePaths.Controls.Add(this.lblBinFolderRoot);
             this.pagePaths.Controls.Add(this.txtBinFolderRoot);
             this.pagePaths.Name = "pagePaths";
-            this.pagePaths.NextPage = this.pageGit;
+            this.pagePaths.NextPage = this.pageWebUser;
             this.pagePaths.Size = new System.Drawing.Size(737, 407);
             this.pagePaths.TabIndex = 2;
             this.pagePaths.Text = "Paths";
@@ -528,6 +546,115 @@ namespace OrigamArchitect
             this.txtBinFolderRoot.Name = "txtBinFolderRoot";
             this.txtBinFolderRoot.Size = new System.Drawing.Size(533, 23);
             this.txtBinFolderRoot.TabIndex = 0;
+            // 
+            // pageWebUser
+            // 
+            this.pageWebUser.Controls.Add(this.label29);
+            this.pageWebUser.Controls.Add(this.label28);
+            this.pageWebUser.Controls.Add(this.label27);
+            this.pageWebUser.Controls.Add(this.txtWebEmail);
+            this.pageWebUser.Controls.Add(this.txtWebSurename);
+            this.pageWebUser.Controls.Add(this.txtWebFirstname);
+            this.pageWebUser.Controls.Add(this.txtWebUserPassword);
+            this.pageWebUser.Controls.Add(this.txtWebUserLoginName);
+            this.pageWebUser.Controls.Add(this.label26);
+            this.pageWebUser.Controls.Add(this.label25);
+            this.pageWebUser.Controls.Add(this.label24);
+            this.pageWebUser.Name = "pageWebUser";
+            this.pageWebUser.NextPage = this.pageGit;
+            this.pageWebUser.Size = new System.Drawing.Size(737, 407);
+            this.pageWebUser.TabIndex = 10;
+            this.pageWebUser.Text = "Create New Web User";
+            this.pageWebUser.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageWebUser_Commit);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(21, 224);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(36, 15);
+            this.label29.TabIndex = 24;
+            this.label29.Text = "Email";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(21, 190);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(60, 15);
+            this.label28.TabIndex = 23;
+            this.label28.Text = "Surename";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(21, 161);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(64, 15);
+            this.label27.TabIndex = 22;
+            this.label27.Text = "First Name";
+            // 
+            // txtWebEmail
+            // 
+            this.txtWebEmail.Location = new System.Drawing.Point(110, 216);
+            this.txtWebEmail.Name = "txtWebEmail";
+            this.txtWebEmail.Size = new System.Drawing.Size(174, 23);
+            this.txtWebEmail.TabIndex = 22;
+            // 
+            // txtWebSurename
+            // 
+            this.txtWebSurename.Location = new System.Drawing.Point(110, 187);
+            this.txtWebSurename.Name = "txtWebSurename";
+            this.txtWebSurename.Size = new System.Drawing.Size(174, 23);
+            this.txtWebSurename.TabIndex = 21;
+            // 
+            // txtWebFirstname
+            // 
+            this.txtWebFirstname.Location = new System.Drawing.Point(110, 158);
+            this.txtWebFirstname.Name = "txtWebFirstname";
+            this.txtWebFirstname.Size = new System.Drawing.Size(174, 23);
+            this.txtWebFirstname.TabIndex = 20;
+            // 
+            // txtWebUserPassword
+            // 
+            this.txtWebUserPassword.Location = new System.Drawing.Point(110, 112);
+            this.txtWebUserPassword.Name = "txtWebUserPassword";
+            this.txtWebUserPassword.Size = new System.Drawing.Size(174, 23);
+            this.txtWebUserPassword.TabIndex = 19;
+            // 
+            // txtWebUserLoginName
+            // 
+            this.txtWebUserLoginName.Location = new System.Drawing.Point(110, 83);
+            this.txtWebUserLoginName.Name = "txtWebUserLoginName";
+            this.txtWebUserLoginName.Size = new System.Drawing.Size(174, 23);
+            this.txtWebUserLoginName.TabIndex = 18;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(21, 115);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(57, 15);
+            this.label26.TabIndex = 17;
+            this.label26.Text = "Password";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(21, 86);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(72, 15);
+            this.label25.TabIndex = 16;
+            this.label25.Text = "Login Name";
+            // 
+            // label24
+            // 
+            this.label24.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label24.Location = new System.Drawing.Point(18, 31);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(321, 21);
+            this.label24.TabIndex = 15;
+            this.label24.Text = "Please fill Username and password for new First User";
             // 
             // pageGit
             // 
@@ -642,6 +769,10 @@ namespace OrigamArchitect
             // 
             // pageDocker
             // 
+            this.pageDocker.Controls.Add(this.label23);
+            this.pageDocker.Controls.Add(this.label22);
+            this.pageDocker.Controls.Add(this.label20);
+            this.pageDocker.Controls.Add(this.txtDockerPort);
             this.pageDocker.Controls.Add(this.label21);
             this.pageDocker.Controls.Add(this.label19);
             this.pageDocker.Name = "pageDocker";
@@ -649,14 +780,50 @@ namespace OrigamArchitect
             this.pageDocker.Size = new System.Drawing.Size(737, 407);
             this.pageDocker.TabIndex = 7;
             this.pageDocker.Text = "Docker start script";
+            this.pageDocker.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageDocker_Commit);
             this.pageDocker.Initialize += new System.EventHandler<AeroWizard.WizardPageInitEventArgs>(this.pageDocker_Initialize);
+            // 
+            // label23
+            // 
+            this.label23.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label23.Location = new System.Drawing.Point(109, 151);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(253, 49);
+            this.label23.TabIndex = 20;
+            this.label23.Text = "If you have already created docker for other project on your computer please fill" +
+    " different port.";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(109, 151);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(0, 15);
+            this.label22.TabIndex = 19;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(16, 115);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(69, 15);
+            this.label20.TabIndex = 18;
+            this.label20.Text = "Docker Port";
+            // 
+            // txtDockerPort
+            // 
+            this.txtDockerPort.Location = new System.Drawing.Point(112, 112);
+            this.txtDockerPort.Name = "txtDockerPort";
+            this.txtDockerPort.Size = new System.Drawing.Size(100, 23);
+            this.txtDockerPort.TabIndex = 17;
+            this.txtDockerPort.Text = "8080";
             // 
             // label21
             // 
             this.label21.ForeColor = System.Drawing.SystemColors.GrayText;
             this.label21.Location = new System.Drawing.Point(16, 49);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(694, 333);
+            this.label21.Size = new System.Drawing.Size(662, 19);
             this.label21.TabIndex = 16;
             // 
             // label19
@@ -884,6 +1051,7 @@ namespace OrigamArchitect
             this.pageLocalDeploymentSettings.Controls.Add(this.lblServerName);
             this.pageLocalDeploymentSettings.Controls.Add(this.txtDatabaseUserName);
             this.pageLocalDeploymentSettings.Name = "pageLocalDeploymentSettings";
+            this.pageLocalDeploymentSettings.NextPage = this.pagePaths;
             this.pageLocalDeploymentSettings.Size = new System.Drawing.Size(737, 407);
             this.pageLocalDeploymentSettings.TabIndex = 0;
             this.pageLocalDeploymentSettings.Text = "Local Deployment Settings";
@@ -1082,9 +1250,12 @@ namespace OrigamArchitect
             this.pageAzureDeploymentSettings.PerformLayout();
             this.pagePaths.ResumeLayout(false);
             this.pagePaths.PerformLayout();
+            this.pageWebUser.ResumeLayout(false);
+            this.pageWebUser.PerformLayout();
             this.pageGit.ResumeLayout(false);
             this.pageGit.PerformLayout();
             this.pageDocker.ResumeLayout(false);
+            this.pageDocker.PerformLayout();
             this.pageReview.ResumeLayout(false);
             this.pageTemplateType.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -1194,5 +1365,21 @@ namespace OrigamArchitect
         private WizardPage pageDocker;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox txtDockerPort;
+        private WizardPage pageWebUser;
+        private System.Windows.Forms.TextBox txtWebUserPassword;
+        private System.Windows.Forms.TextBox txtWebUserLoginName;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox txtWebEmail;
+        private System.Windows.Forms.TextBox txtWebSurename;
+        private System.Windows.Forms.TextBox txtWebFirstname;
     }
 }

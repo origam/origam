@@ -43,6 +43,7 @@ using System.Text.RegularExpressions;
 using static Origam.NewProjectEnums;
 using Origam.Extensions;
 using Origam.DA.Service;
+using NPOI.Util;
 
 namespace OrigamArchitect
 {
@@ -482,6 +483,7 @@ namespace OrigamArchitect
                 return;
             }
             _project.SourcesFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text);
+            _project.RootSourceFolder = txtSourcesFolder.Text;
             _project.GitRepository = gitrepo.Checked;
             _project.Gitusername = txtGitUser.Text;
             _project.Gitemail = txtGitEmail.Text;
@@ -681,39 +683,63 @@ namespace OrigamArchitect
         }
         private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
         {
-            label21.Text = "It will create file env.file and put there this:";
+            label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
             label21.Text += Environment.NewLine;
-            label21.Text += Environment.NewLine;
-            string Dockerenviroment= "gitPullOnStart=false";
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "OrigamSettings_SetOnStart=true";
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "OrigamSettings_SchemaExtensionGuid=" + _project.NewPackageId;
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "OrigamSettings_DbHost=" + _project.DatabaseServerName;
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "OrigamSettings_DbPort=" + (_project.Port);
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "OrigamSettings_DbUsername=" + _project.DatabaseUserName;
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "OrigamSettings_DbPassword=" + _project.DatabasePassword;
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "DatabaseName=" + _project.DataDatabaseName.ToLower();
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "OrigamSettings_ModelName=" + _project.Url;
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "DatabaseType=" + _project.DatabaseType.ToString().ToLower();
-            Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "ExternalDomain_SetOnStart=http://localhost:8080";
-            label21.Text += Dockerenviroment;
-            label21.Text += Environment.NewLine;
-            label21.Text += Environment.NewLine;
-            label21.Text += "Run: ";
-            string dockerRun = "docker run --env-file env.list -it --name " + txtName.Text + " -v " +txtSourcesFolder.Text + Path.DirectorySeparatorChar + txtName.Text + ":/home/origam/HTML5/data -p 8080:8080 origam/server";
-            label21.Text += dockerRun;
-            _project.DockerEnviroment = Dockerenviroment;
-            _project.DockerRun = dockerRun;
-
+            label21.Text += "After create new project run "+ _project.SourcesFolder + ".cmd and this script run docker with new project.";
+        }
+        private void pageDocker_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            if(!int.TryParse(txtDockerPort.Text,out int result))
+            {
+                AsMessageBox.ShowError(this, "Port is not number!", "DockerPort", null);
+                e.Cancel = true;
+                return;
+            }
+            if(result<1024)
+            {
+                AsMessageBox.ShowError(this, "Port can be between 1025-65535!", "DockerPort", null);
+                e.Cancel = true;
+                return;
+            }
+            _project.DockerPort = result;
+        }
+        private void pageWebUser_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtWebUserLoginName.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebUserName_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebUserPassword.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebPassword_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebFirstname.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebFirstName_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebSurename.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebSurename_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebEmail.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebEmail_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            _project.WebUserName = txtWebUserLoginName.Text;
+            _project.WebUserPassword = txtWebUserPassword.Text;
+            _project.WebFirstName = txtWebFirstname.Text;
+            _project.WebSurename = txtWebSurename.Text;
+            _project.WebEmail = txtWebEmail.Text;
         }
     }
 }

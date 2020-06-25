@@ -208,6 +208,10 @@
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj">
+      <Project>{01708bd3-093a-42bf-baf9-0a4cd1e69107}</Project>
+      <Name>Origam.Security.Identity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
       <Name>Origam.Security</Name>
       <Project>{93B972C4-D58D-4681-A8B8-95A34C7C2980}</Project>
@@ -444,7 +448,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Origam\Workbench\" />
-    <Folder Include="Wizards" />
+    <Folder Include="Wizards\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AeroWizard">

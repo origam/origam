@@ -340,8 +340,13 @@ namespace Origam.ProjectAutomation
         public string RepositoryUsername { get; set; }
         public string RepositoryPassword { get; set; }
         public DeploymentType Deployment { get;  set; }
-        public string DockerEnviroment { get; set; }
-        public string DockerRun { get; set; }
+        public string RootSourceFolder { get; set; }
+        public int DockerPort { get; set; }
+        public string WebUserName { get; set; }
+        public string WebUserPassword { get; set; }
+        public string WebFirstName { get;  set; }
+        public string WebSurename { get;  set; }
+        public string WebEmail { get;  set; }
         #endregion
     }
     public enum DeploymentType

@@ -60,6 +60,9 @@
     <Reference Include="Antlr4.StringTemplate">
       <HintPath>..\EnterpriseLibrary\Antlr4.StringTemplate.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Windows\System32\inetsrv\Microsoft.Web.Administration.dll</HintPath>
@@ -90,6 +93,7 @@
     <Compile Include="Builders\ModifyConfigurationFilesBuilder.cs" />
     <Compile Include="Builders\ApplyDatabasePermissionsBuilder.cs" />
     <Compile Include="Builders\NewPackageBuilder.cs" />
+    <Compile Include="Builders\NewUserBuilder.cs" />
     <Compile Include="IProjectBuilder.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectBuilder.cs" />
@@ -128,6 +132,10 @@
       <Project>{367d2f77-b10d-438b-bf33-b7825dcf0bf5}</Project>
       <Name>Origam.ModelImport</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.NetFx\Origam.Security.NetFx.csproj">
+      <Project>{22066F4C-117C-4910-BC00-9C1A4BB14551}</Project>
+      <Name>Origam.Security.NetFx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Services\Origam.Services.csproj">
       <Project>{199dde99-9ee7-4cce-b71d-7fc1cc0896aa}</Project>
       <Name>Origam.Services</Name>
@@ -139,6 +147,10 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
