@@ -23,10 +23,11 @@ using System;
 using System.Collections;
 using System.Net;
 using System.Reflection;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
+using System.ServiceModel.Dispatcher;
 using System.Threading;
-using System.Xml;
-using Origam;
-using Origam.BI;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -35,84 +36,114 @@ using Origam.BI.SSRS.SSRSWebReference;
 
 namespace Origam.BI.SSRS
 {
+    // ReSharper disable once InconsistentNaming
     public class SSRSService : IReportService
     {
-        private TraceTaskInfo traceTaskInfo = null;
+        private TraceTaskInfo traceTaskInfo;
+        // ReSharper disable once InconsistentNaming
         private static readonly ILog log = LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
 		public object GetReport(Guid reportId, IXmlContainer data, string format, 
             Hashtable parameters, string dbTransaction)
         {
-			IPersistenceService persistenceService = ServiceManager.Services
-                .GetService(typeof(IPersistenceService)) as IPersistenceService;
-			SSRSReport report = persistenceService.SchemaProvider
+            var persistenceService 
+                = ServiceManager.Services.GetService<IPersistenceService>();
+            if(!(persistenceService.SchemaProvider
                 .RetrieveInstance(typeof(AbstractReport), 
-                new ModelElementKey(reportId)) as SSRSReport;
-			if (report == null)
+                    new ModelElementKey(reportId)) is SSRSReport report))
 			{
-				throw new ArgumentOutOfRangeException("reportId", reportId, 
+				throw new ArgumentOutOfRangeException(
+                    "reportId", reportId, 
                     Strings.DefinitionNotInModel);
 			}
-            if (parameters == null)
+            if(parameters == null)
             {
                 parameters = new Hashtable();
             }
-            ReportHelper.PopulateDefaultValues(report, parameters);
-            ReportHelper.ComputeXsltValueParameters(report, parameters, traceTaskInfo);
-            ReportExecutionService reportService = new ReportExecutionService();
-            OrigamSettings settings 
-                = ConfigurationManager.GetActiveConfiguration() as OrigamSettings;
-            reportService.Url = settings.SQLReportServiceUrl;
-            if (String.IsNullOrEmpty(settings.SQLReportServiceAccount))
+            ReportHelper.PopulateDefaultValues(
+                report, parameters);
+            ReportHelper.ComputeXsltValueParameters(
+                report, parameters, traceTaskInfo);
+            var settings = ConfigurationManager.GetActiveConfiguration();
+            var serviceTimeout 
+                = TimeSpan.FromMilliseconds(settings.SQLReportServiceTimeout);
+            var binding = new BasicHttpBinding(
+                BasicHttpSecurityMode.TransportCredentialOnly)
             {
-                reportService.Credentials = CredentialCache.DefaultCredentials;
+                OpenTimeout = serviceTimeout,
+                SendTimeout = serviceTimeout,
+                ReceiveTimeout = serviceTimeout,
+                CloseTimeout = serviceTimeout,
+                MaxReceivedMessageSize = 104857600 //100MB
+            };
+            if(log.IsDebugEnabled)
+            {
+                log.DebugFormat("SSRSService Timeout: {0}", 
+                    settings.SQLReportServiceTimeout);
+            }
+            var serviceClient = new ReportExecutionServiceSoapClient(
+                binding, new EndpointAddress(settings.SQLReportServiceUrl));
+            if(string.IsNullOrEmpty(settings.SQLReportServiceAccount))
+            {
+                serviceClient.ClientCredentials.Windows.ClientCredential 
+                    = CredentialCache.DefaultNetworkCredentials;
             }
             else
             {
-                reportService.Credentials = new NetworkCredential(
-                    settings.SQLReportServiceAccount,
-                    settings.SQLReportServicePassword);
+                serviceClient.ClientCredentials.Windows.ClientCredential
+                    = new NetworkCredential(
+                        settings.SQLReportServiceAccount, 
+                        settings.SQLReportServicePassword);
             }
-            reportService.Timeout = settings.SQLReportServiceTimeout;
-            if (log.IsDebugEnabled)
+            serviceClient.Endpoint.EndpointBehaviors.Add(
+                new ReportingServicesEndpointBehavior());
+            var reportPath = ReportHelper
+                .ExpandCurlyBracketPlaceholdersWithParameters(
+                    report.ReportPath, parameters);
+            var executionHeader = new ExecutionHeader();
+            // TrustedUserHeader is used when connecting via https
+            // so for we don't have such instance, so we ignore it
+            var loadReportResponse = serviceClient.LoadReportAsync(
+                null, reportPath, null)
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
+            if(loadReportResponse.ExecutionHeader != null)
             {
-                log.DebugFormat("SSRSService Timeout: {0}", 
-                    reportService.Timeout);
+                executionHeader.ExecutionID 
+                    = loadReportResponse.ExecutionHeader.ExecutionID;
             }
-            byte[] result = null;
-            string reportPath = ReportHelper.ExpandCurlyBracketPlaceholdersWithParameters(report.ReportPath, parameters);
-            string historyID = null;
-            string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>";
-            string encoding;
-            string mimeType;
-            string extension;
-            Warning[] warnings = null;
-            string[] streamIDs = null;
-            ExecutionInfo execInfo = new ExecutionInfo();
-            ExecutionHeader execHeader = new ExecutionHeader();
-            reportService.ExecutionHeaderValue = execHeader;
-            execInfo = reportService.LoadReport(reportPath, historyID);
-            if ((parameters != null) && (parameters.Count > 0))
+            if(parameters.Count > 0)
             {
-                ParameterValue[] reportParameters 
-                    = new ParameterValue[parameters.Count];
-                int index = 0;
+                var reportParameters = new ParameterValue[parameters.Count];
+                var index = 0;
                 foreach (string key in parameters.Keys)
                 {
-                    ParameterValue parameterValue = new ParameterValue();
-                    parameterValue.Name = key;
-                    parameterValue.Value = parameters[key].ToString();
+                    var parameterValue = new ParameterValue
+                    {
+                        Name = key, 
+                        Value = parameters[key].ToString()
+                    };
                     reportParameters[index] = parameterValue;
                     index++;
                 }
-                reportService.SetExecutionParameters(reportParameters,
-                    Thread.CurrentThread.CurrentCulture.IetfLanguageTag);
+                serviceClient.SetExecutionParametersAsync(
+                    executionHeader, null,
+                    reportParameters,
+                    Thread.CurrentThread.CurrentCulture.IetfLanguageTag)
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
             }
-            result = reportService.Render(format, devInfo, out extension, 
-                out encoding, out mimeType, out warnings, out streamIDs);
-            execInfo = reportService.GetExecutionInfo();
-            return result;
+            return serviceClient.RenderAsync(
+                new RenderRequest(executionHeader, null, 
+                    format,
+            "<DeviceInfo><Toolbar>False</Toolbar></DeviceInfo>"))
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult()
+                .Result;
         }
 
 		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, 
@@ -121,9 +152,67 @@ namespace Origam.BI.SSRS
 			throw new NotSupportedException();
 		}
 
-        public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)
+        public void SetTraceTaskInfo(TraceTaskInfo value)
         {
-            this.traceTaskInfo = traceTaskInfo;
+            this.traceTaskInfo = value;
+        }
+    }
+
+    internal class ReportingServicesEndpointBehavior : IEndpointBehavior
+    {
+        public void AddBindingParameters(
+            ServiceEndpoint endpoint,
+            BindingParameterCollection bindingParameters)
+        {
+        }
+
+        public void ApplyClientBehavior(
+            ServiceEndpoint endpoint, ClientRuntime clientRuntime)
+        {
+            clientRuntime.ClientMessageInspectors.Add(
+                new ReportingServicesExecutionInspector());
+        }
+
+        public void ApplyDispatchBehavior(
+            ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
+        {
+        }
+
+        public void Validate(ServiceEndpoint endpoint)
+        {
+        }
+    }
+
+    internal class ReportingServicesExecutionInspector : IClientMessageInspector
+    {
+        private MessageHeaders headers;
+
+        public void AfterReceiveReply(
+            ref Message reply, object correlationState)
+        {
+            var index = reply.Headers.FindHeader(
+                "ExecutionHeader", 
+                "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices");
+            if ((index >= 0) && (headers == null))
+            {
+                headers = new MessageHeaders(MessageVersion.Soap11);
+                headers.CopyHeaderFrom(
+                    reply, 
+                    reply.Headers.FindHeader(
+                        "ExecutionHeader", 
+                        "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices"));
+            }
+        }
+
+        public object BeforeSendRequest(
+            ref Message request, IClientChannel channel)
+        {
+            if (headers != null)
+            {
+                request.Headers.CopyHeadersFrom(headers);
+            }
+            //https://msdn.microsoft.com/en-us/library/system.servicemodel.dispatcher.iclientmessageinspector.beforesendrequest(v=vs.110).aspx#Anchor_0
+            return Guid.NewGuid(); 
         }
     }
 }

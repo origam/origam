@@ -206,10 +206,6 @@
       <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
       <Name>Origam.BI.PrintIt</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
-      <Project>{dd8adce0-1a65-412b-a09b-0d139d1cd7ab}</Project>
-      <Name>Origam.BI.SSRS</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
       <Project>{76038b9a-f924-4f7f-b4cc-4b9a0a6a55e3}</Project>
       <Name>Origam.Gui.Designer</Name>
