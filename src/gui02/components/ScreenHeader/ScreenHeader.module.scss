@@ -1,4 +1,5 @@
 @import "src/styles/common_styles.scss";
+@import "src/styles/definitions.scss";
 
 .root {
   height: 50px;
@@ -7,7 +8,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  margin-bottom: 0.5em;
+  margin-bottom: 1em;
   h1 {
     margin: 0;
     margin-right: 0.7em;
@@ -30,4 +31,23 @@
 
 .workflowActionBtn {
   @include dialogButton();
+  background: #E9E8F0;
+  border: 1px solid $grey3;
+  box-sizing: border-box;
+  color: $black;
+  font-size: $font-size;
+  height: 2em;
+    margin: 0 0.5em;
+  padding: 0 1.5em;
+  @include border-radius(3em);
+  &:first-of-type {
+    margin-left: 0;
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
+  &:hover {
+    background: $grey3;
+      color: $black;
+  }
 }

@@ -1,6 +1,6 @@
 @import "./EditorsCommon.scss";
 @import "src/styles/common_styles.scss";
-
+@import "src/styles/definitions.scss";
 
 
 .droppedPanelContainer {
@@ -12,6 +12,10 @@
   background-color: white;
   overflow: hidden;
   @include popoverShadow;
+
+  box-shadow: 0 0.5em 1.5em 0 rgba($black, 0.25);
+  border: 1px solid $grey3;
+  @include border-radius(4px);
 }
 
 .calendarWidgetContainer {
@@ -26,17 +30,20 @@
 .calendarWidgetRow {
   display: flex;
   flex-direction: row;
-  border-bottom: 1px solid #b3b3b3;
+  border: none;
+  height: 30px;
 }
 
 .calendarWidgetCell {
   width: 32px;
-  height: 28px;
-  border-right: 1px solid #b3b3b3;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  height: auto;
+  border: none;
+  background: $white;
+  color: $black;
 }
 
 .calendarWidgetCell:hover {
@@ -44,45 +51,64 @@
 }
 
 .calendarWidgetSelectedDay {
-  background-color: #8998c5;
+  background: $blue;
+  color: $white;
+  font-weight: 700;
+  @include border-radius(5em);
 }
 
 .calendarWidgetDayHeaderCell {
   width: 32px;
-  height: 18px;
-  border-right: 1px solid #b3b3b3;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #666666;
-  color: white;
-  font-weight: bold;
+  height: auto;
+  border: none;
+  background: $white;
+  color: $black;
+  font-size: 0.9em;
+  font-weight: 700;
 }
 
 .calendarWidgetNeighbourMonthCell {
   background-color: #e5e5e5;
-  color: #727272;
+  color: $grey2;
 }
 
 .calendarWidgetHeader {
   flex-grow: 1;
   display: flex;
   flex-direction: row;
-  background-color: #bbc1dc;
-  height: 28px;
   align-items: center;
+  height: auto;
+  background: $grey2;
+  border-bottom: 1px solid $grey3;
 }
 
 .calendarWidgetControlBtn {
   background: transparent;
-  color: white;
   border: none;
   cursor: pointer;
+  box-sizing: content-box;
+  color: $blue;
+  height: 1em;
+  line-height: 0.8em;
+  margin: 0 0.25em;
+  padding: 0.5em;
+  width: 1em;
+  @extend %transition;
+
+  &:hover {
+    background: $blue;
+    color: $white;
+    @include border-radius(5em);
+  }
+  i {
+    font-size: 1.25em;
+    line-height: 0.8em;
+  }
 }
 
-.calendarWidgetControlBtn:hover {
-  background: #8998c5;
-}
 
 .calendarWidgetYearControls {
   flex-shrink: 0;
@@ -100,6 +126,8 @@
   justify-content: center;
   white-space: nowrap;
   overflow: hidden;
+  font-size: 1.1em;
+  font-weight: 700;
 }
 
 .dropdownSymbol {

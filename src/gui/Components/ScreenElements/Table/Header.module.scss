@@ -1,5 +1,6 @@
+@import "src/styles/definitions.scss";
+
 .header {
-  min-height: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,12 +8,41 @@
   box-sizing: border-box;
   /*border-right: 1px solid #bbbbbb;*/
   position: relative;
-  background-color: #f7f6fa;
   /*overflow: hidden;*/
   flex-shrink: 0;
   font-weight: 700;
   border-top: 1px solid #E9E8F0;
   cursor: default;
+
+  background: $grey1;
+  border: none;
+  min-height: 25px;
+  padding: 0 0.1em 0 0.3em;
+
+  @extend %transition;
+
+  &:first-of-type {
+    padding-left: 0.6em;
+  }
+  &:hover {
+    background: $grey2;
+    .Header_order {
+      background: $grey2;
+    }
+  }
+  &.changing-order {
+    color: $black;
+  }
+  .Header_order {
+    background: $grey1;
+    color: $blue;
+    font-size: $font-size;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 0.5em;
+    right: -3px;
+    @extend %transition;
+  }
 }
 
 .header:global(.changing-order):hover {
@@ -21,15 +51,18 @@
 }
 
 .label {
-  margin-left: 3px;
-  margin-right: 3px;
-  overflow: hidden;
   box-sizing: border-box;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
   flex-grow: 1;
+  display: block;
+  line-height: 25px;
+  margin: 0;
+  justify-content: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  width: 100%;
 }
 
 .order {
@@ -42,23 +75,30 @@
 }
 
 .columnWidthHandle {
-  width: 2px;
-  margin-right: 1px;
-  margin-left: 1px;
-  background-color: #bbbbbb;
-  cursor: w-resize;
   flex-shrink: 0;
+  background: $grey2;
+  border-color: $grey1;
+  border-style: solid;
+  border-width: 0 4px;
+  cursor: ew-resize;
+  margin: 0;
+  padding: 0;
+  width: 9px;
+  @extend %transition;
+  &:hover, &:focus {
+    background: $blue;
+  }
+  &:last-of-type {
+    border-right-color: $grey2;
+  }
 }
 
-.columnWidthHandle:hover {
-  background-color: white;
-}
 
 .inHeaderRow {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: left;
-  min-height: 20px;
   width: 100%;
+  min-height: 25px;
 }

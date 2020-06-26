@@ -1,6 +1,9 @@
+@import "src/styles/definitions.scss";
+
 .root {
   border-left: 1px solid #b0afb7;
   height: 2.5em;
   width: 1px;
-  margin: 0 0.9em;
+  border-color: $grey2;
+  margin: 0 2em;
 }

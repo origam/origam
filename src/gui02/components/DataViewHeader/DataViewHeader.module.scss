@@ -1,4 +1,5 @@
 @import "src/styles/common_styles.scss";
+@import "src/styles/definitions.scss";
 
 .root {
   min-height: 0px;
@@ -17,6 +18,9 @@
   z-index: 150;
   border-top: 1px solid #dddddd;
 
+  border-style: solid;
+  border-color: $grey2 !important;
+  border-width: 0 0 1px 0;
   
   &:global(.isVisible) {
     min-height: 30px;
@@ -35,13 +39,18 @@
   }
 
   h2 {
-    font-size: (1.25em*0.9);
-    line-height: 1.4em;
+    font-size: $h2-fontsize;
+    line-height: $h2-lineheight;
     font-weight: 700;
-    margin: 0;
-    margin-right: (2em/2);
+    margin: 0 1.5em 0 0;
     padding: 0;
-    white-space: nowrap;
     text-overflow: ellipsis;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: normal;
   }
 }
+
+
+

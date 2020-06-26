@@ -4,14 +4,14 @@
 
 .caption {
   position: absolute;
-  overflow: visible;
-  // text-overflow: ellipsis;
-  white-space: nowrap;
-  word-wrap: normal;
   top: 0;
   left: 0;
   display: block;
-  white-space: pre;
+  overflow: hidden;
+  padding: 0 0.5em 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
 }
 
 .editor {

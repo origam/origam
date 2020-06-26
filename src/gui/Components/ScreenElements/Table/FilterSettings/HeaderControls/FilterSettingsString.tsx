@@ -4,7 +4,7 @@ import {
   FilterSettingsComboBoxItem
 } from "../FilterSettingsComboBox";
 
-import CS from "./FilterSettingsCommon.module.css";
+import CS from "./FilterSettingsCommon.module.scss";
 import { observable, computed, action } from "mobx";
 import { observer, PropTypes } from "mobx-react";
 import produce from "immer";

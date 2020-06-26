@@ -4,7 +4,7 @@ import {
   FilterSettingsComboBoxItem
 } from "../FilterSettingsComboBox";
 
-import CS from "./FilterSettingsCommon.module.css";
+import CS from "./FilterSettingsCommon.module.scss";
 import { Checkbox } from "../../../../Checkbox";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";

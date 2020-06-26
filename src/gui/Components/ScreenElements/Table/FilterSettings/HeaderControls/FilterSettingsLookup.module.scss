@@ -1,7 +1,11 @@
 @import "src/styles/common_styles.scss";
+@import "src/styles/definitions.scss";
 
 .droppedPanel {
   @include popoverShadow;
+  box-shadow: 0 0.5em 1.5em 0 rgba($black, 0.25);
+  border: 1px solid $grey3;
+  @include border-radius(4px);
 }
 
 .optionGridCell {
@@ -11,10 +15,13 @@
   cursor: pointer;
   white-space: nowrap;
   @include hoverItemAnimation;
-
+  background: $white !important;
+  color: $blue;
+  padding: 0 0.25em;
   &:hover {
-    background-color: #e0e0e0 !important;
     font-weight: 400;
+    background: $blue !important;
+    color: $white;
   }
 }
 

@@ -1,15 +1,16 @@
 @import "src/styles/common_styles.scss";
+@import "src/styles/definitions.scss";
 
 .root {
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-  height: 25px;
   cursor: pointer;
   display: flex;
   flex-direction: row;
   align-items: center;
   white-space: nowrap;
   @include hoverItemAnimation;
+  color: $blue;
+  height: 30px;
+  padding: 0 1em;
 
   &:not(:global(.isDisabled)):hover {
     background-color: #e0e0e0;
@@ -19,5 +20,23 @@
   &:global(.isDisabled) {
     color: grey;
     cursor: not-allowed;
+  }
+
+
+  &:last-of-type {
+    color: $red;
+    &:hover {
+      background: $red;
+    }
+  }
+  &:hover {
+    background: $blue;
+    color: $white;
+  }
+  &:global(.isDisabled) {
+    color: $grey3;
+    &:hover {
+      background: $grey1;
+    }
   }
 }
