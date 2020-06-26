@@ -48,9 +48,9 @@ body,
   overflow: none;
   height: 100%;
   &.isBlurred {
-    filter: blur(2px);
-    -webkit-filter: blur(2px);
-    -moz-filter: blur(2px);
+    filter: blur(0.2em);
+    -webkit-filter: blur(0.2em);
+    -moz-filter: blur(0.2em);
   }
 }
 

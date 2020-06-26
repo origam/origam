@@ -1,17 +1,19 @@
 @import "src/gui02/components/Splitter/Splitter.module.scss";
+@import "src/styles/definitions.scss";
 
 .divider {
-  background-color: white;
+  background: $white;
   &:global(.isDragging) {
     position: relative;
-    background-color: black;
-    opacity: 0.2;
     z-index: 1000;
+    background: $blue;
+    @include opacity(0.8);
+    border-color: $blue !important;
   }
   &:not(:global(.isDragging)):hover {
-    background-color: white;
     :global(.dividerLine) {
-      border-color: #202020;
+      border-color: $blue !important; 
     }
+    background: $white;
   }
 }
