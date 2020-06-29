@@ -71,6 +71,8 @@ namespace OrigamArchitect
             this.lblBinFolderRoot = new System.Windows.Forms.Label();
             this.txtBinFolderRoot = new System.Windows.Forms.TextBox();
             this.pageWebUser = new AeroWizard.WizardPage();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txtWebUserPasswordConfirmed = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -549,6 +551,8 @@ namespace OrigamArchitect
             // 
             // pageWebUser
             // 
+            this.pageWebUser.Controls.Add(this.label30);
+            this.pageWebUser.Controls.Add(this.txtWebUserPasswordConfirmed);
             this.pageWebUser.Controls.Add(this.label29);
             this.pageWebUser.Controls.Add(this.label28);
             this.pageWebUser.Controls.Add(this.label27);
@@ -567,10 +571,28 @@ namespace OrigamArchitect
             this.pageWebUser.Text = "Create New Web User";
             this.pageWebUser.Commit += new System.EventHandler<AeroWizard.WizardPageConfirmEventArgs>(this.pageWebUser_Commit);
             // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(21, 144);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(104, 15);
+            this.label30.TabIndex = 26;
+            this.label30.Text = "Confirm Password";
+            // 
+            // txtWebUserPasswordConfirmed
+            // 
+            this.txtWebUserPasswordConfirmed.Location = new System.Drawing.Point(142, 141);
+            this.txtWebUserPasswordConfirmed.Name = "txtWebUserPasswordConfirmed";
+            this.txtWebUserPasswordConfirmed.PasswordChar = '*';
+            this.txtWebUserPasswordConfirmed.Size = new System.Drawing.Size(174, 23);
+            this.txtWebUserPasswordConfirmed.TabIndex = 20;
+            this.txtWebUserPasswordConfirmed.UseSystemPasswordChar = true;
+            // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(21, 224);
+            this.label29.Location = new System.Drawing.Point(21, 267);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(36, 15);
             this.label29.TabIndex = 24;
@@ -579,7 +601,7 @@ namespace OrigamArchitect
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(21, 190);
+            this.label28.Location = new System.Drawing.Point(21, 233);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(60, 15);
             this.label28.TabIndex = 23;
@@ -588,7 +610,7 @@ namespace OrigamArchitect
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(21, 161);
+            this.label27.Location = new System.Drawing.Point(21, 204);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(64, 15);
             this.label27.TabIndex = 22;
@@ -596,35 +618,37 @@ namespace OrigamArchitect
             // 
             // txtWebEmail
             // 
-            this.txtWebEmail.Location = new System.Drawing.Point(110, 216);
+            this.txtWebEmail.Location = new System.Drawing.Point(142, 259);
             this.txtWebEmail.Name = "txtWebEmail";
             this.txtWebEmail.Size = new System.Drawing.Size(174, 23);
-            this.txtWebEmail.TabIndex = 22;
+            this.txtWebEmail.TabIndex = 23;
             // 
             // txtWebSurename
             // 
-            this.txtWebSurename.Location = new System.Drawing.Point(110, 187);
+            this.txtWebSurename.Location = new System.Drawing.Point(142, 230);
             this.txtWebSurename.Name = "txtWebSurename";
             this.txtWebSurename.Size = new System.Drawing.Size(174, 23);
-            this.txtWebSurename.TabIndex = 21;
+            this.txtWebSurename.TabIndex = 22;
             // 
             // txtWebFirstname
             // 
-            this.txtWebFirstname.Location = new System.Drawing.Point(110, 158);
+            this.txtWebFirstname.Location = new System.Drawing.Point(142, 201);
             this.txtWebFirstname.Name = "txtWebFirstname";
             this.txtWebFirstname.Size = new System.Drawing.Size(174, 23);
-            this.txtWebFirstname.TabIndex = 20;
+            this.txtWebFirstname.TabIndex = 21;
             // 
             // txtWebUserPassword
             // 
-            this.txtWebUserPassword.Location = new System.Drawing.Point(110, 112);
+            this.txtWebUserPassword.Location = new System.Drawing.Point(142, 112);
             this.txtWebUserPassword.Name = "txtWebUserPassword";
+            this.txtWebUserPassword.PasswordChar = '*';
             this.txtWebUserPassword.Size = new System.Drawing.Size(174, 23);
             this.txtWebUserPassword.TabIndex = 19;
+            this.txtWebUserPassword.UseSystemPasswordChar = true;
             // 
             // txtWebUserLoginName
             // 
-            this.txtWebUserLoginName.Location = new System.Drawing.Point(110, 83);
+            this.txtWebUserLoginName.Location = new System.Drawing.Point(142, 83);
             this.txtWebUserLoginName.Name = "txtWebUserLoginName";
             this.txtWebUserLoginName.Size = new System.Drawing.Size(174, 23);
             this.txtWebUserLoginName.TabIndex = 18;
@@ -1381,5 +1405,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.TextBox txtWebEmail;
         private System.Windows.Forms.TextBox txtWebSurename;
         private System.Windows.Forms.TextBox txtWebFirstname;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox txtWebUserPasswordConfirmed;
     }
 }

@@ -469,17 +469,17 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
         public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
         {
-            return string.Format("INSERT INTO \"OrigamUser\" (\"Username\",\"IsLockedOut\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
+            return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"IsLockedOut\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
                 "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
-                "1", "1",
+                "true", "true",
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
-                Guid.NewGuid().ToString(),0,0);
+                Guid.NewGuid().ToString(),0,"false");
         }
         public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
         {
-            return string.Format("INSERT INTO '\"BusinessPartnerOrigamRole\" (\"Id\",\"refBusinessPartnerId\",\"refOrigamRoleId\") " +
+            return string.Format("INSERT INTO \"BusinessPartnerOrigamRole\" (\"Id\",\"refBusinessPartnerId\",\"refOrigamRoleId\") " +
                 "VALUES ('{0}','{1}','{2}')",
                 Guid.NewGuid().ToString(),
                 parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),

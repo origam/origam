@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using static Origam.DA.Common.Enums;
 
 namespace Origam.ProjectAutomation.Builders
 {
@@ -42,7 +43,7 @@ namespace Origam.ProjectAutomation.Builders
             Dockerenviroment += Environment.NewLine;
             Dockerenviroment += "OrigamSettings_ModelName=" + _project.Url;
             Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "DatabaseType=" + _project.DatabaseType.ToString().ToLower();
+            Dockerenviroment += "DatabaseType=" + (_project.DatabaseType==DatabaseType.PgSql?"postgresql":_project.DatabaseType.ToString().ToLower());
             Dockerenviroment += Environment.NewLine;
             Dockerenviroment += "ExternalDomain_SetOnStart=http://localhost:"+_project.DockerPort;
             return Dockerenviroment;

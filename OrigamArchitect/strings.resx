@@ -756,4 +756,7 @@
   <data name="EnterWebSurename_Message" xml:space="preserve">
     <value>Please enter Surename.</value>
   </data>
+  <data name="WebPasswordNotMatch_Message" xml:space="preserve">
+    <value>Passwords not equals!</value>
+  </data>
 </root>

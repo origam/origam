@@ -717,6 +717,12 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
+            if (!txtWebUserPasswordConfirmed.Text.Equals(txtWebUserPassword.Text))
+            {
+                AsMessageBox.ShowError(this, strings.WebPasswordNotMatch_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
             if (string.IsNullOrEmpty(txtWebFirstname.Text))
             {
                 AsMessageBox.ShowError(this, strings.EnterWebFirstName_Message, "Template", null);
