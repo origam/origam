@@ -25,10 +25,11 @@
         <LocalizationFolder />
         <TranslationBuilderLanguages />
         <HelpUrl>doc.aspx</HelpUrl>
+		<ExecuteUpgradeScriptsOnStart>true</ExecuteUpgradeScriptsOnStart>
         <DataServiceSelectTimeout>120</DataServiceSelectTimeout>
         <AuthorizationProvider>Origam.Security.OrigamDatabaseAuthorizationProvider, Origam.Security</AuthorizationProvider>
         <ProfileProvider>Origam.Security.OrigamProfileProvider, Origam.Security</ProfileProvider>
-        <LoadExternalWorkQueues>false</LoadExternalWorkQueues>
+        <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
         <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
         <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
       </OrigamSettings>
