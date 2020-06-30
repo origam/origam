@@ -416,7 +416,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToAction(nameof(LoginTwoStep), new { user.Email, model.RememberLogin, model.ReturnUrl });
+                    return RedirectToAction(nameof(LoginTwoStep), new { user.UserName, model.RememberLogin, model.ReturnUrl });
                 }
             }
 
@@ -426,12 +426,12 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         }
         
         [HttpGet]
-        public async Task<IActionResult> LoginTwoStep(string email, bool rememberLogin, string returnUrl = null)
+        public async Task<IActionResult> LoginTwoStep(string userName, bool rememberLogin, string returnUrl = null)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return View(nameof(Error));
+                return View(nameof(Error), new Error(resourceManager.GetString("ErrorUserNotFound")));
             }
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
@@ -441,7 +441,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
             if (!providers.Contains("Email"))
             {
-                return View(nameof(Error));
+                return View(nameof(Error), new Error("Email provider not found."));
             }
 
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
