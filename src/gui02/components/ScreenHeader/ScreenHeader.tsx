@@ -8,7 +8,7 @@ export class ScreenHeader extends React.Component<{
     return (
       <div className={S.root}>
         {this.props.children}
-        {this.props.isLoading && (
+        {(this.props.isLoading || window.localStorage.getItem("debugKeepProgressIndicatorsOn")) && (
           <div className={S.progressIndicator}>
             <div className={S.indefinite} />
           </div>

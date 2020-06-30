@@ -27,10 +27,7 @@ class MainViewHandle extends React.Component<{
       >
         {this.props.label}
         {this.props.order > 0 ? ` [${this.props.order}] ` : ""}
-        <button
-          className={S.TabHandleCloseBtn}
-          onClick={this.props.onCloseClick}
-        >
+        <button className={S.TabHandleCloseBtn} onClick={this.props.onCloseClick}>
           <i className="fas fa-times" />
         </button>
       </div>
@@ -40,7 +37,7 @@ class MainViewHandle extends React.Component<{
 
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
-}> = observer(props => {
+}> = observer((props) => {
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
   useEffect(() => {
@@ -52,20 +49,16 @@ export const DialogScreen: React.FC<{
             title={
               /*!props.openedScreen.content.isLoading
                 ? props.openedScreen.content.formScreen!.title
-                : */ props.openedScreen.title
+                : */ props
+                .openedScreen.title
             }
             titleIsWorking={
               props.openedScreen.content.isLoading ||
-              getIsScreenOrAnyDataViewWorking(
-                props.openedScreen.content.formScreen!
-              )
+              getIsScreenOrAnyDataViewWorking(props.openedScreen.content.formScreen!) ||
+              !!window.localStorage.getItem("debugKeepProgressIndicatorsOn")
             }
             titleButtons={
-              <CloseButton
-                onClick={event =>
-                  onScreenTabCloseClick(props.openedScreen)(event)
-                }
-              />
+              <CloseButton onClick={(event) => onScreenTabCloseClick(props.openedScreen)(event)} />
             }
             buttonsCenter={null}
             buttonsLeft={null}
@@ -74,21 +67,16 @@ export const DialogScreen: React.FC<{
                 {() =>
                   !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content.formScreen!.dialogActions.map(
-                        action => (
-                          <button
-                            key={action.id}
-                            onClick={(event: any) => {
-                              onSelectionDialogActionButtonClick(action)(
-                                event,
-                                action
-                              );
-                            }}
-                          >
-                            {action.caption}
-                          </button>
-                        )
-                      )}
+                      {props.openedScreen.content.formScreen!.dialogActions.map((action) => (
+                        <button
+                          key={action.id}
+                          onClick={(event: any) => {
+                            onSelectionDialogActionButtonClick(action)(event, action);
+                          }}
+                        >
+                          {action.caption}
+                        </button>
+                      ))}
                     </>
                   ) : (
                     <></>
@@ -104,14 +92,16 @@ export const DialogScreen: React.FC<{
                     width: props.openedScreen.dialogInfo!.width,
                     height: props.openedScreen.dialogInfo!.height,
                     display: "flex",
-                    flexDirection: "column"
+                    flexDirection: "column",
                   }}
                 >
-                  {!props.openedScreen.content.isLoading ? (
-                    <CtxPanelVisibility.Provider value={{ isVisible: true }}>
-                      <DialogScreenBuilder openedScreen={props.openedScreen} />
-                    </CtxPanelVisibility.Provider>
-                  ) : null /*<DialogLoadingContent />*/}
+                  {
+                    !props.openedScreen.content.isLoading ? (
+                      <CtxPanelVisibility.Provider value={{ isVisible: true }}>
+                        <DialogScreenBuilder openedScreen={props.openedScreen} />
+                      </CtxPanelVisibility.Provider>
+                    ) : null /*<DialogLoadingContent />*/
+                  }
                 </div>
               )}
             </Observer>
@@ -124,7 +114,7 @@ export const DialogScreen: React.FC<{
   return null;
 });
 
-export const DialogLoadingContent: React.FC = props => {
+export const DialogLoadingContent: React.FC = (props) => {
   return (
     <div className={S.dialogLoadingContent}>
       <i className="fas fa-cog fa-spin fa-2x" />

@@ -129,7 +129,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                               {action.caption}
                             </DataViewHeaderButton>
                           ))}
-                        <ResponsiveChild childKey={"action-1"} order={20}>
+                        {/*<ResponsiveChild childKey={"action-1"} order={20}>
                           {({ refChild, isHidden }) => (
                             <DataViewHeaderButton
                               domRef={refChild}
@@ -172,7 +172,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                               Action 4
                             </DataViewHeaderButton>
                           )}
-                        </ResponsiveChild>
+                          </ResponsiveChild>*/}
                       </DataViewHeaderButtonGroup>
                     </DataViewHeaderGroup>
                     <ResponsiveChild childKey={"cursor-move"} order={5}>
