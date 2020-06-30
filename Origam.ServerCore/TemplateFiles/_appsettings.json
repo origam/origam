@@ -15,7 +15,8 @@
         "UserRegistrationAllowed": "true"
     },
     "IdentityGuiConfig": {
-        "PathToBrandIcon": "icons/origam.png"
+        "PathToBrandIcon": "icons/origam.png",
+        "AllowPasswordReset": "false"
     },
     "IdentityServerConfig": {
         "PathToJwtCertificate": "serverCore.pfx",

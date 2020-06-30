@@ -8,6 +8,10 @@
 @model Origam.ServerCore.IdentityServerGui.Account.LoginViewModel
 @inject IViewLocalizer Localizer
 @inject LanguageConfig languageConfig
+@inject IOptions<IdentityGuiConfig> ConfigOptions;
+@{
+    IdentityGuiConfig guiConfig = ConfigOptions.Value;
+}
 
 
 @{
@@ -73,12 +77,14 @@
             }
         </form>
     </div>
-        
+@if (guiConfig.AllowPasswordReset)
+{
     <div class="centered">
         <div>
             @SharedLocalizer["ToResetPassword1"] <a class="in-page-link" href="/account/forgotpassword">@SharedLocalizer["ToResetPassword2"]</a> @SharedLocalizer["ToResetPassword3"]
         </div>
     </div>
+}
     <br/>
 }
 @if (Model.VisibleExternalProviders.Any())
