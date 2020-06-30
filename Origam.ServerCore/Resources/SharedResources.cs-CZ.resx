@@ -324,4 +324,7 @@
   <data name="LoginFailedWrongCode" xml:space="preserve">
     <value>Přihlášení se nezdařilo. Zkontrolujte prosím kód.</value>
   </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Objevila se neznámá chyba. Kontaktujte prosím support.</value>
+  </data>
 </root>

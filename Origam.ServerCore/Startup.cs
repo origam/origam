@@ -182,6 +182,7 @@ namespace Origam.ServerCore
             }
             else
             {
+                app.UseExceptionHandler("/Error/Error");
                 app.UseHsts();
             }
             if (Configuration.GetValue<bool>("BehindProxy") == true)
