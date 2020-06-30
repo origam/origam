@@ -46,14 +46,8 @@ class DroppedBox extends React.Component<{
   render() {
     let style: any = {};
 
-    const viewportWidth = Math.max(
-      document.documentElement.clientWidth,
-      window.innerWidth || 0
-    );
-    const viewportHeight = Math.max(
-      document.documentElement.clientHeight,
-      window.innerHeight || 0
-    );
+    const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
     const tBounds = this.props.triggerRect.bounds!;
     const dBounds = this.props.dropdownRect.bounds!;
@@ -98,7 +92,15 @@ export class Dropdowner extends React.Component<{
   refMeasDropdown = (elm: any) => (this.elmMeasDropdown = elm);
   elmMeasDropdown: any | null = null;
 
-  @observable isDropped = false;
+  @observable _isDropped = false;
+  get isDropped() {
+    return this._isDropped;
+  }
+
+  set isDropped(value: boolean) {
+    if (window.localStorage.getItem("debugKeepDropdownOpen") && !value) return;
+    this._isDropped = value;
+  }
 
   @action.bound
   setDropped(state: boolean) {
@@ -130,16 +132,12 @@ export class Dropdowner extends React.Component<{
     (() => this.isDropped)();
     return (
       <Measure bounds={true} ref={this.refMeasTrigger}>
-        {({
-          measureRef: mRefTrigger,
-          contentRect: cRectTrigger,
-          measure: measureTrigger
-        }) => (
+        {({ measureRef: mRefTrigger, contentRect: cRectTrigger, measure: measureTrigger }) => (
           <Measure bounds={true} ref={this.refMeasDropdown}>
             {({
               measureRef: mRefDropdown,
               contentRect: cRectDropdown,
-              measure: measureDropdown
+              measure: measureDropdown,
             }) => (
               <Observer>
                 {() => (
@@ -154,7 +152,7 @@ export class Dropdowner extends React.Component<{
                     {this.props.trigger({
                       refTrigger: mRefTrigger,
                       measure: this.reMeasure,
-                      setDropped: this.setDropped
+                      setDropped: this.setDropped,
                     })}
                     {this.isDropped && (
                       <DroppedBox
