@@ -94,14 +94,15 @@ export class ResponsiveBlock {
     //     console.log("no child rec");
     //   }
     // }
-    console.log(
-      "chw",
-      this.containerWidth,
-      Array.from(this.keyToChildRec).map(([k, v]) => `${k}:${v.width}`)
-      /*Array.from(this.keyToChildRec)
-        .map(([k, v]) => v.width)
-        .reduce((acc, v) => acc + v, 0)*/
-    );
+
+    // console.log(
+    //   "chw",
+    //   this.containerWidth,
+    //   Array.from(this.keyToChildRec).map(([k, v]) => `${k}:${v.width}`)
+    //   /*Array.from(this.keyToChildRec)
+    //     .map(([k, v]) => v.width)
+    //     .reduce((acc, v) => acc + v, 0)*/
+    // );
     if (shouldRecompute) this.recomputeSizesDeb();
   }
 
