@@ -27,14 +27,10 @@ using System.Security.Principal;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +46,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Origam.ServerCore
 {
@@ -99,7 +96,7 @@ namespace Origam.ServerCore
                     options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
                 });
             }
-
+            services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
