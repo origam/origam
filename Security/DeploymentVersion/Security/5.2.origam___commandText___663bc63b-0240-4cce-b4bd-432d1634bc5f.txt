@@ -1,0 +1,12 @@
+﻿CREATE TABLE "OrigamIdentityGrant" (
+	"Key" Varchar(100) NULL,
+	"Type" Varchar(100) NULL,
+	"SubjectId" Varchar(100) NULL,
+	"ClientId" Varchar(100) NULL,
+	"CreationTime" Timestamp(3) NOT NULL,
+	"Expiration" Timestamp(3) NULL,
+	"Data" Varchar(2000) NULL);
+CREATE  INDEX  "OrigamIdentityGrant_KeyIndex" ON "OrigamIdentityGrant" ("Key" ASC);
+CREATE  INDEX  "OrigamIdentityGrant_SubjectIdIndex" ON "OrigamIdentityGrant" ("SubjectId" ASC);
+CREATE  INDEX  "OrigamIdentityGrant_ClientId" ON "OrigamIdentityGrant" ("ClientId" ASC);
+CREATE  INDEX  "OrigamIdentityGrant_TypeIndex" ON "OrigamIdentityGrant" ("Type" ASC);

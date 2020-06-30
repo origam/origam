@@ -16,5 +16,23 @@
       platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="20"
+      commandText="-***-ExternalFile:5.2.origam___commandText___663bc63b-0240-4cce-b4bd-432d1634bc5f.txt"
+      x:id="663bc63b-0240-4cce-b4bd-432d1634bc5f"
+      name="00020_PG_Database_Entity_OrigamIdentityGrant"
+      platform="PgSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="30"
+      commandText="-***-ExternalFile:5.2.origam___commandText___63ed4acb-d668-49c0-a8b7-789fc778c833.txt"
+      x:id="63ed4acb-d668-49c0-a8b7-789fc778c833"
+      name="00030_PG_Database_Field_OrigamUser.SecurityStamp"
+      platform="PgSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
   </DeploymentVersion>
 </x:file>
