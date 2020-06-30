@@ -34,31 +34,15 @@ namespace Origam.DA.Service
         string RenderSqlExpression(DataStructureEntity entity,
             DetachedField detachedField);
     }
-    
-    class DetachedFieldPackerPostgre : IDetachedFieldPacker
-    {
-        public List<KeyValuePair<string, object>> ProcessReaderOutput(
-            KeyValuePair<string, object>[] values, List<ColumnData> columnData)
-        {
-            throw new NotImplementedException();
-        }
 
-        public string RenderSqlExpression(DataStructureEntity entity,
-            DetachedField detachedField)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class DetachedFieldPackerMs : IDetachedFieldPacker
+    abstract class AbsractDetachedFieldPacker : IDetachedFieldPacker
     {
-        public List<KeyValuePair<string, object>> ProcessReaderOutput(
-            KeyValuePair<string, object>[] values, List<ColumnData> columnData)
+        public List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values, List<ColumnData> columnData)
         {
             if (columnData == null)
                 throw new ArgumentNullException(nameof(columnData));
             var updatedValues = new List<KeyValuePair<string, object>>();
-            
+
             for (int i = 0; i < columnData.Count; i++)
             {
                 if (columnData[i].IsVirtual)
@@ -66,7 +50,7 @@ namespace Origam.DA.Service
                     if (columnData[i].HasRelation && values[i].Value != null && values[i].Value != DBNull.Value)
                     {
                         updatedValues.Add(new KeyValuePair<string, object>(
-                            values[i].Key, ((string) values[i].Value).Split((char) 1)));
+                            values[i].Key, ((string)values[i].Value).Split((char)1)));
                         continue;
                     }
                     else
@@ -83,7 +67,21 @@ namespace Origam.DA.Service
             return updatedValues;
         }
 
-        public string RenderSqlExpression(DataStructureEntity entity,
+        public abstract string RenderSqlExpression(DataStructureEntity entity, DetachedField detachedField);
+
+    }
+    class DetachedFieldPackerPostgre : AbsractDetachedFieldPacker
+    {
+        public override string RenderSqlExpression(DataStructureEntity entity,
+            DetachedField detachedField)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class DetachedFieldPackerMs : AbsractDetachedFieldPacker
+    {
+        public override string RenderSqlExpression(DataStructureEntity entity,
             DetachedField detachedField)
         {
             if (detachedField.ArrayRelation == null)

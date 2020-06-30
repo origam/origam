@@ -169,7 +169,7 @@
     <value>Nesprávné jméno nebo heslo</value>
   </data>
   <data name="UserLockedOut" xml:space="preserve">
-    <value>Přístup uživateli byl zablokován</value>
+    <value>Uživateli byl zablokován přístup</value>
   </data>
   <data name="ErrorUserNotFound" xml:space="preserve">
     <value>Uživatel nebyl nalezen</value>
@@ -178,13 +178,13 @@
     <value>Nesprávný e-mail</value>
   </data>
   <data name="StringTooShort" xml:space="preserve">
-    <value>{0} musí mít nejméně {2} znaky.</value>
+    <value>{0} musí mít nejméně {2} znaků.</value>
   </data>
   <data name="AccountCreated" xml:space="preserve">
     <value>Nový účet byl vytvořen a aktivován.</value>
   </data>
   <data name="ActivateAccount" xml:space="preserve">
-    <value>Nový účet byl vytvořen. Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme ván právě odeslali na e-mail.</value>
+    <value>Nový účet byl vytvořen. Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme vám právě odeslali na e-mail.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Zrušit</value>
@@ -202,7 +202,7 @@
     <value>Vytvořit nový účet</value>
   </data>
   <data name="EmailSent" xml:space="preserve">
-    <value>Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme ván právě odeslali na e-mail.</value>
+    <value>Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme vám právě odeslali na e-mail.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
     <value>Origam přihlášení</value>
@@ -313,15 +313,15 @@
     <value>.</value>
   </data>
   <data name="TwoFactorAuthentication" xml:space="preserve">
-    <value>Dvou faktorové přihlášení</value>
+    <value>Dvoufaktorové přihlášení</value>
   </data>
   <data name="EnterAuthenticationCode" xml:space="preserve">
-    <value>Sem opište autorizační kód, který jeme odeslali na Váš e-mail</value>
+    <value>Sem opište autorizační kód, který jsme odeslali na Váš e-mail.</value>
   </data>
   <data name="LoginFailedUnknown" xml:space="preserve">
-    <value>Přihlášení se nazdařilo</value>
+    <value>Přihlášení se nezdařilo.</value>
   </data>
   <data name="LoginFailedWrongCode" xml:space="preserve">
-    <value>Přihlášení se nazdařilo. Zkontrolujte prosím kód.</value>
+    <value>Přihlášení se nezdařilo. Zkontrolujte prosím kód.</value>
   </data>
 </root>

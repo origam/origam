@@ -193,7 +193,7 @@
     <value>Bitte überprüfen Sie Ihre E-Mail Adresse um Ihres Passwort zurückzusetzen.</value>
   </data>
   <data name="ConfirmationOk1" xml:space="preserve">
-    <value>Danke für die Bestätigung Ihrer E-Mail Adresse. Bitte </value>
+    <value>Danke für die Bestätigung Ihrer E-Mail Adresse. Bitte</value>
   </data>
   <data name="ConfirmationOk2" xml:space="preserve">
     <value>klicken Sie hier um sich anzumelden.</value>
@@ -256,7 +256,7 @@
     <value>hier</value>
   </data>
   <data name="ReturnToApplication3" xml:space="preserve">
-    <value>um zu der Applikation </value>
+    <value>um zu der Applikation</value>
   </data>
   <data name="ReturnToApplication4" xml:space="preserve">
     <value>zurückzukehren.</value>
@@ -299,5 +299,35 @@
   </data>
   <data name="ExternalLogin" xml:space="preserve">
     <value>Extern Anmelden</value>
+  </data>
+  <data name="ResetPasswordConfirmation1" xml:space="preserve">
+    <value>Ihr Passwort wurde zurückgesetzt. Bitte klicken Sie</value>
+  </data>
+  <data name="ResetPasswordConfirmation2" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="ResetPasswordConfirmation3" xml:space="preserve">
+    <value>um sich anzumelden.</value>
+  </data>
+  <data name="EmailConfirmation1" xml:space="preserve">
+    <value>Danke für die Bestätigung Ihrer E-Mail Adresse. Bitte klicken Sie</value>
+  </data>
+  <data name="EmailConfirmation2" xml:space="preserve">
+    <value>hier</value>
+  </data>
+  <data name="EmailConfirmation3" xml:space="preserve">
+    <value>um sich anzumelden.</value>
+  </data>
+  <data name="TwoFactorAuthentication" xml:space="preserve">
+    <value>Zwei-Faktor-Authentifizierung</value>
+  </data>
+  <data name="EnterAuthenticationCode" xml:space="preserve">
+    <value>Bitte geben Sie den Passcode ein, den wir auf Ihre E-Mail Adresse gesandt haben.</value>
+  </data>
+  <data name="LoginFailedUnknown" xml:space="preserve">
+    <value>Die Anmeldung ist fehlgeschlagen.</value>
+  </data>
+  <data name="LoginFailedWrongCode" xml:space="preserve">
+    <value>Die Anmeldung ist fehlgeschlagen. Bitte überprüfen Sie den Passcode.</value>
   </data>
 </root>
