@@ -84,7 +84,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
               <span>
                 <h2>{label} Testing panel label</h2>
               </span>
-              <ResponsiveContainer compensate={0}>
+              <ResponsiveContainer compensate={50}>
                 {({ refChild }) => (
                   <div className="fullspaceBlock" ref={refChild}>
                     <ResponsiveChild childKey={"add-del-cpy"} order={1}>
@@ -209,7 +209,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                         </DataViewHeaderGroup>
                       )}
                     </ResponsiveChild>
-                    <ResponsiveChild childKey={"view-switchers"} order={1}>
+                    <ResponsiveChild childKey={"filter-control"} order={1}>
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
                           <DataViewHeaderAction

@@ -23,7 +23,10 @@
   }
 
   &:global(.isHidden) {
-    display: none;
+    //display: none;
+    position: absolute;
+    top: 110%;;
+    left: 0;
   }
 
   &:first-of-type {

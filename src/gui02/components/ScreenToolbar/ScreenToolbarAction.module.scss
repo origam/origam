@@ -10,7 +10,10 @@
   cursor: pointer;
 
   &:global(.isHidden) {
-    display: none;
+    // display: none;
+    position: absolute;
+    top: 110%;;
+    left: 0;
   }
 
   &:hover {

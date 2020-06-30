@@ -25,8 +25,6 @@ export class ResponsiveBlock {
   containerWidth = Number.MAX_SAFE_INTEGER;
   containerCompensate = 0;
 
-  domObsv = new (window as any).ResizeObserver(this.someNodesResized.bind(this));
-
   recomputeSizesImm() {
     const keysAndChildren = Array.from(this.keyToChildRec);
     keysAndChildren.sort(([ak, ar], [bk, br]) => {
@@ -55,32 +53,61 @@ export class ResponsiveBlock {
 
   recomputeSizesDeb = _.throttle(this.recomputeSizesImm.bind(this), 500);
 
-  someNodesResized(entries: any[]) {
-    for (let e of entries) {
-      //console.log(e.target, e.contentRect.width);
-      if (e.target === this.container) {
-        this.containerWidth = e.contentRect.width;
-        continue;
-      }
-      const key = this.childToKey.get(e.target);
-      // Preserve width when hidden, otherwise it gets never shown again.
-      if (this.hiddenChildren.has(key)) continue;
-      const childRec = this.keyToChildRec.get(key);
-      if (childRec) {
-        childRec.width = e.target.offsetWidth; //e.target.getBoundingClientRect().width;
-        continue;
-      }
+  someNodesResizedImm(entries: any[]) {
+    let shouldRecompute = false;
+    if(this.container) {
+      const newWidth = this.container.getBoundingClientRect().width;
+      if (newWidth !== this.containerWidth) shouldRecompute = true;
+      this.containerWidth = newWidth;
     }
+    for(let [key, chRec] of this.keyToChildRec.entries()) {
+      if(chRec.elmChild) {
+        const newWidth = chRec.elmChild.offsetWidth; /*e.target.getBoundingClientRect().width;*/
+        if (chRec.width !== newWidth) {
+          shouldRecompute = true;
+          //console.log(e.target, e.target.offsetWidth, e.target.getBoundingClientRect().width, e);
+        }
+        chRec.width = newWidth;
+      }
+    }/*
+    // for (let e of entries) {
+    //   //console.log(e.target, e.contentRect.width);
+    //   if (e.target === this.container) {
+    //     const newWidth = e.contentRect.width;
+    //     if (newWidth !== this.containerWidth) shouldRecompute = true;
+    //     this.containerWidth = newWidth;
+    //     continue;
+    //   }
+    //   const key = this.childToKey.get(e.target);
+    //   // Preserve width when hidden, otherwise it gets never shown again.
+    //   if (this.hiddenChildren.has(key)) continue;
+    //   const childRec = this.keyToChildRec.get(key);
+    //   if (childRec) {
+    //     const newWidth = /*e.target.offsetWidth;*/// e.target.getBoundingClientRect().width;
+    //     if (childRec.width !== newWidth) {
+    //       shouldRecompute = true;
+    //       console.log(e.target, e.target.offsetWidth, e.target.getBoundingClientRect().width, e);
+    //     }
+    //     childRec.width = newWidth;
+    //     continue;
+    //   } else {
+    //     console.log("no child rec");
+    //   }
+    // }
     console.log(
       "chw",
       this.containerWidth,
-      //Array.from(this.keyToChildRec).map(([k, v]) => `${k}:${v.width}`)
-      Array.from(this.keyToChildRec)
+      Array.from(this.keyToChildRec).map(([k, v]) => `${k}:${v.width}`)
+      /*Array.from(this.keyToChildRec)
         .map(([k, v]) => v.width)
-        .reduce((acc, v) => acc + v, 0)
+        .reduce((acc, v) => acc + v, 0)*/
     );
-    this.recomputeSizesDeb();
+    if (shouldRecompute) this.recomputeSizesDeb();
   }
+
+  someNodesResizedDeb = _.debounce(this.someNodesResizedImm.bind(this), 100);
+
+  domObsv = new (window as any).ResizeObserver(this.someNodesResizedDeb.bind(this));
 
   refContainer(compensate: number, elm: any) {
     if (elm) {
