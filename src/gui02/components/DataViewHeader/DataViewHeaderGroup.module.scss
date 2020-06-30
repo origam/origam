@@ -4,14 +4,26 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex-wrap: nowrap;
 
   border-right: 1px solid $grey2;
   padding: 0 1.5em;
 
-  &:global(.isHidden) {
+  /*&:global(.isHidden) {
     position: absolute;
     top: 110%;;
     left: 0;
+  }*/
+
+
+  flex-shrink: 0;
+  overflow: hidden;
+  &:global(.grovable) {
+    flex: 1 1;
+  }
+
+  &:global(.isHidden) {
+    display: none;
   }
 
   &:first-of-type {

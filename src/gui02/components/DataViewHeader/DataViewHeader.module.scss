@@ -38,6 +38,14 @@
     flex-wrap: nowrap;
   }
 
+  :global(.fullspaceBlock) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+
   h2 {
     font-size: $h2-fontsize;
     line-height: $h2-lineheight;
@@ -49,6 +57,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: normal;
+    white-space: nowrap;
   }
 }
 

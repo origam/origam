@@ -32,8 +32,12 @@ import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/get
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import React from "react";
-
-
+import {
+  ResponsiveBlock,
+  CtxResponsiveToolbar,
+  ResponsiveContainer,
+  ResponsiveChild,
+} from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -42,6 +46,13 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
   get dataView() {
     return this.context.dataView;
   }
+
+  state = {
+    hiddenActionIds: new Set<string>(),
+  };
+  responsiveToolbar = new ResponsiveBlock((ids) => {
+    this.setState({ ...this.state, hiddenActionIds: ids });
+  });
 
   render() {
     const { dataView } = this;
@@ -66,142 +77,204 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
 
     return (
-      <DataViewHeader isVisible={this.props.isVisible}>
-        {this.props.isVisible && (
-          <>
-            <span>
-              <h2>{label}</h2>
-            </span>
-
-            <DataViewHeaderGroup>
-              {isAddButton && (
-                <DataViewHeaderAction
-                  className="isGreenHover"
-                  onClick={onCreateRowClickEvt}
-                >
-                  <Icon src="./icons/add.svg" />
-                </DataViewHeaderAction>
-              )}
-
-              {isDelButton && (
-                <DataViewHeaderAction
-                  className="isRedHover"
-                  onClick={onDeleteRowClickEvt}
-                >
-                  <Icon src="./icons/minus.svg" />
-                </DataViewHeaderAction>
-              )}
-
-              {isCopyButton && (
-                <DataViewHeaderAction
-                  className="isOrangeHover"
-                  onClick={undefined}
-                >
-                  <Icon src="./icons/duplicate.svg" />
-                </DataViewHeaderAction>
-              )}
-            </DataViewHeaderGroup>
-            <DataViewHeaderButtonGroup>
-              {actions
-                .filter(action => getIsEnabledAction(action))
-                .map(action => (
-                  <DataViewHeaderButton
-                    onClick={event =>
-                      uiActions.actions.onActionClick(action)(event, action)
-                    }
-                  >
-                    {action.caption}
-                  </DataViewHeaderButton>
-                ))}
-            </DataViewHeaderButtonGroup>
-            <DataViewHeaderPusher />
-            <DataViewHeaderGroup>
-              <DataViewHeaderAction onClick={undefined}>
-                <Icon src="./icons/list-arrow-first.svg" />
-              </DataViewHeaderAction>
-              <DataViewHeaderAction onClick={onPrevRowClickEvt}>
-                <Icon src="./icons/list-arrow-previous.svg" />
-              </DataViewHeaderAction>
-              <DataViewHeaderAction onClick={onNextRowClickEvt}>
-                <Icon src="./icons/list-arrow-next.svg" />
-              </DataViewHeaderAction>
-              <DataViewHeaderAction onClick={undefined}>
-                <Icon src="./icons/list-arrow-last.svg" />
-              </DataViewHeaderAction>
-            </DataViewHeaderGroup>
-            <DataViewHeaderGroup>
-              {" "}
+      <CtxResponsiveToolbar.Provider value={this.responsiveToolbar}>
+        <DataViewHeader isVisible={this.props.isVisible}>
+          {this.props.isVisible && (
+            <>
               <span>
-                {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-                &nbsp;/&nbsp;{maxRowCountSeen}
+                <h2>{label} Testing panel label</h2>
               </span>
-            </DataViewHeaderGroup>
-            <DataViewHeaderGroup>
-              
-              {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
-              
-            </DataViewHeaderGroup>
-            <DataViewHeaderGroup>
-              <DataViewHeaderAction
-                onClick={onFilterButtonClickEvt}
-                isActive={isFilterSettingsVisible}
-                className={"test-filter-button"}
-              >
-                <Icon src="./icons/search-filter.svg" />
-              </DataViewHeaderAction>
-            </DataViewHeaderGroup>
-            <DataViewHeaderGroup>
-              <Dropdowner
-                trigger={({ refTrigger, setDropped }) => (
-                  <DataViewHeaderAction
-                    refDom={refTrigger}
-                    onClick={() => setDropped(true)}
-                    isActive={false}
-                  >
-                    <Icon src="./icons/dot-menu.svg" />
-                  </DataViewHeaderAction>
+              <ResponsiveContainer compensate={0}>
+                {({ refChild }) => (
+                  <div className="fullspaceBlock" ref={refChild}>
+                    <ResponsiveChild childKey={"add-del-cpy"} order={1}>
+                      {({ refChild, isHidden }) => (
+                        <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
+                          {isAddButton && (
+                            <DataViewHeaderAction
+                              className="isGreenHover"
+                              onClick={onCreateRowClickEvt}
+                            >
+                              <Icon src="./icons/add.svg" />
+                            </DataViewHeaderAction>
+                          )}
+
+                          {isDelButton && (
+                            <DataViewHeaderAction
+                              className="isRedHover"
+                              onClick={onDeleteRowClickEvt}
+                            >
+                              <Icon src="./icons/minus.svg" />
+                            </DataViewHeaderAction>
+                          )}
+
+                          {isCopyButton && (
+                            <DataViewHeaderAction className="isOrangeHover" onClick={undefined}>
+                              <Icon src="./icons/duplicate.svg" />
+                            </DataViewHeaderAction>
+                          )}
+                        </DataViewHeaderGroup>
+                      )}
+                    </ResponsiveChild>
+                    <DataViewHeaderGroup grovable={true}>
+                      <DataViewHeaderButtonGroup>
+                        {actions
+                          .filter((action) => getIsEnabledAction(action))
+                          .map((action) => (
+                            <DataViewHeaderButton
+                              onClick={(event) =>
+                                uiActions.actions.onActionClick(action)(event, action)
+                              }
+                            >
+                              {action.caption}
+                            </DataViewHeaderButton>
+                          ))}
+                        <ResponsiveChild childKey={"action-1"} order={20}>
+                          {({ refChild, isHidden }) => (
+                            <DataViewHeaderButton
+                              domRef={refChild}
+                              isHidden={isHidden}
+                              onClick={undefined}
+                            >
+                              Action 1
+                            </DataViewHeaderButton>
+                          )}
+                        </ResponsiveChild>
+                        <ResponsiveChild childKey={"action-2"} order={20}>
+                          {({ refChild, isHidden }) => (
+                            <DataViewHeaderButton
+                              domRef={refChild}
+                              isHidden={isHidden}
+                              onClick={undefined}
+                            >
+                              Action 2
+                            </DataViewHeaderButton>
+                          )}
+                        </ResponsiveChild>
+                        <ResponsiveChild childKey={"action-3"} order={20}>
+                          {({ refChild, isHidden }) => (
+                            <DataViewHeaderButton
+                              domRef={refChild}
+                              isHidden={isHidden}
+                              onClick={undefined}
+                            >
+                              Action 3
+                            </DataViewHeaderButton>
+                          )}
+                        </ResponsiveChild>
+                        <ResponsiveChild childKey={"action-4"} order={20}>
+                          {({ refChild, isHidden }) => (
+                            <DataViewHeaderButton
+                              domRef={refChild}
+                              isHidden={isHidden}
+                              onClick={undefined}
+                            >
+                              Action 4
+                            </DataViewHeaderButton>
+                          )}
+                        </ResponsiveChild>
+                      </DataViewHeaderButtonGroup>
+                    </DataViewHeaderGroup>
+                    <ResponsiveChild childKey={"cursor-move"} order={5}>
+                      {({ refChild, isHidden }) => (
+                        <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
+                          <DataViewHeaderAction onClick={undefined}>
+                            <Icon src="./icons/list-arrow-first.svg" />
+                          </DataViewHeaderAction>
+                          <DataViewHeaderAction onClick={onPrevRowClickEvt}>
+                            <Icon src="./icons/list-arrow-previous.svg" />
+                          </DataViewHeaderAction>
+                          <DataViewHeaderAction onClick={onNextRowClickEvt}>
+                            <Icon src="./icons/list-arrow-next.svg" />
+                          </DataViewHeaderAction>
+                          <DataViewHeaderAction onClick={undefined}>
+                            <Icon src="./icons/list-arrow-last.svg" />
+                          </DataViewHeaderAction>
+                        </DataViewHeaderGroup>
+                      )}
+                    </ResponsiveChild>
+                    <ResponsiveChild childKey={"row-cnt-label"} order={10}>
+                      {({ refChild, isHidden }) => (
+                        <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
+                          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
+                          &nbsp;/&nbsp;
+                          {maxRowCountSeen}
+                        </DataViewHeaderGroup>
+                      )}
+                    </ResponsiveChild>
+                    <ResponsiveChild childKey={"view-switchers"} order={1}>
+                      {({ refChild, isHidden }) => (
+                        <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
+                          {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
+                        </DataViewHeaderGroup>
+                      )}
+                    </ResponsiveChild>
+                    <ResponsiveChild childKey={"view-switchers"} order={1}>
+                      {({ refChild, isHidden }) => (
+                        <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
+                          <DataViewHeaderAction
+                            onClick={onFilterButtonClickEvt}
+                            isActive={isFilterSettingsVisible}
+                            className={"test-filter-button"}
+                          >
+                            <Icon src="./icons/search-filter.svg" />
+                          </DataViewHeaderAction>
+                        </DataViewHeaderGroup>
+                      )}
+                    </ResponsiveChild>
+                  </div>
                 )}
-                content={({ setDropped }) => (
-                  <Dropdown>
-                    <DropdownItem isDisabled={true}>
-                      Export to Excel
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(event: any) => {
-                        setDropped(false);
-                        onColumnConfigurationClickEvt(event);
-                      }}
+              </ResponsiveContainer>
+
+              <DataViewHeaderGroup>
+                <Dropdowner
+                  trigger={({ refTrigger, setDropped }) => (
+                    <DataViewHeaderAction
+                      refDom={refTrigger}
+                      onClick={() => setDropped(true)}
+                      isActive={false}
                     >
-                      Column configuration
-                    </DropdownItem>
-                    <DropdownItem
-                      isDisabled={false}
-                      onClick={(event: any) => {
-                        setDropped(false);
-                        onRecordAuditClick(dataView)(event);
-                      }}
-                    >
-                      Show audit
-                    </DropdownItem>
-                    <DropdownItem isDisabled={true}>
-                      Show attachments
-                    </DropdownItem>
-                    <DropdownItem
-                      isDisabled={false}
-                      onClick={(event: any) => {
-                        setDropped(false);
-                        onRecordInfoClick(dataView)(event);
-                      }}
-                    >
-                      Show record information
-                    </DropdownItem>
-                  </Dropdown>
-                )}
-              />
-            </DataViewHeaderGroup>
-          </>
-        )}
-      </DataViewHeader>
+                      <Icon src="./icons/dot-menu.svg" />
+                    </DataViewHeaderAction>
+                  )}
+                  content={({ setDropped }) => (
+                    <Dropdown>
+                      <DropdownItem isDisabled={true}>Export to Excel</DropdownItem>
+                      <DropdownItem
+                        onClick={(event: any) => {
+                          setDropped(false);
+                          onColumnConfigurationClickEvt(event);
+                        }}
+                      >
+                        Column configuration
+                      </DropdownItem>
+                      <DropdownItem
+                        isDisabled={false}
+                        onClick={(event: any) => {
+                          setDropped(false);
+                          onRecordAuditClick(dataView)(event);
+                        }}
+                      >
+                        Show audit
+                      </DropdownItem>
+                      <DropdownItem isDisabled={true}>Show attachments</DropdownItem>
+                      <DropdownItem
+                        isDisabled={false}
+                        onClick={(event: any) => {
+                          setDropped(false);
+                          onRecordInfoClick(dataView)(event);
+                        }}
+                      >
+                        Show record information
+                      </DropdownItem>
+                    </Dropdown>
+                  )}
+                />
+              </DataViewHeaderGroup>
+            </>
+          )}
+        </DataViewHeader>
+      </CtxResponsiveToolbar.Provider>
     );
   }
 }

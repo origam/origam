@@ -17,6 +17,9 @@
   font-size: 0.9em;
   @include hoverItemAnimation;
 
+  &:global(.hidden) {
+    display: none;
+  }
 
   &:first-of-type {
     border-radius: 3em 0em 0em 3em;
