@@ -6,6 +6,16 @@ import { IApi } from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import {IOrdering} from "./types/IOrderingConfiguration";
 
+export enum IAuditLogColumnIndices {
+  Id = 0,
+  DateTime = 1,
+  UserName = 2,
+  FieldName = 3,
+  OldValue = 4,
+  NewValue = 5,
+  ActionType = 6,
+}
+
 export class OrigamAPI implements IApi {
   constructor() {
     this.urlPrefix = "/internalApi";
@@ -752,12 +762,3 @@ export class OrigamAPI implements IApi {
   }
 }
 
-export enum IAuditLogColumnIndices {
-  Id = 0,
-  DateTime = 1,
-  UserName = 2,
-  FieldName = 3,
-  OldValue = 4,
-  NewValue = 5,
-  ActionType = 6,
-}

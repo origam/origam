@@ -32,7 +32,7 @@ export class VisibleRowsMonitor implements IVisibleRowsMonitor {
       (i) => this.gridDimensions.getRowTop(i),
       this.gridDimensions.rowCount,
       this.scrollState.scrollTop,
-      this.scrollState.scrollTop + (dataView.contentBounds && dataView.contentBounds.height || 0)
+      this.scrollState.scrollTop + (dataView.contentBounds?.height ?? 0)
     );
   }
 

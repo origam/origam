@@ -5,7 +5,6 @@ import { IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
 import { IAction } from "./IAction";
 import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
 import { IPanelConfiguration } from "./IPanelConfiguration";
-import { IOrdering } from "./IOrderingConfiguration";
 
 /*
 export interface ILoadedFormScreenData {

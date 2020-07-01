@@ -1,7 +1,6 @@
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
-import moment from "moment";
 import React from "react";
 import {
   FilterSettingsComboBox,

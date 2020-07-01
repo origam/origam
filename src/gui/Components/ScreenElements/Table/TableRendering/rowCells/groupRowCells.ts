@@ -6,7 +6,6 @@ import {
 import {groupRowContentCellsWidths, groupRowContentCellsDraws, groupRowEmptyCellsWidths} from "../cells/groupCell";
 import { currentRow } from "../renderingValues";
 import {aggregationCellDraws, aggregationColumnsWidths} from "../cells/aggregationCell";
-import {dataColumnsWidths} from "../cells/dataCell";
 
 export function groupRowCellsWidths() {
   return [

@@ -6,7 +6,7 @@ import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
 import { observer } from "mobx-react-lite";
 import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
 import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
-import { toJS, flow } from "mobx";
+import { flow } from "mobx";
 import { useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
 import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";

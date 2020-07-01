@@ -29,7 +29,7 @@ export default class DateCompleter
         const dateText = dateAndTime[0];
         let completeDate = this.autoCompleteDate(dateText);
 
-        if(dateAndTime.length == 2)
+        if(dateAndTime.length === 2)
         {
             const timeText = dateAndTime[1];
             const completeTime = this.autoCompleteTime(timeText);
@@ -41,7 +41,7 @@ export default class DateCompleter
 
     reformat(completeDateTime: string){
       const dateTime = moment(completeDateTime, this.expectedFormat)
-      if (dateTime.hour() == 0 && dateTime.minute() == 0 && dateTime.second() == 0){
+      if (dateTime.hour() === 0 && dateTime.minute() === 0 && dateTime.second() === 0){
         return dateTime.format(this.expectedDateFormat)
       }
       return dateTime.format(this.expectedFormat)
@@ -80,10 +80,10 @@ export default class DateCompleter
     completeTimeWithSeparators(incompleteTime: string): string
     {
         const splitTime = incompleteTime.split(this.timeSeparator)
-        if(splitTime.length == 2){
+        if(splitTime.length === 2){
           return moment([2010, 1, 1, splitTime[0],splitTime[1], 0, 0]).format("hh:mm:ss A")
         }   
-        if(splitTime.length == 3){
+        if(splitTime.length === 3){
           return moment([2010, 1, 1, splitTime[0], splitTime[1], splitTime[2], 0]).format("hh:mm:ss A")
         }       
         return incompleteTime
@@ -99,7 +99,7 @@ export default class DateCompleter
     completeDateWithSeparators(incompleteDate: string): string
     {
         const splitDate = incompleteDate.split(this.dateSeparator)
-        if(splitDate.length == 2){
+        if(splitDate.length === 2){
           return incompleteDate + this.dateSeparator + this.timeNowFunc().year()
         }
         else
@@ -183,7 +183,7 @@ export default class DateCompleter
     {
         // dateFormat might be d/m/yyyy, this,
         // method makes sure we get dd/mm/yyyy
-        const formatHasSingleDigitDayAndMonth = this.expectedDateFormat.length == 8;
+        const formatHasSingleDigitDayAndMonth = this.expectedDateFormat.length === 8;
         let format;
         if(formatHasSingleDigitDayAndMonth)
         {
