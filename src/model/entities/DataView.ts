@@ -32,6 +32,7 @@ import {flattenToTableRows} from "../../gui/Components/ScreenElements/Table/Tabl
 import {GridDimensions} from "../../gui/Workbench/ScreenArea/TableView/GridDimensions";
 import {SimpleScrollState} from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
 import {BoundingRect} from "react-measure";
+import {IGridDimensions} from "../../gui/Components/ScreenElements/Table/types";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -54,7 +55,18 @@ export class DataView implements IDataView {
     this.lookupLoader.parent = this;
     this.clientSideGrouper.parent = this;
     this.serverSideGrouper.parent = this;
+
+    this.gridDimensions = new GridDimensions({
+      getTableViewProperties: () => getTableViewProperties(this),
+      getRowCount: () => this.tableRows.length,
+      getIsSelectionCheckboxes: () =>
+        getIsSelectionCheckboxesShown(this.tablePanelView),
+      ctx: this,
+      defaultRowHeight: this.tablePanelView.rowHeight
+    });
   }
+
+  gridDimensions: IGridDimensions;
 
   isReorderedOnClient: boolean = true;
 
@@ -363,14 +375,6 @@ export class DataView implements IDataView {
       ? getDataTable(this).rows
       : flattenToTableRows(getDataTable(this).groups);
   }
-
-  gridDimensions = new GridDimensions({
-    getTableViewProperties: () => getTableViewProperties(this),
-    getRowCount: () => this.tableRows.length,
-    getIsSelectionCheckboxes: () =>
-      getIsSelectionCheckboxesShown(this.tablePanelView),
-    ctx: this
-  });
 
   scrollState = new SimpleScrollState(0, 0);
 

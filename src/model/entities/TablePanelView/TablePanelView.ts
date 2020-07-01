@@ -41,6 +41,7 @@ export class TablePanelView implements ITablePanelView {
   filterConfiguration: IFilterConfiguration = null as any;
   orderingConfiguration: IOrderingConfiguration = null as any;
   groupingConfiguration: IGroupingConfiguration = null as any;
+  rowHeight: number = null as any;
 
   rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number, Map<number, ICellRectangle>>();
 

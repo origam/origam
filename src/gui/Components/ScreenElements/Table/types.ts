@@ -63,6 +63,7 @@ export type IRenderEditor = () => React.ReactNode;
 
 export interface IGridDimensions {
   rowCount: number;
+  defaultRowHeight: number;
   columnCount: number;
   contentWidth: number;
   contentHeight: number;

@@ -11,6 +11,7 @@ export interface IGridDimensionsData {
   getRowCount: () => number;
   getIsSelectionCheckboxes: () => boolean;
   ctx: any;
+  defaultRowHeight: number;
 }
 
 export class GridDimensions implements IGridDimensions {
@@ -26,6 +27,7 @@ export class GridDimensions implements IGridDimensions {
   getRowCount: () => number = null as any;
   getIsSelectionCheckboxes: () => boolean = null as any;
   ctx: any;
+  defaultRowHeight: number = null as any;
 
   @computed get isSelectionCheckboxes() {
     return this.getIsSelectionCheckboxes();
@@ -76,7 +78,7 @@ export class GridDimensions implements IGridDimensions {
   }
 
   getRowHeight(rowIndex: number): number {
-    return 20;
+    return this.defaultRowHeight;
   }
 
   getRowBottom(rowIndex: number): number {

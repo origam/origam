@@ -314,6 +314,7 @@ export function interpretScreenXml(
           filterConfiguration: filterConfiguration,
           orderingConfiguration: orderingConfiguration,
           groupingConfiguration: new GroupingConfiguration(),
+          rowHeight: 25
         }),
         formPanelView: new FormPanelView(),
         lookupLoader: new LookupLoader(),

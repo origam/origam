@@ -12,6 +12,7 @@ export interface ITablePanelViewData {
   filterConfiguration: IFilterConfiguration;
   orderingConfiguration: IOrderingConfiguration;
   groupingConfiguration: IGroupingConfiguration;
+  rowHeight: number;
 }
 
 export interface ITableCanvas {
