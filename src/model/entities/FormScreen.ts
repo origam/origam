@@ -1,12 +1,17 @@
-import {IDataView} from "./types/IDataView";
-import {IDataSource} from "./types/IDataSource";
-import {IComponentBinding} from "./types/IComponentBinding";
-import {IFormScreenLifecycle02} from "./types/IFormScreenLifecycle";
-import {action, computed, observable} from "mobx";
-import {IAction} from "./types/IAction";
-import {getDontRequestData} from "model/selectors/getDontRequestData";
-import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData} from "./types/IFormScreen";
-import {IPanelConfiguration} from "./types/IPanelConfiguration";
+import { IDataView } from "./types/IDataView";
+import { IDataSource } from "./types/IDataSource";
+import { IComponentBinding } from "./types/IComponentBinding";
+import { IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
+import { action, computed, observable } from "mobx";
+import { IAction } from "./types/IAction";
+import { getDontRequestData } from "model/selectors/getDontRequestData";
+import {
+  IFormScreen,
+  IFormScreenData,
+  IFormScreenEnvelope,
+  IFormScreenEnvelopeData,
+} from "./types/IFormScreen";
+import { IPanelConfiguration } from "./types/IPanelConfiguration";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -14,9 +19,9 @@ export class FormScreen implements IFormScreen {
   constructor(data: IFormScreenData) {
     Object.assign(this, data);
     this.formScreenLifecycle.parent = this;
-    this.dataViews.forEach(o => (o.parent = this));
-    this.dataSources.forEach(o => (o.parent = this));
-    this.componentBindings.forEach(o => (o.parent = this));
+    this.dataViews.forEach((o) => (o.parent = this));
+    this.dataSources.forEach((o) => (o.parent = this));
+    this.componentBindings.forEach((o) => (o.parent = this));
   }
 
   parent?: any;
@@ -45,18 +50,18 @@ export class FormScreen implements IFormScreen {
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
 
-  get dynamicTitle(){
-    if(!this.dynamicTitleSource){
+  get dynamicTitle() {
+    if (!this.dynamicTitleSource) {
       return undefined;
     }
     const splitSource = this.dynamicTitleSource.split(".");
     const dataSourceName = splitSource[0];
     const columnName = splitSource[1];
 
-    const dataView = this.dataViews
-      .find(view => view.name === dataSourceName);
-    const dataSource = this.dataSources
-      .find(view => view.entity === dataSourceName);
+    const dataView = this.dataViews.find((view) => view.name === dataSourceName);
+    if (!dataView) return;
+    const dataSource = this.dataSources.find((view) => view.entity === dataSourceName);
+    if (!dataSource) return;
     const dataSourceField = dataSource!.getFieldByName(columnName);
     const dataTable = dataView!.dataTable;
 
@@ -68,11 +73,11 @@ export class FormScreen implements IFormScreen {
   }
 
   @computed get rootDataViews(): IDataView[] {
-    return this.dataViews.filter(dv => dv.isBindingRoot);
+    return this.dataViews.filter((dv) => dv.isBindingRoot);
   }
 
   @computed get nonRootDataViews(): IDataView[] {
-    return this.dataViews.filter(dv => !dv.isBindingRoot);
+    return this.dataViews.filter((dv) => !dv.isBindingRoot);
   }
 
   @action.bound setTitle(title: string) {
@@ -80,23 +85,23 @@ export class FormScreen implements IFormScreen {
   }
 
   getBindingsByChildId(childId: string) {
-    return this.componentBindings.filter(b => b.childId === childId);
+    return this.componentBindings.filter((b) => b.childId === childId);
   }
 
   getBindingsByParentId(parentId: string) {
-    return this.componentBindings.filter(b => b.parentId === parentId);
+    return this.componentBindings.filter((b) => b.parentId === parentId);
   }
 
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined {
-    return this.dataViews.find(dv => dv.modelInstanceId === modelInstanceId);
+    return this.dataViews.find((dv) => dv.modelInstanceId === modelInstanceId);
   }
 
   getDataViewsByEntity(entity: string): IDataView[] {
-    return this.dataViews.filter(dv => dv.entity === entity);
+    return this.dataViews.filter((dv) => dv.entity === entity);
   }
 
   getDataSourceByEntity(entity: string): IDataSource | undefined {
-    return this.dataSources.find(ds => ds.entity === entity);
+    return this.dataSources.find((ds) => ds.entity === entity);
   }
 
   @computed get toolbarActions() {
@@ -105,7 +110,7 @@ export class FormScreen implements IFormScreen {
       if (dv.toolbarActions.length > 0) {
         result.push({
           section: dv.name,
-          actions: dv.toolbarActions
+          actions: dv.toolbarActions,
         });
       }
     }
@@ -148,7 +153,7 @@ export class FormScreen implements IFormScreen {
     console.log("");
     console.log("View bindings");
     console.log("=============");
-    const roots = Array.from(this.dataViews.values()).filter(dv => dv.isBindingRoot);
+    const roots = Array.from(this.dataViews.values()).filter((dv) => dv.isBindingRoot);
     for (let dv of roots) {
       recursive(dv, 0);
     }
@@ -182,7 +187,7 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
 
   *start(initUIResult: any, preloadIsDirty?: boolean): Generator {
     yield* this.formScreenLifecycle.start(initUIResult);
-    if(this.formScreen){
+    if (this.formScreen) {
       this.formScreen.setDirty(!!preloadIsDirty);
     }
   }
