@@ -4,7 +4,6 @@ import {ScreenHeaderAction} from "gui02/components/ScreenHeader/ScreenHeaderActi
 import {ScreenHeaderPusher} from "gui02/components/ScreenHeader/ScreenHeaderPusher";
 import {MobXProviderContext, observer} from "mobx-react";
 import {onFullscreenClick} from "model/actions-ui/ScreenHeader/onFullscreenClick";
-import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
 import {IWorkbench} from "model/entities/types/IWorkbench";
 import {getIsScreenOrAnyDataViewWorking} from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 import {getOpenedNonDialogScreenItems} from "model/selectors/getOpenedNonDialogScreenItems";

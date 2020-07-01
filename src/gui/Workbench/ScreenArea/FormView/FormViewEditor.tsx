@@ -16,7 +16,7 @@ import { IProperty } from "../../../../model/entities/types/IProperty";
 import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
 import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
-import { CheckList, CheckListItem } from "gui/Components/ScreenElements/Editors/CheckList";
+import { CheckList } from "gui/Components/ScreenElements/Editors/CheckList";
 import { ImageEditor } from "gui/Components/ScreenElements/Editors/ImageEditor";
 import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 
