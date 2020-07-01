@@ -11,9 +11,9 @@
 
   &:global(.isHidden) {
     // display: none;
-    position: absolute;
-    top: 110%;;
-    left: 0;
+    position: fixed;
+    top: 110%;
+    left: 110%;
   }
 
   &:hover {

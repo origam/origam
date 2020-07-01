@@ -5,8 +5,8 @@
   padding: 0 (1.15em/2);
 
   &:global(.isHidden) {
-    position: absolute;
+    position: fixed;
     top: 110%;
-    left: 0;
+    left: 110%;
   }
 }
