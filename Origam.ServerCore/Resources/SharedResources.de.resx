@@ -330,4 +330,7 @@
   <data name="LoginFailedWrongCode" xml:space="preserve">
     <value>Die Anmeldung ist fehlgeschlagen. Bitte überprüfen Sie den Passcode.</value>
   </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Ein unerwarteter Fehler ist aufgetreten. Bitte kontaktieren Sie den Support.</value>
+  </data>
 </root>

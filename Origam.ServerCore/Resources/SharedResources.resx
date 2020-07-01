@@ -325,6 +325,6 @@
     <value>Login Failed. Check the code please.</value>
   </data>
   <data name="UnknownError" xml:space="preserve">
-    <value>An unknown error has occured. Please contact support.</value>
+    <value>An unexpected error has occured. Please contact support.</value>
   </data>
 </root>
