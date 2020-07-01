@@ -29,7 +29,7 @@ export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
 }
 
 export const SCROLL_ROW_CHUNK = 1000;
-export const MAX_CHUNKS_TO_HOLD = 6;
+export const MAX_CHUNKS_TO_HOLD = 10;
 
 export class NullIScrollLoader implements IInfiniteScrollLoader{
   ctx: any = null as any;
@@ -78,12 +78,12 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @computed
   get headLoadingNeeded() {
-    return this.distanceToStart <= SCROLL_ROW_CHUNK && !this.rowsContainer.isFirstRowLoaded;
+    return this.distanceToStart <= SCROLL_ROW_CHUNK * 0.9 && !this.rowsContainer.isFirstRowLoaded;
   }
 
   @computed
   get tailLoadingNeeded() {
-    return this.distanceToEnd <= SCROLL_ROW_CHUNK && !this.rowsContainer.isLastRowLoaded;
+    return this.distanceToEnd <= SCROLL_ROW_CHUNK * 0.9 && !this.rowsContainer.isLastRowLoaded;
   }
 
   @computed
