@@ -52,6 +52,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IPersistedGrantStore _persistedGrantStore;
         private readonly SessionObjects _sessionObjects;
+        private readonly IdentityGuiConfig _configOptions;
         private readonly RequestLocalizationOptions _requestLocalizationOptions;
         private readonly ResourceManager resourceManager = new ResourceManager("Origam.ServerCore.Resources.SharedResources", Assembly.GetExecutingAssembly());
 
@@ -65,7 +66,8 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IMailService mailService,
             IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer,
             IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
-            IOptions<RequestLocalizationOptions> requestLocalizationOptions)
+            IOptions<RequestLocalizationOptions> requestLocalizationOptions,
+            IOptions<IdentityGuiConfig> configOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -77,6 +79,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _localizer = localizer;
             _persistedGrantStore = persistedGrantStore;
             _sessionObjects = sessionObjects;
+            _configOptions = configOptions.Value;
             _userConfig = userConfig.Value;
             _requestLocalizationOptions = requestLocalizationOptions.Value;
         }
@@ -103,6 +106,10 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
+            if (!_configOptions.AllowPasswordReset)
+            {
+                return RedirectToAction(nameof(Login), "Account");
+            }
             return View();
         }
         
@@ -112,6 +119,10 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
+            if (!_configOptions.AllowPasswordReset)
+            {
+                return RedirectToAction(nameof(Login), "Account");
+            }
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
@@ -271,6 +282,10 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
+            if (!_configOptions.AllowPasswordReset)
+            {
+                return RedirectToAction(nameof(Login), "Account");
+            }
             return code == null ? View("Error") : View();
         }
         
@@ -280,6 +295,10 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+            if (!_configOptions.AllowPasswordReset)
+            {
+                return RedirectToAction(nameof(Login), "Account");
+            }
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -397,7 +416,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToAction(nameof(LoginTwoStep), new { user.Email, model.RememberLogin, model.ReturnUrl });
+                    return RedirectToAction(nameof(LoginTwoStep), new { user.UserName, model.RememberLogin, model.ReturnUrl });
                 }
             }
 
@@ -407,12 +426,12 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         }
         
         [HttpGet]
-        public async Task<IActionResult> LoginTwoStep(string email, bool rememberLogin, string returnUrl = null)
+        public async Task<IActionResult> LoginTwoStep(string userName, bool rememberLogin, string returnUrl = null)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return View(nameof(Error));
+                return View(nameof(Error), new Error(resourceManager.GetString("ErrorUserNotFound")));
             }
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
@@ -422,7 +441,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
             if (!providers.Contains("Email"))
             {
-                return View(nameof(Error));
+                return View(nameof(Error), new Error("Email provider not found."));
             }
 
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");

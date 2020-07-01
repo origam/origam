@@ -120,7 +120,8 @@ namespace Origam.Git
         {
             List<string> rules = new List<string>
             {
-                "/index.bin"
+                "/index.bin",
+                "scripts/"
             };
             Repo.Ignore.AddTemporaryRules(rules);
             Commands.Stage(Repo, "*");

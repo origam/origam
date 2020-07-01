@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
+using System.Linq;
 using System.Text;
 using Npgsql;
 using Origam.Schema.EntityModel;
@@ -137,7 +138,7 @@ namespace Origam.DA.Service
         {
             return Enum.GetNames(typeof(NpgsqlTypes.NpgsqlDbType));
         }
-        public override void CreateUser(string user,string password,string database, bool DatabaseIntegratedAuthentication)
+        public override void CreateDatabaseUser(string user,string password,string database, bool DatabaseIntegratedAuthentication)
         {
             string transaction1 = Guid.NewGuid().ToString();
             try
@@ -453,6 +454,40 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
             String[] vs = new String[ar.Count];
             ar.CopyTo(vs, 0);
             return vs;
+        }
+
+        public override string CreateBusinessPartnerInsert(QueryParameterCollection parameters)
+        {
+            return string.Format("INSERT INTO \"BusinessPartner\" (\"FirstName\",\"UserName\",\"Name\",\"Id\",\"UserEmail\") " +
+                "VALUES ('{0}','{1}','{2}','{3}','{4}')",
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "FirstName").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Name").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Email").Select(param => param.Value).FirstOrDefault());
+        }
+
+        public override string CreateOrigamUserInsert(QueryParameterCollection parameters)
+        {
+            return string.Format("INSERT INTO \"OrigamUser\" (\"UserName\",\"IsLockedOut\",\"EmailConfirmed\",\"refBusinessPartnerId\",\"Password\",\"Id\",\"FailedPasswordAttemptCount\",\"Is2FAEnforced\") " +
+                "VALUES ('{0}',{1},{2},'{3}','{4}','{5}','{6}','{7}')",
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "UserName").Select(param => param.Value).FirstOrDefault(),
+                "true", "true",
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Password").Select(param => param.Value).FirstOrDefault(),
+                Guid.NewGuid().ToString(),0,"false");
+        }
+        public override string CreateBusinessPartnerRoleIdInsert(QueryParameterCollection parameters)
+        {
+            return string.Format("INSERT INTO \"BusinessPartnerOrigamRole\" (\"Id\",\"refBusinessPartnerId\",\"refOrigamRoleId\") " +
+                "VALUES ('{0}','{1}','{2}')",
+                Guid.NewGuid().ToString(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "Id").Select(param => param.Value).FirstOrDefault(),
+                parameters.Cast<QueryParameter>().Where(param => param.Name == "RoleId").Select(param => param.Value).FirstOrDefault());
+        }
+        public override string AlreadyCreatedUser(QueryParameterCollection parameters)
+        {
+            return string.Format("UPDATE \"OrigamParameters\" SET \"BooleanValue\" = true WHERE \"Id\" = 'e42f864f-5018-4967-abdc-5910439adc9a'");
         }
     }
 }

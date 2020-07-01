@@ -21,11 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 #endregion
 
-namespace Origam.ServerCore.Configuration
+using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Origam.ServerCore.IdentityServerGui.Home;
+
+namespace Origam.ServerCore.IdentityServerGui.Account
 {
-    public class IdentityGuiConfig
+    public class ErrorController: Microsoft.AspNetCore.Mvc.Controller
     {
-        public string PathToBrandIcon { get; set; }
-        public bool AllowPasswordReset { get; set; }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Error()
+        {
+            return View();
+        }
     }
 }

@@ -119,7 +119,7 @@ namespace Origam.DA.Service
             string userName, string password, bool integratedAuthentication, bool pooling);
         public abstract void CreateDatabase(string name);
         public abstract void DeleteDatabase(string name);
-        public abstract void CreateUser(string user, string password, string name, bool databaseIntegratedAuthentication);
+        public abstract void CreateDatabaseUser(string user, string password, string name, bool databaseIntegratedAuthentication);
         public abstract void DeleteUser(string user, bool _integratedAuthentication);
         public virtual string EntityDdl(Guid entity)
         {
