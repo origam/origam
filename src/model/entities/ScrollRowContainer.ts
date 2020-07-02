@@ -122,6 +122,9 @@ export class ScrollRowContainer implements IRowsContainer {
       return;
     }
     const rowOffset = this.rowChunks[0].rowOffset - SCROLL_ROW_CHUNK;
+    if(rowOffset < 0) {
+      return;
+    }
     this.rowChunks.unshift(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined))
     if (this.rowChunks.length > MAX_CHUNKS_TO_HOLD) {
       this.rowChunks.pop();
