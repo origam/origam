@@ -451,7 +451,7 @@ group by ccu.table_name,tc.table_name,tc.constraint_name,tc.table_schema ";
 
         internal override object FillParameterArrayData(ICollection ar)
         {
-            String[] vs = new String[ar.Count];
+            Object[] vs = new Object[ar.Count];
             ar.CopyTo(vs, 0);
             return vs;
         }
