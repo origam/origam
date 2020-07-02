@@ -1,17 +1,17 @@
 import {
+  currentDataRow,
+  dataTable,
   drawingColumnIndex,
-  rowIndex,
-  rowHeight,
-  realFixedColumnCount,
   gridLeadCellDimensions,
   propertyById,
+  realFixedColumnCount,
+  rowHeight,
+  rowIndex,
   scRenderCell,
-  dataTable,
-  currentDataRow,
 } from "./renderingValues";
-import { currentRowCellsDraws, currentRowCellsDimensions } from "./currentRowCells";
-import { Memoized } from "./common/Memoized";
-import { dataRowColumnIds } from "./rowCells/dataRowCells";
+import {currentRowCellsDimensions, currentRowCellsDraws} from "./currentRowCells";
+import {Memoized} from "./common/Memoized";
+import {dataRowColumnIds} from "./rowCells/dataRowCells";
 
 export function drawCurrentCell() {
   const colIdx = drawingColumnIndex();

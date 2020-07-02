@@ -2,8 +2,8 @@ import xmlJs from "xml-js";
 import axios from "axios";
 
 import _ from "lodash";
-import { IApi } from "./types/IApi";
-import { IAggregationInfo } from "./types/IAggregationInfo";
+import {IApi} from "./types/IApi";
+import {IAggregationInfo} from "./types/IAggregationInfo";
 import {IOrdering} from "./types/IOrderingConfiguration";
 
 export enum IAuditLogColumnIndices {

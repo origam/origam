@@ -1,5 +1,5 @@
-import { IDropDownColumn } from "./IDropDownColumn";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import {IDropDownColumn} from "./IDropDownColumn";
+import {CancellablePromise} from "mobx/lib/api/flow";
 
 export enum IDropDownType {
   EagerlyLoadedGrid = "EagerlyLoadedGrid",

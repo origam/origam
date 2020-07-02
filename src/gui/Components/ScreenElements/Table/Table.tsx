@@ -1,24 +1,24 @@
-import { action, computed, observable, comparer, autorun, runInAction } from "mobx";
-import { observer, Observer, MobXProviderContext } from "mobx-react";
+import {action, autorun, comparer, computed, observable, runInAction} from "mobx";
+import {MobXProviderContext, Observer, observer} from "mobx-react";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import Measure, { BoundingRect } from "react-measure";
-import { Canvas } from "./Canvas";
-import { HeaderRow } from "./HeaderRow";
-import { PositionedField } from "./PositionedField";
+import Measure, {BoundingRect} from "react-measure";
+import {Canvas} from "./Canvas";
+import {HeaderRow} from "./HeaderRow";
+import {PositionedField} from "./PositionedField";
 import Scrollee from "./Scrollee";
 import Scroller from "./Scroller";
 import S from "./Table.module.scss";
-import { ITableProps, IGridDimensions } from "./types";
-import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import {IGridDimensions, ITableProps} from "./types";
+import {CtxPanelVisibility} from "gui02/contexts/GUIContexts";
 import {IClickSubsItem, ITableRow} from "./TableRendering/types";
-import { renderTable } from "./TableRendering/renderTable";
-import { handleTableClick } from "./TableRendering/onClick";
-import { getProperties } from "model/selectors/DataView/getProperties";
-import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import { IProperty } from "model/entities/types/IProperty";
+import {renderTable} from "./TableRendering/renderTable";
+import {handleTableClick} from "./TableRendering/onClick";
+import {getProperties} from "model/selectors/DataView/getProperties";
+import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import {IProperty} from "model/entities/types/IProperty";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 

@@ -1,5 +1,5 @@
 import bind from "bind-decorator";
-import {action, autorun, computed, observable, reaction} from "mobx";
+import {action, autorun, computed, observable} from "mobx";
 import {inject, observer, Provider} from "mobx-react";
 import {onTableKeyDown} from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
@@ -15,7 +15,6 @@ import {IColumnHeader} from "../../../../model/selectors/TablePanelView/types";
 import {ITableColumnsConf} from "../../../Components/Dialogs/ColumnsDialog";
 import {FilterSettings} from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
 import {Header} from "../../../Components/ScreenElements/Table/Header";
-import {SimpleScrollState} from "../../../Components/ScreenElements/Table/SimpleScrollState";
 import {RawTable, Table} from "../../../Components/ScreenElements/Table/Table";
 import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
 import {CellRenderer} from "./CellRenderer";

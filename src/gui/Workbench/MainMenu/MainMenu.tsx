@@ -1,7 +1,7 @@
 import S from "./MainMenu.module.css";
 import React from "react";
-import { observer, inject } from "mobx-react";
-import { observable, action } from "mobx";
+import {observer} from "mobx-react";
+import {action, observable} from "mobx";
 
 export enum IMenuItemIcon {
   Form = "menu_form.png",

@@ -4,7 +4,7 @@ import {IProperty} from "../../../../model/entities/types/IProperty";
 import {getLeadingColumnCount} from "../../../../model/selectors/TablePanelView/getLeadingColumnCount";
 import {getIsSelectionCheckboxesShown} from "../../../../model/selectors/DataView/getIsSelectionCheckboxesShown";
 import {getGroupingConfiguration} from "../../../../model/selectors/TablePanelView/getGroupingConfiguration";
-import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
 
 export interface IGridDimensionsData {
   getTableViewProperties: () => IProperty[];

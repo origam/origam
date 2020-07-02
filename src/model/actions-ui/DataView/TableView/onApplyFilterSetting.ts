@@ -1,7 +1,7 @@
-import { toJS, flow } from "mobx";
-import { getProperty } from "model/selectors/DataView/getProperty";
-import { getFilterConfiguration } from "../../../selectors/DataView/getFilterConfiguration";
-import { handleError } from "model/actions/handleError";
+import {flow, toJS} from "mobx";
+import {getProperty} from "model/selectors/DataView/getProperty";
+import {getFilterConfiguration} from "../../../selectors/DataView/getFilterConfiguration";
+import {handleError} from "model/actions/handleError";
 
 export function onApplyFilterSetting(ctx: any) {
   const prop = getProperty(ctx);

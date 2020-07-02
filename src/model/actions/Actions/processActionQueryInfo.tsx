@@ -1,7 +1,7 @@
 import React from "react";
-import { action } from "mobx";
-import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
-import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import {action} from "mobx";
+import {getDialogStack} from "model/selectors/DialogStack/getDialogStack";
+import {ModalWindow} from "gui/Components/Dialog/Dialog";
 import S from "./processActionQueryResult.module.scss";
 
 export interface IQueryInfo {
@@ -77,6 +77,3 @@ export function processActionQueryInfo(ctx: any) {
   };
 }
 
-function questionContinueWorkflow() {
-  return;
-}

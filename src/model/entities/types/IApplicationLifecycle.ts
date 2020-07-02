@@ -1,5 +1,3 @@
-import { IOpenedScreen } from "./IOpenedScreen";
-
 export enum IApplicationPage {
   Login = "Login",
   Workbench = "Workbench"

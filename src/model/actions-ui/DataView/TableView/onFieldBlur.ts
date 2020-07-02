@@ -1,6 +1,6 @@
-import { flushCurrentRowData } from "../../../actions/DataView/TableView/flushCurrentRowData";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {flushCurrentRowData} from "../../../actions/DataView/TableView/flushCurrentRowData";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onFieldBlur(ctx: any) {
   return flow(function* onFieldBlur(event: any) {

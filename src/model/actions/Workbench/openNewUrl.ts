@@ -1,6 +1,5 @@
-import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
-import { getApi } from "model/selectors/getApi";
+import {IUrlUpenMethod} from "model/entities/types/IUrlOpenMethod";
+import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
 
 export function openNewUrl(ctx: any) {
   return function* openNewUrl(

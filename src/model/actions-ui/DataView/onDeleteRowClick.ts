@@ -1,9 +1,9 @@
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onDeleteRowClick(ctx: any) {
   return flow(function* onDeleteRowClick(event: any) {

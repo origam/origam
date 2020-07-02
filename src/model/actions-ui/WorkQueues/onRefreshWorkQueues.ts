@@ -1,6 +1,6 @@
-import { flow } from "mobx";
-import { refreshWorkQueues } from "model/actions/WorkQueues/refreshWorkQueues";
-import { handleError } from "model/actions/handleError";
+import {flow} from "mobx";
+import {refreshWorkQueues} from "model/actions/WorkQueues/refreshWorkQueues";
+import {handleError} from "model/actions/handleError";
 
 export function onRefreshWorkQueues(ctx: any) {
   return flow(function* onRefreshWorkQueues() {

@@ -1,12 +1,8 @@
-import { action, observable } from "mobx";
+import {action, observable} from "mobx";
 import FlexSearch from "flexsearch";
 import _ from "lodash";
-import {
-  ISearchResultSection,
-  ISearchResultItem,
-  IClientFulltextSearch
-} from "./types/IClientFulltextSearch";
-import { IMenuItemIcon } from "../../gui/Workbench/MainMenu/MainMenu";
+import {IClientFulltextSearch, ISearchResultItem, ISearchResultSection} from "./types/IClientFulltextSearch";
+import {IMenuItemIcon} from "../../gui/Workbench/MainMenu/MainMenu";
 
 class SearchResultSection implements ISearchResultSection {
   constructor(public label: string, public items: ISearchResultItem[]) {}
@@ -108,11 +104,6 @@ export class ClientFulltextSearch implements IClientFulltextSearch {
       switch (node.name) {
         case "Submenu":
         case "Command":
-          const doc = {
-            id: node.attributes.id,
-            label: node.attributes.label,
-            node
-          };
           documents.push(node);
       }
       node.elements.forEach((element: any) => recursive(element));

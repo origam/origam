@@ -1,10 +1,10 @@
-import { flow } from "mobx";
-import { IAction, IActionMode } from "model/entities/types/IAction";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getGridId } from "model/selectors/DataView/getGridId";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { handleError } from "model/actions/handleError";
+import {flow} from "mobx";
+import {IAction, IActionMode} from "model/entities/types/IAction";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getGridId} from "model/selectors/DataView/getGridId";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {handleError} from "model/actions/handleError";
 
 import selectors from "model/selectors-tree";
 

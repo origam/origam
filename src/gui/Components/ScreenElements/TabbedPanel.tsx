@@ -1,7 +1,6 @@
 import React from "react";
 import S from "./TabbedPanel.module.css";
-import { observer } from "mobx-react";
-import { observable, action } from "mobx";
+import {observer} from "mobx-react";
 
 @observer
 export class TabBody extends React.Component<{ isActive: boolean }> {

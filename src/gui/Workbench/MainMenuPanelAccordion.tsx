@@ -1,9 +1,9 @@
 import React from "react";
 
 import S from "./MainMenuPanelAccordion.module.css";
-import { Accordion } from "gui/Components/Accordion/Accordion";
-import { AccordionHandle } from "../Components/Accordion/AccordionHandle";
-import { AccordionBody } from "gui/Components/Accordion/AccordionBody";
+import {Accordion} from "gui/Components/Accordion/Accordion";
+import {AccordionHandle} from "../Components/Accordion/AccordionHandle";
+import {AccordionBody} from "gui/Components/Accordion/AccordionBody";
 
 export const MainMenuPanelAccordion: React.FC<{
   subscribeActivator?: (

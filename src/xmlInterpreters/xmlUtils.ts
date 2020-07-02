@@ -1,4 +1,4 @@
-import { getIdent } from "utils/common";
+import {getIdent} from "utils/common";
 
 export function find(xmlObj: any, pred: (node: any) => boolean) {
   function recursive(n: any) {

@@ -1,39 +1,35 @@
 import {
-  scRenderTable,
+  clickSubscriptions,
+  columnWidths,
+  context,
   context2d,
-  rowIndex,
-  scRenderRow,
+  currentRow,
   drawingColumnIndex,
-  scRenderCell,
-  tableRows,
+  fixedColumnCount,
+  gridLeadCellDimensions,
   groupingColumnIds,
-  tableColumnIds,
+  isCheckBoxedTable,
   propertyById,
+  realFixedColumnCount,
+  rowHeight,
+  rowIndex,
+  scRenderCell,
+  scRenderRow,
+  scRenderTable,
   scrollLeft,
   scrollTop,
-  viewportWidth,
+  tableColumnIds,
+  tableRows,
   viewportHeight,
-  isCheckBoxedTable,
-  gridLeadCellDimensions,
-  rowHeight,
-  columnWidths,
-  fixedColumnCount,
-  realFixedColumnCount,
-  clickSubscriptions,
-  context,
-  currentRow,
+  viewportWidth,
 } from "./renderingValues";
-import { firstDrawableRowIndex, lastDrawableRowIndex } from "./drawableRowIndex";
-import { drawCurrentCell} from "./currentCell";
-import { firstDrawableColumnIndex, lastDrawableColumnIndex } from "./drawableColumnIndex";
-import { ITableRow, IClickSubsItem } from "./types";
-import { CPR } from "utils/canvas";
-import { IProperty } from "model/entities/types/IProperty";
-import {
-  currentRowCellsDimensions,
-  currentRowCellsDraws,
-  } from "./currentRowCells";
-import {dataRowColumnIds} from "./rowCells/dataRowCells";
+import {firstDrawableRowIndex, lastDrawableRowIndex} from "./drawableRowIndex";
+import {drawCurrentCell} from "./currentCell";
+import {firstDrawableColumnIndex, lastDrawableColumnIndex} from "./drawableColumnIndex";
+import {IClickSubsItem, ITableRow} from "./types";
+import {CPR} from "utils/canvas";
+import {IProperty} from "model/entities/types/IProperty";
+import {currentRowCellsDimensions, currentRowCellsDraws,} from "./currentRowCells";
 import {cellLayerCount, setLayerIndex} from "./currentCellLayerIndex";
 
 export function renderTable(

@@ -1,14 +1,9 @@
 import _ from "lodash";
-import { computed, createAtom, flow, IAtom, observable, when } from "mobx";
-import { getApi } from "../selectors/getApi";
-import { IDropDownColumn } from "./types/IDropDownColumn";
-import {
-  IDropDownParameter,
-  IDropDownType,
-  ILookup,
-  ILookupData
-} from "./types/ILookup";
-import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
+import {computed, createAtom, flow, IAtom, observable, when} from "mobx";
+import {getApi} from "../selectors/getApi";
+import {IDropDownColumn} from "./types/IDropDownColumn";
+import {IDropDownParameter, IDropDownType, ILookup, ILookupData} from "./types/ILookup";
+import {getLookupLoader} from "model/selectors/DataView/getLookupLoader";
 
 export enum IIdState {
   LOADING = "LOADING",

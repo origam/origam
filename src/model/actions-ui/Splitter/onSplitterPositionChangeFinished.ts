@@ -1,5 +1,5 @@
-import { flow } from "mobx";
-import { saveSplitPanelConfiguration } from "model/actions/FormScreen/saveSplitPanelConfiguration";
+import {flow} from "mobx";
+import {saveSplitPanelConfiguration} from "model/actions/FormScreen/saveSplitPanelConfiguration";
 
 export function onSplitterPositionChangeFinished(ctx: any) {
   return flow(function* onSplitterPositionChangeFinished(

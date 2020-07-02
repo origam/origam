@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  FilterSettingsComboBox,
-  FilterSettingsComboBoxItem
-} from "../FilterSettingsComboBox";
+import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
 
-import CS from "./FilterSettingsCommon.module.scss";
-import { Checkbox } from "../../../../Checkbox";
-import { observer } from "mobx-react";
-import { observable, action } from "mobx";
+import {Checkbox} from "../../../../Checkbox";
+import {observer} from "mobx-react";
+import {action, observable} from "mobx";
 import produce from "immer";
 
 const OPERATORS: any[] = [

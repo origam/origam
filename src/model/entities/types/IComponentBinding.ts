@@ -1,4 +1,4 @@
-import { IDataView } from "./IDataView";
+import {IDataView} from "./IDataView";
 
 export interface IComponentBindingData {
   parentId: string;

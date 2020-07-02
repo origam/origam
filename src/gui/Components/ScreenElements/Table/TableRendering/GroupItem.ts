@@ -1,4 +1,3 @@
-
 import {computed, observable} from "mobx";
 import {IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";

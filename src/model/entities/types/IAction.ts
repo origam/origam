@@ -1,4 +1,4 @@
-import { IActionParameter } from "./IActionParameter";
+import {IActionParameter} from "./IActionParameter";
 
 
 export enum IActionType {

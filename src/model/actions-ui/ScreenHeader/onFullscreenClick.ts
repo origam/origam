@@ -1,5 +1,5 @@
-import { getWorkbench } from "model/selectors/getWorkbench";
-import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
+import {getWorkbench} from "model/selectors/getWorkbench";
+import {getIsCurrentScreenFull} from "model/selectors/Workbench/getIsCurrentScreenFull";
 
 export function onFullscreenClick(ctx: any) {
   return function onFullscreenClick(event: any) {

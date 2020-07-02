@@ -1,7 +1,6 @@
-import { getDataTable } from "../DataView/getDataTable";
-import { getTableViewProperties } from "./getTableViewProperties";
-import { getTablePanelView } from "./getTablePanelView";
-import { IProperty } from "../../entities/types/IProperty";
+import {getDataTable} from "../DataView/getDataTable";
+import {getTablePanelView} from "./getTablePanelView";
+import {IProperty} from "../../entities/types/IProperty";
 
 export function getCellValueByIdx(ctx: any) {
   const tablePanelView = getTablePanelView(ctx);

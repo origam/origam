@@ -1,15 +1,15 @@
 import "mobx-react-lite/batchingForReactDom";
 
 import axios from "axios";
-import { flow } from "mobx";
-import { getApi } from "model/selectors/getApi";
-import { ensureLogin, userManager } from "oauth";
+import {flow} from "mobx";
+import {getApi} from "model/selectors/getApi";
+import {ensureLogin, userManager} from "oauth";
 import React from "react";
 import ReactDOM from "react-dom";
 import "react-tippy/dist/tippy.css";
-import { Root } from "Root";
+import {Root} from "Root";
 import "./index.scss";
-import { createApplication } from "./model/factories/createApplication";
+import {createApplication} from "./model/factories/createApplication";
 import "./rootContainer";
 import * as serviceWorker from "./serviceWorker";
 import Cookie from "js-cookie";
@@ -61,9 +61,6 @@ async function main() {
   const user = await ensureLogin();
   if (user) {
     if (window.sessionStorage.getItem("teleportAfterLogin")) {
-      const newUrl =
-        window.sessionStorage.getItem("teleportAfterLogin") +
-        `#origamAuthTokenOverride=${user.access_token}`;
       window.sessionStorage.removeItem("teleportAfterLogin");
       //window.location.assign(newUrl);
       return;

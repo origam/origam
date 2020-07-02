@@ -1,11 +1,11 @@
 import _ from "lodash";
-import { action, createAtom, flow, observable, computed } from "mobx";
-import { handleError } from "model/actions/handleError";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { getApi } from "model/selectors/getApi";
-import { getSessionId } from "model/selectors/getSessionId";
-import { flashColor2htmlColor } from "utils/flashColorFormat";
-import { IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem } from "./types/IRowState";
+import {action, computed, createAtom, flow, observable} from "mobx";
+import {handleError} from "model/actions/handleError";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {getApi} from "model/selectors/getApi";
+import {getSessionId} from "model/selectors/getSessionId";
+import {flashColor2htmlColor} from "utils/flashColorFormat";
+import {IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem} from "./types/IRowState";
 
 export enum IIdState {
   LOADING = "LOADING",

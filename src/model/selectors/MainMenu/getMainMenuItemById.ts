@@ -1,4 +1,4 @@
-import { getMainMenu } from "./getMainMenu";
+import {getMainMenu} from "./getMainMenu";
 
 const BREAK_RECURSION = Symbol("BREAK_RECURSION");
 

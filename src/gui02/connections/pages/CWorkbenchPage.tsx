@@ -1,19 +1,18 @@
-import { MainBar } from "gui02/components/MainBar/MainBar";
-import { ScreenTabsArea } from "gui02/components/ScreenTabsArea/ScreenTabsArea";
-import { WorkbenchPage } from "gui02/components/WorkbenchPage/WorkbenchPage";
-import { MobXProviderContext, observer, Provider } from "mobx-react";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { getWorkbench } from "model/selectors/getWorkbench";
+import {MainBar} from "gui02/components/MainBar/MainBar";
+import {ScreenTabsArea} from "gui02/components/ScreenTabsArea/ScreenTabsArea";
+import {WorkbenchPage} from "gui02/components/WorkbenchPage/WorkbenchPage";
+import {MobXProviderContext, observer, Provider} from "mobx-react";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {getWorkbench} from "model/selectors/getWorkbench";
 import React from "react";
-import { CScreenTabbedViewHandleRow } from "../CScreenTabbedViewHandleRow";
-import { CScreenToolbar } from "../CScreenToolbar";
-import { CSidebar } from "../CSidebar";
-import { CScreenHeader } from "../CScreenHeader";
-import { CScreenContent } from "../CScreenContent";
-import { CDialogContent } from "../CDialogContent";
-import { observable } from "mobx";
-import { getIsCurrentScreenFull } from "model/selectors/Workbench/getIsCurrentScreenFull";
-import { Fullscreen } from "gui02/components/Fullscreen/Fullscreen";
+import {CScreenTabbedViewHandleRow} from "../CScreenTabbedViewHandleRow";
+import {CScreenToolbar} from "../CScreenToolbar";
+import {CSidebar} from "../CSidebar";
+import {CScreenHeader} from "../CScreenHeader";
+import {CScreenContent} from "../CScreenContent";
+import {CDialogContent} from "../CDialogContent";
+import {getIsCurrentScreenFull} from "model/selectors/Workbench/getIsCurrentScreenFull";
+import {Fullscreen} from "gui02/components/Fullscreen/Fullscreen";
 
 @observer
 export class CWorkbenchPage extends React.Component {

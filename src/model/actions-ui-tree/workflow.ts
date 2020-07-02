@@ -1,8 +1,6 @@
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
-import { getApi } from "model/selectors/getApi";
-import { getSessionId } from "model/selectors/getSessionId";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export default {
   onCloseClick(ctx: any) {

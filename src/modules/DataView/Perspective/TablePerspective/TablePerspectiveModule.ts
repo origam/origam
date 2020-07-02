@@ -1,6 +1,6 @@
-import { Container } from "dic/Container";
-import { ITablePerspectiveDirector, TablePerspectiveDirector } from "./TablePerspectiveDirector";
-import { ITablePerspective, TablePerspective } from "./TablePerspective";
+import {Container} from "dic/Container";
+import {ITablePerspectiveDirector, TablePerspectiveDirector} from "./TablePerspectiveDirector";
+import {ITablePerspective, TablePerspective} from "./TablePerspective";
 
 export const SCOPE_TablePerspective = "TablePerspective";
 

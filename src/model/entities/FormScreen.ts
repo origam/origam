@@ -1,17 +1,12 @@
-import { IDataView } from "./types/IDataView";
-import { IDataSource } from "./types/IDataSource";
-import { IComponentBinding } from "./types/IComponentBinding";
-import { IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
-import { action, computed, observable } from "mobx";
-import { IAction } from "./types/IAction";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
-import {
-  IFormScreen,
-  IFormScreenData,
-  IFormScreenEnvelope,
-  IFormScreenEnvelopeData,
-} from "./types/IFormScreen";
-import { IPanelConfiguration } from "./types/IPanelConfiguration";
+import {IDataView} from "./types/IDataView";
+import {IDataSource} from "./types/IDataSource";
+import {IComponentBinding} from "./types/IComponentBinding";
+import {IFormScreenLifecycle02} from "./types/IFormScreenLifecycle";
+import {action, computed, observable} from "mobx";
+import {IAction} from "./types/IAction";
+import {getDontRequestData} from "model/selectors/getDontRequestData";
+import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData,} from "./types/IFormScreen";
+import {IPanelConfiguration} from "./types/IPanelConfiguration";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;

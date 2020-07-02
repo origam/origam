@@ -1,12 +1,12 @@
-import { TabbedViewHandle } from "gui02/components/TabbedView/TabbedViewHandle";
-import { TabbedViewHandleRow } from "gui02/components/TabbedView/TabbedViewHandleRow";
-import { MobXProviderContext, observer } from "mobx-react";
-import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
-import { onScreenTabHandleClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
-import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
+import {TabbedViewHandle} from "gui02/components/TabbedView/TabbedViewHandle";
+import {TabbedViewHandleRow} from "gui02/components/TabbedView/TabbedViewHandleRow";
+import {MobXProviderContext, observer} from "mobx-react";
+import {onScreenTabCloseClick} from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import {onScreenTabHandleClick} from "model/actions-ui/ScreenTabHandleRow/onScreenTabHandleClick";
+import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {getIsFormScreenDirty} from "model/selectors/FormScreen/getisFormScreenDirty";
+import {getOpenedNonDialogScreenItems} from "model/selectors/getOpenedNonDialogScreenItems";
 import React from "react";
 
 @observer

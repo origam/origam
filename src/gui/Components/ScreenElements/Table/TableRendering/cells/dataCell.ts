@@ -1,37 +1,48 @@
-import { tableColumnIds, columnWidths, context2d, drawingColumnIndex, rowHeight, rowIndex, tablePanelView, recordId, context, currentDataRow } from "../renderingValues";
 import {
-  currentColumnLeft,
-  currentRowTop,
+  columnWidths,
+  context,
+  context2d,
+  currentDataRow,
+  drawingColumnIndex,
+  recordId,
+  rowHeight,
+  rowIndex,
+  tableColumnIds,
+  tablePanelView
+} from "../renderingValues";
+import {
   currentCellText,
-  currentColumnWidth,
-  currentRowHeight,
+  currentColumnLeft,
   currentColumnLeftVisible,
+  currentColumnWidth,
   currentColumnWidthVisible,
   currentProperty,
+  currentRowHeight,
+  currentRowTop,
 } from "../currentCell";
 import {
   applyScrollTranslation,
-  numberCellPaddingLeft,
-  clipCell,
   cellPaddingLeft,
-  topTextOffset,
-  fontSize, cellPaddingLeftFirstCell
+  cellPaddingLeftFirstCell,
+  clipCell,
+  fontSize,
+  numberCellPaddingLeft,
+  topTextOffset
 } from "./cellsCommon";
-import { CPR } from "utils/canvas";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
-import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
-import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import {CPR} from "utils/canvas";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getRowStateColumnBgColor} from "model/selectors/RowState/getRowStateColumnBgColor";
+import {getRowStateRowBgColor} from "model/selectors/RowState/getRowStateRowBgColor";
+import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
+import {getRowStateForegroundColor} from "model/selectors/RowState/getRowStateForegroundColor";
 import selectors from "model/selectors-tree";
 import moment from "moment";
-import { onClick } from "../onClick";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { flow } from "mobx";
-import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTable";
+import {onClick} from "../onClick";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import {onPossibleSelectedRowChange} from "model/actions-ui/onPossibleSelectedRowChange";
+import {getMenuItemId} from "model/selectors/getMenuItemId";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {flow} from "mobx";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -178,7 +189,6 @@ function drawCellValue(){
 }
 
 function getPaddingLeft(){
-  const number = drawingColumnIndex();
   return drawingColumnIndex() === 0
     ? cellPaddingLeftFirstCell
     : cellPaddingLeft

@@ -1,4 +1,3 @@
-import {IDataView} from "../../entities/types/IDataView";
 import {getOrderingConfiguration} from "./getOrderingConfiguration";
 import {getDataStructureEntityId} from "./getDataStructureEntityId";
 import {getDataView} from "./getDataView";

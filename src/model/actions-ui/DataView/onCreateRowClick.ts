@@ -1,8 +1,8 @@
-import { getGridId } from "model/selectors/DataView/getGridId";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {getGridId} from "model/selectors/DataView/getGridId";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onCreateRowClick(ctx: any) {
   return flow(function* onCreateRowClick(event: any) {

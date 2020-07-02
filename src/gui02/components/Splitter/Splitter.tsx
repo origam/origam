@@ -1,9 +1,9 @@
 import React from "react";
 import S from "./Splitter.module.scss";
-import { observable, computed, runInAction, action } from "mobx";
-import { observer, Observer } from "mobx-react";
+import {action, computed, observable, runInAction} from "mobx";
+import {observer, Observer} from "mobx-react";
 
-import Measure, { ContentRect } from "react-measure";
+import Measure, {ContentRect} from "react-measure";
 import _ from "lodash";
 import cx from "classnames";
 
@@ -13,10 +13,6 @@ class SplitterPanel extends React.Component<{
   size: number;
   className?: string;
 }> {
-  constructor(props: any) {
-    super(props);
-  }
-
   refPanel = (elm: any) => (this.elmPanel = elm);
   elmPanel: HTMLDivElement | null = null;
 

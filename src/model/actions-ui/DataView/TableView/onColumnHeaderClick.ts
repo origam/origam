@@ -1,6 +1,6 @@
-import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
-import { runInAction, flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {getOrderingConfiguration} from "model/selectors/DataView/getOrderingConfiguration";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onColumnHeaderClick(ctx: any) {
   return flow(function* onColumnHeaderClick(event: any, column: string) {

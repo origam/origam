@@ -1,5 +1,3 @@
-import { any } from "prop-types";
-
 export interface IRowStateData {}
 
 export interface IRowState extends IRowStateData {

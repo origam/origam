@@ -1,10 +1,7 @@
-import { ITableRow, IGroupRow } from "../types";
-import {
-  selectionCheckboxEmptyCellsWidths,
-  selectionCheckboxEmptyCellsDraws,
-} from "../cells/selectionCheckboxCell";
-import {groupRowContentCellsWidths, groupRowContentCellsDraws, groupRowEmptyCellsWidths} from "../cells/groupCell";
-import { currentRow } from "../renderingValues";
+import {IGroupRow, ITableRow} from "../types";
+import {selectionCheckboxEmptyCellsDraws, selectionCheckboxEmptyCellsWidths,} from "../cells/selectionCheckboxCell";
+import {groupRowContentCellsDraws, groupRowContentCellsWidths, groupRowEmptyCellsWidths} from "../cells/groupCell";
+import {currentRow} from "../renderingValues";
 import {aggregationCellDraws, aggregationColumnsWidths} from "../cells/aggregationCell";
 
 export function groupRowCellsWidths() {

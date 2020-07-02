@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { observer } from "mobx-react-lite";
-import { AccordionContext } from "./AccordionTypes";
+import React, {useContext} from "react";
+import {observer} from "mobx-react-lite";
+import {AccordionContext} from "./AccordionTypes";
 
 export const AccordionHandle: React.FC<{
   id: string;

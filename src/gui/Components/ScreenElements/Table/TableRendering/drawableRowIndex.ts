@@ -1,4 +1,4 @@
-import { rowHeight, viewportBottom, viewportTop } from "./renderingValues";
+import {rowHeight, viewportBottom, viewportTop} from "./renderingValues";
 
 
 export function firstDrawableRowIndex() {

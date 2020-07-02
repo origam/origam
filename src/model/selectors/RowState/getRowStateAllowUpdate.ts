@@ -1,4 +1,4 @@
-import { getRowStateById } from "./getRowStateById";
+import {getRowStateById} from "./getRowStateById";
 
 export function getRowStateAllowUpdate(ctx: any, rowId: string, columnId: string) {
   const rowState = getRowStateById(ctx, rowId);

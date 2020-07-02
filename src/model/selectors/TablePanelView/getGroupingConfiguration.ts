@@ -1,4 +1,4 @@
-import { getTablePanelView } from "./getTablePanelView";
+import {getTablePanelView} from "./getTablePanelView";
 
 export function getGroupingConfiguration(ctx: any) {
   return getTablePanelView(ctx).groupingConfiguration;

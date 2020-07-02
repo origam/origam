@@ -1,19 +1,18 @@
-import { inject, observer, Observer, Provider } from "mobx-react";
+import {inject, observer, Observer, Provider} from "mobx-react";
 import React from "react";
-import { IDataView } from "../../../../model/entities/types/IDataView";
-import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
-import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
-import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
-import { findStrings } from "../../../../xmlInterpreters/screenXml";
+import {IDataView} from "../../../../model/entities/types/IDataView";
+import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
+import {getDataViewPropertyById} from "../../../../model/selectors/DataView/getDataViewPropertyById";
+import {getSelectedRow} from "../../../../model/selectors/DataView/getSelectedRow";
+import {findStrings} from "../../../../xmlInterpreters/screenXml";
 
-import { FormRoot } from "./FormRoot";
-import { FormViewEditor } from "./FormViewEditor";
-import { getRowStates } from "model/selectors/RowState/getRowStates";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { FormField } from "gui02/components/Form/FormField";
-import { FormSection } from "gui02/components/Form/FormSection";
-import { FormLabel } from "gui02/components/Form/FormLabel";
+import {FormRoot} from "./FormRoot";
+import {FormViewEditor} from "./FormViewEditor";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getRowStateRowBgColor} from "model/selectors/RowState/getRowStateRowBgColor";
+import {FormField} from "gui02/components/Form/FormField";
+import {FormSection} from "gui02/components/Form/FormSection";
+import {FormLabel} from "gui02/components/Form/FormLabel";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };

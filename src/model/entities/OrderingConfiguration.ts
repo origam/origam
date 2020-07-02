@@ -1,13 +1,14 @@
-import { action, computed, observable, flow } from "mobx";
+import {action, computed, flow, observable} from "mobx";
 import {
   IOrderByColumnSetting,
-  IOrderByDirection, IOrdering,
+  IOrderByDirection,
+  IOrdering,
   IOrderingConfiguration
 } from "./types/IOrderingConfiguration";
 import _ from "lodash";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
 import {getProperties} from "../selectors/DataView/getProperties";
 
 

@@ -1,8 +1,5 @@
-import { observable, computed, action, flow } from "mobx";
-import { IGroupingConfiguration } from "./types/IGroupingConfiguration";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getGrouper } from "model/selectors/DataView/getGrouper";
+import {action, computed, observable} from "mobx";
+import {IGroupingConfiguration} from "./types/IGroupingConfiguration";
 
 export class GroupingConfiguration implements IGroupingConfiguration {
   @observable groupingIndices: Map<string, number> = new Map();

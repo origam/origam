@@ -1,7 +1,7 @@
 import React from "react";
-import { ModalWindowOverlay, ModalWindow, CloseButton } from "../Dialog/Dialog";
-import { observer } from "mobx-react";
-import { getDialogStack } from "../../../model/selectors/DialogStack/getDialogStack";
+import {CloseButton, ModalWindow} from "../Dialog/Dialog";
+import {observer} from "mobx-react";
+import {getDialogStack} from "../../../model/selectors/DialogStack/getDialogStack";
 
 @observer
 export class CannotChangeRowDialog extends React.Component<{

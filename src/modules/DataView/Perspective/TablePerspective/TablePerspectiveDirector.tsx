@@ -1,16 +1,16 @@
 import React from "react";
-import { action, flow } from "mobx";
-import { IDataViewToolbarUI, IDataViewBodyUI } from "modules/DataView/DataViewUI";
-import { TypeSymbol } from "dic/Container";
-import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
-import { IIId, getIdent } from "utils/common";
-import { DataViewHeaderAction } from "gui02/components/DataViewHeader/DataViewHeaderAction";
-import { Icon } from "gui02/components/Icon/Icon";
+import {action, flow} from "mobx";
+import {IDataViewBodyUI, IDataViewToolbarUI} from "modules/DataView/DataViewUI";
+import {TypeSymbol} from "dic/Container";
+import {SectionViewSwitchers} from "modules/DataView/DataViewTypes";
+import {getIdent, IIId} from "utils/common";
+import {DataViewHeaderAction} from "gui02/components/DataViewHeader/DataViewHeaderAction";
+import {Icon} from "gui02/components/Icon/Icon";
 
-import { Observer } from "mobx-react";
-import { ITablePerspective } from "./TablePerspective";
-import { IPerspective, IPerspectiveContrib } from "../Perspective";
-import { TableView } from "gui/Workbench/ScreenArea/TableView/TableView";
+import {Observer} from "mobx-react";
+import {ITablePerspective} from "./TablePerspective";
+import {IPerspective} from "../Perspective";
+import {TableView} from "gui/Workbench/ScreenArea/TableView/TableView";
 
 export class TablePerspectiveDirector implements IIId {
   $iid = getIdent();

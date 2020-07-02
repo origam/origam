@@ -1,27 +1,23 @@
-import { action, computed, observable } from "mobx";
-import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
-import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
-import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
-import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
-import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { getDataTable } from "../../selectors/DataView/getDataTable";
-import { getDataView } from "../../selectors/DataView/getDataView";
-import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
-import { IFilterConfiguration } from "../types/IFilterConfiguration";
-import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
-import { IProperty } from "../types/IProperty";
-import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import {
-  ITableCanvas,
-  ITablePanelView,
-  ITablePanelViewData
-} from "./types/ITablePanelView";
-import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import {action, computed, observable} from "mobx";
+import {onFieldChangeG} from "model/actions-ui/DataView/TableView/onFieldChange";
+import {getSelectedRowIndex} from "model/selectors/DataView/getSelectedRowIndex";
+import {getCellValue} from "model/selectors/TablePanelView/getCellValue";
+import {getSelectedColumnId} from "model/selectors/TablePanelView/getSelectedColumnId";
+import {getSelectedColumnIndex} from "model/selectors/TablePanelView/getSelectedColumnIndex";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
+import {getDataTable} from "../../selectors/DataView/getDataTable";
+import {getDataView} from "../../selectors/DataView/getDataView";
+import {getDataViewPropertyById} from "../../selectors/DataView/getDataViewPropertyById";
+import {IFilterConfiguration} from "../types/IFilterConfiguration";
+import {IOrderingConfiguration} from "../types/IOrderingConfiguration";
+import {IProperty} from "../types/IProperty";
+import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
+import {ITableCanvas, ITablePanelView, ITablePanelViewData} from "./types/ITablePanelView";
+import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 import selectors from "model/selectors-tree";
-import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
+import {IGroupingConfiguration} from "../types/IGroupingConfiguration";
 import {IAggregationInfo} from "../types/IAggregationInfo";
 import {AggregationType} from "../types/AggregationType";
 import {ICellRectangle} from "./types/ICellRectangle";

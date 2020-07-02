@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useContext, createContext, useMemo, useState } from "react";
+import {createContext, PropsWithChildren, useContext, useMemo, useState} from "react";
 import _ from "lodash";
 
 export class ResponsiveBlock {
@@ -60,7 +60,7 @@ export class ResponsiveBlock {
       if (newWidth !== this.containerWidth) shouldRecompute = true;
       this.containerWidth = newWidth;
     }
-    for(let [key, chRec] of this.keyToChildRec.entries()) {
+    for(let [chRec] of this.keyToChildRec.entries()) {
       if(chRec.elmChild) {
         const newWidth = chRec.elmChild.offsetWidth; /*e.target.getBoundingClientRect().width;*/
         if (chRec.width !== newWidth) {

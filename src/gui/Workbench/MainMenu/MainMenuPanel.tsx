@@ -1,12 +1,11 @@
-import React, { useContext } from "react";
-import { observer } from "mobx-react-lite";
-import { MainMenu } from "./MainMenu";
-import { MobXProviderContext } from "mobx-react";
-import { IApplication } from "model/entities/types/IApplication";
-import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
-import { getMainMenu } from "../../../model/selectors/MainMenu/getMainMenu";
-import { getWorkbench } from "model/selectors/getWorkbench";
-import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
+import React, {useContext} from "react";
+import {observer} from "mobx-react-lite";
+import {MainMenu} from "./MainMenu";
+import {MobXProviderContext} from "mobx-react";
+import {IApplication} from "model/entities/types/IApplication";
+import {getIsMainMenuLoading} from "model/selectors/MainMenu/getIsMainMenuLoading";
+import {getMainMenu} from "../../../model/selectors/MainMenu/getMainMenu";
+import {getWorkbenchLifecycle} from "../../../model/selectors/getWorkbenchLifecycle";
 
 export const MainMenuPanel: React.FC = observer(props => {
   const application = useContext(MobXProviderContext)

@@ -1,8 +1,8 @@
-import { getApi } from "model/selectors/getApi";
-import { getMenuItemId } from "../selectors/getMenuItemId";
-import { getDataStructureEntityId } from "../selectors/DataView/getDataStructureEntityId";
-import { getColumnNamesToLoad } from "../selectors/DataView/getColumnNamesToLoad";
-import { getDataView } from "model/selectors/DataView/getDataView";
+import {getApi} from "model/selectors/getApi";
+import {getMenuItemId} from "../selectors/getMenuItemId";
+import {getDataStructureEntityId} from "../selectors/DataView/getDataStructureEntityId";
+import {getColumnNamesToLoad} from "../selectors/DataView/getColumnNamesToLoad";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 
 export interface IDataCacheContent {

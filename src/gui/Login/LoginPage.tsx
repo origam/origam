@@ -1,8 +1,8 @@
 import React from "react";
 import S from "./LoginPage.module.css";
-import { action } from "mobx";
-import { inject, observer } from "mobx-react";
-import { getApplicationLifecycle } from "../../model/selectors/getApplicationLifecycle";
+import {action} from "mobx";
+import {inject, observer} from "mobx-react";
+import {getApplicationLifecycle} from "../../model/selectors/getApplicationLifecycle";
 
 @inject(({ application }) => {
   const al = getApplicationLifecycle(application);

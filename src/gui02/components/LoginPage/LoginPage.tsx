@@ -1,8 +1,7 @@
 import React from "react";
 import S from "./LoginPage.module.scss";
-import { action } from "mobx";
-import { inject, observer } from "mobx-react";
-import { getApplicationLifecycle } from "model/selectors/getApplicationLifecycle";
+import {action} from "mobx";
+import {observer} from "mobx-react";
 
 @observer
 export class LoginPage extends React.Component<{

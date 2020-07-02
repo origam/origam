@@ -1,7 +1,8 @@
-import { IAction } from "model/entities/types/IAction";
-import { IDataView } from "./IDataView";
+import {IAction} from "model/entities/types/IAction";
+import {IDataView} from "./IDataView";
 import {IAggregationInfo} from "./IAggregationInfo";
 import {IOrdering} from "./IOrderingConfiguration";
+
 export interface IFormScreenLifecycleData {}
 
 export interface IFormScreenLifecycle extends IFormScreenLifecycleData {

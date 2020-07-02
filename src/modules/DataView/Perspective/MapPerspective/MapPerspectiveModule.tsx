@@ -1,6 +1,6 @@
-import { Container } from "dic/Container";
-import { IMapPerspectiveDirector, MapPerspectiveDirector } from "./MapPerspectiveDirector";
-import { IMapPerspective, MapPerspective } from "./MapPerspective";
+import {Container} from "dic/Container";
+import {IMapPerspectiveDirector, MapPerspectiveDirector} from "./MapPerspectiveDirector";
+import {IMapPerspective, MapPerspective} from "./MapPerspective";
 
 export const SCOPE_MapPerspective = "MapPerspective";
 

@@ -1,13 +1,12 @@
-import { MobXProviderContext } from "mobx-react";
-import { observer } from "mobx-react-lite";
-import { IApplication } from "model/entities/types/IApplication";
-import React, { useContext, useEffect } from "react";
-import { ISearchResultItem } from "../../model/entities/types/IClientFulltextSearch";
-import { getClientFulltextSearch } from "../../model/selectors/getClientFulltextSearch";
-import { IMenuItemIcon } from "./MainMenu/MainMenu";
+import {MobXProviderContext} from "mobx-react";
+import {observer} from "mobx-react-lite";
+import {IApplication} from "model/entities/types/IApplication";
+import React, {useContext} from "react";
+import {ISearchResultItem} from "../../model/entities/types/IClientFulltextSearch";
+import {getClientFulltextSearch} from "../../model/selectors/getClientFulltextSearch";
+import {IMenuItemIcon} from "./MainMenu/MainMenu";
 import S from "./SearchResults.module.css";
-import { getApplicationLifecycle } from "model/selectors/getApplicationLifecycle";
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
+import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
 
 export const SearchResultItem: React.FC<{
   icon: React.ReactNode;

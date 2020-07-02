@@ -214,7 +214,7 @@ class RowChunk {
   }
 
   trySubstitute(row: any[]) {
-    const index = this.rows.findIndex(row => this.rowIdGetter(row) === this.rowIdGetter(row)
+    const index = this.rows.findIndex(existingRow => this.rowIdGetter(existingRow) === this.rowIdGetter(row)
     );
     if (index > -1) {
       this.rows.splice(index, 1, row);

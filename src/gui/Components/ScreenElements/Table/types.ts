@@ -1,6 +1,6 @@
-import { PubSub } from "../../../../utils/events";
-import { IHeaderContainer } from "gui/Workbench/ScreenArea/TableView/TableView";
-import { ITableRow} from "./TableRendering/types";
+import {PubSub} from "../../../../utils/events";
+import {IHeaderContainer} from "gui/Workbench/ScreenArea/TableView/TableView";
+import {ITableRow} from "./TableRendering/types";
 import {BoundingRect} from "react-measure";
 import {ITablePanelView} from "../../../../model/entities/TablePanelView/types/ITablePanelView";
 

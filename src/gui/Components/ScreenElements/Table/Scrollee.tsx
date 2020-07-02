@@ -1,6 +1,6 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import * as React from "react";
-import { IScrolleeProps } from "./types";
+import {IScrolleeProps} from "./types";
 import S from "./Scrollee.module.css";
 
 /*

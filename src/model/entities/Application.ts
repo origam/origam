@@ -1,10 +1,10 @@
-import { handleError } from "model/actions/handleError";
-import { IApi } from "./types/IApi";
-import { IApplication, IApplicationData } from "./types/IApplication";
-import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
-import { IDialogStack } from "./types/IDialogStack";
-import { IErrorDialogController } from "./types/IErrorDialog";
-import { IWorkbench } from "./types/IWorkbench";
+import {handleError} from "model/actions/handleError";
+import {IApi} from "./types/IApi";
+import {IApplication, IApplicationData} from "./types/IApplication";
+import {IApplicationLifecycle} from "./types/IApplicationLifecycle";
+import {IDialogStack} from "./types/IDialogStack";
+import {IErrorDialogController} from "./types/IErrorDialog";
+import {IWorkbench} from "./types/IWorkbench";
 
 export class Application implements IApplication {
   

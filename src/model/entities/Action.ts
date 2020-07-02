@@ -1,9 +1,9 @@
-import { computed } from "mobx";
-import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getRowStateIsDisableAction } from "model/selectors/RowState/getRowStateIsDisabledAction";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { IAction, IActionData, IActionMode, IActionPlacement, IActionType } from "./types/IAction";
-import { IActionParameter } from "./types/IActionParameter";
+import {computed} from "mobx";
+import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
+import {getRowStateIsDisableAction} from "model/selectors/RowState/getRowStateIsDisabledAction";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {IAction, IActionData, IActionMode, IActionPlacement, IActionType} from "./types/IAction";
+import {IActionParameter} from "./types/IActionParameter";
 
 
 export class Action implements IAction {

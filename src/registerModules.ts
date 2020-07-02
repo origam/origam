@@ -1,4 +1,4 @@
-import { Container } from "dic/Container";
+import {Container} from "dic/Container";
 import * as PerspectiveModule from "modules/DataView/Perspective/PerspectiveModule";
 import * as DataViewModule from "modules/DataView/DataViewModule";
 

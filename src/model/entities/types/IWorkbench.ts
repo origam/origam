@@ -1,9 +1,9 @@
-import {  IMainMenu, IMainMenuEnvelope } from "./IMainMenu";
-import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
-import { IClientFulltextSearch } from "./IClientFulltextSearch";
-import { IOpenedScreens } from "./IOpenedScreens";
-import { IWorkQueues } from "./IWorkQueues";
-import { IRecordInfo } from "./IRecordInfo";
+import {IMainMenuEnvelope} from "./IMainMenu";
+import {IWorkbenchLifecycle} from "./IWorkbenchLifecycle";
+import {IClientFulltextSearch} from "./IClientFulltextSearch";
+import {IOpenedScreens} from "./IOpenedScreens";
+import {IWorkQueues} from "./IWorkQueues";
+import {IRecordInfo} from "./IRecordInfo";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;

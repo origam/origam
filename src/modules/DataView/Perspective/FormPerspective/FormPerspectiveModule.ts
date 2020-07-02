@@ -1,6 +1,6 @@
-import { Container } from "dic/Container";
-import { IFormPerspectiveDirector, FormPerspectiveDirector } from "./FormPerspectiveDirector";
-import { IFormPerspective, FormPerspective } from "./FormPerspective";
+import {Container} from "dic/Container";
+import {FormPerspectiveDirector, IFormPerspectiveDirector} from "./FormPerspectiveDirector";
+import {FormPerspective, IFormPerspective} from "./FormPerspective";
 
 export const SCOPE_FormPerspective = "FormPerspective";
 

@@ -1,4 +1,5 @@
-import { IMenuItemIcon } from '../../../gui/Workbench/MainMenu/MainMenu';
+import {IMenuItemIcon} from '../../../gui/Workbench/MainMenu/MainMenu';
+
 export interface IClientFulltextSearch {
   foundItems: ISearchResultSection[];
   onSearchFieldChange(event: any): void;

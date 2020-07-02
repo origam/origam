@@ -1,6 +1,6 @@
-import { selectNextRow } from "model/actions/DataView/selectNextRow";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {selectNextRow} from "model/actions/DataView/selectNextRow";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onNextRowClick(ctx: any) {
   return flow(function* onNextRowClick(event: any) {

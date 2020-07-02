@@ -1,6 +1,5 @@
 import React from "react";
 import S from "./UserMenuDropdown.module.scss";
-import { DropdownItem } from "../Dropdown/DropdownItem";
 
 export const UserMenuBlock: React.FC<{
   userName: string;

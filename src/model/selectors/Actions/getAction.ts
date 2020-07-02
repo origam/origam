@@ -1,4 +1,4 @@
-import { isIAction } from "model/entities/types/IAction";
+import {isIAction} from "model/entities/types/IAction";
 
 export function getAction(ctx: any) {
   let cn = ctx;

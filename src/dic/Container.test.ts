@@ -1,15 +1,14 @@
 import {
   Container,
-  ILifetime,
-  TypeSymbol,
-  pushCurrentContainer,
-  popCurrentContainer,
   Func,
   getCreatorStack,
   getScopePath,
-  ITypeSymbol,
+  ILifetime,
   IRegistrator,
-  InjectContainer,
+  ITypeSymbol,
+  popCurrentContainer,
+  pushCurrentContainer,
+  TypeSymbol,
 } from "./Container";
 
 interface IDog {

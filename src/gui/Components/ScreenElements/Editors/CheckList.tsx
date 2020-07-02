@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import S from "./CheckList.module.scss";
-import { observer, MobXProviderContext } from "mobx-react";
-import { action, flow, observable, computed } from "mobx";
-import { IApi } from "model/entities/types/IApi";
-import { lookup } from "dns";
-import { getApi } from "model/selectors/getApi";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { getSessionId } from "model/selectors/getSessionId";
+import {MobXProviderContext, observer} from "mobx-react";
+import {action, computed, flow, observable} from "mobx";
+import {IApi} from "model/entities/types/IApi";
+import {getApi} from "model/selectors/getApi";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getMenuItemId} from "model/selectors/getMenuItemId";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {getSessionId} from "model/selectors/getSessionId";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -30,7 +29,6 @@ export interface IRawCheckListProps {
 }
 
 export class CheckListControler {
-  constructor() {}
 
   @observable lookupList: string[][] = [];
 

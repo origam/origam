@@ -1,4 +1,4 @@
-import { getTablePanelView } from "./getTablePanelView";
+import {getTablePanelView} from "./getTablePanelView";
 
 export function getTableViewPropertyById(ctx: any, id: string) {
   const property = getTablePanelView(ctx).propertyMap.get(id);

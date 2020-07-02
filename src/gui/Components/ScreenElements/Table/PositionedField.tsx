@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { IPositionedFieldProps } from "./types";
-import { observer } from "mobx-react";
+import {IPositionedFieldProps} from "./types";
+import {observer} from "mobx-react";
 import S from "./PositionedField.module.css";
 import cx from "classnames";
 

@@ -1,5 +1,5 @@
-import { getOpenedScreen } from "../getOpenedScreen";
-import { getGridId } from "./getGridId";
+import {getOpenedScreen} from "../getOpenedScreen";
+import {getGridId} from "./getGridId";
 
 export function getDataViewByGridId(ctx: any, gridId: string) {
   return getOpenedScreen(ctx).content.formScreen!.dataViews.find(

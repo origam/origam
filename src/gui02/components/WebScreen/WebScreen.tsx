@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import S from "./WebScreen.module.scss";
 import cx from "classnames";
 

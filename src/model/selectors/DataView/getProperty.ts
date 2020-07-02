@@ -1,4 +1,4 @@
-import { IProperty, isIProperty } from "../../entities/types/IProperty";
+import {IProperty, isIProperty} from "../../entities/types/IProperty";
 
 export function getProperty(ctx: any): IProperty {
   let cn = ctx;

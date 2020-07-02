@@ -1,7 +1,7 @@
-import { IProperty } from "./IProperty";
-import { IAdditionalRowData } from "./IAdditionalRecordData";
-import { IDataSourceField } from "./IDataSourceField";
-import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {IProperty} from "./IProperty";
+import {IAdditionalRowData} from "./IAdditionalRecordData";
+import {IDataSourceField} from "./IDataSourceField";
+import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import {IFormScreenLifecycle02} from "./IFormScreenLifecycle";
 import {IOrderingConfiguration} from "./IOrderingConfiguration";
 import {IFilterConfiguration} from "./IFilterConfiguration";

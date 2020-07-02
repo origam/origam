@@ -1,12 +1,12 @@
 import React from "react";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { MobXProviderContext, observer } from "mobx-react";
-import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
-import { WorkQueuesItem } from "gui02/components/WorkQueues/WorkQueuesItem";
-import { computed } from "mobx";
-import { Icon } from "gui02/components/Icon/Icon";
-import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
-import { getActiveScreen } from "model/selectors/getActiveScreen";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {MobXProviderContext, observer} from "mobx-react";
+import {getWorkQueuesItems} from "model/selectors/WorkQueues/getWorkQueuesItems";
+import {WorkQueuesItem} from "gui02/components/WorkQueues/WorkQueuesItem";
+import {computed} from "mobx";
+import {Icon} from "gui02/components/Icon/Icon";
+import {onWorkQueuesListItemClick} from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
+import {getActiveScreen} from "model/selectors/getActiveScreen";
 
 @observer
 export class CWorkQueues extends React.Component {

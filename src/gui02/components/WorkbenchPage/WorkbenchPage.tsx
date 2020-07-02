@@ -1,7 +1,7 @@
 import React from "react";
 import S from "./WorkbenchPage.module.scss";
 import SSplitter from "styles/CustomSplitter.module.scss";
-import { Splitter } from "../Splitter/Splitter";
+import {Splitter} from "../Splitter/Splitter";
 
 export const WorkbenchPage: React.FC<{
   sidebar: React.ReactNode;

@@ -1,10 +1,9 @@
-import React from "react";
-import { IInfoSubsection } from "./types";
-import { SidebarRecordInfo } from "gui02/components/SidebarInfoSection/SidebarRecordInfo";
-import { SidebarRecordAudit } from "gui02/components/SidebarInfoSection/SidebarRecordAudit";
-import { useContext } from "react";
-import { MobXProviderContext, observer } from "mobx-react";
-import { getRecordInfo } from "model/selectors/RecordInfo/getRecordInfo";
+import React, {useContext} from "react";
+import {IInfoSubsection} from "./types";
+import {SidebarRecordInfo} from "gui02/components/SidebarInfoSection/SidebarRecordInfo";
+import {SidebarRecordAudit} from "gui02/components/SidebarInfoSection/SidebarRecordAudit";
+import {MobXProviderContext, observer} from "mobx-react";
+import {getRecordInfo} from "model/selectors/RecordInfo/getRecordInfo";
 
 export const CSidebarInfoSection: React.FC<{
   activeSubsection: IInfoSubsection;

@@ -1,22 +1,22 @@
-import { EmbeddedWebpage } from "gui02/components/EmbeddedWebpage/EmbeddedWebpage";
-import { Splitter } from "gui02/components/Splitter/Splitter";
-import { CScreenSectionTabbedView } from "gui02/connections/CScreenSectionTabbedView";
-import { action, computed, observable } from "mobx";
-import { MobXProviderContext, observer, Observer } from "mobx-react";
-import { onSplitterPositionChangeFinished } from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
-import { IFormScreen } from "model/entities/types/IFormScreen";
+import {EmbeddedWebpage} from "gui02/components/EmbeddedWebpage/EmbeddedWebpage";
+import {Splitter} from "gui02/components/Splitter/Splitter";
+import {CScreenSectionTabbedView} from "gui02/connections/CScreenSectionTabbedView";
+import {action, computed, observable} from "mobx";
+import {MobXProviderContext, observer, Observer} from "mobx-react";
+import {onSplitterPositionChangeFinished} from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
+import {IFormScreen} from "model/entities/types/IFormScreen";
 import React from "react";
 import SSplitter from "styles/CustomSplitter.module.scss";
-import { findBoxes, findUIChildren, findUIRoot } from "../../../xmlInterpreters/screenXml";
-import { Box } from "../../Components/ScreenElements/Box";
-import { DataView } from "../../Components/ScreenElements/DataView";
-import { Label } from "../../Components/ScreenElements/Label";
-import { TabbedPanel, TabBody, TabHandle } from "../../Components/ScreenElements/TabbedPanel";
-import { VBox } from "../../Components/ScreenElements/VBox";
-import { WorkflowFinishedPanel } from "gui02/components/WorkflowFinishedPanel/WorkflowFinishedPanel";
+import {findBoxes, findUIChildren, findUIRoot} from "../../../xmlInterpreters/screenXml";
+import {Box} from "../../Components/ScreenElements/Box";
+import {DataView} from "../../Components/ScreenElements/DataView";
+import {Label} from "../../Components/ScreenElements/Label";
+import {TabbedPanel, TabBody, TabHandle} from "../../Components/ScreenElements/TabbedPanel";
+import {VBox} from "../../Components/ScreenElements/VBox";
+import {WorkflowFinishedPanel} from "gui02/components/WorkflowFinishedPanel/WorkflowFinishedPanel";
 
 import actions from "model/actions-ui-tree";
-import { HBox } from "gui/Components/ScreenElements/HBox";
+import {HBox} from "gui/Components/ScreenElements/HBox";
 
 @observer
 class TabbedPanelHelper extends React.Component<{

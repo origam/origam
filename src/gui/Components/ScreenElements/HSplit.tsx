@@ -1,6 +1,5 @@
 import React from "react";
-import S from "./HSplit.module.css";
-import { SplitterPanel, Splitter } from "../Splitter/Splitter";
+import {Splitter, SplitterPanel} from "../Splitter/Splitter";
 
 export class HSplitPanel extends React.Component<{ id: any }> {
   render() {

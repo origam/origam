@@ -1,14 +1,11 @@
-import { IPropertyData, IProperty, IDockType } from "./types/IProperty";
-import { ICaptionPosition } from "./types/ICaptionPosition";
-import { IDropDownColumn } from "./types/IDropDownColumn";
-import { IPropertyColumn } from "./types/IPropertyColumn";
-import { observable, computed, action } from "mobx";
+import {IDockType, IProperty, IPropertyData} from "./types/IProperty";
+import {ICaptionPosition} from "./types/ICaptionPosition";
+import {IPropertyColumn} from "./types/IPropertyColumn";
+import {action, computed, observable} from "mobx";
 
-import { ILookup } from "./types/ILookup";
-import { getDataSourceFieldIndexByName } from "../selectors/DataSources/getDataSourceFieldIndexByName";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { IDataSource } from "./types/IDataSource";
-import { IDataSourceField } from "./types/IDataSourceField";
+import {ILookup} from "./types/ILookup";
+import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
+import {IDataSourceField} from "./types/IDataSourceField";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;

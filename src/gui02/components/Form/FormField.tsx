@@ -1,13 +1,13 @@
-import { computed } from "mobx";
-import { inject, observer } from "mobx-react";
-import { IDockType } from "model/entities/types/IProperty";
-import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import {computed} from "mobx";
+import {inject, observer} from "mobx-react";
+import {IDockType} from "model/entities/types/IProperty";
+import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
 import S from "./FormField.module.scss";
-import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
-import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
-import { getRowStateHasItem } from "model/selectors/RowState/getRowStateHasItem";
+import {getRowStateMayCauseFlicker} from "model/selectors/RowState/getRowStateMayCauseFlicker";
+import {getRowStateDynamicLabel} from "model/selectors/RowState/getRowStateNameOverride";
+import {getRowStateHasItem} from "model/selectors/RowState/getRowStateHasItem";
 
 export enum ICaptionPosition {
   Left = "Left",

@@ -1,12 +1,11 @@
-import { ValueBox } from "./common/ValueBox";
-import { ITableRow, IClickSubsItem } from "./types";
-import { Memoized } from "./common/Memoized";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { getTableViewPropertyByIdx } from "model/selectors/TablePanelView/getTableViewPropertyByIdx";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { IProperty } from "model/entities/types/IProperty";
-import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import { getDataView } from "model/selectors/DataView/getDataView";
+import {ValueBox} from "./common/ValueBox";
+import {IClickSubsItem, ITableRow} from "./types";
+import {Memoized} from "./common/Memoized";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {IProperty} from "model/entities/types/IProperty";
+import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 
 export const scRenderTable: Array<() => void> = [];

@@ -1,6 +1,6 @@
-import { observable, action, computed } from "mobx";
-import { IDialogStack } from "./types/IDialogStack";
-import { IDialogDimensions } from "../../gui/Components/Dialog/types";
+import {action, computed, observable} from "mobx";
+import {IDialogStack} from "./types/IDialogStack";
+import {IDialogDimensions} from "../../gui/Components/Dialog/types";
 
 let nextId = 0;
 

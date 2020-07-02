@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import Measure from "react-measure";
-import { Observer, observer, Provider, inject } from "mobx-react";
-import { observable, action, reaction } from "mobx";
+import {Observer, observer} from "mobx-react";
+import {action, observable} from "mobx";
 import * as _ from "lodash";
 import S from "./Splitter.module.css";
 
@@ -58,8 +58,6 @@ export class Splitter extends React.Component<ISplitterProps> {
       this.model = props.model;
     }
   }
-
-  private isFirstResize = true;
 
   private model = new SplitterModel();
 

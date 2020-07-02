@@ -1,5 +1,5 @@
-import { TypeSymbol } from "dic/Container";
-import { ContribArray } from "utils/common";
+import {TypeSymbol} from "dic/Container";
+import {ContribArray} from "utils/common";
 import bind from "bind-decorator";
 
 export interface IPerspectiveContrib {

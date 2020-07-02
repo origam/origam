@@ -1,5 +1,5 @@
-import { TypeSymbol } from "dic/Container";
-import { IPanelViewType } from "model/entities/types/IPanelViewType";
+import {TypeSymbol} from "dic/Container";
+import {IPanelViewType} from "model/entities/types/IPanelViewType";
 
 export class ViewConfiguration {
   constructor(

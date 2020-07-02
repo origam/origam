@@ -7,17 +7,14 @@ import {
   TagInputPlus
 } from "gui02/components/TagInput/TagInput";
 import _ from "lodash";
-import { action, computed, flow, observable, runInAction, toJS } from "mobx";
-import { observer } from "mobx-react";
-import { CancellablePromise } from "mobx/lib/api/flow";
+import {action, computed, flow, observable, runInAction, toJS} from "mobx";
+import {observer} from "mobx-react";
+import {CancellablePromise} from "mobx/lib/api/flow";
 import React from "react";
-import { Grid, GridCellProps } from "react-virtualized";
+import {Grid, GridCellProps} from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import { Dropdowner } from "../../../../Dropdowner/Dropdowner";
-import {
-  FilterSettingsComboBox,
-  FilterSettingsComboBoxItem
-} from "../FilterSettingsComboBox";
+import {Dropdowner} from "../../../../Dropdowner/Dropdowner";
+import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
 import S from "./FilterSettingsLookup.module.scss";
 import produce from "immer";
 

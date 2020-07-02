@@ -1,5 +1,5 @@
 import React from "react";
-import L, { featureGroup } from "leaflet";
+import L from "leaflet";
 import "leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";

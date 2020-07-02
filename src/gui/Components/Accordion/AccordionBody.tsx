@@ -1,6 +1,6 @@
-import React, { useContext, useLayoutEffect, useImperativeHandle } from 'react';
-import { observer, useLocalStore } from 'mobx-react-lite';
-import { AccordionContext } from './AccordionTypes';
+import React, {useContext, useLayoutEffect} from 'react';
+import {observer, useLocalStore} from 'mobx-react-lite';
+import {AccordionContext} from './AccordionTypes';
 
 export const AccordionBody: React.FC<{
   id: string;

@@ -1,6 +1,6 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import path from "path";
-import { createProxyMiddleware } from "http-proxy-middleware";
+import {createProxyMiddleware} from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
 
 const app = express();

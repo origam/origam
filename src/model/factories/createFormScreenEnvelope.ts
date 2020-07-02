@@ -1,6 +1,6 @@
-import { FormScreenLifecycle02 } from "../entities/FormScreenLifecycle/FormScreenLifecycle";
-import { FormScreenEnvelope } from "model/entities/FormScreen";
-import { IRefreshOnReturnType } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
+import {FormScreenLifecycle02} from "../entities/FormScreenLifecycle/FormScreenLifecycle";
+import {FormScreenEnvelope} from "model/entities/FormScreen";
+import {IRefreshOnReturnType} from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 
 export function createFormScreenEnvelope(
   preloadedSessionId?: string,

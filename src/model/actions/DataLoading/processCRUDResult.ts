@@ -1,12 +1,10 @@
-import { getDataViewsByEntity } from "../../selectors/DataView/getDataViewsByEntity";
-import { runInAction } from "mobx";
+import {getDataViewsByEntity} from "../../selectors/DataView/getDataViewsByEntity";
 import _ from "lodash";
-import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
-import { putRowStateValue } from "../RowStates/putRowStateValue";
-import { reloadScreen } from "../FormScreen/reloadScreen";
-import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
-import { getIsBindingParent } from "model/selectors/DataView/getIsBindingParent";
-import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
+import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
+import {putRowStateValue} from "../RowStates/putRowStateValue";
+import {reloadScreen} from "../FormScreen/reloadScreen";
+import {getDataViewList} from "model/selectors/FormScreen/getDataViewList";
+import {getIsBindingRoot} from "model/selectors/DataView/getIsBindingRoot";
 
 export enum IResponseOperation {
   DeleteAllData = -2,

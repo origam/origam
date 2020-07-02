@@ -1,7 +1,7 @@
-import { action } from "mobx";
-import { observer } from "mobx-react";
+import {action} from "mobx";
+import {observer} from "mobx-react";
 import * as React from "react";
-import { Tooltip } from "react-tippy";
+import {Tooltip} from "react-tippy";
 import S from "./TextEditor.module.scss";
 
 @observer

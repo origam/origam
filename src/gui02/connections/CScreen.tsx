@@ -1,13 +1,12 @@
-import { FormScreenBuilder } from "gui/Workbench/ScreenArea/FormScreenBuilder";
-import { observer, Provider } from "mobx-react";
-import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
-import React, { useState, useEffect } from "react";
-import { Screen } from "../components/Screen/Screen";
-import { ScreenContainer } from "gui02/components/Screen/ScreenContainer";
-import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
-import { WebScreen } from "gui02/components/WebScreen/WebScreen";
-import { IWebScreen } from "model/entities/types/IWebScreen";
-import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
+import {FormScreenBuilder} from "gui/Workbench/ScreenArea/FormScreenBuilder";
+import {observer, Provider} from "mobx-react";
+import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
+import React, {useEffect, useState} from "react";
+import {Screen} from "../components/Screen/Screen";
+import {CtxPanelVisibility} from "gui02/contexts/GUIContexts";
+import {WebScreen} from "gui02/components/WebScreen/WebScreen";
+import {IWebScreen} from "model/entities/types/IWebScreen";
+import {getIsTopmostNonDialogScreen} from "model/selectors/getIsTopmostNonDialogScreen";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const { openedScreen } = props;

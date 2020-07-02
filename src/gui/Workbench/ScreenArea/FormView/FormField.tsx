@@ -1,8 +1,8 @@
 import S from "./FormField.module.css";
 import React from "react";
-import { inject, observer } from "mobx-react";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import {inject, observer} from "mobx-react";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
 
 export enum ICaptionPosition {
   Left = "Left",

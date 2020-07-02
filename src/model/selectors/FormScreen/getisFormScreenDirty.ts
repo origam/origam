@@ -1,5 +1,4 @@
-import { getFormScreen } from "./getFormScreen";
-import { getOpenedScreen } from "../getOpenedScreen";
+import {getOpenedScreen} from "../getOpenedScreen";
 
 export function getIsFormScreenDirty(ctx: any) {
   const openedScreen = getOpenedScreen(ctx);

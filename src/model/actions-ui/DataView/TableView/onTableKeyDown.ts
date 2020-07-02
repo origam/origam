@@ -1,10 +1,10 @@
-import { selectPrevRow } from "../../../actions/DataView/selectPrevRow";
-import { selectNextRow } from "../../../actions/DataView/selectNextRow";
-import { selectPrevColumn } from "../../../actions/DataView/TableView/selectPrevColumn";
-import { selectNextColumn } from "../../../actions/DataView/TableView/selectNextColumn";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {selectPrevRow} from "../../../actions/DataView/selectPrevRow";
+import {selectNextRow} from "../../../actions/DataView/selectNextRow";
+import {selectPrevColumn} from "../../../actions/DataView/TableView/selectPrevColumn";
+import {selectNextColumn} from "../../../actions/DataView/TableView/selectNextColumn";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onTableKeyDown(ctx: any) {
   return flow(function* onTableKeyDown(event: any) {

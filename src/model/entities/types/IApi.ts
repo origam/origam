@@ -1,5 +1,4 @@
-import { IAggregationInfo } from "./IAggregationInfo";
-import Axios, { AxiosPromise } from "axios";
+import {IAggregationInfo} from "./IAggregationInfo";
 import {IOrdering} from "./IOrderingConfiguration";
 
 export interface IApi {

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { IHeaderRowProps } from "./types";
-import { observer } from "mobx-react";
+import {IHeaderRowProps} from "./types";
+import {observer} from "mobx-react";
 import S from "./HeaderRow.module.css";
 
 @observer

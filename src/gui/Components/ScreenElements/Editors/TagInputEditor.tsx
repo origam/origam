@@ -1,18 +1,16 @@
 import React from "react";
-import { Tooltip } from "react-tippy";
+import {Tooltip} from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
 import S from "./TagInputEditor.module.css";
 
-import { TagInput, TagInputItem } from "gui/Components/TagInput/TagInput";
-import { observer } from "mobx-react";
-import { inject } from "mobx-react";
-import { IProperty } from "model/entities/types/IProperty";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
+import {TagInput, TagInputItem} from "gui/Components/TagInput/TagInput";
+import {inject, observer} from "mobx-react";
+import {IProperty} from "model/entities/types/IProperty";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
-  const lookup = property.lookup!;
   return {
     textualValue: dataTable.resolveCellText(property, value)
   };

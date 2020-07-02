@@ -1,11 +1,7 @@
-import {
-  IOpenedScreen,
-  IOpenedScreenData,
-  IDialogInfo
-} from "./types/IOpenedScreen";
-import { observable, action, computed } from "mobx";
-import { IFormScreen, IFormScreenEnvelope } from "./types/IFormScreen";
-import { IMainMenuItemType } from "./types/IMainMenu";
+import {IDialogInfo, IOpenedScreen, IOpenedScreenData} from "./types/IOpenedScreen";
+import {action, computed, observable} from "mobx";
+import {IFormScreenEnvelope} from "./types/IFormScreen";
+import {IMainMenuItemType} from "./types/IMainMenu";
 
 export class DialogInfo implements IDialogInfo {
   constructor(public width: number, public height: number) {}

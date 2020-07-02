@@ -1,5 +1,5 @@
-import { IOpenedScreen, IDialogInfo } from "./IOpenedScreen";
-import { IMainMenuItemType } from "./IMainMenu";
+import {IDialogInfo, IOpenedScreen} from "./IOpenedScreen";
+import {IMainMenuItemType} from "./IMainMenu";
 
 export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;

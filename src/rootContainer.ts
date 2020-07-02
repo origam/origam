@@ -1,5 +1,5 @@
-import { Container, ILifetime } from "dic/Container";
-import { registerModules } from "registerModules";
+import {Container, ILifetime} from "dic/Container";
+import {registerModules} from "registerModules";
 
 const $root = new Container({defaultLifetime: ILifetime.PerLifetimeScope});
 registerModules($root);

@@ -1,7 +1,7 @@
-import { action, observable } from "mobx";
+import {action, observable} from "mobx";
 import * as React from "react";
-import { IScrollerProps } from "./types";
-import { observer } from "mobx-react";
+import {IScrollerProps} from "./types";
+import {observer} from "mobx-react";
 import S from "./Scroller.module.css";
 
 /*

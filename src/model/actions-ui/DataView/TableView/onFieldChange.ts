@@ -1,11 +1,10 @@
-import { getFormScreenLifecycle } from "../../../selectors/FormScreen/getFormScreenLifecycle";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getDataView } from "model/selectors/DataView/getDataView";
-import { IProperty } from "model/entities/types/IProperty";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
-import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import {getFormScreenLifecycle} from "../../../selectors/FormScreen/getFormScreenLifecycle";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {IProperty} from "model/entities/types/IProperty";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onFieldChange(ctx: any) {
   return flow(onFieldChangeG(ctx));

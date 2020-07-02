@@ -1,5 +1,5 @@
-import { getGroupingConfiguration } from "./getGroupingConfiguration";
-import { getIsSelectionCheckboxesShown } from "../DataView/getIsSelectionCheckboxesShown";
+import {getGroupingConfiguration} from "./getGroupingConfiguration";
+import {getIsSelectionCheckboxesShown} from "../DataView/getIsSelectionCheckboxesShown";
 
 export function getLeadingColumnCount(ctx: any){
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);

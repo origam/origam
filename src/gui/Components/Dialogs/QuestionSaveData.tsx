@@ -1,7 +1,6 @@
 import React from "react";
-import { ModalWindowOverlay, ModalWindow, CloseButton } from "../Dialog/Dialog";
-import { observer } from "mobx-react";
-import { getDialogStack } from "../../../model/selectors/DialogStack/getDialogStack";
+import {ModalWindow} from "../Dialog/Dialog";
+import {observer} from "mobx-react";
 import CS from "./DialogsCommon.module.css";
 
 @observer

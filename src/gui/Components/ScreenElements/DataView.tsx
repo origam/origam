@@ -1,17 +1,13 @@
-import { FormView } from "gui/Workbench/ScreenArea/FormView/FormView";
-import { CDataViewHeader } from "gui02/connections/CDataViewHeader";
-import { inject, observer, Provider } from "mobx-react";
-import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
+import {CDataViewHeader} from "gui02/connections/CDataViewHeader";
+import {inject, observer, Provider} from "mobx-react";
+import {getIsDataViewOrFormScreenWorking} from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
 import React from "react";
-import { IDataView } from "../../../model/entities/types/IDataView";
-import { IPanelViewType } from "../../../model/entities/types/IPanelViewType";
-import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
-import { FormBuilder } from "../../Workbench/ScreenArea/FormView/FormBuilder";
-import { TableView } from "../../Workbench/ScreenArea/TableView/TableView";
+import {IDataView} from "../../../model/entities/types/IDataView";
+import {getDataViewById} from "../../../model/selectors/DataView/getDataViewById";
 import S from "./DataView.module.css";
-import { DataViewLoading } from "./DataViewLoading";
-import { scopeFor } from "dic/Container";
-import { IDataViewBodyUI } from "modules/DataView/DataViewUI";
+import {DataViewLoading} from "./DataViewLoading";
+import {scopeFor} from "dic/Container";
+import {IDataViewBodyUI} from "modules/DataView/DataViewUI";
 
 @inject(({ formScreen }, { id }) => {
   const dataView = getDataViewById(formScreen, id);

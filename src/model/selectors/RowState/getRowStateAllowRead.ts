@@ -1,4 +1,4 @@
-import { getRowStateById } from "./getRowStateById";
+import {getRowStateById} from "./getRowStateById";
 
 export function getRowStateAllowRead(
   ctx: any,

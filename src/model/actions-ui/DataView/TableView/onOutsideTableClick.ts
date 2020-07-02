@@ -1,6 +1,6 @@
-import { flow } from "mobx";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { handleError } from "model/actions/handleError";
+import {flow} from "mobx";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import {handleError} from "model/actions/handleError";
 
 export function onOutsideTableClick(ctx: any) {
   return flow(function* onOutsideTableClick(event: any) {

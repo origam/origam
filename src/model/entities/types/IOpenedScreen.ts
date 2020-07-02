@@ -1,5 +1,5 @@
-import { IFormScreen, IFormScreenEnvelope } from "./IFormScreen";
-import { IMainMenuItemType } from "./IMainMenu";
+import {IFormScreenEnvelope} from "./IFormScreen";
+import {IMainMenuItemType} from "./IMainMenu";
 
 export interface IDialogInfo {
   width: number;

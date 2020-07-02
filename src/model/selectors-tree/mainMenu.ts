@@ -1,4 +1,4 @@
-import { getMainMenu } from "model/selectors/MainMenu/getMainMenu"
+import {getMainMenu} from "model/selectors/MainMenu/getMainMenu"
 
 export default {
   getItemById(ctx: any, id: string) {

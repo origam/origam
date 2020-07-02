@@ -1,12 +1,12 @@
 import React from "react";
-import { observer, Observer } from "mobx-react";
-import { TabbedViewPanel } from "gui02/components/TabbedView/TabbedViewPanel";
-import { TabbedViewHandleRow } from "gui02/components/TabbedView/TabbedViewHandleRow";
-import { TabbedViewHandle } from "gui02/components/TabbedView/TabbedViewHandle";
-import { observable, action } from "mobx";
-import { TabbedView } from "gui02/components/TabbedView/TabbedView";
-import { findUIChildren } from "xmlInterpreters/screenXml";
-import { TabbedViewPanelsContainer } from "gui02/components/TabbedView/TabbedViewPanelsContainer";
+import {observer, Observer} from "mobx-react";
+import {TabbedViewPanel} from "gui02/components/TabbedView/TabbedViewPanel";
+import {TabbedViewHandleRow} from "gui02/components/TabbedView/TabbedViewHandleRow";
+import {TabbedViewHandle} from "gui02/components/TabbedView/TabbedViewHandle";
+import {action, observable} from "mobx";
+import {TabbedView} from "gui02/components/TabbedView/TabbedView";
+import {findUIChildren} from "xmlInterpreters/screenXml";
+import {TabbedViewPanelsContainer} from "gui02/components/TabbedView/TabbedViewPanelsContainer";
 
 @observer
 export class CScreenSectionTabbedView extends React.Component<{

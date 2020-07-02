@@ -1,10 +1,4 @@
-import {
-  onInitPortalDone,
-  onOpenScreen,
-  onInitUIDone,
-  onChoiceTaken,
-  onOpenScreenWithSelection
-} from "./constants";
+import {onChoiceTaken, onInitPortalDone, onInitUIDone, onOpenScreen, onOpenScreenWithSelection} from "./constants";
 
 export interface IOnOpenScreen {
   type: typeof onOpenScreen;

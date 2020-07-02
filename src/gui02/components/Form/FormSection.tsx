@@ -1,7 +1,7 @@
 import React from "react";
 import S from "./FormSection.module.scss";
 import cx from "classnames";
-import { FormSectionHeader } from "./FormSectionHeader";
+import {FormSectionHeader} from "./FormSectionHeader";
 
 export const FormSection: React.FC<{
   top: number;

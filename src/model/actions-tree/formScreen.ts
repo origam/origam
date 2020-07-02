@@ -1,4 +1,4 @@
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle"
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle"
 
 export default {
   refresh(ctx: any) {

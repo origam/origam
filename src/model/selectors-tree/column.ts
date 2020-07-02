@@ -1,4 +1,4 @@
-import { getProperty } from "model/selectors/DataView/getProperty";
+import {getProperty} from "model/selectors/DataView/getProperty";
 
 export default {
   isLinkToForm(ctx: any) {

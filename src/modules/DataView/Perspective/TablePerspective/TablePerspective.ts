@@ -1,10 +1,10 @@
-import { TypeSymbol } from "dic/Container";
-import { observable, action } from "mobx";
-import { IIId, getIdent } from "utils/common";
-import { IPerspective, IPerspectiveContrib } from "../Perspective";
+import {TypeSymbol} from "dic/Container";
+import {observable} from "mobx";
+import {getIdent, IIId} from "utils/common";
+import {IPerspective, IPerspectiveContrib} from "../Perspective";
 import bind from "bind-decorator";
-import { IPanelViewType } from "model/entities/types/IPanelViewType";
-import { IViewConfiguration } from "modules/DataView/ViewConfiguration";
+import {IPanelViewType} from "model/entities/types/IPanelViewType";
+import {IViewConfiguration} from "modules/DataView/ViewConfiguration";
 
 export class TablePerspective implements IIId, IPerspectiveContrib {
   $iid = getIdent();

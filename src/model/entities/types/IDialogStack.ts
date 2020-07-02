@@ -1,4 +1,4 @@
-import { IDialogDimensions } from "gui/Components/Dialog/types";
+import {IDialogDimensions} from "gui/Components/Dialog/types";
 
 export interface IDialogStack {
   stackedDialogs: Array<{

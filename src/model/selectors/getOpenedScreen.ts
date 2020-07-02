@@ -1,4 +1,4 @@
-import { IOpenedScreen, isIOpenedScreen } from "../entities/types/IOpenedScreen";
+import {IOpenedScreen, isIOpenedScreen} from "../entities/types/IOpenedScreen";
 
 export function getOpenedScreen(ctx: any): IOpenedScreen {
   let cn = ctx;

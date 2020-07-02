@@ -1,11 +1,7 @@
-import { Memoized } from "./common/Memoized";
-import { scRenderRow, isCheckBoxedTable, scrollLeft } from "./renderingValues";
-import { dataRowCellsDraws, dataRowCellsWidths, isCurrentDataRow } from "./rowCells/dataRowCells";
-import {
-  groupRowCellsDraws,
-  groupRowCellsWidths,
-  isCurrentGroupRow,
-} from "./rowCells/groupRowCells";
+import {Memoized} from "./common/Memoized";
+import {isCheckBoxedTable, scRenderRow, scrollLeft} from "./renderingValues";
+import {dataRowCellsDraws, dataRowCellsWidths, isCurrentDataRow} from "./rowCells/dataRowCells";
+import {groupRowCellsDraws, groupRowCellsWidths, isCurrentGroupRow,} from "./rowCells/groupRowCells";
 import {currentCellLayerIndex} from "./currentCellLayerIndex";
 
 function computeDimensions(cellWidths: number[]) {

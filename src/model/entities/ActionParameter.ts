@@ -1,7 +1,4 @@
-import {
-  IActionParameter,
-  IActionParameterData
-} from "./types/IActionParameter";
+import {IActionParameter, IActionParameterData} from "./types/IActionParameter";
 
 export class ActionParameter implements IActionParameter {
   $type_IActionParameter: 1 = 1;

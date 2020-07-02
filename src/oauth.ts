@@ -1,6 +1,6 @@
 import Oidc from "oidc-client";
 
-const [windowLocation, _rest] = window.location.href.split("#");
+const [windowLocation] = window.location.href.split("#");
 
 const config = {
   authority: `${windowLocation}`,
@@ -26,7 +26,7 @@ export async function ensureLogin() {
     const user = await userManager.signinRedirectCallback(
       window.location.hash.replace("#origamClientCallback/", "")
     );
-    const [urlpart, hashpart] = window.location.href.split("#");
+    const [urlpart] = window.location.href.split("#");
     window.history.replaceState(null, "", urlpart);
     return user;
   } else {

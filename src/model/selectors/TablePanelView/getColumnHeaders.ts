@@ -1,6 +1,6 @@
-import { getTableViewProperties } from "./getTableViewProperties";
-import { IColumnHeader } from './types';
-import { getPropertyOrdering } from "../DataView/getPropertyOrdering";
+import {getTableViewProperties} from "./getTableViewProperties";
+import {IColumnHeader} from './types';
+import {getPropertyOrdering} from "../DataView/getPropertyOrdering";
 
 
 export function getColumnHeaders(ctx: any): IColumnHeader[] {

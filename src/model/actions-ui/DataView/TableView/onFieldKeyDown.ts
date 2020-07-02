@@ -1,11 +1,11 @@
-import { selectNextColumn } from "../../../actions/DataView/TableView/selectNextColumn";
-import { selectPrevColumn } from "../../../actions/DataView/TableView/selectPrevColumn";
-import { selectPrevRow } from "../../../actions/DataView/selectPrevRow";
-import { selectNextRow } from "../../../actions/DataView/selectNextRow";
-import { flushCurrentRowData } from "../../../actions/DataView/TableView/flushCurrentRowData";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { runInAction, flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {selectNextColumn} from "../../../actions/DataView/TableView/selectNextColumn";
+import {selectPrevColumn} from "../../../actions/DataView/TableView/selectPrevColumn";
+import {selectPrevRow} from "../../../actions/DataView/selectPrevRow";
+import {selectNextRow} from "../../../actions/DataView/selectNextRow";
+import {flushCurrentRowData} from "../../../actions/DataView/TableView/flushCurrentRowData";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onFieldKeyDown(ctx: any) {
   return flow(function* onFieldKeyDown(event: any) {

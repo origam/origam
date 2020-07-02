@@ -1,5 +1,5 @@
-import { IDataSourceField } from "./IDataSourceField";
-import { IRowState } from "./IRowState";
+import {IDataSourceField} from "./IDataSourceField";
+import {IRowState} from "./IRowState";
 
 export interface IDataSourceData {
   entity: string;

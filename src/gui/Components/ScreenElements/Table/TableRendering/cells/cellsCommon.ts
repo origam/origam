@@ -1,18 +1,12 @@
+import {context2d, drawingColumnIndex, scRenderCell, scrollLeft, scrollTop} from "../renderingValues";
 import {
-  context2d,
-  drawingColumnIndex,
-  scRenderCell,
-  scrollLeft,
-  scrollTop
-} from "../renderingValues";
-import {
-  isCurrentCellFixed,
   currentColumnLeft,
-  currentRowTop,
   currentColumnWidth,
   currentRowHeight,
+  currentRowTop,
+  isCurrentCellFixed,
 } from "../currentCell";
-import { CPR } from "utils/canvas";
+import {CPR} from "utils/canvas";
 import {Memoized} from "../common/Memoized";
 
 export function applyScrollTranslation() {

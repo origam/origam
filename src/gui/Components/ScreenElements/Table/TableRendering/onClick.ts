@@ -1,5 +1,5 @@
-import { clickSubscriptions } from "./renderingValues";
-import { IClickSubsItem } from "./types";
+import {clickSubscriptions} from "./renderingValues";
+import {IClickSubsItem} from "./types";
 
 export function onClick(item: IClickSubsItem) {
   clickSubscriptions().push(item);

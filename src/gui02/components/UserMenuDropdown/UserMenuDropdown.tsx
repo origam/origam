@@ -1,7 +1,5 @@
 import React from "react";
-import S from "./UserMenuDropdown.module.scss";
-import { Dropdown } from "../Dropdown/Dropdown";
-import { UserMenuBlock } from "./UserMenuBlock";
+import {Dropdown} from "../Dropdown/Dropdown";
 
 export const UserMenuDropdown: React.FC = props => (
   <Dropdown>

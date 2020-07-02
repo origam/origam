@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import S from "./EmbeddedWebpage.module.scss";
 import cx from "classnames";
 

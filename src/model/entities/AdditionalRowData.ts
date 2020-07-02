@@ -1,7 +1,5 @@
-import {
-  IAdditionalRowData,
-} from "./types/IAdditionalRecordData";
-import { observable } from "mobx";
+import {IAdditionalRowData,} from "./types/IAdditionalRecordData";
+import {observable} from "mobx";
 
 export class AdditionalRowData implements IAdditionalRowData {
   $type_IAdditionalRowData: 1 = 1;

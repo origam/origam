@@ -1,25 +1,12 @@
-import {
-    context2d,
-    currentRow,
-    recordId,
-    tableColumnIds,
-    tablePanelView
-} from "../renderingValues";
-import {applyScrollTranslation, numberCellPaddingLeft, clipCell, topTextOffset, fontSize} from "./cellsCommon";
+import {context2d, currentRow, recordId, tableColumnIds, tablePanelView} from "../renderingValues";
+import {applyScrollTranslation, clipCell, fontSize, numberCellPaddingLeft, topTextOffset} from "./cellsCommon";
 import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
-import {
-    currentColumnId,
-    currentColumnLeft,
-    currentColumnWidth,
-    currentProperty,
-    currentRowTop
-} from "../currentCell";
+import {currentColumnId, currentColumnLeft, currentColumnWidth, currentProperty, currentRowTop} from "../currentCell";
 import {CPR} from "utils/canvas";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {IGroupRow} from "../types";
 import {dataColumnsWidths} from "./dataCell";
 import {aggregationToString} from "model/entities/types/IAggregation";
-
 
 
 export function aggregationColumnsWidths() {

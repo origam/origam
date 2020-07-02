@@ -1,13 +1,13 @@
 import * as React from "react";
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import S from "./DateTimeEditor.module.scss";
 // import CS from "./CommonStyle.module.css";
-import { action, observable, computed, runInAction } from "mobx";
+import {action, computed, observable, runInAction} from "mobx";
 import moment from "moment";
-import { Tooltip } from "react-tippy";
-import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import {Tooltip} from "react-tippy";
+import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
 import DateCompleter from "./DateCompleter"
-import { getLocaleFromCookie } from "../../../../utils/cookies";
+import {getLocaleFromCookie} from "../../../../utils/cookies";
 import cx from 'classnames';
 
 @observer
@@ -251,7 +251,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound getDateCompleter(){
-    if(getLocaleFromCookie() == "en-US"){
+    if(getLocaleFromCookie() === "en-US"){
       return new DateCompleter("MM/DD/YYYY h:mm:ss A", "/",
       ":", " ", () =>  moment())
     }else{
@@ -281,7 +281,7 @@ export class DateTimeEditor extends React.Component<{
 
   @computed get formattedMomentValue() {
     if (!this.momentValue) return ""
-    if (this.momentValue.hour() == 0 && this.momentValue.minute() == 0 && this.momentValue.second() == 0) {
+    if (this.momentValue.hour() === 0 && this.momentValue.minute() === 0 && this.momentValue.second() === 0) {
       const expectedDateFormat = this.props.outputFormat.split(" ")[0]
       return this.momentValue.format(expectedDateFormat)
     }
@@ -391,7 +391,7 @@ export class DateTimeEditor extends React.Component<{
             )}
           </div>
         )}
-        content={({}) => (
+        content={() => (
           <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}

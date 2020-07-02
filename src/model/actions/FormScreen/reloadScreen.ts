@@ -1,4 +1,4 @@
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export function reloadScreen(ctx: any) {
   return function* reloadScreen() {

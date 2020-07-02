@@ -1,5 +1,5 @@
-import { getBindingParents } from "./getBindingParents";
-import { getSelectedRow } from "./getSelectedRow";
+import {getBindingParents} from "./getBindingParents";
+import {getSelectedRow} from "./getSelectedRow";
 
 export function getParentRow(ctx: any) {
   const bps = getBindingParents(ctx);

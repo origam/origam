@@ -1,4 +1,5 @@
-import { IDataSourceField, IDataSourceFieldData } from "./types/IDataSourceField";
+import {IDataSourceField, IDataSourceFieldData} from "./types/IDataSourceField";
+
 export class DataSourceField implements IDataSourceField {
   $type_IDataSourceField: 1 = 1;
   

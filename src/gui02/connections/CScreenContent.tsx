@@ -1,9 +1,9 @@
-import { ScreenContainer } from "gui02/components/Screen/ScreenContainer";
-import { MobXProviderContext, observer } from "mobx-react";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { getOpenedNonDialogScreenItems } from "model/selectors/getOpenedNonDialogScreenItems";
+import {ScreenContainer} from "gui02/components/Screen/ScreenContainer";
+import {MobXProviderContext, observer} from "mobx-react";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {getOpenedNonDialogScreenItems} from "model/selectors/getOpenedNonDialogScreenItems";
 import React from "react";
-import { CScreen } from "./CScreen";
+import {CScreen} from "./CScreen";
 
 @observer
 export class CScreenContent extends React.Component {

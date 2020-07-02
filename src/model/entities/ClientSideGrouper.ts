@@ -5,7 +5,7 @@ import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering
 import {ClientSideGroupItem} from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {IAggregationInfo} from "./types/IAggregationInfo";
-import { computed } from "mobx";
+import {computed} from "mobx";
 import {AggregationType} from "./types/AggregationType";
 
 export class ClientSideGrouper implements IGrouper {

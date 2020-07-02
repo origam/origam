@@ -1,7 +1,6 @@
 import selectors from "model/selectors-tree";
-import { stopWorkQueues } from "./WorkQueues/stopWorkQueues";
-import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
-import { performLogout } from "./User/performLogout";
+import {stopWorkQueues} from "./WorkQueues/stopWorkQueues";
+import {performLogout} from "./User/performLogout";
 
 const HANDLED = Symbol("_$ErrorHandled");
 

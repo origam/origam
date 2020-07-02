@@ -1,6 +1,3 @@
-
-import { IDataTable } from "./IDataTable";
-
 // TODO: Extract types so that model layer does not depend on view layer?
 
 

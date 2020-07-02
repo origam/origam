@@ -1,7 +1,7 @@
-import { IOpenedScreen, IDialogInfo } from "../entities/types/IOpenedScreen";
-import { OpenedScreen } from "../entities/OpenedScreen";
-import { IFormScreen, IFormScreenEnvelope } from "../entities/types/IFormScreen";
-import { IMainMenuItemType } from "../entities/types/IMainMenu";
+import {IDialogInfo, IOpenedScreen} from "../entities/types/IOpenedScreen";
+import {OpenedScreen} from "../entities/OpenedScreen";
+import {IFormScreenEnvelope} from "../entities/types/IFormScreen";
+import {IMainMenuItemType} from "../entities/types/IMainMenu";
 
 export function createOpenedScreen(
   menuItemId: string,

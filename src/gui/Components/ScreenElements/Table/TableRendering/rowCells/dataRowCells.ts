@@ -1,10 +1,9 @@
-import { dataColumnsDraws, dataColumnsWidths } from "../cells/dataCell";
-import { groupRowEmptyCellsDraws, groupRowEmptyCellsWidths } from "../cells/groupCell";
-import { selectionCheckboxCellsDraws, selectionCheckboxCellsWidths } from "../cells/selectionCheckboxCell";
-import { Memoized } from "../common/Memoized";
-import { scRenderRow, tableColumnIds, scRenderTable, currentRow } from "../renderingValues";
-import { ITableRow } from "../types";
-
+import {dataColumnsDraws, dataColumnsWidths} from "../cells/dataCell";
+import {groupRowEmptyCellsDraws, groupRowEmptyCellsWidths} from "../cells/groupCell";
+import {selectionCheckboxCellsDraws, selectionCheckboxCellsWidths} from "../cells/selectionCheckboxCell";
+import {Memoized} from "../common/Memoized";
+import {currentRow, scRenderRow, scRenderTable, tableColumnIds} from "../renderingValues";
+import {ITableRow} from "../types";
 
 
 export const dataRowCellsWidths = Memoized(() => {

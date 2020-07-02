@@ -1,5 +1,5 @@
-import { currentRowCellsDimensions } from "./currentRowCells";
-import { viewportLeft, viewportRight } from "./renderingValues";
+import {currentRowCellsDimensions} from "./currentRowCells";
+import {viewportLeft, viewportRight} from "./renderingValues";
 
 export function firstDrawableColumnIndex() {
   const dimensions = currentRowCellsDimensions();

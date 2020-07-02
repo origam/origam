@@ -2,10 +2,10 @@ import S from "./Dialog.module.scss";
 import React from "react";
 
 import * as ReactDOM from "react-dom";
-import { observer, Observer } from "mobx-react";
-import { observable, action } from "mobx";
-import Measure, { BoundingRect } from "react-measure";
-import { Icon } from "gui02/components/Icon/Icon";
+import {observer, Observer} from "mobx-react";
+import {action, observable} from "mobx";
+import Measure, {BoundingRect} from "react-measure";
+import {Icon} from "gui02/components/Icon/Icon";
 
 export class ModalWindowOverlay extends React.Component {
   render() {

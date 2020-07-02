@@ -1,11 +1,6 @@
-import {
-  IMainMenuContent,
-  IMainMenuData,
-  IMainMenuEnvelope,
-  IMainMenu
-} from "./types/IMainMenu";
-import { action, observable } from "mobx";
-import { proxyEnrich } from "utils/esproxy";
+import {IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope} from "./types/IMainMenu";
+import {action, observable} from "mobx";
+import {proxyEnrich} from "utils/esproxy";
 
 export class MainMenuContent implements IMainMenuContent {
   $type_IMainMenuContent: 1 = 1;

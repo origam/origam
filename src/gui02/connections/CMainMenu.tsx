@@ -1,18 +1,16 @@
 import React from "react";
-import { MainMenuUL } from "gui02/components/MainMenu/MainMenuUL";
-import { MainMenuLI } from "gui02/components/MainMenu/MainMenuLI";
-import { MainMenuItem } from "gui02/components/MainMenu/MainMenuItem";
-import { Icon } from "gui02/components/Icon/Icon";
-import { observer } from "mobx-react";
-import { MobXProviderContext } from "mobx-react";
-import { IApplication } from "model/entities/types/IApplication";
-import { getIsMainMenuLoading } from "model/selectors/MainMenu/getIsMainMenuLoading";
-import { getMainMenu } from "model/selectors/MainMenu/getMainMenu";
-import { observable, action, computed } from "mobx";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import { getOpenedScreens } from "model/selectors/getOpenedScreens";
-import { getActiveScreen } from "model/selectors/getActiveScreen";
+import {MainMenuUL} from "gui02/components/MainMenu/MainMenuUL";
+import {MainMenuLI} from "gui02/components/MainMenu/MainMenuLI";
+import {MainMenuItem} from "gui02/components/MainMenu/MainMenuItem";
+import {Icon} from "gui02/components/Icon/Icon";
+import {MobXProviderContext, observer} from "mobx-react";
+import {IApplication} from "model/entities/types/IApplication";
+import {getIsMainMenuLoading} from "model/selectors/MainMenu/getIsMainMenuLoading";
+import {getMainMenu} from "model/selectors/MainMenu/getMainMenu";
+import {action, observable} from "mobx";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import {getActiveScreen} from "model/selectors/getActiveScreen";
 
 @observer
 export class CMainMenu extends React.Component {

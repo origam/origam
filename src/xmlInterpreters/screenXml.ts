@@ -413,7 +413,7 @@ export function interpretScreenXml(
     flow($dataView.resolve(IPerspective).activateDefault)();
   }
 
-  const rscr = $screen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
+  $screen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
   return scr;
 }
 

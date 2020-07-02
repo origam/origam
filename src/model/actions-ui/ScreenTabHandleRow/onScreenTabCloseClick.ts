@@ -1,8 +1,8 @@
-import { flow } from "mobx";
-import { closeForm } from "model/actions/closeForm";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getOpenedScreen } from "model/selectors/getOpenedScreen";
-import { handleError } from "model/actions/handleError";
+import {flow} from "mobx";
+import {closeForm} from "model/actions/closeForm";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getOpenedScreen} from "model/selectors/getOpenedScreen";
+import {handleError} from "model/actions/handleError";
 
 export function onScreenTabCloseClick(ctx: any) {
   return flow(function* onFormTabCloseClick(event: any) {

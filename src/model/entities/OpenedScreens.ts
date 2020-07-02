@@ -1,7 +1,7 @@
-import { IOpenedScreens } from "./types/IOpenedScreens";
-import { IOpenedScreen } from "./types/IOpenedScreen";
-import { action, observable, computed } from "mobx";
-import { IAction } from "./types/IAction";
+import {IOpenedScreens} from "./types/IOpenedScreens";
+import {IOpenedScreen} from "./types/IOpenedScreen";
+import {action, computed, observable} from "mobx";
+import {IAction} from "./types/IAction";
 
 export class OpenedScreens implements IOpenedScreens {
   $type_IOpenedScreens: 1 = 1;

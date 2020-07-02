@@ -1,6 +1,6 @@
-import { DialogScreen } from "gui/Workbench/ScreenArea/ScreenArea";
-import { MobXProviderContext, observer } from "mobx-react";
-import { getOpenedDialogScreenItems } from "model/selectors/getOpenedDialogScreenItems";
+import {DialogScreen} from "gui/Workbench/ScreenArea/ScreenArea";
+import {MobXProviderContext, observer} from "mobx-react";
+import {getOpenedDialogScreenItems} from "model/selectors/getOpenedDialogScreenItems";
 import React from "react";
 
 @observer

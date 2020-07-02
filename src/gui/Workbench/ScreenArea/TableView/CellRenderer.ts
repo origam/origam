@@ -1,25 +1,25 @@
 import bind from "bind-decorator";
-import { computed } from "mobx";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
-import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import {computed} from "mobx";
+import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
+import {getRowStateColumnBgColor} from "model/selectors/RowState/getRowStateColumnBgColor";
+import {getRowStateForegroundColor} from "model/selectors/RowState/getRowStateForegroundColor";
+import {getRowStateRowBgColor} from "model/selectors/RowState/getRowStateRowBgColor";
 import moment from "moment";
-import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getCellTextByIdx } from "model/selectors/TablePanelView/getCellText";
-import { getCellValueByIdx } from "model/selectors/TablePanelView/getCellValue";
-import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getTableViewPropertyByIdx } from "model/selectors/TablePanelView/getTableViewPropertyByIdx";
-import { getTableViewRecordByExistingIdx } from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
-import { CPR } from "utils/canvas";
-import { IRenderCellArgs, IRenderedCell } from "../../../Components/ScreenElements/Table/types";
-import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
+import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {getCellTextByIdx} from "model/selectors/TablePanelView/getCellText";
+import {getCellValueByIdx} from "model/selectors/TablePanelView/getCellValue";
+import {getSelectedColumnId} from "model/selectors/TablePanelView/getSelectedColumnId";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getTableViewPropertyByIdx} from "model/selectors/TablePanelView/getTableViewPropertyByIdx";
+import {getTableViewRecordByExistingIdx} from "model/selectors/TablePanelView/getTableViewRecordByExistingIdx";
+import {CPR} from "utils/canvas";
+import {IRenderCellArgs, IRenderedCell} from "../../../Components/ScreenElements/Table/types";
+import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import {getSelectionMember} from "model/selectors/DataView/getSelectionMember";
 
 import selectors from "model/selectors-tree";
-import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
 
 export interface ICellRendererData {
   tablePanelView: ITablePanelView;
@@ -234,7 +234,6 @@ export class CellRenderer implements ICellRenderer {
       const errMsg = dsFieldErrors && errMap ? errMap.get(property.dataSourceIndex) : undefined;
       if (errMsg) {
         isInvalid = true;
-        invalidMessage = errMsg;
       }
     }
 

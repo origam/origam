@@ -1,6 +1,4 @@
-import { IApplication } from '../entities/types/IApplication';
-import { useContext } from 'react';
-import { MobXProviderContext } from 'mobx-react';
+import {IApplication} from '../entities/types/IApplication';
 
 export function getApplication(ctx?: any): IApplication {
   let cn = ctx;

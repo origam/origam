@@ -1,5 +1,5 @@
-import { IScrollState } from "./types";
-import { observable, action } from "mobx";
+import {IScrollState} from "./types";
+import {action, observable} from "mobx";
 
 export class SimpleScrollState implements IScrollState {
   scrollToFunction: ((coords: { scrollLeft?: number; scrollTop?: number }) => void) | undefined;

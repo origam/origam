@@ -1,4 +1,4 @@
-import { getDataSourceByEntity } from "../DataSources/getDataSourceByEntity";
+import {getDataSourceByEntity} from "../DataSources/getDataSourceByEntity";
 
 export function getRowStatesByEntity(ctx: any, entity: string) {
   const dataSource = getDataSourceByEntity(ctx, entity);

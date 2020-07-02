@@ -1,4 +1,4 @@
-import { flow } from "mobx";
+import {flow} from "mobx";
 
 export default {
   onApplyFilterSetting(ctx: any) {

@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { useLocalStore } from "mobx-react-lite";
-import { IAccordionContext, AccordionContext } from "./AccordionTypes";
+import React, {useEffect} from "react";
+import {useLocalStore} from "mobx-react-lite";
+import {AccordionContext, IAccordionContext} from "./AccordionTypes";
 
 export const Accordion: React.FC<{
   className: string;

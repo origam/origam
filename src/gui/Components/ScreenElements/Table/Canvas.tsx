@@ -1,7 +1,7 @@
 import React from "react";
 import S from "./Canvas.module.css";
-import { computed, action } from "mobx";
-import { CPR } from "utils/canvas";
+import {action, computed} from "mobx";
+import {CPR} from "utils/canvas";
 
 export class Canvas extends React.Component<{ width: number; height: number, refCanvasElement: any }> {
   firstVisibleRowIndex = 0;

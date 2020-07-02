@@ -1,12 +1,12 @@
 import bind from "bind-decorator";
-import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import {ModalWindow} from "gui/Components/Dialog/Dialog";
 import _ from "lodash";
-import { action, observable, computed } from "mobx";
-import { observer, Observer } from "mobx-react";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import {action, computed, observable} from "mobx";
+import {observer, Observer} from "mobx-react";
+import {getDialogStack} from "model/selectors/getDialogStack";
 import React from "react";
 import CS from "./ErrorDialog.module.scss";
-import moment, { Moment } from "moment";
+import moment, {Moment} from "moment";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;

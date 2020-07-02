@@ -1,7 +1,7 @@
 import React from "react";
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import S from "./Header.module.scss";
-import { action } from "mobx";
+import {action} from "mobx";
 import {IOrderByDirection} from "../../../../model/entities/types/IOrderingConfiguration";
 
 @observer

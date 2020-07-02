@@ -1,5 +1,4 @@
-import { getRowStates } from "model/selectors/RowState/getRowStates";
-import { getRowStatesByEntity } from "model/selectors/RowState/getRowStatesByEntity";
+import {getRowStatesByEntity} from "model/selectors/RowState/getRowStatesByEntity";
 
 export function putRowStateValue(ctx: any) {
   return function putRowStateValue(entity: string, state: any) {

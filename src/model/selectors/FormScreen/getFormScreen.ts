@@ -1,4 +1,4 @@
-import { IFormScreen, isIFormScreen } from "model/entities/types/IFormScreen";
+import {IFormScreen, isIFormScreen} from "model/entities/types/IFormScreen";
 
 export function getFormScreen(ctx: any): IFormScreen {
   let cn = ctx;

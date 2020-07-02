@@ -1,5 +1,4 @@
-import { getDataView } from "./getDataView";
-import { getBindingParents } from "./getBindingParents";
+import {getBindingParents} from "./getBindingParents";
 
 export function getBindingParent(ctx: any) {
   const bps = getBindingParents(ctx);

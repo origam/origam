@@ -1,4 +1,4 @@
-import { getDataView } from "model/selectors/DataView/getDataView"
+import {getDataView} from "model/selectors/DataView/getDataView"
 
 export default {
   toggleSelectedId(ctx: any) {

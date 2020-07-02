@@ -1,10 +1,10 @@
-import { flow } from "mobx";
-import { IAction } from "model/entities/types/IAction";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { getGridId } from "model/selectors/DataView/getGridId";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getSelectedRowId } from "../../selectors/TablePanelView/getSelectedRowId";
-import { handleError } from "model/actions/handleError";
+import {flow} from "mobx";
+import {IAction} from "model/entities/types/IAction";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {getGridId} from "model/selectors/DataView/getGridId";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getSelectedRowId} from "../../selectors/TablePanelView/getSelectedRowId";
+import {handleError} from "model/actions/handleError";
 
 let isRunning = false;
 

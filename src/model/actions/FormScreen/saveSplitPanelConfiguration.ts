@@ -1,4 +1,4 @@
-import { getApi } from "model/selectors/getApi";
+import {getApi} from "model/selectors/getApi";
 
 export function saveSplitPanelConfiguration(ctx: any) {
   return function* saveSplitPanelConfiguration(

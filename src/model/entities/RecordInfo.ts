@@ -1,6 +1,6 @@
-import { IRecordInfo } from "./types/IRecordInfo";
-import { getApi } from "model/selectors/getApi";
-import { observable, action } from "mobx";
+import {IRecordInfo} from "./types/IRecordInfo";
+import {getApi} from "model/selectors/getApi";
+import {action, observable} from "mobx";
 
 export class RecordInfo implements IRecordInfo {
   $type_IRecordInfo: 1 = 1;

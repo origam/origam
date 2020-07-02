@@ -1,6 +1,5 @@
 import React from "react";
-import S from "./VSplit.module.css";
-import { Splitter, SplitterPanel } from "../Splitter/Splitter";
+import {Splitter, SplitterPanel} from "../Splitter/Splitter";
 
 export class VSplitPanel extends React.Component<{ id: any }> {
   render() {

@@ -1,25 +1,25 @@
-import { Icon } from "gui02/components/Icon/Icon";
-import { SidebarAlertCounter } from "gui02/components/Sidebar/AlertCounter";
-import { LogoSection } from "gui02/components/Sidebar/LogoSection";
-import { Sidebar } from "gui02/components/Sidebar/Sidebar";
-import { SidebarSection } from "gui02/components/Sidebar/SidebarSection";
-import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDivider";
-import { SidebarSectionHeader } from "gui02/components/Sidebar/SidebarSectionHeader";
+import {Icon} from "gui02/components/Icon/Icon";
+import {SidebarAlertCounter} from "gui02/components/Sidebar/AlertCounter";
+import {LogoSection} from "gui02/components/Sidebar/LogoSection";
+import {Sidebar} from "gui02/components/Sidebar/Sidebar";
+import {SidebarSection} from "gui02/components/Sidebar/SidebarSection";
+import {SidebarSectionDivider} from "gui02/components/Sidebar/SidebarSectionDivider";
+import {SidebarSectionHeader} from "gui02/components/Sidebar/SidebarSectionHeader";
 import React from "react";
-import { CMainMenu } from "./CMainMenu";
-import { observable, action } from "mobx";
-import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
-import { observer, MobXProviderContext } from "mobx-react";
-import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { CWorkQueues } from "./CWorkQueues";
-import { ISidebarSection, IInfoSubsection } from "./types";
-import { CSidebarInfoSection } from "./CSidebarInfoSection";
-import { addRecordInfoExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordInfoExpandRequestHandler";
-import { addRecordAuditExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordAuditExpandRequestHandler";
-import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
-import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
-import { onSidebarInfoSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
+import {CMainMenu} from "./CMainMenu";
+import {action, observable} from "mobx";
+import {SidebarSectionBody} from "gui02/components/Sidebar/SidebarSectionBody";
+import {MobXProviderContext, observer} from "mobx-react";
+import {getWorkQueuesTotalItemsCount} from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {CWorkQueues} from "./CWorkQueues";
+import {IInfoSubsection, ISidebarSection} from "./types";
+import {CSidebarInfoSection} from "./CSidebarInfoSection";
+import {addRecordInfoExpandRequestHandler} from "model/actions-ui/RecordInfo/addRecordInfoExpandRequestHandler";
+import {addRecordAuditExpandRequestHandler} from "model/actions-ui/RecordInfo/addRecordAuditExpandRequestHandler";
+import {onSidebarInfoSectionCollapsed} from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
+import {onSidebarAuditSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
+import {onSidebarInfoSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
 
 @observer
 export class CSidebar extends React.Component {

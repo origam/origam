@@ -1,5 +1,5 @@
-import { IOpenedScreen } from "./IOpenedScreen";
-import { IAction } from "./IAction";
+import {IOpenedScreen} from "./IOpenedScreen";
+import {IAction} from "./IAction";
 
 export interface IOpenedScreensData {}
 

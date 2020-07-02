@@ -1,7 +1,6 @@
-import { ICaptionPosition } from "./ICaptionPosition";
-import { IPropertyColumn } from "./IPropertyColumn";
-import { IDropDownColumn } from "./IDropDownColumn";
-import { ILookup } from "./ILookup";
+import {ICaptionPosition} from "./ICaptionPosition";
+import {IPropertyColumn} from "./IPropertyColumn";
+import {ILookup} from "./ILookup";
 
 export enum IDockType {
   Dock = "Dock",

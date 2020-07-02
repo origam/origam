@@ -1,5 +1,5 @@
-import { getOpenedScreens } from "model/selectors/getOpenedScreens";
-import { stopAutoreload } from "../FormScreen/stopAutoreload";
+import {getOpenedScreens} from "model/selectors/getOpenedScreens";
+import {stopAutoreload} from "../FormScreen/stopAutoreload";
 
 export function stopAllFormsAutorefresh(ctx: any) {
   return function*() {

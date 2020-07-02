@@ -1,4 +1,4 @@
-import { getApplicationLifecycle } from "model/selectors/getApplicationLifecycle"
+import {getApplicationLifecycle} from "model/selectors/getApplicationLifecycle"
 
 export function performLogout(ctx: any) {
   return function* performLogout() {

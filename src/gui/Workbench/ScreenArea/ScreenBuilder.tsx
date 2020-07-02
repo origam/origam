@@ -1,9 +1,8 @@
-import { observer, Provider } from "mobx-react";
+import {observer, Provider} from "mobx-react";
 import React from "react";
-import { IAction } from "../../../model/entities/types/IAction";
-import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
-import { FormScreenBuilder } from "./FormScreenBuilder";
-
+import {IAction} from "../../../model/entities/types/IAction";
+import {IOpenedScreen} from "../../../model/entities/types/IOpenedScreen";
+import {FormScreenBuilder} from "./FormScreenBuilder";
 
 
 export class DialogActionButton extends React.Component<{ action: IAction }> {

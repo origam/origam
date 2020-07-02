@@ -1,4 +1,4 @@
-import { IRenderable } from "modules/CommonTypes";
+import {IRenderable} from "modules/CommonTypes";
 
 export const SectionViewSwitchers = "SectionViewSwitchers";
 

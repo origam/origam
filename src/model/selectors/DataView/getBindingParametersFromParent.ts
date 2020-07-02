@@ -1,4 +1,4 @@
-import { getDataView } from "./getDataView";
+import {getDataView} from "./getDataView";
 
 export function getBindingParametersFromParent(ctx: any) {
   // debugger

@@ -1,16 +1,16 @@
-import { IActionResultType } from "../SelectionDialog/types";
-import { getWorkbenchLifecycle } from "../../selectors/getWorkbenchLifecycle";
-import { DialogInfo } from "model/entities/OpenedScreen";
-import { closeForm } from "../closeForm";
-import { getActionCaption } from "model/selectors/Actions/getActionCaption";
-import { IMainMenuItemType } from "model/entities/types/IMainMenu";
-import { IDialogInfo } from "model/entities/types/IOpenedScreen";
+import {IActionResultType} from "../SelectionDialog/types";
+import {getWorkbenchLifecycle} from "../../selectors/getWorkbenchLifecycle";
+import {DialogInfo} from "model/entities/OpenedScreen";
+import {closeForm} from "../closeForm";
+import {getActionCaption} from "model/selectors/Actions/getActionCaption";
+import {IMainMenuItemType} from "model/entities/types/IMainMenu";
+import {IDialogInfo} from "model/entities/types/IOpenedScreen";
 
 import actions from "model/actions-tree";
-import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
-import { openNewUrl } from "../Workbench/openNewUrl";
-import { processCRUDResult, ICRUDResult } from "../DataLoading/processCRUDResult";
-import { IRefreshOnReturnType } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
+import {IUrlUpenMethod} from "model/entities/types/IUrlOpenMethod";
+import {openNewUrl} from "../Workbench/openNewUrl";
+import {ICRUDResult, processCRUDResult} from "../DataLoading/processCRUDResult";
+import {IRefreshOnReturnType} from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 
 export interface IOpenNewForm {
   (

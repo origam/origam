@@ -1,7 +1,7 @@
-import { IWorkQueues } from "./types/IWorkQueues";
-import { getApi } from "model/selectors/getApi";
-import { onRefreshWorkQueues } from "model/actions-ui/WorkQueues/onRefreshWorkQueues";
-import { observable, computed } from "mobx";
+import {IWorkQueues} from "./types/IWorkQueues";
+import {getApi} from "model/selectors/getApi";
+import {onRefreshWorkQueues} from "model/actions-ui/WorkQueues/onRefreshWorkQueues";
+import {computed, observable} from "mobx";
 
 export class WorkQueues implements IWorkQueues {
   $type_IWorkQueues: 1 = 1;

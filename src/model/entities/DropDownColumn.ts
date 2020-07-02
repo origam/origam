@@ -1,4 +1,4 @@
-import { IDropDownColumn, IDropDownColumnData } from "./types/IDropDownColumn";
+import {IDropDownColumn, IDropDownColumnData} from "./types/IDropDownColumn";
 
 export class DropDownColumn implements IDropDownColumn {
   $type_IDropDownColumn: 1 = 1;

@@ -1,42 +1,40 @@
-import { scopeFor } from "dic/Container";
-import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { DataViewHeader } from "gui02/components/DataViewHeader/DataViewHeader";
-import { DataViewHeaderAction } from "gui02/components/DataViewHeader/DataViewHeaderAction";
-import { DataViewHeaderButton } from "gui02/components/DataViewHeader/DataViewHeaderButton";
-import { DataViewHeaderButtonGroup } from "gui02/components/DataViewHeader/DataViewHeaderButtonGroup";
-import { DataViewHeaderGroup } from "gui02/components/DataViewHeader/DataViewHeaderGroup";
-import { DataViewHeaderPusher } from "gui02/components/DataViewHeader/DataViewHeaderPusher";
-import { Dropdown } from "gui02/components/Dropdown/Dropdown";
-import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
-import { Icon } from "gui02/components/Icon/Icon";
-import { MobXProviderContext, observer } from "mobx-react";
+import {scopeFor} from "dic/Container";
+import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
+import {DataViewHeader} from "gui02/components/DataViewHeader/DataViewHeader";
+import {DataViewHeaderAction} from "gui02/components/DataViewHeader/DataViewHeaderAction";
+import {DataViewHeaderButton} from "gui02/components/DataViewHeader/DataViewHeaderButton";
+import {DataViewHeaderButtonGroup} from "gui02/components/DataViewHeader/DataViewHeaderButtonGroup";
+import {DataViewHeaderGroup} from "gui02/components/DataViewHeader/DataViewHeaderGroup";
+import {Dropdown} from "gui02/components/Dropdown/Dropdown";
+import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
+import {Icon} from "gui02/components/Icon/Icon";
+import {MobXProviderContext, observer} from "mobx-react";
 import uiActions from "model/actions-ui-tree";
-import { onColumnConfigurationClick } from "model/actions-ui/DataView/onColumnConfigurationClick";
-import { onCreateRowClick } from "model/actions-ui/DataView/onCreateRowClick";
-import { onDeleteRowClick } from "model/actions-ui/DataView/onDeleteRowClick";
-import { onFilterButtonClick } from "model/actions-ui/DataView/onFilterButtonClick";
-import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
-import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
-import { onRecordAuditClick } from "model/actions-ui/RecordInfo/onRecordAuditClick";
-import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
-import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
-import { getActivePanelView } from "model/selectors/DataView/getActivePanelView";
-import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
-import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
-import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
-import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
-import { getMaxRowCountSeen } from "model/selectors/DataView/getMaxRowCountSeen";
-import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
-import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
-import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
-import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
-import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
+import {onColumnConfigurationClick} from "model/actions-ui/DataView/onColumnConfigurationClick";
+import {onCreateRowClick} from "model/actions-ui/DataView/onCreateRowClick";
+import {onDeleteRowClick} from "model/actions-ui/DataView/onDeleteRowClick";
+import {onFilterButtonClick} from "model/actions-ui/DataView/onFilterButtonClick";
+import {onNextRowClick} from "model/actions-ui/DataView/onNextRowClick";
+import {onPrevRowClick} from "model/actions-ui/DataView/onPrevRowClick";
+import {onRecordAuditClick} from "model/actions-ui/RecordInfo/onRecordAuditClick";
+import {onRecordInfoClick} from "model/actions-ui/RecordInfo/onRecordInfoClick";
+import {getIsEnabledAction} from "model/selectors/Actions/getIsEnabledAction";
+import {getDataViewLabel} from "model/selectors/DataView/getDataViewLabel";
+import {getIsAddButtonVisible} from "model/selectors/DataView/getIsAddButtonVisible";
+import {getIsCopyButtonVisible} from "model/selectors/DataView/getIsCopyButtonVisible";
+import {getIsDelButtonVisible} from "model/selectors/DataView/getIsDelButtonVisible";
+import {getMaxRowCountSeen} from "model/selectors/DataView/getMaxRowCountSeen";
+import {getPanelViewActions} from "model/selectors/DataView/getPanelViewActions";
+import {getSelectedRowIndex} from "model/selectors/DataView/getSelectedRowIndex";
+import {getIsFilterControlsDisplayed} from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
+import {SectionViewSwitchers} from "modules/DataView/DataViewTypes";
+import {IDataViewToolbarUI} from "modules/DataView/DataViewUI";
 import React from "react";
 import {
-  ResponsiveBlock,
   CtxResponsiveToolbar,
-  ResponsiveContainer,
+  ResponsiveBlock,
   ResponsiveChild,
+  ResponsiveContainer,
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 
 @observer
@@ -58,7 +56,6 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const { dataView } = this;
     const selectedRowIndex = getSelectedRowIndex(dataView);
     const maxRowCountSeen = getMaxRowCountSeen(dataView);
-    const activePanelView = getActivePanelView(dataView);
     const label = getDataViewLabel(dataView);
     const isFilterSettingsVisible = getIsFilterControlsDisplayed(dataView);
     const actions = getPanelViewActions(dataView);

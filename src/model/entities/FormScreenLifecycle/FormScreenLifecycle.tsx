@@ -53,8 +53,6 @@ enum IQuestionDeleteDataAnswer {
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
-  constructor() {}
-
   @observable allDataViewsSteady = true;
 
   @computed get isWorking() {

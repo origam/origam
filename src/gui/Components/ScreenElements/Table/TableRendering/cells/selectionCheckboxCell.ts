@@ -1,21 +1,21 @@
-import { isCheckBoxedTable, context2d, context, rowId, dataView, currentDataRow } from "../renderingValues";
+import {context, context2d, currentDataRow, dataView, isCheckBoxedTable, rowId} from "../renderingValues";
 import {
   currentColumnLeft,
-  currentRowTop,
-  currentColumnWidth,
-  currentRowHeight,
   currentColumnLeftVisible,
+  currentColumnWidth,
   currentColumnWidthVisible,
+  currentRowHeight,
+  currentRowTop,
 } from "../currentCell";
 import {applyScrollTranslation, topTextOffset} from "./cellsCommon";
-import { CPR } from "utils/canvas";
-import { onClick } from "../onClick";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
-import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {CPR} from "utils/canvas";
+import {onClick} from "../onClick";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {getSelectionMember} from "model/selectors/DataView/getSelectionMember";
+import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import actions from "model/actions-tree";
-import { flow } from "mobx";
+import {flow} from "mobx";
 
 export const selectionCheckBoxColumnWidth = 20;
 const checkSymbolFontSize = 15;

@@ -1,12 +1,12 @@
-import { MobXProviderContext, observer } from "mobx-react";
-import { IApplication } from "model/entities/types/IApplication";
-import { IApplicationPage } from "model/entities/types/IApplicationLifecycle";
-import { getShownPage } from "model/selectors/Application/getShownPage";
+import {MobXProviderContext, observer} from "mobx-react";
+import {IApplication} from "model/entities/types/IApplication";
+import {IApplicationPage} from "model/entities/types/IApplicationLifecycle";
+import {getShownPage} from "model/selectors/Application/getShownPage";
 import React from "react";
-import { CLoginPage } from "./pages/CLoginPage";
-import { CWorkbenchPage } from "./pages/CWorkbenchPage";
-import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
-import { getDialogStack } from "model/selectors/getDialogStack";
+import {CLoginPage} from "./pages/CLoginPage";
+import {CWorkbenchPage} from "./pages/CWorkbenchPage";
+import {ApplicationDialogStack} from "gui/Components/Dialog/DialogStack";
+import {getDialogStack} from "model/selectors/getDialogStack";
 import cx from "classnames";
 
 @observer

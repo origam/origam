@@ -1,11 +1,8 @@
-import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import { action, observable } from "mobx";
-import { observer } from "mobx-react";
+import {DateTimeEditor} from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import {action, observable} from "mobx";
+import {observer} from "mobx-react";
 import React from "react";
-import {
-  FilterSettingsComboBox,
-  FilterSettingsComboBoxItem
-} from "../FilterSettingsComboBox";
+import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
 import produce from "immer";
 
 const OPERATORS: any[] = [

@@ -1,6 +1,6 @@
-import { selectPrevRow } from "model/actions/DataView/selectPrevRow";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
+import {selectPrevRow} from "model/actions/DataView/selectPrevRow";
+import {flow} from "mobx";
+import {handleError} from "model/actions/handleError";
 
 export function onPrevRowClick(ctx: any) {
   return flow(function* onPrevRowClick(event: any) {

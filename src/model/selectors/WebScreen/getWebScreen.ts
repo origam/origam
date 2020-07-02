@@ -1,4 +1,4 @@
-import { isIWebScreen } from "model/entities/types/IWebScreen";
+import {isIWebScreen} from "model/entities/types/IWebScreen";
 
 export function getWebScreen(ctx: any) {
   let cn = ctx;

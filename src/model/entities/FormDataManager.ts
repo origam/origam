@@ -1,4 +1,4 @@
-import { IFormDataManager } from "./types/IFormDataManager";
+import {IFormDataManager} from "./types/IFormDataManager";
 
 export class FormDataManager implements IFormDataManager {
   $type_IFormDataManager: 1 = 1;

@@ -1,8 +1,8 @@
-import { IApi } from "./IApi";
-import { IApplicationLifecycle } from "./IApplicationLifecycle";
-import { IDialogStack } from "./IDialogStack";
-import { IWorkbench } from "./IWorkbench";
-import { IErrorDialogController } from "./IErrorDialog";
+import {IApi} from "./IApi";
+import {IApplicationLifecycle} from "./IApplicationLifecycle";
+import {IDialogStack} from "./IDialogStack";
+import {IWorkbench} from "./IWorkbench";
+import {IErrorDialogController} from "./IErrorDialog";
 
 export interface IApplicationData {
   api: IApi;

@@ -1,5 +1,4 @@
-import { getProperties } from "./getProperties";
-import { getDataSourceFields } from "../DataSources/getDataSourceFields";
+import {getDataSourceFields} from "../DataSources/getDataSourceFields";
 
 export function getColumnNamesToLoad(ctx: any): string[] {
   return getDataSourceFields(ctx)

@@ -1,7 +1,7 @@
 import S from "./FormRoot.module.scss";
 import React from "react";
-import { observer } from "mobx-react";
-import { action } from "mobx";
+import {observer} from "mobx-react";
+import {action} from "mobx";
 
 @observer
 export class FormRoot extends React.Component<{style?:any}> {

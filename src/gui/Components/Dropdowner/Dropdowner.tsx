@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import Measure from "react-measure";
-import { ContentRect } from "react-measure";
+import Measure, {ContentRect} from "react-measure";
 import S from "./Dropdowner.module.scss";
-import { observable, action } from "mobx";
-import { observer, Observer } from "mobx-react";
+import {action, observable} from "mobx";
+import {observer, Observer} from "mobx-react";
 
 class DroppedBox extends React.Component<{
   triggerRect: ContentRect;

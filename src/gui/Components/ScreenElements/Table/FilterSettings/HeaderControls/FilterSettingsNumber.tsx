@@ -1,12 +1,9 @@
-import React, { useImperativeHandle } from "react";
-import {
-  FilterSettingsComboBox,
-  FilterSettingsComboBoxItem
-} from "../FilterSettingsComboBox";
+import React from "react";
+import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
-import { observable, computed, action } from "mobx";
-import { observer, PropTypes } from "mobx-react";
+import {action, observable} from "mobx";
+import {observer} from "mobx-react";
 import produce from "immer";
 
 const OPERATORS: any[] = [

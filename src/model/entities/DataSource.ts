@@ -1,6 +1,6 @@
-import { IDataSource, IDataSourceData } from "./types/IDataSource";
-import { IDataSourceField } from "./types/IDataSourceField";
-import { IRowState } from "./types/IRowState";
+import {IDataSource, IDataSourceData} from "./types/IDataSource";
+import {IDataSourceField} from "./types/IDataSourceField";
+import {IRowState} from "./types/IRowState";
 
 export class DataSource implements IDataSource {
   $type_IDataSource: 1 = 1;

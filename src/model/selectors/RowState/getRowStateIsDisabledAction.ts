@@ -1,4 +1,4 @@
-import { getRowStateById } from "./getRowStateById";
+import {getRowStateById} from "./getRowStateById";
 
 export function getRowStateIsDisableAction(ctx: any, rowId: string, actionId: string) {
   const rowState = getRowStateById(ctx, rowId);

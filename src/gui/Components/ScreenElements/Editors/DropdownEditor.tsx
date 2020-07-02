@@ -1,24 +1,23 @@
 import * as React from "react";
-import { observer, Observer, inject } from "mobx-react";
-import { action, observable, computed, runInAction } from "mobx";
+import {inject, Observer, observer} from "mobx-react";
+import {action, computed, observable, runInAction} from "mobx";
 import S from "./DropdownEditor.module.scss";
-import { Tooltip } from "react-tippy";
+import {Tooltip} from "react-tippy";
 import cx from "classnames";
 
 import _ from "lodash";
-import { MultiGrid, AutoSizer } from "react-virtualized";
+import {AutoSizer, MultiGrid} from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import { IApi } from "../../../../model/entities/types/IApi";
-import { getApi } from "../../../../model/selectors/getApi";
-import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
-import { getDataStructureEntityId } from "../../../../model/selectors/DataView/getDataStructureEntityId";
-import { ILookup } from "../../../../model/entities/types/ILookup";
-import { IProperty } from "../../../../model/entities/types/IProperty";
-import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
-import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
-import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
-import { getEntity } from "../../../../model/selectors/DataView/getEntity";
-import { getSessionId } from "model/selectors/getSessionId";
+import {IApi} from "../../../../model/entities/types/IApi";
+import {getApi} from "../../../../model/selectors/getApi";
+import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
+import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
+import {IProperty} from "../../../../model/entities/types/IProperty";
+import {getSelectedRowId} from "../../../../model/selectors/TablePanelView/getSelectedRowId";
+import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
+import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
+import {getEntity} from "../../../../model/selectors/DataView/getEntity";
+import {getSessionId} from "model/selectors/getSessionId";
 
 export interface IDropdownEditorProps {
   value: string | null;

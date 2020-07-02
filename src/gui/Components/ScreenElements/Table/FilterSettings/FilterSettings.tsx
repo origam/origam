@@ -1,17 +1,16 @@
-import React from "react";
-import { FilterSettingsBoolean } from "./HeaderControls/FilterSettingsBoolean";
-import { IProperty } from "../../../../../model/entities/types/IProperty";
-import { FilterSettingsString } from "./HeaderControls/FilterSettingsString";
-import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
-import { observer } from "mobx-react-lite";
-import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
-import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
-import { flow } from "mobx";
-import { useContext } from "react";
-import { MobXProviderContext } from "mobx-react";
-import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
-import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
+import React, {useContext} from "react";
+import {FilterSettingsBoolean} from "./HeaderControls/FilterSettingsBoolean";
+import {IProperty} from "../../../../../model/entities/types/IProperty";
+import {FilterSettingsString} from "./HeaderControls/FilterSettingsString";
+import {FilterSettingsDate} from "./HeaderControls/FilterSettingsDate";
+import {observer} from "mobx-react-lite";
+import {FilterSettingsNumber} from "./HeaderControls/FilterSettingsNumber";
+import {FilterSettingsLookup} from "./HeaderControls/FilterSettingsLookup";
+import {flow} from "mobx";
+import {MobXProviderContext} from "mobx-react";
+import {onApplyFilterSetting} from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
+import {getFilterSettingByProperty} from "model/selectors/DataView/getFilterSettingByProperty";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
 
 export const FilterSettings: React.FC = observer(props => {
   const property = useContext(MobXProviderContext).property as IProperty;

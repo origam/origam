@@ -1,14 +1,6 @@
-import React from "react";
-
-import { Container } from "dic/Container";
-import {
-  IDataViewBodyUI,
-  DataViewBodyUI,
-  IDataViewToolbarUI,
-  DataViewToolbarUI,
-} from "./DataViewUI";
+import {Container} from "dic/Container";
+import {DataViewBodyUI, DataViewToolbarUI, IDataViewBodyUI, IDataViewToolbarUI,} from "./DataViewUI";
 import * as PerspectiveModule from "./Perspective/PerspectiveModule";
-import { IViewConfiguration, ViewConfiguration } from "./ViewConfiguration";
 
 export const SCOPE_DataView = "DataView";
 

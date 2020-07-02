@@ -1,8 +1,8 @@
 import _ from "lodash";
-import { action, observable, when, flow } from "mobx";
-import { handleError } from "model/actions/handleError";
-import { getApi } from "model/selectors/getApi";
-import { ILookupLoader } from "./types/ILookupLoader";
+import {action, flow, observable, when} from "mobx";
+import {handleError} from "model/actions/handleError";
+import {getApi} from "model/selectors/getApi";
+import {ILookupLoader} from "./types/ILookupLoader";
 
 export class LookupLoader implements ILookupLoader {
   collectedQuery: {
@@ -27,7 +27,7 @@ export class LookupLoader implements ILookupLoader {
   }) {
     try {
       const existingItem = this.collectedQuery.find(
-        q => q.LookupId == query.LookupId && q.MenuId === query.MenuId
+        q => q.LookupId === query.LookupId && q.MenuId === query.MenuId
       );
       if (existingItem) {
         const existingIds = new Set(existingItem.LabelIds);

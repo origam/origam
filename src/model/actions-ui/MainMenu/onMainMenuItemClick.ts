@@ -1,6 +1,6 @@
-import { flow } from "mobx";
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
-import { handleError } from "model/actions/handleError";
+import {flow} from "mobx";
+import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
+import {handleError} from "model/actions/handleError";
 
 export function onMainMenuItemClick(ctx: any) {
   return flow(function* onMainMenuItemClick(args: { event: any; item: any }) {
