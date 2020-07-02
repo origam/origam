@@ -1,6 +1,6 @@
 import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
 import {SimpleScrollState} from "../../../Components/ScreenElements/Table/SimpleScrollState";
-import {action, autorun, computed, flow, IReactionDisposer, reaction, runInAction} from "mobx";
+import {action, autorun, computed, flow, IReactionDisposer, reaction} from "mobx";
 import {getApi} from "../../../../model/selectors/getApi";
 import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
@@ -12,9 +12,10 @@ import {getUserFilters} from "../../../../model/selectors/DataView/getUserFilter
 import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrdering";
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
-import {Root} from "../../../../Root";
+import {CancellablePromise} from "mobx/lib/api/flow";
+import Timeout = NodeJS.Timeout;
 
-export interface IInfiniteScrollLoaderData{
+export interface IInfiniteScrollLoaderData {
   gridDimensions: IGridDimensions;
   scrollState: SimpleScrollState;
   ctx: any;
@@ -23,21 +24,24 @@ export interface IInfiniteScrollLoaderData{
   visibleRowsMonitor: IVisibleRowsMonitor;
 }
 
-export interface  IInfiniteScrollLoader extends IInfiniteScrollLoaderData{
-  start(): ()=>void;
+export interface IInfiniteScrollLoader extends IInfiniteScrollLoaderData {
+  start(): () => void;
+
   dispose(): void;
 }
 
 export const SCROLL_ROW_CHUNK = 1000;
 export const MAX_CHUNKS_TO_HOLD = 10;
 
-export class NullIScrollLoader implements IInfiniteScrollLoader{
+export class NullIScrollLoader implements IInfiniteScrollLoader {
   ctx: any = null as any;
   gridDimensions: IGridDimensions = null as any;
   scrollState: SimpleScrollState = null as any;
-  rowsContainer: ScrollRowContainer =  null as any;
-  start(): ()=>void {
-    return ()=>{};
+  rowsContainer: ScrollRowContainer = null as any;
+
+  start(): () => void {
+    return () => {
+    };
   }
 
   dispose(): void {
@@ -56,6 +60,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     Object.assign(this, data);
     this.rowsContainer.registerResetListener(() => this.handleRowContainerReset());
     this.visibleRowsMonitor = new OpenGroupVisibleRowsMonitor(this.ctx, this.gridDimensions, this.scrollState);
+    this.requestProcessor.start();
   }
 
   groupFilter: string | undefined;
@@ -65,6 +70,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   scrollState: SimpleScrollState = null as any;
   ctx: any = null as any;
   rowsContainer: ScrollRowContainer = null as any;
+  requestProcessor: FlowQueueProcessor = new FlowQueueProcessor(100, 100);
 
   @computed
   get distanceToStart() {
@@ -93,7 +99,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   @action.bound
   public start() {
-    this.debugDisposer =  autorun(() => {
+    this.debugDisposer = autorun(() => {
       //console.log("distanceToStart: " + this.distanceToStart);
       //console.log("distanceToEnd: " + this.distanceToEnd);
       //console.log("headLoadingNeeded(): " + this.headLoadingNeeded);
@@ -110,28 +116,28 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       },
       () => {
         if (this.headLoadingNeeded) {
-          this.prependLines();
+          this.requestProcessor.enqueue(() => this.prependLines());
         }
         if (this.tailLoadingNeeded) {
-          this.appendLines();
+          this.requestProcessor.enqueue(() => this.appendLines());
         }
       }
     );
     return this.reactionDisposer;
   }
 
-  handleRowContainerReset(){
+  handleRowContainerReset() {
     this.lastRequestedStartOffset = 0;
     this.lastRequestedEndOffset = 0;
   }
 
-  getFilters(){
-    const filters=[];
-    if(this.groupFilter){
+  getFilters() {
+    const filters = [];
+    if (this.groupFilter) {
       filters.push(this.groupFilter);
     }
     const userFilters = getUserFilters(this.ctx);
-    if(userFilters) {
+    if (userFilters) {
       filters.push(userFilters);
     }
     return joinWithAND(filters);
@@ -140,16 +146,17 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   private appendLines = flow(function* (
     this: InfiniteScrollLoader
   ) {
-    //console.log("appendLines!");
-    const api = getApi(this.ctx);
-    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
-
+    if (!this.tailLoadingNeeded) {
+      return;
+    }
     if (this.lastRequestedEndOffset === this.rowsContainer.nextEndOffset) {
       return;
     }
     this.lastRequestedEndOffset = this.rowsContainer.nextEndOffset;
     this.lastRequestedStartOffset = -1;
 
+    const api = getApi(this.ctx);
+    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
@@ -163,7 +170,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     })
     const oldDistanceToStart = this.distanceToStart;
     this.rowsContainer.appendRecords(data)
-    if(this.rowsContainer.isFull && !this.rowsContainer.isLastRowLoaded){
+    if (this.rowsContainer.isFull && !this.rowsContainer.isLastRowLoaded) {
       const newDistanceToStart = oldDistanceToStart - SCROLL_ROW_CHUNK
       const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
       this.scrollState.scrollTo({scrollTop: newTop});
@@ -174,10 +181,9 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   private prependLines = flow(function* (
     this: InfiniteScrollLoader
   ) {
-    //console.log("prependLines!");
-    const api = getApi(this.ctx);
-    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
-
+    if (!this.headLoadingNeeded) {
+      return;
+    }
     const nextStartOffset = this.rowsContainer.nextStartOffset;
     if (this.lastRequestedStartOffset === nextStartOffset || nextStartOffset < 0) {
       return;
@@ -185,6 +191,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.lastRequestedStartOffset = nextStartOffset;
     this.lastRequestedEndOffset = 0;
 
+    const api = getApi(this.ctx);
+    const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
@@ -198,7 +206,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     })
     const oldDistanceToStart = this.distanceToStart;
     this.rowsContainer.prependRecords(data);
-    if(this.rowsContainer.isFull && !this.rowsContainer.isFirstRowLoaded){
+    if (this.rowsContainer.isFull && !this.rowsContainer.isFirstRowLoaded) {
       const newDistanceToStart = oldDistanceToStart + SCROLL_ROW_CHUNK
       const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
       this.scrollState.scrollTo({scrollTop: newTop});
@@ -206,11 +214,55 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   });
 
   dispose(): void {
-    if(this.reactionDisposer){
+    if (this.reactionDisposer) {
       this.reactionDisposer();
     }
-    if(this.debugDisposer){
+    if (this.debugDisposer) {
       this.debugDisposer();
     }
+    this.requestProcessor.dispose();
   }
+}
+
+class FlowQueueProcessor {
+
+  private flowQueue: (() => CancellablePromise<void>)[] = [];
+  private stopRequested: boolean = false;
+  private readonly delayBetweenCallsMillis: number;
+  private readonly mainLoopDelayMills: number;
+  private timeoutHandle: any;
+
+  constructor(mainLoopDelayMilliseconds: number, delayBetweenCallsMilliseconds: number) {
+    this.mainLoopDelayMills = mainLoopDelayMilliseconds;
+    this.delayBetweenCallsMillis = delayBetweenCallsMilliseconds;
+  }
+
+  private sleep(milliseconds: number) {
+    return new Promise(resolve => {
+      this.timeoutHandle = setTimeout(resolve, milliseconds);
+    });
+  }
+
+  enqueue(flow: () => CancellablePromise<void>) {
+    this.flowQueue.push(flow);
+  }
+
+  dispose() {
+    this.stopRequested = true;
+    clearTimeout(this.timeoutHandle);
+  }
+
+  async start() {
+    while (true) {
+      while (this.flowQueue.length > 0) {
+        const currentFlow = this.flowQueue.shift()!;
+        await currentFlow();
+        await this.sleep(this.delayBetweenCallsMillis);
+      }
+      await this.sleep(this.mainLoopDelayMills);
+      if (this.stopRequested) {
+        return;
+      }
+    }
+  };
 }
