@@ -178,17 +178,21 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const api = getApi(this);
       let data;
       if(dataView.isRootEntity && !dataView.isRootGrid && getDontRequestData(this)){
-        data = yield api.getRows({
-          MenuId: getMenuItemId(dataView),
-          SessionFormIdentifier: getSessionId(this),
-          DataStructureEntityId: getDataStructureEntityId(dataView),
-          Filter: this.buildDetailFilter(dataView),
-          Ordering: [],
-          RowLimit: SCROLL_ROW_CHUNK,
-          RowOffset: 0,
-          ColumnNames: getColumnNamesToLoad(dataView),
-          MasterRowId: undefined,
-        });
+        if(dataView.parentBindings.length === 1){
+          data = [dataView.parentBindings[0].parentDataView.selectedRow];
+        }else{
+          data = yield api.getRows({
+            MenuId: getMenuItemId(dataView),
+            SessionFormIdentifier: getSessionId(this),
+            DataStructureEntityId: getDataStructureEntityId(dataView),
+            Filter: this.buildDetailFilter(dataView),
+            Ordering: [],
+            RowLimit: SCROLL_ROW_CHUNK,
+            RowOffset: 0,
+            ColumnNames: getColumnNamesToLoad(dataView),
+            MasterRowId: undefined,
+          });
+        }
       }else{
         data = yield api.getData({
           SessionFormIdentifier: getSessionId(this),
