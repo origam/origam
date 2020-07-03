@@ -13,7 +13,7 @@ import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrder
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
-import Timeout = NodeJS.Timeout;
+
 
 export interface IInfiniteScrollLoaderData {
   gridDimensions: IGridDimensions;
