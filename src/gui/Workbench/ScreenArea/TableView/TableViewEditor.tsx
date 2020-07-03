@@ -89,6 +89,7 @@ export class TableViewEditor extends React.Component<{
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            isRichText={false}
           />
         );
       case "Date":

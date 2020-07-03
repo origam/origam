@@ -94,7 +94,7 @@ export class FormBuilder extends React.Component<{
                       left={property.x}
                       top={property.y}
                       isCheckbox={property.column === "CheckBox"}
-                      editor={<FormViewEditor value={value} textualValue={textualValue} />}
+                      editor={<FormViewEditor value={value} isRichText={property.isRichText} textualValue={textualValue} />}
                     />
                   </Provider>
                 ) : (

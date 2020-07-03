@@ -33,6 +33,7 @@ export class FormViewEditor extends React.Component<{
   value?: any;
   textualValue?: any;
   property?: IProperty;
+  isRichText: boolean;
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => void;
 }> {
@@ -115,6 +116,7 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={undefined}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            isRichText={this.props.isRichText}
           />
         );
       case "Date":

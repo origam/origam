@@ -15,6 +15,7 @@ export class TextEditor extends React.Component<{
   isFocused: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
+  isRichText: boolean;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
@@ -70,53 +71,79 @@ export class TextEditor extends React.Component<{
   render() {
     return (
       <div className={S.editorContainer}>
-        {!this.props.isMultiline ? (
-          <input
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
-            className={S.input}
-            type={this.props.isPassword ? "password" : "text"}
-            autoComplete={this.props.isPassword ? "new-password" : undefined}
-            value={this.props.value || ""}
-            readOnly={this.props.isReadOnly}
-            ref={this.refInput}
-            onChange={(event: any) =>
-              this.props.onChange && this.props.onChange(event, event.target.value)
-            }
-            onKeyDown={this.props.onKeyDown}
-            onClick={this.props.onClick}
-            onBlur={this.props.onEditorBlur}
-            onFocus={this.handleFocus}
-          />
-        ) : (
-          <textarea
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
-            className={S.input}
-            value={this.props.value || ""}
-            readOnly={this.props.isReadOnly}
-            ref={this.refInput}
-            onChange={(event: any) =>
-              this.props.onChange && this.props.onChange(event, event.target.value)
-            }
-            onKeyDown={this.props.onKeyDown}
-            onClick={this.props.onClick}
-            onBlur={this.props.onEditorBlur}
-            onFocus={this.handleFocus}
-          />
-        )}
+        {this.renderValueTag()}
         {this.props.isInvalid && (
           <div className={S.notification}>
             <Tooltip html={this.props.invalidMessage} arrow={true}>
-              <i className="fas fa-exclamation-circle red" />
+              <i className="fas fa-exclamation-circle red"/>
             </Tooltip>
           </div>
         )}
       </div>
     );
+  }
+
+  private renderValueTag() {
+    if (this.props.isRichText) {
+      return (
+        <div className={S.editorContainer}>
+          <div
+            style={{
+              color: this.props.foregroundColor,
+              backgroundColor: this.props.backgroundColor,
+            }}
+            className={S.input}
+            ref={this.refInput}
+            dangerouslySetInnerHTML={{__html: this.props.value ?? ""}}
+            onKeyDown={this.props.onKeyDown}
+            onClick={this.props.onClick}
+            onBlur={this.props.onEditorBlur}
+            onFocus={this.handleFocus}
+          />
+        </div>
+      );
+    }
+    if (!this.props.isMultiline) {
+      return (
+        <input
+          style={{
+            color: this.props.foregroundColor,
+            backgroundColor: this.props.backgroundColor,
+          }}
+          className={S.input}
+          type={this.props.isPassword ? "password" : "text"}
+          autoComplete={this.props.isPassword ? "new-password" : undefined}
+          value={this.props.value || ""}
+          readOnly={this.props.isReadOnly}
+          ref={this.refInput}
+          onChange={(event: any) =>
+            this.props.onChange && this.props.onChange(event, event.target.value)
+          }
+          onKeyDown={this.props.onKeyDown}
+          onClick={this.props.onClick}
+          onBlur={this.props.onEditorBlur}
+          onFocus={this.handleFocus}
+        />
+      );
+    }
+    return (
+      <textarea
+        style={{
+          color: this.props.foregroundColor,
+          backgroundColor: this.props.backgroundColor,
+        }}
+        className={S.input}
+        value={this.props.value || ""}
+        readOnly={this.props.isReadOnly}
+        ref={this.refInput}
+        onChange={(event: any) =>
+          this.props.onChange && this.props.onChange(event, event.target.value)
+        }
+        onKeyDown={this.props.onKeyDown}
+        onClick={this.props.onClick}
+        onBlur={this.props.onEditorBlur}
+        onFocus={this.handleFocus}
+      />
+    )
   }
 }
