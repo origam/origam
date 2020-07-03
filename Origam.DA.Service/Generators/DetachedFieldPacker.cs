@@ -70,6 +70,10 @@ namespace Origam.DA.Service
         public  string RenderSqlExpression(DataStructureEntity entity,
             DetachedField detachedField)
         {
+            if (detachedField.ArrayRelation == null)
+            {
+                return "";
+            }
             throw new NotImplementedException();
         }
     }
