@@ -13,7 +13,7 @@ import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrder
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
-import Timeout = NodeJS.Timeout;
+
 
 export interface IInfiniteScrollLoaderData {
   gridDimensions: IGridDimensions;
@@ -157,6 +157,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
+    debugger;
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
@@ -193,6 +194,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
+    debugger;
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
