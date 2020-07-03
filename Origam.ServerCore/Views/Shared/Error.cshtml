@@ -4,11 +4,28 @@
 @inject IHtmlLocalizer<SharedResources> SharedLocalizer
 
 @{
-    var error = Model?.Error?.Error;
-    var errorDescription = Model?.Error?.ErrorDescription;
-    var request_id = Model?.Error?.RequestId;
+    var error = "unauthorized_client";//Model?.Error?.Error;
+    var errorDescription = "blable sdvc df  tytyn  d f";//Model?.Error?.ErrorDescription;
+    var request_id = "80002e94-0000-d300-b63f-84710c7967bb"; //Model?.Error?.RequestId;
 }
 
 <h3 class="confirmation-text">
     @SharedLocalizer["UnknownError"]
 </h3>
+@if (error != null)
+{
+    <strong>
+        <em>
+            @error
+        </em>
+    </strong>
+
+    if (errorDescription != null)
+    {
+        <div>@errorDescription</div>
+    }
+}
+@if (request_id != null)
+{
+    <div class="request-id">Request Id: @request_id</div>
+}
