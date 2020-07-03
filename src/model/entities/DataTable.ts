@@ -15,6 +15,8 @@ import {formatNumber} from "./NumberFormating";
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
   rowsContainer: IRowsContainer = null as any;
+  @observable
+  isEmpty: boolean = false;
 
   constructor(data: IDataTableData) {
     Object.assign(this, data);
@@ -217,6 +219,9 @@ export class DataTable implements IDataTable {
   setRecords(rows: any[][]) {
     this.clear();
     this.rowsContainer.set(rows);
+    if(rows.length === 0){
+      this.isEmpty = true;
+    }
   }
   @action.bound
   setFormDirtyValue(row: any[], propertyId: string, value: any) {

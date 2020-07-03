@@ -170,8 +170,8 @@ export class DataView implements IDataView {
 
   @computed get panelViewActions() {
     const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
-    if (rowStateMayCauseFlicker) {
-      return [];
+    if (rowStateMayCauseFlicker && !this.dataTable.isEmpty) {
+       return [];
     }
     return this.actions.filter(
       action => action.placement === IActionPlacement.PanelHeader
@@ -180,7 +180,7 @@ export class DataView implements IDataView {
 
   @computed get toolbarActions() {
     const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
-    if (rowStateMayCauseFlicker) {
+    if (rowStateMayCauseFlicker && !this.dataTable.isEmpty) {
       return [];
     }
     return this.actions.filter(
