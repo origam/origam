@@ -34,7 +34,7 @@ export interface IPropertyData {
   parameters?: any;
   allowReturnToForm?: boolean;
   isTree?: boolean;
-
+  style?: string;
   identifier?: string;
   lookup?: ILookup;
 }

@@ -247,6 +247,7 @@ export function interpretScreenXml(
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
             isTree: property.attributes.IsTree === "true",
             isAggregatedColumn: property.attributes.Aggregated || false,
+            style: property.attributes.Style
           });
         }
       );
