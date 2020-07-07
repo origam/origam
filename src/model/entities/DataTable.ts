@@ -108,7 +108,7 @@ export class DataTable implements IDataTable {
     if (property.isLookup) {
       if (property.column === "TagInput") {
         const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
-        return (textArray || []).join(", ");
+        return (textArray || []);
       } else {
         return property.lookup!.getValue(`${value}`);
       }
