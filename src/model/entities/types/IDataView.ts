@@ -13,6 +13,7 @@ import {ClientSideGrouper} from "../ClientSideGrouper";
 import {IGridDimensions, IScrollState} from "../../../gui/Components/ScreenElements/Table/types";
 import {ITableRow} from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
 import {BoundingRect} from "react-measure";
+import {FocusManager} from "../FocusManager";
 
 export interface IDataViewData {
   id: string;
@@ -76,6 +77,7 @@ export interface IDataView extends IDataViewData {
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
+  focusManager: FocusManager;
   
   isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;

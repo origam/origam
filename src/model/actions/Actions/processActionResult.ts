@@ -11,6 +11,8 @@ import {IUrlUpenMethod} from "model/entities/types/IUrlOpenMethod";
 import {openNewUrl} from "../Workbench/openNewUrl";
 import {ICRUDResult, processCRUDResult} from "../DataLoading/processCRUDResult";
 import {IRefreshOnReturnType} from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
+import {IDataView} from "../../entities/types/IDataView";
+import {getDataViewByModelInstanceId} from "../../selectors/DataView/getDataViewByModelInstanceId";
 
 export interface IOpenNewForm {
   (
@@ -47,19 +49,22 @@ export interface IProcessCRUDResult {
   (result: ICRUDResult): Generator;
 }
 
-export function new_ProcessActionResult($: any) {
-  const workbenchLifecycle = getWorkbenchLifecycle($);
+export function new_ProcessActionResult(ctx: any) {
+  const workbenchLifecycle = getWorkbenchLifecycle(ctx);
+  const getPanelFunc = (modelInstanceId: string) => getDataViewByModelInstanceId(ctx, modelInstanceId)!;
   return processActionResult2({
+    getPanelFunc: getPanelFunc,
     openNewForm: workbenchLifecycle.openNewForm,
-    openNewUrl: openNewUrl($),
-    closeForm: closeForm($),
-    refreshForm: actions.formScreen.refresh($),
-    getActionCaption: () => getActionCaption($),
-    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult($, crudResult)
+    openNewUrl: openNewUrl(ctx),
+    closeForm: closeForm(ctx),
+    refreshForm: actions.formScreen.refresh(ctx),
+    getActionCaption: () => getActionCaption(ctx),
+    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult(ctx, crudResult)
   });
 }
 
 export function processActionResult2(dep: {
+  getPanelFunc: (modelInstanceId: string) => IDataView;
   openNewForm: IOpenNewForm;
   openNewUrl: IOpenNewUrl;
   closeForm: ICloseForm;
@@ -115,6 +120,19 @@ export function processActionResult2(dep: {
             actionResultItem.urlOpenMethod,
             dep.getActionCaption()
           );
+          break;
+        }
+        case IActionResultType.Script: {
+          try {
+            // eslint-disable-next-line no-new-func
+            const actionScript = new Function("getPanel", actionResultItem.script);
+            actionScript(dep.getPanelFunc);
+          }catch (e) {
+            let message = "An error occurred while executing custom script: "+actionResultItem.script+", \n"+e.message;
+            if(e.stackTrace)
+              message +=(", \n"+e.stackTrace);
+            throw new Error(message)
+          }
           break;
         }
       }
