@@ -15,6 +15,7 @@ const sockHost = process.env.WDS_SOCKET_HOST;
 const sockPath = process.env.WDS_SOCKET_PATH; // default: '/sockjs-node'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
+//To use auth token from another origin https://localhost:3000/#origamAuthTokenOverride=er8OOdOzIyqINyX_vHm-z46T-gOfE-Q3msmCaH8-c9k
 const proxyTarget = "https://localhost:44356";
 //const proxyTarget = "http://admintesth5.wy.by";
 //const proxyTarget = "http://admindevh5.wy.by";
