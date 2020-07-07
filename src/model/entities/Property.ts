@@ -44,7 +44,7 @@ export class Property implements IProperty {
   identifier?: string;
   lookup?: ILookup;
   isAggregatedColumn: boolean = false;
-  style?: string;
+  style: any;
 
   linkToMenuId?: string = undefined;
 

@@ -16,6 +16,7 @@ export class TextEditor extends React.Component<{
   backgroundColor?: string;
   foregroundColor?: string;
   isRichText: boolean;
+  customStyle?: any;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
@@ -68,6 +69,17 @@ export class TextEditor extends React.Component<{
     this.elmInput = elm;
   };
 
+  getStyle(){
+    if(this.props.customStyle){
+      return this.props.customStyle;
+    }else{
+      return {
+        color: this.props.foregroundColor,
+        backgroundColor: this.props.backgroundColor,
+      }
+    }
+  }
+
   render() {
     return (
       <div className={S.editorContainer}>
@@ -88,10 +100,7 @@ export class TextEditor extends React.Component<{
       return (
         <div className={S.editorContainer}>
           <div
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
+            style={this.getStyle()}
             className={S.input}
             ref={this.refInput}
             dangerouslySetInnerHTML={{__html: this.props.value ?? ""}}
@@ -106,10 +115,7 @@ export class TextEditor extends React.Component<{
     if (!this.props.isMultiline) {
       return (
         <input
-          style={{
-            color: this.props.foregroundColor,
-            backgroundColor: this.props.backgroundColor,
-          }}
+          style={this.getStyle()}
           className={S.input}
           type={this.props.isPassword ? "password" : "text"}
           autoComplete={this.props.isPassword ? "new-password" : undefined}
@@ -128,10 +134,7 @@ export class TextEditor extends React.Component<{
     }
     return (
       <textarea
-        style={{
-          color: this.props.foregroundColor,
-          backgroundColor: this.props.backgroundColor,
-        }}
+        style={this.getStyle()}
         className={S.input}
         value={this.props.value || ""}
         readOnly={this.props.isReadOnly}

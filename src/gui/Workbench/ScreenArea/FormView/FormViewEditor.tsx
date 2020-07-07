@@ -92,6 +92,7 @@ export class FormViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
+            customStyle={this.props.property?.style}
             refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={undefined}
@@ -107,6 +108,7 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             isMultiline={this.props.property!.multiline}
             isPassword={this.props.property!.isPassword}
+            customStyle={this.props.property?.style}
             invalidMessage={invalidMessage}
             isFocused={false}
             backgroundColor={backgroundColor}
