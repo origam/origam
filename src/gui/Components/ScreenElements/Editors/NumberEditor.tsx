@@ -22,6 +22,7 @@ export class NumberEditor extends React.Component<{
   backgroundColor?: string;
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
+  customStyle?: any;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
@@ -126,15 +127,23 @@ export class NumberEditor extends React.Component<{
     this.elmInput = elm;
   };
 
+  getStyle(){
+    if(this.props.customStyle){
+      return this.props.customStyle;
+    }else{
+      return {
+        color: this.props.foregroundColor,
+        backgroundColor: this.props.backgroundColor,
+      }
+    }
+  }
+
   render() {
     return (
       <div className={S.editorContainer}>
         {!this.props.isMultiline ? (
           <input
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
+            style={this.getStyle()}
             title={this.props.customNumberFormat || ""}
             className={cx(S.input, "isRightAligned")}
             type={this.props.isPassword ? "password" : "text"}
@@ -150,10 +159,7 @@ export class NumberEditor extends React.Component<{
           />
         ) : (
           <textarea
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
+            style={this.getStyle()}
             className={S.input}
             value={this.props.value || ""}
             readOnly={this.props.isReadOnly}

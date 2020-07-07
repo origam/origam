@@ -40,6 +40,7 @@ import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveCol
 import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
 import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
 import {isInfiniteScrollingActive} from "../model/selectors/isInfiniteScrollingActive";
+import {cssString2Object} from "../utils/objects";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -247,6 +248,7 @@ export function interpretScreenXml(
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
             isTree: property.attributes.IsTree === "true",
             isAggregatedColumn: property.attributes.Aggregated || false,
+            style: cssString2Object(property.attributes.Style)
           });
         }
       );
