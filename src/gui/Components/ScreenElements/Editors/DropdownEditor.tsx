@@ -18,6 +18,7 @@ import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
 import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
 import {getEntity} from "../../../../model/selectors/DataView/getEntity";
 import {getSessionId} from "model/selectors/getSessionId";
+import {IFocusable} from "../../../../model/entities/FocusManager";
 
 export interface IDropdownEditorProps {
   value: string | null;
@@ -39,6 +40,7 @@ export interface IDropdownEditorProps {
   LookupId?: string;
   Parameters?: { [key: string]: any };
   menuItemId?: string;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 
   refocuser?: (cb: () => void) => () => void;
   onTextChange?(event: any, value: string): void;
@@ -84,6 +86,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   @observable isLoading = false;
   @observable wasTextEdited = false;
   @observable initialTextValue = "";
+  unsubscribeFromFocusManager?: () => void;
 
   componentDidMount() {
     runInAction(() => {
@@ -93,10 +96,14 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
       this.makeFocusedIfNeeded();
       this.selectedItemId = this.props.value || undefined;
     });
+    if(this.elmInput && this.props.subscribeToFocusManager){
+      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+    }
   }
 
   componentWillUnmount() {
     this.disposers.forEach(d => d());
+    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   componentDidUpdate(prevProps: {

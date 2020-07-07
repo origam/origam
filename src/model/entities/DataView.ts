@@ -33,6 +33,7 @@ import {GridDimensions} from "../../gui/Workbench/ScreenArea/TableView/GridDimen
 import {SimpleScrollState} from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
 import {BoundingRect} from "react-measure";
 import {IGridDimensions} from "../../gui/Components/ScreenElements/Table/types";
+import {FocusManager} from "./FocusManager";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -41,6 +42,7 @@ class SavedViewState {
 export class DataView implements IDataView {
 
   $type_IDataView: 1 = 1;
+  focusManager: FocusManager = new FocusManager();
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
@@ -381,4 +383,19 @@ export class DataView implements IDataView {
   @observable contentBounds: BoundingRect | undefined;
 
   parent?: any;
+
+  // Called by client scripts
+  focusFormViewControl(name: string){
+    this.focusManager.focus(name);
+  }
+
+  // Called by client scripts
+  showView(viewId: string, focus: boolean) {
+    throw new Error("showView method is not yet implemented.")
+  }
+
+  // Called by client scripts
+  switchToPanel(modelInstanceId: string){
+    throw new Error("switchToPanel method is not yet implemented.")
+  }
 }
