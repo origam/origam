@@ -1,5 +1,7 @@
-import {createContext, PropsWithChildren, useContext, useMemo, useState} from "react";
+import { createContext, PropsWithChildren, useContext, useMemo, useState } from "react";
 import _ from "lodash";
+import { Observer } from "mobx-react";
+import React from "react";
 
 export class ResponsiveBlock {
   constructor(private onChildrenSetUpdate?: (ids: Set<any>) => void) {
@@ -55,13 +57,13 @@ export class ResponsiveBlock {
 
   someNodesResizedImm(entries: any[]) {
     let shouldRecompute = false;
-    if(this.container) {
+    if (this.container) {
       const newWidth = this.container.getBoundingClientRect().width;
       if (newWidth !== this.containerWidth) shouldRecompute = true;
       this.containerWidth = newWidth;
     }
-    for(let [chRec] of this.keyToChildRec.entries()) {
-      if(chRec.elmChild) {
+    for (let [chRec] of this.keyToChildRec.entries()) {
+      if (chRec.elmChild) {
         const newWidth = chRec.elmChild.offsetWidth; /*e.target.getBoundingClientRect().width;*/
         if (chRec.width !== newWidth) {
           shouldRecompute = true;
@@ -69,7 +71,7 @@ export class ResponsiveBlock {
         }
         chRec.width = newWidth;
       }
-    }/*
+    } /*
     // for (let e of entries) {
     //   //console.log(e.target, e.contentRect.width);
     //   if (e.target === this.container) {
@@ -83,7 +85,7 @@ export class ResponsiveBlock {
     //   if (this.hiddenChildren.has(key)) continue;
     //   const childRec = this.keyToChildRec.get(key);
     //   if (childRec) {
-    //     const newWidth = /*e.target.offsetWidth;*/// e.target.getBoundingClientRect().width;
+    //     const newWidth = /*e.target.offsetWidth;*/ // e.target.getBoundingClientRect().width;
     //     if (childRec.width !== newWidth) {
     //       shouldRecompute = true;
     //       console.log(e.target, e.target.offsetWidth, e.target.getBoundingClientRect().width, e);
@@ -168,16 +170,24 @@ export function ResponsiveChild(
     },
     [props.childKey]
   );
-  return props.children({ refChild, isHidden });
+  return <Observer>{() => <>{props.children({ refChild, isHidden })}</>}</Observer>;
 }
 
 export function ResponsiveContainer(
   props: PropsWithChildren<{ compensate?: number; children: (args: { refChild: any }) => any }>
 ) {
   const responsiveToolbar = useContext(CtxResponsiveToolbar);
-  return props.children({
-    refChild: (elm: any) => responsiveToolbar.refContainer(props.compensate || 0, elm),
-  });
+  return (
+    <Observer>
+      {() => (
+        <>
+          {props.children({
+            refChild: (elm: any) => responsiveToolbar.refContainer(props.compensate || 0, elm),
+          })}
+        </>
+      )}
+    </Observer>
+  );
 }
 
 export const CtxResponsiveToolbar = createContext<ResponsiveBlock>(new ResponsiveBlock());
