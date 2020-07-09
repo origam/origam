@@ -384,6 +384,10 @@ export class DataView implements IDataView {
 
   parent?: any;
 
+  get defaultAction(){
+    return this.actions.find(action => action.isDefault);
+  }
+
   // Called by client scripts
   focusFormViewControl(name: string){
     this.focusManager.focus(name);
