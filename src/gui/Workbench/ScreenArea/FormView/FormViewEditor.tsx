@@ -224,7 +224,7 @@ export class FormViewEditor extends React.Component<{
       if (!dataView.defaultAction) {
         return;
       }
-      if (event.keyCode === 13) {
+      if (event.key === "Enter") {
         uiActions.actions.onActionClick(dataView.defaultAction)(event, dataView.defaultAction)
       }
     };
