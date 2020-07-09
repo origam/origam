@@ -105,5 +105,121 @@
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.FieldMappingItem"
       xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="a340fd4b-ea2e-4397-8ee0-c40b6cf174a0"
+      isPrimaryKey="false"
+      mappedColumnName="SecondReferenceKey"
+      name="SecondReferenceKey"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityIndex
+      abstract="false"
+      generateDeploymentScript="false"
+      x:id="8a2a458b-5a86-4fc5-b232-11ceaa6c9456"
+      name="ix_OrigamDataAuditLog_SecondReferenceKey"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
+      <DataEntityIndexField
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/SecondReferenceKey/a340fd4b-ea2e-4397-8ee0-c40b6cf174a0"
+        x:id="c132dcf5-cf52-4b1d-b1b9-505fa157e8ca"
+        name="0_SecondReferenceKey"
+        sortOrder="Ascending"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+    <EntityFilter
+      abstract="false"
+      x:id="07192def-61bf-4ddf-a18d-4cf33aac3df7"
+      name="GetByParentRecordIdOrSecondReferenceKey"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
+        x:id="8b481773-bb1f-4d60-bf63-9822853b297d"
+        isPrimaryKey="false"
+        name="or"
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
+        <FunctionCallParameter
+          abstract="false"
+          x:id="f57ab345-61d4-479a-a3f6-93bf590f3567"
+          name="Arguments"
+          parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityFilterReference
+            abstract="false"
+            filter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/GetByParentRecordId/f61532be-17e8-4f4f-8bf7-43189c296c55"
+            x:id="39e8e82c-7d9f-4d8e-9041-b1002f39a890"
+            name="GetByParentRecordId"
+            x:type="Origam.Schema.EntityModel.EntityFilterReference" />
+          <EntityFilterReference
+            abstract="false"
+            filter="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/GetBySecondReferenceKey/d0696caf-72ee-4afc-8a6c-1dadb4cc8bd7"
+            x:id="dba1dcfe-9df7-4bf2-b44e-c10e7800d5cd"
+            name="GetBySecondReferenceKey"
+            x:type="Origam.Schema.EntityModel.EntityFilterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      abstract="false"
+      x:id="d0696caf-72ee-4afc-8a6c-1dadb4cc8bd7"
+      name="GetBySecondReferenceKey"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="effc7481-1bb4-46ea-a99a-629c11eee87b"
+        isPrimaryKey="false"
+        name="="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
+        <FunctionCallParameter
+          abstract="false"
+          x:id="d4136bd8-04e6-4aab-b37d-e397f53893cf"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="false"
+            x:id="86f6753d-b823-4cde-854d-9e20151aa3af"
+            name="parRefParentRecordId"
+            parameter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/parRefParentRecordId/39373b8a-c514-4ff5-9cda-ae1eaa555fe9"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="false"
+          x:id="b456ad0e-b6b0-49ae-9310-e91dcfcbb41d"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="false"
+            field="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/SecondReferenceKey/a340fd4b-ea2e-4397-8ee0-c40b6cf174a0"
+            x:id="e38ea1a0-4b52-4dfe-aba8-d22dd0190cf1"
+            name="SecondReferenceKey"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
   </DataEntity>
 </x:file>

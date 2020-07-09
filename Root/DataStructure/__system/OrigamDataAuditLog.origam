@@ -27,9 +27,9 @@
       <DataStructureFilterSetFilter
         abstract="false"
         entity="Root/DataStructure/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/AuditRecord/e5eabac7-cf91-437c-b4d5-94f1d885fbde"
-        filter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/GetByParentRecordId/f61532be-17e8-4f4f-8bf7-43189c296c55"
+        filter="Root/DataEntity/__system/OrigamDataAuditLog.origam#OrigamDataAuditLog/GetByParentRecordIdOrSecondReferenceKey/07192def-61bf-4ddf-a18d-4cf33aac3df7"
         x:id="6ad90e6d-a452-42f6-816d-c8390c07d253"
-        name="AuditRecord_GetByParentRecordId"
+        name="AuditRecord_GetByParentRecordIdOrSecondReferenceKey"
         passWhenParameterMatch="false"
         x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
     </DataStructureFilterSet>
