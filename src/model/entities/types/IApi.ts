@@ -309,4 +309,6 @@ export interface IApi {
     data: { uploadToken: string; fileName: string; file: any },
     onUploadProgress?: (event: any) => void
   ): Promise<any>;
+
+  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any>
 }

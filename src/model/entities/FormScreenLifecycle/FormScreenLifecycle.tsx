@@ -398,7 +398,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const api = getApi(this);
       do {
         this._flushDataShallRerun = false;
-        for (let dataView of getFormScreen(this).dataViews) {
+        const dataViews = getFormScreen(this).dataViews;
+        for (let dataView of dataViews) {
           for (let row of dataView.dataTable.getDirtyValueRows()) {
             const updateObjectResult = yield api.updateObject({
               SessionFormIdentifier: getSessionId(this),
