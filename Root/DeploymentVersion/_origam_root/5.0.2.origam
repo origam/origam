@@ -2,8 +2,8 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
     abstract="false"
-    deploymentDependenciesCsv="&#xD;&#xA;de1b2a3c-2d03-49ce-ba0d-5e44972daf1f, 1.0.0&#xD;&#xA;0fe05b88-11e4-4f28-81bc-7762afa76dc8, 1.2.38&#xD;&#xA;b9ab12fe-7f7d-43f7-bedc-93747647d6e4, 1.2.3&#xD;&#xA;951f2cda-2867-4b99-8824-071fa8749ead, 5.0"
-    x:id="4765b155-a907-4bd9-8627-29ffd1f5f8c8"
+    deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.0"
+	x:id="4765b155-a907-4bd9-8627-29ffd1f5f8c8"
     name="5.0.2"
     x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
     version="5.0.2">

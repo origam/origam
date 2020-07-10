@@ -2,6 +2,7 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
     abstract="false"
+	deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.0.2"
     x:id="5fc878d0-13c7-4329-9341-ece208455cf2"
     name="5.1.0"
     x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
