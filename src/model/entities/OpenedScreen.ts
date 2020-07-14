@@ -32,6 +32,10 @@ export class OpenedScreen implements IOpenedScreen {
       return this.content.formScreen?.dynamicTitle ?? this._title;
   }
 
+  get hasDynamicTitle(){
+    return !!this.content.formScreen?.dynamicTitle
+  }
+
   set title(value: string){
     this._title = value;
   }
