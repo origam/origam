@@ -21,6 +21,7 @@ import {IGroupingConfiguration} from "../types/IGroupingConfiguration";
 import {IAggregationInfo} from "../types/IAggregationInfo";
 import {AggregationType} from "../types/AggregationType";
 import {ICellRectangle} from "./types/ICellRectangle";
+import {getRowStateAllowUpdate} from "../../selectors/RowState/getRowStateAllowUpdate";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -149,13 +150,18 @@ export class TablePanelView implements ITablePanelView {
         }
       }
     } else {
-      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-      yield* onFieldChangeG(this)(
-        undefined,
-        row,
-        property,
-        !getCellValue(this, row, property)
-      );
+      const rowId = this.dataTable.getRowId(row);
+      this.selectCell(rowId as string, property.id);
+
+      const readOnly = property!.readOnly || !getRowStateAllowUpdate(property, rowId || "", property!.id);
+      if(!readOnly){
+        yield* onFieldChangeG(this)(
+          undefined,
+          row,
+          property,
+          !getCellValue(this, row, property)
+        );
+      }
     }
     this.scrollToCurrentCell();
   }
