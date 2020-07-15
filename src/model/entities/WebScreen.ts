@@ -50,4 +50,5 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   dialogInfo = undefined;
   content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
+  hasDynamicTitle: boolean = false;
 }
