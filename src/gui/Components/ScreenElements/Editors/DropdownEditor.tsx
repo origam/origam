@@ -386,8 +386,8 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
           }
           break;
       }
+      this.props.onKeyDown && this.props.onKeyDown(event);
     }
-    this.props.onKeyDown && this.props.onKeyDown(event);
   }
 
   render() {
