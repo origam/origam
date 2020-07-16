@@ -141,13 +141,13 @@ namespace Origam.Server
                 report, reportRequest.Parameters);
             string filePath = ReportHelper.BuildFileSystemReportFilePath(
                 report.ReportPath, reportRequest.Parameters);
-            string mimeType = HttpTools.GetMimeType(filePath);
             if (!File.Exists(filePath))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 context.Response.End();
                 return;
             }
+            string mimeType = HttpTools.GetMimeType(filePath);
             context.Response.ContentType = mimeType;
             context.Response.AddHeader(
                 "content-disposition",

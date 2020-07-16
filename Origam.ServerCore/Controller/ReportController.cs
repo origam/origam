@@ -142,6 +142,10 @@ namespace Origam.ServerCore.Controller
                 report, reportRequest.Parameters);
             var filePath = ReportHelper.BuildFileSystemReportFilePath(
                 report.ReportPath, reportRequest.Parameters);
+            if(!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
             var mimeType = HttpTools.GetMimeType(filePath);
             Response.Headers.Add(
                 HeaderNames.ContentDisposition,
