@@ -34,6 +34,7 @@ import {SimpleScrollState} from "../../gui/Components/ScreenElements/Table/Simpl
 import {BoundingRect} from "react-measure";
 import {IGridDimensions} from "../../gui/Components/ScreenElements/Table/types";
 import {FocusManager} from "./FocusManager";
+import { getRowStates } from "model/selectors/RowState/getRowStates";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -204,7 +205,7 @@ export class DataView implements IDataView {
 
   get isWorking() {
     // TODO
-    return this.lifecycle.isWorking;
+    return this.lifecycle.isWorking || getRowStates(this).isWorking;
   }
 
   @computed get isAnyBindingAncestorWorking() {

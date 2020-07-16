@@ -5,6 +5,8 @@ export interface IRowState extends IRowStateData {
 
   mayCauseFlicker: boolean;
 
+  isWorking: boolean;
+
   getValue(key: string): IRowStateItem | undefined;
   putValue(state: any): void;
   hasValue(key: string): boolean;
