@@ -5,6 +5,7 @@ import {IFormScreenLifecycle02} from "./IFormScreenLifecycle";
 import {IAction} from "./IAction";
 import {IRefreshOnReturnType} from "../WorkbenchLifecycle/WorkbenchLifecycle";
 import {IPanelConfiguration} from "./IPanelConfiguration";
+import { CriticalSection } from "utils/sync";
 
 /*
 export interface ILoadedFormScreenData {
@@ -122,7 +123,9 @@ export interface IFormScreen extends IFormScreenData {
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];
   dynamicTitle: string | undefined;
-
+  
+  dataUpdateCRS: CriticalSection;
+  
   getPanelPosition(id: string): number | undefined;
 
   getBindingsByChildId(childId: string): IComponentBinding[];
