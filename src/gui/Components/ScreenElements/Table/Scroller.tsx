@@ -12,6 +12,8 @@ export default class Scroller extends React.Component<IScrollerProps> {
   @observable.ref private elmScrollerDiv: HTMLDivElement | null = null;
   private lastScrollLeft: number = 0;
   private lastScrollTop: number = 0;
+  private clickHandler: SequentialSingleDoubleClickHandler =
+    new SequentialSingleDoubleClickHandler((event: any) => this.runOnclick(event));
 
   @action.bound scrollTo(coords: { scrollLeft?: number; scrollTop?: number }) {
     if (this.elmScrollerDiv) {
@@ -88,10 +90,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
     this.elmScrollerDiv = elm;
   }
 
-  @action.bound private handleClick(event: any, double: boolean) {
-    event.persist();
-    event.preventDefault();
-    event.isDouble = double;
+  private runOnclick(event: any) {
     const scrollerRect = this.elmScrollerDiv!.getBoundingClientRect();
     this.props.onClick &&
       this.props.onClick(
@@ -101,7 +100,8 @@ export default class Scroller extends React.Component<IScrollerProps> {
       );
   }
 
-  @action.bound private handleWindowClick(event: any) {
+  @action.bound
+  private handleWindowClick(event: any) {
     if (this.elmScrollerDiv && !this.elmScrollerDiv.contains(event.target)) {
       this.props.onOutsideClick && this.props.onOutsideClick(event);
     }
@@ -127,8 +127,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         tabIndex={1}
         style={{ width: this.props.width, height: this.props.height }}
         onScroll={this.handleScroll}
-        onClick={(e) => this.handleClick(e, false)}
-        onDoubleClick={(e) => this.handleClick(e, true)}
+        onClick={(e) => this.clickHandler.handleClick(e)}
         onMouseDown={(e) => e.preventDefault()} // To prevent selection when double clicking
         onKeyDown={this.props.onKeyDown}
         ref={this.refScrollerDiv}
@@ -142,5 +141,52 @@ export default class Scroller extends React.Component<IScrollerProps> {
         />
       </div>
     );
+  }
+}
+
+// Ensures that single click is handled before double click and
+// that single click callback does not prevent double click from being registered
+class SequentialSingleDoubleClickHandler {
+
+  private timer: any = null;
+  private scheduledSingleClick: (() => void) | undefined;
+  private readonly runOnclick: (event: any) => void;
+
+  constructor(runOnclick: (event: any) => void) {
+    this.runOnclick = runOnclick;
+  }
+
+  sleep(ms: number) {
+    return new Promise(resolve => this.timer = setTimeout(resolve, ms));
+  }
+
+  @action.bound
+  async handleClick(event: any) {
+    event.persist();
+    event.preventDefault();
+
+    if (this.scheduledSingleClick) {
+      clearTimeout(this.timer);
+      this.scheduledSingleClick();
+      this.scheduledSingleClick = undefined;
+      this.doubleClick(event);
+    } else {
+      this.scheduledSingleClick = () => this.singleClick(event);
+      await this.sleep(500);
+      if (this.scheduledSingleClick) {
+        this.scheduledSingleClick();
+        this.scheduledSingleClick = undefined;
+      }
+    }
+  }
+
+  private singleClick(event: any) {
+    event.isDouble = false;
+    this.runOnclick(event);
+  }
+
+  private doubleClick(event: any) {
+    event.isDouble = true;
+    this.runOnclick(event);
   }
 }

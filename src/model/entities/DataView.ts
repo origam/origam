@@ -50,6 +50,7 @@ export class DataView implements IDataView {
     //this.showSelectionCheckboxes = false;
     this.properties.forEach(o => (o.parent = this));
     this.actions.forEach(o => (o.parent = this));
+    this.defaultAction = this.actions.find(action => action.isDefault);
     this.dataTable.parent = this;
     this.lifecycle.parent = this;
     this.tablePanelView.parent = this;
@@ -95,6 +96,7 @@ export class DataView implements IDataView {
   confirmSelectionChange = false;
   properties: IProperty[] = [];
   actions: IAction[] = [];
+  defaultAction: IAction | undefined;
 
   @observable tableViewProperties: IProperty[] = [];
   dataTable: IDataTable = null as any;

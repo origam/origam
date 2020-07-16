@@ -130,7 +130,11 @@ function shouldCloseOtherGroups(clickedGroup: IGroupTreeNode, ctx: any){
 }
 
 function formatColumnValue(value: string){
-  return value || "<empty>"
+  if(value === undefined || value === null){
+    return "<empty>";
+  }else{
+    return value
+  }
 }
 
 export function drawGroupCellBackground() {

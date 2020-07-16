@@ -398,7 +398,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const api = getApi(this);
       do {
         this._flushDataShallRerun = false;
-        for (let dataView of getFormScreen(this).dataViews) {
+        const formScreen = getFormScreen(this);
+        const dataViews = formScreen.dataViews;
+        for (let dataView of dataViews) {
           for (let row of dataView.dataTable.getDirtyValueRows()) {
             const updateObjectResult = yield api.updateObject({
               SessionFormIdentifier: getSessionId(this),
@@ -409,6 +411,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             yield* refreshWorkQueues(this)();
             yield* processCRUDResult(dataView, updateObjectResult);
           }
+        }
+        if(formScreen.requestSaveAfterUpdate){
+          yield* this.saveSession();
         }
       } while (this._flushDataShallRerun);
     } finally {
