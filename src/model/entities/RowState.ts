@@ -19,6 +19,12 @@ export class RowState implements IRowState {
     Object.assign(this, data);
   }
 
+
+  @observable inFlow = 0;
+  @computed get isWorking() {
+    return this.inFlow > 0;
+  }
+
   @observable firstLoadingPerformed = false;
   @computed get mayCauseFlicker() {
     return !this.firstLoadingPerformed;
@@ -39,6 +45,7 @@ export class RowState implements IRowState {
       while (true) {
         const idsToLoad: Set<string> = new Set();
         try {
+          this.inFlow++;
           for (let key of this.observedIds.keys()) {
             if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
               idsToLoad.add(key);
@@ -71,6 +78,8 @@ export class RowState implements IRowState {
           console.error(error);
           // TODO: Better error handling.
           yield* handleError(this)(error);
+        } finally {
+          this.inFlow--
         }
       }
     }.bind(this)

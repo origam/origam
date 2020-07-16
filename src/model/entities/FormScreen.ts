@@ -7,6 +7,7 @@ import {IAction} from "./types/IAction";
 import {getDontRequestData} from "model/selectors/getDontRequestData";
 import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData,} from "./types/IFormScreen";
 import {IPanelConfiguration} from "./types/IPanelConfiguration";
+import { CriticalSection } from "utils/sync";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -20,6 +21,8 @@ export class FormScreen implements IFormScreen {
   }
 
   parent?: any;
+
+  dataUpdateCRS = new CriticalSection();
 
   @observable isDirty: boolean = false;
   dynamicTitleSource: string | undefined;

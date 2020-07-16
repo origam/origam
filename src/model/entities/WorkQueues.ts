@@ -27,7 +27,7 @@ export class WorkQueues implements IWorkQueues {
 
   *startTimer() {
     if (this.refreshInterval === 0) {
-      throw new Error("Work queues refresh interval was not set.");
+      return
     }
     if (this.hRefreshTimer) {
       yield* this.stopTimer();

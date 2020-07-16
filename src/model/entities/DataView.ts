@@ -1,46 +1,47 @@
-import {action, computed, observable} from "mobx";
-import {getParentRow} from "model/selectors/DataView/getParentRow";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getDataSourceByEntity} from "../selectors/DataSources/getDataSourceByEntity";
-import {getDataTable} from "../selectors/DataView/getDataTable";
-import {getFormScreen} from "../selectors/FormScreen/getFormScreen";
-import {getIsDialog} from "../selectors/getIsDialog";
-import {IDataViewLifecycle} from "./DataViewLifecycle/types/IDataViewLifecycle";
-import {IFormPanelView} from "./FormPanelView/types/IFormPanelView";
-import {ITablePanelView} from "./TablePanelView/types/ITablePanelView";
-import {IAction, IActionPlacement, IActionType} from "./types/IAction";
-import {IDataTable} from "./types/IDataTable";
-import {IDataView, IDataViewData} from "./types/IDataView";
-import {IPanelViewType} from "./types/IPanelViewType";
-import {IProperty} from "./types/IProperty";
-import {getBindingToParent} from "model/selectors/DataView/getBindingToParent";
-import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getBindingParent} from "model/selectors/DataView/getBindingParent";
-import {ILookupLoader} from "./types/ILookupLoader";
+import { action, computed, observable } from "mobx";
+import { getParentRow } from "model/selectors/DataView/getParentRow";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
+import { getDataTable } from "../selectors/DataView/getDataTable";
+import { getFormScreen } from "../selectors/FormScreen/getFormScreen";
+import { getIsDialog } from "../selectors/getIsDialog";
+import { IDataViewLifecycle } from "./DataViewLifecycle/types/IDataViewLifecycle";
+import { IFormPanelView } from "./FormPanelView/types/IFormPanelView";
+import { ITablePanelView } from "./TablePanelView/types/ITablePanelView";
+import { IAction, IActionPlacement, IActionType } from "./types/IAction";
+import { IDataTable } from "./types/IDataTable";
+import { IDataView, IDataViewData } from "./types/IDataView";
+import { IPanelViewType } from "./types/IPanelViewType";
+import { IProperty } from "./types/IProperty";
+import { getBindingToParent } from "model/selectors/DataView/getBindingToParent";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getBindingParent } from "model/selectors/DataView/getBindingParent";
+import { ILookupLoader } from "./types/ILookupLoader";
 import bind from "bind-decorator";
-import {getRowStateMayCauseFlicker} from "model/selectors/RowState/getRowStateMayCauseFlicker";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
-import {ServerSideGrouper} from "./ServerSideGrouper";
-import {ClientSideGrouper} from "./ClientSideGrouper";
-import {getFormScreenLifecycle} from "../selectors/FormScreen/getFormScreenLifecycle";
-import {getTableViewProperties} from "../selectors/TablePanelView/getTableViewProperties";
-import {getIsSelectionCheckboxesShown} from "../selectors/DataView/getIsSelectionCheckboxesShown";
-import {getGroupingConfiguration} from "../selectors/TablePanelView/getGroupingConfiguration";
-import {flattenToTableRows} from "../../gui/Components/ScreenElements/Table/TableRendering/tableRows";
-import {GridDimensions} from "../../gui/Workbench/ScreenArea/TableView/GridDimensions";
-import {SimpleScrollState} from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
-import {BoundingRect} from "react-measure";
-import {IGridDimensions} from "../../gui/Components/ScreenElements/Table/types";
-import {FocusManager} from "./FocusManager";
+import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { ServerSideGrouper } from "./ServerSideGrouper";
+import { ClientSideGrouper } from "./ClientSideGrouper";
+import { getFormScreenLifecycle } from "../selectors/FormScreen/getFormScreenLifecycle";
+import { getTableViewProperties } from "../selectors/TablePanelView/getTableViewProperties";
+import { getIsSelectionCheckboxesShown } from "../selectors/DataView/getIsSelectionCheckboxesShown";
+import { getGroupingConfiguration } from "../selectors/TablePanelView/getGroupingConfiguration";
+import { flattenToTableRows } from "../../gui/Components/ScreenElements/Table/TableRendering/tableRows";
+import { GridDimensions } from "../../gui/Workbench/ScreenArea/TableView/GridDimensions";
+import { SimpleScrollState } from "../../gui/Components/ScreenElements/Table/SimpleScrollState";
+import { BoundingRect } from "react-measure";
+import { IGridDimensions } from "../../gui/Components/ScreenElements/Table/types";
+import { FocusManager } from "./FocusManager";
+import { getRowStates } from "model/selectors/RowState/getRowStates";
+import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
 }
 
 export class DataView implements IDataView {
-
   $type_IDataView: 1 = 1;
   focusManager: FocusManager = new FocusManager();
 
@@ -48,9 +49,9 @@ export class DataView implements IDataView {
     Object.assign(this, data);
     //this.showSelectionCheckboxes = true;
     //this.showSelectionCheckboxes = false;
-    this.properties.forEach(o => (o.parent = this));
-    this.actions.forEach(o => (o.parent = this));
-    this.defaultAction = this.actions.find(action => action.isDefault);
+    this.properties.forEach((o) => (o.parent = this));
+    this.actions.forEach((o) => (o.parent = this));
+    this.defaultAction = this.actions.find((action) => action.isDefault);
     this.dataTable.parent = this;
     this.lifecycle.parent = this;
     this.tablePanelView.parent = this;
@@ -62,10 +63,9 @@ export class DataView implements IDataView {
     this.gridDimensions = new GridDimensions({
       getTableViewProperties: () => getTableViewProperties(this),
       getRowCount: () => this.tableRows.length,
-      getIsSelectionCheckboxes: () =>
-        getIsSelectionCheckboxesShown(this.tablePanelView),
+      getIsSelectionCheckboxes: () => getIsSelectionCheckboxesShown(this.tablePanelView),
       ctx: this,
-      defaultRowHeight: this.tablePanelView.rowHeight
+      defaultRowHeight: this.tablePanelView.rowHeight,
     });
   }
 
@@ -132,7 +132,7 @@ export class DataView implements IDataView {
   }
 
   isSelected(id: string): boolean {
-    if(!this.selectedRowIdsMap.has(id)) return false;
+    if (!this.selectedRowIdsMap.has(id)) return false;
     return this.selectedRowIdsMap.get(id)!;
   }
 
@@ -175,11 +175,9 @@ export class DataView implements IDataView {
   @computed get panelViewActions() {
     const rowStateMayCauseFlicker = getRowStateMayCauseFlicker(this);
     if (rowStateMayCauseFlicker && !this.dataTable.isEmpty) {
-       return [];
+      return [];
     }
-    return this.actions.filter(
-      action => action.placement === IActionPlacement.PanelHeader
-    );
+    return this.actions.filter((action) => action.placement === IActionPlacement.PanelHeader);
   }
 
   @computed get toolbarActions() {
@@ -188,7 +186,7 @@ export class DataView implements IDataView {
       return [];
     }
     return this.actions.filter(
-      action =>
+      (action) =>
         action.placement === IActionPlacement.Toolbar &&
         action.type !== IActionType.SelectionDialogAction &&
         !getIsDialog(this)
@@ -197,24 +195,22 @@ export class DataView implements IDataView {
 
   @computed get dialogActions() {
     return this.actions.filter(
-      action =>
-        action.type === IActionType.SelectionDialogAction || getIsDialog(this)
+      (action) => action.type === IActionType.SelectionDialogAction || getIsDialog(this)
     );
   }
 
   get isWorking() {
     // TODO
-    return this.lifecycle.isWorking;
+    return (
+      this.lifecycle.isWorking || getRowStates(this).isWorking || getLookupLoader(this).isWorking
+    );
   }
 
   @computed get isAnyBindingAncestorWorking() {
     if (this.isBindingRoot) {
       return false;
     } else {
-      return (
-        this.bindingParent.isWorking ||
-        this.bindingParent.isAnyBindingAncestorWorking
-      );
+      return this.bindingParent.isWorking || this.bindingParent.isAnyBindingAncestorWorking;
     }
   }
 
@@ -267,13 +263,8 @@ export class DataView implements IDataView {
       const bindingToParent = getBindingToParent(this)!;
       const result: { [key: string]: string } = {};
       for (let bp of bindingToParent.bindingPairs) {
-        const parentDataSourceField = getDataSourceFieldByName(
-          parent,
-          bp.parentPropertyId
-        )!;
-        result[
-          bp.childPropertyId
-        ] = parentDataTable.getCellValueByDataSourceField(
+        const parentDataSourceField = getDataSourceFieldByName(parent, bp.parentPropertyId)!;
+        result[bp.childPropertyId] = parentDataTable.getCellValueByDataSourceField(
           parentRow,
           parentDataSourceField
         );
@@ -284,7 +275,6 @@ export class DataView implements IDataView {
       return {};
     }
   }
-
 
   @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
@@ -306,12 +296,7 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound onFieldChange(
-    event: any,
-    row: any[],
-    property: IProperty,
-    value: any
-  ) {
+  @action.bound onFieldChange(event: any, row: any[], property: IProperty, value: any) {
     if (!property.readOnly) {
       getDataTable(this).setFormDirtyValue(row, property.id, value);
     }
@@ -357,9 +342,9 @@ export class DataView implements IDataView {
   @action.bound
   restoreViewState(): void {
     const state = this.viewStateStack.pop();
-    if(state && state.selectedRowId) {
+    if (state && state.selectedRowId) {
       this.setSelectedRowId(state.selectedRowId);
-      if(!getSelectedRow(this)) {
+      if (!getSelectedRow(this)) {
         this.selectFirstRow();
       }
       getTablePanelView(this).scrollToCurrentCell();
@@ -369,11 +354,10 @@ export class DataView implements IDataView {
   @action.bound start() {
     this.lifecycle.start();
     this.serverSideGrouper.start();
-    getFormScreenLifecycle(this)
-      .registerDisposer(() => this.serverSideGrouper.dispose());
+    getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
   }
 
-  @computed get tableRows(){
+  @computed get tableRows() {
     const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnIds;
     return groupedColumnIds.length === 0
       ? getDataTable(this).rows
@@ -387,17 +371,17 @@ export class DataView implements IDataView {
   parent?: any;
 
   // Called by client scripts
-  focusFormViewControl(name: string){
+  focusFormViewControl(name: string) {
     this.focusManager.focus(name);
   }
 
   // Called by client scripts
   showView(viewId: string, focus: boolean) {
-    throw new Error("showView method is not yet implemented.")
+    throw new Error("showView method is not yet implemented.");
   }
 
   // Called by client scripts
-  switchToPanel(modelInstanceId: string){
-    throw new Error("switchToPanel method is not yet implemented.")
+  switchToPanel(modelInstanceId: string) {
+    throw new Error("switchToPanel method is not yet implemented.");
   }
 }
