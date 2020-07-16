@@ -562,7 +562,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const formScreen = getFormScreen(this);
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
-        yield api.saveSessionQuery(getSessionId(this));
+        const queryResult = yield api.saveSessionQuery(getSessionId(this));
+        const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
+        if (!processQueryInfoResult.canContinue) return;
         result = yield api.saveSession(getSessionId(this));
       } finally {
         formScreen.dataUpdateCRS.leave();
