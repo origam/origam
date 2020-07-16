@@ -7,6 +7,7 @@ import {IMainMenuItemType} from "./types/IMainMenu";
 export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
   $type_IWebScreen: 1 = 1;
+  parentScreen: IOpenedScreen | undefined;
 
   constructor(
     title: string,

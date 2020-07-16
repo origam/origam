@@ -1,0 +1,41 @@
+
+.noSelect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.expander{
+    padding-right: 5px;
+}
+
+.treeView{
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex: 1 0 0;
+    overflow: scroll;
+}
+
+.nodeLabel{
+    white-space:nowrap;
+}
+
+.node{
+    display: flex;
+    justify-content: space-between;
+    height: 20px;
+}
+
+.node:hover{
+    background: lightsteelblue;
+}
+
+.nodeSelected{
+    background: #ebf3ff;
+}

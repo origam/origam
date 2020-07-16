@@ -26,6 +26,8 @@ export interface IDataViewData {
   showAddButton: boolean;
   showDeleteButton: boolean;
   showSelectionCheckboxesSetting: boolean;
+  type: string;
+  attributes: any;
   
   isGridHeightDynamic: boolean;
   selectionMember: string;

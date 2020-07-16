@@ -10,6 +10,7 @@ export class DialogInfo implements IDialogInfo {
 export class OpenedScreen implements IOpenedScreen {
   dialogInfo?: IDialogInfo | undefined;
   $type_IOpenedScreen: 1 = 1;
+  parentScreen: IOpenedScreen | undefined;
 
   constructor(data: IOpenedScreenData) {
     Object.assign(this, data);

@@ -226,6 +226,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       isSleepingDirty
     );
     try {
+      newScreen.parentScreen = openedScreens.activeItem;
       openedScreens.pushItem(newScreen);
       if (!isSessionRebirth) {
         openedScreens.activateItem(newScreen.menuItemId, newScreen.order);

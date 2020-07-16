@@ -97,6 +97,7 @@ export class DataView implements IDataView {
   properties: IProperty[] = [];
   actions: IAction[] = [];
   defaultAction: IAction | undefined;
+  type: string = "";
 
   @observable tableViewProperties: IProperty[] = [];
   dataTable: IDataTable = null as any;
@@ -400,4 +401,6 @@ export class DataView implements IDataView {
   switchToPanel(modelInstanceId: string){
     throw new Error("switchToPanel method is not yet implemented.")
   }
+
+  attributes: any;
 }
