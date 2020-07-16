@@ -158,6 +158,7 @@ function drawCellValue(){
         break;
       case "ComboBox":
       case "TagInput":
+      case "Checklist":
         if (isLink) {
           ctx2d.save();
           ctx2d.fillStyle = "#4c84ff";
