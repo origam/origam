@@ -56,7 +56,7 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
             <Row
               key={node.id}
               node={node}
-              isSelected={node.id === this.selectedNodeId}
+              isSelected={node.id === this.props.dataView.selectedRowId}
               onRowClick={() => this.onRowClick(node)}
             />
           ))}
