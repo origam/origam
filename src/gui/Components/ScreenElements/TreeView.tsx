@@ -9,9 +9,6 @@ import S from "./TreeView.module.css";
 export class TreeView extends React.Component<{ dataView: IDataView; }> {
   nodes: Node[] = [];
 
-  @observable
-  selectedNodeId: string | undefined;
-
   constructor(props: Readonly<{ dataView: IDataView; }>) {
     super(props);
 
@@ -45,7 +42,6 @@ export class TreeView extends React.Component<{ dataView: IDataView; }> {
   }
 
   onRowClick(node: Node) {
-    this.selectedNodeId = node.id;
     this.props.dataView.selectRowById(node.id);
   }
 
@@ -57,7 +53,7 @@ export class TreeView extends React.Component<{ dataView: IDataView; }> {
           .map(node => <Row
             key={node.id}
             node={node}
-            isSelected={node.id === this.selectedNodeId}
+            isSelected={node.id === this.props.dataView.selectedRowId}
             onRowClick={() => this.onRowClick(node)}
           />)}
       </div>
