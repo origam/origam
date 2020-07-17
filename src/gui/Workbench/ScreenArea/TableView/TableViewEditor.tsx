@@ -142,6 +142,8 @@ export class TableViewEditor extends React.Component<{
             // api={undefined}
           />
         );
+      case "Checklist":
+        return "";
       case "TagInput":
         return (
           <TagInputEditor
