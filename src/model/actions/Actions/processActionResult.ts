@@ -13,6 +13,7 @@ import {ICRUDResult, processCRUDResult} from "../DataLoading/processCRUDResult";
 import {IRefreshOnReturnType} from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import {IDataView} from "../../entities/types/IDataView";
 import {getDataViewByModelInstanceId} from "../../selectors/DataView/getDataViewByModelInstanceId";
+import {IActionResultRequest} from "../../entities/types/IActionResultRequest";
 
 export interface IOpenNewForm {
   (
@@ -25,7 +26,8 @@ export interface IOpenNewForm {
     formSessionId?: string,
     isSessionRebirth?: boolean,
     registerSession?: true,
-    refreshOnReturnType?: IRefreshOnReturnType
+    refreshOnReturnType?: IRefreshOnReturnType,
+    actionResultRequest?: IActionResultRequest
   ): Generator; //boolean
 }
 
@@ -98,7 +100,8 @@ export function processActionResult2(dep: {
             undefined,
             undefined,
             undefined,
-            refreshOnReturnType
+            refreshOnReturnType,
+            request
           );
           break;
         }

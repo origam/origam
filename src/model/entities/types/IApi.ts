@@ -136,6 +136,8 @@ export interface IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
+    ParentSessionId: string | undefined,
+    SourceActionId: string | undefined,
   }): Promise<any>;
   destroyUI(data: { FormSessionId: string }): Promise<any>;
 
@@ -310,5 +312,5 @@ export interface IApi {
     onUploadProgress?: (event: any) => void
   ): Promise<any>;
 
-  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any>
+  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>
 }

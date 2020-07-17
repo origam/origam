@@ -2,6 +2,7 @@ import {IDialogInfo, IOpenedScreen, IOpenedScreenData} from "./types/IOpenedScre
 import {action, computed, observable} from "mobx";
 import {IFormScreenEnvelope} from "./types/IFormScreen";
 import {IMainMenuItemType} from "./types/IMainMenu";
+import {IActionResultRequest} from "./types/IActionResultRequest";
 
 export class DialogInfo implements IDialogInfo {
   constructor(public width: number, public height: number) {}
@@ -10,7 +11,7 @@ export class DialogInfo implements IDialogInfo {
 export class OpenedScreen implements IOpenedScreen {
   dialogInfo?: IDialogInfo | undefined;
   $type_IOpenedScreen: 1 = 1;
-  parentScreen: IOpenedScreen | undefined;
+  parentSessionId: string | undefined;
 
   constructor(data: IOpenedScreenData) {
     Object.assign(this, data);

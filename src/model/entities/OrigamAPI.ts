@@ -97,6 +97,8 @@ export class OrigamAPI implements IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any };
+    ParentSessionId: string | undefined,
+    SourceActionId: string | undefined,
   }) {
     const result = (
       await axios.post(`${this.urlPrefix}/UIService/InitUI`, data, {
@@ -761,7 +763,7 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
-  async pendingChanges(data: { sessionFormIdentifier: string }): Promise<any> {
+  async pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]> {
     return (
       await axios.get(`${this.urlPrefix}/UIService/PendingChanges/${data.sessionFormIdentifier}`, {
         headers: this.httpAuthHeader,

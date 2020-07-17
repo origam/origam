@@ -21,6 +21,7 @@ import {getSessionId} from "model/selectors/getSessionId";
 import {scopeFor} from "dic/Container";
 import {assignIIds} from "xmlInterpreters/xmlUtils";
 import {DEBUG_CLOSE_ALL_FORMS} from "utils/debugHelpers";
+import {IActionResultRequest} from "../types/IActionResultRequest";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -208,7 +209,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     formSessionId?: string,
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
-    refreshOnReturnType?: IRefreshOnReturnType
+    refreshOnReturnType?: IRefreshOnReturnType,
+    actionResultRequest?: IActionResultRequest
   ) {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
@@ -226,7 +228,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       isSleepingDirty
     );
     try {
-      newScreen.parentScreen = openedScreens.activeItem;
+      newScreen.parentSessionId = actionResultRequest?.parentSessionId;
       openedScreens.pushItem(newScreen);
       if (!isSessionRebirth) {
         openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
@@ -236,7 +238,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         return;
       }
 
-      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth);
+      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, actionResultRequest);
 
       yield* newFormScreen.start(initUIResult);
     } catch (e) {
@@ -246,7 +248,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean) {
+  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean, actionResultRequest?: IActionResultRequest) {
     const api = getApi(this);
     const initUIResult = yield api.initUI({
       Type: screen.menuItemType,
@@ -257,6 +259,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       RegisterSession: true, //!!registerSession,
       DataRequested: !screen.dontRequestData,
       Parameters: screen.parameters,
+      ParentSessionId: actionResultRequest?.parentSessionId,
+      SourceActionId: actionResultRequest?.sourceActionId
     });
     console.log(initUIResult);
     return initUIResult;
