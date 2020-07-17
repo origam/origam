@@ -79,7 +79,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
           {this.props.isVisible && (
             <>
               <span>
-                <h2>{label} Testing panel label</h2>
+                <h2>{label}</h2>
               </span>
               <ResponsiveContainer compensate={50}>
                 {({ refChild }) => (
