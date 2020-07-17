@@ -2,6 +2,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  flex-basis: 0;
+  overflow: hidden;
 }
 
 .dataViewOverlay {
