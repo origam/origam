@@ -664,8 +664,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *closeForm() {
     try {
       this.inFlow++;
-      this.killForm();
       yield* closeForm(this)();
+      this.killForm();
     } finally {
       this.inFlow--;
     }
