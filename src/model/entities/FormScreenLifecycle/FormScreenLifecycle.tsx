@@ -287,7 +287,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // yield* this.initUI();
     yield* this.applyInitUIResult({ initUIResult });
     if (!this.isReadData) {
-      yield* this.loadData(true);
+      yield* this.loadData();
       const formScreen = getFormScreen(this);
       for (let rootDataView of formScreen.rootDataViews) {
         const orderingConfiguration = getOrderingConfiguration(rootDataView);
@@ -303,7 +303,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
               ]);
               return [];
             },
-            flow(() => this.readFirstChunkOfRows(rootDataView, true))
+            flow(() => this.readFirstChunkOfRows(rootDataView))
           )
         );
       }
@@ -325,7 +325,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
     openedScreen.content.setFormScreen(screen);
     screen.printMasterDetailTree();
-    yield* this.applyData(args.initUIResult.data, true);
+    yield* this.applyData(args.initUIResult.data);
     getDataViewList(this).forEach((dv) => dv.start());
   }
 
@@ -410,7 +410,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     });
   }
 
-  *loadData(selectFirstRow: boolean) {
+  *loadData() {
     const formScreen = getFormScreen(this);
     try {
       this.inFlow++;
@@ -421,7 +421,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       for (let rootDataView of formScreen.rootDataViews) {
         rootDataView.saveViewState();
-        yield* this.readFirstChunkOfRows(rootDataView, selectFirstRow);
+        yield* this.readFirstChunkOfRows(rootDataView);
       }
     } finally {
       for (let dataView of formScreen.nonRootDataViews) {
@@ -474,7 +474,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *readFirstChunkOfRows(rootDataView: IDataView, selectFirstRow: boolean) {
+  *readFirstChunkOfRows(rootDataView: IDataView) {
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
     rootDataView.lifecycle.stopSelectedRowReaction();
@@ -491,10 +491,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MasterRowId: undefined,
       });
       rootDataView.dataTable.setRecords(loadedData);
+      rootDataView.reselectOrSelectFirst();
 
-      if (selectFirstRow) {
-        rootDataView.selectFirstRow();
-      }
       //debugger
       rootDataView.restoreViewState();
     } finally {
@@ -591,11 +589,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         } finally {
           formScreen.dataUpdateCRS.leave();
         }
-        yield* this.applyData(result, false);
+        yield* this.applyData(result);
         getFormScreen(this).setDirty(false);
         getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
       } else {
-        yield* this.loadData(false);
+        yield* this.loadData();
       }
     } finally {
       this.inFlow--;
@@ -717,14 +715,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  *applyData(data: any, selectFirstRow: boolean): Generator {
+  *applyData(data: any): Generator {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         dataView.dataTable.setRecords((entityValue as any).data);
-        if (selectFirstRow) {
-          dataView.selectFirstRow();
-        }
+        dataView.reselectOrSelectFirst();
       }
     }
   }
