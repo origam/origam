@@ -149,8 +149,8 @@ export default class Scroller extends React.Component<IScrollerProps> {
 class SequentialSingleDoubleClickHandler {
 
   private timer: any = null;
-  private scheduledSingleClick: (() => void) | undefined;
   private readonly runOnclick: (event: any) => void;
+  private singleClickIsRunning = false;
 
   constructor(runOnclick: (event: any) => void) {
     this.runOnclick = runOnclick;
@@ -165,18 +165,14 @@ class SequentialSingleDoubleClickHandler {
     event.persist();
     event.preventDefault();
 
-    if (this.scheduledSingleClick) {
-      clearTimeout(this.timer);
-      this.scheduledSingleClick();
-      this.scheduledSingleClick = undefined;
-      this.doubleClick(event);
-    } else {
-      this.scheduledSingleClick = () => this.singleClick(event);
+    if (!this.singleClickIsRunning) {
+      this.singleClickIsRunning = true;
+      this.singleClick(event);
       await this.sleep(500);
-      if (this.scheduledSingleClick) {
-        this.scheduledSingleClick();
-        this.scheduledSingleClick = undefined;
-      }
+      this.singleClickIsRunning = false;
+    } else {
+      this.singleClickIsRunning = false;
+      this.doubleClick(event);
     }
   }
 

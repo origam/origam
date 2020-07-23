@@ -199,7 +199,7 @@ export class DataView implements IDataView {
     );
   }
 
-  get isWorking() {
+  @computed get isWorking() {
     // TODO
     return (
       this.lifecycle.isWorking || getRowStates(this).isWorking || getLookupLoader(this).isWorking

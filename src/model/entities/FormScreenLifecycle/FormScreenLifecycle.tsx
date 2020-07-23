@@ -38,6 +38,7 @@ import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingCo
 import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
 import { getUserFilters } from "../../selectors/DataView/getUserFilters";
 import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
+import {FlowBusyMonitor} from "../../../utils/flow";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -55,10 +56,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   @observable allDataViewsSteady = true;
 
-  @computed get isWorking() {
-    return this.inFlow > 0;
+  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
+
+  get isWorking(){
+    return this.monitor.isWorking;
   }
-  @observable inFlow = 0;
+
   disposers: (() => void)[] = [];
 
   registerDisposer(disposer: () => void) {
@@ -136,7 +139,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onWorkflowNextClick(event: any): Generator {
-    this.inFlow++;
+    this.monitor.inFlow++;
     try {
       const api = getApi(this);
       const sessionId = getSessionId(this);
@@ -159,12 +162,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.killForm();
       yield* this.start(uiResult);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
   *onWorkflowAbortClick(event: any): Generator {
-    this.inFlow++;
+    this.monitor.inFlow++;
     try {
       const api = getApi(this);
       let uiResult;
@@ -178,12 +181,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.killForm();
       yield* this.start(uiResult);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
   *onWorkflowRepeatClick(event: any): Generator {
-    this.inFlow++;
+    this.monitor.inFlow++;
     try {
       const api = getApi(this);
       const sessionId = getSessionId(this);
@@ -198,12 +201,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.killForm();
       yield* this.start(uiResult);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
   *onWorkflowCloseClick(event: any): Generator {
-    this.inFlow++;
+    this.monitor.inFlow++;
     try {
       const formScreen = getFormScreen(this);
       try {
@@ -213,7 +216,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* this.onRequestScreenClose();
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
@@ -413,7 +416,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *loadData(selectFirstRow: boolean) {
     const formScreen = getFormScreen(this);
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       for (let dataView of formScreen.nonRootDataViews) {
         dataView.dataTable.clear();
         dataView.setSelectedRowId(undefined);
@@ -427,7 +430,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       for (let dataView of formScreen.nonRootDataViews) {
         dataView.lifecycle.startSelectedRowReaction();
       }
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
@@ -440,7 +443,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         return;
       }
       this._flushDataRunning = true;
-      this.inFlow++;
+      this.monitor.inFlow++;
       const api = getApi(this);
       do {
         this._flushDataShallRerun = false;
@@ -470,7 +473,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } while (this._flushDataShallRerun);
     } finally {
       this._flushDataRunning = false;
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
@@ -504,7 +507,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *createRow(entity: string, gridId: string) {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       const api = getApi(this);
       const targetDataView = getDataViewByGridId(this, gridId)!;
       const formScreen = getFormScreen(this);
@@ -524,13 +527,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
   *deleteRow(entity: string, rowId: string) {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       const api = getApi(this);
       const formScreen = getFormScreen(this);
       let deleteObjectResult;
@@ -547,7 +550,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, deleteObjectResult);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
@@ -556,7 +559,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       return;
     }
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       const api = getApi(this);
       let result;
       const formScreen = getFormScreen(this);
@@ -572,14 +575,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, result);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
   *refreshSession() {
     // TODO: Refresh lookups and rowstates !!!
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       if (this.isReadData) {
         const formScreen = getFormScreen(this);
         formScreen.dataViews.forEach((dv) => dv.saveViewState());
@@ -598,7 +601,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.loadData(false);
       }
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
       setTimeout(async () => {
         await when(() => this.allDataViewsSteady);
       }, 10);
@@ -609,7 +612,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       const parameters: { [key: string]: any } = {};
       for (let parameter of action.parameters) {
         parameters[parameter.name] = parameter.fieldName;
@@ -649,7 +652,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* refreshWorkQueues(this)();
       yield* new_ProcessActionResult(action)(result);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
@@ -663,11 +666,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *closeForm() {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       yield* closeForm(this)();
       this.killForm();
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 

@@ -22,24 +22,16 @@ import {getDataStructureEntityId} from "../../selectors/DataView/getDataStructur
 import {SCROLL_ROW_CHUNK} from "../../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {getColumnNamesToLoad} from "../../selectors/DataView/getColumnNamesToLoad";
 import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
+import {FlowBusyMonitor} from "../../../utils/flow";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
+  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
 
-  @observable _inFlow = 0;
-
-  set inFlow(value: number) {
-    // console.log('Setting inFlow to', value)
-    this._inFlow = value;
+  get isWorking(){
+    return this.monitor.isWorking;
   }
 
-  get inFlow() {
-    return this._inFlow;
-  }
-
-  @computed get isWorking() {
-    return this.inFlow > 0;
-  }
   disposers: any[] = [];
 
   @action.bound
@@ -52,7 +44,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   onSelectedRowIdChangeImm = flow(
     function*(this: DataViewLifecycle) {
       try {
-        this.inFlow++;
+        this.monitor.inFlow++;
         console.log(getDataViewLabel(this), "detected control id change", getSelectedRowId(this));
         if (getSelectedRowId(this)) {
           if (getIsBindingRoot(this)) {
@@ -67,7 +59,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         yield* handleError(this)(e);
         throw e;
       } finally {
-        this.inFlow--;
+        this.monitor.inFlow--;
       }
     }.bind(this)
   );
@@ -78,12 +70,12 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     if (this._selectedRowIdChangeDebounceTimeout) {
       clearTimeout(this._selectedRowIdChangeDebounceTimeout);
     } else {
-      this.inFlow++;
+      this.monitor.inFlow++;
     }
     this._selectedRowIdChangeDebounceTimeout = setTimeout(() => {
       this.onSelectedRowIdChangeImm();
       this._selectedRowIdChangeDebounceTimeout = undefined;
-      this.inFlow--;
+      this.monitor.inFlow--;
     }, 100);
   }
 
@@ -115,7 +107,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   *changeMasterRow() {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       const api = getApi(this);
       this.changeMasterRowCanceller && this.changeMasterRowCanceller();
       this.changeMasterRowCanceller = api.createCanceller();
@@ -136,7 +128,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       yield errDialogPromise(this)(error);*/
       throw error;
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
@@ -173,7 +165,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   *loadGetData() {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       const dataView = getDataView(this);
       const api = getApi(this);
       let data;
@@ -204,13 +196,13 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       dataView.dataTable.setRecords(data);
       dataView.selectFirstRow();
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
   *navigateChildren(): Generator<any, any> {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       yield Promise.all(
         getBindingChildren(this).map(bch =>
           flow(function*() {
@@ -226,7 +218,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         yield navigateAsChild(bch)();
       }*/
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
