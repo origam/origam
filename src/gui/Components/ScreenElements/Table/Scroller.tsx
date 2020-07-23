@@ -151,6 +151,7 @@ class SequentialSingleDoubleClickHandler {
   private timer: any = null;
   private readonly runOnclick: (event: any) => void;
   private singleClickIsRunning = false;
+  firstEvent: any | undefined;
 
   constructor(runOnclick: (event: any) => void) {
     this.runOnclick = runOnclick;
@@ -171,12 +172,16 @@ class SequentialSingleDoubleClickHandler {
       await this.sleep(500);
       this.singleClickIsRunning = false;
     } else {
+      if(clickDistance(this.firstEvent, event) < 5){
+        this.doubleClick(event);
+      }
+      this.firstEvent = undefined;
       this.singleClickIsRunning = false;
-      this.doubleClick(event);
     }
   }
 
   private singleClick(event: any) {
+    this.firstEvent = event;
     event.isDouble = false;
     this.runOnclick(event);
   }
@@ -185,4 +190,8 @@ class SequentialSingleDoubleClickHandler {
     event.isDouble = true;
     this.runOnclick(event);
   }
+}
+
+function clickDistance(event1: any, event2: any) {
+  return Math.sqrt((event1.screenX - event2.screenX) ** 2 + (event1.screenY - event2.screenY) ** 2);
 }
