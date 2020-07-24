@@ -73,6 +73,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.createRow(entity, gridId);
   }
 
+  *onCopyRow(entity: any, gridId: string, rowId: string): any {
+    yield* this.copyRow(entity, gridId, rowId);
+  }
+
   *onDeleteRow(entity: string, rowId: string): Generator<unknown, any, unknown> {
     yield* this.onRequestDeleteRow(entity, rowId);
   }
@@ -517,6 +521,33 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           RequestingGridId: gridId,
           Values: {},
           Parameters: { ...getBindingParametersFromParent(targetDataView) },
+        });
+      } finally {
+        formScreen.dataUpdateCRS.leave();
+      }
+      yield* refreshWorkQueues(this)();
+      yield* processCRUDResult(targetDataView, createObjectResult);
+    } finally {
+      this.inFlow--;
+    }
+  }
+
+  *copyRow(entity: string, gridId: string, rowId: string) {
+    try {
+      this.inFlow++;
+      const api = getApi(this);
+      const targetDataView = getDataViewByGridId(this, gridId)!;
+      const formScreen = getFormScreen(this);
+      let createObjectResult;
+      try {
+        yield* formScreen.dataUpdateCRS.enterGenerator();
+        createObjectResult = yield api.copyObject({
+          SessionFormIdentifier: getSessionId(this),
+          Entity: entity,
+          OriginalId: rowId,
+          RequestingGridId: gridId,
+          Entities: [entity],
+          ForcedValues: {}
         });
       } finally {
         formScreen.dataUpdateCRS.leave();

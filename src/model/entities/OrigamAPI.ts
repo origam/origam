@@ -397,6 +397,21 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
+  async copyObject(data: {
+    Entity: string;
+    SessionFormIdentifier: string;
+    ForcedValues: {};
+    RequestingGridId: string;
+    OriginalId: string;
+    Entities: string[]
+  }): Promise<any>{
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/CopyObject`, data, {
+        headers: this.httpAuthHeader,
+      })
+    ).data;
+  }
+
   async deleteObject(data: {
     SessionFormIdentifier: string;
     Entity: string;

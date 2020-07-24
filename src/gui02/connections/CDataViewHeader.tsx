@@ -11,7 +11,7 @@ import {Icon} from "gui02/components/Icon/Icon";
 import {MobXProviderContext, observer} from "mobx-react";
 import uiActions from "model/actions-ui-tree";
 import {onColumnConfigurationClick} from "model/actions-ui/DataView/onColumnConfigurationClick";
-import {onCreateRowClick} from "model/actions-ui/DataView/onCreateRowClick";
+import {onCopyRowClick, onCreateRowClick} from "model/actions-ui/DataView/onCreateRowClick";
 import {onDeleteRowClick} from "model/actions-ui/DataView/onDeleteRowClick";
 import {onFilterButtonClick} from "model/actions-ui/DataView/onFilterButtonClick";
 import {onNextRowClick} from "model/actions-ui/DataView/onNextRowClick";
@@ -62,6 +62,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
     const onDeleteRowClickEvt = onDeleteRowClick(dataView);
     const onCreateRowClickEvt = onCreateRowClick(dataView);
+    const onCopyRowClickEvt = onCopyRowClick(dataView);
     const onFilterButtonClickEvt = onFilterButtonClick(dataView);
     const onPrevRowClickEvt = onPrevRowClick(dataView);
     const onNextRowClickEvt = onNextRowClick(dataView);
@@ -106,7 +107,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                           )}
 
                           {isCopyButton && (
-                            <DataViewHeaderAction className="isOrangeHover" onClick={undefined}>
+                            <DataViewHeaderAction className="isOrangeHover" onClick={onCopyRowClickEvt}>
                               <Icon src="./icons/duplicate.svg" />
                             </DataViewHeaderAction>
                           )}
