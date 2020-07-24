@@ -3,6 +3,7 @@ import * as React from "react";
 import {IScrollerProps} from "./types";
 import {observer} from "mobx-react";
 import S from "./Scroller.module.css";
+import {busyDelayMillis} from "../../../../utils/flow";
 
 /*
   Two divs broadcasting the outer one's scroll state to scrollOffsetTarget.
@@ -152,6 +153,7 @@ class SequentialSingleDoubleClickHandler {
   private readonly runOnclick: (event: any) => void;
   private singleClickIsRunning = false;
   firstEvent: any | undefined;
+  private readonly doubleClickDelayMillis =  busyDelayMillis;
 
   constructor(runOnclick: (event: any) => void) {
     this.runOnclick = runOnclick;
@@ -169,7 +171,7 @@ class SequentialSingleDoubleClickHandler {
     if (!this.singleClickIsRunning) {
       this.singleClickIsRunning = true;
       this.singleClick(event);
-      await this.sleep(500);
+      await this.sleep(this.doubleClickDelayMillis);
       this.singleClickIsRunning = false;
     } else {
       if(clickDistance(this.firstEvent, event) < 5){
