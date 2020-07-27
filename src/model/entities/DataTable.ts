@@ -141,7 +141,17 @@ export class DataTable implements IDataTable {
   }
 
   getFirstRow(): any[] | undefined {
+    if(this.rows.length === 0){
+      return undefined;
+    }
     return this.rows[0];
+  }
+
+  getLastRow(): any[] | undefined {
+    if(this.rows.length === 0){
+      return undefined;
+    }
+    return this.rows[this.rows.length - 1];
   }
 
   getNearestRow(row: any[]): any[] | undefined {

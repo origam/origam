@@ -68,6 +68,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   subOnFocusTable(fn: () => void): () => void;
 
   scrollToCurrentCell(): void;
+  scrollToCurrentRow(): void;
   triggerOnFocusTable(): void;
   triggerOnScrollToCellShortest(rowIdx: number, columnIdx: number): void;
   setPropertyHidden(propertyId: string, state: boolean): void;

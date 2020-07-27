@@ -312,6 +312,16 @@ export class DataView implements IDataView {
     }
   }
 
+  @action.bound selectLastRow() {
+    const dataTable = getDataTable(this);
+    const lastRow = dataTable.getLastRow();
+    if (lastRow) {
+      this.selectRowById(dataTable.getRowId(lastRow));
+    }else{
+      this.selectRowById(undefined);
+    }
+  }
+
   @action.bound selectRowById(id: string | undefined) {
     if (id !== this.selectedRowId) {
       //cannotChangeRowDialog(this);

@@ -36,6 +36,8 @@ import {
   ResponsiveChild,
   ResponsiveContainer,
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
+import {onFirstRowClick} from "../../model/actions-ui/DataView/onFirstRowClick";
+import {onLastRowClick} from "../../model/actions-ui/DataView/onLastRowClick";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -64,8 +66,10 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const onCreateRowClickEvt = onCreateRowClick(dataView);
     const onCopyRowClickEvt = onCopyRowClick(dataView);
     const onFilterButtonClickEvt = onFilterButtonClick(dataView);
+    const onFirstRowClickEvt = onFirstRowClick(dataView);
     const onPrevRowClickEvt = onPrevRowClick(dataView);
     const onNextRowClickEvt = onNextRowClick(dataView);
+    const onLastRowClickEvt = onLastRowClick(dataView);
 
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
@@ -176,7 +180,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                     <ResponsiveChild childKey={"cursor-move"} order={5}>
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
-                          <DataViewHeaderAction onClick={undefined}>
+                          <DataViewHeaderAction onClick={onFirstRowClickEvt}>
                             <Icon src="./icons/list-arrow-first.svg" />
                           </DataViewHeaderAction>
                           <DataViewHeaderAction onClick={onPrevRowClickEvt}>
@@ -185,7 +189,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                           <DataViewHeaderAction onClick={onNextRowClickEvt}>
                             <Icon src="./icons/list-arrow-next.svg" />
                           </DataViewHeaderAction>
-                          <DataViewHeaderAction onClick={undefined}>
+                          <DataViewHeaderAction onClick={onLastRowClickEvt}>
                             <Icon src="./icons/list-arrow-last.svg" />
                           </DataViewHeaderAction>
                         </DataViewHeaderGroup>
