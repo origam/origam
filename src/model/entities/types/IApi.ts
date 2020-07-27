@@ -163,6 +163,15 @@ export interface IApi {
     RequestingGridId: string;
   }): Promise<any>;
 
+  copyObject(data: {
+    Entity: string;
+    SessionFormIdentifier: string;
+    ForcedValues: {};
+    RequestingGridId: string;
+    OriginalId: string;
+    Entities: string[]
+  }): Promise<any>;
+
   deleteObject(data: { SessionFormIdentifier: string; Entity: string; Id: string }): Promise<any>;
 
   executeActionQuery(data: {
