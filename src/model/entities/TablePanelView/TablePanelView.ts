@@ -277,6 +277,13 @@ export class TablePanelView implements ITablePanelView {
     return () => this.onScrollToCurrentCellHandlers.delete(myId);
   }
 
+  @action.bound scrollToCurrentRow(){
+    const rowIdx = getSelectedRowIndex(this);
+    if (rowIdx !== undefined) {
+      this.triggerOnScrollToCellShortest(rowIdx, 0);
+    }
+  }
+
   @action.bound scrollToCurrentCell() {
     const rowIdx = getSelectedRowIndex(this);
     const columnIdx = getSelectedColumnIndex(this);

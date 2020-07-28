@@ -98,6 +98,8 @@ export interface IDataView extends IDataViewData {
 
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
   selectFirstRow(): void;
+  selectLastRow(): void;
+  reselectOrSelectFirst(): void
   selectRowById(id: string | undefined): void;
   selectRow(row: any[]): void;
   setSelectedRowId(id: string | undefined): void;

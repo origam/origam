@@ -452,7 +452,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             className={S.droppedPanelContainer}
             style={{
               width: Math.min(200, 200 * this.props.ColumnNames!.length),
-              height: Math.min(300, 20 * (this.lookupItems.length + 1))
+              height: Math.min(300, 20 * (this.lookupItems.length + 2))
             }}
           >
             <AutoSizer>

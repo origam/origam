@@ -1,8 +1,8 @@
 import _ from "lodash";
-import {action, flow, observable, when} from "mobx";
-import {handleError} from "model/actions/handleError";
-import {getApi} from "model/selectors/getApi";
-import {ILookupLoader} from "./types/ILookupLoader";
+import { action, flow, observable, when, computed } from "mobx";
+import { handleError } from "model/actions/handleError";
+import { getApi } from "model/selectors/getApi";
+import { ILookupLoader } from "./types/ILookupLoader";
 
 export class LookupLoader implements ILookupLoader {
   collectedQuery: {
@@ -20,6 +20,11 @@ export class LookupLoader implements ILookupLoader {
   loadedItems: { [key: string]: { [key: string]: any } } = {};
   waitingRequesters = 0;
 
+  @observable inFlow = 0;
+  @computed get isWorking() {
+    return this.inFlow > 0;
+  }
+
   async getLookupLabels(query: {
     LookupId: string;
     MenuId: string | undefined;
@@ -27,11 +32,11 @@ export class LookupLoader implements ILookupLoader {
   }) {
     try {
       const existingItem = this.collectedQuery.find(
-        q => q.LookupId === query.LookupId && q.MenuId === query.MenuId
+        (q) => q.LookupId === query.LookupId && q.MenuId === query.MenuId
       );
       if (existingItem) {
         const existingIds = new Set(existingItem.LabelIds);
-        query.LabelIds.forEach(id => existingIds.add(id));
+        query.LabelIds.forEach((id) => existingIds.add(id));
         existingItem.LabelIds = Array.from(existingIds);
       } else {
         this.collectedQuery.push(query);
@@ -54,35 +59,40 @@ export class LookupLoader implements ILookupLoader {
   }
 
   async triggerLoadImm() {
-    if (this.isLoading) {
-      return;
-    }
-    this.isLoading = true;
-    try {
-      while (this.willLoad) {
-        const api = getApi(this);
-        this.willLoad = false;
-        const query = this.collectedQuery;
-        this.collectedQuery = [];
-        this.loadedItems = {
-          ...this.loadedItems,
-          ...(await api.getLookupLabelsEx(query))
-        };
-        if (!this.willLoad) {
-          this.loadingDone = true;
-        }
+    const self = this;
+    flow(function* () {
+      if (self.isLoading) {
+        return;
       }
-    } catch (error) {
-      console.error(error);
-      // TODO: Better error handling.
-      // TODO: Refactor to use generators
-      await flow(handleError(this))(error);
-    } finally {
-      this.isLoading = false;
-    }
+      self.isLoading = true;
+      try {
+        self.inFlow++;
+        while (self.willLoad) {
+          const api = getApi(self);
+          self.willLoad = false;
+          const query = self.collectedQuery;
+          self.collectedQuery = [];
+          self.loadedItems = {
+            ...self.loadedItems,
+            ...(yield api.getLookupLabelsEx(query)),
+          };
+          if (!self.willLoad) {
+            self.loadingDone = true;
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        // TODO: Better error handling.
+        // TODO: Refactor to use generators
+        yield* handleError(self)(error);
+      } finally {
+        self.inFlow--;
+        self.isLoading = false;
+      }
+    })();
   }
 
-  triggerLoad = _.throttle(this.triggerLoadImm, 100);
+  triggerLoad = _.throttle(this.triggerLoadImm.bind(this), 100);
 
   @action.bound ensureScheduleLoad() {
     this.loadingDone = false;

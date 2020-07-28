@@ -104,12 +104,15 @@ export class DataTable implements IDataTable {
   }
 
   resolveCellText(property: IProperty, value: any): any {
-    if (value === null || value === undefined) return "";
+    if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) return "";
     if (property.isLookup) {
       if (property.column === "TagInput") {
         const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
         return (textArray || []);
       } else {
+        if(Array.isArray(value)){
+          return value.map(item => property.lookup!.getValue(`${item}`)).join(", ");
+        }
         return property.lookup!.getValue(`${value}`);
       }
     }
@@ -138,7 +141,17 @@ export class DataTable implements IDataTable {
   }
 
   getFirstRow(): any[] | undefined {
+    if(this.rows.length === 0){
+      return undefined;
+    }
     return this.rows[0];
+  }
+
+  getLastRow(): any[] | undefined {
+    if(this.rows.length === 0){
+      return undefined;
+    }
+    return this.rows[this.rows.length - 1];
   }
 
   getNearestRow(row: any[]): any[] | undefined {

@@ -3,6 +3,7 @@ import * as React from "react";
 import {IScrollerProps} from "./types";
 import {observer} from "mobx-react";
 import S from "./Scroller.module.css";
+import {busyDelayMillis} from "../../../../utils/flow";
 
 /*
   Two divs broadcasting the outer one's scroll state to scrollOffsetTarget.
@@ -149,8 +150,10 @@ export default class Scroller extends React.Component<IScrollerProps> {
 class SequentialSingleDoubleClickHandler {
 
   private timer: any = null;
-  private scheduledSingleClick: (() => void) | undefined;
   private readonly runOnclick: (event: any) => void;
+  private singleClickIsRunning = false;
+  firstEvent: any | undefined;
+  private readonly doubleClickDelayMillis =  busyDelayMillis;
 
   constructor(runOnclick: (event: any) => void) {
     this.runOnclick = runOnclick;
@@ -165,22 +168,22 @@ class SequentialSingleDoubleClickHandler {
     event.persist();
     event.preventDefault();
 
-    if (this.scheduledSingleClick) {
-      clearTimeout(this.timer);
-      this.scheduledSingleClick();
-      this.scheduledSingleClick = undefined;
-      this.doubleClick(event);
+    if (!this.singleClickIsRunning) {
+      this.singleClickIsRunning = true;
+      this.singleClick(event);
+      await this.sleep(this.doubleClickDelayMillis);
+      this.singleClickIsRunning = false;
     } else {
-      this.scheduledSingleClick = () => this.singleClick(event);
-      await this.sleep(500);
-      if (this.scheduledSingleClick) {
-        this.scheduledSingleClick();
-        this.scheduledSingleClick = undefined;
+      if(clickDistance(this.firstEvent, event) < 5){
+        this.doubleClick(event);
       }
+      this.firstEvent = undefined;
+      this.singleClickIsRunning = false;
     }
   }
 
   private singleClick(event: any) {
+    this.firstEvent = event;
     event.isDouble = false;
     this.runOnclick(event);
   }
@@ -189,4 +192,8 @@ class SequentialSingleDoubleClickHandler {
     event.isDouble = true;
     this.runOnclick(event);
   }
+}
+
+function clickDistance(event1: any, event2: any) {
+  return Math.sqrt((event1.screenX - event2.screenX) ** 2 + (event1.screenY - event2.screenY) ** 2);
 }

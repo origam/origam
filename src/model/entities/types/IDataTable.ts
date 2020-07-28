@@ -61,6 +61,7 @@ export interface IDataTable {
   clearRecordDirtyValues(id: string): void;
   substituteRecord(row: any[]): void;
   insertRecord(index: number, row: any[]): void;
+  getLastRow(): any[] | undefined;
   parent?: any;
 }
 

@@ -180,7 +180,7 @@ export class ColumnsDialog extends React.Component<{
                     onClick={() => setDropped(true)}
                     isActive={false}
                   >
-                    {this.configuration.columnConf[rowIndex].aggregationType}
+                    {aggregationType}
                   </DataViewHeaderAction>
                 )}
                 content={({setDropped}) => (
