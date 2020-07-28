@@ -1,5 +1,6 @@
 import React from "react";
-import S from "./FormLabel.module.scss";
+import S from "./RadioButton.module.scss";
+
 
 export class RadioButton extends React.Component<{
   caption: string;
@@ -31,6 +32,7 @@ export class RadioButton extends React.Component<{
         }}
       >
         <input
+          className={S.input}
           type={"radio"}
           id={this.props.value}
           name={this.props.name}
