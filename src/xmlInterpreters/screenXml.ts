@@ -41,6 +41,7 @@ import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
 import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
 import {isInfiniteScrollingActive} from "../model/selectors/isInfiniteScrollingActive";
 import {cssString2Object} from "../utils/objects";
+import {parseAggregationType} from "../model/entities/types/AggregationType";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -325,6 +326,7 @@ export function interpretScreenXml(
         clientSideGrouper: new ClientSideGrouper(),
       });
 
+      let groupingColumnCounter = 1;
       configuration.forEach((conf) => {
         const columns = findStopping(conf, (n) => n.name === "column");
         columns.forEach((column, columnIndex) => {
@@ -337,8 +339,13 @@ export function interpretScreenXml(
             if (column.attributes.isHidden === "true") {
               dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
             }
+            if(column.attributes.aggregationType !== "0"){
+              const aggregationType = parseAggregationType(column.attributes.aggregationType);
+              dataViewInstance.tablePanelView.aggregations.setType(column.attributes.property, aggregationType);
+            }
           } else if (column.attributes.groupingField) {
-            // TODO
+            dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(column.attributes.groupingField, groupingColumnCounter);
+            groupingColumnCounter++;
           }
         });
         dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds

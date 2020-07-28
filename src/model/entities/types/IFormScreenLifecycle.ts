@@ -71,6 +71,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   parent?: any;
 
   registerDisposer(disposer: ()=>void): void;
+
+  onCopyRow(entity: any, gridId: string, rowId: string): any;
 }
 
 export const isIFormScreenLifecycle = (o: any): o is IFormScreenLifecycle =>

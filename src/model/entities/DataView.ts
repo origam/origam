@@ -199,7 +199,7 @@ export class DataView implements IDataView {
     );
   }
 
-  get isWorking() {
+  @computed get isWorking() {
     // TODO
     return (
       this.lifecycle.isWorking || getRowStates(this).isWorking || getLookupLoader(this).isWorking
@@ -308,6 +308,16 @@ export class DataView implements IDataView {
     if (firstRow) {
       this.selectRowById(dataTable.getRowId(firstRow));
     } else {
+      this.selectRowById(undefined);
+    }
+  }
+
+  @action.bound selectLastRow() {
+    const dataTable = getDataTable(this);
+    const lastRow = dataTable.getLastRow();
+    if (lastRow) {
+      this.selectRowById(dataTable.getRowId(lastRow));
+    }else{
       this.selectRowById(undefined);
     }
   }

@@ -5,6 +5,8 @@ import _ from "lodash";
 import {IApi} from "./types/IApi";
 import {IAggregationInfo} from "./types/IAggregationInfo";
 import {IOrdering} from "./types/IOrderingConfiguration";
+import {IColumnSettings} from "./types/IColumnSettings";
+import {compareByGroupingIndex} from "./ColumnSettings";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -397,6 +399,21 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
+  async copyObject(data: {
+    Entity: string;
+    SessionFormIdentifier: string;
+    ForcedValues: {};
+    RequestingGridId: string;
+    OriginalId: string;
+    Entities: string[]
+  }): Promise<any>{
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/CopyObject`, data, {
+        headers: this.httpAuthHeader,
+      })
+    ).data;
+  }
+
   async deleteObject(data: {
     SessionFormIdentifier: string;
     Entity: string;
@@ -527,28 +544,36 @@ export class OrigamAPI implements IApi {
 
   async saveObjectConfiguration(data: {
     instanceId: string;
-    columnSettings: Array<{
-      propertyId: string;
-      isHidden: boolean;
-      width: number;
-    }>;
+    columnSettings: IColumnSettings[];
     defaultView: string;
   }): Promise<any> {
+    const columnFields = data.columnSettings
+      .filter( settings => settings.groupingIndex !== undefined)
+      .sort(compareByGroupingIndex)
+      .map(
+      (setting) =>
+        `<column 
+          groupingField="${setting.propertyId}" 
+        />`
+    );
+    const columnsProps =  data.columnSettings
+      .map(
+        (setting) =>
+          `<column 
+            property="${setting.propertyId}" 
+            isHidden="${setting.isHidden ? "true" : "false"}" 
+            width="${setting.width}" 
+            aggregationType="${setting.aggregationTypeNumber}" 
+          />`
+      );
+
     await axios.post(
       `${this.urlPrefix}/UIService/SaveObjectConfig`,
       {
         ObjectinstanceId: data.instanceId,
         Section: "columnWidths",
-        SettingsData: data.columnSettings
-          .map(
-            (setting) =>
-              `<column 
-                  property="${setting.propertyId}" 
-                  isHidden="${setting.isHidden ? "true" : "false"}" 
-                  width="${setting.width}" 
-                  aggregationType="0" 
-                />`
-          )
+        SettingsData: columnsProps
+          .concat(columnFields)
           .join(""),
       },
       {
