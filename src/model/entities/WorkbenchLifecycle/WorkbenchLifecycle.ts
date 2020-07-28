@@ -21,6 +21,7 @@ import {getSessionId} from "model/selectors/getSessionId";
 import {scopeFor} from "dic/Container";
 import {assignIIds} from "xmlInterpreters/xmlUtils";
 import {DEBUG_CLOSE_ALL_FORMS} from "utils/debugHelpers";
+import {getOpenedScreen} from "../../selectors/getOpenedScreen";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -205,10 +206,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     dontRequestData: boolean,
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
+    parentContext?: any,
+    sourceActionId?: string | undefined,
     formSessionId?: string,
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
-    refreshOnReturnType?: IRefreshOnReturnType
+    refreshOnReturnType?: IRefreshOnReturnType,
   ) {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
@@ -228,14 +231,18 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     try {
       openedScreens.pushItem(newScreen);
       if (!isSessionRebirth) {
+        newScreen.parentContext = parentContext;
         openedScreens.activateItem(newScreen.menuItemId, newScreen.order);
       }
 
       if (isSessionRebirth) {
         return;
       }
+      const parentSessionId = parentContext
+        ? getOpenedScreen(parentContext)?.content?.formScreen?.sessionId
+        : undefined
 
-      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth);
+      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, parentSessionId, sourceActionId);
 
       yield* newFormScreen.start(initUIResult);
     } catch (e) {
@@ -245,7 +252,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean) {
+  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean, parentSessionId?: string, sourceActionId?: string) {
     const api = getApi(this);
     const initUIResult = yield api.initUI({
       Type: screen.menuItemType,
@@ -256,6 +263,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       RegisterSession: true, //!!registerSession,
       DataRequested: !screen.dontRequestData,
       Parameters: screen.parameters,
+      ParentSessionId: parentSessionId,
+      SourceActionId: sourceActionId
     });
     console.log(initUIResult);
     return initUIResult;
@@ -291,6 +300,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             menuItem.attributes.dontRequestData === "true", // TODO: Find in menu
             undefined, // TODO: Find in... menu?
             {},
+            undefined,
+            undefined,
             session.formSessionId,
             true,
             session.isDirty

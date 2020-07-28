@@ -136,6 +136,8 @@ export interface IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
+    ParentSessionId?: string | undefined;
+    SourceActionId?: string;
   }): Promise<any>;
   destroyUI(data: { FormSessionId: string }): Promise<any>;
 
