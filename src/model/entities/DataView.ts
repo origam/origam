@@ -307,7 +307,7 @@ export class DataView implements IDataView {
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
       this.selectRowById(dataTable.getRowId(firstRow));
-    }else{
+    } else {
       this.selectRowById(undefined);
     }
   }
@@ -319,6 +319,13 @@ export class DataView implements IDataView {
       this.selectRowById(dataTable.getRowId(lastRow));
     }else{
       this.selectRowById(undefined);
+    }
+  }
+
+  reselectOrSelectFirst() {
+    const previouslySelectedRowExists = this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
+    if (!this.isRootGrid || !previouslySelectedRowExists) {
+      this.selectFirstRow();
     }
   }
 
