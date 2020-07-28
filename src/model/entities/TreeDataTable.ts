@@ -170,4 +170,8 @@ export class TreeDataTable implements IDataTable {
   }
 
   parent?: any;
+
+  getLastRow(): any[] | undefined {
+    return undefined;
+  }
 }
