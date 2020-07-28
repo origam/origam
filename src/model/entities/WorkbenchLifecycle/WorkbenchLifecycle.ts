@@ -207,7 +207,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext?: any,
-    sourceActionId?: string | undefined,
+    additionalRequestParameters?: object | undefined,
     formSessionId?: string,
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
@@ -238,11 +238,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (isSessionRebirth) {
         return;
       }
-      const parentSessionId = parentContext
-        ? getOpenedScreen(parentContext)?.content?.formScreen?.sessionId
-        : undefined
-
-      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, parentSessionId, sourceActionId);
+      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, additionalRequestParameters);
 
       yield* newFormScreen.start(initUIResult);
     } catch (e) {
@@ -252,7 +248,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean, parentSessionId?: string, sourceActionId?: string) {
+  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean, additionalRequestParameters?: object | undefined) {
     const api = getApi(this);
     const initUIResult = yield api.initUI({
       Type: screen.menuItemType,
@@ -263,8 +259,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       RegisterSession: true, //!!registerSession,
       DataRequested: !screen.dontRequestData,
       Parameters: screen.parameters,
-      ParentSessionId: parentSessionId,
-      SourceActionId: sourceActionId
+      AdditionalRequestParameters: additionalRequestParameters
     });
     console.log(initUIResult);
     return initUIResult;

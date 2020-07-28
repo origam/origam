@@ -99,11 +99,18 @@ export class OrigamAPI implements IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any };
-    ParentSessionId?: string | undefined;
-    SourceActionId?: string;
+    AdditionalRequestParameters: object | undefined;
   }) {
+    let requestData;
+    if(data.AdditionalRequestParameters){
+      const additionalRequestParameters = data.AdditionalRequestParameters;
+      delete data['AdditionalRequestParameters'];
+      requestData = {...data, ...additionalRequestParameters}
+    }else{
+      requestData =  data;
+    }
     const result = (
-      await axios.post(`${this.urlPrefix}/UIService/InitUI`, data, {
+      await axios.post(`${this.urlPrefix}/UIService/InitUI`, requestData, {
         headers: this.httpAuthHeader,
       })
     ).data;

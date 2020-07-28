@@ -25,7 +25,7 @@ export interface IOpenNewForm {
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext: any,
-    sourceActionId: string,
+    additionalRequestParameters: object,
     formSessionId?: string,
     isSessionRebirth?: boolean,
     registerSession?: true,
@@ -54,8 +54,6 @@ export interface IProcessCRUDResult {
 }
 
 export function new_ProcessActionResult(ctx: any) {
-  const dataView = getDataView(ctx);
-  const openedScreen = getOpenedScreen(dataView);
   const workbenchLifecycle = getWorkbenchLifecycle(ctx);
   const getPanelFunc = (modelInstanceId: string) => getDataViewByModelInstanceId(ctx, modelInstanceId)!;
   return processActionResult2({
@@ -104,7 +102,7 @@ export function processActionResult2(dep: {
             dialogInfo,
             parameters,
             dep.parentContext,
-            actionResultItem.request.sourceActionId,
+            actionResultItem.request,
             undefined,
             undefined,
             undefined,

@@ -16,7 +16,7 @@ export interface IWorkbenchLifecycle {
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext: any,
-    sourceActionId?: string | undefined,
+    additionalRequestParameters?: object | undefined,
   ): Generator;
 
   openNewUrl(url: string, title: string): Generator;
