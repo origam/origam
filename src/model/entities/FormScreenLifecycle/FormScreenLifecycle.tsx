@@ -535,7 +535,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *copyRow(entity: string, gridId: string, rowId: string) {
     try {
-      this.inFlow++;
+      this.monitor.inFlow++;
       const api = getApi(this);
       const targetDataView = getDataViewByGridId(this, gridId)!;
       const formScreen = getFormScreen(this);
@@ -556,7 +556,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
     } finally {
-      this.inFlow--;
+      this.monitor.inFlow--;
     }
   }
 
