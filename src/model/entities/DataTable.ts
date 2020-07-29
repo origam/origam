@@ -26,17 +26,6 @@ export class DataTable implements IDataTable {
       data.orderingConfiguration,
       data.filterConfiguration,
       (row: any[]) => this.getRowId(row))
-    autorun(() => {
-      const dataView = getDataView(this);
-      if(dataView.modelInstanceId !== "fbe5b4ad-db0a-4424-a4e9-837448fe9f83"){
-        return;
-      }
-      console.log("------------------------------")
-      console.log("SelectedRowId: "+dataView.selectedRowId)
-      for (let row of this.allRows) {
-        console.log(row)
-      }
-    });
   }
 
   get allRows(){

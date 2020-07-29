@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, reaction } from "mobx";
 import { getParentRow } from "model/selectors/DataView/getParentRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
@@ -114,7 +114,16 @@ export class DataView implements IDataView {
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
 
-  @observable selectedRowId: string | undefined;
+  @observable _selectedRowId: string | undefined;
+
+  set selectedRowId(value: string | undefined) {
+    // debugger;
+    this._selectedRowId = value;
+  }
+
+  get selectedRowId() {
+    return this._selectedRowId;
+  }
 
   @computed get showSelectionCheckboxes() {
     return this.showSelectionCheckboxesSetting || !!this.selectionMember;
@@ -270,7 +279,6 @@ export class DataView implements IDataView {
           parentDataSourceField
         );
       }
-      console.log(result);
       return result;
     } else {
       return {};
@@ -318,14 +326,15 @@ export class DataView implements IDataView {
     const lastRow = dataTable.getLastRow();
     if (lastRow) {
       this.selectRowById(dataTable.getRowId(lastRow));
-    }else{
+    } else {
       this.selectRowById(undefined);
     }
   }
 
   reselectOrSelectFirst() {
-    const previouslySelectedRowExists = this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
-    if (!this.isRootGrid || !previouslySelectedRowExists) {
+    const previouslySelectedRowExists =
+      this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
+    if (!this.isRootGrid || !previouslySelectedRowExists || this.selectedRow) {
       this.selectFirstRow();
     }
   }
@@ -375,6 +384,22 @@ export class DataView implements IDataView {
     this.lifecycle.start();
     this.serverSideGrouper.start();
     getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
+    getFormScreenLifecycle(this).registerDisposer(
+      reaction(
+        () => ({
+          selectedRow: this.selectedRow,
+          rowsCount: getDataTable(this).allRows.length,
+        }),
+        (reData: { selectedRow: any[] | undefined; rowsCount: number }) => {
+          if (reData.selectedRow === undefined && reData.rowsCount > 0) {
+            this.reselectOrSelectFirst();
+          }
+        },
+        {
+          fireImmediately: true,
+        }
+      )
+    );
   }
 
   @computed get tableRows() {
