@@ -32,6 +32,7 @@ import {
   ResponsiveChild,
   ResponsiveContainer
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
+import {T} from "../../utils/translation";
 
 
 @observer
@@ -102,13 +103,13 @@ export class CScreenToolbar extends React.Component<{}> {
                         className={isDirty ? "isRed isHoverGreen" : ""}
                       />
                     }
-                    label="Save"
+                    label={T("Save","save_tool_tip")}
                   />
                 )}
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(formScreen)}
                   icon={<Icon src="./icons/refresh.svg" />}
-                  label="Refresh"
+                  label={T("Refresh","refresh_tool_tip")}
                 />
               </ScreenToolbarActionGroup>
               <ResponsiveContainer>
@@ -182,8 +183,12 @@ export class CScreenToolbar extends React.Component<{}> {
                   userName={userName || "Logged user"}
                   actionItems={
                     <>
-                      <DropdownItem isDisabled={true}>My profile</DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                       {T("My profile","???")}
+                      </DropdownItem>
+                      <DropdownItem onClick={this.handleLogoutClick}>
+                       {T("Log out","sign_out_tool_tip")}
+                      </DropdownItem>
                     </>
                   }
                 />
