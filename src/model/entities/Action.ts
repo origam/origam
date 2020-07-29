@@ -26,10 +26,10 @@ export class Action implements IAction {
 
   @computed get isEnabled() {
     const selRowId = getSelectedRowId(this);
-    const isDisableddOverride = selRowId
+    const isDisabledOverride = selRowId
       ? getRowStateIsDisableAction(this, selRowId, this.id)
       : false;
-    if (isDisableddOverride) {
+    if (isDisabledOverride) {
       return false;
     }
     switch (this.mode) {
