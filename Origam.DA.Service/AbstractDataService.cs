@@ -588,6 +588,7 @@ namespace Origam.DA.Service
 				return null;
 			}
 			DataAuditLog log = new DataAuditLog();
+            var timestamp = DateTime.Now;
 			foreach(DataRow row in table.Rows)
 			{
 				foreach(DataColumn column in table.Columns)
@@ -618,7 +619,7 @@ namespace Origam.DA.Service
                         }
                         else
                         {
-                            logRow.RecordCreated = DateTime.Now;
+                            logRow.RecordCreated = timestamp;
                         }
                         if((row.RowState == DataRowState.Modified)
                         && table.Columns.Contains("RecordUpdatedBy") 
@@ -653,6 +654,15 @@ namespace Origam.DA.Service
                             if(profile != null)
                             {
                                 logRow.RecordCreatedBy = profile.Id;
+                            }
+                            if((table.ExtendedProperties[
+                                Const.AuditingSecondReferenceKeyColumnAttribute] 
+                            is IDataEntityColumn dataEntityColumn)
+                            && (table.Columns.Contains(dataEntityColumn.Name)))
+                            {
+                                logRow.SecondReferenceKey 
+                                    = (Guid)row[dataEntityColumn.Name, 
+                                        DataRowVersion.Original];
                             }
                         }
                         if(column.ExtendedProperties.Contains(

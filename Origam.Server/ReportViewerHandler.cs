@@ -43,6 +43,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.IO;
+using System.Net;
 using System.Web;
 using System.Web.SessionState;
 using log4net;
@@ -140,12 +141,19 @@ namespace Origam.Server
                 report, reportRequest.Parameters);
             string filePath = ReportHelper.BuildFileSystemReportFilePath(
                 report.ReportPath, reportRequest.Parameters);
+            if (!File.Exists(filePath))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.End();
+                return;
+            }
             string mimeType = HttpTools.GetMimeType(filePath);
             context.Response.ContentType = mimeType;
             context.Response.AddHeader(
                 "content-disposition",
-                /*"attachment; " +*/ httpTools.GetFileDisposition(
-                    new FxHttpRequestWrapper(context.Request), Path.GetFileName(filePath)));
+                httpTools.GetFileDisposition(
+                    new FxHttpRequestWrapper(context.Request), 
+                    Path.GetFileName(filePath)));
             context.Response.WriteFile(filePath);
         }
         private void HandleWebReport(

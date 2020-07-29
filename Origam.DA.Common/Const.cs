@@ -29,6 +29,7 @@ namespace Origam.DA
 
 		public static string DefaultLookupIdAttribute = "DefaultLookupId";
 		public static string EntityAuditingAttribute = "IsAuditingEnabled";
+        public static string AuditingSecondReferenceKeyColumnAttribute = "AuditingSecondReferenceKeyColumn";
 		public static string TemporaryColumnAttribute = "TemporaryColumn";
 		public static string TemporaryColumnInitializedAttribute = "TemporaryColumnInitialized";
 		public static string IsAddittionalFieldAttribute = "IsAddittionalField";

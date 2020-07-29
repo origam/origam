@@ -138,6 +138,24 @@ namespace Origam.Schema.EntityModel
 			}
 		}
 
+		[EntityColumn("G03")]  
+		public Guid AuditingSecondReferenceKeyColumnId;
+
+		[TypeConverter(typeof(EntityColumnReferenceConverter))]
+		[Category("Entity")]
+		[Description("If auditing is enabled and this value is filled, system will store value of designated column to audit log when recording delete operation.")]
+        [XmlReference("auditingSecondReferenceKeyColumn", 
+            "AuditingSecondReferenceKeyColumnId")]
+		public IDataEntityColumn AuditingSecondReferenceKeyColumn
+		{
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+                typeof(AbstractSchemaItem), 
+                new ModelElementKey(AuditingSecondReferenceKeyColumnId)) 
+                as IDataEntityColumn;
+            set => AuditingSecondReferenceKeyColumnId 
+                = (Guid?) value?.PrimaryKey["Id"] ?? Guid.Empty;
+		}
+
 		private string _caption = "";
 		[EntityColumn("SS01")]
 		[Category("Entity")]

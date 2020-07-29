@@ -588,5 +588,10 @@ VALUES (newid(), '{2}', '{0}', getdate(), 0)",
         {
             return string.Format("UPDATE [dbo].[OrigamParameters] SET [BooleanValue] = 1 WHERE [Id] = 'e42f864f-5018-4967-abdc-5910439adc9a'");
         }
+
+        protected override void ResetTransactionIsolationLevel(IDbCommand command)
+        {
+            command.Connection = null;
+        }
     }
 }
