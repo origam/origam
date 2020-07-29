@@ -21,6 +21,7 @@ export interface IOpenedScreenData {
 }
 
 export interface IOpenedScreen extends IOpenedScreenData {
+  parentContext: IOpenedScreen | undefined;
   $type_IOpenedScreen: 1;
 
   isActive: boolean;
