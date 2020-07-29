@@ -26,20 +26,31 @@ export async function translationsInit(){
 
 export function T(defaultContent: any, translKey: string, ...p: any[]) {
   let result;
+  let showingDefault = false;
   if (translations.hasOwnProperty(translKey)) {
     result = translations[translKey];
   } else {
     result = defaultContent;
+    showingDefault = true;
   }
   for (let i = 0; i < p.length; i++) {
     result = result.replace(`{${i}}`, p[i]);
   }
   if (DEBUG_SHOW_TRANSLATIONS) {
-    return (
-      <span title={translKey} style={{ backgroundColor: "red" }}>
-    {result}
-    </span>
-  );
+    if(showingDefault){
+      console.error(`Could not find translation for: "${translKey}", showing default: "${result}"`);
+      return (
+        <span title={translKey} style={{ backgroundColor: "red" }}>
+          {result}
+        </span>
+      );
+    }else{
+      return (
+        <span title={translKey} style={{ backgroundColor: "green" }}>
+          {result}
+        </span>
+      );
+    }
   } else {
     return result;
   }
