@@ -20,6 +20,7 @@ import {addRecordAuditExpandRequestHandler} from "model/actions-ui/RecordInfo/ad
 import {onSidebarInfoSectionCollapsed} from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
 import {onSidebarAuditSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
 import {onSidebarInfoSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
+import {T} from "../../utils/translation";
 
 @observer
 export class CSidebar extends React.Component {
@@ -109,7 +110,9 @@ export class CSidebar extends React.Component {
                 )}
               </>
             }
-            label={<>Work Queues</>}
+            label={<>
+              {T("Work Queues","???")}
+            </>}
             onClick={() => (this.activeSection = ISidebarSection.WorkQueues)}
           />
           <SidebarSectionBody
@@ -125,7 +128,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Favorites}
             icon={<Icon src="./icons/favorites.svg" />}
-            label={"Favorites"}
+            label={T("Favorites","default_group")}
             onClick={() => (this.activeSection = ISidebarSection.Favorites)}
           />
           <SidebarSectionBody
@@ -139,7 +142,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Menu}
             icon={<Icon src="./icons/menu.svg" />}
-            label={"Menu"}
+            label={T("Menu","menu")}
             onClick={() => (this.activeSection = ISidebarSection.Menu)}
           />
           <SidebarSectionBody
@@ -153,7 +156,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Info}
             icon={<Icon src="./icons/info.svg" />}
-            label={"Info"}
+            label={T("Info","infopanel_title")}
             onClick={() => (this.activeSection = ISidebarSection.Info)}
           />
           <SidebarSectionBody
@@ -169,7 +172,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Search}
             icon={<Icon src="./icons/search.svg" />}
-            label={"Search"}
+            label={T("Search","???")}
             onClick={() => (this.activeSection = ISidebarSection.Search)}
           />
           <SidebarSectionBody
