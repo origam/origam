@@ -25,7 +25,7 @@ function makeProxyTarget() {
 const proxyTarget = makeProxyTarget();
 
 const proxyCommon = {
-  logLevel: 'debug',
+  //logLevel: 'debug',
   //changeOrigin: true
 };
 
