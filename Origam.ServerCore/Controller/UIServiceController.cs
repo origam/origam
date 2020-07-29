@@ -813,8 +813,14 @@ namespace Origam.ServerCore.Controller
             GetGroupsInput input, EntityData entityData)
         {
             var customOrdering = GetOrderings(input.Ordering);
-            
-            var field = entityData.Entity.Column(input.GroupBy).Field;
+
+            DataStructureColumn column = entityData.Entity.Column(input.GroupBy);
+            if (column == null)
+            {
+                return Result.Failure<DataStructureQuery, IActionResult>(BadRequest($"Cannot group by \"{input.GroupBy}\" because the column does not exist."));
+            }
+
+            var field = column.Field;
             var columnData = new ColumnData(
                 name: input.GroupBy,
                 isVirtual: (field is DetachedField),

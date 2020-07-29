@@ -998,7 +998,7 @@ namespace Origam.DA.Service
 				//					transaction.Commit();
 				//					transaction.Dispose();
 				
-				command.Connection = null;
+				ResetTransactionIsolationLevel(command);
 			}
 			catch(Exception e)
 			{
@@ -1022,7 +1022,9 @@ namespace Origam.DA.Service
 			return result;
 		}
 
-		public override DataSet ExecuteProcedure(string name, string entityOrder, DataStructureQuery query, string transactionId)
+        protected abstract void ResetTransactionIsolationLevel(IDbCommand command);
+
+        public override DataSet ExecuteProcedure(string name, string entityOrder, DataStructureQuery query, string transactionId)
 		{
 			OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
 
