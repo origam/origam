@@ -32,3 +32,10 @@ cd origam-html5
 set HTTPS=true
 yarn start
 ```
+
+By default https://localhost:44356 is used as a backend proxy target. If you need to customize this 
+for your setup, create a file `.env.development.local` and add this line to it:
+
+```
+WDS_PROXY_TARGET=your-protocol://your-backend-proxy-target
+```
