@@ -38,6 +38,7 @@ import {
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 import {onFirstRowClick} from "../../model/actions-ui/DataView/onFirstRowClick";
 import {onLastRowClick} from "../../model/actions-ui/DataView/onLastRowClick";
+import {T} from "../../utils/translation";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -241,14 +242,16 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                   )}
                   content={({ setDropped }) => (
                     <Dropdown>
-                      <DropdownItem isDisabled={true}>Export to Excel</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                        {T("Export to Excel","excel_tool_tip")}
+                      </DropdownItem>
                       <DropdownItem
                         onClick={(event: any) => {
                           setDropped(false);
                           onColumnConfigurationClickEvt(event);
                         }}
                       >
-                        Column configuration
+                        {T("Column configuration","column_config_tool_tip")}
                       </DropdownItem>
                       <DropdownItem
                         isDisabled={false}
@@ -257,9 +260,11 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                           onRecordAuditClick(dataView)(event);
                         }}
                       >
-                        Show audit
+                        {T("Show audit","audit_title")}
                       </DropdownItem>
-                      <DropdownItem isDisabled={true}>Show attachments</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                        {T("Show attachments","attachment_button_tool_tip")}
+                      </DropdownItem>
                       <DropdownItem
                         isDisabled={false}
                         onClick={(event: any) => {
@@ -267,7 +272,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                           onRecordInfoClick(dataView)(event);
                         }}
                       >
-                        Show record information
+                        {T("Show record information","info_button_tool_tip")}
                       </DropdownItem>
                     </Dropdown>
                   )}
