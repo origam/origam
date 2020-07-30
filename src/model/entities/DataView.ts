@@ -114,16 +114,7 @@ export class DataView implements IDataView {
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
 
-  @observable _selectedRowId: string | undefined;
-
-  set selectedRowId(value: string | undefined) {
-    // debugger;
-    this._selectedRowId = value;
-  }
-
-  get selectedRowId() {
-    return this._selectedRowId;
-  }
+  @observable selectedRowId: string | undefined;
 
   @computed get showSelectionCheckboxes() {
     return this.showSelectionCheckboxesSetting || !!this.selectionMember;
@@ -263,7 +254,6 @@ export class DataView implements IDataView {
   }
 
   @computed get bindingParametersFromParent() {
-    // debugger
     const parentRow = getParentRow(this);
     if (parentRow) {
       const parent = getBindingParent(this);

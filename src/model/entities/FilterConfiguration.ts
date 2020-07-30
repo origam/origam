@@ -375,7 +375,6 @@ export class FilterConfiguration implements IFilterConfiguration {
   };
 
   isPresentInDetail(row: any[]): boolean {
-    // console.log(row)
     if (this.dataView.isBindingRoot) return true;
     for (let binding of this.dataView.parentBindings) {
       const selectedRow = binding.parentDataView.selectedRow;
@@ -404,12 +403,10 @@ export class FilterConfiguration implements IFilterConfiguration {
           childDsField
         );
         if (parentValue !== childValue) {
-          //console.log("parentValue !== childValue")
           return false;
         }
       }
     }
-    // console.log("TRUE")
     return true;
   }
 
