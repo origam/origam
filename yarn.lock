@@ -9185,13 +9185,6 @@ prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
-properties-reader@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/properties-reader/-/properties-reader-2.0.0.tgz#04ddfe3a9a5d00275f457666bc60faafa01c2273"
-  integrity sha512-wEvznelF2vGq52VA51j8ZNoUZOeCJQd2kh5CGHLOhdLKKN176ZAdYv+WH6s6tj7IOBLFRkWhMPQjq8uzyFe37Q==
-  dependencies:
-    mkdirp "~0.5.1"
-
 proxy-addr@~2.0.5:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.6.tgz#fdc2336505447d3f2f2c638ed272caf614bbb2bf"
