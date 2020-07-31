@@ -111,7 +111,7 @@ export class CSidebar extends React.Component {
               </>
             }
             label={<>
-              {T("Work Queues","???")}
+              {T("Work Queues","work_queue_measure")}
             </>}
             onClick={() => (this.activeSection = ISidebarSection.WorkQueues)}
           />
@@ -172,7 +172,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Search}
             icon={<Icon src="./icons/search.svg" />}
-            label={T("Search","???")}
+            label={T("Search","search_result", 0)}
             onClick={() => (this.activeSection = ISidebarSection.Search)}
           />
           <SidebarSectionBody

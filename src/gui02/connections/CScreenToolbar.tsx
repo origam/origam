@@ -184,7 +184,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   actionItems={
                     <>
                       <DropdownItem isDisabled={true}>
-                       {T("My profile","???")}
+                       {T("My profile","my_profile")}
                       </DropdownItem>
                       <DropdownItem onClick={this.handleLogoutClick}>
                        {T("Log out","sign_out_tool_tip")}
@@ -261,8 +261,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 userName={userName || "Logged user"}
                 actionItems={
                   <>
-                    <DropdownItem isDisabled={true}>My profile</DropdownItem>
-                    <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                          {T("My profile","my_profile")}
+                      </DropdownItem>
+                      <DropdownItem onClick={this.handleLogoutClick}>
+                          {T("Log out","sign_out_tool_tip")}
+                      </DropdownItem>
                   </>
                 }
               />
@@ -304,8 +308,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 userName={userName || "Logged user"}
                 actionItems={
                   <>
-                    <DropdownItem isDisabled={true}>My profile</DropdownItem>
-                    <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                          {T("My profile","my_profile")}
+                      </DropdownItem>
+                      <DropdownItem onClick={this.handleLogoutClick}>
+                          {T("Log out","sign_out_tool_tip")}
+                      </DropdownItem>
                   </>
                 }
               />
