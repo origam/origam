@@ -1,18 +1,23 @@
 import React from "react";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
 import S from "./TagInputEditor.module.css";
 
-import {TagInput, TagInputItem} from "gui/Components/TagInput/TagInput";
-import {inject, observer} from "mobx-react";
-import {IProperty} from "model/entities/types/IProperty";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {
+  TagInput,
+  TagInputAdd,
+  TagInputItem,
+  TagInputItemDelete,
+} from "gui/Components/TagInput/TagInput";
+import { inject, observer } from "mobx-react";
+import { IProperty } from "model/entities/types/IProperty";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
   return {
-    textualValues: dataTable.resolveCellText(property, value)
+    textualValues: dataTable.resolveCellText(property, value),
   };
 })
 @observer
@@ -26,11 +31,24 @@ export class TagInputEditor extends React.Component<{
   backgroundColor?: string;
   foregroundColor?: string;
   refocuser?: (cb: () => void) => () => void;
-  onChange?(event: any, value: string): void;
+  onChange?(event: any, value: any): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onEditorBlur?(event: any): void;
 }> {
+  removeItem(event: any, item: string) {
+    const index = this.props.value.indexOf(item);
+    if (index > -1) {
+      this.props.value.splice(index, 1);
+      if (this.props.onChange) {
+        this.props.onChange(event, this.props.value);
+      }
+      if (this.props.onEditorBlur) {
+        this.props.onEditorBlur(event);
+      }
+    }
+  }
+
   render() {
     return (
       <div className={CS.editorContainer}>
@@ -38,10 +56,16 @@ export class TagInputEditor extends React.Component<{
           {this.props.value
             ? this.props.value.map((valueItem, idx) => (
                 <TagInputItem key={valueItem}>
+                  <TagInputItemDelete
+                    onClick={(event) => {
+                      this.removeItem(event, valueItem);
+                    }}
+                  />
                   {this.props.textualValues![idx] || ""}
                 </TagInputItem>
               ))
             : null}
+          <TagInputAdd onClick={(event) => {}} />
         </TagInput>
         {/* <input
           style={{
