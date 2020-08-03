@@ -297,6 +297,8 @@ namespace Origam.DA.Service.Generators
                 case "contains": return ("Like", prependWildCard(appendWildCard(value)));
                 case "ncontains": return ("NotLike", prependWildCard(appendWildCard(value)));
                 case "like": return ("Like", value);
+                case "null": return ("Equal", null);
+                case "nnull": return ("NotEqual", null);
                 default: throw new NotImplementedException(operatorName);
             }
         }
