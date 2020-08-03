@@ -144,7 +144,11 @@ namespace Origam.DA.Service
             }
             if (retrievedObj is Schema.RuleModel.XPathRule)
             {
-                mc = Regex.Matches(((Schema.RuleModel.XPathRule)retrievedObj).XPath, pattern);
+                string xPath = ((Schema.RuleModel.XPathRule)retrievedObj).XPath;
+                if (xPath != null)
+                {
+                    mc = Regex.Matches(xPath, pattern);
+                }
             }
             if (mc != null)
             {
