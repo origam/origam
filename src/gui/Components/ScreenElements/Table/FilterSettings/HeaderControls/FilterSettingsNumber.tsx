@@ -155,6 +155,7 @@ export class FilterSettingsNumber extends React.Component<{
       case "lte":
       case "gte":
         this.setting.isComplete = this.setting.val1 !== undefined;
+        this.setting.val2 = undefined;
         this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
         break;
       case "between":
