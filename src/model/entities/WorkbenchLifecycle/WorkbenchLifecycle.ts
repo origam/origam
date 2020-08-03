@@ -229,7 +229,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       isSleepingDirty
     );
     try {
-      newScreen.parentSessionId = actionResultRequest?.parentSessionId;
       openedScreens.pushItem(newScreen);
       if (!isSessionRebirth) {
         newScreen.parentContext = parentContext;
