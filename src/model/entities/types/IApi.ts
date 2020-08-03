@@ -136,6 +136,7 @@ export interface IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
+    AdditionalRequestParameters?: object | undefined
   }): Promise<any>;
   destroyUI(data: { FormSessionId: string }): Promise<any>;
 
@@ -161,6 +162,15 @@ export interface IApi {
     Values: { [key: string]: any };
     Parameters: { [key: string]: any };
     RequestingGridId: string;
+  }): Promise<any>;
+
+  copyObject(data: {
+    Entity: string;
+    SessionFormIdentifier: string;
+    ForcedValues: {};
+    RequestingGridId: string;
+    OriginalId: string;
+    Entities: string[]
   }): Promise<any>;
 
   deleteObject(data: { SessionFormIdentifier: string; Entity: string; Id: string }): Promise<any>;
@@ -309,4 +319,6 @@ export interface IApi {
     data: { uploadToken: string; fileName: string; file: any },
     onUploadProgress?: (event: any) => void
   ): Promise<any>;
+
+  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>
 }

@@ -6,6 +6,7 @@ import {getApi} from "model/selectors/getApi";
 import {getSessionId} from "model/selectors/getSessionId";
 import {flashColor2htmlColor} from "utils/flashColorFormat";
 import {IRowState, IRowStateColumnItem, IRowStateData, IRowStateItem} from "./types/IRowState";
+import {FlowBusyMonitor} from "../../utils/flow";
 
 export enum IIdState {
   LOADING = "LOADING",
@@ -17,6 +18,12 @@ export class RowState implements IRowState {
 
   constructor(data: IRowStateData) {
     Object.assign(this, data);
+  }
+
+  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
+
+  get isWorking() {
+    return this.monitor.isWorking;
   }
 
   @observable firstLoadingPerformed = false;
@@ -39,6 +46,7 @@ export class RowState implements IRowState {
       while (true) {
         const idsToLoad: Set<string> = new Set();
         try {
+          this.monitor.inFlow++;
           for (let key of this.observedIds.keys()) {
             if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
               idsToLoad.add(key);
@@ -71,6 +79,8 @@ export class RowState implements IRowState {
           console.error(error);
           // TODO: Better error handling.
           yield* handleError(this)(error);
+        } finally {
+          this.monitor.inFlow--
         }
       }
     }.bind(this)

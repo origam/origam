@@ -89,6 +89,7 @@ export class TableViewEditor extends React.Component<{
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            isRichText={false}
           />
         );
       case "Date":
@@ -141,6 +142,8 @@ export class TableViewEditor extends React.Component<{
             // api={undefined}
           />
         );
+      case "Checklist":
+        return "";
       case "TagInput":
         return (
           <TagInputEditor

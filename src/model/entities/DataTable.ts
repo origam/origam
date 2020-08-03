@@ -1,5 +1,5 @@
 import {IDataTable, IDataTableData} from "./types/IDataTable";
-import {action, computed, observable} from "mobx";
+import {action, autorun, computed, observable} from "mobx";
 import {IProperty} from "./types/IProperty";
 import {getDataView} from "../selectors/DataView/getDataView";
 import {IAdditionalRowData} from "./types/IAdditionalRecordData";
@@ -15,6 +15,8 @@ import {formatNumber} from "./NumberFormating";
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
   rowsContainer: IRowsContainer = null as any;
+  @observable
+  isEmpty: boolean = false;
 
   constructor(data: IDataTableData) {
     Object.assign(this, data);
@@ -102,12 +104,15 @@ export class DataTable implements IDataTable {
   }
 
   resolveCellText(property: IProperty, value: any): any {
-    if (value === null || value === undefined) return "";
+    if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) return "";
     if (property.isLookup) {
       if (property.column === "TagInput") {
         const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
-        return (textArray || []).join(", ");
+        return (textArray || []);
       } else {
+        if(Array.isArray(value)){
+          return value.map(item => property.lookup!.getValue(`${item}`)).join(", ");
+        }
         return property.lookup!.getValue(`${value}`);
       }
     }
@@ -136,7 +141,17 @@ export class DataTable implements IDataTable {
   }
 
   getFirstRow(): any[] | undefined {
+    if(this.rows.length === 0){
+      return undefined;
+    }
     return this.rows[0];
+  }
+
+  getLastRow(): any[] | undefined {
+    if(this.rows.length === 0){
+      return undefined;
+    }
+    return this.rows[this.rows.length - 1];
   }
 
   getNearestRow(row: any[]): any[] | undefined {
@@ -217,6 +232,9 @@ export class DataTable implements IDataTable {
   setRecords(rows: any[][]) {
     this.clear();
     this.rowsContainer.set(rows);
+    if(rows.length === 0){
+      this.isEmpty = true;
+    }
   }
   @action.bound
   setFormDirtyValue(row: any[], propertyId: string, value: any) {

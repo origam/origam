@@ -21,6 +21,7 @@ import {IGroupingConfiguration} from "../types/IGroupingConfiguration";
 import {IAggregationInfo} from "../types/IAggregationInfo";
 import {AggregationType} from "../types/AggregationType";
 import {ICellRectangle} from "./types/ICellRectangle";
+import {getRowStateAllowUpdate} from "../../selectors/RowState/getRowStateAllowUpdate";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -58,9 +59,9 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @computed get allTableProperties() {
-    return this.tablePropertyIds.map(id =>
-      getDataTable(this).getPropertyById(id)
-    ) as IProperty[];
+    return this.tablePropertyIds
+      .map(id => getDataTable(this).getPropertyById(id))
+      .filter(prop => prop) as IProperty[];
   }
 
   @computed get tableProperties() {
@@ -149,13 +150,18 @@ export class TablePanelView implements ITablePanelView {
         }
       }
     } else {
-      this.selectCell(this.dataTable.getRowId(row) as string, property.id);
-      yield* onFieldChangeG(this)(
-        undefined,
-        row,
-        property,
-        !getCellValue(this, row, property)
-      );
+      const rowId = this.dataTable.getRowId(row);
+      this.selectCell(rowId as string, property.id);
+
+      const readOnly = property!.readOnly || !getRowStateAllowUpdate(property, rowId || "", property!.id);
+      if(!readOnly){
+        yield* onFieldChangeG(this)(
+          undefined,
+          row,
+          property,
+          !getCellValue(this, row, property)
+        );
+      }
     }
     this.scrollToCurrentCell();
   }
@@ -269,6 +275,13 @@ export class TablePanelView implements ITablePanelView {
     const myId = this.subId++;
     this.onScrollToCurrentCellHandlers.set(myId, fn);
     return () => this.onScrollToCurrentCellHandlers.delete(myId);
+  }
+
+  @action.bound scrollToCurrentRow(){
+    const rowIdx = getSelectedRowIndex(this);
+    if (rowIdx !== undefined) {
+      this.triggerOnScrollToCellShortest(rowIdx, 0);
+    }
   }
 
   @action.bound scrollToCurrentCell() {

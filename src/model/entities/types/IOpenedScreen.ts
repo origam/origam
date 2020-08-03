@@ -21,6 +21,7 @@ export interface IOpenedScreenData {
 }
 
 export interface IOpenedScreen extends IOpenedScreenData {
+  parentContext: IOpenedScreen | undefined;
   $type_IOpenedScreen: 1;
 
   isActive: boolean;
@@ -31,6 +32,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
   setContent(screen: IFormScreenEnvelope): void;
   screenUrl?: string;
   parent?: any;
+  hasDynamicTitle: boolean;
 }
 
 export const isIOpenedScreen = (o: any): o is IOpenedScreen =>

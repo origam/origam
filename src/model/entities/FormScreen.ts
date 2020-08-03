@@ -7,6 +7,7 @@ import {IAction} from "./types/IAction";
 import {getDontRequestData} from "model/selectors/getDontRequestData";
 import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData,} from "./types/IFormScreen";
 import {IPanelConfiguration} from "./types/IPanelConfiguration";
+import { CriticalSection } from "utils/sync";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -20,6 +21,8 @@ export class FormScreen implements IFormScreen {
   }
 
   parent?: any;
+
+  dataUpdateCRS = new CriticalSection();
 
   @observable isDirty: boolean = false;
   dynamicTitleSource: string | undefined;
@@ -54,9 +57,9 @@ export class FormScreen implements IFormScreen {
     const columnName = splitSource[1];
 
     const dataView = this.dataViews.find((view) => view.name === dataSourceName);
-    if (!dataView) return;
+    if (!dataView) return undefined;
     const dataSource = this.dataSources.find((view) => view.entity === dataSourceName);
-    if (!dataSource) return;
+    if (!dataSource) return undefined;
     const dataSourceField = dataSource!.getFieldByName(columnName);
     const dataTable = dataView!.dataTable;
 
@@ -127,6 +130,9 @@ export class FormScreen implements IFormScreen {
 
   @action.bound
   setDirty(state: boolean): void {
+    if(this.suppressSave && state === true){
+      return;
+    }
     this.isDirty = state;
   }
 
@@ -139,8 +145,11 @@ export class FormScreen implements IFormScreen {
 
     const recursive = (dataView: IDataView, level: number) => {
       console.log(
-        `${strrep(level, "  ")}${dataView.name} (${dataView.entity} - ${dataView.modelId})`
+        `${strrep(level, "  ")}${dataView?.name} (${dataView?.entity} - ${dataView?.modelId})`
       );
+      if(!dataView){
+        return;
+      }
       for (let chb of dataView.childBindings) {
         recursive(chb.childDataView, level + 1);
       }

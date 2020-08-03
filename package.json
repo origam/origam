@@ -180,5 +180,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "prettier": {
+    "printWidth": 100
   }
 }

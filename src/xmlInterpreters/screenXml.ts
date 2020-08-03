@@ -40,6 +40,9 @@ import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveCol
 import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
 import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
 import {isInfiniteScrollingActive} from "../model/selectors/isInfiniteScrollingActive";
+import {cssString2Object} from "../utils/objects";
+import {TreeDataTable} from "../model/entities/TreeDataTable";
+import {parseAggregationType} from "../model/entities/types/AggregationType";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -86,7 +89,8 @@ export function interpretScreenXml(
 
   const dataViews = findStopping(
     screenDoc,
-    (n) => (n.name === "UIElement" || n.name === "UIRoot") && n.attributes.Type === "Grid"
+    (n) => (n.name === "UIElement" || n.name === "UIRoot") &&
+                (n.attributes.Type === "Grid" || n.attributes.Type === "TreePanel")
   );
 
   checkInfiniteScrollWillWork(dataViews, formScreenLifecycle, panelConfigurations);
@@ -247,6 +251,7 @@ export function interpretScreenXml(
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
             isTree: property.attributes.IsTree === "true",
             isAggregatedColumn: property.attributes.Aggregated || false,
+            style: cssString2Object(property.attributes.Style)
           });
         }
       );
@@ -277,6 +282,8 @@ export function interpretScreenXml(
       const filterConfiguration = new FilterConfiguration(implicitFilters);
       const dataViewInstance = new DataView({
         id: dataView.attributes.Id,
+        attributes: dataView.attributes,
+        type: dataView.attributes.Type,
         modelInstanceId: dataView.attributes.ModelInstanceId,
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
@@ -300,12 +307,14 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: new DataTable({
-          formScreenLifecycle: formScreenLifecycle,
-          dataViewAttributes: dataView.attributes,
-          orderingConfiguration: orderingConfiguration,
-          filterConfiguration: filterConfiguration,
-        }),
+        dataTable: dataView.attributes.Type === "TreePanel"
+          ? new TreeDataTable(dataView.attributes.IdProperty, dataView.attributes.ParentIdProperty, orderingConfiguration, filterConfiguration)
+          : new DataTable({
+            formScreenLifecycle: formScreenLifecycle,
+            dataViewAttributes: dataView.attributes,
+            orderingConfiguration: orderingConfiguration,
+            filterConfiguration: filterConfiguration,
+          }),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
@@ -323,6 +332,7 @@ export function interpretScreenXml(
         clientSideGrouper: new ClientSideGrouper(),
       });
 
+      let groupingColumnCounter = 1;
       configuration.forEach((conf) => {
         const columns = findStopping(conf, (n) => n.name === "column");
         columns.forEach((column, columnIndex) => {
@@ -335,8 +345,13 @@ export function interpretScreenXml(
             if (column.attributes.isHidden === "true") {
               dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
             }
+            if(column.attributes.aggregationType !== "0"){
+              const aggregationType = parseAggregationType(column.attributes.aggregationType);
+              dataViewInstance.tablePanelView.aggregations.setType(column.attributes.property, aggregationType);
+            }
           } else if (column.attributes.groupingField) {
-            // TODO
+            dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(column.attributes.groupingField, groupingColumnCounter);
+            groupingColumnCounter++;
           }
         });
         dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds

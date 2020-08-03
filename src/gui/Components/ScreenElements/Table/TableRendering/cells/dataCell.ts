@@ -43,6 +43,8 @@ import {onPossibleSelectedRowChange} from "model/actions-ui/onPossibleSelectedRo
 import {getMenuItemId} from "model/selectors/getMenuItemId";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {flow} from "mobx";
+import actionsUi from "../../../../../../model/actions-ui-tree";
+import {getDataView} from "../../../../../../model/selectors/DataView/getDataView";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -76,12 +78,18 @@ function registerClickHandler(columnId: string){
     w: currentColumnWidthVisible(),
     h: currentRowHeight(),
     handler(event: any) { flow(function* (){
-      console.log("click");
-      yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
-      yield onPossibleSelectedRowChange(ctx)(
-        getMenuItemId(ctx),
-        getDataStructureEntityId(ctx),
-        getSelectedRowId(ctx));
+      if (event.isDouble) {
+        const defaultAction = getDataView(ctx).defaultAction;
+        if (defaultAction && defaultAction.isEnabled){
+          yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+        }
+      }else{
+        yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
+        yield onPossibleSelectedRowChange(ctx)(
+          getMenuItemId(ctx),
+          getDataStructureEntityId(ctx),
+          getSelectedRowId(ctx));
+      }
     })();
     },
   });
@@ -150,6 +158,7 @@ function drawCellValue(){
         break;
       case "ComboBox":
       case "TagInput":
+      case "Checklist":
         if (isLink) {
           ctx2d.save();
           ctx2d.fillStyle = "#4c84ff";

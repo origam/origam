@@ -11,6 +11,10 @@ import {IUrlUpenMethod} from "model/entities/types/IUrlOpenMethod";
 import {openNewUrl} from "../Workbench/openNewUrl";
 import {ICRUDResult, processCRUDResult} from "../DataLoading/processCRUDResult";
 import {IRefreshOnReturnType} from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
+import {IDataView} from "../../entities/types/IDataView";
+import {getDataViewByModelInstanceId} from "../../selectors/DataView/getDataViewByModelInstanceId";
+import {getDataView} from "../../selectors/DataView/getDataView";
+import {getOpenedScreen} from "../../selectors/getOpenedScreen";
 
 export interface IOpenNewForm {
   (
@@ -20,6 +24,8 @@ export interface IOpenNewForm {
     dontRequestData: boolean,
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
+    parentContext: any,
+    additionalRequestParameters: object,
     formSessionId?: string,
     isSessionRebirth?: boolean,
     registerSession?: true,
@@ -47,25 +53,30 @@ export interface IProcessCRUDResult {
   (result: ICRUDResult): Generator;
 }
 
-export function new_ProcessActionResult($: any) {
-  const workbenchLifecycle = getWorkbenchLifecycle($);
+export function new_ProcessActionResult(ctx: any) {
+  const workbenchLifecycle = getWorkbenchLifecycle(ctx);
+  const getPanelFunc = (modelInstanceId: string) => getDataViewByModelInstanceId(ctx, modelInstanceId)!;
   return processActionResult2({
+    getPanelFunc: getPanelFunc,
     openNewForm: workbenchLifecycle.openNewForm,
-    openNewUrl: openNewUrl($),
-    closeForm: closeForm($),
-    refreshForm: actions.formScreen.refresh($),
-    getActionCaption: () => getActionCaption($),
-    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult($, crudResult)
+    openNewUrl: openNewUrl(ctx),
+    closeForm: closeForm(ctx),
+    refreshForm: actions.formScreen.refresh(ctx),
+    getActionCaption: () => getActionCaption(ctx),
+    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult(ctx, crudResult),
+    parentContext: ctx
   });
 }
 
 export function processActionResult2(dep: {
+  getPanelFunc: (modelInstanceId: string) => IDataView;
   openNewForm: IOpenNewForm;
   openNewUrl: IOpenNewUrl;
   closeForm: ICloseForm;
   refreshForm: IRefreshForm;
   getActionCaption: IGetActionCaption;
   processCRUDResult: IProcessCRUDResult;
+  parentContext: any
 }) {
   return function* processActionResult2(actionResultList: any[]) {
     for (let actionResultItem of actionResultList) {
@@ -90,10 +101,12 @@ export function processActionResult2(dep: {
             !dataRequested,
             dialogInfo,
             parameters,
+            dep.parentContext,
+            actionResultItem.request,
             undefined,
             undefined,
             undefined,
-            refreshOnReturnType
+            refreshOnReturnType,
           );
           break;
         }
@@ -115,6 +128,19 @@ export function processActionResult2(dep: {
             actionResultItem.urlOpenMethod,
             dep.getActionCaption()
           );
+          break;
+        }
+        case IActionResultType.Script: {
+          try {
+            // eslint-disable-next-line no-new-func
+            const actionScript = new Function("getPanel", actionResultItem.script);
+            actionScript(dep.getPanelFunc);
+          }catch (e) {
+            let message = "An error occurred while executing custom script: "+actionResultItem.script+", \n"+e.message;
+            if(e.stackTrace)
+              message +=(", \n"+e.stackTrace);
+            throw new Error(message)
+          }
           break;
         }
       }

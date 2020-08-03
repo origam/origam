@@ -38,6 +38,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   onFlushData(): Generator;
   onCreateRow(entity: string, gridId: string): Generator;
   onDeleteRow(entity: string, rowId: string): Generator;
+  updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string): Generator;
 
   onSaveSession(): Generator;
   onRequestScreenReload(): Generator;
@@ -71,6 +72,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   parent?: any;
 
   registerDisposer(disposer: ()=>void): void;
+
+  onCopyRow(entity: any, gridId: string, rowId: string): any;
 }
 
 export const isIFormScreenLifecycle = (o: any): o is IFormScreenLifecycle =>

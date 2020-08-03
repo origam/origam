@@ -12,13 +12,13 @@ import {getDataTable} from "model/selectors/DataView/getDataTable";
 @inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
   return {
-    textualValue: dataTable.resolveCellText(property, value)
+    textualValues: dataTable.resolveCellText(property, value)
   };
 })
 @observer
 export class TagInputEditor extends React.Component<{
   value: string[];
-  textualValue?: string[];
+  textualValues?: string[];
   isReadOnly: boolean;
   isInvalid: boolean;
   invalidMessage?: string;
@@ -38,7 +38,7 @@ export class TagInputEditor extends React.Component<{
           {this.props.value
             ? this.props.value.map((valueItem, idx) => (
                 <TagInputItem key={valueItem}>
-                  {this.props.textualValue![idx] || ""}
+                  {this.props.textualValues![idx] || ""}
                 </TagInputItem>
               ))
             : null}

@@ -13,6 +13,7 @@ import {ClientSideGrouper} from "../ClientSideGrouper";
 import {IGridDimensions, IScrollState} from "../../../gui/Components/ScreenElements/Table/types";
 import {ITableRow} from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
 import {BoundingRect} from "react-measure";
+import {FocusManager} from "../FocusManager";
 
 export interface IDataViewData {
   id: string;
@@ -25,6 +26,8 @@ export interface IDataViewData {
   showAddButton: boolean;
   showDeleteButton: boolean;
   showSelectionCheckboxesSetting: boolean;
+  type: string;
+  attributes: any;
   
   isGridHeightDynamic: boolean;
   selectionMember: string;
@@ -76,6 +79,8 @@ export interface IDataView extends IDataViewData {
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
+  focusManager: FocusManager;
+  defaultAction: IAction | undefined;
   
   isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
@@ -93,6 +98,8 @@ export interface IDataView extends IDataViewData {
 
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
   selectFirstRow(): void;
+  selectLastRow(): void;
+  reselectOrSelectFirst(): void
   selectRowById(id: string | undefined): void;
   selectRow(row: any[]): void;
   setSelectedRowId(id: string | undefined): void;

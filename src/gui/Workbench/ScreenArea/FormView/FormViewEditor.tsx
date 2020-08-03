@@ -19,6 +19,8 @@ import {DropdownEditor} from "../../../Components/ScreenElements/Editors/Dropdow
 import {CheckList} from "gui/Components/ScreenElements/Editors/CheckList";
 import {ImageEditor} from "gui/Components/ScreenElements/Editors/ImageEditor";
 import {BlobEditor} from "gui/Components/ScreenElements/Editors/BlobEditor";
+import {getDataView} from "../../../../model/selectors/DataView/getDataView";
+import uiActions from "../../../../model/actions-ui-tree";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -33,6 +35,7 @@ export class FormViewEditor extends React.Component<{
   value?: any;
   textualValue?: any;
   property?: IProperty;
+  isRichText: boolean;
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => void;
 }> {
@@ -55,10 +58,10 @@ export class FormViewEditor extends React.Component<{
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;
     if (row) {
-      const dataView = getDataTable(this.props.property);
+      const dataTable = getDataTable(this.props.property);
       const dsFieldErrors = getDataSourceFieldByName(this.props.property, "__Errors");
       const errors = dsFieldErrors
-        ? dataView.getCellValueByDataSourceField(row, dsFieldErrors)
+        ? dataTable.getCellValueByDataSourceField(row, dsFieldErrors)
         : null;
 
       const errMap: Map<number, string> | undefined = errors
@@ -77,6 +80,8 @@ export class FormViewEditor extends React.Component<{
       }
     }
 
+    const focusManager = getDataView(this.props.property).focusManager;
+
     switch (this.props.property!.column) {
       case "Number":
         return (
@@ -91,11 +96,13 @@ export class FormViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
+            customStyle={this.props.property?.style}
             refocuser={undefined}
             onChange={this.props.onChange}
-            onKeyDown={undefined}
+            onKeyDown={this.MakeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
           />
         );
       case "Text":
@@ -106,15 +113,18 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             isMultiline={this.props.property!.multiline}
             isPassword={this.props.property!.isPassword}
+            customStyle={this.props.property?.style}
             invalidMessage={invalidMessage}
             isFocused={false}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
-            onKeyDown={undefined}
+            onKeyDown={this.MakeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            isRichText={this.props.isRichText}
+            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
           />
         );
       case "Date":
@@ -132,6 +142,8 @@ export class FormViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
+            onKeyDown={this.MakeOnKeyDownCallBack()}
           />
         );
       case "CheckBox":
@@ -165,6 +177,8 @@ export class FormViewEditor extends React.Component<{
             menuItemId={""}
             api={undefined}
             onEditorBlur={this.props.onEditorBlur}
+            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
+            onKeyDown={this.MakeOnKeyDownCallBack()}
           />
         );
       case "TagInput":
@@ -179,7 +193,7 @@ export class FormViewEditor extends React.Component<{
             foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
-            onKeyDown={undefined}
+            onKeyDown={this.MakeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
           />
@@ -198,6 +212,22 @@ export class FormViewEditor extends React.Component<{
       default:
         return "Unknown field";
     }
+  }
+
+  private MakeOnKeyDownCallBack() {
+    const dataView = getDataView(this.props.property);
+
+    return (event: any) => {
+      if (this.props.property!.multiline) {
+        return;
+      }
+      if (!dataView.defaultAction) {
+        return;
+      }
+      if (event.key === "Enter") {
+        uiActions.actions.onActionClick(dataView.defaultAction)(event, dataView.defaultAction)
+      }
+    };
   }
 
   render() {

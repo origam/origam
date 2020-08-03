@@ -9,6 +9,7 @@ import {
   getCurrentDecimalSeparator,
   getCurrentGroupSeparator
 } from "../../../../model/entities/NumberFormating";
+import {IFocusable} from "../../../../model/entities/FocusManager";
 
 @observer
 export class NumberEditor extends React.Component<{
@@ -22,17 +23,20 @@ export class NumberEditor extends React.Component<{
   backgroundColor?: string;
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
+  customStyle?: any;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onEditorBlur?(event: any): void;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> {
   disposers: any[] = [];
 
   @observable hasFocus = false;
   @observable editingValue: null | string = "";
   @observable wasChanged = false;
+  unsubscribeFromFocusManager?: () => void;
 
   @computed get numeralFormattedValue() {
     if (this.props.value === null) {
@@ -52,10 +56,14 @@ export class NumberEditor extends React.Component<{
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
+    if(this.elmInput && this.props.subscribeToFocusManager){
+      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+    }
   }
 
   componentWillUnmount() {
     this.disposers.forEach((d) => d());
+    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   componentDidUpdate(prevProps: { isFocused: boolean }) {
@@ -126,15 +134,23 @@ export class NumberEditor extends React.Component<{
     this.elmInput = elm;
   };
 
+  getStyle(){
+    if(this.props.customStyle){
+      return this.props.customStyle;
+    }else{
+      return {
+        color: this.props.foregroundColor,
+        backgroundColor: this.props.backgroundColor,
+      }
+    }
+  }
+
   render() {
     return (
       <div className={S.editorContainer}>
         {!this.props.isMultiline ? (
           <input
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
+            style={this.getStyle()}
             title={this.props.customNumberFormat || ""}
             className={cx(S.input, "isRightAligned")}
             type={this.props.isPassword ? "password" : "text"}
@@ -150,10 +166,7 @@ export class NumberEditor extends React.Component<{
           />
         ) : (
           <textarea
-            style={{
-              color: this.props.foregroundColor,
-              backgroundColor: this.props.backgroundColor,
-            }}
+            style={this.getStyle()}
             className={S.input}
             value={this.props.value || ""}
             readOnly={this.props.isReadOnly}
