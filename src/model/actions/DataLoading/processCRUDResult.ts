@@ -96,6 +96,13 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       yield* reloadScreen(ctx)(); // TODO: It is not possible to reload data... Has to be done by different API endpoint
       break;
     }
+    case IResponseOperation.DeleteAllData: {
+      const dataViews = getDataViewList(ctx);
+      for(let dataView of dataViews) {
+        dataView.dataTable.clear();
+      }
+      break;
+    }
     default:
       throw new Error("Unknown operation " + resultItem.operation);
   }

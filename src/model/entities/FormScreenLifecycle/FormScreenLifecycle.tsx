@@ -481,6 +481,35 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string){
+    try {
+      this.monitor.inFlow++;
+      const api = getApi(this);
+      const changes: any = {}
+      changes[fieldName] = newValue;
+      const formScreen = getFormScreen(this);
+      const self = this;
+      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
+        function* () {
+          return yield api.updateObject({
+            SessionFormIdentifier: getSessionId(self),
+            Entity: dataView.entity,
+            Id: dataView.dataTable.getRowId(row),
+            Values: changes
+          });
+        }
+      );
+
+      yield* processCRUDResult(dataView, updateObjectResult);
+
+      if (formScreen.requestSaveAfterUpdate) {
+        yield* this.saveSession();
+      }
+    } finally {
+      this.monitor.inFlow--;
+    }
+  }
+
   *readFirstChunkOfRows(rootDataView: IDataView) {
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);

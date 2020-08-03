@@ -2,7 +2,7 @@ import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
 import {getOpenedScreen} from "model/selectors/getOpenedScreen";
 import {IRefreshOnReturnType} from "../entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import {getApi} from "../selectors/getApi";
-import {getFormScreen} from "../selectors/FormScreen/getFormScreen";
+import {ICRUDResult, processCRUDResult} from "./DataLoading/processCRUDResult";
 
 export function closeForm(ctx: any) {
   return function* closeForm(): Generator {
@@ -19,12 +19,11 @@ export function closeForm(ctx: any) {
           break;
         case IRefreshOnReturnType.MergeModalDialogChanges:
           const api = getApi(ctx);
-          const changeList = (yield api.pendingChanges({ sessionFormIdentifier: openedScreen.parentSessionId!})) as any[];
-          for (let change of changeList) {
-            const dataViews = getFormScreen(ctx).getDataViewsByEntity(change.entity);
-            for (let dataView of dataViews) {
-              dataView.dataTable.substituteRecord(change.wrappedObject);
-            }
+          const parentScreen = getOpenedScreen(openedScreen.parentContext);
+          const parentScreenSessionId = parentScreen!.content!.formScreen!.sessionId;
+          const changes = (yield api.pendingChanges({ sessionFormIdentifier: parentScreenSessionId})) as ICRUDResult[];
+          for (let change of changes) {
+            yield* processCRUDResult(openedScreen.parentContext, change);
           }
           break;
       }

@@ -130,6 +130,9 @@ export class FormScreen implements IFormScreen {
 
   @action.bound
   setDirty(state: boolean): void {
+    if(this.suppressSave && state === true){
+      return;
+    }
     this.isDirty = state;
   }
 
