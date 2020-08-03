@@ -145,8 +145,11 @@ export class FormScreen implements IFormScreen {
 
     const recursive = (dataView: IDataView, level: number) => {
       console.log(
-        `${strrep(level, "  ")}${dataView.name} (${dataView.entity} - ${dataView.modelId})`
+        `${strrep(level, "  ")}${dataView?.name} (${dataView?.entity} - ${dataView?.modelId})`
       );
+      if(!dataView){
+        return;
+      }
       for (let chb of dataView.childBindings) {
         recursive(chb.childDataView, level + 1);
       }

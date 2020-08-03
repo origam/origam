@@ -320,5 +320,5 @@ export interface IApi {
     onUploadProgress?: (event: any) => void
   ): Promise<any>;
 
-  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any>
+  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>
 }

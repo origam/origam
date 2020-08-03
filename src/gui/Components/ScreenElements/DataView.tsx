@@ -8,8 +8,9 @@ import S from "./DataView.module.css";
 import {DataViewLoading} from "./DataViewLoading";
 import {scopeFor} from "dic/Container";
 import {IDataViewBodyUI} from "modules/DataView/DataViewUI";
+import {TreeView} from "./TreeView";
 
-@inject(({ formScreen }, { id }) => {
+@inject(({formScreen}, {id}) => {
   const dataView = getDataViewById(formScreen, id);
   return {
     dataView,
@@ -45,18 +46,17 @@ export class DataView extends React.Component<{
     const isWorking = getIsDataViewOrFormScreenWorking(this.props.dataView);
     const $cont = scopeFor(this.props.dataView);
     const uiBody = $cont && $cont.resolve(IDataViewBodyUI);
+
     return (
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
-          <CDataViewHeader isVisible={!this.props.isHeadless} />
+          <CDataViewHeader isVisible={!this.props.isHeadless}/>
 
-          {uiBody && uiBody.render()}
-          {/*
+            {this.props.dataView?.type === "TreePanel"
+              ? <TreeView dataView={this.props.dataView}/>
+              : uiBody && uiBody.render()}
 
-          {this.props.dataView!.activePanelView === IPanelViewType.Form && (
-
-            )}*/}
-          {isWorking && <DataViewLoading />}
+          {isWorking && <DataViewLoading/>}
         </div>
       </Provider>
     );

@@ -795,7 +795,7 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
-  async pendingChanges(data: { sessionFormIdentifier: string }): Promise<any> {
+  async pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]> {
     return (
       await axios.get(`${this.urlPrefix}/UIService/PendingChanges/${data.sessionFormIdentifier}`, {
         headers: this.httpAuthHeader,
