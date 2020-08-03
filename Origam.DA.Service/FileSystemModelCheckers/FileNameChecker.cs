@@ -68,7 +68,7 @@ namespace Origam.DA.Service
                         : expectedFilePath;
                     return $"Object with id: \"{instance.Id}\"\n" +
                            $"should be in: \"{expectedFilePathFormatted}\"\n" +
-                           $"but is in: \"file://{actualFilePath}\"";
+                           $"but is in:         \"file://{actualFilePath}\"";
                 })
                 .ToList();
 
