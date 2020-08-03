@@ -25,14 +25,7 @@ const OpCombo: React.FC<{
 }> = props => {
   return (
     <FilterSettingsComboBox
-      trigger={
-        <>
-          {
-            (OPERATORS.find(item => item.typ === props.setting.type) || {})
-              .human
-          }
-        </>
-      }
+      trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).human}</>}
     >
       {OPERATORS.map(op => (
         <FilterSettingsComboBoxItem
