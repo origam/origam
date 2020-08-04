@@ -308,7 +308,7 @@ export function interpretScreenXml(
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
         dataTable: dataView.attributes.Type === "TreePanel"
-          ? new TreeDataTable(dataView.attributes.IdProperty, dataView.attributes.ParentIdProperty, orderingConfiguration, filterConfiguration)
+          ? new TreeDataTable(dataView.attributes.IdProperty, dataView.attributes.ParentIdProperty)
           : new DataTable({
             formScreenLifecycle: formScreenLifecycle,
             dataViewAttributes: dataView.attributes,
