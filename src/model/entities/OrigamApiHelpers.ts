@@ -21,5 +21,5 @@ export function toFilterItem(columnId: string, operator: string, val1: any, val2
 }
 
 function toFilterValueForm(value: any) {
-  return typeof value === "string" ? '"' + value + '"' : value;
+  return isNaN(value) ? '"' + value + '"' : value;
 }
