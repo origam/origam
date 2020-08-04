@@ -1,11 +1,14 @@
 import _ from "lodash";
-import {action, comparer, computed, flow, observable, reaction, toJS} from "mobx";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
-import {getDataTable} from "../selectors/DataView/getDataTable";
-import {IFilterConfiguration} from "./types/IFilterConfiguration";
+import { action, comparer, computed, flow, observable, reaction, toJS } from "mobx";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getDataTable } from "../selectors/DataView/getDataTable";
+import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import produce from "immer";
-import {getDataSource} from "../selectors/DataSources/getDataSource";
+import { getDataSource } from "../selectors/DataSources/getDataSource";
+import {IFilter} from "./types/IFilter";
+import {IFilterSetting} from "./types/IFilterSetting";
+
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
@@ -16,14 +19,14 @@ export class FilterConfiguration implements IFilterConfiguration {
   $type_IFilterConfigurationData: 1 = 1;
 
   implicitFilters: IImplicitFilter[];
-  @observable.ref filters: any[] = [];
+  @observable.ref filters: IFilter[] = [];
 
   getSettingByPropertyId(propertyId: string): any {
-    return this.filters.find(item => item.propertyId === propertyId);
+    return this.filters.find((item) => item.propertyId === propertyId);
   }
 
   @action.bound
-  setFilter(term: any): void {
+  setFilter(term: IFilter): void {
     this.filters = produce(this.filters, (draft: any) => {
       const oldIdx = draft.findIndex((item: any) => item.propertyId === term.propertyId);
       if (oldIdx > -1) {
@@ -352,7 +355,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         break;
       }
     }
-  };
+  }
 
   implicitFilterPredicate(row: any[], implicitFilter: IImplicitFilter) {
     const dataTable = getDataTable(this);
@@ -362,17 +365,17 @@ export class FilterConfiguration implements IFilterConfiguration {
 
     switch (parseInt(implicitFilter.operatorCode)) {
       case 1:
-        return implicitFilter.value === String(cellValue)
+        return implicitFilter.value === String(cellValue);
       case 10:
-        return implicitFilter.value !== String(cellValue)
+        return implicitFilter.value !== String(cellValue);
       case 15:
         return cellValue === null;
       case 16:
         return cellValue !== null;
       default:
-        throw new Error(`Operator code ${implicitFilter.operatorCode} not implemented.`)
+        throw new Error(`Operator code ${implicitFilter.operatorCode} not implemented.`);
     }
-  };
+  }
 
   isPresentInDetail(row: any[]): boolean {
     if (this.dataView.isBindingRoot) return true;
@@ -420,14 +423,14 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.disposers.push(
       reaction(
         () => {
-          const data = toJS(this.filters);
-          data.forEach(item => delete item.setting.human);
+          const data: any[] = toJS(this.filters);
+          data.forEach((item) => delete item.setting.caption);
           return data;
         },
         () => {
           this.applyNewFiltering();
         },
-        {equals: comparer.structural}
+        { equals: comparer.structural }
       )
     );
   }
@@ -439,11 +442,11 @@ export class FilterConfiguration implements IFilterConfiguration {
     if (dataView.isReorderedOnClient) {
       if (this.filters.length > 0) {
         const comboProps = this.filters
-          .map(term => getDataViewPropertyById(this, term.propertyId)!)
-          .filter(prop => prop.column === "ComboBox");
+          .map((term) => getDataViewPropertyById(this, term.propertyId)!)
+          .filter((prop) => prop.column === "ComboBox");
 
         yield Promise.all(
-          comboProps.map(prop =>
+          comboProps.map((prop) =>
             prop.lookup!.resolveList(new Set(dataTable.getAllValuesOfProp(prop)))
           )
         );
@@ -454,7 +457,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   applyNewFiltering = _.throttle(this.applyNewFilteringImm, 200);
 
   @action.bound stop() {
-    this.disposers.forEach(dis => dis());
+    this.disposers.forEach((dis) => dis());
   }
 
   parent?: any;
@@ -462,6 +465,6 @@ export class FilterConfiguration implements IFilterConfiguration {
 
 interface IImplicitFilter {
   propertyId: string;
-  operatorCode: string,
-  value: any
+  operatorCode: string;
+  value: any;
 }
