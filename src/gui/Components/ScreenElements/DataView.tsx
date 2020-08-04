@@ -28,8 +28,8 @@ export class DataView extends React.Component<{
     if (this.props.height !== undefined || this.props.width !== undefined) {
       return {
         flexGrow: 0,
-        height: this.props.height,
-        width: this.props.width,
+        minHeight: this.props.height,
+        minWidth: this.props.width,
       };
     } else {
       return {
