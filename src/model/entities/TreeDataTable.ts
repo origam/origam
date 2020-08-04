@@ -111,24 +111,9 @@ export class TreeDataTable implements IDataTable {
   }
 
   setRecords(rows: any[][]): void {
-    const treeSortedRows: any[] = [...this.sortTreeRows(rows, null)];
-    this.rows = treeSortedRows;
+    this.rows = [...this.sortTreeRows(rows, null)];
 
     // const ble = [
-    //   [
-    //     "A",
-    //     null,
-    //     "1",
-    //     false,
-    //     "91599670-d428-433d-ae75-1664d2049647",
-    //     null,
-    //     "1",
-    //     "2020-02-21T10:42:17.977",
-    //     null,
-    //     false,
-    //     null,
-    //   ],
-    //
     //   [
     //     "B",
     //     null,
@@ -138,6 +123,20 @@ export class TreeDataTable implements IDataTable {
     //     null,
     //     "2",
     //     "2019-11-07T13:17:56.29",
+    //     null,
+    //     false,
+    //     null,
+    //   ],
+    //
+    //   [
+    //     "A",
+    //     null,
+    //     "1",
+    //     false,
+    //     "91599670-d428-433d-ae75-1664d2049647",
+    //     null,
+    //     "1",
+    //     "2020-02-21T10:42:17.977",
     //     null,
     //     false,
     //     null,
@@ -185,7 +184,7 @@ export class TreeDataTable implements IDataTable {
     //     null,
     //   ],
     // ];
-
+    //
     // this.rows = [...this.sortTreeRows(ble, null)];
   }
 
@@ -271,9 +270,7 @@ export class TreeDataTable implements IDataTable {
   }
 
   compareLabels(row1: any[], row2: any[]) {
-    if (this.getLabel(row1) > this.getLabel(row2)) return 1;
-    if (this.getLabel(row2) > this.getLabel(row1)) return -1;
-    return 0;
+    return this.getLabel(row1).localeCompare(this.getLabel(row2));
   }
 }
 
