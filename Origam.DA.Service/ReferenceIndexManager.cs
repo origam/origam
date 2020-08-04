@@ -25,6 +25,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
+using Origam.Schema.RuleModel;
 
 namespace Origam.DA.Service
 {
@@ -134,21 +136,21 @@ namespace Origam.DA.Service
         private static void GetGuidFromText(AbstractSchemaItem retrievedObj, List<KeyValuePair<Guid, KeyValuePair<Guid, Type>>> referenceIndex)
         {
             MatchCollection mc = null;
-            if (retrievedObj is Schema.EntityModel.XslTransformation)
+            if (retrievedObj is XslTransformation transformation)
             {
-                mc = Regex.Matches(((Schema.EntityModel.XslTransformation)retrievedObj).TextStore, pattern);
+                mc = Regex.Matches(transformation.TextStore, pattern);
             }
-            if (retrievedObj is Schema.RuleModel.XslRule)
+            if (retrievedObj is XslRule rule)
             {
-                mc = Regex.Matches(((Schema.RuleModel.XslRule)retrievedObj).Xsl, pattern);
+                mc = Regex.Matches(rule.Xsl, pattern);
             }
-            if (retrievedObj is Schema.RuleModel.XPathRule)
+            if (retrievedObj is XPathRule xPathRule)
             {
-                string xPath = ((Schema.RuleModel.XPathRule)retrievedObj).XPath;
-                if (xPath != null)
+                if (xPathRule.XPath == null)
                 {
-                    mc = Regex.Matches(xPath, pattern);
+                    throw new NullReferenceException(string.Format(Strings.XPathIsNull, xPathRule.Id));
                 }
+                mc = Regex.Matches(xPathRule.XPath, pattern);
             }
             if (mc != null)
             {

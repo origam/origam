@@ -168,4 +168,7 @@ This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
 under certain conditions.</value>
   </data>
+  <data name="XPathIsNull" xml:space="preserve">
+    <value>Property XPath of object: {0} is null, references could not be indexed.</value>
+  </data>
 </root>
