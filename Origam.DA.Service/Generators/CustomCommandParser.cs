@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Primitives;
 using MoreLinq;
 using ArgumentException = System.ArgumentException;
 
@@ -193,7 +194,7 @@ namespace Origam.DA.Service.Generators
                 {
                     splitValue = Value
                         .Split(',');
-                    if (splitValue.Length > 3 && Value.Contains(","))
+                    if (splitValue.Length > 3 && Value.Contains(",") && IsString(Value))
                     {
                         splitValue = new []
                         {
@@ -215,6 +216,9 @@ namespace Origam.DA.Service.Generators
         private string Operator => SplitValue[1].Replace("\"","");
         private string ColumnValue => SplitValue[2]
             .Replace("'", "''")
+            .Replace("\"", "'");       
+        private string ColumnValue2 => SplitValue[3]
+            .Replace("'", "''")
             .Replace("\"", "'");
         
         private readonly FilterRenderer renderer = new FilterRenderer();
@@ -230,6 +234,12 @@ namespace Origam.DA.Service.Generators
             return value
                 .Replace("\"", "")
                 .Replace("'", "''");
+        }
+
+        private bool IsString(string value)
+        {
+            string columnValue = string.Join(",", value.Split(',').Skip(2));
+            return columnValue.Contains("\"");
         }
 
         public string SqlRepresentation()
@@ -263,10 +273,24 @@ namespace Origam.DA.Service.Generators
         {
             if (Children.Count == 0)
             {
-                if (SplitValue.Length != 3) throw new ArgumentException("could not parse: "+Value+" to a filter node");
                 var (operatorName, modifiedColumnValue) = GetRendererInput(Operator, ColumnValue);
-                
-                return renderer.BinaryOperator(ColumnName, modifiedColumnValue, operatorName);
+                if (SplitValue.Length == 4)
+                {
+                    return renderer.BinaryOperator(
+                        leftValue: ColumnName, 
+                        rightValue1: ColumnValue, 
+                        rightValue2: ColumnValue2,
+                        operatorName: operatorName);
+                }
+                if (SplitValue.Length == 3)
+                {
+                    return renderer.BinaryOperator(
+                        leftValue: ColumnName, 
+                        rightValue: modifiedColumnValue, 
+                        operatorName: operatorName);
+                }
+
+                throw new ArgumentException("could not parse: "+Value+" to a filter node");
             }
 
             if (Children.Count == 1 && Operator == "in")
@@ -299,6 +323,8 @@ namespace Origam.DA.Service.Generators
                 case "like": return ("Like", value);
                 case "null": return ("Equal", null);
                 case "nnull": return ("NotEqual", null);
+                case "between": return ("Between", null);
+                case "nbetween": return ("NotBetween", null);
                 default: throw new NotImplementedException(operatorName);
             }
         }

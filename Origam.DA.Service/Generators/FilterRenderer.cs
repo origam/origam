@@ -74,6 +74,20 @@ namespace Origam.DA.Service
                         leftValue, GetOperator(operatorName), rightValue);
             }
         }
+        
+        public string BinaryOperator(string leftValue,
+            string rightValue1,string rightValue2, string operatorName)
+        {
+            switch (operatorName)
+            {
+                case "Between":
+                    return $"{leftValue} BETWEEN {rightValue1} AND {rightValue2}";
+                case "NotBetween":
+                    return $"{leftValue} NOT BETWEEN {rightValue1} AND {rightValue2}";
+                default:
+                    throw new NotImplementedException();
+            }
+        }
 
         public string NotEqual(string leftValue, string rightValue)
         {
