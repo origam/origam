@@ -2,18 +2,21 @@ import { observer } from "mobx-react";
 import React from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { computed, observable } from "mobx";
-import { getDataSource } from "../../../model/selectors/DataSources/getDataSource";
 import S from "./TreeView.module.css";
 import cx from "classnames";
+import { isTreeDataTable, TreeDataTable } from "../../../model/entities/TreeDataTable";
 
 @observer
 export class TreeView extends React.Component<{ dataView: IDataView }> {
   nodes: Node[] = [];
 
-  constructor(props: Readonly<{ dataView: IDataView; }>) {
+  constructor(props: Readonly<{ dataView: IDataView }>) {
     super(props);
 
-    // const testRows = [[]];
+    if (!isTreeDataTable(this.props.dataView.dataTable)) {
+      throw new Error("TreeView requires TreeDataTable to work properly");
+    }
+
     this.nodes = this.props.dataView.dataTable.rows.map(
       (row) => new Node(this.getRowId(row), this.getLabel(row), row)
     );
@@ -31,16 +34,11 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   }
 
   getParentId(row: any) {
-    const parentProperty = this.props.dataView.attributes["ParentIdProperty"];
-    const dataSource = getDataSource(this.props.dataView.dataTable);
-    const dataSourceField = dataSource.getFieldByName(parentProperty)!;
-    return this.props.dataView.dataTable.getCellValueByDataSourceField(row, dataSourceField);
+    return (this.props.dataView.dataTable as TreeDataTable).getParentId(row);
   }
 
   private getLabel(row: any[]) {
-    const dataSource = getDataSource(this.props.dataView.dataTable);
-    const dataSourceField = dataSource.getFieldByName("Name")!;
-    return this.props.dataView.dataTable.getCellValueByDataSourceField(row, dataSourceField);
+    return (this.props.dataView.dataTable as TreeDataTable).getLabel(row);
   }
 
   onRowClick(node: Node) {
