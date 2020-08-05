@@ -21,9 +21,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Primitives;
 using MoreLinq;
+using Newtonsoft.Json.Converters;
 using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
@@ -194,7 +196,7 @@ namespace Origam.DA.Service.Generators
                 {
                     splitValue = Value
                         .Split(',');
-                    if (splitValue.Length > 3 && Value.Contains(",") && IsString(Value))
+                    if (splitValue.Length > 3 && Value.Contains(",") && IsString(Value) && !ContainsIsoDates(Value))
                     {
                         splitValue = new []
                         {
@@ -240,6 +242,20 @@ namespace Origam.DA.Service.Generators
         {
             string columnValue = string.Join(",", value.Split(',').Skip(2));
             return columnValue.Contains("\"");
+        }
+        
+        private bool ContainsIsoDates(string value)
+        {
+            var columnValues = value
+                .Split(',')
+                .Skip(2)
+                .Select(x => x.Replace("\"", "").Trim());
+
+            return columnValues
+                .All(colValue =>
+                    DateTime.TryParseExact(colValue, "yyyy-MM-ddTHH:mm:ss.fff",
+                        CultureInfo.InvariantCulture, DateTimeStyles.None, out _)
+                );
         }
 
         public string SqlRepresentation()

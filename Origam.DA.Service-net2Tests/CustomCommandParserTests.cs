@@ -70,7 +70,13 @@ namespace Origam.DA.Service_net2Tests
             "[age] BETWEEN 18 AND 80")]        
         [TestCase(
             "[\"age\",\"nbetween\",18, 80]",
-            "[age] NOT BETWEEN 18 AND 80")]
+            "[age] NOT BETWEEN 18 AND 80")]        
+        [TestCase(
+            "[\"Timestamp\", \"between\", \"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]",
+            "[Timestamp] BETWEEN '2020-08-04T00:00:00.000' AND '2020-05-01T00:00:00.000'")]       
+        [TestCase(
+            "[\"Timestamp\", \"nbetween\", \"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]",
+            "[Timestamp] NOT BETWEEN '2020-08-04T00:00:00.000' AND '2020-05-01T00:00:00.000'")]
         [TestCase("", null)]
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
