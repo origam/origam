@@ -65,7 +65,7 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   get maxRowCountSeen() {
-    return this.allRows.length;
+    return this.rows.length;
   }
 
   registerResetListener(listener: () => void): void {}
