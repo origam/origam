@@ -1,21 +1,21 @@
 import React from "react";
-import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
+import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
 
-import {Checkbox} from "../../../../Checkbox";
-import {observer} from "mobx-react";
-import {action, observable} from "mobx";
+import { Checkbox } from "../../../../Checkbox";
+import { observer } from "mobx-react";
+import { action, observable } from "mobx";
 import produce from "immer";
+import { FilterSetting } from "./FilterSettingsNumber";
+import {IFilterSetting} from "../../../../../../model/entities/types/IFilterSetting";
 
-const OPERATORS: any[] = [
-  { dataType: "boolean", human: <>=</>, type: "eq", val1: null }
-];
+const OPERATORS: any[] = [{ dataType: "boolean", human: <>=</>, type: "eq", val1: undefined }];
 
 @observer
 export class FilterSettingsBoolean extends React.Component<{
   onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  @observable.ref setting: any = OPERATORS[0];
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS[0].type, OPERATORS[0].human);
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -32,18 +32,20 @@ export class FilterSettingsBoolean extends React.Component<{
   }
 
   @action.bound handleValueClick(event: any) {
-    this.setting = produce(this.setting, (draft: any) => {
-      if (draft.val1 === null) {
-        draft.val1 = false;
-      } else if (draft.val1 === false) {
-        draft.val1 = true;
-      } else if (draft.val1 === true) {
-        draft.val1 = null;
+    this.setting = produce(this.setting, (draft: IFilterSetting) => {
+      if (draft.val1 === undefined) {
+        draft.val1 = 0;
+        draft.isComplete = true;
+      } else if (draft.val1 === 0) {
+        draft.val1 = 1;
+        draft.isComplete = true;
+      } else if (draft.val1 === 1) {
+        draft.val1 = undefined;
+        draft.isComplete = false;
       }
     });
 
-    this.props.onTriggerApplySetting &&
-      this.props.onTriggerApplySetting(this.setting);
+    this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
 
   render() {
@@ -53,8 +55,8 @@ export class FilterSettingsBoolean extends React.Component<{
           <FilterSettingsComboBoxItem>=</FilterSettingsComboBoxItem>
         </FilterSettingsComboBox>
         <Checkbox
-          indeterminate={this.setting.val1 === null}
-          checked={this.setting.val1 !== null ? this.setting.val1 : undefined}
+          indeterminate={this.setting.val1 === undefined}
+          checked={this.setting.val1}
           onClick={this.handleValueClick}
         />
       </>
