@@ -141,11 +141,6 @@ export class FilterSettingsDate extends React.Component<{
   }
 
   @action.bound
-  handleBlur() {
-    this.handleSettingChange();
-  }
-
-  @action.bound
   handleChange(newSetting: any) {
     this.setting = newSetting;
     this.handleSettingChange();
@@ -174,37 +169,13 @@ export class FilterSettingsDate extends React.Component<{
         this.setting.val2 = undefined;
         this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
     }
-
-    // switch (this.setting.type) {
-    //   case "eq":
-    //   case "neq":
-    //   case "lt":
-    //   case "gt":
-    //   case "lte":
-    //   case "gte":
-    //     //if (this.setting.val1) {
-    //       this.props.onTriggerApplySetting &&
-    //         this.props.onTriggerApplySetting(this.setting);
-    //     //}
-    //     break;
-    //   case "between":
-    //   case "nbetween":
-    //     //if (this.setting.val1 && this.setting.val2) {
-    //       this.props.onTriggerApplySetting &&
-    //         this.props.onTriggerApplySetting(this.setting);
-    //     //}
-    //     break;
-    //   default:
-    //     this.props.onTriggerApplySetting &&
-    //       this.props.onTriggerApplySetting(this.setting);
-    // }
   }
 
   render() {
     return (
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
+        <OpEditors setting={this.setting} onChange={this.handleChange}/>
 
         {/*<input className={CS.input} />*/}
       </>
