@@ -310,6 +310,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             }
             return false;
           }
+          case "nin":
           case "neq": {
             const txt1 = dataTable.getCellValue(row, prop);
             const val1 = term.setting.val1 || [];
