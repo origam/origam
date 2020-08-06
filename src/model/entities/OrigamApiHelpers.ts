@@ -15,11 +15,13 @@ export function filterToFilterItem(filter: IFilter) {
   );
 }
 export function toFilterItem(columnId: string, operator: string, val1?: any, val2?: string) {
-  const values = [val1, val2]
-    .filter(x => !!x)
-    .map(x => toFilterValueForm(x))
+  const values = [Array.isArray(val1) ? val1 : [val1],
+                  Array.isArray(val2) ? val2 : [val2]]
+    .flat()
+    .filter((x) => !!x)
+    .map((x) => toFilterValueForm(x));
   const items = [columnId, operator]
-    .map(x => `"${x}"`)
+    .map((x) => `"${x}"`)
     .concat(values)
     .join(", ");
   return `[${items}]`;

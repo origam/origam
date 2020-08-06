@@ -329,7 +329,6 @@ class OpEditors extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable selectedItems: Array<{ value: any; content: any }> = [];
-  // @observable searchTerm: string = "";
 
   @action.bound handleSelectedItemsChange(items: Array<{ value: any; content: any }>) {
     this.selectedItems = items;
@@ -337,7 +336,7 @@ class OpEditors extends React.Component<{
       produce(this.props.setting, (draft: IFilterSetting) => {
         draft.val1 = toJS(items, { recurseEverything: true });
         draft.val2 = undefined;
-        draft.isComplete = !!draft.val1;
+        draft.isComplete = draft.val1 !== undefined && draft.val1.length > 0;
       })
     );
   }
@@ -359,7 +358,7 @@ class OpEditors extends React.Component<{
       case "neq":
         return (
           <TagInputStateful
-            selectedItems={this.selectedItems}
+            selectedItems={setting.val1 ? this.selectedItems : []}
             onChange={this.handleSelectedItemsChange}
             getOptions={this.props.getOptions}
           />
@@ -420,8 +419,10 @@ export class LookupFilterSetting implements IFilterSetting {
     }
     switch (this.type) {
       case "contain":
+      case "ncontain":
         return this.val1.map((item: any) => item.content);
       case "eq":
+      case "neq":
         return this.val1.map((item: any) => item.value);
       default:
         return undefined;
