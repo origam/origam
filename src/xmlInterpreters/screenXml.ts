@@ -28,7 +28,7 @@ import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
 import $root from "rootContainer";
 import { SCOPE_Screen } from "modules/Screen/ScreenModule";
 import { SCOPE_DataView } from "modules/DataView/DataViewModule";
-import { TypeSymbol } from "dic/Container";
+import { scopeFor, TypeSymbol } from "dic/Container";
 import { SCOPE_FormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
 import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
@@ -43,6 +43,23 @@ import { isInfiniteScrollingActive } from "../model/selectors/isInfiniteScrollin
 import { cssString2Object } from "../utils/objects";
 import { TreeDataTable } from "../model/entities/TreeDataTable";
 import { parseAggregationType } from "../model/entities/types/AggregationType";
+import { getDataStructureEntityId } from "../model/selectors/DataView/getDataStructureEntityId";
+import { getEntity } from "../model/selectors/DataView/getEntity";
+import { DataViewAPI } from "../modules/DataView/DataViewAPI";
+import { getSelectedRowId } from "../model/selectors/TablePanelView/getSelectedRowId";
+import { IRowCursor, RowCursor } from "../modules/DataView/TableCursor";
+import { getDataViewPropertyById } from "../model/selectors/DataView/getDataViewPropertyById";
+import { DataViewData } from "../modules/DataView/DataViewData";
+import { ScreenAPI } from "../modules/Screen/ScreenAPI";
+import { getMenuItemId } from "../model/selectors/getMenuItemId";
+import { getSessionId } from "../model/selectors/getSessionId";
+import { getApi } from "../model/selectors/getApi";
+import { getWorkbench } from "../model/selectors/getWorkbench";
+import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
+import { IOrigamAPI, OrigamAPI } from "../model/entities/OrigamAPI";
+import { IDataView } from "../modules/DataView/DataViewTypes";
+import { ILookupScopeRegistry } from "../modules/Lookup/LookupScopeRegistry";
+import { beginLookupScope } from "../modules/Lookup/LookupModule";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -64,6 +81,11 @@ export const findStrings = (node: any) =>
     (n) => findStopping(n, (n2) => n2.type === "text")[0].text
   );
 
+export const findFormPropertyIds = (node: any) =>
+  findStopping(node, (n) => n.name === "string" && n.parent.name === "PropertyNames").map(
+    (n) => findStopping(n, (n2) => n2.type === "text")[0].text
+  );
+
 export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];
 
 export function interpretScreenXml(
@@ -73,6 +95,7 @@ export function interpretScreenXml(
   lookupMenuMappings: any,
   sessionId: string
 ) {
+  const $workbench = scopeFor(getWorkbench(formScreenLifecycle));
   const panelConfigurations = new Map<string, IPanelConfiguration>(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
@@ -118,6 +141,12 @@ export function interpretScreenXml(
   const xmlComponentBindings = findStopping(
     screenDoc,
     (n) => n.name === "Binding" && n.parent.name === "ComponentBindings"
+  );
+
+  const screenAPI = new ScreenAPI(
+    () => getSessionId(scr),
+    () => getMenuItemId(scr),
+    () => getApi(scr)
   );
 
   const componentBindings: IComponentBinding[] = [];
@@ -258,6 +287,13 @@ export function interpretScreenXml(
         }
       );
 
+      const formPropertyIds = new Set(findFormPropertyIds(dataView));
+      for (let prop of properties) {
+        if (formPropertyIds.has(prop.id)) {
+          prop.isFormField = true;
+        }
+      }
+
       const actions = findActions(dataView).map(
         (action) =>
           new Action({
@@ -283,7 +319,7 @@ export function interpretScreenXml(
       const orderingConfiguration = new OrderingConfiguration(defaultOrdering);
       const implicitFilters = getImplicitFilters(dataView);
       const filterConfiguration = new FilterConfiguration(implicitFilters);
-      const dataViewInstance = new DataView({
+      const dataViewInstance: DataView = new DataView({
         id: dataView.attributes.Id,
         attributes: dataView.attributes,
         type: dataView.attributes.Type,
@@ -337,6 +373,16 @@ export function interpretScreenXml(
         properties,
         actions,
         clientSideGrouper: new ClientSideGrouper(),
+        dataViewData: new DataViewData(
+          () => dataViewInstance.dataTable,
+          (propId) => getDataViewPropertyById(dataViewInstance, propId)
+        ),
+        dataViewRowCursor: new RowCursor(() => getSelectedRowId(dataViewInstance)),
+        dataViewApi: new DataViewAPI(
+          () => getDataStructureEntityId(dataViewInstance),
+          () => getEntity(dataViewInstance),
+          () => screenAPI
+        ),
       });
 
       let groupingColumnCounter = 1;
@@ -402,17 +448,50 @@ export function interpretScreenXml(
 
       return dataViewInstance;
     }),
-    componentBindings,
+    componentBindings: [],
   });
 
-  const $screen = $root.beginLifetimeScope(SCOPE_Screen);
+  for (let xmlBinding of xmlComponentBindings) {
+    let existingBinding = scr.componentBindings.find(
+      (item) =>
+        item.parentId === xmlBinding.attributes.ParentId &&
+        item.childId === xmlBinding.attributes.ChildId
+    );
+    const componentBindingPair = new ComponentBindingPair({
+      parentPropertyId: xmlBinding.attributes.ParentProperty,
+      childPropertyId: xmlBinding.attributes.ChildProperty,
+    });
+    if (existingBinding) {
+      existingBinding.bindingPairs.push(componentBindingPair);
+    } else {
+      const cb = new ComponentBinding({
+        parentId: xmlBinding.attributes.ParentId,
+        childId: xmlBinding.attributes.ChildId,
+        parentEntity: xmlBinding.attributes.ParentEntity,
+        childEntity: xmlBinding.attributes.ChildEntity,
+        bindingPairs: [componentBindingPair],
+        childPropertyType: xmlBinding.attributes.ChildPropertyType,
+      });
+      scr.componentBindings.push(cb);
+      cb.parent = scr;
+    }
+  }
+
+  const $screen = $workbench!.beginLifetimeScope(SCOPE_Screen);
+  const $formScreen = $screen.beginLifetimeScope(SCOPE_FormScreen);
+  $root.register(IOrigamAPI, () => getApi(scr) as OrigamAPI).scopedInstance(SCOPE_Screen);
+
   const IFormScreen = TypeSymbol<FormScreen>("IFormScreen");
-  const IDataView = TypeSymbol<DataView>("IDataView");
-  $screen.register(IFormScreen, () => scr).scopedInstance(SCOPE_Screen);
+
+  $formScreen.register(IFormScreen, () => scr).scopedInstance(SCOPE_Screen);
 
   for (let dv of scr.dataViews) {
-    const $dataView = $screen.beginLifetimeScope(SCOPE_DataView);
+    const $dataView = $formScreen.beginLifetimeScope(SCOPE_DataView);
     $dataView.register(IDataView, () => dv).scopedInstance(SCOPE_DataView);
+
+    $dataView
+      .register(IRowCursor, () => new RowCursor(() => getSelectedRowId(dv)))
+      .scopedInstance(SCOPE_DataView);
     $dataView
       .register(
         IViewConfiguration,
@@ -438,10 +517,19 @@ export function interpretScreenXml(
     /*const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
     $mapPerspective.resolve(IMapPerspectiveDirector).setup();*/
 
+    const lookupScopeRegistry = $formScreen.resolve(ILookupScopeRegistry);
+    for (let property of dv.properties) {
+      if (property.isLookup) {
+        if (!lookupScopeRegistry.hasScope(property.lookup!.lookupId)) {
+          beginLookupScope($formScreen, property.lookup!.lookupId);
+        }
+      }
+    }
+
     flow($dataView.resolve(IPerspective).activateDefault)();
   }
 
-  $screen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
+  const rscr = $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
   return scr;
 }
 

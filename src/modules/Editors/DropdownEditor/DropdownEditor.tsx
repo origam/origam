@@ -15,6 +15,7 @@ import { DropdownEditorControl } from "./DropdownEditorControl";
 import { DropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
+import { IDataView } from "../../../model/entities/types/IDataView";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -62,7 +63,7 @@ export function DropdownEditor() {
 
 export function XmlBuildDropdownEditor(props: { xmlNode: any }) {
   const mobxContext = useContext(MobXProviderContext);
-  const dataView = mobxContext.dataView;
+  const dataView = mobxContext.dataView as IDataView;
   const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
   const workbench = mobxContext.workbench;
   const { lookupListCache } = workbench;

@@ -1,10 +1,10 @@
-import {ICaptionPosition} from "./ICaptionPosition";
-import {IPropertyColumn} from "./IPropertyColumn";
-import {ILookup} from "./ILookup";
+import { ICaptionPosition } from "./ICaptionPosition";
+import { IPropertyColumn } from "./IPropertyColumn";
+import { ILookup } from "./ILookup";
 
 export enum IDockType {
   Dock = "Dock",
-  Fill = "Fill"
+  Fill = "Fill",
 }
 
 export interface IPropertyData {
@@ -46,10 +46,11 @@ export interface IProperty extends IPropertyData {
   dataSourceIndex: number;
   dataIndex: number;
   isLookup: boolean;
-  
+
   linkToMenuId?: string;
   isLink: boolean;
   nameOverride: string | null | undefined;
+  isFormField: boolean;
 
   setColumnWidth(width: number): void;
 
