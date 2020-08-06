@@ -53,7 +53,6 @@ export class CMain extends React.Component {
           isBlurred: dialogStack.isAnyDialogShown,
         })}
       >
-        <ApplicationDialogStack />
         {this.getPage()}
       </div>
     );
