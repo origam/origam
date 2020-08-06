@@ -399,6 +399,15 @@ export class Container implements IContainer {
     for (let h of this.scheduledOnActivated) h();
     this.scheduledOnActivated.length = 0;
   }
+  _onThisScopeWillDispose: Array<($cont: Container) => void> = [];
+
+  onThisScopeWillDispose(handler: ($cont: Container) => void) {
+    this._onThisScopeWillDispose.push(handler);
+  }
+
+  triggerOnThisScopeWillDispose() {
+    for (let h of this._onThisScopeWillDispose) h(this);
+  }
 }
 
 export interface IContainer {

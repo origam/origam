@@ -1,48 +1,48 @@
-import {DataViewLifecycle} from "model/entities/DataViewLifecycle/DataViewLifecycle";
-import {LookupLoader} from "model/entities/LookupLoader";
-import {RowState} from "model/entities/RowState";
-import {Action} from "../model/entities/Action";
-import {ActionParameter} from "../model/entities/ActionParameter";
-import {ComponentBinding, ComponentBindingPair} from "../model/entities/ComponentBinding";
-import {DataSource} from "../model/entities/DataSource";
-import {DataSourceField} from "../model/entities/DataSourceField";
-import {DataTable} from "../model/entities/DataTable";
-import {DataView} from "../model/entities/DataView";
-import {DropDownColumn} from "../model/entities/DropDownColumn";
-import {FilterConfiguration} from "../model/entities/FilterConfiguration";
-import {FormPanelView} from "../model/entities/FormPanelView/FormPanelView";
-import {FormScreen} from "../model/entities/FormScreen";
-import {Lookup} from "../model/entities/Lookup";
-import {OrderingConfiguration} from "../model/entities/OrderingConfiguration";
-import {Property} from "../model/entities/Property";
-import {ColumnConfigurationDialog} from "../model/entities/TablePanelView/ColumnConfigurationDialog";
-import {TablePanelView} from "../model/entities/TablePanelView/TablePanelView";
-import {IComponentBinding} from "../model/entities/types/IComponentBinding";
-import {IFormScreenLifecycle02} from "../model/entities/types/IFormScreenLifecycle";
-import {IPanelViewType} from "../model/entities/types/IPanelViewType";
-import {flf2mof} from "../utils/flashDateFormat";
-import {findStopping} from "./xmlUtils";
-import {GroupingConfiguration} from "model/entities/GroupingConfiguration";
-import {ServerSideGrouper} from "model/entities/ServerSideGrouper";
-import {ClientSideGrouper} from "model/entities/ClientSideGrouper";
+import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
+import { LookupLoader } from "model/entities/LookupLoader";
+import { RowState } from "model/entities/RowState";
+import { Action } from "../model/entities/Action";
+import { ActionParameter } from "../model/entities/ActionParameter";
+import { ComponentBinding, ComponentBindingPair } from "../model/entities/ComponentBinding";
+import { DataSource } from "../model/entities/DataSource";
+import { DataSourceField } from "../model/entities/DataSourceField";
+import { DataTable } from "../model/entities/DataTable";
+import { DataView } from "../model/entities/DataView";
+import { DropDownColumn } from "../model/entities/DropDownColumn";
+import { FilterConfiguration } from "../model/entities/FilterConfiguration";
+import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
+import { FormScreen } from "../model/entities/FormScreen";
+import { Lookup } from "../model/entities/Lookup";
+import { OrderingConfiguration } from "../model/entities/OrderingConfiguration";
+import { Property } from "../model/entities/Property";
+import { ColumnConfigurationDialog } from "../model/entities/TablePanelView/ColumnConfigurationDialog";
+import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
+import { IComponentBinding } from "../model/entities/types/IComponentBinding";
+import { IFormScreenLifecycle02 } from "../model/entities/types/IFormScreenLifecycle";
+import { IPanelViewType } from "../model/entities/types/IPanelViewType";
+import { flf2mof } from "../utils/flashDateFormat";
+import { findStopping } from "./xmlUtils";
+import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
+import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
+import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
 import $root from "rootContainer";
-import {SCOPE_Screen} from "modules/Screen/ScreenModule";
-import {SCOPE_DataView} from "modules/DataView/DataViewModule";
-import {TypeSymbol} from "dic/Container";
-import {SCOPE_FormPerspective} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
-import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
-import {SCOPE_TablePerspective} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
-import {ITablePerspectiveDirector} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
-import {IPerspective} from "modules/DataView/Perspective/Perspective";
-import {flow} from "mobx";
-import {IViewConfiguration, ViewConfiguration} from "modules/DataView/ViewConfiguration";
-import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
-import {IPanelConfiguration} from "../model/entities/types/IPanelConfiguration";
-import {parseToOrdering} from "../model/entities/types/IOrderingConfiguration";
-import {isInfiniteScrollingActive} from "../model/selectors/isInfiniteScrollingActive";
-import {cssString2Object} from "../utils/objects";
-import {TreeDataTable} from "../model/entities/TreeDataTable";
-import {parseAggregationType} from "../model/entities/types/AggregationType";
+import { SCOPE_Screen } from "modules/Screen/ScreenModule";
+import { SCOPE_DataView } from "modules/DataView/DataViewModule";
+import { TypeSymbol } from "dic/Container";
+import { SCOPE_FormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
+import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
+import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
+import { ITablePerspectiveDirector } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
+import { IPerspective } from "modules/DataView/Perspective/Perspective";
+import { flow } from "mobx";
+import { IViewConfiguration, ViewConfiguration } from "modules/DataView/ViewConfiguration";
+import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
+import { IPanelConfiguration } from "../model/entities/types/IPanelConfiguration";
+import { parseToOrdering } from "../model/entities/types/IOrderingConfiguration";
+import { isInfiniteScrollingActive } from "../model/selectors/isInfiniteScrollingActive";
+import { cssString2Object } from "../utils/objects";
+import { TreeDataTable } from "../model/entities/TreeDataTable";
+import { parseAggregationType } from "../model/entities/types/AggregationType";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -89,8 +89,9 @@ export function interpretScreenXml(
 
   const dataViews = findStopping(
     screenDoc,
-    (n) => (n.name === "UIElement" || n.name === "UIRoot") &&
-                (n.attributes.Type === "Grid" || n.attributes.Type === "TreePanel")
+    (n) =>
+      (n.name === "UIElement" || n.name === "UIRoot") &&
+      (n.attributes.Type === "Grid" || n.attributes.Type === "TreePanel")
   );
 
   checkInfiniteScrollWillWork(dataViews, formScreenLifecycle, panelConfigurations);
@@ -187,6 +188,7 @@ export function interpretScreenXml(
       const properties = findStopping(dataView, (n) => n.name === "Property").map(
         (property, idx) => {
           return new Property({
+            xmlNode: property,
             id: property.attributes.Id,
             modelInstanceId: property.attributes.ModelInstanceId || "",
             name: property.attributes.Name,
@@ -251,7 +253,7 @@ export function interpretScreenXml(
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
             isTree: property.attributes.IsTree === "true",
             isAggregatedColumn: property.attributes.Aggregated || false,
-            style: cssString2Object(property.attributes.Style)
+            style: cssString2Object(property.attributes.Style),
           });
         }
       );
@@ -276,7 +278,8 @@ export function interpretScreenXml(
             ),
           })
       );
-      const defaultOrdering = panelConfigurations.get(dataView.attributes.ModelInstanceId)?.defaultOrdering;
+      const defaultOrdering = panelConfigurations.get(dataView.attributes.ModelInstanceId)
+        ?.defaultOrdering;
       const orderingConfiguration = new OrderingConfiguration(defaultOrdering);
       const implicitFilters = getImplicitFilters(dataView);
       const filterConfiguration = new FilterConfiguration(implicitFilters);
@@ -307,14 +310,18 @@ export function interpretScreenXml(
           dataView.attributes.RequestDataAfterSelectionChange === "true",
         confirmSelectionChange: dataView.attributes.ConfirmSelectionChange === "true",
         formViewUI: findFormRoot(dataView),
-        dataTable: dataView.attributes.Type === "TreePanel"
-          ? new TreeDataTable(dataView.attributes.IdProperty, dataView.attributes.ParentIdProperty)
-          : new DataTable({
-            formScreenLifecycle: formScreenLifecycle,
-            dataViewAttributes: dataView.attributes,
-            orderingConfiguration: orderingConfiguration,
-            filterConfiguration: filterConfiguration,
-          }),
+        dataTable:
+          dataView.attributes.Type === "TreePanel"
+            ? new TreeDataTable(
+                dataView.attributes.IdProperty,
+                dataView.attributes.ParentIdProperty
+              )
+            : new DataTable({
+                formScreenLifecycle: formScreenLifecycle,
+                dataViewAttributes: dataView.attributes,
+                orderingConfiguration: orderingConfiguration,
+                filterConfiguration: filterConfiguration,
+              }),
         serverSideGrouper: new ServerSideGrouper(),
         lifecycle: new DataViewLifecycle(),
         tablePanelView: new TablePanelView({
@@ -323,7 +330,7 @@ export function interpretScreenXml(
           filterConfiguration: filterConfiguration,
           orderingConfiguration: orderingConfiguration,
           groupingConfiguration: new GroupingConfiguration(),
-          rowHeight: 25
+          rowHeight: 25,
         }),
         formPanelView: new FormPanelView(),
         lookupLoader: new LookupLoader(),
@@ -345,12 +352,18 @@ export function interpretScreenXml(
             if (column.attributes.isHidden === "true") {
               dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
             }
-            if(column.attributes.aggregationType !== "0"){
+            if (column.attributes.aggregationType !== "0") {
               const aggregationType = parseAggregationType(column.attributes.aggregationType);
-              dataViewInstance.tablePanelView.aggregations.setType(column.attributes.property, aggregationType);
+              dataViewInstance.tablePanelView.aggregations.setType(
+                column.attributes.property,
+                aggregationType
+              );
             }
           } else if (column.attributes.groupingField) {
-            dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(column.attributes.groupingField, groupingColumnCounter);
+            dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
+              column.attributes.groupingField,
+              groupingColumnCounter
+            );
             groupingColumnCounter++;
           }
         });
@@ -432,20 +445,20 @@ export function interpretScreenXml(
   return scr;
 }
 
-function getImplicitFilters(dataViewXml: any){
-  const filterNodes = findStopping(dataViewXml, node => node.name === "Filter");
+function getImplicitFilters(dataViewXml: any) {
+  const filterNodes = findStopping(dataViewXml, (node) => node.name === "Filter");
   if (filterNodes.length === 0) {
     return [];
   }
-  return filterNodes
-    .flatMap(node => node.elements
-      .map((element: any) => {
-        return {
-          propertyId: element.attributes.Property,
-          operatorCode: element.attributes.Operator,
-          value: element.attributes.RightSideValue
-        }
-      }));
+  return filterNodes.flatMap((node) =>
+    node.elements.map((element: any) => {
+      return {
+        propertyId: element.attributes.Property,
+        operatorCode: element.attributes.Operator,
+        value: element.attributes.RightSideValue,
+      };
+    })
+  );
 }
 function checkInfiniteScrollWillWork(
   dataViews: any[],

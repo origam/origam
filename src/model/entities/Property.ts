@@ -73,4 +73,5 @@ export class Property implements IProperty {
   }
 
   parent: any;
+  xmlNode = undefined;
 }

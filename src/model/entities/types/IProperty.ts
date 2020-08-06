@@ -37,6 +37,7 @@ export interface IPropertyData {
   style: any;
   identifier?: string;
   lookup?: ILookup;
+  xmlNode: any;
 }
 
 export interface IProperty extends IPropertyData {
