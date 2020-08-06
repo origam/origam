@@ -415,7 +415,7 @@ export class LookupFilterSetting implements IFilterSetting {
   isComplete: boolean;
 
   get filterValue1() {
-    if(!this.val1){
+    if (!this.val1) {
       return this.val1;
     }
     switch (this.type) {
