@@ -6,7 +6,7 @@ You may like a thorough tutorial section about adding the JavaScript client in t
 
 To understand details of following sections, see also the example code.
 
-## How to rub the example
+## How to run the example
 
 To run the app you need:
 
@@ -22,7 +22,7 @@ yarn
 yarn start
 ```
 
-The default port the example is running at is `5599`.
+The default port the example is running at is `5599` and it expects the backend to listen at `https://localhost:44356`.
 
 The example uses self-signed HTTPS certificate. For development purposes it is convenient to use Chrome browser with `allow-insecure-localhost` option `Enabled`:
 
