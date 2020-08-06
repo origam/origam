@@ -10,14 +10,19 @@ export function filterToFilterItem(filter: IFilter) {
   return toFilterItem(
     filter.propertyId,
     filter.setting.type,
-    filter.setting.val1,
-    filter.setting.val2
+    filter.setting.filterValue1,
+    filter.setting.filterValue2
   );
 }
-export function toFilterItem(columnId: string, operator: string, val1: any, val2?: string) {
-  return val2
-    ? `["${columnId}", "${operator}", ${toFilterValueForm(val1)}, ${toFilterValueForm(val2)}]`
-    : `["${columnId}", "${operator}", ${toFilterValueForm(val1)}]`;
+export function toFilterItem(columnId: string, operator: string, val1?: any, val2?: string) {
+  const values = [val1, val2]
+    .filter(x => !!x)
+    .map(x => toFilterValueForm(x))
+  const items = [columnId, operator]
+    .map(x => `"${x}"`)
+    .concat(values)
+    .join(", ");
+  return `[${items}]`;
 }
 
 function toFilterValueForm(value: any) {

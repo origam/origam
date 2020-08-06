@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
 import produce from "immer";
-import { FilterSetting } from "./FilterSettingsNumber";
+import { FilterSetting } from "./FilterSetting";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "eq" },
@@ -49,7 +49,7 @@ const OpEditors: React.FC<{
   setting: any;
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
-}> = props => {
+}> = (props) => {
   const { setting } = props;
   switch (setting.type) {
     case "eq":
@@ -175,7 +175,7 @@ export class FilterSettingsDate extends React.Component<{
     return (
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.setting} onChange={this.handleChange}/>
+        <OpEditors setting={this.setting} onChange={this.handleChange} />
 
         {/*<input className={CS.input} />*/}
       </>

@@ -5,7 +5,7 @@ import CS from "./FilterSettingsCommon.module.scss";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
-import { FilterSetting } from "./FilterSettingsNumber";
+import { FilterSetting } from "./FilterSetting";
 
 export interface IStringFilterOp {}
 

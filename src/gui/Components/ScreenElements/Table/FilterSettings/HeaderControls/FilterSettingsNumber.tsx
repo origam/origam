@@ -5,7 +5,7 @@ import CS from "./FilterSettingsCommon.module.scss";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
-import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
+import { FilterSetting } from "./FilterSetting";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "eq" },
@@ -183,16 +183,3 @@ export class FilterSettingsNumber extends React.Component<{
   }
 }
 
-export class FilterSetting implements IFilterSetting {
-  type: string;
-  caption: string;
-  val1?: any;
-  val2?: any;
-  isComplete: boolean;
-
-  constructor(type: string, caption: string) {
-    this.type = type;
-    this.caption = caption;
-    this.isComplete = false;
-  }
-}

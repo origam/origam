@@ -5,8 +5,8 @@ import { Checkbox } from "../../../../Checkbox";
 import { observer } from "mobx-react";
 import { action, observable } from "mobx";
 import produce from "immer";
-import { FilterSetting } from "./FilterSettingsNumber";
-import {IFilterSetting} from "../../../../../../model/entities/types/IFilterSetting";
+import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
+import { FilterSetting } from "./FilterSetting";
 
 const OPERATORS: any[] = [{ dataType: "boolean", human: <>=</>, type: "eq", val1: undefined }];
 
