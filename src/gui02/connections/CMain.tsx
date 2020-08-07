@@ -1,13 +1,14 @@
-import {MobXProviderContext, observer} from "mobx-react";
-import {IApplication} from "model/entities/types/IApplication";
-import {IApplicationPage} from "model/entities/types/IApplicationLifecycle";
-import {getShownPage} from "model/selectors/Application/getShownPage";
+import { MobXProviderContext, observer, Provider } from "mobx-react";
+import { IApplication } from "model/entities/types/IApplication";
+import { IApplicationPage } from "model/entities/types/IApplicationLifecycle";
+import { getShownPage } from "model/selectors/Application/getShownPage";
 import React from "react";
-import {CLoginPage} from "./pages/CLoginPage";
-import {CWorkbenchPage} from "./pages/CWorkbenchPage";
-import {ApplicationDialogStack} from "gui/Components/Dialog/DialogStack";
-import {getDialogStack} from "model/selectors/getDialogStack";
+import { CLoginPage } from "./pages/CLoginPage";
+import { CWorkbenchPage } from "./pages/CWorkbenchPage";
+import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
+import { getDialogStack } from "model/selectors/getDialogStack";
 import cx from "classnames";
+import {IWorkbench} from "../../model/entities/types/IWorkbench";
 
 @observer
 export class CMain extends React.Component {
@@ -17,14 +18,30 @@ export class CMain extends React.Component {
     return this.context.application;
   }
 
+  get workbench(): IWorkbench {
+    return this.application.workbench!;
+  }
+
   getPage() {
     const page = getShownPage(this.application);
 
     switch (page) {
       case IApplicationPage.Login:
-        return <CLoginPage />;
+        return (
+          <>
+            <ApplicationDialogStack />
+            <CLoginPage />
+          </>
+        );
       case IApplicationPage.Workbench:
-        return <CWorkbenchPage />;
+        return (
+          <>
+            <Provider workbench={this.workbench}>
+              <ApplicationDialogStack />
+              <CWorkbenchPage />
+            </Provider>
+          </>
+        );
     }
   }
 
@@ -33,10 +50,9 @@ export class CMain extends React.Component {
     return (
       <div
         className={cx("toplevelContainer", {
-          isBlurred: dialogStack.isAnyDialogShown
+          isBlurred: dialogStack.isAnyDialogShown,
         })}
       >
-        <ApplicationDialogStack />
         {this.getPage()}
       </div>
     );

@@ -1,10 +1,11 @@
 import React from "react";
-import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
+import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
-import {action, observable} from "mobx";
-import {observer} from "mobx-react";
+import { action, observable } from "mobx";
+import { observer } from "mobx-react";
 import produce from "immer";
+import { FilterSetting } from "./FilterSetting";
 
 export interface IStringFilterOp {}
 
@@ -18,22 +19,18 @@ const OPERATORS: any[] = [
   { human: <>contain</>, type: "contains" },
   { human: <>not contain</>, type: "ncontains" },
   { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" }
+  { human: <>is not null</>, type: "nnull" },
 ];
 
 const OpCombo: React.FC<{
   setting: any;
   onChange: (newSetting: any) => void;
-}> = props => {
+}> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={
-        <>
-          {(OPERATORS.find(op => op.type === props.setting.type) || {}).human}
-        </>
-      }
+      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS.map(op => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() =>
@@ -55,7 +52,7 @@ const OpEditors: React.FC<{
   setting: any;
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
-}> = props => {
+}> = (props) => {
   const { setting } = props;
   switch (setting.type) {
     case "eq":
@@ -74,7 +71,7 @@ const OpEditors: React.FC<{
             props.onChange &&
             props.onChange(
               produce(setting, (draft: any) => {
-                draft.val1 = event.target.value;
+                draft.val1 = event.target.value === "" ? undefined : event.target.value;
               })
             )
           }
@@ -93,7 +90,7 @@ export class FilterSettingsString extends React.Component<{
   setting?: any;
   onTriggerApplySetting?: (setting: any) => void;
 }> {
-  @observable.ref setting: any = OPERATORS[2];
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS[0].type, OPERATORS[0].human);
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -111,57 +108,26 @@ export class FilterSettingsString extends React.Component<{
 
   @action.bound
   handleBlur() {
-    switch (this.setting.type) {
-      case "eq":
-      case "neq":
-      case "starts":
-      case "nstarts":
-      case "ends":
-      case "nends":
-      case "contains":
-      case "ncontains":
-        if (this.setting.val1) {
-          this.props.onTriggerApplySetting &&
-            this.props.onTriggerApplySetting(this.setting);
-        }
-        break;
-      default:
-        this.props.onTriggerApplySetting &&
-          this.props.onTriggerApplySetting(this.setting);
-    }
+    this.handleSettingChange();
   }
 
   @action.bound
   handleChange(newSetting: any) {
     this.setting = newSetting;
-    switch (this.setting.type) {
-      case "eq":
-      case "neq":
-      case "starts":
-      case "nstarts":
-      case "ends":
-      case "nends":
-      case "contains":
-      case "ncontains":
-        if (this.setting.val1) {
-          this.props.onTriggerApplySetting &&
-            this.props.onTriggerApplySetting(this.setting);
-        }
-      default:
-        this.props.onTriggerApplySetting &&
-          this.props.onTriggerApplySetting(this.setting);
-    }
+    this.handleSettingChange();
+  }
+
+  handleSettingChange() {
+    this.setting.isComplete = this.setting.val1 !== undefined;
+    this.setting.val2 = undefined;
+    this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
 
   render() {
     return (
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors
-          setting={this.setting}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-        />
+        <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
 
         {/*<input className={CS.input} />*/}
       </>

@@ -4,48 +4,49 @@ import {
   TagInputEdit,
   TagInputEditFake,
   TagInputItem,
-  TagInputPlus
+  TagInputPlus,
 } from "gui02/components/TagInput/TagInput";
 import _ from "lodash";
-import {action, computed, flow, observable, runInAction, toJS} from "mobx";
-import {observer} from "mobx-react";
-import {CancellablePromise} from "mobx/lib/api/flow";
+import { action, computed, flow, observable, runInAction, toJS } from "mobx";
+import { observer } from "mobx-react";
+import { CancellablePromise } from "mobx/lib/api/flow";
 import React from "react";
-import {Grid, GridCellProps} from "react-virtualized";
+import { Grid, GridCellProps } from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import {Dropdowner} from "../../../../Dropdowner/Dropdowner";
-import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
+import { Dropdowner } from "../../../../Dropdowner/Dropdowner";
+import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
 import S from "./FilterSettingsLookup.module.scss";
 import produce from "immer";
+import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
+import { FilterSetting } from "./FilterSetting";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "eq" },
-  { human: <>&ne;</>, type: "neq" },
+  { human: <>&ne;</>, type: "nin" },
   { human: <>contain</>, type: "contains" },
   { human: <>not contain</>, type: "ncontains" },
   { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" }
+  { human: <>is not null</>, type: "nnull" },
 ];
 
 const OpCombo: React.FC<{
   setting: any;
   onChange: (newSetting: any) => void;
-}> = props => {
+}> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={
-        <>
-          {(OPERATORS.find(op => op.type === props.setting.type) || {}).human}
-        </>
-      }
+      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS.map(op => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
             props.onChange(
-              produce(props.setting, (draft: any) => {
+              produce(props.setting, (draft: IFilterSetting) => {
                 draft.type = op.type;
+                draft.isComplete = false;
+                draft.val1 = undefined;
+                draft.val2 = undefined;
               })
             );
           }}
@@ -101,15 +102,12 @@ export class OptionGrid extends React.Component<{
         key={key}
         className={S.optionGridCell + (rowIndex % 2 === 0 ? " a" : " b")}
         onClick={(event: any) =>
-          this.props.onCellClick &&
-          this.props.onCellClick(event, rowIndex, columnIndex)
+          this.props.onCellClick && this.props.onCellClick(event, rowIndex, columnIndex)
         }
       >
         <Highlighter
           textToHighlight={this.props.items[rowIndex].content}
-          searchWords={
-            [this.props.searchPhrase].filter(item => item) as string[]
-          }
+          searchWords={[this.props.searchPhrase].filter((item) => item) as string[]}
           autoEscape={true}
         />
         {}
@@ -122,27 +120,20 @@ export class OptionGrid extends React.Component<{
 export class TagInputStateful extends React.Component<{
   selectedItems: Array<{ value: any; content: any }>;
   onChange?(selectedItems: Array<{ value: any; content: any }>): void;
-  getOptions(
-    searchTerm: string
-  ): CancellablePromise<Array<{ value: any; content: any }>>;
+  getOptions(searchTerm: string): CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable cursorAfterIndex = this.props.selectedItems.length - 1;
   @observable searchTerm = "";
   @observable.shallow availOptions: Array<{ content: any; value: any }> = [];
 
   @computed get offeredOptions() {
-    const selectedIds = new Set(
-      this.props.selectedItems.map(item => item.value)
-    );
-    return this.availOptions.filter(option => !selectedIds.has(option.value));
+    const selectedIds = new Set(this.props.selectedItems.map((item) => item.value));
+    return this.availOptions.filter((option) => !selectedIds.has(option.value));
   }
 
   componentDidUpdate() {
     runInAction(() => {
-      this.cursorAfterIndex = Math.min(
-        this.cursorAfterIndex,
-        this.props.selectedItems.length - 1
-      );
+      this.cursorAfterIndex = Math.min(this.cursorAfterIndex, this.props.selectedItems.length - 1);
       // TODO: detect that the component updated due to its own event
       // (otherwise there might be mess caused by a focus avalanche)
       /*if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
@@ -199,10 +190,7 @@ export class TagInputStateful extends React.Component<{
     switch (event.key) {
       case "ArrowLeft":
         if (this.elmInput) {
-          if (
-            this.elmInput.selectionStart === 0 &&
-            this.elmInput.selectionEnd === 0
-          ) {
+          if (this.elmInput.selectionStart === 0 && this.elmInput.selectionEnd === 0) {
             this.cursorAfterIndex--;
             setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
           }
@@ -227,9 +215,7 @@ export class TagInputStateful extends React.Component<{
   }
 
   @action.bound handleDeleteBtnClick(event: any, value: any) {
-    const idx = this.props.selectedItems.findIndex(
-      item => item.value === value
-    );
+    const idx = this.props.selectedItems.findIndex((item) => item.value === value);
     const newItems = [...this.props.selectedItems];
     newItems.splice(idx, 1);
     this.props.onChange && this.props.onChange(newItems);
@@ -250,7 +236,7 @@ export class TagInputStateful extends React.Component<{
   refDropdowner = (elm: any) => (this.elmDropdowner = elm);
 
   handlePlusClick = flow(
-    function*(this: TagInputStateful, event: any) {
+    function* (this: TagInputStateful, event: any) {
       yield* this.getOptions();
     }.bind(this)
   );
@@ -260,10 +246,7 @@ export class TagInputStateful extends React.Component<{
     this.handleSearchTermChangeDeb(event);
   }
 
-  handleSearchTermChangeImm = flow(function*(
-    this: TagInputStateful,
-    event: any
-  ) {
+  handleSearchTermChangeImm = flow(function* (this: TagInputStateful, event: any) {
     yield* this.getOptions();
   });
 
@@ -275,11 +258,7 @@ export class TagInputStateful extends React.Component<{
     this.elmDropdowner && this.elmDropdowner.setDropped(true);
   }
 
-  @action.bound handleOptionCellClick(
-    event: AnalyserNode,
-    rowIndex: number,
-    columnIndex: number
-  ) {
+  @action.bound handleOptionCellClick(event: AnalyserNode, rowIndex: number, columnIndex: number) {
     const newSelectedItems = [...this.props.selectedItems];
     newSelectedItems.push(this.offeredOptions[rowIndex]);
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
@@ -290,10 +269,7 @@ export class TagInputStateful extends React.Component<{
     return (
       <TagInput>
         {this.cursorAfterIndex === -1 && (
-          <TagInputEditFake
-            domRef={this.refFakeInput}
-            onKeyDown={this.handleFakeEditKeyDown}
-          />
+          <TagInputEditFake domRef={this.refFakeInput} onKeyDown={this.handleFakeEditKeyDown} />
         )}
         {this.props.selectedItems.map((item, idx) => {
           return (
@@ -301,18 +277,15 @@ export class TagInputStateful extends React.Component<{
               <TagInputItem key={item.value}>
                 {item.content}
                 <TagInputDeleteBtn
-                  onClick={event =>
-                    this.handleDeleteBtnClick(event, item.value)
-                  }
+                  onClick={(event) => this.handleDeleteBtnClick(event, item.value)}
                 />
               </TagInputItem>
-              {this.cursorAfterIndex === idx &&
-                idx < this.props.selectedItems.length - 1 && (
-                  <TagInputEditFake
-                    domRef={this.refFakeInput}
-                    onKeyDown={this.handleFakeEditKeyDown}
-                  />
-                )}
+              {this.cursorAfterIndex === idx && idx < this.props.selectedItems.length - 1 && (
+                <TagInputEditFake
+                  domRef={this.refFakeInput}
+                  onKeyDown={this.handleFakeEditKeyDown}
+                />
+              )}
             </React.Fragment>
           );
         })}
@@ -320,10 +293,7 @@ export class TagInputStateful extends React.Component<{
           ref={this.refDropdowner}
           trigger={({ refTrigger, setDropped }) => (
             <>
-              <TagInputPlus
-                domRef={refTrigger}
-                onClick={this.handlePlusClick}
-              />
+              <TagInputPlus domRef={refTrigger} onClick={this.handlePlusClick} />
               <TagInputEdit
                 domRef={this.refInput}
                 onKeyDown={this.handleEditKeyDown}
@@ -356,28 +326,27 @@ export class TagInputStateful extends React.Component<{
 class OpEditors extends React.Component<{
   setting: any;
   onChange: (newSetting: any) => void;
-  getOptions: (
-    searchTerm: string
-  ) => CancellablePromise<Array<{ value: any; content: any }>>;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable selectedItems: Array<{ value: any; content: any }> = [];
-  @observable searchTerm: string = "";
 
-  @action.bound handleSelectedItemsChange(
-    items: Array<{ value: any; content: any }>
-  ) {
+  @action.bound handleSelectedItemsChange(items: Array<{ value: any; content: any }>) {
     this.selectedItems = items;
     this.props.onChange(
-      produce(this.props.setting, (draft: any) => {
+      produce(this.props.setting, (draft: IFilterSetting) => {
         draft.val1 = toJS(items, { recurseEverything: true });
+        draft.val2 = undefined;
+        draft.isComplete = draft.val1 !== undefined && draft.val1.length > 0;
       })
     );
   }
 
   @action.bound handleTermChange(event: any) {
     this.props.onChange(
-      produce(this.props.setting, (draft: any) => {
+      produce(this.props.setting, (draft: IFilterSetting) => {
+        draft.val1 = undefined;
         draft.val2 = event.target.value;
+        draft.isComplete = !!draft.val2;
       })
     );
   }
@@ -386,10 +355,10 @@ class OpEditors extends React.Component<{
     const { setting } = this.props;
     switch (setting.type) {
       case "eq":
-      case "neq":
+      case "nin":
         return (
           <TagInputStateful
-            selectedItems={this.selectedItems}
+            selectedItems={setting.val1 ? this.selectedItems : []}
             onChange={this.handleSelectedItemsChange}
             getOptions={this.props.getOptions}
           />
@@ -407,18 +376,18 @@ class OpEditors extends React.Component<{
 
 @observer
 export class FilterSettingsLookup extends React.Component<{
-  getOptions: (
-    searchTerm: string
-  ) => CancellablePromise<Array<{ value: any; content: any }>>;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
   setting: any;
   onTriggerApplySetting?(setting: any): void;
 }> {
-  @observable.ref setting: any = OPERATORS[0];
+  @observable.ref setting: FilterSetting = new LookupFilterSetting(
+    OPERATORS[0].type,
+    OPERATORS[0].human
+  );
 
   @action.bound handleChange(newSetting: any) {
     this.setting = newSetting;
-    this.props.onTriggerApplySetting &&
-      this.props.onTriggerApplySetting(this.setting);
+    this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
 
   render() {
@@ -434,5 +403,39 @@ export class FilterSettingsLookup extends React.Component<{
         {/*<input className={CS.input} />*/}
       </>
     );
+  }
+}
+
+export class LookupFilterSetting implements IFilterSetting {
+  type: string;
+  caption: string;
+  val1?: any;
+  val2?: any;
+  isComplete: boolean;
+
+  get filterValue1() {
+    if (!this.val1) {
+      return this.val1;
+    }
+    switch (this.type) {
+      case "contain":
+      case "ncontain":
+        return this.val1.map((item: any) => item.content);
+      case "eq":
+      case "nin":
+        return this.val1.map((item: any) => item.value);
+      default:
+        return undefined;
+    }
+  }
+
+  get filterValue2() {
+    return this.val2;
+  }
+
+  constructor(type: string, caption: string) {
+    this.type = type;
+    this.caption = caption;
+    this.isComplete = false;
   }
 }

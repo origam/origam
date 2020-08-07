@@ -1,10 +1,10 @@
-import {IDataView} from "./IDataView";
-import {IDataSource} from "./IDataSource";
-import {IComponentBinding} from "./IComponentBinding";
-import {IFormScreenLifecycle02} from "./IFormScreenLifecycle";
-import {IAction} from "./IAction";
-import {IRefreshOnReturnType} from "../WorkbenchLifecycle/WorkbenchLifecycle";
-import {IPanelConfiguration} from "./IPanelConfiguration";
+import { IDataView } from "./IDataView";
+import { IDataSource } from "./IDataSource";
+import { IComponentBinding } from "./IComponentBinding";
+import { IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
+import { IAction } from "./IAction";
+import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
+import { IPanelConfiguration } from "./IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
 
 /*
@@ -123,9 +123,9 @@ export interface IFormScreen extends IFormScreenData {
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];
   dynamicTitle: string | undefined;
-  
+
   dataUpdateCRS: CriticalSection;
-  
+
   getPanelPosition(id: string): number | undefined;
 
   getBindingsByChildId(childId: string): IComponentBinding[];
@@ -133,6 +133,8 @@ export interface IFormScreen extends IFormScreenData {
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;
   getDataViewsByEntity(entity: string): IDataView[];
   getDataSourceByEntity(entity: string): IDataSource | undefined;
+
+  getFirstFormPropertyId(): string | undefined;
 
   setDirty(state: boolean): void;
   setTitle(title: string): void;

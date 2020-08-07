@@ -1,26 +1,30 @@
-import {TagInputEditor} from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import {TextEditor} from "gui/Components/ScreenElements/Editors/TextEditor";
-import {NumberEditor} from "gui/Components/ScreenElements/Editors/NumberEditor";
-import {inject, observer} from "mobx-react";
-import {onFieldBlur} from "model/actions-ui/DataView/TableView/onFieldBlur";
-import {onFieldChange} from "model/actions-ui/DataView/TableView/onFieldChange";
-import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
-import {getRowStateAllowUpdate} from "model/selectors/RowState/getRowStateAllowUpdate";
-import {getRowStateColumnBgColor} from "model/selectors/RowState/getRowStateColumnBgColor";
-import {getRowStateForegroundColor} from "model/selectors/RowState/getRowStateForegroundColor";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
+import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
+import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
+import { inject, observer } from "mobx-react";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import {IProperty} from "../../../../model/entities/types/IProperty";
-import {BoolEditor} from "../../../Components/ScreenElements/Editors/BoolEditor";
-import {DateTimeEditor} from "../../../Components/ScreenElements/Editors/DateTimeEditor";
-import {DropdownEditor} from "../../../Components/ScreenElements/Editors/DropdownEditor";
-import {CheckList} from "gui/Components/ScreenElements/Editors/CheckList";
-import {ImageEditor} from "gui/Components/ScreenElements/Editors/ImageEditor";
-import {BlobEditor} from "gui/Components/ScreenElements/Editors/BlobEditor";
-import {getDataView} from "../../../../model/selectors/DataView/getDataView";
+import { IProperty } from "../../../../model/entities/types/IProperty";
+import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
+import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
+// import {DropdownEditor} from "../../../Components/ScreenElements/Editors/DropdownEditor";
+import { CheckList } from "gui/Components/ScreenElements/Editors/CheckList";
+import { ImageEditor } from "gui/Components/ScreenElements/Editors/ImageEditor";
+import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
+import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
+import {
+  DropdownEditor,
+  XmlBuildDropdownEditor,
+} from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -32,6 +36,7 @@ import uiActions from "../../../../model/actions-ui-tree";
 })
 @observer
 export class FormViewEditor extends React.Component<{
+  xmlNode?: any;
   value?: any;
   textualValue?: any;
   property?: IProperty;
@@ -102,7 +107,9 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={this.MakeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
-            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
+            subscribeToFocusManager={(textEditor) =>
+              focusManager.subscribe(textEditor, this.props.property?.id)
+            }
           />
         );
       case "Text":
@@ -124,7 +131,9 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={this.props.isRichText}
-            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
+            subscribeToFocusManager={(textEditor) =>
+              focusManager.subscribe(textEditor, this.props.property?.id)
+            }
           />
         );
       case "Date":
@@ -142,7 +151,9 @@ export class FormViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
-            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
+            subscribeToFocusManager={(textEditor) =>
+              focusManager.subscribe(textEditor, this.props.property?.id)
+            }
             onKeyDown={this.MakeOnKeyDownCallBack()}
           />
         );
@@ -158,29 +169,34 @@ export class FormViewEditor extends React.Component<{
         );
       case "ComboBox":
         return (
-          <DropdownEditor
-            value={this.props.value}
-            textualValue={this.props.textualValue}
-            isReadOnly={readOnly}
-            isInvalid={isInvalid}
-            invalidMessage={invalidMessage}
-            isFocused={false}
-            backgroundColor={backgroundColor}
-            foregroundColor={foregroundColor}
-            onTextChange={undefined}
-            onItemSelect={this.props.onChange}
-            DataStructureEntityId={""}
-            ColumnNames={[]}
-            Property={""}
-            RowId={""}
-            LookupId={""}
-            menuItemId={""}
-            api={undefined}
-            onEditorBlur={this.props.onEditorBlur}
-            subscribeToFocusManager={(textEditor) => focusManager.subscribe(textEditor, this.props.property?.id)}
-            onKeyDown={this.MakeOnKeyDownCallBack()}
-          />
+          <XmlBuildDropdownEditor key={this.props.xmlNode.$iid} xmlNode={this.props.xmlNode} />
         );
+      // return (
+      //   <DropdownEditor
+      //     value={this.props.value}
+      //     textualValue={this.props.textualValue}
+      //     isReadOnly={readOnly}
+      //     isInvalid={isInvalid}
+      //     invalidMessage={invalidMessage}
+      //     isFocused={false}
+      //     backgroundColor={backgroundColor}
+      //     foregroundColor={foregroundColor}
+      //     onTextChange={undefined}
+      //     onItemSelect={this.props.onChange}
+      //     DataStructureEntityId={""}
+      //     ColumnNames={[]}
+      //     Property={""}
+      //     RowId={""}
+      //     LookupId={""}
+      //     menuItemId={""}
+      //     api={undefined}
+      //     onEditorBlur={this.props.onEditorBlur}
+      //     subscribeToFocusManager={(textEditor) =>
+      //       focusManager.subscribe(textEditor, this.props.property?.id)
+      //     }
+      //     onKeyDown={this.MakeOnKeyDownCallBack()}
+      //   />
+      // );
       case "TagInput":
         return (
           <TagInputEditor
@@ -208,7 +224,7 @@ export class FormViewEditor extends React.Component<{
       case "Image":
         return <ImageEditor value={this.props.value} />;
       case "Blob":
-        return <BlobEditor value={this.props.value} />
+        return <BlobEditor value={this.props.value} />;
       default:
         return "Unknown field";
     }
@@ -225,7 +241,7 @@ export class FormViewEditor extends React.Component<{
         return;
       }
       if (event.key === "Enter") {
-        uiActions.actions.onActionClick(dataView.defaultAction)(event, dataView.defaultAction)
+        uiActions.actions.onActionClick(dataView.defaultAction)(event, dataView.defaultAction);
       }
     };
   }

@@ -18,6 +18,7 @@ import {DateTimeEditor} from "../../../Components/ScreenElements/Editors/DateTim
 import {DropdownEditor} from "../../../Components/ScreenElements/Editors/DropdownEditor";
 import {NumberEditor} from "gui/Components/ScreenElements/Editors/NumberEditor";
 import {BlobEditor} from "gui/Components/ScreenElements/Editors/BlobEditor";
+import {XmlBuildDropdownEditor} from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -121,27 +122,33 @@ export class TableViewEditor extends React.Component<{
         );
       case "ComboBox":
         return (
-          <DropdownEditor
-            value={this.props.getCellValue!()}
-            // textualValue={""}
-            isReadOnly={readOnly}
-            isInvalid={false}
-            isFocused={true}
-            backgroundColor={backgroundColor}
-            foregroundColor={foregroundColor}
-            onTextChange={undefined}
-            onItemSelect={this.props.onChange}
-            onEditorBlur={this.props.onEditorBlur}
-            onKeyDown={this.props.onEditorKeyDown}
-            // DataStructureEntityId={""}
-            // ColumnNames={[]}
-            // Property={""}
-            // RowId={""}
-            // LookupId={""}
-            // menuItemId={""}
-            // api={undefined}
+          <XmlBuildDropdownEditor
+            key={this.props.property!.xmlNode.$iid}
+            xmlNode={this.props.property!.xmlNode}
           />
         );
+        // return (
+        //   <DropdownEditor
+        //     value={this.props.getCellValue!()}
+        //     // textualValue={""}
+        //     isReadOnly={readOnly}
+        //     isInvalid={false}
+        //     isFocused={true}
+        //     backgroundColor={backgroundColor}
+        //     foregroundColor={foregroundColor}
+        //     onTextChange={undefined}
+        //     onItemSelect={this.props.onChange}
+        //     onEditorBlur={this.props.onEditorBlur}
+        //     onKeyDown={this.props.onEditorKeyDown}
+        //     // DataStructureEntityId={""}
+        //     // ColumnNames={[]}
+        //     // Property={""}
+        //     // RowId={""}
+        //     // LookupId={""}
+        //     // menuItemId={""}
+        //     // api={undefined}
+        //   />
+        // );
       case "Checklist":
         return "";
       case "TagInput":

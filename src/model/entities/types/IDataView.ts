@@ -1,19 +1,22 @@
-import {IPanelViewType} from "./IPanelViewType";
-import {IProperty} from "./IProperty";
-import {IDataSource} from "./IDataSource";
-import {IDataTable} from "./IDataTable";
-import {IComponentBinding} from "./IComponentBinding";
-import {IDataViewLifecycle} from "../DataViewLifecycle/types/IDataViewLifecycle";
-import {ITablePanelView} from "../TablePanelView/types/ITablePanelView";
-import {IFormPanelView} from "../FormPanelView/types/IFormPanelView";
-import {IAction} from "./IAction";
-import {ILookupLoader} from "./ILookupLoader";
-import {ServerSideGrouper} from "../ServerSideGrouper";
-import {ClientSideGrouper} from "../ClientSideGrouper";
-import {IGridDimensions, IScrollState} from "../../../gui/Components/ScreenElements/Table/types";
-import {ITableRow} from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
-import {BoundingRect} from "react-measure";
-import {FocusManager} from "../FocusManager";
+import { IPanelViewType } from "./IPanelViewType";
+import { IProperty } from "./IProperty";
+import { IDataSource } from "./IDataSource";
+import { IDataTable } from "./IDataTable";
+import { IComponentBinding } from "./IComponentBinding";
+import { IDataViewLifecycle } from "../DataViewLifecycle/types/IDataViewLifecycle";
+import { ITablePanelView } from "../TablePanelView/types/ITablePanelView";
+import { IFormPanelView } from "../FormPanelView/types/IFormPanelView";
+import { IAction } from "./IAction";
+import { ILookupLoader } from "./ILookupLoader";
+import { ServerSideGrouper } from "../ServerSideGrouper";
+import { ClientSideGrouper } from "../ClientSideGrouper";
+import { IGridDimensions, IScrollState } from "../../../gui/Components/ScreenElements/Table/types";
+import { ITableRow } from "../../../gui/Components/ScreenElements/Table/TableRendering/types";
+import { BoundingRect } from "react-measure";
+import { FocusManager } from "../FocusManager";
+import { DataViewData } from "../../../modules/DataView/DataViewData";
+import { DataViewAPI } from "../../../modules/DataView/DataViewAPI";
+import { RowCursor } from "../../../modules/DataView/TableCursor";
 
 export interface IDataViewData {
   id: string;
@@ -28,7 +31,7 @@ export interface IDataViewData {
   showSelectionCheckboxesSetting: boolean;
   type: string;
   attributes: any;
-  
+
   isGridHeightDynamic: boolean;
   selectionMember: string;
   orderMember: string;
@@ -49,12 +52,15 @@ export interface IDataViewData {
   formPanelView: IFormPanelView;
   lifecycle: IDataViewLifecycle;
   lookupLoader: ILookupLoader;
-  serverSideGrouper: ServerSideGrouper; 
+  serverSideGrouper: ServerSideGrouper;
   clientSideGrouper: ClientSideGrouper;
+
+  dataViewRowCursor: RowCursor;
+  dataViewApi: DataViewAPI;
+  dataViewData: DataViewData;
 }
 
 export interface IDataView extends IDataViewData {
- 
   $type_IDataView: 1;
 
   isBindingRoot: boolean;
@@ -72,7 +78,7 @@ export interface IDataView extends IDataViewData {
   maxRowCountSeen: number;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
-  bindingParametersFromParent: {[key: string]: string};
+  bindingParametersFromParent: { [key: string]: string };
   showSelectionCheckboxes: boolean;
   isReorderedOnClient: boolean;
   selectedRowIdsMap: Map<string, boolean>;
@@ -81,7 +87,7 @@ export interface IDataView extends IDataViewData {
   dialogActions: IAction[];
   focusManager: FocusManager;
   defaultAction: IAction | undefined;
-  
+
   isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
   selectedRowIds: string[];
@@ -90,16 +96,13 @@ export interface IDataView extends IDataViewData {
   removeSelectedRowId(id: string): void;
   toggleSelectedRowId(id: string): void;
 
-
-
-  
   selectNextRow(): void;
   selectPrevRow(): void;
 
   onFieldChange(event: any, row: any[], property: IProperty, value: any): void;
   selectFirstRow(): void;
   selectLastRow(): void;
-  reselectOrSelectFirst(): void
+  reselectOrSelectFirst(): void;
   selectRowById(id: string | undefined): void;
   selectRow(row: any[]): void;
   setSelectedRowId(id: string | undefined): void;

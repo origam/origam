@@ -1,23 +1,18 @@
-import {IDataTable} from "./types/IDataTable";
-import {IProperty} from "./types/IProperty";
-import {IRowsContainer} from "./types/IRowsContainer";
-import {IAdditionalRowData} from "./types/IAdditionalRecordData";
-import {IGroupTreeNode} from "../../gui/Components/ScreenElements/Table/TableRendering/types";
-import {IOrderingConfiguration} from "./types/IOrderingConfiguration";
-import {IFilterConfiguration} from "./types/IFilterConfiguration";
-import {ListRowContainer} from "./ListRowContainer";
-import {IDataSourceField} from "./types/IDataSourceField";
-import {computed} from "mobx";
-import {getDataSource} from "../selectors/DataSources/getDataSource";
+import { IDataTable } from "./types/IDataTable";
+import { IProperty } from "./types/IProperty";
+import { IRowsContainer } from "./types/IRowsContainer";
+import { IAdditionalRowData } from "./types/IAdditionalRecordData";
+import { IGroupTreeNode } from "../../gui/Components/ScreenElements/Table/TableRendering/types";
+import { IDataSourceField } from "./types/IDataSourceField";
+import { computed } from "mobx";
+import { getDataSource } from "../selectors/DataSources/getDataSource";
 
 export class TreeDataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
+  $type_TreeDataTable: 1 = 1;
   properties: IProperty[] = [];
-  rowsContainer: IRowsContainer;
-
-  get rows() {
-    return this.rowsContainer.rows;
-  }
+  rowsContainer: IRowsContainer = null as any;
+  rows: any[] = [];
 
   get allRows(): any[][] {
     return this.rows;
@@ -26,15 +21,13 @@ export class TreeDataTable implements IDataTable {
   additionalRowData: Map<string, IAdditionalRowData> = new Map();
   maxRowCountSeen: number = 0;
   groups: IGroupTreeNode[] = [];
-  private parentIdProperty: string;
+  parentIdProperty: string;
   isEmpty: boolean = false;
   idProperty: string;
 
-  constructor(idProperty: string, parentIdProperty: string, orderingConfiguration: IOrderingConfiguration,
-              filterConfiguration: IFilterConfiguration) {
+  constructor(idProperty: string, parentIdProperty: string) {
     this.parentIdProperty = parentIdProperty;
     this.idProperty = idProperty;
-    this.rowsContainer = new ListRowContainer(orderingConfiguration, filterConfiguration, (row: any[]) => this.getRowId(row));
   }
 
   getRowId(row: any[]): string {
@@ -118,7 +111,24 @@ export class TreeDataTable implements IDataTable {
   }
 
   setRecords(rows: any[][]): void {
-    this.rowsContainer.set(rows);
+    this.rows = [...this.sortTreeRows(rows, null)];
+  }
+
+  private *sortTreeRows(rows: any[], parent: any[] | null): Generator {
+    const children = this.getChildren(rows, parent);
+    if (parent) {
+      yield parent;
+    }
+    for (let child of children) {
+      yield* this.sortTreeRows(rows, child);
+    }
+  }
+
+  private getChildren(rows: any[], parent: any[] | null) {
+    const parentId = parent ? this.getRowId(parent) : null;
+    return rows
+      .filter((row) => parentId === this.getParentId(row))
+      .sort((row1, row2) => this.compareLabels(row1, row2));
   }
 
   setFormDirtyValue(row: any[], propertyId: string, value: any): void {
@@ -174,4 +184,24 @@ export class TreeDataTable implements IDataTable {
   getLastRow(): any[] | undefined {
     return undefined;
   }
+
+  getParentId(row: any) {
+    const dataSourceField = this.dataSource.getFieldByName(this.parentIdProperty)!;
+    return this.getCellValueByDataSourceField(row, dataSourceField);
+  }
+
+  getLabel(row: any[]) {
+    const dataSourceField = this.dataSource.getFieldByName("Name")!;
+    return this.getCellValueByDataSourceField(row, dataSourceField);
+  }
+
+  compareLabels(row1: any[], row2: any[]) {
+    return this.getLabel(row1).localeCompare(this.getLabel(row2));
+  }
+
+  isCellTextResolving(property: IProperty, value: any): boolean {
+    return false;
+  }
 }
+
+export const isTreeDataTable = (o: any): o is TreeDataTable => o.$type_TreeDataTable;
