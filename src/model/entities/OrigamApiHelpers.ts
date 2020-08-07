@@ -14,27 +14,25 @@ export function filterToFilterItem(filter: IFilter) {
     filter.setting.filterValue2
   );
 }
-function arrayToString(array: any[]){
+function arrayToString(array: any[]) {
   return `[${array.join(", ")}]`;
 }
 
-function valesToRightHandSide(val1?: any, val2?: any){
+function valesToRightHandSide(val1?: any, val2?: any) {
   const val1IsArray = Array.isArray(val1);
   const val2IsArray = Array.isArray(val2);
 
-  if(val1 !== undefined && !val1IsArray && val2 !== undefined && !val2IsArray){
-    return arrayToString([ toFilterValueForm(val1),  toFilterValueForm(val2)]);
+  if (val1 !== undefined && !val1IsArray && val2 !== undefined && !val2IsArray) {
+    return arrayToString([toFilterValueForm(val1), toFilterValueForm(val2)]);
   }
-  if(val1IsArray && val2 === undefined){
+  if (val1IsArray && val2 === undefined) {
     return arrayToString(val1.map((x: any) => toFilterValueForm(x)));
+  } else if (!val1IsArray && val2 === undefined) {
+    return toFilterValueForm(val1);
+  } else if (val1 === undefined && !val2IsArray) {
+    return toFilterValueForm(val2);
   }
-  else if(!val1IsArray && val2 === undefined){
-    return  toFilterValueForm(val1);
-  }
-  else if(val1 === undefined && !val2IsArray){
-    return  toFilterValueForm(val2);
-  }
-  throw new Error(`Cannot convert values "${val1}" and "${val2}" to a right hand side`)
+  throw new Error(`Cannot convert values "${val1}" and "${val2}" to a right hand side`);
 }
 
 export function toFilterItem(columnId: string, operator: string, val1?: any, val2?: any) {
