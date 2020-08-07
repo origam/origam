@@ -5,6 +5,7 @@ import { IOpenedScreens } from "./IOpenedScreens";
 import { IWorkQueues } from "./IWorkQueues";
 import { IRecordInfo } from "./IRecordInfo";
 import { LookupListCacheMulti } from "../../../modules/Lookup/LookupListCacheMulti";
+import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -16,6 +17,7 @@ export interface IWorkbenchData {
   recordInfo: IRecordInfo;
 
   lookupListCache: LookupListCacheMulti;
+  lookupMultiEngine: IMultiLookupEngine;
 }
 
 export interface IWorkbench extends IWorkbenchData {

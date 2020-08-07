@@ -14,7 +14,7 @@ import { FormPanelView } from "../model/entities/FormPanelView/FormPanelView";
 import { FormScreen } from "../model/entities/FormScreen";
 import { Lookup } from "../model/entities/Lookup";
 import { OrderingConfiguration } from "../model/entities/OrderingConfiguration";
-import { Property } from "../model/entities/Property";
+import { Property, ILookupIndividualEngine } from "../model/entities/Property";
 import { ColumnConfigurationDialog } from "../model/entities/TablePanelView/ColumnConfigurationDialog";
 import { TablePanelView } from "../model/entities/TablePanelView/TablePanelView";
 import { IComponentBinding } from "../model/entities/types/IComponentBinding";
@@ -58,8 +58,13 @@ import { getWorkbench } from "../model/selectors/getWorkbench";
 import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
 import { IOrigamAPI, OrigamAPI } from "../model/entities/OrigamAPI";
 import { IDataView } from "../modules/DataView/DataViewTypes";
-import { ILookupScopeRegistry } from "../modules/Lookup/LookupScopeRegistry";
-import { beginLookupScope } from "../modules/Lookup/LookupModule";
+import {
+  beginLookupScope,
+  createMultiLookupEngine,
+  createIndividualLookupEngine,
+} from "../modules/Lookup/LookupModule";
+import { LookupResolver } from "modules/Lookup/LookupResolver";
+import { LookupLabelsCleanerReloader } from "modules/Lookup/LookupCleanerLoader";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -95,7 +100,8 @@ export function interpretScreenXml(
   lookupMenuMappings: any,
   sessionId: string
 ) {
-  const $workbench = scopeFor(getWorkbench(formScreenLifecycle));
+  const workbench = getWorkbench(formScreenLifecycle);
+  const $workbench = scopeFor(workbench);
   const panelConfigurations = new Map<string, IPanelConfiguration>(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
@@ -247,6 +253,7 @@ export function interpretScreenXml(
             columnWidth: property.attributes.GridColumnWidth
               ? parseInt(property.attributes.GridColumnWidth)
               : 100,
+            lookupId: property.attributes.LookupId,
             lookup: !property.attributes.LookupId
               ? undefined
               : new Lookup({
@@ -517,12 +524,22 @@ export function interpretScreenXml(
     /*const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
     $mapPerspective.resolve(IMapPerspectiveDirector).setup();*/
 
-    const lookupScopeRegistry = $formScreen.resolve(ILookupScopeRegistry);
+    //***************** */
+
+    const { lookupMultiEngine } = workbench;
+
+    const lookupEngineById = new Map<string, ILookupIndividualEngine>();
+
     for (let property of dv.properties) {
-      if (property.isLookup) {
-        if (!lookupScopeRegistry.hasScope(property.lookup!.lookupId)) {
-          beginLookupScope($formScreen, property.lookup!.lookupId);
+      if (property.isLookup && property.lookupId) {
+        const { lookupId } = property;
+        if (!lookupEngineById.has(lookupId)) {
+          const lookupIndividualEngine = createIndividualLookupEngine(lookupId, lookupMultiEngine);
+          lookupIndividualEngine.startup();
+          lookupEngineById.set(lookupId, lookupIndividualEngine);
         }
+        const lookupIndividualEngine = lookupEngineById.get(lookupId)!;
+        property.lookupEngine = lookupIndividualEngine;
       }
     }
 

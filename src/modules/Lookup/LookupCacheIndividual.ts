@@ -4,7 +4,7 @@ import { TypeSymbol } from "dic/Container";
 import { ILookupId } from "./LookupModule";
 
 export class LookupCacheIndividual {
-  constructor(private lookupId = ILookupId(), private cache = ILookupCacheMulti()) {}
+  constructor(private lookupId: string, private cache: LookupCacheMulti) {}
 
   getLookupLabels() {
     return this.cache.getLookupLabels(this.lookupId) || new Map();

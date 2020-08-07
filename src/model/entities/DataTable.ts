@@ -11,10 +11,7 @@ import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRenderi
 import { getRowContainer } from "../selectors/getRowContainer";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { formatNumber } from "./NumberFormating";
-import { getWorkbench } from "../selectors/getWorkbench";
-import { scopeFor } from "../../dic/Container";
-import { ILookupResolver } from "../../modules/Lookup/LookupResolver";
-import { ILookupScopeRegistry } from "../../modules/Lookup/LookupScopeRegistry";
+
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -109,15 +106,20 @@ export class DataTable implements IDataTable {
   resolveCellText(property: IProperty, value: any): any {
     if (value === null || value === undefined || (Array.isArray(value) && value.length === 0))
       return "";
-    if (property.isLookup) {
+    if (property.isLookup && property.lookupEngine) {
+      const { lookupEngine } = property;
       if (property.column === "TagInput") {
-        const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
+        const textArray = value.map((valueItem: any) =>
+          lookupEngine.lookupResolver.resolveValue(`${valueItem}`)
+        );
         return textArray || [];
       } else {
         if (Array.isArray(value)) {
-          return value.map((item) => property.lookup!.getValue(`${item}`)).join(", ");
+          return value
+            .map((item) => lookupEngine.lookupResolver.resolveValue(`${item}`))
+            .join(", ");
         }
-        return property.lookup!.getValue(`${value}`);
+        return lookupEngine.lookupResolver.resolveValue(`${value}`);
       }
     }
     if (property.column === "Number") {
@@ -142,22 +144,15 @@ export class DataTable implements IDataTable {
 
   isCellTextResolving(property: IProperty, value: any): boolean {
     if (value === null || value === undefined) return false;
-    if (property.isLookup) {
-      const $workbench = scopeFor(getWorkbench(this))!;
-      const lookupScopeRegistry = $workbench.resolve(ILookupScopeRegistry);
-      const $lookup = lookupScopeRegistry.getScope(property.lookup!.lookupId);
-      const lookupResolver = $lookup.resolve(ILookupResolver);
+    if (property.isLookup && property.lookupEngine) {
+      const { lookupEngine } = property;
       if (property.column === "TagInput") {
-        return value.some((valueItem: any) => lookupResolver.isEmptyAndLoading(`${valueItem}`));
+        return value.some((valueItem: any) =>
+          lookupEngine.lookupResolver.isEmptyAndLoading(`${valueItem}`)
+        );
       } else {
-        return lookupResolver.isEmptyAndLoading(`${value}`);
+        return lookupEngine.lookupResolver.isEmptyAndLoading(`${value}`);
       }
-
-      /*     if (property.column === "TagInput") {
-        return value.some((valueItem: any) => property.lookup!.isLoading(`${valueItem}`));
-      } else {
-        return property.lookup!.isLoading(`${value}`);
-      }*/
     } else {
       return false;
     }

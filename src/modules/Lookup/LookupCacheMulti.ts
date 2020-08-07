@@ -1,16 +1,17 @@
 import { action } from "mobx";
 import { TypeSymbol, Func } from "dic/Container";
-import { IClock } from "./Clock";
+import { IClock, Clock } from "./Clock";
 import { FORMERR } from "dns";
 import {
   ILookupLabelsCleanerReloader,
   IGetLookupLabelsCleanerReloader,
+  LookupLabelsCleanerReloader,
 } from "./LookupCleanerLoader";
 
 export class LookupCacheMulti {
   constructor(
-    private clock = IClock(),
-    private cleanerReloader = IGetLookupLabelsCleanerReloader()
+    private clock: Clock,
+    private cleanerReloader: (lookupId: string) => LookupLabelsCleanerReloader
   ) {}
 
   labels = new Map<string, Map<any, any>>();

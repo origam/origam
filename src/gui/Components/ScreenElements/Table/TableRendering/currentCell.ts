@@ -76,8 +76,25 @@ export const currentProperty = () => propertyById().get(currentColumnId() as any
 
 export const currentCellText = Memoized(
   () => {
-    const value = currentDataRow()[currentProperty().dataIndex];
+    const value = currentCellValue();
     return dataTable().resolveCellText(currentProperty(), value)
   }
 );
 scRenderCell.push(() => currentCellText.clear());
+
+export const currentCellValue = Memoized(
+  () => {
+    const value = currentDataRow()[currentProperty().dataIndex];
+    return value
+  }
+);
+scRenderCell.push(() => currentCellValue.clear());
+
+
+export const isCurrentCellLoading = Memoized(
+  () => {
+    const value = dataTable().isCellTextResolving(currentProperty(), currentCellValue())
+    return value
+  }
+);
+scRenderCell.push(() => isCurrentCellLoading.clear());

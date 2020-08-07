@@ -1,6 +1,7 @@
 import { ICaptionPosition } from "./ICaptionPosition";
 import { IPropertyColumn } from "./IPropertyColumn";
 import { ILookup } from "./ILookup";
+import { ILookupIndividualEngine } from "../Property";
 
 export enum IDockType {
   Dock = "Dock",
@@ -37,6 +38,7 @@ export interface IPropertyData {
   style: any;
   identifier?: string;
   lookup?: ILookup;
+  lookupId?: string;
   xmlNode: any;
 }
 
@@ -46,6 +48,8 @@ export interface IProperty extends IPropertyData {
   dataSourceIndex: number;
   dataIndex: number;
   isLookup: boolean;
+  lookupEngine?: ILookupIndividualEngine;
+  
 
   linkToMenuId?: string;
   isLink: boolean;
@@ -53,6 +57,8 @@ export interface IProperty extends IPropertyData {
   isFormField: boolean;
 
   setColumnWidth(width: number): void;
+
+  stop(): void;
 
   parent?: any;
 }

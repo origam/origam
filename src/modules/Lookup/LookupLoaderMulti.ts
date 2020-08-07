@@ -9,7 +9,7 @@ export interface ILookupMultiResultListenerArgs {
 }
 
 export class LookupLoaderMulti {
-  constructor(private clock = IClock(), private api = ILookupApi()) {
+  constructor(private clock: Clock, private api: LookupApi) {
     this.triggerLoadDeb = clock.debounce(this.triggerLoadImm, 100);
   }
 
@@ -50,8 +50,10 @@ export class LookupLoaderMulti {
         const result = await this.api.getLookupLabels(this.loading);
 
         for (let [l1k, l1v] of result.entries()) {
+          l1k = String(l1k).toLowerCase();
           if (!this.loading.has(l1k)) continue;
           for (let [l2k, l2v] of l1v.entries()) {
+            l2k = String(l2k).toLowerCase();
             this.loading.get(l1k)!.delete(l2k);
           }
           if (this.loading.get(l1k)!.size === 0) {
@@ -59,8 +61,6 @@ export class LookupLoaderMulti {
           }
         }
         this.loadingAtom.reportChanged();
-
-        console.log(result);
 
         this.resultListeners.trigger({ labels: result });
       } while (this.interrests.size > 0);

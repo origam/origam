@@ -11,10 +11,13 @@ import { Clock } from "../../modules/Lookup/Clock";
 import $root from "../../rootContainer";
 import { SCOPE_Workbench } from "../../modules/Workbench/WorkbenchModule";
 import {registerScope} from "../../dic/Container";
+import { createMultiLookupEngine } from "modules/Lookup/LookupModule";
+import { getApi } from "model/selectors/getApi";
 
 export function createWorkbench() {
   const clock = new Clock();
   const workbenchLookupListCache = new LookupListCacheMulti(clock);
+  const lookupMultiEngine = createMultiLookupEngine(() => getApi(instance));
 
   const instance = new Workbench({
     mainMenuEnvelope: new MainMenuEnvelope(),
@@ -26,8 +29,10 @@ export function createWorkbench() {
     recordInfo: new RecordInfo(),
 
     lookupListCache: workbenchLookupListCache,
+    lookupMultiEngine,
   });
   workbenchLookupListCache.startup();
+  lookupMultiEngine.startup();
   const $workbench = $root.beginLifetimeScope(SCOPE_Workbench);
   registerScope(instance, $workbench);
   return instance;
