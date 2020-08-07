@@ -80,6 +80,7 @@ export class ScrollRowContainer implements IRowsContainer {
     this.clear();
     this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
     this.notifyResetListeners()
+    this._maxRowNumberSeen=0;
   }
 
   substitute(row: any[]): void {
