@@ -1,9 +1,5 @@
 import { action } from "mobx";
-import {
-  ILookupMultiResultListenerArgs,
-  LookupLoaderMulti,
-  ILookupLoaderMulti,
-} from "./LookupLoaderMulti";
+import { ILookupMultiResultListenerArgs, LookupLoaderMulti, ILookupLoaderMulti } from "./LookupLoaderMulti";
 import { PubSub } from "./common";
 import { TypeSymbol } from "dic/Container";
 import { ILookupId } from "./LookupModule";
@@ -13,7 +9,7 @@ export interface ILookupIndividualResultListenerArgs {
 }
 
 export class LookupLoaderIndividual {
-  constructor(private lookupId = ILookupId(), private loader = ILookupLoaderMulti()) {}
+  constructor(private lookupId: string, private loader: LookupLoaderMulti) {}
 
   @action.bound
   handleResultingLabels(args: ILookupMultiResultListenerArgs) {
@@ -40,6 +36,4 @@ export class LookupLoaderIndividual {
     return this.loader.isWorking(this.lookupId, key);
   }
 }
-export const ILookupLoaderIndividual = TypeSymbol<LookupLoaderIndividual>(
-  "ILookupLoaderIndividual"
-);
+export const ILookupLoaderIndividual = TypeSymbol<LookupLoaderIndividual>("ILookupLoaderIndividual");

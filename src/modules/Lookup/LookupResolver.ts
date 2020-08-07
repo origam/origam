@@ -10,8 +10,8 @@ import { TypeSymbol } from "dic/Container";
 
 export class LookupResolver {
   constructor(
-    private cache = ILookupCacheIndividual(),
-    private loader = ILookupLoaderIndividual()
+    private cache: LookupCacheIndividual,
+    private loader: LookupLoaderIndividual
   ) {}
 
   resolved = new Map<any, any>();

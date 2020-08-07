@@ -9,7 +9,7 @@ export interface ILookupMultiResultListenerArgs {
 }
 
 export class LookupLoaderMulti {
-  constructor(private clock = IClock(), private api = ILookupApi()) {
+  constructor(private clock: Clock, private api: LookupApi) {
     this.triggerLoadDeb = clock.debounce(this.triggerLoadImm, 100);
   }
 
