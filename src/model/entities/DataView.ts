@@ -399,6 +399,10 @@ export class DataView implements IDataView {
     );
   }
 
+  @action.bound stop() {
+    this.properties.forEach((prop) => prop.stop());
+  }
+
   @computed get tableRows() {
     const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnIds;
     return groupedColumnIds.length === 0

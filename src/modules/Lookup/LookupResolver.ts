@@ -9,10 +9,7 @@ import {
 import { TypeSymbol } from "dic/Container";
 
 export class LookupResolver {
-  constructor(
-    private cache: LookupCacheIndividual,
-    private loader: LookupLoaderIndividual
-  ) {}
+  constructor(private cache: LookupCacheIndividual, private loader: LookupLoaderIndividual) {}
 
   resolved = new Map<any, any>();
   atoms = new Map<any, IAtom>();
@@ -63,6 +60,9 @@ export class LookupResolver {
 
   resolveValue(key: any) {
     // This runs in COMPUTED scope
+
+    if (_.isString(key)) key = String(key).toLowerCase();
+
     let value: any = null;
 
     this.globalAtom.reportObserved();
@@ -99,9 +99,9 @@ export class LookupResolver {
   async resolveList(keys: Set<any>) {
     keys = new Set(keys);
     const cachedLabels = this.cache.getLookupLabels();
-    for(let labelId of Array.from(keys.keys())) {
-      if(this.resolved.has(labelId)) keys.delete(labelId);
-      if(cachedLabels.has(labelId)) keys.delete(labelId);
+    for (let labelId of Array.from(keys.keys())) {
+      if (this.resolved.has(labelId)) keys.delete(labelId);
+      if (cachedLabels.has(labelId)) keys.delete(labelId);
     }
     const result = await this.loader.loadList(keys);
     this.cache.addLookupLabels(result);
@@ -109,6 +109,8 @@ export class LookupResolver {
   }
 
   isEmptyAndLoading(key: any) {
+    if (_.isString(key)) key = String(key).toLowerCase();
+    
     if (!this.resolved.has(key)) {
       return this.loader.isWorking(key);
     } else return false;

@@ -9,7 +9,7 @@ export interface ILookupIndividualResultListenerArgs {
 }
 
 export class LookupLoaderIndividual {
-  constructor(private lookupId: string, private loader: LookupLoaderMulti) {}
+  constructor(public lookupId: string, private loader: LookupLoaderMulti) {}
 
   @action.bound
   handleResultingLabels(args: ILookupMultiResultListenerArgs) {

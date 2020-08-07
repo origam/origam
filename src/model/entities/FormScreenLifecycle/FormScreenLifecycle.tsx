@@ -727,6 +727,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   killForm() {
     this.clearAutorefreshInterval();
     this.disposers.forEach((disposer) => disposer());
+    getDataViewList(this).forEach((dv) => dv.stop());
     const openedScreen = getOpenedScreen(this);
     openedScreen.content.setFormScreen(undefined);
   }

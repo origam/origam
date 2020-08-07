@@ -4,7 +4,7 @@ import { IOrigamAPI } from "model/entities/OrigamAPI";
 import { IApi } from "model/entities/types/IApi";
 
 export class LookupApi {
-  constructor(private api: IApi) {}
+  constructor(private api: () => IApi) {}
 
   async getLookupLabels(request: Map<string, Map<any, any>>) {
     const requestRaw: any[] = [];
@@ -16,7 +16,7 @@ export class LookupApi {
       });
     }
 
-    const resultRaw: { [k: string]: any } = await this.api.getLookupLabelsEx(requestRaw);
+    const resultRaw: { [k: string]: any } = await this.api().getLookupLabelsEx(requestRaw);
     const result = new Map<string, Map<any, any>>();
     for (let [lookupId, lookupResolved] of Object.entries(resultRaw)) {
       if (!result.has(lookupId)) {

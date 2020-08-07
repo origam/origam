@@ -112,6 +112,7 @@ export interface IDataView extends IDataViewData {
   restoreViewState(): void;
 
   start(): void;
+  stop(): void;
 
   scrollState: IScrollState;
   tableRows: ITableRow[];
