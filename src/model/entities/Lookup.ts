@@ -1,19 +1,19 @@
 import _ from "lodash";
-import {computed, createAtom, flow, IAtom, observable, when} from "mobx";
-import {getApi} from "../selectors/getApi";
-import {IDropDownColumn} from "./types/IDropDownColumn";
-import {IDropDownParameter, IDropDownType, ILookup, ILookupData} from "./types/ILookup";
-import {getLookupLoader} from "model/selectors/DataView/getLookupLoader";
+import { computed, createAtom, flow, IAtom, observable, when } from "mobx";
+import { getApi } from "../selectors/getApi";
+import { IDropDownColumn } from "./types/IDropDownColumn";
+import { IDropDownParameter, IDropDownType, ILookup, ILookupData } from "./types/ILookup";
+import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 
 export enum IIdState {
   LOADING = "LOADING",
-  ERROR = "ERROR"
+  ERROR = "ERROR",
 }
 
 export class Lookup implements ILookup {
   constructor(data: ILookupData) {
     Object.assign(this, data);
-    this.dropDownColumns.forEach(o => (o.parent = this));
+    this.dropDownColumns.forEach((o) => (o.parent = this));
   }
   $type_ILookup: 1 = 1;
 
@@ -46,58 +46,54 @@ export class Lookup implements ILookup {
 
   isSomethingLoading: boolean = false;
 
-  triggerloadImm = flow(
-    function*(this: Lookup) {
-      if (this.isSomethingLoading) {
-        return;
-      }
-      while (true) {
-        const idsToLoad: Set<string> = new Set();
-        try {
-          for (let key of this.visibleIds.keys()) {
-            if (
-              key &&
-              !this.idStates.has(key) &&
-              !this.resolvedValues.has(key)
-            ) {
-              idsToLoad.add(key);
-              this.idStates.set(key, IIdState.LOADING);
-            }
-          }
+  // triggerloadImm = flow(
+  //   function* (this: Lookup) {
+  //     if (this.isSomethingLoading) {
+  //       return;
+  //     }
+  //     while (true) {
+  //       const idsToLoad: Set<string> = new Set();
+  //       try {
+  //         for (let key of this.visibleIds.keys()) {
+  //           if (key && !this.idStates.has(key) && !this.resolvedValues.has(key)) {
+  //             idsToLoad.add(key);
+  //             this.idStates.set(key, IIdState.LOADING);
+  //           }
+  //         }
+  //
+  //         if (idsToLoad.size === 0) {
+  //           break;
+  //         }
+  //         this.isSomethingLoading = true;
+  //         const api = getLookupLoader(this);
+  //
+  //         const labels = yield api.getLookupLabels({
+  //           LookupId: this.lookupId,
+  //           MenuId: undefined, // getMenuItemId(this),
+  //           LabelIds: Array.from(idsToLoad),
+  //         }) as { [key: string]: any };
+  //
+  //         this.isSomethingLoading = false;
+  //         for (let [key, value] of Object.entries(labels)) {
+  //           this.idStates.delete(key);
+  //           this.resolvedValues.set(key, value);
+  //           idsToLoad.delete(key);
+  //         }
+  //       } catch (error) {
+  //         this.isSomethingLoading = false;
+  //         for (let key of idsToLoad) {
+  //           this.idStates.set(key, IIdState.ERROR);
+  //         }
+  //         console.error(error);
+  //       }
+  //     }
+  //   }.bind(this)
+  // );
 
-          if (idsToLoad.size === 0) {
-            break;
-          }
-          this.isSomethingLoading = true;
-          const api = getLookupLoader(this);
-
-          const labels = yield api.getLookupLabels({
-            LookupId: this.lookupId,
-            MenuId: undefined, // getMenuItemId(this),
-            LabelIds: Array.from(idsToLoad)
-          }) as { [key: string]: any };
-
-          this.isSomethingLoading = false;
-          for (let [key, value] of Object.entries(labels)) {
-            this.idStates.delete(key);
-            this.resolvedValues.set(key, value);
-            idsToLoad.delete(key);
-          }
-        } catch (error) {
-          this.isSomethingLoading = false;
-          for (let key of idsToLoad) {
-            this.idStates.set(key, IIdState.ERROR);
-          }
-          console.error(error);
-        }
-      }
-    }.bind(this)
-  );
-
-  triggerLoad = _.debounce(this.triggerloadImm, 100);
+  // triggerLoad = _.debounce(this.triggerloadImm, 100);
 
   resolveList = flow(
-    function*(this: Lookup, idsToLoadArg: Set<string>) {
+    function* (this: Lookup, idsToLoadArg: Set<string>) {
       const idsToLoad = new Set(idsToLoadArg);
       yield when(() => !this.isSomethingLoading);
       try {
@@ -116,7 +112,7 @@ export class Lookup implements ILookup {
         const labels = yield api.getLookupLabels({
           LookupId: this.lookupId,
           MenuId: undefined, // getMenuItemId(this),
-          LabelIds: Array.from(idsToLoad)
+          LabelIds: Array.from(idsToLoad),
         });
         for (let [key, value] of Object.entries(labels)) {
           this.idStates.delete(key);
@@ -134,23 +130,23 @@ export class Lookup implements ILookup {
     }.bind(this)
   );
 
-  getValue(key: string): any {
-    if (!this.visibleIds.has(key)) {
-      this.visibleIds.set(key, {
-        atom: createAtom(
-          `Lookup atom [${key}]`,
-          () => {
-            this.triggerLoad();
-          },
-          () => {
-            this.visibleIds.delete(key);
-          }
-        )
-      });
-    }
-    this.visibleIds.get(key)!.atom.reportObserved();
-    return this.resolvedValues.get(key);
-  }
+  // getValue(key: string): any {
+  //   if (!this.visibleIds.has(key)) {
+  //     this.visibleIds.set(key, {
+  //       atom: createAtom(
+  //         `Lookup atom [${key}]`,
+  //         () => {
+  //           this.triggerLoad();
+  //         },
+  //         () => {
+  //           this.visibleIds.delete(key);
+  //         }
+  //       )
+  //     });
+  //   }
+  //   this.visibleIds.get(key)!.atom.reportObserved();
+  //   return this.resolvedValues.get(key);
+  // }
 
   @computed
   get parameters() {

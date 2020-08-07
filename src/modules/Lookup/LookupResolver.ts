@@ -96,7 +96,7 @@ export class LookupResolver {
     return value;
   }
 
-  async resolveList(keys: Set<any>) {
+  async resolveList(keys: Set<any>): Promise<Map<string, Map<any, any>>> {
     keys = new Set(keys);
     const cachedLabels = this.cache.getLookupLabels();
     for (let labelId of Array.from(keys.keys())) {

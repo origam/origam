@@ -1,18 +1,18 @@
-import React, {useContext} from "react";
-import {FilterSettingsBoolean} from "./HeaderControls/FilterSettingsBoolean";
-import {IProperty} from "../../../../../model/entities/types/IProperty";
-import {FilterSettingsString} from "./HeaderControls/FilterSettingsString";
-import {FilterSettingsDate} from "./HeaderControls/FilterSettingsDate";
-import {observer} from "mobx-react-lite";
-import {FilterSettingsNumber} from "./HeaderControls/FilterSettingsNumber";
-import {FilterSettingsLookup} from "./HeaderControls/FilterSettingsLookup";
-import {flow} from "mobx";
-import {MobXProviderContext} from "mobx-react";
-import {onApplyFilterSetting} from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
-import {getFilterSettingByProperty} from "model/selectors/DataView/getFilterSettingByProperty";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
+import React, { useContext } from "react";
+import { FilterSettingsBoolean } from "./HeaderControls/FilterSettingsBoolean";
+import { IProperty } from "../../../../../model/entities/types/IProperty";
+import { FilterSettingsString } from "./HeaderControls/FilterSettingsString";
+import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
+import { observer } from "mobx-react-lite";
+import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
+import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
+import { flow } from "mobx";
+import { MobXProviderContext } from "mobx-react";
+import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
+import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
-export const FilterSettings: React.FC = observer(props => {
+export const FilterSettings: React.FC = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
   const dataTable = getDataTable(property);
   const setting = getFilterSettingByProperty(property, property.id);
@@ -53,20 +53,18 @@ export const FilterSettings: React.FC = observer(props => {
         <FilterSettingsLookup
           setting={setting as any}
           onTriggerApplySetting={handleApplyFilterSetting}
-          getOptions={flow(function*(searchTerm: string) {
+          getOptions={flow(function* (searchTerm: string) {
             const allIds = new Set(dataTable.getAllValuesOfProp(property));
-            yield property.lookup!.resolveList(allIds);
+            const lookupValues = yield property.lookupEngine?.lookupResolver.resolveList(allIds);
             return Array.from(allIds.values())
-              .map(item => ({
-                content: property.lookup!.getValue(item),
-                value: item
+              .map((item) => ({
+                content: lookupValues[item],
+                value: item,
               }))
               .filter(
-                item =>
+                (item) =>
                   item.content &&
-                  item.content
-                    .toLocaleLowerCase()
-                    .includes((searchTerm || "").toLocaleLowerCase())
+                  item.content.toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
               );
           })}
         />
