@@ -25,7 +25,9 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Primitives;
 using MoreLinq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
@@ -216,26 +218,16 @@ namespace Origam.DA.Service.Generators
 
         private string ColumnName => "["+SplitValue[0].Replace("\"","")+"]";
         private string Operator => SplitValue[1].Replace("\"","");
-        private string ColumnValue => SplitValue[2]
-            .Replace("'", "''")
-            .Replace("\"", "'");       
-        private string ColumnValue2 => SplitValue[3]
-            .Replace("'", "''")
-            .Replace("\"", "'");
+        private string ColumnValue => ValueToOperand(SplitValue[2]);
+
         
         private readonly FilterRenderer renderer = new FilterRenderer();
 
         private string ValueToOperand(string value)
         {
-            // if (string.IsNullOrWhiteSpace(value)) return value;
-            // string valueWithoutDoubleQuotes = value.Replace("\"", "");
-            // char firstChar = valueWithoutDoubleQuotes.First();
-            // char lastChar = valueWithoutDoubleQuotes.Last();
-            // return value.First() + value.Substring(1,value.Length - 2).Replace("'","''") + value.Last();
-
             return value
-                .Replace("\"", "")
-                .Replace("'", "''");
+                .Replace("'", "''")
+                .Replace("\"", "'"); 
         }
 
         private bool IsString(string value)
@@ -287,34 +279,31 @@ namespace Origam.DA.Service.Generators
 
         private string GetSqlOfLeafNode()
         {
+            var (operatorName, modifiedColumnValue) = GetRendererInput(Operator, ColumnValue);
             if (Children.Count == 0)
             {
-                var (operatorName, modifiedColumnValue) = GetRendererInput(Operator, ColumnValue);
-                if (SplitValue.Length == 4)
+                if (SplitValue.Length != 3)
                 {
-                    return renderer.BinaryOperator(
-                        leftValue: ColumnName, 
-                        rightValue1: ColumnValue, 
-                        rightValue2: ColumnValue2,
-                        operatorName: operatorName);
-                }
-                if (SplitValue.Length == 3)
-                {
-                    return renderer.BinaryOperator(
-                        leftValue: ColumnName, 
-                        rightValue: modifiedColumnValue, 
-                        operatorName: operatorName);
+                    throw new ArgumentException("could not parse: " + Value + " to a filter node");
                 }
 
-                throw new ArgumentException("could not parse: "+Value+" to a filter node");
+                return renderer.BinaryOperator(
+                    leftValue: ColumnName, 
+                    rightValue: modifiedColumnValue, 
+                    operatorName: operatorName);
             }
 
-            if (Children.Count == 1 && Operator == "in")
+            if (Children.Count == 1 && 
+                (Operator == "in" ||  Operator == "nin" ||  Operator == "between" ||  Operator == "nbetween") )
             {
-                IEnumerable<string> options = Children.First()
+                string[] rightHandValues = Children.First()
                     .SplitValue
-                    .Select(val => val.Replace("\"", "'"));
-                return renderer.In(ColumnName, options);
+                    .Select(ValueToOperand)
+                    .ToArray();
+                return renderer.BinaryOperator(
+                    leftValue: ColumnName, 
+                    rightValues: rightHandValues, 
+                    operatorName: operatorName);
             }
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
@@ -341,6 +330,8 @@ namespace Origam.DA.Service.Generators
                 case "nnull": return ("NotEqual", null);
                 case "between": return ("Between", null);
                 case "nbetween": return ("NotBetween", null);
+                case "in": return ("In", null);
+                case "nin": return ("NotIn", null);
                 default: throw new NotImplementedException(operatorName);
             }
         }

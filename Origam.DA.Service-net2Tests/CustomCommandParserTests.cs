@@ -66,16 +66,22 @@ namespace Origam.DA.Service_net2Tests
             "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
             "((([city_name] LIKE '%Wash%') OR ([name] LIKE '%Smith%')) AND ([age] >= 18) AND [id] IN ('f2', 'f3', 'f4'))")]        
         [TestCase(
-            "[\"age\",\"between\",18, 80]",
+            "[\"age\",\"between\",[18, 80]]",
             "[age] BETWEEN 18 AND 80")]        
         [TestCase(
-            "[\"age\",\"nbetween\",18, 80]",
-            "[age] NOT BETWEEN 18 AND 80")]        
+            "[\"age\",\"nbetween\",[18, 80]]",
+            "[age] NOT BETWEEN 18 AND 80")]         
         [TestCase(
-            "[\"Timestamp\", \"between\", \"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]",
+            "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\"]]",
+            "[Name] IN ('Tom', 'Jane', 'David')")]            
+        [TestCase(
+            "[\"Name\",\"nin\",[\"Tom\", \"Jane\", \"David\"]]",
+            "[Name] NOT IN ('Tom', 'Jane', 'David')")]        
+        [TestCase(
+            "[\"Timestamp\", \"between\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
             "[Timestamp] BETWEEN '2020-08-04T00:00:00.000' AND '2020-05-01T00:00:00.000'")]       
         [TestCase(
-            "[\"Timestamp\", \"nbetween\", \"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]",
+            "[\"Timestamp\", \"nbetween\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
             "[Timestamp] NOT BETWEEN '2020-08-04T00:00:00.000' AND '2020-05-01T00:00:00.000'")]
         [TestCase("", null)]
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
