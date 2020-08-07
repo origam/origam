@@ -310,6 +310,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             }
             return false;
           }
+          case "nin":
           case "neq": {
             const txt1 = dataTable.getCellValue(row, prop);
             const val1 = term.setting.val1 || [];
@@ -347,9 +348,9 @@ export class FilterConfiguration implements IFilterConfiguration {
       case "CheckBox": {
         switch (term.setting.type) {
           case "eq": {
-            if (term.setting.val1 === null) return true;
+            if (term.setting.val1 === undefined) return true;
             const bool1 = dataTable.getCellValue(row, prop);
-            return bool1 === term.setting.val1;
+            return bool1 === !!term.setting.val1;
           }
         }
         break;
