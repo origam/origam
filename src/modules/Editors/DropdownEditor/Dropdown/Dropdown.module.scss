@@ -1,0 +1,54 @@
+.control {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+
+  :global(.input) {
+    flex: 1 0 0;
+    min-width: 0px;
+    border: 1px solid #b0afb7;
+    border-right: none;
+    background-color: #f9f9fc;
+    border-radius: 2px 0 0 2px;
+    padding-left: 15px;
+    &:focus {
+      background-color: #fff;
+      border: 1px solid #4c84ff;
+      margin-right: -1px;
+      z-index: 100;
+    }
+  }
+
+  :global(.inputBtn) {
+    flex: 0 0 0;
+    border: 1px solid #b0afb7;
+    border-right: none;
+    background-color: #f9f9fc;
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: pointer;
+    &:global(.lastOne) {
+      border: 1px solid #b0afb7;
+      border-radius: 0 2px 2px 0;
+    }
+    
+    &:focus {
+      background-color: #fff;
+      border: 1px solid #4c84ff;
+      margin-right: -1px;
+      z-index: 100;
+    }
+  }
+}
+
+.body {
+  z-index: 2000;
+  display: inline-block;
+  // overflow: hidden;
+  border: 1px solid #b0afb7;
+  background-color: #f9f9fc;
+  border-radius: 2px;
+  box-shadow: 1px 2px 5px 1px rgba(0,0,0,0.1) ;
+}

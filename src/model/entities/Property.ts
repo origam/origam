@@ -1,11 +1,11 @@
-import {IDockType, IProperty, IPropertyData} from "./types/IProperty";
-import {ICaptionPosition} from "./types/ICaptionPosition";
-import {IPropertyColumn} from "./types/IPropertyColumn";
-import {action, computed, observable} from "mobx";
+import { IDockType, IProperty, IPropertyData } from "./types/IProperty";
+import { ICaptionPosition } from "./types/ICaptionPosition";
+import { IPropertyColumn } from "./types/IPropertyColumn";
+import { action, computed, observable } from "mobx";
 
-import {ILookup} from "./types/ILookup";
-import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
-import {IDataSourceField} from "./types/IDataSourceField";
+import { ILookup } from "./types/ILookup";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { IDataSourceField } from "./types/IDataSourceField";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -48,6 +48,8 @@ export class Property implements IProperty {
 
   linkToMenuId?: string = undefined;
 
+  isFormField: boolean = false;
+
   get isLookup() {
     return !!this.lookup;
   }
@@ -73,4 +75,5 @@ export class Property implements IProperty {
   }
 
   parent: any;
+  xmlNode = undefined;
 }

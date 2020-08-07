@@ -163,7 +163,26 @@ export class Container implements IContainer {
     }
   }
 
+  resolveOptional<TInstance>(
+    sym: ITypeSymbol<TInstance>,
+    ...creatorArgs: any[]
+  ): TInstance | undefined {
+    this.checkDisposed();
+    pushCurrentContainer(this);
+    try {
+      const registration = this.findRegistration(sym);
+      if (registration) {
+        return this.resolveByRegistration(registration, creatorArgs || []);
+      } else {
+        return;
+      }
+    } finally {
+      popCurrentContainer();
+    }
+  }
+
   resolveByRegistration<TInstance>(registration: Registration<TInstance>, creatorArgs: any[]) {
+    //console.log('Resolve:', registration.typeSymbol)
     for (let h of registration.onPreparing) h({ container: this });
     if (registration.instancePerDependency) {
       return this.providePerDependency(registration, creatorArgs);
@@ -192,7 +211,7 @@ export class Container implements IContainer {
     pushCurrentContainer(this);
     try {
       const instance = creator();
-      _registeredScopes.set(instance, this);
+      registerScope(instance, this);
       // this.transientInstances.push(instance);
       return instance;
     } finally {
@@ -224,7 +243,7 @@ export class Container implements IContainer {
 
   providePerDependency<TInstance>(registration: Registration<TInstance>, creatorArgs: any[]) {
     let instance = this.newFromRegistration(registration, creatorArgs);
-    _registeredScopes.set(instance, this);
+    registerScope(instance, this);
     if (registration.onRelease.length > 0) {
       this.disposeEvents.set(instance, registration.onRelease);
     }
@@ -282,7 +301,7 @@ export class Container implements IContainer {
       return container.instances.get(registration.typeSymbol!)!;
     } else {
       let instance = this.newFromRegistration(registration, creatorArgs);
-      _registeredScopes.set(instance, this);
+      registerScope(instance, this);
       if (registration.onRelease.length > 0) {
         this.disposeEvents.set(instance, registration.onRelease);
       }
@@ -302,16 +321,12 @@ export class Container implements IContainer {
     }
   }
 
-  resolveOptional<TInstance>(sym: ITypeSymbol<TInstance>): TInstance | undefined {
-    throw new Error("Method not implemented.");
-  }
-
-  beginLifetimeScope(scopeName?: string): Container {
+  beginLifetimeScope(scopeName?: string, detached?: boolean): Container {
     //console.log("Entering lifetime scope:", scopeName);
     const container = new Container(this.options);
     container.scopeName = scopeName;
     container.parent = this;
-    this.children.push(container);
+    if (!detached) this.children.push(container);
     return container;
   }
 
@@ -319,18 +334,20 @@ export class Container implements IContainer {
     // TODO: Dispose registered objects
     //console.log("Disposing lifetime scope:", this.scopeName);
     // You might want to use TypeSymbol instance call to resolve something during disposal.
+    this.triggerOnThisScopeWillDispose();
     pushCurrentContainer(this);
+    // console.log("Disposing", this);
     try {
       const parent = this.parent;
       if (this.children.length > 0) {
-        console.log("Disposing container with children?");
+        console.log("Disposing container with children?", this);
       }
       for (let instance of this.instances.values()) {
         const disposeEvent = this.disposeEvents.get(instance);
         if (disposeEvent) {
           for (let h of disposeEvent) h({ instance, container: this });
         }
-        console.log("Disposing cached", instance);
+        // console.log("Disposing cached", instance);
         if (instance.dispose) instance.dispose();
       }
       this.instances.clear();
@@ -339,7 +356,7 @@ export class Container implements IContainer {
         if (disposeEvent) {
           for (let h of disposeEvent) h({ instance, container: this });
         }
-        console.log("Disposing transient", instance);
+        // console.log("Disposing transient", instance);
         if (instance.dispose) instance.dispose();
       }
       this.transientInstances.length = 0;
@@ -352,11 +369,12 @@ export class Container implements IContainer {
       return parent;
     } finally {
       popCurrentContainer();
+      this.triggerOnThisScopeDisposed();
     }
   }
 
   disposeWithChildren() {
-    for (let child of this.children) {
+    for (let child of [...this.children]) {
       child.disposeWithChildren();
     }
     this.dispose();
@@ -395,9 +413,35 @@ export class Container implements IContainer {
     return;
   }
 
+  findFirstContainer(pred: (cont: Container) => boolean): Container | undefined {
+    if (pred(this)) return this;
+    if (this.parent) return this.parent.findFirstContainer(pred);
+    return;
+  }
+
   resolveFlowFinished() {
     for (let h of this.scheduledOnActivated) h();
     this.scheduledOnActivated.length = 0;
+  }
+
+  _onThisScopeDisposed: Array<($cont: Container) => void> = [];
+
+  onThisScopeDisposed(handler: ($cont: Container) => void) {
+    this._onThisScopeDisposed.push(handler);
+  }
+
+  triggerOnThisScopeDisposed() {
+    for (let h of this._onThisScopeDisposed) h(this);
+  }
+
+  _onThisScopeWillDispose: Array<($cont: Container) => void> = [];
+
+  onThisScopeWillDispose(handler: ($cont: Container) => void) {
+    this._onThisScopeWillDispose.push(handler);
+  }
+
+  triggerOnThisScopeWillDispose() {
+    for (let h of this._onThisScopeWillDispose) h(this);
   }
 }
 
@@ -546,6 +590,18 @@ export function Func<TInstance>(tys: ITypeSymbol<TInstance>) {
   return resolve;
 }
 
+export function Optional<TInstance>(tys: ITypeSymbol<TInstance>) {
+  const container = getTopContainer();
+  if (!container) throw new Error("No resolution flow active.");
+  const resolve = (): TInstance | undefined => {
+    const overrideContainer = getTopContainer();
+    return (overrideContainer || container).resolveOptional<TInstance>(tys as any);
+  };
+  resolve.symName = tys.symName;
+  resolve.toString = () => `Optional <${tys.toString()}>`;
+  return resolve;
+}
+
 export function Owned<TInstance>(tys: ITypeSymbol<TInstance>, scopeName?: string) {
   const container = getTopContainer();
   if (!container) throw new Error("No resolution flow active.");
@@ -590,7 +646,17 @@ export function InjectContainer() {
   return container;
 }
 
-const _registeredScopes = new WeakMap<any, Container>();
+const _registeredScopes = new Map<any, Container>();
+
+export function registerScope(instance: any, scope: Container) {
+  try {
+    _registeredScopes.set(instance, scope);
+  } catch (e) {
+    // When resolving primitive value, it cannot be inserted into weakmap
+    // Nor will we want to know, which scope it comes from.
+  }
+}
+
 export function scopeFor(instance: any): Container | undefined {
   return _registeredScopes.get(instance);
 }

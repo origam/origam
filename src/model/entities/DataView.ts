@@ -36,6 +36,9 @@ import { IGridDimensions } from "../../gui/Components/ScreenElements/Table/types
 import { FocusManager } from "./FocusManager";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
+import { DataViewData } from "../../modules/DataView/DataViewData";
+import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
+import { RowCursor } from "../../modules/DataView/TableCursor";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -108,6 +111,10 @@ export class DataView implements IDataView {
   lookupLoader: ILookupLoader = null as any;
   serverSideGrouper: ServerSideGrouper = null as any;
   clientSideGrouper: ClientSideGrouper = null as any;
+
+  dataViewRowCursor: RowCursor = null as any;
+  dataViewApi: DataViewAPI = null as any;
+  dataViewData: DataViewData = null as any;
 
   @observable selectedRowIdsMap: Map<string, boolean> = new Map();
 
