@@ -6,4 +6,5 @@ export interface IFilterSetting {
   filterValue1: any | undefined;
   filterValue2: any | undefined;
   isComplete: boolean;
+  lookupId: string | undefined
 }

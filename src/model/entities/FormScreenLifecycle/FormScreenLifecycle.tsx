@@ -38,7 +38,8 @@ import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingCo
 import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
 import { getUserFilters } from "../../selectors/DataView/getUserFilters";
 import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
-import {FlowBusyMonitor} from "../../../utils/flow";
+import { FlowBusyMonitor } from "../../../utils/flow";
+import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -56,9 +57,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   @observable allDataViewsSteady = true;
 
-  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
+  monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
-  get isWorking(){
+  get isWorking() {
     return this.monitor.isWorking;
   }
 
@@ -481,24 +482,22 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string){
+  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
     try {
       this.monitor.inFlow++;
       const api = getApi(this);
-      const changes: any = {}
+      const changes: any = {};
       changes[fieldName] = newValue;
       const formScreen = getFormScreen(this);
       const self = this;
-      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
-        function* () {
-          return yield api.updateObject({
-            SessionFormIdentifier: getSessionId(self),
-            Entity: dataView.entity,
-            Id: dataView.dataTable.getRowId(row),
-            Values: changes
-          });
-        }
-      );
+      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
+        return yield api.updateObject({
+          SessionFormIdentifier: getSessionId(self),
+          Entity: dataView.entity,
+          Id: dataView.dataTable.getRowId(row),
+          Values: changes,
+        });
+      });
 
       yield* processCRUDResult(dataView, updateObjectResult);
 
@@ -520,6 +519,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
         Filter: getUserFilters(rootDataView),
+        FilterLookups: getUserFilterLookups(rootDataView),
         Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_ROW_CHUNK,
         RowOffset: 0,
@@ -577,7 +577,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           OriginalId: rowId,
           RequestingGridId: gridId,
           Entities: [entity],
-          ForcedValues: {}
+          ForcedValues: {},
         });
       } finally {
         formScreen.dataUpdateCRS.leave();

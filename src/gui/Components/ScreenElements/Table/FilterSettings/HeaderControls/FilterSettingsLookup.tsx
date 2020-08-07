@@ -377,6 +377,7 @@ class OpEditors extends React.Component<{
 @observer
 export class FilterSettingsLookup extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
+  lookupId: string;
   setting: any;
   onTriggerApplySetting?(setting: any): void;
 }> {
@@ -386,7 +387,11 @@ export class FilterSettingsLookup extends React.Component<{
   );
 
   @action.bound handleChange(newSetting: any) {
+    newSetting.lookupId = newSetting.type === "contains" || newSetting.type === "ncontains"
+      ? this.props.lookupId
+      : undefined
     this.setting = newSetting;
+
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
 
@@ -412,6 +417,7 @@ export class LookupFilterSetting implements IFilterSetting {
   val1?: any;
   val2?: any;
   isComplete: boolean;
+  lookupId: string | undefined
 
   get filterValue1() {
     if (!this.val1) {
