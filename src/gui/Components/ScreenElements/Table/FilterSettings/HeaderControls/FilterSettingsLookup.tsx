@@ -21,7 +21,7 @@ import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSe
 import { FilterSetting } from "./FilterSetting";
 
 const OPERATORS: any[] = [
-  { human: <>=</>, type: "eq" },
+  { human: <>=</>, type: "in" },
   { human: <>&ne;</>, type: "nin" },
   { human: <>contain</>, type: "contains" },
   { human: <>not contain</>, type: "ncontains" },
@@ -354,7 +354,7 @@ class OpEditors extends React.Component<{
   render() {
     const { setting } = this.props;
     switch (setting.type) {
-      case "eq":
+      case "in":
       case "nin":
         return (
           <TagInputStateful
@@ -421,7 +421,7 @@ export class LookupFilterSetting implements IFilterSetting {
       case "contain":
       case "ncontain":
         return this.val1.map((item: any) => item.content);
-      case "eq":
+      case "in":
       case "nin":
         return this.val1.map((item: any) => item.value);
       default:

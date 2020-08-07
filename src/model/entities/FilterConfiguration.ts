@@ -300,6 +300,7 @@ export class FilterConfiguration implements IFilterConfiguration {
       }
       case "ComboBox": {
         switch (term.setting.type) {
+          case "in":
           case "eq": {
             const txt1 = dataTable.getCellValue(row, prop);
             const val1 = term.setting.val1 || [];
