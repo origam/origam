@@ -96,21 +96,38 @@ export class LookupResolver {
     return value;
   }
 
-  async resolveList(keys: Set<any>): Promise<Map<string, Map<any, any>>> {
-    keys = new Set(keys);
+  async resolveList(keys: Set<any>): Promise<Map<any, any>> {
+    const missingKeys = new Set(keys);
     const cachedLabels = this.cache.getLookupLabels();
-    for (let labelId of Array.from(keys.keys())) {
-      if (this.resolved.has(labelId)) keys.delete(labelId);
-      if (cachedLabels.has(labelId)) keys.delete(labelId);
+    const cachedResultMap = new Map<any, any>();
+    for (let labelId of Array.from(missingKeys.keys())) {
+      if (this.resolved.has(labelId)) {
+        missingKeys.delete(labelId);
+        cachedResultMap.set(labelId, this.resolved.get(labelId));
+      }
+      if (cachedLabels.has(labelId)) {
+        missingKeys.delete(labelId);
+        cachedResultMap.set(labelId, cachedLabels.get(labelId));
+      }
     }
-    const result = await this.loader.loadList(keys);
-    this.cache.addLookupLabels(result);
-    return result;
+
+    const loadedResultMap = await this.loader.loadList(missingKeys);
+    const entryArray = Array.from(loadedResultMap);
+    if (entryArray.length === 1) {
+      this.cache.addLookupLabels(loadedResultMap);
+      const innerLoadedMap = entryArray[0][1];
+      this.resolved = new Map([...innerLoadedMap, ...this.resolved]);
+      return new Map([...innerLoadedMap, ...cachedResultMap])
+    }
+    if(entryArray.length === 0){
+      return cachedResultMap;
+    }
+    throw new Error("More that one lookup result maps")
   }
 
   isEmptyAndLoading(key: any) {
     if (_.isString(key)) key = String(key).toLowerCase();
-    
+
     if (!this.resolved.has(key)) {
       return this.loader.isWorking(key);
     } else return false;
