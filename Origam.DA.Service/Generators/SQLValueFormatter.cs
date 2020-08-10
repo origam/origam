@@ -14,11 +14,23 @@ namespace Origam.DA.Service
             this.falseValue = falseValue;
         }
             
-        internal string RenderString(string text)
+        internal string RenderString(string text, string sqlOperator=null)
         {
-            return "'" + text.Replace("'", "''") + "'";
+            string escapedValue;
+            switch (sqlOperator)
+            {
+                case "like":
+                    escapedValue = text.Replace("%", "[%]");
+                    break;
+                default:
+                    escapedValue = text;
+                    break;
+            }
+
+            return "'" + escapedValue.Replace("'", "''") + "'";
         }
-        public string Format(OrigamDataType dataType, object value)
+
+        public string Format(OrigamDataType dataType, object value, string sqlOperator=null)
         {
             switch (dataType)
             {
@@ -38,12 +50,12 @@ namespace Origam.DA.Service
                     }
 
                 case OrigamDataType.UniqueIdentifier:
-                    return "'" + value is string strGuid ? strGuid.Replace("'","''") : value  + "'";
+                    return "'" + value + "'";
 
                 case OrigamDataType.Xml:
                 case OrigamDataType.Memo:
                 case OrigamDataType.String:
-                    return value.ToString() == "null" ? "NULL" : RenderString(value.ToString());
+                    return value.ToString() == "null" ? "NULL" : RenderString(value.ToString(), sqlOperator);
 
                 case OrigamDataType.Date:
                     if (value == null || (value is string strValue1 && string.IsNullOrWhiteSpace(strValue1))) return "null";

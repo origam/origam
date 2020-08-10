@@ -286,7 +286,7 @@ namespace Origam.DA.Service.Generators
 
         private string ValueToOperand(string value)
         {
-            return sqlValueFormatter.Format(DataType, value.Replace("\"", ""));
+            return sqlValueFormatter.Format(DataType, value.Replace("\"", ""), Operator);
         }
 
         private bool IsString(string value)
