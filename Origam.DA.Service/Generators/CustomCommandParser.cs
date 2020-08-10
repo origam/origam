@@ -28,18 +28,23 @@ using MoreLinq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Origam.Schema;
 using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
 {
     public class CustomCommandParser
     {
+        private readonly string nameLeftBracket;
+        private readonly string nameRightBracket;
+        private readonly SQLValueFormatter sqlValueFormatter;
         private Node root = null;
         private Node currentNode = null;
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
         private string whereFilterInput;
         private List<Ordering> orderingsInput;
         private Dictionary<string, string> lookupExpressions = new Dictionary<string, string>();
+        private readonly Dictionary<string, OrigamDataType> columnNameToType = new Dictionary<string, OrigamDataType>();
         public string WhereClause {
             get
             {
@@ -58,8 +63,11 @@ namespace Origam.DA.Service.Generators
             }
         }
 
-        public CustomCommandParser(string nameLeftBracket, string nameRightBracket)
+        public CustomCommandParser(string nameLeftBracket, string nameRightBracket, SQLValueFormatter sqlValueFormatter)
         {
+            this.nameLeftBracket = nameLeftBracket;
+            this.nameRightBracket = nameRightBracket;
+            this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
                 = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
         }
@@ -117,7 +125,8 @@ namespace Origam.DA.Service.Generators
 
         private void AddNode()
         {
-            Node newNode = new Node(lookupExpressions);
+            Node newNode = new Node(
+                nameLeftBracket, nameRightBracket, lookupExpressions, sqlValueFormatter, columnNameToType);
             newNode.Parent = currentNode;
             currentNode?.Children.Add(newNode);
             currentNode = newNode;
@@ -156,6 +165,10 @@ namespace Origam.DA.Service.Generators
             }
 
             return inpValue;
+        }
+        public void AddDataType(string columnName, OrigamDataType columnDataType)
+        {
+            columnNameToType.Add(columnName, columnDataType);
         }
     }
 
@@ -200,7 +213,11 @@ namespace Origam.DA.Service.Generators
 
     class Node
     {
+        private readonly string nameLeftBracket;
+        private readonly string nameRightBracket;
         private readonly Dictionary<string, string> lookupExpressions;
+        private readonly Dictionary<string, OrigamDataType> columnNameToType;
+        private readonly SQLValueFormatter sqlValueFormatter;
         private string[] splitValue;
         public Node Parent { get; set; }
         public List<Node> Children { get; } = new List<Node>();
@@ -233,33 +250,43 @@ namespace Origam.DA.Service.Generators
             }
         }
 
-        private string ColumnName
-        {
-            get
-            {
-                string columnName = SplitValue[0].Replace("\"", "");
-                return lookupExpressions.ContainsKey(columnName)
-                    ? lookupExpressions[columnName]
-                    : "[" + columnName + "]";
-            }
-        }
+        private string ColumnName => SplitValue[0].Replace("\"", "");
+
+        private string RenderedColumnName =>
+            lookupExpressions.ContainsKey(ColumnName)
+                ? lookupExpressions[ColumnName]
+                : nameLeftBracket + ColumnName + nameRightBracket;
+
 
         private string Operator => SplitValue[1].Replace("\"","");
         private string ColumnValue => ValueToOperand(SplitValue[2]);
 
-        
+        private OrigamDataType DataType
+        {
+            get
+            {
+                if (columnNameToType.ContainsKey(ColumnName))
+                {
+                    return columnNameToType[ColumnName];
+                }
+                throw new Exception($"Data type of column \"{ColumnName}\" is unknown");
+            }
+        }
         private readonly FilterRenderer renderer = new FilterRenderer();
 
-        public Node(Dictionary<string,string> lookupExpressions)
+        public Node(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
+            SQLValueFormatter sqlValueFormatter, Dictionary<string, OrigamDataType> columnNameToType)
         {
+            this.nameLeftBracket = nameLeftBracket;
+            this.nameRightBracket = nameRightBracket;
             this.lookupExpressions = lookupExpressions;
+            this.sqlValueFormatter = sqlValueFormatter;
+            this.columnNameToType = columnNameToType;
         }
 
         private string ValueToOperand(string value)
         {
-            return value
-                .Replace("'", "''")
-                .Replace("\"", "'"); 
+            return sqlValueFormatter.Format(DataType, value.Replace("\"", ""));
         }
 
         private bool IsString(string value)
@@ -311,7 +338,7 @@ namespace Origam.DA.Service.Generators
 
         private string GetSqlOfLeafNode()
         {
-            var (operatorName, modifiedColumnValue) = GetRendererInput(Operator, ColumnValue);
+            var (operatorName, renderedColumnValue) = GetRendererInput(Operator, ColumnValue);    
             if (Children.Count == 0)
             {
                 if (SplitValue.Length != 3)
@@ -320,8 +347,8 @@ namespace Origam.DA.Service.Generators
                 }
 
                 return renderer.BinaryOperator(
-                    leftValue: ColumnName, 
-                    rightValue: modifiedColumnValue, 
+                    leftValue: RenderedColumnName, 
+                    rightValue: renderedColumnValue, 
                     operatorName: operatorName);
             }
 
@@ -333,7 +360,7 @@ namespace Origam.DA.Service.Generators
                     .Select(ValueToOperand)
                     .ToArray();
                 return renderer.BinaryOperator(
-                    leftValue: ColumnName, 
+                    leftValue: RenderedColumnName, 
                     rightValues: rightHandValues, 
                     operatorName: operatorName);
             }

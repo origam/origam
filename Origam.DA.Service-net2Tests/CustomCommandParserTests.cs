@@ -25,7 +25,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Origam.DA.Service;
 using Origam.DA.Service.Generators;
+using Origam.Schema;
 
 namespace Origam.DA.Service_net2Tests
 {
@@ -79,17 +81,23 @@ namespace Origam.DA.Service_net2Tests
             "[Name] NOT IN ('Tom', 'Jane', 'David')")]        
         [TestCase(
             "[\"Timestamp\", \"between\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
-            "[Timestamp] BETWEEN '2020-08-04T00:00:00.000' AND '2020-05-01T00:00:00.000'")]       
+            "[Timestamp] BETWEEN  '2020-08-04 00:00:00'  AND  '2020-05-01 00:00:00' ")]       
         [TestCase(
             "[\"Timestamp\", \"nbetween\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
-            "[Timestamp] NOT BETWEEN '2020-08-04T00:00:00.000' AND '2020-05-01T00:00:00.000'")]
+            "[Timestamp] NOT BETWEEN  '2020-08-04 00:00:00'  AND  '2020-05-01 00:00:00' ")]
         [TestCase("", null)]
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
-            var sqlWhere = new CustomCommandParser("","")
-                .Where(filter)
-                .WhereClause;
-            Assert.That(sqlWhere, Is.EqualTo(expectedSqlWhere));
+            var sut = new CustomCommandParser("[", "]", new SQLValueFormatter("1", "0"))
+                .Where(filter);
+            sut.AddDataType("name", OrigamDataType.String);
+            sut.AddDataType("Timestamp", OrigamDataType.Date);
+            sut.AddDataType("age", OrigamDataType.Integer);
+            sut.AddDataType("city_name", OrigamDataType.String);
+            sut.AddDataType("Name", OrigamDataType.String);
+            sut.AddDataType("id", OrigamDataType.String);
+            
+            Assert.That(sut.WhereClause, Is.EqualTo(expectedSqlWhere));
         }
 
         [TestCase("bla")]
@@ -100,7 +108,7 @@ namespace Origam.DA.Service_net2Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                string sql = new CustomCommandParser("", "")
+                string sql = new CustomCommandParser("[", "]", new SQLValueFormatter("1", "0"))
                     .Where(filter)
                     .WhereClause;
             });
@@ -114,8 +122,10 @@ namespace Origam.DA.Service_net2Tests
                 new Ordering("col1", "desc",100),
                 new Ordering("col2", "asc",101)
             };
-            string orderBy = new CustomCommandParser("","").OrderBy(ordering).OrderByClause;
-            Assert.That(orderBy, Is.EqualTo("col1 DESC, col2 ASC"));
+            string orderBy = new CustomCommandParser("[","]", new SQLValueFormatter("1", "0"))
+                .OrderBy(ordering)
+                .OrderByClause;
+            Assert.That(orderBy, Is.EqualTo("[col1] DESC, [col2] ASC"));
         }
         
         [TestCase("col1, ")]
@@ -127,7 +137,8 @@ namespace Origam.DA.Service_net2Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new CustomCommandParser("","").OrderBy(ToListOfOrderings(orderingStr));
+                new CustomCommandParser("[","]", new SQLValueFormatter("1", "0"))
+                    .OrderBy(ToListOfOrderings(orderingStr));
             });
         }
 

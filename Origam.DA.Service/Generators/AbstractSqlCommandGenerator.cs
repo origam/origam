@@ -31,12 +31,14 @@ using Origam.Extensions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.LookupModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Workbench.Services;
 
 namespace Origam.DA.Service
 {
     public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisposable
     {
+        private readonly SQLValueFormatter sqlValueFormatter;
         private readonly IDetachedFieldPacker detachedFieldPacker;
         internal readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         internal readonly ParameterReference PageSizeParameterReference = new ParameterReference();
@@ -78,6 +80,7 @@ namespace Origam.DA.Service
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
             this.detachedFieldPacker = detachedFieldPacker;
+            sqlValueFormatter = new SQLValueFormatter(True, False);
         }
 
         public abstract IDbDataParameter GetParameter();
@@ -340,7 +343,7 @@ namespace Origam.DA.Service
             bool forceDatabaseCalculation)
         {
             CustomCommandParser commandParser =
-                new CustomCommandParser(NameLeftBracket, NameRightBracket)
+                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter)
                     .Where(selectParameters.CustomFilters.Filters)
                     .OrderBy(selectParameters.CustomOrdering);
 
@@ -1749,7 +1752,7 @@ namespace Origam.DA.Service
                         });
                 }
                 sqlExpression.Append(" ");
-                sqlExpression.Append(RenderConcat(columnRenderData, RenderString(", "),
+                sqlExpression.Append(RenderConcat(columnRenderData, sqlValueFormatter.RenderString(", "),
                     replaceParameterTexts, dynamicParameters, selectParameterReferences));
                 return false;
             }
@@ -1781,6 +1784,7 @@ namespace Origam.DA.Service
                         orderByExpression = expression.Split("AS")[0].Trim();
                     }
                 }
+                customCommandParser?.AddDataType(column.Name, column.DataType);
             }
 
             if (aggregatedColumns != null)
@@ -1796,19 +1800,22 @@ namespace Origam.DA.Service
 
             if (!customFilters.IsEmpty && customFilters.HasLookups && customCommandParser != null)
             {
-                string columnName = customFilters.FilterLookups.First().Key;
-                Guid lookupId =  customFilters.FilterLookups.First().Value;
-                var lookup = ServiceManager.Services
-                    .GetService<IPersistenceService>()
-                    .SchemaProvider
-                    .RetrieveInstance(typeof(DataServiceDataLookup),
-                        new Key(lookupId)) as DataServiceDataLookup;
-                var dataStructureColumn = dataStructureColumns
-                    .First(x => x.Name == columnName);
-                var resultExpression = 
-                    RenderLookupColumnExpression(ds, entity, dataStructureColumn,
-                        replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
-                customCommandParser.AddLookupExpression(columnName ,resultExpression);
+                foreach (var columnNameAndLookupId in customFilters.FilterLookups)
+                {
+                    string columnName = columnNameAndLookupId.Key;
+                    Guid lookupId =  columnNameAndLookupId.Value;
+                    var lookup = ServiceManager.Services
+                        .GetService<IPersistenceService>()
+                        .SchemaProvider
+                        .RetrieveInstance(typeof(DataServiceDataLookup),
+                            new Key(lookupId)) as DataServiceDataLookup;
+                    var dataStructureColumn = dataStructureColumns
+                        .First(x => x.Name == columnName);
+                    var resultExpression = 
+                        RenderLookupColumnExpression(ds, entity, dataStructureColumn,
+                            replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
+                    customCommandParser.AddLookupExpression(columnName ,resultExpression);
+                }
             }
             if (customGrouping != null)
             {
@@ -3178,65 +3185,17 @@ namespace Origam.DA.Service
             if (constant.Name == "null") return "NULL";
 
             IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+            
+            object value = userDefinedParameters && parameterService != null
+                ? parameterService.GetParameterValue(constant.Id)
+                : constant.Value;
 
-            object value;
-            if (userDefinedParameters && parameterService != null)
-            {
-                value = parameterService.GetParameterValue(constant.Id);
-            }
-            else
-            {
-                value = constant.Value;
-            }
-
-            switch (constant.DataType)
-            {
-                case OrigamDataType.Integer:
-                case OrigamDataType.Float:
-                case OrigamDataType.Currency:
-                    return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
-
-                case OrigamDataType.Boolean:
-                    if ((bool)constant.Value)
-                    {
-                        return this.True;
-                    }
-                    else
-                    {
-                        return this.False;
-                    }
-
-                case OrigamDataType.UniqueIdentifier:
-                    return "'" + value.ToString() + "'";
-
-                case OrigamDataType.Xml:
-                case OrigamDataType.Memo:
-                case OrigamDataType.String:
-                    return this.RenderString(value.ToString());
-
-                case OrigamDataType.Date:
-                    if (value == null) return "null";
-
-                    return ((DateTime)value).ToString(@"{ \t\s \'yyyy-MM-dd HH:mm:ss\' }");
-
-                default:
-                    throw new NotImplementedException(ResourceUtils.GetString("TypeNotImplementedByDatabase", constant.DataType.ToString()));
-            }
+            return sqlValueFormatter.Format(constant.DataType, value);
         }
 
         private string RenderExpression(DataConstantReference item)
         {
             return RenderConstant(item.DataConstant, UserDefinedParameters);
-        }
-
-//        private string RenderExpression(DataConstantReference item)
-//        {
-//            return RenderConstant(item.DataConstant);
-//        }
-
-        internal string RenderString(string text)
-        {
-            return "'" + text.Replace("'", "''") + "'";
         }
 
         internal string RenderSortDirection(DataStructureColumnSortDirection direction)
@@ -3533,7 +3492,7 @@ namespace Origam.DA.Service
                         result += " ";
                     }
 
-                    result = RenderString(result);
+                    result = sqlValueFormatter.RenderString(result);
                     break;
 
                 case "Substring":
