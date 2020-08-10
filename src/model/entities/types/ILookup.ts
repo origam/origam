@@ -1,5 +1,4 @@
 import { IDropDownColumn } from "./IDropDownColumn";
-import { CancellablePromise } from "mobx/lib/api/flow";
 
 export enum IDropDownType {
   EagerlyLoadedGrid = "EagerlyLoadedGrid",
@@ -26,10 +25,6 @@ export interface ILookupData {
 
 export interface ILookup extends ILookupData {
   $type_ILookup: 1;
-
-  // getValue(key: string): any;
-  isLoading(key: string): boolean;
-  resolveList(ids: Set<string>): CancellablePromise<any>;
 
   parameters: { [key: string]: any };
   parent?: any;
