@@ -70,7 +70,7 @@ namespace Origam.DA
 		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
 
 	    public List<Ordering> CustomOrdering { get; set; }
-	    public string CustomFilters { get; set; }
+	    public CustomFilters CustomFilters { get; set; }
 
 	    public bool Paging
 		{
@@ -123,4 +123,19 @@ namespace Origam.DA
 			    .ToList();
 	    }
 	}
+
+	public class CustomFilters
+	{
+		private string filters = "";
+
+		public string Filters
+		{
+			get => filters;
+			set => filters = string.IsNullOrWhiteSpace(value) ? "" : value;
+		}
+
+		public Dictionary<string, Guid> FilterLookups { get; set; } = new Dictionary<string, Guid>();
+		public bool IsEmpty => string.IsNullOrWhiteSpace(Filters);
+		public bool HasLookups => FilterLookups.Count > 0;
+	}	
 }

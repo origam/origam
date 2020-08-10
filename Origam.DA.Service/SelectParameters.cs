@@ -34,7 +34,7 @@ namespace Origam.DA.Service
         public DataStructureSortSet SortSet { get; set; }
         public Hashtable Parameters { get; set; }
         public bool Paging { get; set; }
-        public string CustomFilters { get; set; } = "";
+        public CustomFilters CustomFilters { get; set; } = new CustomFilters();
         public int? RowLimit { get; set; }
         public int? RowOffset { get; set; }
         public List<Ordering> CustomOrdering { get; set; }

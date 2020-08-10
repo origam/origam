@@ -91,7 +91,7 @@ namespace Origam.DA.Service_net2Tests
                 .WhereClause;
             Assert.That(sqlWhere, Is.EqualTo(expectedSqlWhere));
         }
-        
+
         [TestCase("bla")]
         [TestCase("\"name\",\"gt\",\"John Doe\"]")] // "[" is missing
         [TestCase("[\"name\",\"gt\",\"John Doe\"")] // "]" is missing
@@ -99,8 +99,12 @@ namespace Origam.DA.Service_net2Tests
         public void ShouldThrowArgumentExceptionWhenParsingFilter(string filter)
         {
             Assert.Throws<ArgumentException>(() =>
-                new CustomCommandParser("","").Where(filter));
-        }
+            {
+                string sql = new CustomCommandParser("", "")
+                    .Where(filter)
+                    .WhereClause;
+            });
+    }
 
         [Test]
         public void ShouldParseOrderBy()

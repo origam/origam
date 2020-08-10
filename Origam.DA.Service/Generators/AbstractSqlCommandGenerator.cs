@@ -341,7 +341,7 @@ namespace Origam.DA.Service
         {
             CustomCommandParser commandParser =
                 new CustomCommandParser(NameLeftBracket, NameRightBracket)
-                    .Where(selectParameters.CustomFilters)
+                    .Where(selectParameters.CustomFilters.Filters)
                     .OrderBy(selectParameters.CustomOrdering);
 
             Hashtable selectParameterReferences = new Hashtable();
@@ -1004,7 +1004,8 @@ namespace Origam.DA.Service
                 selectParameterReferences: selectParameterReferences,
                 isInRecursion: isInRecursion, 
                 concatScalarColumns: restrictScalarToTop1,
-                forceDatabaseCalculation: forceDatabaseCalculation);
+                forceDatabaseCalculation: forceDatabaseCalculation,
+                customCommandParser);
             bool orderBySpecified = (!string.IsNullOrWhiteSpace(customCommandParser?.OrderByClause) || orderByBuilder.Length > 0);
             // paging column
             if (paging)
@@ -1715,7 +1716,7 @@ namespace Origam.DA.Service
             StringBuilder orderByBuilder, StringBuilder groupByBuilder, 
             Hashtable replaceParameterTexts, Hashtable selectParameterReferences,
             bool isInRecursion,
-            bool concatScalarColumns, bool forceDatabaseCalculation)
+            bool concatScalarColumns, bool forceDatabaseCalculation, CustomCommandParser customCommandParser=null)
         {
             var ds = selectParameters.DataStructure;
             var entity = selectParameters.Entity;
@@ -1725,6 +1726,7 @@ namespace Origam.DA.Service
             var customGrouping = selectParameters.CustomGrouping;
             var aggregatedColumns = selectParameters.AggregatedColumns;
             var dynamicParameters = selectParameters.Parameters;
+            var customFilters = selectParameters.CustomFilters;
             
             DataStructureColumn groupByColumn = null;
             int i = 0;
@@ -1792,6 +1794,22 @@ namespace Origam.DA.Service
                     noColumnsRenderedYet: i == 0);
             }
 
+            if (!customFilters.IsEmpty && customFilters.HasLookups && customCommandParser != null)
+            {
+                string columnName = customFilters.FilterLookups.First().Key;
+                Guid lookupId =  customFilters.FilterLookups.First().Value;
+                var lookup = ServiceManager.Services
+                    .GetService<IPersistenceService>()
+                    .SchemaProvider
+                    .RetrieveInstance(typeof(DataServiceDataLookup),
+                        new Key(lookupId)) as DataServiceDataLookup;
+                var dataStructureColumn = dataStructureColumns
+                    .First(x => x.Name == columnName);
+                var resultExpression = 
+                    RenderLookupColumnExpression(ds, entity, dataStructureColumn,
+                        replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
+                customCommandParser.AddLookupExpression(columnName ,resultExpression);
+            }
             if (customGrouping != null)
             {
                 sqlExpression.Append($", COUNT(*) as {ColumnData.GroupByCountColumn} ");

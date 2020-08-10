@@ -759,9 +759,10 @@ namespace Origam.ServerCore.Controller
             var query = new DataStructureQuery
             {
                 Entity = entityData.Entity.Name,
-                CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
-                    ? null
-                    : input.Filter,
+                CustomFilters = new CustomFilters
+                    {
+                        Filters = input.Filter
+                    },
                 ColumnsInfo = new ColumnsInfo(
                     columns: new List<ColumnData>(), 
                     renderSqlForDetachedFields: true),
@@ -783,9 +784,11 @@ namespace Origam.ServerCore.Controller
             var query = new DataStructureQuery
             {
                 Entity = entityData.Entity.Name,
-                CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
-                    ? null
-                    : input.Filter,
+                CustomFilters = new CustomFilters
+                    {
+                        Filters = input.Filter,
+                        FilterLookups = input.FilterLookups
+                    },
                 CustomOrdering = customOrdering,
                 RowLimit = input.RowLimit,
                 RowOffset = input.RowOffset,
@@ -840,9 +843,7 @@ namespace Origam.ServerCore.Controller
             var query = new DataStructureQuery
             {
                 Entity = entityData.Entity.Name,
-                CustomFilters = string.IsNullOrWhiteSpace(input.Filter)
-                    ? null
-                    : input.Filter,
+                CustomFilters = new CustomFilters{Filters = input.Filter},
                 CustomOrdering = customOrdering,
                 RowLimit = input.RowLimit,
                 ColumnsInfo = new ColumnsInfo(

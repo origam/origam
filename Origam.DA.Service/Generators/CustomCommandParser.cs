@@ -37,9 +37,26 @@ namespace Origam.DA.Service.Generators
         private Node root = null;
         private Node currentNode = null;
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
-
-        public string WhereClause { get; private set; }
-        public string OrderByClause { get; private set; }
+        private string whereFilterInput;
+        private List<Ordering> orderingsInput;
+        private Dictionary<string, string> lookupExpressions = new Dictionary<string, string>();
+        public string WhereClause {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(whereFilterInput)) return null;
+                var inpValue = GetCheckedInput(whereFilterInput);
+                ParseToNodeTree(inpValue);
+                return root.SqlRepresentation();
+            }
+        }
+        public string OrderByClause {
+            get
+            {
+                return orderingsInput != null 
+                    ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
+                    : null;
+            }
+        }
 
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket)
         {
@@ -53,10 +70,7 @@ namespace Origam.DA.Service.Generators
         /// <returns></returns>
         public CustomCommandParser OrderBy(List<Ordering> orderings)
         {
-            if (orderings != null)
-            {
-                OrderByClause = columnOrderingRenderer.ToSqlOrderBy(orderings);
-            }
+            orderingsInput = orderings;
             return this;
         }
 
@@ -67,11 +81,13 @@ namespace Origam.DA.Service.Generators
         /// </param>
         public CustomCommandParser Where(string strFilter)
         {
-            if (string.IsNullOrWhiteSpace(strFilter)) return this;
-            var inpValue = GetCheckedInput(strFilter);
-            ParseToNodeTree(inpValue);
-            WhereClause = root.SqlRepresentation();
+            whereFilterInput = strFilter;
             return this;
+        }
+
+        public void AddLookupExpression(string columnName, string expression)
+        {
+            lookupExpressions.Add(columnName, expression);
         }
 
         private void ParseToNodeTree(string filter)
@@ -101,7 +117,7 @@ namespace Origam.DA.Service.Generators
 
         private void AddNode()
         {
-            Node newNode = new Node();
+            Node newNode = new Node(lookupExpressions);
             newNode.Parent = currentNode;
             currentNode?.Children.Add(newNode);
             currentNode = newNode;
@@ -184,6 +200,7 @@ namespace Origam.DA.Service.Generators
 
     class Node
     {
+        private readonly Dictionary<string, string> lookupExpressions;
         private string[] splitValue;
         public Node Parent { get; set; }
         public List<Node> Children { get; } = new List<Node>();
@@ -216,12 +233,27 @@ namespace Origam.DA.Service.Generators
             }
         }
 
-        private string ColumnName => "["+SplitValue[0].Replace("\"","")+"]";
+        private string ColumnName
+        {
+            get
+            {
+                string columnName = SplitValue[0].Replace("\"", "");
+                return lookupExpressions.ContainsKey(columnName)
+                    ? lookupExpressions[columnName]
+                    : "[" + columnName + "]";
+            }
+        }
+
         private string Operator => SplitValue[1].Replace("\"","");
         private string ColumnValue => ValueToOperand(SplitValue[2]);
 
         
         private readonly FilterRenderer renderer = new FilterRenderer();
+
+        public Node(Dictionary<string,string> lookupExpressions)
+        {
+            this.lookupExpressions = lookupExpressions;
+        }
 
         private string ValueToOperand(string value)
         {

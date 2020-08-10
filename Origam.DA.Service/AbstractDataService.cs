@@ -145,7 +145,7 @@ namespace Origam.DA.Service
             }
 
             bool hasDynamicFilter = selectParameters.Filter != null && selectParameters.Filter.IsDynamic;
-            bool hasCustomFilters = !string.IsNullOrWhiteSpace(selectParameters.CustomFilters);
+            bool hasCustomFilters = !selectParameters.CustomFilters.IsEmpty;
             bool hasCustomOrdering = selectParameters.CustomOrdering != null && selectParameters.CustomOrdering.Count > 0;
             bool hasAggregateColumns = selectParameters.AggregatedColumns != null && selectParameters.AggregatedColumns.Count > 0;
             if (hasDynamicFilter || hasCustomFilters || hasCustomOrdering || hasAggregateColumns)
