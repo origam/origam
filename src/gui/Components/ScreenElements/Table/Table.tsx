@@ -1,36 +1,33 @@
-import {action, autorun, comparer, computed, observable, runInAction} from "mobx";
-import {MobXProviderContext, Observer, observer} from "mobx-react";
+import { action, autorun, comparer, computed, observable, runInAction } from "mobx";
+import { MobXProviderContext, Observer, observer } from "mobx-react";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import Measure, {BoundingRect} from "react-measure";
-import {Canvas} from "./Canvas";
-import {HeaderRow} from "./HeaderRow";
-import {PositionedField} from "./PositionedField";
+import Measure, { BoundingRect } from "react-measure";
+import { Canvas } from "./Canvas";
+import { HeaderRow } from "./HeaderRow";
+import { PositionedField } from "./PositionedField";
 import Scrollee from "./Scrollee";
 import Scroller from "./Scroller";
 import S from "./Table.module.scss";
-import {IGridDimensions, ITableProps} from "./types";
-import {CtxPanelVisibility} from "gui02/contexts/GUIContexts";
-import {IClickSubsItem, ITableRow} from "./TableRendering/types";
-import {renderTable} from "./TableRendering/renderTable";
-import {handleTableClick} from "./TableRendering/onClick";
-import {getProperties} from "model/selectors/DataView/getProperties";
-import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
-import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
-import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import {IProperty} from "model/entities/types/IProperty";
+import { IGridDimensions, ITableProps } from "./types";
+import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import { IClickSubsItem, ITableRow } from "./TableRendering/types";
+import { renderTable } from "./TableRendering/renderTable";
+import { handleTableClick } from "./TableRendering/onClick";
+import { getProperties } from "model/selectors/DataView/getProperties";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { IProperty } from "model/entities/types/IProperty";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
-
-  const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds)
+  const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds);
   const properties = observable<IProperty>(getProperties(ctx));
   const propertyById = computed(
     () => new Map(properties.map((property) => [property.id, property]))
   );
 
-  const tableColumnIds = computed(
-    () => getTableViewProperties(ctx).map(prop => prop.id)
-  )
+  const tableColumnIds = computed(() => getTableViewProperties(ctx).map((prop) => prop.id));
 
   const scrollTopObs = observable.box<number>(0);
   const scrollLeftObs = observable.box<number>(0);
@@ -40,7 +37,11 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const clickSubscriptions: IClickSubsItem[] = [];
 
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
-  function drawTable(ctx2d: CanvasRenderingContext2D, fixedColumnCount: number, tableRows:  ITableRow[]) {
+  function drawTable(
+    ctx2d: CanvasRenderingContext2D,
+    fixedColumnCount: number,
+    tableRows: ITableRow[]
+  ) {
     renderTable(
       ctx,
       ctx2d,
@@ -99,8 +100,6 @@ export const Table: React.FC<
   const ctxPanelVisibility = React.useContext(CtxPanelVisibility);
   return <RawTable {...props} isVisible={ctxPanelVisibility.isVisible} ref={props.refTable} />;
 };
-
-
 
 @observer
 export class RawTable extends React.Component<ITableProps & { isVisible: boolean }> {
@@ -180,7 +179,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
       autorun(
         () => {
           if (this.ctxCanvas) {
-            this.tableRenderer.drawTable(this.ctxCanvas, this.props.fixedColumnCount, this.props.tableRows);
+            this.tableRenderer.drawTable(
+              this.ctxCanvas,
+              this.props.fixedColumnCount,
+              this.props.tableRows
+            );
           }
         },
         {
@@ -251,7 +254,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   get fixedColumnCount() {
-    return this.fixedHeaderContainers.length
+    return this.fixedHeaderContainers.length;
   }
 
   get hasFixedColumns() {
@@ -260,28 +263,24 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   @computed get fixedColumnsWidth() {
     return this.fixedHeaderContainers
-      .map(container => container.width)
-      .reduce((x,y) => x+y, 0)
+      .map((container) => container.width)
+      .reduce((x, y) => x + y, 0);
   }
 
-  @computed get freeHeaderContainers(){
-    return this.props.headerContainers
-      .filter(container => !container.isFixed)
+  @computed get freeHeaderContainers() {
+    return this.props.headerContainers.filter((container) => !container.isFixed);
   }
 
-  @computed get freeHeaders(){
-    return this.freeHeaderContainers
-      .map(container => container.header)
+  @computed get freeHeaders() {
+    return this.freeHeaderContainers.map((container) => container.header);
   }
 
-  @computed get fixedHeaderContainers(){
-    return this.props.headerContainers
-      .filter(container => container.isFixed)
+  @computed get fixedHeaderContainers() {
+    return this.props.headerContainers.filter((container) => container.isFixed);
   }
 
-  @computed get fixedHeaders(){
-    return this.fixedHeaderContainers
-      .map(container => container.header)
+  @computed get fixedHeaders() {
+    return this.fixedHeaderContainers.map((container) => container.header);
   }
 
   @action.bound handleScrollerClick(event: any) {
@@ -314,8 +313,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
             <Observer>
               {() => (
                 <>
-
-
                   {this.props.headerContainers &&
                     (contentRect.bounds!.width ? (
                       <div className={S.headers}>
@@ -328,10 +325,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                             zIndex={100}
                             offsetLeft={3}
                           >
-                            <HeaderRow
-                              headerElements={this.fixedHeaders}
-                              zIndex={100}
-                            />
+                            <HeaderRow headerElements={this.fixedHeaders} zIndex={100} />
                           </Scrollee>
                         ) : null}
                         <Scrollee
@@ -340,17 +334,13 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           width={contentRect.bounds!.width - 10 - this.fixedColumnsWidth}
                           offsetLeft={3}
                         >
-                          <HeaderRow
-                            headerElements={this.freeHeaders}
-                          />
+                          <HeaderRow headerElements={this.freeHeaders} />
                         </Scrollee>
                       </div>
                     ) : null)}
 
-
-
                   <div ref={measureRef} className={S.cellAreaContainer}>
-                    {contentRect.bounds!.height && this.props.renderCell ? (
+                    {contentRect.bounds!.height ? (
                       <>
                         <div className={S.canvasRow}>
                           <Canvas
@@ -383,7 +373,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           contentHeight={this.props.gridDimensions.contentHeight}
                           onScroll={this.handleScroll}
                           onClick={this.handleScrollerClick}
-                          
                           onKeyDown={this.props.onKeyDown}
                         />
                       </>
