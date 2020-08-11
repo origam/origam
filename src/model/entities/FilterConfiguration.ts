@@ -436,7 +436,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   }
 
   @action.bound applyNewFilteringImm = flow(function* (this: FilterConfiguration) {
-    console.log("New filtering:", toJS(this.filters));
+    //console.log("New filtering:", toJS(this.filters));
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (dataView.isReorderedOnClient) {

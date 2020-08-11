@@ -17,7 +17,7 @@ export const FilterSettings: React.FC = observer((props) => {
   const dataTable = getDataTable(property);
   const setting = getFilterSettingByProperty(property, property.id);
   const handleApplyFilterSetting = onApplyFilterSetting(property);
-  console.log(setting);
+  //console.log(setting);
 
   switch (property.column) {
     case "Text":

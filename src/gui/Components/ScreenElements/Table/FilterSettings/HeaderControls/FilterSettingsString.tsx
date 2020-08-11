@@ -94,11 +94,11 @@ export class FilterSettingsString extends React.Component<{
   @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS[0].type, OPERATORS[0].human);
 
   componentDidMount() {
-    // this.takeSettingFromProps();
+    this.takeSettingFromProps();
   }
 
   componentDidUpdate() {
-    // this.takeSettingFromProps();
+    this.takeSettingFromProps();
   }
 
   @action.bound takeSettingFromProps() {
@@ -115,27 +115,25 @@ export class FilterSettingsString extends React.Component<{
   @action.bound
   handleChange(newSetting: any) {
     this.setting = newSetting;
-    this.handleSettingChangeDebounced();
+    this.handleSettingChange();
   }
 
-  handleSettingChangeDebounced = _.debounce(() => this.handleSettingChange(), 1000);
 
   @action.bound
   handleSettingChange() {
-    this.setting.isComplete = this.setting.val1 !== undefined;
-    this.setting.val2 = undefined;
+    this.setting = produce(this.setting, (draft) => {
+      draft.isComplete = this.setting.val1 !== undefined;
+      draft.val2 = undefined;
+    });
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
+
 
   render() {
     return (
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors
-          setting={this.setting}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-        />
+        <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
 
         {/*<input className={CS.input} />*/}
       </>

@@ -42,6 +42,7 @@ import { FlowBusyMonitor } from "../../../utils/flow";
 import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
+import _ from "lodash";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -303,18 +304,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const orderingConfiguration = getOrderingConfiguration(rootDataView);
         const filterConfiguration = getFilterConfiguration(rootDataView);
         this.disposers.push(
-          reaction(
-            () => {
-              orderingConfiguration.ordering.map((x) => x.direction);
-              filterConfiguration.filters.map((x) => [
-                x.propertyId,
-                x.setting.type,
-                x.setting.val1,
-              ]);
-              return [];
-            },
-            flow(() => this.readFirstChunkOfRows(rootDataView))
-          )
+          reaction(() => {
+            orderingConfiguration.ordering.map((x) => x.direction);
+            filterConfiguration.filters.map((x) => [x.propertyId, x.setting.type, x.setting.val1]);
+            return [] as any;
+          }, () => this.readFirstChunkOfRowsWithGateDebounced(rootDataView))
         );
       }
     }
@@ -546,6 +540,27 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       rootDataView.lifecycle.startSelectedRowReaction(true);
     }
   }
+
+  _readFirstChunkOfRowsRunning = false;
+  _readFirstChunkOfRowsScheduled = false;
+  *readFirstChunkOfRowsWithGate(rootDataView: IDataView) {
+    try {
+      if (this._readFirstChunkOfRowsRunning) {
+        this._readFirstChunkOfRowsScheduled = true;
+        return;
+      }
+      this._readFirstChunkOfRowsRunning = true;
+      do {
+        this._readFirstChunkOfRowsScheduled = false;
+        yield* this.readFirstChunkOfRows(rootDataView);
+      } while (this._readFirstChunkOfRowsScheduled);
+    } finally {
+      this._readFirstChunkOfRowsRunning = false;
+      this._readFirstChunkOfRowsScheduled = false;
+    }
+  }
+
+  readFirstChunkOfRowsWithGateDebounced = _.debounce(flow(this.readFirstChunkOfRowsWithGate.bind(this)), 500);
 
   *createRow(entity: string, gridId: string) {
     try {
