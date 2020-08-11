@@ -178,6 +178,7 @@ export class FormScreenBuilder extends React.Component<{
               {findUIChildren(xso).map((child) => recursive(child))}
             </HBox>
           );
+        case "TreePanel":
         case "Grid":
           if (xso.attributes.ModelInstanceId !== "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE") {
             return (

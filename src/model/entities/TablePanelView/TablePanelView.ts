@@ -59,9 +59,9 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @computed get allTableProperties() {
-    return this.tablePropertyIds.map(id =>
-      getDataTable(this).getPropertyById(id)
-    ) as IProperty[];
+    return this.tablePropertyIds
+      .map(id => getDataTable(this).getPropertyById(id))
+      .filter(prop => prop) as IProperty[];
   }
 
   @computed get tableProperties() {

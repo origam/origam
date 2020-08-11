@@ -1,15 +1,17 @@
-import {CloseButton, ModalWindow} from "gui/Components/Dialog/Dialog";
-import {observer, Observer} from "mobx-react";
-import {onScreenTabCloseClick} from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
-import {onSelectionDialogActionButtonClick} from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
-import {getIsScreenOrAnyDataViewWorking} from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import {getDialogStack} from "model/selectors/getDialogStack";
-import React, {useEffect} from "react";
-import {IOpenedScreen} from "../../../model/entities/types/IOpenedScreen";
-import {getWorkbenchLifecycle} from "../../../model/selectors/getWorkbenchLifecycle";
-import S from "./ScreenArea.module.css";
-import {DialogScreenBuilder} from "./ScreenBuilder";
-import {CtxPanelVisibility} from "gui02/contexts/GUIContexts";
+import { CloseButton, ModalWindow } from "gui/Components/Dialog/Dialog";
+import { observer, Observer } from "mobx-react";
+import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
+import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
+import { getDialogStack } from "model/selectors/getDialogStack";
+import React, { useEffect } from "react";
+import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
+import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
+import S from "./ScreenArea.module.scss";
+import { DialogScreenBuilder } from "./ScreenBuilder";
+import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import { onWorkflowAbortClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowAbortClick";
+import { onWorkflowNextClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowNextClick";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -40,6 +42,33 @@ export const DialogScreen: React.FC<{
 }> = observer((props) => {
   const key = `ScreenDialog@${props.openedScreen.menuItemId}@${props.openedScreen.order}`;
   const workbenchLifecycle = getWorkbenchLifecycle(props.openedScreen);
+
+  function renderActionButtons() {
+    const content = props.openedScreen.content;
+    const isNextButton = content.formScreen && content.formScreen.showWorkflowNextButton;
+    const isCancelButton = content.formScreen && content.formScreen.showWorkflowCancelButton;
+    return (
+      <div className={S.actionButtonHeader}>
+        {isCancelButton && (
+          <button
+            className={S.workflowActionBtn}
+            onClick={onWorkflowAbortClick(content.formScreen!)}
+          >
+            Cancel
+          </button>
+        )}
+        {isNextButton && (
+          <button
+            className={S.workflowActionBtn}
+            onClick={onWorkflowNextClick(content.formScreen!)}
+          >
+            Next
+          </button>
+        )}
+      </div>
+    );
+  }
+
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
       key,
@@ -98,6 +127,7 @@ export const DialogScreen: React.FC<{
                   {
                     !props.openedScreen.content.isLoading ? (
                       <CtxPanelVisibility.Provider value={{ isVisible: true }}>
+                        {renderActionButtons()}
                         <DialogScreenBuilder openedScreen={props.openedScreen} />
                       </CtxPanelVisibility.Provider>
                     ) : null /*<DialogLoadingContent />*/

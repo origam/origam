@@ -1,16 +1,17 @@
-import {IDataTable, IDataTableData} from "./types/IDataTable";
-import {action, computed, observable} from "mobx";
-import {IProperty} from "./types/IProperty";
-import {getDataView} from "../selectors/DataView/getDataView";
-import {IAdditionalRowData} from "./types/IAdditionalRecordData";
-import {AdditionalRowData} from "./AdditionalRowData";
-import {getDataSource} from "../selectors/DataSources/getDataSource";
-import {IDataSourceField} from "./types/IDataSourceField";
-import {getGrouper} from "model/selectors/DataView/getGrouper";
-import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {getRowContainer} from "../selectors/getRowContainer";
-import {IRowsContainer} from "./types/IRowsContainer";
-import {formatNumber} from "./NumberFormating";
+import { IDataTable, IDataTableData } from "./types/IDataTable";
+import { action, autorun, computed, observable } from "mobx";
+import { IProperty } from "./types/IProperty";
+import { getDataView } from "../selectors/DataView/getDataView";
+import { IAdditionalRowData } from "./types/IAdditionalRecordData";
+import { AdditionalRowData } from "./AdditionalRowData";
+import { getDataSource } from "../selectors/DataSources/getDataSource";
+import { IDataSourceField } from "./types/IDataSourceField";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { getRowContainer } from "../selectors/getRowContainer";
+import { IRowsContainer } from "./types/IRowsContainer";
+import { formatNumber } from "./NumberFormating";
+
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -25,10 +26,11 @@ export class DataTable implements IDataTable {
       data.dataViewAttributes,
       data.orderingConfiguration,
       data.filterConfiguration,
-      (row: any[]) => this.getRowId(row))
+      (row: any[]) => this.getRowId(row)
+    );
   }
 
-  get allRows(){
+  get allRows() {
     return this.rowsContainer.rows;
   }
 
@@ -37,7 +39,7 @@ export class DataTable implements IDataTable {
   }
 
   @computed get rows(): any[][] {
-    return this.rowsContainer.rows.filter(row => !this.isRowDirtyDeleted(row));
+    return this.rowsContainer.rows.filter((row) => !this.isRowDirtyDeleted(row));
   }
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
 
@@ -55,11 +57,9 @@ export class DataTable implements IDataTable {
   }
 
   @computed get maxRowCountSeen() {
-    if(this.groups.length > 0){
-      return this.groups
-        .map(group => group.rowCount)
-        .reduce((x, y) => x + y);
-    }else{
+    if (this.groups.length > 0) {
+      return this.groups.map((group) => group.rowCount).reduce((x, y) => x + y);
+    } else {
       return this.rowsContainer.maxRowCountSeen;
     }
   }
@@ -95,7 +95,7 @@ export class DataTable implements IDataTable {
   }
 
   getAllValuesOfProp(property: IProperty): any[] {
-    return this.rowsContainer.rows.map(row => this.getCellValue(row, property));
+    return this.rowsContainer.rows.map((row) => this.getCellValue(row, property));
   }
 
   getCellText(row: any[], property: IProperty) {
@@ -104,20 +104,26 @@ export class DataTable implements IDataTable {
   }
 
   resolveCellText(property: IProperty, value: any): any {
-    if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) return "";
-    if (property.isLookup) {
+    if (value === null || value === undefined || (Array.isArray(value) && value.length === 0))
+      return "";
+    if (property.isLookup && property.lookupEngine) {
+      const { lookupEngine } = property;
       if (property.column === "TagInput") {
-        const textArray = value.map((valueItem: any) => property.lookup!.getValue(`${valueItem}`));
-        return (textArray || []);
+        const textArray = value.map((valueItem: any) =>
+          lookupEngine.lookupResolver.resolveValue(`${valueItem}`)
+        );
+        return textArray || [];
       } else {
-        if(Array.isArray(value)){
-          return value.map(item => property.lookup!.getValue(`${item}`)).join(", ");
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => lookupEngine.lookupResolver.resolveValue(`${item}`))
+            .join(", ");
         }
-        return property.lookup!.getValue(`${value}`);
+        return lookupEngine.lookupResolver.resolveValue(`${value}`);
       }
     }
-    if(property.column === "Number"){
-      return formatNumber(property.customNumericFormat, property.entity,  value);
+    if (property.column === "Number") {
+      return formatNumber(property.customNumericFormat, property.entity, value);
     }
     return value;
   }
@@ -128,7 +134,7 @@ export class DataTable implements IDataTable {
   }
 
   getRowById(id: string): any[] | undefined {
-    return this.rowsContainer.rows.find(row => this.getRowId(row) === id);
+    return this.rowsContainer.rows.find((row) => this.getRowId(row) === id);
   }
 
   getExistingRowIdxById(id: string) {
@@ -136,19 +142,35 @@ export class DataTable implements IDataTable {
     return idx > -1 ? idx : undefined;
   }
 
+  isCellTextResolving(property: IProperty, value: any): boolean {
+    if (value === null || value === undefined) return false;
+    if (property.isLookup && property.lookupEngine) {
+      const { lookupEngine } = property;
+      if (property.column === "TagInput") {
+        return value.some((valueItem: any) =>
+          lookupEngine.lookupResolver.isEmptyAndLoading(`${valueItem}`)
+        );
+      } else {
+        return lookupEngine.lookupResolver.isEmptyAndLoading(`${value}`);
+      }
+    } else {
+      return false;
+    }
+  }
+
   getPropertyById(id: string) {
     return this.properties.find((prop) => prop.id === id);
   }
 
   getFirstRow(): any[] | undefined {
-    if(this.rows.length === 0){
+    if (this.rows.length === 0) {
       return undefined;
     }
     return this.rows[0];
   }
 
   getLastRow(): any[] | undefined {
-    if(this.rows.length === 0){
+    if (this.rows.length === 0) {
       return undefined;
     }
     return this.rows[this.rows.length - 1];
@@ -221,7 +243,7 @@ export class DataTable implements IDataTable {
   }
 
   getDirtyDeletedRows(): any[][] {
-    return this.rowsContainer.rows.filter(row => this.isRowDirtyDeleted(row));
+    return this.rowsContainer.rows.filter((row) => this.isRowDirtyDeleted(row));
   }
 
   getDirtyNewRows(): any[][] {
@@ -232,7 +254,7 @@ export class DataTable implements IDataTable {
   setRecords(rows: any[][]) {
     this.clear();
     this.rowsContainer.set(rows);
-    if(rows.length === 0){
+    if (rows.length === 0) {
       this.isEmpty = true;
     }
   }
@@ -318,7 +340,7 @@ export class DataTable implements IDataTable {
 
   @action.bound
   substituteRecord(row: any[]): void {
-   this.rowsContainer.substitute(row);
+    this.rowsContainer.substitute(row);
   }
 
   @action.bound

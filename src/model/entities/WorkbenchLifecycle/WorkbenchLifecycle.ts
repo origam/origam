@@ -128,51 +128,51 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *closeForm(openedScreen: IOpenedScreen): Generator {
     // TODO: Refactor to get rid of code duplication
     const openedScreens = getOpenedScreens(openedScreen);
-    const closestScreen = openedScreens.findClosestItem(
-      openedScreen.menuItemId,
-      openedScreen.order
-    );
+    const screenToActivate = openedScreen.parentContext
+         ? getOpenedScreen(openedScreen.parentContext)
+         : openedScreens.findClosestItem(openedScreen.menuItemId, openedScreen.order);
+
     openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     if (openedScreen.dialogInfo) {
       if (openedScreen.isActive) {
-        if (closestScreen) {
-          openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+        if (screenToActivate) {
+          openedScreens.activateItem(screenToActivate.menuItemId, screenToActivate.order);
 
-          if (closestScreen.isSleeping) {
-            closestScreen.isSleeping = false;
-            const initUIResult = yield* this.initUIForScreen(closestScreen, false);
-            yield* closestScreen.content!.start(initUIResult, closestScreen.isSleepingDirty);
+          if (screenToActivate.isSleeping) {
+            screenToActivate.isSleeping = false;
+            const initUIResult = yield* this.initUIForScreen(screenToActivate, false);
+            yield* screenToActivate.content!.start(initUIResult, screenToActivate.isSleepingDirty);
           } else if (
-            closestScreen.content &&
-            closestScreen.content.formScreen &&
-            (closestScreen.content.formScreen.refreshOnFocus ||
+            screenToActivate.content &&
+            screenToActivate.content.formScreen &&
+            (screenToActivate.content.formScreen.refreshOnFocus ||
               openedScreen.content.refreshOnReturnType ===
                 IRefreshOnReturnType.RefreshCompleteForm) &&
-            !closestScreen.content.isLoading
+            !screenToActivate.content.isLoading
           ) {
-            if (!getIsFormScreenDirty(closestScreen.content.formScreen)) {
-              yield* reloadScreen(closestScreen.content.formScreen)();
+            if (!getIsFormScreenDirty(screenToActivate.content.formScreen)) {
+              yield* reloadScreen(screenToActivate.content.formScreen)();
             }
           }
         }
       }
     } else {
       if (openedScreen.isActive) {
-        if (closestScreen) {
-          openedScreens.activateItem(closestScreen.menuItemId, closestScreen.order);
+        if (screenToActivate) {
+          openedScreens.activateItem(screenToActivate.menuItemId, screenToActivate.order);
 
-          if (closestScreen.isSleeping) {
-            closestScreen.isSleeping = false;
-            const initUIResult = yield* this.initUIForScreen(closestScreen, false);
-            yield* closestScreen.content!.start(initUIResult, closestScreen.isSleepingDirty);
+          if (screenToActivate.isSleeping) {
+            screenToActivate.isSleeping = false;
+            const initUIResult = yield* this.initUIForScreen(screenToActivate, false);
+            yield* screenToActivate.content!.start(initUIResult, screenToActivate.isSleepingDirty);
           } else if (
-            closestScreen.content &&
-            closestScreen.content.formScreen &&
-            closestScreen.content.formScreen.refreshOnFocus &&
-            !closestScreen.content.isLoading
+            screenToActivate.content &&
+            screenToActivate.content.formScreen &&
+            screenToActivate.content.formScreen.refreshOnFocus &&
+            !screenToActivate.content.isLoading
           ) {
-            if (!getIsFormScreenDirty(closestScreen.content.formScreen)) {
-              yield* reloadScreen(closestScreen.content.formScreen)();
+            if (!getIsFormScreenDirty(screenToActivate.content.formScreen)) {
+              yield* reloadScreen(screenToActivate.content.formScreen)();
             }
           }
         }

@@ -8,8 +8,9 @@ import S from "./DataView.module.css";
 import {DataViewLoading} from "./DataViewLoading";
 import {scopeFor} from "dic/Container";
 import {IDataViewBodyUI} from "modules/DataView/DataViewUI";
+import {TreeView} from "./TreeView";
 
-@inject(({ formScreen }, { id }) => {
+@inject(({formScreen}, {id}) => {
   const dataView = getDataViewById(formScreen, id);
   return {
     dataView,
@@ -27,8 +28,8 @@ export class DataView extends React.Component<{
     if (this.props.height !== undefined || this.props.width !== undefined) {
       return {
         flexGrow: 0,
-        height: this.props.height,
-        width: this.props.width,
+        minHeight: this.props.height,
+        minWidth: this.props.width,
       };
     } else {
       return {
@@ -40,23 +41,30 @@ export class DataView extends React.Component<{
     }
   }
 
+  renderUiBodyWithHeader(){
+    const $cont = scopeFor(this.props.dataView);
+    const uiBody = $cont && $cont.resolve(IDataViewBodyUI);
+    return(
+      <>
+        <CDataViewHeader isVisible={!this.props.isHeadless}/>
+        {uiBody && uiBody.render()}
+      </>
+      );
+  }
+
   render() {
     // TODO: Move styling to stylesheet
     const isWorking = getIsDataViewOrFormScreenWorking(this.props.dataView);
-    const $cont = scopeFor(this.props.dataView);
-    const uiBody = $cont && $cont.resolve(IDataViewBodyUI);
+
     return (
       <Provider dataView={this.props.dataView}>
         <div className={S.dataView} style={this.getDataViewStyle()}>
-          <CDataViewHeader isVisible={!this.props.isHeadless} />
 
-          {uiBody && uiBody.render()}
-          {/*
+            {this.props.dataView?.type === "TreePanel"
+              ? <TreeView dataView={this.props.dataView}/>
+              : this.renderUiBodyWithHeader()}
 
-          {this.props.dataView!.activePanelView === IPanelViewType.Form && (
-
-            )}*/}
-          {isWorking && <DataViewLoading />}
+          {isWorking && <DataViewLoading/>}
         </div>
       </Provider>
     );

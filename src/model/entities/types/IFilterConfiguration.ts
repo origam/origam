@@ -1,6 +1,6 @@
 // TODO: Extract types so that model layer does not depend on view layer?
 
-
+import { IFilter } from "./IFilter";
 
 export interface IFilterConfigurationData {}
 
@@ -9,9 +9,9 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
 
   isFilterControlsDisplayed: boolean;
   filters: any[];
-  filteringFunction: () => (row: any[]) => boolean ;
+  filteringFunction: () => (row: any[]) => boolean;
   getSettingByPropertyId(propertyId: string): any;
-  setFilter(term: any): void;
+  setFilter(term: IFilter): void;
   clearFilters(): void;
 
   onFilterDisplayClick(event: any): void;

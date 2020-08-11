@@ -38,7 +38,9 @@ import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingCo
 import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
 import { getUserFilters } from "../../selectors/DataView/getUserFilters";
 import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
-import {FlowBusyMonitor} from "../../../utils/flow";
+import { FlowBusyMonitor } from "../../../utils/flow";
+import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
+import { scopeFor } from "../../../dic/Container";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -56,9 +58,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   @observable allDataViewsSteady = true;
 
-  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
+  monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
-  get isWorking(){
+  get isWorking() {
     return this.monitor.isWorking;
   }
 
@@ -334,6 +336,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
     getDataViewList(this).forEach((dv) => dv.start());
+
+    setTimeout(() => {
+      const fieldToSelect = getFormScreen(this).getFirstFormPropertyId();
+      if (fieldToSelect) {
+        const formScreen = getFormScreen(this);
+        const $formScreen = scopeFor(formScreen);
+        $formScreen?.resolve(IScreenEvents).focusField.trigger({ propertyId: fieldToSelect });
+      }
+    }, 100);
   }
 
   loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined) {
@@ -481,24 +492,22 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string){
+  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
     try {
       this.monitor.inFlow++;
       const api = getApi(this);
-      const changes: any = {}
+      const changes: any = {};
       changes[fieldName] = newValue;
       const formScreen = getFormScreen(this);
       const self = this;
-      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
-        function* () {
-          return yield api.updateObject({
-            SessionFormIdentifier: getSessionId(self),
-            Entity: dataView.entity,
-            Id: dataView.dataTable.getRowId(row),
-            Values: changes
-          });
-        }
-      );
+      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
+        return yield api.updateObject({
+          SessionFormIdentifier: getSessionId(self),
+          Entity: dataView.entity,
+          Id: dataView.dataTable.getRowId(row),
+          Values: changes,
+        });
+      });
 
       yield* processCRUDResult(dataView, updateObjectResult);
 
@@ -577,7 +586,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           OriginalId: rowId,
           RequestingGridId: gridId,
           Entities: [entity],
-          ForcedValues: {}
+          ForcedValues: {},
         });
       } finally {
         formScreen.dataUpdateCRS.leave();
@@ -718,6 +727,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   killForm() {
     this.clearAutorefreshInterval();
     this.disposers.forEach((disposer) => disposer());
+    getDataViewList(this).forEach((dv) => dv.stop());
     const openedScreen = getOpenedScreen(this);
     openedScreen.content.setFormScreen(undefined);
   }

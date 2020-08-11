@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, reaction } from "mobx";
 import { getParentRow } from "model/selectors/DataView/getParentRow";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getDataSourceByEntity } from "../selectors/DataSources/getDataSourceByEntity";
@@ -36,6 +36,9 @@ import { IGridDimensions } from "../../gui/Components/ScreenElements/Table/types
 import { FocusManager } from "./FocusManager";
 import { getRowStates } from "model/selectors/RowState/getRowStates";
 import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
+import { DataViewData } from "../../modules/DataView/DataViewData";
+import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
+import { RowCursor } from "../../modules/DataView/TableCursor";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -97,6 +100,7 @@ export class DataView implements IDataView {
   properties: IProperty[] = [];
   actions: IAction[] = [];
   defaultAction: IAction | undefined;
+  type: string = "";
 
   @observable tableViewProperties: IProperty[] = [];
   dataTable: IDataTable = null as any;
@@ -107,6 +111,10 @@ export class DataView implements IDataView {
   lookupLoader: ILookupLoader = null as any;
   serverSideGrouper: ServerSideGrouper = null as any;
   clientSideGrouper: ClientSideGrouper = null as any;
+
+  dataViewRowCursor: RowCursor = null as any;
+  dataViewApi: DataViewAPI = null as any;
+  dataViewData: DataViewData = null as any;
 
   @observable selectedRowIdsMap: Map<string, boolean> = new Map();
 
@@ -253,7 +261,6 @@ export class DataView implements IDataView {
   }
 
   @computed get bindingParametersFromParent() {
-    // debugger
     const parentRow = getParentRow(this);
     if (parentRow) {
       const parent = getBindingParent(this);
@@ -269,7 +276,6 @@ export class DataView implements IDataView {
           parentDataSourceField
         );
       }
-      console.log(result);
       return result;
     } else {
       return {};
@@ -317,14 +323,15 @@ export class DataView implements IDataView {
     const lastRow = dataTable.getLastRow();
     if (lastRow) {
       this.selectRowById(dataTable.getRowId(lastRow));
-    }else{
+    } else {
       this.selectRowById(undefined);
     }
   }
 
   reselectOrSelectFirst() {
-    const previouslySelectedRowExists = this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
-    if (!this.isRootGrid || !previouslySelectedRowExists) {
+    const previouslySelectedRowExists =
+      this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
+    if (!this.isRootGrid || !previouslySelectedRowExists || this.selectedRow) {
       this.selectFirstRow();
     }
   }
@@ -374,6 +381,26 @@ export class DataView implements IDataView {
     this.lifecycle.start();
     this.serverSideGrouper.start();
     getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
+    getFormScreenLifecycle(this).registerDisposer(
+      reaction(
+        () => ({
+          selectedRow: this.selectedRow,
+          rowsCount: getDataTable(this).allRows.length,
+        }),
+        (reData: { selectedRow: any[] | undefined; rowsCount: number }) => {
+          if (reData.selectedRow === undefined && reData.rowsCount > 0) {
+            this.reselectOrSelectFirst();
+          }
+        },
+        {
+          fireImmediately: true,
+        }
+      )
+    );
+  }
+
+  @action.bound stop() {
+    this.properties.forEach((prop) => prop.stop());
   }
 
   @computed get tableRows() {
@@ -403,4 +430,6 @@ export class DataView implements IDataView {
   switchToPanel(modelInstanceId: string) {
     throw new Error("switchToPanel method is not yet implemented.");
   }
+
+  attributes: any;
 }
