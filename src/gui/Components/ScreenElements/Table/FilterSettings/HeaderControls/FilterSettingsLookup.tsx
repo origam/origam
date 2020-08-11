@@ -44,7 +44,7 @@ const OpCombo: React.FC<{
             props.onChange(
               produce(props.setting, (draft: IFilterSetting) => {
                 draft.type = op.type;
-                draft.isComplete = false;
+                draft.isComplete = op.type === "null" || op.type === "nnull";
                 draft.val1 = undefined;
                 draft.val2 = undefined;
               })
