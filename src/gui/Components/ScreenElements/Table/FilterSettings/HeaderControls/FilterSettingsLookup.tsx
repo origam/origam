@@ -326,6 +326,7 @@ export class TagInputStateful extends React.Component<{
 class OpEditors extends React.Component<{
   setting: any;
   onChange: (newSetting: any) => void;
+  onChangeDebounced: (newSetting: any) => void;
   getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable selectedItems: Array<{ value: any; content: any }> = [];
@@ -342,7 +343,7 @@ class OpEditors extends React.Component<{
   }
 
   @action.bound handleTermChange(event: any) {
-    this.props.onChange(
+    this.props.onChangeDebounced(
       produce(this.props.setting, (draft: IFilterSetting) => {
         draft.val1 = undefined;
         draft.val2 = event.target.value;
@@ -387,13 +388,16 @@ export class FilterSettingsLookup extends React.Component<{
   );
 
   @action.bound handleChange(newSetting: any) {
-    newSetting.lookupId = newSetting.type === "contains" || newSetting.type === "ncontains"
-      ? this.props.lookupId
-      : undefined
+    newSetting.lookupId =
+      newSetting.type === "contains" || newSetting.type === "ncontains"
+        ? this.props.lookupId
+        : undefined;
     this.setting = newSetting;
 
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
+
+  handleChangeDebounced = _.debounce((newSetting) => this.handleChange(newSetting), 500);
 
   render() {
     return (
@@ -402,6 +406,7 @@ export class FilterSettingsLookup extends React.Component<{
         <OpEditors
           setting={this.setting}
           onChange={this.handleChange}
+          onChangeDebounced={this.handleChangeDebounced}
           getOptions={this.props.getOptions}
         />
 
@@ -417,7 +422,7 @@ export class LookupFilterSetting implements IFilterSetting {
   val1?: any;
   val2?: any;
   isComplete: boolean;
-  lookupId: string | undefined
+  lookupId: string | undefined;
 
   get filterValue1() {
     if (!this.val1) {
