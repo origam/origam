@@ -147,8 +147,6 @@ export class FilterSettingsNumber extends React.Component<{
     this.handleSettingChange();
   }
 
-  handleChangeDebounced = _.debounce((newSetting) => this.handleChange(newSetting), 500);
-
   private handleSettingChange() {
     switch (this.setting.type) {
       case "eq":
@@ -180,7 +178,7 @@ export class FilterSettingsNumber extends React.Component<{
         <OpCombo setting={this.setting} onChange={this.handleChange} />
         <OpEditors
           setting={this.setting}
-          onChange={this.handleChangeDebounced}
+          onChange={this.handleChange}
           onBlur={this.handleBlur}
         />
 

@@ -397,7 +397,6 @@ export class FilterSettingsLookup extends React.Component<{
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
 
-  handleChangeDebounced = _.debounce((newSetting) => this.handleChange(newSetting), 500);
 
   render() {
     return (
@@ -406,7 +405,7 @@ export class FilterSettingsLookup extends React.Component<{
         <OpEditors
           setting={this.setting}
           onChange={this.handleChange}
-          onChangeDebounced={this.handleChangeDebounced}
+          onChangeDebounced={this.handleChange}
           getOptions={this.props.getOptions}
         />
 
