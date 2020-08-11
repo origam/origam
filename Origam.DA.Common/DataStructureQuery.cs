@@ -136,6 +136,6 @@ namespace Origam.DA
 
 		public Dictionary<string, Guid> FilterLookups { get; set; } = new Dictionary<string, Guid>();
 		public bool IsEmpty => string.IsNullOrWhiteSpace(Filters);
-		public bool HasLookups => FilterLookups.Count > 0;
+		public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
 	}	
 }
