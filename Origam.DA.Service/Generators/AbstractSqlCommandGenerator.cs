@@ -38,7 +38,7 @@ namespace Origam.DA.Service
 {
     public abstract class AbstractSqlCommandGenerator : IDbDataAdapterFactory, IDisposable
     {
-        private readonly SQLValueFormatter sqlValueFormatter;
+        protected readonly SQLValueFormatter sqlValueFormatter;
         private readonly IDetachedFieldPacker detachedFieldPacker;
         internal readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         internal readonly ParameterReference PageSizeParameterReference = new ParameterReference();
@@ -75,12 +75,15 @@ namespace Origam.DA.Service
             Lon
         }
         
-        public AbstractSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker)
+        public AbstractSqlCommandGenerator(string trueValue, string falseValue, 
+            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter)
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
+            True = trueValue;
+            False = falseValue;
             this.detachedFieldPacker = detachedFieldPacker;
-            sqlValueFormatter = new SQLValueFormatter(True, False);
+            this.sqlValueFormatter = sqlValueFormatter;
         }
 
         public abstract IDbDataParameter GetParameter();
@@ -135,8 +138,8 @@ namespace Origam.DA.Service
         public abstract string GetIndexName(IDataEntity entity, DataEntityIndex index);
         public abstract string SelectClause(string finalQuery, int top);
 
-        public abstract string True { get; }
-        public abstract string False { get; }
+        public string True { get; }
+        public string False { get; }
 
         public const string RowNumColumnName = "RowNum";
 

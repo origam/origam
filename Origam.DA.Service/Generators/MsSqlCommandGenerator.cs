@@ -36,7 +36,11 @@ namespace Origam.DA.Service
     public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
     {
         public MsSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker):
-            base(detachedFieldPacker)
+            base(
+                trueValue: "1",
+                falseValue: "0",
+                detachedFieldPacker: detachedFieldPacker, 
+                sqlValueFormatter: new SQLValueFormatter("1", "0", (text) => text.Replace("%", "[%]").Replace("_", "[_]")))
         {
 
         }
@@ -366,22 +370,6 @@ namespace Origam.DA.Service
             else
             {
                 return "SELECT TOP " + top.ToString() + finalQuery;
-            }
-        }
-
-        public override string True
-        {
-            get
-            {
-                return "1";
-            }
-        }
-
-        public override string False
-        {
-            get
-            {
-                return "0";
             }
         }
 

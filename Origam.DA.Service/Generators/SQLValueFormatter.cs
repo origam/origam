@@ -7,11 +7,13 @@ namespace Origam.DA.Service
     {
         private readonly string trueValue;
         private readonly string falseValue;
-            
-        public SQLValueFormatter(string trueValue, string falseValue)
+        private readonly Func<string, string> escapeLikeInput;
+
+        public SQLValueFormatter(string trueValue, string falseValue, Func<string, string> escapeLikeInput)
         {
             this.trueValue = trueValue;
             this.falseValue = falseValue;
+            this.escapeLikeInput = escapeLikeInput;
         }
             
         internal string RenderString(string text, string sqlOperator=null)
@@ -20,7 +22,7 @@ namespace Origam.DA.Service
             switch (sqlOperator)
             {
                 case "like":
-                    escapedValue = text.Replace("%", "[%]");
+                    escapedValue = escapeLikeInput(text);
                     break;
                 default:
                     escapedValue = text;
