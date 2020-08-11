@@ -1,9 +1,11 @@
-import {IMainMenuEnvelope} from "./IMainMenu";
-import {IWorkbenchLifecycle} from "./IWorkbenchLifecycle";
-import {IClientFulltextSearch} from "./IClientFulltextSearch";
-import {IOpenedScreens} from "./IOpenedScreens";
-import {IWorkQueues} from "./IWorkQueues";
-import {IRecordInfo} from "./IRecordInfo";
+import { IMainMenuEnvelope } from "./IMainMenu";
+import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
+import { IClientFulltextSearch } from "./IClientFulltextSearch";
+import { IOpenedScreens } from "./IOpenedScreens";
+import { IWorkQueues } from "./IWorkQueues";
+import { IRecordInfo } from "./IRecordInfo";
+import { LookupListCacheMulti } from "../../../modules/Lookup/LookupListCacheMulti";
+import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -13,6 +15,9 @@ export interface IWorkbenchData {
   openedDialogScreens: IOpenedScreens;
   workQueues: IWorkQueues;
   recordInfo: IRecordInfo;
+
+  lookupListCache: LookupListCacheMulti;
+  lookupMultiEngine: IMultiLookupEngine;
 }
 
 export interface IWorkbench extends IWorkbenchData {
@@ -20,7 +25,7 @@ export interface IWorkbench extends IWorkbenchData {
   isFullScreen: boolean;
 
   // loggedUserName: any
-  mainMenuEnvelope: IMainMenuEnvelope;  
+  mainMenuEnvelope: IMainMenuEnvelope;
   run(): Generator;
   setFullscreen(state: boolean): void;
 

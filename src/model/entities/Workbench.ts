@@ -1,11 +1,13 @@
-import {IWorkbench, IWorkbenchData} from "./types/IWorkbench";
-import {IMainMenuEnvelope} from "./types/IMainMenu";
-import {IWorkbenchLifecycle} from "./types/IWorkbenchLifecycle";
-import {action, computed, observable} from "mobx";
-import {IClientFulltextSearch} from "./types/IClientFulltextSearch";
-import {IOpenedScreens} from "./types/IOpenedScreens";
-import {IWorkQueues} from "./types/IWorkQueues";
-import {IRecordInfo} from "./types/IRecordInfo";
+import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
+import { IMainMenuEnvelope } from "./types/IMainMenu";
+import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
+import { action, computed, observable } from "mobx";
+import { IClientFulltextSearch } from "./types/IClientFulltextSearch";
+import { IOpenedScreens } from "./types/IOpenedScreens";
+import { IWorkQueues } from "./types/IWorkQueues";
+import { IRecordInfo } from "./types/IRecordInfo";
+import { LookupListCacheMulti } from "../../modules/Lookup/LookupListCacheMulti";
+import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 
 export class Workbench implements IWorkbench {
   $type_IWorkbench: 1 = 1;
@@ -27,6 +29,8 @@ export class Workbench implements IWorkbench {
   openedDialogScreens: IOpenedScreens = null as any;
   workQueues: IWorkQueues = null as any;
   recordInfo: IRecordInfo = null as any;
+  lookupListCache: LookupListCacheMulti = null as any;
+  lookupMultiEngine: IMultiLookupEngine = null as any;
 
   @observable isFullScreen: boolean = false;
 
@@ -35,7 +39,7 @@ export class Workbench implements IWorkbench {
   }
 
   @computed get openedScreenIdSet() {
-    return new Set(this.openedScreens.items.map(item => item.menuItemId));
+    return new Set(this.openedScreens.items.map((item) => item.menuItemId));
   }
 
   *run(): Generator {

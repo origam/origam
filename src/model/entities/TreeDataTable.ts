@@ -198,6 +198,10 @@ export class TreeDataTable implements IDataTable {
   compareLabels(row1: any[], row2: any[]) {
     return this.getLabel(row1).localeCompare(this.getLabel(row2));
   }
+
+  isCellTextResolving(property: IProperty, value: any): boolean {
+    return false;
+  }
 }
 
 export const isTreeDataTable = (o: any): o is TreeDataTable => o.$type_TreeDataTable;

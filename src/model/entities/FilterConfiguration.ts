@@ -6,9 +6,7 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import produce from "immer";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
-import {IFilter} from "./types/IFilter";
-import {IFilterSetting} from "./types/IFilterSetting";
-
+import { IFilter } from "./types/IFilter";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
@@ -448,9 +446,11 @@ export class FilterConfiguration implements IFilterConfiguration {
           .filter((prop) => prop.column === "ComboBox");
 
         yield Promise.all(
-          comboProps.map((prop) =>
-            prop.lookup!.resolveList(new Set(dataTable.getAllValuesOfProp(prop)))
-          )
+          comboProps.map(async (prop) => {
+            return prop.lookupEngine?.lookupResolver.resolveList(
+              new Set(dataTable.getAllValuesOfProp(prop))
+            );
+          })
         );
       }
     }

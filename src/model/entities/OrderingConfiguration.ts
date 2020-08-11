@@ -1,16 +1,15 @@
-import {action, computed, flow, observable} from "mobx";
+import { action, computed, flow, observable } from "mobx";
 import {
   IOrderByColumnSetting,
   IOrderByDirection,
   IOrdering,
-  IOrderingConfiguration
+  IOrderingConfiguration,
 } from "./types/IOrderingConfiguration";
 import _ from "lodash";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
-import {getProperties} from "../selectors/DataView/getProperties";
-
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { getProperties } from "../selectors/DataView/getProperties";
 
 function cycleOrdering(direction: IOrderByDirection) {
   switch (direction) {
@@ -33,56 +32,49 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     this.defaultOrdering = defaultOrdering;
   }
 
-
-  getDefaultOrdering(){
+  getDefaultOrdering() {
     return this.defaultOrdering;
   }
 
   @computed get groupChildrenOrdering(): IOrdering | undefined {
-    return this.ordering.length === 0 || !this.ordering[0]
-      ? undefined
-      : this.ordering[0];
+    return this.ordering.length === 0 || !this.ordering[0] ? undefined : this.ordering[0];
   }
 
   getOrdering(column: string): IOrderByColumnSetting {
-    const ordIndex = this.ordering.findIndex(item => item.columnId === column);
+    const ordIndex = this.ordering.findIndex((item) => item.columnId === column);
     if (ordIndex === -1) {
       return {
         order: 0,
-        ordering: IOrderByDirection.NONE
+        ordering: IOrderByDirection.NONE,
       };
     } else {
       return {
         order: ordIndex,
-        ordering: this.ordering[ordIndex].direction
+        ordering: this.ordering[ordIndex].direction,
       };
     }
   }
 
-  private newOrdering(columnId: string, direction: IOrderByDirection): IOrdering{
-    const property = getProperties(this)
-      .find(prop => prop.id === columnId);
-    const lookupId = property &&  property.lookup && property.lookup.lookupId;
+  private newOrdering(columnId: string, direction: IOrderByDirection): IOrdering {
+    const property = getProperties(this).find((prop) => prop.id === columnId);
+    const lookupId = property && property.lookup && property.lookup.lookupId;
     return {
       columnId: columnId,
       direction: direction,
-      lookupId: lookupId
+      lookupId: lookupId,
     };
   }
 
   @action.bound
   setOrdering(columnId: string): void {
     const orderingClone = _.cloneDeep(this.ordering);
-    const curOrd = this.ordering.find(item => item.columnId === columnId);
+    const curOrd = this.ordering.find((item) => item.columnId === columnId);
     this.ordering.length = 0;
     if (!curOrd) {
       this.ordering.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
-      this.ordering.push(this.newOrdering(columnId, cycleOrdering(curOrd.direction)
-      ));
-      this.ordering = this.ordering.filter(
-        item => item.direction !== IOrderByDirection.NONE
-      );
+      this.ordering.push(this.newOrdering(columnId, cycleOrdering(curOrd.direction)));
+      this.ordering = this.ordering.filter((item) => item.direction !== IOrderByDirection.NONE);
     }
 
     if (!_.isEqual(orderingClone, this.ordering)) {
@@ -93,7 +85,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   @action.bound
   addOrdering(columnId: string): void {
     const orderingClone = _.cloneDeep(this.ordering);
-    const curOrd = this.ordering.find(item => item.columnId === columnId);
+    const curOrd = this.ordering.find((item) => item.columnId === columnId);
     if (!curOrd) {
       this.ordering.push(this.newOrdering(columnId, IOrderByDirection.ASC));
     } else {
@@ -109,20 +101,20 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   }
 
   maybeApplyOrdering = flow(
-    function*(this: OrderingConfiguration) {
+    function* (this: OrderingConfiguration) {
       const dataView = getDataView(this);
       const dataTable = getDataTable(dataView);
       if (dataView.isReorderedOnClient) {
         const comboProps = this.ordering
-          .map(term => getDataViewPropertyById(this, term.columnId)!)
-          .filter(prop => prop.column === "ComboBox");
+          .map((term) => getDataViewPropertyById(this, term.columnId)!)
+          .filter((prop) => prop.column === "ComboBox");
 
         yield Promise.all(
-          comboProps.map(prop =>
-            prop.lookup!.resolveList(
+          comboProps.map(async (prop) => {
+            return prop.lookupEngine?.lookupResolver.resolveList(
               new Set(dataTable.getAllValuesOfProp(prop))
-            )
-          )
+            );
+          })
         );
       }
     }.bind(this)
@@ -174,17 +166,13 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             } else if (val2 === null) {
               cmpSign = -1;
             } else {
-              cmpSign =
-                dataTable.getCellValue(row1, prop) -
-                dataTable.getCellValue(row2, prop);
+              cmpSign = dataTable.getCellValue(row1, prop) - dataTable.getCellValue(row2, prop);
             }
             break;
           }
         }
 
-        res =
-          res +
-          mul * (term.direction === IOrderByDirection.DESC ? -1 : 1) * cmpSign;
+        res = res + mul * (term.direction === IOrderByDirection.DESC ? -1 : 1) * cmpSign;
         mul = mul / 10;
       }
       return res;

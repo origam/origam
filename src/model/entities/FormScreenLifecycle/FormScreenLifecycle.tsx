@@ -39,6 +39,8 @@ import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfig
 import { getUserFilters } from "../../selectors/DataView/getUserFilters";
 import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
 import { FlowBusyMonitor } from "../../../utils/flow";
+import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
+import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 
 enum IQuestionSaveDataAnswer {
@@ -335,6 +337,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
     getDataViewList(this).forEach((dv) => dv.start());
+
+    setTimeout(() => {
+      const fieldToSelect = getFormScreen(this).getFirstFormPropertyId();
+      if (fieldToSelect) {
+        const formScreen = getFormScreen(this);
+        const $formScreen = scopeFor(formScreen);
+        $formScreen?.resolve(IScreenEvents).focusField.trigger({ propertyId: fieldToSelect });
+      }
+    }, 100);
   }
 
   loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined) {
@@ -718,6 +729,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   killForm() {
     this.clearAutorefreshInterval();
     this.disposers.forEach((disposer) => disposer());
+    getDataViewList(this).forEach((dv) => dv.stop());
     const openedScreen = getOpenedScreen(this);
     openedScreen.content.setFormScreen(undefined);
   }

@@ -30,6 +30,7 @@ export interface IDataTable {
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField): any;
   getCellText(row: any[], property: IProperty): any;
   resolveCellText(property: IProperty, value: any): any
+  isCellTextResolving(property: IProperty, value: any): boolean;
   getRowByExistingIdx(idx: number): any[];
   getRowById(id: string): any[] | undefined
   getExistingRowIdxById(id: string): number | undefined;

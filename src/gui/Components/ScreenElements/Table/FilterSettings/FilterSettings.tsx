@@ -53,13 +53,12 @@ export const FilterSettings: React.FC = observer((props) => {
         <FilterSettingsLookup
           setting={setting as any}
           onTriggerApplySetting={handleApplyFilterSetting}
-          lookupId={property.lookup!.lookupId}
           getOptions={flow(function* (searchTerm: string) {
             const allIds = new Set(dataTable.getAllValuesOfProp(property));
-            yield property.lookup!.resolveList(allIds);
+            const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allIds);
             return Array.from(allIds.values())
               .map((item) => ({
-                content: property.lookup!.getValue(item),
+                content: lookupMap.get(item),
                 value: item,
               }))
               .filter(

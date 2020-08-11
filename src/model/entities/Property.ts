@@ -1,11 +1,13 @@
-import {IDockType, IProperty, IPropertyData} from "./types/IProperty";
-import {ICaptionPosition} from "./types/ICaptionPosition";
-import {IPropertyColumn} from "./types/IPropertyColumn";
-import {action, computed, observable} from "mobx";
+import { IDockType, IProperty, IPropertyData } from "./types/IProperty";
+import { ICaptionPosition } from "./types/ICaptionPosition";
+import { IPropertyColumn } from "./types/IPropertyColumn";
+import { action, computed, observable } from "mobx";
 
-import {ILookup} from "./types/ILookup";
-import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
-import {IDataSourceField} from "./types/IDataSourceField";
+import { ILookup } from "./types/ILookup";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { IDataSourceField } from "./types/IDataSourceField";
+import { LookupResolver } from "modules/Lookup/LookupResolver";
+import { LookupLabelsCleanerReloader } from "modules/Lookup/LookupCleanerLoader";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -43,10 +45,14 @@ export class Property implements IProperty {
   @observable columnWidth: number = 100;
   identifier?: string;
   lookup?: ILookup;
+  lookupId?: string;
+  lookupEngine?: ILookupIndividualEngine = null as any;
   isAggregatedColumn: boolean = false;
   style: any;
 
   linkToMenuId?: string = undefined;
+
+  isFormField: boolean = false;
 
   get isLookup() {
     return !!this.lookup;
@@ -72,5 +78,19 @@ export class Property implements IProperty {
     return getDataSourceFieldByName(this, this.id)!;
   }
 
+  @action.bound
+  stop() {
+    this.lookupEngine?.teardown();
+  }
+
   parent: any;
+  xmlNode = undefined;
 }
+
+
+export interface ILookupIndividualEngine {
+  lookupResolver: LookupResolver;
+  lookupCleanerReloader: LookupLabelsCleanerReloader;
+  startup(): void;
+  teardown(): void;
+};
