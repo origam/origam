@@ -382,9 +382,9 @@ namespace Origam.DA.Service.Generators
                 case "nstarts": return ("NotLike", appendWildCard(value));
                 case "ends": return ("Like", prependWildCard(value));
                 case "nends": return ("NotLike",  prependWildCard(value));
+                case "like":
                 case "contains": return ("Like", prependWildCard(appendWildCard(value)));
                 case "ncontains": return ("NotLike", prependWildCard(appendWildCard(value)));
-                case "like": return ("Like", value);
                 case "null": return ("Equal", null);
                 case "nnull": return ("NotEqual", null);
                 case "between": return ("Between", null);
