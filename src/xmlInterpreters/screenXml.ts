@@ -535,6 +535,10 @@ export function interpretScreenXml(
         const { lookupId } = property;
         if (!lookupEngineById.has(lookupId)) {
           const lookupIndividualEngine = createIndividualLookupEngine(lookupId, lookupMultiEngine);
+          lookupMultiEngine.lookupCleanerReloaderById.set(
+            lookupId,
+            lookupIndividualEngine.lookupCleanerReloader
+          );
           lookupIndividualEngine.startup();
           lookupEngineById.set(lookupId, lookupIndividualEngine);
         }
