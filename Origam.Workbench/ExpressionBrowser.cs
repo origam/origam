@@ -1265,7 +1265,7 @@ namespace Origam.Workbench
 
 					if(renameCopy)
 					{
-						item.Name = ResourceUtils.GetString("CopyOf", item.Name);
+						item.Name = GetItemText(item);
 					}
 				}
 				else
