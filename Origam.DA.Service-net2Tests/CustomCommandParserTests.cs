@@ -88,7 +88,8 @@ namespace Origam.DA.Service_net2Tests
         [TestCase("", null)]
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
-            var sut = new CustomCommandParser("[", "]", new SQLValueFormatter("1", "0"))
+            var sut = new CustomCommandParser("[", "]", 
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
                 .Where(filter);
             sut.AddDataType("name", OrigamDataType.String);
             sut.AddDataType("Timestamp", OrigamDataType.Date);
@@ -108,7 +109,8 @@ namespace Origam.DA.Service_net2Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                string sql = new CustomCommandParser("[", "]", new SQLValueFormatter("1", "0"))
+                string sql = new CustomCommandParser("[", "]", 
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
                     .Where(filter)
                     .WhereClause;
             });
@@ -122,7 +124,8 @@ namespace Origam.DA.Service_net2Tests
                 new Ordering("col1", "desc",100),
                 new Ordering("col2", "asc",101)
             };
-            string orderBy = new CustomCommandParser("[","]", new SQLValueFormatter("1", "0"))
+            string orderBy = new CustomCommandParser("[","]", 
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
                 .OrderBy(ordering)
                 .OrderByClause;
             Assert.That(orderBy, Is.EqualTo("[col1] DESC, [col2] ASC"));
@@ -137,7 +140,8 @@ namespace Origam.DA.Service_net2Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new CustomCommandParser("[","]", new SQLValueFormatter("1", "0"))
+                new CustomCommandParser("[","]", 
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
                     .OrderBy(ToListOfOrderings(orderingStr));
             });
         }
