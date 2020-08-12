@@ -125,6 +125,7 @@ export class TableViewEditor extends React.Component<{
           <XmlBuildDropdownEditor
             key={this.props.property!.xmlNode.$iid}
             xmlNode={this.props.property!.xmlNode}
+            showTagInput={false}
           />
         );
         // return (

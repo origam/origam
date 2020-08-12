@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Tooltip } from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
@@ -13,6 +13,8 @@ import {
 import { inject, observer } from "mobx-react";
 import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { CtxDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
@@ -65,7 +67,7 @@ export class TagInputEditor extends React.Component<{
                 </TagInputItem>
               ))
             : null}
-          <TagInputAdd onClick={(event) => {}} />
+          <TagInputAdd />
         </TagInput>
         {/* <input
           style={{

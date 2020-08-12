@@ -21,10 +21,7 @@ import { ImageEditor } from "gui/Components/ScreenElements/Editors/ImageEditor";
 import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
-import {
-  DropdownEditor,
-  XmlBuildDropdownEditor,
-} from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -169,23 +166,30 @@ export class FormViewEditor extends React.Component<{
         );
       case "ComboBox":
         return (
-          <XmlBuildDropdownEditor key={this.props.xmlNode.$iid} xmlNode={this.props.xmlNode} />
+          <XmlBuildDropdownEditor key={this.props.xmlNode.$iid} showTagInput={false} xmlNode={this.props.xmlNode} onChange={this.props.onChange} />
         );
       case "TagInput":
         return (
-          <TagInputEditor
-            value={this.props.value}
-            isReadOnly={readOnly}
-            isInvalid={isInvalid}
-            invalidMessage={invalidMessage}
-            isFocused={false}
-            backgroundColor={backgroundColor}
-            foregroundColor={foregroundColor}
-            refocuser={undefined}
-            onChange={this.props.onChange}
-            onKeyDown={this.MakeOnKeyDownCallBack()}
-            onClick={undefined}
-            onEditorBlur={this.props.onEditorBlur}
+          <XmlBuildDropdownEditor
+            key={this.props.xmlNode.$iid}
+            showTagInput={true}
+            xmlNode={this.props.xmlNode}
+            editor={
+              <TagInputEditor
+                value={this.props.value}
+                isReadOnly={readOnly}
+                isInvalid={isInvalid}
+                invalidMessage={invalidMessage}
+                isFocused={false}
+                backgroundColor={backgroundColor}
+                foregroundColor={foregroundColor}
+                refocuser={undefined}
+                onChange={this.props.onChange}
+                onKeyDown={this.MakeOnKeyDownCallBack()}
+                onClick={undefined}
+                onEditorBlur={this.props.onEditorBlur}
+              />
+            }
           />
         );
       case "Checklist":

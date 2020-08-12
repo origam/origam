@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useContext} from "react";
 import S from "./TagInput.module.css";
+import {CtxDropdownEditor} from "../../../modules/Editors/DropdownEditor/DropdownEditor";
 
 export const TagInput: React.FC<{ className?: string }> = props => {
   return (
@@ -19,10 +20,11 @@ export const TagInputAdd: React.FC<{
   onClick?: (event: any) => void;
   onMouseDown?: (event: any) => void;
 }> = props => {
+  const beh = useContext(CtxDropdownEditor).behavior;
   return (
     <div
       className={S.tagInputAdd + (props.className ? ` ${props.className}` : "")}
-      onClick={props.onClick}
+      onClick={beh.handleInputBtnClick}
       onMouseDown={props.onMouseDown}
       ref={props.domRef}
     >
