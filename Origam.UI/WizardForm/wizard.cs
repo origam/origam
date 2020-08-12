@@ -372,10 +372,18 @@ namespace Origam.UI.WizardForm
             if (cboDisplayField.SelectedItem != null)
             {
                 var selectName = (cboDisplayField.SelectedItem as IDataEntityColumn).Name;
-                if (selectName != "Name")
-                {
-                    this.txtName.Text = form.Entity.Name + "_" + selectName;
-                }
+                string txt = form.Entity.Name + "_" + selectName;
+                this.txtName.Text = txt;
+            }
+        }
+
+        private void cboIdFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LookupForm form = (LookupForm)iwizard;
+            if (cboIdFilter.SelectedItem != null)
+            {
+                var selectName = (cboIdFilter.SelectedItem as AbstractSchemaItem).Name;
+                this.txtName.Text = this.txtName.Text + "_" + selectName;
             }
         }
 

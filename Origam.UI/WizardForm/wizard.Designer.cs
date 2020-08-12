@@ -325,6 +325,7 @@ namespace Origam.UI.WizardForm
             this.cboIdFilter.Size = new System.Drawing.Size(272, 23);
             this.cboIdFilter.Sorted = true;
             this.cboIdFilter.TabIndex = 3;
+            this.cboIdFilter.SelectedIndexChanged += new System.EventHandler(this.cboIdFilter_SelectedIndexChanged);
             // 
             // lblListFilter
             // 
