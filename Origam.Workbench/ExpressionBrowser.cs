@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -31,7 +30,6 @@ using Origam.Extensions;
 using Origam.Git;
 using Origam.Schema;
 using Origam.Schema.Attributes;
-using Origam.Schema.EntityModel;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -1287,7 +1285,23 @@ namespace Origam.Workbench
 			}
 		}
 
-		private static void MoveItemFile(ISchemaItem item)
+        private string GetItemText(ISchemaItem item)
+        {
+			IPersistenceService persistence =
+				ServiceManager.Services.GetService(typeof(IPersistenceService)) as
+					IPersistenceService;
+			string text = item.Name;
+            AbstractSchemaItem[] results = null;
+			do
+			{
+				text = ResourceUtils.GetString("CopyOf", text);
+				results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text)
+					.Where(searchitem=>searchitem.GetType()==item.GetType()).ToArray();
+			} while (results.LongLength != 0);
+			return text;
+		}
+
+        private static void MoveItemFile(ISchemaItem item)
 		{
 			IPersistenceService persistence =
 				ServiceManager.Services.GetService(typeof(IPersistenceService)) as
