@@ -171,32 +171,6 @@ export class FormViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor key={this.props.xmlNode.$iid} xmlNode={this.props.xmlNode} />
         );
-      // return (
-      //   <DropdownEditor
-      //     value={this.props.value}
-      //     textualValue={this.props.textualValue}
-      //     isReadOnly={readOnly}
-      //     isInvalid={isInvalid}
-      //     invalidMessage={invalidMessage}
-      //     isFocused={false}
-      //     backgroundColor={backgroundColor}
-      //     foregroundColor={foregroundColor}
-      //     onTextChange={undefined}
-      //     onItemSelect={this.props.onChange}
-      //     DataStructureEntityId={""}
-      //     ColumnNames={[]}
-      //     Property={""}
-      //     RowId={""}
-      //     LookupId={""}
-      //     menuItemId={""}
-      //     api={undefined}
-      //     onEditorBlur={this.props.onEditorBlur}
-      //     subscribeToFocusManager={(textEditor) =>
-      //       focusManager.subscribe(textEditor, this.props.property?.id)
-      //     }
-      //     onKeyDown={this.MakeOnKeyDownCallBack()}
-      //   />
-      // );
       case "TagInput":
         return (
           <TagInputEditor
