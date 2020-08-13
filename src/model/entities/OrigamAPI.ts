@@ -103,12 +103,12 @@ export class OrigamAPI implements IApi {
     AdditionalRequestParameters: object | undefined;
   }) {
     let requestData;
-    if(data.AdditionalRequestParameters){
+    if (data.AdditionalRequestParameters) {
       const additionalRequestParameters = data.AdditionalRequestParameters;
-      delete data['AdditionalRequestParameters'];
-      requestData = {...data, ...additionalRequestParameters}
-    }else{
-      requestData =  data;
+      delete data["AdditionalRequestParameters"];
+      requestData = { ...data, ...additionalRequestParameters };
+    } else {
+      requestData = data;
     }
     const result = (
       await axios.post(`${this.urlPrefix}/UIService/InitUI`, requestData, {
@@ -241,7 +241,7 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
-  async deleteSession() { }
+  async deleteSession() {}
 
   async saveSession(sessionFormIdentifier: string) {
     return (
@@ -415,8 +415,8 @@ export class OrigamAPI implements IApi {
     ForcedValues: {};
     RequestingGridId: string;
     OriginalId: string;
-    Entities: string[]
-  }): Promise<any>{
+    Entities: string[];
+  }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/CopyObject`, data, {
         headers: this.httpAuthHeader,
@@ -474,7 +474,8 @@ export class OrigamAPI implements IApi {
     DataStructureEntityId: string;
     Filter: string | undefined;
     Ordering: IOrdering[];
-    RowLimit: number; GroupBy: string;
+    RowLimit: number;
+    GroupBy: string;
     MasterRowId: string | undefined;
     GroupByLookupId: string | undefined;
     SessionFormIdentifier: string | undefined;
@@ -482,7 +483,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any[]> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetGroups`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -496,7 +497,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any[]> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetAggregations`, data, {
-        headers: this.httpAuthHeader
+        headers: this.httpAuthHeader,
       })
     ).data;
   }
@@ -511,6 +512,7 @@ export class OrigamAPI implements IApi {
     RowOffset: number;
     ColumnNames: string[];
     MasterRowId: string | undefined;
+    FilterLookups?: { [key: string]: string };
   }): Promise<any> {
     return (
       await axios.post(`${this.urlPrefix}/UIService/GetRows`, data, {
@@ -558,33 +560,30 @@ export class OrigamAPI implements IApi {
     defaultView: string;
   }): Promise<any> {
     const columnFields = data.columnSettings
-      .filter( settings => settings.groupingIndex !== undefined)
+      .filter((settings) => settings.groupingIndex !== undefined)
       .sort(compareByGroupingIndex)
-      .map(
-      (setting) =>
-        `<column 
-          groupingField="${setting.propertyId}" 
-        />`
-    );
-    const columnsProps =  data.columnSettings
       .map(
         (setting) =>
           `<column 
+          groupingField="${setting.propertyId}" 
+        />`
+      );
+    const columnsProps = data.columnSettings.map(
+      (setting) =>
+        `<column 
             property="${setting.propertyId}" 
             isHidden="${setting.isHidden ? "true" : "false"}" 
             width="${setting.width}" 
             aggregationType="${setting.aggregationTypeNumber}" 
           />`
-      );
+    );
 
     await axios.post(
       `${this.urlPrefix}/UIService/SaveObjectConfig`,
       {
         ObjectinstanceId: data.instanceId,
         Section: "columnWidths",
-        SettingsData: columnsProps
-          .concat(columnFields)
-          .join(""),
+        SettingsData: columnsProps.concat(columnFields).join(""),
       },
       {
         headers: this.httpAuthHeader,
@@ -612,7 +611,7 @@ export class OrigamAPI implements IApi {
   }
 
   async workflowAbort(data: { sessionFormIdentifier: string }): Promise<any> {
-    const result =  (
+    const result = (
       await axios.get(`${this.urlPrefix}/UIService/WorkflowAbort/${data.sessionFormIdentifier}`, {
         headers: this.httpAuthHeader,
       })
@@ -628,7 +627,7 @@ export class OrigamAPI implements IApi {
   }
 
   async workflowRepeat(data: { sessionFormIdentifier: string }): Promise<any> {
-    const result =  (
+    const result = (
       await axios.get(`${this.urlPrefix}/UIService/WorkflowRepeat/${data.sessionFormIdentifier}`, {
         headers: this.httpAuthHeader,
       })

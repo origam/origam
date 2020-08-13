@@ -298,6 +298,7 @@ export class FilterConfiguration implements IFilterConfiguration {
       }
       case "ComboBox": {
         switch (term.setting.type) {
+          case "in":
           case "eq": {
             const txt1 = dataTable.getCellValue(row, prop);
             const val1 = term.setting.val1 || [];
@@ -435,7 +436,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   }
 
   @action.bound applyNewFilteringImm = flow(function* (this: FilterConfiguration) {
-    console.log("New filtering:", toJS(this.filters));
+    //console.log("New filtering:", toJS(this.filters));
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (dataView.isReorderedOnClient) {
