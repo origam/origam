@@ -14,6 +14,7 @@ import { inject, observer } from "mobx-react";
 import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
 
 export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
@@ -51,6 +52,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       }
 
       const beh = useContext(CtxDropdownEditor).behavior;
+      const ref = useContext(CtxDropdownRefCtrl);
       const data = useContext(CtxDropdownEditor).editorData;
       const refInput = useMemo(() => {
         return (elm: any) => {
@@ -71,7 +73,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       });
 
       return (
-        <div className={CS.editorContainer}>
+        <div className={CS.editorContainer} ref={ref}>
           <TagInput className={S.tagInput}>
             {props.value
               ? props.value.map((valueItem, idx) => (

@@ -46,10 +46,6 @@ export class DropdownEditorSetup {
 export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
   "IGetDropdownEditorSetup"
 );
-function EditorContainer(props: { editor?: JSX.Element }) {
-  const ref = useContext(CtxDropdownRefCtrl);
-  return <div ref={ref}>{props.editor}</div>;
-}
 
 export function DropdownEditor(props: { editor?: JSX.Element }) {
   const beh = useContext(CtxDropdownEditor).behavior;
@@ -59,7 +55,7 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
         <DropdownLayout
           isDropped={beh.isDropped}
           renderCtrl={() =>
-            props.editor ? <EditorContainer editor={props.editor} /> : <DropdownEditorControl />
+            props.editor ? props.editor : <DropdownEditorControl />
           }
           renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} />}
         />
