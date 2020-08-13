@@ -168,7 +168,6 @@ export class FormViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor
             key={this.props.xmlNode.$iid}
-            showTagInput={false}
             xmlNode={this.props.xmlNode}
           />
         );
@@ -176,9 +175,8 @@ export class FormViewEditor extends React.Component<{
         return (
           <XmlBuildDropdownEditor
             key={this.props.xmlNode.$iid}
-            showTagInput={true}
             xmlNode={this.props.xmlNode}
-            editor={
+            tagEditor={
               <TagInputEditor
                 value={this.props.value}
                 isReadOnly={readOnly}

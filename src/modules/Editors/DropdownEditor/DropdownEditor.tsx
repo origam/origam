@@ -65,8 +65,7 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
 
 export function XmlBuildDropdownEditor(props: {
   xmlNode: any;
-  showTagInput: boolean;
-  editor?: JSX.Element;
+  tagEditor?: JSX.Element;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -85,7 +84,7 @@ export function XmlBuildDropdownEditor(props: {
       dataViewApi,
       () => dropdownEditorBehavior
     );
-    const dropdownEditorData: IDropdownEditorData = props.showTagInput
+    const dropdownEditorData: IDropdownEditorData = props.tagEditor
       ? new TagInputEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
       : new DropdownEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup);
     const dropdownEditorDataTable = new DropdownDataTable(
@@ -197,7 +196,7 @@ export function XmlBuildDropdownEditor(props: {
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      <DropdownEditor editor={props.editor} />
+      <DropdownEditor editor={props.tagEditor} />
     </CtxDropdownEditor.Provider>
   );
 }
