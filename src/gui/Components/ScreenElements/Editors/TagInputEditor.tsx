@@ -61,8 +61,10 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const previousValueRef = useRef<string[]>();
 
       useEffect(() => {
-        if(previousValueRef.current !== undefined &&
-          previousValueRef.current.length !== props.value.length){
+        if (
+          previousValueRef.current !== undefined &&
+          previousValueRef.current.length !== props.value.length
+        ) {
           beh.elmInputElement.value = "";
         }
         previousValueRef.current = props.value;
@@ -91,28 +93,8 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onKeyDown={beh.handleInputKeyDown}
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
-              // value={beh.inputValue}
             />
           </TagInput>
-          {/* <input
-        style={{
-          color: this.props.foregroundColor,
-          backgroundColor: this.props.backgroundColor
-        }}
-        className={CS.editor}
-        type="text"
-        value={this.props.value || ""}
-        readOnly={true || this.props.isReadOnly}
-        // ref={this.refInput}
-        onChange={(event: any) =>
-          this.props.onChange &&
-          this.props.onChange(event, event.target.value)
-        }
-        onKeyDown={this.props.onKeyDown}
-        onClick={this.props.onClick}
-        onBlur={this.props.onEditorBlur}
-        // onFocus={this.handleFocus}
-      />*/}
           {props.isInvalid && (
             <div className={CS.notification}>
               <Tooltip html={props.invalidMessage} arrow={true}>
