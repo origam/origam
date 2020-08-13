@@ -1,11 +1,11 @@
-import {IProperty} from "./IProperty";
-import {IAdditionalRowData} from "./IAdditionalRecordData";
-import {IDataSourceField} from "./IDataSourceField";
-import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
-import {IFormScreenLifecycle02} from "./IFormScreenLifecycle";
-import {IOrderingConfiguration} from "./IOrderingConfiguration";
-import {IFilterConfiguration} from "./IFilterConfiguration";
-import {IRowsContainer} from "./IRowsContainer";
+import { IProperty } from "./IProperty";
+import { IAdditionalRowData } from "./IAdditionalRecordData";
+import { IDataSourceField } from "./IDataSourceField";
+import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { IFormScreenLifecycle02 } from "./IFormScreenLifecycle";
+import { IOrderingConfiguration } from "./IOrderingConfiguration";
+import { IFilterConfiguration } from "./IFilterConfiguration";
+import { IRowsContainer } from "./IRowsContainer";
 
 export interface IDataTableData {
   formScreenLifecycle: IFormScreenLifecycle02;
@@ -29,10 +29,10 @@ export interface IDataTable {
   getCellValue(row: any[], property: IProperty): any;
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField): any;
   getCellText(row: any[], property: IProperty): any;
-  resolveCellText(property: IProperty, value: any): any
+  resolveCellText(property: IProperty, value: any): any;
   isCellTextResolving(property: IProperty, value: any): boolean;
   getRowByExistingIdx(idx: number): any[];
-  getRowById(id: string): any[] | undefined
+  getRowById(id: string): any[] | undefined;
   getExistingRowIdxById(id: string): number | undefined;
   getPropertyById(id: string): IProperty | undefined;
   getFirstRow(): any[] | undefined;
@@ -49,7 +49,6 @@ export interface IDataTable {
   /*setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
   | undefined): void;*/
 
-  
   setRecords(rows: any[][]): void;
   setFormDirtyValue(row: any[], propertyId: string, value: any): void;
   setDirtyValue(row: any[], columnId: string, value: any): void;
@@ -63,6 +62,7 @@ export interface IDataTable {
   substituteRecord(row: any[]): void;
   insertRecord(index: number, row: any[]): void;
   getLastRow(): any[] | undefined;
+  unlockAddedRowPosition(): void;
   parent?: any;
 }
 

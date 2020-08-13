@@ -6,7 +6,8 @@ import { IRowsContainer } from "./types/IRowsContainer";
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
   private filterConfiguration: IFilterConfiguration;
-  private forcedFirstRow: any[] | undefined
+  @observable
+  private forcedFirstRowId: string | undefined;
   constructor(
     orderingConfiguration: IOrderingConfiguration,
     filterConfiguration: IFilterConfiguration,
@@ -32,10 +33,16 @@ export class ListRowContainer implements IRowsContainer {
     }
   }
 
-  internalRowOrderingFunc(row1: any[], row2: any[]){
-    if (this.forcedFirstRow === row1) return -1;
-    if (this.forcedFirstRow === row2) return 1;
+  internalRowOrderingFunc(row1: any[], row2: any[]) {
+    if(this.forcedFirstRowId !== undefined){
+      if (this.forcedFirstRowId === this.rowIdGetter(row1)) return -1;
+      if (this.forcedFirstRowId === this.rowIdGetter(row2)) return 1;
+    }
     return this.orderingConfiguration.orderingFunction()(row1, row2);
+  }
+
+  unlockAddedRowPosition(): void {
+    this.forcedFirstRowId = undefined;
   }
 
   clear(): void {
@@ -51,7 +58,7 @@ export class ListRowContainer implements IRowsContainer {
 
   insert(index: number, row: any[]): void {
     this.allRows.splice(index, 0, row);
-    this.forcedFirstRow = row;
+    this.forcedFirstRowId = this.rowIdGetter(row);
   }
 
   set(rows: any[][]) {

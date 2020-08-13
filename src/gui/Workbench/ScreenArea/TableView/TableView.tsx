@@ -134,9 +134,14 @@ export class TableView extends React.Component<{
     onColumnWidthChange: (cid, nw) => onColumnWidthChanged(this.props.tablePanelView)(cid, nw),
     onColumnOrderChange: (id1, id2) =>
       onColumnOrderChangeFinished(this.props.tablePanelView)(id1, id2),
-    onColumnOrderAttendantsChange: (idSource: string | undefined, idTarget: string | undefined) =>
-      this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget),
+    onColumnOrderAttendantsChange: (idSource, idTarget) =>
+      this.onColumnOrderAttendantsChange(idSource, idTarget),
   });
+
+  onColumnOrderAttendantsChange(idSource: string | undefined, idTarget: string | undefined) {
+    this.props.tablePanelView!.setColumnOrderChangeAttendants(idSource, idTarget);
+    getDataTable(this.props.dataView).unlockAddedRowPosition();
+  }
 
   render() {
     const self = this;

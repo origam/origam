@@ -202,6 +202,8 @@ export class TreeDataTable implements IDataTable {
   isCellTextResolving(property: IProperty, value: any): boolean {
     return false;
   }
+
+  unlockAddedRowPosition(): void {}
 }
 
 export const isTreeDataTable = (o: any): o is TreeDataTable => o.$type_TreeDataTable;

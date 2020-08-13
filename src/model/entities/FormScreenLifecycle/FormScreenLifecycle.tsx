@@ -131,6 +131,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* this.refreshSession();
       return;
     }
+    getFormScreen(this).dataViews.forEach((dataView) => dataView.onReload());
     switch (yield this.questionSaveData()) {
       case IQuestionSaveDataAnswer.Cancel:
         return;
