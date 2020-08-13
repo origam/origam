@@ -89,6 +89,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               : null}
             <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />
             <input
+              className={S.filterInput}
               ref={refInput}
               placeholder={data.isResolving ? "Loading..." : ""}
               onChange={beh.handleInputChange}

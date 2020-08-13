@@ -1,4 +1,9 @@
 .tagInput {
   flex-grow: 1;
   border: 1px solid #bdbdbd;
+  overflow-y:scroll;
+}
+
+.filterInput{
+  border: 0;
 }

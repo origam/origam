@@ -54,9 +54,7 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
       {() => (
         <DropdownLayout
           isDropped={beh.isDropped}
-          renderCtrl={() =>
-            props.editor ? props.editor : <DropdownEditorControl />
-          }
+          renderCtrl={() => (props.editor ? props.editor : <DropdownEditorControl />)}
           renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} />}
         />
       )}
