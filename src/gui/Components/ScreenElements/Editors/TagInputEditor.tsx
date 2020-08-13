@@ -72,6 +72,13 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         previousValueRef.current = props.value;
       });
 
+      function handleInputKeyDown(event: any) {
+        if (event.key === "Backspace" && event.target.value === "" && props.value.length > 0) {
+          removeItem(event, props.value[props.value.length - 1]);
+        }
+        beh.handleInputKeyDown(event);
+      }
+
       return (
         <div className={CS.editorContainer} ref={ref}>
           <TagInput className={S.tagInput}>
@@ -93,7 +100,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               ref={refInput}
               placeholder={data.isResolving ? "Loading..." : ""}
               onChange={beh.handleInputChange}
-              onKeyDown={beh.handleInputKeyDown}
+              onKeyDown={handleInputKeyDown}
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
             />
