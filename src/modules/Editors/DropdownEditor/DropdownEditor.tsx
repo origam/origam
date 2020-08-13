@@ -85,7 +85,7 @@ export function XmlBuildDropdownEditor(props: {
       dataViewApi,
       () => dropdownEditorBehavior
     );
-    const dropdownEditorData = props.showTagInput
+    const dropdownEditorData: IDropdownEditorData = props.showTagInput
       ? new TagInputEditorData(
           dataViewData,
           dataViewRowCursor,
@@ -93,7 +93,10 @@ export function XmlBuildDropdownEditor(props: {
           props.onChange
         )
       : new DropdownEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup);
-    const dropdownEditorDataTable = new DropdownDataTable(() => dropdownEditorSetup);
+    const dropdownEditorDataTable = new DropdownDataTable(
+      () => dropdownEditorSetup,
+      dropdownEditorData
+    );
     const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
       () => dropdownEditorSetup,
       lookupListCache

@@ -6,6 +6,7 @@ import { RowCursor } from "modules/DataView/TableCursor";
 import { DropdownEditorSetup } from "./DropdownEditor";
 
 export interface IDropdownEditorData {
+  idsInEditor: string[];
   value: any | null;
   text: string;
   isResolving: boolean;
@@ -41,8 +42,9 @@ export class DropdownEditorData implements IDropdownEditorData {
       this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, value);
     }
   }
+
+  idsInEditor: string[] = [];
 }
-// export const IDropdownEditorData = TypeSymbol<DropdownEditorData>("IDropdownEditorData");
 
 @bind
 export class TagInputEditorData implements IDropdownEditorData {
@@ -50,7 +52,7 @@ export class TagInputEditorData implements IDropdownEditorData {
     private dataTable: DataViewData,
     private rowCursor: RowCursor,
     private setup: () => DropdownEditorSetup,
-    private onChange?: (event: any, value: any)=>void
+    private onChange?: (event: any, value: any) => void
   ) {}
 
   @computed get value(): any | null {
@@ -70,10 +72,13 @@ export class TagInputEditorData implements IDropdownEditorData {
   }
 
   @action.bound chooseNewValue(value: any) {
-    const newArray =[...this.value, value];
+    const newArray = [...this.value, value];
     if (this.rowCursor.selectedId) {
       this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
     }
-    // this.onChange && this.onChange(null, newArray);
+  }
+
+  get idsInEditor() {
+    return this.value ? this.value : [];
   }
 }
