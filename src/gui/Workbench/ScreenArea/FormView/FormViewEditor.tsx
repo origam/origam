@@ -166,7 +166,11 @@ export class FormViewEditor extends React.Component<{
         );
       case "ComboBox":
         return (
-          <XmlBuildDropdownEditor key={this.props.xmlNode.$iid} showTagInput={false} xmlNode={this.props.xmlNode} onChange={this.props.onChange} />
+          <XmlBuildDropdownEditor
+            key={this.props.xmlNode.$iid}
+            showTagInput={false}
+            xmlNode={this.props.xmlNode}
+          />
         );
       case "TagInput":
         return (

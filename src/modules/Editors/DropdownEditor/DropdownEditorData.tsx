@@ -1,5 +1,4 @@
 import { bind } from "@decorize/bind";
-import { TypeSymbol } from "dic/Container";
 import { action, computed } from "mobx";
 import { DataViewData } from "modules/DataView/DataViewData";
 import { RowCursor } from "modules/DataView/TableCursor";
@@ -7,7 +6,7 @@ import { DropdownEditorSetup } from "./DropdownEditor";
 
 export interface IDropdownEditorData {
   idsInEditor: string[];
-  value: any | null;
+  value: string | string[] | null;
   text: string;
   isResolving: boolean;
   chooseNewValue(value: any): void;
@@ -21,7 +20,7 @@ export class DropdownEditorData implements IDropdownEditorData {
     private setup: () => DropdownEditorSetup
   ) {}
 
-  @computed get value(): any | null {
+  @computed get value(): string | string[] | null {
     if (this.rowCursor.selectedId) {
       return this.dataTable.getCellValue(this.rowCursor.selectedId, this.setup().propertyId);
     } else return null;
@@ -44,41 +43,4 @@ export class DropdownEditorData implements IDropdownEditorData {
   }
 
   idsInEditor: string[] = [];
-}
-
-@bind
-export class TagInputEditorData implements IDropdownEditorData {
-  constructor(
-    private dataTable: DataViewData,
-    private rowCursor: RowCursor,
-    private setup: () => DropdownEditorSetup,
-    private onChange?: (event: any, value: any) => void
-  ) {}
-
-  @computed get value(): any | null {
-    if (this.rowCursor.selectedId) {
-      return this.dataTable.getCellValue(this.rowCursor.selectedId, this.setup().propertyId);
-    } else return null;
-  }
-
-  @computed get text(): string {
-    if (!this.isResolving && this.value) {
-      return this.dataTable.getCellText(this.setup().propertyId, this.value);
-    } else return "";
-  }
-
-  get isResolving() {
-    return this.dataTable.getIsCellTextLoading(this.setup().propertyId, this.value);
-  }
-
-  @action.bound chooseNewValue(value: any) {
-    const newArray = [...this.value, value];
-    if (this.rowCursor.selectedId) {
-      this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
-    }
-  }
-
-  get idsInEditor() {
-    return this.value ? this.value : [];
-  }
 }

@@ -12,11 +12,12 @@ import { DropdownEditorApi } from "./DropdownEditorApi";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";
 import { DropdownEditorControl } from "./DropdownEditorControl";
-import { DropdownEditorData, IDropdownEditorData, TagInputEditorData } from "./DropdownEditorData";
+import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
+import { TagInputEditorData } from "./TagInputEditorData";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -66,7 +67,6 @@ export function XmlBuildDropdownEditor(props: {
   xmlNode: any;
   showTagInput: boolean;
   editor?: JSX.Element;
-  onChange?(event: any, value: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -86,12 +86,7 @@ export function XmlBuildDropdownEditor(props: {
       () => dropdownEditorBehavior
     );
     const dropdownEditorData: IDropdownEditorData = props.showTagInput
-      ? new TagInputEditorData(
-          dataViewData,
-          dataViewRowCursor,
-          () => dropdownEditorSetup,
-          props.onChange
-        )
+      ? new TagInputEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
       : new DropdownEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup);
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
