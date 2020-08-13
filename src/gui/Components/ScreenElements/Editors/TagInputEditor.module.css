@@ -6,4 +6,6 @@
 
 .filterInput{
   border: 0;
+  flex-grow: 1;
+  min-width: 50px;
 }
