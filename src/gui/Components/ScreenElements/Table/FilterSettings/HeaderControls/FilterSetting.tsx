@@ -6,6 +6,7 @@ export class FilterSetting implements IFilterSetting {
   val1?: any;
   val2?: any;
   isComplete: boolean;
+  lookupId: string | undefined;
 
   get filterValue1() {
     return this.val1;

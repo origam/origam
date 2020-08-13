@@ -6,6 +6,7 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
+import _ from "lodash";
 
 export interface IStringFilterOp {}
 
@@ -117,11 +118,16 @@ export class FilterSettingsString extends React.Component<{
     this.handleSettingChange();
   }
 
+
+  @action.bound
   handleSettingChange() {
-    this.setting.isComplete = this.setting.val1 !== undefined;
-    this.setting.val2 = undefined;
+    this.setting = produce(this.setting, (draft) => {
+      draft.isComplete = this.setting.val1 !== undefined;
+      draft.val2 = undefined;
+    });
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
+
 
   render() {
     return (
