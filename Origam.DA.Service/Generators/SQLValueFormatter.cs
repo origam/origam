@@ -60,14 +60,16 @@ namespace Origam.DA.Service
                     return value.ToString() == "null" ? "NULL" : RenderString(value.ToString(), sqlOperator);
 
                 case OrigamDataType.Date:
-                    if (value == null || (value is string strValue1 && string.IsNullOrWhiteSpace(strValue1))) return "null";
+                    if (value == null || 
+                        value.Equals("null") || 
+                        value is string strValue1 && string.IsNullOrWhiteSpace(strValue1)) return "null";
                     DateTime date;
                     if (value is string strValue)
                     {
                         bool success = DateTime.TryParse(strValue, out var parsedDate);
                         if (!success)
                         {
-                            throw new ArgumentException($"Cannot parse \"value\" to date"); 
+                            throw new ArgumentException($"Cannot parse \"{value}\" to date"); 
                         }
                         date = parsedDate;
                     }
