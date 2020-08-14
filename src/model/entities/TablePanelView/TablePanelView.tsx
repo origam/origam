@@ -216,10 +216,14 @@ export class TablePanelView implements ITablePanelView {
     if(dataView.selectedRowId === rowId){
       return;
     }
-
-    dataView.selectRowById(rowId);
-    const dataViewLifecycle = getDataViewLifecycle(dataView);
-    yield dataViewLifecycle.onSelectedRowIdChange()
+    try{
+      dataView.lifecycle.stopSelectedRowReaction();
+      dataView.selectRowById(rowId);
+      yield dataView.lifecycle.onSelectedRowIdChange()
+      
+    }finally {
+      dataView.lifecycle.startSelectedRowReaction();
+    }
   }
 
   *onNoCellClick() {

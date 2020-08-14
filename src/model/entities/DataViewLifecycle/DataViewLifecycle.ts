@@ -79,8 +79,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }, 100);
   }
 
-
-
   @action.bound
   async onSelectedRowIdChange() {
     const rowChangeFlow = flow(
@@ -111,7 +109,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       () => {
         return getSelectedRowId(this);
       },
-      () => self.onSelectedRowIdChange(),
+      () => self.onSelectedRowIdChangeDebounced(),
       { equals: comparer.structural, fireImmediately }
     ));
   }
