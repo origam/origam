@@ -41,6 +41,7 @@ import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
 import { FlowBusyMonitor } from "../../../utils/flow";
 import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
+import {selectFirstRow} from "../../actions/DataView/selectFirstRow";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -567,6 +568,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
+      yield* selectFirstRow(targetDataView)();
     } finally {
       this.monitor.inFlow--;
     }
