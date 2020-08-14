@@ -322,4 +322,6 @@ export interface IApi {
   ): Promise<any>;
 
   pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>;
+  saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void>;
+  saveData(data: { sessionFormIdentifier: string }): Promise<void>;
 }
