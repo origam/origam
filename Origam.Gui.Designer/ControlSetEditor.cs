@@ -638,7 +638,9 @@ namespace Origam.Gui.Designer
                             dataMember = parentTable.TableName + "." + dataMember;
                         }
                         panel.DataMember = dataMember;
-                        break;
+						IsDirty = true;
+						ControlProperties(control as Control, true);
+						break;
                     }
                 }
             }
