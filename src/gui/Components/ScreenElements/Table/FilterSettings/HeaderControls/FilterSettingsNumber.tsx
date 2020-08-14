@@ -6,6 +6,7 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
+import _ from "lodash";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "eq" },
@@ -175,11 +176,14 @@ export class FilterSettingsNumber extends React.Component<{
     return (
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
+        <OpEditors
+          setting={this.setting}
+          onChange={this.handleChange}
+          onBlur={this.handleBlur}
+        />
 
         {/*<input className={CS.input} />*/}
       </>
     );
   }
 }
-

@@ -1,5 +1,5 @@
 import {getFilterConfiguration} from "./getFilterConfiguration";
-import {filterToFilterItem, joinWithAND, toFilterItem} from "../../entities/OrigamApiHelpers";
+import {filterToFilterItem, joinWithAND} from "../../entities/OrigamApiHelpers";
 import {getDataView} from "./getDataView";
 
 export function getUserFilters(ctx: any){

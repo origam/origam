@@ -21,7 +21,7 @@ import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSe
 import { FilterSetting } from "./FilterSetting";
 
 const OPERATORS: any[] = [
-  { human: <>=</>, type: "eq" },
+  { human: <>=</>, type: "in" },
   { human: <>&ne;</>, type: "nin" },
   { human: <>contain</>, type: "contains" },
   { human: <>not contain</>, type: "ncontains" },
@@ -44,7 +44,7 @@ const OpCombo: React.FC<{
             props.onChange(
               produce(props.setting, (draft: IFilterSetting) => {
                 draft.type = op.type;
-                draft.isComplete = false;
+                draft.isComplete = op.type === "null" || op.type === "nnull";
                 draft.val1 = undefined;
                 draft.val2 = undefined;
               })
@@ -326,6 +326,7 @@ export class TagInputStateful extends React.Component<{
 class OpEditors extends React.Component<{
   setting: any;
   onChange: (newSetting: any) => void;
+  onChangeDebounced: (newSetting: any) => void;
   getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
 }> {
   @observable selectedItems: Array<{ value: any; content: any }> = [];
@@ -342,7 +343,7 @@ class OpEditors extends React.Component<{
   }
 
   @action.bound handleTermChange(event: any) {
-    this.props.onChange(
+    this.props.onChangeDebounced(
       produce(this.props.setting, (draft: IFilterSetting) => {
         draft.val1 = undefined;
         draft.val2 = event.target.value;
@@ -354,7 +355,7 @@ class OpEditors extends React.Component<{
   render() {
     const { setting } = this.props;
     switch (setting.type) {
-      case "eq":
+      case "in":
       case "nin":
         return (
           <TagInputStateful
@@ -377,6 +378,7 @@ class OpEditors extends React.Component<{
 @observer
 export class FilterSettingsLookup extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
+  lookupId: string;
   setting: any;
   onTriggerApplySetting?(setting: any): void;
 }> {
@@ -386,9 +388,15 @@ export class FilterSettingsLookup extends React.Component<{
   );
 
   @action.bound handleChange(newSetting: any) {
+    newSetting.lookupId =
+      newSetting.type === "contains" || newSetting.type === "ncontains"
+        ? this.props.lookupId
+        : undefined;
     this.setting = newSetting;
+
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
+
 
   render() {
     return (
@@ -397,6 +405,7 @@ export class FilterSettingsLookup extends React.Component<{
         <OpEditors
           setting={this.setting}
           onChange={this.handleChange}
+          onChangeDebounced={this.handleChange}
           getOptions={this.props.getOptions}
         />
 
@@ -412,6 +421,7 @@ export class LookupFilterSetting implements IFilterSetting {
   val1?: any;
   val2?: any;
   isComplete: boolean;
+  lookupId: string | undefined;
 
   get filterValue1() {
     if (!this.val1) {
@@ -421,7 +431,7 @@ export class LookupFilterSetting implements IFilterSetting {
       case "contain":
       case "ncontain":
         return this.val1.map((item: any) => item.content);
-      case "eq":
+      case "in":
       case "nin":
         return this.val1.map((item: any) => item.value);
       default:
