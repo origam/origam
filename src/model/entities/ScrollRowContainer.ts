@@ -180,6 +180,7 @@ export class ScrollRowContainer implements IRowsContainer {
 
 class RowChunk {
   rowOffset: number;
+  @observable.shallow
   rows: any[];
   private rowIdGetter: (row: any[]) => string;
   isFinal: boolean;
