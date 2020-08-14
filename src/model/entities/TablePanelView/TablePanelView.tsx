@@ -1,27 +1,43 @@
-import {action, computed, observable} from "mobx";
-import {onFieldChangeG} from "model/actions-ui/DataView/TableView/onFieldChange";
-import {getSelectedRowIndex} from "model/selectors/DataView/getSelectedRowIndex";
-import {getCellValue} from "model/selectors/TablePanelView/getCellValue";
-import {getSelectedColumnId} from "model/selectors/TablePanelView/getSelectedColumnId";
-import {getSelectedColumnIndex} from "model/selectors/TablePanelView/getSelectedColumnIndex";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
-import {getDataTable} from "../../selectors/DataView/getDataTable";
-import {getDataView} from "../../selectors/DataView/getDataView";
-import {getDataViewPropertyById} from "../../selectors/DataView/getDataViewPropertyById";
-import {IFilterConfiguration} from "../types/IFilterConfiguration";
-import {IOrderingConfiguration} from "../types/IOrderingConfiguration";
-import {IProperty} from "../types/IProperty";
-import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
-import {ITableCanvas, ITablePanelView, ITablePanelViewData} from "./types/ITablePanelView";
-import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import { action, computed, observable } from "mobx";
+import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
+import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
+import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
+import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { getDataTable } from "../../selectors/DataView/getDataTable";
+import { getDataView } from "../../selectors/DataView/getDataView";
+import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
+import { IFilterConfiguration } from "../types/IFilterConfiguration";
+import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
+import { IProperty } from "../types/IProperty";
+import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 import selectors from "model/selectors-tree";
-import {IGroupingConfiguration} from "../types/IGroupingConfiguration";
-import {IAggregationInfo} from "../types/IAggregationInfo";
-import {AggregationType} from "../types/AggregationType";
-import {ICellRectangle} from "./types/ICellRectangle";
-import {getRowStateAllowUpdate} from "../../selectors/RowState/getRowStateAllowUpdate";
+import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
+import { IAggregationInfo } from "../types/IAggregationInfo";
+import { AggregationType } from "../types/AggregationType";
+import { ICellRectangle } from "./types/ICellRectangle";
+import { getRowStateAllowUpdate } from "../../selectors/RowState/getRowStateAllowUpdate";
+import {getDialogStack} from "../../selectors/getDialogStack";
+import {QuestionDeleteData} from "../../../gui/Components/Dialogs/QuestionDeleteData";
+import {getOpenedScreen} from "../../selectors/getOpenedScreen";
+import React from "react";
+import {QuestionSaveData} from "../../../gui/Components/Dialogs/QuestionSaveData";
+import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
+import {isInfiniteScrollingActive} from "../../selectors/isInfiniteScrollingActive";
+import {getApi} from "../../selectors/getApi";
+import {getSessionId} from "../../selectors/getSessionId";
+import {getDataViewLifecycle} from "../../selectors/DataView/getDataViewLifecycle";
+
+enum IQuestionChangeRecordAnswer {
+  Yes = 0,
+  No = 1,
+  Cancel = 2,
+}
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -119,6 +135,35 @@ export class TablePanelView implements ITablePanelView {
   }
 
   *onCellClick(event: any, row: any[], columnId: string) {
+
+    const dataView = getDataView(this);
+    const rowId = this.dataTable.getRowId(row);
+    const isDirty = this.dataTable.getDirtyValueRows().length === 0;
+
+    if(dataView.selectedRowId === rowId || !isDirty || !isInfiniteScrollingActive(dataView)){
+      yield* this.onCellClickInternal(event, row, columnId);
+      return;
+    }
+
+    const api = getApi(dataView);
+    const openedScreen = getOpenedScreen(this);
+    const sessionId = getSessionId(openedScreen.content.formScreen);
+
+    switch (yield this.questionSaveData()) {
+      case IQuestionChangeRecordAnswer.Cancel:
+        return;
+      case IQuestionChangeRecordAnswer.Yes:
+        yield api.saveDataQuery({ sessionFormIdentifier: sessionId});
+        yield api.saveData({ sessionFormIdentifier: sessionId});
+        yield* this.onCellClickInternal(event, row, columnId);
+        return;
+      case IQuestionChangeRecordAnswer.No:
+        yield* this.onCellClickInternal(event, row, columnId);
+        return;
+    }
+  }
+
+  *onCellClickInternal(event: any, row: any[], columnId: string) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {
@@ -151,7 +196,7 @@ export class TablePanelView implements ITablePanelView {
       }
     } else {
       const rowId = this.dataTable.getRowId(row);
-      this.selectCell(rowId as string, property.id);
+      yield* this.selectCellAsync(columnId, rowId);
 
       const readOnly = property!.readOnly || !getRowStateAllowUpdate(property, rowId || "", property!.id);
       if(!readOnly){
@@ -164,6 +209,17 @@ export class TablePanelView implements ITablePanelView {
       }
     }
     this.scrollToCurrentCell();
+  }
+  private *selectCellAsync(columnId: string, rowId: string) {
+    this.selectedColumnId = columnId;
+    const dataView = getDataView(this);
+    if(dataView.selectedRowId === rowId){
+      return;
+    }
+
+    dataView.selectRowById(rowId);
+    const dataViewLifecycle = getDataViewLifecycle(dataView);
+    yield dataViewLifecycle.onSelectedRowIdChange()
   }
 
   *onNoCellClick() {
@@ -178,10 +234,33 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  @action.bound selectCell(
-    rowId: string | undefined,
-    columnId: string | undefined
-  ) {
+
+  questionSaveData() {
+    return new Promise(
+      action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
+        const closeDialog = getDialogStack(this).pushDialog(
+          "",
+          <ChangeMasterRecordDialog
+            screenTitle={getOpenedScreen(this).title}
+            onSaveClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.Yes);
+            }}
+            onDontSaveClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.No);
+            }}
+            onCancelClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.Cancel);
+            }}
+          />
+        );
+      })
+    );
+  }
+
+  @action.bound selectCell(rowId: string | undefined, columnId: string | undefined) {
     this.selectedColumnId = columnId;
     getDataView(this).selectRowById(rowId);
   }
