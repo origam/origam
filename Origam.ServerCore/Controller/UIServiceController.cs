@@ -108,6 +108,12 @@ namespace Origam.ServerCore.Controller
                 => Ok(sessionObjects.UIService.RefreshData(
                     sessionFormIdentifier, localizer)));
         }
+        [HttpPost("[action]")]
+        public IActionResult RestoreData([FromBody]RestoreDataInput input)
+        {
+            return RunWithErrorHandler(()
+                => Ok(sessionObjects.UIService.RestoreData(input)));
+        }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult SaveDataQuery(Guid sessionFormIdentifier)
         {

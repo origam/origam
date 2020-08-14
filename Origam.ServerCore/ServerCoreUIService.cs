@@ -266,6 +266,12 @@ namespace Origam.ServerCore
                 INITIAL_PAGE_NUMBER_OF_RECORDS, sessionStore.CurrentRecordId, 
                 sessionStore.DataListEntity, sessionStore);
         }
+        public IList RestoreData(RestoreDataInput input)
+        {
+            var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
+            return sessionStore.RestoreData(input.ObjectId);
+        }
         public RuleExceptionDataCollection SaveDataQuery(
             Guid sessionFormIdentifier)
         {
