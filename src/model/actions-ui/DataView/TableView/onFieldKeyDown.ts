@@ -18,6 +18,16 @@ export function onFieldKeyDown(ctx: any) {
             (getTablePanelView(ctx).isLastColumnSelected() && !tabEvent.shiftKey)
   }
 
+
+  async function shouldProceedToChangeRow(){
+    const dataView = getDataView(ctx);
+    const isDirty = getFormScreen(dataView).isDirty;
+    if (isDirty && isInfiniteScrollingActive(dataView)) {
+      return await getFormScreenLifecycle(dataView).handleUserInputOnChangingRow(dataView);
+    }
+    return true;
+  }
+
   return flow(function* onFieldKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
@@ -28,13 +38,8 @@ export function onFieldKeyDown(ctx: any) {
             getTablePanelView(ctx).setEditing(false);
             yield* flushCurrentRowData(ctx)();
 
-            const isDirty = getFormScreen(dataView).isDirty;
-            if (isDirty && isInfiniteScrollingActive(dataView)) {
-              const shouldProceedToChangeRow = yield getFormScreenLifecycle(dataView)
-                .handleUserInputOnChangingRow(dataView);
-              if (!shouldProceedToChangeRow) {
-                return;
-              }
+            if (!(yield shouldProceedToChangeRow())) {
+              return;
             }
 
             yield dataView.lifecycle.runRecordChangedReaction(function*() {
@@ -49,7 +54,8 @@ export function onFieldKeyDown(ctx: any) {
             getTablePanelView(ctx).scrollToCurrentCell();
             getTablePanelView(ctx).setEditing(true);
           }
-          else {
+          else
+          {
             if (event.shiftKey) {
               selectPrevColumn(ctx)(true);
             } else {
@@ -69,13 +75,8 @@ export function onFieldKeyDown(ctx: any) {
 
           yield* flushCurrentRowData(ctx)();
 
-          const isDirty = getFormScreen(dataView).isDirty;
-          if (isDirty && isInfiniteScrollingActive(dataView)) {
-            const shouldProceedToChangeRow = yield getFormScreenLifecycle(dataView)
-              .handleUserInputOnChangingRow(dataView);
-            if (!shouldProceedToChangeRow) {
-              return;
-            }
+          if (!(yield shouldProceedToChangeRow())) {
+            return;
           }
 
           yield dataView.lifecycle.runRecordChangedReaction(function*() {
