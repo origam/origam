@@ -33,12 +33,6 @@ import {getApi} from "../../selectors/getApi";
 import {getSessionId} from "../../selectors/getSessionId";
 import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
 
-enum IQuestionChangeRecordAnswer {
-  Yes = 0,
-  No = 1,
-  Cancel = 2,
-}
-
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
 
@@ -140,27 +134,15 @@ export class TablePanelView implements ITablePanelView {
     const rowId = this.dataTable.getRowId(row);
     const isDirty = this.dataTable.getDirtyValueRows().length === 0;
 
-    if(dataView.selectedRowId === rowId || !isDirty || !isInfiniteScrollingActive(dataView)){
+    if (dataView.selectedRowId === rowId || !isDirty || !isInfiniteScrollingActive(dataView)) {
       yield* this.onCellClickInternal(event, row, columnId);
       return;
     }
+    const shouldProceedToSelectRow = yield getFormScreenLifecycle(dataView)
+      .handleUserInputOnChangingRow(dataView);
 
-    const api = getApi(dataView);
-    const openedScreen = getOpenedScreen(this);
-    const sessionId = getSessionId(openedScreen.content.formScreen);
-
-    switch (yield this.questionSaveData()) {
-      case IQuestionChangeRecordAnswer.Cancel:
-        return;
-      case IQuestionChangeRecordAnswer.Yes:
-        yield api.saveDataQuery({ sessionFormIdentifier: sessionId});
-        yield api.saveData({ sessionFormIdentifier: sessionId});
-        yield* this.onCellClickInternal(event, row, columnId);
-        return;
-      case IQuestionChangeRecordAnswer.No:
-        yield* getFormScreenLifecycle(dataView).throwChangesAway(dataView);
-        yield* this.onCellClickInternal(event, row, columnId);
-        return;
+    if (shouldProceedToSelectRow) {
+      yield * this.onCellClickInternal(event, row, columnId);
     }
   }
 
@@ -221,7 +203,7 @@ export class TablePanelView implements ITablePanelView {
       dataView.lifecycle.stopSelectedRowReaction();
       dataView.selectRowById(rowId);
       yield dataView.lifecycle.onSelectedRowIdChange()
-      
+
     }finally {
       dataView.lifecycle.startSelectedRowReaction();
     }
@@ -237,32 +219,6 @@ export class TablePanelView implements ITablePanelView {
     if (this.isEditing) {
       this.setEditing(false);
     }
-  }
-
-
-  questionSaveData() {
-    return new Promise(
-      action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
-          "",
-          <ChangeMasterRecordDialog
-            screenTitle={getOpenedScreen(this).title}
-            onSaveClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.Yes);
-            }}
-            onDontSaveClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.No);
-            }}
-            onCancelClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.Cancel);
-            }}
-          />
-        );
-      })
-    );
   }
 
   @action.bound selectCell(rowId: string | undefined, columnId: string | undefined) {

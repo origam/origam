@@ -43,6 +43,8 @@ import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 import _ from "lodash";
+import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
+import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -53,6 +55,12 @@ enum IQuestionSaveDataAnswer {
 enum IQuestionDeleteDataAnswer {
   No = 0,
   Yes = 1,
+}
+
+enum IQuestionChangeRecordAnswer {
+  Yes = 0,
+  No = 1,
+  Cancel = 2,
 }
 
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
@@ -795,6 +803,51 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             onCancelClick={() => {
               closeDialog();
               resolve(IQuestionSaveDataAnswer.Cancel);
+            }}
+          />
+        );
+      })
+    );
+  }
+
+  async handleUserInputOnChangingRow(dataView: IDataView){
+    const api = getApi(dataView);
+    const openedScreen = getOpenedScreen(this);
+    const sessionId = getSessionId(openedScreen.content.formScreen);
+
+    switch (await this.questionSaveDataAfterRecordChange()) {
+      case IQuestionChangeRecordAnswer.Cancel:
+        return false;
+      case IQuestionChangeRecordAnswer.Yes:
+        await api.saveDataQuery({ sessionFormIdentifier: sessionId});
+        await api.saveData({ sessionFormIdentifier: sessionId});
+        return true;
+      case IQuestionChangeRecordAnswer.No:
+        await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
+        return true;
+      default:
+        throw new Error("Option not implemented");
+    }
+  }
+
+  questionSaveDataAfterRecordChange() {
+    return new Promise(
+      action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
+        const closeDialog = getDialogStack(this).pushDialog(
+          "",
+          <ChangeMasterRecordDialog
+            screenTitle={getOpenedScreen(this).title}
+            onSaveClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.Yes);
+            }}
+            onDontSaveClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.No);
+            }}
+            onCancelClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.Cancel);
             }}
           />
         );
