@@ -25,6 +25,7 @@ import {getRowStateAllowUpdate} from "../../selectors/RowState/getRowStateAllowU
 import React from "react";
 import {isInfiniteScrollingActive} from "../../selectors/isInfiniteScrollingActive";
 import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
+import {getFormScreen} from "../../selectors/FormScreen/getFormScreen";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
