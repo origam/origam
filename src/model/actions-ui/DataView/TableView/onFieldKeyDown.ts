@@ -36,10 +36,9 @@ export function onFieldKeyDown(ctx: any) {
 
           const dataView = getDataView(ctx);
           const isDirty = getFormScreen(dataView).isDirty;
-          if (isDirty || isInfiniteScrollingActive(dataView)) {
-            const shouldProceedToChangeRow = yield getFormScreenLifecycle(
-              dataView
-            ).handleUserInputOnChangingRow(dataView);
+          if (isDirty && isInfiniteScrollingActive(dataView)) {
+            const shouldProceedToChangeRow = yield getFormScreenLifecycle(dataView)
+              .handleUserInputOnChangingRow(dataView);
             if (!shouldProceedToChangeRow) {
               return;
             }
