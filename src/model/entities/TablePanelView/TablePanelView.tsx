@@ -31,7 +31,7 @@ import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMa
 import {isInfiniteScrollingActive} from "../../selectors/isInfiniteScrollingActive";
 import {getApi} from "../../selectors/getApi";
 import {getSessionId} from "../../selectors/getSessionId";
-import {getDataViewLifecycle} from "../../selectors/DataView/getDataViewLifecycle";
+import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
 
 enum IQuestionChangeRecordAnswer {
   Yes = 0,
@@ -158,6 +158,7 @@ export class TablePanelView implements ITablePanelView {
         yield* this.onCellClickInternal(event, row, columnId);
         return;
       case IQuestionChangeRecordAnswer.No:
+        yield* getFormScreenLifecycle(dataView).throwChangesAway(dataView);
         yield* this.onCellClickInternal(event, row, columnId);
         return;
     }

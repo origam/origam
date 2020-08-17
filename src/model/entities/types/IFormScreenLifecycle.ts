@@ -36,6 +36,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   isWorking: boolean;
 
   onFlushData(): Generator;
+  throwChangesAway(dataView: IDataView): Generator;
   onCreateRow(entity: string, gridId: string): Generator;
   onDeleteRow(entity: string, rowId: string): Generator;
   updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string): Generator;

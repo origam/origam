@@ -1,6 +1,6 @@
 import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, autorun, computed, flow, observable, reaction, when } from "mobx";
+import { action, autorun, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -440,6 +440,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       for (let dataView of formScreen.nonRootDataViews) {
         dataView.lifecycle.startSelectedRowReaction();
       }
+      this.monitor.inFlow--;
+    }
+  }
+
+  *throwChangesAway(dataView: IDataView) {
+    try {
+      this.monitor.inFlow++;
+      const api = getApi(this);
+      const updateObjectResult = yield api.restoreData({
+        SessionFormIdentifier: getSessionId(this),
+        ObjectId: dataView.selectedRowId!,
+      });
+      yield* processCRUDResult(dataView, updateObjectResult);
+      const formScreen = getFormScreen(this);
+      if (formScreen.requestSaveAfterUpdate) {
+        yield* this.saveSession();
+      }
+    } finally {
       this.monitor.inFlow--;
     }
   }
