@@ -1,36 +1,29 @@
-import { action, computed, observable } from "mobx";
-import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
-import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
-import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
-import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
-import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { getDataTable } from "../../selectors/DataView/getDataTable";
-import { getDataView } from "../../selectors/DataView/getDataView";
-import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
-import { IFilterConfiguration } from "../types/IFilterConfiguration";
-import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
-import { IProperty } from "../types/IProperty";
-import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
-import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import {action, computed, observable} from "mobx";
+import {onFieldChangeG} from "model/actions-ui/DataView/TableView/onFieldChange";
+import {getSelectedRowIndex} from "model/selectors/DataView/getSelectedRowIndex";
+import {getCellValue} from "model/selectors/TablePanelView/getCellValue";
+import {getSelectedColumnId} from "model/selectors/TablePanelView/getSelectedColumnId";
+import {getSelectedColumnIndex} from "model/selectors/TablePanelView/getSelectedColumnIndex";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
+import {getDataTable} from "../../selectors/DataView/getDataTable";
+import {getDataView} from "../../selectors/DataView/getDataView";
+import {getDataViewPropertyById} from "../../selectors/DataView/getDataViewPropertyById";
+import {IFilterConfiguration} from "../types/IFilterConfiguration";
+import {IOrderingConfiguration} from "../types/IOrderingConfiguration";
+import {IProperty} from "../types/IProperty";
+import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
+import {ITableCanvas, ITablePanelView, ITablePanelViewData} from "./types/ITablePanelView";
+import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 import selectors from "model/selectors-tree";
-import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
-import { IAggregationInfo } from "../types/IAggregationInfo";
-import { AggregationType } from "../types/AggregationType";
-import { ICellRectangle } from "./types/ICellRectangle";
-import { getRowStateAllowUpdate } from "../../selectors/RowState/getRowStateAllowUpdate";
-import {getDialogStack} from "../../selectors/getDialogStack";
-import {QuestionDeleteData} from "../../../gui/Components/Dialogs/QuestionDeleteData";
-import {getOpenedScreen} from "../../selectors/getOpenedScreen";
+import {IGroupingConfiguration} from "../types/IGroupingConfiguration";
+import {IAggregationInfo} from "../types/IAggregationInfo";
+import {AggregationType} from "../types/AggregationType";
+import {ICellRectangle} from "./types/ICellRectangle";
+import {getRowStateAllowUpdate} from "../../selectors/RowState/getRowStateAllowUpdate";
 import React from "react";
-import {QuestionSaveData} from "../../../gui/Components/Dialogs/QuestionSaveData";
-import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
 import {isInfiniteScrollingActive} from "../../selectors/isInfiniteScrollingActive";
-import {getApi} from "../../selectors/getApi";
-import {getSessionId} from "../../selectors/getSessionId";
 import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
 
 export class TablePanelView implements ITablePanelView {
@@ -50,7 +43,8 @@ export class TablePanelView implements ITablePanelView {
   groupingConfiguration: IGroupingConfiguration = null as any;
   rowHeight: number = null as any;
 
-  rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number, Map<number, ICellRectangle>>();
+  rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number,
+    Map<number, ICellRectangle>>();
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
@@ -63,31 +57,27 @@ export class TablePanelView implements ITablePanelView {
   aggregations: AggregationContainer = new AggregationContainer();
 
   @computed get propertyMap() {
-    return new Map(
-      this.allTableProperties.map(x => [x.id, x] as [string, IProperty])
-    );
+    return new Map(this.allTableProperties.map((x) => [x.id, x] as [string, IProperty]));
   }
 
   @computed get allTableProperties() {
     return this.tablePropertyIds
-      .map(id => getDataTable(this).getPropertyById(id))
-      .filter(prop => prop) as IProperty[];
+      .map((id) => getDataTable(this).getPropertyById(id))
+      .filter((prop) => prop) as IProperty[];
   }
 
   @computed get tableProperties() {
-    return this.allTableProperties.filter(
-      prop => !this.hiddenPropertyIds.get(prop.id)
-    );
+    return this.allTableProperties.filter((prop) => !this.hiddenPropertyIds.get(prop.id));
   }
+
   @observable selectedColumnId: string | undefined;
+
   @computed get selectedRowId(): string | undefined {
     return getDataView(this).selectedRowId;
   }
 
   @computed get selectedColumnIndex(): number | undefined {
-    const idx = this.tableProperties.findIndex(
-      prop => prop.id === this.selectedColumnId
-    );
+    const idx = this.tableProperties.findIndex((prop) => prop.id === this.selectedColumnId);
     return idx > -1 ? idx : undefined;
   }
 
@@ -96,9 +86,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @computed get selectedProperty(): IProperty | undefined {
-    return this.selectedColumnId
-      ? getDataViewPropertyById(this, this.selectedColumnId)
-      : undefined;
+    return this.selectedColumnId ? getDataViewPropertyById(this, this.selectedColumnId) : undefined;
   }
 
   @observable.ref tableCanvas: ITableCanvas | null = null;
@@ -128,8 +116,7 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  *onCellClick(event: any, row: any[], columnId: string) {
-
+  * onCellClick(event: any, row: any[], columnId: string) {
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);
     const isDirty = this.dataTable.getDirtyValueRows().length === 0;
@@ -138,15 +125,16 @@ export class TablePanelView implements ITablePanelView {
       yield* this.onCellClickInternal(event, row, columnId);
       return;
     }
-    const shouldProceedToSelectRow = yield getFormScreenLifecycle(dataView)
-      .handleUserInputOnChangingRow(dataView);
+    const shouldProceedToSelectRow = yield getFormScreenLifecycle(
+      dataView
+    ).handleUserInputOnChangingRow(dataView);
 
     if (shouldProceedToSelectRow) {
-      yield * this.onCellClickInternal(event, row, columnId);
+      yield* this.onCellClickInternal(event, row, columnId);
     }
   }
 
-  *onCellClickInternal(event: any, row: any[], columnId: string) {
+  * onCellClickInternal(event: any, row: any[], columnId: string) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {
@@ -155,7 +143,7 @@ export class TablePanelView implements ITablePanelView {
         if (menuItem) {
           yield onMainMenuItemClick(this)({
             event: undefined,
-            item: menuItem
+            item: menuItem,
           });
         }
       } else {
@@ -167,7 +155,7 @@ export class TablePanelView implements ITablePanelView {
           this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
         } else {
-          const { isEditing } = this;
+          const {isEditing} = this;
           if (isEditing) {
             this.setEditing(false);
           }
@@ -181,41 +169,37 @@ export class TablePanelView implements ITablePanelView {
       const rowId = this.dataTable.getRowId(row);
       yield* this.selectCellAsync(columnId, rowId);
 
-      const readOnly = property!.readOnly || !getRowStateAllowUpdate(property, rowId || "", property!.id);
-      if(!readOnly){
-        yield* onFieldChangeG(this)(
-          undefined,
-          row,
-          property,
-          !getCellValue(this, row, property)
-        );
+      const readOnly =
+        property!.readOnly || !getRowStateAllowUpdate(property, rowId || "", property!.id);
+      if (!readOnly) {
+        yield* onFieldChangeG(this)(undefined, row, property, !getCellValue(this, row, property));
       }
     }
     this.scrollToCurrentCell();
   }
-  private *selectCellAsync(columnId: string, rowId: string) {
+
+  private* selectCellAsync(columnId: string, rowId: string) {
     this.selectedColumnId = columnId;
     const dataView = getDataView(this);
-    if(dataView.selectedRowId === rowId){
+    if (dataView.selectedRowId === rowId) {
       return;
     }
-    try{
+    try {
       dataView.lifecycle.stopSelectedRowReaction();
       dataView.selectRowById(rowId);
-      yield dataView.lifecycle.onSelectedRowIdChange()
-
-    }finally {
+      yield dataView.lifecycle.onSelectedRowIdChange();
+    } finally {
       dataView.lifecycle.startSelectedRowReaction();
     }
   }
 
-  *onNoCellClick() {
+  * onNoCellClick() {
     if (this.isEditing) {
       this.setEditing(false);
     }
   }
 
-  *onOutsideTableClick() {
+  * onOutsideTableClick() {
     if (this.isEditing) {
       this.setEditing(false);
     }
@@ -231,7 +215,7 @@ export class TablePanelView implements ITablePanelView {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
-      const idx = properties.findIndex(prop => prop.id === selPropId);
+      const idx = properties.findIndex((prop) => prop.id === selPropId);
       if (idx < properties.length - 1) {
         const newProp = properties[idx + 1];
         this.setSelectedColumnId(newProp.id);
@@ -250,7 +234,7 @@ export class TablePanelView implements ITablePanelView {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
     if (selPropId) {
-      const idx = properties.findIndex(prop => prop.id === selPropId);
+      const idx = properties.findIndex((prop) => prop.id === selPropId);
       if (idx > 0) {
         const newProp = properties[idx - 1];
         this.setSelectedColumnId(newProp.id);
@@ -288,36 +272,30 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound
   swapColumns(id1: string, id2: string): void {
-    const idx1 = this.tablePropertyIds.findIndex(id => id === id1);
-    const idx2 = this.tablePropertyIds.findIndex(id => id === id2);
+    const idx1 = this.tablePropertyIds.findIndex((id) => id === id1);
+    const idx2 = this.tablePropertyIds.findIndex((id) => id === id2);
     const tmp = this.tablePropertyIds[idx1];
     this.tablePropertyIds[idx1] = this.tablePropertyIds[idx2];
     this.tablePropertyIds[idx2] = tmp;
   }
 
   @action.bound
-  setColumnOrderChangeAttendants(
-    idSource: string | undefined,
-    idTarget: string | undefined
-  ): void {
+  setColumnOrderChangeAttendants(idSource: string | undefined, idTarget: string | undefined): void {
     this.columnOrderChangingTargetId = idTarget;
     this.columnOrderChangingSourceId = idSource;
   }
 
   subId = 0;
-  onScrollToCurrentCellHandlers: Map<
-    number,
-    (rowIdx: number, columnIdx: number) => void
-  > = new Map();
-  subOnScrollToCellShortest(
-    fn: (rowIdx: number, columnIdx: number) => void
-  ): () => void {
+  onScrollToCurrentCellHandlers: Map<number,
+    (rowIdx: number, columnIdx: number) => void> = new Map();
+
+  subOnScrollToCellShortest(fn: (rowIdx: number, columnIdx: number) => void): () => void {
     const myId = this.subId++;
     this.onScrollToCurrentCellHandlers.set(myId, fn);
     return () => this.onScrollToCurrentCellHandlers.delete(myId);
   }
 
-  @action.bound scrollToCurrentRow(){
+  @action.bound scrollToCurrentRow() {
     const rowIdx = getSelectedRowIndex(this);
     if (rowIdx !== undefined) {
       this.triggerOnScrollToCellShortest(rowIdx, 0);
@@ -332,15 +310,12 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  @action.bound triggerOnScrollToCellShortest(
-    rowIdx: number,
-    columnIdx: number
-  ) {
-    for (let h of this.onScrollToCurrentCellHandlers.values())
-      h(rowIdx, columnIdx);
+  @action.bound triggerOnScrollToCellShortest(rowIdx: number, columnIdx: number) {
+    for (let h of this.onScrollToCurrentCellHandlers.values()) h(rowIdx, columnIdx);
   }
 
   onFocusTableHandlers: Map<number, () => void> = new Map();
+
   subOnFocusTable(fn: () => void): () => void {
     const myId = this.subId++;
     this.onFocusTableHandlers.set(myId, fn);
@@ -364,36 +339,36 @@ export class TablePanelView implements ITablePanelView {
     return getDataTable(this);
   }
 
-  getCellRectangle(rowIndex: number, columnIndex: number){
+  getCellRectangle(rowIndex: number, columnIndex: number) {
     return this.rectangleMap.get(rowIndex)!.get(columnIndex)!;
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {
-    if(!this.rectangleMap.has(rowId)){
+    if (!this.rectangleMap.has(rowId)) {
       this.rectangleMap.set(rowId, new Map<number, ICellRectangle>());
     }
     this.rectangleMap.get(rowId)!.set(columnId, rectangle);
   }
 }
 
-export class AggregationContainer{
+export class AggregationContainer {
   @observable aggregationTypes: Map<string, AggregationType | undefined> = new Map<string, AggregationType | undefined>();
 
-  getType(columnId: string){
+  getType(columnId: string) {
     return this.aggregationTypes.get(columnId)
   }
 
-  setType(columnId: string, aggregationType: AggregationType | undefined){
-    if(!aggregationType && !this.aggregationTypes.has(columnId)) return;
+  setType(columnId: string, aggregationType: AggregationType | undefined) {
+    if (!aggregationType && !this.aggregationTypes.has(columnId)) return;
     this.aggregationTypes.set(columnId, aggregationType);
   }
 
-  @computed get aggregationList(): IAggregationInfo[]{
+  @computed get aggregationList(): IAggregationInfo[] {
     // @ts-ignore
     return Array.from(this.aggregationTypes.entries())
       .filter(entry => entry[1])
       .map(entry => {
-        return  {
+        return {
           "ColumnName": entry[0],
           "AggregationType": entry[1]
         }
