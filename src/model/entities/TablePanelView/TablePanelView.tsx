@@ -119,7 +119,7 @@ export class TablePanelView implements ITablePanelView {
   * onCellClick(event: any, row: any[], columnId: string) {
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);
-    const isDirty = this.dataTable.getDirtyValueRows().length === 0;
+    const isDirty = getFormScreen(dataView).isDirty;
 
     if (dataView.selectedRowId === rowId || !isDirty || !isInfiniteScrollingActive(dataView)) {
       yield* this.onCellClickInternal(event, row, columnId);
