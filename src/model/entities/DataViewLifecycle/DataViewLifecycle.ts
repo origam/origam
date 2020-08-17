@@ -79,39 +79,31 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }, 100);
   }
 
-  @action.bound
-  async onSelectedRowIdChange() {
-    const rowChangeFlow = flow(
-      function*(this: DataViewLifecycle) {
-        try {
-          const api = getApi(this);
-          const crudResult = yield api.setMasterRecord(
-            {
-              SessionFormIdentifier: getSessionId(this),
-              Entity: getEntity(this),
-              RowId: getSelectedRowId(this)!
-            },
-          );
-          yield* processCRUDResult(this, crudResult);
-
-        } catch (e) {
-          yield* handleError(this)(e);
-          throw e;
-        }
-      }.bind(this));
-      await rowChangeFlow();
-  }
   _selectedRowReactionDisposer: any;
-  @action.bound startSelectedRowReaction(fireImmediately?: boolean) {
+  @action.bound
+  async startSelectedRowReaction(fireImmediately?: boolean) {
     console.log('selrow reaction started')
+    if(fireImmediately){
+      await this.onSelectedRowIdChangeImm();
+    }
+
     const self = this;
     return (this._selectedRowReactionDisposer = reaction(
       () => {
         return getSelectedRowId(this);
       },
-      () => self.onSelectedRowIdChangeDebounced(),
-      { equals: comparer.structural, fireImmediately }
+      () => self.onSelectedRowIdChangeImm(),
+      { equals: comparer.structural }
     ));
+  }
+
+  async runRecordChangedReaction(action: ()=>Generator){
+    try {
+      this.stopSelectedRowReaction();
+      await flow(action)();
+    } finally {
+      await this.startSelectedRowReaction(true);
+    }
   }
 
   @action.bound stopSelectedRowReaction() {
