@@ -207,6 +207,27 @@ export class TablePanelView implements ITablePanelView {
     getDataView(this).selectRowById(rowId);
   }
 
+
+  isFirstColumnSelected(): boolean {
+    const properties = getTableViewProperties(this);
+    const selPropId = getSelectedColumnId(this);
+    if(!selPropId){
+      return false;
+    }
+    const idx = properties.findIndex((prop) => prop.id === selPropId);
+    return idx === 0;
+  }
+
+  isLastColumnSelected(): boolean {
+    const properties = getTableViewProperties(this);
+    const selPropId = getSelectedColumnId(this);
+    if(!selPropId){
+      return false;
+    }
+    const idx = properties.findIndex((prop) => prop.id === selPropId);
+    return idx === properties.length - 1;
+  }
+
   @action.bound
   selectNextColumn(nextRowWhenEnd?: boolean): void {
     const properties = getTableViewProperties(this);

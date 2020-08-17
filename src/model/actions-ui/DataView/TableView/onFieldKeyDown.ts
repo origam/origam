@@ -12,19 +12,54 @@ import { getFormScreenLifecycle } from "../../../selectors/FormScreen/getFormScr
 import { getFormScreen } from "../../../selectors/FormScreen/getFormScreen";
 
 export function onFieldKeyDown(ctx: any) {
+
+  function isGoingToChangeRow(tabEvent: any){
+    return  (getTablePanelView(ctx).isFirstColumnSelected() && tabEvent.shiftKey) ||
+            (getTablePanelView(ctx).isLastColumnSelected() && !tabEvent.shiftKey)
+  }
+
   return flow(function* onFieldKeyDown(event: any) {
     try {
+      const dataView = getDataView(ctx);
+
       switch (event.key) {
         case "Tab": {
-          if (event.shiftKey) {
-            selectPrevColumn(ctx)(true);
+          if (isGoingToChangeRow(event)){
+            getTablePanelView(ctx).setEditing(false);
+            yield* flushCurrentRowData(ctx)();
+
+            const isDirty = getFormScreen(dataView).isDirty;
+            if (isDirty && isInfiniteScrollingActive(dataView)) {
+              const shouldProceedToChangeRow = yield getFormScreenLifecycle(dataView)
+                .handleUserInputOnChangingRow(dataView);
+              if (!shouldProceedToChangeRow) {
+                return;
+              }
+            }
+
+            yield dataView.lifecycle.runRecordChangedReaction(function*() {
+              if (event.shiftKey) {
+                yield selectPrevColumn(ctx)(true);
+              } else {
+                yield selectNextColumn(ctx)(true);
+              }
+            });
+
             event.preventDefault();
-          } else {
-            selectNextColumn(ctx)(true);
-            event.preventDefault();
+            getTablePanelView(ctx).scrollToCurrentCell();
+            getTablePanelView(ctx).setEditing(true);
           }
-          getTablePanelView(ctx).scrollToCurrentCell();
-          yield* flushCurrentRowData(ctx)();
+          else {
+            if (event.shiftKey) {
+              selectPrevColumn(ctx)(true);
+            } else {
+              selectNextColumn(ctx)(true);
+            }
+            event.preventDefault();
+
+            getTablePanelView(ctx).scrollToCurrentCell();
+            yield* flushCurrentRowData(ctx)();
+          }
           break;
         }
         case "Enter": {
@@ -34,7 +69,6 @@ export function onFieldKeyDown(ctx: any) {
 
           yield* flushCurrentRowData(ctx)();
 
-          const dataView = getDataView(ctx);
           const isDirty = getFormScreen(dataView).isDirty;
           if (isDirty && isInfiniteScrollingActive(dataView)) {
             const shouldProceedToChangeRow = yield getFormScreenLifecycle(dataView)
