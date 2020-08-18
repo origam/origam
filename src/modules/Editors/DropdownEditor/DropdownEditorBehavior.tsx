@@ -4,14 +4,14 @@ import { action, computed, flow, observable, reaction } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
 import { DropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
-import { DropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
 
 export class DropdownEditorBehavior {
   constructor(
     private api: DropdownEditorApi,
-    private data: DropdownEditorData,
+    private data: IDropdownEditorData,
     private dataTable: DropdownDataTable,
     private setup: () => DropdownEditorSetup,
     private cache: DropdownEditorLookupListCache
@@ -96,7 +96,12 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound handleInputBlur(event: any) {
-    if (this.userEnteredValue !== undefined && this.isDropped && !this.isWorking && this.cursorRowId) {
+    if (
+      this.userEnteredValue !== undefined &&
+      this.isDropped &&
+      !this.isWorking &&
+      this.cursorRowId
+    ) {
       this.data.chooseNewValue(this.cursorRowId);
     }
     this.dropUp();
@@ -219,7 +224,11 @@ export class DropdownEditorBehavior {
     console.log(args);
     const setup = this.setup();
     if (setup.dropdownType === LazilyLoadedGrid) {
-      if (this.willLoadNextPage && !this.isWorking && args.scrollTop > args.scrollHeight - args.clientHeight - 500) {
+      if (
+        this.willLoadNextPage &&
+        !this.isWorking &&
+        args.scrollTop > args.scrollHeight - args.clientHeight - 500
+      ) {
         this.willLoadPage++;
         this.ensureRequestRunning();
       }
@@ -229,7 +238,9 @@ export class DropdownEditorBehavior {
   @action.bound
   ensureRequestRunning() {
     if (!this.isWorking) {
-      this.runGetLookupList(this.setup().dropdownType === EagerlyLoadedGrid ? "" : this.userEnteredValue || "");
+      this.runGetLookupList(
+        this.setup().dropdownType === EagerlyLoadedGrid ? "" : this.userEnteredValue || ""
+      );
     }
   }
 
@@ -293,4 +304,6 @@ export class DropdownEditorBehavior {
   refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
   elmDropdownBody: any;
 }
-export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>("IDropdownEditorBehavior");
+export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
+  "IDropdownEditorBehavior"
+);

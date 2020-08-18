@@ -21,10 +21,7 @@ import { ImageEditor } from "gui/Components/ScreenElements/Editors/ImageEditor";
 import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
-import {
-  DropdownEditor,
-  XmlBuildDropdownEditor,
-} from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -169,49 +166,32 @@ export class FormViewEditor extends React.Component<{
         );
       case "ComboBox":
         return (
-          <XmlBuildDropdownEditor key={this.props.xmlNode.$iid} xmlNode={this.props.xmlNode} />
+          <XmlBuildDropdownEditor
+            key={this.props.xmlNode.$iid}
+            xmlNode={this.props.xmlNode}
+          />
         );
-      // return (
-      //   <DropdownEditor
-      //     value={this.props.value}
-      //     textualValue={this.props.textualValue}
-      //     isReadOnly={readOnly}
-      //     isInvalid={isInvalid}
-      //     invalidMessage={invalidMessage}
-      //     isFocused={false}
-      //     backgroundColor={backgroundColor}
-      //     foregroundColor={foregroundColor}
-      //     onTextChange={undefined}
-      //     onItemSelect={this.props.onChange}
-      //     DataStructureEntityId={""}
-      //     ColumnNames={[]}
-      //     Property={""}
-      //     RowId={""}
-      //     LookupId={""}
-      //     menuItemId={""}
-      //     api={undefined}
-      //     onEditorBlur={this.props.onEditorBlur}
-      //     subscribeToFocusManager={(textEditor) =>
-      //       focusManager.subscribe(textEditor, this.props.property?.id)
-      //     }
-      //     onKeyDown={this.MakeOnKeyDownCallBack()}
-      //   />
-      // );
       case "TagInput":
         return (
-          <TagInputEditor
-            value={this.props.value}
-            isReadOnly={readOnly}
-            isInvalid={isInvalid}
-            invalidMessage={invalidMessage}
-            isFocused={false}
-            backgroundColor={backgroundColor}
-            foregroundColor={foregroundColor}
-            refocuser={undefined}
-            onChange={this.props.onChange}
-            onKeyDown={this.MakeOnKeyDownCallBack()}
-            onClick={undefined}
-            onEditorBlur={this.props.onEditorBlur}
+          <XmlBuildDropdownEditor
+            key={this.props.xmlNode.$iid}
+            xmlNode={this.props.xmlNode}
+            tagEditor={
+              <TagInputEditor
+                value={this.props.value}
+                isReadOnly={readOnly}
+                isInvalid={isInvalid}
+                invalidMessage={invalidMessage}
+                isFocused={false}
+                backgroundColor={backgroundColor}
+                foregroundColor={foregroundColor}
+                refocuser={undefined}
+                onChange={this.props.onChange}
+                onKeyDown={this.MakeOnKeyDownCallBack()}
+                onClick={undefined}
+                onEditorBlur={this.props.onEditorBlur}
+              />
+            }
           />
         );
       case "Checklist":

@@ -1,75 +1,119 @@
-import React from "react";
-import {Tooltip} from "react-tippy";
+import React, { useContext, useEffect, useMemo, useRef } from "react";
+import { Tooltip } from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
 import S from "./TagInputEditor.module.css";
 
-import {TagInput, TagInputItem} from "gui/Components/TagInput/TagInput";
-import {inject, observer} from "mobx-react";
-import {IProperty} from "model/entities/types/IProperty";
-import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {
+  TagInput,
+  TagInputAdd,
+  TagInputItem,
+  TagInputItemDelete,
+} from "gui/Components/TagInput/TagInput";
+import { inject, observer } from "mobx-react";
+import { IProperty } from "model/entities/types/IProperty";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { CtxDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
 
-@inject(({ property }: { property: IProperty }, { value }) => {
+export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
   return {
-    textualValues: dataTable.resolveCellText(property, value)
+    textualValues: dataTable.resolveCellText(property, value),
   };
-})
-@observer
-export class TagInputEditor extends React.Component<{
-  value: string[];
-  textualValues?: string[];
-  isReadOnly: boolean;
-  isInvalid: boolean;
-  invalidMessage?: string;
-  isFocused: boolean;
-  backgroundColor?: string;
-  foregroundColor?: string;
-  refocuser?: (cb: () => void) => () => void;
-  onChange?(event: any, value: string): void;
-  onKeyDown?(event: any): void;
-  onClick?(event: any): void;
-  onEditorBlur?(event: any): void;
-}> {
-  render() {
-    return (
-      <div className={CS.editorContainer}>
-        <TagInput className={S.tagInput}>
-          {this.props.value
-            ? this.props.value.map((valueItem, idx) => (
-                <TagInputItem key={valueItem}>
-                  {this.props.textualValues![idx] || ""}
-                </TagInputItem>
-              ))
-            : null}
-        </TagInput>
-        {/* <input
-          style={{
-            color: this.props.foregroundColor,
-            backgroundColor: this.props.backgroundColor
-          }}
-          className={CS.editor}
-          type="text"
-          value={this.props.value || ""}
-          readOnly={true || this.props.isReadOnly}
-          // ref={this.refInput}
-          onChange={(event: any) =>
-            this.props.onChange &&
-            this.props.onChange(event, event.target.value)
+})(
+  observer(
+    (props: {
+      value: string[];
+      textualValues?: string[];
+      isReadOnly: boolean;
+      isInvalid: boolean;
+      invalidMessage?: string;
+      isFocused: boolean;
+      backgroundColor?: string;
+      foregroundColor?: string;
+      refocuser?: (cb: () => void) => () => void;
+      onChange?(event: any, value: any): void;
+      onKeyDown?(event: any): void;
+      onClick?(event: any): void;
+      onEditorBlur?(event: any): void;
+    }) => {
+      function removeItem(event: any, item: string) {
+        const index = props.value.indexOf(item);
+        if (index > -1) {
+          props.value.splice(index, 1);
+          if (props.onChange) {
+            props.onChange(event, props.value);
           }
-          onKeyDown={this.props.onKeyDown}
-          onClick={this.props.onClick}
-          onBlur={this.props.onEditorBlur}
-          // onFocus={this.handleFocus}
-        />*/}
-        {this.props.isInvalid && (
-          <div className={CS.notification}>
-            <Tooltip html={this.props.invalidMessage} arrow={true}>
-              <i className="fas fa-exclamation-circle red" />
-            </Tooltip>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+          if (props.onEditorBlur) {
+            props.onEditorBlur(event);
+          }
+        }
+      }
+
+      const beh = useContext(CtxDropdownEditor).behavior;
+      const ref = useContext(CtxDropdownRefCtrl);
+      const data = useContext(CtxDropdownEditor).editorData;
+      const refInput = useMemo(() => {
+        return (elm: any) => {
+          beh.refInputElement(elm);
+        };
+      }, []);
+
+      const previousValueRef = useRef<string[]>();
+
+      useEffect(() => {
+        if (
+          previousValueRef.current !== undefined &&
+          previousValueRef.current.length !== props.value.length
+        ) {
+          beh.elmInputElement.value = "";
+        }
+        previousValueRef.current = props.value;
+      });
+
+      function handleInputKeyDown(event: any) {
+        if (event.key === "Backspace" && event.target.value === "" && props.value.length > 0) {
+          removeItem(event, props.value[props.value.length - 1]);
+        }
+        beh.handleInputKeyDown(event);
+      }
+
+      return (
+        <div className={CS.editorContainer} ref={ref}>
+          <TagInput className={S.tagInput}>
+            {props.value
+              ? props.value.map((valueItem, idx) => (
+                  <TagInputItem key={valueItem}>
+                    <TagInputItemDelete
+                      onClick={(event) => {
+                        removeItem(event, valueItem);
+                      }}
+                    />
+                    {props.textualValues![idx] || ""}
+                  </TagInputItem>
+                ))
+              : null}
+            <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />
+            <input
+              className={S.filterInput}
+              ref={refInput}
+              placeholder={data.isResolving ? "Loading..." : ""}
+              onChange={beh.handleInputChange}
+              onKeyDown={handleInputKeyDown}
+              onFocus={beh.handleInputFocus}
+              onBlur={beh.handleInputBlur}
+            />
+          </TagInput>
+          {props.isInvalid && (
+            <div className={CS.notification}>
+              <Tooltip html={props.invalidMessage} arrow={true}>
+                <i className="fas fa-exclamation-circle red" />
+              </Tooltip>
+            </div>
+          )}
+        </div>
+      );
+    }
+  )
+);
