@@ -15,7 +15,8 @@ export function DropdownEditorInput() {
       {() => (
         <input
           className={"input"}
-          //readOnly={false}
+          readOnly={beh.isReadOnly}
+          disabled={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
           onChange={beh.handleInputChange}

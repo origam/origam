@@ -63,7 +63,8 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
   );
 }
 
-export function XmlBuildDropdownEditor(props: { xmlNode: any; tagEditor?: JSX.Element }) {
+export function XmlBuildDropdownEditor(props: {
+    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
   const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
@@ -97,7 +98,8 @@ export function XmlBuildDropdownEditor(props: { xmlNode: any; tagEditor?: JSX.El
       dropdownEditorData,
       dropdownEditorDataTable,
       () => dropdownEditorSetup,
-      dropdownEditorLookupListCache
+      dropdownEditorLookupListCache,
+      props.isReadOnly
     );
 
     const rat = props.xmlNode.attributes;

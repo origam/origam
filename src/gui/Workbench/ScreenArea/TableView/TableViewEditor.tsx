@@ -1,24 +1,24 @@
-import {TagInputEditor} from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import {TextEditor} from "gui/Components/ScreenElements/Editors/TextEditor";
-import {inject, observer, Provider} from "mobx-react";
-import {onFieldChange} from "model/actions-ui/DataView/TableView/onFieldChange";
-import {onFieldKeyDown} from "model/actions-ui/DataView/TableView/onFieldKeyDown";
-import {getRowStateAllowUpdate} from "model/selectors/RowState/getRowStateAllowUpdate";
-import {getRowStateColumnBgColor} from "model/selectors/RowState/getRowStateColumnBgColor";
-import {getRowStateForegroundColor} from "model/selectors/RowState/getRowStateForegroundColor";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
+import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
+import { inject, observer, Provider } from "mobx-react";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { onFieldKeyDown } from "model/actions-ui/DataView/TableView/onFieldKeyDown";
+import { getRowStateAllowUpdate } from "model/selectors/RowState/getRowStateAllowUpdate";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
-import {onFieldBlur} from "../../../../model/actions-ui/DataView/TableView/onFieldBlur";
-import {IProperty} from "../../../../model/entities/types/IProperty";
-import {getSelectedRow} from "../../../../model/selectors/DataView/getSelectedRow";
-import {getCellValue} from "../../../../model/selectors/TablePanelView/getCellValue";
-import {getSelectedProperty} from "../../../../model/selectors/TablePanelView/getSelectedProperty";
-import {BoolEditor} from "../../../Components/ScreenElements/Editors/BoolEditor";
-import {DateTimeEditor} from "../../../Components/ScreenElements/Editors/DateTimeEditor";
-import {DropdownEditor} from "../../../Components/ScreenElements/Editors/DropdownEditor";
-import {NumberEditor} from "gui/Components/ScreenElements/Editors/NumberEditor";
-import {BlobEditor} from "gui/Components/ScreenElements/Editors/BlobEditor";
-import {XmlBuildDropdownEditor} from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import { onFieldBlur } from "../../../../model/actions-ui/DataView/TableView/onFieldBlur";
+import { IProperty } from "../../../../model/entities/types/IProperty";
+import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
+import { getCellValue } from "../../../../model/selectors/TablePanelView/getCellValue";
+import { getSelectedProperty } from "../../../../model/selectors/TablePanelView/getSelectedProperty";
+import { BoolEditor } from "../../../Components/ScreenElements/Editors/BoolEditor";
+import { DateTimeEditor } from "../../../Components/ScreenElements/Editors/DateTimeEditor";
+import { DropdownEditor } from "../../../Components/ScreenElements/Editors/DropdownEditor";
+import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
+import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
+import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -125,6 +125,7 @@ export class TableViewEditor extends React.Component<{
           <XmlBuildDropdownEditor
             key={this.props.property!.xmlNode.$iid}
             xmlNode={this.props.property!.xmlNode}
+            isReadOnly={readOnly}
           />
         );
       case "Checklist":
