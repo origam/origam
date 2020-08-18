@@ -55,7 +55,7 @@ export class TreeDataTable implements IDataTable {
   }
 
   getRowById(id: string): any[] | undefined {
-    throw new Error("Not implemented");
+    return this.rows.find((row) => this.getRowId(row) === id);
   }
 
   getExistingRowIdxById(id: string): number | undefined {
