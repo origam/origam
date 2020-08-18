@@ -382,6 +382,19 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
+  async restoreData(
+    data: {
+      SessionFormIdentifier: string;
+      ObjectId: string;
+    }
+  ) {
+    return (
+      await axios.post(`${this.urlPrefix}/UIService/RestoreData`, data, {
+        headers: this.httpAuthHeader,
+      })
+    ).data;
+  }
+
   async updateObject(data: {
     SessionFormIdentifier: string;
     Entity: string;
@@ -801,6 +814,18 @@ export class OrigamAPI implements IApi {
         headers: this.httpAuthHeader,
       })
     ).data;
+  }
+
+  async saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void> {
+    await axios.get(`${this.urlPrefix}/UIService/SaveDataQuery/${data.sessionFormIdentifier}`, {
+      headers: this.httpAuthHeader,
+    });
+  }
+
+  async saveData(data: { sessionFormIdentifier: string }): Promise<void> {
+    await axios.get(`${this.urlPrefix}/UIService/SaveData/${data.sessionFormIdentifier}`, {
+      headers: this.httpAuthHeader,
+    });
   }
 }
 

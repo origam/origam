@@ -75,4 +75,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle;
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle): void;
   parent?: any;
+
+  isLastColumnSelected(): boolean;
+  isFirstColumnSelected(): boolean;
 }

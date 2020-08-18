@@ -66,7 +66,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   _selectedRowIdChangeDebounceTimeout: any;
   @action.bound
-  onSelectedRowIdChange() {
+  onSelectedRowIdChangeDebounced() {
     if (this._selectedRowIdChangeDebounceTimeout) {
       clearTimeout(this._selectedRowIdChangeDebounceTimeout);
     } else {
@@ -80,16 +80,30 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
   _selectedRowReactionDisposer: any;
-  @action.bound startSelectedRowReaction(fireImmediately?: boolean) {
+  @action.bound
+  async startSelectedRowReaction(fireImmediately?: boolean) {
     console.log('selrow reaction started')
+    if(fireImmediately){
+      await this.onSelectedRowIdChangeImm();
+    }
+
     const self = this;
     return (this._selectedRowReactionDisposer = reaction(
       () => {
         return getSelectedRowId(this);
       },
-      () => self.onSelectedRowIdChange(),
-      { equals: comparer.structural, fireImmediately }
+      () => self.onSelectedRowIdChangeImm(),
+      { equals: comparer.structural }
     ));
+  }
+
+  async runRecordChangedReaction(action: ()=>Generator){
+    try {
+      this.stopSelectedRowReaction();
+      await flow(action)();
+    } finally {
+      await this.startSelectedRowReaction(true);
+    }
   }
 
   @action.bound stopSelectedRowReaction() {
