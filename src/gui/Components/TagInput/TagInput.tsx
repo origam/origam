@@ -1,13 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import S from "./TagInput.module.css";
+import { CtxDropdownEditor } from "../../../modules/Editors/DropdownEditor/DropdownEditor";
 
-export const TagInput: React.FC<{ className?: string }> = props => {
+export const TagInput: React.FC<{ className?: string }> = (props) => {
   return (
-    <div
-      className={
-        S.tagInputContainer + (props.className ? ` ${props.className}` : "")
-      }
-    >
+    <div className={S.tagInputContainer + (props.className ? ` ${props.className}` : "")}>
       {props.children}
     </div>
   );
@@ -16,13 +13,20 @@ export const TagInput: React.FC<{ className?: string }> = props => {
 export const TagInputAdd: React.FC<{
   domRef?: any;
   className?: string;
-  onClick?: (event: any) => void;
+  onClick: (event: any) => void;
   onMouseDown?: (event: any) => void;
-}> = props => {
+}> = (props) => {
+  const beh = useContext(CtxDropdownEditor).behavior;
+
+  function onClick(event: any) {
+    beh.handleInputBtnClick(event);
+    props.onClick(event);
+  }
+
   return (
     <div
       className={S.tagInputAdd + (props.className ? ` ${props.className}` : "")}
-      onClick={props.onClick}
+      onClick={(event) => onClick(event)}
       onMouseDown={props.onMouseDown}
       ref={props.domRef}
     >
@@ -34,12 +38,10 @@ export const TagInputAdd: React.FC<{
 export const TagInputItemDelete: React.FC<{
   onClick?: (event: any) => void;
   className?: string;
-}> = props => {
+}> = (props) => {
   return (
     <div
-      className={
-        S.tagInputItemDelete + (props.className ? ` ${props.className}` : "")
-      }
+      className={S.tagInputItemDelete + (props.className ? ` ${props.className}` : "")}
       onClick={props.onClick}
     >
       <i className="fas fa-times" />
@@ -47,13 +49,9 @@ export const TagInputItemDelete: React.FC<{
   );
 };
 
-export const TagInputItem: React.FC<{ className?: string }> = props => {
+export const TagInputItem: React.FC<{ className?: string }> = (props) => {
   return (
-    <div
-      className={
-        S.tagInputItem + (props.className ? ` ${props.className}` : "")
-      }
-    >
+    <div className={S.tagInputItem + (props.className ? ` ${props.className}` : "")}>
       {props.children}
     </div>
   );

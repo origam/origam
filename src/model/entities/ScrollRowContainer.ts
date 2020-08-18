@@ -1,6 +1,9 @@
-import {action, computed, observable} from "mobx";
-import {MAX_CHUNKS_TO_HOLD, SCROLL_ROW_CHUNK} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {IRowsContainer} from "./types/IRowsContainer";
+import { action, computed, observable } from "mobx";
+import {
+  MAX_CHUNKS_TO_HOLD,
+  SCROLL_ROW_CHUNK,
+} from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { IRowsContainer } from "./types/IRowsContainer";
 
 // The constants have to be defined here for the unit tests to work.
 // const MAX_CHUNKS_TO_HOLD = 20;
@@ -18,9 +21,11 @@ export class ScrollRowContainer implements IRowsContainer {
 
   @computed
   get maxRowCountSeen() {
-    const maxRowsNow = this.rowChunks.length === 0
-      ? 0
-      : this.rowChunks[this.rowChunks.length - 1].rowOffset + this.rowChunks[this.rowChunks.length - 1].length;
+    const maxRowsNow =
+      this.rowChunks.length === 0
+        ? 0
+        : this.rowChunks[this.rowChunks.length - 1].rowOffset +
+          this.rowChunks[this.rowChunks.length - 1].length;
     if (maxRowsNow > this._maxRowNumberSeen) {
       this._maxRowNumberSeen = maxRowsNow;
     }
@@ -30,7 +35,7 @@ export class ScrollRowContainer implements IRowsContainer {
 
   @computed
   get rows() {
-    return this.rowChunks.flatMap(chunk => chunk.rows);
+    return this.rowChunks.flatMap((chunk) => chunk.rows);
   }
 
   clear(): void {
@@ -43,22 +48,22 @@ export class ScrollRowContainer implements IRowsContainer {
     chunk.delete(rowId);
   }
 
-  findChunkByRowId(rowId: string){
-    const chunk = this.rowChunks.find(chunk => chunk.has(rowId))
-    if(!chunk){
+  findChunkByRowId(rowId: string) {
+    const chunk = this.rowChunks.find((chunk) => chunk.has(rowId));
+    if (!chunk) {
       throw new Error(`Row with id "${rowId}" was not found`);
     }
     return chunk;
   }
 
-  findChunkByRowIndex(indexInContainer: number){
+  findChunkByRowIndex(indexInContainer: number) {
     let rowCounter = 0;
     for (let rowChunk of this.rowChunks) {
       const indexInChunk = indexInContainer - rowCounter;
-      if(indexInChunk < rowChunk.rows.length){
+      if (indexInChunk < rowChunk.rows.length) {
         return {
           chunk: rowChunk,
-          indexInChunk: indexInChunk
+          indexInChunk: indexInChunk,
         };
       }
       rowCounter += rowChunk.rows.length;
@@ -66,12 +71,12 @@ export class ScrollRowContainer implements IRowsContainer {
     const lastChunk = this.rowChunks[this.rowChunks.length - 1];
     return {
       chunk: lastChunk,
-      indexInChunk: lastChunk.rows.length
+      indexInChunk: lastChunk.rows.length,
     };
   }
 
   insert(index: number, row: any[]): void {
-    const {chunk, indexInChunk} = this.findChunkByRowIndex(index);
+    const { chunk, indexInChunk } = this.findChunkByRowIndex(index);
     chunk.insert(indexInChunk, row);
   }
 
@@ -79,8 +84,8 @@ export class ScrollRowContainer implements IRowsContainer {
   set(rows: any[][]) {
     this.clear();
     this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
-    this.notifyResetListeners()
-    this._maxRowNumberSeen=0;
+    this.notifyResetListeners();
+    this._maxRowNumberSeen = 0;
   }
 
   substitute(row: any[]): void {
@@ -107,7 +112,7 @@ export class ScrollRowContainer implements IRowsContainer {
   get nextEndOffset() {
     return this.rowChunks.length === 0
       ? SCROLL_ROW_CHUNK
-      : this.rowChunks[this.rowChunks.length - 1].rowOffset + SCROLL_ROW_CHUNK
+      : this.rowChunks[this.rowChunks.length - 1].rowOffset + SCROLL_ROW_CHUNK;
   }
 
   get nextStartOffset() {
@@ -123,10 +128,10 @@ export class ScrollRowContainer implements IRowsContainer {
       return;
     }
     const rowOffset = this.rowChunks[0].rowOffset - SCROLL_ROW_CHUNK;
-    if(rowOffset < 0) {
+    if (rowOffset < 0) {
       return;
     }
-    this.rowChunks.unshift(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined))
+    this.rowChunks.unshift(new RowChunk(rowOffset, rows, this.rowIdGetter, undefined));
     if (this.rowChunks.length > MAX_CHUNKS_TO_HOLD) {
       this.rowChunks.pop();
     }
@@ -142,7 +147,7 @@ export class ScrollRowContainer implements IRowsContainer {
     const isFinal = rows.length < SCROLL_ROW_CHUNK;
     const rowChunk = new RowChunk(rowOffset, rows, this.rowIdGetter, isFinal);
     const filteredChunk = this.replaceDuplicateRows(rowChunk);
-    this.rowChunks.push(filteredChunk)
+    this.rowChunks.push(filteredChunk);
     if (this.rowChunks.length > MAX_CHUNKS_TO_HOLD) {
       this.rowChunks.shift();
     }
@@ -158,16 +163,12 @@ export class ScrollRowContainer implements IRowsContainer {
 
   @computed
   get isLastRowLoaded() {
-    return this.rowChunks.length === 0
-      ? false
-      : this.rowChunks[this.rowChunks.length - 1].isFinal;
+    return this.rowChunks.length === 0 ? false : this.rowChunks[this.rowChunks.length - 1].isFinal;
   }
 
   @computed
   get isFirstRowLoaded() {
-    return this.rowChunks.length === 0
-      ? false
-      : this.rowChunks[0].isInitial;
+    return this.rowChunks.length === 0 ? false : this.rowChunks[0].isInitial;
   }
 
   @computed
@@ -175,8 +176,8 @@ export class ScrollRowContainer implements IRowsContainer {
     return this.rows.length === MAX_CHUNKS_TO_HOLD * SCROLL_ROW_CHUNK;
   }
 
+  unlockAddedRowPosition(): void {}
 }
-
 
 class RowChunk {
   rowOffset: number;
@@ -184,13 +185,16 @@ class RowChunk {
   rows: any[];
   private rowIdGetter: (row: any[]) => string;
   isFinal: boolean;
-  private idMap: Map<string, number> ;
+  private idMap: Map<string, number>;
 
-  constructor(rowOffset: number, rows: any[], rowIdGetter: (row: any[]) => string, isFinal: boolean | undefined) {
+  constructor(
+    rowOffset: number,
+    rows: any[],
+    rowIdGetter: (row: any[]) => string,
+    isFinal: boolean | undefined
+  ) {
     this.rowIdGetter = rowIdGetter;
-    this.isFinal = isFinal === undefined
-      ? rows.length < SCROLL_ROW_CHUNK
-      :isFinal  ;
+    this.isFinal = isFinal === undefined ? rows.length < SCROLL_ROW_CHUNK : isFinal;
     if (rowOffset < 0) {
       throw new Error("Offset cannot be less than 0");
     }
@@ -199,9 +203,9 @@ class RowChunk {
     this.idMap = this.makeIdMap(rows);
   }
 
-  makeIdMap(rows: any[][]){
+  makeIdMap(rows: any[][]) {
     const idMap = new Map<string, number>();
-    for (let i = 0; i<rows.length; i++) {
+    for (let i = 0; i < rows.length; i++) {
       idMap.set(this.rowIdGetter(rows[i]), i);
     }
     return idMap;
@@ -216,7 +220,8 @@ class RowChunk {
   }
 
   trySubstitute(row: any[]) {
-    const index = this.rows.findIndex(existingRow => this.rowIdGetter(existingRow) === this.rowIdGetter(row)
+    const index = this.rows.findIndex(
+      (existingRow) => this.rowIdGetter(existingRow) === this.rowIdGetter(row)
     );
     if (index > -1) {
       this.rows.splice(index, 1, row);
@@ -226,31 +231,37 @@ class RowChunk {
     }
   }
 
-  getRow(id: string){
+  getRow(id: string) {
     const rowIndex = this.idMap.get(id);
-    if(rowIndex === undefined){
-      return undefined
+    if (rowIndex === undefined) {
+      return undefined;
     }
     return this.rows[rowIndex];
   }
 
   replaceRows(sourceChunk: RowChunk) {
-    const duplicateRowIndicesInSource: number[]=[];
+    const duplicateRowIndicesInSource: number[] = [];
     for (let id of this.idMap.keys()) {
       const duplicateRow = sourceChunk.getRow(id);
-      if(duplicateRow){
+      if (duplicateRow) {
         const indexInThisChunk = this.idMap.get(id)!;
         this.rows[indexInThisChunk] = duplicateRow;
-        duplicateRowIndicesInSource.push(sourceChunk.getIndex(id)!)
+        duplicateRowIndicesInSource.push(sourceChunk.getIndex(id)!);
       }
     }
 
-    if(duplicateRowIndicesInSource.length === 0 ){
+    if (duplicateRowIndicesInSource.length === 0) {
       return sourceChunk;
-    }else{
-      const nonDuplicateRows = sourceChunk.rows
-        .filter((row,i) => !duplicateRowIndicesInSource.includes(i))
-      return new RowChunk(sourceChunk.rowOffset, nonDuplicateRows, this.rowIdGetter, sourceChunk.isFinal);
+    } else {
+      const nonDuplicateRows = sourceChunk.rows.filter(
+        (row, i) => !duplicateRowIndicesInSource.includes(i)
+      );
+      return new RowChunk(
+        sourceChunk.rowOffset,
+        nonDuplicateRows,
+        this.rowIdGetter,
+        sourceChunk.isFinal
+      );
     }
   }
 
@@ -270,7 +281,7 @@ class RowChunk {
   }
 
   insert(index: number, row: any[]) {
-    this.rows.splice(index, 0, row)
+    this.rows.splice(index, 0, row);
     const rowId = this.rowIdGetter(row);
     this.shiftIdMapUp(index);
     this.idMap.set(rowId, index);
@@ -279,7 +290,7 @@ class RowChunk {
   private shiftIdMapDown(index: number) {
     for (let entry of Array.from(this.idMap.entries())) {
       if (entry[1] > index) {
-        this.idMap.set(entry[0], entry[1] - 1)
+        this.idMap.set(entry[0], entry[1] - 1);
       }
     }
   }
@@ -287,9 +298,8 @@ class RowChunk {
   private shiftIdMapUp(index: number) {
     for (let entry of Array.from(this.idMap.entries())) {
       if (entry[1] > index - 1) {
-        this.idMap.set(entry[0], entry[1] + 1)
+        this.idMap.set(entry[0], entry[1] + 1);
       }
     }
   }
 }
-

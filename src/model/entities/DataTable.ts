@@ -12,7 +12,6 @@ import { getRowContainer } from "../selectors/getRowContainer";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { formatNumber } from "./NumberFormating";
 
-
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
   rowsContainer: IRowsContainer = null as any;
@@ -352,6 +351,9 @@ export class DataTable implements IDataTable {
   clear(): void {
     this.rowsContainer.clear();
     this.additionalRowData.clear();
+  }
+  unlockAddedRowPosition(): void {
+    this.rowsContainer.unlockAddedRowPosition();
   }
 
   parent?: any;

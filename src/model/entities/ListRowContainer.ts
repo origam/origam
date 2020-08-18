@@ -6,7 +6,8 @@ import { IRowsContainer } from "./types/IRowsContainer";
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
   private filterConfiguration: IFilterConfiguration;
-
+  @observable
+  private forcedFirstRowId: string | undefined;
   constructor(
     orderingConfiguration: IOrderingConfiguration,
     filterConfiguration: IFilterConfiguration,
@@ -28,8 +29,20 @@ export class ListRowContainer implements IRowsContainer {
     if (this.orderingConfiguration.ordering.length === 0) {
       return rows;
     } else {
-      return rows.sort(this.orderingConfiguration.orderingFunction());
+      return rows.sort((row1: any[], row2: any[]) => this.internalRowOrderingFunc(row1, row2));
     }
+  }
+
+  internalRowOrderingFunc(row1: any[], row2: any[]) {
+    if(this.forcedFirstRowId !== undefined){
+      if (this.forcedFirstRowId === this.rowIdGetter(row1)) return -1;
+      if (this.forcedFirstRowId === this.rowIdGetter(row2)) return 1;
+    }
+    return this.orderingConfiguration.orderingFunction()(row1, row2);
+  }
+
+  unlockAddedRowPosition(): void {
+    this.forcedFirstRowId = undefined;
   }
 
   clear(): void {
@@ -44,12 +57,8 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   insert(index: number, row: any[]): void {
-    const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === this.rowIdGetter(row));
-    if (idx > -1) {
-      this.allRows.splice(idx, 0, row);
-    } else {
-      this.allRows.push(row);
-    }
+    this.allRows.splice(index, 0, row);
+    this.forcedFirstRowId = this.rowIdGetter(row);
   }
 
   set(rows: any[][]) {

@@ -11,7 +11,10 @@ export interface IRowsContainer {
 
   registerResetListener(listener: () => void): void;
 
+  unlockAddedRowPosition(): void;
+  
   maxRowCountSeen: number;
 
   rows: any[];
+
 }

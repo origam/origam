@@ -3,15 +3,19 @@ import FlexSearch from "flexsearch";
 import { action, computed, observable } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
 import { EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
+import { IDropdownEditorData } from "./DropdownEditorData";
 
 export class DropdownDataTable {
-  constructor(private setup: () => DropdownEditorSetup) {}
+  constructor(
+    private setup: () => DropdownEditorSetup,
+    private dropdownEditorData: IDropdownEditorData
+  ) {}
 
   @observable.shallow allRows: any[][] = [];
   @observable filterPhrase: string = "";
   fulltext: any;
 
-  @computed get rows(): any[][] {
+  get rowsBeforeRedundancyFilter(): any[][] {
     const setup = this.setup();
     switch (setup.dropdownType) {
       case EagerlyLoadedGrid: {
@@ -25,6 +29,12 @@ export class DropdownDataTable {
         return this.allRows;
       }
     }
+  }
+
+  @computed get rows(): any[][] {
+    return this.rowsBeforeRedundancyFilter.filter(
+      (row) => !this.dropdownEditorData.idsInEditor.includes(this.getRowIdentifier(row))
+    );
   }
 
   get rowCount() {
@@ -108,7 +118,10 @@ export class DropdownDataTable {
     const isOnlyFirstColumn = setup.searchByFirstColumnOnly;
     for (
       let i = 0;
-      i < (isOnlyFirstColumn ? Math.min(1, setup.visibleColumnNames.length) : setup.visibleColumnNames.length);
+      i <
+      (isOnlyFirstColumn
+        ? Math.min(1, setup.visibleColumnNames.length)
+        : setup.visibleColumnNames.length);
       i++
     ) {
       flexFields.push(`${setup.columnNameToIndex.get(setup.visibleColumnNames[i])}`);
@@ -120,6 +133,7 @@ export class DropdownDataTable {
         field: flexFields,
       },
     });
+
     function arr2obj(arr: any[]) {
       const result: { [k: string]: any } = {};
       for (let i = 0; i < arr.length; i++) {
@@ -127,12 +141,14 @@ export class DropdownDataTable {
       }
       return result;
     }
+
     for (let i = 0; i < rows.length; i++) {
       flexIndex.add(arr2obj(rows[i]));
     }
     return flexIndex;
   }
 }
+
 export const IDropdownDataTable = TypeSymbol<DropdownDataTable>("IDropdownDataTable");
 
 export interface IHeaderCellDriver {
@@ -159,4 +175,5 @@ export class DropdownColumnDrivers {
     return this.drivers[columnIndex];
   }
 }
+
 export const IDropdownColumnDrivers = TypeSymbol<DropdownColumnDrivers>("IDropdownColumnDrivers");

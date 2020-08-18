@@ -12,14 +12,16 @@ import { DropdownEditorApi } from "./DropdownEditorApi";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { DropdownEditorBody } from "./DropdownEditorBody";
 import { DropdownEditorControl } from "./DropdownEditorControl";
-import { DropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
+import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
+import { TagInputEditorData } from "./TagInputEditorData";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
-  editorData: DropdownEditorData;
+  editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
   columnDrivers: DropdownColumnDrivers;
 }
@@ -46,14 +48,14 @@ export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
   "IGetDropdownEditorSetup"
 );
 
-export function DropdownEditor() {
+export function DropdownEditor(props: { editor?: JSX.Element }) {
   const beh = useContext(CtxDropdownEditor).behavior;
   return (
     <Observer>
       {() => (
         <DropdownLayout
           isDropped={beh.isDropped}
-          renderCtrl={() => <DropdownEditorControl />}
+          renderCtrl={() => (props.editor ? props.editor : <DropdownEditorControl />)}
           renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} />}
         />
       )}
@@ -61,7 +63,8 @@ export function DropdownEditor() {
   );
 }
 
-export function XmlBuildDropdownEditor(props: { xmlNode: any }) {
+export function XmlBuildDropdownEditor(props: {
+    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
   const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
@@ -79,12 +82,13 @@ export function XmlBuildDropdownEditor(props: { xmlNode: any }) {
       dataViewApi,
       () => dropdownEditorBehavior
     );
-    const dropdownEditorData = new DropdownEditorData(
-      dataViewData,
-      dataViewRowCursor,
-      () => dropdownEditorSetup
+    const dropdownEditorData: IDropdownEditorData = props.tagEditor
+      ? new TagInputEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
+      : new DropdownEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup);
+    const dropdownEditorDataTable = new DropdownDataTable(
+      () => dropdownEditorSetup,
+      dropdownEditorData
     );
-    const dropdownEditorDataTable = new DropdownDataTable(() => dropdownEditorSetup);
     const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
       () => dropdownEditorSetup,
       lookupListCache
@@ -94,7 +98,8 @@ export function XmlBuildDropdownEditor(props: { xmlNode: any }) {
       dropdownEditorData,
       dropdownEditorDataTable,
       () => dropdownEditorSetup,
-      dropdownEditorLookupListCache
+      dropdownEditorLookupListCache,
+      props.isReadOnly
     );
 
     const rat = props.xmlNode.attributes;
@@ -190,7 +195,7 @@ export function XmlBuildDropdownEditor(props: { xmlNode: any }) {
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      <DropdownEditor />
+      <DropdownEditor editor={props.tagEditor} />
     </CtxDropdownEditor.Provider>
   );
 }

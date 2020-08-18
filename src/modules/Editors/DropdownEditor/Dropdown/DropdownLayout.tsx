@@ -59,8 +59,12 @@ export function DropdownLayout(props: {
   });
 
   const reMeasure = () => {
-    if (refMeasureCtrl.current) (refMeasureCtrl.current as any).measure();
-    if (refMeasureBody.current) (refMeasureBody.current as any).measure();
+    if (refMeasureCtrl.current){
+      (refMeasureCtrl.current as any).measure();
+    }
+    if (refMeasureBody.current){
+      (refMeasureBody.current as any).measure();
+    }
   };
 
   useEffect(() => {

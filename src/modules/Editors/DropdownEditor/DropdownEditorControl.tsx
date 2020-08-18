@@ -5,7 +5,6 @@ import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
 
-
 export function DropdownEditorControl() {
   const ref = useContext(CtxDropdownRefCtrl);
   const beh = useContext(CtxDropdownEditor).behavior;
@@ -14,10 +13,12 @@ export function DropdownEditorControl() {
       {() => (
         <div className={S.control} ref={ref} onMouseDown={beh.handleControlMouseDown}>
           <DropdownEditorInput />
-          <button className={"inputBtn"}>
+          <button className={"inputBtn"} disabled={beh.isReadOnly}>
             <i className="fas fa-ellipsis-h"></i>
           </button>
-          <button className={"inputBtn lastOne"} onClick={beh.handleInputBtnClick}>
+          <button className={"inputBtn lastOne"}
+                  disabled={beh.isReadOnly}
+                  onClick={beh.handleInputBtnClick}>
             {!beh.isWorking ? (
               <i className="fas fa-caret-down"></i>
             ) : (
