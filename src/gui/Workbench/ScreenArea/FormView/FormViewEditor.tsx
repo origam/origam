@@ -177,6 +177,7 @@ export class FormViewEditor extends React.Component<{
           <XmlBuildDropdownEditor
             key={this.props.xmlNode.$iid}
             xmlNode={this.props.xmlNode}
+            isReadOnly={readOnly}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
