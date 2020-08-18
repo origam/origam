@@ -118,16 +118,15 @@ export class FilterSettingsString extends React.Component<{
     this.handleSettingChange();
   }
 
-
   @action.bound
   handleSettingChange() {
     this.setting = produce(this.setting, (draft) => {
-      draft.isComplete = this.setting.val1 !== undefined;
+      draft.isComplete =
+        draft.type === "null" || draft.type === "nnull" || draft.val1 !== undefined;
       draft.val2 = undefined;
     });
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
-
 
   render() {
     return (
