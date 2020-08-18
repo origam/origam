@@ -167,6 +167,7 @@ export class FilterSettingsDate extends React.Component<{
       default:
         this.setting.val1 = undefined;
         this.setting.val2 = undefined;
+        this.setting.isComplete = this.setting.type === "null" || this.setting.type === "nnull";
         this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
     }
   }

@@ -6,7 +6,6 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
-import _ from "lodash";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "eq" },
@@ -168,6 +167,7 @@ export class FilterSettingsNumber extends React.Component<{
       default:
         this.setting.val1 = undefined;
         this.setting.val2 = undefined;
+        this.setting.isComplete = this.setting.type === "null" || this.setting.type === "nnull";
         this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
     }
   }
@@ -176,11 +176,7 @@ export class FilterSettingsNumber extends React.Component<{
     return (
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors
-          setting={this.setting}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-        />
+        <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
 
         {/*<input className={CS.input} />*/}
       </>

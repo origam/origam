@@ -1,19 +1,26 @@
 import { bind } from "@decorize/bind";
-import { TypeSymbol } from "dic/Container";
 import { action, computed } from "mobx";
 import { DataViewData } from "modules/DataView/DataViewData";
 import { RowCursor } from "modules/DataView/TableCursor";
 import { DropdownEditorSetup } from "./DropdownEditor";
 
+export interface IDropdownEditorData {
+  idsInEditor: string[];
+  value: string | string[] | null;
+  text: string;
+  isResolving: boolean;
+  chooseNewValue(value: any): void;
+}
+
 @bind
-export class DropdownEditorData {
+export class DropdownEditorData implements IDropdownEditorData {
   constructor(
     private dataTable: DataViewData,
     private rowCursor: RowCursor,
     private setup: () => DropdownEditorSetup
   ) {}
 
-  @computed get value(): string | null {
+  @computed get value(): string | string[] | null {
     if (this.rowCursor.selectedId) {
       return this.dataTable.getCellValue(this.rowCursor.selectedId, this.setup().propertyId);
     } else return null;
@@ -34,5 +41,6 @@ export class DropdownEditorData {
       this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, value);
     }
   }
+
+  idsInEditor: string[] = [];
 }
-export const IDropdownEditorData = TypeSymbol<DropdownEditorData>("IDropdownEditorData");

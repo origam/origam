@@ -40,5 +40,8 @@ export function toFilterItem(columnId: string, operator: string, val1?: any, val
 }
 
 function toFilterValueForm(value: any) {
+  if(value === undefined){
+    return null;
+  }
   return isNaN(value) ? '"' + value + '"' : value;
 }

@@ -4,19 +4,19 @@ import { action, computed, flow, observable, reaction } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
 import { DropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
-import { DropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
 
 export class DropdownEditorBehavior {
-         constructor(
-           private api: DropdownEditorApi,
-           private data: DropdownEditorData,
-           private dataTable: DropdownDataTable,
-           private setup: () => DropdownEditorSetup,
-           private cache: DropdownEditorLookupListCache,
-           public isReadOnly: boolean
-         ) {}
+  constructor(
+    private api: DropdownEditorApi,
+    private data: IDropdownEditorData,
+    private dataTable: DropdownDataTable,
+    private setup: () => DropdownEditorSetup,
+    private cache: DropdownEditorLookupListCache,
+    public isReadOnly: boolean
+  ) {}
 
          @observable isDropped = false;
          @observable isWorking = false;
@@ -213,37 +213,37 @@ export class DropdownEditorBehavior {
            }
          }
 
-         @action.bound
-         handleScroll(args: {
-           clientHeight: number;
-           clientWidth: number;
-           scrollHeight: number;
-           scrollLeft: number;
-           scrollTop: number;
-           scrollWidth: number;
-         }) {
-           console.log(args);
-           const setup = this.setup();
-           if (setup.dropdownType === LazilyLoadedGrid) {
-             if (
-               this.willLoadNextPage &&
-               !this.isWorking &&
-               args.scrollTop > args.scrollHeight - args.clientHeight - 500
-             ) {
-               this.willLoadPage++;
-               this.ensureRequestRunning();
-             }
-           }
-         }
+  @action.bound
+  handleScroll(args: {
+    clientHeight: number;
+    clientWidth: number;
+    scrollHeight: number;
+    scrollLeft: number;
+    scrollTop: number;
+    scrollWidth: number;
+  }) {
+    console.log(args);
+    const setup = this.setup();
+    if (setup.dropdownType === LazilyLoadedGrid) {
+      if (
+        this.willLoadNextPage &&
+        !this.isWorking &&
+        args.scrollTop > args.scrollHeight - args.clientHeight - 500
+      ) {
+        this.willLoadPage++;
+        this.ensureRequestRunning();
+      }
+    }
+  }
 
-         @action.bound
-         ensureRequestRunning() {
-           if (!this.isWorking) {
-             this.runGetLookupList(
-               this.setup().dropdownType === EagerlyLoadedGrid ? "" : this.userEnteredValue || ""
-             );
-           }
-         }
+  @action.bound
+  ensureRequestRunning() {
+    if (!this.isWorking) {
+      this.runGetLookupList(
+        this.setup().dropdownType === EagerlyLoadedGrid ? "" : this.userEnteredValue || ""
+      );
+    }
+  }
 
          @action.bound ensureRequestCancelled() {
            if (this.runningPromise) this.runningPromise.cancel();
@@ -301,8 +301,10 @@ export class DropdownEditorBehavior {
            this.elmInputElement = elm;
          };
 
-         elmInputElement: any;
-         refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
-         elmDropdownBody: any;
-       }
-export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>("IDropdownEditorBehavior");
+  elmInputElement: any;
+  refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
+  elmDropdownBody: any;
+}
+export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
+  "IDropdownEditorBehavior"
+);

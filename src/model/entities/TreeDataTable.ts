@@ -55,7 +55,7 @@ export class TreeDataTable implements IDataTable {
   }
 
   getRowById(id: string): any[] | undefined {
-    throw new Error("Not implemented");
+    return this.rows.find((row) => this.getRowId(row) === id);
   }
 
   getExistingRowIdxById(id: string): number | undefined {
@@ -202,6 +202,8 @@ export class TreeDataTable implements IDataTable {
   isCellTextResolving(property: IProperty, value: any): boolean {
     return false;
   }
+
+  unlockAddedRowPosition(): void {}
 }
 
 export const isTreeDataTable = (o: any): o is TreeDataTable => o.$type_TreeDataTable;

@@ -116,6 +116,8 @@ export interface IDataView extends IDataViewData {
 
   scrollState: IScrollState;
   tableRows: ITableRow[];
+  onReload(): void;
+
   gridDimensions: IGridDimensions;
   contentBounds: BoundingRect | undefined;
 

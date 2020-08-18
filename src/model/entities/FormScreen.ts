@@ -61,7 +61,7 @@ export class FormScreen implements IFormScreen {
     const dataSourceName = splitSource[0];
     const columnName = splitSource[1];
 
-    const dataView = this.dataViews.find((view) => view.name === dataSourceName);
+    const dataView = this.dataViews.find((view) => view.entity === dataSourceName);
     if (!dataView) return undefined;
     const dataSource = this.dataSources.find((view) => view.entity === dataSourceName);
     if (!dataSource) return undefined;

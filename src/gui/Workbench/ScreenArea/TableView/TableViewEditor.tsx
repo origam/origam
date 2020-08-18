@@ -128,28 +128,6 @@ export class TableViewEditor extends React.Component<{
             isReadOnly={readOnly}
           />
         );
-      // return (
-      //   <DropdownEditor
-      //     value={this.props.getCellValue!()}
-      //     // textualValue={""}
-      //     isReadOnly={readOnly}
-      //     isInvalid={false}
-      //     isFocused={true}
-      //     backgroundColor={backgroundColor}
-      //     foregroundColor={foregroundColor}
-      //     onTextChange={undefined}
-      //     onItemSelect={this.props.onChange}
-      //     onEditorBlur={this.props.onEditorBlur}
-      //     onKeyDown={this.props.onEditorKeyDown}
-      //     // DataStructureEntityId={""}
-      //     // ColumnNames={[]}
-      //     // Property={""}
-      //     // RowId={""}
-      //     // LookupId={""}
-      //     // menuItemId={""}
-      //     // api={undefined}
-      //   />
-      // );
       case "Checklist":
         return "";
       case "TagInput":
