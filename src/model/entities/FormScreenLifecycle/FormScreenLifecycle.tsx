@@ -158,11 +158,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       })) as IQueryInfo[];
       const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo);
       if (!processQueryInfoResult.canContinue) return;
-      let uiResult;
       const formScreen = getFormScreen(this);
+      let uiResult;
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
-        const uiResult = yield api.workflowNext({
+        uiResult = yield api.workflowNext({
           sessionFormIdentifier: sessionId,
           CachedFormIds: [],
         });
@@ -306,11 +306,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const orderingConfiguration = getOrderingConfiguration(rootDataView);
         const filterConfiguration = getFilterConfiguration(rootDataView);
         this.disposers.push(
-          reaction(() => {
-            orderingConfiguration.ordering.map((x) => x.direction);
-            filterConfiguration.filters.map((x) => [x.propertyId, x.setting.type, x.setting.val1]);
-            return [] as any;
-          }, () => this.readFirstChunkOfRowsWithGateDebounced(rootDataView))
+          reaction(
+            () => {
+              orderingConfiguration.ordering.map((x) => x.direction);
+              filterConfiguration.filters.map((x) => [
+                x.propertyId,
+                x.setting.type,
+                x.setting.val1,
+              ]);
+              return [] as any;
+            },
+            () => this.readFirstChunkOfRowsWithGateDebounced(rootDataView)
+          )
         );
       }
     }
@@ -562,7 +569,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  readFirstChunkOfRowsWithGateDebounced = _.debounce(flow(this.readFirstChunkOfRowsWithGate.bind(this)), 500);
+  readFirstChunkOfRowsWithGateDebounced = _.debounce(
+    flow(this.readFirstChunkOfRowsWithGate.bind(this)),
+    500
+  );
 
   *createRow(entity: string, gridId: string) {
     try {
