@@ -43,6 +43,7 @@ import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 import _ from "lodash";
+import {selectFirstRow} from "../../actions/DataView/selectFirstRow";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -133,6 +134,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* this.refreshSession();
       return;
     }
+    getFormScreen(this).dataViews.forEach((dataView) => dataView.onReload());
     switch (yield this.questionSaveData()) {
       case IQuestionSaveDataAnswer.Cancel:
         return;
@@ -583,6 +585,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
+      yield* selectFirstRow(targetDataView)();
     } finally {
       this.monitor.inFlow--;
     }

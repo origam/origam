@@ -431,5 +431,9 @@ export class DataView implements IDataView {
     throw new Error("switchToPanel method is not yet implemented.");
   }
 
+  onReload() {
+    this.dataTable.unlockAddedRowPosition();
+  }
+
   attributes: any;
 }
