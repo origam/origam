@@ -914,21 +914,25 @@ namespace OrigamArchitect.Commands
 			foreach(string language in languages)
 			{
 				string fileName = packageName + "-" + language.Trim() + ".xml";
-				string outputPath = System.IO.Path.Combine(System.IO.Path.Combine(settings.ModelSourceControlLocation, "l10n"), fileName);
-				Origam.DA.ObjectPersistence.LocalizationCache currentTransaltions = null;
-				if(System.IO.File.Exists(outputPath))
+				string outputPath = Path.Combine(Path.Combine(settings.ModelSourceControlLocation, "l10n"), fileName);
+				LocalizationCache currentTransaltions = null;
+				if(File.Exists(outputPath))
 				{
-					currentTransaltions = new Origam.DA.ObjectPersistence.LocalizationCache(outputPath);
+					currentTransaltions = new LocalizationCache(outputPath);
 				}
-				System.IO.FileStream fs = null;
+				MemoryStream ms = new MemoryStream();
+                FileStream fs = null;
 				try
 				{
-					fs = new System.IO.FileStream(outputPath, System.IO.FileMode.Create);
-					TranslationBuilder.Build(fs, currentTransaltions, language, ss.ActiveSchemaExtensionId);
+					TranslationBuilder.Build(ms, currentTransaltions, language, ss.ActiveSchemaExtensionId);
+					fs = new FileStream(outputPath, FileMode.Create);
+					ms.Seek(0, SeekOrigin.Begin);
+					ms.WriteTo(fs);
 				}
 				finally
 				{
 					if(fs != null)	fs.Close();
+					if (ms != null) ms.Close();
 				}
 			}
 		}		

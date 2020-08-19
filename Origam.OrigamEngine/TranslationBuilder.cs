@@ -34,13 +34,9 @@ namespace Origam.OrigamEngine
 	/// <summary>
 	/// Summary description for TranslationBuilder.
 	/// </summary>
-	public class TranslationBuilder
+	public static class TranslationBuilder
 	{
-		internal TranslationBuilder()
-		{
-		}
-
-		public static void Build(Stream stream, LocalizationCache currentTranslations, string locale, Guid packageId)
+        public static void Build(Stream stream, LocalizationCache currentTranslations, string locale, Guid packageId)
 		{
 			XmlTextWriter xtw = new XmlTextWriter(stream, System.Text.Encoding.UTF8);
 			xtw.Formatting = Formatting.Indented;
@@ -129,7 +125,7 @@ namespace Origam.OrigamEngine
 
 			xtw.WriteEndElement();
 			xtw.WriteEndDocument();
-			xtw.Close();
+			xtw.Flush();
 		}
 	}
 }
