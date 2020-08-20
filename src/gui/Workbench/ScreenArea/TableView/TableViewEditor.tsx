@@ -132,18 +132,25 @@ export class TableViewEditor extends React.Component<{
         return "";
       case "TagInput":
         return (
-          <TagInputEditor
-            value={this.props.getCellValue!()}
+          <XmlBuildDropdownEditor
+            key={this.props.property!.xmlNode.$iid}
+            xmlNode={this.props.property!.xmlNode}
             isReadOnly={readOnly}
-            isInvalid={false}
-            isFocused={false}
-            backgroundColor={backgroundColor}
-            foregroundColor={foregroundColor}
-            refocuser={undefined}
-            onChange={this.props.onChange}
-            onKeyDown={undefined}
-            onClick={undefined}
-            onEditorBlur={this.props.onEditorBlur}
+            tagEditor={
+               <TagInputEditor
+                value={this.props.getCellValue!()}
+                isReadOnly={readOnly}
+                isInvalid={false}
+                isFocused={false}
+                backgroundColor={backgroundColor}
+                foregroundColor={foregroundColor}
+                refocuser={undefined}
+                onChange={this.props.onChange}
+                onKeyDown={undefined}
+                onClick={undefined}
+                onEditorBlur={this.props.onEditorBlur}
+              />
+            }
           />
         );
       case "Blob":
