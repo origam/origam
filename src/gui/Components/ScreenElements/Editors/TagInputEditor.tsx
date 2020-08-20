@@ -36,6 +36,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       onChange?(event: any, value: any): void;
       onKeyDown?(event: any): void;
       onClick?(event: any): void;
+      onDoubleClick?(event: any): void;
       onEditorBlur?(event: any): void;
     }) => {
       function removeItem(event: any, item: string) {
@@ -103,6 +104,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onKeyDown={handleInputKeyDown}
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
+              onDoubleClick={props.onDoubleClick}
             />
           </TagInput>
           {props.isInvalid && (

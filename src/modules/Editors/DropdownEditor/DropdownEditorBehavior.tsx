@@ -15,7 +15,8 @@ export class DropdownEditorBehavior {
     private dataTable: DropdownDataTable,
     private setup: () => DropdownEditorSetup,
     private cache: DropdownEditorLookupListCache,
-    public isReadOnly: boolean
+    public isReadOnly: boolean,
+    public onDoubleClick?: (event:any)=>void
   ) {}
 
          @observable isDropped = false;

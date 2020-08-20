@@ -24,6 +24,7 @@ export function DropdownEditorInput() {
           onFocus={beh.handleInputFocus}
           onBlur={beh.handleInputBlur}
           value={beh.inputValue}
+          onDoubleClick={beh.onDoubleClick}
         />
       )}
     </Observer>

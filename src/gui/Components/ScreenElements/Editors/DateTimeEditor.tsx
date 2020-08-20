@@ -163,6 +163,7 @@ export class DateTimeEditor extends React.Component<{
   onChange?: (event: any, isoDay: string | undefined | null) => void;
   onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
+  onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
@@ -377,6 +378,7 @@ export class DateTimeEditor extends React.Component<{
                 readOnly={this.props.isReadOnly}
                 onChange={this.handleTextfieldChange}
                 onClick={this.props.onClick}
+                onDoubleClick={this.props.onDoubleClick}
                 onKeyDown={this.props.onKeyDown}
               />
             </Tooltip>
