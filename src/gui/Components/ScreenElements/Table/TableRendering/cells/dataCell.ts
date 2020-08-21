@@ -8,7 +8,7 @@ import {
   rowHeight,
   rowIndex,
   tableColumnIds,
-  tablePanelView
+  tablePanelView,
 } from "../renderingValues";
 import {
   currentCellText,
@@ -19,6 +19,8 @@ import {
   currentProperty,
   currentRowHeight,
   currentRowTop,
+  currentCellValue,
+  isCurrentCellLoading,
 } from "../currentCell";
 import {
   applyScrollTranslation,
@@ -27,24 +29,24 @@ import {
   clipCell,
   fontSize,
   numberCellPaddingLeft,
-  topTextOffset
+  topTextOffset,
 } from "./cellsCommon";
-import {CPR} from "utils/canvas";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getRowStateColumnBgColor} from "model/selectors/RowState/getRowStateColumnBgColor";
-import {getRowStateRowBgColor} from "model/selectors/RowState/getRowStateRowBgColor";
-import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
-import {getRowStateForegroundColor} from "model/selectors/RowState/getRowStateForegroundColor";
+import { CPR } from "utils/canvas";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
+import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import selectors from "model/selectors-tree";
 import moment from "moment";
-import {onClick} from "../onClick";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {onPossibleSelectedRowChange} from "model/actions-ui/onPossibleSelectedRowChange";
-import {getMenuItemId} from "model/selectors/getMenuItemId";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {flow} from "mobx";
+import { onClick } from "../onClick";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { flow } from "mobx";
 import actionsUi from "../../../../../../model/actions-ui-tree";
-import {getDataView} from "../../../../../../model/selectors/DataView/getDataView";
+import { getDataView } from "../../../../../../model/selectors/DataView/getDataView";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -60,7 +62,7 @@ export function dataColumnsDraws() {
   });
 }
 
-function registerClickHandler(columnId: string){
+function registerClickHandler(columnId: string) {
   const ctx = context();
   const row = currentDataRow();
 
@@ -68,8 +70,8 @@ function registerClickHandler(columnId: string){
     columnLeft: currentColumnLeft(),
     columnWidth: currentColumnWidth(),
     rowTop: currentRowTop(),
-    rowHeight: currentRowHeight()
-  }
+    rowHeight: currentRowHeight(),
+  };
   getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
 
   onClick({
@@ -77,26 +79,27 @@ function registerClickHandler(columnId: string){
     y: currentRowTop(),
     w: currentColumnWidthVisible(),
     h: currentRowHeight(),
-    handler(event: any) { flow(function* (){
-      if (event.isDouble) {
-        const defaultAction = getDataView(ctx).defaultAction;
-        if (defaultAction && defaultAction.isEnabled){
-          yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+    handler(event: any) {
+      flow(function* () {
+        if (event.isDouble) {
+          const defaultAction = getDataView(ctx).defaultAction;
+          if (defaultAction && defaultAction.isEnabled) {
+            yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+          }
+        } else {
+          yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
+          yield onPossibleSelectedRowChange(ctx)(
+            getMenuItemId(ctx),
+            getDataStructureEntityId(ctx),
+            getSelectedRowId(ctx)
+          );
         }
-      }else{
-        yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
-        yield onPossibleSelectedRowChange(ctx)(
-          getMenuItemId(ctx),
-          getDataStructureEntityId(ctx),
-          getSelectedRowId(ctx));
-      }
-    })();
+      })();
     },
   });
 }
 
 export function drawDataCellBackground() {
-
   const ctx2d = context2d();
 
   ctx2d.fillStyle = getUnderLineColor();
@@ -111,16 +114,17 @@ export function drawDataCellBackground() {
   );
 }
 
-function drawCellValue(){
+function drawCellValue() {
   const ctx2d = context2d();
-  const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), currentProperty().id)
-  const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId(), "")
+  const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), currentProperty().id);
+  const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId(), "");
   const type = currentProperty().column;
 
   let isLink = false;
   let isLoading = false;
-  if (currentProperty().isLookup) {
-    isLoading = currentProperty().lookup!.isLoading(currentCellText());
+  const property = currentProperty();
+  if (property.isLookup && property.lookupEngine) {
+    isLoading = isCurrentCellLoading();
     isLink = selectors.column.isLinkToForm(currentProperty());
   }
 
@@ -130,7 +134,11 @@ function drawCellValue(){
   }
   if (isLoading) {
     ctx2d.fillStyle = "#888888";
-    ctx2d.fillText("Loading...", numberCellPaddingLeft() * CPR(), 15 * CPR());
+    ctx2d.fillText(
+      "Loading...",
+      CPR() * (currentColumnLeft() + getPaddingLeft()),
+      CPR() * (currentRowTop() + topTextOffset)
+    );
   } else {
     ctx2d.fillStyle = foregroundColor || "black";
     switch (type) {
@@ -141,19 +149,21 @@ function drawCellValue(){
 
         ctx2d.fillText(
           !!currentCellText() ? "\uf14a" : "\uf0c8",
-          CPR() * (currentColumnLeft() + (currentColumnWidth() / 2)),
-          CPR() * (currentRowTop() + (rowHeight() / 2)));
+          CPR() * (currentColumnLeft() + currentColumnWidth() / 2),
+          CPR() * (currentRowTop() + rowHeight() / 2)
+        );
         break;
       case "Date":
         if (currentCellText() !== null && currentCellText() !== "") {
           let momentValue = moment(currentCellText());
-          if(!momentValue.isValid()){
+          if (!momentValue.isValid()) {
             break;
           }
           ctx2d.fillText(
             momentValue.format(currentProperty().formatterPattern),
             CPR() * (currentColumnLeft() + getPaddingLeft()),
-            CPR() * (currentRowTop() + topTextOffset));
+            CPR() * (currentRowTop() + topTextOffset)
+          );
         }
         break;
       case "ComboBox":
@@ -164,9 +174,11 @@ function drawCellValue(){
           ctx2d.fillStyle = "#4c84ff";
         }
         if (currentCellText() !== null) {
-          ctx2d.fillText("" + currentCellText()!,                   
+          ctx2d.fillText(
+            "" + currentCellText()!,
             CPR() * (currentColumnLeft() + getPaddingLeft()),
-            CPR() * (currentRowTop() + topTextOffset));
+            CPR() * (currentRowTop() + topTextOffset)
+          );
         }
         if (isLink) {
           ctx2d.restore();
@@ -176,9 +188,11 @@ function drawCellValue(){
         if (currentCellText() !== null) {
           ctx2d.save();
           ctx2d.textAlign = "right";
-          ctx2d.fillText("" + currentCellText()!,                
+          ctx2d.fillText(
+            "" + currentCellText()!,
             CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
-            CPR() * (currentRowTop() + topTextOffset));
+            CPR() * (currentRowTop() + topTextOffset)
+          );
           ctx2d.restore();
         }
         break;
@@ -188,7 +202,8 @@ function drawCellValue(){
             ctx2d.fillText(
               "" + currentCellText()!,
               CPR() * (currentColumnLeft() + getPaddingLeft()),
-              CPR() * (currentRowTop() + topTextOffset));
+              CPR() * (currentRowTop() + topTextOffset)
+            );
           } else {
             ctx2d.fillText("*******", numberCellPaddingLeft() * CPR(), 15 * CPR());
           }
@@ -197,17 +212,17 @@ function drawCellValue(){
   }
 }
 
-function getPaddingLeft(){
-  return drawingColumnIndex() === 0
-    ? cellPaddingLeftFirstCell
-    : cellPaddingLeft
+function getPaddingLeft() {
+  return drawingColumnIndex() === 0 ? cellPaddingLeftFirstCell : cellPaddingLeft;
 }
 
-function getUnderLineColor() { return "#e5e5e5"; }
+function getUnderLineColor() {
+  return "#e5e5e5";
+}
 
 function getBackGroundColor() {
-
-  const isColumnOrderChangeSource = tablePanelView().columnOrderChangingSourceId === currentProperty().id;
+  const isColumnOrderChangeSource =
+    tablePanelView().columnOrderChangingSourceId === currentProperty().id;
   const selectedColumnId = tableColumnIds()[drawingColumnIndex()];
   const selectedRowId = getSelectedRowId(tablePanelView());
 

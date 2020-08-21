@@ -1,18 +1,22 @@
-import {inject, observer, Observer, Provider} from "mobx-react";
+import { inject, observer, Observer, Provider } from "mobx-react";
 import React from "react";
-import {IDataView} from "../../../../model/entities/types/IDataView";
-import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
-import {getDataViewPropertyById} from "../../../../model/selectors/DataView/getDataViewPropertyById";
-import {getSelectedRow} from "../../../../model/selectors/DataView/getSelectedRow";
-import {findStrings} from "../../../../xmlInterpreters/screenXml";
+import { IDataView } from "../../../../model/entities/types/IDataView";
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
+import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
+import { getSelectedRow } from "../../../../model/selectors/DataView/getSelectedRow";
+import { findStrings } from "../../../../xmlInterpreters/screenXml";
 
-import {FormRoot} from "./FormRoot";
-import {FormViewEditor} from "./FormViewEditor";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getRowStateRowBgColor} from "model/selectors/RowState/getRowStateRowBgColor";
-import {FormField} from "gui02/components/Form/FormField";
-import {FormSection} from "gui02/components/Form/FormSection";
-import {FormLabel} from "gui02/components/Form/FormLabel";
+import { FormRoot } from "./FormRoot";
+import { FormViewEditor } from "./FormViewEditor";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import { FormField } from "gui02/components/Form/FormField";
+import { FormSection } from "gui02/components/Form/FormSection";
+import { FormLabel } from "gui02/components/Form/FormLabel";
+import { RadioButton } from "gui02/components/Form/RadioButton";
+import { getDataSourceFieldByName } from "../../../../model/selectors/DataSources/getDataSourceFieldByName";
+import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
+import { flow } from "mobx";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -63,6 +67,37 @@ export class FormBuilder extends React.Component<{
             height={+xfo.attributes.Height}
           />
         );
+      } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
+        const sourceField = getDataSourceFieldByName(self.props.dataView, xfo.attributes.Id);
+
+        const checked = row
+          ? dataTable.getCellValueByDataSourceField(row, sourceField!) === xfo.attributes.Value
+          : false;
+
+        return (
+          <RadioButton
+            key={xfo.$iid}
+            caption={xfo.attributes.Name}
+            left={+xfo.attributes.X}
+            top={+xfo.attributes.Y}
+            width={+xfo.attributes.Width}
+            height={+xfo.attributes.Height}
+            name={xfo.attributes.Id}
+            value={xfo.attributes.Value}
+            checked={checked}
+            onSelected={(value) => {
+              const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
+              flow(function* () {
+                yield* formScreenLifecycle.updateRadioButtonValue(
+                  self.props.dataView!,
+                  row,
+                  xfo.attributes.Id,
+                  value
+                );
+              })();
+            }}
+          />
+        );
       } else if (xfo.name === "PropertyNames") {
         const propertyNames = findStrings(xfo);
         return propertyNames.map((propertyId) => {
@@ -94,7 +129,14 @@ export class FormBuilder extends React.Component<{
                       left={property.x}
                       top={property.y}
                       isCheckbox={property.column === "CheckBox"}
-                      editor={<FormViewEditor value={value} isRichText={property.isRichText} textualValue={textualValue} />}
+                      editor={
+                        <FormViewEditor
+                          value={value}
+                          isRichText={property.isRichText}
+                          textualValue={textualValue}
+                          xmlNode={property.xmlNode}
+                        />
+                      }
                     />
                   </Provider>
                 ) : (

@@ -1,6 +1,6 @@
 import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, autorun, computed, flow, observable, reaction, when } from "mobx";
+import { action, autorun, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -38,7 +38,14 @@ import { getOrderingConfiguration } from "../../selectors/DataView/getOrderingCo
 import { getFilterConfiguration } from "../../selectors/DataView/getFilterConfiguration";
 import { getUserFilters } from "../../selectors/DataView/getUserFilters";
 import { getUserOrdering } from "../../selectors/DataView/getUserOrdering";
-import {FlowBusyMonitor} from "../../../utils/flow";
+import { FlowBusyMonitor } from "../../../utils/flow";
+import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
+import { scopeFor } from "../../../dic/Container";
+import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
+import _ from "lodash";
+import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
+import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
+import {selectFirstRow} from "../../actions/DataView/selectFirstRow";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -51,14 +58,20 @@ enum IQuestionDeleteDataAnswer {
   Yes = 1,
 }
 
+enum IQuestionChangeRecordAnswer {
+  Yes = 0,
+  No = 1,
+  Cancel = 2,
+}
+
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
   @observable allDataViewsSteady = true;
 
-  monitor: FlowBusyMonitor =  new FlowBusyMonitor();
+  monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
-  get isWorking(){
+  get isWorking() {
     return this.monitor.isWorking;
   }
 
@@ -129,6 +142,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* this.refreshSession();
       return;
     }
+    getFormScreen(this).dataViews.forEach((dataView) => dataView.onReload());
     switch (yield this.questionSaveData()) {
       case IQuestionSaveDataAnswer.Cancel:
         return;
@@ -152,11 +166,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       })) as IQueryInfo[];
       const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo);
       if (!processQueryInfoResult.canContinue) return;
-      let uiResult;
       const formScreen = getFormScreen(this);
+      let uiResult;
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
-        const uiResult = yield api.workflowNext({
+        uiResult = yield api.workflowNext({
           sessionFormIdentifier: sessionId,
           CachedFormIds: [],
         });
@@ -308,9 +322,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                 x.setting.type,
                 x.setting.val1,
               ]);
-              return [];
+              return [] as any;
             },
-            flow(() => this.readFirstChunkOfRows(rootDataView))
+            () => this.readFirstChunkOfRowsWithGateDebounced(rootDataView)
           )
         );
       }
@@ -334,6 +348,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
     getDataViewList(this).forEach((dv) => dv.start());
+
+    setTimeout(() => {
+      const fieldToSelect = getFormScreen(this).getFirstFormPropertyId();
+      if (fieldToSelect) {
+        const formScreen = getFormScreen(this);
+        const $formScreen = scopeFor(formScreen);
+        $formScreen?.resolve(IScreenEvents).focusField.trigger({ propertyId: fieldToSelect });
+      }
+    }, 100);
   }
 
   loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined) {
@@ -438,6 +461,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *throwChangesAway(dataView: IDataView) {
+    try {
+      this.monitor.inFlow++;
+      const api = getApi(this);
+      const updateObjectResult = yield api.restoreData({
+        SessionFormIdentifier: getSessionId(this),
+        ObjectId: dataView.selectedRowId!,
+      });
+      yield* processCRUDResult(dataView, updateObjectResult);
+      const formScreen = getFormScreen(this);
+      if (formScreen.requestSaveAfterUpdate) {
+        yield* this.saveSession();
+      }
+    } finally {
+      this.monitor.inFlow--;
+    }
+  }
+
   _flushDataRunning = false;
   _flushDataShallRerun = false;
   *flushData() {
@@ -481,6 +522,33 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
+    try {
+      this.monitor.inFlow++;
+      const api = getApi(this);
+      const changes: any = {};
+      changes[fieldName] = newValue;
+      const formScreen = getFormScreen(this);
+      const self = this;
+      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
+        return yield api.updateObject({
+          SessionFormIdentifier: getSessionId(self),
+          Entity: dataView.entity,
+          Id: dataView.dataTable.getRowId(row),
+          Values: changes,
+        });
+      });
+
+      yield* processCRUDResult(dataView, updateObjectResult);
+
+      if (formScreen.requestSaveAfterUpdate) {
+        yield* this.saveSession();
+      }
+    } finally {
+      this.monitor.inFlow--;
+    }
+  }
+
   *readFirstChunkOfRows(rootDataView: IDataView) {
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
@@ -491,6 +559,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
         Filter: getUserFilters(rootDataView),
+        FilterLookups: getUserFilterLookups(rootDataView),
         Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_ROW_CHUNK,
         RowOffset: 0,
@@ -506,6 +575,30 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       rootDataView.lifecycle.startSelectedRowReaction(true);
     }
   }
+
+  _readFirstChunkOfRowsRunning = false;
+  _readFirstChunkOfRowsScheduled = false;
+  *readFirstChunkOfRowsWithGate(rootDataView: IDataView) {
+    try {
+      if (this._readFirstChunkOfRowsRunning) {
+        this._readFirstChunkOfRowsScheduled = true;
+        return;
+      }
+      this._readFirstChunkOfRowsRunning = true;
+      do {
+        this._readFirstChunkOfRowsScheduled = false;
+        yield* this.readFirstChunkOfRows(rootDataView);
+      } while (this._readFirstChunkOfRowsScheduled);
+    } finally {
+      this._readFirstChunkOfRowsRunning = false;
+      this._readFirstChunkOfRowsScheduled = false;
+    }
+  }
+
+  readFirstChunkOfRowsWithGateDebounced = _.debounce(
+    flow(this.readFirstChunkOfRowsWithGate.bind(this)),
+    500
+  );
 
   *createRow(entity: string, gridId: string) {
     try {
@@ -528,6 +621,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
+      yield* selectFirstRow(targetDataView)();
     } finally {
       this.monitor.inFlow--;
     }
@@ -548,7 +642,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           OriginalId: rowId,
           RequestingGridId: gridId,
           Entities: [entity],
-          ForcedValues: {}
+          ForcedValues: {},
         });
       } finally {
         formScreen.dataUpdateCRS.leave();
@@ -689,6 +783,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   killForm() {
     this.clearAutorefreshInterval();
     this.disposers.forEach((disposer) => disposer());
+    getDataViewList(this).forEach((dv) => dv.stop());
     const openedScreen = getOpenedScreen(this);
     openedScreen.content.setFormScreen(undefined);
   }
@@ -721,6 +816,51 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             onCancelClick={() => {
               closeDialog();
               resolve(IQuestionSaveDataAnswer.Cancel);
+            }}
+          />
+        );
+      })
+    );
+  }
+
+  async handleUserInputOnChangingRow(dataView: IDataView){
+    const api = getApi(dataView);
+    const openedScreen = getOpenedScreen(this);
+    const sessionId = getSessionId(openedScreen.content.formScreen);
+
+    switch (await this.questionSaveDataAfterRecordChange()) {
+      case IQuestionChangeRecordAnswer.Cancel:
+        return false;
+      case IQuestionChangeRecordAnswer.Yes:
+        await api.saveDataQuery({ sessionFormIdentifier: sessionId});
+        await api.saveData({ sessionFormIdentifier: sessionId});
+        return true;
+      case IQuestionChangeRecordAnswer.No:
+        await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
+        return true;
+      default:
+        throw new Error("Option not implemented");
+    }
+  }
+
+  questionSaveDataAfterRecordChange() {
+    return new Promise(
+      action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
+        const closeDialog = getDialogStack(this).pushDialog(
+          "",
+          <ChangeMasterRecordDialog
+            screenTitle={getOpenedScreen(this).title}
+            onSaveClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.Yes);
+            }}
+            onDontSaveClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.No);
+            }}
+            onCancelClick={() => {
+              closeDialog();
+              resolve(IQuestionChangeRecordAnswer.Cancel);
             }}
           />
         );

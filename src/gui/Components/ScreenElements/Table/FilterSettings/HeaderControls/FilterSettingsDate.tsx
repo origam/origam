@@ -1,9 +1,10 @@
-import {DateTimeEditor} from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import {action, observable} from "mobx";
-import {observer} from "mobx-react";
+import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import { action, observable } from "mobx";
+import { observer } from "mobx-react";
 import React from "react";
-import {FilterSettingsComboBox, FilterSettingsComboBoxItem} from "../FilterSettingsComboBox";
+import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
 import produce from "immer";
+import { FilterSetting } from "./FilterSetting";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "eq" },
@@ -15,25 +16,18 @@ const OPERATORS: any[] = [
   { human: <>between</>, type: "between" },
   { human: <>not between</>, type: "nbetween" },
   { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" }
+  { human: <>is not null</>, type: "nnull" },
 ];
 
 const OpCombo: React.FC<{
   setting: any;
   onChange: (newSetting: any) => void;
-}> = props => {
+}> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={
-        <>
-          {
-            (OPERATORS.find(item => item.type === props.setting.type) || {})
-              .human
-          }
-        </>
-      }
+      trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS.map(op => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() =>
@@ -55,7 +49,7 @@ const OpEditors: React.FC<{
   setting: any;
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
-}> = props => {
+}> = (props) => {
   const { setting } = props;
   switch (setting.type) {
     case "eq":
@@ -72,7 +66,7 @@ const OpEditors: React.FC<{
             props.onChange &&
             props.onChange(
               produce(setting, (draft: any) => {
-                draft.val1 = isoDay;
+                draft.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
               })
             )
           }
@@ -91,7 +85,7 @@ const OpEditors: React.FC<{
               props.onChange &&
               props.onChange(
                 produce(setting, (draft: any) => {
-                  draft.val1 = isoDay;
+                  draft.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
                 })
               )
             }
@@ -104,7 +98,7 @@ const OpEditors: React.FC<{
               props.onChange &&
               props.onChange(
                 produce(setting, (draft: any) => {
-                  draft.val2 = isoDay;
+                  draft.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
                 })
               )
             }
@@ -126,11 +120,11 @@ export class FilterSettingsDate extends React.Component<{
 }> {
   constructor(props: any) {
     super(props);
-    (this.setting as any).val1 = undefined; //moment().toISOString();
-    (this.setting as any).val2 = undefined; //moment().toISOString();
+    (this.setting as any).val1 = undefined;
+    (this.setting as any).val2 = undefined;
   }
 
-  @observable.ref setting: any = OPERATORS[0];
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS[0].type, OPERATORS[0].human);
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -147,34 +141,12 @@ export class FilterSettingsDate extends React.Component<{
   }
 
   @action.bound
-  handleBlur() {
-    switch (this.setting.type) {
-      case "eq":
-      case "neq":
-      case "lt":
-      case "gt":
-      case "lte":
-      case "gte":
-        //if (this.setting.val1) {
-          this.props.onTriggerApplySetting &&
-            this.props.onTriggerApplySetting(this.setting);
-        //}
-        break;
-      case "between":
-      case "nbetween":
-        //if (this.setting.val1 && this.setting.val2) {
-          this.props.onTriggerApplySetting &&
-            this.props.onTriggerApplySetting(this.setting);
-        //}
-      default:
-        this.props.onTriggerApplySetting &&
-          this.props.onTriggerApplySetting(this.setting);
-    }
-  }
-
-  @action.bound
   handleChange(newSetting: any) {
     this.setting = newSetting;
+    this.handleSettingChange();
+  }
+
+  handleSettingChange() {
     switch (this.setting.type) {
       case "eq":
       case "neq":
@@ -182,21 +154,21 @@ export class FilterSettingsDate extends React.Component<{
       case "gt":
       case "lte":
       case "gte":
-        //if (this.setting.val1) {
-          this.props.onTriggerApplySetting &&
-            this.props.onTriggerApplySetting(this.setting);
-        //}
+        this.setting.isComplete = this.setting.val1 !== undefined;
+        this.setting.val2 = undefined;
+        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
         break;
       case "between":
       case "nbetween":
-        //if (this.setting.val1 && this.setting.val2) {
-          this.props.onTriggerApplySetting &&
-            this.props.onTriggerApplySetting(this.setting);
-        //}
+        this.setting.isComplete =
+          this.setting.val1 !== undefined && this.setting.val2 !== undefined;
+        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
         break;
       default:
-        this.props.onTriggerApplySetting &&
-          this.props.onTriggerApplySetting(this.setting);
+        this.setting.val1 = undefined;
+        this.setting.val2 = undefined;
+        this.setting.isComplete = this.setting.type === "null" || this.setting.type === "nnull";
+        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
     }
   }
 
@@ -204,14 +176,15 @@ export class FilterSettingsDate extends React.Component<{
     return (
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors
-          setting={this.setting}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur}
-        />
+        <OpEditors setting={this.setting} onChange={this.handleChange} />
 
         {/*<input className={CS.input} />*/}
       </>
     );
   }
+}
+
+function removeTimeZone(isoDateString: string | null | undefined) {
+  if (!isoDateString) return isoDateString;
+  return isoDateString.substring(0, 23);
 }

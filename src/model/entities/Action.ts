@@ -1,17 +1,22 @@
-import {computed} from "mobx";
-import {getSelectedRow} from "model/selectors/DataView/getSelectedRow";
-import {getRowStateIsDisableAction} from "model/selectors/RowState/getRowStateIsDisabledAction";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {IAction, IActionData, IActionMode, IActionPlacement, IActionType} from "./types/IAction";
-import {IActionParameter} from "./types/IActionParameter";
-
+import { computed } from "mobx";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { getRowStateIsDisableAction } from "model/selectors/RowState/getRowStateIsDisabledAction";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import {
+  IAction,
+  IActionData,
+  IActionMode,
+  IActionPlacement,
+  IActionType,
+} from "./types/IAction";
+import { IActionParameter } from "./types/IActionParameter";
 
 export class Action implements IAction {
   $type_IAction: 1 = 1;
 
   constructor(data: IActionData) {
     Object.assign(this, data);
-    this.parameters.forEach(o => (o.parent = this));
+    this.parameters.forEach((o) => (o.parent = this));
   }
 
   type: IActionType = null as any;
@@ -25,17 +30,17 @@ export class Action implements IAction {
   parameters: IActionParameter[] = [];
 
   @computed get isEnabled() {
+    if (this.mode === IActionMode.Always) {
+      return true;
+    }
     const selRowId = getSelectedRowId(this);
-    const isDisableddOverride = selRowId
+    const isDisabledOverride = selRowId
       ? getRowStateIsDisableAction(this, selRowId, this.id)
       : false;
-    if (isDisableddOverride) {
+    if (isDisabledOverride) {
       return false;
     }
     switch (this.mode) {
-      case IActionMode.Always: {
-        return true;
-      }
       case IActionMode.ActiveRecord: {
         const selectedRow = getSelectedRow(this);
         return !!selectedRow;

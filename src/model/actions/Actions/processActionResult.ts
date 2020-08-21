@@ -13,6 +13,8 @@ import {ICRUDResult, processCRUDResult} from "../DataLoading/processCRUDResult";
 import {IRefreshOnReturnType} from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import {IDataView} from "../../entities/types/IDataView";
 import {getDataViewByModelInstanceId} from "../../selectors/DataView/getDataViewByModelInstanceId";
+import {getDataView} from "../../selectors/DataView/getDataView";
+import {getOpenedScreen} from "../../selectors/getOpenedScreen";
 
 export interface IOpenNewForm {
   (
@@ -22,6 +24,8 @@ export interface IOpenNewForm {
     dontRequestData: boolean,
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
+    parentContext: any,
+    additionalRequestParameters: object,
     formSessionId?: string,
     isSessionRebirth?: boolean,
     registerSession?: true,
@@ -59,7 +63,8 @@ export function new_ProcessActionResult(ctx: any) {
     closeForm: closeForm(ctx),
     refreshForm: actions.formScreen.refresh(ctx),
     getActionCaption: () => getActionCaption(ctx),
-    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult(ctx, crudResult)
+    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult(ctx, crudResult),
+    parentContext: ctx
   });
 }
 
@@ -71,6 +76,7 @@ export function processActionResult2(dep: {
   refreshForm: IRefreshForm;
   getActionCaption: IGetActionCaption;
   processCRUDResult: IProcessCRUDResult;
+  parentContext: any
 }) {
   return function* processActionResult2(actionResultList: any[]) {
     for (let actionResultItem of actionResultList) {
@@ -95,10 +101,12 @@ export function processActionResult2(dep: {
             !dataRequested,
             dialogInfo,
             parameters,
+            dep.parentContext,
+            actionResultItem.request,
             undefined,
             undefined,
             undefined,
-            refreshOnReturnType
+            refreshOnReturnType,
           );
           break;
         }

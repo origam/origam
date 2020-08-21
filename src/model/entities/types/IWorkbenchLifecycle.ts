@@ -14,7 +14,9 @@ export interface IWorkbenchLifecycle {
     label: string,
     dontRequestData: boolean,
     dialogInfo: IDialogInfo | undefined,
-    parameters: { [key: string]: any }
+    parameters: { [key: string]: any },
+    parentContext: any,
+    additionalRequestParameters?: object | undefined,
   ): Generator;
 
   openNewUrl(url: string, title: string): Generator;

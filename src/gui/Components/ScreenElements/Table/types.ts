@@ -30,8 +30,6 @@ export interface ITableProps {
 
   renderEditor?: IRenderEditor;
 
-  renderCell?: IRenderCell;
-
   listenForScrollToCell?: IListenForScrollToCell;
   onOutsideTableClick?(event: any): void;
   onNoCellClick?(event: any): void;
@@ -39,23 +37,6 @@ export interface ITableProps {
   refCanvasMovingComponent?(elm: IGridCanvas | null): void;
   onContentBoundsChanged(bounds: BoundingRect): void;
 }
-
-export type IRenderCell = (args: IRenderCellArgs) => void;
-
-export type IRenderCellArgs = {
-  rowIndex: number;
-  columnIndex: number;
-  topOffset: number;
-  leftOffset: number;
-  columnLeft: number;
-  columnWidth: number;
-  columnRight: number;
-  rowTop: number;
-  rowHeight: number;
-  rowBottom: number;
-  ctx: CanvasRenderingContext2D;
-  onCellClick: PubSub<any>;
-};
 
 export type IRenderHeader = (args: { columnIndex: number; columnWidth: number }) => React.ReactNode;
 
@@ -117,12 +98,6 @@ export interface IGridCanvasProps {
 
   gridDimensions: IGridDimensions;
 
-  // Cell renderer. Should draw a cell content to ctx.
-  // Ctx has its origin set to the top left corner of the cell being drawn.
-  // Ctx state is saved before the renderer is called and its state restored
-  // just after it ends its business.
-  // Renderer is called exactly once for each visible cell.
-  renderCell: IRenderCell;
 
   onBeforeRender?(): void;
   onAfterRender?(): void;

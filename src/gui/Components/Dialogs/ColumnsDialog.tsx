@@ -176,7 +176,7 @@ export class ColumnsDialog extends React.Component<{
           </span>
         );
       case 3:
-        if ((entity === "Currency" || entity === "Integer") && canAggregate) {
+        if ((entity === "Currency" || entity === "Integer" || entity === "Float" || entity === "Long") && canAggregate) {
           return (
               <Dropdowner
                 trigger={({refTrigger, setDropped}) => (

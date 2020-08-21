@@ -18,6 +18,7 @@ export function onFieldChangeG(ctx: any) {
       }
       getDataView(ctx).onFieldChange(event, row, property, value);
       if (
+        property.column === "TagInput" ||
         property.column === "ComboBox" ||
         property.column === "CheckBox" ||
         property.column === "Checklist" ||

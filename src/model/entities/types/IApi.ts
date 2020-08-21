@@ -1,5 +1,5 @@
-import {IAggregationInfo} from "./IAggregationInfo";
-import {IOrdering} from "./IOrderingConfiguration";
+import { IAggregationInfo } from "./IAggregationInfo";
+import { IOrdering } from "./IOrderingConfiguration";
 
 export interface IApi {
   accessToken: string;
@@ -136,6 +136,7 @@ export interface IApi {
     ObjectId: string;
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
+    AdditionalRequestParameters?: object | undefined;
   }): Promise<any>;
   destroyUI(data: { FormSessionId: string }): Promise<any>;
 
@@ -147,6 +148,13 @@ export interface IApi {
     },
     canceller?: any
   ): Promise<any>;
+
+  restoreData(
+    data: {
+      SessionFormIdentifier: string;
+      ObjectId: string;
+    }
+  ): Promise<void>;
 
   updateObject(data: {
     SessionFormIdentifier: string;
@@ -169,7 +177,7 @@ export interface IApi {
     ForcedValues: {};
     RequestingGridId: string;
     OriginalId: string;
-    Entities: string[]
+    Entities: string[];
   }): Promise<any>;
 
   deleteObject(data: { SessionFormIdentifier: string; Entity: string; Id: string }): Promise<any>;
@@ -205,29 +213,30 @@ export interface IApi {
     RowOffset: number;
     ColumnNames: string[];
     MasterRowId: string | undefined;
+    FilterLookups?: { [key: string]: string };
   }): Promise<any>;
 
   getGroups(data: {
-    MenuId: string
-    DataStructureEntityId: string,
-    Filter: string | undefined,
+    MenuId: string;
+    DataStructureEntityId: string;
+    Filter: string | undefined;
     Ordering: IOrdering[];
-    RowLimit: number,
-    GroupBy: string,
-    MasterRowId: string | undefined,
-    GroupByLookupId: string | undefined,
-    SessionFormIdentifier: string | undefined,
-    AggregatedColumns: IAggregationInfo[] | undefined
+    RowLimit: number;
+    GroupBy: string;
+    MasterRowId: string | undefined;
+    GroupByLookupId: string | undefined;
+    SessionFormIdentifier: string | undefined;
+    AggregatedColumns: IAggregationInfo[] | undefined;
   }): Promise<any[]>;
 
-  getAggregations(data :{
-    MenuId: string
-    DataStructureEntityId: string,
-    Filter: string | undefined,
-    AggregatedColumns: IAggregationInfo[]
-    SessionFormIdentifier: string | undefined,
-    MasterRowId: string | undefined,
-  }): Promise<any[]>
+  getAggregations(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    Filter: string | undefined;
+    AggregatedColumns: IAggregationInfo[];
+    SessionFormIdentifier: string | undefined;
+    MasterRowId: string | undefined;
+  }): Promise<any[]>;
 
   getData(data: {
     SessionFormIdentifier: string;
@@ -319,5 +328,7 @@ export interface IApi {
     onUploadProgress?: (event: any) => void
   ): Promise<any>;
 
-  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any>
+  pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>;
+  saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void>;
+  saveData(data: { sessionFormIdentifier: string }): Promise<void>;
 }

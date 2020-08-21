@@ -1,12 +1,17 @@
-import {IDataView} from "./types/IDataView";
-import {IDataSource} from "./types/IDataSource";
-import {IComponentBinding} from "./types/IComponentBinding";
-import {IFormScreenLifecycle02} from "./types/IFormScreenLifecycle";
-import {action, computed, observable} from "mobx";
-import {IAction} from "./types/IAction";
-import {getDontRequestData} from "model/selectors/getDontRequestData";
-import {IFormScreen, IFormScreenData, IFormScreenEnvelope, IFormScreenEnvelopeData,} from "./types/IFormScreen";
-import {IPanelConfiguration} from "./types/IPanelConfiguration";
+import { IDataView } from "./types/IDataView";
+import { IDataSource } from "./types/IDataSource";
+import { IComponentBinding } from "./types/IComponentBinding";
+import { IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
+import { action, computed, observable } from "mobx";
+import { IAction } from "./types/IAction";
+import { getDontRequestData } from "model/selectors/getDontRequestData";
+import {
+  IFormScreen,
+  IFormScreenData,
+  IFormScreenEnvelope,
+  IFormScreenEnvelopeData,
+} from "./types/IFormScreen";
+import { IPanelConfiguration } from "./types/IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
 
 export class FormScreen implements IFormScreen {
@@ -56,7 +61,7 @@ export class FormScreen implements IFormScreen {
     const dataSourceName = splitSource[0];
     const columnName = splitSource[1];
 
-    const dataView = this.dataViews.find((view) => view.name === dataSourceName);
+    const dataView = this.dataViews.find((view) => view.entity === dataSourceName);
     if (!dataView) return undefined;
     const dataSource = this.dataSources.find((view) => view.entity === dataSourceName);
     if (!dataSource) return undefined;
@@ -130,7 +135,18 @@ export class FormScreen implements IFormScreen {
 
   @action.bound
   setDirty(state: boolean): void {
+    if (this.suppressSave && state === true) {
+      return;
+    }
     this.isDirty = state;
+  }
+
+  getFirstFormPropertyId() {
+    for(let dv of this.dataViews) {
+      for(let prop of dv.properties) {
+        if(prop.isFormField) return prop.id;
+      }
+    }
   }
 
   printMasterDetailTree() {
@@ -142,8 +158,11 @@ export class FormScreen implements IFormScreen {
 
     const recursive = (dataView: IDataView, level: number) => {
       console.log(
-        `${strrep(level, "  ")}${dataView.name} (${dataView.entity} - ${dataView.modelId})`
+        `${strrep(level, "  ")}${dataView?.name} (${dataView?.entity} - ${dataView?.modelId})`
       );
+      if (!dataView) {
+        return;
+      }
       for (let chb of dataView.childBindings) {
         recursive(chb.childDataView, level + 1);
       }
