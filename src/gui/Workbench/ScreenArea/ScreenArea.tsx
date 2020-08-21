@@ -12,6 +12,7 @@ import { DialogScreenBuilder } from "./ScreenBuilder";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 import { onWorkflowAbortClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowAbortClick";
 import { onWorkflowNextClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowNextClick";
+import {T} from "../../../utils/translation";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -54,7 +55,7 @@ export const DialogScreen: React.FC<{
             className={S.workflowActionBtn}
             onClick={onWorkflowAbortClick(content.formScreen!)}
           >
-            Cancel
+            {T("Cancel","button_cancel")}
           </button>
         )}
         {isNextButton && (
@@ -62,7 +63,7 @@ export const DialogScreen: React.FC<{
             className={S.workflowActionBtn}
             onClick={onWorkflowNextClick(content.formScreen!)}
           >
-            Next
+            {T("Next","button_next")}
           </button>
         )}
       </div>

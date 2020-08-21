@@ -56,7 +56,7 @@ export class CScreenHeader extends React.Component {
             className={S.workflowActionBtn}
             onClick={onWorkflowAbortClick(content.formScreen!)}
           >
-            Cancel
+            {T("Cancel","button_cancel")}
           </button>
         )}
         {isNextButton && (
@@ -70,7 +70,7 @@ export class CScreenHeader extends React.Component {
             className={S.workflowActionBtn}
             onClick={onWorkflowNextClick(content.formScreen!)}
           >
-            Next
+            {T("Next","button_next")}
           </button>
         )}
         {/*<ScreenheaderDivider />

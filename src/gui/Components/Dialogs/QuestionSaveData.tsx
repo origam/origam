@@ -2,6 +2,7 @@ import React from "react";
 import {ModalWindow} from "../Dialog/Dialog";
 import {observer} from "mobx-react";
 import CS from "./DialogsCommon.module.css";
+import {T} from "../../../utils/translation";
 
 @observer
 export class QuestionSaveData extends React.Component<{
@@ -13,20 +14,20 @@ export class QuestionSaveData extends React.Component<{
   render() {
     return (
       <ModalWindow
-        title="Question"
+        title={T("Question","question_title")}
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={this.props.onSaveClick}>Save</button>
-            <button onClick={this.props.onDontSaveClick}>Don't Save</button>
-            <button onClick={this.props.onCancelClick}>Cancel</button>
+            <button onClick={this.props.onSaveClick}>{T("Save","save")}</button>
+            <button onClick={this.props.onDontSaveClick}>{T("Don't Save","close_without_saving")}</button>
+            <button onClick={this.props.onCancelClick}>{T("Cancel","button_cancel")}</button>
           </>
         }
         buttonsLeft={null}
         buttonsRight={null}
       >
         <div className={CS.dialogContent}>
-          Do you wish to save changes in {this.props.screenTitle}
+          {T("Do you wish to save changes in {0}?","do_you_wish_to_save", this.props.screenTitle)}
         </div>
       </ModalWindow>
     );
