@@ -132,7 +132,7 @@ export const CheckListItem: React.FC<{
 }> = props => {
   return (
     <div className={S.item} onClick={props.onClick}>
-      <input type="checkbox" className="checkbox" checked={props.checked} />
+      <input type="checkbox" className={"checkbox "+S.input} checked={props.checked} />
       <div className={"content"}>{props.children}</div>
     </div>
   );

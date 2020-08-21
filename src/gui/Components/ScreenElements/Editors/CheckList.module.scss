@@ -20,6 +20,10 @@
   overflow-y: hidden;
 }
 
+.input:focus{
+  outline: #4c84ff solid;
+}
+
 .item {
   min-width: 25%;
   display: flex;
