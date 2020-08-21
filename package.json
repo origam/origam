@@ -182,9 +182,6 @@
       "react-app"
     ]
   },
-  "devDependencies": {
-    "@types/properties-reader": "^0.0.2"
-  },
   "prettier": {
     "printWidth": 100
   }
