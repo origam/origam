@@ -12,6 +12,7 @@ import {IFormPerspective} from "./FormPerspective";
 import {IPerspective} from "../Perspective";
 import {FormView} from "gui/Workbench/ScreenArea/FormView/FormView";
 import {FormBuilder} from "gui/Workbench/ScreenArea/FormView/FormBuilder";
+import {T} from "../../../../utils/translation";
 
 export class FormPerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -63,7 +64,7 @@ export class FormPerspectiveDirector implements IIId {
               onClick={flow(this.formPerspective.handleToolbarBtnClick)}
               isActive={this.formPerspective.isActive}
             >
-              <Icon src="./icons/detail-view.svg" />
+              <Icon src="./icons/detail-view.svg" tooltip={T("Grid","form_tool_tip")}/>
             </DataViewHeaderAction>
           )}
         </Observer>
