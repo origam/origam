@@ -101,6 +101,7 @@ export class CScreenToolbar extends React.Component<{}> {
                       <Icon
                         src="./icons/save.svg"
                         className={isDirty ? "isRed isHoverGreen" : ""}
+                        tooltip={T("Save","save_tool_tip")}
                       />
                     }
                     label={T("Save","save_tool_tip")}
@@ -108,7 +109,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 )}
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(formScreen)}
-                  icon={<Icon src="./icons/refresh.svg" />}
+                  icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh","refresh_tool_tip")}/>}
                   label={T("Refresh","refresh_tool_tip")}
                 />
               </ScreenToolbarActionGroup>
@@ -152,7 +153,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   rootRef={refTrigger}
                   onClick={() => setDropped(true)}
                   //onClick={this.handleLogoutClick}
-                  icon={<Icon src="./icons/dot-menu.svg" />}
+                  icon={<Icon src="./icons/dot-menu.svg" tooltip={""}/>}
                   label={userName}
                 />
               )}
@@ -170,7 +171,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 //onClick={this.handleLogoutClick}
                 icon={
                   <>
-                    <Icon src="./icons/user.svg" />
+                    <Icon src="./icons/user.svg" tooltip={""}/>
                     {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
                   </>
                 }
@@ -218,7 +219,7 @@ export class CScreenToolbar extends React.Component<{}> {
               />*/}
             <ScreenToolbarAction
               onClick={onReloadWebScreenClick(activeScreen)}
-              icon={<Icon src="./icons/refresh.svg" />}
+              icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh","refresh_tool_tip")} />}
             />
           </ScreenToolbarActionGroup>
 
@@ -248,7 +249,7 @@ export class CScreenToolbar extends React.Component<{}> {
               //onClick={this.handleLogoutClick}
               icon={
                 <>
-                  <Icon src="./icons/user.svg" />
+                  <Icon src="./icons/user.svg" tooltip={""} />
                   {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
                 </>
               }
@@ -295,7 +296,7 @@ export class CScreenToolbar extends React.Component<{}> {
               //onClick={this.handleLogoutClick}
               icon={
                 <>
-                  <Icon src="./icons/user.svg" />
+                  <Icon src="./icons/user.svg" tooltip={""} />
                   {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
                 </>
               }

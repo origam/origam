@@ -98,7 +98,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                               className="isGreenHover"
                               onClick={onCreateRowClickEvt}
                             >
-                              <Icon src="./icons/add.svg" />
+                              <Icon src="./icons/add.svg" tooltip={T("Add","add_tool_tip")} />
                             </DataViewHeaderAction>
                           )}
 
@@ -107,13 +107,13 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                               className="isRedHover"
                               onClick={onDeleteRowClickEvt}
                             >
-                              <Icon src="./icons/minus.svg" />
+                              <Icon src="./icons/minus.svg" tooltip={T("Delete","delete_tool_tip")} />
                             </DataViewHeaderAction>
                           )}
 
                           {isCopyButton && (
                             <DataViewHeaderAction className="isOrangeHover" onClick={onCopyRowClickEvt}>
-                              <Icon src="./icons/duplicate.svg" />
+                              <Icon src="./icons/duplicate.svg" tooltip={T("Duplicate","add_duplicate_tool_tip")} />
                             </DataViewHeaderAction>
                           )}
                         </DataViewHeaderGroup>
@@ -182,16 +182,16 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
                           <DataViewHeaderAction onClick={onFirstRowClickEvt}>
-                            <Icon src="./icons/list-arrow-first.svg" />
+                            <Icon src="./icons/list-arrow-first.svg" tooltip={T("First","move_first_tool_tip")} />
                           </DataViewHeaderAction>
                           <DataViewHeaderAction onClick={onPrevRowClickEvt}>
-                            <Icon src="./icons/list-arrow-previous.svg" />
+                            <Icon src="./icons/list-arrow-previous.svg" tooltip={T("Previous","move_prev_tool_tip")}/>
                           </DataViewHeaderAction>
                           <DataViewHeaderAction onClick={onNextRowClickEvt}>
-                            <Icon src="./icons/list-arrow-next.svg" />
+                            <Icon src="./icons/list-arrow-next.svg" tooltip={T("Next","move_next_tool_tip")}/>
                           </DataViewHeaderAction>
                           <DataViewHeaderAction onClick={onLastRowClickEvt}>
-                            <Icon src="./icons/list-arrow-last.svg" />
+                            <Icon src="./icons/list-arrow-last.svg" tooltip={T("Last","move_last_tool_tip")}/>
                           </DataViewHeaderAction>
                         </DataViewHeaderGroup>
                       )}
@@ -220,7 +220,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                             isActive={isFilterSettingsVisible}
                             className={"test-filter-button"}
                           >
-                            <Icon src="./icons/search-filter.svg" />
+                            <Icon src="./icons/search-filter.svg" tooltip={T("Last","filter_tool_tip")} />
                           </DataViewHeaderAction>
                         </DataViewHeaderGroup>
                       )}
@@ -237,7 +237,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                       onClick={() => setDropped(true)}
                       isActive={false}
                     >
-                      <Icon src="./icons/dot-menu.svg" />
+                      <Icon src="./icons/dot-menu.svg" tooltip={""} />
                     </DataViewHeaderAction>
                   )}
                   content={({ setDropped }) => (

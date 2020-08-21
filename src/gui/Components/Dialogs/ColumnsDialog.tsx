@@ -135,7 +135,7 @@ export class ColumnsDialog extends React.Component<{
           </AutoSizer>
         </div>
         <div className={S.lockedColumns}>
-          {T("Locked columns count","column_config_locked_columns")}
+          {T("Locked columns count","column_config_locked_columns_count")}
           <input
             className={S.lockedColumnsInput}
             type="number"

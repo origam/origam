@@ -102,7 +102,7 @@ export class CSidebar extends React.Component {
             isActive={this.activeSection === ISidebarSection.WorkQueues}
             icon={
               <>
-                <Icon src="./icons/work-queue.svg" />
+                <Icon src="./icons/work-queue.svg" tooltip={T("Work Queues","work_queue_measure")} />
                 {workQueuesItemsCount > 0 && (
                   <SidebarAlertCounter>
                     {workQueuesItemsCount}
@@ -127,7 +127,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Favorites}
-            icon={<Icon src="./icons/favorites.svg" />}
+            icon={<Icon src="./icons/favorites.svg" tooltip={T("Favorites","default_group")}/>}
             label={T("Favorites","default_group")}
             onClick={() => (this.activeSection = ISidebarSection.Favorites)}
           />
@@ -141,7 +141,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Menu}
-            icon={<Icon src="./icons/menu.svg" />}
+            icon={<Icon src="./icons/menu.svg" tooltip={T("Menu","menu")}/>}
             label={T("Menu","menu")}
             onClick={() => (this.activeSection = ISidebarSection.Menu)}
           />
@@ -155,7 +155,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Info}
-            icon={<Icon src="./icons/info.svg" />}
+            icon={<Icon src="./icons/info.svg" tooltip={T("Info","infopanel_title")}/>}
             label={T("Info","infopanel_title")}
             onClick={() => (this.activeSection = ISidebarSection.Info)}
           />
@@ -171,7 +171,7 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Search}
-            icon={<Icon src="./icons/search.svg" />}
+            icon={<Icon src="./icons/search.svg" tooltip={T("Search","search_result", 0)} />}
             label={T("Search","search_result", 0)}
             onClick={() => (this.activeSection = ISidebarSection.Search)}
           />
