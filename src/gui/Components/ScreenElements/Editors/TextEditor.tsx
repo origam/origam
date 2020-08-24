@@ -23,6 +23,7 @@ export class TextEditor extends React.Component<{
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
+  onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
 }> {
   disposers: any[] = [];
@@ -133,6 +134,7 @@ export class TextEditor extends React.Component<{
           }
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
+          onDoubleClick={this.props.onDoubleClick}
           onBlur={this.props.onEditorBlur}
           onFocus={this.handleFocus}
         />

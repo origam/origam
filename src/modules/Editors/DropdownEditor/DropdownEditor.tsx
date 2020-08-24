@@ -18,6 +18,7 @@ import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
 import { TagInputEditorData } from "./TagInputEditorData";
+import {NumberEditor} from "../../../gui/Components/ScreenElements/Editors/NumberEditor";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -64,7 +65,8 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
 }
 
 export function XmlBuildDropdownEditor(props: {
-    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element }) {
+    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element, onDoubleClick?: (event:any)=>void })
+{
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
   const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
@@ -99,7 +101,8 @@ export function XmlBuildDropdownEditor(props: {
       dropdownEditorDataTable,
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
-      props.isReadOnly
+      props.isReadOnly,
+      props.onDoubleClick
     );
 
     const rat = props.xmlNode.attributes;
