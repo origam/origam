@@ -203,6 +203,10 @@ export const CheckListItem: React.FC<{
     }
   }
 
+  function onLabelClick(){
+    refInput?.current?.focus();
+  }
+
   const refInput = useRef<HTMLInputElement>(null);
   props.inputSetter(new InputReference(refInput));
 
@@ -216,7 +220,9 @@ export const CheckListItem: React.FC<{
         tabIndex={props.tabIndex ? props.tabIndex : undefined}
         onKeyDown={onKeyDown}
       />
-      <div className={"content"}>{props.children}</div>
+      <div className={"content"} onClick={onLabelClick}>
+        {props.children}
+      </div>
     </div>
   );
 };
