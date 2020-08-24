@@ -1626,6 +1626,11 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
 
+"@types/properties-reader@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@types/properties-reader/-/properties-reader-0.0.2.tgz#7ee65104e055cdc33bf02b75612c2029aab42d30"
+  integrity sha512-8YLK7Kq3Zrj6vN4j0o+Zssu3esIRUIxY3a38Ahw8VjwML7d1nq/V6y9ov0fNtEeDv0qzoagTuxMf5veootvVpA==
+
 "@types/q@^1.5.1":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"

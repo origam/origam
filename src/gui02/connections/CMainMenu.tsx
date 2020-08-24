@@ -93,7 +93,7 @@ class CMainMenuCommandItem extends React.Component<{
       <MainMenuItem
         level={props.level}
         isActive={false}
-        icon={<Icon src={iconUrl(props.node.attributes.icon)} />}
+        icon={<Icon src={iconUrl(props.node.attributes.icon)} tooltip={props.node.attributes.label}/>}
         label={props.node.attributes.label /*+ (props.node.attributes.dontRequestData === "true" ? "(DRD)" : "")*/}
         isHidden={!props.isOpen}
         // TODO: Implements selector for this idset
@@ -119,9 +119,9 @@ class CMainMenuFolderItem extends React.Component<{
 
   get icon() {
     if (this.isOpen) {
-      return <Icon src="./icons/folder-open.svg" />;
+      return <Icon src="./icons/folder-open.svg" tooltip={this.props.node.attributes.label} />;
     } else {
-      return <Icon src="./icons/folder-closed.svg" />;
+      return <Icon src="./icons/folder-closed.svg" tooltip={this.props.node.attributes.label} />;
     }
   }
 

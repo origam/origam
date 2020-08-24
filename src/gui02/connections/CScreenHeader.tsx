@@ -15,6 +15,7 @@ import {onWorkflowAbortClick} from "model/actions-ui/ScreenHeader/onWorkflowAbor
 import {onWorkflowNextClick} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 
 import S from "gui02/components/ScreenHeader/ScreenHeader.module.scss";
+import {T} from "../../utils/translation";
 
 @observer
 export class CScreenHeader extends React.Component {
@@ -55,7 +56,7 @@ export class CScreenHeader extends React.Component {
             className={S.workflowActionBtn}
             onClick={onWorkflowAbortClick(content.formScreen!)}
           >
-            Cancel
+            {T("Cancel","button_cancel")}
           </button>
         )}
         {isNextButton && (
@@ -69,7 +70,7 @@ export class CScreenHeader extends React.Component {
             className={S.workflowActionBtn}
             onClick={onWorkflowNextClick(content.formScreen!)}
           >
-            Next
+            {T("Next","button_next")}
           </button>
         )}
         {/*<ScreenheaderDivider />
@@ -107,7 +108,7 @@ export class CScreenHeader extends React.Component {
         </ScreenHeaderAction>
         <ScreenheaderDivider />*/}
         <ScreenHeaderAction onClick={onFullscreenClick(activeScreen)} isActive={isFullscreen}>
-          <Icon src="./icons/fullscreen.svg" />
+          <Icon src="./icons/fullscreen.svg" tooltip={T("Fullscreen","fullscreen_button_tool_tip")}/>
         </ScreenHeaderAction>
         {/*<ScreenHeaderAction>
           <Icon src="./icons/dot-menu.svg" />

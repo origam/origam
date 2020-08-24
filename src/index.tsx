@@ -13,6 +13,7 @@ import {createApplication} from "./model/factories/createApplication";
 import "./rootContainer";
 import * as serviceWorker from "./serviceWorker";
 import Cookie from "js-cookie";
+import {translationsInit} from "./utils/translation";
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -73,6 +74,8 @@ async function main() {
       sessionStorage.setItem("origamAuthToken", user.access_token);
     });
     flow(application.run.bind(application))();
+
+    await translationsInit();
 
     ReactDOM.render(<Root application={application} />, document.getElementById("root"));
   } else {

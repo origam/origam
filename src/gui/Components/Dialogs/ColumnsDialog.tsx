@@ -11,6 +11,7 @@ import {DataViewHeaderAction} from "../../../gui02/components/DataViewHeader/Dat
 import {Dropdown} from "../../../gui02/components/Dropdown/Dropdown";
 import {DropdownItem} from "../../../gui02/components/Dropdown/DropdownItem";
 import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/AggregationType";
+import {T} from "../../../utils/translation";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -88,7 +89,7 @@ export class ColumnsDialog extends React.Component<{
   render() {
     return (
       <ModalWindow
-        title="Columns"
+        title={T("Columns","column_config_title")}
         titleButtons={<CloseButton onClick={this.props.onCloseClick}/>}
         buttonsCenter={
           <>
@@ -97,10 +98,14 @@ export class ColumnsDialog extends React.Component<{
                 this.props.onOkClick && this.props.onOkClick(event, this.configuration)
               }
             >
-              OK
+              {T("OK","button_ok")}
             </button>
-            <button onClick={this.props.onSaveAsClick}>Save As...</button>
-            <button onClick={this.props.onCancelClick}>Cancel</button>
+            <button onClick={this.props.onSaveAsClick}>
+              {T("Save As...","column_config_save_as")}
+            </button>
+            <button onClick={this.props.onCancelClick}>
+              {T("Cancel","button_cancel")}
+            </button>
           </>
         }
         buttonsLeft={null}
@@ -130,7 +135,7 @@ export class ColumnsDialog extends React.Component<{
           </AutoSizer>
         </div>
         <div className={S.lockedColumns}>
-          Locked columns count
+          {T("Locked columns count","column_config_locked_columns_count")}
           <input
             className={S.lockedColumnsInput}
             type="number"
@@ -196,28 +201,28 @@ export class ColumnsDialog extends React.Component<{
                         setDropped(false);
                         this.setAggregation(rowIndex, AggregationType.SUM)
                       }}>
-                      SUM
+                      {T("SUM","aggregation_sum")}
                     </DropdownItem>
                     <DropdownItem
                       onClick={(event: any) => {
                         setDropped(false);
                         this.setAggregation(rowIndex, AggregationType.AVG)
                       }}>
-                      AVG
+                      {T("AVG","aggregation_avg")}
                     </DropdownItem>
                     <DropdownItem
                       onClick={(event: any) => {
                         setDropped(false);
                         this.setAggregation(rowIndex, AggregationType.MIN)
                       }}>
-                      MIN
+                      {T("MIN","aggregation_min")}
                     </DropdownItem>
                     <DropdownItem
                       onClick={(event: any) => {
                         setDropped(false);
                         this.setAggregation(rowIndex, AggregationType.MAX)
                       }}>
-                      MAX
+                      {T("MAX","aggregation_max")}
                     </DropdownItem>
                   </Dropdown>
                 )}
@@ -284,13 +289,13 @@ export class TableHeader extends React.Component<{
   getHeader(columnIndex: number) {
     switch (columnIndex) {
       case 0:
-        return "Visible";
+        return T("Visible","column_config_visible");
       case 1:
-        return "Name";
+        return T("Name","column_config_name");
       case 2:
-        return "GroupBy";
+        return T("GroupBy","column_config_group_by");
       case 3:
-        return "Aggregation";
+        return T("Aggregation","column_config_aggregation");
       default:
         return "?";
     }
