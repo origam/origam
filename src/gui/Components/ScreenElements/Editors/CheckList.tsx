@@ -24,6 +24,7 @@ export interface IRawCheckListProps {
   LookupId: string;
   Parameters: any;
   menuItemId: string;
+  tabIndex?: number;
 
   onChange?(newValue: string[]): void;
 }
@@ -82,6 +83,7 @@ export class CheckListControler {
 export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
+  tabIndex?: number;
 }> = observer(props => {
   const { property } = useContext(MobXProviderContext);
 
@@ -100,6 +102,7 @@ export const CheckList: React.FC<{
       menuItemId={getMenuItemId(property)}
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
+      tabIndex={props.tabIndex}
     />
   );
 });
@@ -110,14 +113,15 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
   useEffect(controller.loadLookupList, [props.RowId]);
   console.log(props.value);
   return (
-    <div className={S.root}>
-      {controller.items.map(item => (
+    <div className={S.root} >
+      {controller.items.map((item, i) => (
         <CheckListItem
           key={item.value}
           checked={!!props.value.find(v => v === item.value)}
           onClick={event => {
             controller.handleClick(event, item);
           }}
+          tabIndex={ i === 0 ? props.tabIndex : -1}
         >
           {item.label}
         </CheckListItem>
@@ -129,10 +133,15 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
 export const CheckListItem: React.FC<{
   checked: boolean;
   onClick?(event: any): void;
+  tabIndex?: number;
 }> = props => {
   return (
     <div className={S.item} onClick={props.onClick}>
-      <input type="checkbox" className={"checkbox "+S.input} checked={props.checked} />
+      <input type="checkbox"
+             className={"checkbox "+S.input}
+             checked={props.checked}
+             tabIndex={props.tabIndex ? props.tabIndex : undefined}
+             onKeyDown={onKeyDown}/>
       <div className={"content"}>{props.children}</div>
     </div>
   );

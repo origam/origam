@@ -11,6 +11,7 @@ export class BoolEditor extends React.Component<{
   onChange?(event: any, value: boolean): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
+  tabIndex?: number;
 }> {
   
   render() {
@@ -28,6 +29,7 @@ export class BoolEditor extends React.Component<{
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
           onBlur={() => 'bool blur'}
+          tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
         />
       </div>
     );

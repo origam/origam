@@ -36,6 +36,7 @@ export class FormViewEditor extends React.Component<{
   xmlNode?: any;
   value?: any;
   textualValue?: any;
+  tabIndex?: number;
   property?: IProperty;
   isRichText: boolean;
   onChange?: (event: any, value: any) => void;
@@ -107,6 +108,7 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               focusManager.subscribe(textEditor, this.props.property?.id)
             }
+            tabIndex={this.props.tabIndex}
           />
         );
       case "Text":
@@ -131,6 +133,7 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               focusManager.subscribe(textEditor, this.props.property?.id)
             }
+            tabIndex={this.props.tabIndex}
           />
         );
       case "Date":
@@ -152,6 +155,7 @@ export class FormViewEditor extends React.Component<{
               focusManager.subscribe(textEditor, this.props.property?.id)
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
+            tabIndex={this.props.tabIndex}
           />
         );
       case "CheckBox":
@@ -162,6 +166,7 @@ export class FormViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={undefined}
+            tabIndex={this.props.tabIndex}
           />
         );
       case "ComboBox":
@@ -170,6 +175,7 @@ export class FormViewEditor extends React.Component<{
             key={this.props.xmlNode.$iid}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
+            tabIndex={this.props.tabIndex}
           />
         );
       case "TagInput":
@@ -178,6 +184,7 @@ export class FormViewEditor extends React.Component<{
             key={this.props.xmlNode.$iid}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
+            tabIndex={this.props.tabIndex}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
@@ -201,12 +208,18 @@ export class FormViewEditor extends React.Component<{
           <CheckList
             value={this.props.value}
             onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
+            tabIndex={this.props.tabIndex}
           />
         );
       case "Image":
-        return <ImageEditor value={this.props.value} />;
+        return <ImageEditor
+          value={this.props.value}
+          tabIndex={this.props.tabIndex}/>;
       case "Blob":
-        return <BlobEditor value={this.props.value} />;
+        return <BlobEditor
+          value={this.props.value}
+          tabIndex={this.props.tabIndex}
+        />;
       default:
         return "Unknown field";
     }

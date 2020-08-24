@@ -27,6 +27,7 @@ export class FormBuilder extends React.Component<{
   dataView?: IDataView;
 }> {
   buildForm() {
+    let tabIndex=0;
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -113,7 +114,7 @@ export class FormBuilder extends React.Component<{
                     textualValue = dataTable.getCellText(row, property);
                   }
                 }
-
+                tabIndex++;
                 return property ? (
                   <Provider property={property}>
                     <FormField
@@ -132,6 +133,7 @@ export class FormBuilder extends React.Component<{
                       editor={
                         <FormViewEditor
                           value={value}
+                          tabIndex={tabIndex}
                           isRichText={property.isRichText}
                           textualValue={textualValue}
                           xmlNode={property.xmlNode}

@@ -24,6 +24,7 @@ export class TextEditor extends React.Component<{
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   onEditorBlur?(event: any): void;
+  tabIndex?: number;
 }> {
   disposers: any[] = [];
   unsubscribeFromFocusManager?: () => void;
@@ -114,6 +115,7 @@ export class TextEditor extends React.Component<{
             onClick={this.props.onClick}
             onBlur={this.props.onEditorBlur}
             onFocus={this.handleFocus}
+            tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           />
         </div>
       );
@@ -135,6 +137,7 @@ export class TextEditor extends React.Component<{
           onClick={this.props.onClick}
           onBlur={this.props.onEditorBlur}
           onFocus={this.handleFocus}
+          tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
         />
       );
     }
@@ -152,6 +155,7 @@ export class TextEditor extends React.Component<{
         onClick={this.props.onClick}
         onBlur={this.props.onEditorBlur}
         onFocus={this.handleFocus}
+        tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
       />
     )
   }
