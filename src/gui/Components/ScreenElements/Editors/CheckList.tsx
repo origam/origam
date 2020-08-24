@@ -186,18 +186,21 @@ export const CheckListItem: React.FC<{
 }> = (props) => {
   function onKeyDown(event: any) {
     const boundingRect = refInput.current?.getBoundingClientRect()!;
-    event.preventDefault();
     switch (event.key) {
       case "ArrowUp":
+        event.preventDefault();
         props.focusUp(boundingRect.x, boundingRect.y);
         break;
       case "ArrowDown":
+        event.preventDefault();
         props.focusDown(boundingRect.x, boundingRect.y);
         break;
       case "ArrowRight":
+        event.preventDefault();
         props.focusRight(boundingRect.x, boundingRect.y);
         break;
       case "ArrowLeft":
+        event.preventDefault();
         props.focusLeft(boundingRect.x, boundingRect.y);
         break;
     }
