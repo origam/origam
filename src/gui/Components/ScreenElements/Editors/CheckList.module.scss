@@ -20,8 +20,12 @@
   overflow-y: hidden;
 }
 
-.input:focus{
-  outline: #4c84ff solid;
+.focusedLabel{
+  background-color:  #4c84ff;
+}
+
+.unFocusedLabel{
+  background-color: transparent;
 }
 
 .item {

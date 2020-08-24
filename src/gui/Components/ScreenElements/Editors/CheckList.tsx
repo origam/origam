@@ -166,9 +166,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
           focusRight={focusRight}
           focusUp={focusUp}
           focusDown={focusDown}
-        >
-          {item.label}
-        </CheckListItem>
+          label={item.label}/>
       ))}
     </div>
   );
@@ -183,7 +181,11 @@ export const CheckListItem: React.FC<{
   focusRight: (x: number, y: number)=>void;
   focusUp: (x: number, y: number)=>void;
   focusDown: (x: number, y: number)=>void;
+  label: string;
 }> = (props) => {
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   function onKeyDown(event: any) {
     const boundingRect = refInput.current?.getBoundingClientRect()!;
     switch (event.key) {
@@ -210,6 +212,14 @@ export const CheckListItem: React.FC<{
     refInput?.current?.focus();
   }
 
+  function onInputFocus(){
+    setIsFocused(true);
+  }
+
+  function onInputBlur(){
+    setIsFocused(false);
+  }
+
   const refInput = useRef<HTMLInputElement>(null);
   props.inputSetter(new InputReference(refInput));
 
@@ -222,9 +232,12 @@ export const CheckListItem: React.FC<{
         checked={props.checked}
         tabIndex={props.tabIndex ? props.tabIndex : undefined}
         onKeyDown={onKeyDown}
+        onFocus={onInputFocus}
+        onBlur={onInputBlur}
       />
-      <div className={"content"} onClick={onLabelClick}>
-        {props.children}
+      <div className={"content "+(isFocused ? S.focusedLabel : S.unFocusedLabel)}
+           onClick={onLabelClick}>
+        {props.label}
       </div>
     </div>
   );
