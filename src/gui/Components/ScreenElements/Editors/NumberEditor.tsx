@@ -28,6 +28,7 @@ export class NumberEditor extends React.Component<{
   onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
+  onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
   tabIndex?: number;
@@ -162,6 +163,7 @@ export class NumberEditor extends React.Component<{
             onChange={this.handleChange}
             onKeyDown={this.props.onKeyDown}
             onClick={this.props.onClick}
+            onDoubleClick={this.props.onDoubleClick}
             onBlur={this.handleBlur}
             onFocus={this.handleFocus}
             tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}

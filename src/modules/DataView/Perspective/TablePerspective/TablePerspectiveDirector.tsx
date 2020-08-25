@@ -11,6 +11,7 @@ import {Observer} from "mobx-react";
 import {ITablePerspective} from "./TablePerspective";
 import {IPerspective} from "../Perspective";
 import {TableView} from "gui/Workbench/ScreenArea/TableView/TableView";
+import {T} from "../../../../utils/translation";
 
 export class TablePerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -56,7 +57,7 @@ export class TablePerspectiveDirector implements IIId {
               onClick={flow(this.tablePerspective.handleToolbarBtnClick)}
               isActive={this.tablePerspective.isActive}
             >
-              <Icon src="./icons/table-view.svg" />
+              <Icon src="./icons/table-view.svg" tooltip={T("Grid","grid_tool_tip")}/>
             </DataViewHeaderAction>
           )}
         </Observer>

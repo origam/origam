@@ -20,6 +20,7 @@ import {addRecordAuditExpandRequestHandler} from "model/actions-ui/RecordInfo/ad
 import {onSidebarInfoSectionCollapsed} from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
 import {onSidebarAuditSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
 import {onSidebarInfoSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
+import {T} from "../../utils/translation";
 
 @observer
 export class CSidebar extends React.Component {
@@ -101,7 +102,7 @@ export class CSidebar extends React.Component {
             isActive={this.activeSection === ISidebarSection.WorkQueues}
             icon={
               <>
-                <Icon src="./icons/work-queue.svg" />
+                <Icon src="./icons/work-queue.svg" tooltip={T("Work Queues","work_queue_measure")} />
                 {workQueuesItemsCount > 0 && (
                   <SidebarAlertCounter>
                     {workQueuesItemsCount}
@@ -109,7 +110,9 @@ export class CSidebar extends React.Component {
                 )}
               </>
             }
-            label={<>Work Queues</>}
+            label={<>
+              {T("Work Queues","work_queue_measure")}
+            </>}
             onClick={() => (this.activeSection = ISidebarSection.WorkQueues)}
           />
           <SidebarSectionBody
@@ -124,8 +127,8 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Favorites}
-            icon={<Icon src="./icons/favorites.svg" />}
-            label={"Favorites"}
+            icon={<Icon src="./icons/favorites.svg" tooltip={T("Favorites","default_group")}/>}
+            label={T("Favorites","default_group")}
             onClick={() => (this.activeSection = ISidebarSection.Favorites)}
           />
           <SidebarSectionBody
@@ -138,8 +141,8 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Menu}
-            icon={<Icon src="./icons/menu.svg" />}
-            label={"Menu"}
+            icon={<Icon src="./icons/menu.svg" tooltip={T("Menu","menu")}/>}
+            label={T("Menu","menu")}
             onClick={() => (this.activeSection = ISidebarSection.Menu)}
           />
           <SidebarSectionBody
@@ -152,8 +155,8 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Info}
-            icon={<Icon src="./icons/info.svg" />}
-            label={"Info"}
+            icon={<Icon src="./icons/info.svg" tooltip={T("Info","infopanel_title")}/>}
+            label={T("Info","infopanel_title")}
             onClick={() => (this.activeSection = ISidebarSection.Info)}
           />
           <SidebarSectionBody
@@ -168,8 +171,8 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Search}
-            icon={<Icon src="./icons/search.svg" />}
-            label={"Search"}
+            icon={<Icon src="./icons/search.svg" tooltip={T("Search","search_result", 0)} />}
+            label={T("Search","search_result", 0)}
             onClick={() => (this.activeSection = ISidebarSection.Search)}
           />
           <SidebarSectionBody

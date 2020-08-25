@@ -26,6 +26,8 @@ import React from "react";
 import {isInfiniteScrollingActive} from "../../selectors/isInfiniteScrollingActive";
 import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
 import {getFormScreen} from "../../selectors/FormScreen/getFormScreen";
+import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import {flushCurrentRowData} from "../../actions/DataView/TableView/flushCurrentRowData";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -135,7 +137,9 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  * onCellClickInternal(event: any, row: any[], columnId: string) {
+  *onCellClickInternal(event: any, row: any[], columnId: string) {
+    getTablePanelView(this).setEditing(false);
+    yield* flushCurrentRowData(this)();
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {

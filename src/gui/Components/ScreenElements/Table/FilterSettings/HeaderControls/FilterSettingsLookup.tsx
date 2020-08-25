@@ -268,9 +268,9 @@ export class TagInputStateful extends React.Component<{
   render() {
     return (
       <TagInput>
-        {this.cursorAfterIndex === -1 && (
-          <TagInputEditFake domRef={this.refFakeInput} onKeyDown={this.handleFakeEditKeyDown} />
-        )}
+        {/*{this.cursorAfterIndex === -1 && (*/}
+        {/*  <TagInputEditFake domRef={this.refFakeInput} onKeyDown={this.handleFakeEditKeyDown} />*/}
+        {/*)}*/}
         {this.props.selectedItems.map((item, idx) => {
           return (
             <React.Fragment key={item.value}>
@@ -280,12 +280,12 @@ export class TagInputStateful extends React.Component<{
                   onClick={(event) => this.handleDeleteBtnClick(event, item.value)}
                 />
               </TagInputItem>
-              {this.cursorAfterIndex === idx && idx < this.props.selectedItems.length - 1 && (
-                <TagInputEditFake
-                  domRef={this.refFakeInput}
-                  onKeyDown={this.handleFakeEditKeyDown}
-                />
-              )}
+              {/*{this.cursorAfterIndex === idx && idx < this.props.selectedItems.length - 1 && (*/}
+              {/*  <TagInputEditFake*/}
+              {/*    domRef={this.refFakeInput}*/}
+              {/*    onKeyDown={this.handleFakeEditKeyDown}*/}
+              {/*  />*/}
+              {/*)}*/}
             </React.Fragment>
           );
         })}

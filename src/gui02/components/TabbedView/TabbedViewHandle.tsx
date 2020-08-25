@@ -18,7 +18,7 @@ export class TabbedViewHandle extends React.Component<{
         </div>
         {this.props.hasCloseBtn && (
           <a className={S.closeBtn} onClick={this.props.onCloseClick}>
-            <Icon src="./icons/close.svg" />
+            <Icon src="./icons/close.svg" tooltip={""} />
           </a>
         )}
       </div>

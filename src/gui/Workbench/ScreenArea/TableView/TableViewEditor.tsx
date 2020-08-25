@@ -19,6 +19,8 @@ import { DropdownEditor } from "../../../Components/ScreenElements/Editors/Dropd
 import { NumberEditor } from "gui/Components/ScreenElements/Editors/NumberEditor";
 import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import {getDataView} from "../../../../model/selectors/DataView/getDataView";
+import uiActions from "../../../../model/actions-ui-tree";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -72,6 +74,7 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
+            onDoubleClick={event => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
           />
         );
@@ -89,6 +92,7 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
             onClick={undefined}
+            onDoubleClick={event => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={false}
           />
@@ -106,6 +110,7 @@ export class TableViewEditor extends React.Component<{
             refocuser={undefined}
             onChange={this.props.onChange}
             onClick={undefined}
+            onDoubleClick={event => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             onKeyDown={this.props.onEditorKeyDown}
           />
@@ -125,6 +130,7 @@ export class TableViewEditor extends React.Component<{
           <XmlBuildDropdownEditor
             key={this.props.property!.xmlNode.$iid}
             xmlNode={this.props.property!.xmlNode}
+            onDoubleClick={event => this.onDoubleClick(event)}
             isReadOnly={readOnly}
           />
         );
@@ -132,18 +138,26 @@ export class TableViewEditor extends React.Component<{
         return "";
       case "TagInput":
         return (
-          <TagInputEditor
-            value={this.props.getCellValue!()}
+          <XmlBuildDropdownEditor
+            key={this.props.property!.xmlNode.$iid}
+            xmlNode={this.props.property!.xmlNode}
             isReadOnly={readOnly}
-            isInvalid={false}
-            isFocused={false}
-            backgroundColor={backgroundColor}
-            foregroundColor={foregroundColor}
-            refocuser={undefined}
-            onChange={this.props.onChange}
-            onKeyDown={undefined}
-            onClick={undefined}
-            onEditorBlur={this.props.onEditorBlur}
+            tagEditor={
+               <TagInputEditor
+                value={this.props.getCellValue!()}
+                isReadOnly={readOnly}
+                isInvalid={false}
+                isFocused={false}
+                backgroundColor={backgroundColor}
+                foregroundColor={foregroundColor}
+                refocuser={undefined}
+                onChange={this.props.onChange}
+                onKeyDown={undefined}
+                onClick={undefined}
+                onDoubleClick={event => this.onDoubleClick(event)}
+                onEditorBlur={this.props.onEditorBlur}
+              />
+            }
           />
         );
       case "Blob":
@@ -152,6 +166,15 @@ export class TableViewEditor extends React.Component<{
         return "Unknown field";
     }
   }
+
+  onDoubleClick(event: any){
+    const dataView = getDataView(this.props.property);
+    if (!dataView.defaultAction) {
+      return;
+    }
+    uiActions.actions.onActionClick(dataView.defaultAction)(event, dataView.defaultAction);
+  };
+
 
   render() {
     return <Provider property={this.props.property}>{this.getEditor()}</Provider>;

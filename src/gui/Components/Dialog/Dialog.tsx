@@ -135,7 +135,7 @@ export class ModalWindow extends React.Component<{
 export const CloseButton = (props: { onClick?: (event: any) => void }) => (
   <button className={S.btnClose} onClick={props.onClick}>
     <div className={S.btnIconContainer}>
-      <Icon src="./icons/close.svg" />
+      <Icon src="./icons/close.svg" tooltip={""} />
     </div>
   </button>
 );
