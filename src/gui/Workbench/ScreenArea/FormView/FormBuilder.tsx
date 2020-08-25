@@ -17,6 +17,8 @@ import { RadioButton } from "gui02/components/Form/RadioButton";
 import { getDataSourceFieldByName } from "../../../../model/selectors/DataSources/getDataSourceFieldByName";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import { flow } from "mobx";
+import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
+import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -115,7 +117,28 @@ export class FormBuilder extends React.Component<{
                   }
                 }
                 tabIndex++;
-                return property ? (
+                if(!property){
+                  return (<></>);
+                }
+
+                if(property.column === "CheckBox"){
+
+                  const readOnly =
+                    property!.readOnly ||
+                    !getRowStateAllowUpdate(property, rowId || "", property!.id);
+
+                  return (
+                    <Provider property={property}>
+                      <CheckBox
+                        checked={value}
+                        readOnly={readOnly}
+                        tabIndex={tabIndex}
+                      />
+                    </Provider>
+                  );
+                }
+
+                return (
                   <Provider property={property}>
                     <FormField
                       // Id={property.id}
@@ -129,7 +152,6 @@ export class FormBuilder extends React.Component<{
                       width={property.width}
                       left={property.x}
                       top={property.y}
-                      isCheckbox={property.column === "CheckBox"}
                       editor={
                         <FormViewEditor
                           value={value}
@@ -141,8 +163,6 @@ export class FormBuilder extends React.Component<{
                       }
                     />
                   </Provider>
-                ) : (
-                  <></>
                 );
               }}
             </Observer>
