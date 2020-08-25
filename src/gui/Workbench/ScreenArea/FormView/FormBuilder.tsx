@@ -141,13 +141,10 @@ export class FormBuilder extends React.Component<{
                 return (
                   <Provider property={property}>
                     <FormField
-                      // Id={property.id}
                       caption={property.name}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
                       dock={property.dock}
-                      // Column={property.column}
-                      // Entity={property.entity}
                       height={property.height}
                       width={property.width}
                       left={property.x}
@@ -176,7 +173,6 @@ export class FormBuilder extends React.Component<{
   }
 
   render() {
-    // debugger
     return this.buildForm();
   }
 }

@@ -26,11 +26,8 @@ export const CheckBox: React.FC<{
   const [isChecked, setIsChecked] = useState<boolean>(props.checked);
   const [refInput, setRefInput] = useState<HTMLInputElement>();
 
-  // const {name, captionLength, dock, height, width, x, y} = props.property!;
-
   const label = props.property!.name;
   const captionLength = props.property!.captionLength;
-  const dock = props.property!.dock;
   const height = props.property!.height;
   const width = props.property!.width;
   const left = props.property!.x;
@@ -42,43 +39,17 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
-    // switch (props.captionPosition) {
-    //   default:
-    //   case ICaptionPosition.Left:
-    //     return {
-    //       top: props.top,
-    //       left: props.left - props.captionLength,
-    //       width: props.captionLength
-    //       //  height: this.props.height
-    //     };
-    //   case ICaptionPosition.Right:
     return {
       top: top,
       left: left + height,
       width: captionLength,
-      //  height: this.props.height
     };
-    //   case ICaptionPosition.Top:
-    //     return {
-    //       top: props.top - 20, // TODO: Move this constant somewhere else...
-    //       left: props.left,
-    //       width: props.captionLength
-    //     };
-    // }
   }
 
   function formFieldStyle() {
     if (props.isHidden) {
       return {
         display: "none",
-      };
-    }
-    if (dock === IDockType.Fill) {
-      return {
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
       };
     }
     return {
