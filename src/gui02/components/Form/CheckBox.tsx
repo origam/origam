@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {IDockType, IProperty} from "../../../model/entities/types/IProperty";
+import { IProperty} from "../../../model/entities/types/IProperty";
 import { BoolEditor } from "../../../gui/Components/ScreenElements/Editors/BoolEditor";
 import S from "./CheckBox.module.scss";
 import { inject } from "mobx-react";
