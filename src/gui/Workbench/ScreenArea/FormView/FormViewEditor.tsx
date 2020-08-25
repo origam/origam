@@ -22,6 +22,7 @@ import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
 import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
+import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -55,9 +56,7 @@ export class FormViewEditor extends React.Component<{
       rowId || "",
       this.props.property!.id
     );
-    const readOnly =
-      this.props.property!.readOnly ||
-      !getRowStateAllowUpdate(this.props.property, rowId || "", this.props.property!.id);
+    const readOnly = isReadOnly(this.props.property!, rowId);
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;
     if (row) {

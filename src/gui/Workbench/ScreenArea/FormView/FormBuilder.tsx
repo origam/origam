@@ -19,6 +19,7 @@ import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/g
 import { flow } from "mobx";
 import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
 import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
+import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -122,16 +123,11 @@ export class FormBuilder extends React.Component<{
                 }
 
                 if(property.column === "CheckBox"){
-
-                  const readOnly =
-                    property!.readOnly ||
-                    !getRowStateAllowUpdate(property, rowId || "", property!.id);
-
                   return (
                     <Provider property={property}>
                       <CheckBox
                         checked={value}
-                        readOnly={readOnly}
+                        readOnly={isReadOnly(property, rowId)}
                         tabIndex={tabIndex}
                       />
                     </Provider>
