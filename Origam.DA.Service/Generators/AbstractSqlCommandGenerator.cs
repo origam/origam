@@ -49,6 +49,7 @@ namespace Origam.DA.Service
 
         internal struct SortOrder
         {
+            public string ColumnName;
             public string Expression;
             public DataStructureColumnSortDirection SortDirection;
         }
@@ -1853,6 +1854,11 @@ namespace Origam.DA.Service
                 i = 0;
                 foreach (DictionaryEntry entry in order)
                 {
+                    if (customGrouping != null &&  customGrouping.GroupBy != ((SortOrder) entry.Value).ColumnName)
+                    {
+                        continue;
+                    }
+
                     if (i > 0)
                     {
                         orderByBuilder.Append(",");
@@ -2073,6 +2079,7 @@ namespace Origam.DA.Service
                         replaceParameterTexts, dynamicParameters, 
                         selectParameterReferences, orderingInfo?.Lookup, rowOffset);
                 }
+                sortOrder.ColumnName = column.Name;
                 sortOrder.Expression = sortExpression;
                 if (orderingInfo == null)
                 {
