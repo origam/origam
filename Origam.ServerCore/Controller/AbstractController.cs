@@ -259,10 +259,10 @@ namespace Origam.ServerCore.Controller
             bool isLazyLoaded = entityData.MenuItem.ListDataStructure != null;
             if(isLazyLoaded)
             {
-                if(entityData.MenuItem.ListEntity.Name
-                == entityData.Entity.Name)
+                if(entityData.MenuItem.ListEntity.Name == entityData.Entity.Name)
                 {
                     query.MethodId = entityData.MenuItem.ListMethodId;
+                    query.SortSetId = entityData.MenuItem.ListSortSetId;
                     query.DataSourceId
                         = entityData.MenuItem.ListDataStructure.Id;
                     // get parameters from session store
@@ -293,6 +293,7 @@ namespace Origam.ServerCore.Controller
                             }
 
                             query.MethodId = entityData.MenuItem.MethodId;
+                            query.SortSetId = entityData.MenuItem.SortSetId;
                             return Result
                                 .Success<DataStructureQuery, IActionResult>(query);
                         });
@@ -301,6 +302,7 @@ namespace Origam.ServerCore.Controller
             else
             {
                 query.MethodId = entityData.MenuItem.MethodId;
+                query.SortSetId = entityData.MenuItem.SortSetId;
                 query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
             }
 
