@@ -343,7 +343,7 @@ class HeaderRenderer implements IHeaderRendererData {
           width={args.columnWidth}
           label={header.label}
           orderingDirection={header.ordering}
-          orderingOrder={header.order}
+          orderingOrder={header.order + 1}
           onColumnWidthChange={this.onColumnWidthChange}
           onColumnWidthChangeFinished={onColumnWidthChangeFinished(this.tablePanelView)}
           isColumnOrderChanging={this.isColumnOrderChanging}
