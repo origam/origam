@@ -7,17 +7,19 @@ import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./Dropd
 import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
+import {IFocusable} from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
-  constructor(
-    private api: DropdownEditorApi,
-    private data: IDropdownEditorData,
-    private dataTable: DropdownDataTable,
-    private setup: () => DropdownEditorSetup,
-    private cache: DropdownEditorLookupListCache,
-    public isReadOnly: boolean,
-    public onDoubleClick?: (event:any)=>void
-  ) {}
+         constructor(
+           private api: DropdownEditorApi,
+           private data: IDropdownEditorData,
+           private dataTable: DropdownDataTable,
+           private setup: () => DropdownEditorSetup,
+           private cache: DropdownEditorLookupListCache,
+           public isReadOnly: boolean,
+           public onDoubleClick?: (event: any) => void,
+           public subscribeToFocusManager?: (obj: IFocusable) => (()=>void)
+         ) {}
 
          @observable isDropped = false;
          @observable isWorking = false;
@@ -30,6 +32,7 @@ export class DropdownEditorBehavior {
          willLoadPage = 1;
          willLoadNextPage = true;
          pageSize = 100;
+         unsubscribeFromFocusManager?: () => void;
 
          @computed get choosenRowId() {
            return this.data.value;
@@ -300,6 +303,9 @@ export class DropdownEditorBehavior {
          _refInputDisposer: any;
          refInputElement = (elm: any) => {
            this.elmInputElement = elm;
+           if(this.elmInputElement && this.subscribeToFocusManager){
+             this.unsubscribeFromFocusManager = this.subscribeToFocusManager(this.elmInputElement);
+           }
          };
 
   elmInputElement: any;

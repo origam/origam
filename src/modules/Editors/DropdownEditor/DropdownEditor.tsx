@@ -19,6 +19,7 @@ import { IDataView } from "../../../model/entities/types/IDataView";
 import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
 import { TagInputEditorData } from "./TagInputEditorData";
 import {NumberEditor} from "../../../gui/Components/ScreenElements/Editors/NumberEditor";
+import {IFocusable} from "../../../model/entities/FocusManager";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -65,7 +66,8 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
 }
 
 export function XmlBuildDropdownEditor(props: {
-    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element, onDoubleClick?: (event:any)=>void })
+    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element, onDoubleClick?: (event:any)=>void,
+    subscribeToFocusManager?: (obj: IFocusable) => (()=>void) })
 {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -102,7 +104,8 @@ export function XmlBuildDropdownEditor(props: {
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
       props.isReadOnly,
-      props.onDoubleClick
+      props.onDoubleClick,
+      props.subscribeToFocusManager
     );
 
     const rat = props.xmlNode.attributes;
