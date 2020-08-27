@@ -2,6 +2,7 @@
 
 .input {
   @include input;
+  overflow-y: auto;
 }
 
 .editorContainer {
