@@ -258,6 +258,19 @@ export class DateTimeEditor extends React.Component<{
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
+  @action.bound handleKeyDown(event: any) {
+    if(event.key === "Enter")
+    {
+      const dateCompleter = this.getDateCompleter()
+      const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue)
+      if(completedMoment){
+        this.props.onChange?.(event, completedMoment.toISOString(true));
+      }
+      this.dirtyTextualValue = undefined;
+    }
+    this.props.onKeyDown?.(event);
+  }
+
   @action.bound getDateCompleter(){
     if(getLocaleFromCookie() === "en-US"){
       return new DateCompleter("MM/DD/YYYY h:mm:ss A", "/",
@@ -379,7 +392,7 @@ export class DateTimeEditor extends React.Component<{
                 onChange={this.handleTextfieldChange}
                 onClick={this.props.onClick}
                 onDoubleClick={this.props.onDoubleClick}
-                onKeyDown={this.props.onKeyDown}
+                onKeyDown={this.handleKeyDown}
               />
             </Tooltip>
             {this.props.isInvalid && (
