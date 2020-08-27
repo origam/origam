@@ -9,7 +9,8 @@ import {
   getCurrentDecimalSeparator,
 } from "../../../../model/entities/NumberFormating";
 import {IFocusable} from "../../../../model/entities/FocusManager";
-
+import {getLocaleFromCookie} from "../../../../utils/cookies";
+import numeral from "numeral";
 @observer
 export class NumberEditor extends React.Component<{
   value: string | null;
@@ -106,11 +107,9 @@ export class NumberEditor extends React.Component<{
       return;
     }
     if (this.editValue === "") {
-      this.props.onChange && this.props.onChange(null, null);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     } else {
       this.hasFocus = false;
-      this.props.onChange && this.props.onChange(null, this.numericValue);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     }
   }
@@ -131,6 +130,7 @@ export class NumberEditor extends React.Component<{
     this.wasChanged = true;
     const invalidChars = new RegExp("[^\\d" + getCurrentDecimalSeparator() + "]", "g");
     this.editingValue = (event.target.value || "").replace(invalidChars, "");
+    this.props.onChange && this.props.onChange(null, this.numericValue);
   }
 
   @action.bound handleKeyDown(event: any) {
