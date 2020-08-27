@@ -12,16 +12,16 @@ export class BoolEditor extends React.Component<{
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
   tabIndex?: number;
-  inputSetter?: (inputRef: HTMLInputElement) => void;
   onBlur?: ()=>void;
   onFocus?: ()=>void;
+  id?: string;
 }> {
   
   render() {
     return (
       <div className={cx(S.editorContainer)}>
         <input
-          ref={this.props.inputSetter ? this.props.inputSetter : undefined}
+          id={ this.props.id ? this.props.id : undefined }
           className="editor"
           type="checkbox"
           checked={this.props.value}

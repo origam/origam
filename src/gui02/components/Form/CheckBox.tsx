@@ -24,7 +24,6 @@ export const CheckBox: React.FC<{
 })((props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState<boolean>(props.checked);
-  const [refInput, setRefInput] = useState<HTMLInputElement>();
 
   const label = props.property!.name;
   const captionLength = props.property!.captionLength;
@@ -60,11 +59,6 @@ export const CheckBox: React.FC<{
     };
   }
 
-  function onLabelClick(event: any) {
-    refInput?.focus();
-    onChange(event);
-  }
-
   function onChange(event: any){
     setIsChecked(!isChecked);
     props.onChange && !props.readOnly && props.onChange(event, isChecked);
@@ -82,18 +76,18 @@ export const CheckBox: React.FC<{
     <div>
       <div className={S.editor} style={formFieldStyle()}>
         <BoolEditor
+          id={props.property!.modelInstanceId}
           value={isChecked}
           isReadOnly={props.readOnly}
           tabIndex={props.tabIndex}
-          inputSetter={(refInput) => setRefInput(refInput)}
           onBlur={onInputBlur}
           onFocus={onInputFocus}
           onChange={onChange}
         />
       </div>
       <label
+        htmlFor={props.property!.modelInstanceId}
         className={S.caption + " " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}
-        onClick={onLabelClick}
         style={captionStyle()}
       >
         {label}
