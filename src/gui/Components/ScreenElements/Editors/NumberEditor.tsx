@@ -7,7 +7,6 @@ import cx from "classnames";
 import {
   formatNumber,
   getCurrentDecimalSeparator,
-  getCurrentGroupSeparator
 } from "../../../../model/entities/NumberFormating";
 import {IFocusable} from "../../../../model/entities/FocusManager";
 
@@ -110,16 +109,27 @@ export class NumberEditor extends React.Component<{
       this.props.onChange && this.props.onChange(null, null);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     } else {
-      const value =  ""+Number(this.editValue);
       this.hasFocus = false;
-      this.props.onChange && this.props.onChange(null, value);
+      this.props.onChange && this.props.onChange(null, this.numericValue);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     }
   }
 
+  @computed
+  private get numericValue() {
+    if(this.editValue === null) {
+      return null;
+    }
+    let valueToParse = this.editValue.endsWith(getCurrentDecimalSeparator())
+      ? this.editValue+"0"
+      : this.editValue;
+    valueToParse = valueToParse.replace(getCurrentDecimalSeparator(), ".")
+    return "" + Number(valueToParse);
+  }
+
   @action.bound handleChange(event: any) {
     this.wasChanged = true;
-    const invalidChars = new RegExp("[^\\d"+getCurrentDecimalSeparator()+getCurrentGroupSeparator()+"]", "g");
+    const invalidChars = new RegExp("[^\\d" + getCurrentDecimalSeparator() + "]", "g");
     this.editingValue = (event.target.value || "").replace(invalidChars, "");
   }
 
