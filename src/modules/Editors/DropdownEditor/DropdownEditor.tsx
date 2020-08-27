@@ -16,9 +16,7 @@ import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
-import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
 import { TagInputEditorData } from "./TagInputEditorData";
-import {NumberEditor} from "../../../gui/Components/ScreenElements/Editors/NumberEditor";
 import {IFocusable} from "../../../model/entities/FocusManager";
 
 export interface IDropdownEditorContext {
@@ -75,10 +73,6 @@ export function XmlBuildDropdownEditor(props: {
   const workbench = mobxContext.workbench;
   const { lookupListCache } = workbench;
 
-  // const dataViewRowCursor = new RowCursor(() => null);
-  // const dataViewApi = new DataViewAPI(() => null, () => null, null);
-  // const dataViewData = new DataViewData(() => null, (propId) => null);
-
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
       () => dropdownEditorSetup,
@@ -113,7 +107,7 @@ export function XmlBuildDropdownEditor(props: {
     const propertyId = rat.Id;
     const showUniqueValues = rat.DropDownShowUniqueValues === "true";
     const identifier = rat.Identifier;
-    let identifierIndex = 0; //= parseInt(rat.IdentifierIndex, 10);
+    let identifierIndex = 0;
     const dropdownType = rat.DropDownType;
     const cached = rat.Cached === "true";
     const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
@@ -127,14 +121,12 @@ export function XmlBuildDropdownEditor(props: {
       index++;
       const pat = ddp.attributes;
       const id = pat.Id;
-      //const index = parseInt(pat.Index, 10);
       columnNames.push(id);
       columnNameToIndex.set(id, index);
 
       visibleColumnNames.push(id);
       const name = pat.Name;
       const column = pat.Column;
-      const entity = pat.Entity;
 
       let bodyCellDriver;
       switch (column) {
