@@ -16,9 +16,8 @@ import { DropdownEditorData, IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
-import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
 import { TagInputEditorData } from "./TagInputEditorData";
-import {NumberEditor} from "../../../gui/Components/ScreenElements/Editors/NumberEditor";
+import {IFocusable} from "../../../model/entities/FocusManager";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -65,17 +64,14 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
 }
 
 export function XmlBuildDropdownEditor(props: {
-    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element, tabIndex?: number,
-    onDoubleClick?: (event:any)=>void }) {
+    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element, onDoubleClick?: (event:any)=>void,
+    subscribeToFocusManager?: (obj: IFocusable) => (()=>void), tabIndex?: number})
+{
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
   const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
   const workbench = mobxContext.workbench;
   const { lookupListCache } = workbench;
-
-  // const dataViewRowCursor = new RowCursor(() => null);
-  // const dataViewApi = new DataViewAPI(() => null, () => null, null);
-  // const dataViewData = new DataViewData(() => null, (propId) => null);
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
@@ -102,8 +98,9 @@ export function XmlBuildDropdownEditor(props: {
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
       props.isReadOnly,
+      props.onDoubleClick,
+      props.subscribeToFocusManager,
       props.tabIndex,
-      props.onDoubleClick
     );
 
     const rat = props.xmlNode.attributes;
@@ -111,7 +108,7 @@ export function XmlBuildDropdownEditor(props: {
     const propertyId = rat.Id;
     const showUniqueValues = rat.DropDownShowUniqueValues === "true";
     const identifier = rat.Identifier;
-    let identifierIndex = 0; //= parseInt(rat.IdentifierIndex, 10);
+    let identifierIndex = 0;
     const dropdownType = rat.DropDownType;
     const cached = rat.Cached === "true";
     const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
@@ -125,14 +122,12 @@ export function XmlBuildDropdownEditor(props: {
       index++;
       const pat = ddp.attributes;
       const id = pat.Id;
-      //const index = parseInt(pat.Index, 10);
       columnNames.push(id);
       columnNameToIndex.set(id, index);
 
       visibleColumnNames.push(id);
       const name = pat.Name;
       const column = pat.Column;
-      const entity = pat.Entity;
 
       let bodyCellDriver;
       switch (column) {

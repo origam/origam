@@ -1,5 +1,5 @@
 import { Observer } from "mobx-react";
-import React, { useContext, useMemo } from "react";
+import React, {useContext, useEffect, useMemo } from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 
 export function DropdownEditorInput() {
@@ -10,6 +10,13 @@ export function DropdownEditorInput() {
       beh.refInputElement(elm);
     };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
+    }
+  }, [])
+
   return (
     <Observer>
       {() => (
