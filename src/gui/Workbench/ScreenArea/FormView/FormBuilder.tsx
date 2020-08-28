@@ -79,6 +79,7 @@ export class FormBuilder extends React.Component<{
           ? dataTable.getCellValueByDataSourceField(row, sourceField!) === xfo.attributes.Value
           : false;
 
+        tabIndex++;
         return (
           <RadioButton
             key={xfo.$iid}
@@ -90,6 +91,10 @@ export class FormBuilder extends React.Component<{
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
+            tabIndex={tabIndex}
+            subscribeToFocusManager={(radioInput) =>
+              focusManager.subscribe(radioInput, xfo.attributes.Id)
+            }
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
               flow(function* () {
