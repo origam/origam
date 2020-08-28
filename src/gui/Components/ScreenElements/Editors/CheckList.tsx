@@ -1,4 +1,4 @@
-import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
+import React, {RefObject, useContext, useEffect, useMemo, useRef, useState} from "react";
 import S from "./CheckList.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { action, computed, flow, observable } from "mobx";
@@ -9,6 +9,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
+import {IFocusable} from "../../../../model/entities/FocusManager";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -25,6 +26,7 @@ export interface IRawCheckListProps {
   Parameters: any;
   menuItemId: string;
   tabIndex?: number;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 
   onChange?(newValue: string[]): void;
 }
@@ -83,6 +85,7 @@ export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
   tabIndex?: number;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
 
@@ -102,6 +105,7 @@ export const CheckList: React.FC<{
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
       tabIndex={props.tabIndex}
+      subscribeToFocusManager={props.subscribeToFocusManager}
     />
   );
 });
@@ -161,6 +165,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
             controller.handleClick(event, item);
           }}
           tabIndex={i === 0 ? props.tabIndex : -1}
+          subscribeToFocusManager={i === 0 ? props.subscribeToFocusManager : undefined}
           inputSetter={(inputRef: InputReference) => inputRefs.push(inputRef)}
           focusLeft={focusLeft}
           focusRight={focusRight}
@@ -182,9 +187,20 @@ export const CheckListItem: React.FC<{
   focusUp: (x: number, y: number)=>void;
   focusDown: (x: number, y: number)=>void;
   label: string;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> = (props) => {
 
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [ unsubscribeFromFocusManager, setUnsubscribeFromFocusManager] = useState<() => void>();
+
+  useEffect(() => {
+    if(props.subscribeToFocusManager && refInput.current){
+      setUnsubscribeFromFocusManager(props.subscribeToFocusManager(refInput.current));
+    }
+    return () => {
+      unsubscribeFromFocusManager && unsubscribeFromFocusManager();
+    }
+  }, [])
 
   function onKeyDown(event: any) {
     const boundingRect = refInput.current?.getBoundingClientRect()!;
