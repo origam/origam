@@ -166,6 +166,9 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onKeyDown={undefined}
             tabIndex={this.props.tabIndex}
+            subscribeToFocusManager={(textEditor) =>
+              focusManager.subscribe(textEditor, this.props.property?.id)
+            }
           />
         );
       case "ComboBox":
@@ -211,6 +214,9 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
             tabIndex={this.props.tabIndex}
+            subscribeToFocusManager={(firstCheckInput) =>
+              focusManager.subscribe(firstCheckInput, this.props.property?.id)
+            }
           />
         );
       case "Image":
@@ -221,6 +227,9 @@ export class FormViewEditor extends React.Component<{
         return <BlobEditor
           value={this.props.value}
           tabIndex={this.props.tabIndex}
+          subscribeToFocusManager={(inputEditor) =>
+            focusManager.subscribe(inputEditor, this.props.property?.id)
+          }
         />;
       default:
         return "Unknown field";

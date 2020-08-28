@@ -39,6 +39,7 @@ export class FormBuilder extends React.Component<{
     if (row && rowId) {
       backgroundColor = getRowStateRowBgColor(self.props.dataView, rowId);
     }
+    const focusManager = self.props.dataView!.focusManager;
 
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
@@ -78,6 +79,7 @@ export class FormBuilder extends React.Component<{
           ? dataTable.getCellValueByDataSourceField(row, sourceField!) === xfo.attributes.Value
           : false;
 
+        tabIndex++;
         return (
           <RadioButton
             key={xfo.$iid}
@@ -89,6 +91,10 @@ export class FormBuilder extends React.Component<{
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
+            tabIndex={tabIndex}
+            subscribeToFocusManager={(radioInput) =>
+              focusManager.subscribe(radioInput, xfo.attributes.Id)
+            }
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
               flow(function* () {
@@ -165,7 +171,10 @@ export class FormBuilder extends React.Component<{
         return xfo.elements.map((child: any) => recursive(child));
       }
     }
-    return recursive(this.props.xmlFormRootObject);
+
+    const form = recursive(this.props.xmlFormRootObject);
+    focusManager.focusFirst();
+    return form;
   }
 
   render() {
