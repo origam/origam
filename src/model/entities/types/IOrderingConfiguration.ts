@@ -12,12 +12,12 @@ export interface IOrderByColumnSetting {
 }
 
 export interface IOrderingConfiguration {
-  ordering: IOrdering[];
+  userOrderings: IOrdering[];
   getOrdering(column: string): IOrderByColumnSetting;
   setOrdering(column: string): void;
   addOrdering(column: string): void;
   groupChildrenOrdering: IOrdering | undefined;
-  getDefaultOrdering(): IOrdering | undefined;
+  getDefaultOrderings(): IOrdering[];
   parent?: any;
   orderingFunction: () => (row1: any[], row2: any[]) => number;
 }
@@ -36,12 +36,15 @@ export function parseToIOrderByDirection(candidate: string | undefined): IOrderB
     default: throw new Error("Option not implemented: " + candidate)
   }
 }
-export function parseToOrdering(candidate: any): IOrdering | undefined{
-  if(!candidate || !candidate.field || !candidate.direction) return undefined;
+export function parseToOrdering(candidateArray: any[]): IOrdering[] | undefined{
+  if(!candidateArray || candidateArray.length === 0) return undefined;
 
-  return {
-    columnId: candidate.field,
-    direction: parseToIOrderByDirection(candidate.direction),
-    lookupId: undefined
-  };
+  return candidateArray.filter(candidate => candidate.field || candidate.direction)
+    .map(candidate => {
+      return {
+        columnId: candidate.field,
+        direction: parseToIOrderByDirection(candidate.direction),
+        lookupId: undefined
+      };
+  })
 }

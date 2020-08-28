@@ -4,5 +4,5 @@ import {IOrdering} from "./IOrderingConfiguration";
 
 export interface IPanelConfiguration {
   position: number | undefined;
-  defaultOrdering: IOrdering;
+  defaultOrdering: IOrdering[] | undefined;
 }
