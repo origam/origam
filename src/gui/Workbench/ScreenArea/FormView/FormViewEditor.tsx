@@ -166,6 +166,9 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onKeyDown={undefined}
             tabIndex={this.props.tabIndex}
+            subscribeToFocusManager={(textEditor) =>
+              focusManager.subscribe(textEditor, this.props.property?.id)
+            }
           />
         );
       case "ComboBox":

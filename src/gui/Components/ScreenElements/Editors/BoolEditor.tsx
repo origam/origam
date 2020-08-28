@@ -2,6 +2,7 @@ import * as React from "react";
 import {observer} from "mobx-react";
 import S from './BoolEditor.module.scss';
 import cx from 'classnames';
+import {IFocusable} from "../../../../model/entities/FocusManager";
 
 
 @observer
@@ -15,7 +16,24 @@ export class BoolEditor extends React.Component<{
   onBlur?: ()=>void;
   onFocus?: ()=>void;
   id?: string;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> {
+
+  elmInput: HTMLInputElement | null = null;
+  refInput = (elm: HTMLInputElement | any) => {
+    this.elmInput = elm;
+  };
+  unsubscribeFromFocusManager?: () => void;
+
+  componentDidMount() {
+    if(this.elmInput && this.props.subscribeToFocusManager){
+      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+    }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
+  }
   
   render() {
     return (
@@ -35,6 +53,7 @@ export class BoolEditor extends React.Component<{
           onBlur={this.props.onBlur}
           onFocus={this.props.onFocus}
           tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
+          ref={this.refInput}
         />
       </div>
     );
