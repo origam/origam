@@ -49,6 +49,7 @@ const OpEditors: React.FC<{
   setting: any;
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
+  onKeyDown?: (event: any) => void;
 }> = (props) => {
   const { setting } = props;
   switch (setting.type) {
@@ -71,6 +72,7 @@ const OpEditors: React.FC<{
             )
           }
           onEditorBlur={props.onBlur}
+          onKeyDown={props.onKeyDown}
         />
       );
 
@@ -90,6 +92,7 @@ const OpEditors: React.FC<{
               )
             }
             onEditorBlur={props.onBlur}
+            onKeyDown={props.onKeyDown}
           />
           <DateTimeEditor
             value={setting.val2}
@@ -103,6 +106,7 @@ const OpEditors: React.FC<{
               )
             }
             onEditorBlur={props.onBlur}
+            onKeyDown={props.onKeyDown}
           />
         </>
       );
@@ -177,8 +181,6 @@ export class FilterSettingsDate extends React.Component<{
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
         <OpEditors setting={this.setting} onChange={this.handleChange} />
-
-        {/*<input className={CS.input} />*/}
       </>
     );
   }

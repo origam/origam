@@ -138,18 +138,24 @@ export class FilterConfiguration implements IFilterConfiguration {
       }
       case "Date": {
         const txt1 = dataTable.getCellValue(row, prop);
-        if (txt1 === undefined) return true;
+        if (txt1 === undefined) return false;
+        if (term.setting.type === "nnull") return txt1 !== null;
+        if (term.setting.type === "null") return txt1 === null;
+        if (
+            term.setting.val1 === "" ||
+            term.setting.val1 === undefined ||
+            term.setting.val1 === null
+        )
+          return true;
 
-        const t1 = txt1;
+        const t1 = term.setting.val1.endsWith("T00:00:00.000")
+          ? txt1.substr(0, 10).concat("T00:00:00.000") : txt1;
 
         switch (term.setting.type) {
           case "between": {
             if (
-              term.setting.val1 === "" ||
               term.setting.val2 === "" ||
-              term.setting.val1 === undefined ||
               term.setting.val2 === undefined ||
-              term.setting.val1 === null ||
               term.setting.val2 === null
             )
               return true;
@@ -159,57 +165,24 @@ export class FilterConfiguration implements IFilterConfiguration {
             return t0 < t1 && t1 < t2;
           }
           case "eq":
-            if (
-              term.setting.val1 === "" ||
-              term.setting.val1 === undefined ||
-              term.setting.val1 === null
-            )
-              return true;
             if (txt1 === null) return false;
             return t1 === term.setting.val1;
           case "gt":
-            if (
-              term.setting.val1 === "" ||
-              term.setting.val1 === undefined ||
-              term.setting.val1 === null
-            )
-              return true;
             if (txt1 === null) return false;
             return t1 > term.setting.val1;
           case "gte":
-            if (
-              term.setting.val1 === "" ||
-              term.setting.val1 === undefined ||
-              term.setting.val1 === null
-            )
-              return true;
             if (txt1 === null) return false;
             return t1 >= term.setting.val1;
           case "lt":
-            if (
-              term.setting.val1 === "" ||
-              term.setting.val1 === undefined ||
-              term.setting.val1 === null
-            )
-              return true;
             if (txt1 === null) return false;
             return t1 < term.setting.val1;
           case "lte":
-            if (
-              term.setting.val1 === "" ||
-              term.setting.val1 === undefined ||
-              term.setting.val1 === null
-            )
-              return true;
             if (txt1 === null) return false;
             return t1 <= term.setting.val1;
           case "nbetween": {
             if (
-              term.setting.val1 === "" ||
               term.setting.val2 === "" ||
-              term.setting.val1 === undefined ||
               term.setting.val2 === undefined ||
-              term.setting.val1 === null ||
               term.setting.val2 === null
             )
               return true;
@@ -219,18 +192,8 @@ export class FilterConfiguration implements IFilterConfiguration {
             return !(t0 < t1 && t1 < t2);
           }
           case "neq":
-            if (
-              term.setting.val1 === "" ||
-              term.setting.val1 === undefined ||
-              term.setting.val1 === null
-            )
-              return true;
             if (txt1 === null) return false;
             return t1 !== term.setting.val1;
-          case "nnull":
-            return t1 !== null;
-          case "null":
-            return t1 === null;
         }
       }
       case "Number": {
