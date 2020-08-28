@@ -1,4 +1,4 @@
-import {getRowStateById} from "./getRowStateById";
+import { getRowStateById } from "./getRowStateById";
 
 export function getRowStateAllowUpdate(ctx: any, rowId: string, columnId: string) {
   const rowState = getRowStateById(ctx, rowId);
@@ -6,3 +6,4 @@ export function getRowStateAllowUpdate(ctx: any, rowId: string, columnId: string
   const allowUpdate = column ? column.allowUpdate : undefined;
   return allowUpdate !== undefined ? allowUpdate : true;
 }
+

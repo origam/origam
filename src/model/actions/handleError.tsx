@@ -1,6 +1,7 @@
 import selectors from "model/selectors-tree";
 import {stopWorkQueues} from "./WorkQueues/stopWorkQueues";
 import {performLogout} from "./User/performLogout";
+import {T} from "utils/translation";
 
 const HANDLED = Symbol("_$ErrorHandled");
 
@@ -10,8 +11,9 @@ export function handleError(ctx: any) {
       yield* stopWorkQueues(ctx)();
       selectors.error.getDialogController(ctx).dismissErrors();
       yield* selectors.error.getDialogController(ctx)
-        .pushError(`Your request is no longer authorized, which means that 
-          you were either logged out or your session expired. Please log in again.`);
+        .pushError(T(`Your request is no longer authorized, which means that 
+          you were either logged out or your session expired. Please log in again.`,
+            "request_no_longer_authorized"));
       yield* performLogout(ctx)();
       return;
     } else {

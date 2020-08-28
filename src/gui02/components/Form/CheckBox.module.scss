@@ -1,0 +1,26 @@
+.caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  overflow: hidden;
+  padding: 0 0.5em 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+}
+
+.editor {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.focusedLabel{
+  background-color:  #4c84ff;
+  color: white;
+}
+
+.unFocusedLabel{
+  background-color: transparent;
+}

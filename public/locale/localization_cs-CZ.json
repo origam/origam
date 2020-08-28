@@ -6,6 +6,7 @@
   "button_next": "Další",
   "button_repeat": "Opakovat",
   "button_close": "Zavřít",
+  "button_continue": "Pokračovat",
   "button_no": "Ne",
   "button_yes": "Ano",
   "confirm_title": "Potvrďte",
@@ -376,5 +377,9 @@
   "blob_download": "Stáhnout",
   "blob_preview": "Náhled",
   "blob_upload": "Nahrát",
-  "my_profile": "Můj profil"
+  "my_profile": "Můj profil",
+  "action_error": "Chyba",
+  "there_has_been_a_problem": "Nastaly následující problémy:",
+  "request_no_longer_authorized": "Váš požadavek již není autorizovaný, to znamená že jste byli odhlášeni, nebo vypršela seance. Přihlašte se, prosím, znovu."
+
 }

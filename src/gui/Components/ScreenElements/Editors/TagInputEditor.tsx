@@ -104,6 +104,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onKeyDown={handleInputKeyDown}
               onFocus={beh.handleInputFocus}
               onBlur={beh.handleInputBlur}
+              tabIndex={beh.tabIndex ? beh.tabIndex : undefined}
               onDoubleClick={props.onDoubleClick}
             />
           </TagInput>

@@ -98,19 +98,25 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   }
 
   async runRecordChangedReaction(action: ()=>Generator){
+    let wasRunning = false;
     try {
-      this.stopSelectedRowReaction();
+      wasRunning = this.stopSelectedRowReaction();
       await flow(action)();
     } finally {
-      await this.startSelectedRowReaction(true);
+      if(wasRunning){
+        await this.startSelectedRowReaction(true);
+      }
     }
   }
 
   @action.bound stopSelectedRowReaction() {
     if (this._selectedRowReactionDisposer) {
       this._selectedRowReactionDisposer();
+      this._selectedRowReactionDisposer = undefined;
       console.log('selrow reaction stopped')
+      return true;
     }
+    return false;
   }
 
   *navigateAsChild() {

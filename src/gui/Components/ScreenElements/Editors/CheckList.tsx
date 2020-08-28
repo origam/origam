@@ -1,14 +1,14 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { RefObject, useContext, useEffect, useRef, useState } from "react";
 import S from "./CheckList.module.scss";
-import {MobXProviderContext, observer} from "mobx-react";
-import {action, computed, flow, observable} from "mobx";
-import {IApi} from "model/entities/types/IApi";
-import {getApi} from "model/selectors/getApi";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getMenuItemId} from "model/selectors/getMenuItemId";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getSessionId} from "model/selectors/getSessionId";
+import { MobXProviderContext, observer } from "mobx-react";
+import { action, computed, flow, observable } from "mobx";
+import { IApi } from "model/entities/types/IApi";
+import { getApi } from "model/selectors/getApi";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -24,25 +24,25 @@ export interface IRawCheckListProps {
   LookupId: string;
   Parameters: any;
   menuItemId: string;
+  tabIndex?: number;
 
   onChange?(newValue: string[]): void;
 }
 
 export class CheckListControler {
-
   @observable lookupList: string[][] = [];
 
   @computed get items() {
-    return this.lookupList.map(llitem => ({
+    return this.lookupList.map((llitem) => ({
       value: llitem[0],
-      label: llitem[1]
+      label: llitem[1],
     }));
   }
 
   @action.bound
   loadLookupList() {
     const self = this;
-    flow(function*() {
+    flow(function* () {
       const lookupList = yield self.props.api.getLookupList({
         Entity: self.props.Entity,
         SessionFormIdentifier: self.props.SessionFormIdentifier,
@@ -56,7 +56,7 @@ export class CheckListControler {
         ShowUniqueValues: false,
         SearchText: "",
         PageSize: 10000,
-        PageNumber: 1
+        PageNumber: 1,
       });
       self.lookupList = lookupList;
     })();
@@ -64,7 +64,7 @@ export class CheckListControler {
 
   @action.bound handleClick(event: any, item: { value: string; label: string }) {
     event.preventDefault();
-    const currentIndex = this.props.value.findIndex(id => item.value === id);
+    const currentIndex = this.props.value.findIndex((id) => item.value === id);
     if (currentIndex > -1) {
       const newValue = [...this.props.value];
       newValue.splice(currentIndex, 1);
@@ -82,7 +82,8 @@ export class CheckListControler {
 export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
-}> = observer(props => {
+  tabIndex?: number;
+}> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
 
   return (
@@ -100,6 +101,7 @@ export const CheckList: React.FC<{
       menuItemId={getMenuItemId(property)}
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
+      tabIndex={props.tabIndex}
     />
   );
 });
@@ -108,19 +110,63 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
   const [controller] = useState(() => new CheckListControler());
   controller.props = props;
   useEffect(controller.loadLookupList, [props.RowId]);
-  console.log(props.value);
+
+  const inputRefs: InputReference[] = [];
+
+  function focusLeft(x: number, y: number) {
+    const inputsOnTheLeft = inputRefs.filter(input => input.hasYEqualTo(y) && input.isOnTheLeftOf(x))
+      .sort((i1, i2) => i2.x - i1.x);
+
+    if (inputsOnTheLeft.length > 0) {
+      inputsOnTheLeft[0].focus();
+    }
+  }
+
+  function focusRight(x: number, y: number){
+    const inputsOnTheRight = inputRefs.filter(input => input.hasYEqualTo(y) && input.isOnTheRightOf(x))
+      .sort((i1, i2) => i1.x - i2.x);
+
+    if(inputsOnTheRight.length > 0){
+      inputsOnTheRight[0].focus();
+    }
+  }
+
+  function focusUp(x: number, y: number){
+    const inputsAbove = inputRefs.filter(input => input.hasXEqualTo(x) && input.isAbove(y))
+      .sort((i1, i2) => i2.y - i1.y);
+
+    if(inputsAbove.length > 0){
+      inputsAbove[0].focus();
+    }
+  }
+
+
+  function focusDown(x: number, y: number){
+    const inputsBelow = inputRefs.filter(input => input.hasXEqualTo(x) && input.isBelow(y))
+      .sort((i1, i2) => i1.y - i2.y);
+
+    if(inputsBelow.length > 0){
+      inputsBelow[0].focus();
+    }
+  }
+
+
   return (
     <div className={S.root}>
-      {controller.items.map(item => (
+      {controller.items.map((item, i) => (
         <CheckListItem
           key={item.value}
-          checked={!!props.value.find(v => v === item.value)}
-          onClick={event => {
+          checked={!!props.value.find((v) => v === item.value)}
+          onClick={(event) => {
             controller.handleClick(event, item);
           }}
-        >
-          {item.label}
-        </CheckListItem>
+          tabIndex={i === 0 ? props.tabIndex : -1}
+          inputSetter={(inputRef: InputReference) => inputRefs.push(inputRef)}
+          focusLeft={focusLeft}
+          focusRight={focusRight}
+          focusUp={focusUp}
+          focusDown={focusDown}
+          label={item.label}/>
       ))}
     </div>
   );
@@ -129,11 +175,111 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
 export const CheckListItem: React.FC<{
   checked: boolean;
   onClick?(event: any): void;
-}> = props => {
+  tabIndex?: number;
+  inputSetter: (inputRef: InputReference) => void;
+  focusLeft: (x: number, y: number)=>void;
+  focusRight: (x: number, y: number)=>void;
+  focusUp: (x: number, y: number)=>void;
+  focusDown: (x: number, y: number)=>void;
+  label: string;
+}> = (props) => {
+
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  function onKeyDown(event: any) {
+    const boundingRect = refInput.current?.getBoundingClientRect()!;
+    switch (event.key) {
+      case "ArrowUp":
+        event.preventDefault();
+        props.focusUp(boundingRect.x, boundingRect.y);
+        break;
+      case "ArrowDown":
+        event.preventDefault();
+        props.focusDown(boundingRect.x, boundingRect.y);
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        props.focusRight(boundingRect.x, boundingRect.y);
+        break;
+      case "ArrowLeft":
+        event.preventDefault();
+        props.focusLeft(boundingRect.x, boundingRect.y);
+        break;
+    }
+  }
+
+  function onLabelClick(){
+    refInput?.current?.focus();
+  }
+
+  function onInputFocus(){
+    setIsFocused(true);
+  }
+
+  function onInputBlur(){
+    setIsFocused(false);
+  }
+
+  const refInput = useRef<HTMLInputElement>(null);
+  props.inputSetter(new InputReference(refInput));
+
   return (
     <div className={S.item} onClick={props.onClick}>
-      <input type="checkbox" className="checkbox" checked={props.checked} />
-      <div className={"content"}>{props.children}</div>
+      <input
+        ref={refInput}
+        type="checkbox"
+        className={"checkbox " + S.input}
+        checked={props.checked}
+        tabIndex={props.tabIndex ? props.tabIndex : undefined}
+        onKeyDown={onKeyDown}
+        onFocus={onInputFocus}
+        onBlur={onInputBlur}
+      />
+      <div className={"content "+(isFocused ? S.focusedLabel : S.unFocusedLabel)}
+           onClick={onLabelClick}>
+        {props.label}
+      </div>
     </div>
   );
 };
+
+class InputReference {
+  constructor(private inputRef: RefObject<HTMLInputElement>) {
+  }
+
+  get x() {
+    return this.inputRef.current?.getBoundingClientRect()!.x;
+  }
+
+  get y() {
+    return this.inputRef.current?.getBoundingClientRect()!.y;
+  }
+
+  hasXEqualTo(x: number) {
+    return Math.abs(this.x - x) < 1;
+  }
+
+  hasYEqualTo(y: number) {
+    return Math.abs(this.y - y) < 1;
+  }
+
+  isOnTheLeftOf(x: number) {
+    return this.x < x;
+  }
+
+  isOnTheRightOf(x: number) {
+    return this.x > x;
+  }
+
+  isAbove(y: number) {
+    return this.y < y;
+  }
+
+  isBelow(y: number) {
+    return this.y > y;
+  }
+
+  focus() {
+    this.inputRef.current?.focus();
+  }
+}
