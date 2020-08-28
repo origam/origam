@@ -221,6 +221,9 @@ export class FormViewEditor extends React.Component<{
         return <BlobEditor
           value={this.props.value}
           tabIndex={this.props.tabIndex}
+          subscribeToFocusManager={(inputEditor) =>
+            focusManager.subscribe(inputEditor, this.props.property?.id)
+          }
         />;
       default:
         return "Unknown field";
