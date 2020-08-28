@@ -21,6 +21,7 @@ import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 import {getDataView} from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
+import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -54,9 +55,7 @@ export class TableViewEditor extends React.Component<{
       rowId || "",
       this.props.property!.id
     );
-    const readOnly =
-      this.props.property!.readOnly ||
-      !getRowStateAllowUpdate(this.props.property, rowId || "", this.props.property!.id);
+    const readOnly = isReadOnly(this.props.property!, rowId);
 
     switch (this.props.property!.column) {
       case "Number":

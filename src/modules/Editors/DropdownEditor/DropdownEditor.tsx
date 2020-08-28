@@ -55,7 +55,7 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
       {() => (
         <DropdownLayout
           isDropped={beh.isDropped}
-          renderCtrl={() => (props.editor ? props.editor : <DropdownEditorControl />)}
+          renderCtrl={() => (props.editor ? props.editor : <DropdownEditorControl/>)}
           renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} />}
         />
       )}
@@ -65,7 +65,7 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
 
 export function XmlBuildDropdownEditor(props: {
     xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element, onDoubleClick?: (event:any)=>void,
-    subscribeToFocusManager?: (obj: IFocusable) => (()=>void) })
+    subscribeToFocusManager?: (obj: IFocusable) => (()=>void), tabIndex?: number})
 {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -99,7 +99,8 @@ export function XmlBuildDropdownEditor(props: {
       dropdownEditorLookupListCache,
       props.isReadOnly,
       props.onDoubleClick,
-      props.subscribeToFocusManager
+      props.subscribeToFocusManager,
+      props.tabIndex,
     );
 
     const rat = props.xmlNode.attributes;
@@ -193,7 +194,7 @@ export function XmlBuildDropdownEditor(props: {
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      <DropdownEditor editor={props.tagEditor} />
+      <DropdownEditor editor={props.tagEditor}/>
     </CtxDropdownEditor.Provider>
   );
 }

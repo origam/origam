@@ -28,6 +28,7 @@ import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLi
 import {getFormScreen} from "../../selectors/FormScreen/getFormScreen";
 import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
 import {flushCurrentRowData} from "../../actions/DataView/TableView/flushCurrentRowData";
+import {isReadOnly} from "../../selectors/RowState/isReadOnly";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -174,9 +175,7 @@ export class TablePanelView implements ITablePanelView {
       const rowId = this.dataTable.getRowId(row);
       yield* this.selectCellAsync(columnId, rowId);
 
-      const readOnly =
-        property!.readOnly || !getRowStateAllowUpdate(property, rowId || "", property!.id);
-      if (!readOnly) {
+      if (!isReadOnly(property!, rowId)) {
         yield* onFieldChangeG(this)(undefined, row, property, !getCellValue(this, row, property));
       }
     }

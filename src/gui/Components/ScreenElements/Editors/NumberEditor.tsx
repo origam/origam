@@ -7,10 +7,10 @@ import cx from "classnames";
 import {
   formatNumber,
   getCurrentDecimalSeparator,
-  getCurrentGroupSeparator
 } from "../../../../model/entities/NumberFormating";
 import {IFocusable} from "../../../../model/entities/FocusManager";
-
+import {getLocaleFromCookie} from "../../../../utils/cookies";
+import numeral from "numeral";
 @observer
 export class NumberEditor extends React.Component<{
   value: string | null;
@@ -31,6 +31,7 @@ export class NumberEditor extends React.Component<{
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  tabIndex?: number;
 }> {
   disposers: any[] = [];
 
@@ -107,20 +108,30 @@ export class NumberEditor extends React.Component<{
       return;
     }
     if (this.editValue === "") {
-      this.props.onChange && this.props.onChange(null, null);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     } else {
-      const value =  ""+Number(this.editValue);
       this.hasFocus = false;
-      this.props.onChange && this.props.onChange(null, value);
       this.props.onEditorBlur && this.props.onEditorBlur(event);
     }
   }
 
+  @computed
+  private get numericValue() {
+    if(this.editValue === null) {
+      return null;
+    }
+    let valueToParse = this.editValue.endsWith(getCurrentDecimalSeparator())
+      ? this.editValue+"0"
+      : this.editValue;
+    valueToParse = valueToParse.replace(getCurrentDecimalSeparator(), ".")
+    return "" + Number(valueToParse);
+  }
+
   @action.bound handleChange(event: any) {
     this.wasChanged = true;
-    const invalidChars = new RegExp("[^\\d"+getCurrentDecimalSeparator()+getCurrentGroupSeparator()+"]", "g");
+    const invalidChars = new RegExp("[^\\d" + getCurrentDecimalSeparator() + "]", "g");
     this.editingValue = (event.target.value || "").replace(invalidChars, "");
+    this.props.onChange && this.props.onChange(null, this.numericValue);
   }
 
   @action.bound handleKeyDown(event: any) {
@@ -165,6 +176,7 @@ export class NumberEditor extends React.Component<{
             onDoubleClick={this.props.onDoubleClick}
             onBlur={this.handleBlur}
             onFocus={this.handleFocus}
+            tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           />
         ) : (
           <textarea
@@ -178,6 +190,7 @@ export class NumberEditor extends React.Component<{
             onClick={this.props.onClick}
             onBlur={this.handleBlur}
             onFocus={this.handleFocus}
+            tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           />
         )}
         {this.props.isInvalid && (

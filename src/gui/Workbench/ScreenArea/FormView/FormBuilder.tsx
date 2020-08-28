@@ -17,6 +17,9 @@ import { RadioButton } from "gui02/components/Form/RadioButton";
 import { getDataSourceFieldByName } from "../../../../model/selectors/DataSources/getDataSourceFieldByName";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import { flow } from "mobx";
+import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
+import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
+import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -27,6 +30,7 @@ export class FormBuilder extends React.Component<{
   dataView?: IDataView;
 }> {
   buildForm() {
+    let tabIndex=0;
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -113,25 +117,38 @@ export class FormBuilder extends React.Component<{
                     textualValue = dataTable.getCellText(row, property);
                   }
                 }
+                tabIndex++;
+                if(!property){
+                  return (<></>);
+                }
 
-                return property ? (
+                if(property.column === "CheckBox"){
+                  return (
+                    <Provider property={property}>
+                      <CheckBox
+                        checked={value}
+                        readOnly={isReadOnly(property, rowId)}
+                        tabIndex={tabIndex}
+                      />
+                    </Provider>
+                  );
+                }
+
+                return (
                   <Provider property={property}>
                     <FormField
-                      // Id={property.id}
                       caption={property.name}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
                       dock={property.dock}
-                      // Column={property.column}
-                      // Entity={property.entity}
                       height={property.height}
                       width={property.width}
                       left={property.x}
                       top={property.y}
-                      isCheckbox={property.column === "CheckBox"}
                       editor={
                         <FormViewEditor
                           value={value}
+                          tabIndex={tabIndex}
                           isRichText={property.isRichText}
                           textualValue={textualValue}
                           xmlNode={property.xmlNode}
@@ -139,8 +156,6 @@ export class FormBuilder extends React.Component<{
                       }
                     />
                   </Provider>
-                ) : (
-                  <></>
                 );
               }}
             </Observer>
@@ -154,7 +169,6 @@ export class FormBuilder extends React.Component<{
   }
 
   render() {
-    // debugger
     return this.buildForm();
   }
 }

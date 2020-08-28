@@ -31,6 +31,7 @@ export function DropdownEditorInput() {
           onFocus={beh.handleInputFocus}
           onBlur={beh.handleInputBlur}
           value={beh.inputValue}
+          tabIndex={beh.tabIndex ? beh.tabIndex : undefined}
           onDoubleClick={beh.onDoubleClick}
         />
       )}

@@ -18,7 +18,8 @@ export class DropdownEditorBehavior {
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
-    public subscribeToFocusManager?: (obj: IFocusable) => () => void
+    public subscribeToFocusManager?: (obj: IFocusable) => () => void,
+    public tabIndex?: number
   ) {
   }
 

@@ -54,6 +54,7 @@ export class BlobEditor extends React.Component<{
   Entity?: string;
   SessionFormIdentifier?: string;
   parameters?: any;
+  tabIndex?: number;
 }> {
   handleFileChange(event: any) {
     this.fileList = event.target.files;
@@ -267,6 +268,7 @@ export class BlobEditor extends React.Component<{
               type="file"
               multiple={false}
               onChange={(event) => this.handleFileChange(event)}
+              tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
             />
             <i className="fas fa-upload"></i>
           </label>
