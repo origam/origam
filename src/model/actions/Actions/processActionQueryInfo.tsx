@@ -2,6 +2,7 @@ import React from "react";
 import {action} from "mobx";
 import {getDialogStack} from "model/selectors/DialogStack/getDialogStack";
 import {ModalWindow} from "gui/Components/Dialog/Dialog";
+import {T} from "utils/translation";
 import S from "./processActionQueryResult.module.scss";
 
 export interface IQueryInfo {
@@ -30,7 +31,7 @@ export function processActionQueryInfo(ctx: any) {
           const closeDialog = getDialogStack(ctx).pushDialog(
             "",
             <ModalWindow
-              title="Action error"
+              title={T("Action Error","question_title")}
               titleButtons={null}
               buttonsCenter={
                 <>
@@ -41,7 +42,7 @@ export function processActionQueryInfo(ctx: any) {
                       resolve();
                     }}
                   >
-                    Cancel
+                      {T("Cancel", "button_cancel")}
                   </button>
                   {canContinue && (
                     <button
@@ -51,7 +52,7 @@ export function processActionQueryInfo(ctx: any) {
                         resolve();
                       }}
                     >
-                      Continue
+                        {T("Continue", "button_continue")}
                     </button>
                   )}
                 </>
@@ -60,13 +61,15 @@ export function processActionQueryInfo(ctx: any) {
               buttonsRight={null}
             >
               <div className={S.dialogContent}>
-                There has been a problem:
+                  {T("There has been a problem:",
+                      "there_has_been_a_problem")}
                 <ul>
                   {queryInfo.map((item, idx) => (
                     <li key={idx}>{item.message}</li>
                   ))}
                 </ul>
-                {canContinue && <>Do you wish to continue anyway?</>}
+                {canContinue && <>{T("Do you wish to continue anyway?",
+                    "do_you_wish_to_continue")}</>}
               </div>
             </ModalWindow>
           );
