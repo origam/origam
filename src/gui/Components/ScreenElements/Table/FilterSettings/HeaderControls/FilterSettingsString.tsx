@@ -6,19 +6,18 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
-import _ from "lodash";
 
 export interface IStringFilterOp {}
 
 const OPERATORS: any[] = [
-  { human: <>=</>, type: "eq" },
-  { human: <>&ne;</>, type: "neq" },
   { human: <>begins with</>, type: "starts" },
   { human: <>not begins with</>, type: "nstarts" },
   { human: <>ends with</>, type: "ends" },
   { human: <>not ends with</>, type: "nends" },
   { human: <>contain</>, type: "contains" },
   { human: <>not contain</>, type: "ncontains" },
+  { human: <>=</>, type: "eq" },
+  { human: <>&ne;</>, type: "neq" },
   { human: <>is null</>, type: "null" },
   { human: <>is not null</>, type: "nnull" },
 ];
