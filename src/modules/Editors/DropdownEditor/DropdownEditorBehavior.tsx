@@ -16,6 +16,7 @@ export class DropdownEditorBehavior {
     private setup: () => DropdownEditorSetup,
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
+    public tabIndex?: number,
     public onDoubleClick?: (event:any)=>void
   ) {}
 

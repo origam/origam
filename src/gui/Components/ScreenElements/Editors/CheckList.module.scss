@@ -16,8 +16,17 @@
   align-items: flex-start;
   align-content: flex-start;
   //justify-content: space-between;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
+}
+
+.focusedLabel{
+  background-color:  #4c84ff;
+  color: white;
+}
+
+.unFocusedLabel{
+  background-color: transparent;
 }
 
 .item {

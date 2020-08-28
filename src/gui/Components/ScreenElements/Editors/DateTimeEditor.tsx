@@ -168,6 +168,7 @@ export class DateTimeEditor extends React.Component<{
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  tabIndex?: number;
 }> {
   @observable isDroppedDown = false;
 
@@ -380,6 +381,7 @@ export class DateTimeEditor extends React.Component<{
                 onClick={this.props.onClick}
                 onDoubleClick={this.props.onDoubleClick}
                 onKeyDown={this.props.onKeyDown}
+                tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
               />
             </Tooltip>
             {this.props.isInvalid && (

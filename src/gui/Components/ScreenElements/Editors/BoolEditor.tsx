@@ -11,12 +11,17 @@ export class BoolEditor extends React.Component<{
   onChange?(event: any, value: boolean): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
+  tabIndex?: number;
+  onBlur?: ()=>void;
+  onFocus?: ()=>void;
+  id?: string;
 }> {
   
   render() {
     return (
       <div className={cx(S.editorContainer)}>
         <input
+          id={ this.props.id ? this.props.id : undefined }
           className="editor"
           type="checkbox"
           checked={this.props.value}
@@ -27,7 +32,9 @@ export class BoolEditor extends React.Component<{
           }}
           onKeyDown={this.props.onKeyDown}
           onClick={this.props.onClick}
-          onBlur={() => 'bool blur'}
+          onBlur={this.props.onBlur}
+          onFocus={this.props.onFocus}
+          tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
         />
       </div>
     );
