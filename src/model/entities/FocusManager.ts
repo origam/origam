@@ -22,8 +22,21 @@ export class FocusManager {
       objectToFocus.focus();
     }
   }
+
+  focusFirst(){
+    if(this.objectMap.size === 0){
+      return;
+    }
+    setTimeout(() => {
+      const iFocusable = Array.from(this.objectMap.values())
+        .sort((x, y) => x.tabIndex - y.tabIndex)
+        [0];
+      iFocusable.focus();
+    }, 0)
+  }
 }
 
 export interface IFocusable {
   focus(): void;
+  tabIndex: number;
 }
