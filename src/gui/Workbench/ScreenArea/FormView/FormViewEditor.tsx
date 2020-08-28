@@ -177,6 +177,9 @@ export class FormViewEditor extends React.Component<{
             key={this.props.xmlNode.$iid}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
+            subscribeToFocusManager={(textEditor) =>
+              focusManager.subscribe(textEditor, this.props.property?.id)
+            }
             tabIndex={this.props.tabIndex}
           />
         );

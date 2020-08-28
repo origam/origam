@@ -26,7 +26,7 @@ export class ListRowContainer implements IRowsContainer {
     if (this.filterConfiguration.filteringFunction) {
       rows = rows.filter((row) => this.filterConfiguration.filteringFunction()(row));
     }
-    if (this.orderingConfiguration.ordering.length === 0) {
+    if (this.orderingConfiguration.userOrderings.length === 0) {
       return rows;
     } else {
       return rows.sort((row1: any[], row2: any[]) => this.internalRowOrderingFunc(row1, row2));

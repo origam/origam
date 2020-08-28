@@ -43,7 +43,7 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   @computed get childRows(){
     const orderingConfiguration = getOrderingConfiguration(this.grouper);
 
-    if(orderingConfiguration.ordering.length === 0){
+    if(orderingConfiguration.userOrderings.length === 0){
       return this._childRows;
     }else{
       return this._childRows.slice().sort(orderingConfiguration.orderingFunction());

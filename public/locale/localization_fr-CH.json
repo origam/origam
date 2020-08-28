@@ -6,6 +6,7 @@
   "button_next": "continuer",
   "button_repeat": "répéter",
   "button_close": "fermer",
+  "button_continue": "Continue",
   "button_no": "non",
   "button_yes": "oui",
   "confirm_title": "confirmer",
@@ -376,5 +377,8 @@
   "blob_download": "Download",
   "blob_preview": "Preview",
   "blob_upload": "Upload",
-  "my_profile": "My Profile"
+  "my_profile": "My Profile",
+  "action_error": "erreur",
+  "there_has_been_a_problem": "There has been a problem:",
+  "request_no_longer_authorized": "Your request is no longer authorized, which means that you were either logged out or your session expired. Please log in again."
 }

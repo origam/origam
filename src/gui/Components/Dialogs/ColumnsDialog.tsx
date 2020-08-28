@@ -100,9 +100,9 @@ export class ColumnsDialog extends React.Component<{
             >
               {T("OK","button_ok")}
             </button>
-            <button onClick={this.props.onSaveAsClick}>
-              {T("Save As...","column_config_save_as")}
-            </button>
+            {/*<button onClick={this.props.onSaveAsClick}>*/}
+            {/*  {T("Save As...","column_config_save_as")}*/}
+            {/*</button>*/}
             <button onClick={this.props.onCancelClick}>
               {T("Cancel","button_cancel")}
             </button>
