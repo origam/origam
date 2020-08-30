@@ -192,7 +192,8 @@ namespace Origam.ServerCore
                     ForwardedHeaders = ForwardedHeaders.XForwardedProto
                 });
             }
-            var localizationOptions= app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value;
+            var localizationOptions = app.ApplicationServices
+                .GetService<IOptions<RequestLocalizationOptions>>().Value;
             app.UseRequestLocalization(localizationOptions);
             app.UseIdentityServer();
             app.MapWhen(
