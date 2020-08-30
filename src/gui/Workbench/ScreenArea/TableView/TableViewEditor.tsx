@@ -94,6 +94,7 @@ export class TableViewEditor extends React.Component<{
             onDoubleClick={event => this.onDoubleClick(event)}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={false}
+            isMultiline={this.props.property!.multiline}
           />
         );
       case "Date":
