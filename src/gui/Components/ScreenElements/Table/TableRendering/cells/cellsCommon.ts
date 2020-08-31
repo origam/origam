@@ -31,7 +31,7 @@ scRenderCell.push(() => numberCellPaddingLeft.clear());
 
 export const cellPaddingLeft = 5
 export const cellPaddingLeftFirstCell = 25;
-
 export const topTextOffset = 17;
-
 export const fontSize = 12;
+export const checkSymbolFontSize = 15;
+export const checkBoxCellPaddingLeft = 3;
