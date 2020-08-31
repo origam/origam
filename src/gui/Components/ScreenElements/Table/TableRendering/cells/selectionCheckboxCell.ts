@@ -112,17 +112,3 @@ export function drawSelectionCheckboxBackground() {
     CPR() * currentRowHeight()
   );
 }
-
-export function drawSelectionCheckboxContent() {
-  const ctx2d = context2d();
-  applyScrollTranslation();
-  drawSelectionCheckboxBackground();
-  ctx2d.fillStyle = "black";
-  ctx2d.font = `${CPR() * checkSymbolFontSize}px "Font Awesome 5 Free"`;
-  const state = true;
-  ctx2d.fillText(
-    state ? "\uf14a" : "\uf0c8",
-    CPR() * (currentColumnLeft() + paddingLeft),
-    CPR() * (currentRowTop() + topTextOffset)
-  );
-}
