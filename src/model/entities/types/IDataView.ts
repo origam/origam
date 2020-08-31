@@ -122,6 +122,8 @@ export interface IDataView extends IDataViewData {
   contentBounds: BoundingRect | undefined;
 
   parent?: any;
+
+  moveSelectedRowUp(): void;
 }
 
 export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;

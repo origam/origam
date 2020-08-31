@@ -282,6 +282,27 @@ export class DataView implements IDataView {
     }
   }
 
+  @action.bound moveSelectedRowUp(){
+    if(!this.selectedRowId){
+      return;
+    }
+    const dataTable = getDataTable(this);
+    const orderProperty = this.properties.find(prop => prop.name === this.orderMember)!;
+    const selectedRow = dataTable.getRowById(this.selectedRowId)!;
+    const positionIndex = orderProperty.dataIndex;
+    const selectedRowPosition = selectedRow[positionIndex];
+    const nextRow = dataTable.rows.find(row => row[positionIndex] ===  selectedRowPosition + 1);
+    if(!nextRow){
+      return;
+    }
+    selectedRow[positionIndex] += 1;
+    nextRow[positionIndex] -=1;
+    this.dataTable.substituteRecord(selectedRow);
+    this.dataTable.substituteRecord(nextRow);
+    this.dataTable.setDirtyValue(selectedRow,orderProperty.id, selectedRow[positionIndex]);
+    this.dataTable.setDirtyValue(nextRow,orderProperty.id, nextRow[positionIndex]);
+  }
+
   @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
     const newId = selectedRowId
