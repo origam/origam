@@ -30,7 +30,7 @@ export class FormBuilder extends React.Component<{
   dataView?: IDataView;
 }> {
   buildForm() {
-    let tabIndex=0;
+    let tabIndex = getStartTabIndex(this.props.dataView!);
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -173,11 +173,35 @@ export class FormBuilder extends React.Component<{
     }
 
     const form = recursive(this.props.xmlFormRootObject);
-    // focusManager.focusFirst();
+    if(this.props.dataView?.isFirst){
+      focusManager.focusFirst();
+    }
     return form;
   }
 
   render() {
     return this.buildForm();
   }
+}
+
+const startTabInduces = new Map<string, number>();
+
+function getNextTabIndex(){
+  if(startTabInduces.size === 0){
+    return 0;
+  }
+  const nextTabIndex = Array.from(startTabInduces.values()).sort().reverse()[0] + 100;
+  if(nextTabIndex > 32767){
+    console.error("TabIndex Overflow!");
+    startTabInduces.clear();
+    return 0;
+  }
+  return nextTabIndex;
+}
+
+function getStartTabIndex(dataView: IDataView): number {
+  if(!startTabInduces.has(dataView.id)){
+    startTabInduces.set(dataView.id, getNextTabIndex());
+  }
+  return startTabInduces.get(dataView.id)!;
 }

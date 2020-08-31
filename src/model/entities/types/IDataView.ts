@@ -54,6 +54,7 @@ export interface IDataViewData {
   lookupLoader: ILookupLoader;
   serverSideGrouper: ServerSideGrouper;
   clientSideGrouper: ClientSideGrouper;
+  isFirst: boolean;
 
   dataViewRowCursor: RowCursor;
   dataViewApi: DataViewAPI;

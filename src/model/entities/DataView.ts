@@ -115,6 +115,7 @@ export class DataView implements IDataView {
   lookupLoader: ILookupLoader = null as any;
   serverSideGrouper: ServerSideGrouper = null as any;
   clientSideGrouper: ClientSideGrouper = null as any;
+  isFirst: boolean = null as any;
 
   dataViewRowCursor: RowCursor = null as any;
   dataViewApi: DataViewAPI = null as any;
