@@ -70,7 +70,11 @@ export class DataView implements IDataView {
       ctx: this,
       defaultRowHeight: this.tablePanelView.rowHeight,
     });
+
+    this.orderProperty = this.properties.find(prop => prop.name === this.orderMember)!;
   }
+
+  orderProperty: IProperty;
 
   gridDimensions: IGridDimensions;
 
@@ -287,20 +291,39 @@ export class DataView implements IDataView {
       return;
     }
     const dataTable = getDataTable(this);
-    const orderProperty = this.properties.find(prop => prop.name === this.orderMember)!;
     const selectedRow = dataTable.getRowById(this.selectedRowId)!;
-    const positionIndex = orderProperty.dataIndex;
+    const positionIndex = this.orderProperty.dataIndex;
     const selectedRowPosition = selectedRow[positionIndex];
     const nextRow = dataTable.rows.find(row => row[positionIndex] ===  selectedRowPosition + 1);
     if(!nextRow){
       return;
     }
     selectedRow[positionIndex] += 1;
-    nextRow[positionIndex] -=1;
+    nextRow[positionIndex] -= 1;
     this.dataTable.substituteRecord(selectedRow);
     this.dataTable.substituteRecord(nextRow);
-    this.dataTable.setDirtyValue(selectedRow,orderProperty.id, selectedRow[positionIndex]);
-    this.dataTable.setDirtyValue(nextRow,orderProperty.id, nextRow[positionIndex]);
+    this.dataTable.setDirtyValue(selectedRow, this.orderProperty.id, selectedRow[positionIndex]);
+    this.dataTable.setDirtyValue(nextRow, this.orderProperty.id, nextRow[positionIndex]);
+  }
+
+  @action.bound moveSelectedRowDown(){
+    if(!this.selectedRowId){
+      return;
+    }
+    const dataTable = getDataTable(this);
+    const selectedRow = dataTable.getRowById(this.selectedRowId)!;
+    const positionIndex = this.orderProperty.dataIndex;
+    const selectedRowPosition = selectedRow[positionIndex];
+    const previous = dataTable.rows.find(row => row[positionIndex] ===  selectedRowPosition - 1);
+    if(!previous){
+      return;
+    }
+    selectedRow[positionIndex] -= 1;
+    previous[positionIndex] += 1;
+    this.dataTable.substituteRecord(selectedRow);
+    this.dataTable.substituteRecord(previous);
+    this.dataTable.setDirtyValue(selectedRow, this.orderProperty.id, selectedRow[positionIndex]);
+    this.dataTable.setDirtyValue(previous, this.orderProperty.id, previous[positionIndex]);
   }
 
   @action.bound selectNextRow() {

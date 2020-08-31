@@ -124,6 +124,7 @@ export interface IDataView extends IDataViewData {
   parent?: any;
 
   moveSelectedRowUp(): void;
+  moveSelectedRowDown(): void;
 }
 
 export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;
