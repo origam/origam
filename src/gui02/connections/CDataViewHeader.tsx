@@ -41,7 +41,8 @@ import {onLastRowClick} from "../../model/actions-ui/DataView/onLastRowClick";
 import {T} from "../../utils/translation";
 import {onCopyRowClick} from "model/actions-ui/DataView/onCopyRowClick";
 import {onMoveRowUpClick} from "model/actions-ui/DataView/onMoveRowUpClick";
-import {onMoveRowDownClick} from "model/actions-ui/DataView/onMoveRowDownClick";
+import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick";
+import { getIsisMoveRowMenuVisible } from "model/selectors/DataView/getIsisMoveRowMenuVisible";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -77,6 +78,8 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const onNextRowClickEvt = onNextRowClick(dataView);
     const onLastRowClickEvt = onLastRowClick(dataView);
 
+    const isMoveRowMenuVisible = getIsisMoveRowMenuVisible(dataView);
+    
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
@@ -95,7 +98,8 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
               <ResponsiveContainer compensate={50}>
                 {({ refChild }) => (
                   <div className="fullspaceBlock" ref={refChild}>
-                    <DataViewHeaderGroup isHidden={false}>
+                    { isMoveRowMenuVisible
+                      ? <DataViewHeaderGroup isHidden={false}>
                         <DataViewHeaderAction
                           onClick={onMoveRowUpClickEvt}
                         >
@@ -106,7 +110,9 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                         >
                           <Icon src="./icons/move-down.svg" tooltip={T("Move Down","decrease_tool_tip")} />
                         </DataViewHeaderAction>
-                    </DataViewHeaderGroup>
+                      </DataViewHeaderGroup>
+                      : null
+                    }
                     <ResponsiveChild childKey={"add-del-cpy"} order={1}>
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
