@@ -16,6 +16,11 @@ import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourc
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import actions from "model/actions-tree";
 import {flow} from "mobx";
+import {
+  hasSelectedRowId,
+  setSelectedStateRowId,
+} from "model/actions-tree/selectionCheckboxes";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 export const selectionCheckBoxColumnWidth = 20;
 const checkSymbolFontSize = 15;
@@ -59,20 +64,23 @@ function registerClickHandler() {
         console.log("click");
 
         // TODO: Move to tablePanelView
+        let newSelectionState=false;
         const dataTable = getDataTable(ctx);
         const selectionMember = getSelectionMember(ctx);
         if (!!selectionMember) {
           const dsField = getDataSourceFieldByName(ctx, selectionMember);
           if (dsField) {
-            const value = dataTable.getCellValueByDataSourceField(row, dsField);
-            dataTable.setDirtyValue(row, selectionMember, !value);
+            newSelectionState = !dataTable.getCellValueByDataSourceField(row, dsField);
+            dataTable.setDirtyValue(row, selectionMember, newSelectionState);
             yield* getFormScreenLifecycle(ctx).onFlushData();
           }
         } else {
-          yield* actions.selectionCheckboxes.toggleSelectedId(ctx)(
-            dataTable.getRowId(row)
-          );
-          return;
+          const rowId = dataTable.getRowId(row);
+          newSelectionState = !hasSelectedRowId(ctx,  rowId);
+          yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
+        }
+        if(!newSelectionState){
+          getDataView(ctx).selectAllCheckboxChecked = false;
         }
       })();
     },

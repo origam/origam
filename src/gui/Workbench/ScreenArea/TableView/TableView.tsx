@@ -43,6 +43,7 @@ import {
 } from "./InfiniteScrollLoader";
 import { VisibleRowsMonitor } from "./VisibleRowsMonitor";
 import { ScrollRowContainer } from "../../../../model/entities/ScrollRowContainer";
+import {SelectionCheckBoxHeader} from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
 
 @inject(({ dataView }) => {
   return {
@@ -290,7 +291,7 @@ class HeaderRenderer implements IHeaderRendererData {
     if (selectionCheckBoxesShown) {
       headerContainers.push(
         new HeaderContainer({
-          header: this.renderDummyHeader(columnDimensions[0].width),
+          header: this.renderSelectionCheckBoxHeader(columnDimensions[0].width),
           isFixed: true,
           width: columnDimensions[0].width,
         })
@@ -328,6 +329,12 @@ class HeaderRenderer implements IHeaderRendererData {
 
   renderDummyHeader(columnWidth: number) {
     return <div style={{ minWidth: columnWidth + "px" }}></div>;
+  }
+
+  renderSelectionCheckBoxHeader(columnWidth: number){
+    return <SelectionCheckBoxHeader
+      width={columnWidth}
+      dataView={this.dataView}/>;
   }
 
   @bind
