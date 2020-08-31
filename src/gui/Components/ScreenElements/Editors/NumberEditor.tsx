@@ -102,7 +102,6 @@ export class NumberEditor extends React.Component<{
 
   @action.bound
   handleBlur(event: any) {
-    console.log(this.props.value, this.editValue);
     if (!this.wasChanged || this.props.value === this.editValue) {
       this.props.onEditorBlur && this.props.onEditorBlur(event);
       return;
