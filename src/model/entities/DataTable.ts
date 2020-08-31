@@ -1,16 +1,16 @@
 import { IDataTable, IDataTableData } from "./types/IDataTable";
-import { action, autorun, computed, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import { IProperty } from "./types/IProperty";
 import { getDataView } from "../selectors/DataView/getDataView";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { AdditionalRowData } from "./AdditionalRowData";
-import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IDataSourceField } from "./types/IDataSourceField";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { getRowContainer } from "../selectors/getRowContainer";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { formatNumber } from "./NumberFormating";
+import { getDataSource } from "model/selectors/DataSources/getDataSource";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -40,6 +40,7 @@ export class DataTable implements IDataTable {
   @computed get rows(): any[][] {
     return this.rowsContainer.rows.filter((row) => !this.isRowDirtyDeleted(row));
   }
+
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
 
   @computed
@@ -257,6 +258,7 @@ export class DataTable implements IDataTable {
       this.isEmpty = true;
     }
   }
+
   @action.bound
   setFormDirtyValue(row: any[], propertyId: string, value: any) {
     this.createAdditionalData(row);
@@ -352,6 +354,7 @@ export class DataTable implements IDataTable {
     this.rowsContainer.clear();
     this.additionalRowData.clear();
   }
+
   unlockAddedRowPosition(): void {
     this.rowsContainer.unlockAddedRowPosition();
   }
