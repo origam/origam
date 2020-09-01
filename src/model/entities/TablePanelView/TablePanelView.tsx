@@ -120,7 +120,9 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  * onCellClick(event: any, row: any[], columnId: string) {
+  *onCellClick(event: any, row: any[], columnId: string) {
+    getTablePanelView(this).setEditing(false);
+    yield* flushCurrentRowData(this)();
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);
     const isDirty = getFormScreen(dataView).isDirty;
@@ -139,8 +141,6 @@ export class TablePanelView implements ITablePanelView {
   }
 
   *onCellClickInternal(event: any, row: any[], columnId: string) {
-    getTablePanelView(this).setEditing(false);
-    yield* flushCurrentRowData(this)();
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {
