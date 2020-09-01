@@ -64,8 +64,14 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
 }
 
 export function XmlBuildDropdownEditor(props: {
-    xmlNode: any; isReadOnly: boolean; tagEditor?: JSX.Element, onDoubleClick?: (event:any)=>void,
-    subscribeToFocusManager?: (obj: IFocusable) => (()=>void), tabIndex?: number})
+  xmlNode: any;
+  isReadOnly: boolean;
+  tagEditor?: JSX.Element,
+  onDoubleClick?: (event:any)=>void,
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void),
+  tabIndex?: number,
+  onKeyDown?(event: any): void;
+})
 {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -101,6 +107,7 @@ export function XmlBuildDropdownEditor(props: {
       props.onDoubleClick,
       props.subscribeToFocusManager,
       props.tabIndex,
+      props.onKeyDown
     );
 
     const rat = props.xmlNode.attributes;

@@ -12,6 +12,7 @@ export function DropdownEditorInput() {
   }, []);
 
   useEffect(() => {
+    beh.elmInputElement.focus();
     return () => {
       beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
     }
@@ -23,7 +24,6 @@ export function DropdownEditorInput() {
         <input
           className={"input"}
           readOnly={beh.isReadOnly}
-          disabled={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
           onChange={beh.handleInputChange}

@@ -132,6 +132,7 @@ export class TableViewEditor extends React.Component<{
             xmlNode={this.props.property!.xmlNode}
             onDoubleClick={event => this.onDoubleClick(event)}
             isReadOnly={readOnly}
+            onKeyDown={this.props.onEditorKeyDown}
           />
         );
       case "Checklist":
