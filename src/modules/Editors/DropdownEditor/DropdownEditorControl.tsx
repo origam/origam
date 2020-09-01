@@ -13,9 +13,9 @@ export function DropdownEditorControl() {
       {() => (
         <div className={S.control} ref={ref} onMouseDown={beh.handleControlMouseDown}>
           <DropdownEditorInput />
-          <button className={"inputBtn"} disabled={beh.isReadOnly}>
-            <i className="fas fa-ellipsis-h"></i>
-          </button>
+          {/*<button className={"inputBtn"} disabled={beh.isReadOnly}>*/}
+          {/*  <i className="fas fa-ellipsis-h"></i>*/}
+          {/*</button>*/}
           <button className={"inputBtn lastOne"}
                   disabled={beh.isReadOnly}
                   onClick={beh.handleInputBtnClick}>
