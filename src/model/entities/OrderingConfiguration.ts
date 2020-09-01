@@ -35,13 +35,16 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     return this.defaultOrderings;
   }
 
+  @computed get orderings(){
+    return this.userOrderings.length !== 0 ? this.userOrderings : this.defaultOrderings;
+  }
+
   @computed get groupChildrenOrdering(): IOrdering | undefined {
     return this.userOrderings.length === 0 || !this.userOrderings[0] ? undefined : this.userOrderings[0];
   }
 
   getOrdering(column: string): IOrderByColumnSetting {
-    const orderings = this.userOrderings.length !== 0 ? this.userOrderings : this.defaultOrderings;
-    const ordIndex = orderings.findIndex((item) => item.columnId === column);
+    const ordIndex = this.orderings.findIndex((item) => item.columnId === column);
     if (ordIndex === -1) {
       return {
         order: 0,
@@ -50,7 +53,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     } else {
       return {
         order: ordIndex,
-        ordering: orderings[ordIndex].direction,
+        ordering: this.orderings[ordIndex].direction,
       };
     }
   }
@@ -123,9 +126,9 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   @computed get orderingFunction(): () => (row1: any[], row2: any[]) => number {
     return () => (row1: any[], row2: any) => {
       const dataTable = getDataTable(this);
-      let mul = 10 * this.userOrderings.length;
+      let mul = 10 * this.orderings.length;
       let res = 0;
-      for (let term of this.userOrderings) {
+      for (let term of this.orderings) {
         const prop = dataTable.getPropertyById(term.columnId)!;
         let cmpSign = 0;
         switch (prop.column) {

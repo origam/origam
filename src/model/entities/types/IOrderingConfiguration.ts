@@ -13,6 +13,7 @@ export interface IOrderByColumnSetting {
 
 export interface IOrderingConfiguration {
   userOrderings: IOrdering[];
+  orderings: IOrdering[];
   getOrdering(column: string): IOrderByColumnSetting;
   setOrdering(column: string): void;
   addOrdering(column: string): void;

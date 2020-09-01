@@ -217,7 +217,7 @@ export function interpretScreenXml(
       });
     }),
 
-    dataViews: dataViews.map((dataView) => {
+    dataViews: dataViews.map((dataView, i) => {
       const configuration = findStopping(dataView, (n) => n.name === "Configuration");
 
       const properties = findStopping(dataView, (n) => n.name === "Property").map(
@@ -333,6 +333,7 @@ export function interpretScreenXml(
       const implicitFilters = getImplicitFilters(dataView);
       const filterConfiguration = new FilterConfiguration(implicitFilters);
       const dataViewInstance: DataView = new DataView({
+        isFirst: i === 0,
         id: dataView.attributes.Id,
         attributes: dataView.attributes,
         type: dataView.attributes.Type,
