@@ -39,6 +39,7 @@ import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../modules/DataView/TableCursor";
+import {getDontRequestData} from "model/selectors/getDontRequestData";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -425,7 +426,10 @@ export class DataView implements IDataView {
 
   @action.bound start() {
     this.lifecycle.start();
-    this.serverSideGrouper.start();
+    const serverSideGrouping = getDontRequestData(this)
+    if(serverSideGrouping){
+      this.serverSideGrouper.start();
+    }
     getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
     getFormScreenLifecycle(this).registerDisposer(
       reaction(
