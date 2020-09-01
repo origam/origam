@@ -54,6 +54,7 @@ export interface IDataViewData {
   lookupLoader: ILookupLoader;
   serverSideGrouper: ServerSideGrouper;
   clientSideGrouper: ClientSideGrouper;
+  isFirst: boolean;
 
   dataViewRowCursor: RowCursor;
   dataViewApi: DataViewAPI;
@@ -94,7 +95,8 @@ export interface IDataView extends IDataViewData {
   isAnyRowIdSelected: boolean;
   addSelectedRowId(id: string): void;
   removeSelectedRowId(id: string): void;
-  toggleSelectedRowId(id: string): void;
+  setSelectedState(rowId: string, newState: boolean): void;
+  selectAllCheckboxChecked: boolean;
 
   selectNextRow(): void;
   selectPrevRow(): void;
@@ -122,6 +124,9 @@ export interface IDataView extends IDataViewData {
   contentBounds: BoundingRect | undefined;
 
   parent?: any;
+
+  moveSelectedRowUp(): void;
+  moveSelectedRowDown(): void;
 }
 
 export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;

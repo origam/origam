@@ -26,6 +26,9 @@ import React from "react";
 import {isInfiniteScrollingActive} from "../../selectors/isInfiniteScrollingActive";
 import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
 import {getFormScreen} from "../../selectors/FormScreen/getFormScreen";
+import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
+import {flushCurrentRowData} from "../../actions/DataView/TableView/flushCurrentRowData";
+import {isReadOnly} from "../../selectors/RowState/isReadOnly";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -117,7 +120,9 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  * onCellClick(event: any, row: any[], columnId: string) {
+  *onCellClick(event: any, row: any[], columnId: string) {
+    getTablePanelView(this).setEditing(false);
+    yield* flushCurrentRowData(this)();
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);
     const isDirty = getFormScreen(dataView).isDirty;
@@ -135,7 +140,7 @@ export class TablePanelView implements ITablePanelView {
     }
   }
 
-  * onCellClickInternal(event: any, row: any[], columnId: string) {
+  *onCellClickInternal(event: any, row: any[], columnId: string) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox") {
       if (property.isLink && event.ctrlKey) {
@@ -170,9 +175,7 @@ export class TablePanelView implements ITablePanelView {
       const rowId = this.dataTable.getRowId(row);
       yield* this.selectCellAsync(columnId, rowId);
 
-      const readOnly =
-        property!.readOnly || !getRowStateAllowUpdate(property, rowId || "", property!.id);
-      if (!readOnly) {
+      if (!isReadOnly(property!, rowId)) {
         yield* onFieldChangeG(this)(undefined, row, property, !getCellValue(this, row, property));
       }
     }

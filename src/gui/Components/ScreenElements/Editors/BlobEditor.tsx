@@ -20,6 +20,7 @@ import {ModalWindow} from "gui/Components/Dialog/Dialog";
 import {changeManyFields} from "model/actions-ui/DataView/TableView/onFieldChange";
 import {flushCurrentRowData} from "model/actions/DataView/TableView/flushCurrentRowData";
 import {handleError} from "model/actions/handleError";
+import {IFocusable} from "../../../../model/entities/FocusManager";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -54,7 +55,25 @@ export class BlobEditor extends React.Component<{
   Entity?: string;
   SessionFormIdentifier?: string;
   parameters?: any;
+  tabIndex?: number;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> {
+  elmInput: HTMLInputElement | null = null;
+  refInput = (elm: HTMLInputElement | any) => {
+    this.elmInput = elm;
+  };
+  unsubscribeFromFocusManager?: () => void;
+
+  componentDidMount() {
+    if(this.elmInput && this.props.subscribeToFocusManager){
+      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+    }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
+  }
+
   handleFileChange(event: any) {
     this.fileList = event.target.files;
     flow(this.upload.bind(this))();
@@ -267,6 +286,8 @@ export class BlobEditor extends React.Component<{
               type="file"
               multiple={false}
               onChange={(event) => this.handleFileChange(event)}
+              tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
+              ref={this.refInput}
             />
             <i className="fas fa-upload"></i>
           </label>

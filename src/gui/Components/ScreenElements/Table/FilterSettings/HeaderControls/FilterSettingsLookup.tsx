@@ -19,6 +19,7 @@ import S from "./FilterSettingsLookup.module.scss";
 import produce from "immer";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
+import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "in" },
@@ -70,7 +71,6 @@ export class OptionGrid extends React.Component<{
   onCellClick?(event: any, rowIndex: number, columnIndex: number): void;
 }> {
   render() {
-    const rowHeight = 20;
     const rowCount = this.props.items.length;
     const columnWidths = [100];
 
@@ -268,9 +268,9 @@ export class TagInputStateful extends React.Component<{
   render() {
     return (
       <TagInput>
-        {this.cursorAfterIndex === -1 && (
-          <TagInputEditFake domRef={this.refFakeInput} onKeyDown={this.handleFakeEditKeyDown} />
-        )}
+        {/*{this.cursorAfterIndex === -1 && (*/}
+        {/*  <TagInputEditFake domRef={this.refFakeInput} onKeyDown={this.handleFakeEditKeyDown} />*/}
+        {/*)}*/}
         {this.props.selectedItems.map((item, idx) => {
           return (
             <React.Fragment key={item.value}>
@@ -280,12 +280,12 @@ export class TagInputStateful extends React.Component<{
                   onClick={(event) => this.handleDeleteBtnClick(event, item.value)}
                 />
               </TagInputItem>
-              {this.cursorAfterIndex === idx && idx < this.props.selectedItems.length - 1 && (
-                <TagInputEditFake
-                  domRef={this.refFakeInput}
-                  onKeyDown={this.handleFakeEditKeyDown}
-                />
-              )}
+              {/*{this.cursorAfterIndex === idx && idx < this.props.selectedItems.length - 1 && (*/}
+              {/*  <TagInputEditFake*/}
+              {/*    domRef={this.refFakeInput}*/}
+              {/*    onKeyDown={this.handleFakeEditKeyDown}*/}
+              {/*  />*/}
+              {/*)}*/}
             </React.Fragment>
           );
         })}

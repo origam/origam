@@ -107,7 +107,7 @@ export function interpretScreenXml(
       pcr.panel.instanceId,
       {
         position: pcr.position,
-        defaultOrdering: parseToOrdering(pcr.defaultSort && pcr.defaultSort[0]),
+        defaultOrdering: parseToOrdering(pcr.defaultSort),
       },
     ])
   );
@@ -217,7 +217,7 @@ export function interpretScreenXml(
       });
     }),
 
-    dataViews: dataViews.map((dataView) => {
+    dataViews: dataViews.map((dataView, i) => {
       const configuration = findStopping(dataView, (n) => n.name === "Configuration");
 
       const properties = findStopping(dataView, (n) => n.name === "Property").map(
@@ -321,12 +321,19 @@ export function interpretScreenXml(
             ),
           })
       );
-      const defaultOrdering = panelConfigurations.get(dataView.attributes.ModelInstanceId)
+      const defaultOrderings = panelConfigurations.get(dataView.attributes.ModelInstanceId)
         ?.defaultOrdering;
-      const orderingConfiguration = new OrderingConfiguration(defaultOrdering);
+      if(defaultOrderings){
+        for(let ordering of defaultOrderings){
+          ordering.lookupId = properties.find(prop => prop.id === ordering.columnId)?.lookupId;
+        }
+      }
+
+      const orderingConfiguration = new OrderingConfiguration(defaultOrderings);
       const implicitFilters = getImplicitFilters(dataView);
       const filterConfiguration = new FilterConfiguration(implicitFilters);
       const dataViewInstance: DataView = new DataView({
+        isFirst: i === 0,
         id: dataView.attributes.Id,
         attributes: dataView.attributes,
         type: dataView.attributes.Type,

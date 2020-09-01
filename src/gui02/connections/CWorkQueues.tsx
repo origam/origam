@@ -33,7 +33,7 @@ export class CWorkQueues extends React.Component {
               isEmphasized={item.countTotal > 0}
               isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}
-              icon={<Icon src="./icons/work-queue.svg" />}
+              icon={<Icon src="./icons/work-queue.svg" tooltip={item.name}/>}
               label={
                 <>
                   {item.name}

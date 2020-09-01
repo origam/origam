@@ -43,6 +43,7 @@ import {
 } from "./InfiniteScrollLoader";
 import { VisibleRowsMonitor } from "./VisibleRowsMonitor";
 import { ScrollRowContainer } from "../../../../model/entities/ScrollRowContainer";
+import {SelectionCheckBoxHeader} from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
 
 @inject(({ dataView }) => {
   return {
@@ -290,7 +291,7 @@ class HeaderRenderer implements IHeaderRendererData {
     if (selectionCheckBoxesShown) {
       headerContainers.push(
         new HeaderContainer({
-          header: this.renderDummyHeader(columnDimensions[0].width),
+          header: this.renderSelectionCheckBoxHeader(columnDimensions[0].width),
           isFixed: true,
           width: columnDimensions[0].width,
         })
@@ -330,6 +331,12 @@ class HeaderRenderer implements IHeaderRendererData {
     return <div style={{ minWidth: columnWidth + "px" }}></div>;
   }
 
+  renderSelectionCheckBoxHeader(columnWidth: number){
+    return <SelectionCheckBoxHeader
+      width={columnWidth}
+      dataView={this.dataView}/>;
+  }
+
   @bind
   renderDataHeader(args: { columnIndex: number; columnWidth: number }) {
     const property = this.tableViewProperties[args.columnIndex];
@@ -343,7 +350,7 @@ class HeaderRenderer implements IHeaderRendererData {
           width={args.columnWidth}
           label={header.label}
           orderingDirection={header.ordering}
-          orderingOrder={header.order}
+          orderingOrder={header.order + 1}
           onColumnWidthChange={this.onColumnWidthChange}
           onColumnWidthChangeFinished={onColumnWidthChangeFinished(this.tablePanelView)}
           isColumnOrderChanging={this.isColumnOrderChanging}

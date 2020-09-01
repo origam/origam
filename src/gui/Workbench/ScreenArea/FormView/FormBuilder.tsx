@@ -17,6 +17,9 @@ import { RadioButton } from "gui02/components/Form/RadioButton";
 import { getDataSourceFieldByName } from "../../../../model/selectors/DataSources/getDataSourceFieldByName";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import { flow } from "mobx";
+import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
+import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
+import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -27,6 +30,7 @@ export class FormBuilder extends React.Component<{
   dataView?: IDataView;
 }> {
   buildForm() {
+    let tabIndex = getStartTabIndex(this.props.dataView!);
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -35,6 +39,7 @@ export class FormBuilder extends React.Component<{
     if (row && rowId) {
       backgroundColor = getRowStateRowBgColor(self.props.dataView, rowId);
     }
+    const focusManager = self.props.dataView!.focusManager;
 
     function recursive(xfo: any) {
       if (xfo.name === "FormRoot") {
@@ -74,6 +79,7 @@ export class FormBuilder extends React.Component<{
           ? dataTable.getCellValueByDataSourceField(row, sourceField!) === xfo.attributes.Value
           : false;
 
+        tabIndex++;
         return (
           <RadioButton
             key={xfo.$iid}
@@ -85,6 +91,10 @@ export class FormBuilder extends React.Component<{
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
+            tabIndex={tabIndex}
+            subscribeToFocusManager={(radioInput) =>
+              focusManager.subscribe(radioInput, xfo.attributes.Id)
+            }
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
               flow(function* () {
@@ -113,25 +123,38 @@ export class FormBuilder extends React.Component<{
                     textualValue = dataTable.getCellText(row, property);
                   }
                 }
+                tabIndex++;
+                if(!property){
+                  return (<></>);
+                }
 
-                return property ? (
+                if(property.column === "CheckBox"){
+                  return (
+                    <Provider property={property}>
+                      <CheckBox
+                        checked={value}
+                        readOnly={isReadOnly(property, rowId)}
+                        tabIndex={tabIndex}
+                      />
+                    </Provider>
+                  );
+                }
+
+                return (
                   <Provider property={property}>
                     <FormField
-                      // Id={property.id}
                       caption={property.name}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
                       dock={property.dock}
-                      // Column={property.column}
-                      // Entity={property.entity}
                       height={property.height}
                       width={property.width}
                       left={property.x}
                       top={property.y}
-                      isCheckbox={property.column === "CheckBox"}
                       editor={
                         <FormViewEditor
                           value={value}
+                          tabIndex={tabIndex}
                           isRichText={property.isRichText}
                           textualValue={textualValue}
                           xmlNode={property.xmlNode}
@@ -139,8 +162,6 @@ export class FormBuilder extends React.Component<{
                       }
                     />
                   </Provider>
-                ) : (
-                  <></>
                 );
               }}
             </Observer>
@@ -150,11 +171,37 @@ export class FormBuilder extends React.Component<{
         return xfo.elements.map((child: any) => recursive(child));
       }
     }
-    return recursive(this.props.xmlFormRootObject);
+
+    const form = recursive(this.props.xmlFormRootObject);
+    if(this.props.dataView?.isFirst){
+     // focusManager.focusFirst();
+    }
+    return form;
   }
 
   render() {
-    // debugger
     return this.buildForm();
   }
+}
+
+const startTabInduces = new Map<string, number>();
+
+function getNextTabIndex(){
+  if(startTabInduces.size === 0){
+    return 0;
+  }
+  const nextTabIndex = Array.from(startTabInduces.values()).sort().reverse()[0] + 100;
+  if(nextTabIndex > 32767){
+    console.error("TabIndex Overflow!");
+    startTabInduces.clear();
+    return 0;
+  }
+  return nextTabIndex;
+}
+
+function getStartTabIndex(dataView: IDataView): number {
+  if(!startTabInduces.has(dataView.id)){
+    startTabInduces.set(dataView.id, getNextTabIndex());
+  }
+  return startTabInduces.get(dataView.id)!;
 }

@@ -2,6 +2,7 @@ import React from "react";
 import {ModalWindow} from "../Dialog/Dialog";
 import {observer} from "mobx-react";
 import CS from "./DialogsCommon.module.css";
+import {T} from "../../../utils/translation";
 
 @observer
 export class QuestionDeleteData extends React.Component<{
@@ -12,18 +13,18 @@ export class QuestionDeleteData extends React.Component<{
   render() {
     return (
       <ModalWindow
-        title="Question"
+        title={T("Question","question_title")}
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={this.props.onYesClick}>Yes</button>
-            <button onClick={this.props.onNoClick}>No</button>
+            <button onClick={this.props.onYesClick}>{T("Yes","button_yes")}</button>
+            <button onClick={this.props.onNoClick}>{T("No","button_no")}</button>
           </>
         }
         buttonsLeft={null}
         buttonsRight={null}
       >
-        <div className={CS.dialogContent}>Are you sure you want to delete this record?</div>
+        <div className={CS.dialogContent}>{T("Delete selected row?","delete_confirmation")}</div>
       </ModalWindow>
     );
   }

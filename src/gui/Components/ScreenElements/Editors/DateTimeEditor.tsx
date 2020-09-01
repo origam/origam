@@ -163,10 +163,12 @@ export class DateTimeEditor extends React.Component<{
   onChange?: (event: any, isoDay: string | undefined | null) => void;
   onChangeByCalendar?: (event: any, isoDay: string) => void;
   onClick?: (event: any) => void;
+  onDoubleClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  tabIndex?: number;
 }> {
   @observable isDroppedDown = false;
 
@@ -255,6 +257,19 @@ export class DateTimeEditor extends React.Component<{
 
     this.dirtyTextualValue = undefined;
     this.props.onEditorBlur && this.props.onEditorBlur(event);
+  }
+
+  @action.bound handleKeyDown(event: any) {
+    if(event.key === "Enter")
+    {
+      const dateCompleter = this.getDateCompleter()
+      const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue)
+      if(completedMoment){
+        this.props.onChange?.(event, completedMoment.toISOString(true));
+      }
+      this.dirtyTextualValue = undefined;
+    }
+    this.props.onKeyDown?.(event);
   }
 
   @action.bound getDateCompleter(){
@@ -377,7 +392,9 @@ export class DateTimeEditor extends React.Component<{
                 readOnly={this.props.isReadOnly}
                 onChange={this.handleTextfieldChange}
                 onClick={this.props.onClick}
-                onKeyDown={this.props.onKeyDown}
+                onDoubleClick={this.props.onDoubleClick}
+                onKeyDown={this.handleKeyDown}
+                tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
               />
             </Tooltip>
             {this.props.isInvalid && (

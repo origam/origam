@@ -32,6 +32,7 @@ import {
   ResponsiveChild,
   ResponsiveContainer
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
+import {T} from "../../utils/translation";
 
 
 @observer
@@ -100,15 +101,16 @@ export class CScreenToolbar extends React.Component<{}> {
                       <Icon
                         src="./icons/save.svg"
                         className={isDirty ? "isRed isHoverGreen" : ""}
+                        tooltip={T("Save","save_tool_tip")}
                       />
                     }
-                    label="Save"
+                    label={T("Save","save_tool_tip")}
                   />
                 )}
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(formScreen)}
-                  icon={<Icon src="./icons/refresh.svg" />}
-                  label="Refresh"
+                  icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh","refresh_tool_tip")}/>}
+                  label={T("Refresh","refresh_tool_tip")}
                 />
               </ScreenToolbarActionGroup>
               <ResponsiveContainer>
@@ -151,7 +153,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   rootRef={refTrigger}
                   onClick={() => setDropped(true)}
                   //onClick={this.handleLogoutClick}
-                  icon={<Icon src="./icons/dot-menu.svg" />}
+                  icon={<Icon src="./icons/dot-menu.svg" tooltip={""}/>}
                   label={userName}
                 />
               )}
@@ -169,7 +171,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 //onClick={this.handleLogoutClick}
                 icon={
                   <>
-                    <Icon src="./icons/user.svg" />
+                    <Icon src="./icons/user.svg" tooltip={""}/>
                     {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
                   </>
                 }
@@ -182,8 +184,12 @@ export class CScreenToolbar extends React.Component<{}> {
                   userName={userName || "Logged user"}
                   actionItems={
                     <>
-                      <DropdownItem isDisabled={true}>My profile</DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                       {T("My profile","my_profile")}
+                      </DropdownItem>
+                      <DropdownItem onClick={this.handleLogoutClick}>
+                       {T("Log out","sign_out_tool_tip")}
+                      </DropdownItem>
                     </>
                   }
                 />
@@ -213,7 +219,7 @@ export class CScreenToolbar extends React.Component<{}> {
               />*/}
             <ScreenToolbarAction
               onClick={onReloadWebScreenClick(activeScreen)}
-              icon={<Icon src="./icons/refresh.svg" />}
+              icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh","refresh_tool_tip")} />}
             />
           </ScreenToolbarActionGroup>
 
@@ -243,7 +249,7 @@ export class CScreenToolbar extends React.Component<{}> {
               //onClick={this.handleLogoutClick}
               icon={
                 <>
-                  <Icon src="./icons/user.svg" />
+                  <Icon src="./icons/user.svg" tooltip={""} />
                   {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
                 </>
               }
@@ -256,8 +262,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 userName={userName || "Logged user"}
                 actionItems={
                   <>
-                    <DropdownItem isDisabled={true}>My profile</DropdownItem>
-                    <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                          {T("My profile","my_profile")}
+                      </DropdownItem>
+                      <DropdownItem onClick={this.handleLogoutClick}>
+                          {T("Log out","sign_out_tool_tip")}
+                      </DropdownItem>
                   </>
                 }
               />
@@ -286,7 +296,7 @@ export class CScreenToolbar extends React.Component<{}> {
               //onClick={this.handleLogoutClick}
               icon={
                 <>
-                  <Icon src="./icons/user.svg" />
+                  <Icon src="./icons/user.svg" tooltip={""} />
                   {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
                 </>
               }
@@ -299,8 +309,12 @@ export class CScreenToolbar extends React.Component<{}> {
                 userName={userName || "Logged user"}
                 actionItems={
                   <>
-                    <DropdownItem isDisabled={true}>My profile</DropdownItem>
-                    <DropdownItem onClick={this.handleLogoutClick}>Log out</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                          {T("My profile","my_profile")}
+                      </DropdownItem>
+                      <DropdownItem onClick={this.handleLogoutClick}>
+                          {T("Log out","sign_out_tool_tip")}
+                      </DropdownItem>
                   </>
                 }
               />

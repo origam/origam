@@ -11,7 +11,7 @@ import {Icon} from "gui02/components/Icon/Icon";
 import {MobXProviderContext, observer} from "mobx-react";
 import uiActions from "model/actions-ui-tree";
 import {onColumnConfigurationClick} from "model/actions-ui/DataView/onColumnConfigurationClick";
-import {onCopyRowClick, onCreateRowClick} from "model/actions-ui/DataView/onCreateRowClick";
+import {onCreateRowClick} from "model/actions-ui/DataView/onCreateRowClick";
 import {onDeleteRowClick} from "model/actions-ui/DataView/onDeleteRowClick";
 import {onFilterButtonClick} from "model/actions-ui/DataView/onFilterButtonClick";
 import {onNextRowClick} from "model/actions-ui/DataView/onNextRowClick";
@@ -38,6 +38,11 @@ import {
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 import {onFirstRowClick} from "../../model/actions-ui/DataView/onFirstRowClick";
 import {onLastRowClick} from "../../model/actions-ui/DataView/onLastRowClick";
+import {T} from "../../utils/translation";
+import {onCopyRowClick} from "model/actions-ui/DataView/onCopyRowClick";
+import {onMoveRowUpClick} from "model/actions-ui/DataView/onMoveRowUpClick";
+import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick";
+import { getIsisMoveRowMenuVisible } from "model/selectors/DataView/getIsisMoveRowMenuVisible";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -64,6 +69,8 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
     const onDeleteRowClickEvt = onDeleteRowClick(dataView);
     const onCreateRowClickEvt = onCreateRowClick(dataView);
+    const onMoveRowUpClickEvt = onMoveRowUpClick(dataView);
+    const onMoveRowDownClickEvt = onMoveRowDownClick(dataView);
     const onCopyRowClickEvt = onCopyRowClick(dataView);
     const onFilterButtonClickEvt = onFilterButtonClick(dataView);
     const onFirstRowClickEvt = onFirstRowClick(dataView);
@@ -71,6 +78,8 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const onNextRowClickEvt = onNextRowClick(dataView);
     const onLastRowClickEvt = onLastRowClick(dataView);
 
+    const isMoveRowMenuVisible = getIsisMoveRowMenuVisible(dataView);
+    
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
     const isCopyButton = getIsCopyButtonVisible(dataView);
@@ -89,6 +98,21 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
               <ResponsiveContainer compensate={50}>
                 {({ refChild }) => (
                   <div className="fullspaceBlock" ref={refChild}>
+                    { isMoveRowMenuVisible
+                      ? <DataViewHeaderGroup isHidden={false}>
+                        <DataViewHeaderAction
+                          onClick={onMoveRowUpClickEvt}
+                        >
+                          <Icon src="./icons/move-up.svg" tooltip={T("Move Up","increase_tool_tip")} />
+                        </DataViewHeaderAction>
+                        <DataViewHeaderAction
+                          onClick={onMoveRowDownClickEvt}
+                        >
+                          <Icon src="./icons/move-down.svg" tooltip={T("Move Down","decrease_tool_tip")} />
+                        </DataViewHeaderAction>
+                      </DataViewHeaderGroup>
+                      : null
+                    }
                     <ResponsiveChild childKey={"add-del-cpy"} order={1}>
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
@@ -97,7 +121,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                               className="isGreenHover"
                               onClick={onCreateRowClickEvt}
                             >
-                              <Icon src="./icons/add.svg" />
+                              <Icon src="./icons/add.svg" tooltip={T("Add","add_tool_tip")} />
                             </DataViewHeaderAction>
                           )}
 
@@ -106,13 +130,13 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                               className="isRedHover"
                               onClick={onDeleteRowClickEvt}
                             >
-                              <Icon src="./icons/minus.svg" />
+                              <Icon src="./icons/minus.svg" tooltip={T("Delete","delete_tool_tip")} />
                             </DataViewHeaderAction>
                           )}
 
                           {isCopyButton && (
                             <DataViewHeaderAction className="isOrangeHover" onClick={onCopyRowClickEvt}>
-                              <Icon src="./icons/duplicate.svg" />
+                              <Icon src="./icons/duplicate.svg" tooltip={T("Duplicate","add_duplicate_tool_tip")} />
                             </DataViewHeaderAction>
                           )}
                         </DataViewHeaderGroup>
@@ -181,16 +205,16 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
                           <DataViewHeaderAction onClick={onFirstRowClickEvt}>
-                            <Icon src="./icons/list-arrow-first.svg" />
+                            <Icon src="./icons/list-arrow-first.svg" tooltip={T("First","move_first_tool_tip")} />
                           </DataViewHeaderAction>
                           <DataViewHeaderAction onClick={onPrevRowClickEvt}>
-                            <Icon src="./icons/list-arrow-previous.svg" />
+                            <Icon src="./icons/list-arrow-previous.svg" tooltip={T("Previous","move_prev_tool_tip")}/>
                           </DataViewHeaderAction>
                           <DataViewHeaderAction onClick={onNextRowClickEvt}>
-                            <Icon src="./icons/list-arrow-next.svg" />
+                            <Icon src="./icons/list-arrow-next.svg" tooltip={T("Next","move_next_tool_tip")}/>
                           </DataViewHeaderAction>
                           <DataViewHeaderAction onClick={onLastRowClickEvt}>
-                            <Icon src="./icons/list-arrow-last.svg" />
+                            <Icon src="./icons/list-arrow-last.svg" tooltip={T("Last","move_last_tool_tip")}/>
                           </DataViewHeaderAction>
                         </DataViewHeaderGroup>
                       )}
@@ -219,7 +243,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                             isActive={isFilterSettingsVisible}
                             className={"test-filter-button"}
                           >
-                            <Icon src="./icons/search-filter.svg" />
+                            <Icon src="./icons/search-filter.svg" tooltip={T("Last","filter_tool_tip")} />
                           </DataViewHeaderAction>
                         </DataViewHeaderGroup>
                       )}
@@ -236,19 +260,21 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                       onClick={() => setDropped(true)}
                       isActive={false}
                     >
-                      <Icon src="./icons/dot-menu.svg" />
+                      <Icon src="./icons/dot-menu.svg" tooltip={""} />
                     </DataViewHeaderAction>
                   )}
                   content={({ setDropped }) => (
                     <Dropdown>
-                      <DropdownItem isDisabled={true}>Export to Excel</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                        {T("Export to Excel","excel_tool_tip")}
+                      </DropdownItem>
                       <DropdownItem
                         onClick={(event: any) => {
                           setDropped(false);
                           onColumnConfigurationClickEvt(event);
                         }}
                       >
-                        Column configuration
+                        {T("Column configuration","column_config_tool_tip")}
                       </DropdownItem>
                       <DropdownItem
                         isDisabled={false}
@@ -257,9 +283,11 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                           onRecordAuditClick(dataView)(event);
                         }}
                       >
-                        Show audit
+                        {T("Show audit","audit_title")}
                       </DropdownItem>
-                      <DropdownItem isDisabled={true}>Show attachments</DropdownItem>
+                      <DropdownItem isDisabled={true}>
+                        {T("Show attachments","attachment_button_tool_tip")}
+                      </DropdownItem>
                       <DropdownItem
                         isDisabled={false}
                         onClick={(event: any) => {
@@ -267,7 +295,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                           onRecordInfoClick(dataView)(event);
                         }}
                       >
-                        Show record information
+                        {T("Show record information","info_button_tool_tip")}
                       </DropdownItem>
                     </Dropdown>
                   )}

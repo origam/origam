@@ -9,7 +9,8 @@ export function onApplyFilterSetting(ctx: any) {
   return flow(function* onApplyFilterSetting(setting: IFilterSetting) {
     try {
       console.log("apply filter:", prop, toJS(setting));
-      getFilterConfiguration(ctx).setFilter({ propertyId: prop.id, setting });
+      getFilterConfiguration(ctx).setFilter(
+          { propertyId: prop.id, dataType:prop.column, setting });
     } catch (e) {
       yield* handleError(ctx)(e);
       throw e;

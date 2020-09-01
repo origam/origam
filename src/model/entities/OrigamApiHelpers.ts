@@ -9,6 +9,7 @@ export function joinWithAND(filterItems: string[]) {
 export function filterToFilterItem(filter: IFilter) {
   return toFilterItem(
     filter.propertyId,
+    filter.dataType,
     filter.setting.type,
     filter.setting.filterValue1,
     filter.setting.filterValue2
@@ -18,7 +19,7 @@ function arrayToString(array: any[]) {
   return `[${array.join(", ")}]`;
 }
 
-function valesToRightHandSide(val1?: any, val2?: any) {
+function valuesToRightHandSide(val1?: any, val2?: any) {
   const val1IsArray = Array.isArray(val1);
   const val2IsArray = Array.isArray(val2);
 
@@ -35,8 +36,29 @@ function valesToRightHandSide(val1?: any, val2?: any) {
   throw new Error(`Cannot convert values "${val1}" and "${val2}" to a right hand side`);
 }
 
-export function toFilterItem(columnId: string, operator: string, val1?: any, val2?: any) {
-  return `["${columnId}", "${operator}", ${valesToRightHandSide(val1, val2)}]`;
+export function toFilterItem(
+    columnId: string, dataType: string,
+    operator: string, val1?: any, val2?: any) {
+  if (
+      dataType === "Date"
+      && (operator === "eq" || operator === "neq")
+      && val1 !== undefined
+      && val1 !== ""
+      && val1 !== null
+      && val1.endsWith("T00:00:00.000")
+  ) {
+    const upperLimit = new Date(val1);
+    upperLimit.setDate(upperLimit.getDate() + 1);
+    const dateTimeFormat = new Intl.DateTimeFormat(
+        'en', {year: 'numeric', month: '2-digit', day: '2-digit'});
+    const [{value: month},,{value: day},,{value: year}]
+        = dateTimeFormat.formatToParts(upperLimit);
+    const upperLimitString = year.concat("-", month, "-", day, "T00:00:00.000");
+    const substitutedOperator = operator === "eq" ? "between" : "nbetween";
+    return `["${columnId}", "${substitutedOperator}", ${valuesToRightHandSide(
+        val1, upperLimitString)}]`;
+  }
+  return `["${columnId}", "${operator}", ${valuesToRightHandSide(val1, val2)}]`;
 }
 
 function toFilterValueForm(value: any) {

@@ -39,6 +39,7 @@ import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../modules/DataView/TableCursor";
+import {getDontRequestData} from "model/selectors/getDontRequestData";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -70,7 +71,11 @@ export class DataView implements IDataView {
       ctx: this,
       defaultRowHeight: this.tablePanelView.rowHeight,
     });
+
+    this.orderProperty = this.properties.find(prop => prop.name === this.orderMember)!;
   }
+
+  orderProperty: IProperty;
 
   gridDimensions: IGridDimensions;
 
@@ -111,11 +116,13 @@ export class DataView implements IDataView {
   lookupLoader: ILookupLoader = null as any;
   serverSideGrouper: ServerSideGrouper = null as any;
   clientSideGrouper: ClientSideGrouper = null as any;
+  isFirst: boolean = null as any;
 
   dataViewRowCursor: RowCursor = null as any;
   dataViewApi: DataViewAPI = null as any;
   dataViewData: DataViewData = null as any;
 
+  @observable selectAllCheckboxChecked = false;
   @observable selectedRowIdsMap: Map<string, boolean> = new Map();
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
@@ -152,11 +159,11 @@ export class DataView implements IDataView {
     this.selectedRowIdsMap.delete(id);
   }
 
-  @action.bound toggleSelectedRowId(id: string) {
-    if (this.hasSelectedRowId(id)) {
-      this.removeSelectedRowId(id);
+  @action.bound setSelectedState(rowId: string, newState: boolean){
+    if (newState) {
+      this.addSelectedRowId(rowId);
     } else {
-      this.addSelectedRowId(id);
+      this.removeSelectedRowId(rowId);
     }
   }
 
@@ -282,6 +289,46 @@ export class DataView implements IDataView {
     }
   }
 
+  @action.bound moveSelectedRowUp(){
+    if(!this.selectedRowId){
+      return;
+    }
+    const dataTable = getDataTable(this);
+    const selectedRow = dataTable.getRowById(this.selectedRowId)!;
+    const positionIndex = this.orderProperty.dataIndex;
+    const selectedRowPosition = selectedRow[positionIndex];
+    const nextRow = dataTable.rows.find(row => row[positionIndex] ===  selectedRowPosition + 1);
+    if(!nextRow){
+      return;
+    }
+    selectedRow[positionIndex] += 1;
+    nextRow[positionIndex] -= 1;
+    this.dataTable.substituteRecord(selectedRow);
+    this.dataTable.substituteRecord(nextRow);
+    this.dataTable.setDirtyValue(selectedRow, this.orderProperty.id, selectedRow[positionIndex]);
+    this.dataTable.setDirtyValue(nextRow, this.orderProperty.id, nextRow[positionIndex]);
+  }
+
+  @action.bound moveSelectedRowDown(){
+    if(!this.selectedRowId){
+      return;
+    }
+    const dataTable = getDataTable(this);
+    const selectedRow = dataTable.getRowById(this.selectedRowId)!;
+    const positionIndex = this.orderProperty.dataIndex;
+    const selectedRowPosition = selectedRow[positionIndex];
+    const previous = dataTable.rows.find(row => row[positionIndex] ===  selectedRowPosition - 1);
+    if(!previous){
+      return;
+    }
+    selectedRow[positionIndex] -= 1;
+    previous[positionIndex] += 1;
+    this.dataTable.substituteRecord(selectedRow);
+    this.dataTable.substituteRecord(previous);
+    this.dataTable.setDirtyValue(selectedRow, this.orderProperty.id, selectedRow[positionIndex]);
+    this.dataTable.setDirtyValue(previous, this.orderProperty.id, previous[positionIndex]);
+  }
+
   @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
     const newId = selectedRowId
@@ -379,7 +426,10 @@ export class DataView implements IDataView {
 
   @action.bound start() {
     this.lifecycle.start();
-    this.serverSideGrouper.start();
+    const serverSideGrouping = getDontRequestData(this)
+    if(serverSideGrouping){
+      this.serverSideGrouper.start();
+    }
     getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
     getFormScreenLifecycle(this).registerDisposer(
       reaction(
