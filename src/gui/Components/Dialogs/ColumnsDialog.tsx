@@ -12,6 +12,7 @@ import {Dropdown} from "../../../gui02/components/Dropdown/Dropdown";
 import {DropdownItem} from "../../../gui02/components/Dropdown/DropdownItem";
 import {AggregationType, tryParseAggregationType} from "../../../model/entities/types/AggregationType";
 import {T} from "../../../utils/translation";
+import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -125,7 +126,7 @@ export class ColumnsDialog extends React.Component<{
                     columnWidth={({index}: { index: number }) => {
                       return this.columnWidths[index];
                     }}
-                    rowHeight={20}
+                    rowHeight={rowHeight}
                     width={width}
                     height={height}
                   />

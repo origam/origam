@@ -19,6 +19,7 @@ import S from "./FilterSettingsLookup.module.scss";
 import produce from "immer";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
+import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 const OPERATORS: any[] = [
   { human: <>=</>, type: "in" },
@@ -70,7 +71,6 @@ export class OptionGrid extends React.Component<{
   onCellClick?(event: any, rowIndex: number, columnIndex: number): void;
 }> {
   render() {
-    const rowHeight = 20;
     const rowCount = this.props.items.length;
     const columnWidths = [100];
 

@@ -116,6 +116,7 @@ export class DataView implements IDataView {
   dataViewApi: DataViewAPI = null as any;
   dataViewData: DataViewData = null as any;
 
+  @observable selectAllCheckboxChecked = false;
   @observable selectedRowIdsMap: Map<string, boolean> = new Map();
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
@@ -152,11 +153,11 @@ export class DataView implements IDataView {
     this.selectedRowIdsMap.delete(id);
   }
 
-  @action.bound toggleSelectedRowId(id: string) {
-    if (this.hasSelectedRowId(id)) {
-      this.removeSelectedRowId(id);
+  @action.bound setSelectedState(rowId: string, newState: boolean){
+    if (newState) {
+      this.addSelectedRowId(rowId);
     } else {
-      this.addSelectedRowId(id);
+      this.removeSelectedRowId(rowId);
     }
   }
 

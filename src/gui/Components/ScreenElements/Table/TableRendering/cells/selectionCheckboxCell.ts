@@ -7,7 +7,12 @@ import {
   currentRowHeight,
   currentRowTop,
 } from "../currentCell";
-import {applyScrollTranslation, topTextOffset} from "./cellsCommon";
+import {
+  applyScrollTranslation,
+  checkSymbolFontSize,
+  checkBoxCellPaddingLeft,
+  topTextOffset
+} from "./cellsCommon";
 import {CPR} from "utils/canvas";
 import {onClick} from "../onClick";
 import {getDataTable} from "model/selectors/DataView/getDataTable";
@@ -16,10 +21,13 @@ import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourc
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import actions from "model/actions-tree";
 import {flow} from "mobx";
+import {
+  hasSelectedRowId,
+  setSelectedStateRowId,
+} from "model/actions-tree/selectionCheckboxes";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 export const selectionCheckBoxColumnWidth = 20;
-const checkSymbolFontSize = 15;
-const paddingLeft = 2;
 
 export function selectionCheckboxCellsWidths() {
   return isCheckBoxedTable() ? [selectionCheckBoxColumnWidth] : [];
@@ -37,7 +45,7 @@ export function selectionCheckboxCellsDraws() {
         const state = dataView().isSelected(rowId());
         ctx2d.fillText(
           state ? "\uf14a" : "\uf0c8",
-          CPR() * (currentColumnLeft() + paddingLeft),
+          CPR() * (currentColumnLeft() + checkBoxCellPaddingLeft),
           CPR() * (currentRowTop() + topTextOffset)
         );
         registerClickHandler();
@@ -59,20 +67,23 @@ function registerClickHandler() {
         console.log("click");
 
         // TODO: Move to tablePanelView
+        let newSelectionState=false;
         const dataTable = getDataTable(ctx);
         const selectionMember = getSelectionMember(ctx);
         if (!!selectionMember) {
           const dsField = getDataSourceFieldByName(ctx, selectionMember);
           if (dsField) {
-            const value = dataTable.getCellValueByDataSourceField(row, dsField);
-            dataTable.setDirtyValue(row, selectionMember, !value);
+            newSelectionState = !dataTable.getCellValueByDataSourceField(row, dsField);
+            dataTable.setDirtyValue(row, selectionMember, newSelectionState);
             yield* getFormScreenLifecycle(ctx).onFlushData();
           }
         } else {
-          yield* actions.selectionCheckboxes.toggleSelectedId(ctx)(
-            dataTable.getRowId(row)
-          );
-          return;
+          const rowId = dataTable.getRowId(row);
+          newSelectionState = !hasSelectedRowId(ctx,  rowId);
+          yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
+        }
+        if(!newSelectionState){
+          getDataView(ctx).selectAllCheckboxChecked = false;
         }
       })();
     },
@@ -102,19 +113,5 @@ export function drawSelectionCheckboxBackground() {
     CPR() * currentRowTop(),
     CPR() * currentColumnWidth(),
     CPR() * currentRowHeight()
-  );
-}
-
-export function drawSelectionCheckboxContent() {
-  const ctx2d = context2d();
-  applyScrollTranslation();
-  drawSelectionCheckboxBackground();
-  ctx2d.fillStyle = "black";
-  ctx2d.font = `${CPR() * checkSymbolFontSize}px "Font Awesome 5 Free"`;
-  const state = true;
-  ctx2d.fillText(
-    state ? "\uf14a" : "\uf0c8",
-    CPR() * (currentColumnLeft() + paddingLeft),
-    CPR() * (currentRowTop() + topTextOffset)
   );
 }

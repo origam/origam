@@ -94,7 +94,8 @@ export interface IDataView extends IDataViewData {
   isAnyRowIdSelected: boolean;
   addSelectedRowId(id: string): void;
   removeSelectedRowId(id: string): void;
-  toggleSelectedRowId(id: string): void;
+  setSelectedState(rowId: string, newState: boolean): void;
+  selectAllCheckboxChecked: boolean;
 
   selectNextRow(): void;
   selectPrevRow(): void;
