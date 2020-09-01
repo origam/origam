@@ -6,6 +6,7 @@ import S from "./Dropdown/Dropdown.module.scss";
 import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "./Dropdown/DropdownCommon";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import SE from "./DropdownEditor.module.scss";
+import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 export function DropdownEditorBody() {
   const refCtxBody = useContext(CtxDropdownRefBody);
@@ -135,7 +136,7 @@ export function DropdownEditorTable() {
             columnWidth={({ index }) =>
               columnGrowFactor !== 1 ? widths[index] : cache.columnWidth({ index })
             }
-            rowHeight={20}
+            rowHeight={rowHeight}
             deferredMeasurementCache={cache}
             fixedRowCount={1}
             height={height}

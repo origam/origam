@@ -19,6 +19,7 @@ import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
 import {getEntity} from "../../../../model/selectors/DataView/getEntity";
 import {getSessionId} from "model/selectors/getSessionId";
 import {IFocusable} from "../../../../model/entities/FocusManager";
+import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 export interface IDropdownEditorProps {
   value: string | null;
@@ -465,7 +466,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
                       height={height}
                       rowCount={this.lookupItems.length + 1}
                       columnCount={this.props.ColumnNames!.length}
-                      rowHeight={20}
+                      rowHeight={rowHeight}
                       columnWidth={200}
                       cellRenderer={this.cellRenderer}
                     />

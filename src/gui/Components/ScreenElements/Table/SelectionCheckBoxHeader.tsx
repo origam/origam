@@ -3,7 +3,7 @@ import React from "react";
 import { setAllSelectionStates } from "model/actions-tree/setAllSelectionStates";
 import { CPR } from "utils/canvas";
 import {
-  checkSymbolFontSize,
+  checkSymbolFontSize, rowHeight,
   topTextOffset,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import {IReactionDisposer, reaction} from "mobx";
@@ -58,8 +58,8 @@ export class SelectionCheckBoxHeader extends React.Component<{
       <div style={{ minWidth: this.props.width + "px" }}>
         <canvas
           ref={this.refCanvas}
-          width={20}
-          height={20}
+          width={rowHeight}
+          height={rowHeight}
           onClick={(event) => this.onClick(event)}
         />
       </div>
