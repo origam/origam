@@ -124,6 +124,14 @@ namespace Origam.DA.ObjectPersistence
             }
         }
 
+        public bool IsOfType<T>(Guid id)
+        {
+            return RetrieveInstance(
+                type: typeof(T), 
+                primaryKey: new Key(id),
+                useCache: false) is T;
+        }
+
         private IEnumerable<object> FindUsages(AbstractSchemaItem item, bool ignoreErrors, Key key)
         {
             List<object> foundUsages = new List<object>();

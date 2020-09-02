@@ -355,5 +355,10 @@ namespace Origam.Workbench.ServicesTests
         {
             throw new NotImplementedException();
         }
+
+        public bool IsOfType<T>(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
