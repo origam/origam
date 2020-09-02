@@ -19,7 +19,8 @@ export class DropdownEditorBehavior {
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusable) => () => void,
-    public tabIndex?: number
+    public tabIndex?: number,
+    private onKeyDown?: (event: any)=> void
   ) {
   }
 
@@ -166,6 +167,7 @@ export class DropdownEditorBehavior {
         }
         break;
     }
+    this.onKeyDown && this.onKeyDown(event);
   }
 
   handleInputChangeDeb = _.debounce(this.handleInputChangeImm, 300);

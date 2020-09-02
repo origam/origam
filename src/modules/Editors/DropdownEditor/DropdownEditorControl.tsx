@@ -18,6 +18,7 @@ export function DropdownEditorControl() {
           {/*</button>*/}
           <button className={"inputBtn lastOne"}
                   disabled={beh.isReadOnly}
+                  tabIndex={-1}
                   onClick={beh.handleInputBtnClick}>
             {!beh.isWorking ? (
               <i className="fas fa-caret-down"></i>
