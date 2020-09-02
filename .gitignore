@@ -34,3 +34,4 @@ src/.ionide/symbolCache.db
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
 /.idea/codeStyles/codeStyleConfig.xml
+/src/debug.http

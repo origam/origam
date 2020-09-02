@@ -328,6 +328,12 @@ export class OrigamAPI implements IApi {
     ).data;
   }
 
+  async defaultCulture(): Promise<any> {
+    return (
+      await this.axiosInstance.get("/UIService/DefaultCulture")
+    ).data;
+  }
+
   async initPortal(): Promise<any> {
     const data = (await this.axiosInstance.get("/UIService/InitPortal")).data;
 

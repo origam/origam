@@ -75,7 +75,7 @@ async function main() {
     });
     flow(application.run.bind(application))();
 
-    await translationsInit();
+    await translationsInit(application);
 
     ReactDOM.render(<Root application={application} />, document.getElementById("root"));
   } else {
