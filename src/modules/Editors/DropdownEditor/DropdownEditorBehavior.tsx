@@ -277,6 +277,7 @@ export class DropdownEditorBehavior {
         self.isWorking = true;
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
+        items.sort(compareLookupItems);
         switch (setup.dropdownType) {
           case EagerlyLoadedGrid: {
             self.dataTable.setData(items);
@@ -320,6 +321,16 @@ export class DropdownEditorBehavior {
   elmInputElement: any;
   refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
   elmDropdownBody: any;
+}
+
+function compareLookupItems( a: any[], b: any[] ) {
+  if ( a[1] < b[1] ){
+    return -1;
+  }
+  if ( a[1] > b[1] ){
+    return 1;
+  }
+  return 0;
 }
 
 export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
