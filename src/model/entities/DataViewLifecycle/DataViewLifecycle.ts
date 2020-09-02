@@ -97,11 +97,13 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     ));
   }
 
-  async runRecordChangedReaction(action: ()=>Generator){
+  async runRecordChangedReaction(action?: ()=>Generator){
     let wasRunning = false;
     try {
       wasRunning = this.stopSelectedRowReaction();
-      await flow(action)();
+      if(action){
+        await flow(action)();
+      }
     } finally {
       if(wasRunning){
         await this.startSelectedRowReaction(true);
