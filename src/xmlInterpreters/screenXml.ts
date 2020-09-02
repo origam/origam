@@ -289,6 +289,7 @@ export function interpretScreenXml(
             allowReturnToForm: property.attributes.AllowReturnToForm === "true",
             isTree: property.attributes.IsTree === "true",
             isAggregatedColumn: property.attributes.Aggregated || false,
+            isLookupColumn: property.attributes.IsLookupColumn || false,
             style: cssString2Object(property.attributes.Style),
           });
         }
@@ -420,11 +421,14 @@ export function interpretScreenXml(
               );
             }
           } else if (column.attributes.groupingField) {
-            dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
-              column.attributes.groupingField,
-              groupingColumnCounter
-            );
-            groupingColumnCounter++;
+            const property = properties.find(prop => prop.id === column.attributes.groupingField);
+            if(!property?.isLookupColumn){
+              dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
+                column.attributes.groupingField,
+                groupingColumnCounter
+              );
+              groupingColumnCounter++;
+            }
           }
         });
         dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds
