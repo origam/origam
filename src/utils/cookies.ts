@@ -1,8 +1,8 @@
 import { getApi } from "model/selectors/getApi";
 
 function getCookie(name: string): string {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
+  const value = "; " + document.cookie;
+  const parts = value.split("; " + name + "=");
 
   if(parts.length === 2){
     const cookieValue = parts.pop()!.split(";").shift()
@@ -30,5 +30,5 @@ export async function initLocaleCookie(ctx: any) {
   const expires = "; expires=" + expireDate.toUTCString();
   const cultureInfo = "c=" + defaultCultureInfo.culture
     + "|uic=" + defaultCultureInfo.uiCulture;
-  document.cookie = "origamCurrentLocale=" + cultureInfo + expires + "; Path=/"
+  document.cookie = "origamCurrentLocale=" + cultureInfo + expires + "; Path=/";
 }
