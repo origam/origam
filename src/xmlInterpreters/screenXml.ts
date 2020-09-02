@@ -312,6 +312,7 @@ export function interpretScreenXml(
             mode: action.attributes.Mode,
             isDefault: action.attributes.IsDefault === "true",
             placement: action.attributes.Placement,
+            confirmationMessage: action.attributes.ConfirmationMessage,
             parameters: findParameters(action).map(
               (parameter) =>
                 new ActionParameter({

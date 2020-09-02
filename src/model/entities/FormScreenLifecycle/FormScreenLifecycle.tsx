@@ -45,7 +45,8 @@ import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLook
 import _ from "lodash";
 import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
 import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
-import {selectFirstRow} from "../../actions/DataView/selectFirstRow";
+import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
+import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -107,7 +108,32 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     action: IAction,
     selectedItems: string[]
   ): Generator<any, any, any> {
+    if(action.confirmationMessage && !(yield this.askYesNoQuestion(action.confirmationMessage))){
+      return;
+    }
     yield* this.executeAction(gridId, entity, action, selectedItems);
+  }
+
+  askYesNoQuestion(question: string) {
+    return new Promise(
+      action((resolve: (value: boolean) => void) => {
+        const closeDialog = getDialogStack(this).pushDialog(
+          "",
+          <YesNoQuestion
+            screenTitle={getOpenedScreen(this).title}
+            message={question}
+            onYesClick={() => {
+              closeDialog();
+              resolve(true);
+            }}
+            onNoClick={() => {
+              closeDialog();
+              resolve(false);
+            }}
+          />
+        );
+      })
+    );
   }
 
   *onRequestDeleteRow(entity: string, rowId: string) {
