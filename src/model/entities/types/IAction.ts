@@ -32,13 +32,12 @@ export interface IActionData {
   mode: IActionMode;
   isDefault: boolean;
   parameters: IActionParameter[];
+  confirmationMessage?: string;
 }
 
 export interface IAction extends IActionData {
   $type_IAction: 1;
-
   isEnabled: boolean;
-
   parent?: any;
 }
 
