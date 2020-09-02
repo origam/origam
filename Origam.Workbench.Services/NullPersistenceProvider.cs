@@ -158,5 +158,10 @@ namespace Origam.Workbench.Services
         {
             return new ArrayList();
         }
+
+        public bool IsOfType<T>(Guid id)
+        {
+            return false;
+        }
     }
 }
