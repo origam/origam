@@ -1,4 +1,5 @@
 {
+    "PathToClientApp": "clients/origam"
     "UserConfig": {
         "FromAddress": "admin@localhost",
         "NewUserRoleId": "",

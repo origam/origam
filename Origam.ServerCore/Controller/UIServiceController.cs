@@ -44,7 +44,9 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using IdentityServer4;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 using Origam.Schema;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
@@ -60,13 +62,18 @@ namespace Origam.ServerCore.Controller
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataLookupService lookupService;
         private readonly IDataService dataService;
+        private readonly IOptions<RequestLocalizationOptions> 
+            localizationOptions;
 
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log, sessionObjects)
+            ILogger<AbstractController> log,
+            IOptions<RequestLocalizationOptions> localizationOptions) 
+            : base(log, sessionObjects)
         {
             this.localizer = localizer;
+            this.localizationOptions = localizationOptions;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
@@ -79,6 +86,11 @@ namespace Origam.ServerCore.Controller
             Analytics.Instance.Log("UI_INIT");
             return RunWithErrorHandler(() 
                 => Ok(sessionObjects.UIService.InitPortal(4)));
+        }
+        [HttpGet("[action]")]
+        public IActionResult DefaultCulture()
+        {
+            return Ok(localizationOptions.Value.DefaultRequestCulture);
         }
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
