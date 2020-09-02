@@ -25,8 +25,8 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         groupingIndex: groupingConf.groupingIndices.get(prop.id) || 0,
         aggregationType: this.tablePanelView.aggregations.getType(prop.id)!,
         entity: prop.entity,
-        canGroup: groupingOnClient || !prop.isAggregatedColumn,
-        canAggregate: groupingOnClient || !prop.isAggregatedColumn,
+        canGroup: groupingOnClient || (!prop.isAggregatedColumn && !prop.isLookupColumn),
+        canAggregate: groupingOnClient || (!prop.isAggregatedColumn && !prop.isLookupColumn),
       });
     }
     return conf;

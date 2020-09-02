@@ -48,6 +48,7 @@ export class Property implements IProperty {
   lookupId?: string;
   lookupEngine?: ILookupIndividualEngine = null as any;
   isAggregatedColumn: boolean = false;
+  isLookupColumn: boolean = false;
   style: any;
 
   linkToMenuId?: string = undefined;

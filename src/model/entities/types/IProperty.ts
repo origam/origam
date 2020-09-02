@@ -31,6 +31,7 @@ export interface IPropertyData {
   formatterPattern: string;
   customNumericFormat?: string;
   isAggregatedColumn: boolean;
+  isLookupColumn: boolean;
 
   parameters?: any;
   allowReturnToForm?: boolean;
