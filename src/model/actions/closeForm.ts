@@ -6,12 +6,14 @@ import {ICRUDResult, processCRUDResult} from "./DataLoading/processCRUDResult";
 import {getDontRequestData} from "model/selectors/getDontRequestData";
 import {getDataViewLifecycle} from "model/selectors/DataView/getDataViewLifecycle";
 import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
+import {onRefreshSessionClick} from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
 
 export function closeForm(ctx: any) {
   return function* closeForm(): Generator {
     const lifecycle = getWorkbenchLifecycle(ctx);
     const openedScreen = getOpenedScreen(ctx);
     const parentScreen = getOpenedScreen(openedScreen.parentContext);
+    const parentFormScreen = getFormScreen(openedScreen.parentContext);
 
     yield* lifecycle.closeForm(openedScreen);
     if(openedScreen.content){
@@ -21,13 +23,13 @@ export function closeForm(ctx: any) {
           if (getDontRequestData(ctx)) {
             break;
           }
-          const formScreen = getFormScreen(openedScreen.parentContext);
-          for (let dataView of formScreen.dataViews) {
+          for (let dataView of parentFormScreen.dataViews) {
             const dataViewLifecycle = getDataViewLifecycle(dataView);
             yield dataViewLifecycle.runRecordChangedReaction();
           }
           break;
         case IRefreshOnReturnType.RefreshCompleteForm:
+          onRefreshSessionClick(parentFormScreen)
           break;
         case IRefreshOnReturnType.MergeModalDialogChanges:
           const api = getApi(ctx);
