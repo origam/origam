@@ -24,7 +24,7 @@
   
   &:global(.isVisible) {
     min-height: 30px;
-    max-height: unset;
+    max-height: 30px;
     border-bottom: 1px solid #dddddd;
   }
 
