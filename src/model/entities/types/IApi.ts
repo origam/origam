@@ -126,7 +126,10 @@ export interface IApi {
     PageNumber: number;
   }): Promise<any>;
 
+  defaultCulture(): Promise<any>;
+
   initPortal(): Promise<any>;
+
   initUI(data: {
     Type: string;
     FormSessionId: string | undefined;
