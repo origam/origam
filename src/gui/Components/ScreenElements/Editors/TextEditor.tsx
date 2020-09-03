@@ -114,6 +114,7 @@ export class TextEditor extends React.Component<{
             dangerouslySetInnerHTML={{__html: this.props.value ?? ""}}
             onKeyDown={this.props.onKeyDown}
             onClick={this.props.onClick}
+            onDoubleClick={this.props.onDoubleClick}
             onBlur={this.props.onEditorBlur}
             onFocus={this.handleFocus}
             tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
@@ -154,6 +155,7 @@ export class TextEditor extends React.Component<{
           this.props.onChange && this.props.onChange(event, event.target.value)
         }
         onKeyDown={this.props.onKeyDown}
+        onDoubleClick={this.props.onDoubleClick}
         onClick={this.props.onClick}
         onBlur={this.props.onEditorBlur}
         onFocus={this.handleFocus}
