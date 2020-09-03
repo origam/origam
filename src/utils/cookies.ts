@@ -20,7 +20,7 @@ export function getLocaleFromCookie(): string {
 
 export async function initLocaleCookie(ctx: any) {
   const cookieValue = unescape(getCookie("origamCurrentLocale"));
-  if (cookieValue !== undefined && cookieValue !== "") {
+  if (cookieValue) {
     return;
   }
   const api = getApi(ctx);
