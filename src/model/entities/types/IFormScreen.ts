@@ -93,6 +93,7 @@ export interface IFormScreenData {
   menuId: string;
   dynamicTitleSource: string | undefined;
   openingOrder: number;
+  autoWorkflowNext: boolean;
   showInfoPanel: boolean;
   showWorkflowCancelButton: boolean;
   showWorkflowNextButton: boolean;

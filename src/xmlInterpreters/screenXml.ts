@@ -187,6 +187,7 @@ export function interpretScreenXml(
     menuId: windowXml.attributes.MenuId,
     dynamicTitleSource: screenDoc.elements[0].attributes.DynamicFormLabelSource,
     sessionId,
+    autoWorkflowNext: screenDoc.elements[0].attributes.AutoWorkflowNext === "true",
     openingOrder: 0,
     suppressSave: windowXml.attributes.SuppressSave === "true",
     showInfoPanel: windowXml.attributes.ShowInfoPanel === "true",

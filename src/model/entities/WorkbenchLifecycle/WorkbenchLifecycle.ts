@@ -1,27 +1,28 @@
 import bind from "bind-decorator";
-import {reloadScreen} from "model/actions/FormScreen/reloadScreen";
-import {handleError} from "model/actions/handleError";
-import {createFormScreenEnvelope} from "model/factories/createFormScreenEnvelope";
-import {createOpenedScreen} from "model/factories/createOpenedScreen";
-import {getIsFormScreenDirty} from "model/selectors/FormScreen/getisFormScreenDirty";
-import {getApi} from "model/selectors/getApi";
-import {getClientFulltextSearch} from "model/selectors/getClientFulltextSearch";
-import {getOpenedScreens} from "model/selectors/getOpenedScreens";
-import {getMainMenuEnvelope} from "model/selectors/MainMenu/getMainMenuEnvelope";
-import {getMainMenuItemById} from "model/selectors/MainMenu/getMainMenuItemById";
-import {getWorkQueues} from "model/selectors/WorkQueues/getWorkQueues";
-import {findMenu} from "xmlInterpreters/menuXml";
-import {MainMenuContent} from "../MainMenu";
-import {DialogInfo} from "../OpenedScreen";
-import {IMainMenuItemType} from "../types/IMainMenu";
-import {IDialogInfo, IOpenedScreen} from "../types/IOpenedScreen";
-import {IWorkbenchLifecycle} from "../types/IWorkbenchLifecycle";
-import {WebScreen} from "../WebScreen";
-import {getSessionId} from "model/selectors/getSessionId";
-import {scopeFor} from "dic/Container";
-import {assignIIds} from "xmlInterpreters/xmlUtils";
-import {DEBUG_CLOSE_ALL_FORMS} from "utils/debugHelpers";
-import {getOpenedScreen} from "../../selectors/getOpenedScreen";
+import { reloadScreen } from "model/actions/FormScreen/reloadScreen";
+import { handleError } from "model/actions/handleError";
+import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelope";
+import { createOpenedScreen } from "model/factories/createOpenedScreen";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { getApi } from "model/selectors/getApi";
+import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
+import { getMainMenuEnvelope } from "model/selectors/MainMenu/getMainMenuEnvelope";
+import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
+import { getWorkQueues } from "model/selectors/WorkQueues/getWorkQueues";
+import { findMenu } from "xmlInterpreters/menuXml";
+import { MainMenuContent } from "../MainMenu";
+import { DialogInfo } from "../OpenedScreen";
+import { IMainMenuItemType } from "../types/IMainMenu";
+import { IDialogInfo, IOpenedScreen } from "../types/IOpenedScreen";
+import { IWorkbenchLifecycle } from "../types/IWorkbenchLifecycle";
+import { WebScreen } from "../WebScreen";
+import { getSessionId } from "model/selectors/getSessionId";
+import { scopeFor } from "dic/Container";
+import { assignIIds } from "xmlInterpreters/xmlUtils";
+import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
+import { getOpenedScreen } from "../../selectors/getOpenedScreen";
+import {onWorkflowNextClick} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -241,6 +242,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, additionalRequestParameters);
 
       yield* newFormScreen.start(initUIResult);
+      const formScreen = newScreen.content.formScreen;
+      if (formScreen?.autoWorkflowNext) {
+        onWorkflowNextClick(formScreen!)(undefined);
+      }
+      debugger;
     } catch (e) {
       yield* handleError(this)(e);
       yield* this.closeForm(newScreen);
