@@ -12,12 +12,12 @@ export function closeForm(ctx: any) {
   return function* closeForm(): Generator {
     const lifecycle = getWorkbenchLifecycle(ctx);
     const openedScreen = getOpenedScreen(ctx);
-    const parentScreen = getOpenedScreen(openedScreen.parentContext);
-    const parentFormScreen = getFormScreen(openedScreen.parentContext);
 
     yield* lifecycle.closeForm(openedScreen);
-    if(openedScreen.content){
+    if(openedScreen.content?.refreshOnReturnType){
       const refreshOnReturnType = openedScreen.content.refreshOnReturnType;
+      const parentScreen = getOpenedScreen(openedScreen.parentContext);
+      const parentFormScreen = getFormScreen(openedScreen.parentContext);
       switch(refreshOnReturnType){
         case IRefreshOnReturnType.ReloadActualRecord:
           if (getDontRequestData(ctx)) {
