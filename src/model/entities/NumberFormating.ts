@@ -34,10 +34,14 @@ function getSeparator(separatorType: string) {
 
 export function formatNumber(customNumericFormat: string | undefined, dataType: string, value: number){
   const locale = getLocaleFromCookie();
-  if(dataType === "Currency" && !customNumericFormat){
-    return formatNumberWithLocale("#.00", value, locale);
+  if(customNumericFormat){
+    return formatNumberWithLocale(customNumericFormat, value, locale);
   }
-  return formatNumberWithLocale(customNumericFormat, value, locale);
+  if(dataType === "Currency" || dataType === "Float"){
+    return formatNumberWithLocale("### ###.00", value, locale);
+  }else{
+    return formatNumberWithLocale("### ###", value, locale);
+  }
 }
 
 class CustomNumericFormat{
