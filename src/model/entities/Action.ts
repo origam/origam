@@ -10,6 +10,7 @@ import {
   IActionType,
 } from "./types/IAction";
 import { IActionParameter } from "./types/IActionParameter";
+import {getIsAnySelected} from "model/selectors-tree/selectionCheckboxes";
 
 export class Action implements IAction {
   $type_IAction: 1 = 1;
@@ -46,8 +47,7 @@ export class Action implements IAction {
         return !!selectedRow;
       }
       case IActionMode.MultipleCheckboxes: {
-        // TODO: Multiple checkboxes case
-        return true; // selectors.selectionCheckboxes.getIsAnySelected(this);
+        return getIsAnySelected(this);
       }
     }
   }
