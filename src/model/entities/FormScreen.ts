@@ -48,6 +48,7 @@ export class FormScreen implements IFormScreen {
   panelConfigurations: Map<string, IPanelConfiguration> = new Map();
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
+  autoWorkflowNext: boolean = null as any;
 
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
