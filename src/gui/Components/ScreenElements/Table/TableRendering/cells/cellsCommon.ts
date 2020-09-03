@@ -35,4 +35,5 @@ export const topTextOffset = 17;
 export const fontSize = 12;
 export const checkSymbolFontSize = 15;
 export const checkBoxCellPaddingLeft = 3;
+export const checkBoxCharacterFontSize = 14;
 export const rowHeight = 20;
