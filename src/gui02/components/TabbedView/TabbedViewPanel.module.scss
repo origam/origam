@@ -17,7 +17,7 @@
   //display: none;
   display: flex;
   flex-direction: column;
-  transform: translate(100%, 100%);
+  transform: translate(-0.01%, -0.01%) scaleX(0.0);
   &:global(.isActive) {
     //display: flex;
     transform: unset;
