@@ -246,7 +246,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (formScreen?.autoWorkflowNext) {
         onWorkflowNextClick(formScreen!)(undefined);
       }
-      debugger;
     } catch (e) {
       yield* handleError(this)(e);
       yield* this.closeForm(newScreen);
