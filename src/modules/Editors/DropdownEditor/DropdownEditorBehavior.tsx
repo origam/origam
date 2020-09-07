@@ -111,22 +111,16 @@ export class DropdownEditorBehavior {
     ) {
       this.data.chooseNewValue(this.cursorRowId);
     }
-    this.flipDroppedStateDebounced();
+    this.dropUp();
   }
 
   @action.bound
   handleInputBtnClick(event: any) {
-    this.flipDroppedStateDebounced();
-  }
-
-  flipDroppedStateDebounced = _.debounce(() => { this.flipDroppedState() }, 100);
-
-  private flipDroppedState() {
-      if (!this.isDropped) {
-        this.dropDown();
-      } else {
-        this.dropUp();
-      }
+    if (!this.isDropped) {
+      this.dropDown();
+    } else {
+      this.dropUp();
+    }
   }
 
   @action.bound
@@ -208,7 +202,10 @@ export class DropdownEditorBehavior {
 
   @action.bound
   handleControlMouseDown(event: any) {
-    if (this.isDropped) event.stopPropagation();
+    if (this.isDropped) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
   }
 
   @action.bound
