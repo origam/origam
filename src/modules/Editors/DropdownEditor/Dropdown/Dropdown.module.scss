@@ -19,6 +19,12 @@
       margin-right: -1px;
       z-index: 100;
     }
+    &:read-only {
+      cursor: not-allowed;
+      background: #e9e8f0;
+      border: 1px solid #e9e8f0;
+      color: #3e3d45;
+    }
   }
 
   :global(.inputBtn) {
@@ -33,7 +39,13 @@
       border: 1px solid #b0afb7;
       border-radius: 0 2px 2px 0;
     }
-    
+    &:global(.readOnly) {
+      cursor: not-allowed;
+      background: #e9e8f0;
+      border: 1px solid #e9e8f0;
+      color: #3e3d45;
+    }
+
     &:focus {
       background-color: #fff;
       border: 1px solid #4c84ff;
@@ -50,5 +62,5 @@
   border: 1px solid #b0afb7;
   background-color: #f9f9fc;
   border-radius: 2px;
-  box-shadow: 1px 2px 5px 1px rgba(0,0,0,0.1) ;
+  box-shadow: 1px 2px 5px 1px rgba(0, 0, 0, 0.1);
 }
