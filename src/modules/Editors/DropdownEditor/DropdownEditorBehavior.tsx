@@ -130,6 +130,13 @@ export class DropdownEditorBehavior {
           this.dropUp();
         }
         break;
+      case "Tab":
+        if (this.isDropped) {
+          if (this.cursorRowId) {
+            this.data.chooseNewValue(this.cursorRowId);
+          }
+        }
+        break;
       case "Delete":
         event.preventDefault();
         event.stopPropagation();
@@ -138,27 +145,34 @@ export class DropdownEditorBehavior {
         this.data.chooseNewValue(null);
         break;
       case "ArrowUp":
-        if (this.isDropped && this.cursorRowId) {
+        if (this.isDropped) {
           event.preventDefault();
-          const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
-          if (prevRowId) {
-            this.cursorRowId = prevRowId;
+          if (!this.cursorRowId) {
+            this.trySelectFirstRow();
+          } else {
+            const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
+            if (prevRowId) {
+              this.cursorRowId = prevRowId;
+            }
           }
           this.scrollToCursoredRowIfNeeded();
         }
         break;
       case "ArrowDown":
-        if (this.isDropped && this.cursorRowId) {
+        if (this.isDropped) {
           event.preventDefault();
-          if (this.cursorRowId) {
+          if (!this.cursorRowId) {
+            this.trySelectFirstRow();
+          } else {
             const nextRowId = this.dataTable.getRowIdAfterId(this.cursorRowId);
             if (nextRowId) {
               this.cursorRowId = nextRowId;
             }
           }
           this.scrollToCursoredRowIfNeeded();
-        } else {
+        } else if (event.ctrlKey) {
           this.dropDown();
+          this.trySelectFirstRow();
         }
         break;
     }
@@ -221,6 +235,9 @@ export class DropdownEditorBehavior {
 
   @action.bound
   handleWindowMouseDown(event: any) {
+    if (this.userEnteredValue === "") {
+      this.data.chooseNewValue(null);
+    }
     if (this.isDropped) {
       this.dropUp();
     }
