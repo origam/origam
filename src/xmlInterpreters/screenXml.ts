@@ -326,9 +326,9 @@ export function interpretScreenXml(
       );
       const defaultOrderings = panelConfigurations.get(dataView.attributes.ModelInstanceId)
         ?.defaultOrdering;
-      if(defaultOrderings){
-        for(let ordering of defaultOrderings){
-          ordering.lookupId = properties.find(prop => prop.id === ordering.columnId)?.lookupId;
+      if (defaultOrderings) {
+        for (let ordering of defaultOrderings) {
+          ordering.lookupId = properties.find((prop) => prop.id === ordering.columnId)?.lookupId;
         }
       }
 
@@ -423,8 +423,8 @@ export function interpretScreenXml(
               );
             }
           } else if (column.attributes.groupingField) {
-            const property = properties.find(prop => prop.id === column.attributes.groupingField);
-            if(!property?.isLookupColumn){
+            const property = properties.find((prop) => prop.id === column.attributes.groupingField);
+            if (!property?.isLookupColumn) {
               dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
                 column.attributes.groupingField,
                 groupingColumnCounter
@@ -448,7 +448,7 @@ export function interpretScreenXml(
           (n) => n.name === "view" && n.parent.name === "defaultView"
         );
         defaultView.forEach((element) => {
-          if (element.attributes.id.length <= 2) {
+          if (!dataViewInstance.isHeadless && element.attributes.id.length <= 2) {
             dataViewInstance.activePanelView = element.attributes.id;
           }
         });
