@@ -133,6 +133,13 @@ export class DropdownEditorBehavior {
           this.dropUp();
         }
         break;
+      case "Delete":
+        event.preventDefault();
+        event.stopPropagation();
+        this.userEnteredValue = undefined;
+        this.cursorRowId = "";
+        this.data.chooseNewValue(null);
+        break;
       case "ArrowUp":
         if (this.isDropped && this.cursorRowId) {
           event.preventDefault();
