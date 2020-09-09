@@ -70,11 +70,11 @@ export class ServerSideGrouper implements IGrouper {
   composeGroupingFilter(rowGroup: IGroupTreeNode) {
     const parents = this.getAllParents(rowGroup);
     if(parents.length === 0){
-      return toFilterItem(rowGroup.columnId, "eq" ,rowGroup.columnValue)
+      return toFilterItem(rowGroup.columnId, null, "eq" ,rowGroup.columnValue)
     }else{
       const andOperands = parents
           .concat([rowGroup])
-          .map(row => toFilterItem(row.columnId, "eq", row.columnValue))
+          .map(row => toFilterItem(row.columnId, null, "eq", row.columnValue))
       return joinWithAND(andOperands);
     }
   }

@@ -37,7 +37,7 @@ function valuesToRightHandSide(val1?: any, val2?: any) {
 }
 
 export function toFilterItem(
-    columnId: string, dataType: string,
+    columnId: string, dataType: string | null,
     operator: string, val1?: any, val2?: any) {
   if (
       dataType === "Date"
