@@ -26,7 +26,6 @@ export const CheckBox: React.FC<{
   const [isChecked, setIsChecked] = useState<boolean>(props.checked);
 
   const label = props.property!.name;
-  const captionLength = props.property!.captionLength;
   const height = props.property!.height;
   const width = props.property!.width;
   const left = props.property!.x;
@@ -40,8 +39,7 @@ export const CheckBox: React.FC<{
     }
     return {
       top: top,
-      left: left + height,
-      width: captionLength,
+      left: left + height
     };
   }
 

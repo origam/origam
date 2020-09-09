@@ -67,15 +67,12 @@ export class FormField extends React.Component<{
           top: this.props.top,
           left: this.props.isCheckbox
             ? this.props.left + this.props.height
-            : this.props.left + this.props.width,
-          width: this.props.captionLength
-          //  height: this.props.height
+            : this.props.left + this.props.width
         };
       case ICaptionPosition.Top:
         return {
           top: this.props.top - 20, // TODO: Move this constant somewhere else...
-          left: this.props.left,
-          width: this.props.captionLength
+          left: this.props.left
         };
     }
   }
