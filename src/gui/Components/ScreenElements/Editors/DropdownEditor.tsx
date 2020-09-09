@@ -1,25 +1,25 @@
 import * as React from "react";
-import {inject, Observer, observer} from "mobx-react";
-import {action, computed, observable, runInAction} from "mobx";
+import { inject, Observer, observer } from "mobx-react";
+import { action, computed, observable, runInAction } from "mobx";
 import S from "./DropdownEditor.module.scss";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
 import cx from "classnames";
 
 import _ from "lodash";
-import {AutoSizer, MultiGrid} from "react-virtualized";
+import { AutoSizer, MultiGrid } from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import {IApi} from "../../../../model/entities/types/IApi";
-import {getApi} from "../../../../model/selectors/getApi";
-import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
-import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
-import {IProperty} from "../../../../model/entities/types/IProperty";
-import {getSelectedRowId} from "../../../../model/selectors/TablePanelView/getSelectedRowId";
-import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
-import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import {getEntity} from "../../../../model/selectors/DataView/getEntity";
-import {getSessionId} from "model/selectors/getSessionId";
-import {IFocusable} from "../../../../model/entities/FocusManager";
-import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import { IApi } from "../../../../model/entities/types/IApi";
+import { getApi } from "../../../../model/selectors/getApi";
+import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
+import { getDataStructureEntityId } from "../../../../model/selectors/DataView/getDataStructureEntityId";
+import { IProperty } from "../../../../model/entities/types/IProperty";
+import { getSelectedRowId } from "../../../../model/selectors/TablePanelView/getSelectedRowId";
+import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { getEntity } from "../../../../model/selectors/DataView/getEntity";
+import { getSessionId } from "model/selectors/getSessionId";
+import { IFocusable } from "../../../../model/entities/FocusManager";
+import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 export interface IDropdownEditorProps {
   value: string | null;
@@ -41,7 +41,7 @@ export interface IDropdownEditorProps {
   LookupId?: string;
   Parameters?: { [key: string]: any };
   menuItemId?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => () => void;
 
   refocuser?: (cb: () => void) => () => void;
   onTextChange?(event: any, value: string): void;
@@ -61,7 +61,7 @@ export interface IDropdownEditorProps {
     api: getApi(property),
     textualValue: dataTable.resolveCellText(property, value),
     DataStructureEntityId: getDataStructureEntityId(property),
-    ColumnNames: lookup.dropDownColumns.map(column => column.id),
+    ColumnNames: lookup.dropDownColumns.map((column) => column.id),
     Property: property.id,
     Parameters: lookup.parameters,
     RowId: getSelectedRowId(property),
@@ -69,7 +69,7 @@ export interface IDropdownEditorProps {
     LookupId: lookup.lookupId,
     menuItemId: getMenuItemId(property),
     Entity: getEntity(property),
-    SessionFormIdentifier: getSessionId(property)
+    SessionFormIdentifier: getSessionId(property),
   };
 })
 @observer
@@ -92,18 +92,17 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   componentDidMount() {
     runInAction(() => {
       this.initialTextValue = this.props.textualValue || "";
-      this.props.refocuser &&
-        this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+      this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
       this.makeFocusedIfNeeded();
       this.selectedItemId = this.props.value || undefined;
     });
-    if(this.elmInput && this.props.subscribeToFocusManager){
+    if (this.elmInput && this.props.subscribeToFocusManager) {
       this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
     }
   }
 
   componentWillUnmount() {
-    this.disposers.forEach(d => d());
+    this.disposers.forEach((d) => d());
     this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
@@ -133,26 +132,18 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
 
   @action.bound
   makeFocusedIfNeeded() {
-    if (this.props.isFocused) {
-      console.log("--- MAKE FOCUSED ---");
-      this.elmInput && this.elmInput.focus();
-      setTimeout(() => {
-        if (this.elmInput) {
-          this.elmInput.select();
-          this.elmInput.scrollLeft = 0;
-        }
-      }, 10);
+    if (this.props.isFocused && this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
     }
   }
 
   @action.bound
   handleFocus(event: any) {
-    setTimeout(() => {
-      if (this.elmInput) {
-        this.elmInput.select();
-        this.elmInput.scrollLeft = 0;
-      }
-    }, 10);
+    if (this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
+    }
   }
 
   elmInput: HTMLInputElement | null = null;
@@ -203,10 +194,9 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         Parameters: this.props.Parameters!,
         MenuId: this.props.menuItemId!,
         ShowUniqueValues: false,
-        SearchText:
-          this.dirtyTextualValue !== undefined ? this.dirtyTextualValue : "",
+        SearchText: this.dirtyTextualValue !== undefined ? this.dirtyTextualValue : "",
         PageSize: 10000,
-        PageNumber: 1
+        PageNumber: 1,
       })
       .then(
         action((lookupItems: any) => {
@@ -228,14 +218,12 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   }
 
   @computed get value() {
-    return this.dirtyTextualValue !== undefined
-      ? this.dirtyTextualValue
-      : this.props.textualValue;
+    return this.dirtyTextualValue !== undefined ? this.dirtyTextualValue : this.props.textualValue;
   }
 
   @action.bound handleContainerMouseDown(event: any) {
     event.preventDefault();
-    this.elmInput && this.elmInput.focus();
+    this.elmInput?.focus();
   }
 
   @action.bound handleInputBlur(event: any) {
@@ -248,21 +236,13 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
-  cellRenderer = (args: {
-    rowIndex: number;
-    columnIndex: number;
-    key: string;
-    style: any;
-  }) => {
+  cellRenderer = (args: { rowIndex: number; columnIndex: number; key: string; style: any }) => {
     const handleClick = action((event: any) => {
       // this.dirtyTextualValue = this.lookupItems[args.rowIndex - 1][1];
       if (args.rowIndex > 0) {
         this.dirtyTextualValue = undefined;
         this.props.onItemSelect &&
-          this.props.onItemSelect(
-            event,
-            this.lookupItems[args.rowIndex - 1][0]
-          );
+          this.props.onItemSelect(event, this.lookupItems[args.rowIndex - 1][0]);
         this.makeFocusedIfNeeded();
         this.elmDropdowner && this.elmDropdowner.setDropped(false);
       }
@@ -273,18 +253,14 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
           <div
             style={args.style}
             className={cx(
-              args.rowIndex === 0
-                ? S.lookupListHeaderCell
-                : S.lookupListItemCell,
+              args.rowIndex === 0 ? S.lookupListHeaderCell : S.lookupListItemCell,
               args.rowIndex % 2 === 0 ? S.evenItem : S.oddItem,
               {
                 selected:
                   args.rowIndex > 0 &&
-                  this.lookupItems[args.rowIndex - 1][0] ===
-                    this.selectedItemId,
+                  this.lookupItems[args.rowIndex - 1][0] === this.selectedItemId,
                 choosen:
-                  args.rowIndex > 0 &&
-                  this.lookupItems[args.rowIndex - 1][0] === this.props.value
+                  args.rowIndex > 0 && this.lookupItems[args.rowIndex - 1][0] === this.props.value,
               }
             )}
             onClick={handleClick}
@@ -293,12 +269,8 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
               this.props.ColumnNames![args.columnIndex]
             ) : (
               <Highlighter
-                textToHighlight={
-                  this.lookupItems[args.rowIndex - 1][args.columnIndex + 1]
-                }
-                searchWords={
-                  [this.dirtyTextualValue].filter(item => item) as string[]
-                }
+                textToHighlight={this.lookupItems[args.rowIndex - 1][args.columnIndex + 1]}
+                searchWords={[this.dirtyTextualValue].filter((item) => item) as string[]}
                 autoEscape={true}
               />
             )}
@@ -315,29 +287,21 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
   }
 
   findNextId() {
-    const idx = this.lookupItems.findIndex(
-      item => item[0] === this.selectedItemId
-    );
-    const newIndex =
-      idx > -1 ? Math.min(idx + 1, this.lookupItems.length - 1) : undefined;
-    const newId =
-      newIndex !== undefined ? this.lookupItems[newIndex][0] : undefined;
+    const idx = this.lookupItems.findIndex((item) => item[0] === this.selectedItemId);
+    const newIndex = idx > -1 ? Math.min(idx + 1, this.lookupItems.length - 1) : undefined;
+    const newId = newIndex !== undefined ? this.lookupItems[newIndex][0] : undefined;
     return newId;
   }
 
   findPrevId() {
-    const idx = this.lookupItems.findIndex(
-      item => item[0] === this.selectedItemId
-    );
+    const idx = this.lookupItems.findIndex((item) => item[0] === this.selectedItemId);
     const newIndex = idx > -1 ? Math.max(idx - 1, 0) : undefined;
-    const newId =
-      newIndex !== undefined ? this.lookupItems[newIndex][0] : undefined;
+    const newId = newIndex !== undefined ? this.lookupItems[newIndex][0] : undefined;
     return newId;
   }
 
   findFirstId() {
-    const newId =
-      this.lookupItems.length > 0 ? this.lookupItems[0][0] : undefined;
+    const newId = this.lookupItems.length > 0 ? this.lookupItems[0][0] : undefined;
     return newId;
   }
 
@@ -367,8 +331,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
         case "Tab":
           if (this.selectedItemId) {
             this.dirtyTextualValue = undefined;
-            this.props.onItemSelect &&
-              this.props.onItemSelect(event, this.selectedItemId);
+            this.props.onItemSelect && this.props.onItemSelect(event, this.selectedItemId);
             this.makeFocusedIfNeeded();
             this.elmDropdowner && this.elmDropdowner.setDropped(false);
             break;
@@ -403,13 +366,13 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             className={S.editorContainer}
             ref={refTrigger}
             style={{
-              zIndex: this.isDroppedDown ? 1000 : undefined
+              zIndex: this.isDroppedDown ? 1000 : undefined,
             }}
           >
             <input
               style={{
                 color: this.props.foregroundColor,
-                backgroundColor: this.props.backgroundColor
+                backgroundColor: this.props.backgroundColor,
               }}
               className={S.input}
               type="text"
@@ -430,19 +393,10 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
               </div>
             )}
             {!this.props.isReadOnly && (
-              <div
-                className={S.dropdownSymbol}
-                onClick={() => setDropped(true)}
-              >
-                {!(this.willReload || this.isLoading) && (
-                  <i className="fas fa-caret-down" />
-                )}
+              <div className={S.dropdownSymbol} onClick={() => setDropped(true)}>
+                {!(this.willReload || this.isLoading) && <i className="fas fa-caret-down" />}
                 {(this.willReload || this.isLoading) && (
-                  <i
-                    className={
-                      "fas fa-sync" + (this.isLoading ? " fa-spin" : "")
-                    }
-                  />
+                  <i className={"fas fa-sync" + (this.isLoading ? " fa-spin" : "")} />
                 )}
               </div>
             )}
@@ -453,7 +407,7 @@ export class DropdownEditor extends React.Component<IDropdownEditorProps> {
             className={S.droppedPanelContainer}
             style={{
               width: Math.min(200, 200 * this.props.ColumnNames!.length),
-              height: Math.min(300, 20 * (this.lookupItems.length + 2))
+              height: Math.min(300, 20 * (this.lookupItems.length + 2)),
             }}
           >
             <AutoSizer>

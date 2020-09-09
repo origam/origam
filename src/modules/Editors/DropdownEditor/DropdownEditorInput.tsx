@@ -1,6 +1,8 @@
 import { Observer } from "mobx-react";
-import React, {useContext, useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
+import cx from 'classnames';
+import S from './DropdownEditor.module.scss';
 
 export function DropdownEditorInput() {
   const beh = useContext(CtxDropdownEditor).behavior;
@@ -15,24 +17,24 @@ export function DropdownEditorInput() {
     beh.elmInputElement.focus();
     return () => {
       beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <Observer>
       {() => (
         <input
-          className={"input"}
+          className={cx("input", S.input)}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
           onChange={beh.handleInputChange}
-          onKeyDown={beh.handleInputKeyDown}
-          onFocus={beh.handleInputFocus}
-          onBlur={beh.handleInputBlur}
+          onKeyDown={!beh.isReadOnly ? beh.handleInputKeyDown : undefined}
+          onFocus={!beh.isReadOnly ? beh.handleInputFocus : undefined}
+          onBlur={!beh.isReadOnly ? beh.handleInputBlur : undefined}
+          onDoubleClick={!beh.isReadOnly ? beh.onDoubleClick : undefined}
           value={beh.inputValue}
           tabIndex={beh.tabIndex ? beh.tabIndex : undefined}
-          onDoubleClick={beh.onDoubleClick}
         />
       )}
     </Observer>

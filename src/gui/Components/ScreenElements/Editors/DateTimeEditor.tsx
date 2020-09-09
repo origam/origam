@@ -1,15 +1,15 @@
 import * as React from "react";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import S from "./DateTimeEditor.module.scss";
 // import CS from "./CommonStyle.module.css";
-import {action, computed, observable, runInAction} from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import moment from "moment";
-import {Tooltip} from "react-tippy";
-import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import DateCompleter from "./DateCompleter"
-import {getLocaleFromCookie} from "../../../../utils/cookies";
-import cx from 'classnames';
-import {IFocusable} from "../../../../model/entities/FocusManager";
+import { Tooltip } from "react-tippy";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import DateCompleter from "./DateCompleter";
+import { getLocaleFromCookie } from "../../../../utils/cookies";
+import cx from "classnames";
+import { IFocusable } from "../../../../model/entities/FocusManager";
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -17,9 +17,7 @@ class CalendarWidget extends React.Component<{
   selectedDay?: moment.Moment;
   onDayClick?(event: any, day: moment.Moment): void;
 }> {
-  @observable.ref displayedMonth = moment(
-    this.props.initialDisplayDate
-  ).startOf("month");
+  @observable.ref displayedMonth = moment(this.props.initialDisplayDate).startOf("month");
 
   getDayHeaders() {
     const result: any[] = [];
@@ -28,11 +26,7 @@ class CalendarWidget extends React.Component<{
       i < 7;
       day.add({ days: 1 }), i++
     ) {
-      result.push(
-        <div className={S.calendarWidgetDayHeaderCell}>
-          {day.format("dd")[0]}
-        </div>
-      );
+      result.push(<div className={S.calendarWidgetDayHeaderCell}>{day.format("dd")[0]}</div>);
     }
     return result;
   }
@@ -41,25 +35,21 @@ class CalendarWidget extends React.Component<{
     const result: any[] = [];
     const today = moment();
     for (
-      let day = moment(this.displayedMonth)
-          .startOf("week")
-          .add({ weeks: weekInc }),
-        i = 0;
+      let day = moment(this.displayedMonth).startOf("week").add({ weeks: weekInc }), i = 0;
       i < 7;
       day.add({ days: 1 }), i++
     ) {
       const isNeighbourMonth = day.month() !== this.displayedMonth.month();
       const isSelectedDay = day.isSame(this.props.selectedDay, "day");
-      const isToday = day.isSame(today, 'days');
+      const isToday = day.isSame(today, "days");
       const dayCopy = moment(day);
       result.push(
         <div
-          className={cx(
-            S.calendarWidgetCell,
-            {[S.calendarWidgetNeighbourMonthCell]: isNeighbourMonth,
-            [S.calendarWidgetSelectedDay]:isSelectedDay,
-            isToday}
-          )}
+          className={cx(S.calendarWidgetCell, {
+            [S.calendarWidgetNeighbourMonthCell]: isNeighbourMonth,
+            [S.calendarWidgetSelectedDay]: isSelectedDay,
+            isToday,
+          })}
           onClick={(event: any) => this.handleDayClick(event, dayCopy)}
         >
           {day.format("D")}
@@ -72,9 +62,7 @@ class CalendarWidget extends React.Component<{
   getDateRows() {
     const result: any[] = [];
     for (let i = 0; i < 6; i++) {
-      result.push(
-        <div className={S.calendarWidgetRow}>{this.getDates(i)}</div>
-      );
+      result.push(<div className={S.calendarWidgetRow}>{this.getDates(i)}</div>);
     }
     return result;
   }
@@ -110,33 +98,19 @@ class CalendarWidget extends React.Component<{
           <div className={S.calendarWidgetRow}>
             <div className={S.calendarWidgetHeader}>
               <div className={S.calendarWidgetMonthControls}>
-                <button
-                  className={S.calendarWidgetControlBtn}
-                  onClick={this.handleMonthDecClick}
-                >
+                <button className={S.calendarWidgetControlBtn} onClick={this.handleMonthDecClick}>
                   <i className="fas fa-caret-left" />
                 </button>
-                <button
-                  className={S.calendarWidgetControlBtn}
-                  onClick={this.handleMonthIncClick}
-                >
+                <button className={S.calendarWidgetControlBtn} onClick={this.handleMonthIncClick}>
                   <i className="fas fa-caret-right" />
                 </button>
               </div>
-              <div className={S.calendarWidgetTitle}>
-                {this.displayedMonth.format("MMMM YYYY")}
-              </div>
+              <div className={S.calendarWidgetTitle}>{this.displayedMonth.format("MMMM YYYY")}</div>
               <div className={S.calendarWidgetYearControls}>
-                <button
-                  className={S.calendarWidgetControlBtn}
-                  onClick={this.handleYearDecClick}
-                >
+                <button className={S.calendarWidgetControlBtn} onClick={this.handleYearDecClick}>
                   <i className="fas fa-caret-down" />
                 </button>
-                <button
-                  className={S.calendarWidgetControlBtn}
-                  onClick={this.handleYearIncClick}
-                >
+                <button className={S.calendarWidgetControlBtn} onClick={this.handleYearIncClick}>
                   <i className="fas fa-caret-up" />
                 </button>
               </div>
@@ -167,7 +141,7 @@ export class DateTimeEditor extends React.Component<{
   onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => () => void;
   tabIndex?: number;
 }> {
   @observable isDroppedDown = false;
@@ -204,16 +178,15 @@ export class DateTimeEditor extends React.Component<{
   unsubscribeFromFocusManager?: () => void;
 
   componentDidMount() {
-    this.props.refocuser &&
-      this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+    this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
-    if(this.elmInput && this.props.subscribeToFocusManager){
+    if (this.elmInput && this.props.subscribeToFocusManager) {
       this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
     }
   }
 
   componentWillUnmount() {
-    this.disposers.forEach(d => d());
+    this.disposers.forEach((d) => d());
     this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
@@ -235,23 +208,17 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound
   makeFocusedIfNeeded() {
-    if (this.props.isFocused) {
-      this.elmInput && this.elmInput.focus();
-      setTimeout(() => {
-        if (this.elmInput) {
-          this.elmInput.select();
-          this.elmInput.scrollLeft = 0;
-        }
-      }, 10);
+    if (this.props.isFocused && this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
     }
   }
 
   @action.bound handleInputBlur(event: any) {
-    
-    const dateCompleter = this.getDateCompleter()
+    const dateCompleter = this.getDateCompleter();
 
-    const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue)
-    if(completedMoment){
+    const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
+    if (completedMoment) {
       this.props.onChange && this.props.onChange(event, completedMoment.toISOString(true));
     }
 
@@ -260,11 +227,10 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleKeyDown(event: any) {
-    if(event.key === "Enter")
-    {
-      const dateCompleter = this.getDateCompleter()
-      const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue)
-      if(completedMoment){
+    if (event.key === "Enter") {
+      const dateCompleter = this.getDateCompleter();
+      const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
+      if (completedMoment) {
         this.props.onChange?.(event, completedMoment.toISOString(true));
       }
       this.dirtyTextualValue = undefined;
@@ -272,21 +238,18 @@ export class DateTimeEditor extends React.Component<{
     this.props.onKeyDown?.(event);
   }
 
-  @action.bound getDateCompleter(){
-    if(getLocaleFromCookie() === "en-US"){
-      return new DateCompleter("MM/DD/YYYY h:mm:ss A", "/",
-      ":", " ", () =>  moment())
-    }else{
-      return new DateCompleter("DD.MM.YYYY h:mm:ss", ".",
-      ":", " ", () =>  moment())
+  @action.bound getDateCompleter() {
+    if (getLocaleFromCookie() === "en-US") {
+      return new DateCompleter("MM/DD/YYYY h:mm:ss A", "/", ":", " ", () => moment());
+    } else {
+      return new DateCompleter("DD.MM.YYYY h:mm:ss", ".", ":", " ", () => moment());
     }
   }
-
 
   @action.bound handleContainerMouseDown(event: any) {
     // event.preventDefault();
     setTimeout(() => {
-      this.elmInput && this.elmInput.focus();
+      this.elmInput?.focus();
     }, 30);
   }
 
@@ -302,12 +265,16 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @computed get formattedMomentValue() {
-    if (!this.momentValue) return ""
-    if (this.momentValue.hour() === 0 && this.momentValue.minute() === 0 && this.momentValue.second() === 0) {
-      const expectedDateFormat = this.props.outputFormat.split(" ")[0]
-      return this.momentValue.format(expectedDateFormat)
+    if (!this.momentValue) return "";
+    if (
+      this.momentValue.hour() === 0 &&
+      this.momentValue.minute() === 0 &&
+      this.momentValue.second() === 0
+    ) {
+      const expectedDateFormat = this.props.outputFormat.split(" ")[0];
+      return this.momentValue.format(expectedDateFormat);
     }
-    return this.momentValue.format(this.props.outputFormat)
+    return this.momentValue.format(this.props.outputFormat);
   }
 
   @computed get textfieldValue() {
@@ -335,19 +302,16 @@ export class DateTimeEditor extends React.Component<{
   @action.bound handleDayClick(event: any, day: moment.Moment) {
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.dirtyTextualValue = undefined;
-    this.props.onChangeByCalendar &&
-      this.props.onChangeByCalendar(event, day.toISOString(true));
+    this.props.onChangeByCalendar && this.props.onChangeByCalendar(event, day.toISOString(true));
     this.props.onChange && this.props.onChange(event, day.toISOString(true));
   }
 
   @action.bound
   handleFocus(event: any) {
-    setTimeout(() => {
-      if (this.elmInput) {
-        this.elmInput.select();
-        this.elmInput.scrollLeft = 0;
-      }
-    }, 10);
+    if (this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
+    }
   }
 
   render() {
@@ -360,7 +324,7 @@ export class DateTimeEditor extends React.Component<{
             className={S.editorContainer}
             ref={this.refContainer}
             style={{
-              zIndex: this.isDroppedDown ? 1000 : undefined
+              zIndex: this.isDroppedDown ? 1000 : undefined,
             }}
           >
             <Tooltip
@@ -378,7 +342,7 @@ export class DateTimeEditor extends React.Component<{
               <input
                 style={{
                   color: this.props.foregroundColor,
-                  backgroundColor: this.props.backgroundColor
+                  backgroundColor: this.props.backgroundColor,
                 }}
                 className={S.input}
                 type="text"

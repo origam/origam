@@ -13,7 +13,7 @@ export function onFieldChange(ctx: any) {
 export function onFieldChangeG(ctx: any) {
   return function* onFieldChange(event: any, row: any[], property: IProperty, value: any) {
     try {
-      if (property.column === "ComboBox") {
+      if (property.column === "ComboBox" && value !== null) {
         value = `${value}`;
       }
       getDataView(ctx).onFieldChange(event, row, property, value);

@@ -11,6 +11,6 @@
   &:global(.isHidden) {
     //display: none;
     //visibility: hidden;
-    transform: translate(100%, 100%);
+    transform: translate(-0.01%, -0.01%) scaleX(0.0);
   }
 }

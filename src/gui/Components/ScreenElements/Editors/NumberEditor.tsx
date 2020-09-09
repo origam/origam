@@ -1,15 +1,15 @@
-import {action, computed, observable} from "mobx";
-import {observer} from "mobx-react";
+import { action, computed, observable } from "mobx";
+import { observer } from "mobx-react";
 import * as React from "react";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
 import S from "./NumberEditor.module.scss";
 import cx from "classnames";
 import {
   formatNumber,
   getCurrentDecimalSeparator,
 } from "../../../../model/entities/NumberFormating";
-import {IFocusable} from "../../../../model/entities/FocusManager";
-import {getLocaleFromCookie} from "../../../../utils/cookies";
+import { IFocusable } from "../../../../model/entities/FocusManager";
+import { getLocaleFromCookie } from "../../../../utils/cookies";
 import numeral from "numeral";
 @observer
 export class NumberEditor extends React.Component<{
@@ -30,7 +30,7 @@ export class NumberEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => () => void;
   tabIndex?: number;
 }> {
   disposers: any[] = [];
@@ -58,7 +58,7 @@ export class NumberEditor extends React.Component<{
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
-    if(this.elmInput && this.props.subscribeToFocusManager){
+    if (this.elmInput && this.props.subscribeToFocusManager) {
       this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
     }
   }
@@ -76,15 +76,9 @@ export class NumberEditor extends React.Component<{
 
   @action.bound
   makeFocusedIfNeeded() {
-    if (this.props.isFocused) {
-      console.log("--- MAKE FOCUSED ---");
-      this.elmInput && this.elmInput.focus();
-      setTimeout(() => {
-        if (this.elmInput) {
-          this.elmInput.select();
-          this.elmInput.scrollLeft = 0;
-        }
-      }, 10);
+    if (this.props.isFocused && this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
     }
   }
 
@@ -92,12 +86,10 @@ export class NumberEditor extends React.Component<{
   handleFocus(event: any) {
     this.hasFocus = true;
     this.editingValue = this.numeralFormattedValue;
-    setTimeout(() => {
-      if (this.elmInput) {
-        this.elmInput.select();
-        this.elmInput.scrollLeft = 0;
-      }
-    }, 10);
+    if (this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
+    }
   }
 
   @action.bound
@@ -116,13 +108,13 @@ export class NumberEditor extends React.Component<{
 
   @computed
   private get numericValue() {
-    if(this.editValue === null) {
+    if (this.editValue === null) {
       return null;
     }
     let valueToParse = this.editValue.endsWith(getCurrentDecimalSeparator())
-      ? this.editValue+"0"
+      ? this.editValue + "0"
       : this.editValue;
-    valueToParse = valueToParse.replace(getCurrentDecimalSeparator(), ".")
+    valueToParse = valueToParse.replace(getCurrentDecimalSeparator(), ".");
     return "" + Number(valueToParse);
   }
 
@@ -145,14 +137,14 @@ export class NumberEditor extends React.Component<{
     this.elmInput = elm;
   };
 
-  getStyle(){
-    if(this.props.customStyle){
+  getStyle() {
+    if (this.props.customStyle) {
       return this.props.customStyle;
-    }else{
+    } else {
       return {
         color: this.props.foregroundColor,
         backgroundColor: this.props.backgroundColor,
-      }
+      };
     }
   }
 

@@ -1,13 +1,13 @@
-import {TypeSymbol} from "dic/Container";
+import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
-import {action, computed, flow, observable, reaction} from "mobx";
-import {DropdownEditorSetup} from "./DropdownEditor";
-import {DropdownEditorApi} from "./DropdownEditorApi";
-import {CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid} from "./DropdownEditorCommon";
-import {IDropdownEditorData} from "./DropdownEditorData";
-import {DropdownEditorLookupListCache} from "./DropdownEditorLookupListCache";
-import {DropdownDataTable} from "./DropdownTableModel";
-import {IFocusable} from "../../../model/entities/FocusManager";
+import { action, computed, flow, observable, reaction } from "mobx";
+import { DropdownEditorSetup } from "./DropdownEditor";
+import { DropdownEditorApi } from "./DropdownEditorApi";
+import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
+import { IDropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
+import { DropdownDataTable } from "./DropdownTableModel";
+import { IFocusable } from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -20,9 +20,8 @@ export class DropdownEditorBehavior {
     public onDoubleClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusable) => () => void,
     public tabIndex?: number,
-    private onKeyDown?: (event: any)=> void
-  ) {
-  }
+    private onKeyDown?: (event: any) => void
+  ) {}
 
   @observable isDropped = false;
   @observable isWorking = false;
@@ -93,40 +92,29 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound handleInputFocus(event: any) {
-    const {target} = event;
-    setTimeout(() => {
-      if (target) {
-        target.select();
-        target.scrollLeft = 0;
-      }
-    }, 10);
+    const { target } = event;
+    if (target) {
+      target.select();
+      target.scrollLeft = 0;
+    }
   }
 
   @action.bound handleInputBlur(event: any) {
-    if (
-      this.userEnteredValue !== undefined &&
-      this.isDropped &&
-      !this.isWorking &&
-      this.cursorRowId
-    ) {
+    if (this.userEnteredValue && this.isDropped && !this.isWorking && this.cursorRowId) {
       this.data.chooseNewValue(this.cursorRowId);
+    } else if (this.userEnteredValue === "") {
+      this.data.chooseNewValue(null);
     }
-    this.flipDroppedStateDebounced();
+    this.dropUp();
   }
 
   @action.bound
   handleInputBtnClick(event: any) {
-    this.flipDroppedStateDebounced();
-  }
-
-  flipDroppedStateDebounced = _.debounce(() => { this.flipDroppedState() }, 100);
-
-  private flipDroppedState() {
-      if (!this.isDropped) {
-        this.dropDown();
-      } else {
-        this.dropUp();
-      }
+    if (!this.isDropped) {
+      this.dropDown();
+    } else {
+      this.dropUp();
+    }
   }
 
   @action.bound
@@ -137,33 +125,61 @@ export class DropdownEditorBehavior {
         this.userEnteredValue = undefined;
         break;
       case "Enter":
+        const wasDropped = this.isDropped;
         if (this.isDropped && !this.isWorking && this.cursorRowId) {
           this.data.chooseNewValue(this.cursorRowId);
           this.dropUp();
         }
+        if (wasDropped) {
+          event.stopPropagation();
+          event.preventDefault();
+          // Do not pass event to props.onKeyDown
+          return;
+        }
+        break;
+      case "Tab":
+        if (this.isDropped) {
+          if (this.cursorRowId) {
+            this.data.chooseNewValue(this.cursorRowId);
+          }
+        }
+        break;
+      case "Delete":
+        event.preventDefault();
+        event.stopPropagation();
+        this.userEnteredValue = undefined;
+        this.cursorRowId = "";
+        this.data.chooseNewValue(null);
         break;
       case "ArrowUp":
-        if (this.isDropped && this.cursorRowId) {
+        if (this.isDropped) {
           event.preventDefault();
-          const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
-          if (prevRowId) {
-            this.cursorRowId = prevRowId;
+          if (!this.cursorRowId) {
+            this.trySelectFirstRow();
+          } else {
+            const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
+            if (prevRowId) {
+              this.cursorRowId = prevRowId;
+            }
           }
           this.scrollToCursoredRowIfNeeded();
         }
         break;
       case "ArrowDown":
-        if (this.isDropped && this.cursorRowId) {
+        if (this.isDropped) {
           event.preventDefault();
-          if (this.cursorRowId) {
+          if (!this.cursorRowId) {
+            this.trySelectFirstRow();
+          } else {
             const nextRowId = this.dataTable.getRowIdAfterId(this.cursorRowId);
             if (nextRowId) {
               this.cursorRowId = nextRowId;
             }
           }
           this.scrollToCursoredRowIfNeeded();
-        } else {
+        } else if (event.ctrlKey) {
           this.dropDown();
+          this.trySelectFirstRow();
         }
         break;
     }
@@ -184,7 +200,9 @@ export class DropdownEditorBehavior {
         this.ensureRequestRunning();
       }
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-      this.trySelectFirstRow();
+      if (this.userEnteredValue) {
+        this.trySelectFirstRow();
+      }
     } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
     }
@@ -208,7 +226,10 @@ export class DropdownEditorBehavior {
 
   @action.bound
   handleControlMouseDown(event: any) {
-    if (this.isDropped) event.stopPropagation();
+    if (this.isDropped) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
   }
 
   @action.bound
@@ -221,6 +242,9 @@ export class DropdownEditorBehavior {
 
   @action.bound
   handleWindowMouseDown(event: any) {
+    if (this.userEnteredValue === "") {
+      this.data.chooseNewValue(null);
+    }
     if (this.isDropped) {
       this.dropUp();
     }
@@ -293,7 +317,7 @@ export class DropdownEditorBehavior {
             break;
           }
         }
-        if (!self.cursorRowId) self.trySelectFirstRow();
+        if (!self.cursorRowId && self.userEnteredValue) self.trySelectFirstRow();
       } finally {
         self.isWorking = false;
         self.runningPromise = undefined;
@@ -323,11 +347,11 @@ export class DropdownEditorBehavior {
   elmDropdownBody: any;
 }
 
-function compareLookupItems( a: any[], b: any[] ) {
-  if ( a[1] < b[1] ){
+function compareLookupItems(a: any[], b: any[]) {
+  if (a[1] < b[1]) {
     return -1;
   }
-  if ( a[1] > b[1] ){
+  if (a[1] > b[1]) {
     return 1;
   }
   return 0;
