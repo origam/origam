@@ -1,13 +1,13 @@
-import {TypeSymbol} from "dic/Container";
+import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
-import {action, computed, flow, observable, reaction} from "mobx";
-import {DropdownEditorSetup} from "./DropdownEditor";
-import {DropdownEditorApi} from "./DropdownEditorApi";
-import {CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid} from "./DropdownEditorCommon";
-import {IDropdownEditorData} from "./DropdownEditorData";
-import {DropdownEditorLookupListCache} from "./DropdownEditorLookupListCache";
-import {DropdownDataTable} from "./DropdownTableModel";
-import {IFocusable} from "../../../model/entities/FocusManager";
+import { action, computed, flow, observable, reaction } from "mobx";
+import { DropdownEditorSetup } from "./DropdownEditor";
+import { DropdownEditorApi } from "./DropdownEditorApi";
+import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
+import { IDropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
+import { DropdownDataTable } from "./DropdownTableModel";
+import { IFocusable } from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -20,9 +20,8 @@ export class DropdownEditorBehavior {
     public onDoubleClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusable) => () => void,
     public tabIndex?: number,
-    private onKeyDown?: (event: any)=> void
-  ) {
-  }
+    private onKeyDown?: (event: any) => void
+  ) {}
 
   @observable isDropped = false;
   @observable isWorking = false;
@@ -93,13 +92,11 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound handleInputFocus(event: any) {
-    const {target} = event;
-    setTimeout(() => {
-      if (target) {
-        target.select();
-        target.scrollLeft = 0;
-      }
-    }, 10);
+    const { target } = event;
+    if (target) {
+      target.select();
+      target.scrollLeft = 0;
+    }
   }
 
   @action.bound handleInputBlur(event: any) {
@@ -320,11 +317,11 @@ export class DropdownEditorBehavior {
   elmDropdownBody: any;
 }
 
-function compareLookupItems( a: any[], b: any[] ) {
-  if ( a[1] < b[1] ){
+function compareLookupItems(a: any[], b: any[]) {
+  if (a[1] < b[1]) {
     return -1;
   }
-  if ( a[1] > b[1] ){
+  if (a[1] > b[1]) {
     return 1;
   }
   return 0;

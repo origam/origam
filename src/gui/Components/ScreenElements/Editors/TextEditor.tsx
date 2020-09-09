@@ -1,9 +1,9 @@
-import {action} from "mobx";
-import {observer} from "mobx-react";
+import { action } from "mobx";
+import { observer } from "mobx-react";
 import * as React from "react";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
 import S from "./TextEditor.module.scss";
-import {IFocusable} from "../../../../model/entities/FocusManager";
+import { IFocusable } from "../../../../model/entities/FocusManager";
 
 @observer
 export class TextEditor extends React.Component<{
@@ -18,7 +18,7 @@ export class TextEditor extends React.Component<{
   foregroundColor?: string;
   isRichText: boolean;
   customStyle?: any;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => () => void;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;
@@ -33,7 +33,7 @@ export class TextEditor extends React.Component<{
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
-    if(this.elmInput && this.props.subscribeToFocusManager){
+    if (this.elmInput && this.props.subscribeToFocusManager) {
       this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
     }
   }
@@ -51,26 +51,18 @@ export class TextEditor extends React.Component<{
 
   @action.bound
   makeFocusedIfNeeded() {
-    if (this.props.isFocused) {
-      console.log("--- MAKE FOCUSED ---");
-      this.elmInput && this.elmInput.focus();
-      setTimeout(() => {
-        if (this.elmInput) {
-          this.elmInput.select();
-          this.elmInput.scrollLeft = 0;
-        }
-      }, 10);
+    if (this.props.isFocused && this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
     }
   }
 
   @action.bound
   handleFocus(event: any) {
-    setTimeout(() => {
-      if (this.elmInput) {
-        this.elmInput.select();
-        this.elmInput.scrollLeft = 0;
-      }
-    }, 10);
+    if (this.elmInput) {
+      this.elmInput.select();
+      this.elmInput.scrollLeft = 0;
+    }
   }
 
   elmInput: HTMLInputElement | null = null;
@@ -78,14 +70,14 @@ export class TextEditor extends React.Component<{
     this.elmInput = elm;
   };
 
-  getStyle(){
-    if(this.props.customStyle){
+  getStyle() {
+    if (this.props.customStyle) {
       return this.props.customStyle;
-    }else{
+    } else {
       return {
         color: this.props.foregroundColor,
         backgroundColor: this.props.backgroundColor,
-      }
+      };
     }
   }
 
@@ -96,7 +88,7 @@ export class TextEditor extends React.Component<{
         {this.props.isInvalid && (
           <div className={S.notification}>
             <Tooltip html={this.props.invalidMessage} arrow={true}>
-              <i className="fas fa-exclamation-circle red"/>
+              <i className="fas fa-exclamation-circle red" />
             </Tooltip>
           </div>
         )}
@@ -111,7 +103,7 @@ export class TextEditor extends React.Component<{
           <div
             style={this.getStyle()}
             className={S.input}
-            dangerouslySetInnerHTML={{__html: this.props.value ?? ""}}
+            dangerouslySetInnerHTML={{ __html: this.props.value ?? "" }}
             onKeyDown={this.props.onKeyDown}
             onClick={this.props.onClick}
             onDoubleClick={this.props.onDoubleClick}
@@ -161,6 +153,6 @@ export class TextEditor extends React.Component<{
         onFocus={this.handleFocus}
         tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
       />
-    )
+    );
   }
 }
