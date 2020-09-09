@@ -125,9 +125,16 @@ export class DropdownEditorBehavior {
         this.userEnteredValue = undefined;
         break;
       case "Enter":
+        const wasDropped = this.isDropped;
         if (this.isDropped && !this.isWorking && this.cursorRowId) {
           this.data.chooseNewValue(this.cursorRowId);
           this.dropUp();
+        }
+        if (wasDropped) {
+          event.stopPropagation();
+          event.preventDefault();
+          // Do not pass event to props.onKeyDown
+          return;
         }
         break;
       case "Tab":
