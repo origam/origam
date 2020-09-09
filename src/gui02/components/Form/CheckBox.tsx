@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { IProperty} from "../../../model/entities/types/IProperty";
-import { BoolEditor } from "../../../gui/Components/ScreenElements/Editors/BoolEditor";
+import { IProperty } from "model/entities/types/IProperty";
+import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import S from "./CheckBox.module.scss";
 import { inject } from "mobx-react";
-import { getSelectedRow } from "../../../model/selectors/DataView/getSelectedRow";
-import { onFieldBlur } from "../../../model/actions-ui/DataView/TableView/onFieldBlur";
-import { onFieldChange } from "../../../model/actions-ui/DataView/TableView/onFieldChange";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 
 export const CheckBox: React.FC<{
   checked: boolean;
@@ -39,7 +39,7 @@ export const CheckBox: React.FC<{
     }
     return {
       top: top,
-      left: left + height
+      left: left + height,
     };
   }
 
@@ -57,7 +57,7 @@ export const CheckBox: React.FC<{
     };
   }
 
-  function onChange(event: any){
+  function onChange(event: any) {
     setIsChecked(!isChecked);
     props.onChange && !props.readOnly && props.onChange(event, isChecked);
   }
