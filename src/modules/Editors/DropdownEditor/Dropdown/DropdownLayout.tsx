@@ -7,6 +7,7 @@ import {
   CtxDropdownBodyRect,
   CtxDropdownCtrlRect,
 } from "./DropdownCommon";
+import _ from "lodash";
 
 export function DropdownLayout(props: {
   isDropped: boolean;
@@ -59,21 +60,21 @@ export function DropdownLayout(props: {
   });
 
   const reMeasure = () => {
-    if (refMeasureCtrl.current){
+    if (refMeasureCtrl.current) {
       (refMeasureCtrl.current as any).measure();
     }
-    if (refMeasureBody.current){
+    if (refMeasureBody.current) {
       (refMeasureBody.current as any).measure();
     }
   };
 
   useEffect(() => {
-    const handleScroll = (event: any) => {
-      reMeasure();
-    };
-    const handleMouse = (event: any) => {
-      reMeasure();
-    };
+    const handleScroll = _.throttle((event: any) => {
+      if (props.isDropped) reMeasure();
+    }, 100);
+    const handleMouse = _.throttle((event: any) => {
+      if (props.isDropped) reMeasure();
+    }, 100);
     window.addEventListener("scroll", handleScroll, true);
     window.addEventListener("mousedown", handleMouse, true);
     window.addEventListener("mouseup", handleMouse, true);
@@ -82,7 +83,7 @@ export function DropdownLayout(props: {
       window.removeEventListener("mousedown", handleMouse, true);
       window.removeEventListener("mouseup", handleMouse, true);
     };
-  }, []);
+  }, [props.isDropped]);
 
   return (
     <>
