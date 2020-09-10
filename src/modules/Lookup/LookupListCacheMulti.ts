@@ -29,9 +29,14 @@ export class LookupListCacheMulti {
       }
     }
     for (let id of idsToClean) {
-      this.lists.delete(id);
-      this.recordBirthdate.delete(id);
+      this.deleteLookup(id);
     }
+  }
+
+  @action.bound
+  deleteLookup(id: string) {
+    this.lists.delete(id);
+    this.recordBirthdate.delete(id);
   }
 
   getLookupList(lookupId: string) {
