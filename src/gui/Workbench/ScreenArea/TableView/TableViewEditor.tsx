@@ -22,6 +22,7 @@ import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEdit
 import {getDataView} from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
 import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -169,6 +170,7 @@ export class TableViewEditor extends React.Component<{
   }
 
   onDoubleClick(event: any){
+    getTablePanelView(this.props.property).setEditing(false);
     const dataView = getDataView(this.props.property);
     if (!dataView.defaultAction) {
       return;
