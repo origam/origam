@@ -48,6 +48,7 @@ import { getDataStructureEntityId } from "model/selectors/DataView/getDataStruct
 import { flow } from "mobx";
 import actionsUi from "../../../../../../model/actions-ui-tree";
 import { getDataView } from "../../../../../../model/selectors/DataView/getDataView";
+import { IPropertyColumn } from "model/entities/types/IPropertyColumn";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -76,30 +77,78 @@ function registerClickHandler(columnId: string) {
   getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
 
   const property = currentProperty();
-  const clickableArea = getClickableArea(property.column);
-  onClick({
-    x: clickableArea.x,
-    y: clickableArea.y,
-    w: clickableArea.width,
-    h: clickableArea.height,
-    handler(event: any) {
-      flow(function* () {
-        if (event.isDouble) {
-          const defaultAction = getDataView(ctx).defaultAction;
-          if (defaultAction && defaultAction.isEnabled) {
-            yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+  
+  const cellClickableArea = getCellClickableArea();
+  if(property.column === "CheckBox") {
+    const checkboxClickableArea = getCheckboxClickableArea();
+    onClick({
+      x: checkboxClickableArea.x,
+      y: checkboxClickableArea.y,
+      w: checkboxClickableArea.width,
+      h: checkboxClickableArea.height,
+      handler(event: any) {
+        flow(function* () {
+          if (event.isDouble) {
+            getTablePanelView(ctx).setEditing(false);
+            const defaultAction = getDataView(ctx).defaultAction;
+            if (defaultAction && defaultAction.isEnabled) {
+              yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+            }
+          } else {
+            yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
+            yield onPossibleSelectedRowChange(ctx)(
+              getMenuItemId(ctx),
+              getDataStructureEntityId(ctx),
+              getSelectedRowId(ctx)
+            );
           }
-        } else {
-          yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
-          yield onPossibleSelectedRowChange(ctx)(
-            getMenuItemId(ctx),
-            getDataStructureEntityId(ctx),
-            getSelectedRowId(ctx)
-          );
-        }
-      })();
-    },
-  });
+        })();
+      },
+    });
+    onClick({
+      x: cellClickableArea.x,
+      y: cellClickableArea.y,
+      w: cellClickableArea.width,
+      h: cellClickableArea.height,
+      handler(event: any) {
+        flow(function* () {
+          if (event.isDouble) {
+            getTablePanelView(ctx).setEditing(false);
+            const defaultAction = getDataView(ctx).defaultAction;
+            if (defaultAction && defaultAction.isEnabled) {
+              yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+            }
+          } 
+        })();
+      },
+    });
+  } else {
+    onClick({
+      x: cellClickableArea.x,
+      y: cellClickableArea.y,
+      w: cellClickableArea.width,
+      h: cellClickableArea.height,
+      handler(event: any) {
+        flow(function* () {
+          if (event.isDouble) {
+            getTablePanelView(ctx).setEditing(false);
+            const defaultAction = getDataView(ctx).defaultAction;
+            if (defaultAction && defaultAction.isEnabled) {
+              yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
+            }
+          } else {
+            yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
+            yield onPossibleSelectedRowChange(ctx)(
+              getMenuItemId(ctx),
+              getDataStructureEntityId(ctx),
+              getSelectedRowId(ctx)
+            );
+          }
+        })();
+      },
+    });
+  }
+  
 }
 
 function xCenter() {
@@ -110,23 +159,23 @@ function yCenter() {
   return currentRowTop() + rowHeight() / 2;
 }
 
-function getClickableArea(columnType: string) {
-  if (columnType === "CheckBox") {
-    const fontSize = checkBoxCharacterFontSize;
-    return {
-      x: xCenter() - fontSize / 2,
-      y: yCenter() - fontSize / 2,
-      width: fontSize,
-      height: fontSize,
-    };
-  } else {
-    return {
-      x: currentColumnLeftVisible(),
-      y: currentRowTop(),
-      width: currentColumnWidthVisible(),
-      height: currentRowHeight(),
-    };
-  }
+function getCellClickableArea() {
+  return {
+    x: currentColumnLeftVisible(),
+    y: currentRowTop(),
+    width: currentColumnWidthVisible(),
+    height: currentRowHeight(),
+  };
+}
+
+function getCheckboxClickableArea() {
+  const fontSize = checkBoxCharacterFontSize;
+  return {
+    x: xCenter() - fontSize / 2,
+    y: yCenter() - fontSize / 2,
+    width: fontSize,
+    height: fontSize,
+  };
 }
 
 export function drawDataCellBackground() {

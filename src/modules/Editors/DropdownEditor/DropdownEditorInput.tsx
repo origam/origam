@@ -32,7 +32,7 @@ export function DropdownEditorInput() {
           onKeyDown={!beh.isReadOnly ? beh.handleInputKeyDown : undefined}
           onFocus={!beh.isReadOnly ? beh.handleInputFocus : undefined}
           onBlur={!beh.isReadOnly ? beh.handleInputBlur : undefined}
-          onDoubleClick={!beh.isReadOnly ? beh.onDoubleClick : undefined}
+          onDoubleClick={beh.onDoubleClick}
           value={beh.inputValue}
           tabIndex={beh.tabIndex ? beh.tabIndex : undefined}
         />

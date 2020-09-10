@@ -18,6 +18,7 @@ export function handleTableClick(
     if (h.x <= canvasX && h.x + h.w >= canvasX && h.y <= canvasY && h.y + h.h >= canvasY) {
       h.handler(event, canvasX, canvasY, canvasX, canvasY);
       handled = true;
+      break;
     }
   }
   return { handled };
