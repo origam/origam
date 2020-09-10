@@ -133,7 +133,7 @@ export class FormBuilder extends React.Component<{
                     <Provider property={property}>
                       <CheckBox
                         checked={value}
-                        readOnly={isReadOnly(property, rowId)}
+                        readOnly={!row || isReadOnly(property, rowId)}
                         tabIndex={tabIndex}
                       />
                     </Provider>
