@@ -7,6 +7,7 @@ import {getTablePanelView} from "../selectors/TablePanelView/getTablePanelView";
 import {IAggregationInfo} from "./types/IAggregationInfo";
 import {computed} from "mobx";
 import {AggregationType} from "./types/AggregationType";
+import {getLocaleFromCookie} from "utils/cookies";
 
 export class ClientSideGrouper implements IGrouper {
 
@@ -14,6 +15,9 @@ export class ClientSideGrouper implements IGrouper {
 
   @computed get topLevelGroups(){
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
+    if (firstGroupingColumn === undefined) {
+      return [];
+    }
     const dataTable = getDataTable(this);
     const groups = this.makeGroups(dataTable.allRows, firstGroupingColumn)
     this.loadRecursively(groups);
@@ -45,10 +49,18 @@ export class ClientSideGrouper implements IGrouper {
           rowCount: rows.length,
           parent: undefined,
           columnValue: groupName,
-          columnDisplayValue: groupName,
+          columnDisplayValue: property ? dataTable.resolveCellText(property, groupName) : groupName,
           aggregations: this.calcAggregations(rows),
           grouper: this
         });
+      }).sort((a, b) => {
+        if (a.columnDisplayValue && b.columnDisplayValue) {
+          return a.columnDisplayValue.localeCompare(b.columnDisplayValue, getLocaleFromCookie());
+        } else if (!a.columnDisplayValue) {
+          return -1;
+        } else {
+          return 1;
+        }
       });
   }
 
