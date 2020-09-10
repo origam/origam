@@ -23,7 +23,6 @@ export const CheckBox: React.FC<{
   };
 })((props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState<boolean>(props.checked);
 
   const label = props.property!.name;
   const height = props.property!.height;
@@ -57,9 +56,8 @@ export const CheckBox: React.FC<{
     };
   }
 
-  function onChange(event: any) {
-    setIsChecked(!isChecked);
-    props.onChange && !props.readOnly && props.onChange(event, isChecked);
+  function onChange(event: any, state: boolean) {
+    if (!props.readOnly) props.onChange?.(event, state);
   }
 
   function onInputFocus() {
@@ -75,7 +73,7 @@ export const CheckBox: React.FC<{
       <div className={S.editor} style={formFieldStyle()}>
         <BoolEditor
           id={props.property!.modelInstanceId}
-          value={isChecked}
+          value={props.checked}
           isReadOnly={props.readOnly}
           tabIndex={props.tabIndex}
           onBlur={onInputBlur}

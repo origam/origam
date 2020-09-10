@@ -1,6 +1,6 @@
 import { TypeSymbol } from "dic/Container";
 import { MobXProviderContext, Observer } from "mobx-react";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { findStopping } from "xmlInterpreters/xmlUtils";
 import { BooleanCellDriver } from "./Cells/BooleanCellDriver";
 import { DefaultHeaderCellDriver } from "./Cells/HeaderCell";
@@ -198,6 +198,12 @@ export function XmlBuildDropdownEditor(props: {
       editorDataTable: dropdownEditorDataTable,
     };
   });
+
+  useEffect(() => {
+    dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
+  }, [props.isReadOnly]);
+  
+
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
