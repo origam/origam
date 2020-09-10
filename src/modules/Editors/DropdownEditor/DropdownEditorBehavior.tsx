@@ -1,6 +1,6 @@
 import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
-import { action, computed, flow, observable, reaction } from "mobx";
+import { action, computed, flow, observable, reaction, decorate } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
 import { DropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
@@ -356,6 +356,11 @@ function compareLookupItems(a: any[], b: any[]) {
   }
   return 0;
 }
+
+
+decorate(DropdownEditorBehavior, {
+  isReadOnly: observable
+})
 
 export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
   "IDropdownEditorBehavior"
