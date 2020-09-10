@@ -25,7 +25,8 @@ import {
 import {
   applyScrollTranslation,
   cellPaddingLeft,
-  cellPaddingLeftFirstCell, checkBoxCharacterFontSize,
+  cellPaddingLeftFirstCell,
+  checkBoxCharacterFontSize,
   clipCell,
   fontSize,
   numberCellPaddingLeft,
@@ -101,34 +102,32 @@ function registerClickHandler(columnId: string) {
   });
 }
 
-function xCenter(){
-  return CPR() * (currentColumnLeft() + currentColumnWidth() / 2);
+function xCenter() {
+  return currentColumnLeft() + currentColumnWidth() / 2;
 }
 
-function yCenter(){
-  return CPR() * (currentRowTop() + rowHeight() / 2);
+function yCenter() {
+  return currentRowTop() + rowHeight() / 2;
 }
 
-function getClickableArea(columnType: string){
-  if(columnType === "CheckBox"){
-    const fontSize = checkBoxCharacterFontSize * CPR();
+function getClickableArea(columnType: string) {
+  if (columnType === "CheckBox") {
+    const fontSize = checkBoxCharacterFontSize;
     return {
       x: xCenter() - fontSize / 2,
       y: yCenter() - fontSize / 2,
       width: fontSize,
       height: fontSize,
-    }
-  }
-  else{
+    };
+  } else {
     return {
       x: currentColumnLeftVisible(),
       y: currentRowTop(),
       width: currentColumnWidthVisible(),
       height: currentRowHeight(),
-    }
+    };
   }
 }
-
 
 export function drawDataCellBackground() {
   const ctx2d = context2d();
@@ -180,8 +179,8 @@ function drawCellValue() {
 
         ctx2d.fillText(
           !!currentCellText() ? "\uf14a" : "\uf0c8",
-          xCenter(),
-          yCenter()
+          CPR() * xCenter(),
+          CPR() * yCenter()
         );
         break;
       case "Date":
