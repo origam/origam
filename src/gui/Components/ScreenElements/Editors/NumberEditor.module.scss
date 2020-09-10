@@ -13,3 +13,7 @@
 .editorContainer {
   @include editorContainer;
 }
+
+.notification {
+  @include notification;
+}
