@@ -71,8 +71,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 
   function handleClick(event: any) {
     const domRect = event.target.getBoundingClientRect();
-    console.log(domRect);
-    handleTableClick(
+    const handlingResult = handleTableClick(
       event,
       event.clientX - domRect.x,
       event.clientY - domRect.y,
@@ -80,6 +79,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       scrollTopObs.get(),
       clickSubscriptions
     );
+    return handlingResult;
   }
 
   function setViewportSize(width: number, height: number) {
@@ -284,7 +284,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @action.bound handleScrollerClick(event: any) {
-    this.tableRenderer.handleClick(event);
+    const { handled } = this.tableRenderer.handleClick(event);
+    if(!handled) this.props.onOutsideTableClick?.(event);
   }
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
@@ -294,6 +295,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   @action.bound handleScroll(event: any, scrollLeft: number, scrollTop: number) {
+    this.context.tablePanelView.handleTableScroll(event, scrollTop, scrollLeft)
     this.props.scrollState.setScrollOffset(event, scrollTop, scrollLeft);
     this.tableRenderer.setScroll(scrollLeft, scrollTop);
   }
@@ -368,7 +370,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           width={contentRect.bounds!.width}
                           height={contentRect.bounds!.height}
                           isVisible={true}
-                          scrollingDisabled={this.props.isEditorMounted}
+                          scrollingDisabled={false /*this.props.isEditorMounted*/}
                           contentWidth={this.props.gridDimensions.contentWidth}
                           contentHeight={this.props.gridDimensions.contentHeight}
                           onScroll={this.handleScroll}

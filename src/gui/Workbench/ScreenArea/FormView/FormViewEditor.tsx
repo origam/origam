@@ -56,7 +56,7 @@ export class FormViewEditor extends React.Component<{
       rowId || "",
       this.props.property!.id
     );
-    const readOnly = isReadOnly(this.props.property!, rowId);
+    const readOnly = !row || isReadOnly(this.props.property!, rowId);
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;
     if (row) {

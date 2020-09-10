@@ -1,34 +1,34 @@
-import {action, computed, observable} from "mobx";
-import {onFieldChangeG} from "model/actions-ui/DataView/TableView/onFieldChange";
-import {getSelectedRowIndex} from "model/selectors/DataView/getSelectedRowIndex";
-import {getCellValue} from "model/selectors/TablePanelView/getCellValue";
-import {getSelectedColumnId} from "model/selectors/TablePanelView/getSelectedColumnId";
-import {getSelectedColumnIndex} from "model/selectors/TablePanelView/getSelectedColumnIndex";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
-import {getDataTable} from "../../selectors/DataView/getDataTable";
-import {getDataView} from "../../selectors/DataView/getDataView";
-import {getDataViewPropertyById} from "../../selectors/DataView/getDataViewPropertyById";
-import {IFilterConfiguration} from "../types/IFilterConfiguration";
-import {IOrderingConfiguration} from "../types/IOrderingConfiguration";
-import {IProperty} from "../types/IProperty";
-import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
-import {ITableCanvas, ITablePanelView, ITablePanelViewData} from "./types/ITablePanelView";
-import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import { action, computed, observable, flow } from "mobx";
+import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
+import { getCellValue } from "model/selectors/TablePanelView/getCellValue";
+import { getSelectedColumnId } from "model/selectors/TablePanelView/getSelectedColumnId";
+import { getSelectedColumnIndex } from "model/selectors/TablePanelView/getSelectedColumnIndex";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
+import { getDataTable } from "../../selectors/DataView/getDataTable";
+import { getDataView } from "../../selectors/DataView/getDataView";
+import { getDataViewPropertyById } from "../../selectors/DataView/getDataViewPropertyById";
+import { IFilterConfiguration } from "../types/IFilterConfiguration";
+import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
+import { IProperty } from "../types/IProperty";
+import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 import selectors from "model/selectors-tree";
-import {IGroupingConfiguration} from "../types/IGroupingConfiguration";
-import {IAggregationInfo} from "../types/IAggregationInfo";
-import {AggregationType} from "../types/AggregationType";
-import {ICellRectangle} from "./types/ICellRectangle";
-import {getRowStateAllowUpdate} from "../../selectors/RowState/getRowStateAllowUpdate";
+import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
+import { IAggregationInfo } from "../types/IAggregationInfo";
+import { AggregationType } from "../types/AggregationType";
+import { ICellRectangle } from "./types/ICellRectangle";
+import { getRowStateAllowUpdate } from "../../selectors/RowState/getRowStateAllowUpdate";
 import React from "react";
-import {isInfiniteScrollingActive} from "../../selectors/isInfiniteScrollingActive";
-import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
-import {getFormScreen} from "../../selectors/FormScreen/getFormScreen";
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
-import {flushCurrentRowData} from "../../actions/DataView/TableView/flushCurrentRowData";
-import {isReadOnly} from "../../selectors/RowState/isReadOnly";
+import { isInfiniteScrollingActive } from "../../selectors/isInfiniteScrollingActive";
+import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
+import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
+import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
+import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurrentRowData";
+import { isReadOnly } from "../../selectors/RowState/isReadOnly";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -47,8 +47,10 @@ export class TablePanelView implements ITablePanelView {
   groupingConfiguration: IGroupingConfiguration = null as any;
   rowHeight: number = null as any;
 
-  rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<number,
-    Map<number, ICellRectangle>>();
+  rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
+    number,
+    Map<number, ICellRectangle>
+  >();
 
   @observable isEditing: boolean = false;
   @observable fixedColumnCount: number = 0;
@@ -161,7 +163,7 @@ export class TablePanelView implements ITablePanelView {
           this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
         } else {
-          const {isEditing} = this;
+          const { isEditing } = this;
           if (isEditing) {
             this.setEditing(false);
           }
@@ -182,26 +184,40 @@ export class TablePanelView implements ITablePanelView {
     this.scrollToCurrentCell();
   }
 
-  private* selectCellAsync(columnId: string, rowId: string) {
+  private *selectCellAsync(columnId: string, rowId: string) {
     this.selectedColumnId = columnId;
     const dataView = getDataView(this);
     if (dataView.selectedRowId === rowId) {
       return;
     }
-    yield dataView.lifecycle.runRecordChangedReaction(function*(){
+    yield dataView.lifecycle.runRecordChangedReaction(function* () {
       yield dataView.selectRowById(rowId);
     });
   }
 
-  * onNoCellClick() {
+  *onNoCellClick() {
     if (this.isEditing) {
       this.setEditing(false);
+      yield* flushCurrentRowData(this)();
     }
   }
 
-  * onOutsideTableClick() {
+  @action.bound
+  handleTableScroll(event: any, scrollTop: number, scrollLeft: number) {
+    const _this = this;
+
+    flow(function* () {
+      if (_this.isEditing) {
+        _this.setEditing(false);
+        yield* flushCurrentRowData(_this)();
+      }
+    })();
+  }
+
+  *onOutsideTableClick() {
     if (this.isEditing) {
       this.setEditing(false);
+      yield* flushCurrentRowData(this)();
     }
   }
 
@@ -210,11 +226,10 @@ export class TablePanelView implements ITablePanelView {
     getDataView(this).selectRowById(rowId);
   }
 
-
   isFirstColumnSelected(): boolean {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
-    if(!selPropId){
+    if (!selPropId) {
       return false;
     }
     const idx = properties.findIndex((prop) => prop.id === selPropId);
@@ -224,7 +239,7 @@ export class TablePanelView implements ITablePanelView {
   isLastColumnSelected(): boolean {
     const properties = getTableViewProperties(this);
     const selPropId = getSelectedColumnId(this);
-    if(!selPropId){
+    if (!selPropId) {
       return false;
     }
     const idx = properties.findIndex((prop) => prop.id === selPropId);
@@ -307,8 +322,10 @@ export class TablePanelView implements ITablePanelView {
   }
 
   subId = 0;
-  onScrollToCurrentCellHandlers: Map<number,
-    (rowIdx: number, columnIdx: number) => void> = new Map();
+  onScrollToCurrentCellHandlers: Map<
+    number,
+    (rowIdx: number, columnIdx: number) => void
+  > = new Map();
 
   subOnScrollToCellShortest(fn: (rowIdx: number, columnIdx: number) => void): () => void {
     const myId = this.subId++;
@@ -373,10 +390,13 @@ export class TablePanelView implements ITablePanelView {
 }
 
 export class AggregationContainer {
-  @observable aggregationTypes: Map<string, AggregationType | undefined> = new Map<string, AggregationType | undefined>();
+  @observable aggregationTypes: Map<string, AggregationType | undefined> = new Map<
+    string,
+    AggregationType | undefined
+  >();
 
   getType(columnId: string) {
-    return this.aggregationTypes.get(columnId)
+    return this.aggregationTypes.get(columnId);
   }
 
   setType(columnId: string, aggregationType: AggregationType | undefined) {
@@ -387,12 +407,12 @@ export class AggregationContainer {
   @computed get aggregationList(): IAggregationInfo[] {
     // @ts-ignore
     return Array.from(this.aggregationTypes.entries())
-      .filter(entry => entry[1])
-      .map(entry => {
+      .filter((entry) => entry[1])
+      .map((entry) => {
         return {
-          "ColumnName": entry[0],
-          "AggregationType": entry[1]
-        }
+          ColumnName: entry[0],
+          AggregationType: entry[1],
+        };
       });
   }
 }
