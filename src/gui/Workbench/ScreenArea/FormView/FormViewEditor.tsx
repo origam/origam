@@ -181,6 +181,8 @@ export class FormViewEditor extends React.Component<{
               focusManager.subscribe(textEditor, this.props.property?.id)
             }
             tabIndex={this.props.tabIndex}
+            isInvalid={isInvalid}
+            invalidMessage={invalidMessage}
           />
         );
       case "TagInput":

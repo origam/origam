@@ -68,9 +68,13 @@ export class NumberEditor extends React.Component<{
     this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean }) {
+  componentDidUpdate(prevProps: { isFocused: boolean, value: any }) {
     if (!prevProps.isFocused && this.props.isFocused) {
       this.makeFocusedIfNeeded();
+    }
+    if(this.props.value !== prevProps.value) {
+      this.editingValue = this.numeralFormattedValue;
+      this.wasChanged = false;
     }
   }
 
@@ -95,20 +99,20 @@ export class NumberEditor extends React.Component<{
   @action.bound
   handleBlur(event: any) {
     if (!this.wasChanged || this.props.value === this.editValue) {
-      this.props.onEditorBlur && this.props.onEditorBlur(event);
+      this.props.onEditorBlur?.(event);
       return;
     }
     if (this.editValue === "") {
-      this.props.onEditorBlur && this.props.onEditorBlur(event);
+      this.props.onEditorBlur?.(event);
     } else {
       this.hasFocus = false;
-      this.props.onEditorBlur && this.props.onEditorBlur(event);
+      this.props.onEditorBlur?.(event);
     }
   }
 
   @computed
   private get numericValue() {
-    if (this.editValue === null) {
+    if (this.editValue === null || this.editValue === "") {
       return null;
     }
     let valueToParse = this.editValue.endsWith(getCurrentDecimalSeparator())

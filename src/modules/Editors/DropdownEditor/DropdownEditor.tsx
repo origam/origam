@@ -17,7 +17,7 @@ import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
-import {IFocusable} from "../../../model/entities/FocusManager";
+import { IFocusable } from "../../../model/entities/FocusManager";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -48,14 +48,27 @@ export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
   "IGetDropdownEditorSetup"
 );
 
-export function DropdownEditor(props: { editor?: JSX.Element }) {
+export function DropdownEditor(props: {
+  editor?: JSX.Element;
+  isInvalid?: boolean;
+  invalidMessage?: string;
+}) {
   const beh = useContext(CtxDropdownEditor).behavior;
   return (
     <Observer>
       {() => (
         <DropdownLayout
           isDropped={beh.isDropped}
-          renderCtrl={() => (props.editor ? props.editor : <DropdownEditorControl/>)}
+          renderCtrl={() =>
+            props.editor ? (
+              props.editor
+            ) : (
+              <DropdownEditorControl
+                isInvalid={props.isInvalid}
+                invalidMessage={props.invalidMessage}
+              />
+            )
+          }
           renderDropdown={() => <DropdownLayoutBody render={() => <DropdownEditorBody />} />}
         />
       )}
@@ -66,13 +79,14 @@ export function DropdownEditor(props: { editor?: JSX.Element }) {
 export function XmlBuildDropdownEditor(props: {
   xmlNode: any;
   isReadOnly: boolean;
-  tagEditor?: JSX.Element,
-  onDoubleClick?: (event:any)=>void,
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void),
-  tabIndex?: number,
+  isInvalid?: boolean;
+  invalidMessage?: string;
+  tagEditor?: JSX.Element;
+  onDoubleClick?: (event: any) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  tabIndex?: number;
   onKeyDown?(event: any): void;
-})
-{
+}) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
   const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
@@ -202,12 +216,14 @@ export function XmlBuildDropdownEditor(props: {
   useEffect(() => {
     dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
   }, [props.isReadOnly]);
-  
-
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
-      <DropdownEditor editor={props.tagEditor}/>
+      <DropdownEditor
+        editor={props.tagEditor}
+        isInvalid={props.isInvalid}
+        invalidMessage={props.invalidMessage}
+      />
     </CtxDropdownEditor.Provider>
   );
 }

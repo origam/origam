@@ -5,8 +5,9 @@ import cx from "classnames";
 import { CtxDropdownRefCtrl } from "./Dropdown/DropdownCommon";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
+import { Tooltip } from "react-tippy";
 
-export function DropdownEditorControl() {
+export function DropdownEditorControl(props: { isInvalid?: boolean; invalidMessage?: string }) {
   const ref = useContext(CtxDropdownRefCtrl);
   const beh = useContext(CtxDropdownEditor).behavior;
   return (
@@ -30,6 +31,13 @@ export function DropdownEditorControl() {
               <i className="fas fa-spinner fa-spin"></i>
             )}
           </button>
+          {props.isInvalid && (
+            <div className={CS.notification}>
+              <Tooltip html={props.invalidMessage} arrow={true}>
+                <i className="fas fa-exclamation-circle red" />
+              </Tooltip>
+            </div>
+          )}
         </div>
       )}
     </Observer>
