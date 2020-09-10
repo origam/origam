@@ -68,9 +68,13 @@ export class NumberEditor extends React.Component<{
     this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean }) {
+  componentDidUpdate(prevProps: { isFocused: boolean, value: any }) {
     if (!prevProps.isFocused && this.props.isFocused) {
       this.makeFocusedIfNeeded();
+    }
+    if(this.props.value !== prevProps.value) {
+      this.editingValue = this.numeralFormattedValue;
+      this.wasChanged = false;
     }
   }
 
