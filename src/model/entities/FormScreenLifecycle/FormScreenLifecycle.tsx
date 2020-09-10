@@ -47,6 +47,8 @@ import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMa
 import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
+import { getProperties } from "model/selectors/DataView/getProperties";
+import { getWorkbench } from "model/selectors/getWorkbench";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -728,6 +730,22 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  *refreshLookups() {
+    const dataViews = getDataViewList(this);
+    const properties = dataViews
+      .flatMap((dv) => getProperties(dv))
+      .filter((prop) => prop.isLookup);
+    const cleaned = new Set<any>();
+    for (let prop of properties) {
+      if (prop.lookupEngine && !cleaned.has(prop.lookupId)) {
+        //console.log("Cleaning and reloading lookup caches:", prop.id, prop.lookupId);
+        prop.lookupEngine.cleanAndReload();
+        getWorkbench(this).lookupListCache.deleteLookup(prop.lookupId!);
+        cleaned.add(prop.lookupId);
+      }
+    }
+  }
+
   *refreshSession() {
     // TODO: Refresh lookups and rowstates !!!
     try {
@@ -749,6 +767,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } else {
         yield* this.loadData();
       }
+      yield* this.refreshLookups();
     } finally {
       this.monitor.inFlow--;
       setTimeout(async () => {

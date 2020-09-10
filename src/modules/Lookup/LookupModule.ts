@@ -135,6 +135,9 @@ export function createIndividualLookupEngine(
       lookupCleanerReloaderById.delete(lookupId);
       for (let d of disposers) d();
     },
+    cleanAndReload() {
+      lookupCleanerReloader.reloadLookupLabels();
+    }
   };
 }
 

@@ -94,4 +94,5 @@ export interface ILookupIndividualEngine {
   lookupCleanerReloader: LookupLabelsCleanerReloader;
   startup(): void;
   teardown(): void;
+  cleanAndReload(): void;
 };
