@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { IProperty} from "../../../model/entities/types/IProperty";
-import { BoolEditor } from "../../../gui/Components/ScreenElements/Editors/BoolEditor";
+import { IProperty } from "model/entities/types/IProperty";
+import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import S from "./CheckBox.module.scss";
 import { inject } from "mobx-react";
-import { getSelectedRow } from "../../../model/selectors/DataView/getSelectedRow";
-import { onFieldBlur } from "../../../model/actions-ui/DataView/TableView/onFieldBlur";
-import { onFieldChange } from "../../../model/actions-ui/DataView/TableView/onFieldChange";
+import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
+import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 
 export const CheckBox: React.FC<{
   checked: boolean;
@@ -25,7 +25,6 @@ export const CheckBox: React.FC<{
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const label = props.property!.name;
-  const captionLength = props.property!.captionLength;
   const height = props.property!.height;
   const width = props.property!.width;
   const left = props.property!.x;
@@ -40,7 +39,6 @@ export const CheckBox: React.FC<{
     return {
       top: top,
       left: left + height,
-      width: captionLength,
     };
   }
 
@@ -58,8 +56,8 @@ export const CheckBox: React.FC<{
     };
   }
 
-  function onChange(event: any, state: boolean){
-    if(!props.readOnly) props.onChange?.(event, state);
+  function onChange(event: any, state: boolean) {
+    if (!props.readOnly) props.onChange?.(event, state);
   }
 
   function onInputFocus() {
