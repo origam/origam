@@ -1,5 +1,8 @@
 import React from "react";
-import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
+import {
+  FilterSettingsComboBox,
+  FilterSettingsComboBoxItem,
+} from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
 import { action, observable } from "mobx";
@@ -8,18 +11,34 @@ import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
 
-const OPERATORS = () => [
-  { human: <>{T("begins with", "filter_operator_begins_with")}</>, type: "starts" },
-  { human: <>{T("not begins with", "filter_operator_not_begins_with")}</>, type: "nstarts" },
-  { human: <>{T("ends with", "filter_operator_ends_with")}</>, type: "ends" },
-  { human: <>{T("not ends with", "filter_operator_not_ends_with")}</>, type: "nends" },
-  { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
-  { human: <>{T("not contains", "filter_operator_not_contains")}</>, type: "ncontains" },
-  { human: <>=</>, type: "eq" },
-  { human: <>&ne;</>, type: "neq" },
-  { human: <>{T("is null","filter_operator_is_null")}</>, type: "null" },
-  { human: <>{T("is not null", "filter_operator_not_is_null")}</>, type: "nnull" },
-] as any[];
+const OPERATORS = () =>
+  [
+    {
+      human: <>{T("begins with", "filter_operator_begins_with")}</>,
+      type: "starts",
+    },
+    {
+      human: <>{T("not begins with", "filter_operator_not_begins_with")}</>,
+      type: "nstarts",
+    },
+    { human: <>{T("ends with", "filter_operator_ends_with")}</>, type: "ends" },
+    {
+      human: <>{T("not ends with", "filter_operator_not_ends_with")}</>,
+      type: "nends",
+    },
+    { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
+    {
+      human: <>{T("not contains", "filter_operator_not_contains")}</>,
+      type: "ncontains",
+    },
+    { human: <>=</>, type: "eq" },
+    { human: <>&ne;</>, type: "neq" },
+    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
+    {
+      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
+      type: "nnull",
+    },
+  ] as any[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -89,7 +108,10 @@ export class FilterSettingsString extends React.Component<{
   setting?: any;
   onTriggerApplySetting?: (setting: any) => void;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type, OPERATORS()[0].human);
+  @observable.ref setting: FilterSetting = new FilterSetting(
+    OPERATORS()[0].type,
+    OPERATORS()[0].human
+  );
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -131,8 +153,6 @@ export class FilterSettingsString extends React.Component<{
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
         <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
-
-        {/*<input className={CS.input} />*/}
       </>
     );
   }
