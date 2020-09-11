@@ -6,21 +6,20 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
+import { T } from "utils/translation";
 
-export interface IStringFilterOp {}
-
-const OPERATORS: any[] = [
-  { human: <>begins with</>, type: "starts" },
-  { human: <>not begins with</>, type: "nstarts" },
-  { human: <>ends with</>, type: "ends" },
-  { human: <>not ends with</>, type: "nends" },
-  { human: <>contain</>, type: "contains" },
-  { human: <>not contain</>, type: "ncontains" },
+const OPERATORS = () => [
+  { human: <>{T("begins with", "filter_operator_begins_with")}</>, type: "starts" },
+  { human: <>{T("not begins with", "filter_operator_not_begins_with")}</>, type: "nstarts" },
+  { human: <>{T("ends with", "filter_operator_ends_with")}</>, type: "ends" },
+  { human: <>{T("not ends with", "filter_operator_not_ends_with")}</>, type: "nends" },
+  { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
+  { human: <>{T("not contains", "filter_operator_not_contains")}</>, type: "ncontains" },
   { human: <>=</>, type: "eq" },
   { human: <>&ne;</>, type: "neq" },
-  { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" },
-];
+  { human: <>{T("is null","filter_operator_is_null")}</>, type: "null" },
+  { human: <>{T("is not null", "filter_operator_not_is_null")}</>, type: "nnull" },
+] as any[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -28,9 +27,9 @@ const OpCombo: React.FC<{
 }> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS().find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS.map((op) => (
+      {OPERATORS().map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() =>
@@ -90,7 +89,7 @@ export class FilterSettingsString extends React.Component<{
   setting?: any;
   onTriggerApplySetting?: (setting: any) => void;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS[0].type, OPERATORS[0].human);
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type, OPERATORS()[0].human);
 
   componentDidMount() {
     this.takeSettingFromProps();
