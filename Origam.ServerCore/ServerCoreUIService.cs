@@ -1114,5 +1114,68 @@ namespace Origam.ServerCore
             gridElement.InnerText = text;
             parentElement.AppendChild(gridElement);
         }
+
+        public static XmlDocument NotificationBoxContent()
+        {
+            SecurityTools.CurrentUserProfile();
+            XmlDocument doc = null;
+            NotificationBox logoNotificationBox = LogoNotificationBox();
+            if (logoNotificationBox != null)
+            {
+                ArrayList tooltips = logoNotificationBox.ChildItemsByType(
+                    DataServiceDataTooltip.ItemTypeConst);
+                doc = GetTooltip(null, tooltips).Xml;
+            }
+            if (doc == null)
+            {
+                doc = DefaultNotificationBoxContent();
+            }
+            return doc;
+        }
+
+        private static IXmlContainer GetTooltip(object id, ArrayList tooltips)
+        {
+            tooltips.Sort();
+            DataServiceDataTooltip tooltip = null;
+            foreach (DataServiceDataTooltip tt in tooltips)
+            {
+                if (RuleEngine.IsFeatureOn(tt.Features) 
+                    && RuleEngine.IsInRole(tt.Roles))
+                {
+                    tooltip = tt;
+                }
+            }
+            if (tooltip == null) return null;
+            QueryParameterCollection qparams = new QueryParameterCollection();
+            if (id != null)
+            {
+                foreach (string paramName in
+                    tooltip.TooltipLoadMethod.ParameterReferences.Keys)
+                {
+                    qparams.Add(new QueryParameter(paramName, id));
+                }
+            }
+            DataSet data = core.DataService.LoadData(
+                tooltip.TooltipDataStructureId, 
+                tooltip.TooltipDataStructureMethodId, 
+                Guid.Empty, Guid.Empty, null, qparams);
+            IPersistenceService persistence = 
+                ServiceManager.Services.GetService<IPersistenceService>();
+            IXsltEngine transformer = AsTransform.GetXsltEngine(
+                XsltEngineType.XslTransform, persistence.SchemaProvider);
+            IXmlContainer result = transformer.Transform(
+                DataDocumentFactory.New(data), 
+                tooltip.TooltipTransformationId, 
+                new Hashtable(), 
+                new RuleEngine(null, null), null, false);
+            return result;
+        }
+
+        private static XmlDocument DefaultNotificationBoxContent()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml("<div class=\"logo-left\"><img src=\"./img/logo-left.png\"></div>");
+            return doc;
+        }
     }
 }

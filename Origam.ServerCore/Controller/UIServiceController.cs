@@ -451,6 +451,11 @@ namespace Origam.ServerCore.Controller
                 .Map(RowDataToRecordTooltip)
                 .Finally(UnwrapReturnValue);
         }
+        [HttpGet("[action]")]
+        public IActionResult GeNotificationBoxContent()
+        {
+            return Ok(ServerCoreUIService.NotificationBoxContent());
+        }
         [HttpPost("[action]")]
         public IActionResult GetAudit([FromBody]GetAuditInput input)
         {
