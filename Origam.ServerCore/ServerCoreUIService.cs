@@ -823,6 +823,15 @@ namespace Origam.ServerCore
             sessionStore.PendingChanges = null;
             return changes ?? new ArrayList();
         }
+        public ArrayList GetChanges(ChangesInput input)
+        {
+            var sessionStore = sessionManager.GetSession(
+                input.SessionFormIdentifier);
+            var hasErrors = sessionStore.Data.HasErrors;
+            var hasChanges = sessionStore.Data.HasChanges();
+            return sessionStore.GetChanges(
+                input.Entity, input.RowId, 0, hasErrors, hasChanges);
+        }
         public static Result<Guid, IActionResult> SaveFilter(
             DataStructureEntity entity, SaveFilterInput input)
         {

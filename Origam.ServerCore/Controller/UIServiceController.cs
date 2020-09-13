@@ -482,6 +482,12 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier)));
         }
         [HttpPost("[action]")]
+        public IActionResult Changes([FromBody]ChangesInput input)
+        {
+            return RunWithErrorHandler(() => Ok(
+                sessionObjects.UIService.GetChanges(input)));
+        }
+        [HttpPost("[action]")]
         public IActionResult SaveFilter([FromBody]SaveFilterInput input)
         {
             return FindEntity(input.DataStructureEntityId)
