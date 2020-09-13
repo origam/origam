@@ -58,13 +58,11 @@ namespace Origam.Server
         private DateTime _dateCreated;
         private DateTime _dateLastModified;
         private string _property;
-        private bool _submitImmediately;
         private DataStructureEntity _entity;
 
         public BlobUploadRequest(
             DataRow row, IPrincipal principal, IDictionary parameters, 
             DateTime dateCreated, DateTime dateLastModified, string property,
-            bool submitImmediately = false,
             DataStructureEntity entity = null)
         {
             _row = row;
@@ -73,7 +71,6 @@ namespace Origam.Server
             _dateCreated = dateCreated;
             _dateLastModified = dateLastModified;
             _property = property;
-            _submitImmediately = submitImmediately;
             _entity = entity;
         }
 
@@ -111,12 +108,6 @@ namespace Origam.Server
         {
             get { return _property; }
             set { _property = value; }
-        }
-
-        public bool SubmitImmediately
-        {
-            get { return _submitImmediately; }
-            set { _submitImmediately = value; }
         }
 
         public DataStructureEntity Entity

@@ -275,16 +275,7 @@ namespace Origam.ServerCore.Controller
                         }
                     }
                 }
-                if(!blobUploadRequest.SubmitImmediately)
-                {
-                    return Ok();
-                }
-                var rowData = new RowData
-                {
-                    Row = blobUploadRequest.Row,
-                    Entity = blobUploadRequest.Entity
-                };
-                return SubmitChange(rowData, Operation.Update);
+                return Ok();
             }
             catch(Exception ex)
             {
@@ -322,7 +313,6 @@ namespace Origam.ServerCore.Controller
                     input.DateCreated,
                     input.DateLastModified,
                     input.Property,
-                    input.SubmitImmediately,
                     rowData.Entity));
             return Ok(token);
         }
