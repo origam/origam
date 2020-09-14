@@ -225,6 +225,14 @@ namespace Origam.ServerCore
                 FileProvider =  new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets")),
                 RequestPath = new PathString("/assets")
             });
+            if(!string.IsNullOrEmpty(startUpConfiguration.PathToChatApp))
+            {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToChatApp),
+                    RequestPath = new PathString("/chatrooms")
+                });
+            }
             app.UseSpaStaticFiles();
             app.UseCors(builder => 
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

@@ -50,5 +50,7 @@ namespace Origam.ServerCore.Configuration
                 .Select(c => c.Value);
 
         public string PathToClientApp => configuration["PathToClientApp"];
+
+        public string PathToChatApp => configuration["PathToChatApp"];
     }
 }
