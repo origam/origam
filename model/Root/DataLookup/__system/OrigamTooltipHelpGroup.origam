@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="a8694652-b572-42cc-9c91-fe189bc9ef2b"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpGroup.origam#LookupOrigamTooltipHelpGroup/a21d3cc7-3063-4f7b-a692-8d19f0cafa30"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamTooltipHelpGroup"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpGroup.origam#LookupOrigamTooltipHelpGroup/a21d3cc7-3063-4f7b-a692-8d19f0cafa30"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpGroup.origam#LookupOrigamTooltipHelpGroup/GetId/1c0b676f-28cb-4b72-ab43-50caafb7d53f"
+    valueValueMember="Id" />
+</x:file>

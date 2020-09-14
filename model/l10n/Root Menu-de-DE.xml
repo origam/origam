@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<OrigamLocalization>
+  <Element Id="fbbfcbd2-4032-4bc0-b4db-076ff0bbd448" Path="Menu/Settings/General">
+    <DisplayName OriginalText="General">Allgemein</DisplayName>
+  </Element>
+  <Element Id="db9a696b-f85b-4864-b049-36ea1ca86ee4" Path="Menu/Settings/General/AsapStyleColor">
+    <DisplayName OriginalText="System Colors">Systemfarben</DisplayName>
+  </Element>
+  <Element Id="a47ba338-1ae6-4f87-9f5f-3a481b836384" Path="Menu/Settings/Maps">
+    <DisplayName OriginalText="Maps">Karte</DisplayName>
+  </Element>
+  <Element Id="112c5faf-2fa4-4e36-8ce1-3e4e285ce96e" Path="Menu/Settings/General/Counter">
+    <DisplayName OriginalText="Serial Number Ranges">Serial Number Ranges</DisplayName>
+  </Element>
+  <Element Id="1462e299-22ab-4a7f-b2e1-4866ad3a8950" Path="Menu/Settings/UserManagement/AsapApplicationRole">
+    <DisplayName OriginalText="Application Roles">Anwendungsrechte</DisplayName>
+  </Element>
+  <Element Id="359bc218-d8c3-49d8-bd1d-5bf293f7db63" Path="Menu/Settings/UserManagement/UserProfile_Screen">
+    <DisplayName OriginalText="My User Profile">My User Profile</DisplayName>
+  </Element>
+  <Element Id="dd8954c2-ffd8-4e18-b67e-66e291bb407f" Path="Menu/Settings/UserManagement">
+    <DisplayName OriginalText="Users &amp; Security">Benutzer &amp; Sicherheit</DisplayName>
+  </Element>
+  <Element Id="894956f4-1e0f-41af-a4b3-6fa0846f39fa" Path="Menu/Settings/UserManagement/NewUser">
+    <DisplayName OriginalText="Add User">Benutzer hinzufügen</DisplayName>
+  </Element>
+  <Element Id="1cd3d010-c1cf-4f5c-b81f-7896029b4ce0" Path="Menu/Settings">
+    <DisplayName OriginalText="Settings">Einstellungen</DisplayName>
+  </Element>
+  <Element Id="9e7fc100-a6d1-4d40-acd6-9cf9ac8fa717" Path="Menu/Settings/General/AsapFeatureList">
+    <DisplayName OriginalText="Features">Eingenschaften</DisplayName>
+  </Element>
+  <Element Id="d1260ffd-9c2d-4869-b666-9fbffed7dcc9" Path="Menu/Settings/UserManagement/AsapRole">
+    <DisplayName OriginalText="User Roles">Benutzerrolle</DisplayName>
+  </Element>
+  <Element Id="74de21a3-0ef8-477c-85e2-b3884d11d34a" Path="Menu/Settings/UserManagement/UsersAndRoles">
+    <DisplayName OriginalText="Users">Benutzer</DisplayName>
+  </Element>
+  <Element Id="ebe813b6-ad9f-432f-acfc-dabf3cf46830" Path="Menu/Settings/Maps/AsapMapLayer">
+    <DisplayName OriginalText="Map Layers">Kartenlayer</DisplayName>
+  </Element>
+  <Element Id="750f96e7-f839-4dea-b54c-dfe9aca103df" Path="Menu/Settings/General/Language">
+    <DisplayName OriginalText="Languages">Sprachen</DisplayName>
+  </Element>
+  <Element Id="aa7ecad3-b8e9-4c5e-9a57-fae3255c0b5f" Path="Menu/Settings/General/WorkQueue">
+    <DisplayName OriginalText="Work Queues">Work Queues</DisplayName>
+  </Element>
+  <Element Id="846b615d-e76e-4500-96b1-fe25222e57a6" Path="Menu/Settings/Maps/AsapMap">
+    <DisplayName OriginalText="Map Configuration">Kartenkonfiguration</DisplayName>
+  </Element>
+  <Element Id="080cb3f6-ca4b-407d-a412-3559b822b857" Path="Menu/Settings/General/AsapNotificationTemplate">
+    <DisplayName OriginalText="Notification Templates">Notification Templates</DisplayName>
+  </Element>
+</OrigamLocalization>

@@ -1,0 +1,1 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'FRM_Language', 'Menu > Settings > General > Languages', 1, getdate())

@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [WorkQueueCommandType_l10n] ADD CONSTRAINT FK_WorkQueueCommandType_l10n_refWorkQueueCommandTypeId_WorkQueueCommandType
+	FOREIGN KEY (
+		[refWorkQueueCommandTypeId]
+	)
+
+	REFERENCES [WorkQueueCommandType] (
+		[Id]
+	)
+ALTER TABLE [WorkQueueCommandType_l10n] ADD CONSTRAINT FK_WorkQueueCommandType_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		[refLanguageId]
+	)
+
+	REFERENCES [Language] (
+		[Id]
+	)

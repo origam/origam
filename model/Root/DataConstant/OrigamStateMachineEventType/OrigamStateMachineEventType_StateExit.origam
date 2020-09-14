@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataConstant
+    abstract="false"
+    dataType="UniqueIdentifier"
+    x:id="c2cc9266-958c-46b1-a041-2a78f021679f"
+    lookup="Root/DataLookup/__system/OrigamStateMachineEventType.origam#OrigamStateMachineEventType/05f6579e-3498-4f0d-b8be-6f0e9f344939"
+    name="OrigamStateMachineEventType_StateExit"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="d4b3b294-6a20-45d8-80bd-1583901e5ac3" />
+</x:file>

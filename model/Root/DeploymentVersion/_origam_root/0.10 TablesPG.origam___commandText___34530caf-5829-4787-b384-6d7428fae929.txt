@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamNotificationTemplate_l10n" (
+	"Template" Text NOT NULL,
+	"refOrigamNotificationTemplateId" Uuid NOT NULL,
+	"Name" Varchar(200) NOT NULL,
+	"refLanguageId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamNotificationTemplate_l10n_ix_unq_OrigamNotificationTemplate" ON "OrigamNotificationTemplate_l10n" ("refOrigamNotificationTemplateId" ASC, "refLanguageId" ASC);

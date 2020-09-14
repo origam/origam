@@ -1,0 +1,2 @@
+﻿INSERT INTO "WorkQueueCommandType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") VALUES (N'Remove', NULL, NULL, '{8d4117e0-590b-4495-9fd3-de46d9e768af}', now(), NULL);
+INSERT INTO "WorkQueueCommandType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") VALUES (N'Queue Command', NULL, NULL, '{e7b1761f-7126-4a20-9da3-80872de80227}', now(), NULL);

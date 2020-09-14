@@ -1,0 +1,15 @@
+﻿CREATE TABLE [AsapSyncRunLog] (
+	[ErrorText] NTEXT NULL,
+	[DestinationId_guid] UNIQUEIDENTIFIER NULL,
+	[SourceId_int] INT NULL,
+	[ReferenceCode] NVARCHAR(50) NOT NULL,
+	[DestinationId_int] INT NULL,
+	[refAsapSyncRunId] UNIQUEIDENTIFIER NOT NULL,
+	[IsSuccess] BIT NOT NULL,
+	[SourceId_guid] UNIQUEIDENTIFIER NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_AsapSyncRun] ON [AsapSyncRunLog] ([refAsapSyncRunId] ASC)CREATE INDEX [ix_SourceGuid] ON [AsapSyncRunLog] ([SourceId_guid] ASC)

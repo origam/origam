@@ -1,0 +1,2 @@
+﻿ALTER TABLE [WorkQueueCommand] ADD [IsAutoProcessedWithErrors] BIT NOT NULL CONSTRAINT [DF_WorkQueueCommand_IsAutoProcessedWithErrors] DEFAULT 0
+ALTER TABLE [WorkQueueCommand] DROP CONSTRAINT [DF_WorkQueueCommand_IsAutoProcessedWithErrors]

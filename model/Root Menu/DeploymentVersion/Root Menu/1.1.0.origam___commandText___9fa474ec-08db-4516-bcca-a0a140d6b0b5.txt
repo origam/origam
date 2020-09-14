@@ -1,0 +1,2 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated)
+VALUES (newid(), 'FRM_UserProfile', 'Menu > Settings > Users & Security > My User Profile', 1, getdate())

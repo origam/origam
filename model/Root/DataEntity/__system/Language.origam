@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="All"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="efdff1b5-916a-4036-977e-e34f59e72d41"
+    label="Language"
+    mappedObjectName="Language"
+    name="Language"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="9d806147-508a-4e26-bdbe-b7266a82b861"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="e8b05f7f-0987-4fab-9b8b-458f127c5515"
+      isPrimaryKey="false"
+      label="Name"
+      mappedColumnName="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="20"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="8b99aed9-d03c-4012-b59d-c3a40bb3d9f3"
+      isPrimaryKey="false"
+      label="IETF Tag"
+      mappedColumnName="TagIETF"
+      name="TagIETF"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+  </DataEntity>
+</x:file>

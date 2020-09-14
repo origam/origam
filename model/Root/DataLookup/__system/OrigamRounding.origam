@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="eea349ad-7e4b-469d-8787-1ec7fa650301"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding.origam#LookupOrigamRounding/9695a1bb-e6e9-4708-9241-36896c6ce7a9"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamRounding"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding.origam#LookupOrigamRounding/9695a1bb-e6e9-4708-9241-36896c6ce7a9"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRounding.origam#LookupOrigamRounding/GetId/3de78664-218e-403c-9538-16ecf07bcd87"
+    valueValueMember="Id" />
+</x:file>

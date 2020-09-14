@@ -1,0 +1,17 @@
+﻿CREATE TABLE "OrigamDataAuditLog" (
+	"OldValue" Text NULL,
+	"refColumnId" Uuid NOT NULL,
+	"NewValueId" Varchar(50) NULL,
+	"NewValue" Text NULL,
+	"OldValueId" Varchar(50) NULL,
+	"ActionType" Integer NOT NULL,
+	"refParentRecordEntityId" Uuid NULL,
+	"refParentRecordId" Uuid NOT NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+CREATE  INDEX  "OrigamDataAuditLog_ix_refParentRecordId" ON "OrigamDataAuditLog" ("refParentRecordId" ASC);

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="d668adce-6551-4f4d-b727-1e17c3fe3b7b"
+    isComplex="true"
+    name="WorkQueue_Remove"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/Work Queue/WorkQueue_Remove.origam#WorkQueue_Remove/df7a798e-5106-48f8-8331-b9bc8b55c048"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="414fbe8d-d07b-4e7b-8a72-2231f30e63fd"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

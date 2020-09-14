@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="f6035698-02ff-437e-ab6a-6055f9ec04ec"
+    localized="false"
+    name="LookupOrganizationMappingList_SecurityFilter"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/3eb1f049-362f-41e9-80dd-2ee16baf5862"
+      x:id="712f2103-0e16-4a4c-bc08-92cd836bee2a"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrganizationMappingList"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/refOrganizationId/f7261cdc-b4b0-4995-8e71-9ac3982bf37c"
+        x:id="9446c510-a37d-4439-b91d-c3479883875e"
+        name="refOrganizationId"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="be5c0cbd-a826-4650-b4f2-4a8dce9383e9"
+      name="GetFilter"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/Organization Management/LookupOrganizationMappingList_SecurityFilter.origam#LookupOrganizationMappingList_SecurityFilter/OrganizationMappingList/712f2103-0e16-4a4c-bc08-92cd836bee2a"
+        filter="Root/DataEntity/Organization Management/OrganizationMappingList.origam#OrganizationMappingList/GetByOrganizationId/b8f03db3-2735-4e01-a377-261debe3019d"
+        x:id="fd0f4837-4f9c-4c83-8f1f-67f81611f627"
+        name="OrganizationMappingList_GetByOrganizationId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

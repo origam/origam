@@ -1,0 +1,416 @@
+<Root>
+  <Documentation>
+    <Data>Prepare a data to be sent as a notification. Return Xml containing in the first row of the first table non-empty fields named "Body" and "Subject".</Data>
+    <Category>USER_SHORT_HELP</Category>
+    <refSchemaItemId>bd66bee0-7a1c-4b48-a53a-04fcef288f4c</refSchemaItemId>
+    <Id>d5ece4dd-b44f-43e0-a176-62bfca4ddcec</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Prefix for the resulting number</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>74658e86-c13d-4c65-887b-06c893a9efb4</refSchemaItemId>
+    <Id>71c48e89-c896-4043-9b6f-5c9d0eb2517b</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Datum a čas aktualizace záznamu na klienské stanici.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>bfd1ea1b-ffbf-47f6-8f9b-08dab6553a18</refSchemaItemId>
+    <Id>293153a9-3f5d-443a-864b-a4dc0d853f79</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Attachment's remark</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>6a148bad-09df-4266-b0aa-0ae2ff14441f</refSchemaItemId>
+    <Id>626f1722-cb90-42b0-a31f-99cfee5dd4fd</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Date from which the counter is valid. Only works when the counter is managed by date.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>e8b87f9a-9ab9-479b-bbf4-11908d299b14</refSchemaItemId>
+    <Id>a7c522cb-68c5-405e-a55f-75ea737fef29</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Uživatel, který vytvořil záznam</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>cbcf7bb8-10d0-4576-98f5-1210b10bae5f</refSchemaItemId>
+    <Id>2ea20ca2-0e0c-424a-b1f7-a45613ebe969</Id>
+  </Documentation>
+  <Documentation>
+    <Data>First Name</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>6d9c8b71-337e-4572-87ff-1dd7e1fa3c53</refSchemaItemId>
+    <Id>88a4610f-af7c-436f-8569-1cac342d1a6b</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Attachment's file name</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>51854e16-2ad2-4ad3-bab4-1f54ac8517e6</refSchemaItemId>
+    <Id>cd4be3ab-2852-4c50-bdff-889dfefa3602</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Uživatel, kerý naposledy aktualizoval tento záznam</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>ad2d2efe-9cb0-4141-ac28-25b8ed68580b</refSchemaItemId>
+    <Id>eab7ed49-584b-4e15-afed-60d8901760ef</Id>
+  </Documentation>
+  <Documentation>
+    <Data>'WorkQueueRow' parametr is filled with work queue row only if 'NotificationDataStracture' is filled for a work queue. If it's not filled the Work Queue row is sent to 'context' parametr</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>a08966b0-249a-4f8d-bdbd-2635a9b41e65</refSchemaItemId>
+    <Id>5b878ea2-6d41-461f-b160-b8531e32b2f1</Id>
+  </Documentation>
+  <Documentation>
+    <Data />
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>1fdb538d-525f-414c-93b1-29cadb29b1cb</refSchemaItemId>
+    <Id>27be90e4-0c22-4022-a9de-4654df7c659a</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Dokončení (skutečné)</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>5985bb3f-74be-488c-987f-3a21ea2a1ee3</refSchemaItemId>
+    <Id>dde25cae-3a03-46da-9acf-86536d30adb7</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Business unit name</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>a7d2a263-2d0c-4c6a-95ca-3c08455ea7b1</refSchemaItemId>
+    <Id>fd89b524-5693-4a0b-9a1c-eb55be391598</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je čtvrtek pracovní den</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>db7ecd0b-ed27-47d3-9a8f-3dd7b6430673</refSchemaItemId>
+    <Id>d2a2203f-a8dc-4bae-965b-69451b8128b2</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je středa pracovní den</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>a5aced01-0a45-4e17-a9cf-3deaabcf6fc9</refSchemaItemId>
+    <Id>408375b9-1573-4661-be77-0d160c148b75</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Název kalendáře</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>16483d96-dff2-4341-9464-3f09db80548c</refSchemaItemId>
+    <Id>dbc56389-2385-476b-9f67-bd2f8213d9fb</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Předpokládané započetí</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>6fe7b894-a09c-4167-8429-40acfc2228f8</refSchemaItemId>
+    <Id>f5f7ef7d-9bab-4ac3-bb58-172e68634474</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Maps the internal user to the login user name.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>15c44b5f-c719-440e-983f-44f177593f63</refSchemaItemId>
+    <Id>980bc69b-4fbe-45d7-b95c-b59824b82f2f</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Current position of the counter. When requesting the next position from the counter this number will be increased by a value set in the Increment field.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>12805c26-2849-416c-8d76-51fa6470fde7</refSchemaItemId>
+    <Id>d86525ce-75b5-4036-96b9-3d53ea969f79</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Number of digits. The resulting number will be padded by zeroes up to the number of digits set in this field.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>25da68f5-2893-4e31-b0e4-53697477bb24</refSchemaItemId>
+    <Id>184055a5-028d-4172-b04b-e9db55188150</Id>
+  </Documentation>
+  <Documentation>
+    <Data>When a SP returns more than one result sets (e.g. more selects), than we have to map SP resultsets to target datastructure. So this parameter is a list of datastructure entity names in order that corresponds to a resultset from SP. List is separated by semicolons.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>cd009a2f-98d2-4f15-9c22-5adef626aa1f</refSchemaItemId>
+    <Id>250612e8-3895-456b-8471-fdccc6b88b72</Id>
+  </Documentation>
+  <Documentation>
+    <Data />
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>724cfd25-9c93-47a6-bdc1-5d6de4a3bb36</refSchemaItemId>
+    <Id>1f8cee93-3dce-4b48-979a-f7a4ddc15517</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Datum a čas vytvoření záznamu (server)</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>da9c4ff5-2e67-4744-935a-60a39b886828</refSchemaItemId>
+    <Id>35be5389-418d-4a48-a3c4-91e3a86e0749</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Obchodní jednotka (oddělení), vlastnící daný zdroj.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>3b49ef11-c055-472b-9f3f-67cd4a8dc106</refSchemaItemId>
+    <Id>db42ac03-396f-4587-bc5b-100025a59682</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Požadované datum dokončení</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>a35181bc-aa52-45e1-a53e-68a22514c939</refSchemaItemId>
+    <Id>c7eab25c-4428-431a-8e29-027041b3be05</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Select Work Queue</Data>
+    <Category>USER_WFSTEP_DESCRIPTION</Category>
+    <refSchemaItemId>a9cf29b7-6704-48a2-990e-6b1f2fb0e535</refSchemaItemId>
+    <Id>71f64714-b4d3-4ac6-82ce-cdf1a854fcbf</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Datum nepracovního dne</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>ef9039f3-ac96-44ae-ad83-6b22f0ef3d24</refSchemaItemId>
+    <Id>0bd63028-b0b3-4c2d-8ebd-f5bb39596bfd</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Odkaz na nadřazenou entitu</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>37560615-b9bc-4b55-8004-6cb68877ef70</refSchemaItemId>
+    <Id>65a1826f-48b3-410b-824e-2473b7dc2083</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Number by which counter numbers will be incremented.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>7e5deb1c-43f8-4973-8545-71cc28457e79</refSchemaItemId>
+    <Id>e21483ea-9a15-41f8-807d-a2f87a910155</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Předpokládané dokončení</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>e0e43094-1483-4e75-ad46-75a65a8320bd</refSchemaItemId>
+    <Id>43419351-1663-4863-b85e-b847ccc69d8a</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Business partner's name shortcut.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>b19baf6b-56ac-4506-a076-769c663be977</refSchemaItemId>
+    <Id>00abccdd-7b2a-4e6f-9873-2af6daf64722</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Input context for transformation (by NotificationTemplateId) - data taken either from WorkQueue Entry or fetched by refId.</Data>
+    <Category>USER_SHORT_HELP</Category>
+    <refSchemaItemId>24412814-427b-4c9e-a786-78429532bd64</refSchemaItemId>
+    <Id>f832b44a-cd7d-4fd5-a188-d263d491a646</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Název druhu zdroje</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>e70431e9-236f-4d42-90da-7a4d94547f85</refSchemaItemId>
+    <Id>881ebd62-a266-4d9b-8b4e-8e111dd5694a</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Datum vytvoření záznamu</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>6a92781b-ac57-4b24-a2a3-7ff772747431</refSchemaItemId>
+    <Id>fb38c57d-ea94-4742-b57b-d304f2c742fb</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Date until when the counter is valid. Only works if the counter is set to be evaluated by date.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>16b7ef84-5207-4d58-87a2-89fae8e1d6f9</refSchemaItemId>
+    <Id>31a598d5-37e9-4048-81e4-634caa7d3da2</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Bottom limit of the counter. This is not the starting number.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>4264cf78-6967-4c5c-a73b-8b5a06698f68</refSchemaItemId>
+    <Id>ffb3f750-1244-4e0e-88bf-9d60cb0d595a</Id>
+  </Documentation>
+  <Documentation>
+    <Data>The serial number range code is used in the application's model and is predefined by the application's vendor or the vendor can provide information how to set-up your codes.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>b4c0ec14-7b66-4ae5-84ca-91b42d9778b4</refSchemaItemId>
+    <Id>884f6f8e-561a-49d2-a283-de194a0082e1</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Name</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>7a5f60a2-895a-49d7-b009-929b4a6a4c5a</refSchemaItemId>
+    <Id>7382cd4e-403b-49b3-abde-ea4589e1d685</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Id záznamu. Jednoznačná identifikace libovolného záznamu ORIGAM/ISA</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>2fdc34b8-fe8b-4353-aa84-92bb5d768370</refSchemaItemId>
+    <Id>1600eed1-9ffe-4842-b764-ac2710f291b8</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je pátek pracovní den</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>b40c78c6-f40c-45c2-bc48-9735d81e9e40</refSchemaItemId>
+    <Id>6d7d24fd-516d-462d-9351-5ed90f2ab59f</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Pomocí tohoto formuláře je možné nastavovat číselné řady. Podle kódu aplikace vyhledává správnou číselnou řadu. </Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>08ec080c-c274-4c38-b11e-996444805418</refSchemaItemId>
+    <Id>25afa56c-cc7a-440f-b60d-319757ff49b1</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Druh zdroje (lidský/stroj)</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>617cd747-0db4-470c-a43d-a6e953546a7b</refSchemaItemId>
+    <Id>ee36517e-881e-4969-86bf-28477fd56b93</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je neděle pracovní den</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>5f5a5980-4059-4b78-8386-ad8f4685109b</refSchemaItemId>
+    <Id>de630082-a8c7-46f2-be8a-1a7e904b1aba</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Datum a čas aktualizace záznamu na serveru.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>9424c659-0c83-4aa9-b2a4-aeec9d9e8d40</refSchemaItemId>
+    <Id>27e37eee-50e7-42ee-9f58-380a899a96c4</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Upper limit of the counter. After reaching this number the counter will raise errors when requesting new positions.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>f6ae7af3-c023-4fa2-993f-b4b0da2dc311</refSchemaItemId>
+    <Id>8f68ad44-480f-46f9-ba48-de10d48c63a7</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je sobota pracovní den</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>7b00ddba-864f-45db-b989-b5fdd7a17926</refSchemaItemId>
+    <Id>f344491a-31f5-4d91-9e51-8f7a13b34c87</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Attachment storage</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>de01feaf-6f60-4a6c-9003-b6f61198ef8a</refSchemaItemId>
+    <Id>5806b9bd-5f7f-42ff-8ce1-196fc9b67bc5</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Datum poslední aktualizace záznamu</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>d245e9df-9a2f-4196-89de-b86faaaeb624</refSchemaItemId>
+    <Id>3f643097-dcfe-45dd-96ac-a600415bb984</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Název svátku nebo volna</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>da60602b-60bb-444c-b12b-b9141dbd62e8</refSchemaItemId>
+    <Id>788e62c8-d520-4cf2-a892-d66002ee5b0d</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Uživatel který vytvořil daný záznam (odkaz na tabulku faktů Subjekt)</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>253ce61e-509c-4d08-864f-c0e03d3eed4b</refSchemaItemId>
+    <Id>15b829fb-0ba0-4a41-8b7f-532b33bfa951</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Odkaz na nadřazený záznam</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>1b7c8e4e-6e0e-4e05-8893-c60d755ff62f</refSchemaItemId>
+    <Id>9452299b-8ca1-4e94-8204-778c6ac8cb03</Id>
+  </Documentation>
+  <Documentation>
+    <Data>If not empty, send a mail by mail work queue of the given name. If empty, send by smtp directly.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>48abb054-bb38-4eb3-9f07-cbfa21e2abb2</refSchemaItemId>
+    <Id>2ecd38ad-d8df-4ac8-a8dd-45ac5067e462</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Id of message template (from table OrigamNotificationTemplate)</Data>
+    <Category>USER_SHORT_HELP</Category>
+    <refSchemaItemId>ad4705d3-0068-4ff5-9b0c-cf283ed65efb</refSchemaItemId>
+    <Id>8a6d583b-1ae4-40b6-92ac-143998a905ef</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je pondělí pracovní den</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>62b00c08-cf52-425a-848e-d24e64f9857a</refSchemaItemId>
+    <Id>9808e0b1-116a-4787-bc29-b76de81b6949</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Id of record where to take all attachments from.</Data>
+    <Category>USER_SHORT_HELP</Category>
+    <refSchemaItemId>1fc5d6ac-8e65-4c61-b5b9-d34ba16aca98</refSchemaItemId>
+    <Id>c54b1c02-9164-4984-afea-ae7ab5c3ba5e</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Business Partner</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>457a4391-e94f-424c-89d0-dc3804121ce6</refSchemaItemId>
+    <Id>6ddb28c9-59ea-4a99-94de-bb00a2bfbb6d</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Email addresss in case of e-mail, phone number of recipient in case of  SMS, etc.</Data>
+    <Category>USER_SHORT_HELP</Category>
+    <refSchemaItemId>6a012b44-655d-4e52-92dc-dd47663524ea</refSchemaItemId>
+    <Id>53efd7f0-4a94-45e6-b9a3-dc242dbb6aa6</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je záznam vybrán</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>de0d5266-6200-4775-87aa-e151815fb23c</refSchemaItemId>
+    <Id>82aac86d-9888-474e-889a-56e2f14d1b57</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Datum a čas vytvoření záznamu (klient)</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>2340af1e-d939-47ae-930b-e24b0cb3a756</refSchemaItemId>
+    <Id>9cbdab1b-905e-45ea-9db7-f76b0610f88c</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Název zdroje</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>7e68a1d3-87bd-4892-8886-e3e8539ff78c</refSchemaItemId>
+    <Id>fecbfd3a-17ed-4289-83bd-06f74cf77757</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Skutečné dokončení kroku</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>1b8f35b6-e5f6-42bf-9f25-e47e2052fd27</refSchemaItemId>
+    <Id>bf04e44e-91a7-493d-9db6-75a0b8e64f64</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Info about a recipient. An OrigamNotificationContactData datastructure with one row is expected. </Data>
+    <Category>USER_SHORT_HELP</Category>
+    <refSchemaItemId>19a4b465-adbd-4710-a8b3-e74e8d3e239d</refSchemaItemId>
+    <Id>e48732bc-93e6-474e-a810-519d7feafd39</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Označuje, zda je úterý pracovní den</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>ac0f701e-b580-4ea4-b210-e985f517bada</refSchemaItemId>
+    <Id>9fb5541a-ccdb-47cb-b60b-060e46d1473f</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Users having at least one user role containing at least one of these application roles will be able to run commands through external HTTP API</Data>
+    <Category>USER_SHORT_HELP</Category>
+    <refSchemaItemId>6878eca9-5ff7-4f01-b756-eb16da693763</refSchemaItemId>
+    <Id>f70b5db0-d326-49ca-85d8-ff5897c8b48c</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Vlastník zdroje. V případě lidského zdroje odkaz na danou osobu v adresáři.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>3e9c243e-29f8-4c1b-bd95-ebf995a9abe1</refSchemaItemId>
+    <Id>deb8c038-7bec-4306-8b8d-e72c4545895d</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Odkaz na nadřazený záznam</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>4badf745-4bf1-4257-a3fe-ec0c86c2588d</refSchemaItemId>
+    <Id>8e2cfa42-2148-4927-89a7-55f2aac7db40</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Serial number range description</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>9c673323-d8ac-4498-9a05-edb73f8d903e</refSchemaItemId>
+    <Id>1177393a-86d1-4e7c-b0df-8c2bafe98584</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Uživatel který aktualizoval naposledy záznam.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>efb83735-bedb-4eee-b9eb-f111dd46980e</refSchemaItemId>
+    <Id>14b0850e-2689-4257-9342-bd4f23d43ae9</Id>
+  </Documentation>
+  <Documentation>
+    <Data>If selected this number range will be divided by date ranges, e.g. invoices will start over numbering each year. If not selected, the same number range will be used for all dates.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>34341cdb-cad9-4150-bb2c-f778f58b2d0f</refSchemaItemId>
+    <Id>2019648c-b9e5-4d68-9fb9-4fd4c13d5a56</Id>
+  </Documentation>
+</Root>

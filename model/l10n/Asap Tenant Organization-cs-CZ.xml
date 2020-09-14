@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<AsapLocalization>
+  <Element Id="9fd302b4-78b8-4d9d-9dc7-02c6d03cccec" Path="OrganizationBusinessPartner">
+    <Caption OriginalText="Obchodní partner organizace">Obchodní partner organizace</Caption>
+    <Documentation Category="USER_LONG_HELP" OriginalText=" Addressbook of an organization. Contains either members (users) of an organization, having refUserBusinessPartnerId filled or customers of an organization (others). An employee can have two records in this table - as a user  and optionally as an internal customer."> Addressbook of an organization. Contains either members (users) of an organization, having refUserBusinessPartnerId filled or customers of an organization (others). An employee can have two records in this table - as a user  and optionally as an internal customer.</Documentation>
+  </Element>
+  <Element Id="aa66babb-36bc-4a15-926b-1d711512c279" Path="OrganizationAsapApplicationRole">
+    <Caption OriginalText="Aplikační role v Organizaci">Aplikační role v Organizaci</Caption>
+  </Element>
+  <Element Id="f55f7adb-2066-42f7-acda-a43a87945233" Path="OrganizationBusinessPartnerAsapRole">
+    <Caption OriginalText="Přiřazení uživatelské role obchodnímu partnerovi v organizaci">Přiřazení uživatelské role obchodnímu partnerovi v organizaci</Caption>
+  </Element>
+  <Element Id="6f625065-5cba-4cd2-9e68-d3d3cc5a8a47" Path="OrganizationAsapRole">
+    <Caption OriginalText="Uživatelská role v Organizaci">Uživatelská role v Organizaci</Caption>
+  </Element>
+  <Element Id="3c7791f4-7954-4f02-8551-defca6b6c749" Path="OrganizationAsapRoleAsapApplicationRole">
+    <Caption OriginalText="Přístupová práva uživatelské role (pro Organizace)">Přístupová práva uživatelské role (pro Organizace)</Caption>
+  </Element>
+  <Element Id="cb91cf09-d43a-4862-a57d-01e95139160e" Path="OrganizationBusinessPartner/Name">
+    <Caption OriginalText="Firma (Příjmení)">Firma (Příjmení)</Caption>
+    <Documentation Category="USER_LONG_HELP" OriginalText="Firma: Název firmy&#xD;&#xA;Osoba: Příjmení">Firma: Název firmy
+Osoba: Příjmení</Documentation>
+  </Element>
+  <Element Id="75b5d45c-b41f-41ca-8a72-0851221cea13" Path="OrganizationBusinessPartner/refUserBusinessPartnerId">
+    <Caption OriginalText="User">User</Caption>
+    <Documentation Category="USER_SHORT_HELP" OriginalText="Reference to user account table. Mandatory for members of an organization.">Reference to user account table. Mandatory for members of an organization.</Documentation>
+  </Element>
+  <Element Id="c56e9dec-44e5-4d90-8d03-23fbbe212d05" Path="OrganizationAsapRoleAsapApplicationRole/refOrganizationAsapApplicationRoleId">
+    <Caption OriginalText="Aplikační role v Organizaci">Aplikační role v Organizaci</Caption>
+  </Element>
+  <Element Id="c16a48c0-3a5c-4de4-9b5c-41b8fd612e55" Path="OrganizationAsapRoleAsapApplicationRole/refOrganizationAsapRoleId">
+    <Caption OriginalText="Uživatelská role v Organizaci">Uživatelská role v Organizaci</Caption>
+  </Element>
+  <Element Id="42e29b0f-a558-487b-9e5c-4c00b1b3a658" Path="OrganizationAsapApplicationRole/IsSystemRole">
+    <Caption OriginalText="Systémová">Systémová</Caption>
+  </Element>
+  <Element Id="29821bd4-5f61-4ebd-a48c-4d63ade80eed" Path="OrganizationBusinessPartner/FirstNameAndName">
+    <Caption OriginalText="Jméno">Jméno</Caption>
+  </Element>
+  <Element Id="aa6da60d-d095-4646-840b-5dd8dcbcbb3e" Path="OrganizationBusinessPartner/ReferenceCode">
+    <Caption OriginalText="Zkrác. název">Zkrác. název</Caption>
+    <Documentation Category="USER_LONG_HELP" OriginalText="Zkrácený název pro vyhledávání">Zkrácený název pro vyhledávání</Documentation>
+  </Element>
+  <Element Id="4b9fb20a-e0dc-4c3d-8bf0-98c4b0403e93" Path="OrganizationAsapApplicationRole/Name">
+    <Caption OriginalText="Název">Název</Caption>
+  </Element>
+  <Element Id="67bc32ed-ff1f-4311-9804-9e04df93b155" Path="OrganizationBusinessPartner/FirstName">
+    <Caption OriginalText="Firma dovětek (Jméno)">Firma dovětek (Jméno)</Caption>
+    <Documentation Category="USER_LONG_HELP" OriginalText="Firma: Dovětek&#xD;&#xA;Osoba: Jméno">Firma: Dovětek
+Osoba: Jméno</Documentation>
+  </Element>
+  <Element Id="6b09a1a3-bcb7-4269-9f95-ab16f3435667" Path="OrganizationBusinessPartnerAsapRole/refOrganizationAsapRoleId">
+    <Caption OriginalText="Uživatelská role v Organizaci">Uživatelská role v Organizaci</Caption>
+  </Element>
+  <Element Id="c6344390-afb8-4dbd-91d7-ae9b1f3a447c" Path="OrganizationBusinessPartner/ParentId">
+    <Caption OriginalText="Nadřazený obchodní partner">Nadřazený obchodní partner</Caption>
+    <Documentation Category="USER_LONG_HELP" OriginalText="Ke které společnosti daný kontakt patří. Společnost je kontakt z adresáře. ">Ke které společnosti daný kontakt patří. Společnost je kontakt z adresáře. </Documentation>
+  </Element>
+  <Element Id="4277aa25-60c0-4b19-b945-d9d58a9c7843" Path="OrganizationAsapRoleAsapApplicationRole/IsFormReadOnly">
+    <Caption OriginalText="Pouze pro čtení (formulář)">Pouze pro čtení (formulář)</Caption>
+  </Element>
+  <Element Id="f40ae21d-5d80-4223-8316-da92915eb133" Path="OrganizationAsapApplicationRole/Description">
+    <Caption OriginalText="Popis">Popis</Caption>
+  </Element>
+  <Element Id="ffd300d0-d230-483b-b753-f183357666aa" Path="OrganizationAsapRole/Name">
+    <Caption OriginalText="Název">Název</Caption>
+  </Element>
+  <Element Id="2f0cf9ab-d6c2-4906-a732-0df09561daa8" Path="OrganizationApplicationRoles/OrganizationApplicationRolesRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value OriginalText="Přístupová práva uživatelské role (pro Organizace)">Přístupová práva uživatelské role (pro Organizace)</Value>
+  </Element>
+  <Element Id="f59f8138-b4ef-43b5-a1f0-184ce3a7a345" Path="OrganizationAsapRole/NewComponent/PanelTitle">
+    <Value OriginalText="Uživatelská role v Organizaci">Uživatelská role v Organizaci</Value>
+  </Element>
+  <Element Id="cc348b7e-a9d6-401e-828f-24ac104ec2a0" Path="OrganizationBusinessPartner/NewComponent/PanelTitle">
+    <Value OriginalText="Obchodní partner organizace">Obchodní partner organizace</Value>
+  </Element>
+  <Element Id="e98e83a2-17f5-48cf-ae56-3c3a6d481c22" Path="OrganizationAsapRole/OrganizationAsapRoleAsapApplicationRoleRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value OriginalText="Přiřazené aplikační role (v organizaci)">Přiřazené aplikační role (v organizaci)</Value>
+  </Element>
+  <Element Id="c07ab326-94be-49f1-92b9-4f1a0cf84b90" Path="OrganizationAsapRoleAsapApplicationRole_UserRolesForm/OrganizationAsapRoleAsapApplicationRole_UserRolesFormRootControl/AsCheckBox1/Text">
+    <Value OriginalText="Pouze pro čtení (formulář)">Pouze pro čtení (formulář)</Value>
+  </Element>
+  <Element Id="dfdc609a-63de-4508-8412-57de5298517b" Path="OrganizationAsapRoleAsapApplicationRole_UserRolesForm/OrganizationAsapRoleAsapApplicationRole_UserRolesFormRootControl/PanelTitle">
+    <Value OriginalText="Přiřazené aplikační role (v organizaci)">Přiřazené aplikační role (v organizaci)</Value>
+  </Element>
+  <Element Id="146de701-18c1-476d-adc9-5d83b30987a4" Path="OrganzationUserAndRoles/OrganzationUserAndRolesRootControl/SplitPanel1/AsPanel2/PanelTitle">
+    <Value OriginalText="Přiřazení uživatelské role obchodnímu partnerovi v organizaci">Přiřazení uživatelské role obchodnímu partnerovi v organizaci</Value>
+  </Element>
+  <Element Id="e42d8f89-ee0e-4d77-b120-78339aa8842d" Path="OrganizationAsapRole/OrganizationAsapRoleAsapApplicationRoleRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value OriginalText="Uživatelská role v Organizaci">Uživatelská role v Organizaci</Value>
+  </Element>
+  <Element Id="d919ed2a-4913-4c6e-83ea-8c39f9eb507b" Path="OrganizationAsapApplicationRole/NewComponent/PanelTitle">
+    <Value OriginalText="Aplikační role v Organizaci">Aplikační role v Organizaci</Value>
+  </Element>
+  <Element Id="54122f5f-b9e5-453b-be2b-907fa676ed66" Path="OrganizationApplicationRoles/OrganizationApplicationRolesRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value OriginalText="Aplikační role v Organizaci">Aplikační role v Organizaci</Value>
+  </Element>
+  <Element Id="903d01ac-b895-4bc2-9617-9dcff3b4887f" Path="OrganizationBusinessPartnerAsapRole/NewComponent/PanelTitle">
+    <Value OriginalText="Přiřazení uživatelské role obchodnímu partnerovi v organizaci">Přiřazení uživatelské role obchodnímu partnerovi v organizaci</Value>
+  </Element>
+  <Element Id="9c9aebb0-c4a1-4784-8d9b-bcdd3b247fbd" Path="OrganzationUserAndRoles/OrganzationUserAndRolesRootControl/SplitPanel1/AsPanel1/PanelTitle">
+    <Value OriginalText="Obchodní partner organizace">Obchodní partner organizace</Value>
+  </Element>
+  <Element Id="1e0dac3c-de0e-4824-8721-d8782a354c50" Path="OrganizationAsapApplicationRole/NewComponent/AsCheckBox0/Text">
+    <Value OriginalText="Systémová">Systémová</Value>
+  </Element>
+  <Element Id="becd0336-4b6b-4704-ae17-ddb289de2bd6" Path="OrganizationAsapRoleAsapApplicationRole/NewComponent/AsCheckBox1/Text">
+    <Value OriginalText="Pouze pro čtení (formulář)">Pouze pro čtení (formulář)</Value>
+  </Element>
+  <Element Id="7facbafd-048f-48d3-8a10-e286c9c4578b" Path="OrganizationAsapRoleAsapApplicationRole/NewComponent/PanelTitle">
+    <Value OriginalText="Přístupová práva uživatelské role (pro Organizace)">Přístupová práva uživatelské role (pro Organizace)</Value>
+  </Element>
+</AsapLocalization>

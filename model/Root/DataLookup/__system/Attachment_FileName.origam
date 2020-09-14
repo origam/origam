@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="eeaffeb8-6f47-414b-8e72-835690aaab87"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/1231691b-395f-4654-b1a9-23ac6404b04a"
+    listDisplayMember="FileName"
+    listValueMember="Id"
+    name="Attachment_FileName"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/1231691b-395f-4654-b1a9-23ac6404b04a"
+    valueDisplayMember="FileName"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/GetId/4fc33120-2a07-454b-b3f4-d68344c58983"
+    valueValueMember="Id" />
+</x:file>

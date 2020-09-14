@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="434d10d2-9eed-45b8-9d77-4be0ff80c7fe"
+    label="WorkQueueNotificationContactType Localization"
+    mappedObjectName="WorkQueueNotificationContactType_l10n"
+    name="WorkQueueNotificationContactType_l10n"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="dbd46dc8-8a63-4210-9571-05d2599e570e"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/b822344b-e1a6-4de0-ae41-ea49e9f981ac"
+      x:id="7cb80f9d-9de1-481a-9189-3abd1c126f54"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      foreignKeyEntity="Root/DataEntity/Work Queue/WorkQueueNotificationContactType.origam#WorkQueueNotificationContactType/3468390e-e00b-4402-bd86-e22a4d6c3a3a"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
+      isPrimaryKey="false"
+      mappedColumnName="refWorkQueueNotificationContactTypeId"
+      name="refWorkQueueNotificationContactTypeId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="a7f9d69b-7874-4ea8-886a-c8a318bdfcdd"
+      isPrimaryKey="false"
+      label="Name"
+      mappedColumnName="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityIndex
+      abstract="false"
+      generateDeploymentScript="false"
+      x:id="be3f167b-daf2-4556-852a-dd9490c26dad"
+      name="ix_unq_WorkQueueNotificationContactType"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="true">
+      <DataEntityIndexField
+        abstract="false"
+        field="Root/DataEntity/__Origam General Interfaces/ILocalization.origam#ILocalization/refLanguageId/13a2f9f8-c3e8-49fb-86e0-0515a72a10f2"
+        x:id="be4015f8-969f-4616-9922-14c84bf97673"
+        name="1_refLanguageId"
+        ordinalPosition="1"
+        sortOrder="Ascending"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+      <DataEntityIndexField
+        abstract="false"
+        field="Root/DataEntity/Work Queue/WorkQueueNotificationContactType_l10n.origam#WorkQueueNotificationContactType_l10n/refWorkQueueNotificationContactTypeId/7c543bdc-1742-4ea7-a4d6-bd558af1d4da"
+        x:id="4805e5eb-3b35-4593-868f-e680596775ee"
+        name="0_refWorkQueueNotificationContactTypeId"
+        sortOrder="Ascending"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+  </DataEntity>
+</x:file>

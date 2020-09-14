@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="8b20fee2-26a9-47e4-a357-b3a65b4a3000"
+    name="4.21"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.21">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:4.21.origam___commandText___f4a2ce82-1e38-40b6-a9c9-00d283640b41.txt"
+      x:id="f4a2ce82-1e38-40b6-a9c9-00d283640b41"
+      name="00010_Database_Field_OrigamParameters.ProfileId"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="20"
+      commandText="-***-ExternalFile:4.21.origam___commandText___062a3fa0-4ba5-4093-a004-9a8466e2f0d5.txt"
+      x:id="062a3fa0-4ba5-4093-a004-9a8466e2f0d5"
+      name="00020_drop_primary_key"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="5"
+      commandText="-***-ExternalFile:4.21.origam___commandText___d36bf6ab-f71e-4ab4-9834-b36744d3d56a.txt"
+      x:id="d36bf6ab-f71e-4ab4-9834-b36744d3d56a"
+      name="00005_Standardize_PK_Names"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="30"
+      commandText="-***-ExternalFile:4.21.origam___commandText___f67a806f-2723-4f54-8a99-d2fd86739647.txt"
+      x:id="f67a806f-2723-4f54-8a99-d2fd86739647"
+      name="00030_create_new_key"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

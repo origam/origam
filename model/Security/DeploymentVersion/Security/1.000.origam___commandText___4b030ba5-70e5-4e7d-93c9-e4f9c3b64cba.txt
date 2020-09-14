@@ -1,0 +1,9 @@
+﻿CREATE TABLE [BusinessPartnerAsapRole] (
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL,
+	[refBusinessPartnerId] UNIQUEIDENTIFIER NOT NULL,
+	[refAsapRoleId] UNIQUEIDENTIFIER NOT NULL)
+CREATE INDEX [refBusinessPartnerId] ON [BusinessPartnerAsapRole] ([refBusinessPartnerId] ASC)

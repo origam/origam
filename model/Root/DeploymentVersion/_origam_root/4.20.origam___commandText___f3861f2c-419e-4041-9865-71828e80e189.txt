@@ -1,0 +1,2 @@
+﻿ALTER TABLE [WorkQueueNotification] ADD [SendAttachments] BIT NOT NULL CONSTRAINT [DF_WorkQueueNotification_SendAttachments] DEFAULT 0
+ALTER TABLE [WorkQueueNotification] DROP CONSTRAINT [DF_WorkQueueNotification_SendAttachments]

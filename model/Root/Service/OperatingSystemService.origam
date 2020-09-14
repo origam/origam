@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Service
+    abstract="false"
+    x:id="a6442bc9-063a-4c23-a897-220aee2906c2"
+    name="OperatingSystemService"
+    x:type="Origam.Schema.WorkflowModel.Service">
+    <ServiceMethod
+      abstract="false"
+      x:id="4bfda941-65f7-4f8c-924f-ee556507ddb1"
+      name="StartProcess"
+      returnValueDataType="Boolean"
+      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataLength="1000"
+        dataType="String"
+        x:id="eafd36c9-95ce-4013-aa18-1c1d2cf97eb7"
+        name="FileName"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="Integer"
+        x:id="aed4787c-654c-44a8-8575-1dfd49c9af93"
+        name="Timeout"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataLength="1000"
+        dataType="String"
+        x:id="21e623ca-9c98-4051-95dd-704ca01ffda8"
+        name="Arguments"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+    </ServiceMethod>
+  </Service>
+</x:file>

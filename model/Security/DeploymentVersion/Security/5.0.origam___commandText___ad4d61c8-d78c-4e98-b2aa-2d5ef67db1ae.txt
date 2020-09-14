@@ -1,0 +1,32 @@
+﻿/*Store Names of table to loop in in a special table variable */
+declare @tables table(idx int identity(1,1), tableName NVARCHAR(100))
+
+insert into @tables (tableName)
+    select  'BusinessPartnerOrigamRole'  union
+	select  'OrigamRole'  union
+	select  'OrigamApplicationRole'  union
+	select  'OrigamRoleOrigamApplicationRole'  union
+	select  'OrigamUser'  
+
+/*Loop through the table with table names */
+declare @tableName NVARCHAR(100)
+declare @cnt int
+DECLARE @getTableName CURSOR
+
+SET @getTableName = CURSOR FOR
+select tableName from @tables
+
+OPEN @getTableName
+FETCH NEXT
+FROM @getTableName INTO @tableName
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	EXEC  RenameColumns @tableName, 'Asap', 'Origam'
+	FETCH NEXT
+	FROM @getTableName INTO @tableName
+END
+
+CLOSE @getTableName
+DEALLOCATE @getTableName
+
+

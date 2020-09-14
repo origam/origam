@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="8d263aa8-2a5c-4d77-8710-5bd27efef835"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Organization Management/LookupOrganization_refBusinessPartnerId.origam#LookupOrganization_refBusinessPartnerId/7dbb4704-4c3d-4aa0-aba1-f70ca31b052f"
+    listDisplayMember="refBusinessPartnerId"
+    listValueMember="Id"
+    name="Organization_refBusinessPartnerId"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Organization Management/LookupOrganization_refBusinessPartnerId.origam#LookupOrganization_refBusinessPartnerId/7dbb4704-4c3d-4aa0-aba1-f70ca31b052f"
+    valueDisplayMember="refBusinessPartnerId"
+    valueMethod="Root/DataStructure/Organization Management/LookupOrganization_refBusinessPartnerId.origam#LookupOrganization_refBusinessPartnerId/GetId/e80f6d50-c7ac-4e34-9549-f70b65d75276"
+    valueValueMember="Id" />
+</x:file>

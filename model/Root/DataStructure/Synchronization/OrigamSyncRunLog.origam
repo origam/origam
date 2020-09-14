@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="0e90437b-c437-4cd3-818c-3c613bf0c061"
+    localized="false"
+    name="OrigamSyncRunLog"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/Synchronization/OrigamSyncRunLog.origam#OrigamSyncRunLog/6f097c8f-ff61-430d-a73d-6113f9420726"
+      x:id="d598f3f1-17f1-40a7-91c9-df80b8b9b3fc"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamSyncRunLog"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

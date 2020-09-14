@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamRounding" ADD CONSTRAINT FK_OrigamRounding_refOrigamRoundingTypeId_OrigamRoundingType
+	FOREIGN KEY (
+		"refOrigamRoundingTypeId"
+	)
+
+	REFERENCES "OrigamRoundingType" (
+		"Id"
+	);

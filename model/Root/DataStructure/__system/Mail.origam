@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="f4eaf9b5-e5a2-4d4b-afb5-174fe5e0b6ea"
+    localized="false"
+    name="Mail"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/Mail.origam#Mail/af59fd91-736c-462c-9039-daece8811668"
+      x:id="0bfef752-7ac6-42b4-8bed-70fe5a4e6e99"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="Mail"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Root/DataEntity/__system/Mail.origam#Mail/MailAttachment/3e5da01a-402d-451a-b4ea-275a0a099eaf"
+        x:id="9828fa09-7976-49eb-add4-54310746f123"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="MailAttachment"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="5da5b9f8-09c9-46f8-bb1c-e706ee30ef0c"
+      name="GetId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/Mail.origam#Mail/Mail/0bfef752-7ac6-42b4-8bed-70fe5a4e6e99"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="c9885053-0368-4598-8a0f-f5e224a1513e"
+        name="Mail_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

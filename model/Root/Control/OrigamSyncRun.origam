@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="5ce839a4-cb0b-454d-999e-0d1b0c166f8a"
+    isComplex="true"
+    name="OrigamSyncRun"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/Synchronization/OrigamSyncRun.origam#OrigamSyncRun/38a315dc-5197-4dcf-b8ae-91505865a817"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="a73f06d1-09e3-4c7b-9006-53a8b2c66138"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

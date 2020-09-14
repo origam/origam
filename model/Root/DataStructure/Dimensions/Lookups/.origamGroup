@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="dcb5ff8c-3b8d-4e1a-a63c-7edf8f2c666f"
+    x:isFolder="true"
+    name="Lookups"
+    rootItemType="DataStructure"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

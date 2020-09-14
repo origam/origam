@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [AsapNotificationTemplate_l10n] ADD CONSTRAINT FK_AsapNotificationTemplate_l10n_refAsapNotificationTemplateId_AsapNotificationTemplate
+	FOREIGN KEY (
+		[refAsapNotificationTemplateId]
+	)
+
+	REFERENCES [AsapNotificationTemplate] (
+		[Id]
+	)
+ALTER TABLE [AsapNotificationTemplate_l10n] ADD CONSTRAINT FK_AsapNotificationTemplate_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		[refLanguageId]
+	)
+
+	REFERENCES [Language] (
+		[Id]
+	)

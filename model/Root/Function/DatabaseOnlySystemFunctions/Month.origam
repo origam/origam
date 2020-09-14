@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Function
+    abstract="false"
+    dataType="Date"
+    x:id="693ac006-9047-481c-9954-835374c5927a"
+    name="Month"
+    type="Database"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      abstract="false"
+      x:id="92067faa-3b52-479b-8c1f-c0fd3d6c706a"
+      name="Expression"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

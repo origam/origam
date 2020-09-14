@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="888e5c70-0b11-4b57-a5bf-33bcd786b3b2"
+    localized="false"
+    name="OrigamRegularExpression"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamRegularExpression.origam#OrigamRegularExpression/df54519a-d49f-4317-931c-c48df86855af"
+      x:id="cf10043b-f2bf-412e-892d-6020d3328d1b"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamRegularExpression"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

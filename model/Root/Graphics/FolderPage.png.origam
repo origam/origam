@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Graphics
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:FolderPage.png.origam___graphicsDataByte___68ce858d-821c-41e7-b0e8-9cd390de1112.png"
+    x:id="68ce858d-821c-41e7-b0e8-9cd390de1112"
+    name="FolderPage.png"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="5a98c98f-d930-4a94-a13e-82685bb6dc29"
+    localized="false"
+    name="OrigamStyleColor"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamStyleColor.origam#OrigamStyleColor/dc81710b-e0d2-4fbd-a219-a13681723ac0"
+      x:id="fab09159-c37d-4913-afe9-061198f693de"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamStyleColor"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Rule
+    abstract="false"
+    dataType="Boolean"
+    x:id="0f9d3c7b-7ca7-48b8-9a76-348a2ded5ff1"
+    isPathRelative="false"
+    name="SR_NotificationChannelType_Email"
+    x:type="Origam.Schema.RuleModel.StartRule"
+    xPath="/ROOT/value = AS:GetConstant('OrigamNotificationChannelType_Email')" />
+</x:file>

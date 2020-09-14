@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="c207f693-b603-4d2b-9a90-b399317a8b61"
+    label="Druh dimenze"
+    mappedObjectName="DimensionType"
+    name="DimensionType"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="dbe9f2e7-cd81-4b54-86e3-7b7029965e38"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="0edc8f71-0a98-4c73-9e67-51eb85393d0c"
+      isPrimaryKey="false"
+      label="Název"
+      mappedColumnName="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+  </DataEntity>
+</x:file>

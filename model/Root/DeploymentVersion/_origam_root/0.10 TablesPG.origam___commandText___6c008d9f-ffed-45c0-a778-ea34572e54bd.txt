@@ -1,0 +1,15 @@
+﻿CREATE TABLE "OrigamPanelColumnConfig" (
+	"ProfileId" Uuid NOT NULL,
+	"PanelId" Uuid NOT NULL,
+	"ColumnName" Varchar(300) NOT NULL,
+	"ColumnWidth" Integer NOT NULL,
+	"Position" Integer NULL,
+	"IsHidden" Boolean NOT NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+CREATE  INDEX  "OrigamPanelColumnConfig_ix_Main" ON "OrigamPanelColumnConfig" ("PanelId" ASC, "ProfileId" ASC);

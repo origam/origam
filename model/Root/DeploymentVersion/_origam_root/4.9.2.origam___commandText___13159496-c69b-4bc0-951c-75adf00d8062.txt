@@ -1,0 +1,1 @@
+﻿ALTER TABLE [AsapMap] ADD [InitialZoom] INT NOT NULL

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Rule
+    abstract="false"
+    dataType="Boolean"
+    x:id="cb164d4d-d971-4fa7-be5b-80f4348a2f3f"
+    name="ER_WQ_Unlock"
+    x:type="Origam.Schema.RuleModel.EndRule"
+    xsl="-***-ExternalFile:ER_WQ_Unlock.origam___xsl___cb164d4d-d971-4fa7-be5b-80f4348a2f3f.xslt" />
+</x:file>

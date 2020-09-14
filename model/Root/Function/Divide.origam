@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Function
+    abstract="false"
+    dataType="Float"
+    x:id="e826c002-ece3-47fc-b537-14a05b1c628d"
+    name="Divide"
+    type="Standard"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      abstract="false"
+      x:id="59b32cc0-d0f7-49a8-a76b-c9177b2b8875"
+      name="Left"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+    <FunctionParameter
+      abstract="false"
+      x:id="fbe71ae8-6e68-4f79-a160-deeb9904a61b"
+      name="Right"
+      ordinalPosition="1"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

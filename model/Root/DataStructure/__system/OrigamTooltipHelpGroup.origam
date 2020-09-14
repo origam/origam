@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="32fe5cc0-5e97-4cd3-a741-f364dfa24712"
+    localized="false"
+    name="OrigamTooltipHelpGroup"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamTooltipHelpGroup.origam#OrigamTooltipHelpGroup/d605a6ab-b280-4595-8bbe-41193777cebf"
+      x:id="671151e7-822b-462d-9385-8d3a9308ea83"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamTooltipHelpGroup"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

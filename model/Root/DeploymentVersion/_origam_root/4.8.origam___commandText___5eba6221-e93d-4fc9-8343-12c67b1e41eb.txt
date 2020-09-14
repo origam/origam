@@ -1,0 +1,8 @@
+﻿ALTER TABLE [AsapMapLayer] ADD CONSTRAINT FK_AsapMapLayer_refAsapMapLayerTypeId_AsapMapLayerType
+	FOREIGN KEY (
+		[refAsapMapLayerTypeId]
+	)
+
+	REFERENCES [AsapMapLayerType] (
+		[Id]
+	)

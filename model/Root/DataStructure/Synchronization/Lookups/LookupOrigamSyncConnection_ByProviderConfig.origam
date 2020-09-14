@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="a9eec7da-0b48-48d5-a2de-67e418afc4c5"
+    localized="false"
+    name="LookupOrigamSyncConnection_ByProviderConfig"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/994886a2-0850-4745-9e33-bec58cf6756e"
+      x:id="b4183aa6-5b49-4856-8ecd-e132f60874bd"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamSyncConnection"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/Name/6eb2f3f6-fecf-4929-a73d-001d914f5b5a"
+        x:id="ea3c333c-e6e3-4b5b-a033-0259c6fa5c99"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="2e4b5905-4276-41ac-8a1c-a70b79281915"
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureEntity
+        abstract="false"
+        allFields="false"
+        concurrencyHandling="Standard"
+        entity="Root/DataEntity/Synchronization/OrigamSyncConnection.origam#OrigamSyncConnection/OrigamSyncProvider/ab432a61-7cd0-4147-873a-6093f648ff83"
+        x:id="cf995a42-dad4-40c1-a9fb-b5b7e68fea88"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamSyncProvider"
+        relationType="FilterParent"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false">
+        <DataStructureEntity
+          abstract="false"
+          allFields="false"
+          concurrencyHandling="Standard"
+          entity="Root/DataEntity/Synchronization/OrigamSyncProvider.origam#OrigamSyncProvider/OrigamSyncProviderConfig/1d59ae19-5f91-4a1e-93ae-d5109a521a22"
+          x:id="95a0de60-e9b3-417e-afc3-ed17066d06ed"
+          ignoreCondition="None"
+          ignoreImplicitFilters="false"
+          name="OrigamSyncProviderConfig"
+          relationType="FilterParent"
+          x:type="Origam.Schema.EntityModel.DataStructureEntity"
+          useUpsert="false" />
+      </DataStructureEntity>
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="d35c8f03-5176-4262-b6b8-adf44214a1d9"
+      name="GetByProviderConfig"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConnection_ByProviderConfig.origam#LookupOrigamSyncConnection_ByProviderConfig/OrigamSyncConnection/OrigamSyncProvider/OrigamSyncProviderConfig/95a0de60-e9b3-417e-afc3-ed17066d06ed"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="68ce2c10-9139-4dc6-a9dc-704fc0fa8c27"
+        name="OrigamSyncProviderConfig_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="e700abab-688b-47f5-9a61-cdeea4287c27"
+      name="GetId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncConnection_ByProviderConfig.origam#LookupOrigamSyncConnection_ByProviderConfig/OrigamSyncConnection/b4183aa6-5b49-4856-8ecd-e132f60874bd"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="d9f7c115-51fa-4cab-9f57-2652ed64dcd5"
+        name="OrigamSyncConnection_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

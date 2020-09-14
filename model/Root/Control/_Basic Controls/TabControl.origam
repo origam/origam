@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="2e39362b-80a6-4430-a9bd-b3013583a2fe"
+    isComplex="false"
+    name="TabControl"
+    namespace="Origam.Gui.Win"
+    requestSaveAfterChangeAllowed="false"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Gui.Win.AsTabControl">
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="caf75be0-9df7-4429-bf92-141142eb3925"
+      localizable="false"
+      name="Width"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="12799531-e602-4004-b42c-3b562b2c6875"
+      localizable="false"
+      name="StyleId"
+      propertyType="UniqueIdentifier"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="91bb273b-c998-4207-ad1a-6772847220b5"
+      localizable="false"
+      name="Top"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="b117b110-17c9-49f0-90b1-91d6d9abb472"
+      localizable="false"
+      name="Left"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="d207bdae-9c3d-48ad-ad98-b798ee1ce241"
+      localizable="false"
+      name="Height"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="dc780c3e-643e-49d4-bbdd-b9fcf2822251"
+      localizable="false"
+      name="Text"
+      propertyType="String"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="aef916e5-fc01-4460-9e28-e94736b084bd"
+      localizable="false"
+      name="TabIndex"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+  </Control>
+</x:file>

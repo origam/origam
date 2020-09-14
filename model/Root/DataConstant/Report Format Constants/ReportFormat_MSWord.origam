@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataConstant
+    abstract="false"
+    dataType="String"
+    x:id="f3a0ab80-b041-4099-b4eb-cadcf4039bed"
+    name="ReportFormat_MSWord"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="MSWord" />
+</x:file>

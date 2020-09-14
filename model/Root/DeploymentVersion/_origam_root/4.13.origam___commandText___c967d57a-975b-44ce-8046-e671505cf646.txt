@@ -1,0 +1,11 @@
+﻿CREATE TABLE [AsapNotificationTemplate_l10n] (
+	[refAsapNotificationTemplateId] UNIQUEIDENTIFIER NOT NULL,
+	[Name] NVARCHAR(200) NOT NULL,
+	[Template] NTEXT NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL,
+	[refLanguageId] UNIQUEIDENTIFIER NOT NULL)
+CREATE UNIQUE INDEX [ix_unq_AsapNotificationTemplate] ON [AsapNotificationTemplate_l10n] ([refAsapNotificationTemplateId] ASC, [refLanguageId] ASC)

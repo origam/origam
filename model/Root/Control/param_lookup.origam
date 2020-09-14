@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="2b26f7fa-1e3b-47c4-aa65-ec36ae0cbbcf"
+    isComplex="true"
+    name="param_lookup"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/__system/param_lookup.origam#param_lookup/44765574-a633-4549-9413-6d43b0fa102e"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="63e3535c-7d27-426b-9e91-2c7330fc6bb3"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

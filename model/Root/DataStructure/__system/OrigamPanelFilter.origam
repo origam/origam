@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="210dc168-891d-4597-a6c0-cc19fee45b4b"
+    localized="false"
+    name="OrigamPanelFilter"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamPanelFilter.origam#OrigamPanelFilter/41dd6b83-6d95-4c59-939e-3440170748eb"
+      x:id="e6b5bcd2-075d-4428-b665-87020e76006a"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="PanelFilter"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Root/DataEntity/__system/OrigamPanelFilter.origam#OrigamPanelFilter/OrigamPanelFilterDetail/c810c3db-f42c-42cf-afd6-687b40645695"
+        x:id="60a4b727-9161-4b0d-8371-d75855b1c127"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="PanelFilterDetail"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="30a60305-a260-4dd3-a2f3-830e7ab1d1ec"
+      name="GetById"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamPanelFilter.origam#OrigamPanelFilter/PanelFilter/e6b5bcd2-075d-4428-b665-87020e76006a"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="009873a8-3806-41ec-a66a-e26a15a073f4"
+        name="PanelFilter_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="847ed860-8f9a-4cc4-bc1c-ba18fb183d13"
+      name="GetFilters"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamPanelFilter.origam#OrigamPanelFilter/PanelFilter/e6b5bcd2-075d-4428-b665-87020e76006a"
+        filter="Root/DataEntity/__system/OrigamPanelFilter.origam#OrigamPanelFilter/GetFilters/161553fd-21f6-4638-b67e-8677cf288203"
+        x:id="2ad09378-2b32-47bc-9f7d-dfcdd2478cdd"
+        name="PanelFilter_GetFilters"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

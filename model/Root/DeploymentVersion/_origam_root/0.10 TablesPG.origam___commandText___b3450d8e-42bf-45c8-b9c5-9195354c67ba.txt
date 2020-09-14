@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamTooltipHelpSubcontext" ADD CONSTRAINT FK_OrigamTooltipHelpSubcontext_refOrigamTooltipHelpContextId_OrigamTooltipHelpContext
+	FOREIGN KEY (
+		"refOrigamTooltipHelpContextId"
+	)
+
+	REFERENCES "OrigamTooltipHelpContext" (
+		"Id"
+	);

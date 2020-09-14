@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="fe4b0866-624b-43b4-8975-5dcbd769e0d1"
+    label="Systém synchronizace"
+    mappedObjectName="OrigamSyncSystem"
+    name="OrigamSyncSystem"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="8d9cdd7c-0fdc-4bd6-99e2-6e1d9c1beae2"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="2bf55777-2e78-482f-b803-c1248a5a7f21"
+      isPrimaryKey="false"
+      label="Název"
+      mappedColumnName="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+  </DataEntity>
+</x:file>

@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [AsapNotificationChannelType_l10n] ADD CONSTRAINT FK_AsapNotificationChannelType_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		[refLanguageId]
+	)
+
+	REFERENCES [Language] (
+		[Id]
+	)
+ALTER TABLE [AsapNotificationChannelType_l10n] ADD CONSTRAINT FK_AsapNotificationChannelType_l10n_refAsapNotificationChannelTypeId_AsapNotificationChannelType
+	FOREIGN KEY (
+		[refAsapNotificationChannelTypeId]
+	)
+
+	REFERENCES [AsapNotificationChannelType] (
+		[Id]
+	)

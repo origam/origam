@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Function
+    abstract="false"
+    dataType="Boolean"
+    x:id="0039c9ba-bb25-455b-8c5c-89d3c1f78fab"
+    name="Exists"
+    type="Database"
+    x:type="Origam.Schema.EntityModel.Function">
+    <FunctionParameter
+      abstract="false"
+      x:id="967afec3-3c30-4fca-8df0-1ac1ea0c3491"
+      name="Lookup"
+      x:type="Origam.Schema.EntityModel.FunctionParameter" />
+  </Function>
+</x:file>

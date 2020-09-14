@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="5d4e1a27-b689-4202-b30c-1863b6ef632c"
+    label="Calendar Item"
+    mappedObjectName="OrigamCalendarDetail"
+    name="OrigamCalendarDetail"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/822192ce-9c74-4c16-8dd6-2a627d803e3c"
+      x:id="6e300202-f5e2-4de2-9952-c35401bbb41f"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="ef9039f3-ac96-44ae-ad83-6b22f0ef3d24"
+      isPrimaryKey="false"
+      label="Date"
+      mappedColumnName="Date"
+      name="Date"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      foreignKeyEntity="Root/DataEntity/__system/OrigamCalendar.origam#OrigamCalendar/bbdc7e44-355e-4b25-bb67-17769fb34b89"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="b8d81a6c-c745-4f1c-b8d7-af58a83fb613"
+      isPrimaryKey="false"
+      mappedColumnName="refOrigamCalendarId"
+      name="refOrigamCalendarId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="100"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="da60602b-60bb-444c-b12b-b9141dbd62e8"
+      isPrimaryKey="false"
+      label="Name"
+      mappedColumnName="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Element" />
+    <DataEntityIndex
+      abstract="false"
+      generateDeploymentScript="false"
+      x:id="a40b47b3-3d1f-4eaf-9a3c-a60444196f66"
+      name="ix_refOrigamCalendarId"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
+      <DataEntityIndexField
+        abstract="false"
+        field="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/refOrigamCalendarId/b8d81a6c-c745-4f1c-b8d7-af58a83fb613"
+        x:id="b99e1759-e9ba-4578-bc04-a1ea2c730518"
+        name="0_refOrigamCalendarId"
+        sortOrder="Ascending"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+    <EntityFilter
+      abstract="false"
+      x:id="8ddb9a95-17ad-4c28-955b-0c7e7d8cf101"
+      name="GetDateMoreOrEqual"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/GreaterThanOrEqual.origam#GreaterThanOrEqual/eb654e87-6c71-4219-9c0e-cdfd0c01f382"
+        x:id="6569a833-1cf1-473a-aca1-40927f6f30e3"
+        isPrimaryKey="false"
+        name="&gt;="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Element">
+        <FunctionCallParameter
+          abstract="false"
+          x:id="45735ac2-cb7f-4b7a-90f9-38dc95f7279e"
+          name="Left"
+          parameter="Root/Function/GreaterThanOrEqual.origam#GreaterThanOrEqual/Left/88ef0007-3fc8-4898-b39d-e31d4a20c1b7"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="false"
+            field="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/Date/ef9039f3-ac96-44ae-ad83-6b22f0ef3d24"
+            x:id="7a4054bd-b7c7-4dba-9ca6-d172cd2b1f01"
+            name="Date"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="false"
+          x:id="9673c3cb-6427-4fa3-8e8c-7df009b8f294"
+          name="Right"
+          parameter="Root/Function/GreaterThanOrEqual.origam#GreaterThanOrEqual/Right/751618a5-8643-41d1-9512-f62e6444b1de"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="false"
+            x:id="f83242eb-e2ce-495b-aef4-7fab9f637375"
+            name="parDate"
+            parameter="Root/DataEntity/__system/OrigamCalendarDetail.origam#OrigamCalendarDetail/parDate/bab5a09c-9faa-479c-a4d4-5e7e00673f3b"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <Parameter
+      abstract="false"
+      allowNulls="false"
+      dataLength="8"
+      dataType="Date"
+      x:id="bab5a09c-9faa-479c-a4d4-5e7e00673f3b"
+      name="parDate"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

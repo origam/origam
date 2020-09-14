@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamMapLayerParameter" ADD CONSTRAINT FK_OrigamMapLayerParameter_refOrigamMapLayerId_OrigamMapLayer
+	FOREIGN KEY (
+		"refOrigamMapLayerId"
+	)
+
+	REFERENCES "OrigamMapLayer" (
+		"Id"
+	);

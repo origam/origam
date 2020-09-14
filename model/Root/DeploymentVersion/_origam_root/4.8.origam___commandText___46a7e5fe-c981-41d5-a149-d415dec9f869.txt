@@ -1,0 +1,1 @@
+﻿ALTER TABLE [AsapMapLayer] ADD [refAsapMapLayerTypeId] UNIQUEIDENTIFIER NOT NULL

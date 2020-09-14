@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Service
+    abstract="false"
+    x:id="3bcee140-d809-41ed-80c7-f2e8efde8ed9"
+    name="HttpService"
+    x:type="Origam.Schema.WorkflowModel.Service">
+    <ServiceMethod
+      abstract="false"
+      x:id="a5ce96de-5114-4bb3-9525-5df9808037d2"
+      name="SendRequest"
+      returnValueDataType="String"
+      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="String"
+        x:id="ba4bd51e-4bac-4812-ac3f-0ffd8f878f31"
+        name="Method"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataLength="200"
+        dataType="String"
+        x:id="91c88cd2-6567-4be4-8396-36d2c80d3b97"
+        name="ContentType"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="Memo"
+        x:id="3a4571ec-4d1c-46ae-83cc-56ecc99d61c5"
+        name="Content"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="String"
+        x:id="46c6a677-7b82-4426-8fa3-79d1eb500d82"
+        name="Url"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="Array"
+        x:id="4811426c-e48d-4783-953b-993b88c2d842"
+        name="Headers"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="Integer"
+        x:id="ded687bd-6818-4c6a-9604-5d94f5e42c8e"
+        name="Timeout"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+    </ServiceMethod>
+  </Service>
+</x:file>

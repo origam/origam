@@ -1,0 +1,2 @@
+﻿INSERT INTO "OrigamApplicationRole" ("Id", "Name", "Description", "IsSystemRole", "RecordCreated")
+VALUES (gen_random_uuid(), 'FRM_UserProfile', 'Menu > Settings > Users & Security > My User Profile', true, now())

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Service
+    abstract="false"
+    x:id="05650374-c8b4-48fa-a0e9-f3902b252fe6"
+    name="FileService"
+    x:type="Origam.Schema.WorkflowModel.Service">
+    <ServiceMethod
+      abstract="false"
+      x:id="196614b9-ae57-48e3-b14f-34257c285416"
+      name="ReadTextFile"
+      returnValueDataType="Xml"
+      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="false"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="1"
+        dataType="Xml"
+        x:id="77629fd7-e24f-4dcd-96da-3807e4fb8fdc"
+        name="Options"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="String"
+        x:id="38a8c283-54b9-4ce7-b54f-6c2546cba237"
+        name="FileName"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="false"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="String"
+        x:id="a8fe1ade-8e06-49b3-b2a4-bb9bb3c25696"
+        name="Entity"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="true"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="3"
+        dataType="String"
+        x:id="623aa066-3025-41b9-b048-cb92dfc4347c"
+        name="Encoding"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+      <Parameter
+        abstract="false"
+        allowContextReference="true"
+        allowDataConstantReference="false"
+        allowDataStructureReference="false"
+        allowNulls="true"
+        allowReportReference="false"
+        allowSystemFunctionCall="false"
+        allowTransformationReference="false"
+        allowWorkflowReference="false"
+        callElements="1"
+        dataType="Blob"
+        x:id="d8f27ab0-73a1-4579-b883-f460c9a2a689"
+        name="File"
+        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
+    </ServiceMethod>
+  </Service>
+</x:file>

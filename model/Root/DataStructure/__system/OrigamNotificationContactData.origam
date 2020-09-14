@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="9647f6ba-f214-4974-b90e-b5a67fcfe9e0"
+    localized="false"
+    name="OrigamNotificationContactData"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamNotificationContact.origam#OrigamNotificationContact/64c59894-459e-4e8f-9b64-62a42c921f5e"
+      x:id="6545c529-4e77-4f6f-97b5-7156624e9199"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamNotificationContact"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

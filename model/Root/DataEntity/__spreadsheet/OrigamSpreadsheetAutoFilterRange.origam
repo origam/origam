@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    x:id="43a16ec7-5f87-4099-a620-1ef979a4d171"
+    name="OrigamSpreadsheetAutoFilterRange"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="89125d39-198b-4ced-b945-2103bbfd2a11"
+      isPrimaryKey="false"
+      name="SheetIndex"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Hidden" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="05a1e3a6-dbba-49bf-8231-3a03a5af416d"
+      isPrimaryKey="false"
+      name="LastRowIndex"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="9ac9b3c6-b0df-4588-a3ae-546b2d1891a0"
+      isPrimaryKey="false"
+      name="LastColumnIndex"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="true"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="2eb73899-50c0-4b34-94bc-5d02dbfb2bca"
+      isPrimaryKey="true"
+      name="Index"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="e87c36ae-09cf-409e-93fa-918c4729f489"
+      isPrimaryKey="false"
+      name="FirstRowIndex"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="a19d160b-67fd-4a4d-b54f-dc337182988a"
+      isPrimaryKey="false"
+      name="FirstColumnIndex"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+  </DataEntity>
+</x:file>

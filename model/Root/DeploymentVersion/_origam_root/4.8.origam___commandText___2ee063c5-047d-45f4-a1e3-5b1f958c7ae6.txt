@@ -1,0 +1,1 @@
+﻿ALTER TABLE [AsapMapLayer] ADD [ReferenceCode] NVARCHAR(20) NOT NULL

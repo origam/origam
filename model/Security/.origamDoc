@@ -1,0 +1,20 @@
+<Root>
+  <Documentation>
+    <Data>By assigning this role to a business partner you will assign him the corresponding application roles.</Data>
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>15ea6af0-68cc-4260-a0b4-7d912b7e87e4</refSchemaItemId>
+    <Id>a09b5220-6106-484c-a7df-439271e518c6</Id>
+  </Documentation>
+  <Documentation>
+    <Data />
+    <Category>USER_LONG_HELP</Category>
+    <refSchemaItemId>61829bb4-5587-4562-a981-892a7da69a6d</refSchemaItemId>
+    <Id>d496d402-1d83-4b97-9b44-56d1f84dd816</Id>
+  </Documentation>
+  <Documentation>
+    <Data>Enter User Information</Data>
+    <Category>USER_WFSTEP_DESCRIPTION</Category>
+    <refSchemaItemId>6c0f5dcd-1dd7-4ce6-885d-d00f6d522ee8</refSchemaItemId>
+    <Id>598a96ee-570c-417a-9397-75081d901955</Id>
+  </Documentation>
+</Root>

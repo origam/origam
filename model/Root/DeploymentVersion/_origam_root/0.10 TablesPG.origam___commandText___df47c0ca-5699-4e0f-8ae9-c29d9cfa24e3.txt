@@ -1,0 +1,16 @@
+﻿CREATE TABLE "OrigamSyncRunLog" (
+	"ErrorText" Text NULL,
+	"DestinationId_guid" Uuid NULL,
+	"SourceId_int" Integer NULL,
+	"ReferenceCode" Varchar(50) NOT NULL,
+	"DestinationId_int" Integer NULL,
+	"refOrigamSyncRunId" Uuid NOT NULL,
+	"IsSuccess" Boolean NOT NULL,
+	"SourceId_guid" Uuid NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamSyncRunLog_ix_OrigamSyncRun" ON "OrigamSyncRunLog" ("refOrigamSyncRunId" ASC);
+CREATE  INDEX  "OrigamSyncRunLog_ix_SourceGuid" ON "OrigamSyncRunLog" ("SourceId_guid" ASC);

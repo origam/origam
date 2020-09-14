@@ -1,0 +1,121 @@
+﻿
+/*Store Names of table to loop in in a special table variable */
+declare @tables table(idx int identity(1,1), tableName NVARCHAR(100))
+
+insert into @tables (tableName)
+    select  'Attachment'  union
+	select  'BusinessPartner'  union
+	select  'BusinessUnit'  union
+	select  'Category'  union
+	select  'Counter'  union
+	select  'CounterDetail'  union
+	select  'Dimension1'  union
+	select  'Dimension2'  union
+	select  'Dimension3'  union
+	select  'Dimension4'  union
+	select  'DimensionEntity'  union
+	select  'DimensionEntityRelation'  union
+	select  'DimensionTransformationMatrix'  union
+	select  'DimensionType'  union
+	select  'Director'  union
+	select  'Language'  union
+	select  'Mail'  union
+	select  'Movie'  union
+	select  'Organization'  union
+	select  'OrganizationMapping'  union
+	select  'OrigamCalendar'  union
+	select  'OrigamCalendarDetail'  union
+	select  'OrigamDashboardView'  union
+	select  'OrigamDataAuditLog'  union
+	select  'OrigamExceptionSeverity'  union
+	select  'OrigamFavoritesTemplate'  union
+	select  'OrigamFavoritesUserConfig'  union
+	select  'OrigamFeatureList'  union
+	select  'OrigamFormPanelConfig'  union
+	select  'OrigamCharacterTranslation'  union
+	select  'OrigamCharacterTranslationDetail'  union
+	select  'OrigamMap'  union
+	select  'OrigamMapLayer'  union
+	select  'OrigamMapLayerParameter'  union
+	select  'OrigamMapLayerType'  union
+	select  'OrigamMapOrigamMapLayer'  union
+	select  'OrigamModelVersion'  union
+	select  'OrigamNotificationChannelType'  union
+	select  'OrigamNotificationChannelType_l10n'  union
+	select  'OrigamNotificationTemplate'  union
+	select  'OrigamNotificationTemplate_l10n'  union
+	select  'OrigamOnlineUser'  union
+	select  'OrigamPanelColumnConfig'  union
+	select  'OrigamPanelFilter'  union
+	select  'OrigamPanelFilterDetail'  union
+	select  'OrigamParameters'  union
+	select  'OrigamRegularExpression'  union
+	select  'OrigamRounding'  union
+	select  'OrigamRoundingType'  union
+	select  'OrigamStateMachineEventType'  union
+	select  'OrigamStateMachineEventType_l10n'  union
+	select  'OrigamStyleColor'  union
+	select  'OrigamSyncConfig'  union
+	select  'OrigamSyncConnection'  union
+	select  'OrigamSyncConnectionParameter'  union
+	select  'OrigamSyncProvider'  union
+	select  'OrigamSyncProviderConfig'  union
+	select  'OrigamSyncRun'  union
+	select  'OrigamSyncRunLog'  union
+	select  'OrigamSyncSystem'  union
+	select  'OrigamTooltipHelp'  union
+	select  'OrigamTooltipHelpContext'  union
+	select  'OrigamTooltipHelpContextComponent'  union
+	select  'OrigamTooltipHelpDestroyEvent'  union
+	select  'OrigamTooltipHelpGroup'  union
+	select  'OrigamTooltipHelpPosition'  union
+	select  'OrigamTooltipHelpSubcontext'  union
+	select  'OrigamTooltipHelpUsage'  union
+	select  'OrigamTraceWorkflow'  union
+	select  'OrigamTraceWorkflowStep'  union
+	select  'OrigamValidationRule'  union
+	select  'OrigamWorkflowMenuItemConfig'  union
+	select  'RecurrenceDefinition'  union
+	select  'Resource'  union
+	select  'ResourceAccessLevel'  union
+	select  'ResourceAccessLevelResource'  union
+	select  'ResourceGroupMember'  union
+	select  'ResourceType'  union
+	select  'TestTable'  union
+	select  'WorkQueue'  union
+	select  'WorkQueueCommand'  union
+	select  'WorkQueueCommandType'  union
+	select  'WorkQueueCommandType_l10n'  union
+	select  'WorkQueueEntry'  union
+	select  'WorkQueueExternalSourceType'  union
+	select  'WorkQueueExternalSourceType_l10n'  union
+	select  'WorkQueueNotification'  union
+	select  'WorkQueueNotificationContact'  union
+	select  'WorkQueueNotificationContactType'  union
+	select  'WorkQueueNotificationContactType_l10n'  union
+	select  'WorkQueueNotificationEvent'  union
+	select  'WorkQueueNotificationEvent_l10n' 
+
+/*Loop through the table with table names */
+declare @tableName_ NVARCHAR(100)
+declare @cnt int
+DECLARE @getTableName CURSOR
+
+SET @getTableName = CURSOR FOR
+select tableName from @tables
+
+OPEN @getTableName
+FETCH NEXT
+FROM @getTableName INTO @tableName_
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	EXEC  RenameColumns @tableName_, 'Asap', 'Origam'
+	FETCH NEXT
+	FROM @getTableName INTO @tableName_
+END
+
+CLOSE @getTableName
+DEALLOCATE @getTableName
+
+
+

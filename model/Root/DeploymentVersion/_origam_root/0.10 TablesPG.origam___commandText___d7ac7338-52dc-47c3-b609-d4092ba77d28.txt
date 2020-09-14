@@ -1,0 +1,10 @@
+﻿CREATE TABLE "WorkQueueNotificationEvent_l10n" (
+	"refWorkQueueNotificationEventId" Uuid NOT NULL,
+	"Name" Varchar(200) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"refLanguageId" Uuid NOT NULL);
+CREATE UNIQUE  INDEX  "WorkQueueNotificationEvent_l10n_ix_unq_WorkQueueNotificationEvent" ON "WorkQueueNotificationEvent_l10n" ("refWorkQueueNotificationEventId" ASC, "refLanguageId" ASC);

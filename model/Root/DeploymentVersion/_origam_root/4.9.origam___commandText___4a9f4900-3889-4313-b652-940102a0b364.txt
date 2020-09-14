@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [AsapMapAsapMapLayer] ADD CONSTRAINT FK_AsapMapAsapMapLayer_refAsapMapId_AsapMap
+	FOREIGN KEY (
+		[refAsapMapId]
+	)
+
+	REFERENCES [AsapMap] (
+		[Id]
+	)
+ALTER TABLE [AsapMapAsapMapLayer] ADD CONSTRAINT FK_AsapMapAsapMapLayer_refAsapMapLayerId_AsapMapLayer
+	FOREIGN KEY (
+		[refAsapMapLayerId]
+	)
+
+	REFERENCES [AsapMapLayer] (
+		[Id]
+	)

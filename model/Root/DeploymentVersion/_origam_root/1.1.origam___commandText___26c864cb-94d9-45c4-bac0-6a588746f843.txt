@@ -1,0 +1,17 @@
+﻿CREATE TABLE [WorkQueueCommand] (
+	[Command] NVARCHAR(40) NULL,
+	[Param1] NVARCHAR(200) NULL,
+	[refWorkQueueId] UNIQUEIDENTIFIER NOT NULL,
+	[AutoProcessingConditionXPath] NTEXT NULL,
+	[refWorkQueueCommandTypeId] UNIQUEIDENTIFIER NOT NULL,
+	[Text] NVARCHAR(100) NOT NULL,
+	[refErrorWorkQueueId] UNIQUEIDENTIFIER NULL,
+	[Param2] NVARCHAR(200) NULL,
+	[SortOrder] INT NOT NULL,
+	[IsAutoProcessed] BIT NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_WorkQueue] ON [WorkQueueCommand] ([refWorkQueueId] ASC)

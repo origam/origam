@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="fff613a4-d8f1-432d-a49d-0060d92029dc"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamMapLayerType.origam#LookupOrigamMapLayerType/973fb86d-83f9-4dd6-b6b8-482c0df713ea"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="OrigamMapLayerType"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamMapLayerType.origam#LookupOrigamMapLayerType/973fb86d-83f9-4dd6-b6b8-482c0df713ea"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamMapLayerType.origam#LookupOrigamMapLayerType/GetId/60946c86-077c-485c-8505-c8d8f32e55a7"
+    valueValueMember="Id" />
+</x:file>

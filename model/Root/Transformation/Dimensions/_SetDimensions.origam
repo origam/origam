@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Transformation
+    abstract="false"
+    engineType="XslCompiledTransform"
+    x:id="8212740e-7f78-4ea2-94de-44286dfef4ca"
+    name="_SetDimensions"
+    text="-***-ExternalFile:_SetDimensions.origam___text___8212740e-7f78-4ea2-94de-44286dfef4ca.xslt"
+    x:type="Origam.Schema.EntityModel.XslTransformation" />
+</x:file>

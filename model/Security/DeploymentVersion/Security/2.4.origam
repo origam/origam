@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="a7767dbf-7fd9-47e4-a18b-18396e4b60d2"
+    name="2.4"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="2.4">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="20"
+      commandText="-***-ExternalFile:2.4.origam___commandText___23cc089f-fdf9-4b9c-bb93-7edde6ecf0b8.txt"
+      x:id="23cc089f-fdf9-4b9c-bb93-7edde6ecf0b8"
+      name="00020_Role"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:2.4.origam___commandText___23ea3dd0-6184-441b-9864-92418ba3fe1c.txt"
+      x:id="23ea3dd0-6184-441b-9864-92418ba3fe1c"
+      name="00010_Nullable"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamSyncProvider" ADD CONSTRAINT FK_OrigamSyncProvider_refOrigamSyncSystemId_OrigamSyncSystem
+	FOREIGN KEY (
+		"refOrigamSyncSystemId"
+	)
+
+	REFERENCES "OrigamSyncSystem" (
+		"Id"
+	);

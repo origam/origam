@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataConstant
+    abstract="false"
+    dataType="Integer"
+    x:id="fb80e964-1fb5-42f6-8b1c-9f22d27072be"
+    name="_Number_100"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="100" />
+</x:file>

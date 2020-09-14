@@ -1,0 +1,8 @@
+﻿ALTER TABLE [BusinessPartner] ADD CONSTRAINT FK_BusinessPartner_refLanguageId_Language
+	FOREIGN KEY (
+		[refLanguageId]
+	)
+
+	REFERENCES [Language] (
+		[Id]
+	)

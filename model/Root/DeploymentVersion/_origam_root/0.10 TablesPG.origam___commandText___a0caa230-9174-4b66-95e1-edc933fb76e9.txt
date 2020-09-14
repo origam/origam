@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamCharacterTranslationDetail" (
+	"Priority" Integer NOT NULL,
+	"Target" Varchar(200) NOT NULL,
+	"refOrigamCharacterTranslationId" Uuid NOT NULL,
+	"Source" Varchar(200) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamCharacterTranslationDetail_ix_OrigamCharacterTranslation" ON "OrigamCharacterTranslationDetail" ("refOrigamCharacterTranslationId" ASC);

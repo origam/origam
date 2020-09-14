@@ -1,0 +1,12 @@
+﻿CREATE TABLE [AsapWorkflowMenuItemConfig] (
+	[IsRepeatable] BIT NOT NULL,
+	[ProfileId] UNIQUEIDENTIFIER NOT NULL,
+	[WorkflowMenuItemId] UNIQUEIDENTIFIER NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_Main] ON [AsapWorkflowMenuItemConfig] ([ProfileId] ASC, [WorkflowMenuItemId] ASC)

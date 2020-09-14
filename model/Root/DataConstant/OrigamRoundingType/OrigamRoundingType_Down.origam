@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataConstant
+    abstract="false"
+    dataType="UniqueIdentifier"
+    x:id="5d92c171-6765-4c3b-a1f5-37ad8429f590"
+    lookup="Root/DataLookup/__system/OrigamRoundingType.origam#OrigamRoundingType/e7d4c78d-c49b-48c5-9ddf-0ac4d9f44f3d"
+    name="OrigamRoundingType_Down"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="970da659-63b1-42e5-9c5b-bfff0216a976" />
+</x:file>

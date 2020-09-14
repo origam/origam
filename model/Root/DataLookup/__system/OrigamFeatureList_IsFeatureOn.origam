@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="c9c13f3c-064b-4405-8068-6104e54ccf36"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
+    listDisplayMember="IsFeatureOn"
+    listValueMember="Id"
+    name="OrigamFeatureList_IsFeatureOn"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
+    valueDisplayMember="IsFeatureOn"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/GetId/88c58151-e4f2-4d15-ad7c-dc02a981800d"
+    valueValueMember="Id" />
+</x:file>

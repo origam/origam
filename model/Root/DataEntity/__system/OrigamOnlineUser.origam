@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="bb74981f-df5b-42ad-923d-77df9d649870"
+    label="Online User"
+    mappedObjectName="OrigamOnlineUser"
+    name="OrigamOnlineUser"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="4d1cae54-6a22-4f77-a306-f29aa74c3b41"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="255"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="2ce0a689-c0fb-4620-9271-2115e1ef3d72"
+      isPrimaryKey="false"
+      label="Login Name"
+      mappedColumnName="UserName"
+      name="UserName"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="2a09d4ed-1d28-4a6f-9bca-39edc81d4197"
+      isPrimaryKey="false"
+      label="Last Operation Timestamp"
+      mappedColumnName="LastOperationTimestamp"
+      name="LastOperationTimestamp"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="354c8da4-ef0d-4c6e-a633-7bda689aab69"
+      isPrimaryKey="false"
+      label="Number of Dirty Screens"
+      mappedColumnName="DirtyScreens"
+      name="DirtyScreens"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      defaultValue="Root/DataConstant/_numbers/_Number_0.origam#_Number_0/c30c36b4-6de5-4b61-a8b6-529371dce463"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="faa64d40-dbbd-495b-88ad-8fd0a9dc5b49"
+      isPrimaryKey="false"
+      label="Number of Running Workflows"
+      mappedColumnName="RunningWorkflows"
+      name="RunningWorkflows"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="45b80ef2-ee38-4cb9-bb48-df6e8951d5c9"
+      isPrimaryKey="false"
+      mappedColumnName="ClearSessionRequestTimestamp"
+      name="ClearSessionRequestTimestamp"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <EntityFilter
+      abstract="false"
+      x:id="fbd67b3b-8470-46f0-bb1e-3336f2ad2cee"
+      name="GetByUserName"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="2097fcd2-1142-4fbe-8aee-fdb2e64433a8"
+        isPrimaryKey="false"
+        name="="
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
+        <FunctionCallParameter
+          abstract="false"
+          x:id="0fec4c82-686f-4cea-b45a-46eeb9255006"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="false"
+            x:id="f7077c60-cd52-4e3c-9647-f0c6d557a4c9"
+            name="par_UserName"
+            parameter="Root/DataEntity/__system/OrigamOnlineUser.origam#OrigamOnlineUser/par_UserName/f748711b-4495-48d7-874f-75117e066f5e"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="false"
+          x:id="f0370459-edcb-437c-b131-b52f014b89b5"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="false"
+            field="Root/DataEntity/__system/OrigamOnlineUser.origam#OrigamOnlineUser/UserName/2ce0a689-c0fb-4620-9271-2115e1ef3d72"
+            x:id="2261a133-55d3-4cb1-bea9-442feb802c11"
+            name="UserName"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityUIAction
+      abstract="false"
+      actionType="Workflow"
+      cleanDataBeforeMerge="false"
+      closeType="None"
+      commitChangesAfterMerge="false"
+      default="false"
+      x:id="9e8d3e42-d6ba-462f-bb90-385750a8412e"
+      label="Clear Session"
+      mergeType="AppendMergeExisting"
+      modal="false"
+      mode="ActiveRecord"
+      name="ClearSessionRequest"
+      order="10"
+      placement="Toolbar"
+      refreshAfterReturn="None"
+      refreshAfterWorkflow="RefreshChangedRecords"
+      refreshPortalAfterFinish="false"
+      requestSaveBeforeWorkflow="false"
+      roles="*"
+      saveAfterWorkflow="false"
+      x:type="Origam.Schema.MenuModel.EntityWorkflowAction"
+      valueType="SavedValue"
+      workflow="Root/Workflow/RequestOrigamOnlineUserSessionClearance.origam#RequestOrigamOnlineUserSessionClearance/d63fe57c-7a00-4d44-8da3-f023d6ba1404">
+      <EntityUIActionParameterMapping
+        abstract="false"
+        field="Id"
+        x:id="5fa9e6ef-91a6-445a-9f6d-8a247c8fa796"
+        name="OrigamOnlineUserId"
+        type="Current"
+        x:type="Origam.Schema.GuiModel.EntityUIActionParameterMapping" />
+    </EntityUIAction>
+    <Parameter
+      abstract="false"
+      allowNulls="false"
+      dataLength="255"
+      dataType="String"
+      x:id="f748711b-4495-48d7-874f-75117e066f5e"
+      name="par_UserName"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

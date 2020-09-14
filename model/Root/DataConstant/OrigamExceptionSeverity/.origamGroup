@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="52d41c9f-18c7-40a0-9b4c-e5190246d7bd"
+    x:isFolder="true"
+    name="OrigamExceptionSeverity"
+    rootItemType="DataConstant"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

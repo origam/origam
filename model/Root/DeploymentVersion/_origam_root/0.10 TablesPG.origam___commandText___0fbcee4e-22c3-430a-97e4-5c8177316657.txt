@@ -1,0 +1,10 @@
+﻿CREATE TABLE "OrigamStateMachineEventType_l10n" (
+	"refOrigamStateMachineEventTypeId" Uuid NOT NULL,
+	"Name" Varchar(200) NOT NULL,
+	"refLanguageId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamStateMachineEventType_l10n_ix_unq_OrigamStateMachineEventType" ON "OrigamStateMachineEventType_l10n" ("refOrigamStateMachineEventTypeId" ASC, "refLanguageId" ASC);

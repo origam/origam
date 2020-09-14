@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="86baa570-b689-440f-810f-fb289c072f2b"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue.origam#LookupWorkQueue/01b072fa-abd1-42de-8624-30a7c1a89539"
+    listDisplayMember="Name"
+    listValueMember="Id"
+    name="WorkQueue"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue.origam#LookupWorkQueue/01b072fa-abd1-42de-8624-30a7c1a89539"
+    valueDisplayMember="Name"
+    valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueue.origam#LookupWorkQueue/GetId/7e036d82-b621-42f4-8bc0-59885407343f"
+    valueValueMember="Id" />
+</x:file>

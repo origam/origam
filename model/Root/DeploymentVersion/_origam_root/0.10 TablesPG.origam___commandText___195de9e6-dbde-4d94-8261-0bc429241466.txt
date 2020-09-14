@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrigamNotificationTemplate_l10n" ADD CONSTRAINT FK_OrigamNotificationTemplate_l10n_refOrigamNotificationTemplateId_OrigamNotificationTemplate
+	FOREIGN KEY (
+		"refOrigamNotificationTemplateId"
+	)
+
+	REFERENCES "OrigamNotificationTemplate" (
+		"Id"
+	);
+ALTER TABLE "OrigamNotificationTemplate_l10n" ADD CONSTRAINT FK_OrigamNotificationTemplate_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		"refLanguageId"
+	)
+
+	REFERENCES "Language" (
+		"Id"
+	);

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="91cb9548-9557-4b25-84cd-fa26ee9390be"
+    isComplex="false"
+    name="ColorPicker"
+    namespace="Origam.Gui.Win"
+    requestSaveAfterChangeAllowed="true"
+    toolboxVisibility="PanelDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Gui.Win.ColorPicker">
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="14398415-e50c-40a5-9e65-000dbd23df62"
+      localizable="false"
+      name="ReadOnly"
+      propertyType="Boolean"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="740fc66d-6444-404b-822b-03bbf9016df5"
+      localizable="false"
+      name="Height"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="fcbaaaae-dee4-484b-b0ea-05d01da13cf4"
+      localizable="false"
+      name="CaptionLength"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="adbda41a-68f3-48e3-bf04-12c1cbe7a2ce"
+      localizable="false"
+      name="CaptionPosition"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="c95dec94-b36e-4f7e-a38a-2fc9ac7dcc34"
+      localizable="false"
+      name="StyleId"
+      propertyType="UniqueIdentifier"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="bad8ab8a-71c4-4cc2-a71e-3acbc7f6c766"
+      localizable="false"
+      name="HideOnForm"
+      propertyType="Boolean"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="9caa6a4c-62c8-4a09-8352-40933edc2422"
+      localizable="true"
+      name="GridColumnCaption"
+      propertyType="String"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="true"
+      x:id="4a7a98f3-d3be-4ad8-9cb8-62f05442c90f"
+      localizable="false"
+      name="SelectedColor"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="2c5c5607-7911-4a59-a529-76cf3e6278de"
+      localizable="false"
+      name="GridColumnWidth"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="a7a21a25-005e-4ddc-ab5a-8eb620fd7f19"
+      localizable="true"
+      name="Caption"
+      propertyType="String"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="671e22bc-1a50-4d16-b09c-a66deb3f4fd8"
+      localizable="false"
+      name="TabIndex"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="210bc2f6-3329-4d38-af95-b586adfd33e2"
+      localizable="false"
+      name="Left"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="64384748-0dfb-4fac-a2f7-c4d439351ff8"
+      localizable="false"
+      name="Top"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="c6b8e1e5-4047-4321-9f24-d60575f3d509"
+      localizable="false"
+      name="Width"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+  </Control>
+</x:file>

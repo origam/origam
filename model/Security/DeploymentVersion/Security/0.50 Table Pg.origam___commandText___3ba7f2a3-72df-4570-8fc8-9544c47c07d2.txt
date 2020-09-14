@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamRoleOrigamApplicationRole" (
+	"IsFormReadOnly" Boolean NOT NULL,
+	"refOrigamRoleId" Uuid NOT NULL,
+	"refOrigamApplicationRoleId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamRoleOrigamApplicationRole_ix_OrigamRole" ON "OrigamRoleOrigamApplicationRole" ("refOrigamRoleId" ASC);
+CREATE UNIQUE  INDEX  "OrigamRoleOrigamApplicationRole_ix_Unique" ON "OrigamRoleOrigamApplicationRole" ("refOrigamRoleId" ASC, "refOrigamApplicationRoleId" ASC);

@@ -1,0 +1,9 @@
+﻿CREATE TABLE [AsapValidationRule] (
+	[Name] NVARCHAR(200) NOT NULL,
+	[Rule] NTEXT NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE UNIQUE INDEX [ix_Unique] ON [AsapValidationRule] ([Name] ASC)

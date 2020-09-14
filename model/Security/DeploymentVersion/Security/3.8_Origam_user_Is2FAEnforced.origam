@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="c75280b0-4f19-452a-a1cd-6f599b1432a5"
+    name="3.8_Origam_user_Is2FAEnforced"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="3.8">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:3.8_Origam_user_Is2FAEnforced.origam___commandText___b992b751-30ec-4a7c-8cb4-4df58285304e.txt"
+      x:id="b992b751-30ec-4a7c-8cb4-4df58285304e"
+      name="00010_Database_Field_OrigamUser.Is2FAEnforced"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

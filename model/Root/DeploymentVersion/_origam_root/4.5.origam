@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="8e7dad9d-719c-4d4f-aab9-b780e7580970"
+    name="4.5"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.5">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="20"
+      commandText="-***-ExternalFile:4.5.origam___commandText___b4fb0cb8-b750-4ff3-85ff-85095e83fe71.txt"
+      x:id="b4fb0cb8-b750-4ff3-85ff-85095e83fe71"
+      name="00020_Index_OrigamStyleColor.ix_Unique"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:4.5.origam___commandText___fda214a1-04db-4172-b889-e8465a6e8df1.txt"
+      x:id="fda214a1-04db-4172-b889-e8465a6e8df1"
+      name="00010_drop_index"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

@@ -1,0 +1,1 @@
+﻿ALTER TABLE WorkQueueCommand DROP COLUMN IsAutoDeleted

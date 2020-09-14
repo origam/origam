@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="8903b2c4-be5f-4741-9268-7fd461a86f5f"
+    localized="false"
+    name="LookupOrigamCalendar_WorkingDays"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamCalendar.origam#OrigamCalendar/bbdc7e44-355e-4b25-bb67-17769fb34b89"
+      x:id="4f6864df-de78-4ace-beaa-b76842225927"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamCalendar"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="3df928ca-5eb8-4852-a1b3-9d18b02a15f6"
+      name="GetId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamCalendar_WorkingDays.origam#LookupOrigamCalendar_WorkingDays/OrigamCalendar/4f6864df-de78-4ace-beaa-b76842225927"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="449ac07c-c3a7-4f74-8036-9fe71b4f7e98"
+        name="OrigamCalendar_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

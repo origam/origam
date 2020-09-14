@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="3005a392-37c8-45c7-ae1b-029b0ac7a18b"
+    isComplex="true"
+    name="DimensionEntityRelation"
+    namespace="Origam.Schema.GuiModel"
+    requestSaveAfterChangeAllowed="false"
+    screenSection="Root/PanelControlSet/Dimensions/DimensionEntityRelation.origam#DimensionEntityRelation/263a4b50-3920-4445-84c7-4df5b3065d74"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <ancestor
+      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="c2cea02c-7a5e-4fcb-b541-49ad9d03f08d"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+  </Control>
+</x:file>

@@ -1,0 +1,9 @@
+﻿CREATE TABLE [AsapStyleColor] (
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL,
+	[Name] NVARCHAR(100) NOT NULL,
+	[Color] INT NOT NULL)
+CREATE INDEX [ix_Unique] ON [AsapStyleColor] ([Name] ASC)

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="d894f5be-8022-4d2d-b749-a1542d1660bd"
+    name="1.1"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="1.1">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:1.1.origam___commandText___7e35fff3-4448-4d73-880f-74f7250b22fc.txt"
+      x:id="7e35fff3-4448-4d73-880f-74f7250b22fc"
+      name="00010_RoleName_255"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

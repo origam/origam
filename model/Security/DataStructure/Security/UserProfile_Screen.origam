@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="c6d40db8-4bb4-4913-b1ce-0473434adef6"
+    localized="false"
+    name="UserProfile_Screen"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      x:id="41a83604-88ed-4b2d-a74b-5253ae4e95e3"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="BusinessPartner"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="6292a80f-6cc9-48a7-8c63-b08ec66937ca"
+      name="GetCurrentUser"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Security/DataStructure/Security/UserProfile_Screen.origam#UserProfile_Screen/BusinessPartner/41a83604-88ed-4b2d-a74b-5253ae4e95e3"
+        filter="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/GetCurrentUser/eb5e13ee-6b45-4816-ba13-1590a42e9436"
+        x:id="622b5e4f-68ad-4855-8fdd-14c2d19fa7c7"
+        name="BusinessPartner_GetCurrentUser"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

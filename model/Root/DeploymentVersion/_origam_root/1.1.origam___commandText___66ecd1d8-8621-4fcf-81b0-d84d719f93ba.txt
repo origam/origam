@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [AsapSyncProvider] ADD CONSTRAINT FK_AsapSyncProvider_refAsapSyncSystemId_AsapSyncSystem
+	FOREIGN KEY (
+		[refAsapSyncSystemId]
+	)
+
+	REFERENCES [AsapSyncSystem] (
+		[Id]
+	)

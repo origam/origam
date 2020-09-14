@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="e3966697-e2d6-4538-b7e7-30973ae1af54"
+    localized="false"
+    name="OrigamPanelColumnConfig"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamPanelColumnConfig.origam#OrigamPanelColumnConfig/428f9ff7-ecd7-4458-b817-6b028dc93eaa"
+      x:id="68dd35f2-16de-438a-97c8-5be933ab9f64"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="PanelColumnConfig"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="c621a8e7-a13a-414d-9db8-192698916ed7"
+      name="GetColumn"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamPanelColumnConfig.origam#OrigamPanelColumnConfig/PanelColumnConfig/68dd35f2-16de-438a-97c8-5be933ab9f64"
+        filter="Root/DataEntity/__system/OrigamPanelColumnConfig.origam#OrigamPanelColumnConfig/GetColumn/d88a512b-9950-4248-81b5-a755f03187d0"
+        x:id="be4f811e-a4e4-498c-ba1d-e633f620c8ce"
+        name="PanelUserConfig_GetColumn"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="97b0ab43-e17a-45ab-b2a6-49f0944d604c"
+      name="GetConfig"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamPanelColumnConfig.origam#OrigamPanelColumnConfig/PanelColumnConfig/68dd35f2-16de-438a-97c8-5be933ab9f64"
+        filter="Root/DataEntity/__system/OrigamPanelColumnConfig.origam#OrigamPanelColumnConfig/GetPanel/999e8952-0824-461e-8388-76fac3262f83"
+        x:id="5023cfe5-1d42-486d-a19d-8ddc37506266"
+        name="PanelUserConfig_GetConfig"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

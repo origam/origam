@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Graphics
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:TelephoneGo.png.origam___graphicsDataByte___0a210d9f-27f0-4e85-8ebf-900f9189bd0c.png"
+    x:id="0a210d9f-27f0-4e85-8ebf-900f9189bd0c"
+    name="TelephoneGo.png"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="81e43786-d57e-4151-9b55-970f3f856b03"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig_refOrganizationId.origam#LookupOrigamSyncProviderConfig_refOrganizationId/f684f5c6-79ac-4539-8ee6-14261ffaa49f"
+    listDisplayMember="refOrganizationId"
+    listValueMember="Id"
+    name="OrigamSyncProviderConfig_refOrganizationId"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig_refOrganizationId.origam#LookupOrigamSyncProviderConfig_refOrganizationId/f684f5c6-79ac-4539-8ee6-14261ffaa49f"
+    valueDisplayMember="refOrganizationId"
+    valueMethod="Root/DataStructure/Synchronization/Lookups/LookupOrigamSyncProviderConfig_refOrganizationId.origam#LookupOrigamSyncProviderConfig_refOrganizationId/GetId/e18d2674-1209-4a81-ab3c-da3d303a7f05"
+    valueValueMember="Id" />
+</x:file>

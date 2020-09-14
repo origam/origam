@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="1ed6d5ca-125d-423c-ae8b-2a0a7576ab2f"
+    x:isFolder="true"
+    name="Work Queue"
+    rootItemType="DataEntity"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

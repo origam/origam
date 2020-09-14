@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="true"
+    audit="None"
+    x:id="85de4821-d615-4b53-8542-3aaeeca1c7c0"
+    name="IResourceAccessList"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      abstract="true"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      defaultLookup="Root/DataLookup/Resource Management/ResourceAccessLevel.origam#ResourceAccessLevel/785ab7b4-decb-48c5-a0ed-ab2e40b71ac5"
+      defaultValue="Root/DataConstant/Resource Management/DefaultResourceAccessLevel.origam#DefaultResourceAccessLevel/6382d239-363c-4523-a3c8-53327a013df7"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      foreignKeyEntity="Root/DataEntity/Resource Management/ResourceAccessLevel.origam#ResourceAccessLevel/21ec1441-46b4-44db-8b3f-576f6fcbbb42"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="e92d84d6-8e2f-4dbe-969b-29f9118e6113"
+      isPrimaryKey="false"
+      label="Access Level"
+      mappedColumnName="refResourceAccessLevelId"
+      name="refResourceAccessLevelId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <EntityRelation
+      abstract="true"
+      x:id="5e7af2fe-ae3d-47b7-b863-8f55cbbcd4fe"
+      name="ResourceAccessList"
+      or="false"
+      parentChild="false"
+      relatedEntity="Root/DataEntity/Resource Management/ResourceAccessList.origam#ResourceAccessList/86e47cb7-3d7b-4b01-8a2e-5217dcb89f09"
+      selfJoin="false"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        abstract="true"
+        baseEntityField="Root/DataEntity/__Origam General Interfaces/IResourceAccessList.origam#IResourceAccessList/refResourceAccessLevelId/e92d84d6-8e2f-4dbe-969b-29f9118e6113"
+        x:id="518fb374-0774-4890-a4cd-a1c39894e10a"
+        name="ResourceAccessListKey1"
+        relatedEntityField="Root/DataEntity/Resource Management/ResourceAccessList.origam#ResourceAccessList/refResourceAccessLevelId/48a4dc16-2136-44af-a3da-6cee266fc672"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+  </DataEntity>
+</x:file>

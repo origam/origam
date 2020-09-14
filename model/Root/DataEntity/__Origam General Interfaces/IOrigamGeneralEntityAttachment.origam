@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="true"
+    audit="None"
+    x:id="d3171349-284d-458e-a22d-be875074b398"
+    name="IOrigamGeneralEntityAttachment"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      abstract="true"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="37560615-b9bc-4b55-8004-6cb68877ef70"
+      isPrimaryKey="false"
+      mappedColumnName="refParentRecordEntityId"
+      name="refParentRecordEntityId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="true"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="4badf745-4bf1-4257-a3fe-ec0c86c2588d"
+      isPrimaryKey="false"
+      mappedColumnName="refParentRecordId"
+      name="refParentRecordId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Element" />
+    <DataEntityIndex
+      abstract="true"
+      generateDeploymentScript="false"
+      x:id="a46b6d9e-f866-4d76-9408-8f3a4e5fdf3d"
+      name="ix_refParentRecordId"
+      x:type="Origam.Schema.EntityModel.DataEntityIndex"
+      unique="false">
+      <DataEntityIndexField
+        abstract="true"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
+        x:id="420318a1-a9e9-4051-8edc-b6c8719c2f69"
+        name="0_refParentRecordId"
+        sortOrder="Ascending"
+        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
+    </DataEntityIndex>
+    <EntityFilter
+      abstract="true"
+      x:id="f61532be-17e8-4f4f-8bf7-43189c296c55"
+      name="GetByParentRecordId"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="true"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="e796c69f-94e6-4a08-96aa-d8e03a99d2ae"
+        isPrimaryKey="false"
+        name="Compare"
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Element">
+        <FunctionCallParameter
+          abstract="true"
+          x:id="06173db6-4b1f-4069-9ae4-44c1a5e01ed4"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="true"
+            x:id="2c2cfeef-e68e-459d-b105-2a783707cab8"
+            name="parRefParentRecordId"
+            parameter="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/parRefParentRecordId/39373b8a-c514-4ff5-9cda-ae1eaa555fe9"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="true"
+          x:id="bda24fa7-b47f-4912-9103-753a82624bad"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="true"
+            field="Root/DataEntity/__Origam General Interfaces/IOrigamGeneralEntityAttachment.origam#IOrigamGeneralEntityAttachment/refParentRecordId/4badf745-4bf1-4257-a3fe-ec0c86c2588d"
+            x:id="2539c9a2-ba62-422f-a482-1135135888b4"
+            name="refParentRecordId"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <Parameter
+      abstract="true"
+      allowNulls="false"
+      dataType="UniqueIdentifier"
+      x:id="39373b8a-c514-4ff5-9cda-ae1eaa555fe9"
+      name="parRefParentRecordId"
+      x:type="Origam.Schema.SchemaItemParameter" />
+  </DataEntity>
+</x:file>

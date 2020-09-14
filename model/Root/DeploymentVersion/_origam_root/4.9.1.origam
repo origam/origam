@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="ab7f4ff5-af1d-4ad8-9160-32cd326f98db"
+    name="4.9.1"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.9.1">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:4.9.1.origam___commandText___337c2e02-1dae-4e94-98bf-2349c6f08a26.txt"
+      x:id="337c2e02-1dae-4e94-98bf-2349c6f08a26"
+      name="00010_delete"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="20"
+      commandText="-***-ExternalFile:4.9.1.origam___commandText___6444a5ba-d887-46c6-b2cd-4afd0cfd2292.txt"
+      x:id="6444a5ba-d887-46c6-b2cd-4afd0cfd2292"
+      name="00020_Database_Field_OrigamMapOrigamMapLayer.SortOrder"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="30"
+      commandText="-***-ExternalFile:4.9.1.origam___commandText___2130ff29-3b47-4b45-82fb-c058eb4d82f9.txt"
+      x:id="2130ff29-3b47-4b45-82fb-c058eb4d82f9"
+      name="00030_Index_OrigamMapOrigamMapLayer.ix_SortOrder"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

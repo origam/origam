@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="b9a9c301-d33c-4139-ad22-a10e8514e3d5"
+    localized="false"
+    name="Counter"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/Counter.origam#Counter/0593c75d-3112-4eda-b4fd-2bf9bf6c82f1"
+      x:id="4655bfe0-5e80-407c-aaf7-0e73265086ac"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="Counter"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Root/DataEntity/__system/Counter.origam#Counter/CounterDetail/d0baa1e1-3a12-4f27-a3c4-6281ac33d7c6"
+        x:id="04d7a8f1-10b2-4f2c-94fd-9f2a20987311"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="CounterDetail"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="01cc148c-1099-4653-8a17-95d1c9a033be"
+      name="GetByReferenceCode"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/Counter.origam#Counter/Counter/4655bfe0-5e80-407c-aaf7-0e73265086ac"
+        filter="Root/DataEntity/__system/Counter.origam#Counter/GetByReferenceCode/a049f084-75c7-4eb7-a028-19cca880e05b"
+        x:id="1183e398-a791-418d-9508-7e7770429bdd"
+        name="Counter_GetByReferenceCode"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

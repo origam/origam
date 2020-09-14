@@ -1,0 +1,10 @@
+﻿CREATE TABLE [AsapSyncConnectionParameter] (
+	[Key] NVARCHAR(100) NOT NULL,
+	[Value] NVARCHAR(200) NULL,
+	[refAsapSyncConnectionId] UNIQUEIDENTIFIER NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_AsapSyncConnection] ON [AsapSyncConnectionParameter] ([refAsapSyncConnectionId] ASC)

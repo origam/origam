@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="8415953b-f0c4-4f89-bd45-271ffd0beca4"
+    name="4.6"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.6">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:4.6.origam___commandText___456322ad-b491-42a6-9d21-22559d6a00ea.txt"
+      x:id="456322ad-b491-42a6-9d21-22559d6a00ea"
+      name="00010_Database_Object_Mapping_OrigamValidationRule"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

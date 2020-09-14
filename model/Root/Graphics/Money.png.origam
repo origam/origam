@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Graphics
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:Money.png.origam___graphicsDataByte___0425b505-233b-48c4-8bed-c8ee7aa62120.png"
+    x:id="0425b505-233b-48c4-8bed-c8ee7aa62120"
+    name="Money.png"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

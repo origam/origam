@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Graphics
+    abstract="false"
+    graphicsDataByte="-***-ExternalFile:Shield.png.origam___graphicsDataByte___9f7241a1-52e7-447f-b89f-5997efeb9599.png"
+    x:id="9f7241a1-52e7-447f-b89f-5997efeb9599"
+    name="Shield.png"
+    x:type="Origam.Schema.GuiModel.Graphics" />
+</x:file>

@@ -1,0 +1,21 @@
+﻿DELETE BusinessPartnerAsapRole
+FROM BusinessPartnerAsapRole
+LEFT OUTER JOIN (
+   SELECT CONVERT(uniqueidentifier, MIN(CONVERT(char(36), Id))) as Id, refBusinessPartnerId, refAsapRoleId
+   FROM BusinessPartnerAsapRole 
+   GROUP BY refBusinessPartnerId, refAsapRoleId
+) as KeepRows ON
+   BusinessPartnerAsapRole.Id = KeepRows.Id
+WHERE
+   KeepRows.Id IS NULL
+   
+DELETE AsapRoleAsapApplicationRole
+FROM AsapRoleAsapApplicationRole
+LEFT OUTER JOIN (
+   SELECT CONVERT(uniqueidentifier, MIN(CONVERT(char(36), Id))) as Id, refAsapApplicationRoleId, refAsapRoleId
+   FROM AsapRoleAsapApplicationRole 
+   GROUP BY refAsapApplicationRoleId, refAsapRoleId
+) as KeepRows ON
+   AsapRoleAsapApplicationRole.Id = KeepRows.Id
+WHERE
+   KeepRows.Id IS NULL

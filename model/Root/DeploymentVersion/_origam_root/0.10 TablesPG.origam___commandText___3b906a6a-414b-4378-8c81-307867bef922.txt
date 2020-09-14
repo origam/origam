@@ -1,0 +1,11 @@
+﻿CREATE TABLE "OrigamSyncRun" (
+	"refOrigamSyncConfigId" Uuid NOT NULL,
+	"ReferenceCode" Varchar(40) NOT NULL,
+	"TimeEnd" Timestamp(3) NULL,
+	"TimeStart" Timestamp(3) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "OrigamSyncRun_ix_refOrigamSyncConfigId" ON "OrigamSyncRun" ("refOrigamSyncConfigId" ASC);

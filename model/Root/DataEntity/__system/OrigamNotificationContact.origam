@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    x:id="64c59894-459e-4e8f-9b64-62a42c921f5e"
+    name="OrigamNotificationContact"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      x:id="407333f3-5586-4d45-bf4c-7875d3ad1aa2"
+      isPrimaryKey="false"
+      name="refSalutationId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="20"
+      dataType="String"
+      excludeFromAllFields="false"
+      x:id="4460da07-9b00-4ad3-a926-78dfc9f23c78"
+      isPrimaryKey="false"
+      label="Language IETF Tag"
+      name="LanguageTagIETF"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Memo"
+      excludeFromAllFields="false"
+      x:id="dbae115f-3c7e-448c-92d3-c9be957eb7b6"
+      isPrimaryKey="false"
+      label="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Memo"
+      excludeFromAllFields="false"
+      x:id="6a012b44-655d-4e52-92dc-dd47663524ea"
+      isPrimaryKey="true"
+      label="Email"
+      name="ContactIdentification"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      x:id="463c4bc2-92b3-4422-9585-f3278d032bc0"
+      isPrimaryKey="false"
+      name="Salutation"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+  </DataEntity>
+</x:file>

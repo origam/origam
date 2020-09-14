@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="bd424149-b499-49d2-9ae3-36a155ea3145"
+    localized="false"
+    name="LookupOrigamParameters"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/3287d809-f83e-4d78-a6f6-321ceca5616b"
+      x:id="3b6c0d18-c3ac-4377-b7a8-baa5920bec24"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamParameters"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/IntValue/66101d3f-1534-4463-a9ca-78b9bf79c85c"
+        x:id="92ffb3ac-2965-4928-b038-1091a80405ff"
+        name="IntValue"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/FloatValue/a07a931e-efed-4583-a88e-07053392b19e"
+        x:id="9a5fe52c-0b48-4451-a854-24e73f93c836"
+        name="FloatValue"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/StringValue/fd044d05-63cc-42c4-9448-18c0492d5702"
+        x:id="ac74e87c-30f3-4fe2-af2e-2fc56234cfdb"
+        name="StringValue"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/CurrencyValue/bc10925f-96d8-4ece-9a5d-baab7f0d928a"
+        x:id="d2bfa734-31d9-47ef-ab08-3924e3b12ea7"
+        name="CurrencyValue"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/GuidValue/1ab55c41-1ee3-4264-b736-7e2c683f4516"
+        x:id="abccbfd2-093a-4248-b81a-782ae1768118"
+        name="GuidValue"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/BooleanValue/b361aa2f-cd26-4ab9-bd60-76333a318026"
+        x:id="8f9ed4a7-9d37-4701-bf63-a97dbb7c2637"
+        name="BooleanValue"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:id="cda0e80a-40d6-410c-a4a3-fd3e0fab143a"
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/DateValue/13046e78-f59b-442d-8ac4-68ae7de04c2a"
+        x:id="0d13cb7d-0421-4320-b7ca-fde435ec0006"
+        name="DateValue"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="000b8686-a08d-4f53-8d66-7dd4f1297492"
+      name="GetId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/OrigamParameters/3b6c0d18-c3ac-4377-b7a8-baa5920bec24"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+        x:id="c7265b62-4f6a-4e53-9cc9-19e83e9bf574"
+        name="OrigamParameters_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/Lookups/LookupOrigamParameters.origam#LookupOrigamParameters/OrigamParameters/3b6c0d18-c3ac-4377-b7a8-baa5920bec24"
+        filter="Root/DataEntity/__system/OrigamParameters.origam#OrigamParameters/GetNoProfile/bd2d36c2-b0af-41fc-a09b-42d2c8089b2a"
+        x:id="857405c1-4904-4e8c-b307-f9b704119999"
+        name="OrigamParameters_GetNoProfile"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

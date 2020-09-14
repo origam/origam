@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="e6b7e890-032c-4837-b3e1-592f9d6f9d0f"
+    localized="false"
+    name="OrigamDashboardView_List"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamDashboardView.origam#OrigamDashboardView/f3c919ae-d3ea-4514-8fb0-a060944d54c5"
+      x:id="1304509a-d172-43aa-9e5d-5436f5492049"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamDashboardView"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="851bd3c3-4b56-4191-a015-6d2ef46fde4a"
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamDashboardView.origam#OrigamDashboardView/Name/bbe0b957-fa8c-4c29-9edc-6748c5b459b4"
+        x:id="bfd557a3-31ab-4cfc-9678-c4d34832be99"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamDashboardView.origam#OrigamDashboardView/Roles/ef401867-1f05-4bb4-aaa9-e3d50d183735"
+        x:id="46a52e63-c913-4695-9703-d4732eeab4cc"
+        name="Roles"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="916f8028-9d89-49b2-bb66-97548bde8b7d"
+      name="GetByMenuId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamDashboardView_List.origam#OrigamDashboardView_List/OrigamDashboardView/1304509a-d172-43aa-9e5d-5436f5492049"
+        filter="Root/DataEntity/__system/OrigamDashboardView.origam#OrigamDashboardView/GetByMenuId/a57d735b-b88a-4082-94ec-aeb48ed279e0"
+        x:id="bd4af5c5-6f7c-4574-bdad-3b989ce212a8"
+        name="OrigamDashboardView_GetByMenuId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

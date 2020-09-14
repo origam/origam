@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataLookup
+    abstract="false"
+    alwaysAllowReturnToForm="false"
+    x:id="3143a9eb-c5de-41d4-bc67-4dfdb5dcaf19"
+    isFilteredServerside="false"
+    isTree="false"
+    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpContextComponent_IdString.origam#LookupOrigamTooltipHelpContextComponent_IdString/3f17934f-fc6e-4670-8083-883cf5f48225"
+    listDisplayMember="IdString"
+    listValueMember="Id"
+    name="OrigamTooltipHelpContextComponent_IdString"
+    searchByFirstColumnOnly="false"
+    suppressEmptyColumns="false"
+    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
+    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpContextComponent_IdString.origam#LookupOrigamTooltipHelpContextComponent_IdString/3f17934f-fc6e-4670-8083-883cf5f48225"
+    valueDisplayMember="IdString"
+    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpContextComponent_IdString.origam#LookupOrigamTooltipHelpContextComponent_IdString/GetId/24255da6-8e6a-4355-a305-d6b585b6c675"
+    valueValueMember="Id" />
+</x:file>

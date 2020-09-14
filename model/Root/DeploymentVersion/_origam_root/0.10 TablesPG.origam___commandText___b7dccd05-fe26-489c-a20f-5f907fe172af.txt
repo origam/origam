@@ -1,0 +1,9 @@
+﻿CREATE TABLE "OrigamFavoritesUserConfig" (
+	"ConfigXml" Text NULL,
+	"refBusinessPartnerId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamFavoritesUserConfig_ix_refBusinessPartnerId" ON "OrigamFavoritesUserConfig" ("refBusinessPartnerId" ASC);

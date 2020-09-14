@@ -1,0 +1,6 @@
+﻿IF NOT EXISTS (SELECT * FROM AsapStyleColor WHERE Name = 'action-button-group-label-color-2011')
+	INSERT INTO AsapStyleColor (Id, Name, Description, Color)
+		VALUES('489fc524-3f44-4123-9f97-59368c4eb716', 'action-button-group-label-color-2011', 'Portal: Action button group labels', '13421772')
+IF NOT EXISTS (SELECT * FROM AsapStyleColor WHERE Name = 'form-background-color-2011')
+	INSERT INTO AsapStyleColor (Id, Name, Description, Color)
+		VALUES('90de7a9a-a13a-45b2-8c53-2e9fe515f295', 'form-background-color-2011', 'Form: Background', '15066597')

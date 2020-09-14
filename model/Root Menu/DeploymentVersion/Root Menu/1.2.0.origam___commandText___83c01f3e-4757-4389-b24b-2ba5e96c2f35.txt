@@ -1,0 +1,4 @@
+﻿INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
+SELECT newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', Id, getdate(), 0 FROM
+ AsapApplicationRole WHERE Name NOT LIKE 'data%restrict%'
+ AND Name NOT LIKE 'data%only%' AND Name NOT LIKE 'data%deny%'

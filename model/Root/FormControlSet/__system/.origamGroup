@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="4164e70c-aa4f-45b5-9506-173d1cde531f"
+    x:isFolder="true"
+    name="__system"
+    rootItemType="FormControlSet"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

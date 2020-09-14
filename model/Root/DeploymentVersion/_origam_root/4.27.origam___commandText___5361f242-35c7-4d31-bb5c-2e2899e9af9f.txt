@@ -1,0 +1,3 @@
+﻿IF NOT EXISTS (SELECT * FROM AsapStyleColor WHERE Name = 'action-button-toolbar-background-color-2011')
+	INSERT INTO AsapStyleColor (Id, Name, Description, Color)
+		VALUES('f8f73fed-b0a8-4675-ba22-0233d42947b2', 'action-button-toolbar-background-color-2011', 'Action Button: Toolbar background color', '9410501')

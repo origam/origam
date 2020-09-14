@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="677e312b-c149-4c74-8f78-7f17d91cd37a"
+    isComplex="false"
+    name="RadioButton"
+    namespace="Origam.Gui.Win"
+    requestSaveAfterChangeAllowed="true"
+    toolboxVisibility="PanelDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.Gui.Win.AsRadioButton">
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="0e70eff4-ede4-499a-8630-39f7b7967086"
+      localizable="false"
+      name="DataConstantId"
+      propertyType="UniqueIdentifier"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="5d1524b9-3e27-4023-8e07-4d5d946fb6b4"
+      localizable="false"
+      name="TabIndex"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="288c5a48-e2bb-4135-ba93-629a93426891"
+      localizable="false"
+      name="Left"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="a89bc6d7-cd6b-46ed-88a3-709b4816cd13"
+      localizable="false"
+      name="Height"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="24cb69bb-9cce-4739-8c43-7be5892aea60"
+      localizable="false"
+      name="Top"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="5931fc5e-bca5-4a52-a319-7f920f22aefc"
+      localizable="true"
+      name="Text"
+      propertyType="String"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="066511a6-978d-45e2-a51b-b2383b3086f2"
+      localizable="false"
+      name="Width"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="1bcc4d22-8944-4879-ace3-be0c2cc48334"
+      localizable="false"
+      name="ReadOnly"
+      propertyType="Boolean"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="f9be9e38-d92f-423b-9380-f7095680908f"
+      localizable="false"
+      name="Value"
+      propertyType="Boolean"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+  </Control>
+</x:file>

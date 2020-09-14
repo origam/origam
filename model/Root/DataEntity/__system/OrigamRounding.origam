@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="All"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="21d86e1c-5a23-434b-9fe2-e187fd100624"
+    label="Rounding"
+    mappedObjectName="OrigamRounding"
+    name="OrigamRounding"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="b7df7c63-9f22-47a2-9517-8b3262798d69"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      defaultLookup="Root/DataLookup/__system/OrigamRoundingType.origam#OrigamRoundingType/e7d4c78d-c49b-48c5-9ddf-0ac4d9f44f3d"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      foreignKeyEntity="Root/DataEntity/__system/OrigamRoundingType.origam#OrigamRoundingType/a46bfc23-8032-480c-bedc-9f49ae318a9a"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="5e7d8268-7dad-4817-8c52-a4f5600a90e2"
+      isPrimaryKey="false"
+      label="Type"
+      mappedColumnName="refOrigamRoundingTypeId"
+      name="refOrigamRoundingTypeId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="cba31248-f8d9-4404-b0ce-aa7a26d0ab90"
+      isPrimaryKey="false"
+      label="Name"
+      mappedColumnName="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Float"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="dd802c64-12ae-4559-8c8e-b86802b8465b"
+      isPrimaryKey="false"
+      label="Precision"
+      mappedColumnName="Precision"
+      name="Precision"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+  </DataEntity>
+</x:file>

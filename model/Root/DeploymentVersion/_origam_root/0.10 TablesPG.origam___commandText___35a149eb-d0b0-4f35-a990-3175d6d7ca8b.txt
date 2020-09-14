@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrganizationMapping" ADD CONSTRAINT FK_OrganizationMapping_refParentOrganizationId_Organization
+	FOREIGN KEY (
+		"refParentOrganizationId"
+	)
+
+	REFERENCES "Organization" (
+		"Id"
+	);
+ALTER TABLE "OrganizationMapping" ADD CONSTRAINT FK_OrganizationMapping_refOrganizationId_Organization
+	FOREIGN KEY (
+		"refOrganizationId"
+	)
+
+	REFERENCES "Organization" (
+		"Id"
+	);

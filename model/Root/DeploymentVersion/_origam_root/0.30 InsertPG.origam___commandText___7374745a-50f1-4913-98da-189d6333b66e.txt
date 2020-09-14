@@ -1,0 +1,4 @@
+﻿INSERT INTO "WorkQueueNotificationEvent" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") VALUES (N'Message Creation', NULL, NULL, '{fe40902f-8a44-477e-96f9-d157eee16a0f}', now(), NULL);
+INSERT INTO "WorkQueueNotificationEvent" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") VALUES (N'Once a Day', NULL, NULL, '{96340243-e360-4409-9ee6-26192748ead0}', now(), NULL);
+INSERT INTO "WorkQueueNotificationEvent" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") VALUES (N'Message Removal', NULL, NULL, '{dc3b0836-b94f-4502-bb20-2c3aa3206f63}', now(), NULL);
+INSERT INTO "WorkQueueNotificationEvent" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") VALUES (N'Escalation', NULL, NULL, '{e1b66e46-7961-4d91-8c71-ab9e57e656a5}', now(), NULL);

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="ec219662-ccef-4394-a7d2-391368acae9c"
+    localized="false"
+    name="LookupResourceAccessLevel"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/Resource Management/ResourceAccessLevel.origam#ResourceAccessLevel/21ec1441-46b4-44db-8b3f-576f6fcbbb42"
+      x:id="2650e98a-7aff-4829-bf0d-9190aa4de11f"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="ResourceAccessLevel"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="7f2bf44f-07b1-4a1e-ab85-150498d00c03"
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/Resource Management/ResourceAccessLevel.origam#ResourceAccessLevel/Name/ce92019f-d693-494d-84c4-3bf509deacfa"
+        x:id="4ab3da32-0cbd-4bbb-b5b8-49c0ab8af64c"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureEntity
+        abstract="false"
+        allFields="false"
+        concurrencyHandling="Standard"
+        entity="Root/DataEntity/Resource Management/ResourceAccessLevel.origam#ResourceAccessLevel/ResourceAccessList/e2b6bed0-1f4d-404a-a423-8ba23c8889be"
+        x:id="ec9e23cc-1421-43f8-9cb9-2c854c310ce1"
+        ignoreCondition="IgnoreWhenNoFilters"
+        ignoreImplicitFilters="false"
+        name="ResourceAccessList"
+        relationType="FilterParent"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="347aae82-7d95-4797-90a7-3f376451ec7b"
+      name="GetId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/Resource Management/Lookups/LookupResourceAccessLevel.origam#LookupResourceAccessLevel/ResourceAccessLevel/2650e98a-7aff-4829-bf0d-9190aa4de11f"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="95d7f78d-ee70-4307-a9d3-5cf025c97721"
+        name="ResourceAccessLevel_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

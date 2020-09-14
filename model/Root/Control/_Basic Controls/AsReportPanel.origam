@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Control
+    abstract="false"
+    x:id="d657c222-f526-4a88-9e06-e18150a7daf8"
+    isComplex="false"
+    name="AsReportPanel"
+    namespace="Origam.BI.CrystalReports"
+    requestSaveAfterChangeAllowed="false"
+    toolboxVisibility="FormDesigner"
+    x:type="Origam.Schema.GuiModel.ControlItem"
+    typeName="Origam.BI.CrystalReports.AsReportPanel">
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="e4c1326b-49a9-4337-a0d6-3eac611662ba"
+      localizable="false"
+      name="ButtonsOnly"
+      propertyType="Boolean"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="7e7f8e37-93ee-44de-b35c-4d1c528bc47e"
+      localizable="false"
+      name="Left"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="80e023ae-7a18-442f-9f3b-680eecda9264"
+      localizable="false"
+      name="Height"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="e66228a5-6e83-4ea7-8932-7b27a40921bf"
+      localizable="false"
+      name="ReportId"
+      propertyType="UniqueIdentifier"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="5f3bb279-07c0-473a-b60c-9551c82b88a9"
+      localizable="false"
+      name="Top"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="d3d9a360-6788-4bfc-9ccf-ca478cfd1dc9"
+      localizable="false"
+      name="TabIndex"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="7737ce00-fea0-4577-bbd9-d9444e39b7cd"
+      localizable="false"
+      name="Width"
+      propertyType="Integer"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+    <ControlPropertyItem
+      abstract="false"
+      bindOnly="false"
+      x:id="01a26128-30cf-49a4-b045-e553331a5bcf"
+      localizable="false"
+      name="DataMember"
+      propertyType="String"
+      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
+  </Control>
+</x:file>

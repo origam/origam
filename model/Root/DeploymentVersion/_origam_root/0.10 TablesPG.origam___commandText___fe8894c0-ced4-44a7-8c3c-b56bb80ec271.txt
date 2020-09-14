@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrigamNotificationChannelType_l10n" ADD CONSTRAINT FK_OrigamNotificationChannelType_l10n_refOrigamNotificationChannelTypeId_OrigamNotificationChannelType
+	FOREIGN KEY (
+		"refOrigamNotificationChannelTypeId"
+	)
+
+	REFERENCES "OrigamNotificationChannelType" (
+		"Id"
+	);
+ALTER TABLE "OrigamNotificationChannelType_l10n" ADD CONSTRAINT FK_OrigamNotificationChannelType_l10n_refLanguageId_Language
+	FOREIGN KEY (
+		"refLanguageId"
+	)
+
+	REFERENCES "Language" (
+		"Id"
+	);

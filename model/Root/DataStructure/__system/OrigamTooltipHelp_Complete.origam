@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="c9822ca7-2c60-41ba-9d6b-94f4440d54ef"
+    localized="false"
+    name="OrigamTooltipHelp_Complete"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamTooltipHelp.origam#OrigamTooltipHelp/dbda17ba-ab31-4df0-bf33-07c1031ae197"
+      x:id="77933ad5-a395-4db0-aca2-d5821ec180fc"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamTooltipHelp"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Root/DataEntity/__system/OrigamTooltipHelp.origam#OrigamTooltipHelp/OrigamTooltipHelpUsage/de80f41a-1efd-43a7-8326-5619a3a2140b"
+        x:id="6d86d35d-e2f6-47e8-aec1-cabf43f0cc76"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamTooltipHelpUsage"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
+    </DataStructureEntity>
+  </DataStructure>
+</x:file>

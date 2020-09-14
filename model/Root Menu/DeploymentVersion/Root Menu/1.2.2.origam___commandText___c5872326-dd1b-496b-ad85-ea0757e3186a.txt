@@ -1,0 +1,5 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+VALUES ('b5f18564-a7e3-45e6-ac95-e2b612cb6cf6', 'FRM_OrigamOnlineUser', 'Menu > Settings > Users &amp; Security > Active Sessions', 1, getdate())
+-- add to the built-in SuperUser role
+INSERT INTO AsapRoleAsapApplicationRole (Id, refAsapRoleId, refAsapApplicationRoleId, RecordCreated, IsFormReadOnly)
+VALUES (newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', 'b5f18564-a7e3-45e6-ac95-e2b612cb6cf6', getdate(), 0)

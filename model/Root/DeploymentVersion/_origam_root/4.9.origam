@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="8c8e3bc6-acab-4636-af34-1ca5b5ee7696"
+    name="4.9"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.9">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="50"
+      commandText="-***-ExternalFile:4.9.origam___commandText___4a9f4900-3889-4313-b652-940102a0b364.txt"
+      x:id="4a9f4900-3889-4313-b652-940102a0b364"
+      name="00050_Database_Entity_OrigamMapOrigamMapLayer"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="40"
+      commandText="-***-ExternalFile:4.9.origam___commandText___a833aa77-718c-4df9-b7c3-985096a09aa2.txt"
+      x:id="a833aa77-718c-4df9-b7c3-985096a09aa2"
+      name="00040_Index_OrigamMapLayer.ix_Unique"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:4.9.origam___commandText___06785f8f-a32f-44e4-a99b-da474e8c856d.txt"
+      x:id="06785f8f-a32f-44e4-a99b-da474e8c856d"
+      name="00010_drop"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="30"
+      commandText="-***-ExternalFile:4.9.origam___commandText___79e698f9-e1b5-4d1c-b55f-eb8f7a753860.txt"
+      x:id="79e698f9-e1b5-4d1c-b55f-eb8f7a753860"
+      name="00030_Database_Entity_OrigamMap"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="20"
+      commandText="-***-ExternalFile:4.9.origam___commandText___97ba2a59-0bb0-4415-8336-fe3510809e93.txt"
+      x:id="97ba2a59-0bb0-4415-8336-fe3510809e93"
+      name="00020_Database_Entity_OrigamMapOrigamMapLayer"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

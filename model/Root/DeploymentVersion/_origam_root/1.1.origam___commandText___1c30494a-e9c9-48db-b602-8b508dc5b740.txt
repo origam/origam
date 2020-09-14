@@ -1,0 +1,12 @@
+﻿CREATE TABLE [WorkQueueNotificationContact] (
+	[IsRecipient] BIT NOT NULL,
+	[refWorkQueueNotificationId] UNIQUEIDENTIFIER NOT NULL,
+	[refAsapNotificationChannelTypeId] UNIQUEIDENTIFIER NOT NULL,
+	[Value] NVARCHAR(200) NULL,
+	[refWorkQueueNotificationContactTypeId] UNIQUEIDENTIFIER NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_WorkQueueNotification] ON [WorkQueueNotificationContact] ([refWorkQueueNotificationId] ASC, [IsRecipient] ASC)

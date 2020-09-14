@@ -1,0 +1,1 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'WF_NewUser', 'Menu > Settings > Users & Security > Add User', 1, getdate())

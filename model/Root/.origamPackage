@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <package
+    copyright="(c) 2005-2007 Advantage Solutions, s. r. o."
+    x:id="147fa70d-6519-4393-b5d0-87931f9fd609"
+    x:isFolder="true"
+    name="Root"
+    x:type="Origam.Schema.SchemaExtension"
+    version="5.1.0" xmlns="http://schemas.origam.com/1.0.0/package" />
+</x:file>

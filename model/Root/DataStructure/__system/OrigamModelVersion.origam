@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="c14d5f5b-df9b-46fa-9f94-2535b9c758e9"
+    localized="false"
+    name="OrigamModelVersion"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamModelVersion.origam#OrigamModelVersion/d70d26d1-6886-496e-a573-2217f470ce98"
+      x:id="d6178906-0461-484a-a6b2-d8aba64e6bc4"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamModelVersion"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

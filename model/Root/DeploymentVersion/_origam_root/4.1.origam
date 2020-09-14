@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    x:id="ffd7f52a-6f53-440c-b47b-e7c0f08ba06a"
+    name="4.1"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="4.1">
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="20"
+      commandText="-***-ExternalFile:4.1.origam___commandText___617ae0bc-c9ea-4dc5-8981-4785fd20424e.txt"
+      x:id="617ae0bc-c9ea-4dc5-8981-4785fd20424e"
+      name="00020_GrantPermissions"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+    <DeploymentUpdateScriptActivity
+      abstract="false"
+      activityOrder="10"
+      commandText="-***-ExternalFile:4.1.origam___commandText___cf5652d6-47c7-44c8-9569-54e7719c2806.txt"
+      x:id="cf5652d6-47c7-44c8-9569-54e7719c2806"
+      name="00010_TYPE_OrigamListValue"
+      platform="MsSql"
+      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
+      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
+  </DeploymentVersion>
+</x:file>

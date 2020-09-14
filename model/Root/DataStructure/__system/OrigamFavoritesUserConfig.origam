@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="e564c554-ca83-47eb-980d-95b4faba8fb8"
+    localized="false"
+    name="OrigamFavoritesUserConfig"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/f229eb75-03ab-4b62-ab60-bc8e74860332"
+      x:id="4f81244c-7335-4bcd-8246-a027a86e3c6c"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamFavoritesUserConfig"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="e468076e-a641-4b7d-b9b4-7d80ff312b1c"
+      name="GetByBusinessPartnerId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/OrigamFavoritesUserConfig/4f81244c-7335-4bcd-8246-a027a86e3c6c"
+        filter="Root/DataEntity/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/GetByBusinessPartnerId/de7e62ac-c64a-4a6f-840b-b2c85a112302"
+        x:id="50acd291-d423-485e-b8bc-e6c3dcfb619a"
+        name="OrigamFavoritesUserConfig_GetByBusinessPartnerId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

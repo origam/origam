@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    x:id="e8a9ffc7-622c-419c-8a83-9767ac78a41f"
+    name="FileSystemInfo"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Boolean"
+      defaultValue="Root/DataConstant/_boolean/_false.origam#_false/9e301a8b-b356-42fa-ae57-3be3a28650d7"
+      excludeFromAllFields="false"
+      x:id="10722d94-de0a-4b39-9e61-430d1f8b4e78"
+      isPrimaryKey="false"
+      name="IsDirectory"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      x:id="e5b98002-6c18-465a-a4e0-4370eea34e44"
+      isPrimaryKey="false"
+      name="LastWriteTime"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="255"
+      dataType="String"
+      excludeFromAllFields="false"
+      x:id="bcbaa09e-39a7-408a-b1be-507d6ba9d31a"
+      isPrimaryKey="false"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="20"
+      dataType="String"
+      excludeFromAllFields="false"
+      x:id="366e0b38-1cdf-4153-b9aa-930647f79bc0"
+      isPrimaryKey="false"
+      name="Extension"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Memo"
+      excludeFromAllFields="false"
+      x:id="75be85ab-1cb8-4b79-a488-941a7ba201e3"
+      isPrimaryKey="false"
+      label="Full path of the directory of file."
+      name="FullName"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      x:id="c0538ad6-729b-4312-9b60-a5e32ed72728"
+      isPrimaryKey="false"
+      name="ParentDirectoryId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      x:id="0b5cecb3-cdb9-4e46-bb1d-a9cdaa7e01a9"
+      isPrimaryKey="false"
+      name="CreationTime"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      x:id="7015a0cd-7220-4615-898e-b0bd3f01c380"
+      isPrimaryKey="false"
+      name="LastAccessTime"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      x:id="0d804bc2-cd22-4798-814d-e1c9d68c693c"
+      isPrimaryKey="true"
+      name="Id"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Long"
+      excludeFromAllFields="false"
+      x:id="a0ae9e91-721e-467e-8953-3e5105bfc9c5"
+      isPrimaryKey="false"
+      label="Length of file"
+      name="Length"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
+  </DataEntity>
+</x:file>

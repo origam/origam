@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Page
+    abstract="false"
+    allowDelete="false"
+    allowPut="false"
+    disableConstraintForInputValidation="false"
+    x:id="7494a972-168e-4af5-8825-5efa3e44a623"
+    mimeType="application/json"
+    name="confirmUserEmail.json"
+    roles="*"
+    x:type="Origam.Schema.WorkflowModel.WorkflowPage"
+    url="confirmUserEmail.json"
+    workflow="Security/Workflow/Security/IDENTITY_USER_MANAGEMENT/Identity_ConfirmUserEmail.origam#Identity_ConfirmUserEmail/0019e8e5-31c9-4fa9-a22a-a4096aab8a59">
+    <PageParameterMapping
+      abstract="false"
+      x:id="d1dfec01-5737-475d-b0c3-493b31c0a556"
+      isList="false"
+      mappedParameter="token"
+      name="Token"
+      x:type="Origam.Schema.GuiModel.PageParameterMapping" />
+    <PageParameterMapping
+      abstract="false"
+      x:id="0c3ab5a7-9b30-4ee5-9664-aaaf00c97996"
+      isList="false"
+      mappedParameter="userId"
+      name="UserId"
+      x:type="Origam.Schema.GuiModel.PageParameterMapping" />
+  </Page>
+</x:file>

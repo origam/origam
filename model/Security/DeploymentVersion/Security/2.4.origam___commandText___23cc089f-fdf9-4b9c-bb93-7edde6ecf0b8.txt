@@ -1,0 +1,1 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, RecordCreated, IsSystemRole) VALUES (newid(), 'WEB_Admin_AddUser', 'Web: Umožní přidávat nové uživatele pomocí webové služby', getdate(), 1)

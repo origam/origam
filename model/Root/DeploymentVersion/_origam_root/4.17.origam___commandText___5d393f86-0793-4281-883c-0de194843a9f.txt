@@ -1,0 +1,28 @@
+﻿INSERT INTO WorkQueueCommandType (Id, Name, RecordCreated) 
+VALUES ('98aaf208-dd29-48b0-9a37-7549918dd86d', 'Archive To Queue', getdate())
+INSERT INTO WorkQueueCommandType (Id, Name, RecordCreated) 
+VALUES ('e620695d-6054-4b0a-af2b-1d3a5349b274', 'Execute Queue Loader', getdate())
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) 
+VALUES (NEWID(),'Archivovat do fronty', (select Id from language where TagIETF like '%cs-CZ%'),
+SYSDATETIME(), '98aaf208-dd29-48b0-9a37-7549918dd86d')
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) 
+VALUES (NEWID(),'Spustit načtení z externího zdroje', (select Id from language where TagIETF like '%cs-CZ%'),
+SYSDATETIME(), 'e620695d-6054-4b0a-af2b-1d3a5349b274')
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) 
+VALUES (NEWID(),'Zu anderer Queue archivieren', (select Id from language where TagIETF like '%de-CH%'),
+SYSDATETIME(), '98aaf208-dd29-48b0-9a37-7549918dd86d')
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) 
+VALUES (NEWID(),'Extern loader ausführen', (select Id from language where TagIETF like '%de-CH%'),
+SYSDATETIME(), 'e620695d-6054-4b0a-af2b-1d3a5349b274')
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) 
+VALUES (NEWID(),'Zu anderer Queue archivieren', (select Id from language where TagIETF like '%de-DE%'),
+SYSDATETIME(), '98aaf208-dd29-48b0-9a37-7549918dd86d')
+
+insert into WorkQueueCommandType_l10n (Id,Name,refLanguageId,RecordCreated,refWorkQueueCommandTypeId) 
+VALUES (NEWID(),'Extern loader ausführen', (select Id from language where TagIETF like '%de-DE%'),
+SYSDATETIME(), 'e620695d-6054-4b0a-af2b-1d3a5349b274')

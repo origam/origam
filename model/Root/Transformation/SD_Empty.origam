@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Transformation
+    abstract="false"
+    engineType="XslCompiledTransform"
+    x:id="693db72d-a400-4df3-b4b7-e0487e7ce8d6"
+    name="SD_Empty"
+    text="-***-ExternalFile:SD_Empty.origam___text___693db72d-a400-4df3-b4b7-e0487e7ce8d6.xslt"
+    x:type="Origam.Schema.EntityModel.XslTransformation" />
+</x:file>

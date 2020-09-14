@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="9b905782-c91c-4af8-8277-f0c851310921"
+    localized="false"
+    name="OrigamTooltipHelpContext_Complete"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamTooltipHelpContext.origam#OrigamTooltipHelpContext/f14e958d-51ba-4d01-b885-720fad41d316"
+      x:id="968883ec-37e0-4d2d-a0f2-9d61d055420a"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamTooltipHelpContext"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Root/DataEntity/__system/OrigamTooltipHelpContext.origam#OrigamTooltipHelpContext/OrigamTooltipHelpSubcontext/7b9b51ad-8d03-4f8e-bd5d-580b3203dc38"
+        x:id="f34cdd8e-23ea-40de-92c7-fbbed316409d"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamTooltipHelpSubcontext"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false">
+        <DataStructureEntity
+          abstract="false"
+          allFields="true"
+          concurrencyHandling="Standard"
+          entity="Root/DataEntity/__system/OrigamTooltipHelpSubcontext.origam#OrigamTooltipHelpSubcontext/OrigamTooltipHelpContextComponent/1964ec06-12f2-4b5c-8c10-47655a17863e"
+          x:id="56c810fb-9c27-46ab-8fa8-d5b7a7b8a590"
+          ignoreCondition="None"
+          ignoreImplicitFilters="false"
+          name="OrigamTooltipHelpContextComponent"
+          relationType="Normal"
+          x:type="Origam.Schema.EntityModel.DataStructureEntity"
+          useUpsert="false" />
+      </DataStructureEntity>
+    </DataStructureEntity>
+  </DataStructure>
+</x:file>

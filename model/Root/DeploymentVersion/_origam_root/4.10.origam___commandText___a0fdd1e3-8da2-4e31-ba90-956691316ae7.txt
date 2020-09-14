@@ -1,0 +1,1 @@
+﻿INSERT INTO WorkQueueExternalSourceType (Id, Name, RecordCreated) VALUES ('75e3b51a-e4f5-48ed-941c-597f49fcc775', 'Sequential Workflow', getdate())

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="a6445ce4-9d16-4125-9eed-1bcc2a08fd17"
+    localized="false"
+    name="OrigamWorkflowMenuItemConfig"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/a6b6c611-06c7-4ca2-ac57-e0f2c9427e4b"
+      x:id="cca93bd5-e55e-4cb6-afa9-31a3f1e4a1c7"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="WorkflowMenuItemConfig"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="600f31f3-19ee-4a64-8d31-2eee388f8849"
+      name="GetConfig"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/WorkflowMenuItemConfig/cca93bd5-e55e-4cb6-afa9-31a3f1e4a1c7"
+        filter="Root/DataEntity/__system/OrigamWorkflowMenuItemConfig.origam#OrigamWorkflowMenuItemConfig/GetConfig/b015b152-3d8e-46b4-b0d1-12b877b391fc"
+        x:id="0d31051c-659c-4b96-a8a1-a9e7cf7ef57c"
+        name="OrigamWorkflowConfig_GetConfig"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

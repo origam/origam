@@ -1,0 +1,4 @@
+﻿INSERT [AsapTooltipHelpPosition] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'41fa1c4f-9a12-4402-aa21-a921b0ceb52e', getdate(), NULL, N'Left')
+INSERT [AsapTooltipHelpPosition] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'bdf7ca80-b110-4e16-932b-684f34c4fed3', getdate(), NULL, N'Top')
+INSERT [AsapTooltipHelpPosition] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'c6f27d77-ab60-421c-b110-a2429a3e1c8b', getdate(), NULL, N'Right')
+INSERT [AsapTooltipHelpPosition] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'da40379a-ae75-4982-888c-17205b64bf4d', getdate(), NULL, N'Bottom')

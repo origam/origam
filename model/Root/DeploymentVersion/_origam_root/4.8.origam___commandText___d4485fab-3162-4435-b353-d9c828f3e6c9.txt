@@ -1,0 +1,10 @@
+﻿CREATE TABLE [AsapMapLayerParameter] (
+	[refAsapMapLayerId] UNIQUEIDENTIFIER NOT NULL,
+	[Value] NTEXT NOT NULL,
+	[Name] NVARCHAR(40) NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE UNIQUE INDEX [ix_Unique] ON [AsapMapLayerParameter] ([refAsapMapLayerId] ASC, [Name] ASC)

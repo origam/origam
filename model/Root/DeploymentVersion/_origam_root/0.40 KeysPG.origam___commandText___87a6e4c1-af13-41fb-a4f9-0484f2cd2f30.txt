@@ -1,0 +1,4 @@
+﻿INSERT INTO "OrigamStyleColor" ("Id", "Name", "Description", "Color")
+select '{f8f73fed-b0a8-4675-ba22-0233d42947b2}', 'action-button-toolbar-background-color-2011', 'Action Button: Toolbar background color', '9410501'
+where 
+NOT EXISTS (SELECT * FROM "OrigamStyleColor" WHERE "Name" = 'action-button-toolbar-background-color-2011')

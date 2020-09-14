@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [AsapCalendarDetail] ADD CONSTRAINT FK_AsapCalendarDetail_refAsapCalendarId_AsapCalendar
+	FOREIGN KEY (
+		[refAsapCalendarId]
+	)
+
+	REFERENCES [AsapCalendar] (
+		[Id]
+	)

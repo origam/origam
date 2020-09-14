@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <package
+    x:id="b9ab12fe-7f7d-43f7-bedc-93747647d6e4"
+    x:isFolder="true"
+    name="Root Menu"
+    x:type="Origam.Schema.SchemaExtension"
+    version="1.2.3" xmlns="http://schemas.origam.com/1.0.0/package">
+    <packageReference
+      x:id="209967b2-8540-41d2-8585-fb34ab31f3b9"
+      referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609"
+      x:type="Origam.Schema.PackageReference" />
+    <packageReference
+      x:id="c9760e0c-3747-4af1-8209-a520db21c6e9"
+      referencedPackage="Security/.origamPackage#951f2cda-2867-4b99-8824-071fa8749ead"
+      x:type="Origam.Schema.PackageReference" />
+  </package>
+</x:file>

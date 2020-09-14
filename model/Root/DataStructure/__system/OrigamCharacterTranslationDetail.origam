@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="9268abd0-a08e-4c97-b5f7-219eacf171c0"
+    localized="false"
+    name="OrigamCharacterTranslationDetail"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/ee9fee5b-2a88-4877-a65c-522f7737f4e9"
+      x:id="f37a758c-c06e-4e75-9b06-eef33ebc4ae0"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamCharacterTranslationDetail"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/refOrigamCharacterTranslationId/91bc19ab-8e3c-4d18-bc7b-76e09be11832"
+        x:id="def33c72-fa49-4053-8087-218fd38b829a"
+        name="refOrigamCharacterTranslationId"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/Priority/50053589-e3cd-4bf0-a2b9-123f1a821bca"
+        x:id="ad0e292f-4a28-49e9-85c8-b79de7c4744d"
+        name="Priority"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/Source/16772f33-3345-47ce-bc27-7b52a9f0c3d7"
+        x:id="d4b0ed44-ca3e-4b5f-a121-db1f7b821312"
+        name="Source"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="1f1080bb-05e5-4d6a-b185-e1c57d3f8a59"
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/Target/bb4dc48b-7efb-4c08-94d7-29388dced38b"
+        x:id="4dc4feac-cf3f-4b82-a5b9-edaa3c851a8b"
+        name="Target"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="c2cd04cd-9a47-49d8-aa03-2e07044b3c7c"
+      name="ByDictionaryId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/OrigamCharacterTranslationDetail/f37a758c-c06e-4e75-9b06-eef33ebc4ae0"
+        filter="Root/DataEntity/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/GetByOrigamCharacterTranslationId/abf95e1c-08f4-4d64-aec0-4181632290d5"
+        x:id="718c7e9b-9649-4f52-83ce-b1de38e302fa"
+        name="OrigamCharacterTranslationDetail_GetByOrigamCharacterTranslationId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureSortSet
+      abstract="false"
+      x:id="26b8f31b-a6ce-4a0a-905d-0915855cd934"
+      name="ByPriority"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSet">
+      <DataStructureSortSetItem
+        abstract="false"
+        entity="Root/DataStructure/__system/OrigamCharacterTranslationDetail.origam#OrigamCharacterTranslationDetail/OrigamCharacterTranslationDetail/f37a758c-c06e-4e75-9b06-eef33ebc4ae0"
+        fieldName="Priority"
+        x:id="af7fe335-6fff-474f-8f69-64310b9401a5"
+        name="OrigamCharacterTranslationDetail_0_Priority"
+        sortDirection="Ascending"
+        x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+    </DataStructureSortSet>
+  </DataStructure>
+</x:file>

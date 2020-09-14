@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE [WorkQueueEntry] ADD CONSTRAINT FK_WorkQueueEntry_refLockedByBusinessPartnerId_BusinessPartner
+	FOREIGN KEY (
+		[refLockedByBusinessPartnerId]
+	)
+
+	REFERENCES [BusinessPartner] (
+		[Id]
+	)
+ALTER TABLE [WorkQueueEntry] ADD CONSTRAINT FK_WorkQueueEntry_refWorkQueueId_WorkQueue
+	FOREIGN KEY (
+		[refWorkQueueId]
+	)
+
+	REFERENCES [WorkQueue] (
+		[Id]
+	)

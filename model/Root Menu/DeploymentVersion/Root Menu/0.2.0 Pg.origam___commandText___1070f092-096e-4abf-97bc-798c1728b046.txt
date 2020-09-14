@@ -1,0 +1,4 @@
+﻿INSERT INTO "OrigamRoleOrigamApplicationRole" ("Id", "refOrigamRoleId", "refOrigamApplicationRoleId", "RecordCreated", "IsFormReadOnly")
+SELECT gen_random_uuid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', "Id", now(), false FROM
+ "OrigamApplicationRole" WHERE "Name" NOT LIKE 'data%restrict%'
+ AND "Name" NOT LIKE 'data%only%' AND "Name" NOT LIKE 'data%deny%'

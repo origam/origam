@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    x:id="5643627e-99f8-4df4-bfd6-d31db81cad4a"
+    name="RuleExceptionData"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.DetachedEntity">
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="255"
+      dataType="String"
+      excludeFromAllFields="false"
+      x:id="ce374f6b-7348-4a09-afe3-17a909e0fb53"
+      isPrimaryKey="false"
+      name="FieldName"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Memo"
+      excludeFromAllFields="false"
+      x:id="fc76a77d-fbbc-472b-a666-4c87df66205b"
+      isPrimaryKey="false"
+      name="Message"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="255"
+      dataType="String"
+      excludeFromAllFields="false"
+      x:id="dfcf08cd-eb7b-48da-9934-a7929acde568"
+      isPrimaryKey="false"
+      name="EntityName"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Integer"
+      excludeFromAllFields="false"
+      x:id="c7089321-a55f-4d61-823c-fdb8e2fed215"
+      isPrimaryKey="false"
+      name="Severity"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Element" />
+  </DataEntity>
+</x:file>

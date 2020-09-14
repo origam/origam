@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="a406c361-3f02-4947-90ef-f9d73228ed60"
+    localized="false"
+    name="Language"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/Language.origam#Language/efdff1b5-916a-4036-977e-e34f59e72d41"
+      x:id="4a94315a-5872-4241-ad8c-4ba5745c9797"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="Language"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

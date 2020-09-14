@@ -1,0 +1,2 @@
+﻿ALTER TABLE [AsapRoleAsapApplicationRole] ADD [IsFormReadOnly] BIT NOT NULL CONSTRAINT [DF_AsapRoleAsapApplicationRole_IsFormReadOnly] DEFAULT 0
+--ALTER TABLE [AsapRoleAsapApplicationRole] DROP CONSTRAINT [DF_AsapRoleAsapApplicationRole_IsFormReadOnly]

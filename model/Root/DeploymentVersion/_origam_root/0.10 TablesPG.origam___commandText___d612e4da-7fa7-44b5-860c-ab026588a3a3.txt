@@ -1,0 +1,41 @@
+﻿
+ALTER TABLE "OrigamSyncConfig" ADD CONSTRAINT FK_OrigamSyncConfig_refSourceOrigamSyncConnectionId_OrigamSyncConnection
+	FOREIGN KEY (
+		"refSourceOrigamSyncConnectionId"
+	)
+
+	REFERENCES "OrigamSyncConnection" (
+		"Id"
+	);
+ALTER TABLE "OrigamSyncConfig" ADD CONSTRAINT FK_OrigamSyncConfig_refSourceOrigamSyncProviderConfigId_OrigamSyncProviderConfig
+	FOREIGN KEY (
+		"refSourceOrigamSyncProviderConfigId"
+	)
+
+	REFERENCES "OrigamSyncProviderConfig" (
+		"Id"
+	);
+ALTER TABLE "OrigamSyncConfig" ADD CONSTRAINT FK_OrigamSyncConfig_refTargetOrigamSyncConnectionId_OrigamSyncConnection
+	FOREIGN KEY (
+		"refTargetOrigamSyncConnectionId"
+	)
+
+	REFERENCES "OrigamSyncConnection" (
+		"Id"
+	);
+ALTER TABLE "OrigamSyncConfig" ADD CONSTRAINT FK_OrigamSyncConfig_refTargetOrigamSyncProviderConfigId_OrigamSyncProviderConfig
+	FOREIGN KEY (
+		"refTargetOrigamSyncProviderConfigId"
+	)
+
+	REFERENCES "OrigamSyncProviderConfig" (
+		"Id"
+	);
+ALTER TABLE "OrigamSyncConfig" ADD CONSTRAINT FK_OrigamSyncConfig_refCounterReferenceCode_Counter
+	FOREIGN KEY (
+		"refCounterReferenceCode"
+	)
+
+	REFERENCES "Counter" (
+		"ReferenceCode"
+	);

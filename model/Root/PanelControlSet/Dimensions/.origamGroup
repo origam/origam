@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="d3087181-fe7b-48dd-85b9-97a4f17f3b6d"
+    x:isFolder="true"
+    name="Dimensions"
+    rootItemType="PanelControlSet"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>
