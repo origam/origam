@@ -199,7 +199,7 @@ function drawCellValue() {
 
   let isLink = false;
   let isLoading = false;
-  let isInvalid = true; //!!currentCellErrorMessage();
+  let isInvalid = !!currentCellErrorMessage();
 
   const property = currentProperty();
   if (property.isLookup && property.lookupEngine) {
