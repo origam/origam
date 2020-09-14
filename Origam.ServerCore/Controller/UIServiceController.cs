@@ -452,7 +452,7 @@ namespace Origam.ServerCore.Controller
                 .Finally(UnwrapReturnValue);
         }
         [HttpGet("[action]")]
-        public IActionResult GeNotificationBoxContent()
+        public IActionResult GetNotificationBoxContent()
         {
             return Ok(ServerCoreUIService.NotificationBoxContent());
         }
