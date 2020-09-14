@@ -4,7 +4,7 @@ import { IRowsContainer } from "./types/IRowsContainer";
 import { IAdditionalRowData } from "./types/IAdditionalRecordData";
 import { IGroupTreeNode } from "../../gui/Components/ScreenElements/Table/TableRendering/types";
 import { IDataSourceField } from "./types/IDataSourceField";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 
 export class TreeDataTable implements IDataTable {
@@ -12,7 +12,12 @@ export class TreeDataTable implements IDataTable {
   $type_TreeDataTable: 1 = 1;
   properties: IProperty[] = [];
   rowsContainer: IRowsContainer = null as any;
-  rows: any[] = [];
+
+  @observable.shallow rows: any[] = [];
+
+  get loadedRowsCount() {
+    return this.rows.length;
+  }
 
   get allRows(): any[][] {
     return this.rows;

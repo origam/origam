@@ -38,6 +38,10 @@ export class ScrollRowContainer implements IRowsContainer {
     return this.rowChunks.flatMap((chunk) => chunk.rows);
   }
 
+  @computed get loadedRowsCount() {
+    return this.rows.length;
+  }
+
   clear(): void {
     this.rowChunks.length = 0;
   }

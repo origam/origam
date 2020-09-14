@@ -18,6 +18,7 @@ export interface IDataTable {
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
+  loadedRowsCount: number;
   allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
   maxRowCountSeen: number;

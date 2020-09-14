@@ -33,6 +33,10 @@ export class DataTable implements IDataTable {
     return this.rowsContainer.rows;
   }
 
+  get loadedRowsCount() {
+    return this.rowsContainer.loadedRowsCount;
+  }
+
   @computed get groups(): IGroupTreeNode[] {
     return getGrouper(this).topLevelGroups;
   }
