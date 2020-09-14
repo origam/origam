@@ -10,5 +10,7 @@ export function getUserOrdering(ctx: any) {
     const dataStructureEntityId = getDataStructureEntityId(dataView);
     throw new Error(`Cannot infinitely scroll on dataStructureEntity: ${dataStructureEntityId} because it has no default ordering on the displayed form.`)
   }
-  return orderingConfiguration.userOrderings;
+  return orderingConfiguration.userOrderings.length === 0
+    ? defaultOrderings
+    : orderingConfiguration.userOrderings;
 }
