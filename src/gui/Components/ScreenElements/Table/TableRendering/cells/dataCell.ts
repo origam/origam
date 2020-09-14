@@ -20,7 +20,8 @@ import {
   currentRowHeight,
   currentRowTop,
   currentCellValue,
-  isCurrentCellLoading,
+  isCurrentCellLoading, 
+  currentCellErrorMessage
 } from "../currentCell";
 import {
   applyScrollTranslation,
@@ -77,9 +78,9 @@ function registerClickHandler(columnId: string) {
   getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
 
   const property = currentProperty();
-  
+
   const cellClickableArea = getCellClickableArea();
-  if(property.column === "CheckBox") {
+  if (property.column === "CheckBox") {
     const checkboxClickableArea = getCheckboxClickableArea();
     onClick({
       x: checkboxClickableArea.x,
@@ -118,7 +119,7 @@ function registerClickHandler(columnId: string) {
             if (defaultAction && defaultAction.isEnabled) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
-          } 
+          }
         })();
       },
     });
@@ -148,7 +149,6 @@ function registerClickHandler(columnId: string) {
       },
     });
   }
-  
 }
 
 function xCenter() {
@@ -201,6 +201,8 @@ function drawCellValue() {
 
   let isLink = false;
   let isLoading = false;
+  let isInvalid = !!currentCellErrorMessage();
+
   const property = currentProperty();
   if (property.isLookup && property.lookupEngine) {
     isLoading = isCurrentCellLoading();
@@ -219,6 +221,21 @@ function drawCellValue() {
       CPR() * (currentRowTop() + topTextOffset)
     );
   } else {
+    if (isInvalid) {
+      ctx2d.save();
+      ctx2d.fillStyle = "red";
+      //ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
+      //This character does not work for some reason 😠
+      //ctx2d.fillText(`\uf06a`, CPR() * currentColumnLeft(), currentRowTop() + topTextOffset);
+      ctx2d.fillRect(
+        currentColumnLeft() * CPR(),
+        currentRowTop() * CPR(),
+        3 * CPR(),
+        currentRowHeight() * CPR()
+      );
+      ctx2d.restore();
+    }
+
     ctx2d.fillStyle = foregroundColor || "black";
     switch (type) {
       case "CheckBox":

@@ -22,7 +22,8 @@ import { BlobEditor } from "gui/Components/ScreenElements/Editors/BlobEditor";
 import { getDataView } from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
 import { XmlBuildDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
-import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
+import { isReadOnly } from "../../../../model/selectors/RowState/isReadOnly";
+import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -59,27 +60,15 @@ export class FormViewEditor extends React.Component<{
     const readOnly = !row || isReadOnly(this.props.property!, rowId);
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;
-    if (row) {
-      const dataTable = getDataTable(this.props.property);
-      const dsFieldErrors = getDataSourceFieldByName(this.props.property, "__Errors");
-      const errors = dsFieldErrors
-        ? dataTable.getCellValueByDataSourceField(row, dsFieldErrors)
-        : null;
 
-      const errMap: Map<number, string> | undefined = errors
-        ? new Map(
-            Object.entries<string>(
-              errors.fieldErrors
-            ).map(([dsIndexStr, errMsg]: [string, string]) => [parseInt(dsIndexStr, 10), errMsg])
-          )
-        : undefined;
 
-      const errMsg =
-        dsFieldErrors && errMap ? errMap.get(this.props.property!.dataSourceIndex) : undefined;
-      if (errMsg) {
-        isInvalid = true;
-        invalidMessage = errMsg;
-      }
+    const errMsg = row
+      ? getFieldErrorMessage(this.props.property!)(row, this.props.property!)
+      : undefined;
+
+    if (errMsg) {
+      isInvalid = true;
+      invalidMessage = errMsg;
     }
 
     const focusManager = getDataView(this.props.property).focusManager;
@@ -222,17 +211,17 @@ export class FormViewEditor extends React.Component<{
           />
         );
       case "Image":
-        return <ImageEditor
-          value={this.props.value}
-          tabIndex={this.props.tabIndex}/>;
+        return <ImageEditor value={this.props.value} tabIndex={this.props.tabIndex} />;
       case "Blob":
-        return <BlobEditor
-          value={this.props.value}
-          tabIndex={this.props.tabIndex}
-          subscribeToFocusManager={(inputEditor) =>
-            focusManager.subscribe(inputEditor, this.props.property?.id)
-          }
-        />;
+        return (
+          <BlobEditor
+            value={this.props.value}
+            tabIndex={this.props.tabIndex}
+            subscribeToFocusManager={(inputEditor) =>
+              focusManager.subscribe(inputEditor, this.props.property?.id)
+            }
+          />
+        );
       default:
         return "Unknown field";
     }
