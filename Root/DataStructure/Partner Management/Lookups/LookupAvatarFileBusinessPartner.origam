@@ -42,6 +42,18 @@
         useLookupValue="false"
         writeOnly="false"
         xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/AvatarFilename/88a6496f-0bda-4032-81ba-3b413baced65"
+        x:id="c4c242cc-fcd3-492a-a276-ebcc3d416772"
+        name="AvatarFilename"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
       abstract="false"
