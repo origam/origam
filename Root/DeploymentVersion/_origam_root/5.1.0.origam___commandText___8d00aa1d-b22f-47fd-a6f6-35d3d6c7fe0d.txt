@@ -1,0 +1,1 @@
+﻿LTER TABLE [BusinessPartner] ADD [AvatarName] NVARCHAR(200) NULL
