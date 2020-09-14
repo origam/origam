@@ -11,6 +11,7 @@ import {
 } from "./types/IAction";
 import { IActionParameter } from "./types/IActionParameter";
 import {getIsAnySelected} from "model/selectors-tree/selectionCheckboxes";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export class Action implements IAction {
   $type_IAction: 1 = 1;
@@ -33,6 +34,10 @@ export class Action implements IAction {
   @computed get isEnabled() {
     if (this.mode === IActionMode.Always) {
       return true;
+    }
+    const dataTable = getDataTable(this);
+    if(dataTable.loadedRowsCount === 0) {
+      return false
     }
     const selRowId = getSelectedRowId(this);
     const isDisabledOverride = selRowId
