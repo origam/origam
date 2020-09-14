@@ -13,6 +13,11 @@ import { T } from "utils/translation";
 
 const OPERATORS = () =>
   [
+    { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
+    {
+      human: <>{T("not contains", "filter_operator_not_contains")}</>,
+      type: "ncontains",
+    },
     {
       human: <>{T("begins with", "filter_operator_begins_with")}</>,
       type: "starts",
@@ -25,11 +30,6 @@ const OPERATORS = () =>
     {
       human: <>{T("not ends with", "filter_operator_not_ends_with")}</>,
       type: "nends",
-    },
-    { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
-    {
-      human: <>{T("not contains", "filter_operator_not_contains")}</>,
-      type: "ncontains",
     },
     { human: <>=</>, type: "eq" },
     { human: <>&ne;</>, type: "neq" },
