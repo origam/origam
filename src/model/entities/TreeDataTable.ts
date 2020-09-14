@@ -15,6 +15,9 @@ export class TreeDataTable implements IDataTable {
 
   @observable.shallow rows: any[] = [];
 
+  get loadedRowsCount() {
+    return this.rows.length;
+  }
 
   get allRows(): any[][] {
     return this.rows;
