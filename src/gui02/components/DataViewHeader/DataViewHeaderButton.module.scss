@@ -1,11 +1,22 @@
 @import "src/styles/common_styles.scss";
 
+.disabled {
+  color: #b0afb7;
+}
+.enabled {
+  color: #3e3d45;
+
+  &:hover {
+    background: #B0AFB7;
+    color: #0D0D0D;
+  }
+}
+
 .root {
   height: 22px;
   padding: 0 0.75em;
   background: #e9e8f0;
   border-color: #b0afb7;
-  color: #3e3d45;
   border-style: solid;
   border-width: 1px;
   box-sizing: border-box;
@@ -41,11 +52,5 @@
     border-color: #b0afb7;
     border-style: solid;
     border-width: 1px;
-  }
-
-
-  &:hover {
-    background: #B0AFB7;
-    color: #0D0D0D;
   }
 }
