@@ -4,7 +4,7 @@
     abstract="false"
     x:id="d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"
     localized="false"
-    name="LookupAvatarBusinessPartner"
+    name="LookupAvatarFileBusinessPartner"
     x:type="Origam.Schema.EntityModel.DataStructure">
     <DataStructureEntity
       abstract="false"
@@ -21,7 +21,7 @@
       <DataStructureColumn
         abstract="false"
         aggregation="None"
-        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
         x:id="6e3c37fd-04a1-42ca-8c47-8bad53f0f9bd"
         name="Id"
         x:type="Origam.Schema.EntityModel.DataStructureColumn"
@@ -33,9 +33,9 @@
       <DataStructureColumn
         abstract="false"
         aggregation="None"
-        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Avatar/bb3e0e9a-3471-4bc7-92e9-481a4304a009"
+        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/AvatarFile/bb3e0e9a-3471-4bc7-92e9-481a4304a009"
         x:id="737776cc-ee8f-4192-86d2-5e687040b8f2"
-        name="Avatar"
+        name="AvatarFile"
         x:type="Origam.Schema.EntityModel.DataStructureColumn"
         upsertType="Replace"
         useCopiedValue="false"
@@ -51,7 +51,7 @@
       x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
       <DataStructureFilterSetFilter
         abstract="false"
-        entity="Root/DataStructure/Partner Management/Lookups/LookupAvatarBusinessPartner.origam#LookupAvatarBusinessPartner/BusinessPartner/8d4958b5-96ad-4778-b464-24a3b7d68f0c"
+        entity="Root/DataStructure/Partner Management/Lookups/LookupAvatarFileBusinessPartner.origam#LookupAvatarFileBusinessPartner/BusinessPartner/8d4958b5-96ad-4778-b464-24a3b7d68f0c"
         filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
         x:id="fb5765b9-9f60-4f6b-9892-e9d4fe2302a2"
         name="BusinessPartner_GetId"

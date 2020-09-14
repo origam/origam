@@ -305,8 +305,8 @@
       excludeFromAuditing="false"
       x:id="bb3e0e9a-3471-4bc7-92e9-481a4304a009"
       isPrimaryKey="false"
-      mappedColumnName="Avatar"
-      name="Avatar"
+      mappedColumnName="AvatarFile"
+      name="AvatarFile"
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.FieldMappingItem"
       xmlMappingType="Attribute" />
@@ -320,8 +320,9 @@
       excludeFromAuditing="false"
       x:id="88a6496f-0bda-4032-81ba-3b413baced65"
       isPrimaryKey="false"
-      mappedColumnName="AvatarName"
-      name="AvatarName"
+      label="Avatar"
+      mappedColumnName="AvatarFilename"
+      name="AvatarFilename"
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.FieldMappingItem"
       xmlMappingType="Attribute" />

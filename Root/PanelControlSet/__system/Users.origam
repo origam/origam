@@ -153,6 +153,12 @@
           name="Text"
           propertyId="e4c1751b-7b33-42d3-b945-11971cdf7c56"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="973d916a-2afa-4e9e-902d-56682d3692f9"
+          name="CustomNumericFormat"
+          propertyId="1713bfc4-d991-4c6d-a26e-93bd8ef8046b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
         abstract="false"
@@ -292,6 +298,12 @@
           x:id="da9d5076-80f9-44a4-a3ee-fb7dd6df56a2"
           name="Caption"
           propertyId="340fed3d-87c0-4c4b-a474-d28ebe2a7a14"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="7935093d-fd0d-4e7c-b0a0-a712663a70b3"
+          name="CustomNumericFormat"
+          propertyId="1713bfc4-d991-4c6d-a26e-93bd8ef8046b"
           x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
@@ -434,6 +446,12 @@
           propertyId="d943815e-c6df-4236-99e8-566aaf4acc20"
           x:type="Origam.Schema.GuiModel.PropertyValueItem"
           value="false" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="f0c9b7d8-ed81-4320-b63a-324447eef66e"
+          name="CustomNumericFormat"
+          propertyId="1713bfc4-d991-4c6d-a26e-93bd8ef8046b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
         abstract="false"
@@ -574,6 +592,12 @@
           propertyId="6a6e791e-0854-4779-9150-e70725b5d279"
           x:type="Origam.Schema.GuiModel.PropertyValueItem"
           value="false" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="993bacc9-5418-4dc6-bdee-88a55255417e"
+          name="CustomNumericFormat"
+          propertyId="1713bfc4-d991-4c6d-a26e-93bd8ef8046b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
       </ControlSetItem>
       <ControlSetItem
         abstract="false"
@@ -712,6 +736,215 @@
           x:id="3cdd1ce3-cff4-4b1c-8267-f35cb8843971"
           name="StyleId"
           propertyId="02a5fdbd-f29d-408e-ac4a-0ef7e7be7a40"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="545226e7-fc68-4f8b-b058-8f80eeedfe2c"
+          name="CustomNumericFormat"
+          propertyId="1713bfc4-d991-4c6d-a26e-93bd8ef8046b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+      </ControlSetItem>
+      <ControlSetItem
+        abstract="false"
+        x:id="ddf3b8b5-2e09-4539-b5e8-2d293849808d"
+        isAlternative="false"
+        level="100"
+        name="BlobControl1"
+        requestSaveAfterChange="false"
+        x:type="Origam.Schema.GuiModel.ControlSetItem"
+        widget="Root/Control/_Basic Controls/BlobControl.origam#BlobControl/7dc84301-dc35-44b0-b766-390b4b6d3a9a">
+        <PropertyBindingInfo
+          abstract="false"
+          designDataSetPath="BusinessPartner.AvatarFilename"
+          x:id="285cd650-98c0-47b6-a837-89b1b3493e8f"
+          name="FileName"
+          propertyId="a02996d3-7766-4e1b-a5dc-125fa0fe165e"
+          x:type="Origam.Schema.GuiModel.PropertyBindingInfo"
+          value="AvatarFilename" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="4dc0c689-8d19-449e-8464-0eb19703f7ea"
+          name="RemarkMember"
+          propertyId="74c43504-beee-4943-844b-07f41453a5f5"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="f6e2e931-b1fd-47a8-a1b6-66f66e1dfcae"
+          name="GridColumnCaption"
+          propertyId="0b90fcf9-f088-4f5d-a02e-0bf98c663b0f"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="95993f51-25d4-4d2f-8284-d543c0e08f14"
+          name="StyleId"
+          propertyId="7b5321fa-9854-4071-b640-11e9bac51187"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="6563c429-bc62-4277-83cc-d425aef0b77c"
+          name="FileName"
+          propertyId="a02996d3-7766-4e1b-a5dc-125fa0fe165e"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="68ecbc56-e151-4802-83f9-eec9543c4395"
+          name="HideOnForm"
+          propertyId="58ab5e69-2ed1-44bb-a7a0-2b8c051f1fec"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="false" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="093f12f3-f1c4-4b56-bf2a-1cb6ed524d41"
+          name="ThumbnailMember"
+          propertyId="92065f56-34b8-4075-a3eb-361efa4b7bc5"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="a34d06f8-9f76-4894-b936-0f33c552e08b"
+          name="ReadOnly"
+          propertyId="b4d508b4-ca6a-4174-a71c-3a7c24c975bc"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="false" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="2a488193-8caa-49fa-830e-92ce97c784ec"
+          name="BlobLookupId"
+          propertyId="0f2ecc41-44b9-4959-bc7d-3a9a07a9b99d"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="8dc44385-53ad-4259-9932-61a23231629c"
+          name="OriginalPathMember"
+          propertyId="36fd2a84-70ec-4585-b936-55659ce472a5"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="f7e98254-cf1a-4b2e-a9bb-291c52c81dc6"
+          name="Height"
+          propertyId="1428b6fb-8731-4fbd-9dfe-56bf77197528"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="20" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="e4415312-8e49-48ad-b16c-1e6be326be56"
+          name="Left"
+          propertyId="8f64ef81-2387-48f1-a236-56dc8d1122af"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="136" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="83bca9b6-9bea-4999-9ee5-5fec4888f4cc"
+          name="AuthorMember"
+          propertyId="444dd5a4-1e41-4821-afac-57941467adc0"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="b1624298-01ed-4fc0-b817-b36ed2f20ab8"
+          name="CaptionLength"
+          propertyId="30800df0-1923-4198-a1f7-6366401def7f"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="130" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="123ac98a-9424-491e-8ac6-bbe055121059"
+          name="DateCreatedMember"
+          propertyId="89fb9640-c3fa-4fb0-a6a6-6a687f210e08"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="dd305e65-0ff7-4161-8556-bfeccbce2f83"
+          name="TabIndex"
+          propertyId="5b4bcc0c-460c-45fe-9a16-8a7f2fbde3c5"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="13" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="510f430a-239e-45b2-aaec-e561aabd1c15"
+          name="DefaultCompressionConstantId"
+          propertyId="bf7fa9b2-2233-43c0-b59e-8d9c6723a69b"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="844bf2c5-2f84-4a10-8f03-fe8a18dfb57a"
+          name="CompressionStateMember"
+          propertyId="0ba1502a-68c9-433c-aca5-99bb38e57edb"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="adfffd24-6a90-417a-aea4-aac0b695413e"
+          name="StorageTypeDefaultConstantId"
+          propertyId="53dd0142-42c1-437b-8541-a005e3d6371e"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="89d58dd3-9d66-4bee-b1a6-bea226615469"
+          name="BlobMember"
+          propertyId="43b39340-4393-4572-9ce4-b08c935a61bc"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="AvatarFile" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="86e092e6-72a9-4f0d-be4f-dec525964959"
+          name="Top"
+          propertyId="b1f2c5cb-1db8-4a33-b75e-b0a426fcf52e"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="155" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="7b0a5dd8-1795-42dd-b0ac-f942ad9bfff3"
+          name="Caption"
+          propertyId="837c02e0-7450-40c2-b9dc-b47cabe71c7a"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="bdbab6b5-4ef5-4358-a1f2-da4433bba824"
+          name="Width"
+          propertyId="73523f9a-1245-4ff3-a791-bdae1073fe34"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="168" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="0142dec2-87cb-412f-88e8-f720f72fcdde"
+          name="DateLastModifiedMember"
+          propertyId="09d7e50b-c48c-4673-8614-d3502fa73cac"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="9cead8c4-6bd9-4e16-8751-4a9ab660e9a0"
+          name="DisplayStorageTypeSelection"
+          propertyId="0d493370-4dbd-466a-8663-d846be197de6"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="false" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="632c6d3e-2604-4782-af4d-9cf2df5314e3"
+          name="CaptionPosition"
+          propertyId="ad4ff415-a8fb-41c1-ae9a-daa820f1aa7c"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="0" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="1655bb40-e1d3-4874-8abb-aad467e60436"
+          name="FileSizeMember"
+          propertyId="caaa1592-7173-42ec-9de3-de49f108de90"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="e7366dd4-7e3a-4435-87f8-04c7131aadfc"
+          name="ThumbnailWidthConstantId"
+          propertyId="8010b240-ceef-4f57-8676-f1487c860fa5"
+          x:type="Origam.Schema.GuiModel.PropertyValueItem"
+          value="00000000-0000-0000-0000-000000000000" />
+        <PropertyValueItem
+          abstract="false"
+          x:id="4e0c6d1f-5753-4a7b-9aae-497e31f1d273"
+          name="ThumbnailHeightConstantId"
+          propertyId="a34fee43-2b66-4f5e-80da-faa69874c8a7"
           x:type="Origam.Schema.GuiModel.PropertyValueItem"
           value="00000000-0000-0000-0000-000000000000" />
       </ControlSetItem>
@@ -1118,6 +1351,20 @@
         x:id="6c5260cb-1ac7-4c12-b910-fe511ecfb77e"
         name="IsMapVisible"
         propertyId="4584fc29-2af7-404e-83ec-3f4847afa367"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="false" />
+      <PropertyValueItem
+        abstract="false"
+        x:id="1b50a7b7-f551-4063-9c20-1a45ba2f4a1a"
+        name="CalendarViewStyleId"
+        propertyId="85e7c9e2-0c94-47a2-b297-63c19270cf40"
+        x:type="Origam.Schema.GuiModel.PropertyValueItem"
+        value="00000000-0000-0000-0000-000000000000" />
+      <PropertyValueItem
+        abstract="false"
+        x:id="f1758742-e794-489d-a86c-fc9e1ea1bd98"
+        name="HideCopyButton"
+        propertyId="4cbf6280-e2ca-4fdf-b621-66df94961094"
         x:type="Origam.Schema.GuiModel.PropertyValueItem"
         value="false" />
     </ControlSetItem>
