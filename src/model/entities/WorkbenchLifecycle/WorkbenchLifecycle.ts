@@ -23,6 +23,7 @@ import { assignIIds } from "xmlInterpreters/xmlUtils";
 import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import {onWorkflowNextClick} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
+import {observable} from "mobx";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -33,6 +34,9 @@ export enum IRefreshOnReturnType {
 
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
+
+  @observable
+  notificationBox: any;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const { type, id, label, dialogWidth, dialogHeight, dontRequestData } = args.item.attributes;
@@ -284,6 +288,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     console.log("portalInfo:");
     console.log(portalInfo);
+    this.startNotificationBoxPolling(portalInfo.notificationBoxRefreshInterval);
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
@@ -339,4 +344,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   parent?: any;
+
+  private startNotificationBoxPolling(notificationBoxRefreshInterval: number) {
+    if(!notificationBoxRefreshInterval)
+    {
+      return;
+    }
+    setInterval(()=>{
+      this.notificationBox = getApi(this).getNotificationBoxContent();
+    }, notificationBoxRefreshInterval * 1000)
+  }
 }
