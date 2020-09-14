@@ -2,44 +2,44 @@
 <x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
   <DeploymentVersion
     abstract="false"
-    deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.0.2"
-    x:id="5fc878d0-13c7-4329-9341-ece208455cf2"
-    name="5.1.0"
+    deploymentDependenciesCsv="147FA70D-6519-4393-B5D0-87931F9FD609, 5.1.0"
+    x:id="77eb1290-a635-46cd-8600-bc72aa1bb18e"
+    name="5.1.1"
     x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
-    version="5.1.0">
+    version="5.1.1">
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="10"
-      commandText="-***-ExternalFile:5.1.0.origam___commandText___ec0791ea-5cef-46e9-97d5-125e8f4d74c6.txt"
-      x:id="ec0791ea-5cef-46e9-97d5-125e8f4d74c6"
-      name="00010_Database_Field_OrigamDataAuditLog.SecondReferenceKey"
+      commandText="-***-ExternalFile:5.1.1.origam___commandText___7cbd5128-d256-44e3-a830-a7e0013ee0d4.txt"
+      x:id="7cbd5128-d256-44e3-a830-a7e0013ee0d4"
+      name="00010_Database_Field_BusinessPartner.Avatar"
       platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="11"
-      commandText="-***-ExternalFile:5.1.0.origam___commandText___cffb9573-ab9d-4cb4-a938-8ba0972c7e18.txt"
-      x:id="cffb9573-ab9d-4cb4-a938-8ba0972c7e18"
-      name="00011_PG_Database_Field_OrigamDataAuditLog.SecondReferenceKey"
+      commandText="-***-ExternalFile:5.1.1.origam___commandText___9535a0c8-227d-4414-9ed6-29112b205a3a.txt"
+      x:id="9535a0c8-227d-4414-9ed6-29112b205a3a"
+      name="00011_PG_Database_Field_BusinessPartner.Avatar"
       platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
-      activityOrder="21"
-      commandText="-***-ExternalFile:5.1.0.origam___commandText___96b0e446-d6d9-46d4-9c41-8c05a473bff2.txt"
-      x:id="96b0e446-d6d9-46d4-9c41-8c05a473bff2"
-      name="00020_ix_OrigamDataAuditLog_SecondReferenceKey"
+      activityOrder="20"
+      commandText="-***-ExternalFile:5.1.1.origam___commandText___8d00aa1d-b22f-47fd-a6f6-35d3d6c7fe0d.txt"
+      x:id="8d00aa1d-b22f-47fd-a6f6-35d3d6c7fe0d"
+      name="00020_Database_Field_BusinessPartner.AvatarName"
       platform="MsSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
     <DeploymentUpdateScriptActivity
       abstract="false"
       activityOrder="21"
-      commandText="-***-ExternalFile:5.1.0.origam___commandText___b0e0abc6-c3d5-428a-a926-d9c3a4e998ac.txt"
-      x:id="b0e0abc6-c3d5-428a-a926-d9c3a4e998ac"
-      name="00021_PG_OrigamDataAuditLog_ix_SecondReferenceKey"
+      commandText="-***-ExternalFile:5.1.1.origam___commandText___82462d06-93d3-45cf-ab3c-0a24d5f9e128.txt"
+      x:id="82462d06-93d3-45cf-ab3c-0a24d5f9e128"
+      name="00021_PG_Database_Field_BusinessPartner.AvatarName"
       platform="PgSql"
       service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
       x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />

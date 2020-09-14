@@ -296,6 +296,36 @@
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.DetachedField"
       xmlMappingType="Element" />
+    <DataEntityColumn
+      abstract="true"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Blob"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="bb3e0e9a-3471-4bc7-92e9-481a4304a009"
+      isPrimaryKey="false"
+      mappedColumnName="AvatarFile"
+      name="AvatarFile"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="true"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="200"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="88a6496f-0bda-4032-81ba-3b413baced65"
+      isPrimaryKey="false"
+      label="Avatar"
+      mappedColumnName="AvatarFilename"
+      name="AvatarFilename"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
       abstract="true"
       generateDeploymentScript="false"
