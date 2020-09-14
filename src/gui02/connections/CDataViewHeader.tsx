@@ -158,12 +158,12 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                     <DataViewHeaderGroup grovable={true}>
                       <DataViewHeaderButtonGroup>
                         {actions
-                          .filter((action) => getIsEnabledAction(action))
                           .map((action) => (
                             <DataViewHeaderButton
                               onClick={(event) =>
                                 uiActions.actions.onActionClick(action)(event, action)
                               }
+                              disabled = {!getIsEnabledAction(action)}
                             >
                               {action.caption}
                             </DataViewHeaderButton>

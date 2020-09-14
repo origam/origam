@@ -1,3 +1,6 @@
+import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import { Memoized } from "./common/Memoized";
+import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
 import {
   currentDataRow,
   dataTable,
@@ -9,14 +12,12 @@ import {
   rowIndex,
   scRenderCell,
 } from "./renderingValues";
-import {currentRowCellsDimensions, currentRowCellsDraws} from "./currentRowCells";
-import {Memoized} from "./common/Memoized";
-import {dataRowColumnIds} from "./rowCells/dataRowCells";
+import { dataRowColumnIds } from "./rowCells/dataRowCells";
 
 export function drawCurrentCell() {
   const colIdx = drawingColumnIndex();
   const cellDraws = currentRowCellsDraws();
-  if(colIdx >= cellDraws.length) return
+  if (colIdx >= cellDraws.length) return;
   currentRowCellsDraws()[drawingColumnIndex()]();
 }
 
@@ -74,27 +75,26 @@ export function currentColumnId() {
 
 export const currentProperty = () => propertyById().get(currentColumnId() as any)!;
 
-export const currentCellText = Memoized(
-  () => {
-    const value = currentCellValue();
-    return dataTable().resolveCellText(currentProperty(), value)
-  }
-);
+export const currentCellText = Memoized(() => {
+  const value = currentCellValue();
+  return dataTable().resolveCellText(currentProperty(), value);
+});
 scRenderCell.push(() => currentCellText.clear());
 
-export const currentCellValue = Memoized(
-  () => {
-    const value = currentDataRow()[currentProperty().dataIndex];
-    return value
-  }
-);
+export const currentCellValue = Memoized(() => {
+  const value = currentDataRow()[currentProperty().dataIndex];
+  return value;
+});
 scRenderCell.push(() => currentCellValue.clear());
 
+export const currentCellErrorMessage = Memoized(() => {
+  const errMsg = getFieldErrorMessage(currentProperty())(currentDataRow(), currentProperty());
+  return errMsg;
+});
+scRenderCell.push(() => currentCellErrorMessage.clear());
 
-export const isCurrentCellLoading = Memoized(
-  () => {
-    const value = dataTable().isCellTextResolving(currentProperty(), currentCellValue())
-    return value
-  }
-);
+export const isCurrentCellLoading = Memoized(() => {
+  const value = dataTable().isCellTextResolving(currentProperty(), currentCellValue());
+  return value;
+});
 scRenderCell.push(() => isCurrentCellLoading.clear());

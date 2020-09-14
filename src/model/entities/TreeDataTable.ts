@@ -91,19 +91,19 @@ export class TreeDataTable implements IDataTable {
   }
 
   getDirtyValues(row: any[]): Map<string, any> {
-    throw new Error("Not implemented");
+    return new Map<string, any>();
   }
 
   getDirtyValueRows(): any[][] {
-    throw new Error("Not implemented");
+    return [];
   }
 
   getDirtyDeletedRows(): any[][] {
-    throw new Error("Not implemented");
+    return [];
   }
 
   getDirtyNewRows(): any[][] {
-    throw new Error("Not implemented");
+    return [];
   }
 
   getAllValuesOfProp(property: IProperty): any[] {
