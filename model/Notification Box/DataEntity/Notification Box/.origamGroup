@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="d3ceda1e-fe58-4fcd-ab9d-ea33f09c6700"
+    x:isFolder="true"
+    name="Notification Box"
+    rootItemType="DataEntity"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>
