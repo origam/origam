@@ -21,6 +21,7 @@ export class ServerSideGrouper implements IGrouper {
       autorun(() => {
         const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
         if (!firstGroupingColumn) {
+          this.topLevelGroups.length = 0;
           return;
         }
         const dataView = getDataView(this);
