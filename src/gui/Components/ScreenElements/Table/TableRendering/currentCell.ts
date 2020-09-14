@@ -1,3 +1,6 @@
+import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
+import { Memoized } from "./common/Memoized";
+import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
 import {
   currentDataRow,
   dataTable,
@@ -9,10 +12,7 @@ import {
   rowIndex,
   scRenderCell,
 } from "./renderingValues";
-import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
-import { Memoized } from "./common/Memoized";
 import { dataRowColumnIds } from "./rowCells/dataRowCells";
-import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 
 export function drawCurrentCell() {
   const colIdx = drawingColumnIndex();

@@ -1,3 +1,31 @@
+import { flow } from "mobx";
+import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
+import selectors from "model/selectors-tree";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
+import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import moment from "moment";
+import { CPR } from "utils/canvas";
+import actionsUi from "../../../../../../model/actions-ui-tree";
+import { getDataView } from "../../../../../../model/selectors/DataView/getDataView";
+import {
+  currentCellErrorMessage,
+  currentCellText,
+  currentColumnLeft,
+  currentColumnLeftVisible,
+  currentColumnWidth,
+  currentColumnWidthVisible,
+  currentProperty,
+  currentRowHeight,
+  currentRowTop,
+  isCurrentCellLoading,
+} from "../currentCell";
+import { onClick } from "../onClick";
 import {
   columnWidths,
   context,
@@ -11,19 +39,6 @@ import {
   tablePanelView,
 } from "../renderingValues";
 import {
-  currentCellText,
-  currentColumnLeft,
-  currentColumnLeftVisible,
-  currentColumnWidth,
-  currentColumnWidthVisible,
-  currentProperty,
-  currentRowHeight,
-  currentRowTop,
-  currentCellValue,
-  isCurrentCellLoading, 
-  currentCellErrorMessage
-} from "../currentCell";
-import {
   applyScrollTranslation,
   cellPaddingLeft,
   cellPaddingLeftFirstCell,
@@ -33,23 +48,6 @@ import {
   numberCellPaddingLeft,
   topTextOffset,
 } from "./cellsCommon";
-import { CPR } from "utils/canvas";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
-import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
-import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
-import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
-import selectors from "model/selectors-tree";
-import moment from "moment";
-import { onClick } from "../onClick";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { flow } from "mobx";
-import actionsUi from "../../../../../../model/actions-ui-tree";
-import { getDataView } from "../../../../../../model/selectors/DataView/getDataView";
-import { IPropertyColumn } from "model/entities/types/IPropertyColumn";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);

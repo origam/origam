@@ -19,9 +19,8 @@ export function getFieldErrorMessage(ctx: any) {
           )
         : undefined;
 
-      const errMsg =
-        dsFieldErrors && errMap ? errMap.get(property.dataSourceIndex) : undefined;
-      return errMsg
+      const errMsg = dsFieldErrors && errMap ? errMap.get(property.dataSourceIndex) : undefined;
+      return errMsg;
     }
-  }
+  };
 }
