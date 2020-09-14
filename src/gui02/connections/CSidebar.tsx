@@ -98,7 +98,7 @@ export class CSidebar extends React.Component {
         <LogoSection>
           <div className={S.logoLeft}>
             {this.workbenchLifecycle?.notificationBox
-              ? this.workbenchLifecycle.notificationBox
+              ? <div dangerouslySetInnerHTML={{ __html:this.workbenchLifecycle.notificationBox}}/>
               : <img src="./img/logo-left.png" />}
           </div>
         </LogoSection>

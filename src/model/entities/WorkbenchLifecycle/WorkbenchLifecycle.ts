@@ -350,8 +350,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     {
       return;
     }
-    setInterval(()=>{
-      this.notificationBox = getApi(this).getNotificationBoxContent();
-    }, notificationBoxRefreshInterval * 1000)
+    setInterval(async ()=>{
+      this.notificationBox = await getApi(this).getNotificationBoxContent();
+    }, notificationBoxRefreshInterval)
   }
 }
