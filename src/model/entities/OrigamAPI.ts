@@ -7,7 +7,7 @@ import {IAggregationInfo} from "./types/IAggregationInfo";
 import {IOrdering} from "./types/IOrderingConfiguration";
 import {IColumnSettings} from "./types/IColumnSettings";
 import {compareByGroupingIndex} from "./ColumnSettings";
-import {TypeSymbol} from "../../dic/Container";
+import {TypeSymbol} from "dic/Container";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -730,6 +730,20 @@ export class OrigamAPI implements IApi {
   async pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]> {
     return (
       await this.axiosInstance.get(`/UIService/PendingChanges/${data.sessionFormIdentifier}`)
+    ).data;
+  }
+
+  async changes(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    RowId: string;
+  }): Promise<any[]> {
+    return (
+      await this.axiosInstance.post(`/UIService/Changes`, {
+        SessionFormIdentifier: data.SessionFormIdentifier,
+        Entity: data.Entity,
+        RowId: data.RowId,
+      })
     ).data;
   }
 

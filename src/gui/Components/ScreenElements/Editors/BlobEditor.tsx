@@ -20,7 +20,7 @@ import {ModalWindow} from "gui/Components/Dialog/Dialog";
 import {changeManyFields} from "model/actions-ui/DataView/TableView/onFieldChange";
 import {flushCurrentRowData} from "model/actions/DataView/TableView/flushCurrentRowData";
 import {handleError} from "model/actions/handleError";
-import {IFocusable} from "../../../../model/entities/FocusManager";
+import {IFocusable} from "model/entities/FocusManager";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -110,13 +110,6 @@ export class BlobEditor extends React.Component<{
       if (this.fileList && this.fileList.length > 0) {
         for (let file of this.fileList) {
           console.log(file);
-          /*if (file.type.startsWith("image")) {
-          this.imageObjectUrl = URL.createObjectURL(file);
-          this.displayImageEditor = true;
-
-          return;
-        }
-        return;*/
           const token = yield this.props.api!.getUploadToken({
             SessionFormIdentifier: this.props.SessionFormIdentifier!,
             MenuId: this.props.menuItemId!,
@@ -133,7 +126,7 @@ export class BlobEditor extends React.Component<{
           console.log("Uploading ", file.name, file.size);
           let lastTime: number | undefined;
           let lastSize: number = 0;
-          const crudResult = yield this.props.api!.putBlob(
+          yield this.props.api!.putBlob(
             {
               uploadToken: token,
               fileName: file.name,
@@ -149,22 +142,13 @@ export class BlobEditor extends React.Component<{
               lastSize = event.loaded;
             })
           );
+          const crudResult = yield this.props.api!.changes(
+            {
+              SessionFormIdentifier: this.props.SessionFormIdentifier!,
+              Entity: this.props.Entity!,
+              RowId: this.props.RowId!});
           console.log(crudResult);
           yield* this.props.processCRUDResult!(crudResult);
-
-          /*const result = await axios.post(`http://localhost:8910/file-upload/${file.name}`, file, {
-          headers: { "content-type": "application/octet-stream" },
-          onUploadProgress(event) {
-            setProgress(event.loaded / event.total);
-            if (lastTime !== undefined) {
-              setSpeed((event.loaded - lastSize) / (event.timeStamp - lastTime) * 1000);
-              console.log(event.loaded - lastSize, event.timeStamp - lastTime)
-            }
-            lastTime = event.timeStamp;
-            lastSize = event.loaded;
-          }
-        });
-        console.log(result)*/
         }
       }
     } catch (e) {

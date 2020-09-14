@@ -72,7 +72,9 @@ export interface IApi {
   }): Promise<any>;
 
   saveSession(sessionFormIdentifier: string): Promise<any>;
+
   saveSessionQuery(sessionFormIdentifier: string): Promise<any>;
+
   refreshSession(sessionFormIdentifier: string): Promise<any>;
 
   sessionChangeMasterRecord(data: {
@@ -141,6 +143,7 @@ export interface IApi {
     Parameters: { [key: string]: any } | undefined;
     AdditionalRequestParameters?: object | undefined;
   }): Promise<any>;
+
   destroyUI(data: { FormSessionId: string }): Promise<any>;
 
   setMasterRecord(
@@ -152,12 +155,7 @@ export interface IApi {
     canceller?: any
   ): Promise<any>;
 
-  restoreData(
-    data: {
-      SessionFormIdentifier: string;
-      ObjectId: string;
-    }
-  ): Promise<void>;
+  restoreData(data: { SessionFormIdentifier: string; ObjectId: string }): Promise<void>;
 
   updateObject(data: {
     SessionFormIdentifier: string;
@@ -332,6 +330,10 @@ export interface IApi {
   ): Promise<any>;
 
   pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>;
+
+  changes(data: { SessionFormIdentifier: string; Entity: string; RowId: string }): Promise<any[]>;
+
   saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void>;
+
   saveData(data: { sessionFormIdentifier: string }): Promise<void>;
 }
