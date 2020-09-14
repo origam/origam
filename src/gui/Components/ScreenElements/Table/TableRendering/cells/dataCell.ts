@@ -199,7 +199,7 @@ function drawCellValue() {
 
   let isLink = false;
   let isLoading = false;
-  let isInvalid = !!currentCellErrorMessage();
+  let isInvalid = true; //!!currentCellErrorMessage();
 
   const property = currentProperty();
   if (property.isLookup && property.lookupEngine) {
@@ -222,15 +222,27 @@ function drawCellValue() {
     if (isInvalid) {
       ctx2d.save();
       ctx2d.fillStyle = "red";
+      // Exclamation mark (not working, probably solvable)
       //ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
       //This character does not work for some reason 😠
       //ctx2d.fillText(`\uf06a`, CPR() * currentColumnLeft(), currentRowTop() + topTextOffset);
-      ctx2d.fillRect(
+
+      // Or we might put a line as in Flash client:
+      /*ctx2d.fillRect(
         currentColumnLeft() * CPR(),
         currentRowTop() * CPR(),
         3 * CPR(),
         currentRowHeight() * CPR()
+      );*/
+
+      ctx2d.beginPath();
+      ctx2d.moveTo(currentColumnLeft() * CPR(), currentRowTop() * CPR());
+      ctx2d.lineTo(
+        (currentColumnLeft() + 5) * CPR(),
+        (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
       );
+      ctx2d.lineTo(currentColumnLeft() * CPR(), (currentRowTop() + currentRowHeight()) * CPR());
+      ctx2d.fill()
       ctx2d.restore();
     }
 
