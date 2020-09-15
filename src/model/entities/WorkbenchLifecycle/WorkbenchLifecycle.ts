@@ -24,6 +24,7 @@ import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import {onWorkflowNextClick} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import {observable} from "mobx";
+import {IUserInfo} from "model/entities/types/IUserInfo";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -37,6 +38,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   @observable
   notificationBox: any;
+
+  @observable
+  userInfo: IUserInfo | undefined;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const { type, id, label, dialogWidth, dialogHeight, dontRequestData } = args.item.attributes;
@@ -289,6 +293,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     console.log("portalInfo:");
     console.log(portalInfo);
     this.startNotificationBoxPolling(portalInfo.notificationBoxRefreshInterval);
+    this.userInfo = { userName: portalInfo.userName }
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
