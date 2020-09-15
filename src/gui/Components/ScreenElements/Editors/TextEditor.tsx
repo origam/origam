@@ -136,23 +136,31 @@ export class TextEditor extends React.Component<{
         />
       );
     }
-    return (
-      <textarea
-        style={this.getStyle()}
-        className={S.input}
-        value={this.props.value || ""}
-        readOnly={this.props.isReadOnly}
-        ref={this.refInput}
-        onChange={(event: any) =>
-          this.props.onChange && this.props.onChange(event, event.target.value)
-        }
-        onKeyDown={this.props.onKeyDown}
-        onDoubleClick={this.props.onDoubleClick}
-        onClick={this.props.onClick}
-        onBlur={this.props.onEditorBlur}
-        onFocus={this.handleFocus}
-        tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
-      />
-    );
+    if(this.props.isReadOnly){
+      return (
+        <div className={S.input}>
+          <span style={this.getStyle()}>{this.props.value || ""}</span>
+        </div>
+      );
+    }else{
+      return (
+        <textarea
+          style={this.getStyle()}
+          className={S.input}
+          value={this.props.value || ""}
+          readOnly={this.props.isReadOnly}
+          ref={this.refInput}
+          onChange={(event: any) =>
+            this.props.onChange && this.props.onChange(event, event.target.value)
+          }
+          onKeyDown={this.props.onKeyDown}
+          onDoubleClick={this.props.onDoubleClick}
+          onClick={this.props.onClick}
+          onBlur={this.props.onEditorBlur}
+          onFocus={this.handleFocus}
+          tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
+        />
+      );
+    }
   }
 }
