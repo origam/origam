@@ -20,15 +20,22 @@ import produce from "immer";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
 import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import {T} from "utils/translation";
 
-const OPERATORS: any[] = [
+const OPERATORS = () => [
   { human: <>=</>, type: "in" },
   { human: <>&ne;</>, type: "nin" },
-  { human: <>contain</>, type: "contains" },
-  { human: <>not contain</>, type: "ncontains" },
-  { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" },
-];
+  { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
+  {
+    human: <>{T("not contains", "filter_operator_not_contains")}</>,
+    type: "ncontains",
+  },
+  { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
+  {
+    human: <>{T("is not null", "filter_operator_not_is_null")}</>,
+    type: "nnull"
+  }
+] as any[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -36,9 +43,9 @@ const OpCombo: React.FC<{
 }> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS().find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS.map((op) => (
+      {OPERATORS().map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
@@ -383,8 +390,8 @@ export class FilterSettingsLookup extends React.Component<{
   onTriggerApplySetting?(setting: any): void;
 }> {
   @observable.ref setting: FilterSetting = new LookupFilterSetting(
-    OPERATORS[0].type,
-    OPERATORS[0].human
+    OPERATORS()[0].type,
+    OPERATORS()[0].human
   );
 
   @action.bound handleChange(newSetting: any) {
