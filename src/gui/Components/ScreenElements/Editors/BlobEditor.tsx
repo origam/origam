@@ -155,6 +155,7 @@ export class BlobEditor extends React.Component<{
       yield* this.props.handleError!(e);
     } finally {
       this.isUploading = false;
+      if(this.elmInput)this.elmInput.value = "";
     }
   }
 
