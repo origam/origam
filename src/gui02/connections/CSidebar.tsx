@@ -21,10 +21,15 @@ import {onSidebarInfoSectionCollapsed} from "model/actions-ui/RecordInfo/onSideb
 import {onSidebarAuditSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
 import {onSidebarInfoSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
 import {T} from "../../utils/translation";
+import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
+import {IWorkbenchLifecycle} from "model/entities/types/IWorkbenchLifecycle";
+import S from "gui02/connections/CSidebar.module.scss";
 
 @observer
 export class CSidebar extends React.Component {
   static contextType = MobXProviderContext;
+
+  private workbenchLifecycle: IWorkbenchLifecycle | undefined;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -79,6 +84,7 @@ export class CSidebar extends React.Component {
         this.handleExpandRecordAuditLog
       )
     );
+    this.workbenchLifecycle = getWorkbenchLifecycle(this.workbench);
   }
 
   componentWillUnmount() {
@@ -90,8 +96,10 @@ export class CSidebar extends React.Component {
     return (
       <Sidebar>
         <LogoSection>
-          <div style={{ width: 150 }}>
-            <img src="./img/logo-left.png" />
+          <div className={S.logoLeft}>
+            {this.workbenchLifecycle?.notificationBox
+              ? <div dangerouslySetInnerHTML={{ __html:this.workbenchLifecycle.notificationBox}}/>
+              : <img src="./img/logo-left.png" />}
           </div>
         </LogoSection>
         <SidebarSection

@@ -7,7 +7,7 @@ import {getWorkbench} from "model/selectors/getWorkbench";
 import React from "react";
 import {CScreenTabbedViewHandleRow} from "../CScreenTabbedViewHandleRow";
 import {CScreenToolbar} from "../CScreenToolbar";
-import {CSidebar} from "../CSidebar";
+import {CSidebar} from "gui02/connections/CSidebar";
 import {CScreenHeader} from "../CScreenHeader";
 import {CScreenContent} from "../CScreenContent";
 import {CDialogContent} from "../CDialogContent";

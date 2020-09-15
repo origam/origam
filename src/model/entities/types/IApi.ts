@@ -126,6 +126,8 @@ export interface IApi {
     PageNumber: number;
   }): Promise<any>;
 
+  getNotificationBoxContent(): Promise<any>;
+
   defaultCulture(): Promise<any>;
 
   initPortal(): Promise<any>;
