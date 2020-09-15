@@ -42,8 +42,8 @@ export function DropdownLayout(props: {
   const refMeasureBody = useRef<Measure>(null);
 
   const [rectCtrl, setRectCtrl] = useState<BoundingRect>({
-    top: 0,
-    left: 0,
+    top: window.screen.height + 50,
+    left: window.screen.width + 50,
     width: 0,
     height: 0,
     bottom: 0,
@@ -51,8 +51,8 @@ export function DropdownLayout(props: {
   });
 
   const [rectBody, setRectBody] = useState<BoundingRect>({
-    top: 0,
-    left: 0,
+    top: window.screen.height + 50,
+    left: window.screen.width + 50,
     width: 0,
     height: 0,
     bottom: 0,

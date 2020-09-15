@@ -36,8 +36,8 @@ export class ModalWindow extends React.Component<{
   width?: number;
   height?: number;
 }> {
-  @observable top: number = 0;
-  @observable left: number = 0;
+  @observable top: number = window.screen.height + 50;
+  @observable left: number = window.screen.width + 50;
   @observable isDragging = false;
 
   dragStartMouseX = 0;
