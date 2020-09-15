@@ -4,7 +4,11 @@ import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
 import S from './DropdownEditor.module.scss';
 
-export function DropdownEditorInput() {
+export function DropdownEditorInput(props:{
+  backgroundColor?: string;
+  foregroundColor?: string;
+  customStyle?: any;
+}) {
   const beh = useContext(CtxDropdownEditor).behavior;
   const data = useContext(CtxDropdownEditor).editorData;
   const refInput = useMemo(() => {
@@ -19,6 +23,18 @@ export function DropdownEditorInput() {
       beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
     };
   }, []);
+
+  function getStyle() {
+    if (props.customStyle) {
+      return props.customStyle;
+    } else {
+      return {
+        color: props.foregroundColor,
+        backgroundColor: props.backgroundColor,
+      };
+    }
+  }
+
 
   return (
     <Observer>
@@ -35,6 +51,7 @@ export function DropdownEditorInput() {
           onDoubleClick={beh.onDoubleClick}
           value={beh.inputValue}
           tabIndex={beh.tabIndex ? beh.tabIndex : undefined}
+          style={getStyle()}
         />
       )}
     </Observer>

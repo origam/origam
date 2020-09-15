@@ -1,13 +1,13 @@
-import { TypeSymbol } from "dic/Container";
+import {TypeSymbol} from "dic/Container";
 import _ from "lodash";
-import { action, computed, flow, observable, reaction, decorate } from "mobx";
-import { DropdownEditorSetup } from "./DropdownEditor";
-import { DropdownEditorApi } from "./DropdownEditorApi";
-import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
-import { IDropdownEditorData } from "./DropdownEditorData";
-import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
-import { DropdownDataTable } from "./DropdownTableModel";
-import { IFocusable } from "../../../model/entities/FocusManager";
+import {action, computed, decorate, flow, observable, reaction} from "mobx";
+import {DropdownEditorSetup} from "./DropdownEditor";
+import {DropdownEditorApi} from "./DropdownEditorApi";
+import {CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid} from "./DropdownEditorCommon";
+import {IDropdownEditorData} from "./DropdownEditorData";
+import {DropdownEditorLookupListCache} from "./DropdownEditorLookupListCache";
+import {DropdownDataTable} from "./DropdownTableModel";
+import {IFocusable} from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -21,7 +21,8 @@ export class DropdownEditorBehavior {
     public subscribeToFocusManager?: (obj: IFocusable) => () => void,
     public tabIndex?: number,
     private onKeyDown?: (event: any) => void
-  ) {}
+  ) {
+  }
 
   @observable isDropped = false;
   @observable isWorking = false;
@@ -92,7 +93,7 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound handleInputFocus(event: any) {
-    const { target } = event;
+    const {target} = event;
     if (target) {
       target.select();
       target.scrollLeft = 0;
