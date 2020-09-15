@@ -293,7 +293,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     console.log("portalInfo:");
     console.log(portalInfo);
     this.startNotificationBoxPolling(portalInfo.notificationBoxRefreshInterval);
-    this.userInfo = { userName: portalInfo.userName }
+    this.userInfo = {
+      userName: portalInfo.userName,
+      avatarLink: portalInfo.avatarLink
+    }
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
