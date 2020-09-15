@@ -38,7 +38,7 @@ namespace Origam.Mail
 
         }
         
-        public static AbstractMailService GetMailService()
+        public static IMailService GetMailService()
         {
 #if NETSTANDARD
             var mailConfig = configuration.GetSection("MailConfig");
