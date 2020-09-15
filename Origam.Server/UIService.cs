@@ -219,7 +219,7 @@ namespace Origam.Server
                 sessionManager.AddPortalSession(profile.Id, pss);
             }
 
-            result.UserName = profile.FullName + " (" + sessionManager.PortalSessionCount + ")";
+            result.UserName = profile.FullName;
             result.UserId = profile.Id;
             result.Tooltip = ToolTipTools.NextTooltip();
             Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(

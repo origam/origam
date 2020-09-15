@@ -199,8 +199,8 @@ namespace Origam.ServerCore
                 var portalSessionStore = new PortalSessionStore(profile.Id);
                 sessionManager.AddPortalSession(profile.Id, portalSessionStore);
             }
-            result.UserName = profile.FullName 
-                + " (" + sessionManager.PortalSessionCount + ")";
+
+            result.UserName = profile.FullName;
             result.UserId = profile.Id;
             result.Tooltip = ToolTipTools.NextTooltip();
             CreateUpdateOrigamOnlineUser();
