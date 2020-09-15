@@ -1,26 +1,26 @@
 import React from "react";
-import {inject, observer} from "mobx-react";
-import {getApi} from "model/selectors/getApi";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getMenuItemId} from "model/selectors/getMenuItemId";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getSessionId} from "model/selectors/getSessionId";
-import {IApi} from "model/entities/types/IApi";
-import {IProperty} from "model/entities/types/IProperty";
-import {action, flow, observable} from "mobx";
+import { inject, observer } from "mobx-react";
+import { getApi } from "model/selectors/getApi";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getSessionId } from "model/selectors/getSessionId";
+import { IApi } from "model/entities/types/IApi";
+import { IProperty } from "model/entities/types/IProperty";
+import { action, flow, observable } from "mobx";
 import S from "./BlobEditor.module.scss";
 /*import ImageEditor from "tui-image-editor";
 import "tui-image-editor/dist/tui-image-editor.css";*/
-import {IProcessCRUDResult} from "model/actions/Actions/processActionResult";
-import {processCRUDResult} from "model/actions/DataLoading/processCRUDResult";
-import {getDialogStack} from "model/selectors/DialogStack/getDialogStack";
-import {IDialogStack} from "model/entities/types/IDialogStack";
-import {ModalWindow} from "gui/Components/Dialog/Dialog";
-import {changeManyFields} from "model/actions-ui/DataView/TableView/onFieldChange";
-import {flushCurrentRowData} from "model/actions/DataView/TableView/flushCurrentRowData";
-import {handleError} from "model/actions/handleError";
-import {IFocusable} from "model/entities/FocusManager";
+import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
+import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
+import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
+import { IDialogStack } from "model/entities/types/IDialogStack";
+import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
+import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
+import { handleError } from "model/actions/handleError";
+import { IFocusable } from "model/entities/FocusManager";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -56,7 +56,7 @@ export class BlobEditor extends React.Component<{
   SessionFormIdentifier?: string;
   parameters?: any;
   tabIndex?: number;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => () => void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
@@ -65,7 +65,7 @@ export class BlobEditor extends React.Component<{
   unsubscribeFromFocusManager?: () => void;
 
   componentDidMount() {
-    if(this.elmInput && this.props.subscribeToFocusManager){
+    if (this.elmInput && this.props.subscribeToFocusManager) {
       this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
     }
   }
@@ -142,11 +142,11 @@ export class BlobEditor extends React.Component<{
               lastSize = event.loaded;
             })
           );
-          const crudResult = yield this.props.api!.changes(
-            {
-              SessionFormIdentifier: this.props.SessionFormIdentifier!,
-              Entity: this.props.Entity!,
-              RowId: this.props.RowId!});
+          const crudResult = yield this.props.api!.changes({
+            SessionFormIdentifier: this.props.SessionFormIdentifier!,
+            Entity: this.props.Entity!,
+            RowId: this.props.RowId!,
+          });
           console.log(crudResult);
           yield* this.props.processCRUDResult!(crudResult);
         }
@@ -155,6 +155,7 @@ export class BlobEditor extends React.Component<{
       yield* this.props.handleError!(e);
     } finally {
       this.isUploading = false;
+      if (this.elmInput) this.elmInput.value = "";
     }
   }
 
