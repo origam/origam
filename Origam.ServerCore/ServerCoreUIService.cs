@@ -1183,7 +1183,7 @@ namespace Origam.ServerCore
         private static XmlDocument DefaultNotificationBoxContent()
         {
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml("<div class=\"logo-left\"><img src=\"./img/logo-left.png\"></div>");
+            doc.LoadXml("<div class=\"logo-left\"><img src=\"./img/logo-left.png\"/></div>");
             return doc;
         }
     }
