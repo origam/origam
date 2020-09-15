@@ -220,6 +220,7 @@ namespace Origam.Server
             }
 
             result.UserName = profile.FullName + " (" + sessionManager.PortalSessionCount + ")";
+            result.UserId = profile.Id;
             result.Tooltip = ToolTipTools.NextTooltip();
             Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
                 SecurityManager.CurrentPrincipal.Identity.Name,

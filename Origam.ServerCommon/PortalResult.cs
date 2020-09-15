@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -39,6 +40,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections.Generic;
 
 namespace Origam.Server
@@ -91,6 +93,8 @@ namespace Origam.Server
             get { return _userName; }
             set { _userName = value; }
         }
+
+        public Guid UserId { get; set; }
 
         public int WorkQueueListRefreshInterval
         {
