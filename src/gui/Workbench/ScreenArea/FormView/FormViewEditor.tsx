@@ -164,6 +164,9 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               focusManager.subscribe(textEditor, this.props.property?.id)
             }
+            backgroundColor={backgroundColor}
+            foregroundColor={foregroundColor}
+            customStyle={this.props.property?.style}
             tabIndex={this.props.tabIndex}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
@@ -185,6 +188,7 @@ export class FormViewEditor extends React.Component<{
                 isFocused={false}
                 backgroundColor={backgroundColor}
                 foregroundColor={foregroundColor}
+                customStyle={this.props.property?.style}
                 refocuser={undefined}
                 onChange={this.props.onChange}
                 onKeyDown={this.MakeOnKeyDownCallBack()}

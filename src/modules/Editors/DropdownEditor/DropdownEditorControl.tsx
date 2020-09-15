@@ -7,14 +7,23 @@ import { CtxDropdownEditor } from "./DropdownEditor";
 import { DropdownEditorInput } from "./DropdownEditorInput";
 import { Tooltip } from "react-tippy";
 
-export function DropdownEditorControl(props: { isInvalid?: boolean; invalidMessage?: string }) {
+export function DropdownEditorControl(props: {
+  isInvalid?: boolean;
+  invalidMessage?: string;
+  backgroundColor?: string;
+  foregroundColor?: string;
+  customStyle?: any;
+}) {
   const ref = useContext(CtxDropdownRefCtrl);
   const beh = useContext(CtxDropdownEditor).behavior;
   return (
     <Observer>
       {() => (
         <div className={CS.control} ref={ref} onMouseDown={beh.handleControlMouseDown}>
-          <DropdownEditorInput />
+          <DropdownEditorInput
+            backgroundColor={props.backgroundColor}
+            foregroundColor={props.foregroundColor}
+            customStyle={props.customStyle}/>
           {/*<button className={"inputBtn"} disabled={beh.isReadOnly}>*/}
           {/*  <i className="fas fa-ellipsis-h"></i>*/}
           {/*</button>*/}

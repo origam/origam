@@ -32,6 +32,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       isFocused: boolean;
       backgroundColor?: string;
       foregroundColor?: string;
+      customStyle?: any;
       refocuser?: (cb: () => void) => () => void;
       onChange?(event: any, value: any): void;
       onKeyDown?(event: any): void;
@@ -39,6 +40,18 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       onDoubleClick?(event: any): void;
       onEditorBlur?(event: any): void;
     }) => {
+
+      function getStyle() {
+        if (props.customStyle) {
+          return props.customStyle;
+        } else {
+          return {
+            color: props.foregroundColor,
+            backgroundColor: props.backgroundColor,
+          };
+        }
+      }
+
       function removeItem(event: any, item: string) {
         const index = props.value.indexOf(item);
         if (index > -1) {
@@ -106,6 +119,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onBlur={beh.handleInputBlur}
               tabIndex={beh.tabIndex ? beh.tabIndex : undefined}
               onDoubleClick={props.onDoubleClick}
+              style={getStyle()}
             />
           </TagInput>
           {props.isInvalid && (

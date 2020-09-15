@@ -52,6 +52,9 @@ export function DropdownEditor(props: {
   editor?: JSX.Element;
   isInvalid?: boolean;
   invalidMessage?: string;
+  backgroundColor?: string;
+  foregroundColor?: string;
+  customStyle?: any;
 }) {
   const beh = useContext(CtxDropdownEditor).behavior;
   return (
@@ -66,6 +69,9 @@ export function DropdownEditor(props: {
               <DropdownEditorControl
                 isInvalid={props.isInvalid}
                 invalidMessage={props.invalidMessage}
+                backgroundColor={props.backgroundColor}
+                foregroundColor={props.foregroundColor}
+                customStyle={props.customStyle}
               />
             )
           }
@@ -81,6 +87,9 @@ export function XmlBuildDropdownEditor(props: {
   isReadOnly: boolean;
   isInvalid?: boolean;
   invalidMessage?: string;
+  backgroundColor?: string;
+  foregroundColor?: string;
+  customStyle?: any;
   tagEditor?: JSX.Element;
   onDoubleClick?: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusable) => () => void;
@@ -223,6 +232,9 @@ export function XmlBuildDropdownEditor(props: {
         editor={props.tagEditor}
         isInvalid={props.isInvalid}
         invalidMessage={props.invalidMessage}
+        backgroundColor={props.backgroundColor}
+        foregroundColor={props.foregroundColor}
+        customStyle={props.customStyle}
       />
     </CtxDropdownEditor.Provider>
   );

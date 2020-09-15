@@ -346,10 +346,6 @@ export class DropdownEditorBehavior {
   elmInputElement: any;
   refDropdownBody = (elm: any) => (this.elmDropdownBody = elm);
   elmDropdownBody: any;
-
-  getStyle() {
-    return undefined;
-  }
 }
 
 function compareLookupItems(a: any[], b: any[]) {
