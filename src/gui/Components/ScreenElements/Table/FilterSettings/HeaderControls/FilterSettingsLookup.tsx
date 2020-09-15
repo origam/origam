@@ -2,7 +2,6 @@ import {
   TagInput,
   TagInputDeleteBtn,
   TagInputEdit,
-  TagInputEditFake,
   TagInputItem,
   TagInputPlus,
 } from "gui02/components/TagInput/TagInput";
@@ -13,22 +12,33 @@ import { CancellablePromise } from "mobx/lib/api/flow";
 import React from "react";
 import { Grid, GridCellProps } from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import { Dropdowner } from "../../../../Dropdowner/Dropdowner";
-import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import {
+  FilterSettingsComboBox,
+  FilterSettingsComboBoxItem,
+} from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import S from "./FilterSettingsLookup.module.scss";
 import produce from "immer";
-import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
+import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
-import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import { T } from "utils/translation";
 
-const OPERATORS: any[] = [
-  { human: <>=</>, type: "in" },
-  { human: <>&ne;</>, type: "nin" },
-  { human: <>contain</>, type: "contains" },
-  { human: <>not contain</>, type: "ncontains" },
-  { human: <>is null</>, type: "null" },
-  { human: <>is not null</>, type: "nnull" },
-];
+const OPERATORS = () =>
+  [
+    { human: <>=</>, type: "in" },
+    { human: <>&ne;</>, type: "nin" },
+    { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
+    {
+      human: <>{T("not contains", "filter_operator_not_contains")}</>,
+      type: "ncontains",
+    },
+    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
+    {
+      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
+      type: "nnull",
+    },
+  ] as any[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -36,9 +46,9 @@ const OpCombo: React.FC<{
 }> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS().find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS.map((op) => (
+      {OPERATORS().map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
@@ -136,11 +146,6 @@ export class TagInputStateful extends React.Component<{
       this.cursorAfterIndex = Math.min(this.cursorAfterIndex, this.props.selectedItems.length - 1);
       // TODO: detect that the component updated due to its own event
       // (otherwise there might be mess caused by a focus avalanche)
-      /*if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
-        setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
-      } else {
-        setTimeout(() => this.elmInput && this.elmInput.focus());
-      }*/
     });
   }
 
@@ -268,9 +273,6 @@ export class TagInputStateful extends React.Component<{
   render() {
     return (
       <TagInput>
-        {/*{this.cursorAfterIndex === -1 && (*/}
-        {/*  <TagInputEditFake domRef={this.refFakeInput} onKeyDown={this.handleFakeEditKeyDown} />*/}
-        {/*)}*/}
         {this.props.selectedItems.map((item, idx) => {
           return (
             <React.Fragment key={item.value}>
@@ -280,12 +282,6 @@ export class TagInputStateful extends React.Component<{
                   onClick={(event) => this.handleDeleteBtnClick(event, item.value)}
                 />
               </TagInputItem>
-              {/*{this.cursorAfterIndex === idx && idx < this.props.selectedItems.length - 1 && (*/}
-              {/*  <TagInputEditFake*/}
-              {/*    domRef={this.refFakeInput}*/}
-              {/*    onKeyDown={this.handleFakeEditKeyDown}*/}
-              {/*  />*/}
-              {/*)}*/}
             </React.Fragment>
           );
         })}
@@ -383,8 +379,8 @@ export class FilterSettingsLookup extends React.Component<{
   onTriggerApplySetting?(setting: any): void;
 }> {
   @observable.ref setting: FilterSetting = new LookupFilterSetting(
-    OPERATORS[0].type,
-    OPERATORS[0].human
+    OPERATORS()[0].type,
+    OPERATORS()[0].human
   );
 
   @action.bound handleChange(newSetting: any) {
@@ -397,7 +393,6 @@ export class FilterSettingsLookup extends React.Component<{
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }
 
-
   render() {
     return (
       <>
@@ -408,8 +403,6 @@ export class FilterSettingsLookup extends React.Component<{
           onChangeDebounced={this.handleChange}
           getOptions={this.props.getOptions}
         />
-
-        {/*<input className={CS.input} />*/}
       </>
     );
   }
