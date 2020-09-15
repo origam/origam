@@ -43,10 +43,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Xml;
 using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
+using Origam.Extensions;
 using Origam.Schema;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
@@ -454,7 +456,12 @@ namespace Origam.ServerCore.Controller
         [HttpGet("[action]")]
         public IActionResult GetNotificationBoxContent()
         {
-            return Ok(ServerCoreUIService.NotificationBoxContent());
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
+            {
+                Indent = true,
+                NewLineOnAttributes = true
+            };
+            return Ok(ServerCoreUIService.NotificationBoxContent().ToBeautifulString(xmlWriterSettings));
         }
         [HttpPost("[action]")]
         public IActionResult GetAudit([FromBody]GetAuditInput input)
