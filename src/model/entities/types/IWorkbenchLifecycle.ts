@@ -1,5 +1,6 @@
 import {IDialogInfo, IOpenedScreen} from "./IOpenedScreen";
 import {IMainMenuItemType} from "./IMainMenu";
+import {IUserInfo} from "model/entities/types/IUserInfo";
 
 export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;
@@ -8,6 +9,7 @@ export interface IWorkbenchLifecycle {
   onWorkQueueListItemClick(event: any, item: any): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
   notificationBox: any;
+  userInfo: IUserInfo | undefined;
   openNewForm(
     id: string,
     type: IMainMenuItemType,
