@@ -35,7 +35,7 @@ namespace Origam.Mail
     /// <summary>
     /// MailAgent sends mails based on AsMail.xsd schema
     /// </summary>
-    public abstract class AbstractMailService
+    public abstract class AbstractMailService: IMailService
     {
         public AbstractMailService()
         {
