@@ -57,7 +57,7 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
+            List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
             ArrayList list = new ArrayList();
             DataStructure dd = new DataStructure();
             PanelControlSet pp = new PanelControlSet();
@@ -147,7 +147,7 @@ namespace Origam.Gui.Win.Wizards
 		public override void Run()
 		{
             IDataEntity entity = Owner as IDataEntity;
-            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
+            List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
 
             ArrayList list = new ArrayList();
             DataStructure ds = new DataStructure();
@@ -262,7 +262,7 @@ namespace Origam.Gui.Win.Wizards
             PanelControlSet panel = Owner as PanelControlSet;
             DataStructure ds = new DataStructure();
             FormControlSet frmSet = new FormControlSet();
-            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst); 
+            List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst); 
             ArrayList list = new ArrayList();
             list.Add(new ListViewItem(ds.GetType().SchemaItemDescription().Name, ds.Icon));
             list.Add(new ListViewItem(frmSet.GetType().SchemaItemDescription().Name, frmSet.Icon));

@@ -57,7 +57,7 @@ namespace Origam.Schema.EntityModel.UI.Wizards
 
         public override void Run()
         {
-            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
+            List<string> listdsName = GetListDatastructure(DataStructure.CategoryConst);
 
             IDataEntity entity = Owner as IDataEntity;
 

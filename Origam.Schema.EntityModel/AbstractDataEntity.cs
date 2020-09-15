@@ -307,7 +307,7 @@ namespace Origam.Schema.EntityModel
 		[Browsable(false)]
 		public  bool HasEntityAFieldDenyReadRule()
 		{
-				if (ChildItemsByTypeRecursive(EntityFieldSecurityRule.ItemTypeConst)
+				if (ChildItemsByTypeRecursive(EntityFieldSecurityRule.CategoryConst)
 				.ToArray().Cast<EntityFieldSecurityRule>()
 				.Where(rule => rule.Type == PermissionType.Deny && rule.ReadCredential)
 				.Count() > 0)

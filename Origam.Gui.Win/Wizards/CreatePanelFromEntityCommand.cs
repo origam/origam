@@ -59,7 +59,7 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-            List<string> listdsName = GetListDatastructure(PanelControlSet.ItemTypeConst);
+            List<string> listdsName = GetListDatastructure(PanelControlSet.CategoryConst);
 
             ArrayList list = new ArrayList();
             PanelControlSet pp = new PanelControlSet();

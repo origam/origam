@@ -17,8 +17,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using Origam.DA;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Rule;
 using Origam.Workbench.Services;
 
@@ -36,6 +38,7 @@ namespace Origam.OrigamEngine
     {
         public void InitializeServices()
         {
+            ServiceManager.Services.AddService(new MetaModelUpgradeService());
             ServiceManager.Services.AddService(CreatePersistenceService());
             ServiceManager.Services.AddService(new Origam.Workflow.StateMachineService());
             // Architect initialzes its own version of schema service
