@@ -94,7 +94,8 @@ namespace Origam.Server
             set { _userName = value; }
         }
 
-        public Guid UserId { get; set; }
+        public Guid UserId { private get; set; }
+        public string AvatarLink => "chatrooms/Avatar/" + UserId;
 
         public int WorkQueueListRefreshInterval
         {
