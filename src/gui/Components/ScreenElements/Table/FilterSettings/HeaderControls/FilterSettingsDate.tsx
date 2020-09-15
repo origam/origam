@@ -2,26 +2,33 @@ import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEd
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
+import {
+  FilterSettingsComboBox,
+  FilterSettingsComboBoxItem,
+} from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
-import {T} from "utils/translation";
+import { T } from "utils/translation";
 
-const OPERATORS = () => [
-  { human: <>=</>, type: "eq" },
-  { human: <>&ne;</>, type: "neq" },
-  { human: <>&le;</>, type: "lte" },
-  { human: <>&ge;</>, type: "gte" },
-  { human: <>&#60;</>, type: "lt" },
-  { human: <>&#62;</>, type: "gt" },
-  { human: <>{T("between", "filter_operator_between")}</>, type: "between" },
-  { human: <>{T("not between", "filter_operator_not_between")}</>, type: "nbetween" },
-  { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
-  {
-    human: <>{T("is not null", "filter_operator_not_is_null")}</>,
-    type: "nnull"
-  }
-] as any[];
+const OPERATORS = () =>
+  [
+    { human: <>=</>, type: "eq" },
+    { human: <>&ne;</>, type: "neq" },
+    { human: <>&le;</>, type: "lte" },
+    { human: <>&ge;</>, type: "gte" },
+    { human: <>&#60;</>, type: "lt" },
+    { human: <>&#62;</>, type: "gt" },
+    { human: <>{T("between", "filter_operator_between")}</>, type: "between" },
+    {
+      human: <>{T("not between", "filter_operator_not_between")}</>,
+      type: "nbetween",
+    },
+    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
+    {
+      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
+      type: "nnull",
+    },
+  ] as any[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -132,7 +139,10 @@ export class FilterSettingsDate extends React.Component<{
     (this.setting as any).val2 = undefined;
   }
 
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type, OPERATORS()[0].human);
+  @observable.ref setting: FilterSetting = new FilterSetting(
+    OPERATORS()[0].type,
+    OPERATORS()[0].human
+  );
 
   componentDidMount() {
     this.takeSettingFromProps();
