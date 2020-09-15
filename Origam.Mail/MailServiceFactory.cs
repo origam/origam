@@ -48,10 +48,10 @@ namespace Origam.Mail
             string server = mailConfig["Server"];
             int port = mailConfig.GetIntOrThrow("Port");
 
-            return new SystemNetMailService(
+            return new NetStandardMailService(
                 server:server, port:port, userName: userName, password:password, useSsl:useSsl);            
 #else
-            return new SystemNetMailService();            
+            return new NetFxMailService();            
 #endif
         }
     }
