@@ -24,10 +24,10 @@
         border: 1px solid $grey2;
         height: 3em;
         width: 3em;
+        overflow: hidden;
 
         :global(.avatar) {
-          display: none;
-          width: 2em;
+          width: 3em;
         }
       }
     }

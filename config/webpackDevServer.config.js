@@ -35,6 +35,11 @@ const customProxy = {
     secure: false,
     ...proxyCommon,
   },
+  "/chatrooms/*": {
+    target: proxyTarget,
+    secure: false,
+    ...proxyCommon,
+  },
   "/api/*": {
     target: proxyTarget,
     secure: false,

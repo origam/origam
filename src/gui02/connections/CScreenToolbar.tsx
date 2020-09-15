@@ -33,6 +33,7 @@ import {
   ResponsiveContainer
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 import {T} from "../../utils/translation";
+import {getUserAvatarLink} from "model/selectors/User/getUserAvatarLink";
 
 
 @observer
@@ -88,6 +89,7 @@ export class CScreenToolbar extends React.Component<{}> {
     const isDirty = formScreen && formScreen.isDirty;
     const toolbarActions = getActiveScreenActions(this.application);
     const userName = getLoggedUserName(this.application);
+    const avatarLink = getUserAvatarLink(this.application);
     return (
       <CtxResponsiveToolbar.Provider value={this.responsiveToolbar}>
         <ScreenToolbar>
@@ -182,6 +184,7 @@ export class CScreenToolbar extends React.Component<{}> {
               <UserMenuDropdown>
                 <UserMenuBlock
                   userName={userName || "Logged user"}
+                  avatarLink={avatarLink}
                   actionItems={
                     <>
                       <DropdownItem isDisabled={true}>
@@ -204,6 +207,7 @@ export class CScreenToolbar extends React.Component<{}> {
   renderForWebScreen() {
     const activeScreen = getActiveScreen(this.application);
     const userName = getLoggedUserName(this.application);
+    const avatarLink = getUserAvatarLink(this.application);
     return (
       <ScreenToolbar>
         <>
@@ -260,6 +264,7 @@ export class CScreenToolbar extends React.Component<{}> {
             <UserMenuDropdown>
               <UserMenuBlock
                 userName={userName || "Logged user"}
+                avatarLink={avatarLink}
                 actionItems={
                   <>
                       <DropdownItem isDisabled={true}>
@@ -280,6 +285,7 @@ export class CScreenToolbar extends React.Component<{}> {
 
   renderDefault() {
     const userName = getLoggedUserName(this.application);
+    const avatarLink = getUserAvatarLink(this.application);
     return (
       <ScreenToolbar>
         <ScreenToolbarPusher />
@@ -307,6 +313,7 @@ export class CScreenToolbar extends React.Component<{}> {
             <UserMenuDropdown>
               <UserMenuBlock
                 userName={userName || "Logged user"}
+                avatarLink={avatarLink}
                 actionItems={
                   <>
                       <DropdownItem isDisabled={true}>
