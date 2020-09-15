@@ -1,10 +1,7 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Origam.ServerCore.Resources
 @inject IHtmlLocalizer<SharedResources> SharedLocalizer
-@{
-    ViewData["Title"] = "Email Confirmation";
-}
 
 <h3 class="confirmation-text">
-    @SharedLocalizer["ConfirmationOk1"]<a asp-controller="Account" asp-action="Login"> @SharedLocalizer["ConfirmationOk2"]</a>.
+    @SharedLocalizer["EmailConfirmation1"] <a class="in-page-link" asp-controller="Account" asp-action="Login">@SharedLocalizer["EmailConfirmation2"]</a> @SharedLocalizer["EmailConfirmation3"]
 </h3>

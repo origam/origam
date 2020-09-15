@@ -537,11 +537,11 @@ namespace Origam
 	{
 		public MyUri(string url) : base (url)  {}
 
-		public static string EscapeUriString(string stringToEscape)
+		public static new string EscapeUriString(string stringToEscape)
 		{
-			return EscapeString(stringToEscape);
+			return Uri.EscapeUriString(stringToEscape);
 		}
-		public static string EscapeDataString(string stringToEscape)
+		public static new string EscapeDataString(string stringToEscape)
 		{
 			return Uri.EscapeDataString(stringToEscape);
 		}

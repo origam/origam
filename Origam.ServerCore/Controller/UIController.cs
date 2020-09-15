@@ -37,7 +37,8 @@ namespace Origam.ServerCore.Controller
     {
         private readonly IPersistenceService persistenceService;
 
-        public UIController(ILogger<UIController> log) : base(log)
+        public UIController(ILogger<UIController> log, SessionObjects sessionObjects) 
+            : base(log, sessionObjects)
         {
             persistenceService = ServiceManager.Services.GetService<IPersistenceService>();
         }

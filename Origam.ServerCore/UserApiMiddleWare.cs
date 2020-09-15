@@ -37,6 +37,7 @@ namespace Origam.ServerCore
             CoreUserApiProcessor userApiProcessor = new CoreUserApiProcessor(new CoreHttpTools());
             var contextWrapper = new StandardHttpContextWrapper(context);
             userApiProcessor.Process(contextWrapper);
+            await Task.CompletedTask;
         }
     }
 }

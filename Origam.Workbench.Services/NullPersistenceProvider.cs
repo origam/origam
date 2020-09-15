@@ -38,7 +38,11 @@ namespace Origam.Workbench.Services
         {
         }
 
-        public event EventHandler<IPersistent> InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted
+        {
+            add { }
+            remove { }
+        }
         public void OnInstancePersisted(object sender)
         {
         }
@@ -153,6 +157,11 @@ namespace Origam.Workbench.Services
         public ArrayList GetReference(Key key)
         {
             return new ArrayList();
+        }
+
+        public bool IsOfType<T>(Guid id)
+        {
+            return false;
         }
     }
 }

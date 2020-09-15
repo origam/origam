@@ -156,7 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -190,10 +189,6 @@
       <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
       <Name>MIMEParser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\origam-utils\origam-utils.csproj">
-      <Project>{3896810a-d91a-48ab-b6d8-db2306f0b62d}</Project>
-      <Name>origam-utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj">
       <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
       <Name>Origam.BI.CrystalReports</Name>
@@ -211,7 +206,7 @@
       <Name>Origam.BI.PrintIt</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
-      <Project>{dd8adce0-1a65-412b-a09b-0d139d1cd7ab}</Project>
+      <Project>{720e0ebb-4b5c-491c-a621-8fa974e0307b}</Project>
       <Name>Origam.BI.SSRS</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Gui.Designer\Origam.Gui.Designer.csproj">
@@ -301,6 +296,10 @@
     <ProjectReference Include="..\Origam.Workflow.SimplicorService\Origam.Workflow.SimplicorService.csproj">
       <Project>{ee92b4de-5635-4b60-80b0-532c438b280f}</Project>
       <Name>Origam.Workflow.SimplicorService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.Documentation\Origam.Documentation.csproj">
+      <Project>{46fb3705-3b11-4a49-ae05-7bee7aa9cfdf}</Project>
+      <Name>Origam.Documentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\ORIGAMLocaleResolver\ORIGAMLocaleResolver.csproj">
       <Project>{4f685ce8-44f7-4f46-9e86-2ec2143f9a1f}</Project>

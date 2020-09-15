@@ -1,7 +1,6 @@
 .navigation-bar{
     display: flex;
-    justify-content: space-between;
-    background-color: white;
+    justify-content: flex-end;
     height: 60px;
 }
 
@@ -37,19 +36,27 @@
     padding-right: 3px;
 }
 .page-content{
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 8px;
-    padding-bottom: 20px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
-.login-link
-{
-	 width: 50%;
-    height: auto;
-    margin: 0 auto;
-    position: relative;
-}
+
 iframe
 {
-	border:0
+    border:0
+}
+
+.logo-container{
+    margin-bottom: 50px;
+}
+
+.centered{
+    display: flex;
+    justify-content: center;
+}
+
+.in-page-link{
+  text-decoration: underline;
 }

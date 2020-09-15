@@ -23,7 +23,7 @@ using System;
 using Origam.UI;
 using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
     public abstract class AbstractFilterMenuCommand : AbstractMenuCommand
     {

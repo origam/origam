@@ -20,18 +20,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
 using System.Windows.Forms;
 using Origam.Schema.EntityModel;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
 
-namespace Origam.Schema.LookupModel.Wizards
+namespace Origam.Schema.LookupModel.UI.Wizards
 {
     /// <summary>
     /// Summary description for CreateFieldWithLookupRelationshipEntityCommand.
     /// </summary>
     public class CreateFieldWithRelationshipEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        CreateFieldWithRelationshipEntityWizardForm wizardForm;
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -52,20 +57,98 @@ namespace Origam.Schema.LookupModel.Wizards
             {
                 baseEntity = baseField.ParentItem as IDataEntity;
             }
-            CreateFieldWithRelationshipEntityWizard wiz = new CreateFieldWithRelationshipEntityWizard
+            //CreateFieldWithRelationshipEntityWizard wiz = new CreateFieldWithRelationshipEntityWizard
+            //{
+            //    Entity = baseEntity
+            //};
+
+            ArrayList list = new ArrayList();
+            TableMappingItem table1 = new TableMappingItem();
+            EntityRelationItem entityRelation = new EntityRelationItem();
+            list.Add(new ListViewItem(table1.GetType().SchemaItemDescription().Name, table1.Icon));
+            list.Add(new ListViewItem(entityRelation.GetType().SchemaItemDescription().Name, entityRelation.Icon));
+            
+
+            Stack stackPage = new Stack();
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
+            stackPage.Push(PagesList.FieldEntity);
+            stackPage.Push(PagesList.StartPage);
+
+
+            wizardForm = new CreateFieldWithRelationshipEntityWizardForm
             {
-                Entity = baseEntity
+                Title = ResourceUtils.GetString("CreateFieldWithRelationshipEntityWizardTitle"),
+                PageTitle = "",
+                Description = ResourceUtils.GetString("CreateFieldWithRelationshipEntityWizardDescription"),
+                Entity = baseEntity,
+                ItemTypeList = list,
+                Pages = stackPage,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this,
+                EnterAllInfo = ResourceUtils.GetString("EnterAllInfo"),
+                LookupWiz = ResourceUtils.GetString("LookupWiz")
             };
 
-            if (wiz.ShowDialog() == DialogResult.OK)
+            Wizard wiz = new Wizard(wizardForm);
+            if (wiz.ShowDialog() != DialogResult.OK)
             {
-                // 1. entity
-                TableMappingItem table = (TableMappingItem)baseEntity;
-                EntityRelationItem relation = EntityHelper.CreateRelation(table, (IDataEntity)wiz.RelatedEntity,wiz.ParentChildCheckbox, true);
-                EntityHelper.CreateRelationKey(relation, 
-                    (AbstractDataEntityColumn)wiz.BaseEntityFieldSelect,
-                    (AbstractDataEntityColumn)wiz.RelatedEntityFieldSelect,true);
+                GeneratedModelElements.Clear();
             }
+        }
+
+        public override void Execute()
+        {
+            IDataEntity baseEntity = GetIDataEntity();
+            // 1. entity
+            TableMappingItem table = (TableMappingItem)baseEntity;
+            GeneratedModelElements.Add(table);
+            EntityRelationItem relation = EntityHelper.CreateRelation(table, (IDataEntity)wizardForm.RelatedEntity, wizardForm.ParentChildCheckbox, true);
+            EntityHelper.CreateRelationKey(relation,
+                (AbstractDataEntityColumn)wizardForm.BaseEntityFieldSelect,
+                (AbstractDataEntityColumn)wizardForm.RelatedEntityFieldSelect, true,wizardForm.LookupKeyName);
+            GeneratedModelElements.Add(relation);
+        }
+
+        private IDataEntity GetIDataEntity()
+        {
+            FieldMappingItem baseField = Owner as FieldMappingItem;
+            IDataEntity baseEntity = Owner as IDataEntity;
+            if (baseField != null)
+            {
+                baseEntity = baseField.ParentItem as IDataEntity;
+            }
+            return baseEntity;
+        }
+
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "This Wizard create Field With Relationship Entity with this parameters:";
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Table: \t\t\t");
+            richTextBoxSummary.AppendText(GetIDataEntity().Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Parent Child:");
+            richTextBoxSummary.AppendText("\t\t" + wizardForm.ParentChildCheckbox.ToString());
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Related Entity:");
+            richTextBoxSummary.AppendText("\t\t" + ((IDataEntity)wizardForm.RelatedEntity).Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Lookup Key Name:");
+            richTextBoxSummary.AppendText("\t" + wizardForm.LookupKeyName);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Base Entity Field:");
+            richTextBoxSummary.AppendText("\t\t" + wizardForm.BaseEntityFieldSelect.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("Related Entity Field:");
+            richTextBoxSummary.AppendText("\t" + wizardForm.RelatedEntityFieldSelect.Name);
+            richTextBoxSummary.AppendText(Environment.NewLine);
         }
     }
 }

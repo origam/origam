@@ -501,10 +501,7 @@ namespace Origam.Workflow.WorkQueue
                 throw new Exception("Recipient must be type OrigamNotificationContactData.OrigamNotificationContactRow.");
             }
             IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            // set a language of current thread to recipient's one and remeber the old one
-            System.Globalization.CultureInfo originalUICulture = null;
-            System.Globalization.CultureInfo originalCulture = null;
-
+            
             using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
                 recipient != null && !recipient.IsLanguageTagIETFNull() ?
                     recipient.LanguageTagIETF : ""))
@@ -1256,6 +1253,9 @@ namespace Origam.Workflow.WorkQueue
             }
             catch (DBConcurrencyException)
             {
+                core.DataService.StoreData(
+                    new Guid("fb5d8abe-99b8-4ca0-871a-c8c6e3ae6b76"),
+                    selectedRows.DataSet, false, transactionId);
             }
 
             if (log.IsInfoEnabled)
@@ -1681,17 +1681,17 @@ namespace Origam.Workflow.WorkQueue
         private void StoreQueueError(WorkQueueClass wqc, DataRow queueRow, string message)
         {
             queueRow["ErrorText"] = DateTime.Now.ToString() + ": " + message;
-            StoreQueueItems(wqc, queueRow.Table, null);
-        }
-
-        private void StoreQueueError(WorkQueueClass wqc, DataRowCollection rows, string message)
-        {
-            foreach(DataRow row in rows)
+            try
             {
-                StoreQueueError(wqc, row, message);
+                StoreQueueItems(wqc, queueRow.Table, null);
+            } catch (DBConcurrencyException)
+            {
+                core.DataService.StoreData(
+                   new Guid("7a18149a-2faa-471b-a43e-9533d7321b44"),
+                   new Guid("ea139b9a-3048-4cd5-bf9a-04a91590624a"),
+                   queueRow.Table.DataSet, false, null);
             }
         }
-
         private void ProcessExternalQueue(WorkQueueData.WorkQueueRow q)
         {
             string transactionId = Guid.NewGuid().ToString();

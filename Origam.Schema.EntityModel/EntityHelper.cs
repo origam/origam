@@ -101,7 +101,12 @@ namespace Origam.Schema.EntityModel
 			return ds;
 		}
 
-		public static DataStructureColumn CreateDataStructureField(DataStructureEntity dataSturctureEntity, IDataEntityColumn field, bool persist)
+        public static DataStructure CreateDataStructure(IDataEntity entity, object nameOfEntity, bool v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static DataStructureColumn CreateDataStructureField(DataStructureEntity dataSturctureEntity, IDataEntityColumn field, bool persist)
 		{
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
@@ -310,12 +315,20 @@ namespace Origam.Schema.EntityModel
 
 		public static EntityRelationColumnPairItem CreateRelationKey(EntityRelationItem relation, IDataEntityColumn baseField, IDataEntityColumn relatedField, bool persist)
 		{
+			return CreateRelationKey(relation,baseField,relatedField,persist,null);
+		}
+
+		public static EntityRelationColumnPairItem CreateRelationKey(EntityRelationItem relation, IDataEntityColumn baseField, IDataEntityColumn relatedField, bool persist,string NameOfKey)
+		{
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
 			EntityRelationColumnPairItem key = relation.NewItem(typeof(EntityRelationColumnPairItem), schema.ActiveSchemaExtensionId, null) as EntityRelationColumnPairItem;
 			key.BaseEntityField = baseField;
 			key.RelatedEntityField = relatedField;
-
+			if(!string.IsNullOrEmpty(NameOfKey))
+            {
+				key.Name = NameOfKey;
+			}
 			if(persist) key.Persist();
 
 			return key;

@@ -26,5 +26,6 @@ namespace Origam.ServerCore.Configuration
     public class IdentityGuiConfig
     {
         public string PathToBrandIcon { get; set; }
+        public bool AllowPasswordReset { get; set; }
     }
 }

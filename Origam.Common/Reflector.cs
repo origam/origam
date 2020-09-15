@@ -215,22 +215,24 @@ namespace Origam
             //			return result;
         }
 
-        private static Type ResolveTypeFromAssembly(string classname, string assembly)
+        private static Type ResolveTypeFromAssembly(
+            string classname, string assemblyName)
         {
-            var classType = Type.GetType(classname + "," + assembly);
+            var classType = Type.GetType(classname + "," + assemblyName);
 #if NETSTANDARD
             if (classType == null)
             {
                 // try to load assembly to default application context
                 // With .NET Core, we need to explicitly load assemblies, that are not a part of the .dep.json file
-                System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                    ComposeAssemblyPath(assembly));
-                classType = Type.GetType(classname + "," + assembly);
+                var assembly = System.Runtime.Loader.AssemblyLoadContext
+                    .Default.LoadFromAssemblyPath(ComposeAssemblyPath(
+                        assemblyName));
+                classType = assembly.GetType(classname);
                 if (log.IsDebugEnabled && classType == null)
                 {
                     log.DebugFormat("Can't resove type '{0}' from assembly path '{1}'",
-                        classname + "," + assembly,
-                        ComposeAssemblyPath(assembly));
+                        classname + "," + assemblyName,
+                        ComposeAssemblyPath(assemblyName));
                 }
             }
 #endif

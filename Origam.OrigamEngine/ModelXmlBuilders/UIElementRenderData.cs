@@ -48,6 +48,8 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 		public bool ShowNewButton = false;
 
+		public bool HideCopyButton = false;
+
 		public bool ShowDeleteButton = false;
 
 		public string IdColumn = "";
@@ -225,6 +227,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						break;
 					case "ShowNewButton":			
 						renderData.ShowNewButton = (forceReadOnly ? false : property.BoolValue);	
+						break;
+					case "HideCopyButton":			
+						renderData.HideCopyButton = property.BoolValue;	
 						break;
 					case "ShowDeleteButton":		
 						renderData.ShowDeleteButton = (forceReadOnly ? false : property.BoolValue); 

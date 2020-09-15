@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,56 +28,89 @@ namespace Origam.DA.Service
 {
     public interface IDetachedFieldPacker
     {
-        List<object> ProcessReaderOutput(object[] values,
-            ColumnsInfo columnsInfo);
+        List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values,
+            List<ColumnData> columnData);
 
         string RenderSqlExpression(DataStructureEntity entity,
             DetachedField detachedField);
     }
-    
-    class DetachedFieldPackerPostgre : IDetachedFieldPacker
+
+    public class DetachedFieldPackerPostgre : IDetachedFieldPacker
     {
-        public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        public List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values, List<ColumnData> columnData)
         {
-            throw new NotImplementedException();
+            if (columnData == null)
+                throw new ArgumentNullException(nameof(columnData));
+            var updatedValues = new List<KeyValuePair<string, object>>();
+
+            for (int i = 0; i < columnData.Count; i++)
+            {
+                if (columnData[i].IsVirtual)
+                {
+                    if (columnData[i].HasRelation && values[i].Value != null && values[i].Value != DBNull.Value)
+                    {
+                        updatedValues.Add(new KeyValuePair<string, object>(
+                            values[i].Key, ((string)values[i].Value).Split((char)1)));
+                        continue;
+                    }
+                    else
+                    {
+                        updatedValues.Add(new KeyValuePair<string, object>
+                            (values[i].Key, columnData[i].DefaultValue));
+                        continue;
+                    }
+                }
+                updatedValues.Add(new KeyValuePair<string, object>(
+                    values[i].Key, values[i].Value));
+            }
+
+            return updatedValues;
         }
 
-        public string RenderSqlExpression(DataStructureEntity entity,
+        public  string RenderSqlExpression(DataStructureEntity entity,
             DetachedField detachedField)
         {
+            if (detachedField.ArrayRelation == null)
+            {
+                return "";
+            }
             throw new NotImplementedException();
         }
     }
 
     public class DetachedFieldPackerMs : IDetachedFieldPacker
     {
-        public List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        public List<KeyValuePair<string, object>> ProcessReaderOutput(KeyValuePair<string, object>[] values, List<ColumnData> columnData)
         {
-            if (columnsInfo == null)
-                throw new ArgumentNullException(nameof(columnsInfo));
-            var updatedValues = new List<object>();
-            for (int i = 0; i < columnsInfo.Count; i++)
+            if (columnData == null)
+                throw new ArgumentNullException(nameof(columnData));
+            var updatedValues = new List<KeyValuePair<string, object>>();
+
+            for (int i = 0; i < columnData.Count; i++)
             {
-                if (columnsInfo.Columns[i].IsVirtual)
+                if (columnData[i].IsVirtual)
                 {
-                    if (columnsInfo.Columns[i].HasRelation && values[i] != null)
+                    if (columnData[i].HasRelation && values[i].Value != null && values[i].Value != DBNull.Value)
                     {
-                        updatedValues.Add(((string) values[i]).Split((char) 1));
+                        updatedValues.Add(new KeyValuePair<string, object>(
+                            values[i].Key, ((string)values[i].Value).Split((char)1)));
                         continue;
                     }
                     else
                     {
-                        updatedValues.Add(columnsInfo.Columns[i].DefaultValue);
+                        updatedValues.Add(new KeyValuePair<string, object>
+                            (values[i].Key, columnData[i].DefaultValue));
                         continue;
                     }
                 }
-                updatedValues.Add(values[i]);
+                updatedValues.Add(new KeyValuePair<string, object>(
+                    values[i].Key, values[i].Value));
             }
 
             return updatedValues;
         }
 
-        public string RenderSqlExpression(DataStructureEntity entity,
+        public  string RenderSqlExpression(DataStructureEntity entity,
             DetachedField detachedField)
         {
             if (detachedField.ArrayRelation == null)

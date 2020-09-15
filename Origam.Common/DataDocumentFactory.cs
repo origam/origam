@@ -39,7 +39,7 @@ namespace Origam
         {
 #if NETSTANDARD
             return new DataDocumentCore(dataSet);
-# else
+#else
             return new DataDocumentFx(dataSet);
 #endif
         }

@@ -19,7 +19,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-using System.Net.Mime;
 using System.Xml;
 
 namespace Origam
@@ -60,6 +59,11 @@ namespace Origam
         public object Clone()
         {
             return Xml.Clone();
+        }
+        public void DocumentElementAppendChild(XmlNode node)
+        {
+            var newNode = Xml.ImportNode(node, true);
+            Xml.DocumentElement.AppendChild(newNode);
         }
     }
 }

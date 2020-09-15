@@ -21,13 +21,20 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using MoreLinq;
 using Origam.DA.Service;
+using Origam.Schema;
 using Origam.Schema.DeploymentModel;
 using Origam.Schema.EntityModel;
+using Origam.Services;
+using Origam.UI.Commands;
+using Origam.UI.WizardForm;
+using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using static Origam.DA.Common.Enums;
 
 namespace Origam.UI
@@ -35,8 +42,8 @@ namespace Origam.UI
 	/// <summary>
 	/// Summary description for AbstractMenuCommand.
 	/// </summary>
-	public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand
-	{
+	public abstract class AbstractMenuCommand : AbstractCommand, IMenuCommand , IRunCommand
+    {
 	    public virtual bool IsEnabled { get; set; } = true;
 
         #region Property
@@ -117,6 +124,16 @@ namespace Origam.UI
             });
             
         }
+        public static List<string> GetListDatastructure(string itemTypeConst)
+        {
+            ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
+            DataStructureSchemaItemProvider dsprovider = schema.GetProvider(typeof(DataStructureSchemaItemProvider)) as DataStructureSchemaItemProvider;
+            return dsprovider.ChildItemsByType(itemTypeConst)
+                           .ToArray()
+                           .Select(x => { return ((AbstractSchemaItem)x).Name; })
+                           .ToList();
+        }
+
         public ServiceCommandUpdateScriptActivity CreateRole(string role)
         {
             OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
@@ -135,6 +152,31 @@ namespace Origam.UI
 		{
 		}
 
-		#endregion
-	}
+        public virtual void Execute()
+        {
+        }
+
+        public virtual int GetImageIndex(string icon)
+        {
+            return 0;
+        }
+
+        public virtual void SetSummaryText(object summary)
+        {
+            RichTextBox box = (RichTextBox)summary;
+            box.Text = "Not implemented";
+        }
+        public static void ShowListItems(RichTextBox richTextBoxSummary, Hashtable selectedFieldNames)
+        {
+            richTextBoxSummary.AppendText(Environment.NewLine);
+            richTextBoxSummary.AppendText("List of fields: \t\t");
+            foreach (DictionaryEntry row in selectedFieldNames)
+            {
+                richTextBoxSummary.AppendText(row.Key.ToString());
+                richTextBoxSummary.AppendText(Environment.NewLine);
+                richTextBoxSummary.AppendText("\t\t\t");
+            }
+        }
+        #endregion
+    }
 }

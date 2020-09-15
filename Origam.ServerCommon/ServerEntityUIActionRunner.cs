@@ -218,6 +218,7 @@ namespace Origam.Server
                 parentSession: sessionManager.GetSession(processData),
                 basicUIService: basicUIService);
             resultList.Add(result);
+            await System.Threading.Tasks.Task.CompletedTask; //CS1998
         }
 
         protected override void ExecuteOpenFormAction(

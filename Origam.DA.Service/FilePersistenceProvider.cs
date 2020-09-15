@@ -87,7 +87,7 @@ namespace Origam.DA.Service
         }
 
         #region UNUSED
-        public ICompiledModel CompiledModel
+        public override ICompiledModel CompiledModel
         {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();

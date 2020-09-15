@@ -51,16 +51,9 @@ namespace Origam.ServerCore.Authorization
             }
 
             User user = new User();
-            if (origamUserRow["RecordUpdated"] != null)
-            {
-                user.SecurityStamp = origamUserRow["RecordUpdated"].ToString();
-            } 
-            else if (origamUserRow["RecordCreated"] 
-                     != null)
-            {
-                user.SecurityStamp = origamUserRow["RecordCreated"].ToString();
-            }
-
+            user.SecurityStamp = origamUserRow["SecurityStamp"] is DBNull
+                ? ""
+                :(string)origamUserRow["SecurityStamp"];
             user.Is2FAEnforced = (bool)origamUserRow["Is2FAEnforced"];
             user.EmailConfirmed = (bool)origamUserRow["EmailConfirmed"];
             user.LastLockoutDate = GetDate(origamUserRow,"LastLockoutDate" );
@@ -93,6 +86,7 @@ namespace Origam.ServerCore.Authorization
             origamUserRow["refBusinessPartnerId"] = user.ProviderUserKey;
             origamUserRow["RecordCreated"] = DateTime.Now;
             origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamUserRow["SecurityStamp"] = user.SecurityStamp;
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
             SetDate(origamUserRow,"LastLockoutDate", user.LastLockoutDate);
             SetDate(origamUserRow,"LastLoginDate",user.LastLoginDate);
@@ -107,6 +101,7 @@ namespace Origam.ServerCore.Authorization
         public static void UpdateOrigamUserRow(IOrigamUser user, DataRow origamUserRow)
         {
             origamUserRow["EmailConfirmed"] = user.EmailConfirmed;
+            origamUserRow["SecurityStamp"] = user.SecurityStamp;
             origamUserRow["Is2FAEnforced"] = user.Is2FAEnforced;
             SetDate(origamUserRow,"LastLockoutDate", user.LastLockoutDate);
             SetDate(origamUserRow,"LastLoginDate",user.LastLoginDate);
@@ -161,8 +156,8 @@ namespace Origam.ServerCore.Authorization
                 parameters.Add(new QueryParameter("Name", user.Name));
                 parameters.Add(new QueryParameter("Email", user.Email));
                 parameters.Add(new QueryParameter("RoleId", user.RoleId));
-                parameters.Add(new QueryParameter("RequestEmailConfirmation",
-                    !user.EmailConfirmed));
+                parameters.Add(new QueryParameter("RequestEmailConfirmation", !user.EmailConfirmed));
+                parameters.Add(new QueryParameter("SecurityStamp", user.SecurityStamp));
                 // Will create new line in BusinessPartner and OrigamUser
                 WorkflowService.ExecuteWorkflow(
                     CREATE_USER_WORKFLOW, parameters, null);

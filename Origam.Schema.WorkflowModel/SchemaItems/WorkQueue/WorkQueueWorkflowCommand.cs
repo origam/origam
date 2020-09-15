@@ -50,7 +50,7 @@ namespace Origam.Schema.WorkflowModel
 			this.ChildItemTypes.Add(typeof(WorkQueueWorkflowCommandParameterMapping));
 		}
 
-		public ArrayList ParameterMappings
+		public new ArrayList ParameterMappings
 		{
 			get
 			{

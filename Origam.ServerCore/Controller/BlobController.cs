@@ -49,16 +49,14 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public class BlobController : AbstractController
     {
-        private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataService dataService;
         private readonly CoreHttpTools httpTools = new CoreHttpTools();
         public BlobController(
             SessionObjects sessionObjects, 
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log)
+            ILogger<AbstractController> log) : base(log, sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
             this.localizer = localizer;
             dataService = DataService.GetDataService();
         }
@@ -66,17 +64,17 @@ namespace Origam.ServerCore.Controller
         public IActionResult DownloadToken(
             [FromBody][Required]BlobDownloadTokenInput input)
         {
-            return AmbiguousInputToRowData(input, dataService, sessionObjects)
-                .OnSuccess(rowData => CreateDownloadToken(input, rowData))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+            return AmbiguousInputToRowData(input, dataService)
+                .Map(rowData => CreateDownloadToken(input, rowData))
+                .Finally(UnwrapReturnValue);
         }
         [HttpPost("[action]")]
         public IActionResult UploadToken(
             [FromBody][Required]BlobUploadTokenInput input)
         {
-            return AmbiguousInputToRowData(input, dataService, sessionObjects)
-                .OnSuccess(rowData => CreateUploadToken(input, rowData))
-                .OnBoth<IActionResult, IActionResult>(UnwrapReturnValue);
+            return AmbiguousInputToRowData(input, dataService)
+                .Map(rowData => CreateUploadToken(input, rowData))
+                .Finally(UnwrapReturnValue);
         }
         [AllowAnonymous]
         [HttpGet("{token:guid}")]
@@ -277,16 +275,7 @@ namespace Origam.ServerCore.Controller
                         }
                     }
                 }
-                if(!blobUploadRequest.SubmitImmediately)
-                {
-                    return Ok();
-                }
-                var rowData = new RowData
-                {
-                    Row = blobUploadRequest.Row,
-                    Entity = blobUploadRequest.Entity
-                };
-                return SubmitChange(rowData, Operation.Update);
+                return Ok();
             }
             catch(Exception ex)
             {
@@ -324,7 +313,6 @@ namespace Origam.ServerCore.Controller
                     input.DateCreated,
                     input.DateLastModified,
                     input.Property,
-                    input.SubmitImmediately,
                     rowData.Entity));
             return Ok(token);
         }

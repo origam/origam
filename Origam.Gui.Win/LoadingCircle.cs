@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 //
 // Copyright ©2006, 2007, Martin R. Gagné (martingagne@gmail.com)
 // All rights reserved.
@@ -422,7 +423,7 @@ namespace MRG.Controls.UI
 		/// <returns>
 		/// An ordered pair of type <see cref="T:System.Drawing.Size"></see> representing the width and height of a rectangle.
 		/// </returns>
-		public Size GetPreferredSize(Size proposedSize)
+		public override Size GetPreferredSize(Size proposedSize)
 		{
 			proposedSize.Width =
 				(m_OuterCircleRadius + m_SpokeThickness) * 2;

@@ -210,7 +210,11 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
-        public event EventHandler<IPersistent> InstancePersisted;
+        public event EventHandler<IPersistent> InstancePersisted
+        {
+            add { }
+            remove { }
+        }
         public void OnTransactionEnded(object sender)
         {
             throw new NotImplementedException();
@@ -348,6 +352,11 @@ namespace Origam.Workbench.ServicesTests
         }
 
         public ArrayList GetReference( Key key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsOfType<T>(Guid id)
         {
             throw new NotImplementedException();
         }

@@ -21,19 +21,53 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Microsoft.Extensions.Primitives;
+using MoreLinq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Origam.Schema;
 using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
 {
     public class CustomCommandParser
     {
+        private readonly string nameLeftBracket;
+        private readonly string nameRightBracket;
+        private readonly SQLValueFormatter sqlValueFormatter;
         private Node root = null;
         private Node currentNode = null;
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
+        private string whereFilterInput;
+        private List<Ordering> orderingsInput;
+        private Dictionary<string, string> lookupExpressions = new Dictionary<string, string>();
+        private readonly Dictionary<string, OrigamDataType> columnNameToType = new Dictionary<string, OrigamDataType>();
+        public string WhereClause {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(whereFilterInput)) return null;
+                var inpValue = GetCheckedInput(whereFilterInput);
+                ParseToNodeTree(inpValue);
+                return root.SqlRepresentation();
+            }
+        }
+        public string OrderByClause {
+            get
+            {
+                return orderingsInput != null 
+                    ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
+                    : null;
+            }
+        }
 
-        public CustomCommandParser(string nameLeftBracket, string nameRightBracket)
+        public CustomCommandParser(string nameLeftBracket, string nameRightBracket, SQLValueFormatter sqlValueFormatter)
         {
+            this.nameLeftBracket = nameLeftBracket;
+            this.nameRightBracket = nameRightBracket;
+            this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
                 = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
         }
@@ -41,11 +75,11 @@ namespace Origam.DA.Service.Generators
         /// <summary>
         /// returns ORDER BY clause without the "ORDER BY" keyword
         /// </summary>
-        /// <param name="ordering"> [[columnName, "asc"|"desc"],...] </param>
         /// <returns></returns>
-        public string ToSqlOrderBy(List<Tuple<string,string>> ordering)
+        public CustomCommandParser OrderBy(List<Ordering> orderings)
         {
-            return columnOrderingRenderer.ToSqlOrderBy(ordering);
+            orderingsInput = orderings;
+            return this;
         }
 
         /// <summary>
@@ -53,12 +87,15 @@ namespace Origam.DA.Service.Generators
         /// </summary>
         /// <param name="strFilter">input example: "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]";
         /// </param>
-        public string ToSqlWhere(string strFilter)
+        public CustomCommandParser Where(string strFilter)
         {
-            if (string.IsNullOrWhiteSpace(strFilter)) return "";
-            var inpValue = GetCheckedInput(strFilter);
-            ParseToNodeTree(inpValue);
-            return root.SqlRepresentation();
+            whereFilterInput = strFilter;
+            return this;
+        }
+
+        public void AddLookupExpression(string columnName, string expression)
+        {
+            lookupExpressions.Add(columnName, expression);
         }
 
         private void ParseToNodeTree(string filter)
@@ -75,7 +112,7 @@ namespace Origam.DA.Service.Generators
                 {
                     currentNode = currentNode.Parent;
                 }
-                else if (c == ' ' || currentNode.IsBinaryOperator && c == ',')
+                else if (currentNode.IsBinaryOperator && c == ',')
                 {
                     continue;
                 }
@@ -88,7 +125,8 @@ namespace Origam.DA.Service.Generators
 
         private void AddNode()
         {
-            Node newNode = new Node();
+            Node newNode = new Node(
+                nameLeftBracket, nameRightBracket, lookupExpressions, sqlValueFormatter, columnNameToType);
             newNode.Parent = currentNode;
             currentNode?.Children.Add(newNode);
             currentNode = newNode;
@@ -128,6 +166,10 @@ namespace Origam.DA.Service.Generators
 
             return inpValue;
         }
+        public void AddDataType(string columnName, OrigamDataType columnDataType)
+        {
+            columnNameToType.Add(columnName, columnDataType);
+        }
     }
 
     class ColumnOrderingRenderer
@@ -141,28 +183,21 @@ namespace Origam.DA.Service.Generators
             this.nameRightBracket = nameRightBracket;
         }
 
-        internal string ToSqlOrderBy(List<Tuple<string, string>> ordering)
+        internal string ToSqlOrderBy(List<Ordering> orderings)
         {
-            if (ordering == null) return "";
-            return string.Join(", ",
-                ordering
-                    .Select(x => ToSql(x.Item1, x.Item2))
+            if (orderings == null) return "";
+                return string.Join(", ", orderings.Select(ToSql)
             );
         }
 
-        private string ToSql(string column, string orderingName)
+        private string ToSql(Ordering ordering)
         {
-            if (string.IsNullOrWhiteSpace(column))
+            if (ordering.LookupId == Guid.Empty)
             {
-                throw new ArgumentException(nameof(column) + " cannot be empty");
+                string orderingSql = OrderingToSQLName(ordering.Direction);
+                return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
             }
-            if (string.IsNullOrWhiteSpace(orderingName))
-            {
-                throw new ArgumentException(nameof(orderingName) + " cannot be empty");
-            }
-
-            string orderingSql = OrderingToSQLName(orderingName);
-            return $"{nameLeftBracket}{column}{nameRightBracket} {orderingSql}";
+            return "";
         }
 
         private string OrderingToSQLName(string orderingName)
@@ -178,16 +213,101 @@ namespace Origam.DA.Service.Generators
 
     class Node
     {
+        private readonly string nameLeftBracket;
+        private readonly string nameRightBracket;
+        private readonly Dictionary<string, string> lookupExpressions;
+        private readonly Dictionary<string, OrigamDataType> columnNameToType;
+        private readonly SQLValueFormatter sqlValueFormatter;
         private string[] splitValue;
         public Node Parent { get; set; }
         public List<Node> Children { get; } = new List<Node>();
         public string Value { get; set; } = "";
         public bool IsBinaryOperator => Value.Contains("$");
-        public string[] SplitValue => splitValue ?? (splitValue = Value.Split(','));
-        private string LeftOperand => SplitValue[0].Replace("\"","");
+
+        private string[] SplitValue
+        {
+            get
+            {
+                if (splitValue == null)
+                {
+                    splitValue = Value
+                        .Split(',');
+                    if (splitValue.Length > 3 && Value.Contains(",") && IsString(Value) && !ContainsIsoDates(Value))
+                    {
+                        splitValue = new []
+                        {
+                            splitValue[0],
+                            splitValue[1],
+                            string.Join(",", splitValue.Skip(2))
+                        };
+                    }
+                    splitValue = splitValue
+                        .Select(x => x.Trim())
+                        .ToArray();
+                }
+
+                return splitValue;
+            }
+        }
+
+        private string ColumnName => SplitValue[0].Replace("\"", "");
+
+        private string RenderedColumnName =>
+            lookupExpressions.ContainsKey(ColumnName)
+                ? lookupExpressions[ColumnName]
+                : nameLeftBracket + ColumnName + nameRightBracket;
+
+
         private string Operator => SplitValue[1].Replace("\"","");
-        private string RightOperand => SplitValue[2].Replace("\"", "'");
+        private string ColumnValue => ValueToOperand(SplitValue[2]);
+
+        private OrigamDataType DataType
+        {
+            get
+            {
+                if (columnNameToType.ContainsKey(ColumnName))
+                {
+                    return columnNameToType[ColumnName];
+                }
+                throw new Exception($"Data type of column \"{ColumnName}\" is unknown");
+            }
+        }
         private readonly FilterRenderer renderer = new FilterRenderer();
+
+        public Node(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
+            SQLValueFormatter sqlValueFormatter, Dictionary<string, OrigamDataType> columnNameToType)
+        {
+            this.nameLeftBracket = nameLeftBracket;
+            this.nameRightBracket = nameRightBracket;
+            this.lookupExpressions = lookupExpressions;
+            this.sqlValueFormatter = sqlValueFormatter;
+            this.columnNameToType = columnNameToType;
+        }
+
+        private string ValueToOperand(string value)
+        {
+            return sqlValueFormatter.Format(DataType, value.Replace("\"", ""), Operator);
+        }
+
+        private bool IsString(string value)
+        {
+            string columnValue = string.Join(",", value.Split(',').Skip(2));
+            return columnValue.Contains("\"");
+        }
+        
+        private bool ContainsIsoDates(string value)
+        {
+            var columnValues = value
+                .Split(',')
+                .Skip(2)
+                .Select(x => x.Replace("\"", "").Trim());
+
+            return columnValues
+                .All(colValue =>
+                    DateTime.TryParseExact(colValue, "yyyy-MM-ddTHH:mm:ss.fff",
+                        CultureInfo.InvariantCulture, DateTimeStyles.None, out _)
+                );
+        }
 
         public string SqlRepresentation()
         {
@@ -211,44 +331,85 @@ namespace Origam.DA.Service.Generators
 
         private string GetLogicalOperator()
         {
-            if (Value == "\"$AND\"") return "AND";
-            if (Value == "\"$OR\"") return "OR";
-            throw new Exception("Could not parse node value to logical operator: " + Value);
+            if (Value.Trim() == "\"$AND\"") return "AND";
+            if (Value.Trim() == "\"$OR\"") return "OR";
+            throw new Exception("Could not parse node value to logical operator: \"" + Value+"\"");
         }
 
         private string GetSqlOfLeafNode()
         {
+            var (operatorName, renderedColumnValue) = GetRendererInput(Operator, ColumnValue);    
             if (Children.Count == 0)
             {
-                if (SplitValue.Length != 3) throw new ArgumentException("could not parse: "+Value+" to a filter node");
-                string operatorName = OperatorToRendererName(Operator);
-                return renderer.BinaryOperator(LeftOperand, RightOperand, operatorName);
+                if (SplitValue.Length != 3)
+                {
+                    throw new ArgumentException("could not parse: " + Value + " to a filter node");
+                }
+
+                return renderer.BinaryOperator(
+                    leftValue: RenderedColumnName, 
+                    rightValue: renderedColumnValue, 
+                    operatorName: operatorName);
             }
 
-            if (Children.Count == 1 && Operator == "in")
+            if (Children.Count == 1 && 
+                (Operator == "in" ||  Operator == "nin" ||  Operator == "between" ||  Operator == "nbetween") )
             {
-                IEnumerable<string> options = Children.First()
+                string[] rightHandValues = Children.First()
                     .SplitValue
-                    .Select(val => val.Replace("\"", "'"));
-                return renderer.In(LeftOperand, options);
+                    .Select(ValueToOperand)
+                    .ToArray();
+                return renderer.BinaryOperator(
+                    leftValue: RenderedColumnName, 
+                    rightValues: rightHandValues, 
+                    operatorName: operatorName);
             }
 
-            throw new Exception("Cannot parse filter node: " + Value);
+            throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
         }
-
-        private string OperatorToRendererName(string operatorName)
+        
+        private (string,string) GetRendererInput(string operatorName, string value)
         {
             switch (operatorName)
             {
-                case "gt": return "GreaterThan";
-                case "lt": return "LessThan";
-                case "gte": return "GreaterThanOrEqual";
-                case "lte": return "LessThanOrEqual";
-                case "eq": return "Equal";
-                case "neq": return "NotEqual";
-                case "like": return "Like";
+                case "gt": return ("GreaterThan", value);
+                case "lt": return ("LessThan", value);
+                case "gte": return ("GreaterThanOrEqual", value);
+                case "lte": return ("LessThanOrEqual", value);
+                case "eq": return ("Equal", value);
+                case "neq": return ("NotEqual", value);
+                case "starts": return ("Like", appendWildCard(value));
+                case "nstarts": return ("NotLike", appendWildCard(value));
+                case "ends": return ("Like", prependWildCard(value));
+                case "nends": return ("NotLike",  prependWildCard(value));
+                case "like":
+                case "contains": return ("Like", prependWildCard(appendWildCard(value)));
+                case "ncontains": return ("NotLike", prependWildCard(appendWildCard(value)));
+                case "null": return ("Equal", null);
+                case "nnull": return ("NotEqual", null);
+                case "between": return ("Between", null);
+                case "nbetween": return ("NotBetween", null);
+                case "in": return ("In", null);
+                case "nin": return ("NotIn", null);
                 default: throw new NotImplementedException(operatorName);
             }
+        }
+
+        private string prependWildCard(string value)
+        {
+            if (!value.StartsWith("'"))
+            {
+                throw new ArgumentException("Cannot prepend \"%\" to a value which does not start with \"'\" (is not string)");
+            }
+            return value.Substring(0,1) + "%" +value.Substring(1);
+        } 
+        private string appendWildCard(string value)
+        {
+            if (!value.EndsWith("'"))
+            {
+                throw new ArgumentException("Cannot prepend \"%\" to a value which does not end with \"'\" (is not string)");
+            }
+            return value.Substring(0,value.Length-1) + "%" +value.Substring(value.Length-1);
         }
     }
 }

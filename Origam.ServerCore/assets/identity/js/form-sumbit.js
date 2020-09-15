@@ -15,4 +15,29 @@ Array.prototype.forEach.call(
         });
 });
 
+const languageForm = document.getElementById("languageSelectForm");
+const languageLinks = document.getElementsByClassName("languageLink");
+Array.prototype.forEach.call(
+    languageLinks, element => {
+        element.addEventListener("click",function(event){
+            const input = document.createElement("input");
+            input.type = "hidden"
+            input.name = "culture"
+            input.value = element.getAttribute("value");
+            languageForm.append(input)
+            languageForm.submit();
+            event.preventDefault();
+        });
+});
+
+
+function onLoginEnter(e) {
+    if (e.key === "Enter") {
+        document.getElementById('loginButton').click()
+    }
+}
+
+document.getElementById('passInput').onkeydown = onLoginEnter;
+document.getElementById('userNameInput').onkeydown = onLoginEnter;
+
 

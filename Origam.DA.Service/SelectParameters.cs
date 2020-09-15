@@ -34,10 +34,13 @@ namespace Origam.DA.Service
         public DataStructureSortSet SortSet { get; set; }
         public Hashtable Parameters { get; set; }
         public bool Paging { get; set; }
-        public string CustomFilters { get; set; } = "";
-        public int RowLimit { get; set; }
-        public List<Tuple<string, string>> CustomOrdering { get; set; }
+        public CustomFilters CustomFilters { get; set; } = new CustomFilters();
+        public int? RowLimit { get; set; }
+        public int? RowOffset { get; set; }
+        public List<Ordering> CustomOrdering { get; set; }
         public bool ForceDatabaseCalculation { get; set; }
         public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
+        public Grouping CustomGrouping { get; set; }
+        public List<Aggregation> AggregatedColumns { get; set; }
     }
 }

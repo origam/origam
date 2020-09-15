@@ -268,9 +268,6 @@
                         <Component Id="GIT2_6311E88.DLL" DiskId="1" Guid="4243d3ae-23f2-4c4e-b69e-873c8cc307f6">
                             <File Id="GIT2_6311E88" Name="GIT2-6311E88.DLL" Source="source\GIT2-6311E88.DLL" />
                         </Component>
-                        <Component Id="SYSTEM.VALUETUPLE.DLL" DiskId="1" Guid="f7011fc9-6960-4778-9e03-56627b323adb">
-                            <File Id="SYSTEM.VALUETUPLE" Name="SYSTEM.VALUETUPLE.DLL" Source="source\SYSTEM.VALUETUPLE.DLL" />
-                        </Component>
                         <Component Id="EDIFACT2XML.DLL" Guid="6018bc7d-9913-4782-847a-94bef17c21b4" DiskId="1">
                             <File Id="EDIFACT2XML" Name="EDIFACT2XML.dll" Source="source\EDIFACT2XML.dll">
                             </File>
@@ -1350,12 +1347,6 @@
                                         <Component Id="PROTOBUFNET.DLL_1" DiskId="1" Guid="c9bae7be-661c-458b-b9a2-d841688bb014">
                                             <File Id="PROTOBUFNET" Name="protobuf-net.dll" Source="server_source\bin\protobuf-net.dll" />
                                         </Component>
-                                        <Component Id="SYSTEM.VALUETUPLE.DLL_1" DiskId="1" Guid="37e139d4-a320-42ba-aa9e-d92b9faba4f1">
-                                            <File Id="SYSTEM.VALUETUPLE_1" Name="System.ValueTuple.dll" Source="server_source\bin\SYSTEM.VALUETUPLE.DLL" />
-                                        </Component>
-                                        <Component Id="ORIGAM_UTILS.EXE" DiskId="1" Guid="CF8D2ED7-4B3A-485C-BBF4-A6CDA926754B">
-                                            <File Id="ORIGAM_UTILS.EXE" Name="origam-utils.exe" Source="server_source\bin\origam-utils.exe" />
-                                        </Component>
                                         <Component Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" DiskId="1" Guid="E42358D4-5F5F-4A15-B58B-94CD19CE2DEB">
                                             <File Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL_1" Name="System.Threading.Tasks.Extensions.dll" Source="server_source\bin\System.Threading.Tasks.Extensions.dll" />
                                         </Component>
@@ -2116,9 +2107,6 @@
             <ComponentRef Id="MORELINQ.DLL_1" />
             <ComponentRef Id="LIBGIT2SHARP.DLL" />
             <ComponentRef Id="GIT2_6311E88.DLL" />
-            <ComponentRef Id="SYSTEM.VALUETUPLE.DLL" />
-            <ComponentRef Id="SYSTEM.VALUETUPLE.DLL_1" />
-            <ComponentRef Id="ORIGAM_UTILS.EXE" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL" />
             <ComponentRef Id="SYSTEM.THREADING.TASKS.EXTENSIONS.DLL" />
             <ComponentRef Id="SYSTEM.RUNTIME.COMPILERSERVICES.UNSAFE.DLL_1" />

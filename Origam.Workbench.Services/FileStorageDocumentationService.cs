@@ -186,9 +186,17 @@ namespace Origam.Workbench.Services
         {
         }
 
-        public override event EventHandler Initialize;
+        public override event EventHandler Initialize
+        {
+            add { }
+            remove { }
+        }
 
-        public override event EventHandler Unload;
+        public override event EventHandler Unload
+        {
+            add { }
+            remove { }
+        }
     }
 
     abstract class DocumentationXmlDocument : XmlDocument

@@ -27,23 +27,37 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Origam.ServerCore
 {
     public class Program
     {
+        private static Log4NetProvider log4NetProvider;
+
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            Log4NetProviderOptions options = new Log4NetProviderOptions();
+            log4NetProvider = new Log4NetProvider(options);
+            ILogger startupLogger = log4NetProvider.CreateLogger();
+            try
+            {
+                CreateWebHostBuilder(args).Build().Run();
+            }
+            catch (Exception e)
+            {
+                startupLogger.LogCritical($"{e.Message}\n{e.StackTrace}");
+                throw;
+            }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)=> 
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .ConfigureLogging((hostingContext, logging) =>
                 {
-                    logging.AddLog4Net();
+                    logging.Services.AddSingleton(log4NetProvider);
                     logging.SetMinimumLevel(LogLevel.Trace);
                     logging.AddConsole();
                     logging.AddDebug();

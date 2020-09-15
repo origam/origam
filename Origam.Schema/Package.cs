@@ -60,7 +60,7 @@ namespace Origam.Schema
 			this._childNodes.Add(_commonModelGroup);
 		}
 
-		public void Persist()
+		public override void Persist()
 		{
 			Action persistsAction = () =>
 			{

@@ -44,8 +44,9 @@ using Origam.Workbench.Services.CoreServices;
 
 namespace Origam.ServerCore
 {
-    public class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigamUser>,
-        IUserTwoFactorStore<IOrigamUser>, IUserPasswordStore<IOrigamUser>,IUserLockoutStore<IOrigamUser>
+    public sealed class UserStore : IUserStore<IOrigamUser>, IUserEmailStore<IOrigamUser>,
+        IUserTwoFactorStore<IOrigamUser>, IUserPasswordStore<IOrigamUser>,IUserLockoutStore<IOrigamUser>,
+        IUserPhoneNumberStore<IOrigamUser>, IUserAuthenticatorKeyStore<IOrigamUser>, IUserSecurityStampStore<IOrigamUser>
     {
         public static readonly Guid ORIGAM_USER_DATA_STRUCTURE
             = new Guid("43b67a51-68f3-4696-b08d-de46ae0223ce");
@@ -433,6 +434,48 @@ namespace Origam.ServerCore
         public Task SetLockoutEnabledAsync(IOrigamUser user, bool enabled, CancellationToken cancellationToken)
         {
             user.IsLockedOut = enabled;
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetPhoneNumberAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult("1");
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(false);
+        }
+
+        public Task SetPhoneNumberAsync(IOrigamUser user, string phoneNumber, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(IOrigamUser user, bool confirmed, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        //https://chsakell.com/2019/08/18/asp-net-core-identity-series-two-factor-authentication/
+        public Task<string> GetAuthenticatorKeyAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult<string>(null);
+        }
+
+        public Task SetAuthenticatorKeyAsync(IOrigamUser user, string key, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        //https://stackoverflow.com/questions/19487322/what-is-asp-net-identitys-iusersecuritystampstoretuser-interface
+        public Task<string> GetSecurityStampAsync(IOrigamUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.SecurityStamp ?? "");
+        }
+        public Task SetSecurityStampAsync(IOrigamUser user, string stamp, CancellationToken cancellationToken)
+        {
+            user.SecurityStamp = stamp;
             return Task.CompletedTask;
         }
     }

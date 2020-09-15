@@ -369,8 +369,16 @@ namespace Origam.DA.Service_net2Tests
             
         }
 
-        public event EventHandler Changed;
-        public event EventHandler Deleted;
+        public event EventHandler Changed
+        {
+            add { }
+            remove { }
+        }
+        public event EventHandler Deleted
+        {
+            add { }
+            remove { }
+        }
         public IPersistenceProvider PersistenceProvider { get; set; }
         public Key PrimaryKey { get; private set; }
         public Guid Id

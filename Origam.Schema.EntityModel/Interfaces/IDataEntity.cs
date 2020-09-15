@@ -83,9 +83,12 @@ namespace Origam.Schema.EntityModel
 
 		EntityAuditingType AuditingType {get; set;}
 
+		IDataEntityColumn AuditingSecondReferenceKeyColumn { get; set; }
+
 		ArrayList ChildEntitiesRecursive {get;}
 		ArrayList ChildEntities {get;}
 
 		IDataEntityColumn DescribingField {get; set;}
+		bool HasEntityAFieldDenyReadRule();
 	}
 }

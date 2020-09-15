@@ -43,17 +43,12 @@ using System.Text.RegularExpressions;
 using static Origam.NewProjectEnums;
 using Origam.Extensions;
 using Origam.DA.Service;
+using NPOI.Util;
 
 namespace OrigamArchitect
 {
     public partial class NewProjectWizard : Form
     {
-        enum DeploymentType
-        {
-            Local,
-            Azure
-        }
-
         [DllImport("user32")]
         public static extern UInt32 SendMessage
             (IntPtr hWnd, UInt32 msg, UInt32 wParam, UInt32 lParam);
@@ -92,7 +87,7 @@ namespace OrigamArchitect
                     case 0:
                         return DeploymentType.Local;
                     case 1:
-                        return DeploymentType.Azure;
+                        return DeploymentType.Docker;
                     default:
                         throw new ArgumentOutOfRangeException("DeploymentType",
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
@@ -212,7 +207,15 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-
+            if(Deployment == DeploymentType.Docker)
+            {
+                if(chkIntegratedAuthentication.Checked)
+                {
+                    AsMessageBox.ShowError(this, strings.CheckIntegratedAuthentication_Message, strings.NewProjectWizard_Title, null);
+                    e.Cancel = true;
+                    return;
+                }
+            }
             _project.Name = txtName.Text.ToLower().Replace("\\s+", "_");
             _project.DatabaseServerName = txtServerName.Text;
             _project.DatabaseUserName = txtDatabaseUserName.Text;
@@ -235,6 +238,8 @@ namespace OrigamArchitect
             txtDatabaseUserName.Enabled = !chkIntegratedAuthentication.Checked;
             lblDatabaseUserName.Enabled = !chkIntegratedAuthentication.Checked;
             lblDatabasePassword.Enabled = !chkIntegratedAuthentication.Checked;
+            txtPort.Visible = !chkIntegratedAuthentication.Checked;
+            labelPort.Visible = !chkIntegratedAuthentication.Checked;
         }
 
         private void pageLocalDeploymentSettings_Initialize(object sender, WizardPageInitEventArgs e)
@@ -245,6 +250,15 @@ namespace OrigamArchitect
             if (cboWebRoot.Items.Count > 0)
             {
                 cboWebRoot.SelectedIndex = 0;
+            }
+            cboWebRoot.Visible = false;
+            lblWebRoot.Visible = false;
+            label2.Visible = false;
+            if (Deployment == DeploymentType.Local )
+            {
+                cboWebRoot.Visible = true;
+                lblWebRoot.Visible = true;
+                label2.Visible = true;
             }
             if (txtDatabaseType.SelectedIndex == -1)
             {
@@ -261,7 +275,7 @@ namespace OrigamArchitect
         {
             if (DatabaseType == DatabaseType.MsSql)
             {
-                txtPort.Text = "0";
+                txtPort.Text = "1433";
             }
             if (DatabaseType == DatabaseType.PgSql)
             {
@@ -332,6 +346,17 @@ namespace OrigamArchitect
             txtSourcesFolder.Text = _settings.SourcesFolder;
             txtBinFolderRoot.Text = _settings.BinFolder;
             txtTemplateFolder.Text = Path.Combine(Application.StartupPath, @"Project Templates\Default");
+            txtBinFolderRoot.Visible = false;
+            btnSelectBinFolderRoot.Visible = false;
+            lblBinFolderRoot.Visible = false;
+            lblBinFolderRootDescription.Visible = false;
+            if (Deployment == DeploymentType.Local)
+            {
+                txtBinFolderRoot.Visible = true;
+                btnSelectBinFolderRoot.Visible = false;
+                lblBinFolderRoot.Visible = true;
+                lblBinFolderRootDescription.Visible = true;
+            }
         }
 
         private void PageWelcome_Initialize(object sender, WizardPageInitEventArgs e)
@@ -400,6 +425,7 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
+            _project.Deployment = Deployment;
             switch (Deployment)
             {
                 case DeploymentType.Local:
@@ -407,6 +433,9 @@ namespace OrigamArchitect
                     break;
                 case DeploymentType.Azure:
                     pageDeploymentType.NextPage = pageAzureDeploymentSettings;
+                    break;
+                case DeploymentType.Docker:
+                    pageDeploymentType.NextPage = pageTemplateType;
                     break;
             }
         }
@@ -454,9 +483,18 @@ namespace OrigamArchitect
                 return;
             }
             _project.SourcesFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text);
+            _project.RootSourceFolder = txtSourcesFolder.Text;
             _project.GitRepository = gitrepo.Checked;
             _project.Gitusername = txtGitUser.Text;
             _project.Gitemail = txtGitEmail.Text;
+            if( Deployment != DeploymentType.Docker)
+            {
+                pageGit.NextPage = pageReview;
+            }
+            else
+            {
+                pageGit.NextPage = pageDocker;
+            }
         }
 
         private void Gitrepo_CheckedChanged(object sender, EventArgs e)
@@ -479,8 +517,8 @@ namespace OrigamArchitect
             else
             {
                 chkIntegratedAuthentication.Enabled = true;
-                txtPort.Visible = false;
-                labelPort.Visible = false;
+                txtPort.Visible = !chkIntegratedAuthentication.Checked;
+                labelPort.Visible = !chkIntegratedAuthentication.Checked;
                 chkIntegratedAuthentication.Visible = true;
                 IntegratedLabel.Visible = true;
             }
@@ -642,6 +680,72 @@ namespace OrigamArchitect
                 rdCopy.Checked = true;
             }
             gitrepo.Enabled = true;
+        }
+        private void pageDocker_Initialize(object sender, WizardPageConfirmEventArgs e)
+        {
+            label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
+            label21.Text += Environment.NewLine;
+            label21.Text += "After create new project run "+ _project.SourcesFolder + ".cmd and this script run docker with new project.";
+        }
+        private void pageDocker_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            if(!int.TryParse(txtDockerPort.Text,out int result))
+            {
+                AsMessageBox.ShowError(this, "Port is not number!", "DockerPort", null);
+                e.Cancel = true;
+                return;
+            }
+            if(result<1024)
+            {
+                AsMessageBox.ShowError(this, "Port can be between 1025-65535!", "DockerPort", null);
+                e.Cancel = true;
+                return;
+            }
+            _project.DockerPort = result;
+        }
+        private void pageWebUser_Commit(object sender, WizardPageConfirmEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtWebUserLoginName.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebUserName_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebUserPassword.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebPassword_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (!txtWebUserPasswordConfirmed.Text.Equals(txtWebUserPassword.Text))
+            {
+                AsMessageBox.ShowError(this, strings.WebPasswordNotMatch_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebFirstname.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebFirstName_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebSurename.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebSurename_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            if (string.IsNullOrEmpty(txtWebEmail.Text))
+            {
+                AsMessageBox.ShowError(this, strings.EnterWebEmail_Message, "Template", null);
+                e.Cancel = true;
+                return;
+            }
+            _project.WebUserName = txtWebUserLoginName.Text;
+            _project.WebUserPassword = txtWebUserPassword.Text;
+            _project.WebFirstName = txtWebFirstname.Text;
+            _project.WebSurename = txtWebSurename.Text;
+            _project.WebEmail = txtWebEmail.Text;
         }
     }
 }

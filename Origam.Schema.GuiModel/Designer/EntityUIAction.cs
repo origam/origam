@@ -260,6 +260,7 @@ namespace Origam.Schema.GuiModel
         [Category("References")]
         [TypeConverter(typeof(EndRuleConverter))]
         [XmlReference("confirmationRule", "ConfirmationRuleId")]
+		[Description("Validation rule, that is executed before the action is invoked. Input xml root element is rows and records are represented by row elements.")]
         public IEndRule ConfirmationRule
         {
             get => (IEndRule)this.PersistenceProvider.RetrieveInstance(typeof(AbstractSchemaItem), new ModelElementKey(this.ConfirmationRuleId));

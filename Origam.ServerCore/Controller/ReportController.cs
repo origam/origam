@@ -45,15 +45,13 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public class ReportController : AbstractController
     {
-        private readonly SessionObjects sessionObjects;
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly CoreHttpTools httpTools = new CoreHttpTools();
         public ReportController(
             SessionObjects sessionObjects, 
             IStringLocalizer<SharedResources> localizer,
-            ILogger<AbstractController> log) : base(log)
+            ILogger<AbstractController> log) : base(log, sessionObjects)
         {
-            this.sessionObjects = sessionObjects;
             this.localizer = localizer;
         }
         [HttpGet("{reportRequestId:guid}")]
@@ -142,8 +140,12 @@ namespace Origam.ServerCore.Controller
         {
             ReportHelper.PopulateDefaultValues(
                 report, reportRequest.Parameters);
-            var filePath = BuildFileSystemReportFilePath(
+            var filePath = ReportHelper.BuildFileSystemReportFilePath(
                 report.ReportPath, reportRequest.Parameters);
+            if(!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
             var mimeType = HttpTools.GetMimeType(filePath);
             Response.Headers.Add(
                 HeaderNames.ContentDisposition,
@@ -152,29 +154,6 @@ namespace Origam.ServerCore.Controller
                     Path.GetFileName(filePath)));
             var stream = new FileStream(filePath, FileMode.Open);
             return File(stream, mimeType);
-        }
-        private string BuildFileSystemReportFilePath(
-            string filePath, IEnumerable parameters)
-        {
-            foreach(DictionaryEntry entry in parameters)
-            {
-                var sKey = entry.Key.ToString();
-                string sValue = null;
-                if (entry.Value != null)
-                {
-                    sValue = entry.Value.ToString();
-                }
-                var replacement = "{" + sKey + "}";
-                if(filePath.IndexOf(replacement, StringComparison.Ordinal) <=
-                   -1) continue;
-                if(sValue == null)
-                {
-                    throw new Exception(
-                        localizer["FilePathPartParameterNull"]);
-                }
-                filePath = filePath.Replace(replacement, sValue);
-            }
-            return filePath;
         }
         private void RemoveRequest(Guid reportRequestId)
         {

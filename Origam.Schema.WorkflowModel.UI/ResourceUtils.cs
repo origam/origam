@@ -22,7 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System.Resources;
 using System.Threading;
 
-namespace Origam.Schema.WorkflowModel
+namespace Origam.Schema.WorkflowModel.UI
 {
 	public class ResourceUtils
 	{

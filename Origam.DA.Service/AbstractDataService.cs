@@ -119,7 +119,7 @@ namespace Origam.DA.Service
             string userName, string password, bool integratedAuthentication, bool pooling);
         public abstract void CreateDatabase(string name);
         public abstract void DeleteDatabase(string name);
-        public abstract void CreateUser(string user, string password, string name, bool databaseIntegratedAuthentication);
+        public abstract void CreateDatabaseUser(string user, string password, string name, bool databaseIntegratedAuthentication);
         public abstract void DeleteUser(string user, bool _integratedAuthentication);
         public virtual string EntityDdl(Guid entity)
         {
@@ -145,9 +145,10 @@ namespace Origam.DA.Service
             }
 
             bool hasDynamicFilter = selectParameters.Filter != null && selectParameters.Filter.IsDynamic;
-            bool hasCustomFilters = !string.IsNullOrWhiteSpace(selectParameters.CustomFilters);
+            bool hasCustomFilters = !selectParameters.CustomFilters.IsEmpty;
             bool hasCustomOrdering = selectParameters.CustomOrdering != null && selectParameters.CustomOrdering.Count > 0;
-            if (hasDynamicFilter || hasCustomFilters || hasCustomOrdering)
+            bool hasAggregateColumns = selectParameters.AggregatedColumns != null && selectParameters.AggregatedColumns.Count > 0;
+            if (hasDynamicFilter || hasCustomFilters || hasCustomOrdering || hasAggregateColumns)
             {
                 return GetAdapterNonCached(selectParameters);
             }
@@ -587,6 +588,7 @@ namespace Origam.DA.Service
 				return null;
 			}
 			DataAuditLog log = new DataAuditLog();
+            var timestamp = DateTime.Now;
 			foreach(DataRow row in table.Rows)
 			{
 				foreach(DataColumn column in table.Columns)
@@ -617,7 +619,7 @@ namespace Origam.DA.Service
                         }
                         else
                         {
-                            logRow.RecordCreated = DateTime.Now;
+                            logRow.RecordCreated = timestamp;
                         }
                         if((row.RowState == DataRowState.Modified)
                         && table.Columns.Contains("RecordUpdatedBy") 
@@ -652,6 +654,15 @@ namespace Origam.DA.Service
                             if(profile != null)
                             {
                                 logRow.RecordCreatedBy = profile.Id;
+                            }
+                            if((table.ExtendedProperties[
+                                Const.AuditingSecondReferenceKeyColumnAttribute] 
+                            is IDataEntityColumn dataEntityColumn)
+                            && (table.Columns.Contains(dataEntityColumn.Name)))
+                            {
+                                logRow.SecondReferenceKey 
+                                    = (Guid)row[dataEntityColumn.Name, 
+                                        DataRowVersion.Original];
                             }
                         }
                         if(column.ExtendedProperties.Contains(
@@ -811,9 +822,13 @@ namespace Origam.DA.Service
             DataStructureQuery dataStructureQuery, 
             IPrincipal userProfile, 
             string transactionId);
+        
+        public abstract IEnumerable<IEnumerable<object>> ExecuteDataReader
+	        (DataStructureQuery dataStructureQuery);
 
-        public abstract IEnumerable<object> ExecuteDataReader(DataStructureQuery dataStructureQuery);
-
+        public abstract IEnumerable<IEnumerable<KeyValuePair<string, object>>>
+	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
+        
         #endregion
 
         #region IDisposable Members

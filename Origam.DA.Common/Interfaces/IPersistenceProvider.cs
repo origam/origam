@@ -94,5 +94,7 @@ namespace Origam.DA.ObjectPersistence
 
         List<string> Files(IPersistent item);
         ArrayList GetReference(Key key);
-    }
+        
+        bool IsOfType<T>(Guid id);
+	}
 }

@@ -129,6 +129,7 @@ namespace Origam.Gui.Win
             }
             catch(Exception ex)
             {
+                _ = ex.ToString();
 #if DEBUG
                 System.Diagnostics.Debug.WriteLine("AsReportPanel:ERROR=>" + ex.ToString());
 #endif

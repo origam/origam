@@ -138,11 +138,11 @@ namespace Origam.Server
                         break;
 
                     case ACTION_NEXT:
-                        result = HandleWorkflowNextAsync(cachedFormIds);
+                        result = HandleWorkflowNextAsync(cachedFormIds).Result;
                         break;
 
                     case ACTION_ABORT:
-                        result = HandleAbortAsync();
+                        result = HandleAbortAsync().Result;
                         break;
 
                     case ACTION_SAVE:
@@ -289,7 +289,7 @@ namespace Origam.Server
             set { _endRule = value; }
         }
 
-        public AbstractDataStructure DataStructure
+        public new AbstractDataStructure DataStructure
         {
             get { return _dataStructure; }
             set { _dataStructure = value; }
@@ -559,6 +559,7 @@ namespace Origam.Server
             UIRequest request = GetRequest(cachedWorkflowTaskIds);
             UIResult result = this.Service.InitUI(request);
             result.WorkflowTaskId = this.TaskId.ToString();
+            await System.Threading.Tasks.Task.CompletedTask; //CS1998
             return result;
         }
 
@@ -587,7 +588,7 @@ namespace Origam.Server
             handler.Event.WaitOne();
 
             HandleWorkflow(handler);
-
+            await System.Threading.Tasks.Task.CompletedTask; //CS1998
             // call InitUI
             UIRequest request = GetRequest(null);
             return Service.InitUI(request);

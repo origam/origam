@@ -20,16 +20,30 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using Origam.Services;
 using Origam.UI;
+using Origam.UI.Interfaces;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
+using Origam.Workbench.Services;
 
-namespace Origam.Schema.EntityModel.Wizards
+namespace Origam.Schema.EntityModel.UI.Wizards
 {
-	/// <summary>
-	/// Summary description for CreateDataStructureFromEntityCommand.
-	/// </summary>
-	public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
+    /// <summary>
+    /// Summary description for CreateDataStructureFromEntityCommand.
+    /// </summary>
+    public class CreateDataStructureFromEntityCommand : AbstractMenuCommand
 	{
-		public override bool IsEnabled
+        SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
+        StructureForm structureForm;
+       
+
+        public override bool IsEnabled
 		{
 			get
 			{
@@ -41,11 +55,66 @@ namespace Origam.Schema.EntityModel.Wizards
 			}
 		}
 
-		public override void Run()
-		{
-			IDataEntity entity = Owner as IDataEntity;
-			DataStructure ds = EntityHelper.CreateDataStructure(entity, entity.Name, true);
-            GeneratedModelElements.Add(ds);
+        public override void Run()
+        {
+            List<string> listdsName = GetListDatastructure(DataStructure.ItemTypeConst);
+
+            IDataEntity entity = Owner as IDataEntity;
+
+            ArrayList list = new ArrayList();
+            DataStructure dd = new DataStructure();
+            list.Add(new ListViewItem(dd.GetType().SchemaItemDescription().Name, dd.Icon));
+
+            Stack stackPage = new Stack();
+
+            stackPage.Push(PagesList.Finish);
+            stackPage.Push(PagesList.SummaryPage);
+            if (listdsName.Any(name => name == entity.Name))
+            {
+                stackPage.Push(PagesList.StructureNamePage);
+            }
+
+            stackPage.Push(PagesList.StartPage);
+
+            structureForm = new StructureForm
+            {
+                Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
+                Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
+                ItemTypeList = list,
+                Pages = stackPage,
+                StructureList = listdsName,
+                NameOfEntity = entity.Name,
+                ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+                Command = this
+            };
+
+            Wizard wizardscreen = new Wizard(structureForm);
+            if (wizardscreen.ShowDialog() != DialogResult.OK)
+            { 
+                GeneratedModelElements.Clear();
+            }
 		}
-	}
+
+        public override void Execute()
+        {
+            DataStructure ds = EntityHelper.CreateDataStructure(Owner as IDataEntity, structureForm.NameOfEntity, true);
+            GeneratedModelElements.Add(ds);
+        }
+
+        public override int GetImageIndex(string icon)
+        {
+            return _schemaBrowser.ImageIndex(icon);
+        }
+
+        public override void SetSummaryText(object summary)
+        {
+            RichTextBox richTextBoxSummary = (RichTextBox)summary;
+            richTextBoxSummary.Text = "";
+            richTextBoxSummary.AppendText("");
+            richTextBoxSummary.AppendText("Create Data Structure: ");
+            richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+            richTextBoxSummary.AppendText(structureForm.NameOfEntity);
+            richTextBoxSummary.AppendText("");
+        }
+    }
 }

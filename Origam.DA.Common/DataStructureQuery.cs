@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Origam.DA
 {
@@ -60,6 +61,7 @@ namespace Origam.DA
 		}
 
 	    public int RowLimit { get; set; }
+	    public int RowOffset { get; set; }
 	    public Guid DataSourceId;
 		public Guid MethodId;
 		public Guid DefaultSetId;
@@ -67,8 +69,8 @@ namespace Origam.DA
 		public QueryParameterCollection Parameters = new QueryParameterCollection();
 		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
 
-	    public List<Tuple<string, string>> CustomOrdering { get; set; }
-	    public string CustomFilters { get; set; }
+	    public List<Ordering> CustomOrdering { get; set; }
+	    public CustomFilters CustomFilters { get; set; }
 
 	    public bool Paging
 		{
@@ -108,5 +110,32 @@ namespace Origam.DA
 
 	    public string Entity { get; set; }
 	    public bool ForceDatabaseCalculation { get; set; }
+	    public Grouping CustomGrouping { get; set; }
+	    public List<Aggregation> AggregatedColumns { get; set; }
+	    
+	    public List<ColumnData> GetAllQueryColumns()
+	    {
+		    var aggregationColData =
+			    (AggregatedColumns ?? new List<Aggregation>())
+			    .Select(x => new ColumnData(x.SqlQueryColumnName));
+		    return ColumnsInfo.Columns
+			    .Concat(aggregationColData)
+			    .ToList();
+	    }
 	}
+
+	public class CustomFilters
+	{
+		private string filters = "";
+
+		public string Filters
+		{
+			get => filters;
+			set => filters = string.IsNullOrWhiteSpace(value) ? "" : value;
+		}
+
+		public Dictionary<string, Guid> FilterLookups { get; set; } = new Dictionary<string, Guid>();
+		public bool IsEmpty => string.IsNullOrWhiteSpace(Filters);
+		public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
+	}	
 }

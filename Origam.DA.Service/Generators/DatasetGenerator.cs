@@ -801,6 +801,9 @@ namespace Origam.DA.Service
 		{
 			table.ExtendedProperties.Add("EntityId", entity.PrimaryKey["Id"]);
 			table.ExtendedProperties.Add(Const.EntityAuditingAttribute, entity.AuditingType);
+            table.ExtendedProperties.Add(
+                Const.AuditingSecondReferenceKeyColumnAttribute,
+                entity.AuditingSecondReferenceKeyColumn);
 			if(entity.DescribingField != null)
 			{
 				table.ExtendedProperties.Add(Const.DescribingField, entity.DescribingField.Name);

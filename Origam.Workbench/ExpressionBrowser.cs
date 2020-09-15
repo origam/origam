@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -30,6 +29,7 @@ using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Git;
 using Origam.Schema;
+using Origam.Schema.Attributes;
 using Origam.UI;
 using Origam.Workbench.Services;
 
@@ -64,7 +64,7 @@ namespace Origam.Workbench
         private Timer watcherTimer;
         private Hashtable _customImages = new Hashtable();
         private bool _fileChangesPending = false;
-        private bool _supportsGit = false;
+        protected bool _supportsGit = false;
         
 
 		public ExpressionBrowser()
@@ -693,7 +693,7 @@ namespace Origam.Workbench
 				if(bnode != null && HasChildNodes(bnode))
 				{
 					ArrayList childNodes = new ArrayList(bnode.ChildNodes());
-					childNodes.Sort();
+					Sort(childNodes);
 
 					foreach(IBrowserNode2 child in childNodes)
 					{
@@ -734,6 +734,23 @@ namespace Origam.Workbench
 			finally
 			{
 				tvwExpressionBrowser.EndUpdate();
+			}
+		}
+
+		private void Sort(ArrayList childNodes)
+		{
+			if (childNodes.Count > 0)
+			{
+				object[] attributes = childNodes[0].GetType().GetCustomAttributes(typeof(ExpressionBrowserTreeSortAtribute), true);
+				if (attributes != null && attributes.Length > 0)
+				{
+					ExpressionBrowserTreeSortAtribute treeSortAtribute = attributes[0] as ExpressionBrowserTreeSortAtribute;
+					childNodes.Sort(treeSortAtribute.GetComparator());
+				}
+				else
+				{
+					childNodes.Sort();
+				}
 			}
 		}
 
@@ -851,7 +868,8 @@ namespace Origam.Workbench
                 else if (parentNode != null
                     && parentNode.Tag is IPersistent  parentItem
                     && parentItem.Files.Count > 0
-                    && parentItem.Files.First() == item.Files.First())
+                    && parentItem.Files.First() == item.Files.First()
+					&& parentNode.ForeColor != OrigamColorScheme.TabActiveForeColor)
                 {
                     // same file as parent
                     node.ForeColor = parentNode.ForeColor;
@@ -1247,7 +1265,7 @@ namespace Origam.Workbench
 
 					if(renameCopy)
 					{
-						item.Name = ResourceUtils.GetString("CopyOf", item.Name);
+						item.Name = GetItemText(item);
 					}
 				}
 				else
@@ -1267,7 +1285,23 @@ namespace Origam.Workbench
 			}
 		}
 
-		private static void MoveItemFile(ISchemaItem item)
+        private string GetItemText(ISchemaItem item)
+        {
+			IPersistenceService persistence =
+				ServiceManager.Services.GetService(typeof(IPersistenceService)) as
+					IPersistenceService;
+			string text = item.Name;
+            AbstractSchemaItem[] results = null;
+			do
+			{
+				text = ResourceUtils.GetString("CopyOf", text);
+				results = persistence.SchemaProvider.FullTextSearch<AbstractSchemaItem>(text)
+					.Where(searchitem=>searchitem.GetType()==item.GetType()).ToArray();
+			} while (results.LongLength != 0);
+			return text;
+		}
+
+        private static void MoveItemFile(ISchemaItem item)
 		{
 			IPersistenceService persistence =
 				ServiceManager.Services.GetService(typeof(IPersistenceService)) as

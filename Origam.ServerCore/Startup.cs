@@ -27,14 +27,10 @@ using System.Security.Principal;
 using IdentityServer4;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +42,11 @@ using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Resources;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Origam.ServerCore
 {
@@ -56,6 +57,7 @@ namespace Origam.ServerCore
         private readonly PasswordConfiguration passwordConfiguration;
         private readonly IdentityServerConfig identityServerConfig;
         private readonly UserLockoutConfig lockoutConfig;
+        private readonly LanguageConfig languageConfig;
 
         public Startup(IConfiguration configuration)
         {
@@ -64,10 +66,22 @@ namespace Origam.ServerCore
             passwordConfiguration = new PasswordConfiguration(configuration);
             identityServerConfig = new IdentityServerConfig(configuration);
             lockoutConfig = new UserLockoutConfig(configuration);
+            languageConfig = new LanguageConfig(configuration);
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
+            // If using IIS:
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
             var builder = services.AddMvc()
                 .AddNewtonsoftJson();
@@ -82,7 +96,7 @@ namespace Origam.ServerCore
                     options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
                 });
             }
-
+            services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
@@ -95,6 +109,7 @@ namespace Origam.ServerCore
             services.AddScoped<SignInManager<IOrigamUser>>();
             services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
             services.AddScoped<UserManager<IOrigamUser>>();
+            services.AddSingleton<LanguageConfig>();
             services.AddLocalization();
             services.AddIdentity<IOrigamUser, Role>()
                 .AddDefaultTokenProviders();
@@ -119,16 +134,11 @@ namespace Origam.ServerCore
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
                 .AddInMemoryClients(Settings.GetIdentityClients(identityServerConfig))
                 .AddInMemoryIdentityResources(Settings.GetIdentityResources())
-                .AddAspNetIdentity<IOrigamUser>();
-
-            if (!string.IsNullOrEmpty(identityServerConfig.PathToJwtCertificate))
-            {
-                serverBuilder
-                    .AddSigningCredential(new X509Certificate2(
-                        identityServerConfig.PathToJwtCertificate,
-                        identityServerConfig.PasswordForJwtCertificate));
-            }
-
+                .AddAspNetIdentity<IOrigamUser>()
+                .AddSigningCredential(new X509Certificate2(
+                    identityServerConfig.PathToJwtCertificate,
+                    identityServerConfig.PasswordForJwtCertificate));
+            
             services.AddScoped<IProfileService, ProfileService>();
             services.AddMvc(options => options.EnableEndpointRouting = false)
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -149,6 +159,15 @@ namespace Origam.ServerCore
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 });
             }
+            
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = languageConfig.DefaultCulture;
+                options.SupportedCultures = languageConfig.AllowedCultures;
+                options.SupportedUICultures = languageConfig.AllowedCultures;
+                options.RequestCultureProviders.Insert(0,
+                    new CookieRequestCultureProvider{CookieName = "origamCurrentLocale"});
+            });
         }
 
         public void Configure(
@@ -163,8 +182,19 @@ namespace Origam.ServerCore
             }
             else
             {
+                app.UseExceptionHandler("/Error/Error");
                 app.UseHsts();
             }
+            if (Configuration.GetValue<bool>("BehindProxy") == true)
+            {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+                });
+            }
+            var localizationOptions = app.ApplicationServices
+                .GetService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
             app.UseIdentityServer();
             app.MapWhen(
                 IsPublicUserApiRoute,
@@ -195,8 +225,15 @@ namespace Origam.ServerCore
                 FileProvider =  new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets")),
                 RequestPath = new PathString("/assets")
             });
+            if(!string.IsNullOrEmpty(startUpConfiguration.PathToChatApp))
+            {
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToChatApp),
+                    RequestPath = new PathString("/chatrooms")
+                });
+            }
             app.UseSpaStaticFiles();
-            app.UseRequestLocalization(); 
             app.UseCors(builder => 
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseMvc(routes =>

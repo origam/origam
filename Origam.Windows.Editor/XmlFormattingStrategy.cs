@@ -106,7 +106,7 @@ namespace Origam.Windows.Editor
             {
                 TryIndent(editor, line.LineNumber, line.LineNumber);
             }
-            catch (XmlException ex)
+            catch (XmlException)
             {
                 //LoggingService.Debug(ex.ToString());
             }
@@ -126,7 +126,7 @@ namespace Origam.Windows.Editor
             {
                 TryIndent(editor, begin, end);
             }
-            catch (XmlException ex)
+            catch (XmlException)
             {
                 //LoggingService.Debug(ex.ToString());
             }

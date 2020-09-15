@@ -83,6 +83,10 @@
       <Project>{65ccc71c-287f-47c2-9b37-f1ecefadc327}</Project>
       <Name>Origam.BI.PrintIt</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
+      <Project>{720e0ebb-4b5c-491c-a621-8fa974e0307b}</Project>
+      <Name>Origam.BI.SSRS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Common\Origam.Common.csproj">
       <Project>{3c49f590-14ac-464d-b0f9-8738576249a9}</Project>
       <Name>Origam.Common</Name>
@@ -208,6 +212,10 @@
       <Project>{976f3aba-938d-4242-a93b-7d7a1861a66e}</Project>
       <Name>Origam.Schema</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Origam.Security.Identity\Origam.Security.Identity.csproj">
+      <Project>{01708bd3-093a-42bf-baf9-0a4cd1e69107}</Project>
+      <Name>Origam.Security.Identity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Origam.Security\Origam.Security.csproj">
       <Name>Origam.Security</Name>
       <Project>{93B972C4-D58D-4681-A8B8-95A34C7C2980}</Project>
@@ -271,10 +279,6 @@
     <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj">
       <Project>{2380e7b2-c993-4167-abca-22ff07a91b2a}</Project>
       <Name>Origam.BI.Excel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.BI.SSRS\Origam.BI.SSRS.csproj">
-      <Project>{dd8adce0-1a65-412b-a09b-0d139d1cd7ab}</Project>
-      <Name>Origam.BI.SSRS</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.Gui\Origam.Gui.csproj">
       <Project>{fb138bf6-af03-4f04-bffe-ef28d95efeb8}</Project>

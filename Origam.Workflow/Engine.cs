@@ -1164,7 +1164,7 @@ namespace Origam.Workflow
 								{
 									if(!(node is XmlDeclaration))
 									{
-										resultDataDoc.DocumentElementAppendChild(node);
+										resultXmlDoc.DocumentElementAppendChild(node);
 									}
 								}
 							}

@@ -504,7 +504,7 @@ namespace Origam.DA
 							}
 						}
 					} 
-					catch (Exception e) 
+					catch (Exception) 
 					{
 						throw;
 					}

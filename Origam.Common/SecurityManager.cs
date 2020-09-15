@@ -105,19 +105,28 @@ namespace Origam
         {
             get
             {
-                // if there is a IPrincipal service in the DI, use it first.
-                IPrincipal ress = _DIServiceProvider?.GetService<IPrincipal>();
-				if (ress != null)
+                IPrincipal principal = null;
+				// if there is a IPrincipal service in the DI, use it first.
+				try
+				{
+                    principal = _DIServiceProvider?.GetService<IPrincipal>();
+                }
+                catch (ObjectDisposedException)
+				{
+					// request not coming from controller,
+					// but still in server environment
+                }
+				if (principal != null)
                 {
-                    return ress;
+                    return principal;
                 }
                 // fallback to the old approach
-                IPrincipal res = Thread.CurrentPrincipal;
-                if (res == null)
+                principal = Thread.CurrentPrincipal;
+                if (principal == null)
                 {
                     throw new UserNotLoggedInException();
                 }
-                return res;
+                return principal;
             }
         }
 

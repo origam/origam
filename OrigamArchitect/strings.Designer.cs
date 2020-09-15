@@ -205,6 +205,15 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please Uncheck Integrated Authentication. And fill Username and Password..
+        /// </summary>
+        internal static string CheckIntegratedAuthentication_Message {
+            get {
+                return ResourceManager.GetString("CheckIntegratedAuthentication_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;Close.
         /// </summary>
         internal static string Close_MenuItem {
@@ -570,6 +579,51 @@ namespace OrigamArchitect {
         internal static string EnterWebAppFolder_Message {
             get {
                 return ResourceManager.GetString("EnterWebAppFolder_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter Email..
+        /// </summary>
+        internal static string EnterWebEmail_Message {
+            get {
+                return ResourceManager.GetString("EnterWebEmail_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter First Name..
+        /// </summary>
+        internal static string EnterWebFirstName_Message {
+            get {
+                return ResourceManager.GetString("EnterWebFirstName_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter the web password..
+        /// </summary>
+        internal static string EnterWebPassword_Message {
+            get {
+                return ResourceManager.GetString("EnterWebPassword_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter Surename..
+        /// </summary>
+        internal static string EnterWebSurename_Message {
+            get {
+                return ResourceManager.GetString("EnterWebSurename_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter the web Username..
+        /// </summary>
+        internal static string EnterWebUserName_Message {
+            get {
+                return ResourceManager.GetString("EnterWebUserName_Message", resourceCulture);
             }
         }
         
@@ -1857,6 +1911,15 @@ namespace OrigamArchitect {
         internal static string WebAppFolderNotExists_Message {
             get {
                 return ResourceManager.GetString("WebAppFolderNotExists_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords not equals!.
+        /// </summary>
+        internal static string WebPasswordNotMatch_Message {
+            get {
+                return ResourceManager.GetString("WebPasswordNotMatch_Message", resourceCulture);
             }
         }
         

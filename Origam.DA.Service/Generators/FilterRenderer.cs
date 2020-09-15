@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -56,7 +57,31 @@ namespace Origam.DA.Service
             logicalBuilder.Append(")");
             return logicalBuilder.ToString();
         }
-
+        
+        public string BinaryOperator(string leftValue,
+            string[] rightValues, string operatorName)
+        {
+            switch (operatorName)
+            {
+                case "Between":
+                    CheckArgumentLength("Between", rightValues, 2);
+                    return $"{leftValue} BETWEEN {rightValues[0]} AND {rightValues[1]}";
+                case "NotBetween":
+                    CheckArgumentLength("NotBetween", rightValues, 2);
+                    return $"{leftValue} NOT BETWEEN {rightValues[0]} AND {rightValues[1]}";                
+                case "In":
+                    return leftValue+" IN (" + string.Join(", ",rightValues) + ")";                
+                case "NotIn":
+                    return leftValue+" NOT IN (" + string.Join(", ",rightValues) + ")";
+                default:
+                    if (rightValues.Length == 1)
+                    {
+                        return BinaryOperator(leftValue, rightValues[0], operatorName);
+                    }
+                    throw new ArgumentException($"Cannot process operator {operatorName} with {rightValues.Length} arguments");
+            }
+        }
+        
         public string BinaryOperator(string leftValue,
             string rightValue, string operatorName)
         {
@@ -73,6 +98,20 @@ namespace Origam.DA.Service
                         leftValue, GetOperator(operatorName), rightValue);
             }
         }
+        //
+        // public string BinaryOperator(string leftValue,
+        //     string rightValue1,string rightValue2, string operatorName)
+        // {
+        //     switch (operatorName)
+        //     {
+        //         case "Between":
+        //             return $"{leftValue} BETWEEN {rightValue1} AND {rightValue2}";
+        //         case "NotBetween":
+        //             return $"{leftValue} NOT BETWEEN {rightValue1} AND {rightValue2}";
+        //         default:
+        //             throw new NotImplementedException();
+        //     }
+        // }
 
         public string NotEqual(string leftValue, string rightValue)
         {
@@ -90,7 +129,7 @@ namespace Origam.DA.Service
         public string Equal(string leftValue, string rightValue)
         {
             CheckArgumentEmpty("leftValue", leftValue);
-            if (rightValue == null)
+            if (rightValue == null || rightValue.ToLower() == "null")
             {
                 return string.Format("{0} IS NULL", leftValue);
             }
@@ -116,6 +155,8 @@ namespace Origam.DA.Service
                     return "=";
                 case "Like":
                     return "LIKE";
+                case "NotLike":
+                    return "NOT LIKE";
                 case "Add":
                     return "+";
                 case "Deduct":
@@ -148,6 +189,13 @@ namespace Origam.DA.Service
             if (argument == null)
             {
                 throw new ArgumentOutOfRangeException("name", name, "Argument cannot be empty.");
+            }
+        }
+        private static void CheckArgumentLength(string operatorName, string[] arguments, int length)
+        {
+            if (arguments?.Length != length)
+            {
+                throw new ArgumentOutOfRangeException("operator", operatorName, $"Operator needs exactly {length} number of right hand arguments.");
             }
         }
     }

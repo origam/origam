@@ -37,8 +37,13 @@ namespace Origam.DA.Service
 	{
 
 		public PgSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker) 
-			: base(detachedFieldPacker)
+			: base(
+				trueValue: "true",
+				falseValue: "false",
+				detachedFieldPacker: detachedFieldPacker, 
+				sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")))
 		{
+
 		}
 
 		public override IDbCommand GetCommand(string cmdText)
@@ -335,22 +340,6 @@ namespace Origam.DA.Service
 			else
 			{
 				return "SELECT" + finalQuery + " LIMIT " + top.ToString();
-			}
-		}
-
-		public override string True
-		{
-			get
-			{
-				return "true";
-			}
-		}
-
-		public override string False
-		{
-			get
-			{
-				return "false";
 			}
 		}
 

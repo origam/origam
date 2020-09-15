@@ -22,7 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Xml;
 using System.Data;
-
+using Origam.DA.ObjectPersistence;
+using Origam.Schema;
+using Origam.Schema.EntityModel;
 using Origam.Workbench.Services;
 using Origam.Schema.GuiModel;
 
@@ -31,7 +33,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 	/// <summary>
 	/// Summary description for AsPanelPropertyBuilder.
 	/// </summary>
-	public class AsPanelPropertyBuilder
+	public static class AsPanelPropertyBuilder
 	{
 		public static XmlElement CreateProperty(XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
 			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition, 
@@ -45,6 +47,10 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition,
             string gridColumnWidth, UIStyle style)
 		{
+			IPersistenceProvider persistenceProvider = ServiceManager.Services
+				.GetService<IPersistenceService>()
+				.SchemaProvider;
+			
             IDocumentationService documentationSvc = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
 
 			XmlElement propertyElement = propertiesElement.OwnerDocument.CreateElement(category);
@@ -92,6 +98,16 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             {
                 propertyElement.SetAttribute("Style", style.StyleDefinition());
             }
+
+			if (persistenceProvider.IsOfType<AggregatedColumn>(id))
+			{
+				propertyElement.SetAttribute("Aggregated", "true");
+			}
+			
+			if (persistenceProvider.IsOfType<LookupField>(id))
+			{
+				propertyElement.SetAttribute("IsLookupColumn", "true");
+			}
 
 			return propertyElement;
 		}

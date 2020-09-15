@@ -20,13 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections;
+using System.Drawing;
+using System.Windows.Forms;
 using Origam.Schema.DeploymentModel;
+using Origam.Schema.MenuModel;
 using Origam.UI;
+using Origam.UI.WizardForm;
+using Origam.Workbench;
 
 namespace Origam.Gui.Win.Wizards
 {
     class CreateRoleCommand : AbstractMenuCommand
     {
+		RoleForm roleForm;
+		SchemaBrowser _schemaBrowser = WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser;
 		public override bool IsEnabled
 		{
 			get
@@ -43,10 +51,56 @@ namespace Origam.Gui.Win.Wizards
 
 		public override void Run()
 		{
-            IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
-            ServiceCommandUpdateScriptActivity activity = 
-                CreateRole(obj.AuthorizationContext);
-            GeneratedModelElements.Add(activity);
+			ServiceCommandUpdateScriptActivity scriptActivity = new ServiceCommandUpdateScriptActivity();
+			ArrayList list = new ArrayList();
+			list.Add(new ListViewItem(scriptActivity.ModelDescription(), scriptActivity.Icon));
+			Stack stackPage = new Stack();
+			stackPage.Push(PagesList.Finish);
+			stackPage.Push(PagesList.SummaryPage);
+			stackPage.Push(PagesList.StartPage);
+
+			roleForm = new RoleForm()
+			{
+				Title = ResourceUtils.GetString("CreateDataStructureFromEntityWizardTitle"),
+				Description = ResourceUtils.GetString("CreateDataStructureFromEntityWizardDescription"),
+				ItemTypeList = list,
+				Pages = stackPage,
+				ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
+				Command = this,
+				Roles = ((AbstractMenuItem)Owner).Roles,
+				NameOfMenu = ((AbstractMenuItem)Owner).DisplayName
+			};
+			Wizard wizardscreen = new Wizard(roleForm);
+			if (wizardscreen.ShowDialog() != DialogResult.OK)
+			{
+				GeneratedModelElements.Clear();
+			}
         }
+		public override void Execute()
+		{
+			IAuthorizationContextContainer obj = Owner as IAuthorizationContextContainer;
+			ServiceCommandUpdateScriptActivity activity =
+				CreateRole(obj.AuthorizationContext);
+			GeneratedModelElements.Add(activity);
+		}
+
+		public override int GetImageIndex(string icon)
+		{
+			return _schemaBrowser.ImageIndex(icon);
+		}
+
+		public override void SetSummaryText(object summary)
+		{
+			RichTextBox richTextBoxSummary = (RichTextBox)summary;
+			richTextBoxSummary.Text = "This Wizard create Role with this parameters:";
+			richTextBoxSummary.AppendText("");
+			richTextBoxSummary.AppendText("Create Role ");
+			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Bold);
+			richTextBoxSummary.AppendText(roleForm.Roles);
+			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Regular);
+			richTextBoxSummary.AppendText(" for ");
+			richTextBoxSummary.SelectionFont = new Font(richTextBoxSummary.Font, FontStyle.Italic);
+			richTextBoxSummary.AppendText(roleForm.NameOfMenu);
+		}
 	}
 }

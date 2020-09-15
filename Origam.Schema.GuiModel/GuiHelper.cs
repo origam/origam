@@ -90,7 +90,12 @@ namespace Origam.Schema.GuiModel
 			return form;
 		}
 
-		public static PanelControlSet CreatePanel(string groupName, IDataEntity entity, Hashtable fieldsToPopulate)
+        public static PanelControlSet CreatePanel(string groupName, IDataEntity entity, Hashtable fieldsToPopulate)
+        {
+            return CreatePanel(groupName,entity,fieldsToPopulate,entity.Name);
+        }
+
+        public static PanelControlSet CreatePanel(string groupName, IDataEntity entity, Hashtable fieldsToPopulate,string name)
 		{
 			ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 			PanelSchemaItemProvider panelProvider = schema.GetProvider(typeof(PanelSchemaItemProvider)) as PanelSchemaItemProvider;
@@ -98,7 +103,7 @@ namespace Origam.Schema.GuiModel
 			SchemaItemGroup group = panelProvider.GetGroup(groupName);
 
 			PanelControlSet panel = panelProvider.NewItem(typeof(PanelControlSet), schema.ActiveSchemaExtensionId, null) as PanelControlSet;
-			panel.Name = entity.Name;
+			panel.Name = name;
 			panel.Group = group;
 			panel.DataEntity = entity;
 

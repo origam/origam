@@ -25,6 +25,7 @@ using System.Collections;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
 using Origam.DA.Common;
+using System.Linq;
 
 namespace Origam.Schema.EntityModel
 {
@@ -137,6 +138,24 @@ namespace Origam.Schema.EntityModel
 			{
 				_auditingType = value;
 			}
+		}
+
+		[EntityColumn("G03")]  
+		public Guid AuditingSecondReferenceKeyColumnId;
+
+		[TypeConverter(typeof(EntityColumnReferenceConverter))]
+		[Category("Entity")]
+		[Description("If auditing is enabled and this value is filled, system will store value of designated column to audit log when recording delete operation.")]
+        [XmlReference("auditingSecondReferenceKeyColumn", 
+            "AuditingSecondReferenceKeyColumnId")]
+		public IDataEntityColumn AuditingSecondReferenceKeyColumn
+		{
+			get => (AbstractSchemaItem)PersistenceProvider.RetrieveInstance(
+                typeof(AbstractSchemaItem), 
+                new ModelElementKey(AuditingSecondReferenceKeyColumnId)) 
+                as IDataEntityColumn;
+            set => AuditingSecondReferenceKeyColumnId 
+                = (Guid?) value?.PrimaryKey["Id"] ?? Guid.Empty;
 		}
 
 		private string _caption = "";
@@ -284,6 +303,19 @@ namespace Origam.Schema.EntityModel
 				if(pk.Fields.Count > 0) result.Add(pk);
 				return result;
 			}
+		}
+		[Browsable(false)]
+		public  bool HasEntityAFieldDenyReadRule()
+		{
+				if (ChildItemsByTypeRecursive(EntityFieldSecurityRule.ItemTypeConst)
+				.ToArray().Cast<EntityFieldSecurityRule>()
+				.Where(rule => rule.Type == PermissionType.Deny && rule.ReadCredential)
+				.Count() > 0)
+				{
+					return true;
+				}
+			
+			return false;
 		}
 		#endregion
 

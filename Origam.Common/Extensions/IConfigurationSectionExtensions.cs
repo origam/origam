@@ -28,35 +28,46 @@ namespace Origam.Extensions
 {
     public static class IConfigurationSectionExtensions
     {
-        public static string GetString(this IConfigurationSection section, string key)
+        public static string GetStringOrThrow(this IConfigurationSection section, string key)
         {
             string stringValue = section[key];
             if (stringValue == null)
             {
-                throw new ArgumentException($"Key \"{key}\" was not found in configuration in section \"{section.Path}\". Add it to appsettings.json");
+                throw new ArgumentException($"Key \"{key}\" was not found in configuration in section \"{section.Path}\". Check your appsettings.json");
             }
             return stringValue;
         }
-        
-        public static bool GetBool(this IConfigurationSection section, string key)
+
+        public static bool GetBoolOrThrow(this IConfigurationSection section, string key)
         {
-            string stringValue = section.GetString(key);
+            string stringValue = section.GetStringOrThrow(key);
             bool success = Boolean.TryParse(stringValue, out bool boolValue);
             if (!success)
             {
-                throw new ArgumentException($"Cannot parse {key} to bool");
+                throw new ArgumentException($"Cannot parse \"{key}\" to bool");
             }
             return boolValue;
         }
-        public static int GetInt(this IConfigurationSection section, string key)
+        public static int GetIntOrThrow(this IConfigurationSection section, string key)
         {
-            string stringValue = section.GetString(key);
+            string stringValue = section.GetStringOrThrow(key);
             bool success = int.TryParse(stringValue, out int intValue);
             if (!success)
             {
-                throw new ArgumentException($"Cannot parse {key} to int");
+                throw new ArgumentException($"Cannot parse \"{key}\" to int");
             }
             return intValue;
         }
+        
+        public static IConfigurationSection GetSectionOrThrow(this IConfigurationSection section, string key)
+        {
+            var subSection = section.GetSection(key);
+            if (!subSection.Exists())
+            {
+                throw new ArgumentException($"Sub section \"{key}\" was not found in \"{section.Path}\" or it was empty. Check your appsettings.json");
+            }
+            return subSection;
+        }        
+       
     }
 }

@@ -206,5 +206,14 @@ namespace Origam {
                 return ResourceManager.GetString("UserNotLoggedInException", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property XPath of object: {0} is null, references could not be indexed..
+        /// </summary>
+        public static string XPathIsNull {
+            get {
+                return ResourceManager.GetString("XPathIsNull", resourceCulture);
+            }
+        }
     }
 }

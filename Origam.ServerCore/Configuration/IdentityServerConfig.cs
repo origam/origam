@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Origam.Extensions;
 
 namespace Origam.ServerCore.Configuration
 {
@@ -36,47 +37,66 @@ namespace Origam.ServerCore.Configuration
         public string GoogleClientSecret { get; }
         public bool UseGoogleLogin { get;}
        
-        public WebClient WebClient { get; set; }
-        public MobileClient MobileClient { get; set; }
+        public WebClient WebClient { get; }
+        public MobileClient MobileClient { get; }
+        public ServerClient ServerClient { get; }
 
         public IdentityServerConfig(IConfiguration configuration)
         {
-            IConfigurationSection identityServerSection = configuration.GetSection("IdentityServerConfig");
-            PathToJwtCertificate = identityServerSection.GetValue<string>("PathToJwtCertificate");
+            IConfigurationSection identityServerSection = configuration.GetSectionOrThrow("IdentityServerConfig");
+            PathToJwtCertificate = identityServerSection.GetStringOrThrow("PathToJwtCertificate");
             PasswordForJwtCertificate = identityServerSection.GetValue<string>("PasswordForJwtCertificate");
             UseGoogleLogin = identityServerSection.GetValue("UseGoogleLogin", false);
             GoogleClientId = identityServerSection["GoogleClientId"] ?? "";
             GoogleClientSecret = identityServerSection["GoogleClientSecret"] ?? "";
-          
             
-            WebClient = new WebClient
+            var webClientSection = identityServerSection
+                .GetSection("WebClient");
+            if (webClientSection.GetChildren().Count() != 0)
             {
-                PostLogoutRedirectUris = identityServerSection
-                    .GetSection("WebClient")
-                    .GetSection("PostLogoutRedirectUris")
-                    .Get<string[]>(),
-                RedirectUris = identityServerSection
-                    .GetSection("WebClient")
-                    .GetSection("RedirectUris")
-                    .Get<string[]>()
-            };           
+                WebClient = new WebClient
+                {
+                    PostLogoutRedirectUris = webClientSection
+                        .GetSectionOrThrow("PostLogoutRedirectUris")
+                        .GetStringArrayOrThrow(),
+                    RedirectUris = webClientSection
+                        .GetSectionOrThrow("RedirectUris")
+                        .GetStringArrayOrThrow()
+                };
+            }
             
-            MobileClient = new MobileClient
+            var mobileClientSection = identityServerSection
+                .GetSection("MobileClient");
+
+            if (mobileClientSection.GetChildren().Count() != 0)
             {
-                PostLogoutRedirectUris = identityServerSection
-                    .GetSection("MobileClient")
-                    .GetSection("PostLogoutRedirectUris")
-                    .Get<string[]>(),
-                RedirectUris = identityServerSection
-                    .GetSection("MobileClient")
-                    .GetSection("RedirectUris")
-                    .Get<string[]>(),
-                ClientSecret= identityServerSection
-                    .GetSection("MobileClient")
-                    .GetValue<string>("ClientSecret") 
-                              ?? throw new Exception("ClientSecret not found in config")
-            };
+                MobileClient = new MobileClient
+                {
+                    PostLogoutRedirectUris = mobileClientSection
+                        .GetSectionOrThrow("PostLogoutRedirectUris")
+                        .GetStringArrayOrThrow(),
+                    RedirectUris = mobileClientSection
+                        .GetSectionOrThrow("RedirectUris")
+                        .GetStringArrayOrThrow(),
+                    ClientSecret= mobileClientSection.GetStringOrThrow("ClientSecret")
+                }; 
+            }
+            
+            var serverClientSection = identityServerSection
+                .GetSection("ServerClient");
+            if (identityServerSection.GetChildren().Count() != 0)
+            {
+                ServerClient = new ServerClient
+                {
+                    ClientSecret = serverClientSection.GetStringOrThrow("ClientSecret")
+                };
+            }
         }
+    }
+
+    public class ServerClient
+    {
+        public string ClientSecret { get; set; }
     }
 
     public class WebClient

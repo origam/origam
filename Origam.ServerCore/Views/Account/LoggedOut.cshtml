@@ -9,6 +9,7 @@
 }
 
 
+
 <h3 class="confirmation-text">
     @SharedLocalizer["LoggedOut"]
 </h3>
@@ -16,14 +17,14 @@
 @if (Model.PostLogoutRedirectUri != null)
 {
     <div class="login-link">
-        Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
-        <span>@Model.ClientName</span> application.
+        @SharedLocalizer["ReturnToApplication1"] <a class="in-page-link" href="@Model.PostLogoutRedirectUri">@SharedLocalizer["ReturnToApplication2"]</a> @SharedLocalizer["ReturnToApplication3"]
+        <span>@Model.ClientName@(string.IsNullOrEmpty(Model.ClientName) ? "" :  " ")</span> @SharedLocalizer["ReturnToApplication4"]
     </div>
 }
 else
 {
-    <div class="login-link" >
-        Click <a href="/account/login">here</a> to login again.
+    <div class="login-link">
+        @SharedLocalizer["ToLogin1"] <a class="in-page-link" href="/account/login">@SharedLocalizer["ToLogin2"]</a> @SharedLocalizer["ToLogin3"]
     </div> 
 }
 

@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
+using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.Server;
@@ -44,6 +45,7 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public abstract class AbstractController: ControllerBase
     {
+        protected readonly SessionObjects sessionObjects;
         protected class EntityData
         {
             public FormReferenceMenuItem MenuItem { get; set; }
@@ -51,9 +53,10 @@ namespace Origam.ServerCore.Controller
         }
         // ReSharper disable once InconsistentNaming
         protected readonly ILogger<AbstractController> log;
-        protected AbstractController(ILogger<AbstractController> log)
+        protected AbstractController(ILogger<AbstractController> log, SessionObjects sessionObjects)
         {
             this.log = log;
+            this.sessionObjects = sessionObjects;
         }
         protected static MenuLookupIndex MenuLookupIndex {
             get
@@ -93,8 +96,8 @@ namespace Origam.ServerCore.Controller
         {
             return SecurityManager.GetAuthorizationProvider().Authorize(
                 User, menuItem.Roles)
-                ? Result.Ok<FormReferenceMenuItem, IActionResult>(menuItem)
-                : Result.Fail<FormReferenceMenuItem, IActionResult>(Forbid());
+                ? Result.Success<FormReferenceMenuItem, IActionResult>(menuItem)
+                : Result.Failure<FormReferenceMenuItem, IActionResult>(Forbid());
         }
         protected Result<T,IActionResult> FindItem<T>(Guid id) where T : class
         {
@@ -102,24 +105,24 @@ namespace Origam.ServerCore.Controller
                 .GetService<IPersistenceService>()
                 .SchemaProvider
                 .RetrieveInstance(typeof(T), new Key(id)) is T instance)
-                ? Result.Fail<T, IActionResult>(
+                ? Result.Failure<T, IActionResult>(
                     NotFound("Object with requested id not found."))
-                : Result.Ok<T, IActionResult>(instance);
+                : Result.Success<T, IActionResult>(instance);
         }
         protected Result<EntityData, IActionResult> GetEntityData(
             Guid dataStructureEntityId, FormReferenceMenuItem menuItem)
         {
             return FindEntity(dataStructureEntityId)
-                .OnSuccess(entity 
-                    => new EntityData {MenuItem = menuItem, Entity = entity});
+                .Map(entity => 
+                    new EntityData {MenuItem = menuItem, Entity = entity});
         }
         protected Result<EntityData, IActionResult> CheckEntityBelongsToMenu(
             EntityData entityData)
         {
             return (entityData.MenuItem.Screen.DataStructure.Id 
                 == entityData.Entity.RootEntity.ParentItemId)
-                ? Result.Ok<EntityData, IActionResult>(entityData)
-                : Result.Fail<EntityData, IActionResult>(
+                ? Result.Success<EntityData, IActionResult>(entityData)
+                : Result.Failure<EntityData, IActionResult>(
                     BadRequest("The requested Entity does not belong to the menu."));
         }
         protected Result<RowData, IActionResult> GetRow(
@@ -131,10 +134,10 @@ namespace Origam.ServerCore.Controller
                 dataStructureEntityId, methodId, new List<Guid> { rowId });
             if(rows.Count == 0)
             {
-                return Result.Fail<RowData, IActionResult>(
+                return Result.Failure<RowData, IActionResult>(
                     NotFound("Requested data row was not found."));
             }
-            return Result.Ok<RowData, IActionResult>(
+            return Result.Success<RowData, IActionResult>(
                 new RowData{Row = rows[0], Entity = entity});
         }
         protected IActionResult UnwrapReturnValue(
@@ -142,11 +145,11 @@ namespace Origam.ServerCore.Controller
         {
             return result.IsSuccess ? result.Value : result.Error;
         }
-        private Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
+        protected Result<DataStructureEntity, IActionResult> FindEntity(Guid id)
         {
             return FindItem<DataStructureEntity>(id)
                 .OnFailureCompensate(error =>
-                    Result.Fail<DataStructureEntity, IActionResult>(
+                    Result.Failure<DataStructureEntity, IActionResult>(
                         NotFound("Requested DataStructureEntity not found. " 
                         + error.GetMessage())));
         }
@@ -177,54 +180,134 @@ namespace Origam.ServerCore.Controller
                 RowStateProcessor: null));
         }
         protected Result<RowData, IActionResult> AmbiguousInputToRowData(
-            AmbiguousInput input, IDataService dataService, 
-            SessionObjects sessionObjects)
+            AmbiguousInput input, IDataService dataService)
         {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => GetEntityData(
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(entityData =>
-                        GetRow(
-                            dataService,
-                            entityData.Entity,
-                            input.DataStructureEntityId,
-                            Guid.Empty,
-                            input.RowId));
+                    .Bind(CheckEntityBelongsToMenu)
+                    .Bind(entityData => GetRow(
+                        dataService,
+                        entityData.Entity,
+                        input.DataStructureEntityId,
+                        Guid.Empty,
+                        input.RowId));
             }
             else
             {
-                return sessionObjects.UIService.GetRow(
-                    input.SessionFormIdentifier, input.Entity, input.RowId);
+                return
+                    FindEntity(input.DataStructureEntityId)
+                        .Bind(dataStructureEntity =>
+                            sessionObjects.UIService.GetRow(
+                                input.SessionFormIdentifier, input.Entity,
+                                dataStructureEntity, input.RowId));
             }
         }
         protected Result<Guid, IActionResult> AmbiguousInputToEntityId(
-            AmbiguousInput input, IDataService dataService, 
-            SessionObjects sessionObjects)
+            AmbiguousInput input)
         {
             if(input.SessionFormIdentifier == Guid.Empty)
             {
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
-                    .OnSuccess(Authorize)
-                    .OnSuccess(menuItem => GetEntityData(
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
-                    .OnSuccess(CheckEntityBelongsToMenu)
-                    .OnSuccess(EntityDataToEntityId);
+                    .Bind(CheckEntityBelongsToMenu)
+                    .Bind(EntityDataToEntityId);
             }
             else
             {
                 return sessionObjects.UIService.GetEntityId(
                     input.SessionFormIdentifier, input.Entity);
             }
+        } 
+        protected Result<EntityData, IActionResult> EntityIdentificationToEntityData(
+            IEntityIdentification input)
+        {
+            if(input.SessionFormIdentifier == Guid.Empty)
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .Bind(Authorize)
+                    .Bind(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem))
+                    .Bind(CheckEntityBelongsToMenu);
+            }
+            else
+            {
+                return FindItem<FormReferenceMenuItem>(input.MenuId)
+                    .Bind(menuItem => GetEntityData(
+                        input.DataStructureEntityId, menuItem));
+            }
         }
-
         protected Result<Guid, IActionResult> EntityDataToEntityId(
             EntityData entityData)
         {
             return Result.Ok<Guid, IActionResult>(entityData.Entity.EntityId);
         }
+        protected IActionResult ToActionResult(object obj)
+        {
+            return Ok(obj);
+        }
+        
+        protected Result<DataStructureQuery, IActionResult> AddMethodAndSource(
+            Guid sessionFormIdentifier, Guid masterRowId, EntityData entityData,
+            DataStructureQuery query)
+        {
+            bool isLazyLoaded = entityData.MenuItem.ListDataStructure != null;
+            if(isLazyLoaded)
+            {
+                if(entityData.MenuItem.ListEntity.Name == entityData.Entity.Name)
+                {
+                    query.MethodId = entityData.MenuItem.ListMethodId;
+                    query.SortSetId = entityData.MenuItem.ListSortSetId;
+                    query.DataSourceId
+                        = entityData.MenuItem.ListDataStructure.Id;
+                    // get parameters from session store
+                    var parameters = sessionObjects.UIService.GetParameters(
+                        sessionFormIdentifier);
+                    foreach(var key in parameters.Keys)
+                    {
+                        query.Parameters.Add(
+                            new QueryParameter(key.ToString(),
+                                parameters[key]));
+                    }
+                }
+                else
+                {
+                    return FindItem<DataStructureMethod>(entityData.MenuItem.MethodId)
+                        .Map(CustomParameterService.GetFirstNonCustomParameter)
+                        .Bind(parameterName =>
+                        {
+                            query.DataSourceId
+                                = entityData.Entity.RootEntity.ParentItemId;
+                            query.Parameters.Add(new QueryParameter(
+                                parameterName, masterRowId));
+                            if(masterRowId == Guid.Empty)
+                            {
+                                return Result
+                                    .Failure<DataStructureQuery, IActionResult>(
+                                        BadRequest("MasterRowId cannot be empty"));
+                            }
+
+                            query.MethodId = entityData.MenuItem.MethodId;
+                            query.SortSetId = entityData.MenuItem.SortSetId;
+                            return Result
+                                .Success<DataStructureQuery, IActionResult>(query);
+                        });
+                }
+            }
+            else
+            {
+                query.MethodId = entityData.MenuItem.MethodId;
+                query.SortSetId = entityData.MenuItem.SortSetId;
+                query.DataSourceId = entityData.Entity.RootEntity.ParentItemId;
+            }
+
+            return Result.Ok<DataStructureQuery, IActionResult>(query);
+        }
+
     }
 }

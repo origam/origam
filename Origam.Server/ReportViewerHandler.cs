@@ -43,6 +43,7 @@ along with ORIGAM.  If not, see<http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.IO;
+using System.Net;
 using System.Web;
 using System.Web.SessionState;
 using log4net;
@@ -138,42 +139,23 @@ namespace Origam.Server
         {
             ReportHelper.PopulateDefaultValues(
                 report, reportRequest.Parameters);
-            string filePath = BuildFileSystemReportFilePath(
+            string filePath = ReportHelper.BuildFileSystemReportFilePath(
                 report.ReportPath, reportRequest.Parameters);
+            if (!File.Exists(filePath))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.End();
+                return;
+            }
             string mimeType = HttpTools.GetMimeType(filePath);
             context.Response.ContentType = mimeType;
             context.Response.AddHeader(
                 "content-disposition",
-                /*"attachment; " +*/ httpTools.GetFileDisposition(
-                    new FxHttpRequestWrapper(context.Request), Path.GetFileName(filePath)));
+                httpTools.GetFileDisposition(
+                    new FxHttpRequestWrapper(context.Request), 
+                    Path.GetFileName(filePath)));
             context.Response.WriteFile(filePath);
         }
-
-        private string BuildFileSystemReportFilePath(
-            string filePath, Hashtable parameters)
-        {
-            foreach (DictionaryEntry entry in parameters)
-            {
-                string sKey = entry.Key.ToString();
-                string sValue = null;
-                if (entry.Value != null)
-                {
-                    sValue = entry.Value.ToString();
-                }
-                string replacement = "{" + sKey + "}";
-                if (filePath.IndexOf(replacement) > -1)
-                {
-                    if (sValue == null)
-                    {
-                        throw new Exception(
-                            Properties.Resources.FilePathPartParameterNull);
-                    }
-                    filePath = filePath.Replace(replacement, sValue);
-                }
-            }
-            return filePath;
-        }
-
         private void HandleWebReport(
             HttpContext context, ReportRequest reportRequest, 
             WebReport webReport)

@@ -135,6 +135,8 @@ namespace Origam.Security.Identity
                 userUnlockNotificationSubject: appSettings["UserUnlockNotification_Subject"], 
                 resetPwdBodyFilename: appSettings["ResetPasswordMail_BodyFileName"], 
                 resetPwdSubject: appSettings["ResetPasswordMail_Subject"],
+                mfaSubject:"",
+                mfaTemplateFileName:"",
                 applicationBasePath: AppDomain.CurrentDomain.SetupInformation.ApplicationBase, 
                 mailQueueName: appSettings["MailQueue_Name"]);
         }
