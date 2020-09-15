@@ -75,6 +75,9 @@ export function DropdownLayout(props: {
     const handleMouse = _.throttle((event: any) => {
       if (props.isDropped) reMeasure();
     }, 100);
+    if (props.isDropped) {
+      reMeasure();
+    }
     window.addEventListener("scroll", handleScroll, true);
     window.addEventListener("mousedown", handleMouse, true);
     window.addEventListener("mouseup", handleMouse, true);
