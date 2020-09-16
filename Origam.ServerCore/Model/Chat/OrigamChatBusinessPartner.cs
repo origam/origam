@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
+using Origam.Server;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -39,10 +40,14 @@ namespace Origam.ServerCore.Model.Chat
 
         internal static List<OrigamChatBusinessPartner> CreateJson(DataSet datasetUsersForInvite)
         {
+            UserProfile profile = SecurityTools.CurrentUserProfile();
             List<OrigamChatBusinessPartner> mentions = new List<OrigamChatBusinessPartner>();
             foreach (DataRow row in datasetUsersForInvite.Tables["BusinessPartner"].Rows)
             {
-                mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
+                if (profile.Id != row.Field<Guid>("Id"))
+                {
+                    mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
+                }
             }
             return mentions;
         }
