@@ -19,11 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
@@ -31,12 +27,10 @@ using Origam.Workbench.Services.CoreServices;
 namespace Origam.ServerCore.Controller
 {
     [Route("chatrooms/[controller]")]
+    [Route("internalApi/[controller]")]
     [ApiController]
     public class AvatarController : ControllerBase
     {
-        private readonly Guid LookupBusinessPartner = new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5");
-        private readonly Guid LookupBusinessPartnerGetById = new Guid("d014e645-dda1-4999-b577-d82221715583");
-
         [HttpGet("{avatarId:guid}")]
         public IActionResult GetAvatarRequest(Guid avatarId)
         {
@@ -45,7 +39,8 @@ namespace Origam.ServerCore.Controller
             {
                 new QueryParameter("BusinessPartner_parId",avatarId)
             };
-            DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner, LookupBusinessPartnerGetById,
+            DataSet datasetUsersForInvite = LoadData(new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"), 
+                                                     new Guid("d014e645-dda1-4999-b577-d82221715583"),
                Guid.Empty, Guid.Empty, null, parameters);
             if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
             {
@@ -60,12 +55,14 @@ namespace Origam.ServerCore.Controller
             return File(imageBytes, HttpTools.GetMimeType(dataAvatar.Field<string>("AvatarFilename")));
         }
         
-        private DataSet LoadData(Guid messageDataStructureID, Guid messageDataafterIdIncludingMethodId, Guid guid, Guid messageDataOrderbyCreatedDateSortSetId, string transactionId, QueryParameterCollection parameters)
+        private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
+                                string transactionId, 
+                                QueryParameterCollection parameters)
         {
-            return DataService.LoadData(messageDataStructureID,
-                     messageDataafterIdIncludingMethodId,
-                     guid,
-                     messageDataOrderbyCreatedDateSortSetId,
+            return DataService.LoadData(dataStructureId,
+                     methodId,
+                     defaultSetId,
+                     sortSetId,
                      transactionId,
                      parameters);
         }
