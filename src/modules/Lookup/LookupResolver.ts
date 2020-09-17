@@ -60,7 +60,7 @@ export class LookupResolver {
 
   resolveValue(key: any) {
     // This runs in COMPUTED scope
-
+    //debugger
     if (_.isString(key)) key = String(key).toLowerCase();
 
     let value: any = null;
@@ -117,12 +117,12 @@ export class LookupResolver {
       this.cache.addLookupLabels(loadedResultMap);
       const innerLoadedMap = entryArray[0][1];
       this.resolved = new Map([...innerLoadedMap, ...this.resolved]);
-      return new Map([...innerLoadedMap, ...cachedResultMap])
+      return new Map([...innerLoadedMap, ...cachedResultMap]);
     }
-    if(entryArray.length === 0){
+    if (entryArray.length === 0) {
       return cachedResultMap;
     }
-    throw new Error("More that one lookup result maps")
+    throw new Error("More that one lookup result maps");
   }
 
   isEmptyAndLoading(key: any) {

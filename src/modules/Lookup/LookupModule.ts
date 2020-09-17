@@ -1,77 +1,21 @@
 import { Container, TypeSymbol } from "dic/Container";
-import { IClock, Clock } from "./Clock";
-import { ILookupApi, LookupApi } from "./LookupApi";
-import { ILookupCacheIndividual, LookupCacheIndividual } from "./LookupCacheIndividual";
-import { ILookupCacheMulti, LookupCacheMulti } from "./LookupCacheMulti";
-import {
-  ILookupLabelsCleanerReloader,
-  LookupLabelsCleanerReloader,
-  IGetLookupLabelsCleanerReloader,
-} from "./LookupCleanerLoader";
-import { ILookupLoaderIndividual, LookupLoaderIndividual } from "./LookupLoaderIndividual";
-import { ILookupLoaderMulti, LookupLoaderMulti } from "./LookupLoaderMulti";
-import { ILookupResolver, LookupResolver } from "./LookupResolver";
-import { ILookupScopeRegistry, LookupScopeRegistry } from "./LookupScopeRegistry";
-import { SCOPE_Workbench } from "modules/Workbench/WorkbenchModule";
-import { ILookupListCacheMulti, LookupListCacheMulti } from "./LookupListCacheMulti";
+import { ILookupIndividualEngine } from "model/entities/Property";
 import { IApi } from "model/entities/types/IApi";
-import { lookup } from "dns";
+import { Clock } from "./Clock";
+import { LookupApi } from "./LookupApi";
+import { LookupCacheIndividual } from "./LookupCacheIndividual";
+import { LookupCacheMulti } from "./LookupCacheMulti";
+import { LookupLabelsCleanerReloader } from "./LookupCleanerLoader";
+import { LookupLoaderIndividual } from "./LookupLoaderIndividual";
+import { LookupLoaderMulti } from "./LookupLoaderMulti";
+import { LookupResolver } from "./LookupResolver";
+import { ILookupScopeRegistry } from "./LookupScopeRegistry";
 
 export const SCOPE_Lookup = "Lookup";
 
 export const ILookupId = TypeSymbol<string>("ILookupId");
 
-export function register($cont: Container) {
-  /* $cont
-    .registerClass(ILookupCacheMulti, LookupCacheMulti)
-    .scopedInstance(SCOPE_Workbench)
-    .onActivated((args) => {
-      args.instance.startup();
-    })
-    .onRelease((args) => {
-      args.instance.teardown();
-    });*/
-  /*$cont.registerClass(ILookupLoaderMulti, LookupLoaderMulti).scopedInstance(SCOPE_Workbench);
-  $cont.registerClass(ILookupScopeRegistry, LookupScopeRegistry).scopedInstance(SCOPE_Workbench);
-
-  $cont.registerClass(IClock, Clock).scopedInstance(SCOPE_Workbench);*/
-  /*$cont
-    .registerClass(ILookupListCacheMulti, LookupListCacheMulti)
-    .scopedInstance(SCOPE_Workbench)
-    .onActivated((args) => {
-      args.instance.startup();
-    })
-    .onRelease((args) => {
-      args.instance.teardown();
-    });*/
-  /*$cont.registerClass(ILookupApi, LookupApi).scopedInstance(SCOPE_Lookup);
-  $cont.registerClass(ILookupCacheIndividual, LookupCacheIndividual).scopedInstance(SCOPE_Lookup);
-  $cont.registerClass(ILookupLabelsCleanerReloader, LookupLabelsCleanerReloader).scopedInstance(SCOPE_Lookup);*/
-  /*$cont
-    .register(IGetLookupLabelsCleanerReloader, undefined, ($cont) => (id: string) =>
-      $cont.resolve(ILookupScopeRegistry).getScope(id).resolve(ILookupLabelsCleanerReloader)
-    )
-    .scopedInstance(SCOPE_Lookup);*/
-  /*$cont
-    .registerClass(ILookupLoaderIndividual, LookupLoaderIndividual)
-    .scopedInstance(SCOPE_Lookup)
-    .forward((reg) => {
-      let disposer: any;
-      reg.onActivating((args) => {
-        disposer = ILookupLoaderMulti().resultListeners.subscribe(args.instance.handleResultingLabels);
-      });
-      reg.onRelease((args) => {
-        disposer?.();
-      });
-      return reg;
-    });*/
-  /*$cont
-    .registerClass(ILookupResolver, LookupResolver)
-    .scopedInstance(SCOPE_Lookup)
-    .onActivating((args) => {
-      ILookupLoaderIndividual().resultListeners.subscribe(args.instance.handleResultingLabels);
-    });*/
-}
+export function register($cont: Container) {}
 
 export function createMultiLookupEngine(origamApi: () => IApi): IMultiLookupEngine {
   const lookupCleanerReloaderById = new Map<string, LookupLabelsCleanerReloader>();
@@ -82,10 +26,12 @@ export function createMultiLookupEngine(origamApi: () => IApi): IMultiLookupEngi
     (lookupId) => lookupCleanerReloaderById.get(lookupId)!
   );
   const lookupLoaderMulti = new LookupLoaderMulti(clock, api);
+  const lookupEngineById = new Map<string, ILookupIndividualEngine>();
   return {
     lookupCacheMulti,
     lookupLoaderMulti,
     lookupCleanerReloaderById,
+    lookupEngineById,
     startup() {
       lookupCacheMulti.startup();
     },
@@ -99,6 +45,7 @@ export interface IMultiLookupEngine {
   lookupCacheMulti: LookupCacheMulti;
   lookupLoaderMulti: LookupLoaderMulti;
   lookupCleanerReloaderById: Map<string, LookupLabelsCleanerReloader>;
+  lookupEngineById: Map<string, ILookupIndividualEngine>;
   startup(): void;
   teardown(): void;
 }
@@ -131,13 +78,14 @@ export function createIndividualLookupEngine(
       );
     },
     teardown() {
+      debugger;
       console.log("Stopping lookup", lookupId);
       lookupCleanerReloaderById.delete(lookupId);
       for (let d of disposers) d();
     },
     cleanAndReload() {
       lookupCleanerReloader.reloadLookupLabels();
-    }
+    },
   };
 }
 
