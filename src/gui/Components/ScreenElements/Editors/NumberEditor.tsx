@@ -162,7 +162,9 @@ export class NumberEditor extends React.Component<{
             className={cx(S.input, "isRightAligned")}
             type={this.props.isPassword ? "password" : "text"}
             autoComplete={this.props.isPassword ? "new-password" : undefined}
-            value={this.editValue !== undefined && this.editValue !== null ? this.editValue : ""}
+            value={this.editValue !== undefined && this.editValue !== "NaN" && this.editValue !== null
+              ? this.editValue
+              : ""}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={this.handleChange}
