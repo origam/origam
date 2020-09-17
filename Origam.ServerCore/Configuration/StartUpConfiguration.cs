@@ -49,6 +49,18 @@ namespace Origam.ServerCore.Configuration
                 .GetChildren()
                 .Select(c => c.Value);
 
+        public string PathToCustomAssetsFolder => 
+            configuration.GetSection("CustomAssetsConfig")["PathToCustomAssetsFolder"];    
+        public string RouteToCustomAssetsFolder => 
+            configuration.GetSection("CustomAssetsConfig")["RouteToCustomAssetsFolder"];    
+        public string IdentityGuiLogoUrl => 
+            configuration.GetSection("CustomAssetsConfig")["IdentityGuiLogoUrl"];    
+        public string Html5ClientLogoUrl => 
+            configuration.GetSection("CustomAssetsConfig")["Html5ClientLogoUrl"];
+        public bool HasCustomAssets => !string.IsNullOrWhiteSpace(PathToCustomAssetsFolder) &&
+                                       !string.IsNullOrWhiteSpace(RouteToCustomAssetsFolder) &&
+                                       (!string.IsNullOrWhiteSpace(IdentityGuiLogoUrl) ||
+                                        !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
         public string PathToClientApp => configuration["PathToClientApp"];
 
         public string PathToChatApp => configuration["PathToChatApp"];

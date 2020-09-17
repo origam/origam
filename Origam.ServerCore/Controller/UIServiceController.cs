@@ -52,6 +52,7 @@ using Origam.Extensions;
 using Origam.Schema;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
+using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Controller
@@ -66,16 +67,18 @@ namespace Origam.ServerCore.Controller
         private readonly IDataService dataService;
         private readonly IOptions<RequestLocalizationOptions> 
             localizationOptions;
+        private readonly CustomAssetsConfig customAssetsConfig;
 
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log,
-            IOptions<RequestLocalizationOptions> localizationOptions) 
+            IOptions<RequestLocalizationOptions> localizationOptions, IOptions<CustomAssetsConfig> customAssetsOptions) 
             : base(log, sessionObjects)
         {
             this.localizer = localizer;
             this.localizationOptions = localizationOptions;
+            customAssetsConfig = customAssetsOptions.Value;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
@@ -86,8 +89,12 @@ namespace Origam.ServerCore.Controller
         public IActionResult InitPortal()
         {
             Analytics.Instance.Log("UI_INIT");
-            return RunWithErrorHandler(() 
-                => Ok(sessionObjects.UIService.InitPortal(4)));
+            return RunWithErrorHandler(() =>
+            {
+                PortalResult result = sessionObjects.UIService.InitPortal(4);
+                AddLogoUrl(result);
+                return Ok(result);
+            });
         }
         [HttpGet("[action]")]
         public IActionResult DefaultCulture()
@@ -1017,6 +1024,13 @@ namespace Origam.ServerCore.Controller
                 updatedValues.Add(values[i]);
             }
             return updatedValues;
+        }
+        
+        private void AddLogoUrl(PortalResult result)
+        {
+            result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.IdentityGuiLogoUrl)
+                ? "./img/logo-left.png"
+                : customAssetsConfig.IdentityGuiLogoUrl;
         }
     }
 }

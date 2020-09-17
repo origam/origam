@@ -16,8 +16,13 @@
     "UserRegistrationAllowed": "true"
   },
   "IdentityGuiConfig": {
-    "PathToBrandIcon": "icons/origam.png",
     "AllowPasswordReset": "false"
+  },
+  "CustomAssetsConfig": {
+    "PathToCustomAssetsFolder": "C:\\someDirectory",
+    "RouteToCustomAssetsFolder": "/customAssets",
+    "IdentityGuiLogoUrl": "/customAssets/someFile1.png",
+    "Html5ClientLogoUrl": "/customAssets/someFile2.png"
   },
   "IdentityServerConfig": {
     "PathToJwtCertificate": "serverCore.pfx",
