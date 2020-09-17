@@ -148,6 +148,8 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={readOnly}
             onChange={this.props.onChange}
             onClick={undefined}
+            isInvalid={isInvalid}
+            invalidMessage={invalidMessage}
             onKeyDown={undefined}
             tabIndex={this.props.tabIndex}
             subscribeToFocusManager={(textEditor) =>
