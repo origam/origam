@@ -10,6 +10,7 @@ export interface IWorkbenchLifecycle {
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
   notificationBox: any;
   userInfo: IUserInfo | undefined;
+  logoUrl: string | undefined;
   openNewForm(
     id: string,
     type: IMainMenuItemType,
