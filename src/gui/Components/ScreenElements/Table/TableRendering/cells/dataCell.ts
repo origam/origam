@@ -94,7 +94,7 @@ function registerClickHandler(columnId: string) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
-            yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
+            yield* getTablePanelView(ctx).onCellClick(event, row, columnId, true);
             yield onPossibleSelectedRowChange(ctx)(
               getMenuItemId(ctx),
               getDataStructureEntityId(ctx),
@@ -117,6 +117,13 @@ function registerClickHandler(columnId: string) {
             if (defaultAction && defaultAction.isEnabled) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
+          } else {
+            yield* getTablePanelView(ctx).onCellClick(event, row, columnId, false);
+            yield onPossibleSelectedRowChange(ctx)(
+              getMenuItemId(ctx),
+              getDataStructureEntityId(ctx),
+              getSelectedRowId(ctx)
+            );
           }
         })();
       },
@@ -136,7 +143,7 @@ function registerClickHandler(columnId: string) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
-            yield* getTablePanelView(ctx).onCellClick(event, row, columnId);
+            yield* getTablePanelView(ctx).onCellClick(event, row, columnId, false);
             yield onPossibleSelectedRowChange(ctx)(
               getMenuItemId(ctx),
               getDataStructureEntityId(ctx),
@@ -242,7 +249,7 @@ function drawCellValue() {
         (currentRowTop() + 0.5 * currentRowHeight()) * CPR()
       );
       ctx2d.lineTo(currentColumnLeft() * CPR(), (currentRowTop() + currentRowHeight()) * CPR());
-      ctx2d.fill()
+      ctx2d.fill();
       ctx2d.restore();
     }
 

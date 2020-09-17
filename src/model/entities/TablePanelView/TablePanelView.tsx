@@ -122,7 +122,7 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  *onCellClick(event: any, row: any[], columnId: string) {
+  *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     getTablePanelView(this).setEditing(false);
     yield* flushCurrentRowData(this)();
     const dataView = getDataView(this);
@@ -130,7 +130,7 @@ export class TablePanelView implements ITablePanelView {
     const isDirty = getFormScreen(dataView).isDirty;
 
     if (dataView.selectedRowId === rowId || !isDirty || !isInfiniteScrollingActive(dataView)) {
-      yield* this.onCellClickInternal(event, row, columnId);
+      yield* this.onCellClickInternal(event, row, columnId, isControlInteraction);
       return;
     }
     const shouldProceedToSelectRow = yield getFormScreenLifecycle(
@@ -138,13 +138,13 @@ export class TablePanelView implements ITablePanelView {
     ).handleUserInputOnChangingRow(dataView);
 
     if (shouldProceedToSelectRow) {
-      yield* this.onCellClickInternal(event, row, columnId);
+      yield* this.onCellClickInternal(event, row, columnId, isControlInteraction);
     }
   }
 
-  *onCellClickInternal(event: any, row: any[], columnId: string) {
+  *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     const property = this.propertyMap.get(columnId)!;
-    if (property.column !== "CheckBox") {
+    if (property.column !== "CheckBox" || !isControlInteraction) {
       if (property.isLink && event.ctrlKey) {
         const menuId = selectors.column.getLinkMenuId(property);
         const menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
