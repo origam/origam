@@ -24,7 +24,7 @@ import {T} from "../../utils/translation";
 import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
 import {IWorkbenchLifecycle} from "model/entities/types/IWorkbenchLifecycle";
 import S from "gui02/connections/CSidebar.module.scss";
-import {getLogoUrl} from "model/selectors/User/getLogoUrl";
+import {getLogoUrl} from "model/selectors/getLogoUrl";
 
 @observer
 export class CSidebar extends React.Component {
