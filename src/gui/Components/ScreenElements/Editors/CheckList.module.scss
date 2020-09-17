@@ -1,4 +1,5 @@
 @import "src/styles/common_styles.scss";
+@import "./EditorsCommon.scss";
 
 .root {
   width: 100%;
@@ -55,4 +56,8 @@
     overflow: hidden;
     white-space: nowrap;
   }
+}
+
+.editorContainer {
+  @include editorContainer;
 }
