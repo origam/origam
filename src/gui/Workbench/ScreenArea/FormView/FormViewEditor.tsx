@@ -148,6 +148,8 @@ export class FormViewEditor extends React.Component<{
             isReadOnly={readOnly}
             onChange={this.props.onChange}
             onClick={undefined}
+            isInvalid={isInvalid}
+            invalidMessage={invalidMessage}
             onKeyDown={undefined}
             tabIndex={this.props.tabIndex}
             subscribeToFocusManager={(textEditor) =>
@@ -204,6 +206,8 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
             tabIndex={this.props.tabIndex}
+            isInvalid={isInvalid}
+            invalidMessage={invalidMessage}
             subscribeToFocusManager={(firstCheckInput) =>
               focusManager.subscribe(firstCheckInput, this.props.property?.id)
             }
@@ -215,6 +219,8 @@ export class FormViewEditor extends React.Component<{
         return (
           <BlobEditor
             value={this.props.value}
+            isInvalid={isInvalid}
+            invalidMessage={invalidMessage}
             tabIndex={this.props.tabIndex}
             subscribeToFocusManager={(inputEditor) =>
               focusManager.subscribe(inputEditor, this.props.property?.id)
