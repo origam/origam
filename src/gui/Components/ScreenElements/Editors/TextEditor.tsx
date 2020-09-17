@@ -138,7 +138,11 @@ export class TextEditor extends React.Component<{
     }
     if(this.props.isReadOnly){
       return (
-        <div className={S.input}>
+        <div className={S.input}
+             onClick={this.props.onClick}
+             onDoubleClick={this.props.onDoubleClick}
+             onBlur={this.props.onEditorBlur}
+             onFocus={this.handleFocus}>
           <span style={this.getStyle()}>{this.props.value || ""}</span>
         </div>
       );
