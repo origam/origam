@@ -164,41 +164,7 @@ export class CScreenToolbar extends React.Component<{}> {
               )}
             />
           )}
-          <Dropdowner
-            style={{ width: "auto" }} // TODO: Move to stylesheet
-            trigger={({ refTrigger, setDropped }) => (
-              <ScreenToolbarAction
-                rootRef={refTrigger}
-                onClick={() => setDropped(true)}
-                //onClick={this.handleLogoutClick}
-                icon={
-                  <>
-                    <Icon src="./icons/user.svg" tooltip={""}/>
-                    {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
-                  </>
-                }
-                label={userName}
-              />
-            )}
-            content={() => (
-              <UserMenuDropdown>
-                <UserMenuBlock
-                  userName={userName || "Logged user"}
-                  avatarLink={avatarLink}
-                  actionItems={
-                    <>
-                      <DropdownItem isDisabled={true}>
-                       {T("My profile","my_profile")}
-                      </DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>
-                       {T("Log out","sign_out_tool_tip")}
-                      </DropdownItem>
-                    </>
-                  }
-                />
-              </UserMenuDropdown>
-            )}
-          />
+          {this.renderUserDropDown(userName, avatarLink)}
         </ScreenToolbar>
       </CtxResponsiveToolbar.Provider>
     );
@@ -244,41 +210,7 @@ export class CScreenToolbar extends React.Component<{}> {
           icon={<Icon src="./icons/search.svg" />}
           label="Search"
         />*/}
-        <Dropdowner
-          style={{ width: "auto" }} // TODO: Move to stylesheet
-          trigger={({ refTrigger, setDropped }) => (
-            <ScreenToolbarAction
-              rootRef={refTrigger}
-              onClick={() => setDropped(true)}
-              //onClick={this.handleLogoutClick}
-              icon={
-                <>
-                  <Icon src="./icons/user.svg" tooltip={""} />
-                  {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
-                </>
-              }
-              label={userName}
-            />
-          )}
-          content={() => (
-            <UserMenuDropdown>
-              <UserMenuBlock
-                userName={userName || "Logged user"}
-                avatarLink={avatarLink}
-                actionItems={
-                  <>
-                      <DropdownItem isDisabled={true}>
-                          {T("My profile","my_profile")}
-                      </DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>
-                          {T("Log out","sign_out_tool_tip")}
-                      </DropdownItem>
-                  </>
-                }
-              />
-            </UserMenuDropdown>
-          )}
-        />
+        {this.renderUserDropDown(userName, avatarLink)}
       </ScreenToolbar>
     );
   }
@@ -293,43 +225,47 @@ export class CScreenToolbar extends React.Component<{}> {
           icon={<Icon src="./icons/search.svg" />}
           label="Search"
         />*/}
-        <Dropdowner
-          style={{ width: "auto" }} // TODO: Move to stylesheet
-          trigger={({ refTrigger, setDropped }) => (
-            <ScreenToolbarAction
-              rootRef={refTrigger}
-              onClick={() => setDropped(true)}
-              //onClick={this.handleLogoutClick}
-              icon={
-                <>
-                  <Icon src="./icons/user.svg" tooltip={""} />
-                  {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
-                </>
-              }
-              label={userName}
-            />
-          )}
-          content={() => (
-            <UserMenuDropdown>
-              <UserMenuBlock
-                userName={userName || "Logged user"}
-                avatarLink={avatarLink}
-                actionItems={
-                  <>
-                      <DropdownItem isDisabled={true}>
-                          {T("My profile","my_profile")}
-                      </DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>
-                          {T("Log out","sign_out_tool_tip")}
-                      </DropdownItem>
-                  </>
-                }
-              />
-            </UserMenuDropdown>
-          )}
-        />
+        {this.renderUserDropDown(userName, avatarLink)}
       </ScreenToolbar>
     );
+  }
+
+  private renderUserDropDown(userName: string | undefined, avatarLink: string) {
+    return <Dropdowner
+      style={{width: "auto"}} // TODO: Move to stylesheet
+      trigger={({refTrigger, setDropped}) => (
+        <ScreenToolbarAction
+          rootRef={refTrigger}
+          onClick={() => setDropped(true)}
+          //onClick={this.handleLogoutClick}
+          icon={
+            <>
+              <Icon src="./icons/user.svg" tooltip={""}/>
+              {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
+            </>
+          }
+          label={userName}
+        />
+      )}
+      content={() => (
+        <UserMenuDropdown>
+          <UserMenuBlock
+            userName={userName || "Logged user"}
+            avatarLink={avatarLink}
+            actionItems={
+              <>
+                <DropdownItem isDisabled={true}>
+                  {T("My profile", "my_profile")}
+                </DropdownItem>
+                <DropdownItem onClick={this.handleLogoutClick}>
+                  {T("Log out", "sign_out_tool_tip")}
+                </DropdownItem>
+              </>
+            }
+          />
+        </UserMenuDropdown>
+      )}
+    />;
   }
 
   render() {
