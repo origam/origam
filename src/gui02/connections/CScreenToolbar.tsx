@@ -167,7 +167,6 @@ export class CScreenToolbar extends React.Component<{}> {
             userName={userName}
             handleLogoutClick={(event) => this.handleLogoutClick(event)}
           />
-          ;
         </ScreenToolbar>
       </CtxResponsiveToolbar.Provider>
     );
@@ -217,7 +216,6 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
         />
-        ;
       </ScreenToolbar>
     );
   }
@@ -237,7 +235,6 @@ export class CScreenToolbar extends React.Component<{}> {
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
         />
-        ;
       </ScreenToolbar>
     );
   }

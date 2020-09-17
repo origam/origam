@@ -7,16 +7,16 @@ export const UserMenuBlock: React.FC<{
   actionItems: React.ReactNode;
 }> = props => (
   <div className={S.root}>
-    <div className="avatarSection">
-      <div className="pictureSection">
-        <div className="avatarContainer">
-          <img className="avatar" src={props.avatarLink} />
+    <div className={S.avatarSection}>
+      <div className={S.pictureSection}>
+        <div className={S.avatarContainer}>
+          <img className={S.avatar} src={props.avatarLink} />
         </div>
       </div>
-      <div className="infoSection">{props.userName}</div>
+      <div className={S.infoSection}>{props.userName}</div>
     </div>
-    <div className="actionSection">
-      <div className="menuItemDivider" />
+    <div className={S.actionSection}>
+      <div className={S.menuItemDivider} />
       {props.actionItems}
     </div>
   </div>
