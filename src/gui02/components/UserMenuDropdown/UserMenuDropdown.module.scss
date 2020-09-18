@@ -1,4 +1,5 @@
 @import "src/styles/definitions.scss";
+@import "src/styles/common_styles.scss";
 
 .avatarSection {
   display: flex;
@@ -24,6 +25,10 @@
   width: 3em;
 }
 
+.clickableAvatar{
+  cursor: pointer;
+}
+
 .pictureSection {
   flex-shrink: 0;
   margin: 0 1em 0 0;
@@ -42,12 +47,19 @@
   margin: 0;
 }
 
-.userNameSection {
+.userNameLabel {
   flex-grow: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
   white-space: nowrap;
+  color: #77767e;
+  cursor: pointer;
+  @include hoverItemAnimation;
+}
+
+.userNameLabel:hover  {
+  color: #0d0d0d;
 }
 
 actionSection {
