@@ -3,6 +3,8 @@ import {observer} from "mobx-react";
 import S from './BoolEditor.module.scss';
 import cx from 'classnames';
 import {IFocusable} from "../../../../model/entities/FocusManager";
+import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
+import {Tooltip} from "react-tippy";
 
 
 @observer
@@ -15,6 +17,8 @@ export class BoolEditor extends React.Component<{
   tabIndex?: number;
   onBlur?: ()=>void;
   onFocus?: ()=>void;
+  isInvalid: boolean;
+  invalidMessage?: string;
   id?: string;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> {
@@ -56,6 +60,13 @@ export class BoolEditor extends React.Component<{
           tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           ref={this.refInput}
         />
+        {this.props.isInvalid && (
+          <div className={CS.notification}>
+            <Tooltip html={this.props.invalidMessage} arrow={true}>
+              <i className="fas fa-exclamation-circle red" />
+            </Tooltip>
+          </div>
+        )}
       </div>
     );
   }

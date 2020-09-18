@@ -24,3 +24,7 @@
   text-transform: uppercase;
 }
 
+.dataViewContentContainer {
+  position: relative;
+  flex-grow: 1;
+}

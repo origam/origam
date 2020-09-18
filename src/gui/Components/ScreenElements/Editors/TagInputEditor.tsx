@@ -77,13 +77,16 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const previousValueRef = useRef<string[]>();
 
       useEffect(() => {
-        if (
-          previousValueRef.current?.length !== props.value?.length
-        ) {
+        if (previousValueRef.current?.length !== props.value?.length) {
           beh.elmInputElement.value = "";
         }
         previousValueRef.current = props.value;
-      });
+      }, [
+        previousValueRef.current,
+        previousValueRef.current?.length,
+        props.value,
+        props.value?.length,
+      ]);
 
       function handleInputKeyDown(event: any) {
         if (event.key === "Backspace" && event.target.value === "" && props.value.length > 0) {

@@ -21,6 +21,7 @@ import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldCha
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { handleError } from "model/actions/handleError";
 import { IFocusable } from "model/entities/FocusManager";
+import {Tooltip} from "react-tippy";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -57,6 +58,8 @@ export class BlobEditor extends React.Component<{
   parameters?: any;
   tabIndex?: number;
   subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  isInvalid: boolean;
+  invalidMessage?: string;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
@@ -241,10 +244,26 @@ export class BlobEditor extends React.Component<{
   imageObjectUrl: any;
 
   render() {
+
+    return (
+    <div className={S.editorContainer}>
+      {this.renderInput()}
+      {this.props.isInvalid && (
+        <div className={S.notification}>
+          <Tooltip html={this.props.invalidMessage} arrow={true}>
+            <i className="fas fa-exclamation-circle red" />
+          </Tooltip>
+        </div>
+      )}
+    </div>
+    );
+  }
+
+  private renderInput() {
     return (
       <div className={S.blobEditor}>
         {/*this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />*/}
-        <input readOnly={true} className="fileName" value={this.props.value || ""} />
+        <input readOnly={true} className="fileName" value={this.props.value || ""}/>
         <div className="controls">
           {this.props.value && (
             <>
@@ -279,7 +298,7 @@ export class BlobEditor extends React.Component<{
         </div>
         {this.isUploading && (
           <div className="progress">
-            <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
+            <div className="progressBar" style={{width: `${this.progressValue * 100}%`}}>
               {(this.progressValue * 100).toFixed(0)}%
             </div>
           </div>

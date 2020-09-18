@@ -10,6 +10,8 @@ import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
 import {IFocusable} from "../../../../model/entities/FocusManager";
+import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
+import {Tooltip} from "react-tippy";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -26,6 +28,8 @@ export interface IRawCheckListProps {
   Parameters: any;
   menuItemId: string;
   tabIndex?: number;
+  isInvalid: boolean;
+  invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 
   onChange?(newValue: string[]): void;
@@ -65,6 +69,7 @@ export class CheckListControler {
   }
 
   @action.bound handleClick(event: any, item: { value: string; label: string }) {
+    console.log("Clicked")
     event.preventDefault();
     const currentIndex = this.props.value.findIndex((id) => item.value === id);
     if (currentIndex > -1) {
@@ -85,6 +90,8 @@ export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
   tabIndex?: number;
+  isInvalid: boolean;
+  invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
@@ -105,6 +112,8 @@ export const CheckList: React.FC<{
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
       tabIndex={props.tabIndex}
+      isInvalid={props.isInvalid}
+      invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
     />
   );
@@ -156,23 +165,32 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
 
 
   return (
-    <div className={S.root}>
-      {controller.items.map((item, i) => (
-        <CheckListItem
-          key={item.value}
-          checked={!!props.value.find((v) => v === item.value)}
-          onClick={(event) => {
-            controller.handleClick(event, item);
-          }}
-          tabIndex={i === 0 ? props.tabIndex : -1}
-          subscribeToFocusManager={i === 0 ? props.subscribeToFocusManager : undefined}
-          inputSetter={(inputRef: InputReference) => inputRefs.push(inputRef)}
-          focusLeft={focusLeft}
-          focusRight={focusRight}
-          focusUp={focusUp}
-          focusDown={focusDown}
-          label={item.label}/>
-      ))}
+    <div className={S.editorContainer}>
+      <div className={S.root}>
+        {controller.items.map((item, i) => (
+          <CheckListItem
+            key={item.value}
+            checked={!!props.value.find((v) => v === item.value)}
+            onClick={(event) => {
+              controller.handleClick(event, item);
+            }}
+            tabIndex={i === 0 ? props.tabIndex : -1}
+            subscribeToFocusManager={i === 0 ? props.subscribeToFocusManager : undefined}
+            inputSetter={(inputRef: InputReference) => inputRefs.push(inputRef)}
+            focusLeft={focusLeft}
+            focusRight={focusRight}
+            focusUp={focusUp}
+            focusDown={focusDown}
+            label={item.label}/>
+        ))}
+      </div>
+      {props.isInvalid && (
+        <div className={CS.notification}>
+          <Tooltip html={props.invalidMessage} arrow={true}>
+            <i className="fas fa-exclamation-circle red" />
+          </Tooltip>
+        </div>
+      )}
     </div>
   );
 });
@@ -224,10 +242,6 @@ export const CheckListItem: React.FC<{
     }
   }
 
-  function onLabelClick(){
-    refInput?.current?.focus();
-  }
-
   function onInputFocus(){
     setIsFocused(true);
   }
@@ -236,11 +250,16 @@ export const CheckListItem: React.FC<{
     setIsFocused(false);
   }
 
+  function onClick(event: any){
+    props.onClick && props.onClick(event);
+    refInput?.current?.focus();
+  }
+
   const refInput = useRef<HTMLInputElement>(null);
   props.inputSetter(new InputReference(refInput));
 
   return (
-    <div className={S.item} onClick={props.onClick}>
+    <div className={S.item} onClick={onClick}>
       <input
         ref={refInput}
         type="checkbox"
@@ -251,8 +270,7 @@ export const CheckListItem: React.FC<{
         onFocus={onInputFocus}
         onBlur={onInputBlur}
       />
-      <div className={"content "+(isFocused ? S.focusedLabel : S.unFocusedLabel)}
-           onClick={onLabelClick}>
+      <div className={"content "+(isFocused ? S.focusedLabel : S.unFocusedLabel)}>
         {props.label}
       </div>
     </div>

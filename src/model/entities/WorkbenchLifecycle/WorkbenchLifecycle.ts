@@ -38,9 +38,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   @observable
   notificationBox: any;
-
   @observable
   userInfo: IUserInfo | undefined;
+  @observable
+  logoUrl: string | undefined;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const { type, id, label, dialogWidth, dialogHeight, dontRequestData } = args.item.attributes;
@@ -295,8 +296,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     this.startNotificationBoxPolling(portalInfo.notificationBoxRefreshInterval);
     this.userInfo = {
       userName: portalInfo.userName,
-      avatarLink: portalInfo.avatarLink
+      avatarLink: portalInfo.avatarLink,
     }
+    this.logoUrl = portalInfo.logoUrl;
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));

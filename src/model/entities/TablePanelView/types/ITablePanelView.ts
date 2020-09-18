@@ -1,10 +1,10 @@
-import {IFilterConfiguration} from "../../types/IFilterConfiguration";
-import {IProperty} from "../../types/IProperty";
-import {IColumnConfigurationDialog} from "./IColumnConfigurationDialog";
-import {IOrderingConfiguration} from "model/entities/types/IOrderingConfiguration";
-import {IGroupingConfiguration} from "model/entities/types/IGroupingConfiguration";
-import {AggregationContainer} from "../TablePanelView";
-import {ICellRectangle} from "./ICellRectangle";
+import { IFilterConfiguration } from "../../types/IFilterConfiguration";
+import { IProperty } from "../../types/IProperty";
+import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
+import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
+import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
+import { AggregationContainer } from "../TablePanelView";
+import { ICellRectangle } from "./ICellRectangle";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
@@ -44,7 +44,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   getCellValueByIdx(rowIdx: number, columnIdx: number): any;
   getCellTextByIdx(rowIdx: number, columnIdx: number): any;
 
-  onCellClick(event: any, row: any[], columnId: string): Generator;
+  onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean): Generator;
   onNoCellClick(): Generator;
   onOutsideTableClick(): Generator;
 
@@ -57,14 +57,9 @@ export interface ITablePanelView extends ITablePanelViewData {
 
   columnOrderChangingTargetId: string | undefined;
   columnOrderChangingSourceId: string | undefined;
-  setColumnOrderChangeAttendants(
-    idSource: string | undefined,
-    idTarget: string | undefined
-  ): void;
+  setColumnOrderChangeAttendants(idSource: string | undefined, idTarget: string | undefined): void;
 
-  subOnScrollToCellShortest(
-    fn: (rowIdx: number, columnIdx: number) => void
-  ): () => void;
+  subOnScrollToCellShortest(fn: (rowIdx: number, columnIdx: number) => void): () => void;
   subOnFocusTable(fn: () => void): () => void;
 
   scrollToCurrentCell(): void;

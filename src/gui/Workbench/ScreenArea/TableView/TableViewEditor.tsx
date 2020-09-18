@@ -121,6 +121,7 @@ export class TableViewEditor extends React.Component<{
           <BoolEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
+            isInvalid={false}
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={this.props.onEditorKeyDown}
@@ -163,7 +164,9 @@ export class TableViewEditor extends React.Component<{
           />
         );
       case "Blob":
-        return <BlobEditor value={this.props.getCellValue!()} />;
+        return <BlobEditor
+          value={this.props.getCellValue!()}
+          isInvalid={false}/>;
       default:
         return "Unknown field";
     }

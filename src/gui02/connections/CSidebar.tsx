@@ -24,6 +24,7 @@ import {T} from "../../utils/translation";
 import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
 import {IWorkbenchLifecycle} from "model/entities/types/IWorkbenchLifecycle";
 import S from "gui02/connections/CSidebar.module.scss";
+import {getLogoUrl} from "model/selectors/getLogoUrl";
 
 @observer
 export class CSidebar extends React.Component {
@@ -93,13 +94,14 @@ export class CSidebar extends React.Component {
 
   render() {
     const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
+    const logoUrl = getLogoUrl(this.workbench);
     return (
       <Sidebar>
         <LogoSection>
           <div className={S.logoLeft}>
             {this.workbenchLifecycle?.notificationBox
               ? <div dangerouslySetInnerHTML={{ __html:this.workbenchLifecycle.notificationBox}}/>
-              : <img src="./img/logo-left.png" />}
+              : <img src={logoUrl} />}
           </div>
         </LogoSection>
         <SidebarSection
