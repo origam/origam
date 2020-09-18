@@ -23,6 +23,7 @@ import {getDataView} from "../../../../model/selectors/DataView/getDataView";
 import uiActions from "../../../../model/actions-ui-tree";
 import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -141,27 +142,29 @@ export class TableViewEditor extends React.Component<{
         return "";
       case "TagInput":
         return (
-          <XmlBuildDropdownEditor
-            key={this.props.property!.xmlNode.$iid}
-            xmlNode={this.props.property!.xmlNode}
-            isReadOnly={readOnly}
-            tagEditor={
-               <TagInputEditor
-                value={this.props.getCellValue!()}
-                isReadOnly={readOnly}
-                isInvalid={false}
-                isFocused={false}
-                backgroundColor={backgroundColor}
-                foregroundColor={foregroundColor}
-                refocuser={undefined}
-                onChange={this.props.onChange}
-                onKeyDown={undefined}
-                onClick={undefined}
-                onDoubleClick={event => this.onDoubleClick(event)}
-                onEditorBlur={this.props.onEditorBlur}
-              />
-            }
-          />
+          <div style={{height: rowHeight * 5+"px", backgroundColor: "white"}}>
+            <XmlBuildDropdownEditor
+              key={this.props.property!.xmlNode.$iid}
+              xmlNode={this.props.property!.xmlNode}
+              isReadOnly={readOnly}
+              tagEditor={
+                 <TagInputEditor
+                  value={this.props.getCellValue!()}
+                  isReadOnly={readOnly}
+                  isInvalid={false}
+                  isFocused={false}
+                  backgroundColor={backgroundColor}
+                  foregroundColor={foregroundColor}
+                  refocuser={undefined}
+                  onChange={this.props.onChange}
+                  onKeyDown={undefined}
+                  onClick={undefined}
+                  onDoubleClick={event => this.onDoubleClick(event)}
+                  onEditorBlur={this.props.onEditorBlur}
+                />
+              }
+            />
+          </div>
         );
       case "Blob":
         return <BlobEditor
