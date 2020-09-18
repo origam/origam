@@ -81,7 +81,7 @@ export class Property implements IProperty {
 
   @action.bound
   stop() {
-    this.lookupEngine?.teardown();
+    
   }
 
   parent: any;

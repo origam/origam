@@ -1,18 +1,20 @@
 import React from "react";
-import {action, flow} from "mobx";
-import {IDataViewBodyUI, IDataViewToolbarUI} from "modules/DataView/DataViewUI";
-import {TypeSymbol} from "dic/Container";
-import {SectionViewSwitchers} from "modules/DataView/DataViewTypes";
-import {getIdent, IIId} from "utils/common";
-import {DataViewHeaderAction} from "gui02/components/DataViewHeader/DataViewHeaderAction";
-import {Icon} from "gui02/components/Icon/Icon";
+import { action, flow } from "mobx";
+import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
+import { TypeSymbol } from "dic/Container";
+import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
+import { getIdent, IIId } from "utils/common";
+import { DataViewHeaderAction } from "gui02/components/DataViewHeader/DataViewHeaderAction";
+import { Icon } from "gui02/components/Icon/Icon";
 
-import {Observer} from "mobx-react";
-import {IFormPerspective} from "./FormPerspective";
-import {IPerspective} from "../Perspective";
-import {FormView} from "gui/Workbench/ScreenArea/FormView/FormView";
-import {FormBuilder} from "gui/Workbench/ScreenArea/FormView/FormBuilder";
-import {T} from "../../../../utils/translation";
+import { Observer } from "mobx-react";
+import { IFormPerspective } from "./FormPerspective";
+import { IPerspective } from "../Perspective";
+import { FormView } from "gui/Workbench/ScreenArea/FormView/FormView";
+import { FormBuilder } from "gui/Workbench/ScreenArea/FormView/FormBuilder";
+import { T } from "../../../../utils/translation";
+import S from "./FormPerspectiveDirector.module.scss";
+import cx from "classnames";
 
 export class FormPerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -34,16 +36,7 @@ export class FormPerspectiveDirector implements IIId {
             !this.formPerspective.isActive ? (
               <></>
             ) : (
-              <div
-                style={{
-                  // width: "100%",
-                  // height: "100%",
-                  flexGrow: 1,
-                  flexDirection: "column",
-                  position: "relative",
-                  display: !this.formPerspective.isActive ? "none" : "flex",
-                }}
-              >
+              <div className={cx(S.root, { isActive: this.formPerspective.isActive })}>
                 <FormView>
                   <FormBuilder />
                 </FormView>
@@ -64,7 +57,7 @@ export class FormPerspectiveDirector implements IIId {
               onClick={flow(this.formPerspective.handleToolbarBtnClick)}
               isActive={this.formPerspective.isActive}
             >
-              <Icon src="./icons/detail-view.svg" tooltip={T("Grid","form_tool_tip")}/>
+              <Icon src="./icons/detail-view.svg" tooltip={T("Grid", "form_tool_tip")} />
             </DataViewHeaderAction>
           )}
         </Observer>

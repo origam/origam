@@ -539,21 +539,19 @@ export function interpretScreenXml(
 
     const { lookupMultiEngine } = workbench;
 
-    const lookupEngineById = new Map<string, ILookupIndividualEngine>();
-
     for (let property of dv.properties) {
       if (property.isLookup && property.lookupId) {
         const { lookupId } = property;
-        if (!lookupEngineById.has(lookupId)) {
+        if (!lookupMultiEngine.lookupEngineById.has(lookupId)) {
           const lookupIndividualEngine = createIndividualLookupEngine(lookupId, lookupMultiEngine);
           lookupMultiEngine.lookupCleanerReloaderById.set(
             lookupId,
             lookupIndividualEngine.lookupCleanerReloader
           );
           lookupIndividualEngine.startup();
-          lookupEngineById.set(lookupId, lookupIndividualEngine);
+          lookupMultiEngine.lookupEngineById.set(lookupId, lookupIndividualEngine);
         }
-        const lookupIndividualEngine = lookupEngineById.get(lookupId)!;
+        const lookupIndividualEngine = lookupMultiEngine.lookupEngineById.get(lookupId)!;
         property.lookupEngine = lookupIndividualEngine;
       }
     }

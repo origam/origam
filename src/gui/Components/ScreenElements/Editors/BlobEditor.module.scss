@@ -1,4 +1,5 @@
 @import "src/styles/common_styles.scss";
+@import "./EditorsCommon.scss";
 
 .blobEditor {
   width: 100%;
@@ -126,4 +127,12 @@
 
 .dialogContent {
   padding: 10px;
+}
+
+.editorContainer {
+  @include editorContainer;
+}
+
+.notification {
+  @include notification;
 }
