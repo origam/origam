@@ -15,13 +15,7 @@
     "IdentityGuiConfig": {
         "PathToBrandIcon": "icons/origam.png"
     },
-		"CustomAssetsConfig": {
-		"PathToCustomAssetsFolder": "/home/origam/HTML5/data/OrigamSettings_ModelName/customAssets",
-		"RouteToCustomAssetsFolder": "/customAssets",
-		"IdentityGuiLogoUrl": "/customAssets/login-logo.png",
-		"Html5ClientLogoUrl": "/customAssets/logo-left.png"
-    },
-    "IdentityServerConfig": {
+	"IdentityServerConfig": {
         "PathToJwtCertificate": "serverCore.pfx",
         "PasswordForJwtCertificate": "certpassword",
         "UseGoogleLogin": "false",
