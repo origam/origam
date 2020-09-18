@@ -135,5 +135,6 @@ namespace Origam.Server
             set { _maxRequestLength = value; }
         }
 
+        public string LogoUrl { get; set; }
     }
 }

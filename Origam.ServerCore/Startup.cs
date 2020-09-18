@@ -128,6 +128,7 @@ namespace Origam.ServerCore
                 provider => provider.GetService<IHttpContextAccessor>().HttpContext?.User);
             services.Configure<UserConfig>(options => Configuration.GetSection("UserConfig").Bind(options));
             services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
+            services.Configure<CustomAssetsConfig>(options => Configuration.GetSection("CustomAssetsConfig").Bind(options));
             services.Configure<UserLockoutConfig>(options => Configuration.GetSection("UserLockoutConfig").Bind(options));
 
             IIdentityServerBuilder serverBuilder = services.AddIdentityServer()
@@ -225,6 +226,15 @@ namespace Origam.ServerCore
                 FileProvider =  new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets")),
                 RequestPath = new PathString("/assets")
             });
+            if (startUpConfiguration.HasCustomAssets)
+            {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToCustomAssetsFolder),
+                    RequestPath = new PathString(startUpConfiguration.RouteToCustomAssetsFolder)
+                });
+            }
+
             if(!string.IsNullOrEmpty(startUpConfiguration.PathToChatApp))
             {
                 app.UseStaticFiles(new StaticFileOptions()
