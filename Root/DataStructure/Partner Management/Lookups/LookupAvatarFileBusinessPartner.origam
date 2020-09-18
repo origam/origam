@@ -54,6 +54,30 @@
         useLookupValue="false"
         writeOnly="false"
         xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Name/7a5f60a2-895a-49d7-b009-929b4a6a4c5a"
+        x:id="c2f5fd38-ea32-44f2-999f-da95e02db6b9"
+        name="Name"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstName/6d9c8b71-337e-4572-87ff-1dd7e1fa3c53"
+        x:id="a4f5e183-a346-483d-994e-966c958879cf"
+        name="FirstName"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
     </DataStructureEntity>
     <DataStructureFilterSet
       abstract="false"
