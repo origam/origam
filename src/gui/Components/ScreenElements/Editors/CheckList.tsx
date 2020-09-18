@@ -69,6 +69,7 @@ export class CheckListControler {
   }
 
   @action.bound handleClick(event: any, item: { value: string; label: string }) {
+    console.log("Clicked")
     event.preventDefault();
     const currentIndex = this.props.value.findIndex((id) => item.value === id);
     if (currentIndex > -1) {
@@ -241,10 +242,6 @@ export const CheckListItem: React.FC<{
     }
   }
 
-  function onLabelClick(){
-    refInput?.current?.focus();
-  }
-
   function onInputFocus(){
     setIsFocused(true);
   }
@@ -253,11 +250,16 @@ export const CheckListItem: React.FC<{
     setIsFocused(false);
   }
 
+  function onClick(event: any){
+    props.onClick && props.onClick(event);
+    refInput?.current?.focus();
+  }
+
   const refInput = useRef<HTMLInputElement>(null);
   props.inputSetter(new InputReference(refInput));
 
   return (
-    <div className={S.item} onClick={props.onClick}>
+    <div className={S.item} onClick={onClick}>
       <input
         ref={refInput}
         type="checkbox"
@@ -268,8 +270,7 @@ export const CheckListItem: React.FC<{
         onFocus={onInputFocus}
         onBlur={onInputBlur}
       />
-      <div className={"content "+(isFocused ? S.focusedLabel : S.unFocusedLabel)}
-           onClick={onLabelClick}>
+      <div className={"content "+(isFocused ? S.focusedLabel : S.unFocusedLabel)}>
         {props.label}
       </div>
     </div>
