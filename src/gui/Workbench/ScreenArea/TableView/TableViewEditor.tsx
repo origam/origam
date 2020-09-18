@@ -175,10 +175,10 @@ export class TableViewEditor extends React.Component<{
   onDoubleClick(event: any){
     getTablePanelView(this.props.property).setEditing(false);
     const dataView = getDataView(this.props.property);
-    if (!dataView.defaultAction) {
+    if (!dataView.firstEnabledDefaultAction) {
       return;
     }
-    uiActions.actions.onActionClick(dataView.defaultAction)(event, dataView.defaultAction);
+    uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(event, dataView.firstEnabledDefaultAction);
   };
 
 

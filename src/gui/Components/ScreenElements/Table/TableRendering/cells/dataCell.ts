@@ -89,8 +89,8 @@ function registerClickHandler(columnId: string) {
         flow(function* () {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
-            const defaultAction = getDataView(ctx).defaultAction;
-            if (defaultAction && defaultAction.isEnabled) {
+            const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
+            if (defaultAction) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
           } else {
@@ -113,7 +113,7 @@ function registerClickHandler(columnId: string) {
         flow(function* () {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
-            const defaultAction = getDataView(ctx).defaultAction;
+            const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
             if (defaultAction && defaultAction.isEnabled) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
@@ -138,7 +138,7 @@ function registerClickHandler(columnId: string) {
         flow(function* () {
           if (event.isDouble) {
             getTablePanelView(ctx).setEditing(false);
-            const defaultAction = getDataView(ctx).defaultAction;
+            const defaultAction = getDataView(ctx).firstEnabledDefaultAction;
             if (defaultAction && defaultAction.isEnabled) {
               yield actionsUi.actions.onActionClick(ctx)(event, defaultAction);
             }
