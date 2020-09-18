@@ -77,11 +77,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const previousValueRef = useRef<string[]>();
 
       useEffect(() => {
-        if (
-          previousValueRef.current &&
-          props.value &&
-          previousValueRef.current.length !== props.value.length
-        ) {
+        if (previousValueRef.current?.length !== props.value?.length) {
           beh.elmInputElement.value = "";
         }
         previousValueRef.current = props.value;

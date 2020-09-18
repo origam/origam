@@ -1,40 +1,37 @@
-import {Icon} from "gui02/components/Icon/Icon";
-import {ScreenToolbar} from "gui02/components/ScreenToolbar/ScreenToolbar";
-import {ScreenToolbarAction} from "gui02/components/ScreenToolbar/ScreenToolbarAction";
-import {ScreenToolbarPusher} from "gui02/components/ScreenToolbar/ScreenToolbarPusher";
-import {MobXProviderContext, observer} from "mobx-react";
-import {IApplication} from "model/entities/types/IApplication";
-import React, {Fragment,} from "react";
-import {action} from "mobx";
-import {onScreenToolbarLogoutClick} from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
-import {ScreenToolbarActionGroup} from "gui02/components/ScreenToolbar/ScreenToolbarActionGroup";
-import {getActiveScreen} from "model/selectors/getActiveScreen";
-import {onSaveSessionClick} from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
-import {onRefreshSessionClick} from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
-import {getActiveScreenActions} from "model/selectors/getActiveScreenActions";
-import {getIsEnabledAction} from "model/selectors/Actions/getIsEnabledAction";
+import { Icon } from "gui02/components/Icon/Icon";
+import { ScreenToolbar } from "gui02/components/ScreenToolbar/ScreenToolbar";
+import { ScreenToolbarAction } from "gui02/components/ScreenToolbar/ScreenToolbarAction";
+import { ScreenToolbarPusher } from "gui02/components/ScreenToolbar/ScreenToolbarPusher";
+import { MobXProviderContext, observer } from "mobx-react";
+import { IApplication } from "model/entities/types/IApplication";
+import React, { Fragment } from "react";
+import { action } from "mobx";
+import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
+import { ScreenToolbarActionGroup } from "gui02/components/ScreenToolbar/ScreenToolbarActionGroup";
+import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
+import { onRefreshSessionClick } from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
+import { getActiveScreenActions } from "model/selectors/getActiveScreenActions";
+import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 
 import uiActions from "model/actions-ui-tree";
-import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import {UserMenuDropdown} from "gui02/components/UserMenuDropdown/UserMenuDropdown";
-import {UserMenuBlock} from "gui02/components/UserMenuDropdown/UserMenuBlock";
-import {getLoggedUserName} from "model/selectors/User/getLoggedUserName";
-import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
-import {onReloadWebScreenClick} from "model/actions-ui/ScreenToolbar/onReloadWebScreen";
-import {isIFormScreenEnvelope} from "model/entities/types/IFormScreen";
-import {isIWebScreen} from "model/entities/types/IWebScreen";
-import {getIsSuppressSave} from "model/selectors/FormScreen/getIsSuppressSave";
-import {Dropdown} from "gui02/components/Dropdown/Dropdown";
-import {IAction} from "model/entities/types/IAction";
+import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
+import { UserMenuDropdown } from "gui02/components/UserMenuDropdown/UserMenuDropdown";
+import { getLoggedUserName } from "model/selectors/User/getLoggedUserName";
+import { onReloadWebScreenClick } from "model/actions-ui/ScreenToolbar/onReloadWebScreen";
+import { isIFormScreenEnvelope } from "model/entities/types/IFormScreen";
+import { isIWebScreen } from "model/entities/types/IWebScreen";
+import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
+import { Dropdown } from "gui02/components/Dropdown/Dropdown";
+import { IAction } from "model/entities/types/IAction";
 import {
   CtxResponsiveToolbar,
   ResponsiveBlock,
   ResponsiveChild,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
-import {T} from "../../utils/translation";
-import {getUserAvatarLink} from "model/selectors/User/getUserAvatarLink";
-
+import { T } from "../../utils/translation";
+import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -103,16 +100,18 @@ export class CScreenToolbar extends React.Component<{}> {
                       <Icon
                         src="./icons/save.svg"
                         className={isDirty ? "isRed isHoverGreen" : ""}
-                        tooltip={T("Save","save_tool_tip")}
+                        tooltip={T("Save", "save_tool_tip")}
                       />
                     }
-                    label={T("Save","save_tool_tip")}
+                    label={T("Save", "save_tool_tip")}
                   />
                 )}
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(formScreen)}
-                  icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh","refresh_tool_tip")}/>}
-                  label={T("Refresh","refresh_tool_tip")}
+                  icon={
+                    <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />
+                  }
+                  label={T("Refresh", "refresh_tool_tip")}
                 />
               </ScreenToolbarActionGroup>
               <ResponsiveContainer>
@@ -146,7 +145,6 @@ export class CScreenToolbar extends React.Component<{}> {
               </ResponsiveContainer>
             </>
           ) : null}
-
           {this.state.hiddenActionIds.size > 0 && (
             <Dropdowner
               style={{ width: "auto" }}
@@ -155,7 +153,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   rootRef={refTrigger}
                   onClick={() => setDropped(true)}
                   //onClick={this.handleLogoutClick}
-                  icon={<Icon src="./icons/dot-menu.svg" tooltip={""}/>}
+                  icon={<Icon src="./icons/dot-menu.svg" tooltip={""} />}
                   label={userName}
                 />
               )}
@@ -164,40 +162,10 @@ export class CScreenToolbar extends React.Component<{}> {
               )}
             />
           )}
-          <Dropdowner
-            style={{ width: "auto" }} // TODO: Move to stylesheet
-            trigger={({ refTrigger, setDropped }) => (
-              <ScreenToolbarAction
-                rootRef={refTrigger}
-                onClick={() => setDropped(true)}
-                //onClick={this.handleLogoutClick}
-                icon={
-                  <>
-                    <Icon src="./icons/user.svg" tooltip={""}/>
-                    {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
-                  </>
-                }
-                label={userName}
-              />
-            )}
-            content={() => (
-              <UserMenuDropdown>
-                <UserMenuBlock
-                  userName={userName || "Logged user"}
-                  avatarLink={avatarLink}
-                  actionItems={
-                    <>
-                      <DropdownItem isDisabled={true}>
-                       {T("My profile","my_profile")}
-                      </DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>
-                       {T("Log out","sign_out_tool_tip")}
-                      </DropdownItem>
-                    </>
-                  }
-                />
-              </UserMenuDropdown>
-            )}
+          <UserMenuDropdown
+            avatarLink={avatarLink}
+            userName={userName}
+            handleLogoutClick={(event) => this.handleLogoutClick(event)}
           />
         </ScreenToolbar>
       </CtxResponsiveToolbar.Provider>
@@ -223,7 +191,7 @@ export class CScreenToolbar extends React.Component<{}> {
               />*/}
             <ScreenToolbarAction
               onClick={onReloadWebScreenClick(activeScreen)}
-              icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh","refresh_tool_tip")} />}
+              icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
             />
           </ScreenToolbarActionGroup>
 
@@ -238,46 +206,15 @@ export class CScreenToolbar extends React.Component<{}> {
               />
             </ScreenToolbarActionGroup>*/}
         </>
-
         <ScreenToolbarPusher />
         {/*<ScreenToolbarAction
           icon={<Icon src="./icons/search.svg" />}
           label="Search"
         />*/}
-        <Dropdowner
-          style={{ width: "auto" }} // TODO: Move to stylesheet
-          trigger={({ refTrigger, setDropped }) => (
-            <ScreenToolbarAction
-              rootRef={refTrigger}
-              onClick={() => setDropped(true)}
-              //onClick={this.handleLogoutClick}
-              icon={
-                <>
-                  <Icon src="./icons/user.svg" tooltip={""} />
-                  {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
-                </>
-              }
-              label={userName}
-            />
-          )}
-          content={() => (
-            <UserMenuDropdown>
-              <UserMenuBlock
-                userName={userName || "Logged user"}
-                avatarLink={avatarLink}
-                actionItems={
-                  <>
-                      <DropdownItem isDisabled={true}>
-                          {T("My profile","my_profile")}
-                      </DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>
-                          {T("Log out","sign_out_tool_tip")}
-                      </DropdownItem>
-                  </>
-                }
-              />
-            </UserMenuDropdown>
-          )}
+        <UserMenuDropdown
+          avatarLink={avatarLink}
+          userName={userName}
+          handleLogoutClick={(event) => this.handleLogoutClick(event)}
         />
       </ScreenToolbar>
     );
@@ -293,40 +230,10 @@ export class CScreenToolbar extends React.Component<{}> {
           icon={<Icon src="./icons/search.svg" />}
           label="Search"
         />*/}
-        <Dropdowner
-          style={{ width: "auto" }} // TODO: Move to stylesheet
-          trigger={({ refTrigger, setDropped }) => (
-            <ScreenToolbarAction
-              rootRef={refTrigger}
-              onClick={() => setDropped(true)}
-              //onClick={this.handleLogoutClick}
-              icon={
-                <>
-                  <Icon src="./icons/user.svg" tooltip={""} />
-                  {/*<ScreenToolbarAlertCounter>5</ScreenToolbarAlertCounter>*/}
-                </>
-              }
-              label={userName}
-            />
-          )}
-          content={() => (
-            <UserMenuDropdown>
-              <UserMenuBlock
-                userName={userName || "Logged user"}
-                avatarLink={avatarLink}
-                actionItems={
-                  <>
-                      <DropdownItem isDisabled={true}>
-                          {T("My profile","my_profile")}
-                      </DropdownItem>
-                      <DropdownItem onClick={this.handleLogoutClick}>
-                          {T("Log out","sign_out_tool_tip")}
-                      </DropdownItem>
-                  </>
-                }
-              />
-            </UserMenuDropdown>
-          )}
+        <UserMenuDropdown
+          avatarLink={avatarLink}
+          userName={userName}
+          handleLogoutClick={(event) => this.handleLogoutClick(event)}
         />
       </ScreenToolbar>
     );

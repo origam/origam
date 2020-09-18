@@ -1,62 +1,84 @@
 @import "src/styles/definitions.scss";
+@import "src/styles/common_styles.scss";
+
+.avatarSection {
+  display: flex;
+  flex-direction: row;
+  padding: 1em;
+}
+
+.avatarContainer {
+  display: flex;
+  flex-direction: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid $grey2;
+  height: 3em;
+  width: 3em;
+  overflow: hidden;
+}
+
+.avatar {
+  width: 3em;
+}
+
+.clickableAvatar{
+  cursor: pointer;
+}
+
+.pictureSection {
+  flex-shrink: 0;
+  margin: 0 1em 0 0;
+  width: 3em;
+}
+
+.infoSection {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  font-size: $h2-fontsize;
+  line-height: $h2-lineheight;
+  font-weight: 700;
+  margin: 0;
+}
+
+.userNameLabel {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  color: #77767e;
+  cursor: pointer;
+  @include hoverItemAnimation;
+}
+
+.userNameLabel:hover  {
+  color: #0d0d0d;
+}
+
+actionSection {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid $grey2;
+  margin: 0;
+  padding: 0;
+
+}
+
+menuItemDivider {
+  height:1px;
+  border-top: 1px solid #cecece;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: none;
+}
 
 .root {
   min-width: 250px;
-
-  :global(.avatarSection) {
-    display: flex;
-    flex-direction: row;
-    padding: 1em;
-
-    :global(.pictureSection) {
-      flex-shrink: 0;
-      margin: 0 1em 0 0;
-      width: 3em;
-
-      :global(.avatarContainer) {
-        display: flex;
-        flex-direction: center;
-        align-items: center;
-        justify-content: center;
-        border-radius: 22px;
-        background-size: cover;
-        background-position: center;
-        border: 1px solid $grey2;
-        height: 3em;
-        width: 3em;
-        overflow: hidden;
-
-        :global(.avatar) {
-          width: 3em;
-        }
-      }
-    }
-
-    :global(.infoSection) {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      white-space: nowrap;
-      font-size: $h2-fontsize;
-      line-height: $h2-lineheight;
-      font-weight: 700;
-      margin: 0;
-    }
-  }
-
-  :global(.actionSection) {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid $grey2;
-    margin: 0;
-    padding: 0;
-    :global(.menuItemDivider) {
-      height:1px;
-      border-top: 1px solid #cecece;
-      margin-top: 5px;
-      margin-bottom: 5px;
-      display: none;
-    }
-  }
 }
