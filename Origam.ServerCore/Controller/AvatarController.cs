@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 using System;
 using System.Data;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
@@ -44,17 +45,34 @@ namespace Origam.ServerCore.Controller
                Guid.Empty, Guid.Empty, null, parameters);
             if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
             {
-                return Ok();
+                return NotFound();
             }
-            DataRow dataAvatar = datasetUsersForInvite.Tables[0].Rows[0];
-            byte[] imageBytes = dataAvatar.Field<byte[]>("AvatarFile");
+            DataRow userRow = datasetUsersForInvite.Tables[0].Rows[0];
+            byte[] imageBytes = userRow.Field<byte[]>("AvatarFile");
             if (imageBytes == null)
             {
-                return Ok();
+                return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
             }
-            return File(imageBytes, HttpTools.GetMimeType(dataAvatar.Field<string>("AvatarFilename")));
+            return File(imageBytes, HttpTools.GetMimeType(userRow.Field<string>("AvatarFilename")));
         }
-        
+
+        private static string MakeInitialsSvg(DataRow userRow)
+        {
+            string name = userRow.Field<string>("Name");
+            string firstName = userRow.Field<string>("FirstName");
+            string initials = "";
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                initials += firstName.First().ToString().ToUpper();
+            }
+            initials += name.First().ToString().ToUpper();
+            string userSvg =
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 25 25\">" +
+                    $"<text x=\"50%\" y=\"55%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"monospace\" fill=\"black\">{initials}</text>" +
+                "</svg>";
+            return userSvg;
+        }
+
         private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
                                 string transactionId, 
                                 QueryParameterCollection parameters)
