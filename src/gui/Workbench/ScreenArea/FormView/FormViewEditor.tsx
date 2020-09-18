@@ -239,11 +239,11 @@ export class FormViewEditor extends React.Component<{
       if (this.props.property!.multiline) {
         return;
       }
-      if (!dataView.defaultAction) {
+      if (!dataView.firstEnabledDefaultAction) {
         return;
       }
       if (event.key === "Enter") {
-        uiActions.actions.onActionClick(dataView.defaultAction)(event, dataView.defaultAction);
+        uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(event, dataView.firstEnabledDefaultAction);
       }
     };
   }

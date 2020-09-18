@@ -87,7 +87,8 @@ export interface IDataView extends IDataViewData {
   toolbarActions: IAction[];
   dialogActions: IAction[];
   focusManager: FocusManager;
-  defaultAction: IAction | undefined;
+  firstEnabledDefaultAction: IAction | undefined;
+  defaultActions: IAction[];
 
   isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
