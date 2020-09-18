@@ -29,6 +29,12 @@ export class DataTable implements IDataTable {
     );
   }
 
+  rowRemovedListeners: (()=>void)[] = [];
+
+  notifyRowRemovedListeners(){
+    this.rowRemovedListeners.forEach(listener => listener());
+  }
+
   get allRows() {
     return this.rowsContainer.rows;
   }
@@ -331,6 +337,7 @@ export class DataTable implements IDataTable {
   deleteRow(row: any[]): void {
     this.deleteAdditionalRowData(row);
     this.rowsContainer.delete(row);
+    this.notifyRowRemovedListeners();
   }
 
   @action.bound
@@ -357,6 +364,7 @@ export class DataTable implements IDataTable {
   clear(): void {
     this.rowsContainer.clear();
     this.additionalRowData.clear();
+    this.notifyRowRemovedListeners();
   }
 
   unlockAddedRowPosition(): void {

@@ -73,6 +73,7 @@ export class DataView implements IDataView {
     });
 
     this.orderProperty = this.properties.find(prop => prop.name === this.orderMember)!;
+    this.dataTable.rowRemovedListeners.push(() => this.selectAllCheckboxChecked = false);
   }
 
   orderProperty: IProperty;

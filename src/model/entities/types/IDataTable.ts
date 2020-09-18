@@ -25,6 +25,7 @@ export interface IDataTable {
   groups: IGroupTreeNode[];
   rowsContainer: IRowsContainer;
   isEmpty: boolean;
+  rowRemovedListeners: (()=>void)[];
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
