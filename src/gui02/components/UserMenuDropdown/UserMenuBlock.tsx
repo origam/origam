@@ -3,7 +3,7 @@ import S from "./UserMenuDropdown.module.scss";
 
 export const UserMenuBlock: React.FC<{
   userName: string;
-  avatarLink: string;
+  avatarLink: string | undefined;
   actionItems: React.ReactNode;
 }> = props => (
   <div className={S.root}>

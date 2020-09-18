@@ -9,7 +9,7 @@ import S from "./UserMenuDropdown.module.scss";
 
 export const UserMenuDropdown: React.FC<{
   handleLogoutClick: (event: any) => void,
-  avatarLink: string,
+  avatarLink: string | undefined,
   userName: string | undefined
 }> = (props) => {
   return (
