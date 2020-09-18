@@ -1,11 +1,11 @@
 import React from "react";
 import {Dropdown} from "../Dropdown/Dropdown";
 import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import {Icon} from "gui02/components/Icon/Icon";
 import {UserMenuBlock} from "gui02/components/UserMenuDropdown/UserMenuBlock";
 import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
 import {T} from "utils/translation";
 import S from "./UserMenuDropdown.module.scss";
+import cx from "classnames";
 
 export const UserMenuDropdown: React.FC<{
   handleLogoutClick: (event: any) => void,
@@ -19,18 +19,14 @@ export const UserMenuDropdown: React.FC<{
         <div
           ref={refTrigger}
           onClick={() => setDropped(true)}>
-          {
-            props.avatarLink
-              ? <div className={S.avatarSection}>
-                <div className={S.pictureSection}>
-                  <div className={S.avatarContainer}>
-                    <img className={S.avatar} src={props.avatarLink} />
-                  </div>
-                </div>
-                <div className={S.userNameSection}>{props.userName}</div>
+           <div className={S.avatarSection}>
+            <div className={S.pictureSection}>
+              <div className={S.avatarContainer}>
+                <img className={cx(S.avatar, S.clickableAvatar)} src={props.avatarLink} />
               </div>
-              : <Icon src="./icons/user.svg" tooltip={""}/>
-          }
+            </div>
+            <div className={S.userNameLabel}>{props.userName}</div>
+          </div>
         </div>
       )}
       content={() => (
