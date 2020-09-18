@@ -35,6 +35,8 @@ export class TreeDataTable implements IDataTable {
     this.idProperty = idProperty;
   }
 
+  rowRemovedListeners: (()=>void)[]=[];
+
   getRowId(row: any[]): string {
     return row[this.dataSource.getFieldByName(this.idProperty)!.index];
   }
