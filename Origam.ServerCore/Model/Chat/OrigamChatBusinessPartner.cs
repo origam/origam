@@ -22,6 +22,7 @@ using Origam.Server;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Origam.ServerCore.Model.Chat
 {
@@ -38,13 +39,14 @@ namespace Origam.ServerCore.Model.Chat
         public string name { get; set; }
         public string avatarUrl { get; set; }
 
-        internal static List<OrigamChatBusinessPartner> CreateJson(DataSet datasetUsersForInvite)
+        internal static List<OrigamChatBusinessPartner> CreateJson(DataSet datasetUsersForInvite, List<OrigamChatParticipant> participants)
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
             List<OrigamChatBusinessPartner> mentions = new List<OrigamChatBusinessPartner>();
             foreach (DataRow row in datasetUsersForInvite.Tables["BusinessPartner"].Rows)
             {
-                if (profile.Id != row.Field<Guid>("Id"))
+                Guid ChatUser = row.Field<Guid>("Id");
+                if (participants==null || !participants.Where(participant=>participant.id == ChatUser).Any())
                 {
                     mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
                 }

@@ -39,9 +39,12 @@ namespace Origam.ServerCore.Model.Chat
             OrigamChatRoom chatRoom = null;
             foreach (DataTable table in ChatRoomDataSet.Tables)
             {
-                foreach (DataRow row in table.Rows)
+                if (table.TableName == "OrigamChatRoom")
                 {
-                    chatRoom = new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"));
+                    foreach (DataRow row in table.Rows)
+                    {
+                        chatRoom = new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"));
+                    }
                 }
             }
             return chatRoom;

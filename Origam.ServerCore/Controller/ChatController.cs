@@ -47,6 +47,7 @@ namespace Origam.ServerCore.Controller
         private readonly Guid OrigamChatMessageDataAfterIdIncludingMethodId = new Guid("61544d12-c4ec-4b05-83c7-427b8cc8bb32");
         private readonly Guid OrigamChatMessageDataBeforeIncludingMethodId = new Guid("338cca32-f6d2-454f-b4b0-e33a39a1a3cb");
         private readonly Guid OrigamChatMessageDataGetByIdMethodId = new Guid("88542750-75e0-4d48-b271-793126cf4847");
+        private readonly Guid OrigamChatMessageDataGetByRoomIdMethodId = new Guid("42076303-19b4-4afa-9836-d38d87036c29");
         private readonly Guid OrigamChatMessageDataOrderbyCreatedDateSortSetId = new Guid("72c14783-0667-4827-b4ee-137e17fe0e3e");
 
         private readonly Guid OrigamChatRoomDatastructureId = new Guid("ae1cd694-9354-49bf-a68e-93b1c241afd2");
@@ -102,14 +103,26 @@ namespace Origam.ServerCore.Controller
 
         }
 
+        //List user for possible invite into Chatroom without exists users.
         [HttpGet("chatrooms/{requestChatRoomId:guid}/usersToInvite")]
-        [HttpGet("users/listToInvite")]
-        public IActionResult GetUsersToInviteRequest(Guid requestChatRoomId,
+        public IActionResult GetUsersToInviteToRoomRequest(Guid requestChatRoomId,
             [FromQuery] int limit, [FromQuery] int offset, [FromQuery] string searchPhrase)
         {
             return RunWithErrorHandler(() =>
             {
                 return GetUsersToInvite(requestChatRoomId, limit,offset, searchPhrase);
+            });
+
+        }
+
+        //List user invite to chatroom (New Room)
+        [HttpGet("users/listToInvite")]
+        public IActionResult GetAllUsersToInviteRequest(Guid requestChatRoomId,
+            [FromQuery] int limit, [FromQuery] int offset, [FromQuery] string searchPhrase)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return GetUsersToInvite(requestChatRoomId, limit, offset, searchPhrase);
             });
 
         }
@@ -214,26 +227,34 @@ namespace Origam.ServerCore.Controller
             DataRow r = data.Tables["OrigamChatRoom"].NewRow();
             r["Id"] = newChatRoomId;
             r["Name"] = newChatRoom.topic;
-            r["ReferenceId"] = newChatRoom.references["referenceId"];
-            r["ReferenceEntity"] = newChatRoom.references["referenceEntity"];
+            //if (newChatRoom.references != null)
+            //{
+            //    r["ReferenceId"] = newChatRoom.references["referenceId"];
+            //    r["ReferenceEntity"] = newChatRoom.references["referenceEntity"];
+            //}
             r["RecordCreated"] = DateTime.Now;
             r["RecordCreatedBy"] = profile.Id;
             data.Tables["OrigamChatRoom"].Rows.Add(r);
-            DataService.StoreData(OrigamChatRoomBusinessPartnerId, data, false, null);
+            DataService.StoreData(OrigamChatRoomDatastructureId, data, false, null);
             AddUsersIntoChatroom(newChatRoomId, newChatRoom.inviteUsers);
             return newChatRoomId;
         }
 
-        private void AddUsersIntoChatroom(Guid newChatRoomId, List<Guid> inviteUsers)
+        private void AddUsersIntoChatroom(Guid newChatRoomId, List<InviteUser> inviteUsers)
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
+            if (!inviteUsers.Where(inviteuser=>inviteuser.id==profile.Id).Any())
+            {
+                inviteUsers.Add(new InviteUser(profile.Id));
+            }
             DatasetGenerator dsg = new DatasetGenerator(true);
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
                                 new ModelElementKey(OrigamChatRoomBusinessPartnerId));
             DataSet data = dsg.CreateDataSet(ds);
-            foreach (Guid userId in inviteUsers)
+            foreach (InviteUser Inviteuser in inviteUsers)
             {
+                Guid userId = Inviteuser.id;
                 DataRow r = data.Tables["OrigamChatRoomBussinesPartner"].NewRow();
                 r["Id"] = Guid.NewGuid();
                 r["isInvited"] = true;
@@ -248,7 +269,7 @@ namespace Origam.ServerCore.Controller
 
         private IActionResult PostRoomAbandon(Guid requestChatRoomId)
         {
-            DataSet datasetUsersForInvite = GetUserChatRoom(requestChatRoomId);
+            DataSet datasetUsersForInvite = GetActiveUserChatRoom(requestChatRoomId);
             if (datasetUsersForInvite != null)
             {
                 datasetUsersForInvite.Tables[0].Rows[0].Delete();
@@ -257,7 +278,7 @@ namespace Origam.ServerCore.Controller
             return Ok();
         }
 
-        private DataSet GetUserChatRoom(Guid requestChatRoomId)
+        private DataSet GetActiveUserChatRoom(Guid requestChatRoomId)
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
             QueryParameterCollection parameters = new QueryParameterCollection
@@ -277,21 +298,18 @@ namespace Origam.ServerCore.Controller
 
         private IActionResult PostinviteUser(Guid requestChatRoomId, Guid userId)
         {
-            if (GetUserChatRoom(requestChatRoomId)==null)
+            if (GetActiveUserChatRoom(requestChatRoomId)==null)
             {
                 return Ok();
             }
-            List<Guid> users = new List<Guid>();
-            users.Add(userId);
+            List<InviteUser> users = new List<InviteUser>();
+            users.Add(new InviteUser(userId));
             AddUsersIntoChatroom(requestChatRoomId, users);
             return Ok();
         }
         private IActionResult GetUsersToInvite(Guid requestChatRoomId, int limit, int offset, string searchPhrase)
         {
-            if(GetUserChatRoom(requestChatRoomId)==null)
-            {
-                return StatusCode(401,"You are not allowed add invite user to this chatroom.");
-            }
+            List<OrigamChatParticipant> participants = GetChatRoomParticipants(requestChatRoomId);
             Guid methodid = LookupBusinessPartnerGetByIdWithoutMe;
             QueryParameterCollection parameters = new QueryParameterCollection();
             if(!string.IsNullOrEmpty(searchPhrase))
@@ -307,7 +325,7 @@ namespace Origam.ServerCore.Controller
             }
             DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner,methodid,
                 Guid.Empty, Guid.Empty, null, parameters);
-            return Ok(OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite));
+            return Ok(OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite, participants));
         }
 
         private OrigamChatRoom GetRoomsData()
@@ -322,7 +340,7 @@ namespace Origam.ServerCore.Controller
         {
             DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner, Guid.Empty,
                Guid.Empty, Guid.Empty, null, null);
-            return OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite);
+            return OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite,null);
         }
 
         private object GetLocalUser()
@@ -358,9 +376,9 @@ namespace Origam.ServerCore.Controller
 
         private IActionResult PostMessages(Guid requestChatRoomId, OrigamChatMessage chatMessages)
         {
-            if (GetUserChatRoom(requestChatRoomId) == null)
+            if (GetActiveUserChatRoom(requestChatRoomId) == null)
             {
-                return StatusCode(401, "You are not allowed add Message to this chatroom.");
+                return StatusCode(403, "You are not allowed add Message to this chatroom.");
             }
             UserProfile profile = SecurityTools.CurrentUserProfile();
             DatasetGenerator dsg = new DatasetGenerator(true);
@@ -402,7 +420,7 @@ namespace Origam.ServerCore.Controller
             OrigamChatBusinessPartner activeUser = (OrigamChatBusinessPartner)GetLocalUser();
             if (!participants.Where(participant => participant.id == activeUser.id).Any())
             {
-                return StatusCode(401, "You are not allowed add Message to this chatroom.");
+                return StatusCode(403, "You are not allowed add Message to this chatroom.");
             }
             pollData.Add("messages", GetMessages(requestChatRoomId, limit, afterIdIncluding, beforeIdIncluding));
             pollData.Add("localUser", activeUser);
@@ -417,7 +435,7 @@ namespace Origam.ServerCore.Controller
             List<OrigamChatBusinessPartner> allUsers = GetLocalUsers();
 
             Guid including = Guid.Empty;
-            Guid MethodId = Guid.Empty;
+            Guid MethodId = OrigamChatMessageDataGetByRoomIdMethodId;
 
             if (afterIdIncluding != null && afterIdIncluding != Guid.Empty)
             {
