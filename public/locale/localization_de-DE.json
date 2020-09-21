@@ -379,6 +379,6 @@
   "blob_upload": "Hochladen",
   "my_profile": "My Profile",
   "action_error": "Fehler",
-  "there_has_been_a_problem": "There has been a problem:",
-  "request_no_longer_authorized": "Your request is no longer authorized, which means that you were either logged out or your session expired. Please log in again."
+  "there_has_been_a_problem": "Es ist ein Problem aufgetreten:",
+  "request_no_longer_authorized": " Ihre Anfrage ist nicht mehr autorisiert, Sie waren entweder abgemeldet or Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
 }
