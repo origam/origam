@@ -729,9 +729,9 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if (string.IsNullOrEmpty(txtWebSurename.Text))
+            if (string.IsNullOrEmpty(txtWebSurname.Text))
             {
-                AsMessageBox.ShowError(this, strings.EnterWebSurename_Message, "Template", null);
+                AsMessageBox.ShowError(this, strings.EnterWebSurname_Message, "Template", null);
                 e.Cancel = true;
                 return;
             }
@@ -744,7 +744,7 @@ namespace OrigamArchitect
             _project.WebUserName = txtWebUserLoginName.Text;
             _project.WebUserPassword = txtWebUserPassword.Text;
             _project.WebFirstName = txtWebFirstname.Text;
-            _project.WebSurename = txtWebSurename.Text;
+            _project.WebSurname = txtWebSurname.Text;
             _project.WebEmail = txtWebEmail.Text;
         }
     }
