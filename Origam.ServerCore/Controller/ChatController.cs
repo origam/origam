@@ -117,12 +117,11 @@ namespace Origam.ServerCore.Controller
 
         //List user invite to chatroom (New Room)
         [HttpGet("users/listToInvite")]
-        public IActionResult GetAllUsersToInviteRequest(Guid requestChatRoomId,
-            [FromQuery] int limit, [FromQuery] int offset, [FromQuery] string searchPhrase)
+        public IActionResult GetAllUsersToInviteRequest([FromQuery] int limit, [FromQuery] int offset, [FromQuery] string searchPhrase)
         {
             return RunWithErrorHandler(() =>
             {
-                return GetUsersToInvite(requestChatRoomId, limit, offset, searchPhrase);
+                return GetUsersToInviteToNewRoom(limit, offset, searchPhrase);
             });
 
         }
@@ -307,6 +306,30 @@ namespace Origam.ServerCore.Controller
             AddUsersIntoChatroom(requestChatRoomId, users);
             return Ok();
         }
+
+        private IActionResult GetUsersToInviteToNewRoom(int limit, int offset, string searchPhrase)
+        {
+            //Guid methodid = LookupBusinessPartnerGetByIdWithoutMe;
+            Guid methodid = Guid.Empty;
+            QueryParameterCollection parameters = new QueryParameterCollection();
+            if (!string.IsNullOrEmpty(searchPhrase))
+            {
+                parameters.Add(new QueryParameter("BusinessPartner_parSearchText", searchPhrase));
+                methodid = DefaultBusinessPartner;
+
+            };
+            if (limit > 0)
+            {
+                parameters.Add(new QueryParameter("BusinessPartner__pageNumber", offset));
+                parameters.Add(new QueryParameter("BusinessPartner__pageSize", limit));
+            }
+            DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner, methodid,
+                Guid.Empty, Guid.Empty, null, parameters);
+            return Ok(OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite, null));
+        }
+            
+
+
         private IActionResult GetUsersToInvite(Guid requestChatRoomId, int limit, int offset, string searchPhrase)
         {
             List<OrigamChatParticipant> participants = GetChatRoomParticipants(requestChatRoomId);
@@ -376,10 +399,6 @@ namespace Origam.ServerCore.Controller
 
         private IActionResult PostMessages(Guid requestChatRoomId, OrigamChatMessage chatMessages)
         {
-            if (GetActiveUserChatRoom(requestChatRoomId) == null)
-            {
-                return StatusCode(403, "You are not allowed add Message to this chatroom.");
-            }
             UserProfile profile = SecurityTools.CurrentUserProfile();
             DatasetGenerator dsg = new DatasetGenerator(true);
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;

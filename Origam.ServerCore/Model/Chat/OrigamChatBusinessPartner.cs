@@ -41,7 +41,6 @@ namespace Origam.ServerCore.Model.Chat
 
         internal static List<OrigamChatBusinessPartner> CreateJson(DataSet datasetUsersForInvite, List<OrigamChatParticipant> participants)
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
             List<OrigamChatBusinessPartner> mentions = new List<OrigamChatBusinessPartner>();
             foreach (DataRow row in datasetUsersForInvite.Tables["BusinessPartner"].Rows)
             {
