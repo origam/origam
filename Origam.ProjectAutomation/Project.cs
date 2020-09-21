@@ -345,7 +345,7 @@ namespace Origam.ProjectAutomation
         public string WebUserName { get; set; }
         public string WebUserPassword { get; set; }
         public string WebFirstName { get;  set; }
-        public string WebSurename { get;  set; }
+        public string WebSurname { get;  set; }
         public string WebEmail { get;  set; }
         #endregion
     }
