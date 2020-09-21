@@ -161,7 +161,6 @@ export class CScreenToolbar extends React.Component<{}> {
                   onClick={() => setDropped(true)}
                   //onClick={this.handleLogoutClick}
                   icon={<Icon src="./icons/dot-menu.svg" tooltip={""} />}
-                  label={userName}
                 />
               )}
               content={() => (
