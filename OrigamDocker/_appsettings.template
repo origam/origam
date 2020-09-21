@@ -59,6 +59,9 @@
     "UserApiOptions": {
         "RestrictedRoutes": [
             "/api/private"
+        ],
+         "PublicRoutes": [
+            "/api/public"
         ]
     },
 	"BehindProxy":  "true",
