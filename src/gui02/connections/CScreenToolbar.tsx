@@ -32,6 +32,7 @@ import {
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 import { T } from "../../utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
+import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -59,6 +60,7 @@ export class CScreenToolbar extends React.Component<{}> {
       actions: IAction[];
     }>
   ) {
+    const customAssetsRoute = getCustomAssetsRoute(this.application);
     return toolbarActions
       .filter((actionGroup) => actionGroup.actions.length > 0)
       .map((actionGroup) => (
@@ -69,7 +71,7 @@ export class CScreenToolbar extends React.Component<{}> {
             )
             .map((action, idx) => (
               <ScreenToolbarAction
-                //icon={<Icon src="./icons/settings.svg" />}
+                icon={<Icon src={customAssetsRoute + "/" + action.iconUrl} />}
                 label={action.caption}
                 onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
               />
@@ -87,6 +89,7 @@ export class CScreenToolbar extends React.Component<{}> {
     const toolbarActions = getActiveScreenActions(this.application);
     const userName = getLoggedUserName(this.application);
     const avatarLink = getUserAvatarLink(this.application);
+    const customAssetsRoute = getCustomAssetsRoute(this.application);
     return (
       <CtxResponsiveToolbar.Provider value={this.responsiveToolbar}>
         <ScreenToolbar>
@@ -129,7 +132,9 @@ export class CScreenToolbar extends React.Component<{}> {
                                   <ScreenToolbarAction
                                     rootRef={refChild}
                                     isHidden={isHidden}
-                                    //icon={<Icon src="./icons/settings.svg" />}
+                                    icon={action.iconUrl
+                                      ? <Icon src={customAssetsRoute + "/" + action.iconUrl}/>
+                                      : undefined}
                                     label={action.caption}
                                     onClick={(event) =>
                                       uiActions.actions.onActionClick(action)(event, action)
