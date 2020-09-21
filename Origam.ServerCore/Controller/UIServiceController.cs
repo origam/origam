@@ -92,7 +92,7 @@ namespace Origam.ServerCore.Controller
             return RunWithErrorHandler(() =>
             {
                 PortalResult result = sessionObjects.UIService.InitPortal(4);
-                AddLogoUrl(result);
+                AddConfigData(result);
                 return Ok(result);
             });
         }
@@ -1026,11 +1026,12 @@ namespace Origam.ServerCore.Controller
             return updatedValues;
         }
         
-        private void AddLogoUrl(PortalResult result)
+        private void AddConfigData(PortalResult result)
         {
             result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.IdentityGuiLogoUrl)
                 ? "./img/logo-left.png"
-                : customAssetsConfig.IdentityGuiLogoUrl;
+                : customAssetsConfig.IdentityGuiLogoUrl;            
+            result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
         }
     }
 }
