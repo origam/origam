@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataConstant
+    abstract="false"
+    dataType="String"
+    x:id="68586d4a-1897-41b8-a0be-0b062255fd43"
+    name="httpMethod_post"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="POST" />
+</x:file>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <package
+    x:id="dc245ea1-d7d1-4405-a2e8-a7ca9d6a1946"
+    x:isFolder="true"
+    name="Api"
+    x:type="Origam.Schema.SchemaExtension"
+    version="1.0.0" xmlns="http://schemas.origam.com/1.0.0/package">
+    <packageReference
+      x:id="a8eed42f-7821-4dbe-9e37-1b4232c719fd"
+      referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609"
+      x:type="Origam.Schema.PackageReference" />
+    <packageReference
+      x:id="2a24eb4c-1580-47f1-a79c-094217a56fc6"
+      referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4"
+      x:type="Origam.Schema.PackageReference" />
+  </package>
+</x:file>

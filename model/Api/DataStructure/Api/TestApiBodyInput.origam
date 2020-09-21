@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="06db1d62-3019-4dfe-8393-645f2d78ec11"
+    localized="false"
+    name="TestApiBodyInput"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="false"
+      concurrencyHandling="Standard"
+      entity="Root/DataEntity/__system/SD.origam#SD/a9770d71-2ee1-464a-8e17-1fae683edd34"
+      x:id="8e7d120b-316f-49c1-a2a6-a4cba9160895"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="Test"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/SD.origam#SD/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="9f4f6449-a7f5-45f4-94ec-3a5540ddbe36"
+        name="Id"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/SD.origam#SD/d1/d9e921ff-b2dc-46a2-966c-aba0c53f5751"
+        x:id="98f7308d-60de-4e6f-8f3c-bceef87b5764"
+        name="dateAttribute"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/SD.origam#SD/s1/fbe2be67-9456-4f8f-bb86-32569b113886"
+        x:id="f539c012-d825-4b35-8d8e-26c72438aba7"
+        name="stringAttribute"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Default" />
+      <DataStructureColumn
+        abstract="false"
+        aggregation="None"
+        field="Root/DataEntity/__system/SD.origam#SD/s2/1b790edb-048f-4475-89ee-317577f746dd"
+        x:id="d72b8d70-22ee-4829-b706-f211a9b9023b"
+        name="stringElement"
+        x:type="Origam.Schema.EntityModel.DataStructureColumn"
+        upsertType="Replace"
+        useCopiedValue="false"
+        useLookupValue="false"
+        writeOnly="false"
+        xmlMappingType="Element" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      x:id="0098010e-6cd9-4c6e-aa2f-af82fa79d8a9"
+      loadWorkflow="Api/Workflow/Api/TestApiBodyInput.origam#TestApiBodyInput/e6235f64-bf67-4391-b346-d745c9a1be27"
+      name="TestApiBodyInput"
+      x:type="Origam.Schema.WorkflowModel.DataStructureWorkflowMethod" />
+  </DataStructure>
+</x:file>

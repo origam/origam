@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Page
+    abstract="false"
+    allowDelete="false"
+    allowPut="false"
+    dataStructure="Api/DataStructure/Api/TestApiBodyInput.origam#TestApiBodyInput/06db1d62-3019-4dfe-8393-645f2d78ec11"
+    disableConstraintForInputValidation="false"
+    x:id="382461c3-8a49-4a68-94ba-8108a834ea91"
+    method="Api/DataStructure/Api/TestApiBodyInput.origam#TestApiBodyInput/TestApiBodyInput/0098010e-6cd9-4c6e-aa2f-af82fa79d8a9"
+    mimeType="application/json"
+    name="api/public/test-api-body-input-data-page"
+    omitJsonRootElement="false"
+    processGetReadRowLevelRules="false"
+    roles="*"
+    x:type="Origam.Schema.GuiModel.XsltDataPage"
+    url="api/public/test-api-body-input-data-page">
+    <PageParameterMapping
+      abstract="false"
+      x:id="148762dc-0b96-4c41-9f56-64e17ed2a89c"
+      isList="false"
+      name="TestApiBodyInput"
+      x:type="Origam.Schema.GuiModel.PageParameterMapping" />
+  </Page>
+</x:file>

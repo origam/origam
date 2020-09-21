@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="d705487f-c0fa-4777-995b-bdd5b4a86262"
+    x:isFolder="true"
+    name="Api"
+    rootItemType="Transformation"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

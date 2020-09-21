@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <Rule
+    abstract="false"
+    dataType="Boolean"
+    x:id="e0b5439a-3a4c-45d8-98f5-865271c14797"
+    name="TestApiBodyInputResponseCheck"
+    x:type="Origam.Schema.RuleModel.EndRule"
+    xsl="-***-ExternalFile:TestApiBodyInputResponseCheck.origam___xsl___e0b5439a-3a4c-45d8-98f5-865271c14797.xslt" />
+</x:file>

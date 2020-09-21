@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DeploymentVersion
+    abstract="false"
+    deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.0"
+    x:id="81b36311-dfe7-40c8-9c1b-014e0037e9d6"
+    name="1.0.0"
+    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
+    version="1.0.0" />
+</x:file>
