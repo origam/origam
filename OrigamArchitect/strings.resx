@@ -739,7 +739,7 @@
     <value> [disconnected]</value>
   </data>
   <data name="CheckIntegratedAuthentication_Message" xml:space="preserve">
-    <value>Please Uncheck Integrated Authentication. And fill Username and Password.</value>
+    <value>Integrated authentication cannot be used with Docker.\nPlease uncheck Integrated Authentication and fill in Username and Password.</value>
   </data>
   <data name="EnterWebPassword_Message" xml:space="preserve">
     <value>Please enter the web password.</value>
@@ -753,10 +753,10 @@
   <data name="EnterWebFirstName_Message" xml:space="preserve">
     <value>Please enter First Name.</value>
   </data>
-  <data name="EnterWebSurename_Message" xml:space="preserve">
-    <value>Please enter Surename.</value>
+  <data name="EnterWebSurname_Message" xml:space="preserve">
+    <value>Please enter Surname.</value>
   </data>
   <data name="WebPasswordNotMatch_Message" xml:space="preserve">
-    <value>Passwords not equals!</value>
+    <value>Passwords are not equal!</value>
   </data>
 </root>
