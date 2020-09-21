@@ -168,6 +168,10 @@ namespace Origam.DA.Service.Generators
         }
         public void AddDataType(string columnName, OrigamDataType columnDataType)
         {
+            if (columnNameToType.ContainsKey(columnName))
+            {
+                throw new Exception(string.Format("Dupliacate column: {0}", columnName));
+            }
             columnNameToType.Add(columnName, columnDataType);
         }
     }
