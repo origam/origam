@@ -71,7 +71,9 @@ export class CScreenToolbar extends React.Component<{}> {
             )
             .map((action, idx) => (
               <ScreenToolbarAction
-                icon={<Icon src={customAssetsRoute + "/" + action.iconUrl} />}
+                icon={action.iconUrl
+                  ? <Icon src={customAssetsRoute + "/" + action.iconUrl}/>
+                  : <div/>}
                 label={action.caption}
                 onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
               />
