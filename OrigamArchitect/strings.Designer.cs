@@ -205,7 +205,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please Uncheck Integrated Authentication. And fill Username and Password..
+        ///   Looks up a localized string similar to Integrated authentication cannot be used with Docker.\nPlease uncheck Integrated Authentication and fill in Username and Password..
         /// </summary>
         internal static string CheckIntegratedAuthentication_Message {
             get {
@@ -610,11 +610,11 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please enter Surename..
+        ///   Looks up a localized string similar to Please enter Surname..
         /// </summary>
-        internal static string EnterWebSurename_Message {
+        internal static string EnterWebSurname_Message {
             get {
-                return ResourceManager.GetString("EnterWebSurename_Message", resourceCulture);
+                return ResourceManager.GetString("EnterWebSurname_Message", resourceCulture);
             }
         }
         
@@ -1915,7 +1915,7 @@ namespace OrigamArchitect {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Passwords not equals!.
+        ///   Looks up a localized string similar to Passwords are not equal!.
         /// </summary>
         internal static string WebPasswordNotMatch_Message {
             get {
