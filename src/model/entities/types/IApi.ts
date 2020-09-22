@@ -248,6 +248,10 @@ export interface IApi {
     RootRecordId: string;
   }): Promise<any>;
 
+  getReportFromMenu(data: {
+    menuId: string;
+  }): Promise<string>;
+
   getRowStates(data: {
     SessionFormIdentifier: string;
     Entity: string;

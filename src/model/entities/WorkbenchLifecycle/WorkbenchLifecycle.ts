@@ -22,9 +22,9 @@ import { scopeFor } from "dic/Container";
 import { assignIIds } from "xmlInterpreters/xmlUtils";
 import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
-import {onWorkflowNextClick} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
-import {observable} from "mobx";
-import {IUserInfo} from "model/entities/types/IUserInfo";
+import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
+import { observable } from "mobx";
+import { IUserInfo } from "model/entities/types/IUserInfo";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -46,8 +46,14 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   customAssetsRoute: string | undefined;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
-    const { type, id, label, dialogWidth, dialogHeight, dontRequestData } = args.item.attributes;
+    const { type, id, label, dialogWidth, dialogHeight, dontRequestData, urlOpenMethod } = args.item.attributes;
     const { event } = args;
+
+    if(urlOpenMethod === "LaunchBrowserWindow"){
+      const url = (yield this.getReportTabUrl(id)) as string;
+      window.open(url);
+      return;
+    }
 
     const openedScreens = getOpenedScreens(this);
 
@@ -75,11 +81,23 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
+        if(type ===  IMainMenuItemType.ReportReferenceMenuItem){
+          const url = (yield this.getReportTabUrl(id)) as string;
+          yield* this.openNewUrl(url, "");
+          return;
+        }else {
+          yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
+        }
       }
     } else {
       yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
     }
+  }
+
+  async getReportTabUrl(menuId: string){
+    const api = getApi(this);
+    const url = (await api.getReportFromMenu({menuId: menuId})) ;
+    return url;
   }
 
   *onWorkQueueListItemClick(event: any, item: any) {
@@ -228,7 +246,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
     const newFormScreen = createFormScreenEnvelope(formSessionId, refreshOnReturnType);
-    const newScreen = createOpenedScreen(
+    const newScreen = yield* createOpenedScreen(
+      this,
       id,
       type,
       existingItem ? existingItem.order + 1 : 0,
@@ -250,6 +269,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (isSessionRebirth) {
         return;
       }
+
       const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, additionalRequestParameters);
 
       yield* newFormScreen.start(initUIResult);
