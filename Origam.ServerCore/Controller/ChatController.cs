@@ -220,7 +220,7 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpPost("chatrooms/{requestChatRoomId:guid}/info")]
-        public IActionResult PostRoomAbandonRequest(Guid requestChatRoomId, [FromBody] string topic)
+        public IActionResult PostRoomAbandonRequest(Guid requestChatRoomId, [FromBody] Info topic)
         {
             return RunWithErrorHandler(() =>
             {
@@ -229,11 +229,11 @@ namespace Origam.ServerCore.Controller
 
         }
 
-        private IActionResult PostRoomChangeTopic(Guid requestChatRoomId, string topic)
+        private IActionResult PostRoomChangeTopic(Guid requestChatRoomId, Info topic)
         {
             DataSet roomInfo = GetChatRoom(requestChatRoomId);
             DataRow dataRow = roomInfo.Tables[0].Rows[0];
-            dataRow["Name"] = topic;
+            dataRow["Name"] = topic.topic;
             DataService.StoreData(OrigamChatRoomDatastructureId, roomInfo, false,null);
             return Ok();
         }
