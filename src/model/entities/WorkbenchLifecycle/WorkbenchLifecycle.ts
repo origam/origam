@@ -22,9 +22,9 @@ import { scopeFor } from "dic/Container";
 import { assignIIds } from "xmlInterpreters/xmlUtils";
 import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
-import {onWorkflowNextClick} from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
-import {observable} from "mobx";
-import {IUserInfo} from "model/entities/types/IUserInfo";
+import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
+import { observable } from "mobx";
+import { IUserInfo } from "model/entities/types/IUserInfo";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -44,7 +44,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   logoUrl: string | undefined;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
-    const { type, id, label, dialogWidth, dialogHeight, dontRequestData } = args.item.attributes;
+    const { type, id, label, dialogWidth, dialogHeight, dontRequestData, urlOpenMethod } = args.item.attributes;
     const { event } = args;
 
     const openedScreens = getOpenedScreens(this);
@@ -226,7 +226,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
     const newFormScreen = createFormScreenEnvelope(formSessionId, refreshOnReturnType);
-    const newScreen = createOpenedScreen(
+    const newScreen = yield* createOpenedScreen(
+      this,
       id,
       type,
       existingItem ? existingItem.order + 1 : 0,
@@ -248,6 +249,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (isSessionRebirth) {
         return;
       }
+      if(type ===  IMainMenuItemType.ReportReferenceMenuItem){
+        return;
+      }
+
       const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, additionalRequestParameters);
 
       yield* newFormScreen.start(initUIResult);

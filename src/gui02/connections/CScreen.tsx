@@ -22,7 +22,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
         url={openedScreen.screenUrl || ""}
         isLoading={isLoading}
         onLoad={(event: any) => {
-          if (event.target.contentDocument.title) {
+          if (event.target.contentDocument?.title) {
             ((openedScreen as unknown) as IWebScreen).setTitle(event.target.contentDocument.title);
           }
           setLoading(false);
