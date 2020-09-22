@@ -39,15 +39,25 @@ namespace Origam.ServerCore.Model.Chat
         public string name { get; set; }
         public string avatarUrl { get; set; }
 
-        internal static List<OrigamChatBusinessPartner> CreateJson(DataSet datasetUsersForInvite, List<OrigamChatParticipant> participants)
+        internal static List<OrigamChatBusinessPartner> CreateJson(DataSet datasetUsersForInvite, List<OrigamChatParticipant> participants,bool usersNotExistsInRoom = true)
         {
             List<OrigamChatBusinessPartner> mentions = new List<OrigamChatBusinessPartner>();
             foreach (DataRow row in datasetUsersForInvite.Tables["BusinessPartner"].Rows)
             {
                 Guid ChatUser = row.Field<Guid>("Id");
-                if (participants==null || !participants.Where(participant=>participant.id == ChatUser).Any())
+                if (usersNotExistsInRoom)
                 {
-                    mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
+                    if (participants == null || !participants.Where(participant => participant.id == ChatUser).Any())
+                    {
+                        mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
+                    }
+                }
+                else
+                {
+                    if (participants.Where(participant => participant.id == ChatUser).Any())
+                    {
+                        mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
+                    }
                 }
             }
             return mentions;
