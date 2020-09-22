@@ -71,7 +71,7 @@ export class ResponsiveBlock {
         }
         chRec.width = newWidth;
       }
-    } /*
+    }
     // for (let e of entries) {
     //   //console.log(e.target, e.contentRect.width);
     //   if (e.target === this.container) {
@@ -85,7 +85,7 @@ export class ResponsiveBlock {
     //   if (this.hiddenChildren.has(key)) continue;
     //   const childRec = this.keyToChildRec.get(key);
     //   if (childRec) {
-    //     const newWidth = /*e.target.offsetWidth;*/ // e.target.getBoundingClientRect().width;
+    //     const newWidth = e.target.offsetWidth;// e.target.getBoundingClientRect().width;
     //     if (childRec.width !== newWidth) {
     //       shouldRecompute = true;
     //       console.log(e.target, e.target.offsetWidth, e.target.getBoundingClientRect().width, e);

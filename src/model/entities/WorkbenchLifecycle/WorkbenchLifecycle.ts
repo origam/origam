@@ -42,6 +42,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   userInfo: IUserInfo | undefined;
   @observable
   logoUrl: string | undefined;
+  @observable
+  customAssetsRoute: string | undefined;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const { type, id, label, dialogWidth, dialogHeight, dontRequestData, urlOpenMethod } = args.item.attributes;
@@ -315,6 +317,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       avatarLink: portalInfo.avatarLink,
     }
     this.logoUrl = portalInfo.logoUrl;
+    this.customAssetsRoute = portalInfo.customAssetsRoute;
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
