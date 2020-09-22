@@ -268,6 +268,7 @@ namespace Origam.ServerCore.Controller
             r["RecordCreatedBy"] = profile.Id;
             data.Tables["OrigamChatRoom"].Rows.Add(r);
             DataService.StoreData(OrigamChatRoomDatastructureId, data, false, null);
+            newChatRoom.inviteUsers.Add(new InviteUser(profile.Id));
             AddUsersIntoChatroom(newChatRoomId, newChatRoom.inviteUsers);
             return newChatRoomId;
         }
@@ -275,10 +276,6 @@ namespace Origam.ServerCore.Controller
         private void AddUsersIntoChatroom(Guid newChatRoomId, List<InviteUser> inviteUsers)
         {
             UserProfile profile = SecurityTools.CurrentUserProfile();
-            if (!inviteUsers.Where(inviteuser=>inviteuser.id==profile.Id).Any())
-            {
-                inviteUsers.Add(new InviteUser(profile.Id));
-            }
             DatasetGenerator dsg = new DatasetGenerator(true);
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
