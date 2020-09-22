@@ -265,7 +265,10 @@ namespace Origam.ServerCore.Controller
             r["RecordCreatedBy"] = profile.Id;
             data.Tables["OrigamChatRoom"].Rows.Add(r);
             DataService.StoreData(OrigamChatRoomDatastructureId, data, false, null);
-            newChatRoom.inviteUsers.Add(new InviteUser(profile.Id));
+            if (!newChatRoom.inviteUsers.Where(inviteuser => inviteuser.id == profile.Id).Any())
+            {
+                newChatRoom.inviteUsers.Add(new InviteUser(profile.Id));
+            }
             AddUsersIntoChatroom(newChatRoomId, newChatRoom.inviteUsers);
             return newChatRoomId;
         }
