@@ -11,6 +11,7 @@ export interface IWorkbenchLifecycle {
   notificationBox: any;
   userInfo: IUserInfo | undefined;
   logoUrl: string | undefined;
+  customAssetsRoute: string | undefined;
   openNewForm(
     id: string,
     type: IMainMenuItemType,

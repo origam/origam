@@ -71,40 +71,40 @@ export class ResponsiveBlock {
         }
         chRec.width = newWidth;
       }
-    } /*
-    // for (let e of entries) {
-    //   //console.log(e.target, e.contentRect.width);
-    //   if (e.target === this.container) {
-    //     const newWidth = e.contentRect.width;
-    //     if (newWidth !== this.containerWidth) shouldRecompute = true;
-    //     this.containerWidth = newWidth;
-    //     continue;
-    //   }
-    //   const key = this.childToKey.get(e.target);
-    //   // Preserve width when hidden, otherwise it gets never shown again.
-    //   if (this.hiddenChildren.has(key)) continue;
-    //   const childRec = this.keyToChildRec.get(key);
-    //   if (childRec) {
-    //     const newWidth = /*e.target.offsetWidth;*/ // e.target.getBoundingClientRect().width;
-    //     if (childRec.width !== newWidth) {
-    //       shouldRecompute = true;
-    //       console.log(e.target, e.target.offsetWidth, e.target.getBoundingClientRect().width, e);
-    //     }
-    //     childRec.width = newWidth;
-    //     continue;
-    //   } else {
-    //     console.log("no child rec");
-    //   }
-    // }
+    }
+    for (let e of entries) {
+      //console.log(e.target, e.contentRect.width);
+      if (e.target === this.container) {
+        const newWidth = e.contentRect.width;
+        if (newWidth !== this.containerWidth) shouldRecompute = true;
+        this.containerWidth = newWidth;
+        continue;
+      }
+      const key = this.childToKey.get(e.target);
+      // Preserve width when hidden, otherwise it gets never shown again.
+      if (this.hiddenChildren.has(key)) continue;
+      const childRec = this.keyToChildRec.get(key);
+      if (childRec) {
+        const newWidth = e.target.offsetWidth;// e.target.getBoundingClientRect().width;
+        if (childRec.width !== newWidth) {
+          shouldRecompute = true;
+          console.log(e.target, e.target.offsetWidth, e.target.getBoundingClientRect().width, e);
+        }
+        childRec.width = newWidth;
+        continue;
+      } else {
+        console.log("no child rec");
+      }
+    }
 
-    // console.log(
-    //   "chw",
-    //   this.containerWidth,
-    //   Array.from(this.keyToChildRec).map(([k, v]) => `${k}:${v.width}`)
-    //   /*Array.from(this.keyToChildRec)
-    //     .map(([k, v]) => v.width)
-    //     .reduce((acc, v) => acc + v, 0)*/
-    // );
+    console.log(
+      "chw",
+      this.containerWidth,
+      Array.from(this.keyToChildRec).map(([k, v]) => `${k}:${v.width}`)
+      /*Array.from(this.keyToChildRec)
+        .map(([k, v]) => v.width)
+        .reduce((acc, v) => acc + v, 0)*/
+    );
     if (shouldRecompute) this.recomputeSizesDeb();
   }
 
