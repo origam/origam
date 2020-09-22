@@ -30,7 +30,6 @@ export class FormBuilder extends React.Component<{
   dataView?: IDataView;
 }> {
   buildForm() {
-    let tabIndex = getStartTabIndex(this.props.dataView!);
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -79,7 +78,6 @@ export class FormBuilder extends React.Component<{
           ? dataTable.getCellValueByDataSourceField(row, sourceField!) === xfo.attributes.Value
           : false;
 
-        tabIndex++;
         return (
           <RadioButton
             key={xfo.$iid}
@@ -91,7 +89,6 @@ export class FormBuilder extends React.Component<{
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
-            tabIndex={tabIndex}
             subscribeToFocusManager={(radioInput) =>
               focusManager.subscribe(radioInput, xfo.attributes.Id)
             }
@@ -123,7 +120,6 @@ export class FormBuilder extends React.Component<{
                     textualValue = dataTable.getCellText(row, property);
                   }
                 }
-                tabIndex++;
                 if(!property){
                   return (<></>);
                 }
@@ -134,7 +130,6 @@ export class FormBuilder extends React.Component<{
                       <CheckBox
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
-                        // tabIndex={tabIndex}
                         subscribeToFocusManager={(radioInput) =>
                           focusManager.subscribe(radioInput, property.id)
                         }
@@ -157,7 +152,6 @@ export class FormBuilder extends React.Component<{
                       editor={
                         <FormViewEditor
                           value={value}
-                          tabIndex={tabIndex}
                           isRichText={property.isRichText}
                           textualValue={textualValue}
                           xmlNode={property.xmlNode}
@@ -185,26 +179,4 @@ export class FormBuilder extends React.Component<{
   render() {
     return this.buildForm();
   }
-}
-
-const startTabInduces = new Map<string, number>();
-
-function getNextTabIndex(){
-  if(startTabInduces.size === 0){
-    return 0;
-  }
-  const nextTabIndex = Array.from(startTabInduces.values()).sort().reverse()[0] + 100;
-  if(nextTabIndex > 32767){
-    console.error("TabIndex Overflow!");
-    startTabInduces.clear();
-    return 0;
-  }
-  return nextTabIndex;
-}
-
-function getStartTabIndex(dataView: IDataView): number {
-  if(!startTabInduces.has(dataView.id)){
-    startTabInduces.set(dataView.id, getNextTabIndex());
-  }
-  return startTabInduces.get(dataView.id)!;
 }

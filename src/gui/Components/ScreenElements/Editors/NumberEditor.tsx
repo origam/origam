@@ -31,7 +31,6 @@ export class NumberEditor extends React.Component<{
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
   subscribeToFocusManager?: (obj: IFocusable) => () => void;
-  tabIndex?: number;
 }> {
   disposers: any[] = [];
 
@@ -173,7 +172,6 @@ export class NumberEditor extends React.Component<{
             onDoubleClick={this.props.onDoubleClick}
             onBlur={this.handleBlur}
             onFocus={this.handleFocus}
-            tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           />
         ) : (
           <textarea
@@ -187,7 +185,6 @@ export class NumberEditor extends React.Component<{
             onClick={this.props.onClick}
             onBlur={this.handleBlur}
             onFocus={this.handleFocus}
-            tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           />
         )}
         {this.props.isInvalid && (

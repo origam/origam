@@ -27,7 +27,6 @@ export interface IRawCheckListProps {
   LookupId: string;
   Parameters: any;
   menuItemId: string;
-  tabIndex?: number;
   isInvalid: boolean;
   invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
@@ -89,7 +88,6 @@ export class CheckListControler {
 export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
-  tabIndex?: number;
   isInvalid: boolean;
   invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
@@ -111,7 +109,6 @@ export const CheckList: React.FC<{
       menuItemId={getMenuItemId(property)}
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
-      tabIndex={props.tabIndex}
       isInvalid={props.isInvalid}
       invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
@@ -174,7 +171,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
             onClick={(event) => {
               controller.handleClick(event, item);
             }}
-            tabIndex={i === 0 ? props.tabIndex : -1}
+            // tabIndex={i === 0 ? props.tabIndex : -1}
             subscribeToFocusManager={i === 0 ? props.subscribeToFocusManager : undefined}
             inputSetter={(inputRef: InputReference) => inputRefs.push(inputRef)}
             focusLeft={focusLeft}

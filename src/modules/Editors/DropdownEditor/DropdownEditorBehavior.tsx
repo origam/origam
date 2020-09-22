@@ -19,7 +19,6 @@ export class DropdownEditorBehavior {
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusable) => () => void,
-    public tabIndex?: number,
     private onKeyDown?: (event: any) => void
   ) {
   }

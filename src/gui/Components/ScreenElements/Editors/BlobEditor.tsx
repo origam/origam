@@ -56,7 +56,6 @@ export class BlobEditor extends React.Component<{
   Entity?: string;
   SessionFormIdentifier?: string;
   parameters?: any;
-  tabIndex?: number;
   subscribeToFocusManager?: (obj: IFocusable) => () => void;
   isInvalid: boolean;
   invalidMessage?: string;
@@ -290,7 +289,6 @@ export class BlobEditor extends React.Component<{
               type="file"
               multiple={false}
               onChange={(event) => this.handleFileChange(event)}
-              tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
               ref={this.refInput}
             />
             <i className="fas fa-upload"></i>

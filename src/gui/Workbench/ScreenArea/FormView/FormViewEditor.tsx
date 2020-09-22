@@ -37,7 +37,6 @@ export class FormViewEditor extends React.Component<{
   xmlNode?: any;
   value?: any;
   textualValue?: any;
-  tabIndex?: number;
   property?: IProperty;
   isRichText: boolean;
   onChange?: (event: any, value: any) => void;
@@ -100,7 +99,6 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
-            // tabIndex={this.props.tabIndex}
           />
         );
       case "Text":
@@ -125,7 +123,6 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
-            // tabIndex={this.props.tabIndex}
           />
         );
       case "Date":
@@ -147,7 +144,6 @@ export class FormViewEditor extends React.Component<{
               this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
-            // tabIndex={this.props.tabIndex}
           />
         );
       case "CheckBox":
@@ -160,7 +156,6 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
-            // tabIndex={this.props.tabIndex}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
@@ -178,7 +173,6 @@ export class FormViewEditor extends React.Component<{
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customStyle={this.props.property?.style}
-            // tabIndex={this.props.tabIndex}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
           />
@@ -189,7 +183,6 @@ export class FormViewEditor extends React.Component<{
             key={this.props.xmlNode.$iid}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
-            // tabIndex={this.props.tabIndex}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
@@ -214,7 +207,6 @@ export class FormViewEditor extends React.Component<{
           <CheckList
             value={this.props.value}
             onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
-            // tabIndex={this.props.tabIndex}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             subscribeToFocusManager={(firstCheckInput) =>
@@ -223,14 +215,13 @@ export class FormViewEditor extends React.Component<{
           />
         );
       case "Image":
-        return <ImageEditor value={this.props.value} tabIndex={this.props.tabIndex} />;
+        return <ImageEditor value={this.props.value} />;
       case "Blob":
         return (
           <BlobEditor
             value={this.props.value}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
-            // tabIndex={this.props.tabIndex}
             subscribeToFocusManager={(inputEditor) =>
               this.focusManager.subscribe(inputEditor, this.props.property?.id)
             }

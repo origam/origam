@@ -10,7 +10,6 @@ import {IFocusable} from "model/entities/FocusManager";
 
 export const CheckBox: React.FC<{
   checked: boolean;
-  tabIndex?: number;
   readOnly: boolean;
   isHidden?: boolean;
   onChange?: (event: any, value: any) => void;
@@ -78,7 +77,6 @@ export const CheckBox: React.FC<{
           value={props.checked}
           isInvalid={false}
           isReadOnly={props.readOnly}
-          tabIndex={props.tabIndex}
           onBlur={onInputBlur}
           onFocus={onInputFocus}
           onChange={onChange}

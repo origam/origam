@@ -14,7 +14,6 @@ export class BoolEditor extends React.Component<{
   onChange?(event: any, value: boolean): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
-  tabIndex?: number;
   onBlur?: ()=>void;
   onFocus?: ()=>void;
   isInvalid: boolean;
@@ -57,7 +56,6 @@ export class BoolEditor extends React.Component<{
           onClick={this.props.onClick}
           onBlur={this.props.onBlur}
           onFocus={this.props.onFocus}
-          tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           ref={this.refInput}
         />
         {this.props.isInvalid && (

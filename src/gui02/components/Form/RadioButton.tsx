@@ -11,7 +11,6 @@ export class RadioButton extends React.Component<{
   height: number;
   name: string;
   value: string;
-  tabIndex: number;
   onSelected: (value: any) => void;
   checked: boolean;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
@@ -55,7 +54,6 @@ export class RadioButton extends React.Component<{
           type={"radio"}
           id={this.props.value}
           name={this.props.name}
-          tabIndex={this.props.tabIndex}
           value={this.props.value}
           checked={this.props.checked}
           onChange={event => this.onChange(event)}/>

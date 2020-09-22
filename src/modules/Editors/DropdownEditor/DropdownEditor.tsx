@@ -93,7 +93,6 @@ export function XmlBuildDropdownEditor(props: {
   tagEditor?: JSX.Element;
   onDoubleClick?: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusable) => () => void;
-  tabIndex?: number;
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);
@@ -129,7 +128,6 @@ export function XmlBuildDropdownEditor(props: {
       props.isReadOnly,
       props.onDoubleClick,
       props.subscribeToFocusManager,
-      props.tabIndex,
       props.onKeyDown
     );
 

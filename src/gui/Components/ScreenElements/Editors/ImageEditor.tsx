@@ -31,14 +31,12 @@ const IMAGE_TYPE: { [key: string]: string } = {
 @observer
 export class ImageEditor extends React.Component<{
   value: string;
-  tabIndex?: number;
 }> {
   render() {
     return this.props.value ? (
       <img
         className={S.image}
         src={`data:image/${IMAGE_TYPE[this.props.value.charAt(0)]};base64,${this.props.value}`}
-        tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
       />
     ) : null;
   }
