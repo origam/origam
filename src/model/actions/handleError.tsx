@@ -2,11 +2,18 @@ import selectors from "model/selectors-tree";
 import {stopWorkQueues} from "./WorkQueues/stopWorkQueues";
 import {performLogout} from "./User/performLogout";
 import {T} from "utils/translation";
+import {getOpenedScreens} from "model/selectors/getOpenedScreens";
+import {getOpenedScreen} from "model/selectors/getOpenedScreen";
 
 const HANDLED = Symbol("_$ErrorHandled");
 
 export function handleError(ctx: any) {
   return function* handleError(error: any) {
+    const openedScreen = getOpenedScreen(ctx);
+    if (!getOpenedScreens(ctx).isShown(openedScreen)){
+      console.log("ERROR was ignored, because it originated from a closed screen:", error);
+      return;
+    }
     if (error.response && error.response.status === 401) {
       yield* stopWorkQueues(ctx)();
       selectors.error.getDialogController(ctx).dismissErrors();

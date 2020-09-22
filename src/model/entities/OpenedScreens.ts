@@ -9,6 +9,10 @@ export class OpenedScreens implements IOpenedScreens {
   parent?: any;
   @observable items: Array<IOpenedScreen> = [];
 
+  isShown(openedScreen: IOpenedScreen): boolean{
+    return this.items.indexOf(openedScreen) > - 1;
+  }
+
   @action.bound
   pushItem(item: IOpenedScreen): void {
     item.stackPosition = this.maxStackPosition + 1;

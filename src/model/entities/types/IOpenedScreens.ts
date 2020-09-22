@@ -14,6 +14,7 @@ export interface IOpenedScreens extends IOpenedScreensData {
     actions: IAction[];
   }>;
 
+  isShown(openedScreen: IOpenedScreen): boolean;
   pushItem(item: IOpenedScreen): void;
   deleteItem(menuItemId: string, order: number): void;
   activateItem(menuItemId: string, order: number): void;
