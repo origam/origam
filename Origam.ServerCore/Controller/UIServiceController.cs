@@ -542,6 +542,12 @@ namespace Origam.ServerCore.Controller
                 return Ok();
             });
         }
+        [HttpGet("[action]/{menuId}")]
+        public IActionResult ReportFromMenu(Guid menuId)
+        {
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.ReportFromMenu(menuId)));
+        }
         #endregion
         
         private Result<IActionResult, IActionResult> ExtractAggregationList(IActionResult fullReaderResult)
