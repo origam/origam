@@ -47,6 +47,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const { type, id, label, dialogWidth, dialogHeight, dontRequestData, urlOpenMethod } = args.item.attributes;
     const { event } = args;
 
+    if(urlOpenMethod === "LaunchBrowserWindow"){
+      yield this.openReportTab(id);
+      return;
+    }
+
     const openedScreens = getOpenedScreens(this);
 
     let dialogInfo: IDialogInfo | undefined;
@@ -78,6 +83,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     } else {
       yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
     }
+  }
+
+  async openReportTab(menuId: string){
+    const api = getApi(this);
+    const url = (await api.getReportFromMenu({menuId: menuId})) as string;
+    window.open(url);
   }
 
   *onWorkQueueListItemClick(event: any, item: any) {
