@@ -265,10 +265,7 @@ namespace Origam.ServerCore.Controller
             r["RecordCreatedBy"] = profile.Id;
             data.Tables["OrigamChatRoom"].Rows.Add(r);
             DataService.StoreData(OrigamChatRoomDatastructureId, data, false, null);
-            if (!newChatRoom.inviteUsers.Where(inviteuser => inviteuser.id == profile.Id).Any())
-            {
-                newChatRoom.inviteUsers.Add(new InviteUser(profile.Id));
-            }
+            newChatRoom.inviteUsers.Add(new InviteUser(profile.Id));
             AddUsersIntoChatroom(newChatRoomId, newChatRoom.inviteUsers);
             return newChatRoomId;
         }
@@ -333,8 +330,7 @@ namespace Origam.ServerCore.Controller
 
         private IActionResult GetUsersToInviteToNewRoom(int limit, int offset, string searchPhrase)
         {
-            //Guid methodid = LookupBusinessPartnerGetByIdWithoutMe;
-            Guid methodid = Guid.Empty;
+            Guid methodid = LookupBusinessPartnerGetByIdWithoutMe;
             QueryParameterCollection parameters = new QueryParameterCollection();
             if (!string.IsNullOrEmpty(searchPhrase))
             {
