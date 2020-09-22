@@ -219,21 +219,18 @@ namespace Origam.ServerCore.Controller
 
         }
 
-        [HttpPatch("chatrooms/{requestChatRoomId:guid}/info")]
-        public IActionResult PostRoomAbandonRequest(Guid requestChatRoomId, [FromBody] JsonPatchDocument patch)
+        [HttpPost("chatrooms/{requestChatRoomId:guid}/info")]
+        public IActionResult PostRoomAbandonRequest(Guid requestChatRoomId, [FromBody] string topic)
         {
             return RunWithErrorHandler(() =>
             {
-                return PostRoomChangeTopic(requestChatRoomId, patch);
+                return PostRoomChangeTopic(requestChatRoomId, topic);
             });
 
         }
 
-        private IActionResult PostRoomChangeTopic(Guid requestChatRoomId, JsonPatchDocument patch)
+        private IActionResult PostRoomChangeTopic(Guid requestChatRoomId, string topic)
         {
-            string topic = "";
-            patch.ApplyTo(topic);
-
             DataSet roomInfo = GetChatRoom(requestChatRoomId);
             DataRow dataRow = roomInfo.Tables[0].Rows[0];
             dataRow["Name"] = topic;
