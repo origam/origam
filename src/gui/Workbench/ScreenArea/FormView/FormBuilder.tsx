@@ -134,7 +134,10 @@ export class FormBuilder extends React.Component<{
                       <CheckBox
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
-                        tabIndex={tabIndex}
+                        // tabIndex={tabIndex}
+                        subscribeToFocusManager={(radioInput) =>
+                          focusManager.subscribe(radioInput, property.id)
+                        }
                       />
                     </Provider>
                   );

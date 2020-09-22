@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IProperty } from "model/entities/types/IProperty";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import S from "./CheckBox.module.scss";
@@ -6,6 +6,7 @@ import { inject } from "mobx-react";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
+import {IFocusable} from "model/entities/FocusManager";
 
 export const CheckBox: React.FC<{
   checked: boolean;
@@ -14,6 +15,7 @@ export const CheckBox: React.FC<{
   isHidden?: boolean;
   onChange?: (event: any, value: any) => void;
   property?: IProperty;
+  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 }> = inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
   return {
@@ -80,6 +82,7 @@ export const CheckBox: React.FC<{
           onBlur={onInputBlur}
           onFocus={onInputFocus}
           onChange={onChange}
+          subscribeToFocusManager={props.subscribeToFocusManager}
         />
       </div>
       <label
