@@ -1,39 +1,43 @@
 export class FocusManager {
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
+  focusableContainers: IFocusableObjectContainer[] = [];
+
 
   subscribe(focusableObject: IFocusable, name: string | undefined) {
-    if(!name){
-      return () => {};
-    }
-    this.objectMap.set(name, focusableObject);
-    return () => this.unsubscribe(name);
+
+    const focusableContainer = {name: name, focusable: focusableObject};
+    this.focusableContainers.push(focusableContainer)
+    return () => this.unsubscribe(focusableContainer);
   }
 
-  unsubscribe(name: string | undefined) {
-    if(!name){
-      return;
+
+  private unsubscribe(container: IFocusableObjectContainer) {
+    const index = this.focusableContainers.indexOf(container);
+    if (index > -1) {
+      this.focusableContainers.splice(index, 1);
     }
-    this.objectMap.delete(name);
   }
 
   focus(name: string) {
-    const objectToFocus = this.objectMap.get(name);
-    if (objectToFocus) {
-      objectToFocus.focus();
-    }
+    this.focusableContainers
+      .find(container => container.name === name)
+      ?.focusable.focus();
   }
 
   focusFirst(){
-    if(this.objectMap.size === 0){
+    if(this.focusableContainers.length === 0){
       return;
     }
+    const focusable = this.focusableContainers[0].focusable;
     setTimeout(() => {
-      const iFocusable = Array.from(this.objectMap.values())
-        .sort((x, y) => x.tabIndex - y.tabIndex)
-        [0];
-      iFocusable.focus();
+      focusable.focus();
     }, 0)
   }
+}
+
+interface IFocusableObjectContainer {
+  name: string | undefined;
+  focusable: IFocusable;
 }
 
 export interface IFocusable {
