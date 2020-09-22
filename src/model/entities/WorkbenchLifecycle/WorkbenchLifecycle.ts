@@ -50,7 +50,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const { event } = args;
 
     if(urlOpenMethod === "LaunchBrowserWindow"){
-      yield this.openReportTab(id);
+      const url = (yield this.getReportTabUrl(id)) as string;
+      window.open(url);
       return;
     }
 
@@ -80,17 +81,23 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
+        if(type ===  IMainMenuItemType.ReportReferenceMenuItem){
+          const url = (yield this.getReportTabUrl(id)) as string;
+          yield* this.openNewUrl(url, "");
+          return;
+        }else {
+          yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
+        }
       }
     } else {
       yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
     }
   }
 
-  async openReportTab(menuId: string){
+  async getReportTabUrl(menuId: string){
     const api = getApi(this);
-    const url = (await api.getReportFromMenu({menuId: menuId})) as string;
-    window.open(url);
+    const url = (await api.getReportFromMenu({menuId: menuId})) ;
+    return url;
   }
 
   *onWorkQueueListItemClick(event: any, item: any) {
@@ -260,9 +267,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       }
 
       if (isSessionRebirth) {
-        return;
-      }
-      if(type ===  IMainMenuItemType.ReportReferenceMenuItem){
         return;
       }
 
