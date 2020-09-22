@@ -247,9 +247,15 @@ export class FormViewEditor extends React.Component<{
     return (event: any) => {
       if (event.key === "Tab") {
         DomEvent.preventDefault(event);
-        this.focusManager.focusNext(document.activeElement);
+        if(event.shiftKey){
+          this.focusManager.focusPrevious(document.activeElement);
+        }
+        else{
+          this.focusManager.focusNext(document.activeElement);
+        }
         return;
       }
+
       if (this.props.property!.multiline) {
         return;
       }
