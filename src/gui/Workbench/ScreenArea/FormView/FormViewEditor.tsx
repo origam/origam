@@ -20,6 +20,9 @@ import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
+import {FocusManager} from "model/entities/FocusManager";
+import {DomEvent} from "leaflet";
+
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -40,6 +43,14 @@ export class FormViewEditor extends React.Component<{
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => void;
 }> {
+
+  focusManager: FocusManager;
+
+  constructor(props: any){
+    super(props);
+    this.focusManager = getDataView(this.props.property).focusManager;
+  }
+
   getEditor() {
     const rowId = getSelectedRowId(this.props.property);
     const row = getSelectedRow(this.props.property);
@@ -66,8 +77,6 @@ export class FormViewEditor extends React.Component<{
       invalidMessage = errMsg;
     }
 
-    const focusManager = getDataView(this.props.property).focusManager;
-
     switch (this.props.property!.column) {
       case "Number":
         return (
@@ -89,9 +98,9 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
-              focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
           />
         );
       case "Text":
@@ -114,9 +123,9 @@ export class FormViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
             isRichText={this.props.isRichText}
             subscribeToFocusManager={(textEditor) =>
-              focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
           />
         );
       case "Date":
@@ -135,10 +144,10 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
-              focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
           />
         );
       case "CheckBox":
@@ -151,9 +160,9 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
             subscribeToFocusManager={(textEditor) =>
-              focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
           />
         );
@@ -164,12 +173,12 @@ export class FormViewEditor extends React.Component<{
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(textEditor) =>
-              focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id)
             }
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customStyle={this.props.property?.style}
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
           />
@@ -180,7 +189,7 @@ export class FormViewEditor extends React.Component<{
             key={this.props.xmlNode.$iid}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
@@ -205,11 +214,11 @@ export class FormViewEditor extends React.Component<{
           <CheckList
             value={this.props.value}
             onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             subscribeToFocusManager={(firstCheckInput) =>
-              focusManager.subscribe(firstCheckInput, this.props.property?.id)
+              this.focusManager.subscribe(firstCheckInput, this.props.property?.id)
             }
           />
         );
@@ -221,9 +230,9 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
-            tabIndex={this.props.tabIndex}
+            // tabIndex={this.props.tabIndex}
             subscribeToFocusManager={(inputEditor) =>
-              focusManager.subscribe(inputEditor, this.props.property?.id)
+              this.focusManager.subscribe(inputEditor, this.props.property?.id)
             }
           />
         );
@@ -236,6 +245,11 @@ export class FormViewEditor extends React.Component<{
     const dataView = getDataView(this.props.property);
 
     return (event: any) => {
+      if (event.key === "Tab") {
+        DomEvent.preventDefault(event);
+        this.focusManager.focusNext(document.activeElement);
+        return;
+      }
       if (this.props.property!.multiline) {
         return;
       }
@@ -243,7 +257,7 @@ export class FormViewEditor extends React.Component<{
         return;
       }
       if (event.key === "Enter") {
-        uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(event, dataView.firstEnabledDefaultAction);
+          uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(event, dataView.firstEnabledDefaultAction);
       }
     };
   }
