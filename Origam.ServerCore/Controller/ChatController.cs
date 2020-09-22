@@ -259,7 +259,7 @@ namespace Origam.ServerCore.Controller
             DataRow r = data.Tables["OrigamChatRoom"].NewRow();
             r["Id"] = newChatRoomId;
             r["Name"] = newChatRoom.topic;
-            if (newChatRoom.references != null)
+            if (newChatRoom.references.ContainsKey("referenceId") && newChatRoom.references.ContainsKey("referenceEntity"))
             {
                 r["ReferenceId"] = newChatRoom.references["referenceId"];
                 r["ReferenceEntity"] = newChatRoom.references["referenceEntity"];
