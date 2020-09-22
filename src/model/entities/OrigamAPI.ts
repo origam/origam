@@ -506,6 +506,17 @@ export class OrigamAPI implements IApi {
       await this.axiosInstance.post(`/UIService/GetData`, data)
     ).data;
   }
+  getReportFromMenu(data: {
+    menuId: string;
+  }): Promise<any>;
+
+  async getReportFromMenu(data: {
+    menuId: string;
+  }): Promise<string> {
+    return (
+      await this.axiosInstance.get(`/UIService/ReportFromMenu/${data.menuId}`)
+    ).data;
+  }
 
   async getRowStates(data: {
     SessionFormIdentifier: string;
