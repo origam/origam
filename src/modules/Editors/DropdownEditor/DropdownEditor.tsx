@@ -62,6 +62,7 @@ export function DropdownEditor(props: {
       {() => (
         <DropdownLayout
           isDropped={beh.isDropped}
+          onDropupRequest={beh.dropUp}
           renderCtrl={() =>
             props.editor ? (
               props.editor

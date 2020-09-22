@@ -6,16 +6,19 @@ import S from "./Dropdown/Dropdown.module.scss";
 import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "./Dropdown/DropdownCommon";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import SE from "./DropdownEditor.module.scss";
-import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 export function DropdownEditorBody() {
   const refCtxBody = useContext(CtxDropdownRefBody);
   const beh = useContext(CtxDropdownEditor).behavior;
 
-  const ref = useMemo(() => (elm: any) => {
-    refCtxBody(elm);
-    beh.refDropdownBody(elm);
-  }, [])
+  const ref = useMemo(
+    () => (elm: any) => {
+      refCtxBody(elm);
+      beh.refDropdownBody(elm);
+    },
+    []
+  );
 
   useEffect(() => {
     window.addEventListener("mousedown", beh.handleWindowMouseDown);
@@ -33,12 +36,11 @@ export function DropdownEditorBody() {
 }
 
 export function DropdownEditorTable() {
-  
   const drivers = useContext(CtxDropdownEditor).columnDrivers;
   const dataTable = useContext(CtxDropdownEditor).editorDataTable;
   const beh = useContext(CtxDropdownEditor).behavior;
   const rectCtrl = useContext(CtxDropdownCtrlRect);
-  
+
   const [cache] = useState(
     () =>
       new CellMeasurerCache({
@@ -110,6 +112,7 @@ export function DropdownEditorTable() {
             break;
           }
         }
+        console.log(widths, width, columnWidthSum);
 
         width = Math.max(width + scrollbarSize.vert, rectCtrl.width!);
         let columnGrowFactor = 1;
@@ -133,9 +136,11 @@ export function DropdownEditorTable() {
             classNameBottomRightGrid={SE.table}
             columnCount={columnCount}
             rowCount={rowCount}
-            columnWidth={({ index }) =>
-              columnGrowFactor !== 1 ? widths[index] : cache.columnWidth({ index })
-            }
+            columnWidth={({ index }) => {
+              const cellWidth =
+                columnGrowFactor !== 1 ? widths[index] : cache.columnWidth({ index });
+              return cellWidth;
+            }}
             rowHeight={rowHeight}
             deferredMeasurementCache={cache}
             fixedRowCount={1}

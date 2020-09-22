@@ -13,6 +13,7 @@ export function DropdownLayout(props: {
   isDropped: boolean;
   renderCtrl: () => React.ReactNode;
   renderDropdown: () => React.ReactNode;
+  onDropupRequest?: () => void;
 }) {
   function handleCtrlBlockResize(contentRect: ContentRect) {
     const { top, left, width, height, bottom, right } = contentRect.bounds!;
@@ -69,14 +70,20 @@ export function DropdownLayout(props: {
   };
 
   useEffect(() => {
+    let intervalHandle: any;
     const handleScroll = _.throttle((event: any) => {
-      if (props.isDropped) reMeasure();
+      if (elmDropdownPortal && !elmDropdownPortal.contains(event.target) && props.isDropped) {
+        props.onDropupRequest?.();
+      }
     }, 100);
     const handleMouse = _.throttle((event: any) => {
       if (props.isDropped) reMeasure();
     }, 100);
     if (props.isDropped) {
       reMeasure();
+      intervalHandle = setInterval(() => {
+        reMeasure();
+      }, 3000);
     }
     window.addEventListener("scroll", handleScroll, true);
     window.addEventListener("mousedown", handleMouse, true);
@@ -85,9 +92,11 @@ export function DropdownLayout(props: {
       window.removeEventListener("scroll", handleScroll, true);
       window.removeEventListener("mousedown", handleMouse, true);
       window.removeEventListener("mouseup", handleMouse, true);
+      clearInterval(intervalHandle);
     };
-  }, [props.isDropped]);
+  }, [props.isDropped, props.onDropupRequest]);
 
+  const elmDropdownPortal = document.getElementById("dropdown-portal")!;
   return (
     <>
       <CtxDropdownBodyRect.Provider value={rectBody}>
@@ -108,7 +117,7 @@ export function DropdownLayout(props: {
                   </CtxDropdownRefBody.Provider>
                 )}
               </Measure>,
-              document.getElementById("dropdown-portal")!
+              elmDropdownPortal
             )}
         </CtxDropdownCtrlRect.Provider>
       </CtxDropdownBodyRect.Provider>
