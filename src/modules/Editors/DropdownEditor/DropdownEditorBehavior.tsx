@@ -1,13 +1,13 @@
-import {TypeSymbol} from "dic/Container";
+import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
-import {action, computed, decorate, flow, observable, reaction} from "mobx";
-import {DropdownEditorSetup} from "./DropdownEditor";
-import {DropdownEditorApi} from "./DropdownEditorApi";
-import {CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid} from "./DropdownEditorCommon";
-import {IDropdownEditorData} from "./DropdownEditorData";
-import {DropdownEditorLookupListCache} from "./DropdownEditorLookupListCache";
-import {DropdownDataTable} from "./DropdownTableModel";
-import {IFocusable} from "../../../model/entities/FocusManager";
+import { action, computed, decorate, flow, observable, reaction } from "mobx";
+import { DropdownEditorSetup } from "./DropdownEditor";
+import { DropdownEditorApi } from "./DropdownEditorApi";
+import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
+import { IDropdownEditorData } from "./DropdownEditorData";
+import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
+import { DropdownDataTable } from "./DropdownTableModel";
+import { IFocusable } from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -21,8 +21,7 @@ export class DropdownEditorBehavior {
     public subscribeToFocusManager?: (obj: IFocusable) => () => void,
     public tabIndex?: number,
     private onKeyDown?: (event: any) => void
-  ) {
-  }
+  ) {}
 
   @observable isDropped = false;
   @observable isWorking = false;
@@ -59,23 +58,19 @@ export class DropdownEditorBehavior {
   @action.bound dropDown() {
     const setup = this.setup();
     if (!this.isDropped) {
-      switch (setup.dropdownType) {
-        case EagerlyLoadedGrid: {
-          this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-          if (this.cache.hasCachedListRows()) {
-            this.dataTable.setData(this.cache.getCachedListRows());
-          } else {
-            this.ensureRequestRunning();
-          }
-          break;
-        }
-        case LazilyLoadedGrid: {
+      if (setup.dropdownType === EagerlyLoadedGrid && setup.cached) {
+        this.dataTable.setFilterPhrase(this.userEnteredValue || "");
+        if (this.cache.hasCachedListRows()) {
+          this.dataTable.setData(this.cache.getCachedListRows());
+        } else {
           this.ensureRequestRunning();
         }
+      } else if (setup.dropdownType === LazilyLoadedGrid || !setup.cached) {
+        this.ensureRequestRunning();
       }
-      this.isDropped = true;
-      this.makeFocused();
     }
+    this.isDropped = true;
+    this.makeFocused();
   }
 
   makeFocused() {
@@ -93,7 +88,7 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound handleInputFocus(event: any) {
-    const {target} = event;
+    const { target } = event;
     if (target) {
       target.select();
       target.scrollLeft = 0;
@@ -194,7 +189,7 @@ export class DropdownEditorBehavior {
     this.userEnteredValue = event.target.value;
     this.isDropped = true;
 
-    if (this.setup().dropdownType === EagerlyLoadedGrid) {
+    if (this.setup().dropdownType === EagerlyLoadedGrid && this.setup().cached) {
       if (this.cache.hasCachedListRows()) {
         this.dataTable.setData(this.cache.getCachedListRows());
       } else {
@@ -204,7 +199,7 @@ export class DropdownEditorBehavior {
       if (this.userEnteredValue) {
         this.trySelectFirstRow();
       }
-    } else if (this.setup().dropdownType === LazilyLoadedGrid) {
+    } else if (this.setup().dropdownType === LazilyLoadedGrid || !this.setup().cached) {
       this.handleInputChangeDeb();
     }
   }
@@ -303,20 +298,15 @@ export class DropdownEditorBehavior {
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
         items.sort(compareLookupItems);
-        switch (setup.dropdownType) {
-          case EagerlyLoadedGrid: {
-            self.dataTable.setData(items);
-            self.cache.setCachedListRows(items);
-            break;
+        if (setup.dropdownType === EagerlyLoadedGrid && setup.cached) {
+          self.dataTable.setData(items);
+          self.cache.setCachedListRows(items);
+        } else if (setup.dropdownType === LazilyLoadedGrid || !setup.cached) {
+          if (items.length < self.pageSize) {
+            self.willLoadNextPage = false;
           }
-          case LazilyLoadedGrid: {
-            if (items.length < self.pageSize) {
-              self.willLoadNextPage = false;
-            }
-            self.scrollToRowIndex = undefined;
-            self.dataTable.appendData(items);
-            break;
-          }
+          self.scrollToRowIndex = undefined;
+          self.dataTable.appendData(items);
         }
         if (!self.cursorRowId && self.userEnteredValue) self.trySelectFirstRow();
       } finally {
@@ -358,10 +348,9 @@ function compareLookupItems(a: any[], b: any[]) {
   return 0;
 }
 
-
 decorate(DropdownEditorBehavior, {
-  isReadOnly: observable
-})
+  isReadOnly: observable,
+});
 
 export const IDropdownEditorBehavior = TypeSymbol<DropdownEditorBehavior>(
   "IDropdownEditorBehavior"
