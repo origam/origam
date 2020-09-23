@@ -18,35 +18,14 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Origam.ServerCore.Model.Chat
 {
-    public class OrigamChatRoom
+    public class NewChatRoom
     {
-        public OrigamChatRoom(Guid id, string topic)
-        {
-            this.id = id;
-            this.topic = topic;
-        }
-        public Guid id { get; set; }
         public string topic { get; set; }
-        internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet)
-        {
-            List<OrigamChatRoom> chatRoom = new List<OrigamChatRoom>();
-            foreach (DataTable table in ChatRoomDataSet.Tables)
-            {
-                if (table.TableName == "OrigamChatRoom")
-                {
-                    foreach (DataRow row in table.Rows)
-                    {
-                        chatRoom.Add(new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name")));
-                    }
-                }
-            }
-            return chatRoom;
-        }
+        public List<InviteUser> inviteUsers { get; set; }
+        public Dictionary<object, object> references { get; set; }
     }
 }
