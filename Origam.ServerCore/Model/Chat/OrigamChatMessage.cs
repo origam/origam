@@ -27,18 +27,16 @@ namespace Origam.ServerCore.Model.Chat
 {
     public class OrigamChatMessage
     {
-
-        public OrigamChatMessage(Guid id, Guid authorId, string fullName, string authorAvatarUrl, DateTime dateTime, string TextMessages, List<Guid> mentions)
+        public OrigamChatMessage(Guid id, Guid authorId, string authorName, string authorAvatarUrl, DateTime dateCreated, string TextMessages, List<Guid> mentions)
         {
             this.id = id;
             this.authorId = authorId;
-            this.authorName = fullName;
+            this.authorName = authorName;
             this.authorAvatarUrl = authorAvatarUrl;
-            this.dateCreated = dateTime;
-            this.text = TextMessages;
+            this.dateCreated = dateCreated;
+            text = TextMessages;
             this.mentions = mentions;
         }
-
         public Guid id { get; set; }
         public Guid authorId { get; set; }
         public string authorName { get; set; }
@@ -53,7 +51,6 @@ namespace Origam.ServerCore.Model.Chat
         public DateTime dateCreated { get; set; }
         public string text { get; set; }
         public List<Guid> mentions { get; set; }
-
         internal static List<OrigamChatMessage> CreateJson(DataSet MessagesDataSet, List<OrigamChatBusinessPartner> allusers)
         {
             List<OrigamChatMessage> messages = new List<OrigamChatMessage>();
@@ -64,7 +61,6 @@ namespace Origam.ServerCore.Model.Chat
                                     .Where(mention => mention.id.Equals(userId))
                                     .Select(mention=> { return mention.name; })
                                     .FirstOrDefault();
-
                 List<Guid> listmention = new List<Guid>();
                 foreach (DataRow rowBpartner in MessagesDataSet.Tables["OrigamChatMessageBusinessPartner"].Rows)
                 {

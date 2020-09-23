@@ -26,20 +26,17 @@ namespace Origam.ServerCore.Model.Chat
 {
     public class OrigamChatParticipant
     {
-        public OrigamChatParticipant(Guid guid1, string username, string avatarurl, string Status)
+        public OrigamChatParticipant(Guid id, string username, string avatarUrl, string status)
         {
-            id = guid1;
+            this.id = id;
             name = username;
-            this.avatarUrl = avatarurl;
+            this.avatarUrl = avatarUrl;
             this.status = status;
         }
-
         public Guid id { get; }
         public string name { get;  }
         public string avatarUrl { get; }
         public string status { get;  }
-        
-
         internal static List<OrigamChatParticipant> CreateJson(DataSet datasetParticipants, DataSet onlineUsers)
         {
             List<OrigamChatParticipant> messages = new List<OrigamChatParticipant>();
@@ -49,7 +46,6 @@ namespace Origam.ServerCore.Model.Chat
             }
             return messages;
         }
-
         private static string GetStatus(Guid guid, DataSet onlineUsers)
         {
             foreach (DataRow row in onlineUsers.Tables[0].Rows)
@@ -63,13 +59,4 @@ namespace Origam.ServerCore.Model.Chat
             return "offline";
         }
     }
-
-    public enum StatusEnum
-    {
-        online,
-        away,
-        offline,
-        none
-    }
-
 }

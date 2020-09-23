@@ -26,15 +26,13 @@ namespace Origam.ServerCore.Model.Chat
 {
     public class OrigamChatRoom
     {
-        public OrigamChatRoom(Guid guid, string name)
+        public OrigamChatRoom(Guid id, string topic)
         {
-            this.id = guid;
-            this.topic = name;
+            this.id = id;
+            this.topic = topic;
         }
-
         public Guid id { get; set; }
         public string topic { get; set; }
-
         internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet)
         {
             List<OrigamChatRoom> chatRoom = new List<OrigamChatRoom>();
