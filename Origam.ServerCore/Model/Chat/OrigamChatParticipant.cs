@@ -46,12 +46,12 @@ namespace Origam.ServerCore.Model.Chat
             }
             return messages;
         }
-        private static string GetStatus(Guid guid, DataSet onlineUsers)
+        private static string GetStatus(Guid userId, DataSet onlineUsers)
         {
             foreach (DataRow row in onlineUsers.Tables[0].Rows)
             {
                 Guid rowId = row.Field<Guid>("Id");
-                if (rowId == guid)
+                if (rowId == userId)
                 {
                     return "online";
                 }

@@ -104,7 +104,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return GetRoomUsers(requestChatRoomId, limit,offset, searchPhrase,true);
+                return GetRoomUsers(requestChatRoomId, limit, offset, searchPhrase, true);
             });
         }
         //List Participant user for outvite
@@ -133,7 +133,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return GetRoomUsers(requestChatRoomId, limit, offset, searchPhrase,true);
+                return GetRoomUsers(requestChatRoomId, limit, offset, searchPhrase, true);
             });
         }
         [HttpGet("users")]
@@ -182,7 +182,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return PostinviteUser(requestChatRoomId, RequestId.userId);
+                return PostInviteUser(requestChatRoomId, RequestId.userId);
             });
         }
         [HttpPost("chatrooms/{requestChatRoomId:guid}/outviteUser")]
@@ -206,7 +206,7 @@ namespace Origam.ServerCore.Controller
             DataSet roomInfo = GetChatRoom(requestChatRoomId);
             DataRow dataRow = roomInfo.Tables[0].Rows[0];
             dataRow["Name"] = topic.topic;
-            DataService.StoreData(OrigamChatRoomDatastructureId, roomInfo, false,null);
+            DataService.StoreData(OrigamChatRoomDatastructureId, roomInfo, false, null);
             return Ok();
         }
         private IActionResult CreateRoom(NewChatRoom newRomJson)
@@ -216,13 +216,13 @@ namespace Origam.ServerCore.Controller
         }
         private Guid CreateRoomDatabase(NewChatRoom newChatRoom)
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
+            UserProfile profile = SecurityManager.CurrentUserProfile();
             Guid newChatRoomId = Guid.NewGuid(); 
-            DatasetGenerator dsg = new DatasetGenerator(true);
-            IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
+            DatasetGenerator datasetGenerator = new DatasetGenerator(true);
+            IPersistenceService persistService = ServiceManager.Services.GetService<IPersistenceService>();
+            DataStructure ds = (DataStructure)persistService.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
                                 new ModelElementKey(OrigamChatRoomDatastructureId));
-            DataSet data = dsg.CreateDataSet(ds);
+            DataSet data = datasetGenerator.CreateDataSet(ds);
             DataRow r = data.Tables["OrigamChatRoom"].NewRow();
             r["Id"] = newChatRoomId;
             r["Name"] = newChatRoom.topic;
@@ -241,9 +241,9 @@ namespace Origam.ServerCore.Controller
         }
         private void AddUsersIntoChatroom(Guid newChatRoomId, List<InviteUser> inviteUsers)
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
+            UserProfile profile = SecurityManager.CurrentUserProfile();
             DatasetGenerator dsg = new DatasetGenerator(true);
-            IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            IPersistenceService ps = ServiceManager.Services.GetService<IPersistenceService>();
             DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem),
                                 new ModelElementKey(OrigamChatRoomBusinessPartnerId));
             DataSet data = dsg.CreateDataSet(ds);
@@ -287,7 +287,7 @@ namespace Origam.ServerCore.Controller
             }
             return resultdata;
         }
-        private IActionResult PostinviteUser(Guid requestChatRoomId, Guid userId)
+        private IActionResult PostInviteUser(Guid requestChatRoomId, Guid userId)
         {
             List<InviteUser> users = new List<InviteUser>();
             users.Add(new InviteUser(userId));
@@ -312,28 +312,28 @@ namespace Origam.ServerCore.Controller
                 Guid.Empty, Guid.Empty, null, parameters);
             return Ok(OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite, null));
         }
-        private IActionResult GetRoomUsers(Guid requestChatRoomId, int limit, int offset, string searchPhrase,bool usersNotExistsInRoom)
+        private IActionResult GetRoomUsers(Guid requestChatRoomId, int limit, int offset, string searchPhrase, bool usersNotExistsInRoom)
         {
             List<OrigamChatParticipant> participants = GetChatRoomParticipants(requestChatRoomId);
-            Guid methodid = usersNotExistsInRoom?LookupBusinessPartnerGetByIdWithoutMe: LookupBusinessPartnerGetAllUsers;
+            Guid methodId = usersNotExistsInRoom?LookupBusinessPartnerGetByIdWithoutMe: LookupBusinessPartnerGetAllUsers;
             QueryParameterCollection parameters = new QueryParameterCollection();
             if(!string.IsNullOrEmpty(searchPhrase))
             {
                 parameters.Add(new QueryParameter("BusinessPartner_parSearchText", searchPhrase));
-                methodid = DefaultBusinessPartner;
+                methodId = DefaultBusinessPartner;
             };
             if (limit > 0)
             {
                 parameters.Add(new QueryParameter("BusinessPartner__pageNumber", offset));
                 parameters.Add(new QueryParameter("BusinessPartner__pageSize", limit));
             }
-            DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner,methodid,
+            DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner, methodId,
                 Guid.Empty, Guid.Empty, null, parameters);
             return Ok(OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite, participants, usersNotExistsInRoom));
         }
         private List<OrigamChatRoom> GetRoomsData()
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
+            UserProfile profile = SecurityManager.CurrentUserProfile();
             QueryParameterCollection parameters = new QueryParameterCollection();
             parameters.Add(new QueryParameter("OrigamChatRoomBussinesPartner_parBusinessPartnerId", profile.Id));
             parameters.Add(new QueryParameter("OrigamChatRoomBussinesPartner_parIsInvited", true));
@@ -345,11 +345,11 @@ namespace Origam.ServerCore.Controller
         {
             DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner, Guid.Empty,
                Guid.Empty, Guid.Empty, null, null);
-            return OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite,null);
+            return OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite, null);
         }
         private object GetLocalUser()
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
+            UserProfile profile = SecurityManager.CurrentUserProfile();
             return new OrigamChatBusinessPartner(profile.Id,profile.FullName,profile.Id.ToString());
         }
         private List<OrigamChatParticipant> GetChatRoomParticipants(Guid requestChatRoomId)
@@ -382,9 +382,9 @@ namespace Origam.ServerCore.Controller
         }
         private IActionResult PostMessages(Guid requestChatRoomId, OrigamChatMessage chatMessages)
         {
-            UserProfile profile = SecurityTools.CurrentUserProfile();
+            UserProfile profile = SecurityManager.CurrentUserProfile();
             DatasetGenerator dsg = new DatasetGenerator(true);
-            IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            IPersistenceService ps = ServiceManager.Services.GetService<IPersistenceService>();
             DataStructure ds = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
                                                  new ModelElementKey(OrigamChatMessageDataStructureID));
             DataSet data = dsg.CreateDataSet(ds);
@@ -398,10 +398,10 @@ namespace Origam.ServerCore.Controller
             r["Mentions"] = chatMessages.mentions.Count;
             data.Tables["OrigamChatMessage"].Rows.Add(r);
             DataService.StoreData(OrigamChatMessageDataStructureID, data, false, null);
-            DatasetGenerator dsgmen = new DatasetGenerator(true);
-            DataStructure dsmen = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
+            DatasetGenerator datasetGenerator = new DatasetGenerator(true);
+            DataStructure dataStructure = (DataStructure)ps.SchemaProvider.RetrieveInstance(typeof(AbstractSchemaItem), 
                                                 new ModelElementKey(OrigamChatMessageBusinessPartnerDataStructureID));
-            DataSet datanem = dsgmen.CreateDataSet(dsmen);
+            DataSet datanem = datasetGenerator.CreateDataSet(dataStructure);
             foreach (Guid messageMention in chatMessages.mentions)
             {
                 DataRow rmen = datanem.Tables["OrigamChatMessageBusinessPartner"].NewRow();
@@ -435,16 +435,16 @@ namespace Origam.ServerCore.Controller
         {
             List<OrigamChatBusinessPartner> allUsers = GetLocalUsers();
             Guid including = Guid.Empty;
-            Guid MethodId = OrigamChatMessageDataGetByRoomIdMethodId;
+            Guid methodId = OrigamChatMessageDataGetByRoomIdMethodId;
             if (afterIdIncluding != null && afterIdIncluding != Guid.Empty)
             {
                 including = afterIdIncluding;
-                MethodId = OrigamChatMessageDataAfterIdIncludingMethodId;
+                methodId = OrigamChatMessageDataAfterIdIncludingMethodId;
             }
             if (beforeIdIncluding != null && beforeIdIncluding != Guid.Empty)
             {
                 including = beforeIdIncluding;
-                MethodId = OrigamChatMessageDataBeforeIncludingMethodId;
+                methodId = OrigamChatMessageDataBeforeIncludingMethodId;
             }
             QueryParameterCollection parametersMessages = new QueryParameterCollection();
             if (including != Guid.Empty)
@@ -464,7 +464,7 @@ namespace Origam.ServerCore.Controller
                 parametersMessages.Add(new QueryParameter("OrigamChatMessage__pageNumber", 0));
                 parametersMessages.Add(new QueryParameter("OrigamChatMessage__pageSize", limit));
             }
-            DataSet MessagesDataSet = LoadData(OrigamChatMessageDataStructureID, MethodId,
+            DataSet MessagesDataSet = LoadData(OrigamChatMessageDataStructureID, methodId,
                 Guid.Empty, OrigamChatMessageDataOrderbyCreatedDateSortSetId, null, parametersMessages);
             return OrigamChatMessage.CreateJson(MessagesDataSet, allUsers);
         }
