@@ -1,13 +1,13 @@
 import xmlJs from "xml-js";
-import axios, {AxiosInstance} from "axios";
+import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import {IApi} from "./types/IApi";
-import {IAggregationInfo} from "./types/IAggregationInfo";
-import {IOrdering} from "./types/IOrderingConfiguration";
-import {IColumnSettings} from "./types/IColumnSettings";
-import {compareByGroupingIndex} from "./ColumnSettings";
-import {TypeSymbol} from "dic/Container";
+import { IApi } from "./types/IApi";
+import { IAggregationInfo } from "./types/IAggregationInfo";
+import { IOrdering } from "./types/IOrderingConfiguration";
+import { IColumnSettings } from "./types/IColumnSettings";
+import { compareByGroupingIndex } from "./ColumnSettings";
+import { TypeSymbol } from "dic/Container";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -29,17 +29,20 @@ export class OrigamAPI implements IApi {
   private createAxiosInstance() {
     const axiosInstance = axios.create({
       baseURL: this.urlPrefix,
-      headers: this.httpAuthHeader
+      headers: this.httpAuthHeader,
     });
 
-    axiosInstance.interceptors.response.use((response) => response, (error) => {
-      this.errorHandler(error);
-      throw error;
-    });
+    axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        this.errorHandler(error);
+        throw error;
+      }
+    );
     return axiosInstance;
   }
 
-  errorHandler: (error: any) => void
+  errorHandler: (error: any) => void;
   axiosInstance: AxiosInstance;
   urlPrefix: string;
   accessToken = "";
@@ -74,9 +77,7 @@ export class OrigamAPI implements IApi {
   }
 
   async login(credentials: { UserName: string; Password: string }) {
-    return (
-      await this.axiosInstance.post("/User/Login", credentials)
-    ).data;
+    return (await this.axiosInstance.post("/User/Login", credentials)).data;
   }
 
   async logout() {
@@ -114,9 +115,7 @@ export class OrigamAPI implements IApi {
     } else {
       requestData = data;
     }
-    const result = (
-      await this.axiosInstance.post("/UIService/InitUI", requestData)
-    ).data;
+    const result = (await this.axiosInstance.post("/UIService/InitUI", requestData)).data;
     return {
       ...result,
       formDefinition: xmlJs.xml2js(result.formDefinition, {
@@ -127,9 +126,7 @@ export class OrigamAPI implements IApi {
   }
 
   async destroyUI(data: { FormSessionId: string }) {
-    return (
-      await this.axiosInstance.get(`/UIService/DestroyUI/${data.FormSessionId}`)
-    ).data;
+    return (await this.axiosInstance.get(`/UIService/DestroyUI/${data.FormSessionId}`)).data;
   }
 
   async getEntities(query: {
@@ -141,9 +138,7 @@ export class OrigamAPI implements IApi {
     RowLimit?: number;
     MasterRowId?: string;
   }) {
-    const response = (
-      await this.axiosInstance.post("/Data/GetRows", query)
-    ).data;
+    const response = (await this.axiosInstance.post("/Data/GetRows", query)).data;
 
     if (_.isString(response.data)) {
       return [];
@@ -157,9 +152,7 @@ export class OrigamAPI implements IApi {
     MenuId: string | undefined;
     LabelIds: string[];
   }) {
-    return (
-      await this.axiosInstance.post("/UIService/GetLookupLabels", query)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/GetLookupLabels", query)).data;
   }
 
   async getLookupLabelsEx(
@@ -169,15 +162,11 @@ export class OrigamAPI implements IApi {
       LabelIds: string[];
     }[]
   ) {
-    return (
-      await this.axiosInstance.post("/UIService/GetLookupLabelsEx", query)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/GetLookupLabelsEx", query)).data;
   }
 
   async newEntity(data: { DataStructureEntityId: string; MenuId: string }) {
-    return (
-      await this.axiosInstance.post("/Data/NewEmptyRow", data)
-    ).data;
+    return (await this.axiosInstance.post("/Data/NewEmptyRow", data)).data;
   }
 
   async putEntity(data: {
@@ -186,9 +175,7 @@ export class OrigamAPI implements IApi {
     NewValues: { [key: string]: any };
     MenuId: string;
   }) {
-    return (
-      await this.axiosInstance.put("/Data/Row", data)
-    ).data;
+    return (await this.axiosInstance.put("/Data/Row", data)).data;
   }
 
   async postEntity(data: {
@@ -196,9 +183,7 @@ export class OrigamAPI implements IApi {
     NewValues: { [key: string]: any };
     MenuId: string;
   }) {
-    return (
-      await this.axiosInstance.post("/Data/Row", data)
-    ).data;
+    return (await this.axiosInstance.post("/Data/Row", data)).data;
   }
 
   async deleteEntity(data: {
@@ -207,7 +192,7 @@ export class OrigamAPI implements IApi {
     MenuId: string;
   }) {
     return (
-      await this.axiosInstance.request( {
+      await this.axiosInstance.request({
         url: `${this.urlPrefix}/Data/Row`,
         method: "DELETE",
         data,
@@ -225,29 +210,21 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     InitializeStructure: boolean;
   }) {
-    return (
-      await this.axiosInstance.post("/Session/CreateSession", data)
-    ).data;
+    return (await this.axiosInstance.post("/Session/CreateSession", data)).data;
   }
 
   async deleteSession() {}
 
   async saveSession(sessionFormIdentifier: string) {
-    return (
-      await this.axiosInstance.get(`/UIService/SaveData/${sessionFormIdentifier}`)
-    ).data;
+    return (await this.axiosInstance.get(`/UIService/SaveData/${sessionFormIdentifier}`)).data;
   }
 
   async saveSessionQuery(sessionFormIdentifier: string) {
-    return (
-      await this.axiosInstance.get(`/UIService/SaveDataQuery/${sessionFormIdentifier}`)
-    ).data;
+    return (await this.axiosInstance.get(`/UIService/SaveDataQuery/${sessionFormIdentifier}`)).data;
   }
 
   async refreshSession(sessionFormIdentifier: string) {
-    return (
-      await this.axiosInstance.get(`/UIService/RefreshData/${sessionFormIdentifier}`)
-    ).data;
+    return (await this.axiosInstance.get(`/UIService/RefreshData/${sessionFormIdentifier}`)).data;
   }
 
   async sessionChangeMasterRecord(data: {
@@ -255,9 +232,7 @@ export class OrigamAPI implements IApi {
     Entity: string;
     RowId: string;
   }) {
-    return (
-      await this.axiosInstance.post("/Session/ChangeMasterRecord", data)
-    ).data;
+    return (await this.axiosInstance.post("/Session/ChangeMasterRecord", data)).data;
   }
 
   async sessionDeleteEntity(data: {
@@ -265,9 +240,7 @@ export class OrigamAPI implements IApi {
     Entity: string;
     RowId: string;
   }) {
-    return (
-      await this.axiosInstance.post("/Session/DeleteRow", data)
-    ).data;
+    return (await this.axiosInstance.post("/Session/DeleteRow", data)).data;
   }
 
   async sessionCreateEntity(data: {
@@ -277,9 +250,7 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     RequestingGridId: string;
   }) {
-    return (
-      await this.axiosInstance.post(`/Session/CreateRow`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/Session/CreateRow`, data)).data;
   }
 
   async sessionGetEntity(data: {
@@ -288,7 +259,8 @@ export class OrigamAPI implements IApi {
     parentRecordId: string;
     rootRecordId: string;
   }) {
-    return (await this.axiosInstance.get("/Session/Rows", {
+    return (
+      await this.axiosInstance.get("/Session/Rows", {
         params: data,
         headers: this.httpAuthHeader,
       })
@@ -303,9 +275,7 @@ export class OrigamAPI implements IApi {
     Property: string;
     NewValue: any;
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post("/Session/UpdateRow", data)
-    ).data;
+    return (await this.axiosInstance.post("/Session/UpdateRow", data)).data;
   }
 
   async getLookupList(data: {
@@ -323,21 +293,19 @@ export class OrigamAPI implements IApi {
     PageNumber: number;
     MenuId: string;
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post("/UIService/GetLookupList", data)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/GetLookupList", data)).data;
   }
 
-  async getNotificationBoxContent(): Promise<any>{
-    return (
-      await this.axiosInstance.get("/UIService/GetNotificationBoxContent")
-    ).data;
+  async getLookupCacheDependencies(data: { LookupIds: string[] }): Promise<any> {
+    return (await this.axiosInstance.post("/UIService/GetLookupCacheDependencies", data)).data;
+  }
+
+  async getNotificationBoxContent(): Promise<any> {
+    return (await this.axiosInstance.get("/UIService/GetNotificationBoxContent")).data;
   }
 
   async defaultCulture(): Promise<any> {
-    return (
-      await this.axiosInstance.get("/UIService/DefaultCulture")
-    ).data;
+    return (await this.axiosInstance.get("/UIService/DefaultCulture")).data;
   }
 
   async initPortal(): Promise<any> {
@@ -357,22 +325,16 @@ export class OrigamAPI implements IApi {
     },
     canceller?: any
   ) {
-    return (await this.axiosInstance.post("/UIService/MasterRecord", data, {
+    return (
+      await this.axiosInstance.post("/UIService/MasterRecord", data, {
         headers: this.httpAuthHeader,
         cancelToken: canceller && canceller.token,
       })
     ).data;
   }
 
-  async restoreData(
-    data: {
-      SessionFormIdentifier: string;
-      ObjectId: string;
-    }
-  ) {
-    return (
-      await this.axiosInstance.post("/UIService/RestoreData", data)
-    ).data;
+  async restoreData(data: { SessionFormIdentifier: string; ObjectId: string }) {
+    return (await this.axiosInstance.post("/UIService/RestoreData", data)).data;
   }
 
   async updateObject(data: {
@@ -381,9 +343,7 @@ export class OrigamAPI implements IApi {
     Id: string;
     Values: { [key: string]: any };
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post("/UIService/UpdateObject", data)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/UpdateObject", data)).data;
   }
 
   async createObject(data: {
@@ -393,9 +353,7 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     RequestingGridId: string;
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post("/UIService/CreateObject", data)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/CreateObject", data)).data;
   }
 
   async copyObject(data: {
@@ -406,9 +364,7 @@ export class OrigamAPI implements IApi {
     OriginalId: string;
     Entities: string[];
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post("/UIService/CopyObject", data)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/CopyObject", data)).data;
   }
 
   async deleteObject(data: {
@@ -416,9 +372,7 @@ export class OrigamAPI implements IApi {
     Entity: string;
     Id: string;
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post("/UIService/DeleteObject", data)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/DeleteObject", data)).data;
   }
 
   async executeActionQuery(data: {
@@ -430,9 +384,7 @@ export class OrigamAPI implements IApi {
     SelectedItems: string[];
     InputParameters: { [key: string]: any };
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post("/UIService/ExecuteActionQuery", data)
-    ).data;
+    return (await this.axiosInstance.post("/UIService/ExecuteActionQuery", data)).data;
   }
 
   async executeAction(data: {
@@ -445,9 +397,7 @@ export class OrigamAPI implements IApi {
     InputParameters: { [key: string]: any };
     RequestingGrid: string;
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post(`/UIService/ExecuteAction`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
   }
 
   async getGroups(data: {
@@ -462,9 +412,7 @@ export class OrigamAPI implements IApi {
     SessionFormIdentifier: string | undefined;
     AggregatedColumns: IAggregationInfo[] | undefined;
   }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/GetGroups`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/GetGroups`, data)).data;
   }
   async getAggregations(data: {
     MenuId: string;
@@ -474,9 +422,7 @@ export class OrigamAPI implements IApi {
     SessionFormIdentifier: string | undefined;
     MasterRowId: string | undefined;
   }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/GetAggregations`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/GetAggregations`, data)).data;
   }
 
   async getRows(data: {
@@ -491,9 +437,7 @@ export class OrigamAPI implements IApi {
     MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post(`/UIService/GetRows`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/GetRows`, data)).data;
   }
 
   async getData(data: {
@@ -502,20 +446,12 @@ export class OrigamAPI implements IApi {
     ParentRecordId: string;
     RootRecordId: string;
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post(`/UIService/GetData`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/GetData`, data)).data;
   }
-  getReportFromMenu(data: {
-    menuId: string;
-  }): Promise<any>;
+  getReportFromMenu(data: { menuId: string }): Promise<any>;
 
-  async getReportFromMenu(data: {
-    menuId: string;
-  }): Promise<string> {
-    return (
-      await this.axiosInstance.get(`/UIService/ReportFromMenu/${data.menuId}`)
-    ).data;
+  async getReportFromMenu(data: { menuId: string }): Promise<string> {
+    return (await this.axiosInstance.get(`/UIService/ReportFromMenu/${data.menuId}`)).data;
   }
 
   async getRowStates(data: {
@@ -523,15 +459,11 @@ export class OrigamAPI implements IApi {
     Entity: string;
     Ids: string[];
   }): Promise<any> {
-    return (
-      await this.axiosInstance.post(`/UIService/RowStates`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/RowStates`, data)).data;
   }
 
   async getWorkQueueList(): Promise<any> {
-    return (
-      await this.axiosInstance.get(`/UIService/WorkQueueList`)
-    ).data;
+    return (await this.axiosInstance.get(`/UIService/WorkQueueList`)).data;
   }
 
   async saveObjectConfiguration(data: {
@@ -558,28 +490,20 @@ export class OrigamAPI implements IApi {
           />`
     );
 
-    await this.axiosInstance.post(
-      `/UIService/SaveObjectConfig`,
-      {
-        ObjectinstanceId: data.instanceId,
-        Section: "columnWidths",
-        SettingsData: columnsProps.concat(columnFields).join(""),
-      }
-    );
-    await this.axiosInstance.post(
-      `/UIService/SaveObjectConfig`,
-      {
-        ObjectinstanceId: data.instanceId,
-        Section: "defaultView",
-        SettingsData: `<view id="${data.defaultView}" />`,
-      }
-    );
+    await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
+      ObjectinstanceId: data.instanceId,
+      Section: "columnWidths",
+      SettingsData: columnsProps.concat(columnFields).join(""),
+    });
+    await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
+      ObjectinstanceId: data.instanceId,
+      Section: "defaultView",
+      SettingsData: `<view id="${data.defaultView}" />`,
+    });
   }
 
   async saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any> {
-    return (
-      await this.axiosInstance.post(`/UIService/SaveSplitPanelConfig`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/SaveSplitPanelConfig`, data)).data;
   }
 
   async workflowAbort(data: { sessionFormIdentifier: string }): Promise<any> {
@@ -615,12 +539,10 @@ export class OrigamAPI implements IApi {
     CachedFormIds: string[];
   }): Promise<any> {
     const result = (
-      await this.axiosInstance.post(`/UIService/WorkflowNext`,
-        {
-          SessionFormIdentifier: data.sessionFormIdentifier,
-          CachedFormIds: data.CachedFormIds,
-        }
-      )
+      await this.axiosInstance.post(`/UIService/WorkflowNext`, {
+        SessionFormIdentifier: data.sessionFormIdentifier,
+        CachedFormIds: data.CachedFormIds,
+      })
     ).data;
 
     return {
@@ -634,36 +556,30 @@ export class OrigamAPI implements IApi {
 
   async workflowNextQuery(data: { sessionFormIdentifier: string }): Promise<any> {
     return (
-      await this.axiosInstance.get(
-        `/UIService/WorkflowNextQuery/${data.sessionFormIdentifier}`
-      )
+      await this.axiosInstance.get(`/UIService/WorkflowNextQuery/${data.sessionFormIdentifier}`)
     ).data;
   }
 
   async getRecordInfo(data: { MenuId: string; DataStructureEntityId: string; RowId: string }) {
-    return (
-      await this.axiosInstance.post(`/UIService/GetRecordTooltip`, data)
-    ).data.tooltip;
+    return (await this.axiosInstance.post(`/UIService/GetRecordTooltip`, data)).data.tooltip;
   }
 
   async getRecordAudit(data: { MenuId: string; DataStructureEntityId: string; RowId: string }) {
-    return (
-      await this.axiosInstance.post(`/UIService/GetAudit`, data)
-    ).data.data.map((row: any[]) => ({
-      id: row[IAuditLogColumnIndices.Id],
-      dateTime: row[IAuditLogColumnIndices.DateTime],
-      userName: row[IAuditLogColumnIndices.UserName],
-      fieldName: row[IAuditLogColumnIndices.FieldName],
-      oldValue: row[IAuditLogColumnIndices.OldValue],
-      newValue: row[IAuditLogColumnIndices.NewValue],
-      actionType: row[IAuditLogColumnIndices.ActionType],
-    }));
+    return (await this.axiosInstance.post(`/UIService/GetAudit`, data)).data.data.map(
+      (row: any[]) => ({
+        id: row[IAuditLogColumnIndices.Id],
+        dateTime: row[IAuditLogColumnIndices.DateTime],
+        userName: row[IAuditLogColumnIndices.UserName],
+        fieldName: row[IAuditLogColumnIndices.FieldName],
+        oldValue: row[IAuditLogColumnIndices.OldValue],
+        newValue: row[IAuditLogColumnIndices.NewValue],
+        actionType: row[IAuditLogColumnIndices.ActionType],
+      })
+    );
   }
 
   async getReport(data: { reportUrl: string }): Promise<any> {
-    return (
-      await this.axiosInstance.get(data.reportUrl)
-    ).data;
+    return (await this.axiosInstance.get(data.reportUrl)).data;
   }
 
   async getDownloadToken(data: {
@@ -677,19 +593,16 @@ export class OrigamAPI implements IApi {
     parameters: any;
   }): Promise<any> {
     return (
-      await this.axiosInstance.post(
-        `/Blob/DownloadToken`,
-        {
-          SessionFormIdentifier: data.SessionFormIdentifier,
-          MenuId: data.MenuId,
-          DataStructureEntityId: data.DataStructureEntityId,
-          Entity: data.Entity,
-          RowId: data.RowId,
-          Property: data.Property,
-          IsPreview: false,
-          Parameters: data.parameters,
-        }
-      )
+      await this.axiosInstance.post(`/Blob/DownloadToken`, {
+        SessionFormIdentifier: data.SessionFormIdentifier,
+        MenuId: data.MenuId,
+        DataStructureEntityId: data.DataStructureEntityId,
+        Entity: data.Entity,
+        RowId: data.RowId,
+        Property: data.Property,
+        IsPreview: false,
+        Parameters: data.parameters,
+      })
     ).data;
   }
 
@@ -715,20 +628,17 @@ export class OrigamAPI implements IApi {
     parameters: any;
   }): Promise<any> {
     return (
-      await this.axiosInstance.post(
-        `/Blob/UploadToken`,
-        {
-          SessionFormIdentifier: data.SessionFormIdentifier,
-          MenuId: data.MenuId,
-          DataStructureEntityId: data.DataStructureEntityId,
-          Entity: data.Entity,
-          RowId: data.RowId,
-          Property: data.Property,
-          IsPreview: false,
-          Parameters: data.parameters,
-          SubmitImmediately: "true",
-        }
-      )
+      await this.axiosInstance.post(`/Blob/UploadToken`, {
+        SessionFormIdentifier: data.SessionFormIdentifier,
+        MenuId: data.MenuId,
+        DataStructureEntityId: data.DataStructureEntityId,
+        Entity: data.Entity,
+        RowId: data.RowId,
+        Property: data.Property,
+        IsPreview: false,
+        Parameters: data.parameters,
+        SubmitImmediately: "true",
+      })
     ).data;
   }
 
@@ -745,9 +655,8 @@ export class OrigamAPI implements IApi {
   }
 
   async pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]> {
-    return (
-      await this.axiosInstance.get(`/UIService/PendingChanges/${data.sessionFormIdentifier}`)
-    ).data;
+    return (await this.axiosInstance.get(`/UIService/PendingChanges/${data.sessionFormIdentifier}`))
+      .data;
   }
 
   async changes(data: {

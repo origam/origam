@@ -43,8 +43,8 @@ import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 import _ from "lodash";
-import {ChangeMasterRecordDialog} from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
-import {getFormScreenLifecycle} from "../../selectors/FormScreen/getFormScreenLifecycle";
+import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
+import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { getProperties } from "model/selectors/DataView/getProperties";
@@ -110,7 +110,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     action: IAction,
     selectedItems: string[]
   ): Generator<any, any, any> {
-    if(action.confirmationMessage && !(yield this.askYesNoQuestion(action.confirmationMessage))){
+    if (action.confirmationMessage && !(yield this.askYesNoQuestion(action.confirmationMessage))) {
       return;
     }
     yield* this.executeAction(gridId, entity, action, selectedItems);
@@ -365,13 +365,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
     assignIIds(args.initUIResult.formDefinition);
 
-    const screen = interpretScreenXml(
+    const { formScreen: screen, foundLookupIds } = yield* interpretScreenXml(
       args.initUIResult.formDefinition,
       this,
       args.initUIResult.panelConfigurations,
       args.initUIResult.lookupMenuMappings,
       args.initUIResult.sessionId
     );
+    const api = getApi(openedScreen);
+    const cacheDependencies = getWorkbench(openedScreen).lookupMultiEngine.cacheDependencies;
+    const lookupIdsToQuery = cacheDependencies.getUnhandledLookupIds(foundLookupIds);
+
+    if (lookupIdsToQuery.size > 0) {
+      const dependencies = yield api.getLookupCacheDependencies({
+        LookupIds: Array.from(lookupIdsToQuery),
+      });
+      cacheDependencies.putValues(dependencies);
+    }
+
     openedScreen.content.setFormScreen(screen);
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
@@ -732,9 +743,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   *refreshLookups() {
     const dataViews = getDataViewList(this);
-    const properties = dataViews
-      .flatMap((dv) => getProperties(dv))
-      .filter((prop) => prop.isLookup);
+    const properties = dataViews.flatMap((dv) => getProperties(dv)).filter((prop) => prop.isLookup);
     const cleaned = new Set<any>();
     for (let prop of properties) {
       if (prop.lookupEngine && !cleaned.has(prop.lookupId)) {
@@ -868,7 +877,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  async handleUserInputOnChangingRow(dataView: IDataView){
+  async handleUserInputOnChangingRow(dataView: IDataView) {
     const api = getApi(dataView);
     const openedScreen = getOpenedScreen(this);
     const sessionId = getSessionId(openedScreen.content.formScreen);
@@ -877,8 +886,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       case IQuestionChangeRecordAnswer.Cancel:
         return false;
       case IQuestionChangeRecordAnswer.Yes:
-        await api.saveDataQuery({ sessionFormIdentifier: sessionId});
-        await api.saveData({ sessionFormIdentifier: sessionId});
+        await api.saveDataQuery({ sessionFormIdentifier: sessionId });
+        await api.saveData({ sessionFormIdentifier: sessionId });
         return true;
       case IQuestionChangeRecordAnswer.No:
         await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();

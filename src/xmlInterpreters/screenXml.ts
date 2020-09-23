@@ -87,7 +87,7 @@ export const findFormPropertyIds = (node: any) =>
 
 export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];
 
-export function interpretScreenXml(
+export function* interpretScreenXml(
   screenDoc: any,
   formScreenLifecycle: IFormScreenLifecycle02,
   panelConfigurationsRaw: any,
@@ -176,6 +176,9 @@ export function interpretScreenXml(
       );
     }
   }
+
+  const foundLookupIds = new Set<string>();
+
   const scr = new FormScreen({
     title: windowXml.attributes.Title,
     menuId: windowXml.attributes.MenuId,
@@ -542,6 +545,7 @@ export function interpretScreenXml(
     for (let property of dv.properties) {
       if (property.isLookup && property.lookupId) {
         const { lookupId } = property;
+        foundLookupIds.add(lookupId);
         if (!lookupMultiEngine.lookupEngineById.has(lookupId)) {
           const lookupIndividualEngine = createIndividualLookupEngine(lookupId, lookupMultiEngine);
           lookupMultiEngine.lookupCleanerReloaderById.set(
@@ -559,8 +563,10 @@ export function interpretScreenXml(
     flow($dataView.resolve(IPerspective).activateDefault)();
   }
 
+
   const rscr = $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
-  return scr;
+
+  return {formScreen: scr, foundLookupIds};
 }
 
 function getImplicitFilters(dataViewXml: any) {
