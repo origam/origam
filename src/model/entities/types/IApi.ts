@@ -36,6 +36,8 @@ export interface IApi {
     LabelIds: string[];
   }): Promise<{ [key: string]: string }>;
 
+  getLookupCacheDependencies(data: { LookupIds: string[] }): Promise<any>;
+
   getLookupLabelsEx(
     query: {
       LookupId: string;
@@ -248,9 +250,7 @@ export interface IApi {
     RootRecordId: string;
   }): Promise<any>;
 
-  getReportFromMenu(data: {
-    menuId: string;
-  }): Promise<string>;
+  getReportFromMenu(data: { menuId: string }): Promise<string>;
 
   getRowStates(data: {
     SessionFormIdentifier: string;

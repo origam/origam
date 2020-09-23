@@ -1,10 +1,12 @@
-import {getDataViewsByEntity} from "../../selectors/DataView/getDataViewsByEntity";
+import { getDataViewsByEntity } from "../../selectors/DataView/getDataViewsByEntity";
 import _ from "lodash";
-import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
-import {putRowStateValue} from "../RowStates/putRowStateValue";
-import {reloadScreen} from "../FormScreen/reloadScreen";
-import {getDataViewList} from "model/selectors/FormScreen/getDataViewList";
-import {getIsBindingRoot} from "model/selectors/DataView/getIsBindingRoot";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
+import { putRowStateValue } from "../RowStates/putRowStateValue";
+import { reloadScreen } from "../FormScreen/reloadScreen";
+import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
+import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
+import { getWorkbench } from "model/selectors/getWorkbench";
+import { getDataSources } from "model/selectors/DataSources/getDataSources";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -14,7 +16,7 @@ export enum IResponseOperation {
   FormSaved = 2, // OK ? - TODO: Check
   FormNeedsRefresh = 3,
   CurrentRecordNeedsUpdate = 4,
-  RefreshPortal = 5
+  RefreshPortal = 5,
 }
 
 export interface ICRUDResult {
@@ -33,7 +35,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
     }
     return;
   }
- // console.log(result)
+  // console.log(result)
   const resultItem = result;
   if (resultItem.state) {
     // TODO: Context for all CRUD ops?
@@ -56,10 +58,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
         const tablePanelView = dataView.tablePanelView;
         const dataSourceRow = result.wrappedObject;
         console.log("New row:", dataSourceRow);
-        dataView.dataTable.insertRecord(
-          tablePanelView.firstVisibleRowIndex,
-          dataSourceRow
-        );
+        dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow);
         dataView.selectRow(dataSourceRow);
       }
       getFormScreen(ctx).setDirty(true);
@@ -78,14 +77,24 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
     }
     case IResponseOperation.FormSaved: {
       getFormScreen(ctx).setDirty(false);
+      const workbench = getWorkbench(ctx);
+      const { cacheDependencies, lookupCleanerReloaderById } = workbench.lookupMultiEngine;
+      const dataSources = getDataSources(ctx);
+      const collectedLookupIds = cacheDependencies.getDependencyLookupIdsByCacheKeys(
+        dataSources.map((ds) => ds.lookupCacheKey)
+      );
+      for (let lookupId of collectedLookupIds) {
+        console.log("Clean+Reload:", lookupId);
+        lookupCleanerReloaderById.get(lookupId)?.reloadLookupLabels();
+        workbench.lookupListCache.deleteLookup(lookupId);
+      }
       break;
     }
     case IResponseOperation.CurrentRecordNeedsUpdate: {
-
       // TODO: Throw away all data and force further navigation / throw away all rowstates
       const dataViews = getDataViewList(ctx);
-      for(let dataView of dataViews) {
-        if(getIsBindingRoot(dataView)) {
+      for (let dataView of dataViews) {
+        if (getIsBindingRoot(dataView)) {
           yield* dataView.lifecycle.changeMasterRow();
           yield* dataView.lifecycle.navigateChildren();
         }
@@ -98,7 +107,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
     }
     case IResponseOperation.DeleteAllData: {
       const dataViews = getDataViewList(ctx);
-      for(let dataView of dataViews) {
+      for (let dataView of dataViews) {
         dataView.dataTable.clear();
       }
       break;

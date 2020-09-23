@@ -3,6 +3,7 @@ import { ILookupIndividualEngine } from "model/entities/Property";
 import { IApi } from "model/entities/types/IApi";
 import { Clock } from "./Clock";
 import { LookupApi } from "./LookupApi";
+import { LookupCacheDependencies } from "./LookupCacheDependencies";
 import { LookupCacheIndividual } from "./LookupCacheIndividual";
 import { LookupCacheMulti } from "./LookupCacheMulti";
 import { LookupLabelsCleanerReloader } from "./LookupCleanerLoader";
@@ -27,11 +28,15 @@ export function createMultiLookupEngine(origamApi: () => IApi): IMultiLookupEngi
   );
   const lookupLoaderMulti = new LookupLoaderMulti(clock, api);
   const lookupEngineById = new Map<string, ILookupIndividualEngine>();
+
+  const cacheDependencies = new LookupCacheDependencies();
+
   return {
     lookupCacheMulti,
     lookupLoaderMulti,
     lookupCleanerReloaderById,
     lookupEngineById,
+    cacheDependencies,
     startup() {
       lookupCacheMulti.startup();
     },
@@ -46,6 +51,7 @@ export interface IMultiLookupEngine {
   lookupLoaderMulti: LookupLoaderMulti;
   lookupCleanerReloaderById: Map<string, LookupLabelsCleanerReloader>;
   lookupEngineById: Map<string, ILookupIndividualEngine>;
+  cacheDependencies: LookupCacheDependencies;
   startup(): void;
   teardown(): void;
 }
