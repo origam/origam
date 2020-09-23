@@ -13,6 +13,7 @@ import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrder
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
 import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
+import { IProperty } from "model/entities/types/IProperty";
 
 
 export interface IInfiniteScrollLoaderData {
@@ -25,6 +26,7 @@ export interface IInfiniteScrollLoaderData {
 }
 
 export interface IInfiniteScrollLoader extends IInfiniteScrollLoaderData {
+  getAllValuesOfProp(property: IProperty): Promise<any[]>;
   start(): () => void;
 
   dispose(): void;
@@ -49,6 +51,10 @@ export class NullIScrollLoader implements IInfiniteScrollLoader {
 
   groupFilter: string | undefined;
   visibleRowsMonitor: IVisibleRowsMonitor = null as any;
+
+  getAllValuesOfProp(property: IProperty): Promise<any[]> {
+    return Promise.resolve([]);
+  }
 }
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
@@ -222,6 +228,24 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       this.debugDisposer();
     }
     this.requestProcessor.dispose();
+  }
+
+  async getAllValuesOfProp(property: IProperty): Promise<any[]> {
+    const api = getApi(this.ctx);
+    const groups = await api.getGroups({
+      MenuId: getMenuItemId(this.ctx),
+      SessionFormIdentifier: getSessionId(this.ctx),
+      DataStructureEntityId: getDataStructureEntityId(this.ctx),
+      Filter: undefined,
+      Ordering: [],
+      RowLimit: 999999,
+      GroupBy: property.id,
+      GroupByLookupId: undefined,
+      MasterRowId: undefined,
+      AggregatedColumns: [],
+    });
+
+    return groups.map(group => group[property.id]);
   }
 }
 

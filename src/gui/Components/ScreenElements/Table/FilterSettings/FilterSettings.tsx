@@ -11,10 +11,12 @@ import { MobXProviderContext } from "mobx-react";
 import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
 import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 export const FilterSettings: React.FC = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
   const dataTable = getDataTable(property);
+  const dataView = getDataView(property);
   const setting = getFilterSettingByProperty(property, property.id);
   const handleApplyFilterSetting = onApplyFilterSetting(property);
   //console.log(setting);
@@ -55,7 +57,9 @@ export const FilterSettings: React.FC = observer((props) => {
           onTriggerApplySetting={handleApplyFilterSetting}
           lookupId={property.lookup!.lookupId}
           getOptions={flow(function* (searchTerm: string) {
-            const allIds = new Set(dataTable.getAllValuesOfProp(property));
+            const allIds = dataView.infiniteScrollLoader
+              ? yield dataView.infiniteScrollLoader.getAllValuesOfProp(property)
+              : new Set(dataTable.getAllValuesOfProp(property));
             const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allIds);
             return Array.from(allIds.values())
               .map((item) => ({

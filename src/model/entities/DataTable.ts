@@ -11,6 +11,7 @@ import { getRowContainer } from "../selectors/getRowContainer";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { formatNumber } from "./NumberFormating";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
+import { isScrollRowContainer } from "./ScrollRowContainer";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -104,8 +105,9 @@ export class DataTable implements IDataTable {
     return row[dsField.index];
   }
 
+  // Returns all values from currently loaded rows (in case thhe table is infinitelly scrolled)
   getAllValuesOfProp(property: IProperty): any[] {
-    return this.rowsContainer.allRows.map((row) => this.getCellValue(row, property));
+      return this.rowsContainer.allRows.map((row) => this.getCellValue(row, property));
   }
 
   getCellText(row: any[], property: IProperty) {
