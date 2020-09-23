@@ -32,6 +32,7 @@
         <LoadExternalWorkQueues>true</LoadExternalWorkQueues>
         <ExternalWorkQueueCheckPeriod>180</ExternalWorkQueueCheckPeriod>
         <ModelProvider>Origam.OrigamEngine.FilePersistenceBuilder, Origam.OrigamEngine</ModelProvider>
+        <ReportDefinitionsPath>OrigamSettings_ReportDefinitionsPath</ReportDefinitionsPath>
       </OrigamSettings>
     </ArrayOfOrigamSettings>
   </xmlSerializerSection>
