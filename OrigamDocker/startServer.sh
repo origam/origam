@@ -94,6 +94,7 @@ if [[ ! -f "OrigamSettings.config" ]]; then
 		sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_ModelName/data\/${OrigamSettings_ModelName}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_Title/${OrigamSettings_ModelName}/" OrigamSettings.config
+		sed -i "s/OrigamSettings_ReportDefinitionsPath/${OrigamSettings_ReportDefinitionsPath}/" OrigamSettings.config
 	fi
 fi
 export ASPNETCORE_URLS="http://+:8080"
