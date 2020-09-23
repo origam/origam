@@ -33,9 +33,8 @@ export class FocusManager {
     const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
-    const nextIndex = this.focusableContainers.length - 1 > currentContainerIndex
-      ? currentContainerIndex + 1
-      : 0;
+    const nextIndex =
+      this.focusableContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
     this.focusableContainers[nextIndex].focusable.focus();
   }
 
@@ -43,9 +42,9 @@ export class FocusManager {
     const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
-    const nextIndex = currentContainerIndex === 0
-      ? this.focusableContainers.length - 1
-      : currentContainerIndex - 1;
+    const nextIndex =
+      currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
+    console.log("nextIndex: "+nextIndex)
     this.focusableContainers[nextIndex].focusable.focus();
   }
 }

@@ -175,6 +175,7 @@ export class FormViewEditor extends React.Component<{
             customStyle={this.props.property?.style}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
+            onKeyDown={this.MakeOnKeyDownCallBack()}
           />
         );
       case "TagInput":
@@ -236,6 +237,7 @@ export class FormViewEditor extends React.Component<{
     const dataView = getDataView(this.props.property);
 
     return (event: any) => {
+      console.log("event.key: "+event.key)
       if (event.key === "Tab") {
         DomEvent.preventDefault(event);
         if(event.shiftKey){
