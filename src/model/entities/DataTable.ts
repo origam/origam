@@ -105,7 +105,7 @@ export class DataTable implements IDataTable {
   }
 
   getAllValuesOfProp(property: IProperty): any[] {
-    return this.rowsContainer.rows.map((row) => this.getCellValue(row, property));
+    return this.rowsContainer.allRows.map((row) => this.getCellValue(row, property));
   }
 
   getCellText(row: any[], property: IProperty) {

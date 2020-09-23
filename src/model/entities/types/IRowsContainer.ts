@@ -18,4 +18,6 @@ export interface IRowsContainer {
   loadedRowsCount: number;
 
   rows: any[];
+
+  allRows: any[];
 }
