@@ -1,10 +1,10 @@
-import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
-import {action, computed} from "mobx";
-import {IProperty} from "../../../../model/entities/types/IProperty";
-import {getLeadingColumnCount} from "../../../../model/selectors/TablePanelView/getLeadingColumnCount";
-import {getIsSelectionCheckboxesShown} from "../../../../model/selectors/DataView/getIsSelectionCheckboxesShown";
-import {getGroupingConfiguration} from "../../../../model/selectors/TablePanelView/getGroupingConfiguration";
-import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
+import { IGridDimensions } from "../../../Components/ScreenElements/Table/types";
+import { action, computed } from "mobx";
+import { IProperty } from "../../../../model/entities/types/IProperty";
+import { getLeadingColumnCount } from "../../../../model/selectors/TablePanelView/getLeadingColumnCount";
+import { getIsSelectionCheckboxesShown } from "../../../../model/selectors/DataView/getIsSelectionCheckboxesShown";
+import { getGroupingConfiguration } from "../../../../model/selectors/TablePanelView/getGroupingConfiguration";
+import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 
 export interface IGridDimensionsData {
   getTableViewProperties: () => IProperty[];
@@ -46,12 +46,11 @@ export class GridDimensions implements IGridDimensions {
   }
 
   @computed get columnCount() {
-    return (
-      this.tableViewProperties.length
-    );
+    return this.tableViewProperties.length;
   }
 
   get contentWidth() {
+    if (this.columnCount === 0) return 0;
     return this.getColumnRight(this.columnCount - 1);
   }
 
@@ -89,10 +88,10 @@ export class GridDimensions implements IGridDimensions {
     this.columnWidths.set(columnId, Math.max(newWidth, 20));
   }
 
-  @computed get displayedColumnDimensionsCom(): { left: number; width: number; right: number; }[] {
+  @computed get displayedColumnDimensionsCom(): { left: number; width: number; right: number }[] {
     const isCheckBoxedTable = getIsSelectionCheckboxesShown(this.ctx);
     const groupedColumnIds = getGroupingConfiguration(this.ctx).orderedGroupingColumnIds;
-    const tableColumnIds = getTableViewProperties(this.ctx).map(prop => prop.id)
+    const tableColumnIds = getTableViewProperties(this.ctx).map((prop) => prop.id);
     const columnWidths = this.columnWidths;
 
     const widths = Array.from(
@@ -118,5 +117,4 @@ export class GridDimensions implements IGridDimensions {
       })()
     );
   }
-
 }

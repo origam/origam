@@ -7,9 +7,16 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; 
+  height: 100%;
+  canvas {
+    opacity: 0;
+    transition: opacity 0.1s steps(1, jump-end);
+  }
   &:global(.isActive) {
     max-width: unset;
     transform: unset;
+    canvas {
+      opacity: unset;
+    }
   }
 }
