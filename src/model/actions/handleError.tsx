@@ -3,14 +3,14 @@ import {stopWorkQueues} from "./WorkQueues/stopWorkQueues";
 import {performLogout} from "./User/performLogout";
 import {T} from "utils/translation";
 import {getOpenedScreens} from "model/selectors/getOpenedScreens";
-import {getOpenedScreen} from "model/selectors/getOpenedScreen";
+import { tryGetOpenedScreen } from "model/selectors/tryGetOpenedScreen";
 
 const HANDLED = Symbol("_$ErrorHandled");
 
 export function handleError(ctx: any) {
   return function* handleError(error: any) {
-    const openedScreen = getOpenedScreen(ctx);
-    if (!getOpenedScreens(ctx).isShown(openedScreen)){
+    const openedScreen = tryGetOpenedScreen(ctx);
+    if (openedScreen && !getOpenedScreens(ctx).isShown(openedScreen)){
       console.log("ERROR was ignored, because it originated from a closed screen:", error);
       return;
     }
