@@ -42,16 +42,15 @@ namespace Origam.ServerCore.Model.Chat
             List<OrigamChatParticipant> messages = new List<OrigamChatParticipant>();
             foreach (DataRow row in datasetParticipants.Tables["BusinessPartner"].Rows)
             {
-                messages.Add(new OrigamChatParticipant(row.Field<Guid>("Id"), row.Field<string>("Username"), row.Field<Guid>("Id").ToString(), GetStatus(row.Field<Guid>("Id"),onlineUsers)));
+                messages.Add(new OrigamChatParticipant(row.Field<Guid>("Id"), row.Field<string>("Username"), row.Field<Guid>("Id").ToString(), GetStatus(row.Field<string>("Username"), onlineUsers)));
             }
             return messages;
         }
-        private static string GetStatus(Guid userId, DataSet onlineUsers)
+        private static string GetStatus(String userName, DataSet onlineUsers)
         {
             foreach (DataRow row in onlineUsers.Tables[0].Rows)
             {
-                Guid rowId = row.Field<Guid>("Id");
-                if (rowId == userId)
+                if (userName.Equals(row.Field<string>("UserName")))
                 {
                     return "online";
                 }
