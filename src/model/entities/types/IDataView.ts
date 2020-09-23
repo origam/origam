@@ -17,6 +17,7 @@ import { FocusManager } from "../FocusManager";
 import { DataViewData } from "../../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../../modules/DataView/TableCursor";
+import {IInfiniteScrollLoader} from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 
 export interface IDataViewData {
   id: string;
@@ -123,11 +124,14 @@ export interface IDataView extends IDataViewData {
 
   gridDimensions: IGridDimensions;
   contentBounds: BoundingRect | undefined;
+  infiniteScrollLoader: IInfiniteScrollLoader | undefined;
 
   parent?: any;
 
   moveSelectedRowUp(): void;
   moveSelectedRowDown(): void;
+
+  initializeNewScrollLoader(): void;
 }
 
 export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;

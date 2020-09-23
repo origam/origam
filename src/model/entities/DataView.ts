@@ -40,6 +40,12 @@ import { DataViewData } from "../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../modules/DataView/TableCursor";
 import {getDontRequestData} from "model/selectors/getDontRequestData";
+import {
+  IInfiniteScrollLoader,
+  InfiniteScrollLoader, NullIScrollLoader
+} from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
+import {VisibleRowsMonitor} from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -468,8 +474,39 @@ export class DataView implements IDataView {
   scrollState = new SimpleScrollState(0, 0);
 
   @observable contentBounds: BoundingRect | undefined;
+  infiniteScrollLoader: IInfiniteScrollLoader | undefined;
 
   parent?: any;
+
+  initializeNewScrollLoader() {
+    if (this.infiniteScrollLoader) {
+      this.infiniteScrollLoader.dispose();
+    }
+    this.infiniteScrollLoader = this.getScrollLoader();
+    getFormScreenLifecycle(this).registerDisposer(this.infiniteScrollLoader.start());
+  }
+
+  getScrollLoader() {
+    const isGroupingOff =
+      getGroupingConfiguration(this).orderedGroupingColumnIds.length === 0;
+    const rowsContainer = getDataTable(this).rowsContainer;
+    if (rowsContainer instanceof ScrollRowContainer && isGroupingOff) {
+      return new InfiniteScrollLoader({
+        ctx: this,
+        gridDimensions: this.gridDimensions,
+        scrollState: this.scrollState,
+        rowsContainer: rowsContainer as ScrollRowContainer,
+        groupFilter: undefined,
+        visibleRowsMonitor: new VisibleRowsMonitor(
+          this,
+          this.gridDimensions,
+          this.scrollState
+        ),
+      });
+    } else {
+      return new NullIScrollLoader();
+    }
+  }
 
   // Called by client scripts
   focusFormViewControl(name: string) {

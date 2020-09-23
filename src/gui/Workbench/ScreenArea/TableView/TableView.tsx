@@ -63,46 +63,14 @@ export class TableView extends React.Component<{
   onColumnDialogOk?: (event: any, configuration: ITableColumnsConf) => void;
   onTableKeyDown?: (event: any) => void;
 }> {
-  infiniteScrollLoader: IInfiniteScrollLoader | undefined;
 
   constructor(props: any) {
     super(props);
 
-    this.initializeNewScrollLoader();
+    this.props.dataView?.initializeNewScrollLoader();
     getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
-      this.initializeNewScrollLoader();
+      this.props.dataView?.initializeNewScrollLoader();
     });
-  }
-
-  private initializeNewScrollLoader() {
-    if (this.infiniteScrollLoader) {
-      this.infiniteScrollLoader.dispose();
-    }
-    this.infiniteScrollLoader = this.getScrollLoader();
-    getFormScreenLifecycle(this.props.dataView).registerDisposer(this.infiniteScrollLoader.start());
-  }
-
-  getScrollLoader() {
-    const isGroupingOff =
-      getGroupingConfiguration(this.props.dataView).orderedGroupingColumnIds.length === 0;
-    const rowsContainer = getDataTable(this.props.dataView).rowsContainer;
-    if (rowsContainer instanceof ScrollRowContainer && isGroupingOff) {
-      const dataView = this.props.dataView!;
-      return new InfiniteScrollLoader({
-        ctx: dataView,
-        gridDimensions: dataView.gridDimensions,
-        scrollState: dataView.scrollState,
-        rowsContainer: rowsContainer as ScrollRowContainer,
-        groupFilter: undefined,
-        visibleRowsMonitor: new VisibleRowsMonitor(
-          dataView,
-          dataView.gridDimensions,
-          dataView.scrollState
-        ),
-      });
-    } else {
-      return new NullIScrollLoader();
-    }
   }
 
   refTableDisposer: any;

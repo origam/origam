@@ -4,12 +4,15 @@ import {
   SCROLL_ROW_CHUNK,
 } from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IRowsContainer } from "./types/IRowsContainer";
+import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
 
 // The constants have to be defined here for the unit tests to work.
 // const MAX_CHUNKS_TO_HOLD = 20;
 // const SCROLL_ROW_CHUNK = 1000;
 
 export class ScrollRowContainer implements IRowsContainer {
+  $type_ScrollRowContainer: 1 = 1;
+
   constructor(rowIdGetter: (row: any[]) => string) {
     this.rowIdGetter = rowIdGetter;
   }
@@ -36,6 +39,11 @@ export class ScrollRowContainer implements IRowsContainer {
   @computed
   get rows() {
     return this.rowChunks.flatMap((chunk) => chunk.rows);
+  }
+
+  @computed
+  get allRows() {
+    return this.rows;
   }
 
   @computed get loadedRowsCount() {
@@ -307,3 +315,6 @@ class RowChunk {
     }
   }
 }
+
+export const isScrollRowContainer = (o: any): o is ScrollRowContainer =>
+  o.$type_ScrollRowContainer;
