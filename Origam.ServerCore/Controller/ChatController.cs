@@ -57,6 +57,7 @@ namespace Origam.ServerCore.Controller
         private readonly Guid OrigamChatRoomBusinessPartnerId = new Guid("fab83217-6cb4-4693-b10e-6ded25a23abf");
         private readonly Guid OrigamChatRoomBusinessPartnerGetParticipantsId = new Guid("f7d1096f-4dfc-4b66-bef5-f54c7a1d9ee1");
         private readonly Guid OrigamChatRoomBusinessPartner_GetBusinessPartnerId = new Guid("5e3d904a-6ad9-4040-ac50-6fee9ee2debb");
+        private readonly Guid GetByBusinessPartnerId_IsInvited = new Guid("36fd5fb8-5aba-4e87-85c2-e412516888ad");
 
         private readonly Guid LookupBusinessPartner = new Guid("d7921e0c-b763-4d07-a019-7e948b4c49a6");
         private readonly Guid DefaultBusinessPartner = new Guid("ab4eb78c-6dcf-46c7-a316-e856f835fbfa");
@@ -370,11 +371,14 @@ namespace Origam.ServerCore.Controller
                 Guid.Empty, Guid.Empty, null, parameters);
             return Ok(OrigamChatBusinessPartner.CreateJson(datasetUsersForInvite, participants, usersNotExistsInRoom));
         }
-        private OrigamChatRoom GetRoomsData()
+        private List<OrigamChatRoom> GetRoomsData()
         {
-            //UserProfile
-            DataSet ds = LoadData(OrigamChatRoomDatastructureId, Guid.Empty,
-               Guid.Empty, Guid.Empty, null, null);
+            UserProfile profile = SecurityTools.CurrentUserProfile();
+            QueryParameterCollection parameters = new QueryParameterCollection();
+            parameters.Add(new QueryParameter("OrigamChatRoomBussinesPartner_parBusinessPartnerId", profile.Id));
+            parameters.Add(new QueryParameter("OrigamChatRoomBussinesPartner_parIsInvited", true));
+            DataSet ds = LoadData(OrigamChatRoomBusinessPartnerId, GetByBusinessPartnerId_IsInvited,
+               Guid.Empty, Guid.Empty, null, parameters);
             return OrigamChatRoom.CreateJson(ds);
         }
 
@@ -408,7 +412,7 @@ namespace Origam.ServerCore.Controller
         private OrigamChatRoom GetChatRoomInfo(Guid requestChatRoomId)
         {
             DataSet datasetGetById = GetChatRoom(requestChatRoomId);
-            return OrigamChatRoom.CreateJson(datasetGetById);
+            return (OrigamChatRoom.CreateJson(datasetGetById))[0];
         }
 
         private DataSet GetChatRoom(Guid requestChatRoomId)

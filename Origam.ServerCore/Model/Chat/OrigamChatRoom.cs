@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Origam.ServerCore.Model.Chat
@@ -34,16 +35,16 @@ namespace Origam.ServerCore.Model.Chat
         public Guid id { get; set; }
         public string topic { get; set; }
 
-        internal static OrigamChatRoom CreateJson(DataSet ChatRoomDataSet)
+        internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet)
         {
-            OrigamChatRoom chatRoom = null;
+            List<OrigamChatRoom> chatRoom = new List<OrigamChatRoom>();
             foreach (DataTable table in ChatRoomDataSet.Tables)
             {
                 if (table.TableName == "OrigamChatRoom")
                 {
                     foreach (DataRow row in table.Rows)
                     {
-                        chatRoom = new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"));
+                        chatRoom.Add(new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name")));
                     }
                 }
             }
