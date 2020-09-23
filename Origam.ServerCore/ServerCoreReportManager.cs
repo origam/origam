@@ -55,7 +55,7 @@ namespace Origam.ServerCore
             return ReportRequestKeyToUrl(key);
         }
 
-        public string GetReportFromMenu(string menuId)
+        public string GetReportFromMenu(Guid menuId)
         {
             Guid key = Guid.NewGuid();
             IPersistenceService persistenceService = ServiceManager.Services
@@ -63,7 +63,7 @@ namespace Origam.ServerCore
             ReportReferenceMenuItem reportReferenceMenuItem 
                 = persistenceService.SchemaProvider.RetrieveInstance(
                     typeof(AbstractMenuItem), 
-                    new ModelElementKey(new Guid(menuId))) 
+                    new ModelElementKey(menuId)) 
                 as ReportReferenceMenuItem;
             sessionManager.AddReportRequest(key, new ReportRequest(
                 reportReferenceMenuItem.ReportId.ToString(), 

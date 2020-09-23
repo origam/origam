@@ -348,7 +348,8 @@ namespace Origam.ServerCore.Controller
             return FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
                 .Bind(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
+                    input.DataStructureEntityId, 
+                    (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Bind(entityData => 
                     GetRow(
@@ -367,7 +368,8 @@ namespace Origam.ServerCore.Controller
             return FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
                 .Bind(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
+                    input.DataStructureEntityId, 
+                    (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Map(entityData => MakeEmptyRow(entityData.Entity))
                 .Tap(rowData => FillRow(input, rowData))
@@ -381,7 +383,7 @@ namespace Origam.ServerCore.Controller
                 .Bind(Authorize)
                 .Bind(menuItem =>
                     GetEntityData(input.DataStructureEntityId,
-                        menuItem))
+                        (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Map(entityData => MakeEmptyRow(entityData.Entity))
                 .Map(PrepareNewRow)
@@ -394,7 +396,8 @@ namespace Origam.ServerCore.Controller
             return FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
                 .Bind(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
+                    input.DataStructureEntityId, 
+                    (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Bind(entityData => GetRow(
                     dataService,
@@ -542,6 +545,15 @@ namespace Origam.ServerCore.Controller
                 return Ok();
             });
         }
+        [HttpGet("[action]/{menuId}")]
+        public IActionResult ReportFromMenu(Guid menuId)
+        {
+            return FindItem<ReportReferenceMenuItem>(menuId)
+                .Bind(Authorize)
+                .Map(menuItem => sessionObjects.UIService.ReportFromMenu(menuItem.Id))
+                .Map(ToActionResult)
+                .Finally(UnwrapReturnValue);
+        }
         #endregion
         
         private Result<IActionResult, IActionResult> ExtractAggregationList(IActionResult fullReaderResult)
@@ -616,7 +628,7 @@ namespace Origam.ServerCore.Controller
                     .Bind(Authorize)
                     .Bind(menuItem
                         => CheckLookupIsAllowedInMenu(
-                            menuItem, input.LookupId));
+                            (FormReferenceMenuItem)menuItem, input.LookupId));
                 if(menuResult.IsFailure)
                 {
                     return menuResult.Error;
@@ -741,7 +753,7 @@ namespace Origam.ServerCore.Controller
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
                     .Bind(Authorize)
                     .Bind(menuItem => CheckLookupIsAllowedInMenu(
-                        menuItem, input.LookupId))
+                        (FormReferenceMenuItem)menuItem, input.LookupId))
                     .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
                     .Bind(CheckEntityBelongsToMenu)

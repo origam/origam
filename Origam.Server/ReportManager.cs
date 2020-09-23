@@ -67,12 +67,12 @@ namespace Origam.Server
             return "ReportViewer.aspx?id=" + key;
         }
 
-        public string GetReportFromMenu(string menuId)
+        public string GetReportFromMenu(Guid menuId)
         {
             string key = Guid.NewGuid().ToString();
 
             IPersistenceService ps = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-            ReportReferenceMenuItem rr = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(new Guid(menuId))) as ReportReferenceMenuItem;
+            ReportReferenceMenuItem rr = ps.SchemaProvider.RetrieveInstance(typeof(AbstractMenuItem), new ModelElementKey(menuId)) as ReportReferenceMenuItem;
 
             System.Web.HttpContext.Current.Application[key] = new ReportRequest(rr.ReportId.ToString(), new Hashtable(),
                 rr.ExportFormatType);

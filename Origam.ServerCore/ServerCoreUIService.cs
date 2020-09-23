@@ -968,6 +968,11 @@ namespace Origam.ServerCore
                 userConfig, input.PanelInstanceId, workflowId, profileId);
             DeleteFilter(filterId);
         }
+        public string ReportFromMenu(Guid menuId)
+        {
+            return reportManager.GetReportFromMenu(menuId);
+        }
+
         private static bool IsRowDirty(DataRow row)
         {
             if(row.RowState != DataRowState.Unchanged)
