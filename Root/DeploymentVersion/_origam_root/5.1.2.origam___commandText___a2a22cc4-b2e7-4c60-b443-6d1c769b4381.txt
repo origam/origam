@@ -1,0 +1,1 @@
+﻿ALTER TABLE [WorkQueueEntry] ALTER COLUMN [m2] nvarchar(max) NULL

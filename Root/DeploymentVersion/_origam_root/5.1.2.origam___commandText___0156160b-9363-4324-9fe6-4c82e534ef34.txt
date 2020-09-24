@@ -1,0 +1,1 @@
+﻿ALTER TABLE [WorkQueueEntry] ALTER COLUMN [blob1] varbinary(max) NULL

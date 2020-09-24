@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamDashboardView] ALTER COLUMN [ConfigXml] nvarchar(max) NOT NULL
