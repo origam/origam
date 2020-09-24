@@ -913,8 +913,8 @@ namespace Origam.DA.Service
             return builder.ToString();
         }
 
-        public abstract string CreateDataStructureFooterSql(List<string>tmptables);
-        public abstract string CreateOutputTableSql(string tmptable);
+        public abstract string CreateDataStructureFooterSql(List<string>tmpTables);
+        public abstract string CreateOutputTableSql(string tmpTable);
 
         public string SelectSql(DataStructure ds, DataStructureEntity entity,
             DataStructureFilterSet filter, DataStructureSortSet sortSet, ColumnsInfo columnsInfo,

@@ -62,14 +62,14 @@ namespace Origam.Gui.Win.Commands
             builder.AppendLine(
                 generator.SelectParameterDeclarationsSql(
                     filterSet, false, null));
-            List<string> tmptables = new List<string>();
+            List<string> tmpTables = new List<string>();
             foreach (DataStructureEntity entity in ds.Entities)
             {
                 if (entity.Columns.Count > 0)
                 {
-                    string tmptable = "tmptable" + System.Guid.NewGuid();
-                    tmptables.Add(tmptable);
-                    builder.AppendLine(generator.CreateOutputTableSql(tmptable));
+                    string tmpTable = "tmptable" + System.Guid.NewGuid();
+                    tmpTables.Add(tmpTable);
+                    builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
                     builder.AppendLine("-----------------------------------------------------------------");
                     builder.AppendLine("-- " + entity.Name);
                     builder.AppendLine("-----------------------------------------------------------------");
@@ -86,7 +86,7 @@ namespace Origam.Gui.Win.Commands
                     );
                 }
             }
-            builder.AppendLine(generator.CreateDataStructureFooterSql(tmptables));
+            builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
             new ShowSqlConsole(builder.ToString()).Run();
         }
     }

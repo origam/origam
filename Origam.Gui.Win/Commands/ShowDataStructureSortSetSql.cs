@@ -59,7 +59,7 @@ namespace Origam.Gui.Win.Commands
             bool displayPagingParameters = true;
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
             builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
-            List<string> tmptables = new List<string>();
+            List<string> tmpTables = new List<string>();
             // parameter declarations
             builder.AppendLine(
                 generator.SelectParameterDeclarationsSql(
@@ -72,9 +72,9 @@ namespace Origam.Gui.Win.Commands
                     builder.AppendLine("-----------------------------------------------------------------");
                     builder.AppendLine("-- " + entity.Name);
                     builder.AppendLine("-----------------------------------------------------------------");
-                    string tmptable = "tmptable" + System.Guid.NewGuid();
-                    tmptables.Add(tmptable);
-                    builder.AppendLine(generator.CreateOutputTableSql(tmptable));
+                    string tmpTable = "tmptable" + System.Guid.NewGuid();
+                    tmpTables.Add(tmpTable);
+                    builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
                     builder.AppendLine(
                         generator.SelectSql(ds,
                             entity,
@@ -88,7 +88,7 @@ namespace Origam.Gui.Win.Commands
                     );
                 }
             }
-            builder.AppendLine(generator.CreateDataStructureFooterSql(tmptables));
+            builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
             new ShowSqlConsole(builder.ToString()).Run();
         }
     }

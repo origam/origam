@@ -575,17 +575,17 @@ namespace Origam.DA.Service
         {
             return "BEGIN";
         }
-        public override string CreateOutputTableSql(string tmptable)
+        public override string CreateOutputTableSql(string tmpTable)
         {
-            return string.Format("CREATE TEMP TABLE {0} ON COMMIT DROP AS {1}", NameLeftBracket + tmptable + NameRightBracket, Environment.NewLine);
+            return string.Format("CREATE TEMP TABLE {0} ON COMMIT DROP AS {1}", NameLeftBracket + tmpTable + NameRightBracket, Environment.NewLine);
         }
-        public override string CreateDataStructureFooterSql(List<string> tmptalbes)
+        public override string CreateDataStructureFooterSql(List<string> tmpTables)
         {
             StringBuilder output = new StringBuilder();
             output.Append(string.Format("{0}END $$;", Environment.NewLine));
-            foreach (string tmptable in tmptalbes)
+            foreach (string tmpTable in tmpTables)
             {
-                output.Append(string.Format("{0}SELECT * FROM {1};", Environment.NewLine,NameLeftBracket+tmptable+NameRightBracket));
+                output.Append(string.Format("{0}SELECT * FROM {1};", Environment.NewLine,NameLeftBracket+tmpTable+NameRightBracket));
             }
             return output.ToString();
         }
