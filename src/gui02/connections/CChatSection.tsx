@@ -7,6 +7,7 @@ import { computed } from "mobx";
 import { Icon } from "gui02/components/Icon/Icon";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
+import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 
 @observer
 export class CChatSection extends React.Component {
@@ -17,23 +18,7 @@ export class CChatSection extends React.Component {
   }
 
   get sortedItems() {
-    return [
-      {
-        id: "001",
-        topic: "Topic 1",
-        unreadMessageCount: 7,
-      },
-      {
-        id: "002",
-        topic: "Topic 2",
-        unreadMessageCount: 9,
-      },
-      {
-        id: "003",
-        topic: "Topic 3",
-        unreadMessageCount: 15,
-      },
-    ];
+    return getChatrooms(this.workbench).items;
   }
 
   render() {

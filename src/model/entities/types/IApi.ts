@@ -260,6 +260,8 @@ export interface IApi {
 
   getWorkQueueList(): Promise<any>;
 
+  getChatroomList(): Promise<any>;
+
   saveObjectConfiguration(data: {
     instanceId: string;
     columnSettings: Array<{

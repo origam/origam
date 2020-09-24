@@ -22,6 +22,7 @@ export enum IAuditLogColumnIndices {
 export class OrigamAPI implements IApi {
   constructor(errorHandler: (error: any) => void) {
     this.urlPrefix = "/internalApi";
+    this.chatroomsUrlPrefix = "/chatrooms";
     this.axiosInstance = this.createAxiosInstance();
     this.errorHandler = errorHandler;
   }
@@ -45,6 +46,7 @@ export class OrigamAPI implements IApi {
   errorHandler: (error: any) => void;
   axiosInstance: AxiosInstance;
   urlPrefix: string;
+  chatroomsUrlPrefix: string;
   accessToken = "";
 
   setAccessToken(token: string) {
@@ -464,6 +466,11 @@ export class OrigamAPI implements IApi {
 
   async getWorkQueueList(): Promise<any> {
     return (await this.axiosInstance.get(`/UIService/WorkQueueList`)).data;
+  }
+
+  async getChatroomList(): Promise<any> {
+    return (await axios.get(`${this.chatroomsUrlPrefix}/Chat`, { headers: this.httpAuthHeader }))
+      .data;
   }
 
   async saveObjectConfiguration(data: {

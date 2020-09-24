@@ -25,6 +25,7 @@ import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { observable } from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
+import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -46,10 +47,18 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   customAssetsRoute: string | undefined;
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
-    const { type, id, label, dialogWidth, dialogHeight, dontRequestData, urlOpenMethod } = args.item.attributes;
+    const {
+      type,
+      id,
+      label,
+      dialogWidth,
+      dialogHeight,
+      dontRequestData,
+      urlOpenMethod,
+    } = args.item.attributes;
     const { event } = args;
 
-    if(urlOpenMethod === "LaunchBrowserWindow"){
+    if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
       window.open(url);
       return;
@@ -81,11 +90,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        if(type ===  IMainMenuItemType.ReportReferenceMenuItem){
+        if (type === IMainMenuItemType.ReportReferenceMenuItem) {
           const url = (yield this.getReportTabUrl(id)) as string;
           yield* this.openNewUrl(url, "");
           return;
-        }else {
+        } else {
           yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
         }
       }
@@ -94,9 +103,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  async getReportTabUrl(menuId: string){
+  async getReportTabUrl(menuId: string) {
     const api = getApi(this);
-    const url = (await api.getReportFromMenu({menuId: menuId})) ;
+    const url = await api.getReportFromMenu({ menuId: menuId });
     return url;
   }
 
@@ -159,8 +168,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     // TODO: Refactor to get rid of code duplication
     const openedScreens = getOpenedScreens(openedScreen);
     const screenToActivate = openedScreen.parentContext
-         ? getOpenedScreen(openedScreen.parentContext)
-         : openedScreens.findClosestItem(openedScreen.menuItemId, openedScreen.order);
+      ? getOpenedScreen(openedScreen.parentContext)
+      : openedScreens.findClosestItem(openedScreen.menuItemId, openedScreen.order);
 
     openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     if (openedScreen.dialogInfo) {
@@ -241,7 +250,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     formSessionId?: string,
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
-    refreshOnReturnType?: IRefreshOnReturnType,
+    refreshOnReturnType?: IRefreshOnReturnType
   ) {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
@@ -270,7 +279,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         return;
       }
 
-      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, additionalRequestParameters);
+      const initUIResult = yield* this.initUIForScreen(
+        newScreen,
+        !isSessionRebirth,
+        additionalRequestParameters
+      );
 
       yield* newFormScreen.start(initUIResult);
       const formScreen = newScreen.content.formScreen;
@@ -284,7 +297,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean, additionalRequestParameters?: object | undefined) {
+  *initUIForScreen(
+    screen: IOpenedScreen,
+    isNewSession: boolean,
+    additionalRequestParameters?: object | undefined
+  ) {
     const api = getApi(this);
     const initUIResult = yield api.initUI({
       Type: screen.menuItemType,
@@ -295,7 +312,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       RegisterSession: true, //!!registerSession,
       DataRequested: !screen.dontRequestData,
       Parameters: screen.parameters,
-      AdditionalRequestParameters: additionalRequestParameters
+      AdditionalRequestParameters: additionalRequestParameters,
     });
     console.log(initUIResult);
     return initUIResult;
@@ -319,7 +336,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
-    }
+    };
     this.logoUrl = portalInfo.logoUrl;
     this.customAssetsRoute = portalInfo.customAssetsRoute;
     const menuUI = findMenu(portalInfo.menu);
@@ -370,6 +387,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const workQueues = getWorkQueues(this);
     yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
     yield* workQueues.startTimer();
+
+    const chatrooms = getChatrooms(this);
+    yield* chatrooms.setRefreshInterval(10000);
+    yield* chatrooms.startTimer();
   }
 
   *run(): Generator {
@@ -379,12 +400,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   parent?: any;
 
   private startNotificationBoxPolling(notificationBoxRefreshInterval: number) {
-    if(!notificationBoxRefreshInterval)
-    {
+    if (!notificationBoxRefreshInterval) {
       return;
     }
-    setInterval(async ()=>{
+    setInterval(async () => {
       this.notificationBox = await getApi(this).getNotificationBoxContent();
-    }, notificationBoxRefreshInterval)
+    }, notificationBoxRefreshInterval);
   }
 }
