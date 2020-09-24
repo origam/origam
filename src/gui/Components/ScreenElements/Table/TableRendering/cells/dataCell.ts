@@ -67,14 +67,6 @@ function registerClickHandler(columnId: string) {
   const ctx = context();
   const row = currentDataRow();
 
-  const thisCellRectangle = {
-    columnLeft: currentColumnLeft(),
-    columnWidth: currentColumnWidth(),
-    rowTop: currentRowTop(),
-    rowHeight: currentRowHeight(),
-  };
-  getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
-
   const property = currentProperty();
 
   const cellClickableArea = getCellClickableArea();
@@ -185,6 +177,15 @@ function getCheckboxClickableArea() {
 
 export function drawDataCellBackground() {
   const ctx2d = context2d();
+  const ctx = context();
+
+  const thisCellRectangle = {
+    columnLeft: currentColumnLeft(),
+    columnWidth: currentColumnWidth(),
+    rowTop: currentRowTop(),
+    rowHeight: currentRowHeight(),
+  };
+  getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
 
   ctx2d.fillStyle = getUnderLineColor();
   ctx2d.fillRect(0, 0, currentColumnWidth() * CPR(), rowHeight() * CPR());
