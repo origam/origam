@@ -31,7 +31,7 @@ export class CChatSection extends React.Component {
           isEmphasized={false}
           isOpenedScreen={false}
           isActiveScreen={false}
-          icon={<Icon src="./icons/work-queue.svg" tooltip={"New chatroom"} />}
+          icon={<Icon src="./icons/add.svg" tooltip={"New chatroom"} />}
           label={<>Create new chatroom</>}
           onClick={(event) => {
             const _this = this;
