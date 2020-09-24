@@ -19,7 +19,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   implicitFilters: IImplicitFilter[];
   @observable.ref filters: IFilter[] = [];
 
-  getSettingByPropertyId(propertyId: string): any {
+  getSettingByPropertyId(propertyId: string): IFilter | undefined {
     return this.filters.find((item) => item.propertyId === propertyId);
   }
 
