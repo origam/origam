@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamTooltipHelp] ALTER COLUMN [Text] nvarchar(max) NOT NULL

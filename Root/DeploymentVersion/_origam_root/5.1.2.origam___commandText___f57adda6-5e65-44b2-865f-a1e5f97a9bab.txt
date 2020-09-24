@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamValidationRule] ALTER COLUMN [Rule] nvarchar(max) NOT NULL
