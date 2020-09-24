@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
@@ -574,13 +575,19 @@ namespace Origam.DA.Service
         {
             return "BEGIN";
         }
-        public override string CreateOutputTableSql()
+        public override string CreateOutputTableSql(string tmptable)
         {
-            return string.Format("CREATE TEMP TABLE tmp_output ON COMMIT DROP AS {0}", Environment.NewLine);
+            return string.Format("CREATE TEMP TABLE {0} ON COMMIT DROP AS {1}", NameLeftBracket + tmptable + NameRightBracket, Environment.NewLine);
         }
-        public override string CreateDataStructureFooterSql()
+        public override string CreateDataStructureFooterSql(List<string> tmptalbes)
         {
-            return string.Format(";{0}END $$;{0}SELECT* FROM tmp_output;", Environment.NewLine);
+            StringBuilder output = new StringBuilder();
+            output.Append(string.Format("{0}END $$;", Environment.NewLine));
+            foreach (string tmptable in tmptalbes)
+            {
+                output.Append(string.Format("{0}SELECT * FROM {1};", Environment.NewLine,NameLeftBracket+tmptable+NameRightBracket));
+            }
+            return output.ToString();
         }
         internal override string SetParameterSql(string name)
         {

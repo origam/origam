@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Origam.DA.Service;
 using Origam.Schema;
@@ -58,6 +59,12 @@ namespace Origam.Gui.Win.Commands
             bool displayPagingParameters = true;
             DataStructure ds = (Owner as ISchemaItem).RootItem as DataStructure;
             builder.AppendLine("-- SQL statements for data structure: " + ds.Name);
+            List<string> tmptables = new List<string>();
+            // parameter declarations
+            builder.AppendLine(
+                generator.SelectParameterDeclarationsSql(
+                    ds,  Owner as DataStructureSortSet,
+                    displayPagingParameters, null));
             foreach (DataStructureEntity entity in ds.Entities)
             {
                 if (entity.Columns.Count > 0)
@@ -65,12 +72,9 @@ namespace Origam.Gui.Win.Commands
                     builder.AppendLine("-----------------------------------------------------------------");
                     builder.AppendLine("-- " + entity.Name);
                     builder.AppendLine("-----------------------------------------------------------------");
-                    // parameter declarations
-                    builder.AppendLine(
-                        generator.SelectParameterDeclarationsSql(
-                            ds, entity, Owner as DataStructureSortSet,
-                            displayPagingParameters, null));
-                    builder.AppendLine(generator.CreateOutputTableSql());
+                    string tmptable = "tmptable" + System.Guid.NewGuid();
+                    tmptables.Add(tmptable);
+                    builder.AppendLine(generator.CreateOutputTableSql(tmptable));
                     builder.AppendLine(
                         generator.SelectSql(ds,
                             entity,
@@ -80,11 +84,11 @@ namespace Origam.Gui.Win.Commands
                             new Hashtable(),
                             new Hashtable(),
                             displayPagingParameters
-                        )
+                        )+ ";"
                     );
-                    builder.AppendLine(generator.CreateDataStructureFooterSql());
                 }
             }
+            builder.AppendLine(generator.CreateDataStructureFooterSql(tmptables));
             new ShowSqlConsole(builder.ToString()).Run();
         }
     }
