@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -576,7 +577,7 @@ namespace Origam.DA.Service
         {
             return "";
         }
-        public override string CreateOutputTableSql()
+        public override string CreateOutputTableSql(string tmptable)
         {
             return "";
         }
@@ -584,7 +585,7 @@ namespace Origam.DA.Service
         {
             return "";
         }
-        public override string CreateDataStructureFooterSql()
+        public override string CreateDataStructureFooterSql(List<string> tmptables)
         {
             return "";
         }
