@@ -8,6 +8,7 @@ import { Icon } from "gui02/components/Icon/Icon";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
+import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
 
 @observer
 export class CChatSection extends React.Component {
@@ -39,7 +40,7 @@ export class CChatSection extends React.Component {
                   {item.unreadMessageCount > 0 && <> ({item.unreadMessageCount})</>}
                 </>
               }
-              onClick={(event) => onWorkQueuesListItemClick(this.workbench)(event, item)}
+              onClick={(event) => onChatroomsListItemClick(this.workbench)(event, item)}
             />
           );
         })}

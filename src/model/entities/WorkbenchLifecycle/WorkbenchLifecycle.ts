@@ -26,6 +26,8 @@ import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNex
 import { observable } from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
+import { openNewUrl } from "model/actions/Workbench/openNewUrl";
+import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -141,6 +143,38 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       }
     } else {
       yield* this.openNewForm(id, type, label, false, dialogInfo, {});
+    }
+  }
+
+  *onChatroomsListItemClick(event: any, item: any) {
+    console.log(event, item);
+
+    const openedScreens = getOpenedScreens(this);
+    const url = `/chatrooms/index.html#/chatroom?chatroomId=${item.id}`;
+    const id = url;
+
+    let dialogInfo: IDialogInfo | undefined;
+
+    const existingItem = openedScreens.findLastExistingItem(id);
+    if (existingItem) {
+      openedScreens.activateItem(id, existingItem.order);
+      const openedScreen = existingItem;
+      if (openedScreen.isSleeping) {
+        openedScreen.isSleeping = false;
+        const initUIResult = yield* this.initUIForScreen(openedScreen, false);
+        yield* openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+      } else if (
+        openedScreen.content &&
+        openedScreen.content.formScreen &&
+        openedScreen.content.formScreen.refreshOnFocus &&
+        !openedScreen.content.isLoading
+      ) {
+        if (!getIsFormScreenDirty(openedScreen.content.formScreen)) {
+          yield* reloadScreen(openedScreen.content.formScreen)();
+        }
+      }
+    } else {
+      yield* openNewUrl(this)(url, IUrlUpenMethod.OrigamTab, item.topic);
     }
   }
 
