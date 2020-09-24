@@ -25,6 +25,7 @@ import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
 import { IWorkbenchLifecycle } from "model/entities/types/IWorkbenchLifecycle";
 import S from "gui02/connections/CSidebar.module.scss";
 import { getLogoUrl } from "model/selectors/getLogoUrl";
+import { CChatSection } from "./CChatSection";
 
 @observer
 export class CSidebar extends React.Component {
@@ -136,7 +137,7 @@ export class CSidebar extends React.Component {
             onClick={() => (this.activeSection = ISidebarSection.Chat)}
           />
           <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Chat}>
-            ...chat..
+            <CChatSection />
           </SidebarSectionBody>
         </SidebarSection>
 
