@@ -7,9 +7,9 @@ import {
 } from "gui02/components/TagInput/TagInput";
 import _ from "lodash";
 import { action, computed, flow, observable, runInAction, toJS } from "mobx";
-import { observer } from "mobx-react";
+import {MobXProviderContext, observer} from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Grid, GridCellProps } from "react-virtualized";
 import Highlighter from "react-highlight-words";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
@@ -23,6 +23,36 @@ import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { T } from "utils/translation";
+import {
+  CtxDropdownEditor, DropdownEditor,
+  DropdownEditorSetup,
+  IDropdownEditorContext,
+} from "modules/Editors/DropdownEditor/DropdownEditor";
+import {TagInputEditor} from "gui/Components/ScreenElements/Editors/TagInputEditor";
+import {IFocusable} from "model/entities/FocusManager";
+import {IDataView} from "model/entities/types/IDataView";
+import {DropdownEditorApi} from "modules/Editors/DropdownEditor/DropdownEditorApi";
+import {
+  DropdownEditorData,
+  IDropdownEditorData
+} from "modules/Editors/DropdownEditor/DropdownEditorData";
+import {TagInputEditorData} from "modules/Editors/DropdownEditor/TagInputEditorData";
+import {
+  DropdownColumnDrivers,
+  DropdownDataTable
+} from "modules/Editors/DropdownEditor/DropdownTableModel";
+import {DropdownEditorLookupListCache} from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
+import {DropdownEditorBehavior} from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
+import {findStopping} from "xmlInterpreters/xmlUtils";
+import {TextCellDriver} from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
+import {NumberCellDriver} from "modules/Editors/DropdownEditor/Cells/NumberCellDriver";
+import {BooleanCellDriver} from "modules/Editors/DropdownEditor/Cells/BooleanCellDriver";
+import {DefaultHeaderCellDriver} from "modules/Editors/DropdownEditor/Cells/HeaderCell";
+import {DataViewData} from "modules/DataView/DataViewData";
+import {RowCursor} from "modules/DataView/TableCursor";
+import {ILookup} from "model/entities/types/ILookup";
+import {getProperty} from "model/selectors/DataView/getProperty";
+import {IProperty} from "model/entities/types/IProperty";
 
 const OPERATORS = () =>
   [
@@ -320,10 +350,12 @@ export class TagInputStateful extends React.Component<{
 
 @observer
 class OpEditors extends React.Component<{
-  setting: any;
+  setting: IFilterSetting | undefined;
   onChange: (newSetting: any) => void;
   onChangeDebounced: (newSetting: any) => void;
   getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
+  lookup: ILookup;
+  property: IProperty;
 }> {
   @observable selectedItems: Array<{ value: any; content: any }> = [];
 
@@ -350,15 +382,19 @@ class OpEditors extends React.Component<{
 
   render() {
     const { setting } = this.props;
-    switch (setting.type) {
+    switch (setting?.type) {
       case "in":
       case "nin":
         return (
-          <TagInputStateful
-            selectedItems={setting.val1 ? this.selectedItems : []}
-            onChange={this.handleSelectedItemsChange}
-            getOptions={this.props.getOptions}
+          <FilterBuildDropdownEditor
+            lookup={this.props.lookup}
+            property={this.props.property}
           />
+          // <TagInputStateful
+          //   selectedItems={setting.val1 ? this.selectedItems : []}
+          //   onChange={this.handleSelectedItemsChange}
+          //   getOptions={this.props.getOptions}
+          // />
         );
       case "contains":
       case "ncontains":
@@ -374,8 +410,9 @@ class OpEditors extends React.Component<{
 @observer
 export class FilterSettingsLookup extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
-  lookupId: string;
-  setting: any;
+  lookup: ILookup;
+  property: IProperty;
+  setting: IFilterSetting | undefined;
   onTriggerApplySetting?(setting: any): void;
 }> {
   @observable.ref setting: FilterSetting = new LookupFilterSetting(
@@ -386,7 +423,7 @@ export class FilterSettingsLookup extends React.Component<{
   @action.bound handleChange(newSetting: any) {
     newSetting.lookupId =
       newSetting.type === "contains" || newSetting.type === "ncontains"
-        ? this.props.lookupId
+        ? this.props.lookup.lookupId
         : undefined;
     this.setting = newSetting;
 
@@ -402,6 +439,8 @@ export class FilterSettingsLookup extends React.Component<{
           onChange={this.handleChange}
           onChangeDebounced={this.handleChange}
           getOptions={this.props.getOptions}
+          lookup={this.props.lookup}
+          property={this.props.property}
         />
       </>
     );
@@ -440,5 +479,240 @@ export class LookupFilterSetting implements IFilterSetting {
     this.type = type;
     this.caption = caption;
     this.isComplete = false;
+  }
+}
+
+
+export function FilterBuildDropdownEditor(props: {
+  // xmlNode: any;
+  // isReadOnly: boolean;
+  // isInvalid?: boolean;
+  // invalidMessage?: string;
+  // backgroundColor?: string;
+  // foregroundColor?: string;
+  // customStyle?: any;
+  // tagEditor?: JSX.Element;
+  // onDoubleClick?: (event: any) => void;
+  // subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  // onKeyDown?(event: any): void;
+  lookup: ILookup;
+  property: IProperty;
+}) {
+  const mobxContext = useContext(MobXProviderContext);
+  const dataView = mobxContext.dataView as IDataView;
+  const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
+  const workbench = mobxContext.workbench;
+  const { lookupListCache } = workbench;
+
+  const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
+    const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
+      () => dropdownEditorSetup,
+      dataViewRowCursor,
+      dataViewApi,
+      () => dropdownEditorBehavior
+    );
+    const dropdownEditorData: IDropdownEditorData =
+      new FilterEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
+
+    const dropdownEditorDataTable = new DropdownDataTable(
+      () => dropdownEditorSetup,
+      dropdownEditorData
+    );
+    const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
+      () => dropdownEditorSetup,
+      lookupListCache
+    );
+    const dropdownEditorBehavior = new DropdownEditorBehavior(
+      dropdownEditorApi,
+      dropdownEditorData,
+      dropdownEditorDataTable,
+      () => dropdownEditorSetup,
+      dropdownEditorLookupListCache,
+      false,
+    );
+
+
+    // const rat = props.xmlNode.attributes;
+    // const lookupId = rat.LookupId;
+    // const propertyId = props.propertyId;
+    // const showUniqueValues = true;
+    // const identifier = rat.Identifier;
+    // let identifierIndex = 0;
+    // const dropdownType = rat.DropDownType;
+    // const cached = rat.Cached === "true";
+    // const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
+    //
+    // const columnNames: string[] = [identifier];
+    // const visibleColumnNames: string[] = [];
+    // const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
+    // let index = 0;
+    // const drivers = new DropdownColumnDrivers();
+    // for (let ddp of findStopping(props.xmlNode, (n) => n.name === "Property")) {
+    //   index++;
+    //   const pat = ddp.attributes;
+    //   const id = pat.Id;
+    //   columnNames.push(id);
+    //   columnNameToIndex.set(id, index);
+    //
+    //   visibleColumnNames.push(id);
+    //   const name = pat.Name;
+    //   const column = pat.Column;
+    //
+    //   let bodyCellDriver;
+    //   switch (column) {
+    //     case "Text":
+    //       bodyCellDriver = new TextCellDriver(
+    //         index,
+    //         dropdownEditorDataTable,
+    //         dropdownEditorBehavior
+    //       );
+    //       break;
+    //     case "Number":
+    //       bodyCellDriver = new NumberCellDriver(
+    //         index,
+    //         dropdownEditorDataTable,
+    //         dropdownEditorBehavior
+    //       );
+    //       break;
+    //     case "CheckBox":
+    //       bodyCellDriver = new BooleanCellDriver(
+    //         index,
+    //         dropdownEditorDataTable,
+    //         dropdownEditorBehavior
+    //       );
+    //       break;
+    //     default:
+    //       throw new Error("Unknown column type " + column);
+    //   }
+    //
+    //   drivers.drivers.push({
+    //     headerCellDriver: new DefaultHeaderCellDriver(name),
+    //     bodyCellDriver,
+    //   });
+    // }
+
+    // const parameters: { [k: string]: any } = {};
+    //
+    // for (let ddp of findStopping(props.xmlNode, (n) => n.name === "ComboBoxParameterMapping")) {
+    //   const pat = ddp.attributes;
+    //   parameters[pat.ParameterName] = pat.FieldName;
+    // }
+
+    const lookupColumn = props.lookup.dropDownColumns[0];
+
+    const drivers = new DropdownColumnDrivers();
+
+    drivers.drivers.push({
+      headerCellDriver: new DefaultHeaderCellDriver(lookupColumn.name),
+      bodyCellDriver:new TextCellDriver(
+              0,
+              dropdownEditorDataTable,
+              dropdownEditorBehavior
+            )
+    });
+
+    const columnNames=[lookupColumn.name];
+    const visibleColumnNames=[lookupColumn.name];
+
+    const columnNameToIndex = props.lookup.dropDownColumns
+      .map((column, i)=> { return {index: i, id: column.id}})
+      .reduce((map, colData) => {
+        map.set(colData.id, colData.index);
+        return map;
+      },  new Map<string, number>());
+
+    const showUniqueValues = true;
+
+    let identifierIndex = 0;
+
+    const dropdownEditorSetup = new DropdownEditorSetup(
+      props.property.id,
+      props.lookup.lookupId,
+      columnNames,
+      visibleColumnNames,
+      columnNameToIndex,
+      showUniqueValues,
+      props.property.identifier!,
+      identifierIndex,
+      props.property.parameters,
+      props.property.lookup?.dropDownType!,
+      props.property.lookup?.cached!,
+      !props.property.lookup?.searchByFirstColumnOnly
+    );
+
+    return {
+      behavior: dropdownEditorBehavior,
+      editorData: dropdownEditorData,
+      columnDrivers: drivers,
+      editorDataTable: dropdownEditorDataTable,
+    };
+  });
+
+  // useEffect(() => {
+  //   dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
+  // }, [props.isReadOnly]);
+
+  return (
+    <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
+      <DropdownEditor
+        editor={<TagInputEditor
+          value={[]}
+          isReadOnly={false}
+          isInvalid={false}
+          // invalidMessage={invalidMessage}
+          isFocused={false}
+          // backgroundColor={backgroundColor}
+          // foregroundColor={foregroundColor}
+          // customStyle={this.props.property?.style}
+          refocuser={undefined}
+          // onChange={this.props.onChange}
+          // onKeyDown={this.MakeOnKeyDownCallBack()}
+          onClick={undefined}
+          // onEditorBlur={this.props.onEditorBlur}
+        />}
+        // isInvalid={props.isInvalid}
+        // invalidMessage={props.invalidMessage}
+        // backgroundColor={props.backgroundColor}
+        // foregroundColor={props.foregroundColor}
+        // customStyle={props.customStyle}
+      />
+    </CtxDropdownEditor.Provider>
+  );
+}
+
+
+// @bind
+export class FilterEditorData implements IDropdownEditorData {
+  dropdownEditorData: IDropdownEditorData;
+
+  constructor(
+    private dataTable: DataViewData,
+    private rowCursor: RowCursor,
+    private setup: () => DropdownEditorSetup
+  ) {
+    this.dropdownEditorData = new DropdownEditorData(dataTable, rowCursor, setup);
+  }
+
+  @computed get value(): string | string[] | null {
+    return this.dropdownEditorData.value;
+  }
+
+  @computed get text(): string {
+    return this.dropdownEditorData.text;
+  }
+
+  get isResolving() {
+    return this.dropdownEditorData.isResolving;
+  }
+
+  @action.bound chooseNewValue(value: any) {
+    // const newArray = [...this.value, value];
+    // if (this.rowCursor.selectedId) {
+    //   this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
+    // }
+  }
+
+  get idsInEditor() {
+    return (this.value ? this.value : []) as string[];
   }
 }

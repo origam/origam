@@ -55,7 +55,8 @@ export const FilterSettings: React.FC = observer((props) => {
         <FilterSettingsLookup
           setting={setting as any}
           onTriggerApplySetting={handleApplyFilterSetting}
-          lookupId={property.lookup!.lookupId}
+          property={property}
+          lookup={property.lookup!}
           getOptions={flow(function* (searchTerm: string) {
             const allIds = dataView.infiniteScrollLoader
               ? yield dataView.infiniteScrollLoader.getAllValuesOfProp(property)
