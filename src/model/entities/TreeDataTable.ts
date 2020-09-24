@@ -45,11 +45,19 @@ export class TreeDataTable implements IDataTable {
     throw new Error("Not implemented");
   }
 
+  getOriginalCellValue(row: any[], property: IProperty): any {
+    throw new Error("Not implemented");
+  }
+
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField) {
     return row[dsField.index];
   }
 
   getCellText(row: any[], property: IProperty): any {
+    throw new Error("Not implemented");
+  }
+
+  getOriginalCellText(row: any[], property: IProperty): any {
     throw new Error("Not implemented");
   }
 

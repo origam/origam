@@ -124,6 +124,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   );
 
   @computed get orderingFunction(): () => (row1: any[], row2: any[]) => number {
+    console.log("new orderingFunction generated!")
     return () => (row1: any[], row2: any) => {
       const dataTable = getDataTable(this);
       let mul = 10 * this.orderings.length;
@@ -135,8 +136,8 @@ export class OrderingConfiguration implements IOrderingConfiguration {
           case "Text":
           case "Date":
           case "ComboBox":
-            const txt1 = dataTable.getCellText(row1, prop);
-            const txt2 = dataTable.getCellText(row2, prop);
+            const txt1 = dataTable.getOriginalCellText(row1, prop);
+            const txt2 = dataTable.getOriginalCellText(row2, prop);
             if (txt1 === undefined) {
               cmpSign = 1;
             } else if (txt2 === undefined) {
@@ -150,8 +151,8 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             }
             break;
           case "CheckBox": {
-            const val1 = dataTable.getCellValue(row1, prop);
-            const val2 = dataTable.getCellValue(row2, prop);
+            const val1 = dataTable.getOriginalCellValue(row1, prop);
+            const val2 = dataTable.getOriginalCellValue(row2, prop);
             if (val1 === null) {
               cmpSign = 1;
             } else if (val2 === null) {
@@ -162,14 +163,14 @@ export class OrderingConfiguration implements IOrderingConfiguration {
             break;
           }
           case "Number": {
-            const val1 = dataTable.getCellValue(row1, prop);
-            const val2 = dataTable.getCellValue(row2, prop);
+            const val1 = dataTable.getOriginalCellValue(row1, prop);
+            const val2 = dataTable.getOriginalCellValue(row2, prop);
             if (val1 === null) {
               cmpSign = 1;
             } else if (val2 === null) {
               cmpSign = -1;
             } else {
-              cmpSign = dataTable.getCellValue(row1, prop) - dataTable.getCellValue(row2, prop);
+              cmpSign = dataTable.getOriginalCellValue(row1, prop) - dataTable.getOriginalCellValue(row2, prop);
             }
             break;
           }
