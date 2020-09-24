@@ -428,7 +428,17 @@ namespace Origam.ServerCore.Controller
             pollData.Add("localUser", activeUser);
             pollData.Add("participants", participants);
             pollData.Add("info", GetChatRoomInfo(requestChatRoomId));
+            CreateLastSeen(requestChatRoomId);
             return Ok(pollData);
+        }
+        private void CreateLastSeen(Guid requestChatRoomId)
+        {
+            UserProfile profile = SecurityManager.CurrentUserProfile();
+            OutviteUser inviteuser = new OutviteUser(profile.Id);
+            DataSet user = GetActiveUserChatRoom(requestChatRoomId,inviteuser);
+            DataRow userRow = user.Tables[0].Rows[0];
+            userRow["LastSeen"] = DateTime.Now;
+            DataService.StoreData(OrigamChatRoomBusinessPartnerId, user, false, null);
         }
         private List<OrigamChatMessage> GetMessages(Guid requestChatRoomId, int limit, 
             Guid afterIdIncluding, Guid beforeIdIncluding)

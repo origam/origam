@@ -24,6 +24,11 @@ namespace Origam.ServerCore.Model.Chat
 {
     public class OutviteUser
     {
+        public OutviteUser(Guid id)
+        {
+            userId = id;
+        }
+
         public Guid userId { get; set; }
     }
 }
