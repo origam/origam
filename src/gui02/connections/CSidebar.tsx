@@ -26,6 +26,7 @@ import { IWorkbenchLifecycle } from "model/entities/types/IWorkbenchLifecycle";
 import S from "gui02/connections/CSidebar.module.scss";
 import { getLogoUrl } from "model/selectors/getLogoUrl";
 import { CChatSection } from "./CChatSection";
+import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 
 @observer
 export class CSidebar extends React.Component {
@@ -85,7 +86,7 @@ export class CSidebar extends React.Component {
 
   render() {
     const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
-    const chatTotalUnreadMessages = 0;
+    const chatTotalUnreadMessages = getChatrooms(this.workbench).totalItemCount;
     const logoUrl = getLogoUrl(this.workbench);
     return (
       <Sidebar>
