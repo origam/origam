@@ -35,6 +35,10 @@ export class OrigamAPI implements IApi {
     axiosInstance.interceptors.response.use(
       (response) => response,
       (error) => {
+        if(error.__CANCEL__ === true){
+          console.log("A cancel error was ignored: "+error)
+          return;
+        }
         this.errorHandler(error);
         throw error;
       }
@@ -330,7 +334,7 @@ export class OrigamAPI implements IApi {
         headers: this.httpAuthHeader,
         cancelToken: canceller && canceller.token,
       })
-    ).data;
+    )?.data ?? [];
   }
 
   async restoreData(data: { SessionFormIdentifier: string; ObjectId: string }) {
