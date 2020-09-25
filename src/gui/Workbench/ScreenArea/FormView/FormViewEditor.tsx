@@ -216,6 +216,7 @@ export class FormViewEditor extends React.Component<{
             subscribeToFocusManager={(firstCheckInput) =>
               this.focusManager.subscribe(firstCheckInput, this.props.property?.id)
             }
+            onKeyDown={this.MakeOnKeyDownCallBack()}
           />
         );
       case "Image":

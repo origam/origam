@@ -32,6 +32,7 @@ export interface IRawCheckListProps {
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
 
   onChange?(newValue: string[]): void;
+  onKeyDown(event: any): void;
 }
 
 export class CheckListControler {
@@ -91,6 +92,7 @@ export const CheckList: React.FC<{
   isInvalid: boolean;
   invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  onKeyDown(event: any): void;
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
 
@@ -112,6 +114,7 @@ export const CheckList: React.FC<{
       isInvalid={props.isInvalid}
       invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
+      onKeyDown={props.onKeyDown}
     />
   );
 });
@@ -178,6 +181,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
             focusRight={focusRight}
             focusUp={focusUp}
             focusDown={focusDown}
+            onKeyDown={props.onKeyDown}
             label={item.label}/>
         ))}
       </div>
@@ -203,6 +207,7 @@ export const CheckListItem: React.FC<{
   focusDown: (x: number, y: number)=>void;
   label: string;
   subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  onKeyDown(event: any): void;
 }> = (props) => {
 
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -220,6 +225,9 @@ export const CheckListItem: React.FC<{
   function onKeyDown(event: any) {
     const boundingRect = refInput.current?.getBoundingClientRect()!;
     switch (event.key) {
+      case "Tab":
+        props.onKeyDown(event);
+        break;
       case "ArrowUp":
         event.preventDefault();
         props.focusUp(boundingRect.x, boundingRect.y);
