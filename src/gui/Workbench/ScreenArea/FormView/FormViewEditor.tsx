@@ -226,6 +226,7 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
+            onKeyDown={this.MakeOnKeyDownCallBack()}
             subscribeToFocusManager={(inputEditor) =>
               this.focusManager.subscribe(inputEditor, this.props.property?.id)
             }
