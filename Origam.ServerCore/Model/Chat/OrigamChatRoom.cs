@@ -36,48 +36,17 @@ namespace Origam.ServerCore.Model.Chat
         public string topic { get; set; }
         
         public int unreadMessageCount { get; private set; }
-        internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet)
+        internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet, Dictionary<Guid, int> unreadMessages)
         {
             List<OrigamChatRoom> chatRoom = new List<OrigamChatRoom>();
             DataTable table = ChatRoomDataSet.Tables["OrigamChatRoom"]; 
             foreach (DataRow row in table.Rows)
             {
-                chatRoom.Add(new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"),getCount(ChatRoomDataSet)));
+                Guid chatRoomId = row.Field<Guid>("Id");
+                chatRoom.Add(new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"),
+                    unreadMessages.ContainsKey(chatRoomId)?unreadMessages[chatRoomId]:0));
             }
             return chatRoom;
-        }
-
-        private static int getCount(DataSet dataTables)
-        {
-            UserProfile profile = SecurityManager.CurrentUserProfile();
-            DataTable dataTable = dataTables.Tables["OrigamChatRoomBussinesPartner"];
-            foreach (DataRow row in dataTable.Rows)
-            {
-                if(row.Field<Guid>("refBusinessPartnerId") ==profile.Id)
-                {
-                    return GetCountMessages(dataTables.Tables["OrigamChatMessage"],row.Field<DateTime>("LastSeen"));
-                }
-            }
-            return 0;
-        }
-
-        private static int GetCountMessages(DataTable dataTable, DateTime dateTime)
-        {
-            if(dateTime==null)
-            {
-                return dataTable.Rows.Count;
-            }
-            int count = 0;
-            foreach(DataRow row in dataTable.Rows)
-            {
-                DateTime date = row.Field<DateTime>("RecordCreated");
-                int result = DateTime.Compare(date, dateTime);
-                if (result>0)
-                {
-                    count++;
-                }
-            }
-            return count;
         }
     }
 }
