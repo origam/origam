@@ -7,6 +7,7 @@ export interface IWorkbenchLifecycle {
 
   onMainMenuItemClick(args: { event: any; item: any }): Generator;
   onWorkQueueListItemClick(event: any, item: any): Generator;
+  onChatroomsListItemClick(event: any, item: any): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
   notificationBox: any;
   userInfo: IUserInfo | undefined;

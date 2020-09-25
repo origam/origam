@@ -1,5 +1,6 @@
 export enum ISidebarSection {
   WorkQueues,
+  Chat,
   Favorites,
   Menu,
   Info,
