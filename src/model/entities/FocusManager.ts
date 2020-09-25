@@ -35,17 +35,29 @@ export class FocusManager {
     );
     const nextIndex =
       this.focusableContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
-    this.focusableContainers[nextIndex].focusable.focus();
+    const focusable = this.focusableContainers[nextIndex].focusable;
+    if(focusable.disabled){
+      this.focusNext(focusable);
+    }
+    else{
+      focusable.focus();
+    }
   }
 
   focusPrevious(activeElement: any) {
     const currentContainerIndex = this.focusableContainers.findIndex(
       (container) => container.focusable === activeElement
     );
-    const nextIndex =
+    const previosIndex =
       currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
-    console.log("nextIndex: "+nextIndex)
-    this.focusableContainers[nextIndex].focusable.focus();
+    console.log("nextIndex: "+previosIndex)
+    const focusable = this.focusableContainers[previosIndex].focusable;
+    if(focusable.disabled){
+      this.focusPrevious(focusable);
+    }
+    else{
+      focusable.focus();
+    }
   }
 }
 
@@ -56,6 +68,6 @@ interface IFocusableObjectContainer {
 
 export interface IFocusable {
   focus(): void;
-
+  disabled: boolean;
   tabIndex: number;
 }
