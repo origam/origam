@@ -257,7 +257,6 @@ namespace Origam.ServerCore.Controller
                 r["refOrigamChatRoomId"] = newChatRoomId;
                 r["refBusinessPartnerId"] = userId;
                 r["RecordCreated"] = DateTime.Now;
-                r["RecordCreated"] = DateTime.Now;
                 r["RecordCreatedBy"] = profile.Id;
                 data.Tables["OrigamChatRoomBussinesPartner"].Rows.Add(r);
             }
