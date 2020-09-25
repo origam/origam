@@ -337,9 +337,6 @@ export class DropdownEditorBehavior {
   _refInputDisposer: any;
   refInputElement = (elm: any) => {
     this.elmInputElement = elm;
-    if (this.elmInputElement && this.subscribeToFocusManager) {
-      this.unsubscribeFromFocusManager = this.subscribeToFocusManager(this.elmInputElement);
-    }
   };
 
   elmInputElement: any;
