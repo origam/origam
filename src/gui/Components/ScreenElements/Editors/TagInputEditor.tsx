@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from "react";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 import { Tooltip } from "react-tippy";
 
 import CS from "./CommonStyle.module.css";
@@ -15,6 +15,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { CtxDropdownEditor } from "../../../../modules/Editors/DropdownEditor/DropdownEditor";
 import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/Dropdown/DropdownCommon";
+import {IFocusable} from "model/entities/FocusManager";
 
 export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
@@ -71,6 +72,15 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       const refInput = useMemo(() => {
         return (elm: any) => {
           beh.refInputElement(elm);
+        };
+      }, []);
+
+      useEffect(() => {
+        if(beh.subscribeToFocusManager && beh.elmInputElement){
+          beh.unsubscribeFromFocusManager = beh.subscribeToFocusManager(beh.elmInputElement);
+        }
+        return () => {
+          beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
         };
       }, []);
 

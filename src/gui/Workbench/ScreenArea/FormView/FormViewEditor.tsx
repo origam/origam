@@ -184,6 +184,9 @@ export class FormViewEditor extends React.Component<{
             key={this.props.xmlNode.$iid}
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
+            subscribeToFocusManager={(firstCheckInput) =>
+              this.focusManager.subscribe(firstCheckInput, this.props.property?.id)
+            }
             tagEditor={
               <TagInputEditor
                 value={this.props.value}

@@ -16,11 +16,10 @@ export function DropdownEditorInput(props:{
       beh.refInputElement(elm);
     };
   }, []);
-  const [ unsubscribeFromFocusManager, setUnsubscribeFromFocusManager] = useState<() => void>();
 
   useEffect(() => {
     if(beh.subscribeToFocusManager && beh.elmInputElement){
-      setUnsubscribeFromFocusManager(beh.subscribeToFocusManager(beh.elmInputElement));
+      beh.unsubscribeFromFocusManager = beh.subscribeToFocusManager(beh.elmInputElement);
     }
     return () => {
       beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
