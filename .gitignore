@@ -35,3 +35,6 @@ src/.ionide/symbolCache.db
 /.idea/vcs.xml
 /.idea/codeStyles/codeStyleConfig.xml
 /src/debug.http
+
+
+*.zip
