@@ -48,7 +48,6 @@ namespace Origam.ServerCore.Controller
         private readonly Guid OrigamChatMessageDataGetByIdMethodId = new Guid("88542750-75e0-4d48-b271-793126cf4847");
         private readonly Guid OrigamChatMessageDataGetByRoomIdMethodId = new Guid("42076303-19b4-4afa-9836-d38d87036c29");
         private readonly Guid OrigamChatMessageDataOrderbyCreatedDateSortSetId = new Guid("72c14783-0667-4827-b4ee-137e17fe0e3e");
-        private readonly Guid GetMyOrigamChatMessageByAfterCreatedDate = new Guid("a6c06145-5b16-4046-839d-4a7f3d96634a");
 
         private readonly Guid OrigamChatRoomDatastructureId = new Guid("ae1cd694-9354-49bf-a68e-93b1c241afd2");
         private readonly Guid OrigamChatRoomGetById = new Guid("a2d56dbe-6807-48ef-9765-7fd8cdaa09c7");
@@ -353,9 +352,8 @@ namespace Origam.ServerCore.Controller
                 {
                    new QueryParameter("OrigamChatMessage_parCreatedDateTime", dataRow.Field<DateTime?>("LastSeen")),
                    new QueryParameter("OrigamChatMessage_parOrigamChatRoomId", dataRow.Field<Guid>("refOrigamChatRoomId")),
-                   new QueryParameter("OrigamChatMessage_parBusinesPartnerId",  dataRow.Field<Guid>("refBusinessPartnerId"))
                 };
-                DataSet datasetRoom = LoadData(OrigamChatMessageDataStructureID, GetMyOrigamChatMessageByAfterCreatedDate,
+                DataSet datasetRoom = LoadData(OrigamChatMessageDataStructureID, OrigamChatMessageDataAfterIdIncludingMethodId,
                     Guid.Empty, Guid.Empty, null, parameters);
                 unreadMessages.Add(dataRow.Field<Guid>("refOrigamChatRoomId"), datasetRoom.Tables["OrigamChatMessage"].Rows.Count);
             }
