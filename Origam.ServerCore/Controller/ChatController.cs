@@ -432,6 +432,7 @@ namespace Origam.ServerCore.Controller
                 datanem.Tables["OrigamChatMessageBusinessPartner"].Rows.Add(rmen);
             }
             DataService.StoreData(OrigamChatMessageBusinessPartnerDataStructureID, datanem, false, null);
+            CreateLastSeen(requestChatRoomId);
             return Ok();
         }
         private IActionResult GetPollData(Guid requestChatRoomId, int limit, Guid afterIdIncluding, Guid beforeIdIncluding)
