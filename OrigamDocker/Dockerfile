@@ -6,6 +6,9 @@ RUN apt-get update
 RUN apt-get -y install git
 RUN apt-get -y install libgdiplus
 RUN useradd -ms /bin/bash origam
+WORKDIR /root
+COPY ["updateTimezone.sh", "/root"]
+RUN chmod +x updateTimezone.sh
 RUN su origam
 USER origam
 WORKDIR /home/origam
@@ -20,5 +23,6 @@ WORKDIR HTML5
 RUN mkdir data
 RUN mkdir logs
 RUN chmod +x startServer.sh
-CMD ./startServer.sh
- 
+RUN exit
+USER root
+CMD /root/updateTimezone.sh; su -m origam -c '/home/origam/HTML5/startServer.sh'

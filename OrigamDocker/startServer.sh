@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /home/origam/HTML5
 DIR="data"
 if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	if [[ -n ${gitUrl} ]]; then
