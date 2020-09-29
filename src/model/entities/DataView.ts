@@ -458,10 +458,12 @@ export class DataView implements IDataView {
         }
       )
     );
+    this.dataTable.start();
   }
 
   @action.bound stop() {
     this.properties.forEach((prop) => prop.stop());
+    this.dataTable.stop();
   }
 
   @computed get tableRows() {

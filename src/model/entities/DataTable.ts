@@ -36,6 +36,14 @@ export class DataTable implements IDataTable {
     this.rowRemovedListeners.forEach(listener => listener());
   }
 
+  start(){
+    this.rowsContainer.start();
+  }
+
+  stop(){
+    this.rowsContainer.stop();
+  }
+
   get allRows() {
     return this.rowsContainer.rows;
   }

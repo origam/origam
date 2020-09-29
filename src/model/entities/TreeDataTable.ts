@@ -23,6 +23,13 @@ export class TreeDataTable implements IDataTable {
     return this.rows;
   }
 
+  start(){
+
+  }
+  stop(){
+
+  }
+
   additionalRowData: Map<string, IAdditionalRowData> = new Map();
   maxRowCountSeen: number = 0;
   groups: IGroupTreeNode[] = [];

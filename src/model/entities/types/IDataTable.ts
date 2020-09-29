@@ -15,6 +15,8 @@ export interface IDataTableData {
 }
 
 export interface IDataTable {
+  start(): void;
+  stop(): void;
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
@@ -25,7 +27,7 @@ export interface IDataTable {
   groups: IGroupTreeNode[];
   rowsContainer: IRowsContainer;
   isEmpty: boolean;
-  rowRemovedListeners: (()=>void)[];
+  rowRemovedListeners: (() => void)[];
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
