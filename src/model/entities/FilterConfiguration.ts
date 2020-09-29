@@ -75,7 +75,7 @@ export class FilterConfiguration implements IFilterConfiguration {
     const prop = dataTable.getPropertyById(term.propertyId)!;
     switch (prop.column) {
       case "Text": {
-        const txt1 = dataTable.getCellValue(row, prop);
+        const txt1 = dataTable.getOriginalCellValue(row, prop);
         if (txt1 === undefined) return true;
 
         switch (term.setting.type) {
@@ -137,7 +137,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         break;
       }
       case "Date": {
-        const txt1 = dataTable.getCellValue(row, prop);
+        const txt1 = dataTable.getOriginalCellValue(row, prop);
         if (txt1 === undefined) return false;
         if (term.setting.type === "nnull") return txt1 !== null;
         if (term.setting.type === "null") return txt1 === null;
@@ -197,7 +197,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         }
       }
       case "Number": {
-        const txt1 = dataTable.getCellValue(row, prop);
+        const txt1 = dataTable.getOriginalCellValue(row, prop);
         if (txt1 === undefined) return true;
         const t1 = prop.column === "Number" ? parseFloat(txt1) : txt1;
 
@@ -263,7 +263,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         switch (term.setting.type) {
           case "in":
           case "eq": {
-            const txt1 = dataTable.getCellValue(row, prop);
+            const txt1 = dataTable.getOriginalCellValue(row, prop);
             const val1 = term.setting.val1 || [];
             if (val1.length === 0) return true;
             if (txt1 === null) return false;
@@ -274,7 +274,7 @@ export class FilterConfiguration implements IFilterConfiguration {
           }
           case "nin":
           case "neq": {
-            const txt1 = dataTable.getCellValue(row, prop);
+            const txt1 = dataTable.getOriginalCellValue(row, prop);
             const val1 = term.setting.val1 || [];
             if (val1.length === 0) return true;
             if (txt1 === null) return false;
@@ -284,22 +284,22 @@ export class FilterConfiguration implements IFilterConfiguration {
             return true;
           }
           case "null": {
-            const txt1 = dataTable.getCellValue(row, prop);
+            const txt1 = dataTable.getOriginalCellValue(row, prop);
             return txt1 === null;
           }
           case "nnull": {
-            const txt1 = dataTable.getCellValue(row, prop);
+            const txt1 = dataTable.getOriginalCellValue(row, prop);
             return txt1 !== null;
           }
           case "contains": {
-            const txt1 = dataTable.getCellText(row, prop);
+            const txt1 = dataTable.getOriginalCellText(row, prop);
             const val2 = term.setting.val2 || "";
             if (val2 === "") return true;
             if (txt1 === null) return false;
             return txt1.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
           }
           case "ncontains": {
-            const txt1 = dataTable.getCellText(row, prop);
+            const txt1 = dataTable.getOriginalCellText(row, prop);
             const val2 = term.setting.val2 || "";
             if (val2 === "") return true;
             if (txt1 === null) return false;
@@ -311,7 +311,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         switch (term.setting.type) {
           case "eq": {
             if (term.setting.val1 === undefined) return true;
-            const bool1 = dataTable.getCellValue(row, prop);
+            const bool1 = dataTable.getOriginalCellValue(row, prop);
             return bool1 === !!term.setting.val1;
           }
         }
