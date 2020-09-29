@@ -396,7 +396,10 @@ namespace Origam.ServerCore
         public Task SetLockoutEndDateAsync(IOrigamUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
             user.LastLockoutDate = null;
-            if (lockoutEnd.HasValue)
+            // if the lockout end is set to default 1. 1. 1900,
+            // the subtraction ends up in out-of-range date 
+            if (lockoutEnd.HasValue 
+            && (lockoutEnd.Value.CompareTo(new DateTimeOffset()) != 0))
             {
                 user.LastLockoutDate = lockoutEnd.Value
                     .AddMinutes(-lockoutConfig.LockoutTimeMinutes)
