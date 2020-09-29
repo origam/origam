@@ -133,7 +133,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return GetRoomUsers(requestChatRoomId, limit, offset, searchPhrase, true);
+                return GetRoomUsers(requestChatRoomId, limit, offset, searchPhrase,false);
             });
         }
         [HttpGet("users")]
