@@ -602,28 +602,28 @@ export function FilterBuildDropdownEditor(props: {
 
     const drivers = new DropdownColumnDrivers();
 
+
     drivers.drivers.push({
       headerCellDriver: new DefaultHeaderCellDriver(lookupColumn.name),
-      bodyCellDriver:new TextCellDriver(
-              0,
-              dropdownEditorDataTable,
-              dropdownEditorBehavior
-            )
+      bodyCellDriver: new TextCellDriver(0, dropdownEditorDataTable, dropdownEditorBehavior),
     });
 
-    const columnNames=[lookupColumn.name];
-    const visibleColumnNames=[lookupColumn.name];
+    const columnNames=[props.property.identifier!];
+    let identifierIndex = 0;
+    const columnNameToIndex = new Map<string, number>([[props.property.identifier!, identifierIndex]]);
+    const visibleColumnNames=[];
 
-    const columnNameToIndex = props.lookup.dropDownColumns
-      .map((column, i)=> { return {index: i, id: column.id}})
-      .reduce((map, colData) => {
-        map.set(colData.id, colData.index);
-        return map;
-      },  new Map<string, number>());
+    let index=0;
+    for (let dropDownColumn of props.lookup.dropDownColumns) {
+      index++;
+      columnNames.push(dropDownColumn.id);
+      columnNameToIndex.set(dropDownColumn.id, index);
+
+      visibleColumnNames.push(dropDownColumn.id);
+    }
+    
 
     const showUniqueValues = true;
-
-    let identifierIndex = 0;
 
     const dropdownEditorSetup = new DropdownEditorSetup(
       props.property.id,
