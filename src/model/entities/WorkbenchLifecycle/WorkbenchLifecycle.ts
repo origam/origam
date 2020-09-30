@@ -28,6 +28,7 @@ import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
 import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
+import { IPortalSettings } from "../types/IPortalSettings";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -41,6 +42,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
   @observable
   notificationBox: any;
+  @observable
+  portalSettings: IPortalSettings | undefined;
   @observable
   userInfo: IUserInfo | undefined;
   @observable
@@ -373,6 +376,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     };
     this.logoUrl = portalInfo.logoUrl;
     this.customAssetsRoute = portalInfo.customAssetsRoute;
+    this.portalSettings = {
+      showChat: portalInfo.chatRefreshInterval > 0,
+      showWorkQueues: portalInfo.workQueueListRefreshInterval > 0
+    }
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
