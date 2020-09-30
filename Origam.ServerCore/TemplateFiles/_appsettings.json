@@ -1,6 +1,8 @@
 {
   "PathToClientApp": "clients/origam",
-  "PathToChatApp": "",
+  "Chat": {
+    "PathToChatApp": ""
+  },
   "UserConfig": {
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",
