@@ -281,7 +281,7 @@ namespace Origam.ServerCore.Controller
                 var row = dataSet.Tables["OrigamChatRoomBusinessPartner"]
                     .NewRow();
                 row["Id"] = Guid.NewGuid();
-                row["isInvited"] = true;
+                row["IsInvited"] = true;
                 row["refOrigamChatRoomId"] = newChatRoomId;
                 row["refBusinessPartnerId"] = userId;
                 row["RecordCreated"] = DateTime.Now;
