@@ -325,7 +325,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                             fixedVert={true}
                             width={this.fixedColumnsWidth}
                             zIndex={100}
-                            offsetLeft={3}
+                            offsetLeft={0}
                           >
                             <HeaderRow headerElements={this.fixedHeaders} zIndex={100} />
                           </Scrollee>
