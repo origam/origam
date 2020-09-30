@@ -143,7 +143,10 @@ export class TextEditor extends React.Component<{
              onDoubleClick={this.props.onDoubleClick}
              onBlur={this.props.onEditorBlur}
              onFocus={this.handleFocus}>
-          <span style={this.getStyle()}>{this.props.value || ""}</span>
+          <span style={this.getStyle()}
+            className={S.multiLine}>
+            {this.props.value || ""}
+          </span>
         </div>
       );
     }else{
