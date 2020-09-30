@@ -2,6 +2,7 @@
   "PathToClientApp": "clients/origam",
   "ChatConfig": {
     "PathToChatApp": "",
+    "ChatRefreshInterval": 1000
   },
   "UserConfig": {
     "FromAddress": "admin@localhost",

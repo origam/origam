@@ -68,12 +68,14 @@ namespace Origam.ServerCore.Controller
         private readonly IOptions<RequestLocalizationOptions> 
             localizationOptions;
         private readonly CustomAssetsConfig customAssetsConfig;
+        private readonly ChatConfig chatConfig;
 
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log,
-            IOptions<RequestLocalizationOptions> localizationOptions, IOptions<CustomAssetsConfig> customAssetsOptions) 
+            IOptions<RequestLocalizationOptions> localizationOptions, IOptions<CustomAssetsConfig> customAssetsOptions,
+            IOptions<ChatConfig> chatConfigOptions)
             : base(log, sessionObjects)
         {
             this.localizer = localizer;
@@ -82,6 +84,7 @@ namespace Origam.ServerCore.Controller
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
+            chatConfig = chatConfigOptions.Value;
         }
         #region Endpoints
         [HttpGet("[action]")]
@@ -1042,7 +1045,8 @@ namespace Origam.ServerCore.Controller
         {
             result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.IdentityGuiLogoUrl)
                 ? "./img/logo-left.png"
-                : customAssetsConfig.IdentityGuiLogoUrl;            
+                : customAssetsConfig.IdentityGuiLogoUrl;
+            result.ChatRefreshInterval = chatConfig.ChatRefreshInterval;
             result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
         }
     }

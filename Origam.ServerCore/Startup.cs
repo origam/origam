@@ -130,6 +130,7 @@ namespace Origam.ServerCore
             services.Configure<IdentityGuiConfig>(options => Configuration.GetSection("IdentityGuiConfig").Bind(options));
             services.Configure<CustomAssetsConfig>(options => Configuration.GetSection("CustomAssetsConfig").Bind(options));
             services.Configure<UserLockoutConfig>(options => Configuration.GetSection("UserLockoutConfig").Bind(options));
+            services.Configure<ChatConfig>(options => Configuration.GetSection("ChatConfig").Bind(options));
 
             IIdentityServerBuilder serverBuilder = services.AddIdentityServer()
                 .AddInMemoryApiResources(Settings.GetIdentityApiResources())
