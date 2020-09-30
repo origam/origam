@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="f9ec17ce-13fc-420c-88b0-3a793fae4001"
+    localized="false"
+    name="OrigamChatMessage"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/478da4a8-dc69-42bb-b10a-7fab3eaa8d6d"
+      x:id="bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamChatMessage"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessageBusinessPartner/d752940d-cb29-4e2a-bc06-0bc9a0356b4b"
+        x:id="6a1bc209-f28b-4c4a-9f18-03cc44fee222"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamChatMessageBusinessPartner"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="61544d12-c4ec-4b05-83c7-427b8cc8bb32"
+      name="GetOrigamChatMessageByAfterCreatedDate"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessage/bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+        filter="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/AfterIncludingCreatedDate/00a2ff2b-9177-41c2-ab05-4f893044320a"
+        x:id="5911af35-8e53-4d91-8322-3db1ac5f748c"
+        name="OrigamChatMessage_AfterIncludingCreatedDate"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessage/bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+        filter="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/GetByOrigamChatRoomId/a5980e64-b5d4-41df-9468-677b8825c166"
+        x:id="e4c8aa34-48a0-4d04-bf9c-bfc1ad37f609"
+        name="OrigamChatMessage_GetByChatRoomsId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="338cca32-f6d2-454f-b4b0-e33a39a1a3cb"
+      name="GetOrigamChatMessagesByBeforeCreatedDate"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessage/bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+        filter="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/BeforeIncludingCreatedDate/3b3d1d08-9c4f-4685-9e09-01be5f462a3e"
+        x:id="08d3aff1-d1d5-4e89-addf-f75612e0bdb6"
+        name="OrigamChatMessage_BeforeIncludingCreatedDate"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessage/bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+        filter="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/GetByOrigamChatRoomId/a5980e64-b5d4-41df-9468-677b8825c166"
+        x:id="6a30b04d-d8e1-44ae-a9cc-0fa085cb4e5d"
+        name="OrigamChatMessage_GetByOrigamChatRoomId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="88542750-75e0-4d48-b271-793126cf4847"
+      name="GetByOrigamChatMessageId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessage/bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="00762ee7-a695-494b-98a1-a63abfbd5c2e"
+        name="OrigamChatMessage_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="42076303-19b4-4afa-9836-d38d87036c29"
+      name="GetByOrigamChatRoomId"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessage/bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+        filter="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/GetByOrigamChatRoomId/a5980e64-b5d4-41df-9468-677b8825c166"
+        x:id="cd31b0b8-485f-4b7f-88ee-4eb7dcf3bf7f"
+        name="OrigamChatMessage_GetByOrigamChatRoomId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+    <DataStructureSortSet
+      abstract="false"
+      x:id="72c14783-0667-4827-b4ee-137e17fe0e3e"
+      name="OrderByCreatedDate"
+      x:type="Origam.Schema.EntityModel.DataStructureSortSet">
+      <DataStructureSortSetItem
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessage/bd71de8c-a7bc-4a5a-aa63-7653697fde93"
+        fieldName="RecordCreated"
+        x:id="53b6fdc8-f3c6-4a10-b93e-5c009546effe"
+        name="OrigamChatMessage_0_RecordCreated"
+        sortDirection="Ascending"
+        x:type="Origam.Schema.EntityModel.DataStructureSortSetItem" />
+    </DataStructureSortSet>
+  </DataStructure>
+</x:file>

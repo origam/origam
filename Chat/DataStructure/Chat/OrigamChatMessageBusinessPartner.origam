@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="763e029f-b306-40bd-98f9-36f89297cfbf"
+    localized="false"
+    name="OrigamChatMessageBusinessPartner"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Chat/DataEntity/Chat/OrigamChatMessageBusinessPartner.origam#OrigamChatMessageBusinessPartner/73f17bd5-6763-461b-afe4-7865101868d4"
+      x:id="4e0d5e22-3848-48d7-b358-6e7dce42e9e6"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamChatMessageBusinessPartner"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

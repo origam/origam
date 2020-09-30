@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="f0d1ff00-2bab-4f75-9cde-eb795e604f4b"
+    mappedObjectName="OrigamChatRoom"
+    name="OrigamChatRoom"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="4ed7b1b1-7b2d-4f58-8c60-510f8f6f2a57"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataLength="50"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="a161d727-97b7-44d3-a314-037183e7c43e"
+      isPrimaryKey="false"
+      mappedColumnName="Name"
+      name="Name"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="9437df39-e464-4117-bce7-109d985cac82"
+      isPrimaryKey="false"
+      mappedColumnName="ReferenceId"
+      name="ReferenceId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataLength="50"
+      dataType="String"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="98fdd11b-a908-438a-9775-53a6945a7013"
+      isPrimaryKey="false"
+      mappedColumnName="ReferenceEntity"
+      name="ReferenceEntity"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <EntityRelation
+      abstract="false"
+      x:id="544a39c8-b9c4-44c7-899f-edd5e9abacb6"
+      name="OrigamChatMessage"
+      or="false"
+      parentChild="false"
+      relatedEntity="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/478da4a8-dc69-42bb-b10a-7fab3eaa8d6d"
+      selfJoin="false"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        abstract="false"
+        baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="b14fd585-eacc-4367-910c-2346885fe10f"
+        name="OrigamChatMessageKey1"
+        relatedEntityField="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/refOrigamChatRoomId/3d790088-fd29-44a1-bcbe-cb112aa3300a"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <EntityRelation
+      abstract="false"
+      x:id="a4b42991-e739-4090-bcc5-12343ddaf5f5"
+      name="OrigamChatRoomBusinessPartner"
+      or="false"
+      parentChild="false"
+      relatedEntity="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/1c33abd7-83b9-4a65-9acb-63cca9764cdd"
+      selfJoin="false"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        abstract="false"
+        baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="3b855f20-bd32-400a-be23-6c5cf51c642e"
+        name="OrigamChatRoomBusinessPartnerKey1"
+        relatedEntityField="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/refOrigamChatRoomId/48044453-19bb-40a1-8bb4-bb3173fbbae7"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+  </DataEntity>
+</x:file>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="ae1cd694-9354-49bf-a68e-93b1c241afd2"
+    localized="false"
+    name="OrigamChatRoom"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/f0d1ff00-2bab-4f75-9cde-eb795e604f4b"
+      x:id="133eebe4-a2fc-4650-ae0f-c11ea9a0bea5"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="OrigamChatRoom"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false">
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/OrigamChatMessage/544a39c8-b9c4-44c7-899f-edd5e9abacb6"
+        x:id="8315107b-b620-4217-8273-6847eb617fcf"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamChatMessage"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false">
+        <DataStructureEntity
+          abstract="false"
+          allFields="true"
+          concurrencyHandling="Standard"
+          entity="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessageBusinessPartner/d752940d-cb29-4e2a-bc06-0bc9a0356b4b"
+          x:id="fb50dffa-ed57-460f-ba8f-a4d3eaa9eae7"
+          ignoreCondition="None"
+          ignoreImplicitFilters="false"
+          name="OrigamChatMessageBusinessPartner"
+          relationType="Normal"
+          x:type="Origam.Schema.EntityModel.DataStructureEntity"
+          useUpsert="false" />
+      </DataStructureEntity>
+      <DataStructureEntity
+        abstract="false"
+        allFields="true"
+        concurrencyHandling="Standard"
+        entity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/OrigamChatRoomBusinessPartner/a4b42991-e739-4090-bcc5-12343ddaf5f5"
+        x:id="a923977f-ab6c-4c53-91c1-77d8dd1f3081"
+        ignoreCondition="None"
+        ignoreImplicitFilters="false"
+        name="OrigamChatRoomBusinessPartner"
+        relationType="Normal"
+        x:type="Origam.Schema.EntityModel.DataStructureEntity"
+        useUpsert="false" />
+    </DataStructureEntity>
+    <DataStructureFilterSet
+      abstract="false"
+      dynamic="false"
+      x:id="a2d56dbe-6807-48ef-9765-7fd8cdaa09c7"
+      name="GetById"
+      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
+      <DataStructureFilterSetFilter
+        abstract="false"
+        entity="Chat/DataStructure/Chat/OrigamChatRoom.origam#OrigamChatRoom/OrigamChatRoom/133eebe4-a2fc-4650-ae0f-c11ea9a0bea5"
+        filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="edf1368a-afd9-4e8e-a47c-55a32a30bfa5"
+        name="OrigamChatRoom_GetId"
+        passWhenParameterMatch="false"
+        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
+    </DataStructureFilterSet>
+  </DataStructure>
+</x:file>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataEntity
+    abstract="false"
+    audit="None"
+    databaseObjectType="Table"
+    generateDeploymentScript="true"
+    x:id="1c33abd7-83b9-4a65-9acb-63cca9764cdd"
+    mappedObjectName="OrigamChatRoomBusinessPartner"
+    name="OrigamChatRoomBusinessPartner"
+    readOnly="false"
+    x:type="Origam.Schema.EntityModel.TableMappingItem">
+    <ancestor
+      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="be7a5ea9-558b-4aa4-9088-a146ab837ef0"
+      x:type="Origam.Schema.SchemaItemAncestor" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      foreignKeyEntity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/f0d1ff00-2bab-4f75-9cde-eb795e604f4b"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="48044453-19bb-40a1-8bb4-bb3173fbbae7"
+      isPrimaryKey="false"
+      mappedColumnName="refOrigamChatRoomId"
+      name="refOrigamChatRoomId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="Boolean"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="bb839d24-e8c4-4b3a-a41f-2af22e920e2d"
+      isPrimaryKey="false"
+      mappedColumnName="IsInvited"
+      name="IsInvited"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      autoIncrement="false"
+      dataType="Date"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      x:id="35b2075e-94ba-4125-8cc9-118b5ee71417"
+      isPrimaryKey="false"
+      mappedColumnName="LastSeen"
+      name="LastSeen"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="false"
+      autoIncrement="false"
+      dataType="UniqueIdentifier"
+      excludeFromAllFields="false"
+      excludeFromAuditing="false"
+      foreignKeyEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="2f633289-62af-4cd7-8dd2-84be9cd5c4ab"
+      isPrimaryKey="false"
+      mappedColumnName="refBusinessPartnerId"
+      name="refBusinessPartnerId"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.FieldMappingItem"
+      xmlMappingType="Attribute" />
+    <EntityFilter
+      abstract="false"
+      x:id="d1879bc1-304e-49dc-8cfb-5a1a7557dd9f"
+      name="GetByOrigamChatRoomId"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="18e33afe-74ea-47c6-85e1-239c74f3c47d"
+        isPrimaryKey="false"
+        name="Equal"
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
+        <FunctionCallParameter
+          abstract="false"
+          x:id="c8044f95-af4e-419b-af8f-abab44488c65"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="false"
+            x:id="27716a55-34f4-4f23-9481-1e782f0161a1"
+            name="parOrigamChatRoomId"
+            parameter="Chat/DataEntity/Chat/OrigamChatRoomBussinesPartner.origam#OrigamChatRoomBussinesPartner/parOrigamChatRoomId/e946c46e-8f1e-46d9-8c04-e13ee2273033"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="false"
+          x:id="abd5a8c8-0b90-4cda-8632-156d5dc81f2c"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="false"
+            field="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/refOrigamChatRoomId/48044453-19bb-40a1-8bb4-bb3173fbbae7"
+            x:id="93b7c1f9-e35c-4f7e-95a9-970b215d9157"
+            name="refOrigamChatRoomId"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      abstract="false"
+      x:id="efcb6e0b-11e5-4453-bb0b-38d171781e7b"
+      name="GetByIsInvited"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="6482a1ff-52fd-40fb-9a18-faa824e254db"
+        isPrimaryKey="false"
+        name="Equal"
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
+        <FunctionCallParameter
+          abstract="false"
+          x:id="8230e292-5b01-4d19-b485-15221384a600"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="false"
+            x:id="ca8ced71-a6d7-4a48-9296-e888dc486c90"
+            name="parIsInvited"
+            parameter="Chat/DataEntity/Chat/OrigamChatRoomBussinesPartner.origam#OrigamChatRoomBussinesPartner/parIsInvited/efb2520b-fe89-4ef3-b787-70f469744255"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="false"
+          x:id="442b0326-f0ef-482f-be31-407e2d68a838"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="false"
+            field="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/IsInvited/bb839d24-e8c4-4b3a-a41f-2af22e920e2d"
+            x:id="bb16b963-fdf1-4292-9d5d-f237f5e99e10"
+            name="IsInvited"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityFilter
+      abstract="false"
+      x:id="42c019b6-803d-43b2-b1c0-9fccb07a667f"
+      name="GetByBusinessPartnerId"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="false"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="a0029a37-73b6-45b7-a100-844fd5715491"
+        isPrimaryKey="false"
+        name="Equal"
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
+        <FunctionCallParameter
+          abstract="false"
+          x:id="63951c4b-0f34-467a-8428-450b06d7c04b"
+          name="Right"
+          parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="false"
+            x:id="ef1f0c8d-30fe-463c-9c9a-80e44e4cee90"
+            name="parBusinessPartnerId"
+            parameter="Chat/DataEntity/Chat/OrigamChatRoomBussinesPartner.origam#OrigamChatRoomBussinesPartner/parBusinessPartnerId/f2228ec9-0843-437a-ab9f-bbf2532a2c99"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="false"
+          x:id="cf141005-80f4-416d-ae06-e32b1e44684d"
+          name="Left"
+          parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="false"
+            field="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/refBusinessPartnerId/2f633289-62af-4cd7-8dd2-84be9cd5c4ab"
+            x:id="9bb17ef1-f924-43fb-b101-75ea18a0b248"
+            name="refBusinessPartnerId"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
+    <EntityRelation
+      abstract="false"
+      x:id="0ee15f2b-9924-479f-b13a-9b533449d2cc"
+      name="BusinessPartner"
+      or="false"
+      parentChild="false"
+      relatedEntity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      selfJoin="false"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        abstract="false"
+        baseEntityField="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/refBusinessPartnerId/2f633289-62af-4cd7-8dd2-84be9cd5c4ab"
+        x:id="b8539bf6-36fa-49c6-bade-62e1cfd44bde"
+        name="BusinessPartner TransactionKey"
+        relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <EntityRelation
+      abstract="false"
+      x:id="edf4607e-d961-4e5d-adff-d70dcbaa76a6"
+      name="OrigamChatRoom"
+      or="false"
+      parentChild="false"
+      relatedEntity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/f0d1ff00-2bab-4f75-9cde-eb795e604f4b"
+      selfJoin="false"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        abstract="false"
+        baseEntityField="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/refOrigamChatRoomId/48044453-19bb-40a1-8bb4-bb3173fbbae7"
+        x:id="de8abdd6-0ab5-425b-a7d2-8a61e34036ab"
+        name="OrigamChatRoomKey1"
+        relatedEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <EntityRelation
+      abstract="false"
+      x:id="be863177-9c82-4a33-8d16-887cc09cd29b"
+      name="OrigamChatMessage"
+      or="false"
+      parentChild="false"
+      relatedEntity="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/478da4a8-dc69-42bb-b10a-7fab3eaa8d6d"
+      selfJoin="false"
+      x:type="Origam.Schema.EntityModel.EntityRelationItem">
+      <EntityRelationColumnPair
+        abstract="false"
+        baseEntityField="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/refOrigamChatRoomId/48044453-19bb-40a1-8bb4-bb3173fbbae7"
+        x:id="b53b411e-6d14-4ef6-9bf9-8f2b9ee90057"
+        name="OrigamChatMessageKey2"
+        relatedEntityField="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/refOrigamChatRoomId/3d790088-fd29-44a1-bcbe-cb112aa3300a"
+        x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+    </EntityRelation>
+    <Parameter
+      abstract="false"
+      allowNulls="true"
+      dataType="UniqueIdentifier"
+      x:id="e946c46e-8f1e-46d9-8c04-e13ee2273033"
+      name="parOrigamChatRoomId"
+      x:type="Origam.Schema.EntityModel.DatabaseParameter" />
+    <Parameter
+      abstract="false"
+      allowNulls="true"
+      dataType="Boolean"
+      x:id="efb2520b-fe89-4ef3-b787-70f469744255"
+      name="parIsInvited"
+      x:type="Origam.Schema.EntityModel.DatabaseParameter" />
+    <Parameter
+      abstract="false"
+      allowNulls="true"
+      dataType="UniqueIdentifier"
+      x:id="f2228ec9-0843-437a-ab9f-bbf2532a2c99"
+      name="parBusinessPartnerId"
+      x:type="Origam.Schema.EntityModel.DatabaseParameter" />
+  </DataEntity>
+</x:file>
