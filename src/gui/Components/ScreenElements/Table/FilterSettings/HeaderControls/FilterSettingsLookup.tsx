@@ -7,9 +7,9 @@ import {
 } from "gui02/components/TagInput/TagInput";
 import _ from "lodash";
 import { action, computed, flow, observable, runInAction, toJS } from "mobx";
-import {MobXProviderContext, observer} from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useState } from "react";
 import { Grid, GridCellProps } from "react-virtualized";
 import Highlighter from "react-highlight-words";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
@@ -24,35 +24,32 @@ import { FilterSetting } from "./FilterSetting";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { T } from "utils/translation";
 import {
-  CtxDropdownEditor, DropdownEditor,
+  CtxDropdownEditor,
+  DropdownEditor,
   DropdownEditorSetup,
   IDropdownEditorContext,
 } from "modules/Editors/DropdownEditor/DropdownEditor";
-import {TagInputEditor} from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import {IFocusable} from "model/entities/FocusManager";
-import {IDataView} from "model/entities/types/IDataView";
-import {DropdownEditorApi} from "modules/Editors/DropdownEditor/DropdownEditorApi";
+import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
+import { IDataView } from "model/entities/types/IDataView";
+import { DropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import {
   DropdownEditorData,
-  IDropdownEditorData
+  IDropdownEditorData,
 } from "modules/Editors/DropdownEditor/DropdownEditorData";
-import {TagInputEditorData} from "modules/Editors/DropdownEditor/TagInputEditorData";
 import {
   DropdownColumnDrivers,
-  DropdownDataTable
+  DropdownDataTable,
 } from "modules/Editors/DropdownEditor/DropdownTableModel";
-import {DropdownEditorLookupListCache} from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
-import {DropdownEditorBehavior} from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
-import {findStopping} from "xmlInterpreters/xmlUtils";
-import {TextCellDriver} from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
-import {NumberCellDriver} from "modules/Editors/DropdownEditor/Cells/NumberCellDriver";
-import {BooleanCellDriver} from "modules/Editors/DropdownEditor/Cells/BooleanCellDriver";
-import {DefaultHeaderCellDriver} from "modules/Editors/DropdownEditor/Cells/HeaderCell";
-import {DataViewData} from "modules/DataView/DataViewData";
-import {RowCursor} from "modules/DataView/TableCursor";
-import {ILookup} from "model/entities/types/ILookup";
-import {getProperty} from "model/selectors/DataView/getProperty";
-import {IProperty} from "model/entities/types/IProperty";
+import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
+import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
+import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
+import { NumberCellDriver } from "modules/Editors/DropdownEditor/Cells/NumberCellDriver";
+import { BooleanCellDriver } from "modules/Editors/DropdownEditor/Cells/BooleanCellDriver";
+import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
+import { DataViewData } from "modules/DataView/DataViewData";
+import { RowCursor } from "modules/DataView/TableCursor";
+import { ILookup } from "model/entities/types/ILookup";
+import { IProperty } from "model/entities/types/IProperty";
 
 const OPERATORS = () =>
   [
@@ -602,13 +599,7 @@ export function FilterBuildDropdownEditor(props: {
 
     const drivers = new DropdownColumnDrivers();
 
-
-    drivers.drivers.push({
-      headerCellDriver: new DefaultHeaderCellDriver(lookupColumn.name),
-      bodyCellDriver: new TextCellDriver(0, dropdownEditorDataTable, dropdownEditorBehavior),
-    });
-
-    const columnNames=[props.property.identifier!];
+    const columnNames = [props.property.identifier!];
     let identifierIndex = 0;
     const columnNameToIndex = new Map<string, number>([[props.property.identifier!, identifierIndex]]);
     const visibleColumnNames=[];
@@ -620,6 +611,38 @@ export function FilterBuildDropdownEditor(props: {
       columnNameToIndex.set(dropDownColumn.id, index);
 
       visibleColumnNames.push(dropDownColumn.id);
+
+      let bodyCellDriver;
+      switch (dropDownColumn.column) {
+        case "Text":
+          bodyCellDriver = new TextCellDriver(
+            index,
+            dropdownEditorDataTable,
+            dropdownEditorBehavior
+          );
+          break;
+        case "Number":
+          bodyCellDriver = new NumberCellDriver(
+            index,
+            dropdownEditorDataTable,
+            dropdownEditorBehavior
+          );
+          break;
+        case "CheckBox":
+          bodyCellDriver = new BooleanCellDriver(
+            index,
+            dropdownEditorDataTable,
+            dropdownEditorBehavior
+          );
+          break;
+        default:
+          throw new Error("Unknown column type " + dropDownColumn.column);
+      }
+
+      drivers.drivers.push({
+        headerCellDriver: new DefaultHeaderCellDriver(dropDownColumn.name),
+        bodyCellDriver,
+      });
     }
     
 
