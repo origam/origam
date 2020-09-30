@@ -61,6 +61,14 @@ if [[ ! -z ${ExternalDomain_SetOnStart} ]]; then
 	sed -i "s|ExternalDomain|${ExternalDomain_SetOnStart}|" appsettings.json
 fi
 
+if [[ ! -z ${EnableChat} ]]; then
+	sed -i "s|pathchatapp|/home/origam/HTML5/clients/chat|" appsettings.json
+	sed -i "s|chatinterval|1000|" appsettings.json
+else
+	sed -i "s|pathchatapp||" appsettings.json
+	sed -i "s|chatinterval|0|" appsettings.json
+fi
+
 if [[ -n ${OrigamSettings_SetOnStart} && ${OrigamSettings_SetOnStart} == true ]]; then
 	rm -f OrigamSettings.config
 fi
