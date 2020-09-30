@@ -16,7 +16,7 @@
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
       abstract="false"
-      allowNulls="true"
+      allowNulls="false"
       autoIncrement="false"
       dataLength="50"
       dataType="String"

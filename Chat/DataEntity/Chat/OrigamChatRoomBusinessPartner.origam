@@ -16,7 +16,7 @@
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
       abstract="false"
-      allowNulls="true"
+      allowNulls="false"
       autoIncrement="false"
       dataType="UniqueIdentifier"
       excludeFromAllFields="false"
@@ -32,15 +32,15 @@
       xmlMappingType="Attribute" />
     <DataEntityColumn
       abstract="false"
-      allowNulls="true"
+      allowNulls="false"
       autoIncrement="false"
       dataType="Boolean"
       excludeFromAllFields="false"
       excludeFromAuditing="false"
       x:id="bb839d24-e8c4-4b3a-a41f-2af22e920e2d"
       isPrimaryKey="false"
-      mappedColumnName="isInvited"
-      name="isInvited"
+      mappedColumnName="IsInvited"
+      name="IsInvited"
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.FieldMappingItem"
       xmlMappingType="Attribute" />
@@ -60,7 +60,7 @@
       xmlMappingType="Attribute" />
     <DataEntityColumn
       abstract="false"
-      allowNulls="true"
+      allowNulls="false"
       autoIncrement="false"
       dataType="UniqueIdentifier"
       excludeFromAllFields="false"
@@ -161,9 +161,9 @@
           x:type="Origam.Schema.EntityModel.FunctionCallParameter">
           <EntityColumnReference
             abstract="false"
-            field="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/isInvited/bb839d24-e8c4-4b3a-a41f-2af22e920e2d"
+            field="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/IsInvited/bb839d24-e8c4-4b3a-a41f-2af22e920e2d"
             x:id="bb16b963-fdf1-4292-9d5d-f237f5e99e10"
-            name="isInvited"
+            name="IsInvited"
             x:type="Origam.Schema.EntityModel.EntityColumnReference" />
         </FunctionCallParameter>
       </DataEntityColumn>

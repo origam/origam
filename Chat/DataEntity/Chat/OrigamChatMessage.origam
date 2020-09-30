@@ -16,7 +16,7 @@
       x:type="Origam.Schema.SchemaItemAncestor" />
     <DataEntityColumn
       abstract="false"
-      allowNulls="true"
+      allowNulls="false"
       autoIncrement="false"
       dataType="UniqueIdentifier"
       excludeFromAllFields="false"
@@ -32,7 +32,7 @@
       xmlMappingType="Attribute" />
     <DataEntityColumn
       abstract="false"
-      allowNulls="true"
+      allowNulls="false"
       autoIncrement="false"
       dataType="Memo"
       excludeFromAllFields="false"
@@ -46,7 +46,7 @@
       xmlMappingType="Attribute" />
     <DataEntityColumn
       abstract="false"
-      allowNulls="true"
+      allowNulls="false"
       autoIncrement="false"
       dataType="UniqueIdentifier"
       excludeFromAllFields="false"

@@ -1,5 +1,5 @@
 ﻿CREATE TABLE "OrigamChatRoom" (
-	"Name" Varchar(50) NULL,
+	"Name" Varchar(50) NOT NULL,
 	"ReferenceId" Uuid NULL,
 	"ReferenceEntity" Varchar(50) NULL,
 	"RecordCreatedBy" Uuid NULL,

@@ -1,5 +1,5 @@
 ﻿
-ALTER TABLE "OrigamChatMessageBusinessPartner" ADD CONSTRAINT FK_OrigamChatMessageBusinessPartner_refOrigamChatMessageId_OrigamChatMessage
+ALTER TABLE "OrigamChatMessageBusinessPartner" ADD CONSTRAINT "FK_OrigamChatMessageBusinessPartner_refOrigamChatMessageId_OrigamChatMessage"
 	FOREIGN KEY (
 		"refOrigamChatMessageId"
 	)
@@ -7,7 +7,7 @@ ALTER TABLE "OrigamChatMessageBusinessPartner" ADD CONSTRAINT FK_OrigamChatMessa
 	REFERENCES "OrigamChatMessage" (
 		"Id"
 	);
-ALTER TABLE "OrigamChatMessageBusinessPartner" ADD CONSTRAINT FK_OrigamChatMessageBusinessPartner_refBusinessPartnerId_BusinessPartner
+ALTER TABLE "OrigamChatMessageBusinessPartner" ADD CONSTRAINT "FK_OrigamChatMessageBusinessPartner_refBusinessPartnerId_BusinessPartner"
 	FOREIGN KEY (
 		"refBusinessPartnerId"
 	)

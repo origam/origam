@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [OrigamChatRoomBusinessPartner] (
-	[refOrigamChatRoomId] UniqueIdentifier NULL,
-	[isInvited] Bit NULL,
+	[refOrigamChatRoomId] UniqueIdentifier NOT NULL,
+	[IsInvited] Bit NOT NULL,
 	[LastSeen] DateTime NULL,
-	[refBusinessPartnerId] UniqueIdentifier NULL,
+	[refBusinessPartnerId] UniqueIdentifier NOT NULL,
 	[RecordCreatedBy] UniqueIdentifier NULL,
 	[RecordUpdatedBy] UniqueIdentifier NULL,
 	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,

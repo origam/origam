@@ -1,7 +1,7 @@
 ﻿CREATE TABLE "OrigamChatMessage" (
-	"refOrigamChatRoomId" Uuid NULL,
-	"TextMessage" Text NULL,
-	"refBusinessPartnerId" Uuid NULL,
+	"refOrigamChatRoomId" Uuid NOT NULL,
+	"TextMessage" Text NOT NULL,
+	"refBusinessPartnerId" Uuid NOT NULL,
 	"RecordCreatedBy" Uuid NULL,
 	"RecordUpdatedBy" Uuid NULL,
 	"Id" Uuid NOT NULL PRIMARY KEY ,

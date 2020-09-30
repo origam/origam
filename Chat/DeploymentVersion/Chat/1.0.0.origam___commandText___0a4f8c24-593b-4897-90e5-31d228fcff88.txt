@@ -7,7 +7,7 @@ ALTER TABLE "OrigamChatRoomBusinessPartner" ADD CONSTRAINT FK_OrigamChatRoomBusi
 	REFERENCES "OrigamChatRoom" (
 		"Id"
 	);
-ALTER TABLE "OrigamChatRoomBusinessPartner" ADD CONSTRAINT FK_OrigamChatRoomBusinessPartner_refBusinessPartnerId_BusinessPartner
+ALTER TABLE "OrigamChatRoomBusinessPartner" ADD CONSTRAINT "FK_OrigamChatRoomBusinessPartner_refBusinessPartnerId_BusinessPartner"
 	FOREIGN KEY (
 		"refBusinessPartnerId"
 	)

@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [OrigamChatMessage] (
-	[refOrigamChatRoomId] UniqueIdentifier NULL,
-	[TextMessage] nvarchar(max) NULL,
-	[refBusinessPartnerId] UniqueIdentifier NULL,
+	[refOrigamChatRoomId] UniqueIdentifier NOT NULL,
+	[TextMessage] nvarchar(max) NOT NULL,
+	[refBusinessPartnerId] UniqueIdentifier NOT NULL,
 	[RecordCreatedBy] UniqueIdentifier NULL,
 	[RecordUpdatedBy] UniqueIdentifier NULL,
 	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
