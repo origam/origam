@@ -156,7 +156,7 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() => 
                 GetRoomUsers(requestChatRoomId, limit, offset, searchPhrase, 
-                    true));
+                    false));
         }
         [HttpGet("users")]
         public IActionResult GetLocalUsersRequest()

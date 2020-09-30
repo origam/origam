@@ -103,7 +103,7 @@ namespace Origam.ServerCore.Authorization
 
         public async Task<bool> UnlockUserAsync(string userName)
         {
-            var user = await FindByIdAsync(userName);
+            var user = await FindByNameAsync(userName);
             if (user == null) { return false; }
             return (await coreUserManager.SetLockoutEndDateAsync( user,DateTimeOffset.MinValue))
                 .Succeeded;
