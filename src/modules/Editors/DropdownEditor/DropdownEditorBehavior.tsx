@@ -221,6 +221,11 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound
+  handleTriggerContextMenu(event: any) {
+    this.dropUp();
+  }
+
+  @action.bound
   handleControlMouseDown(event: any) {
     if (this.isDropped) {
       event.stopPropagation();
