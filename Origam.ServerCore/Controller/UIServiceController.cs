@@ -104,14 +104,19 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
         {
-            return RunWithErrorHandler(() => Ok(
-                // registerSession is important for session less handling
-                sessionObjects.UIManager.InitUI(
-                    request: request,
-                    addChildSession: false,
-                    parentSession: null,
-                    basicUIService: sessionObjects.UIService)
-            ));
+            return RunWithErrorHandler(() =>
+            {
+                return FindItem<AbstractMenuItem>(
+                        new Guid(request.ObjectId))
+                    .Bind(Authorize)
+                    .Map(menuItem => sessionObjects.UIManager.InitUI(
+                        request: request,
+                        addChildSession: false,
+                        parentSession: null,
+                        basicUIService: sessionObjects.UIService))
+                    .Map(ToActionResult)
+                    .Finally(UnwrapReturnValue);
+            });
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
@@ -548,11 +553,15 @@ namespace Origam.ServerCore.Controller
         [HttpGet("[action]/{menuId}")]
         public IActionResult ReportFromMenu(Guid menuId)
         {
-            return FindItem<ReportReferenceMenuItem>(menuId)
-                .Bind(Authorize)
-                .Map(menuItem => sessionObjects.UIService.ReportFromMenu(menuItem.Id))
-                .Map(ToActionResult)
-                .Finally(UnwrapReturnValue);
+            return RunWithErrorHandler(() =>
+            {
+                return FindItem<ReportReferenceMenuItem>(menuId)
+                    .Bind(Authorize)
+                    .Map(menuItem => sessionObjects.UIService.ReportFromMenu(
+                        menuItem.Id))
+                    .Map(ToActionResult)
+                    .Finally(UnwrapReturnValue);
+            });
         }
         #endregion
         
