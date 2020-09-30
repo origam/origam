@@ -63,6 +63,6 @@ namespace Origam.ServerCore.Configuration
                                         !string.IsNullOrWhiteSpace(Html5ClientLogoUrl));
         public string PathToClientApp => configuration["PathToClientApp"];
 
-        public string PathToChatApp => configuration.GetSection("Chat")["PathToChatApp"];
+        public string PathToChatApp => configuration.GetSection("ChatConfig")["PathToChatApp"];
     }
 }
