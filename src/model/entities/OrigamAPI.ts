@@ -36,7 +36,9 @@ export class OrigamAPI implements IApi {
     axiosInstance.interceptors.response.use(
       (response) => response,
       (error) => {
-        this.errorHandler(error);
+        if(!axios.isCancel(error)){
+          this.errorHandler(error);
+        }
         throw error;
       }
     );
@@ -332,7 +334,7 @@ export class OrigamAPI implements IApi {
         headers: this.httpAuthHeader,
         cancelToken: canceller && canceller.token,
       })
-    ).data;
+    )?.data ?? [];
   }
 
   async restoreData(data: { SessionFormIdentifier: string; ObjectId: string }) {

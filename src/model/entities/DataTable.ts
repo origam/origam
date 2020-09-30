@@ -36,6 +36,14 @@ export class DataTable implements IDataTable {
     this.rowRemovedListeners.forEach(listener => listener());
   }
 
+  start(){
+    this.rowsContainer.start();
+  }
+
+  stop(){
+    this.rowsContainer.stop();
+  }
+
   get allRows() {
     return this.rowsContainer.rows;
   }
@@ -89,6 +97,10 @@ export class DataTable implements IDataTable {
         return ard.dirtyValues.get(property.id);
       }
     }
+    return this.getOriginalCellValue(row, property);
+  }
+
+  getOriginalCellValue(row: any[], property: IProperty) {
     return row[property.dataIndex];
   }
 
@@ -112,6 +124,11 @@ export class DataTable implements IDataTable {
 
   getCellText(row: any[], property: IProperty) {
     const value = this.getCellValue(row, property);
+    return this.resolveCellText(property, value);
+  }
+
+  getOriginalCellText(row: any[], property: IProperty) {
+    const value = this.getOriginalCellValue(row, property);
     return this.resolveCellText(property, value);
   }
 

@@ -20,4 +20,10 @@ export interface IRowsContainer {
   rows: any[];
 
   allRows: any[];
+
+  updateSortAndFilter(): void;
+
+  start(): void;
+
+  stop():void;
 }

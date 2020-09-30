@@ -23,6 +23,13 @@ export class TreeDataTable implements IDataTable {
     return this.rows;
   }
 
+  start(){
+
+  }
+  stop(){
+
+  }
+
   additionalRowData: Map<string, IAdditionalRowData> = new Map();
   maxRowCountSeen: number = 0;
   groups: IGroupTreeNode[] = [];
@@ -45,11 +52,19 @@ export class TreeDataTable implements IDataTable {
     throw new Error("Not implemented");
   }
 
+  getOriginalCellValue(row: any[], property: IProperty): any {
+    throw new Error("Not implemented");
+  }
+
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField) {
     return row[dsField.index];
   }
 
   getCellText(row: any[], property: IProperty): any {
+    throw new Error("Not implemented");
+  }
+
+  getOriginalCellText(row: any[], property: IProperty): any {
     throw new Error("Not implemented");
   }
 
