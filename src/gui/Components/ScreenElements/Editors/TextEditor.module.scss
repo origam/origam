@@ -5,6 +5,10 @@
   overflow-y: auto;
 }
 
+.multiLine{
+  white-space: pre-line;
+}
+
 .editorContainer {
   @include editorContainer;
 }
