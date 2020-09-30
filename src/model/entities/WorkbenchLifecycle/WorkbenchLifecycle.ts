@@ -425,13 +425,17 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       }
     }
 
-    const workQueues = getWorkQueues(this);
-    yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
-    yield* workQueues.startTimer();
+    if(this.portalSettings?.showWorkQueues){
+      const workQueues = getWorkQueues(this);
+      yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
+      yield* workQueues.startTimer();
+    }
 
-    const chatrooms = getChatrooms(this);
-    yield* chatrooms.setRefreshInterval(10000);
-    yield* chatrooms.startTimer();
+    if(this.portalSettings?.showChat) {
+      const chatrooms = getChatrooms(this);
+      yield* chatrooms.setRefreshInterval(portalInfo.chatRefreshInterval);
+      yield* chatrooms.startTimer();
+    }
   }
 
   *run(): Generator {
