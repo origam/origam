@@ -9,6 +9,7 @@ import { Tooltip } from "react-tippy";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { action, observable } from "mobx";
 import { createPortal } from "react-dom";
+import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
 
 export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
   return (
@@ -41,6 +42,8 @@ export function TriggerContextMenu(props: { state: TriggerContextMenuState }) {
 }
 
 class TriggerContextMenuState {
+  constructor(public behaviour: DropdownEditorBehavior) {}
+  
   @observable isDropped = false;
   @observable top = 0;
   @observable left = 0;
@@ -74,6 +77,7 @@ class TriggerContextMenuState {
   @action.bound
   handleRefreshClick(event: any) {
     this.isDropped = false;
+    this.behaviour.clearCache();
   }
 }
 
@@ -86,7 +90,7 @@ export function DropdownEditorControl(props: {
 }) {
   const ref = useContext(CtxDropdownRefCtrl);
   const beh = useContext(CtxDropdownEditor).behavior;
-  const [triggerContextMenu] = useState(() => new TriggerContextMenuState());
+  const [triggerContextMenu] = useState(() => new TriggerContextMenuState(beh));
 
   return (
     <Observer>

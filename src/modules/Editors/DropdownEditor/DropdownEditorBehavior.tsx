@@ -330,6 +330,11 @@ export class DropdownEditorBehavior {
     );
   }
 
+  @action.bound
+  clearCache() {
+    this.cache.clean();
+  }
+
   _refInputDisposer: any;
   refInputElement = (elm: any) => {
     this.elmInputElement = elm;
