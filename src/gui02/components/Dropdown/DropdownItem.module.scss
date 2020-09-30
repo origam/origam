@@ -23,12 +23,12 @@
   }
 
 
-  &:last-of-type {
+  /*&:last-of-type {
     color: $red;
     &:hover {
       background: $red;
     }
-  }
+  }*/
   &:hover {
     background: $blue;
     color: $white;
