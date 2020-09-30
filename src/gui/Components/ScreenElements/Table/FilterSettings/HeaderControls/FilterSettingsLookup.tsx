@@ -31,7 +31,10 @@ import {
 } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 import { IDataView } from "model/entities/types/IDataView";
-import { DropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
+import {
+  DropdownEditorApi,
+  IDropdownEditorApi
+} from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import {
   DropdownEditorData,
   IDropdownEditorData,
@@ -386,6 +389,7 @@ class OpEditors extends React.Component<{
           <FilterBuildDropdownEditor
             lookup={this.props.lookup}
             property={this.props.property}
+            getOptions={this.props.getOptions}
           />
           // <TagInputStateful
           //   selectedItems={setting.val1 ? this.selectedItems : []}
@@ -494,6 +498,7 @@ export function FilterBuildDropdownEditor(props: {
   // onKeyDown?(event: any): void;
   lookup: ILookup;
   property: IProperty;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -502,12 +507,13 @@ export function FilterBuildDropdownEditor(props: {
   const { lookupListCache } = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
-    const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
-      () => dropdownEditorSetup,
-      dataViewRowCursor,
-      dataViewApi,
-      () => dropdownEditorBehavior
-    );
+    const dropdownEditorApi = new DropDownApi(props.getOptions);
+    // const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
+    //   () => dropdownEditorSetup,
+    //   dataViewRowCursor,
+    //   dataViewApi,
+    //   () => dropdownEditorBehavior
+    // );
     const dropdownEditorData: IDropdownEditorData =
       new FilterEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
 
@@ -688,7 +694,7 @@ export function FilterBuildDropdownEditor(props: {
           // foregroundColor={foregroundColor}
           // customStyle={this.props.property?.style}
           refocuser={undefined}
-          // onChange={this.props.onChange}
+          //onChange={this.props.onChange}
           // onKeyDown={this.MakeOnKeyDownCallBack()}
           onClick={undefined}
           // onEditorBlur={this.props.onEditorBlur}
@@ -737,5 +743,16 @@ export class FilterEditorData implements IDropdownEditorData {
 
   get idsInEditor() {
     return (this.value ? this.value : []) as string[];
+  }
+}
+
+class DropDownApi implements IDropdownEditorApi{
+
+  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>) {
+
+  }
+
+  *getLookupList(searchTerm: string): any {
+    yield this.getOptions("");
   }
 }

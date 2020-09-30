@@ -2,7 +2,7 @@ import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
 import { action, computed, decorate, flow, observable, reaction } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
-import { DropdownEditorApi } from "./DropdownEditorApi";
+import { DropdownEditorApi, IDropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
@@ -11,7 +11,7 @@ import { IFocusable } from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
   constructor(
-    private api: DropdownEditorApi,
+    private api: IDropdownEditorApi,
     private data: IDropdownEditorData,
     private dataTable: DropdownDataTable,
     private setup: () => DropdownEditorSetup,
