@@ -674,6 +674,53 @@
         </FunctionCallParameter>
       </DataEntityColumn>
     </EntityFilter>
+    <EntityFilter
+      abstract="true"
+      x:id="2b30ff66-91ae-441c-97d1-533d3f5ac7b4"
+      name="GetUsersWithoutME"
+      x:type="Origam.Schema.EntityModel.EntityFilter">
+      <DataEntityColumn
+        abstract="true"
+        allowNulls="true"
+        autoIncrement="false"
+        dataType="Boolean"
+        excludeFromAllFields="false"
+        forceDatabaseCalculation="false"
+        function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
+        x:id="bb49db7b-f949-424d-b956-c9bd3a99edba"
+        isPrimaryKey="false"
+        name="NotEqual"
+        onCopyAction="Copy"
+        x:type="Origam.Schema.EntityModel.FunctionCall"
+        xmlMappingType="Attribute">
+        <FunctionCallParameter
+          abstract="true"
+          x:id="95a3cd9e-962e-4a26-aaf1-932a55561847"
+          name="Left"
+          parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <EntityColumnReference
+            abstract="true"
+            field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+            x:id="d2d0d8af-f63a-48db-99e0-6c8d0e12f23e"
+            name="Id"
+            x:type="Origam.Schema.EntityModel.EntityColumnReference" />
+        </FunctionCallParameter>
+        <FunctionCallParameter
+          abstract="true"
+          x:id="9a130a01-f965-4b0a-bbd9-f2921c042a61"
+          name="Right"
+          parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e"
+          x:type="Origam.Schema.EntityModel.FunctionCallParameter">
+          <ParameterReference
+            abstract="true"
+            x:id="eceb3a04-efd3-44f0-a86d-1428e540ac0f"
+            name="parCurrentUserId"
+            parameter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/parCurrentUserId/e876ab29-a75c-41b4-a469-6d0c6e44d527"
+            x:type="Origam.Schema.ParameterReference" />
+        </FunctionCallParameter>
+      </DataEntityColumn>
+    </EntityFilter>
     <EntityRelation
       abstract="true"
       x:id="4dc1e092-5919-4ef5-b56c-438d890904c6"

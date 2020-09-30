@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <EntityRelation
+    abstract="true"
+    x:id="d7b5f24e-1319-4224-b021-8d4fee9e46ef"
+    name="OrigamUser"
+    or="false"
+    parentChild="false"
+    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
+    relatedEntity="Security/DataEntity/Security/OrigamUser.origam#OrigamUser/a6cca53b-1bdd-4b1a-a7e9-a462c88e9bc1"
+    selfJoin="false"
+    x:type="Origam.Schema.EntityModel.EntityRelationItem">
+    <EntityRelationColumnPair
+      abstract="true"
+      baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="decd47fb-7d14-4681-9139-ca9ee74cd8ae"
+      name="OrigamUserKey1"
+      relatedEntityField="Security/DataEntity/Security/OrigamUser.origam#OrigamUser/refBusinessPartnerId/2ecb3314-77d4-477c-9d2e-38d7b28cfaec"
+      x:type="Origam.Schema.EntityModel.EntityRelationColumnPairItem" />
+  </EntityRelation>
+</x:file>

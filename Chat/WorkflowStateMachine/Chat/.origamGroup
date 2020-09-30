@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="f1ab6d28-73e7-4ede-8846-329529093d6d"
+    x:isFolder="true"
+    name="Chat"
+    rootItemType="WorkflowStateMachine"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>
