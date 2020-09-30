@@ -27,6 +27,9 @@ import S from "gui02/connections/CSidebar.module.scss";
 import { getLogoUrl } from "model/selectors/getLogoUrl";
 import { CChatSection } from "./CChatSection";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
+import {getLoggedUserName} from "model/selectors/User/getLoggedUserName";
+import { getShowChat } from "model/selectors/PortalSettings/getShowChat";
+import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues";
 
 @observer
 export class CSidebar extends React.Component {
@@ -84,9 +87,62 @@ export class CSidebar extends React.Component {
     this.disposers.forEach((disposer) => disposer());
   }
 
-  render() {
+  renderWorkQuesSection(){
     const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
-    const chatTotalUnreadMessages = getChatrooms(this.workbench).totalItemCount;
+    return(
+      <SidebarSection isActive={this.activeSection === ISidebarSection.WorkQueues}>
+        <SidebarSectionDivider />
+        <SidebarSectionHeader
+          isActive={this.activeSection === ISidebarSection.WorkQueues}
+          icon={
+            <>
+              <Icon
+                src="./icons/work-queue.svg"
+                tooltip={T("Work Queues", "work_queue_measure")}
+              />
+              {workQueuesItemsCount > 0 && (
+                <SidebarAlertCounter>{workQueuesItemsCount}</SidebarAlertCounter>
+              )}
+            </>
+          }
+          label={<>{T("Work Queues", "work_queue_measure")}</>}
+          onClick={() => (this.activeSection = ISidebarSection.WorkQueues)}
+        />
+        <SidebarSectionBody isActive={this.activeSection === ISidebarSection.WorkQueues}>
+          <CWorkQueues />
+        </SidebarSectionBody>
+      </SidebarSection>
+    );
+  }
+  
+  renderChatSection(): React.ReactNode {
+    const totalUnreadMessages = getChatrooms(this.workbench).totalItemCount;
+    return(
+      <SidebarSection isActive={this.activeSection === ISidebarSection.Chat}>
+        <SidebarSectionDivider />
+        <SidebarSectionHeader
+          isActive={this.activeSection === ISidebarSection.Chat}
+          icon={
+            <>
+              <Icon src="./icons/work-queue.svg" tooltip={T("Chat", "chat")} />
+              {totalUnreadMessages > 0 && (
+                <SidebarAlertCounter>{totalUnreadMessages}</SidebarAlertCounter>
+              )}
+            </>
+          }
+          label={<>{T("Chat", "chat")}</>}
+          onClick={() => (this.activeSection = ISidebarSection.Chat)}
+        />
+        <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Chat}>
+          <CChatSection />
+        </SidebarSectionBody>
+      </SidebarSection>
+    );
+  }
+
+  render() {
+    const showChat = getShowChat(this.workbench);
+    const showWorkQues = getShowWorkQues(this.workbench);
     const logoUrl = getLogoUrl(this.workbench);
     return (
       <Sidebar>
@@ -99,48 +155,10 @@ export class CSidebar extends React.Component {
             )}
           </div>
         </LogoSection>
-        <SidebarSection isActive={this.activeSection === ISidebarSection.WorkQueues}>
-          <SidebarSectionDivider />
-          <SidebarSectionHeader
-            isActive={this.activeSection === ISidebarSection.WorkQueues}
-            icon={
-              <>
-                <Icon
-                  src="./icons/work-queue.svg"
-                  tooltip={T("Work Queues", "work_queue_measure")}
-                />
-                {workQueuesItemsCount > 0 && (
-                  <SidebarAlertCounter>{workQueuesItemsCount}</SidebarAlertCounter>
-                )}
-              </>
-            }
-            label={<>{T("Work Queues", "work_queue_measure")}</>}
-            onClick={() => (this.activeSection = ISidebarSection.WorkQueues)}
-          />
-          <SidebarSectionBody isActive={this.activeSection === ISidebarSection.WorkQueues}>
-            <CWorkQueues />
-          </SidebarSectionBody>
-        </SidebarSection>
+        
+        {showWorkQues ? this.renderWorkQuesSection() : null}
 
-        <SidebarSection isActive={this.activeSection === ISidebarSection.Chat}>
-          <SidebarSectionDivider />
-          <SidebarSectionHeader
-            isActive={this.activeSection === ISidebarSection.Chat}
-            icon={
-              <>
-                <Icon src="./icons/work-queue.svg" tooltip={T("Chat", "chat")} />
-                {chatTotalUnreadMessages > 0 && (
-                  <SidebarAlertCounter>{chatTotalUnreadMessages}</SidebarAlertCounter>
-                )}
-              </>
-            }
-            label={<>{T("Chat", "chat")}</>}
-            onClick={() => (this.activeSection = ISidebarSection.Chat)}
-          />
-          <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Chat}>
-            <CChatSection />
-          </SidebarSectionBody>
-        </SidebarSection>
+        {showChat ? this.renderChatSection() : null}
 
         <SidebarSection isActive={this.activeSection === ISidebarSection.Favorites}>
           <SidebarSectionDivider />
