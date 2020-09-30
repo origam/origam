@@ -278,7 +278,7 @@ namespace Origam.ServerCore.Controller
             foreach (var inviteUser in inviteUsers)
             {
                 var userId = inviteUser.Id;
-                var row = dataSet.Tables["OrigamChatRoomBussinesPartner"]
+                var row = dataSet.Tables["OrigamChatRoomBusinessPartner"]
                     .NewRow();
                 row["Id"] = Guid.NewGuid();
                 row["isInvited"] = true;
@@ -286,7 +286,7 @@ namespace Origam.ServerCore.Controller
                 row["refBusinessPartnerId"] = userId;
                 row["RecordCreated"] = DateTime.Now;
                 row["RecordCreatedBy"] = profile.Id;
-                dataSet.Tables["OrigamChatRoomBussinesPartner"].Rows.Add(row);
+                dataSet.Tables["OrigamChatRoomBusinessPartner"].Rows.Add(row);
             }
             DataService.StoreData(OrigamChatRoomBusinessPartnerId, dataSet, 
                 false, null);
@@ -310,10 +310,10 @@ namespace Origam.ServerCore.Controller
             var parameters = new QueryParameterCollection
             {
                  new QueryParameter(
-                     "OrigamChatRoomBussinesPartner_parBusinessPartnerId", 
+                     "OrigamChatRoomBusinessPartner_parBusinessPartnerId", 
                      outviteUser.userId),
                  new QueryParameter(
-                     "OrigamChatRoomBussinesPartner_parOrigamChatRoomId", 
+                     "OrigamChatRoomBusinessPartner_parOrigamChatRoomId", 
                      requestChatRoomId)
             };
             var resultData = LoadData(
@@ -398,17 +398,17 @@ namespace Origam.ServerCore.Controller
             var parameters = new QueryParameterCollection
             {
                 new QueryParameter(
-                    "OrigamChatRoomBussinesPartner_parBusinessPartnerId", 
+                    "OrigamChatRoomBusinessPartner_parBusinessPartnerId", 
                     profile.Id),
                 new QueryParameter(
-                    "OrigamChatRoomBussinesPartner_parIsInvited", 
+                    "OrigamChatRoomBusinessPartner_parIsInvited", 
                     true)
             };
             var chatRooms = LoadData(
-                OrigamChatRoomBusinessPartnerId, 
-                GetByBusinessPartnerId_IsInvited,
-               Guid.Empty, Guid.Empty, null, 
-                parameters);
+                    OrigamChatRoomBusinessPartnerId,
+                    GetByBusinessPartnerId_IsInvited,
+                    Guid.Empty, Guid.Empty, null,
+                    parameters);
             var unreadMessages = GetUnreadMessages(chatRooms);
             return OrigamChatRoom.CreateJson(chatRooms, unreadMessages);
         }
@@ -416,7 +416,7 @@ namespace Origam.ServerCore.Controller
         {
             var unreadMessages = new Dictionary<Guid, int>();
             foreach(DataRow dataRow 
-                in chatRooms.Tables["OrigamChatRoomBussinesPartner"].Rows)
+                in chatRooms.Tables["OrigamChatRoomBusinessPartner"].Rows)
             {
                 var parameters = new QueryParameterCollection
                 {
@@ -458,10 +458,10 @@ namespace Origam.ServerCore.Controller
             var parameters = new QueryParameterCollection 
             {
                 new QueryParameter(
-                        "OrigamChatRoomBussinesPartner_parOrigamChatRoomId", 
+                        "OrigamChatRoomBusinessPartner_parOrigamChatRoomId", 
                         requestChatRoomId),
                 new QueryParameter(
-                    "OrigamChatRoomBussinesPartner_parIsInvited", 
+                    "OrigamChatRoomBusinessPartner_parIsInvited", 
                     true)
             };
             var datasetParticipants = LoadData(
