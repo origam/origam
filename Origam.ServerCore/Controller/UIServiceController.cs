@@ -606,10 +606,9 @@ namespace Origam.ServerCore.Controller
             var persistenceService 
                 = ServiceManager.Services.GetService<IPersistenceService>();
             var dataServiceDataLookup 
-                = persistenceService.SchemaProvider.RetrieveInstance(
-                    typeof(DataServiceDataLookup), 
-                    new ModelElementKey(new Guid(lookupId))) 
-                    as DataServiceDataLookup;
+                = persistenceService.SchemaProvider
+                    .RetrieveInstance<DataServiceDataLookup>(
+                        new Guid(lookupId));
             var datasetGenerator = new DatasetGenerator(true);
             var comboListDataset = datasetGenerator.CreateDataSet(
                 dataServiceDataLookup.ListDataStructure);

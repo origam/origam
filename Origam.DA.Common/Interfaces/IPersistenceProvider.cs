@@ -45,6 +45,10 @@ namespace Origam.DA.ObjectPersistence
 		/// </summary>
 		object RetrieveInstance(Type type, Key primaryKey, bool useCache);
 		object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
+
+        T RetrieveInstance<T>(Guid instanceId);
+        T RetrieveInstance<T>(Guid instanceId, bool useCache);
+        T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException);
 		
 		/// <summary>
 		/// Refreshes the current object with data from the dataset.
@@ -66,7 +70,7 @@ namespace Origam.DA.ObjectPersistence
         /// <param name="filter"></param>
         /// <returns></returns>
         List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
-		List<T> RetrieveListByType<T>( string itemType);
+		List<T> RetrieveListByType<T>(string itemType);
 		List<T> RetrieveListByPackage<T>(Guid packageId);
 		T[] FullTextSearch<T>( string text);
 		List<T> RetrieveListByParent<T>( Key primaryKey, string parentTableName, string childTableName, bool useCache);

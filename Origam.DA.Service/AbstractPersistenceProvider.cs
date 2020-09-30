@@ -128,7 +128,7 @@ namespace Origam.DA.ObjectPersistence
         {
             return RetrieveInstance(
                 type: typeof(T), 
-                primaryKey: new Key(id),
+                primaryKey: new Key(id), 
                 useCache: false) is T;
         }
 
@@ -194,5 +194,22 @@ namespace Origam.DA.ObjectPersistence
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache);
 
         public abstract object RetrieveInstance(Type type, Key primaryKey, bool useCache, bool throwNotFoundException);
+
+        public T RetrieveInstance<T>(Guid instanceId)
+        {
+            return (T)RetrieveInstance(typeof(T), new Key(instanceId));
+        }
+
+        public T RetrieveInstance<T>(Guid instanceId, bool useCache)
+        {
+            return (T)RetrieveInstance(typeof(T), new Key(instanceId), useCache);
+        }
+
+        public T RetrieveInstance<T>(
+            Guid instanceId, bool useCache, bool throwNotFoundException)
+        {
+            return (T)RetrieveInstance(typeof(T), new Key(instanceId), useCache, 
+                throwNotFoundException);
+        }
     }
 }
