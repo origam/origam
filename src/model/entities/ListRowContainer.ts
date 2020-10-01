@@ -56,25 +56,12 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   @computed get rows() {
-
     if(!this.sortedIds){
       return this.allRows;
     }
     return this.sortedIds
       .map(id => this.idToRow.get(id))
       .filter(row => row) as any[][];
-
-
-    // // trace();
-    // let rows = this.allRows;
-    // if (this.filterConfiguration.filteringFunction) {
-    //   rows = rows.filter((row) => this.filterConfiguration.filteringFunction()(row));
-    // }
-    // if (this.orderingConfiguration.orderings.length === 0) {
-    //   return rows;
-    // } else {
-    //   return rows.sort((row1: any[], row2: any[]) => this.internalRowOrderingFunc(row1, row2));
-    // }
   }
 
   @computed get loadedRowsCount() {
