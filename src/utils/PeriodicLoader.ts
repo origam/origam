@@ -1,3 +1,5 @@
+import { flow } from "mobx";
+
 export class PeriodicLoader {
   private timeoutHandle: any;
 
@@ -10,21 +12,24 @@ export class PeriodicLoader {
   }
 
   *start(refreshIntervalMs: number) {
-    if (refreshIntervalMs === 0) {
-      return;
-    }
-    if (this.timeoutHandle) {
-      yield* this.stop();
-    }
-    while (true) {
-      const timeBefore = new Date();
-      yield* this.loadFunction();
-      const timeAfter = new Date();
+    const self = this;
+    flow(function* (){
+      if (refreshIntervalMs <= 0) {
+        return;
+      }
+      if (self.timeoutHandle) {
+        yield* self.stop();
+      }
+      while (true) {
+        const timeBefore = new Date();
+        yield* self.loadFunction();
+        const timeAfter = new Date();
 
-      const loadTimeMs = timeAfter.valueOf() - timeBefore.valueOf();
-      const msToWait = refreshIntervalMs - loadTimeMs;
-      yield this.sleep(msToWait);
-    }
+        const loadTimeMs = timeAfter.valueOf() - timeBefore.valueOf();
+        const msToWait = refreshIntervalMs - loadTimeMs;
+        yield self.sleep(msToWait);
+      }
+    })();
   }
 
   *stop() {
