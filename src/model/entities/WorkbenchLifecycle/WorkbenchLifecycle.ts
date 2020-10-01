@@ -29,7 +29,7 @@ import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
 import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
 import { IPortalSettings } from "../types/IPortalSettings";
-import {getNotifications} from "model/selectors/Chatrooms/getNotifications";
+import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -369,7 +369,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     console.log("portalInfo:");
     console.log(portalInfo);
-    // this.notificationPoller.start(portalInfo.notificationBoxRefreshInterval);
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
@@ -426,9 +425,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
 
     if(this.portalSettings?.showWorkQueues){
-      const workQueues = getWorkQueues(this);
-      yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
-      yield* workQueues.startTimer();
+      yield* getWorkQueues(this).startTimer(portalInfo.workQueueListRefreshInterval);
     }
 
     if(this.portalSettings?.showChat) {

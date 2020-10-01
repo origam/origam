@@ -9,9 +9,8 @@ export interface IWorkQueues extends IWorkQueuesData {
   totalItemCount: number;
 
   getWorkQueueList(): Generator<any>;
-  startTimer(): Generator<any>;
+  startTimer(refreshIntervalMs: number): Generator<any>;
   stopTimer(): Generator<any>;
-  setRefreshInterval(ms: number): Generator<any>;
 }
 
 export const isIWorkQueues = (obj: any): obj is IWorkQueues =>
