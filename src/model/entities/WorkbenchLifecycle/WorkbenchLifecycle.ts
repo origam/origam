@@ -40,8 +40,7 @@ export enum IRefreshOnReturnType {
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
 
-  @observable
-  notificationBox: any;
+  notificationPoller = new NotificationPoller(this);
   @observable
   portalSettings: IPortalSettings | undefined;
   @observable
@@ -50,6 +49,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   logoUrl: string | undefined;
   @observable
   customAssetsRoute: string | undefined;
+
+  get notificationBox(){
+    return this.notificationPoller.notificationBox;
+  }
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const {
@@ -369,7 +372,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     console.log("portalInfo:");
     console.log(portalInfo);
-    this.startNotificationBoxPolling(portalInfo.notificationBoxRefreshInterval);
+    this.notificationPoller.start(portalInfo.notificationBoxRefreshInterval);
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
@@ -443,13 +446,33 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   parent?: any;
+}
 
-  private startNotificationBoxPolling(notificationBoxRefreshInterval: number) {
-    if (!notificationBoxRefreshInterval) {
-      return;
-    }
-    setInterval(async () => {
-      this.notificationBox = await getApi(this).getNotificationBoxContent();
-    }, notificationBoxRefreshInterval);
+class NotificationPoller {
+  private timeoutHandle: any;
+
+  @observable
+  notificationBox: any;
+
+  constructor(private ctx: any){
+
   }
+
+  private sleep(milliseconds: number) {
+    return new Promise(resolve => {
+      this.timeoutHandle = setTimeout(resolve, milliseconds);
+    });
+  }
+
+  async start(notificationBoxRefreshInterval: number) {
+    while (true) {
+      const timeBefore = new Date();
+      this.notificationBox = await getApi(this.ctx).getNotificationBoxContent();
+      const timeAfter = new Date();
+
+      const requestTimeMs = timeAfter.valueOf() - timeBefore.valueOf();
+      const timeToWait = notificationBoxRefreshInterval - requestTimeMs;
+      await this.sleep(timeToWait);
+    }
+  };
 }
