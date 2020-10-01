@@ -109,16 +109,28 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                return FindItem<AbstractMenuItem>(
-                        new Guid(request.ObjectId))
-                    .Bind(Authorize)
-                    .Map(menuItem => sessionObjects.UIManager.InitUI(
+                if(request.Type == UIRequestType.WorkQueue)
+                {
+                    return Ok(sessionObjects.UIManager.InitUI(
                         request: request,
                         addChildSession: false,
                         parentSession: null,
-                        basicUIService: sessionObjects.UIService))
-                    .Map(ToActionResult)
-                    .Finally(UnwrapReturnValue);
+                        basicUIService: sessionObjects.UIService));
+
+                }
+                else
+                {
+                    return FindItem<AbstractMenuItem>(
+                            new Guid(request.ObjectId))
+                        .Bind(Authorize)
+                        .Map(menuItem => sessionObjects.UIManager.InitUI(
+                            request: request,
+                            addChildSession: false,
+                            parentSession: null,
+                            basicUIService: sessionObjects.UIService))
+                        .Map(ToActionResult)
+                        .Finally(UnwrapReturnValue);
+                }
             });
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
