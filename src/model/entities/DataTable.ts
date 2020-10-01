@@ -104,6 +104,10 @@ export class DataTable implements IDataTable {
     return row[property.dataIndex];
   }
 
+  updateSortAndFilter(){
+    this.rowsContainer.updateSortAndFilter();
+  }
+
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField) {
     if (this.additionalRowData.has(this.getRowId(row))) {
       const ard = this.additionalRowData.get(this.getRowId(row))!;

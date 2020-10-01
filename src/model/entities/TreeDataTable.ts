@@ -226,6 +226,9 @@ export class TreeDataTable implements IDataTable {
   }
 
   unlockAddedRowPosition(): void {}
+
+  updateSortAndFilter(): void {
+  }
 }
 
 export const isTreeDataTable = (o: any): o is TreeDataTable => o.$type_TreeDataTable;
