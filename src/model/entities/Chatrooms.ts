@@ -1,6 +1,7 @@
-import { action, computed, observable } from "mobx";
+import { computed, observable } from "mobx";
 import { onRefreshChatrooms } from "model/actions/Chatrooms/onRefreshChatrooms";
 import { getApi } from "model/selectors/getApi";
+import { PeriodicLoader } from "utils/PeriodicLoader";
 
 export class Chatrooms {
   *getChatroomsList() {
@@ -8,6 +9,8 @@ export class Chatrooms {
     const chatrooms = yield api.getChatroomList();
     this.items = chatrooms;
   }
+
+  loader = new PeriodicLoader(onRefreshChatrooms(this));
 
   @observable items: any[] = [];
   @computed get totalItemCount() {
@@ -18,40 +21,8 @@ export class Chatrooms {
     return this.items;
   }
 
-  hRefreshTimer: any;
-  refreshInterval = 0;
-
-  get isTimerRunning() {
-    return !!this.hRefreshTimer;
-  }
-
-  *startTimer() {
-    if (this.refreshInterval === 0) {
-      return;
-    }
-    if (this.hRefreshTimer) {
-      yield* this.stopTimer();
-    }
-    onRefreshChatrooms(this)();
-    this.hRefreshTimer = setInterval(() => {
-      onRefreshChatrooms(this)();
-    }, this.refreshInterval);
-  }
-
-  *stopTimer() {
-    clearInterval(this.hRefreshTimer);
-    this.hRefreshTimer = undefined;
-  }
-
-  *setRefreshInterval(ms: number) {
-    const willRestart = this.isTimerRunning;
-    if (willRestart) {
-      yield* this.stopTimer();
-    }
-    this.refreshInterval = ms;
-    if (willRestart) {
-      yield* this.startTimer();
-    }
+  *startTimer(refreshIntervalMs: number) {
+    yield* this.loader.start(refreshIntervalMs);
   }
 
   parent?: any;

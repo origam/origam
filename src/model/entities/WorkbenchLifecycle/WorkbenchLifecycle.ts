@@ -435,9 +435,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
 
     if(this.portalSettings?.showChat) {
-      const chatrooms = getChatrooms(this);
-      yield* chatrooms.setRefreshInterval(portalInfo.chatRefreshInterval);
-      yield* chatrooms.startTimer();
+      yield* getChatrooms(this).startTimer(portalInfo.chatRefreshInterval);
     }
   }
 
