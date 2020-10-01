@@ -10,7 +10,6 @@ export interface IWorkbenchLifecycle {
   onWorkQueueListItemClick(event: any, item: any): Generator;
   onChatroomsListItemClick(event: any, item: any): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
-  notificationBox: any;
   userInfo: IUserInfo | undefined;
   logoUrl: string | undefined;
   customAssetsRoute: string | undefined;

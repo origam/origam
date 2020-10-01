@@ -29,6 +29,7 @@ import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
 import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
 import { IPortalSettings } from "../types/IPortalSettings";
+import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -41,8 +42,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
 
   @observable
-  notificationBox: any;
-  @observable
   portalSettings: IPortalSettings | undefined;
   @observable
   userInfo: IUserInfo | undefined;
@@ -50,6 +49,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   logoUrl: string | undefined;
   @observable
   customAssetsRoute: string | undefined;
+
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const {
@@ -369,7 +369,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     console.log("portalInfo:");
     console.log(portalInfo);
-    this.startNotificationBoxPolling(portalInfo.notificationBoxRefreshInterval);
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
@@ -426,15 +425,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
 
     if(this.portalSettings?.showWorkQueues){
-      const workQueues = getWorkQueues(this);
-      yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
-      yield* workQueues.startTimer();
+      yield* getWorkQueues(this).startTimer(portalInfo.workQueueListRefreshInterval);
     }
 
     if(this.portalSettings?.showChat) {
-      const chatrooms = getChatrooms(this);
-      yield* chatrooms.setRefreshInterval(portalInfo.chatRefreshInterval);
-      yield* chatrooms.startTimer();
+      yield* getChatrooms(this).startTimer(portalInfo.chatRefreshInterval);
+    }
+
+    if(portalInfo.notificationBoxRefreshInterval > 0) {
+      yield* getNotifications(this).startTimer(portalInfo.notificationBoxRefreshInterval);
     }
   }
 
@@ -443,13 +442,4 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   parent?: any;
-
-  private startNotificationBoxPolling(notificationBoxRefreshInterval: number) {
-    if (!notificationBoxRefreshInterval) {
-      return;
-    }
-    setInterval(async () => {
-      this.notificationBox = await getApi(this).getNotificationBoxContent();
-    }, notificationBoxRefreshInterval);
-  }
 }
