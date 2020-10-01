@@ -30,6 +30,7 @@ import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import {getLoggedUserName} from "model/selectors/User/getLoggedUserName";
 import { getShowChat } from "model/selectors/PortalSettings/getShowChat";
 import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues";
+import {getNotifications} from "model/selectors/Chatrooms/getNotifications";
 
 @observer
 export class CSidebar extends React.Component {
@@ -143,13 +144,14 @@ export class CSidebar extends React.Component {
   render() {
     const showChat = getShowChat(this.workbench);
     const showWorkQues = getShowWorkQues(this.workbench);
+    const notificationBox = getNotifications(this.workbench)?.notificationBox;
     const logoUrl = getLogoUrl(this.workbench);
     return (
       <Sidebar>
         <LogoSection>
           <div className={S.logoLeft}>
-            {this.workbenchLifecycle?.notificationBox ? (
-              <div dangerouslySetInnerHTML={{ __html: this.workbenchLifecycle.notificationBox }} />
+            {notificationBox ? (
+              <div dangerouslySetInnerHTML={{ __html: notificationBox }} />
             ) : (
               <img src={logoUrl} />
             )}

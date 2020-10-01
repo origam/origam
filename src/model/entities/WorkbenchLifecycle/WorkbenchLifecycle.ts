@@ -29,6 +29,7 @@ import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
 import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
 import { IPortalSettings } from "../types/IPortalSettings";
+import {getNotifications} from "model/selectors/Chatrooms/getNotifications";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -40,7 +41,6 @@ export enum IRefreshOnReturnType {
 export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
 
-  notificationPoller = new NotificationPoller(this);
   @observable
   portalSettings: IPortalSettings | undefined;
   @observable
@@ -50,9 +50,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
-  get notificationBox(){
-    return this.notificationPoller.notificationBox;
-  }
 
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
     const {
@@ -372,7 +369,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     console.log("portalInfo:");
     console.log(portalInfo);
-    this.notificationPoller.start(portalInfo.notificationBoxRefreshInterval);
+    // this.notificationPoller.start(portalInfo.notificationBoxRefreshInterval);
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
@@ -437,6 +434,10 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if(this.portalSettings?.showChat) {
       yield* getChatrooms(this).startTimer(portalInfo.chatRefreshInterval);
     }
+
+    if(portalInfo.notificationBoxRefreshInterval > 0) {
+      yield* getNotifications(this).startTimer(portalInfo.notificationBoxRefreshInterval);
+    }
   }
 
   *run(): Generator {
@@ -444,33 +445,4 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   parent?: any;
-}
-
-class NotificationPoller {
-  private timeoutHandle: any;
-
-  @observable
-  notificationBox: any;
-
-  constructor(private ctx: any){
-
-  }
-
-  private sleep(milliseconds: number) {
-    return new Promise(resolve => {
-      this.timeoutHandle = setTimeout(resolve, milliseconds);
-    });
-  }
-
-  async start(notificationBoxRefreshInterval: number) {
-    while (true) {
-      const timeBefore = new Date();
-      this.notificationBox = await getApi(this.ctx).getNotificationBoxContent();
-      const timeAfter = new Date();
-
-      const requestTimeMs = timeAfter.valueOf() - timeBefore.valueOf();
-      const timeToWait = notificationBoxRefreshInterval - requestTimeMs;
-      await this.sleep(timeToWait);
-    }
-  };
 }
