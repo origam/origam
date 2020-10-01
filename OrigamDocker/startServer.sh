@@ -61,7 +61,7 @@ if [[ ! -z ${ExternalDomain_SetOnStart} ]]; then
 	sed -i "s|ExternalDomain|${ExternalDomain_SetOnStart}|" appsettings.json
 fi
 
-if [[ ! -z ${EnableChat} ]]; then
+if [[ ! -z ${EnableChat} && ${EnableChat} == true ]]; then
 	sed -i "s|pathchatapp|/home/origam/HTML5/clients/chat|" appsettings.json
 	sed -i "s|chatinterval|1000|" appsettings.json
 else
