@@ -800,13 +800,16 @@ namespace Origam.DA.Service
             return result.ToString();
         }
 
-        public string SelectParameterDeclarationsSql(DataStructure ds, DataStructureEntity entity,
+        public string SelectParameterDeclarationsSql(DataStructure ds, 
             DataStructureSortSet sort, bool paging, string columnName)
         {
             StringBuilder result = new StringBuilder();
             Hashtable ht = new Hashtable();
             result.AppendLine(CreateDataStructureHeadSql());
-            SelectParameterDeclarationsSql(result, ht, ds, entity, null, sort, paging, columnName);
+            foreach (DataStructureEntity entity in ds.Entities)
+            {
+                SelectParameterDeclarationsSql(result, ht, ds, entity, null, sort, paging, columnName);
+            }
             result.AppendLine(DeclareBegin());
             SelectParameterDeclarationsSetSql(result, ht);
             return result.ToString();
@@ -910,8 +913,8 @@ namespace Origam.DA.Service
             return builder.ToString();
         }
 
-        public abstract string CreateDataStructureFooterSql();
-        public abstract string CreateOutputTableSql();
+        public abstract string CreateDataStructureFooterSql(List<string>tmpTables);
+        public abstract string CreateOutputTableSql(string tmpTable);
 
         public string SelectSql(DataStructure ds, DataStructureEntity entity,
             DataStructureFilterSet filter, DataStructureSortSet sortSet, ColumnsInfo columnsInfo,

@@ -91,13 +91,13 @@ namespace Origam.ServerCore.Controller
                 return StatusCode(500, ex);
             }
         }
-        protected Result<FormReferenceMenuItem, IActionResult> Authorize(
-            FormReferenceMenuItem menuItem)
+        protected Result<AbstractMenuItem, IActionResult> Authorize(
+            AbstractMenuItem menuItem)
         {
             return SecurityManager.GetAuthorizationProvider().Authorize(
                 User, menuItem.Roles)
-                ? Result.Success<FormReferenceMenuItem, IActionResult>(menuItem)
-                : Result.Failure<FormReferenceMenuItem, IActionResult>(Forbid());
+                ? Result.Success<AbstractMenuItem, IActionResult>(menuItem)
+                : Result.Failure<AbstractMenuItem, IActionResult>(Forbid());
         }
         protected Result<T,IActionResult> FindItem<T>(Guid id) where T : class
         {
@@ -187,7 +187,8 @@ namespace Origam.ServerCore.Controller
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
                     .Bind(Authorize)
                     .Bind(menuItem => GetEntityData(
-                        input.DataStructureEntityId, menuItem))
+                        input.DataStructureEntityId, 
+                        (FormReferenceMenuItem)menuItem))
                     .Bind(CheckEntityBelongsToMenu)
                     .Bind(entityData => GetRow(
                         dataService,
@@ -214,7 +215,8 @@ namespace Origam.ServerCore.Controller
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
                     .Bind(Authorize)
                     .Bind(menuItem => GetEntityData(
-                        input.DataStructureEntityId, menuItem))
+                        input.DataStructureEntityId, 
+                        (FormReferenceMenuItem)menuItem))
                     .Bind(CheckEntityBelongsToMenu)
                     .Bind(EntityDataToEntityId);
             }
@@ -232,7 +234,8 @@ namespace Origam.ServerCore.Controller
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
                     .Bind(Authorize)
                     .Bind(menuItem => GetEntityData(
-                        input.DataStructureEntityId, menuItem))
+                        input.DataStructureEntityId, 
+                        (FormReferenceMenuItem)menuItem))
                     .Bind(CheckEntityBelongsToMenu);
             }
             else

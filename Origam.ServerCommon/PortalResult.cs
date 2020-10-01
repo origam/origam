@@ -95,7 +95,7 @@ namespace Origam.Server
         }
 
         public Guid UserId { private get; set; }
-        public string AvatarLink => "chatrooms/Avatar/" + UserId;
+        public string AvatarLink => "internalApi/Avatar/" + UserId;
 
         public int WorkQueueListRefreshInterval
         {
@@ -135,5 +135,9 @@ namespace Origam.Server
             set { _maxRequestLength = value; }
         }
 
+        public string LogoUrl { get; set; }
+        public string CustomAssetsRoute { get; set; }
+
+        public int ChatRefreshInterval { get; set; }
     }
 }

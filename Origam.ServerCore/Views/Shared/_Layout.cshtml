@@ -4,14 +4,17 @@
 @using IdentityServer4.Extensions
 @using Microsoft.Extensions.Options
 @using Origam.ServerCore.Configuration
-@inject IOptions<IdentityGuiConfig> ConfigOptions;
+@inject IOptions<CustomAssetsConfig> ConfigOptions;
 @{
     string name = null;
     if (!true.Equals(ViewData["signed-out"]))
     {
         name = Context.User?.GetDisplayName();
     }
-    IdentityGuiConfig config = ConfigOptions.Value;
+    CustomAssetsConfig config = ConfigOptions.Value;
+    var logoUrl = string.IsNullOrWhiteSpace(config.IdentityGuiLogoUrl) 
+        ? "/assets/identity/icons/origam.png" 
+        : config.IdentityGuiLogoUrl;
 }
 <!DOCTYPE html>
 <html>
@@ -36,7 +39,7 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="~/assets/identity/icons/user.svg" class="svg"/>
+                        <img src="/assets/identity/icons/user.svg" class="svg"/>
                         @name
                         <b class="caret"></b>
                     </a>
@@ -50,7 +53,7 @@
 
 <div id="page-container" class="page-content">
         <div class="logo-container centered">
-            <img src="~/assets/identity/@config.PathToBrandIcon"/>
+            <img src=@logoUrl />
         </div>
     @RenderBody()
 </div>

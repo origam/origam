@@ -19,30 +19,32 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Origam.ServerCore.Model.Chat
 {
     public class OrigamChatRoom
     {
-        public OrigamChatRoom(Guid guid, string name)
+        public OrigamChatRoom(Guid id, string topic,int unreadMessageCount)
         {
-            this.id = guid;
-            this.topic = name;
+            this.id = id;
+            this.topic = topic;
+            this.unreadMessageCount = unreadMessageCount;
         }
-
         public Guid id { get; set; }
         public string topic { get; set; }
-
-        internal static OrigamChatRoom CreateJson(DataSet ChatRoomDataSet)
+        
+        public int unreadMessageCount { get; private set; }
+        internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet, Dictionary<Guid, int> unreadMessages)
         {
-            OrigamChatRoom chatRoom = null;
-            foreach (DataTable table in ChatRoomDataSet.Tables)
+            List<OrigamChatRoom> chatRoom = new List<OrigamChatRoom>();
+            DataTable table = ChatRoomDataSet.Tables["OrigamChatRoom"]; 
+            foreach (DataRow row in table.Rows)
             {
-                foreach (DataRow row in table.Rows)
-                {
-                    chatRoom = new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"));
-                }
+                Guid chatRoomId = row.Field<Guid>("Id");
+                chatRoom.Add(new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"),
+                    unreadMessages.ContainsKey(chatRoomId)?unreadMessages[chatRoomId]:0));
             }
             return chatRoom;
         }

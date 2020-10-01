@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Origam.DA.Service;
 using Origam.Schema.EntityModel;
@@ -61,12 +62,14 @@ namespace Origam.Gui.Win.Commands
             builder.AppendLine(
                 generator.SelectParameterDeclarationsSql(
                     filterSet, false, null));
-
+            List<string> tmpTables = new List<string>();
             foreach (DataStructureEntity entity in ds.Entities)
             {
                 if (entity.Columns.Count > 0)
                 {
-                    builder.AppendLine(generator.CreateOutputTableSql());
+                    string tmpTable = "tmptable" + System.Guid.NewGuid();
+                    tmpTables.Add(tmpTable);
+                    builder.AppendLine(generator.CreateOutputTableSql(tmpTable));
                     builder.AppendLine("-----------------------------------------------------------------");
                     builder.AppendLine("-- " + entity.Name);
                     builder.AppendLine("-----------------------------------------------------------------");
@@ -79,11 +82,11 @@ namespace Origam.Gui.Win.Commands
                             new Hashtable(),
                             null,
                             false
-                        )
+                        )+ ";"
                     );
-                    builder.AppendLine(generator.CreateDataStructureFooterSql());
                 }
             }
+            builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
             new ShowSqlConsole(builder.ToString()).Run();
         }
     }

@@ -824,7 +824,7 @@ namespace Origam.Server
         [JsonRpcMethod]
         public string GetReportFromMenu(string menuId)
         {
-            return reportManager.GetReportFromMenu(menuId);
+            return reportManager.GetReportFromMenu(new Guid(menuId));
         }
 
         [JsonRpcMethod]

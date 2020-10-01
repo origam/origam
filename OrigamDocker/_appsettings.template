@@ -1,5 +1,9 @@
 {
     "PathToClientApp": "clients/origam",
+	"ChatConfig": {
+    "PathToChatApp": "pathchatapp",
+    "ChatRefreshInterval": chatinterval
+	},
     "UserConfig": {
         "FromAddress": "admin@localhost",
         "NewUserRoleId": "",
@@ -15,7 +19,7 @@
     "IdentityGuiConfig": {
         "PathToBrandIcon": "icons/origam.png"
     },
-    "IdentityServerConfig": {
+	"IdentityServerConfig": {
         "PathToJwtCertificate": "serverCore.pfx",
         "PasswordForJwtCertificate": "certpassword",
         "UseGoogleLogin": "false",
@@ -59,6 +63,9 @@
     "UserApiOptions": {
         "RestrictedRoutes": [
             "/api/private"
+        ],
+         "PublicRoutes": [
+            "/api/public"
         ]
     },
 	"BehindProxy":  "true",

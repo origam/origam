@@ -77,7 +77,7 @@ namespace OrigamArchitect
             this.label28 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.txtWebEmail = new System.Windows.Forms.TextBox();
-            this.txtWebSurename = new System.Windows.Forms.TextBox();
+            this.txtWebSurname = new System.Windows.Forms.TextBox();
             this.txtWebFirstname = new System.Windows.Forms.TextBox();
             this.txtWebUserPassword = new System.Windows.Forms.TextBox();
             this.txtWebUserLoginName = new System.Windows.Forms.TextBox();
@@ -557,7 +557,7 @@ namespace OrigamArchitect
             this.pageWebUser.Controls.Add(this.label28);
             this.pageWebUser.Controls.Add(this.label27);
             this.pageWebUser.Controls.Add(this.txtWebEmail);
-            this.pageWebUser.Controls.Add(this.txtWebSurename);
+            this.pageWebUser.Controls.Add(this.txtWebSurname);
             this.pageWebUser.Controls.Add(this.txtWebFirstname);
             this.pageWebUser.Controls.Add(this.txtWebUserPassword);
             this.pageWebUser.Controls.Add(this.txtWebUserLoginName);
@@ -605,7 +605,7 @@ namespace OrigamArchitect
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(60, 15);
             this.label28.TabIndex = 23;
-            this.label28.Text = "Surename";
+            this.label28.Text = "Surname";
             // 
             // label27
             // 
@@ -623,12 +623,12 @@ namespace OrigamArchitect
             this.txtWebEmail.Size = new System.Drawing.Size(174, 23);
             this.txtWebEmail.TabIndex = 23;
             // 
-            // txtWebSurename
+            // txtWebSurname
             // 
-            this.txtWebSurename.Location = new System.Drawing.Point(142, 230);
-            this.txtWebSurename.Name = "txtWebSurename";
-            this.txtWebSurename.Size = new System.Drawing.Size(174, 23);
-            this.txtWebSurename.TabIndex = 22;
+            this.txtWebSurname.Location = new System.Drawing.Point(142, 230);
+            this.txtWebSurname.Name = "txtWebSurname";
+            this.txtWebSurname.Size = new System.Drawing.Size(174, 23);
+            this.txtWebSurname.TabIndex = 22;
             // 
             // txtWebFirstname
             // 
@@ -1403,7 +1403,7 @@ namespace OrigamArchitect
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.TextBox txtWebEmail;
-        private System.Windows.Forms.TextBox txtWebSurename;
+        private System.Windows.Forms.TextBox txtWebSurname;
         private System.Windows.Forms.TextBox txtWebFirstname;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox txtWebUserPasswordConfirmed;

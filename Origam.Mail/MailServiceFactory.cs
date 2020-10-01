@@ -38,7 +38,7 @@ namespace Origam.Mail
 
         }
         
-        public static AbstractMailService GetMailService()
+        public static IMailService GetMailService()
         {
 #if NETSTANDARD
             var mailConfig = configuration.GetSection("MailConfig");
@@ -48,10 +48,10 @@ namespace Origam.Mail
             string server = mailConfig["Server"];
             int port = mailConfig.GetIntOrThrow("Port");
 
-            return new SystemNetMailService(
+            return new NetStandardMailService(
                 server:server, port:port, userName: userName, password:password, useSsl:useSsl);            
 #else
-            return new SystemNetMailService();            
+            return new NetFxMailService();            
 #endif
         }
     }

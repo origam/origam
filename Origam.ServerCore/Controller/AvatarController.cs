@@ -19,11 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Origam.DA;
 using Origam.Workbench.Services.CoreServices;
@@ -31,12 +28,10 @@ using Origam.Workbench.Services.CoreServices;
 namespace Origam.ServerCore.Controller
 {
     [Route("chatrooms/[controller]")]
+    [Route("internalApi/[controller]")]
     [ApiController]
     public class AvatarController : ControllerBase
     {
-        private readonly Guid LookupBusinessPartner = new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5");
-        private readonly Guid LookupBusinessPartnerGetById = new Guid("d014e645-dda1-4999-b577-d82221715583");
-
         [HttpGet("{avatarId:guid}")]
         public IActionResult GetAvatarRequest(Guid avatarId)
         {
@@ -45,27 +40,47 @@ namespace Origam.ServerCore.Controller
             {
                 new QueryParameter("BusinessPartner_parId",avatarId)
             };
-            DataSet datasetUsersForInvite = LoadData(LookupBusinessPartner, LookupBusinessPartnerGetById,
+            DataSet datasetUsersForInvite = LoadData(new Guid("d11d9049-8dcb-4d3f-824d-8d63d0fb0ba5"), 
+                                                     new Guid("d014e645-dda1-4999-b577-d82221715583"),
                Guid.Empty, Guid.Empty, null, parameters);
             if (datasetUsersForInvite.Tables[0].Rows.Count == 0)
             {
-                return Ok();
+                return NotFound();
             }
-            DataRow dataAvatar = datasetUsersForInvite.Tables[0].Rows[0];
-            byte[] imageBytes = dataAvatar.Field<byte[]>("AvatarFile");
+            DataRow userRow = datasetUsersForInvite.Tables[0].Rows[0];
+            byte[] imageBytes = userRow.Field<byte[]>("AvatarFile");
             if (imageBytes == null)
             {
-                return Ok();
+                return Content(MakeInitialsSvg(userRow), "image/svg+xml; charset=utf-8");
             }
-            return File(imageBytes, HttpTools.GetMimeType(dataAvatar.Field<string>("AvatarFilename")));
+            return File(imageBytes, HttpTools.GetMimeType(userRow.Field<string>("AvatarFilename")));
         }
-        
-        private DataSet LoadData(Guid messageDataStructureID, Guid messageDataafterIdIncludingMethodId, Guid guid, Guid messageDataOrderbyCreatedDateSortSetId, string transactionId, QueryParameterCollection parameters)
+
+        private static string MakeInitialsSvg(DataRow userRow)
         {
-            return DataService.LoadData(messageDataStructureID,
-                     messageDataafterIdIncludingMethodId,
-                     guid,
-                     messageDataOrderbyCreatedDateSortSetId,
+            string name = userRow.Field<string>("Name");
+            string firstName = userRow.Field<string>("FirstName");
+            string initials = "";
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                initials += firstName.First().ToString().ToUpper();
+            }
+            initials += name.First().ToString().ToUpper();
+            string userSvg =
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 25 25\">" +
+                    $"<text x=\"50%\" y=\"55%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"monospace\" fill=\"black\">{initials}</text>" +
+                "</svg>";
+            return userSvg;
+        }
+
+        private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid defaultSetId, Guid sortSetId,
+                                string transactionId, 
+                                QueryParameterCollection parameters)
+        {
+            return DataService.LoadData(dataStructureId,
+                     methodId,
+                     defaultSetId,
+                     sortSetId,
                      transactionId,
                      parameters);
         }

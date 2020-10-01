@@ -29,7 +29,7 @@ using System.Net;
 
 namespace Origam.Mail
 {
-    public class SystemNetMailService : AbstractMailService
+    public class NetStandardMailService : AbstractMailService
     {
         private readonly string userName;
         private readonly string password;
@@ -37,11 +37,11 @@ namespace Origam.Mail
         private readonly string defaultServer;
         private readonly int defaultPort;
 
-        public SystemNetMailService()
+        protected NetStandardMailService()
         {
         }
 
-        public SystemNetMailService(string server, int port, 
+        public NetStandardMailService(string server, int port, 
            string userName = null, string password = null, bool useSsl = true)
         {
             if (string.IsNullOrWhiteSpace(password) &&
@@ -224,8 +224,7 @@ namespace Origam.Mail
         {
             //local variables
             SmtpClient smtpClient = new SmtpClient();
-
-            //configure smtp server parameters if given, otherwise use web config settings
+            
             if (server != null)
             {
                 smtpClient.Host = server;
@@ -234,15 +233,20 @@ namespace Origam.Mail
             }
             else
             {
-                smtpClient.Host = defaultServer;
-                smtpClient.Port = defaultPort;
-                smtpClient.EnableSsl = useSsl;
-                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(userName, password);
+                SetConfigValues(smtpClient);
             }
 
             return smtpClient;
+        }
+
+        protected virtual void SetConfigValues(SmtpClient smtpClient)
+        {
+            smtpClient.Host = defaultServer;
+            smtpClient.Port = defaultPort;
+            smtpClient.EnableSsl = useSsl;
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(userName, password);
         }
     }
 }

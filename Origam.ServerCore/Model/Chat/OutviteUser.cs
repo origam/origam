@@ -1,5 +1,4 @@
-#region license
-
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -18,13 +17,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #endregion
+using System;
 
-namespace Origam.ServerCore.Configuration
+namespace Origam.ServerCore.Model.Chat
 {
-    public class IdentityGuiConfig
+    public class OutviteUser
     {
-        public bool AllowPasswordReset { get; set; }
+        public OutviteUser(Guid id)
+        {
+            userId = id;
+        }
+
+        public Guid userId { get; set; }
     }
 }

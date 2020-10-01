@@ -23,8 +23,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 namespace Origam.ServerCore.Configuration
 {
-    public class IdentityGuiConfig
+    public class CustomAssetsConfig
     {
-        public bool AllowPasswordReset { get; set; }
+        public string PathToCustomAssetsFolder { get; set; }
+             
+        public string RouteToCustomAssetsFolder { get; set; }
+   
+        public string IdentityGuiLogoUrl { get; set; }
+
+        public string Html5ClientLogoUrl { get; set; }
     }
 }

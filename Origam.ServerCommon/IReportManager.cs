@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
 using System.Collections;
 using Origam.Schema.GuiModel;
 
@@ -31,6 +32,6 @@ namespace Origam.Server
 
         string GetReportStandalone(string reportId, Hashtable parameters,
             DataReportExportFormatType dataReportExportFormatType);
-        string GetReportFromMenu(string menuId);
+        string GetReportFromMenu(Guid menuId);
     }
 }

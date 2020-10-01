@@ -29,7 +29,7 @@ namespace Origam.ProjectAutomation.Builders
             parameters.Add(new QueryParameter("UserName", project.WebUserName));
             parameters.Add(new QueryParameter("Password", hashPassword));
             parameters.Add(new QueryParameter("FirstName", project.WebFirstName));
-            parameters.Add(new QueryParameter("Name", project.WebSurename));
+            parameters.Add(new QueryParameter("Name", project.WebSurname));
             parameters.Add(new QueryParameter("Email", project.WebEmail));
             parameters.Add(new QueryParameter("RoleId", "E0AD1A0B-3E05-4B97-BE38-12FF63E7F2F2"));
             parameters.Add(new QueryParameter("RequestEmailConfirmation",

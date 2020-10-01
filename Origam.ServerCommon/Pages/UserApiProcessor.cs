@@ -462,6 +462,11 @@ namespace Origam.ServerCommon.Pages
             DataSet data = null;
             WorkflowPage wfPage = page as WorkflowPage;
             XsltDataPage dataPage = page as XsltDataPage;
+            var workflow = wfPage?.Workflow;
+            if (dataPage?.Method is DataStructureWorkflowMethod workflowMethod)
+            {
+                workflow = workflowMethod.LoadWorkflow;
+            }
             if (dataPage != null && dataPage.DataStructure != null && context.Request.HttpMethod == "PUT")
             {
                 GetEmptyData(ref doc, ref data, dataPage.DataStructure, mappedParameters, dataPage.DefaultSet);
@@ -470,19 +475,19 @@ namespace Origam.ServerCommon.Pages
                     data.EnforceConstraints = false;
                 }
             }
-            else if (wfPage != null)
+            else if (workflow != null)
             {
-                ContextStore ctx = wfPage.Workflow.GetChildByName(ppm.Name, ContextStore.CategoryConst) as ContextStore;
+                ContextStore ctx = workflow.GetChildByName(ppm.Name, ContextStore.CategoryConst) as ContextStore;
                 if (ctx == null)
                 {
                     throw new ArgumentException(String.Format("Couldn't find a context store with " +
-                        "the name `{0}' in a workflow `{1}' ({2})'.", ppm.Name, wfPage.Name, wfPage.Id));
+                        "the name `{0}' in a workflow `{1}' ({2})'.", ppm.Name, workflow.Path, workflow.Id));
                 }
                 DataStructure ds = ctx.Structure as DataStructure;
                 if (ds != null)
                 {
                     GetEmptyData(ref doc, ref data, ds, mappedParameters, ctx.DefaultSet);
-                    if (ctx.DisableConstraints || wfPage.DisableConstraintForInputValidation)
+                    if (ctx.DisableConstraints || (wfPage != null && wfPage.DisableConstraintForInputValidation))
                     {
                         data.EnforceConstraints = false;
                     }

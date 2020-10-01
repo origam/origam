@@ -52,6 +52,7 @@ using Origam.Extensions;
 using Origam.Schema;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
+using Origam.ServerCore.Configuration;
 using Origam.ServerCore.Resources;
 
 namespace Origam.ServerCore.Controller
@@ -66,19 +67,24 @@ namespace Origam.ServerCore.Controller
         private readonly IDataService dataService;
         private readonly IOptions<RequestLocalizationOptions> 
             localizationOptions;
+        private readonly CustomAssetsConfig customAssetsConfig;
+        private readonly ChatConfig chatConfig;
 
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log,
-            IOptions<RequestLocalizationOptions> localizationOptions) 
+            IOptions<RequestLocalizationOptions> localizationOptions, IOptions<CustomAssetsConfig> customAssetsOptions,
+            IOptions<ChatConfig> chatConfigOptions)
             : base(log, sessionObjects)
         {
             this.localizer = localizer;
             this.localizationOptions = localizationOptions;
+            customAssetsConfig = customAssetsOptions.Value;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
+            chatConfig = chatConfigOptions.Value;
         }
         #region Endpoints
         [HttpGet("[action]")]
@@ -86,8 +92,12 @@ namespace Origam.ServerCore.Controller
         public IActionResult InitPortal()
         {
             Analytics.Instance.Log("UI_INIT");
-            return RunWithErrorHandler(() 
-                => Ok(sessionObjects.UIService.InitPortal(4)));
+            return RunWithErrorHandler(() =>
+            {
+                PortalResult result = sessionObjects.UIService.InitPortal(4);
+                AddConfigData(result);
+                return Ok(result);
+            });
         }
         [HttpGet("[action]")]
         public IActionResult DefaultCulture()
@@ -97,14 +107,19 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
         {
-            return RunWithErrorHandler(() => Ok(
-                // registerSession is important for session less handling
-                sessionObjects.UIManager.InitUI(
-                    request: request,
-                    addChildSession: false,
-                    parentSession: null,
-                    basicUIService: sessionObjects.UIService)
-            ));
+            return RunWithErrorHandler(() =>
+            {
+                return FindItem<AbstractMenuItem>(
+                        new Guid(request.ObjectId))
+                    .Bind(Authorize)
+                    .Map(menuItem => sessionObjects.UIManager.InitUI(
+                        request: request,
+                        addChildSession: false,
+                        parentSession: null,
+                        basicUIService: sessionObjects.UIService))
+                    .Map(ToActionResult)
+                    .Finally(UnwrapReturnValue);
+            });
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
@@ -341,7 +356,8 @@ namespace Origam.ServerCore.Controller
             return FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
                 .Bind(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
+                    input.DataStructureEntityId, 
+                    (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Bind(entityData => 
                     GetRow(
@@ -360,7 +376,8 @@ namespace Origam.ServerCore.Controller
             return FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
                 .Bind(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
+                    input.DataStructureEntityId, 
+                    (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Map(entityData => MakeEmptyRow(entityData.Entity))
                 .Tap(rowData => FillRow(input, rowData))
@@ -374,7 +391,7 @@ namespace Origam.ServerCore.Controller
                 .Bind(Authorize)
                 .Bind(menuItem =>
                     GetEntityData(input.DataStructureEntityId,
-                        menuItem))
+                        (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Map(entityData => MakeEmptyRow(entityData.Entity))
                 .Map(PrepareNewRow)
@@ -387,7 +404,8 @@ namespace Origam.ServerCore.Controller
             return FindItem<FormReferenceMenuItem>(input.MenuId)
                 .Bind(Authorize)
                 .Bind(menuItem => GetEntityData(
-                    input.DataStructureEntityId, menuItem))
+                    input.DataStructureEntityId, 
+                    (FormReferenceMenuItem)menuItem))
                 .Bind(CheckEntityBelongsToMenu)
                 .Bind(entityData => GetRow(
                     dataService,
@@ -535,6 +553,19 @@ namespace Origam.ServerCore.Controller
                 return Ok();
             });
         }
+        [HttpGet("[action]/{menuId}")]
+        public IActionResult ReportFromMenu(Guid menuId)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return FindItem<ReportReferenceMenuItem>(menuId)
+                    .Bind(Authorize)
+                    .Map(menuItem => sessionObjects.UIService.ReportFromMenu(
+                        menuItem.Id))
+                    .Map(ToActionResult)
+                    .Finally(UnwrapReturnValue);
+            });
+        }
         #endregion
         
         private Result<IActionResult, IActionResult> ExtractAggregationList(IActionResult fullReaderResult)
@@ -609,7 +640,7 @@ namespace Origam.ServerCore.Controller
                     .Bind(Authorize)
                     .Bind(menuItem
                         => CheckLookupIsAllowedInMenu(
-                            menuItem, input.LookupId));
+                            (FormReferenceMenuItem)menuItem, input.LookupId));
                 if(menuResult.IsFailure)
                 {
                     return menuResult.Error;
@@ -734,7 +765,7 @@ namespace Origam.ServerCore.Controller
                 return FindItem<FormReferenceMenuItem>(input.MenuId)
                     .Bind(Authorize)
                     .Bind(menuItem => CheckLookupIsAllowedInMenu(
-                        menuItem, input.LookupId))
+                        (FormReferenceMenuItem)menuItem, input.LookupId))
                     .Bind(menuItem => GetEntityData(
                         input.DataStructureEntityId, menuItem))
                     .Bind(CheckEntityBelongsToMenu)
@@ -1017,6 +1048,15 @@ namespace Origam.ServerCore.Controller
                 updatedValues.Add(values[i]);
             }
             return updatedValues;
+        }
+        
+        private void AddConfigData(PortalResult result)
+        {
+            result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.IdentityGuiLogoUrl)
+                ? "./img/logo-left.png"
+                : customAssetsConfig.IdentityGuiLogoUrl;
+            result.ChatRefreshInterval = chatConfig.ChatRefreshInterval;
+            result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
         }
     }
 }
