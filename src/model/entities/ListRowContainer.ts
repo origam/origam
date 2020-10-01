@@ -99,6 +99,7 @@ export class ListRowContainer implements IRowsContainer {
   set(rows: any[][]) {
     this.clear();
     this.allRows.push(...rows);
+    this.updateSortAndFilter();
   }
 
   substitute(row: any[]): void {
