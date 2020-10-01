@@ -11,6 +11,7 @@ import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
 import { IUrlUpenMethod } from "model/entities/types/IUrlOpenMethod";
+import { T } from "utils/translation";
 
 @observer
 export class CChatSection extends React.Component {
@@ -31,15 +32,15 @@ export class CChatSection extends React.Component {
           isEmphasized={false}
           isOpenedScreen={false}
           isActiveScreen={false}
-          icon={<Icon src="./icons/add.svg" tooltip={"New chatroom"} />}
-          label={<>Create new chatroom</>}
+          icon={<Icon src="./icons/add.svg" tooltip={T("New Chat", "new_chat")} />}
+          label={<>{T("New Chat", "new_chat")}</>}
           onClick={(event) => {
-            const self = this;
+            const _this = this;
             flow(function* () {
-              yield* openNewUrl(self.workbench)(
+              yield* openNewUrl(_this.workbench)(
                 `chatrooms/index.html#/chatroom`,
                 IUrlUpenMethod.OrigamTab,
-                "New Chatroom"
+                "New Chat"
               );
             })();
           }}
