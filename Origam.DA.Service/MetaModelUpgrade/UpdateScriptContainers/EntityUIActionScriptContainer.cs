@@ -35,6 +35,8 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
                         screenAttribute.Remove();
                     
                         XNamespace srNamespace = "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0";
+                        doc.AddNamespace("sc",
+                            "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenCondition/6.0.0");
                         XElement screenConditionNode = new XElement( srNamespace.GetName("ScreenCondition"));
                         screenConditionNode.SetAttributeValue(persistenceNamespace.GetName("id"), Guid.NewGuid().ToString());
                         screenConditionNode.SetAttributeValue(asiNamespace.GetName("name"), "ScreenSectionCondition1");
@@ -51,6 +53,8 @@ namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
                         screenSectionAttribute.Remove();
                         
                         XNamespace ssrNamespace = "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenSectionCondition/6.0.0";
+                        doc.AddNamespace("ssc",
+                            "http://schemas.origam.com/Origam.Schema.GuiModel.ScreenSectionCondition/6.0.0");
                         XElement screenSectionConditionNode = new XElement( ssrNamespace.GetName("ScreenSectionCondition"));
                         screenSectionConditionNode.SetAttributeValue(persistenceNamespace.GetName("id"), Guid.NewGuid().ToString());
                         screenSectionConditionNode.SetAttributeValue(asiNamespace.GetName("name"), "ScreenSectionCondition1");
