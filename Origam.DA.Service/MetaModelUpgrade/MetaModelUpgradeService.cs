@@ -44,9 +44,11 @@ namespace Origam.DA.Service.MetaModelUpgrade
 
     public class NullMetaModelUpgradeService : IMetaModelUpgradeService
     {
+#pragma warning disable CS0067 
         public event EventHandler<UpgradeProgressInfo> UpgradeProgress;
         public event EventHandler UpgradeStarted;
         public event EventHandler UpgradeFinished;
+#pragma warning restore CS0067
         public void InitializeService()
         {
         }
