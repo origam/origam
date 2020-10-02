@@ -28,10 +28,10 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Summary description for AbstractTransformation.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
-    public class AbstractTransformation : AbstractSchemaItem, ITransformation
+    [XmlModelRoot(CategoryConst)]
+    public abstract class AbstractTransformation : AbstractSchemaItem, ITransformation
 	{
-		public const string ItemTypeConst = "Transformation";
+		public const string CategoryConst = "Transformation";
 
 		public AbstractTransformation() : base() {}
 
@@ -46,7 +46,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

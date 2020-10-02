@@ -81,7 +81,7 @@ namespace Origam.Schema.EntityModel
 					break;
 			}
 
-            List<DataConstant> listDataconstant = persistenceprovider.RetrieveListByType<DataConstant>(DataConstant.ItemTypeConst);
+            List<DataConstant> listDataconstant = persistenceprovider.RetrieveListByCategory<DataConstant>(DataConstant.CategoryConst);
 
             foreach (string c in constants)
 			{
@@ -115,7 +115,7 @@ namespace Origam.Schema.EntityModel
 					break;
 			}
 
-            List<StringItem> listStringItem = persistenceprovider.RetrieveListByType<StringItem>(StringItem.ItemTypeConst);
+            List<StringItem> listStringItem = persistenceprovider.RetrieveListByCategory<StringItem>(StringItem.CategoryConst);
             foreach (string s in strings)
 			{
                 foreach (StringItem child in listStringItem)

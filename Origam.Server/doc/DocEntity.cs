@@ -197,7 +197,7 @@ namespace Origam.Server.Doc
                     StringBuilder keys = new StringBuilder();
                     keys.Append(DocTools.ImageLink(relation.AssociatedEntity, this.FilterName));
                     keys.Append("<ul>");
-                    foreach (EntityRelationColumnPairItem key in relation.ChildItemsByType(EntityRelationColumnPairItem.ItemTypeConst))
+                    foreach (EntityRelationColumnPairItem key in relation.ChildItemsByType(EntityRelationColumnPairItem.CategoryConst))
                     {
                         keys.AppendFormat("<li>{0}</li>", key.RelatedEntityField.Name);
                     }
@@ -311,10 +311,10 @@ namespace Origam.Server.Doc
                 DocTools.WriteElementLink(writer, field.DerivedFrom, this.FilterName);
                 writer.WriteString(".)");
             }
-            else if (!field.SchemaExtension.PrimaryKey.Equals(entity.SchemaExtension.PrimaryKey))
+            else if (!field.Package.PrimaryKey.Equals(entity.Package.PrimaryKey))
             {
                 writer.WriteString(" (Extended in package ");
-                writer.WriteString(field.SchemaExtension.Name);
+                writer.WriteString(field.Package.Name);
                 writer.WriteString(".)");
             }
             // long description p

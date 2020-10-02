@@ -29,10 +29,10 @@ using Origam.DA.ObjectPersistence;
 
 namespace Origam.Schema.GuiModel
 {
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	public abstract class AbstractDashboardWidget : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DashboardWidget";
+		public const string CategoryConst = "DashboardWidget";
 
 		public AbstractDashboardWidget() : base() {Init();}
 		public AbstractDashboardWidget(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -122,7 +122,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion			

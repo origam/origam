@@ -36,7 +36,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return AbstractChart.ItemTypeConst;
+				return AbstractChart.CategoryConst;
 			}
 		}
 		public override string Group
@@ -54,7 +54,7 @@ namespace Origam.Schema.GuiModel
 
 			foreach(AbstractChart chart in this.ChildItems)
 			{
-				foreach(ChartFormMapping m in chart.ChildItemsByType(ChartFormMapping.ItemTypeConst))
+				foreach(ChartFormMapping m in chart.ChildItemsByType(ChartFormMapping.CategoryConst))
 				{
 					if(formId.Equals(m.Screen.Id) && entity.Equals(m.Entity.Name))
 					{

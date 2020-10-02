@@ -42,7 +42,7 @@ namespace Origam.DA.ObjectPersistence.Attributes
 
             var dataStructureColumn = (DataStructureColumn)instance;
             var abstractSchemaItemParent = dataStructureColumn.ParentItem;
-            if (abstractSchemaItemParent?.ItemType is DataStructureEntity.ItemTypeConst)
+            if (abstractSchemaItemParent?.ItemType is DataStructureEntity.CategoryConst)
             {
                 var dataStructureEntity = (DataStructureEntity)abstractSchemaItemParent;
                 if (dataStructureEntity.RelationType is RelationType.LeftJoin || dataStructureEntity.RelationType is RelationType.InnerJoin)

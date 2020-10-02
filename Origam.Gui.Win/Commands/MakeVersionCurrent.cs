@@ -44,7 +44,7 @@ namespace Origam.Gui.Win.Commands
 
 			DeploymentVersion version = this.Owner as DeploymentVersion;
 
-			SchemaExtension ext = _persistence.SchemaProvider.RetrieveInstance(typeof(SchemaExtension), _schemaService.ActiveExtension.PrimaryKey) as SchemaExtension;
+			Package ext = _persistence.SchemaProvider.RetrieveInstance(typeof(Package), _schemaService.ActiveExtension.PrimaryKey) as Package;
 
 			ext.VersionString = version.VersionString;
 			ext.Persist();

@@ -21,6 +21,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Xml;
+using Origam.DA.Common;
+using Origam.Schema;
 
 namespace Origam.DA.Service
 {
@@ -71,9 +73,9 @@ namespace Origam.DA.Service
             return id;
         }
 
-        public static string ReadType(XmlReader xmlReader) =>
-            xmlReader.GetAttribute(
-                OrigamFile.TypeAttribute,
-                OrigamFile.ModelPersistenceUri);
+        public static string ReadType(XmlReader xmlReader)
+        {
+            return xmlReader.NamespaceURI.Split('/')[3];
+        }
     }
 }

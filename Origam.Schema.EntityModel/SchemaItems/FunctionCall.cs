@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -32,6 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Function Call", "Fields", "icon_function-call.png")]
     [HelpTopic("Function+Call+Field")]
     [DefaultProperty("Function")]
+    [ClassMetaVersion("6.0.0")]
     public class FunctionCall : AbstractDataEntityColumn, ISchemaItemFactory
 	{
 		public FunctionCall() : base() {}

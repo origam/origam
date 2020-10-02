@@ -19,6 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using System;
+using CSharpFunctionalExtensions;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
 using Origam.Workbench.Services;
@@ -39,7 +41,8 @@ namespace Origam.Server.Utils
                     if (persistenceProvider is FilePersistenceProvider filePersistProvider)
                     {
                         filePersistProvider.FlushCache();
-                        filePersistProvider.ReloadFiles(tryUpdate: false);
+                        Maybe<XmlLoadError> result = filePersistProvider.ReloadFiles();
+                        if(result.HasValue) throw new Exception(result.Value.Message);
                         filePersistProvider.PersistIndex();
                     }
                     OrigamUserContext.ResetAll();

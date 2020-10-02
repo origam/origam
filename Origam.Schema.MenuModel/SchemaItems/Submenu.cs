@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Text;
 using System.Collections;
@@ -33,6 +34,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Submenu", "menu_folder.png")]
     [HelpTopic("Submenu")]
+    [ClassMetaVersion("6.0.0")]
 	public class Submenu : AbstractMenuItem, ISchemaItemFactory
 	{
 		public Submenu() : base() {}

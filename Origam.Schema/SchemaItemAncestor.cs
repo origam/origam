@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -35,6 +36,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaItemAncestor")]
 	[XmlModelRoot("ancestor")]
+    [ClassMetaVersion("6.0.0")]
 	public class SchemaItemAncestor : AbstractPersistent, IBrowserNode2, 
         ICloneable, IComparable, IFilePersistent
 	{
@@ -288,11 +290,11 @@ namespace Origam.Schema
             }
         }
 
-        public IDictionary<ElementName, Guid> ParentFolderIds =>
-	        new Dictionary<ElementName, Guid>
+        public IDictionary<string, Guid> ParentFolderIds =>
+	        new Dictionary<string, Guid>
 	        {
 		        {
-			        ElementNameFactory.Create(typeof(SchemaExtension)),
+			        CategoryFactory.Create(typeof(Package)),
 			        SchemaItem.SchemaExtensionId
 		        }
 	        };

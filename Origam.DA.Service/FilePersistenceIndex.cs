@@ -77,8 +77,7 @@ namespace Origam.DA.Service
             readWriteLock.RunWriter(()=> itemTracker.ClearCache());
         }
         
-        public Maybe<XmlLoadError> ReloadFiles(TrackerLoaderFactory trackerLoaderFactory,
-            bool tryUpdate)
+        public Maybe<XmlLoadError> ReloadFiles(TrackerLoaderFactory trackerLoaderFactory)
         {
             return readWriteLock.RunWriter(() =>
             {
@@ -88,8 +87,9 @@ namespace Origam.DA.Service
                 }
 
                 itemTrackerWasJustLoadedFromBin = false;
-                return trackerLoaderFactory.XmlLoader.LoadInto(itemTracker,
-                    tryUpdate);
+                return trackerLoaderFactory.XmlLoader.LoadInto(
+                    itemTracker: itemTracker,
+                    tryUpgrade: false);
             });
         }
         
@@ -144,19 +144,19 @@ namespace Origam.DA.Service
         }
 
         internal IEnumerable<PersistedObjectInfo> GetByParentFolder(
-            ElementName elementName, Guid folderId)
+            string category, Guid folderId)
         {
             return readWriteLock.RunReader(() =>
-                itemTracker.GetByParentFolder(elementName, folderId)
+                itemTracker.GetByParentFolder(category, folderId)
                     .Where(BelongsToALoadedPackage)
                 );
         }
 
-        internal IEnumerable<PersistedObjectInfo> GetListByElementName(
-            ElementName elementName)
+        internal IEnumerable<PersistedObjectInfo> GetListByCategory(
+            string category)
         {
             return readWriteLock.RunReader(() =>
-                itemTracker.GetListByElementName(elementName)
+                itemTracker.GetListByCategory(category)
                     .Where(BelongsToALoadedPackage)
                 );
         }
@@ -202,7 +202,8 @@ namespace Origam.DA.Service
                 itemTracker.GetByPath(instanceRelativeFilePath));
         }
 
-        public void InitItemTracker(TrackerLoaderFactory trackerLoaderFactory)
+        public void InitItemTracker(TrackerLoaderFactory trackerLoaderFactory,
+            bool tryUpgrade)
         {
             readWriteLock.RunWriter(() =>
             {
@@ -213,7 +214,9 @@ namespace Origam.DA.Service
 
                 if (itemTracker.IsEmpty)
                 {
-                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(itemTracker, false);
+                    Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
+                        itemTracker: itemTracker,
+                        tryUpgrade: tryUpgrade);
                     if(error.HasValue)
                     {
                         throw new Exception(error.Value.Message);

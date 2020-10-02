@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using Origam.DA.ObjectPersistence;
@@ -30,10 +31,12 @@ namespace Origam.Schema.GuiModel
 	/// Summary description for ControlSetItem.
 	/// </summary>
    [SchemaItemDescription("Alternative", "Alternatives", "icon_alternative.png")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class ControlSetItem  : AbstractSchemaItem, ISchemaItemFactory 
 	{
-		public const string ItemTypeConst = "ControlSetItem";
+
+		public const string CategoryConst = "ControlSetItem";
 
 		public ControlSetItem() : base(){}
 		
@@ -162,7 +165,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ControlSetItem.ItemTypeConst;
+				return ControlSetItem.CategoryConst;
 			}
 		}
 
@@ -193,7 +196,7 @@ namespace Origam.Schema.GuiModel
 			Guid graphicsId = Guid.Empty;
 			Guid workflowId = Guid.Empty;
 
-			foreach(PropertyValueItem property in this.ChildItemsByType(PropertyValueItem.ItemTypeConst))
+			foreach(PropertyValueItem property in this.ChildItemsByType(PropertyValueItem.CategoryConst))
 			{
 				if(this.ControlItem.Name == "AsCombo" & property.ControlPropertyItem.Name == "LookupId") lookupId = property.GuidValue;
 				if(this.ControlItem.Name == "AsReportPanel" & property.ControlPropertyItem.Name == "ReportId") reportId = property.GuidValue;
@@ -355,7 +358,7 @@ namespace Origam.Schema.GuiModel
 
 		private int TabIndex(ControlSetItem control)
 		{
-			foreach(PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.ItemTypeConst))
+			foreach(PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
 			{
 				if(property.ControlPropertyItem.Name == "TabIndex")
 				{

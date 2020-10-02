@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -31,10 +32,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Method", "Methods", "method-1.png")]
     [HelpTopic("Service+Method")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class ServiceMethod : AbstractSchemaItem, IServiceMethod, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "ServiceMethod";
+		public const string CategoryConst = "ServiceMethod";
 
 		public ServiceMethod() : base() {}
 
@@ -66,7 +68,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

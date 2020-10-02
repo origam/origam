@@ -989,7 +989,7 @@ namespace Origam.Server
             DataServiceDataLookup lookup = persistence.SchemaProvider.RetrieveInstance(typeof(DataServiceDataLookup), new ModelElementKey(new Guid(lookupId))) as DataServiceDataLookup;
             DatasetGenerator gen = new DatasetGenerator(true);
             DataSet comboListDataset = gen.CreateDataSet(lookup.ListDataStructure);
-            DataTable comboListTable = comboListDataset.Tables[(lookup.ListDataStructure.ChildItemsByType(DataStructureEntity.ItemTypeConst)[0] as DataStructureEntity).Name];
+            DataTable comboListTable = comboListDataset.Tables[(lookup.ListDataStructure.ChildItemsByType(DataStructureEntity.CategoryConst)[0] as DataStructureEntity).Name];
             string tableName = FormXmlBuilder.DatabaseTableName(comboListTable);
             if (tableName != null)
             {
@@ -1204,7 +1204,7 @@ namespace Origam.Server
 
             if (logoNotificationBox != null)
             {
-                ArrayList tooltips = logoNotificationBox.ChildItemsByType(DataServiceDataTooltip.ItemTypeConst);
+                ArrayList tooltips = logoNotificationBox.ChildItemsByType(DataServiceDataTooltip.CategoryConst);
 
                 doc = GetTooltip(null, tooltips).Xml;
             }
@@ -1760,7 +1760,7 @@ namespace Origam.Server
 
         private static void AddDashboardItems(ISchemaItemProvider parent, IList<DashboardToolboxItem> items)
         {
-            ArrayList widgets = parent.ChildItemsByType(AbstractDashboardWidget.ItemTypeConst);
+            ArrayList widgets = parent.ChildItemsByType(AbstractDashboardWidget.CategoryConst);
             foreach (AbstractDashboardWidget widget in widgets)
             {
                 DashboardToolboxItem item = new DashboardToolboxItem();
@@ -1783,7 +1783,7 @@ namespace Origam.Server
                 else
                 {
                     // parameters
-                    foreach (DashboardWidgetParameter param in widget.ChildItemsByType(DashboardWidgetParameter.ItemTypeConst))
+                    foreach (DashboardWidgetParameter param in widget.ChildItemsByType(DashboardWidgetParameter.CategoryConst))
                     {
                         DashboardToolboxItemParameter newParameter = new DashboardToolboxItemParameter(param.Name, param.Caption, param.DataType, param.LookupId);
 

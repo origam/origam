@@ -48,20 +48,20 @@ namespace Origam.Gui.UI
             Text = Text.Trim();
             if(string.IsNullOrEmpty(Text)) return;
 
-            var dateStr = IsAutoCompleteable(Text) ? AutoComplete(Text) : Text;
+            var dateStr = IsAutoCompleteAble(Text) ? AutoComplete(Text) : Text;
             var result = ParseToDate(dateStr);
-            var parseSucess = result.Item1;
+            var parseSuccess = result.Item1;
             var date = result.Item2;
 
-            if(!parseSucess)
+            if(!parseSuccess)
             {
                 NotifyInputError("Text cannot be parsed to a valid date.");
                 return;
             }
-            WriteToTextInPropperFormat(date);
+            WriteToTextInProperFormat(date);
         }
 
-        private void WriteToTextInPropperFormat(DateTime date)
+        private void WriteToTextInProperFormat(DateTime date)
         {
             if(string.IsNullOrEmpty(customFormat))
             {
@@ -77,23 +77,23 @@ namespace Origam.Gui.UI
 
         private (bool parseSucess, DateTime parsedDate) ParseToDate(string dateStr)
         {
-            var defaultFormatParseSucess = DateTime.TryParse(dateStr, out var date1);
+            var defaultFormatParseSuccess = DateTime.TryParse(dateStr, out var date1);
 
-            if(defaultFormatParseSucess || string.IsNullOrEmpty(customFormat))
+            if(defaultFormatParseSuccess || string.IsNullOrEmpty(customFormat))
             {
-                return (defaultFormatParseSucess, date1);
+                return (defaultFormatParseSuccess, date1);
             }
 
-            var customFormatParseSucess = DateTime.TryParseExact(dateStr,
+            var customFormatParseSuccess = DateTime.TryParseExact(dateStr,
                 customFormat,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out var date2);
 
-            return (customFormatParseSucess, date2);
+            return (customFormatParseSuccess, date2);
         }
 
-        private bool IsAutoCompleteable(string dateStr)
+        private bool IsAutoCompleteAble(string dateStr)
         {
             var dateParts = dateStr.Split(DateTimeSeparator);
             if(dateParts.Length > 2) return false;
@@ -208,8 +208,8 @@ namespace Origam.Gui.UI
 
         private static string CompleteTimeWithSeparators(string incompleteTime)
         {
-            var parseSucess = DateTime.TryParse(incompleteTime, out var date);
-            return parseSucess ? date.ToShortTimeString() : incompleteTime;
+            var parseSuccess = DateTime.TryParse(incompleteTime, out var date);
+            return parseSuccess ? date.ToShortTimeString() : incompleteTime;
         }
 
         private string AutoCompleteDate(string incompleteDate)
@@ -223,8 +223,8 @@ namespace Origam.Gui.UI
 
         private static string CompleteDateWithSeparators(string incompleteDate)
         {
-            var parseSucess = DateTime.TryParse(incompleteDate, out var date);
-            return parseSucess ? date.ToShortDateString() : incompleteDate;
+            var parseSuccess = DateTime.TryParse(incompleteDate, out var date);
+            return parseSuccess ? date.ToShortDateString() : incompleteDate;
         }
 
         private string CompleteDateWithoutSeparators(string incompleteDate)
@@ -278,7 +278,7 @@ namespace Origam.Gui.UI
 
         private string AddSeparators(string incompleteDate)
         {
-            var format = GetDoubleDayaAndMonthFormat();
+            var format = GetDoubleDayAndMonthFormat();
 
             var firstIndex = format.IndexOf(dateSeparator);
             var secondIndex = format.LastIndexOf(dateSeparator);
@@ -301,7 +301,7 @@ namespace Origam.Gui.UI
             return incompleteDate;
         }
 
-        private string GetDoubleDayaAndMonthFormat()
+        private string GetDoubleDayAndMonthFormat()
         {
             // dateFormat might be d/m/yyyy, this,
             // method makes sure we get dd/mm/yyyy

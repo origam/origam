@@ -37,7 +37,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return AbstractScheduleTime.ItemTypeConst;
+				return AbstractScheduleTime.CategoryConst;
 			}
 		}
 		public override string Group

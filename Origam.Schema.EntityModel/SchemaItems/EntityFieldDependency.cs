@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -32,11 +33,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Dependency", "Dependencies", "icon_dependency.png")]
     [HelpTopic("Field+Dependencies")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityFieldDependency : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "EntityFieldDependency";
+		public const string CategoryConst = "EntityFieldDependency";
 
 		public EntityFieldDependency() : base() {}
 
@@ -55,7 +57,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

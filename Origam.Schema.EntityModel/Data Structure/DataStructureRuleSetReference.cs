@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -31,11 +32,12 @@ namespace Origam.Schema.EntityModel
 
     [SchemaItemDescription("Rule Set Reference", "icon_rule-set-reference.png")]
     [HelpTopic("Rule+Set+Reference")]
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     [DefaultProperty("RuleSet")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureRuleSetReference : AbstractSchemaItem
     {
-        public const string ItemTypeConst = "DataStructureRuleSetReference";
+        public const string CategoryConst = "DataStructureRuleSetReference";
 
         public DataStructureRuleSetReference() : base(){ }
         public DataStructureRuleSetReference(Guid schemaExtensionId) : base(schemaExtensionId) { }
@@ -76,7 +78,7 @@ namespace Origam.Schema.EntityModel
         {
             get
             {
-                return ItemTypeConst; 
+                return CategoryConst; 
             }
         }
 

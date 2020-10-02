@@ -30,7 +30,6 @@ namespace Origam.DA.ObjectPersistence
     {
         public ExternalFileExtension Extension { get; }
         public string ContainerName { get; }
-        public string Namespace { get; }
 
         public XmlExternalFileReference( string containerName,
             ExternalFileExtension extension = ExternalFileExtension.Xml)

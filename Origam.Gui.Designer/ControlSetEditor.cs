@@ -705,7 +705,7 @@ namespace Origam.Gui.Designer
 			{
 				ControlSetItem cntrSetItem = cntrl.Tag as ControlSetItem;
 				
-				foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.ItemTypeConst))
+				foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
 				{
 					//addinng default properties to control set item
 					Type t = cntrl.GetType();
@@ -738,7 +738,7 @@ namespace Origam.Gui.Designer
 
 			ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
 		
-			foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.ItemTypeConst))
+			foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.CategoryConst))
 			{
 				try
 				{
@@ -806,7 +806,7 @@ namespace Origam.Gui.Designer
 
 			ControlSetItem cntrSetItem=cntrl.Tag as ControlSetItem;
 
-			foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.ItemTypeConst))
+			foreach(ControlPropertyItem propItem in cntrSetItem.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
 			{
 				if(propItem.Name.ToUpper() == propertyName.ToUpper())
 					return propItem;
@@ -824,13 +824,13 @@ namespace Origam.Gui.Designer
 
 			if(bind)
 			{
-				strType = PropertyBindingInfo.ItemTypeConst;
+				strType = PropertyBindingInfo.CategoryConst;
 				type= typeof(PropertyBindingInfo);
 
 			}
 			else
 			{
-				strType= PropertyValueItem.ItemTypeConst;
+				strType= PropertyValueItem.CategoryConst;
 				type= typeof(PropertyValueItem);
 				
 			}
@@ -873,10 +873,10 @@ namespace Origam.Gui.Designer
 				IDataEntity dataEntity = this.Panel.DataEntity;
 				Category panelCat2 = new Category();
 				panelCat2.DisplayName =dataEntity.Name;
-				FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType(AbstractDataEntityColumn.ItemTypeConst).Count];
+				FDToolboxItem[] fieldTools = new FDToolboxItem[dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst).Count];
 				int i = 0;
 				FDToolboxItem fd_item;
-				ArrayList fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.ItemTypeConst);
+				ArrayList fields = dataEntity.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
 				fields.Sort();
 				foreach(IDataEntityColumn column in fields)
 				{
@@ -1089,7 +1089,7 @@ namespace Origam.Gui.Designer
 						Settings settings = new Settings();
 
 						// Load all properties we want to see
-						foreach(ControlPropertyItem propItem in ctrlSet.ControlItem.ChildItemsByType(ControlPropertyItem.ItemTypeConst))
+						foreach(ControlPropertyItem propItem in ctrlSet.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
 						{
 							PropertyInfo property = t.GetProperty(propItem.Name);
 							object value = property.GetValue(selectedObject, new object[0]);
@@ -1196,7 +1196,7 @@ namespace Origam.Gui.Designer
 				txtFeatures.Text = _rootControl.Features;
 				txtLevel.Text = _rootControl.Level.ToString ();
 			}
-			txtPackage.Text = _rootControl.Package;
+			txtPackage.Text = _rootControl.PackageName;
 			_form.Location = new Point(15,15);
 			_form.Enabled = (!this.IsReadOnly);
 

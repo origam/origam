@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -32,10 +33,11 @@ namespace Origam.Schema.GuiModel
 	[SchemaItemDescription("Report Reference", "icon_report-reference.png")]
     [HelpTopic("Report+Reference")]
     [DefaultProperty("Report")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class ReportReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "ReportReference";
+		public const string CategoryConst = "ReportReference";
 
 		public ReportReference() : base() {}
 
@@ -50,7 +52,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

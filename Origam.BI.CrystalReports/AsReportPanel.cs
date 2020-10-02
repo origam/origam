@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -306,7 +307,7 @@ namespace Origam.BI.CrystalReports
 
 			ParameterMappings.Clear();
 			
-			foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
+			foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 			{
 				if(! mapInfo.IsDeleted)	// skip any deleted mapping infos
 				{
@@ -418,7 +419,7 @@ namespace Origam.BI.CrystalReports
 				if(!_itemsLoaded)
 					return;
 
-				ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.ItemTypeConst));
+				ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
 
 				foreach(ColumnParameterMapping mapping in col)
 				{
@@ -448,7 +449,7 @@ namespace Origam.BI.CrystalReports
 			}
 
 			// create any missing report's own parameters
-			foreach(SchemaItemParameter param in this.CrystalReport.ChildItemsByType(SchemaItemParameter.ItemTypeConst))
+			foreach(SchemaItemParameter param in this.CrystalReport.ChildItemsByType(SchemaItemParameter.CategoryConst))
 			{
 				if(this._origamMetadata.GetChildByName(param.Name) == null)
 				{
@@ -459,7 +460,7 @@ namespace Origam.BI.CrystalReports
 
 			ArrayList toDelete = new ArrayList();
 			// delete all parameter mappings from the report, if they do not exist in the data structure anymore 
-			foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
+			foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 			{
 				if(! this.CrystalReport.ParameterReferences.Contains(mapping.Name) & 
 					this.CrystalReport.GetChildByName(mapping.Name) == null)

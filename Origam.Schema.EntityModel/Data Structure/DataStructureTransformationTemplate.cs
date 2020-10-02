@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -32,6 +33,7 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Transformation Template", 
         "icon_transformation-template.png")]
     [HelpTopic("Template+Set+Template")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureTransformationTemplate : DataStructureTemplate
 	{
 		public DataStructureTransformationTemplate() : base(){}

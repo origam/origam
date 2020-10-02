@@ -57,7 +57,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			DatasetGenerator gen = new DatasetGenerator(true);
 			DataSet comboListDataset = gen.CreateDataSet(lookup.ListDataStructure);
-			DataTable comboListTable = comboListDataset.Tables[(lookup.ListDataStructure.ChildItemsByType(DataStructureEntity.ItemTypeConst)[0] as DataStructureEntity).Name];
+			DataTable comboListTable = comboListDataset.Tables[(lookup.ListDataStructure.ChildItemsByType(DataStructureEntity.CategoryConst)[0] as DataStructureEntity).Name];
 
 			propertyElement.SetAttribute("LookupId", lookupId.ToString());
 			propertyElement.SetAttribute("Identifier", lookup.ListValueMember);

@@ -28,21 +28,21 @@ namespace Origam.DA.Service
 {
     public class OrigamReferenceFile : ITrackeableFile
     {
-        public OrigamReferenceFile(OrigamPath origamPath, IDictionary<ElementName, Guid> parentFolders)
+        public OrigamReferenceFile(OrigamPath origamPath, IDictionary<string, Guid> parentFolders)
         {
             Path = origamPath;
             FileHash = new FileInfo(Path.Absolute).GetFileBase64Hash();
             ParentFolderIds = new ParentFolders(parentFolders, origamPath);
         }
 
-        public OrigamReferenceFile(OrigamPath origamPath, List<ElementName> parentFolders)
+        public OrigamReferenceFile(OrigamPath origamPath, List<string> parentFolders)
         {
             Path = origamPath;
             FileHash = new FileInfo(Path.Absolute).GetFileBase64Hash();
             ParentFolderIds = new ParentFolders(parentFolders);
         }
 
-        public OrigamReferenceFile(OrigamPath origamPath, IDictionary<ElementName, Guid> parentFolderIds, string fileHash)
+        public OrigamReferenceFile(OrigamPath origamPath, IDictionary<string, Guid> parentFolderIds, string fileHash)
         {
             Path = origamPath;
             ParentFolderIds = new ParentFolders(parentFolderIds, origamPath);

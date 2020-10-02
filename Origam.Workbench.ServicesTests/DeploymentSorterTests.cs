@@ -336,7 +336,7 @@ namespace Origam.WorkbenchTests
         public List<DeploymentDependency> DeploymentDependencies { get; set; }
         public bool HasDependencies => DeploymentDependencies.Count != 0;
         public Guid SchemaExtensionId { get; }
-        public string Package { get; }
+        public string PackageName { get; }
 
         public MockDeploymentVersion(PackageVersion version, List<DeploymentDependency> deploymentDependencies, Guid schemaExtensionId)
         {

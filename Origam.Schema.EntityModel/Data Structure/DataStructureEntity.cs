@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,11 +44,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Entity", "Entities", "icon_entity.png")]
     [HelpTopic("Entities")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Entity")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureEntity : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "DataStructureEntity";
+		public const string CategoryConst = "DataStructureEntity";
 
 		public DataStructureEntity() : base()	{}
 		
@@ -160,7 +162,7 @@ namespace Origam.Schema.EntityModel
 
 				if(value)
 				{
-					ArrayList list = this.ChildItemsByType(DataStructureColumn.ItemTypeConst);
+					ArrayList list = this.ChildItemsByType(DataStructureColumn.CategoryConst);
 
 					foreach(DataStructureColumn column in list)
 					{
@@ -372,7 +374,7 @@ namespace Origam.Schema.EntityModel
 			List<DataStructureColumn> columns = GetColumnsFromEntity();
 			
 			// add all extra columns specified
-			foreach(DataStructureColumn column in this.ChildItemsByType(DataStructureColumn.ItemTypeConst))
+			foreach(DataStructureColumn column in this.ChildItemsByType(DataStructureColumn.CategoryConst))
 			{
 				columns.Add(column);
 			}
@@ -437,7 +439,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return DataStructureEntity.ItemTypeConst;
+				return DataStructureEntity.CategoryConst;
 			}
 		}
 

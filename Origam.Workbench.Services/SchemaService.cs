@@ -83,7 +83,7 @@ namespace Origam.Workbench.Services
 			{
 				IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
-				return persistence.SchemaProvider.RetrieveList<SchemaExtension>(null).ToArrayList();
+				return persistence.SchemaProvider.RetrieveList<Package>(null).ToArrayList();
 			}
 		}
 
@@ -93,7 +93,7 @@ namespace Origam.Workbench.Services
 			{
 				IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 
-				return persistence.SchemaListProvider.RetrieveList<SchemaExtension>(null).ToArrayList();
+				return persistence.SchemaListProvider.RetrieveList<Package>(null).ToArrayList();
 			}
 		}
 
@@ -123,8 +123,8 @@ namespace Origam.Workbench.Services
             }
         }
 
-        protected SchemaExtension _activeExtension = null;
-		public SchemaExtension ActiveExtension
+        protected Package _activeExtension = null;
+		public Package ActiveExtension
 		{
 			get
 			{
@@ -179,7 +179,7 @@ namespace Origam.Workbench.Services
 			{
 				return IsItemFromExtension(item);
 			}
-			if(item is SchemaExtension)
+			if(item is Package)
 			{
 				return true;
 			}
@@ -198,7 +198,7 @@ namespace Origam.Workbench.Services
 				// check if the item is checked out by the user
 				return true;
 			}
-			else if(item is SchemaExtension)
+			else if(item is Package)
 			{
 				return true;
 			}
@@ -291,7 +291,7 @@ namespace Origam.Workbench.Services
 
 			try
 			{
-				_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(mainExtensionId)) as SchemaExtension;
+				_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), new ModelElementKey(mainExtensionId)) as Package;
 			}
 			catch
 			{
@@ -315,10 +315,10 @@ namespace Origam.Workbench.Services
 			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 			persistence.SchemaProvider.InstancePersisted += SchemaProvider_InstancePersisted;
 
-			SchemaExtension extension = persistence.LoadSchema(schemaExtensionId, extraExtensionId, loadDocumentation, loadDeploymentScripts, null);
+			Package extension = persistence.LoadSchema(schemaExtensionId, extraExtensionId, loadDocumentation, loadDeploymentScripts, null);
 			
 			_activeSchemaExtensionId = (Guid)extension.PrimaryKey["Id"];
-			_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(SchemaExtension), extension.PrimaryKey) as SchemaExtension;
+			_activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), extension.PrimaryKey) as Package;
 
 			OnSchemaLoaded(EventArgs.Empty);
 
@@ -347,7 +347,7 @@ namespace Origam.Workbench.Services
 			_providers.Add(provider.GetType(), provider);
 			provider.PersistenceProvider = (ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService).SchemaProvider;
 
-			foreach(SchemaExtension package in this.LoadedPackages)
+			foreach(Package package in this.LoadedPackages)
 			{
 				package.AddProvider(provider);
 			}
@@ -371,7 +371,7 @@ namespace Origam.Workbench.Services
             provider.PersistenceProvider = null;
 			_providers.Remove(provider.GetType());
 
-			foreach(SchemaExtension package in this.LoadedPackages)
+			foreach(Package package in this.LoadedPackages)
 			{
 				foreach (IBrowserNode group in package.ChildNodes())	
 				{

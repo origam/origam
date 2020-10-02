@@ -37,7 +37,7 @@ namespace Origam.Schema.LookupModel
 		{
 			get
 			{
-				return NotificationBox.ItemTypeConst;
+				return NotificationBox.CategoryConst;
 			}
 		}
 		public override string Group

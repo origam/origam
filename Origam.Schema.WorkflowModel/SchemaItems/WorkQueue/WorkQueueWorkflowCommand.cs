@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -32,9 +33,10 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for WorkQueueWorkflowCommand.
 	/// </summary>
 	[SchemaItemDescription("Workflow Command", "Commands", "workflow-command.png")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkQueueWorkflowCommand : EntityUIAction
 	{
-		public new const string ItemTypeConst = "WorkQueueCommand";
+		public new const string CategoryConst = "WorkQueueCommand";
 
 		public WorkQueueWorkflowCommand() : base() {Init();}
 
@@ -52,7 +54,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return this.ChildItemsByType(WorkQueueWorkflowCommandParameterMapping.ItemTypeConst);
+				return this.ChildItemsByType(WorkQueueWorkflowCommandParameterMapping.CategoryConst);
 			}
 		}
 
@@ -63,7 +65,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

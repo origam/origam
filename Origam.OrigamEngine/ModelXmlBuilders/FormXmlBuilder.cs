@@ -113,7 +113,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			foreach(PropertyValueItem panelProperty in
 			    FormTools.GetItemFromControlSet(panel).ChildItemsByType(
-                    PropertyValueItem.ItemTypeConst))
+                    PropertyValueItem.CategoryConst))
 			{
 				PropertyValueItem copy = panelProperty.Clone() as PropertyValueItem;
 				
@@ -362,7 +362,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			// Panel controls
 			int lastPos = 5;
-			ArrayList mappedColumns = wqc.ChildItemsByType(WorkQueueClassEntityMapping.ItemTypeConst);
+			ArrayList mappedColumns = wqc.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
 			mappedColumns.Sort();
 
 			DataStructureEntity entity = wqc.WorkQueueStructure.Entities[0] as DataStructureEntity;
@@ -514,7 +514,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			{
 				if(col.Field.Name == "s1")
 				{
-					style = styles.GetChildByName("bold", UIStyle.ItemTypeConst) as UIStyle;
+					style = styles.GetChildByName("bold", UIStyle.CategoryConst) as UIStyle;
 				}
 				if(col.Field.Name == "m1")
 				{
@@ -1076,7 +1076,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			if (control.ControlItem.Name == "AsForm") {
 				// for the Form we find its root control and we continue
-				item = (AbstractSchemaItem)control.ChildItemsByType (ControlSetItem.ItemTypeConst) [0];
+				item = (AbstractSchemaItem)control.ChildItemsByType (ControlSetItem.CategoryConst) [0];
 				control = item as ControlSetItem;
 			}
 
@@ -1206,7 +1206,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             // add config
             SetUserConfig (xmlOutput.Document, parentNode, renderData.DefaultConfiguration, control.Id, menuWorkflowId);
 
-			ArrayList sortedChildren = new ArrayList (item.ChildItemsByType (ControlSetItem.ItemTypeConst));
+			ArrayList sortedChildren = new ArrayList (item.ChildItemsByType (ControlSetItem.CategoryConst));
 
 			if (sortedChildren.Count > 0) {
 				sortedChildren.Sort (new ControlSetItemComparer ());
@@ -1277,7 +1277,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 Hashtable parameters = new Hashtable(inputParameters);
                 foreach (EntityUIActionParameterMapping mapping
                     in action.ChildItemsByType(
-                    EntityUIActionParameterMapping.ItemTypeConst))
+                    EntityUIActionParameterMapping.CategoryConst))
                 {
                     parameters.Add(mapping.Name, mapping.Field);
                 }
@@ -1367,7 +1367,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			parentElement.AppendChild(formExclusiveControlsElement);
 
 			// other properties
-			ArrayList childItems = new ArrayList(item.ChildItemsByType(ControlSetItem.ItemTypeConst));
+			ArrayList childItems = new ArrayList(item.ChildItemsByType(ControlSetItem.CategoryConst));
 			childItems.Sort(new ControlSetItemComparer());
 
 			foreach(ControlSetItem csi in childItems)
@@ -1408,7 +1408,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					string controlMember = "";
                     string customNumericFormat = "";
 
-					foreach(PropertyValueItem property in csi.ChildItemsByType(PropertyValueItem.ItemTypeConst))
+					foreach(PropertyValueItem property in csi.ChildItemsByType(PropertyValueItem.CategoryConst))
 					{
 						string stringValue = property.Value;
 						if(stringValue != null && DatasetGenerator.IsCaptionExpression(stringValue))
@@ -1469,7 +1469,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					if(parentPanel != null && parentPanel.ControlItem.Name == "AsPanel")
 					{
 						PropertyValueItem hideProperty = parentPanel.GetChildByName(
-                            "HideNavigationPanel", PropertyValueItem.ItemTypeConst) as PropertyValueItem;
+                            "HideNavigationPanel", PropertyValueItem.CategoryConst) as PropertyValueItem;
 						if(hideProperty != null)
 						{
 							if(!hideProperty.BoolValue)
@@ -1479,7 +1479,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						}
 					}
 
-					foreach(PropertyBindingInfo bindItem in csi.ChildItemsByType(PropertyBindingInfo.ItemTypeConst))
+					foreach(PropertyBindingInfo bindItem in csi.ChildItemsByType(PropertyBindingInfo.CategoryConst))
 					{
 						bindingMember = bindItem.Value;
 					}
@@ -1571,7 +1571,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 								XmlElement comboParametersElement = xmlOutput.Document.CreateElement("DropDownParameters");
 								propertyElement.AppendChild(comboParametersElement);
 
-								foreach(ColumnParameterMapping mapping in csi.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
+								foreach(ColumnParameterMapping mapping in csi.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 								{
 									XmlElement comboParamElement = xmlOutput.Document.CreateElement("ComboBoxParameterMapping");
 									comboParametersElement.AppendChild(comboParamElement);

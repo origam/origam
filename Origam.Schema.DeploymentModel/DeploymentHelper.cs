@@ -37,7 +37,7 @@ namespace Origam.Schema.DeploymentModel
 		public static DeploymentVersion CreateVersion
             (SchemaItemGroup group, string name, string version)
 		{
-			SchemaExtension activePackage = ServiceManager.Services
+			Package activePackage = ServiceManager.Services
 				.GetService<ISchemaService>()
 				.ActiveExtension;
 
@@ -59,7 +59,7 @@ namespace Origam.Schema.DeploymentModel
             ServiceSchemaItemProvider serviceProvider = schema.GetProvider(
                 typeof(ServiceSchemaItemProvider)) as ServiceSchemaItemProvider;
             Service service = serviceProvider.GetChildByName(
-                "DataService", Service.ItemTypeConst) as Service;
+                "DataService", Service.CategoryConst) as Service;
             DeploymentSchemaItemProvider deploymentProvider = schema.GetProvider(
                 typeof(DeploymentSchemaItemProvider)) as DeploymentSchemaItemProvider;
             DeploymentVersion currentVersion = deploymentProvider.CurrentVersion();

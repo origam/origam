@@ -3792,7 +3792,7 @@ namespace Origam.Rule
                 typeof(AbstractSchemaItem), new ModelElementKey(entityId))
                 as IDataEntity;
             foreach(EntityUIAction action in entity.ChildItemsByTypeRecursive(
-                EntityUIAction.ItemTypeConst))
+                EntityUIAction.CategoryConst))
             {
 	            bool featureIsOff = ! _parameterService.IsFeatureOn(action.Features);
 

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System;
@@ -35,10 +36,11 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("Widget", "icon_widget.png")]
     [HelpTopic("Widgets")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class ControlItem : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "Control";
+		public const string CategoryConst = "Control";
 
         public ControlItem() : base() { Init(); }
 
@@ -191,7 +193,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ControlItem.ItemTypeConst;
+				return ControlItem.CategoryConst;
 			}
 		}
 

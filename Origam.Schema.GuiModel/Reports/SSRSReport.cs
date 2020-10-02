@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("SQL Server Report", "icon_sql-server-report.png")]
     [HelpTopic("SQL+Server+Report")]
+    [ClassMetaVersion("6.0.0")]
     public class SSRSReport : AbstractReport
     {
 		public SSRSReport() : base() { }

@@ -344,6 +344,12 @@
     <Compile Include="MainClass.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ModelUpgradeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModelUpgrade.Designer.cs">
+      <DependentUpon>ModelUpgradeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="NewProjectWizard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -396,6 +402,9 @@
     </Compile>
     <Content Include="App.ico" />
     <Content Include="build.xml" />
+    <EmbeddedResource Include="ModelUpgradeForm.resx">
+      <DependentUpon>ModelUpgradeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="origam_desktop_architect_logo.png" />
     <Content Include="_OrigamArchitect.exe.config" />
     <Content Include="_OrigamSettings.config" />

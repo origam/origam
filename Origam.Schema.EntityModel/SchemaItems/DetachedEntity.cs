@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 
 namespace Origam.Schema.EntityModel
@@ -28,6 +29,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Virtual Entity", "icon_virtual-entity.png")]
     [HelpTopic("Entities")]
+    [ClassMetaVersion("6.0.0")]
 	public class DetachedEntity : AbstractDataEntity
 	{
 		public DetachedEntity() : base() {}

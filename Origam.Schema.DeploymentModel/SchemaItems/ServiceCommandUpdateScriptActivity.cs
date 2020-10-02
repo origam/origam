@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -34,6 +35,7 @@ namespace Origam.Schema.DeploymentModel
 	[SchemaItemDescription("Service Command Update Activity", 
         "icon_service-command-update-activity.png")]
     [HelpTopic("Service+Command+Update+Activity")]
+    [ClassMetaVersion("6.0.0")]
 	public class ServiceCommandUpdateScriptActivity : AbstractUpdateScriptActivity
 	{
 		public ServiceCommandUpdateScriptActivity() : base()

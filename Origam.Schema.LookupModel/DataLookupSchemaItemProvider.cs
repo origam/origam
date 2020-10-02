@@ -38,7 +38,7 @@ namespace Origam.Schema.LookupModel
 		{
 			get
 			{
-				return AbstractDataLookup.ItemTypeConst;
+				return AbstractDataLookup.CategoryConst;
 			}
 		}
 		public override bool AutoCreateFolder

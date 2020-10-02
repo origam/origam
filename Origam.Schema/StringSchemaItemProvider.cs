@@ -36,7 +36,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return StringItem.ItemTypeConst;
+				return StringItem.CategoryConst;
 			}
 		}
 

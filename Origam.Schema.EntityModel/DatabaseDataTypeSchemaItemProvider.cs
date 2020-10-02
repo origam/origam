@@ -50,7 +50,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return DatabaseDataType.ItemTypeConst;
+				return DatabaseDataType.CategoryConst;
 			}
 		}
 		public override bool AutoCreateFolder

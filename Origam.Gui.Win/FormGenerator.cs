@@ -1394,7 +1394,7 @@ namespace Origam.Gui.Win
 			}
 
 			//recursively add child controls
-			ArrayList sortedChildControls = cntrlSet.ChildItemsByType(ControlSetItem.ItemTypeConst);
+			ArrayList sortedChildControls = cntrlSet.ChildItemsByType(ControlSetItem.CategoryConst);
 			sortedChildControls.Sort();
 			
 			foreach (ControlSetItem childItem in sortedChildControls)
@@ -1604,7 +1604,7 @@ namespace Origam.Gui.Win
 				return;
 			}
 
-			foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.ItemTypeConst))
+			foreach(PropertyBindingInfo bindItem in cntrSetItem.ChildItemsByType(PropertyBindingInfo.CategoryConst))
 			{
 				string propertyName=bindItem.ControlPropertyItem.Name;
 				PropertyInfo property = GetPropertyInfo(cntrl.GetType(), propertyName);
@@ -1659,7 +1659,7 @@ namespace Origam.Gui.Win
 				{
 					itemDataMember = "";
 					
-					foreach(PropertyValueItem item in cntrlSet.ChildItemsByType(PropertyValueItem.ItemTypeConst))
+					foreach(PropertyValueItem item in cntrlSet.ChildItemsByType(PropertyValueItem.CategoryConst))
 					{
 						if(item.ControlPropertyItem.Name == "DataMember")
 						{
@@ -1777,7 +1777,7 @@ namespace Origam.Gui.Win
             
 			bool setProperty=false;
 				
-			foreach(PropertyValueItem propValItem in cntrSetItem.ChildItemsByType(PropertyValueItem.ItemTypeConst))
+			foreach(PropertyValueItem propValItem in cntrSetItem.ChildItemsByType(PropertyValueItem.CategoryConst))
 			{
 				propToSet = GetPropertyInfo(cntrl.GetType(), propValItem.ControlPropertyItem.Name);
 				

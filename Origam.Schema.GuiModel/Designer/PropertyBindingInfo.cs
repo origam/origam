@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -32,10 +33,11 @@ namespace Origam.Schema.GuiModel
     /// Summary description for PropertyValueItem.
     /// </summary>
     /// 
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class PropertyBindingInfo : AbstractPropertyValueItem
 	{
-		public const string ItemTypeConst = "PropertyBindingInfo";
+		public const string CategoryConst = "PropertyBindingInfo";
 
 		public PropertyBindingInfo() : base(){}
 		
@@ -85,7 +87,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return PropertyBindingInfo.ItemTypeConst;
+				return PropertyBindingInfo.CategoryConst;
 			}
 		}
 	}

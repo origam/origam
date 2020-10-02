@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Data;
 using System.Xml;
@@ -39,10 +40,11 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("State Workflow", "state-workflow-2.png")]
     [HelpTopic("State+Workflows")]
     [DefaultProperty("Entity")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class StateMachine : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "WorkflowStateMachine";
+		public const string CategoryConst = "WorkflowStateMachine";
 
 		public StateMachine() : base() {}
 
@@ -83,7 +85,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
@@ -98,10 +100,10 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		[Browsable(false)]
-		public ArrayList Events => this.ChildItemsByType(StateMachineEvent.ItemTypeConst);
+		public ArrayList Events => this.ChildItemsByType(StateMachineEvent.CategoryConst);
 
 		[Browsable(false)]
-		public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineDynamicLookupParameterMapping.ItemTypeConst);
+		public ArrayList ParameterMappings => this.ChildItemsByType(StateMachineDynamicLookupParameterMapping.CategoryConst);
 
 		public object[] DynamicOperations(IXmlContainer data)
 		{

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -31,10 +32,11 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for ContextStore.
 	/// </summary>
 	[SchemaItemDescription("Input Mapping", "Input Mappings", "input-mapping.png")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkQueueClassEntityMapping : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "WorkQueueClassEntityMapping";
+		public const string CategoryConst = "WorkQueueClassEntityMapping";
 
 		public WorkQueueClassEntityMapping() : base() {}
 		public WorkQueueClassEntityMapping(Guid schemaExtensionId) : base(schemaExtensionId) {}
@@ -43,7 +45,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{

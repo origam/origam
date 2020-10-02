@@ -76,17 +76,11 @@ namespace Origam.DA.Service
             fileEventQueue.Continue();
         }
         
-        public void WriteToDisc(OrigamFile origamFile, XmlDocument xmlDocument)
+        public void WriteToDisc(OrigamFile origamFile, OrigamXmlDocument xmlDocument)
         {
-            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
-            {
-                Indent = true,
-                NewLineOnAttributes = true
-            };
-            
             string xmlToWrite = OrigamDocumentSorter
                 .CopyAndSort(xmlDocument)
-                .ToBeautifulString(xmlWriterSettings);
+                .ToBeautifulString();
             fileEventQueue.Pause();
             Directory.CreateDirectory(origamFile.Path.Directory.FullName);
             File.WriteAllText(origamFile.Path.Absolute, xmlToWrite);

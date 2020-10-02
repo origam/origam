@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -31,10 +32,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Filter", "Filters", "icon_filter.png")]
     [HelpTopic("Filters")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityFilter : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "EntityFilter";
+		public const string CategoryConst = "EntityFilter";
 
 		public EntityFilter() : base() {}
 
@@ -53,7 +55,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

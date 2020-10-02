@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using MoreLinq;
+using Origam.DA.Common;
 using Origam.Extensions;
 using ProtoBuf;
 
@@ -126,20 +127,16 @@ namespace Origam.DA.Service
             if (!indexFile.ExistsNow()) return;
             lock (Lock)
             {
-                TrackerSerializationData serializationData;
-                using (var file = indexFile.OpenRead())
+                var serializationData = LoadBinFile();
+
+                bool containsIncompatibleClasses = serializationData.PersistedTypeInfos.Any(
+                    info => Versions.TryGetCurrentClassVersion(info.FullTypeName) != info.Version);
+
+                if (containsIncompatibleClasses)
                 {
-                    try
-                    {
-                        serializationData = Serializer
-                            .Deserialize<TrackerSerializationData>(file);
-                    } 
-                    catch (ProtoException ex)
-                    {
-                        throw new Exception(
-                            $"Could not read index file: {indexFile}. Maybe it is damaged, try removing it.",ex);
-                    }
+                    return;
                 }
+
                 serializationData.GetOrigamFiles(origamFileFactory)
                     .ForEach(x =>
                     {
@@ -163,6 +160,23 @@ namespace Origam.DA.Service
                     {
                         itemTracker.Clear();
                     }
+                }
+            }
+        }
+
+        private TrackerSerializationData LoadBinFile()
+        {
+            using (var file = indexFile.OpenRead())
+            {
+                try
+                {
+                    return Serializer.Deserialize<TrackerSerializationData>(file);
+                }
+                catch (ProtoException ex)
+                {
+                    throw new Exception(
+                        $"Could not read index file: {indexFile}. Maybe it is damaged, try removing it.",
+                        ex);
                 }
             }
         }

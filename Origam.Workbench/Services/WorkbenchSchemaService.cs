@@ -225,7 +225,7 @@ namespace Origam.Workbench.Services
             {
                 _schemaBrowser.EbrSchemaBrowser.RemoveBrowserNode(this.ActiveExtension);
             }            
-            _activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(SchemaExtension), this.ActiveExtension.PrimaryKey) as SchemaExtension;
+            _activeExtension = persistence.SchemaProvider.RetrieveInstance(typeof(Package), this.ActiveExtension.PrimaryKey) as Package;
             this.OnSchemaLoaded(EventArgs.Empty);
             this.OnSchemaChanged(this, EventArgs.Empty);
             if (statusBar != null) statusBar.SetStatusText("");

@@ -236,7 +236,7 @@ namespace Origam.Workbench.ServicesTests
             throw new NotImplementedException();
         }
 
-        public List<T> RetrieveListByType<T>(string itemType)
+        public List<T> RetrieveListByCategory<T>(string category)
         {
             throw new NotImplementedException();
         }

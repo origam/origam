@@ -345,7 +345,7 @@ namespace Origam.Workbench.Commands
 			extArray.Sort();
 			AsMenuCommand[] items = new AsMenuCommand[extArray.Count];
 			int i = 0;
-			foreach(SchemaExtension ext in extArray)
+			foreach(Package ext in extArray)
 			{
 				MoveToExtension cmd = new MoveToExtension();
 				cmd.Owner = ext;
@@ -374,7 +374,7 @@ namespace Origam.Workbench.Commands
 
 		private void AddExtensionsToList(ArrayList list, ArrayList extensions)
 		{
-			foreach(SchemaExtension ext in extensions)
+			foreach(Package ext in extensions)
 			{
 				list.Add(ext);
 				//AddExtensionsToList(list, ext.ChildExtensions);

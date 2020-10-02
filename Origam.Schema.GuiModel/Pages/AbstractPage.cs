@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using Origam.Schema.RuleModel;
@@ -29,10 +30,11 @@ using Origam.Schema.RuleModel;
 
 namespace Origam.Schema.GuiModel
 {
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+	[ClassMetaVersion("6.0.0")]
     public abstract class AbstractPage : AbstractSchemaItem, IAuthorizationContextContainer
 	{
-		public const string ItemTypeConst = "Page";
+		public const string CategoryConst = "Page";
 
 		public AbstractPage() : base() {Init();}
 		public AbstractPage(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -122,7 +124,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

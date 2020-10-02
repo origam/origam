@@ -42,7 +42,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return CrystalReport.ItemTypeConst;
+				return CrystalReport.CategoryConst;
 			}
 		}
 		public override string Group

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -30,11 +31,12 @@ namespace Origam.Schema
 	/// </summary>
 	[SchemaItemDescription("Parameter Reference", "icon_parameter-reference.png")]
     [HelpTopic("Parameter+Reference")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Parameter")]
+    [ClassMetaVersion("6.0.0")]
 	public class ParameterReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "ParameterReference";
+		public const string CategoryConst = "ParameterReference";
 
 		public ParameterReference() : base() {}
 
@@ -49,7 +51,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

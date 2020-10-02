@@ -25,7 +25,10 @@ namespace Origam.OrigamEngine
 {
     public static class VersionProvider
     {
-        public static readonly string CurrentModelMetaVersion = "5.0.0";
+        // only used by Database persistence (the old way), file persisted classes have their meta version persisted with them
+        public static readonly string CurrentModelMetaVersion = "5.0.0"; 
+        
+        // only used by Database persistence (the old way), file persisted classes have their meta version persisted with them
         public static Version CurrentModelMeta { get; } = 
             new Version(CurrentModelMetaVersion);
 
@@ -33,10 +36,6 @@ namespace Origam.OrigamEngine
         public static Version CurrentPersistenceMeta { get; } = 
             new Version(CurrentPersistenceMetaVersion);
         
-        public static readonly string CurrentPackageMetaVersion = "1.0.0";
-        public static Version CurrentPackageMeta { get; } = 
-            new Version(CurrentPackageMetaVersion);
-
 
         public static bool IsCurrentMeta(string versionString)
         {

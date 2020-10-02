@@ -96,7 +96,7 @@ namespace Origam.Workbench.Services
             return new System.Collections.Generic.List<T>();
         }
 
-        public List<T> RetrieveListByType<T>(string itemType)
+        public List<T> RetrieveListByCategory<T>(string category)
         {
             return new System.Collections.Generic.List<T>();
         }

@@ -36,7 +36,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return KeyboardShortcut.ItemTypeConst;
+				return KeyboardShortcut.CategoryConst;
 			}
 		}
 		public override string Group

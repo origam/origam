@@ -73,7 +73,7 @@ namespace Origam.Server
             node.CanDelete = false;
             node.CanUpdate = false;
 
-            foreach (TreeStructureNode child in ts.ChildItemsByType(TreeStructureNode.ItemTypeConst))
+            foreach (TreeStructureNode child in ts.ChildItemsByType(TreeStructureNode.CategoryConst))
             {
                 node.ChildTypes.Add(child.Id.ToString());
             }
@@ -89,7 +89,7 @@ namespace Origam.Server
 
             List<TreeNode> result = new List<TreeNode>();
 
-            foreach (TreeStructureNode childNode in tn.ChildItemsByType(TreeStructureNode.ItemTypeConst))
+            foreach (TreeStructureNode childNode in tn.ChildItemsByType(TreeStructureNode.CategoryConst))
             {
                 QueryParameterCollection parameters = GetParentKeyParameters(childNode, parentId);
                 DataSet data = core.DataService.LoadData(childNode.DataStructureId, childNode.LoadByParentMethodId, Guid.Empty, childNode.DataStructureSortSetId, null, parameters);

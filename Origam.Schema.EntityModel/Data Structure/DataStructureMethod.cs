@@ -28,10 +28,10 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Summary description for DataQuery.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     public abstract class DataStructureMethod : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataStructureFilterSet";
+		public const string CategoryConst = "DataStructureFilterSet";
 
 		public DataStructureMethod() : base() {}
 
@@ -46,7 +46,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

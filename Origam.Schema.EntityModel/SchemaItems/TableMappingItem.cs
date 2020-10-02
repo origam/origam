@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Collections;
@@ -39,6 +40,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Database Entity", "icon_database-entity.png")]
     [HelpTopic("Entities")]
+    [ClassMetaVersion("6.0.0")]
 	public class TableMappingItem : AbstractDataEntity
 	{
 		public TableMappingItem() : base() {}

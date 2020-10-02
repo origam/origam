@@ -92,7 +92,7 @@ namespace Origam.Gui.Designer
 				Hashtable finalprops = new Hashtable();
 
 				// Load all properties we want to see
-				foreach(ControlPropertyItem propItem in ctrlSet.ControlItem.ChildItemsByType(ControlPropertyItem.ItemTypeConst))
+				foreach(ControlPropertyItem propItem in ctrlSet.ControlItem.ChildItemsByType(ControlPropertyItem.CategoryConst))
 				{
 					finalprops.Add(propItem.Name, propItem.Name);
 				}

@@ -83,7 +83,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return StateMachine.ItemTypeConst;
+				return StateMachine.CategoryConst;
 			}
 		}
 		public override bool AutoCreateFolder

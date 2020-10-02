@@ -32,6 +32,7 @@ using CSharpFunctionalExtensions;
 using MoreLinq;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.OrigamEngine;
 
 namespace Origam.Workbench.Services
@@ -39,7 +40,8 @@ namespace Origam.Workbench.Services
     public class FilePersistenceService : IPersistenceService
     {
         private readonly FilePersistenceProvider schemaProvider;
-        private readonly IList<ElementName> defaultFolders;
+        private readonly IMetaModelUpgradeService metaModelUpgradeService;
+        private readonly IList<string> defaultFolders;
         
         public FileEventQueue FileEventQueue { get; }
         public IPersistenceProvider SchemaProvider => schemaProvider;
@@ -47,10 +49,11 @@ namespace Origam.Workbench.Services
         
         public event EventHandler<FileSystemChangeEventArgs> ReloadNeeded;
             
-        public FilePersistenceService(IList<ElementName> defaultFolders,
+        public FilePersistenceService(IMetaModelUpgradeService metaModelUpgradeService, IList<string> defaultFolders,
             string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
             bool checkRules = true)
         {
+            this.metaModelUpgradeService = metaModelUpgradeService;
             this.defaultFolders = defaultFolders;
             var topDirectory = GetTopDirectory(basePath);
             topDirectory.Create();
@@ -73,8 +76,7 @@ namespace Origam.Workbench.Services
             var objectFileDataFactory = new ObjectFileDataFactory(
                                             origamFileFactory, 
                                             defaultFolders);
-            var xmlFileDataFactory =
-                new XmlFileDataFactory(InitializeVersionFixers());
+            var xmlFileDataFactory = new XmlFileDataFactory();
             var trackerLoaderFactory = new TrackerLoaderFactory(
                                             topDirectory, 
                                             objectFileDataFactory, 
@@ -82,8 +84,11 @@ namespace Origam.Workbench.Services
                                             xmlFileDataFactory,
                                             pathToIndexBin,
                                             useBinFile,
-                                            index);
-            index.InitItemTracker(trackerLoaderFactory);
+                                            index,
+                                            metaModelUpgradeService);
+            index.InitItemTracker(
+                trackerLoaderFactory: trackerLoaderFactory, 
+                tryUpgrade: useBinFile);
             
             schemaProvider = new FilePersistenceProvider(
                 topDirectory: topDirectory,
@@ -118,28 +123,6 @@ namespace Origam.Workbench.Services
             ReloadNeeded?.Invoke(this, args);
         }
 
-        private List<MetaVersionFixer> InitializeVersionFixers()
-        {
-            var metaVersionFixers = new List<MetaVersionFixer>
-            {
-                new MetaVersionFixer(
-                    xmlNameSpaceName: "xmlns:x",
-                    currentVersion: VersionProvider.CurrentPersistenceMeta,
-                    failIfNamespaceNotFound: true),
-                
-                new MetaVersionFixer(
-                        xmlNameSpaceName: "xmlns",
-                        currentVersion: VersionProvider.CurrentModelMeta,
-                        failIfNamespaceNotFound: false),
-                
-                new MetaVersionFixer(
-                        xmlNameSpaceName: "xmlns:p",
-                        currentVersion: new Version("1.0.0"), 
-                        failIfNamespaceNotFound: false)   
-            };
-            return metaVersionFixers;
-        }
-
         private IFileChangesWatchDog GetNewWatchDog(DirectoryInfo topDir,
             bool watchFileChanges, FileInfo pathToIndexBin)
         {
@@ -154,24 +137,24 @@ namespace Origam.Workbench.Services
                 directoryNamesToIgnore: new List<string>{".git"});
         }
 
-        public Maybe<XmlLoadError> Reload(bool tryUpdate) => 
-            schemaProvider.ReloadFiles(tryUpdate);
+        public Maybe<XmlLoadError> Reload() => 
+            schemaProvider.ReloadFiles();
 
         public void LoadSchema(ArrayList extensions, bool append, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
         {
             throw new NotImplementedException();
         }
 
-        public SchemaExtension LoadSchema(Guid schemaExtensionId, 
+        public Package LoadSchema(Guid schemaExtensionId, 
             bool loadDocumentation, bool loadDeploymentScripts,
             string transactionId) => LoadSchema(schemaExtensionId);
 
-        private SchemaExtension LoadSchema(Guid schemaExtensionId)
+        private Package LoadSchema(Guid schemaExtensionId)
         {
             schemaProvider.FlushCache();
             var loadedSchema = schemaProvider
-                    .RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(schemaExtensionId))
-                    as SchemaExtension;
+                    .RetrieveInstance(typeof(Package), new ModelElementKey(schemaExtensionId))
+                    as Package;
             if (loadedSchema == null)
             {
                 throw new Exception("Shema: "+schemaExtensionId+" could not be found");  
@@ -184,7 +167,7 @@ namespace Origam.Workbench.Services
             return loadedSchema;
         }
 
-        public SchemaExtension LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
+        public Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation, bool loadDeploymentScripts, string transactionId)
         {
             return LoadSchema(schemaExtensionId);
         }
@@ -229,7 +212,7 @@ namespace Origam.Workbench.Services
 
         public object Clone()
         {
-            return new FilePersistenceService(defaultFolders);
+            return new FilePersistenceService(metaModelUpgradeService, defaultFolders);
         }
 
         public void MergeSchema(System.Data.DataSet schema, Key activePackage)

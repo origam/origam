@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System.IO;
+using Origam.DA.Service.MetaModelUpgrade;
 
 namespace Origam.DA.Service
 {
@@ -33,14 +34,16 @@ namespace Origam.DA.Service
         private OrigamXmlLoader xmlLoader;
         private IBinFileLoader binLoader;
         private readonly bool useBinFile;
-        private FilePersistenceIndex FilePersistenceIndex;
+        private FilePersistenceIndex filePersistenceIndex;
+        private readonly IMetaModelUpgradeService metaModelUpgradeService;
 
-        public TrackerLoaderFactory(
-            DirectoryInfo topDirectory,
+        public TrackerLoaderFactory(DirectoryInfo topDirectory,
             ObjectFileDataFactory objectFileDataFactory,
             OrigamFileFactory origamFileFactory,
             XmlFileDataFactory xmlFileDataFactory,
-            FileInfo pathToIndexFile, bool useBinFile, FilePersistenceIndex filePersistence)
+            FileInfo pathToIndexFile, bool useBinFile,
+            FilePersistenceIndex filePersistence,
+            IMetaModelUpgradeService metaModelUpgradeService)
         {
             this.topDirectory = topDirectory;
             this.objectFileDataFactory = objectFileDataFactory;
@@ -48,7 +51,8 @@ namespace Origam.DA.Service
             this.pathToIndexFile = pathToIndexFile;
             this.xmlFileDataFactory = xmlFileDataFactory;
             this.useBinFile= useBinFile;
-            this.FilePersistenceIndex = filePersistence;
+            this.filePersistenceIndex = filePersistence;
+            this.metaModelUpgradeService = metaModelUpgradeService;
         }
 
         
@@ -56,7 +60,7 @@ namespace Origam.DA.Service
             get
             {
                 return xmlLoader ?? (xmlLoader = new OrigamXmlLoader(
-                           objectFileDataFactory, topDirectory, xmlFileDataFactory));
+                           objectFileDataFactory, topDirectory, xmlFileDataFactory, metaModelUpgradeService));
             }
         }
 
@@ -70,7 +74,7 @@ namespace Origam.DA.Service
         private IBinFileLoader MakeBinLoader()
         {
             return useBinFile
-                ? (IBinFileLoader) new BinFileLoader(origamFileFactory, topDirectory, pathToIndexFile, FilePersistenceIndex)
+                ? (IBinFileLoader) new BinFileLoader(origamFileFactory, topDirectory, pathToIndexFile, filePersistenceIndex)
                 : new NullBinFileLoader();
         }
     }

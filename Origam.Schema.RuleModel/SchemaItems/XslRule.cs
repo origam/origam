@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -31,6 +32,7 @@ namespace Origam.Schema.RuleModel
 	/// <summary>
 	/// Summary description for XslRule.
 	/// </summary>
+    [ClassMetaVersion("6.0.0")]
 	public class XslRule : AbstractRule
 	{
 		public XslRule() : base()

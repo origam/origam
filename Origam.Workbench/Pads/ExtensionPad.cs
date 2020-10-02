@@ -189,7 +189,7 @@ namespace Origam.Workbench.Pads
 				Key selectedId = null;
 				if(lvwPackages.SelectedItems.Count > 0)
 				{
-					selectedId = (lvwPackages.SelectedItems[0].Tag as SchemaExtension).PrimaryKey;
+					selectedId = (lvwPackages.SelectedItems[0].Tag as Package).PrimaryKey;
 				}
 
 				lvwPackages.Items.Clear();
@@ -201,8 +201,8 @@ namespace Origam.Workbench.Pads
                     dbProvider.Refresh(false, null);
                 }
 
-				List<SchemaExtension> packageList = persistenceService.SchemaListProvider.RetrieveList<SchemaExtension>(null);
-				foreach(SchemaExtension extension in packageList)
+				List<Package> packageList = persistenceService.SchemaListProvider.RetrieveList<Package>(null);
+				foreach(Package extension in packageList)
 				{
 					ListViewItem item = lvwPackages.Items.Add(extension.Name, 3);
 					item.SubItems.Add(extension.Version);
@@ -234,13 +234,13 @@ namespace Origam.Workbench.Pads
             tbrRemove.Enabled = false;
         }
 
-        public SchemaExtension SelectedExtension
+        public Package SelectedExtension
 		{
 			get
 			{
 				if(lvwPackages.SelectedItems.Count == 1)
 				{
-					return lvwPackages.SelectedItems[0].Tag as SchemaExtension;
+					return lvwPackages.SelectedItems[0].Tag as Package;
 				}
 				else
 				{
@@ -254,7 +254,7 @@ namespace Origam.Workbench.Pads
 				{
 					foreach(ListViewItem item in lvwPackages.Items)
 					{
-						if((item.Tag as SchemaExtension).PrimaryKey.Equals(value.PrimaryKey))
+						if((item.Tag as Package).PrimaryKey.Equals(value.PrimaryKey))
 						{
 							item.Selected = true;
 						}

@@ -33,7 +33,7 @@ namespace Origam.UI.WizardForm
 
             EntityFilter idFilter = null;
 
-            foreach (EntityFilter filter in this.Entity.ChildItemsByType(EntityFilter.ItemTypeConst))
+            foreach (EntityFilter filter in this.Entity.ChildItemsByType(EntityFilter.CategoryConst))
             {
                 cboListFilter.Items.Add(filter);
                 cboIdFilter.Items.Add(filter);

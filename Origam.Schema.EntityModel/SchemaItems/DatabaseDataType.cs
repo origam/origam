@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -29,10 +30,11 @@ namespace Origam.Schema.EntityModel
 	[SchemaItemDescription("Database Data Type", "icon_08_database-data-types.png")]
     [HelpTopic("Database+Data+Type")]
     [DefaultProperty("DataType")]
-	[XmlModelRoot(ItemTypeConst)]
-	public class DatabaseDataType : AbstractSchemaItem
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
+	public  class DatabaseDataType : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DatabaseDataType";
+		public const string CategoryConst = "DatabaseDataType";
 
 		public DatabaseDataType() : base() {}
 
@@ -93,7 +95,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

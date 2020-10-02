@@ -48,7 +48,7 @@ namespace Origam.Schema.EntityModel
 			// look into columns defined on data structure level and find out
 			// if there is a column from "FieldName" property
 			foreach (DataStructureColumn col in
-				     sortSetItem.Entity.ChildItemsByType(DataStructureColumn.ItemTypeConst))
+				     sortSetItem.Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
 			{
 				if (col.Name == sortSetItem.FieldName)
 				{

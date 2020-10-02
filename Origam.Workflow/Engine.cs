@@ -247,7 +247,7 @@ namespace Origam.Workflow
 		{
 			get
 			{
-				foreach(IContextStore resultContext in this.WorkflowBlock.ChildItemsByType(ContextStore.ItemTypeConst))
+				foreach(IContextStore resultContext in this.WorkflowBlock.ChildItemsByType(ContextStore.CategoryConst))
 				{
 					if(resultContext.IsReturnValue)
 					{
@@ -379,7 +379,7 @@ namespace Origam.Workflow
 			{
 				string name = (string)entry.Key;
 				AbstractSchemaItem context = wf.GetChildByName(
-                    name, ContextStore.ItemTypeConst);
+                    name, ContextStore.CategoryConst);
 				if(context == null)
 				{
 					throw new ArgumentOutOfRangeException(
@@ -470,7 +470,7 @@ namespace Origam.Workflow
 				_ruleEngine = new RuleEngine(stores, this.TransactionId);
 
 				foreach (IContextStore store in this.WorkflowBlock.ChildItemsByType(
-					ContextStore.ItemTypeConst))
+					ContextStore.CategoryConst))
 				{
 					if (log.IsDebugEnabled)
 					{
@@ -538,7 +538,7 @@ namespace Origam.Workflow
 				}
 
 				ArrayList tasks =
-					this.WorkflowBlock.ChildItemsByType(WorkflowTask.ItemTypeConst);
+					this.WorkflowBlock.ChildItemsByType(WorkflowTask.CategoryConst);
 
 				// Set states of each task to "not run"
 				foreach (IWorkflowStep task in tasks)
@@ -574,7 +574,7 @@ namespace Origam.Workflow
 
         private void ResumeWorkflow()
 		{
-			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.ItemTypeConst);
+			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.CategoryConst);
 
 			if(tasks.Count == 0)
 			{
@@ -642,7 +642,7 @@ namespace Origam.Workflow
 			}
 
 			// suppress all tasks that had not run yet and have no dependencies
-			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.ItemTypeConst);
+			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.CategoryConst);
 			for(int i = 0; i < tasks.Count; i++)
 			{
 				IWorkflowStep siblingStep = tasks[i] as IWorkflowStep;
@@ -669,7 +669,7 @@ namespace Origam.Workflow
 		/// <returns></returns>
 		private bool IsFailureHandled()
 		{
-			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.ItemTypeConst);
+			ArrayList tasks = this.WorkflowBlock.ChildItemsByType(WorkflowTask.CategoryConst);
 			for(int i = 0; i < tasks.Count; i++)
 			{
 				IWorkflowStep step = tasks[i] as IWorkflowStep;

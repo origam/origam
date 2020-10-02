@@ -36,7 +36,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return UIStyle.ItemTypeConst;
+				return UIStyle.CategoryConst;
 			}
 		}
 		public override string Group

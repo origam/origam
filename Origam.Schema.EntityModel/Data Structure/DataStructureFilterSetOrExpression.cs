@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
@@ -29,10 +30,11 @@ namespace Origam.Schema.EntityModel
 	/// Summary description for DataQuery.
 	/// </summary>
 	[SchemaItemDescription("OR Expression", 2)]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureFilterSetOrExpression : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "DataStructureFilterSetFilter";
+		public const string CategoryConst = "DataStructureFilterSetFilter";
 
 		public DataStructureFilterSetOrExpression() : base() {}
 
@@ -47,7 +49,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

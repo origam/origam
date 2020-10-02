@@ -37,7 +37,7 @@ namespace Origam.Schema.TestModel
 		{
 			get
 			{
-				return TestScenario.ItemTypeConst;
+				return TestScenario.CategoryConst;
 			}
 		}
 		public override string Group

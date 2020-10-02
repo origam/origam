@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +34,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Menu Action", "UI Actions", "icon_menu-action.png")]
     [HelpTopic("Menu+Action")]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityMenuAction : EntityUIAction
 	{
 		public EntityMenuAction() : base() {}

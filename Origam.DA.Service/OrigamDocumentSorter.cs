@@ -21,23 +21,28 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using MoreLinq;
 
 namespace Origam.DA.Service
 {
     public static class OrigamDocumentSorter
     {
-        public static XmlDocument CopyAndSort(XmlDocument doc)
+        public static XmlDocument CopyAndSort(OrigamXmlDocument doc)
         {
-            var newDoc = OrigamXmlManager.NewDocument();
+            var newDoc = new OrigamXmlDocument();
+            foreach (XmlAttribute attribute in doc.FileElement.Attributes)
+            {
+                newDoc.FileElement.SetAttribute(attribute.Name, attribute.Value);
+            }
             doc.ChildNodes
                 .Cast<XmlNode>()
                 .OrderBy(node => node.Name)
-                .ForEach(node => CopyNodes(node, newDoc.ChildNodes[1], newDoc));
+                .ForEach(node => CopyNodes(node, newDoc.FileElement, newDoc));
             return newDoc;
         }
 
-        private static void CopyNodes(XmlNode node, XmlNode targetNode, XmlDocument newDoc)
+        private static void CopyNodes(XmlNode node, XmlNode targetNode, OrigamXmlDocument newDoc)
         {
             node.ChildNodes
                 .Cast<XmlNode>()
@@ -45,7 +50,7 @@ namespace Origam.DA.Service
                 .ForEach(childNode =>
                 {
                     var xmlns = string.IsNullOrEmpty(childNode.NamespaceURI)
-                        ? newDoc.ChildNodes[1].Attributes["xmlns"].Value
+                        ? newDoc.FileElement.Attributes["xmlns"].Value
                         : childNode.NamespaceURI;
                     XmlElement childCopy = newDoc.CreateElement(childNode.Name, xmlns);
                     CopyAttributes(childNode, childCopy);
@@ -64,6 +69,28 @@ namespace Origam.DA.Service
                         localName: attr.LocalName,
                         namespaceURI: attr.NamespaceURI,
                         value: attr.Value));
+        }
+
+        public static XDocument CopyAndSort(XDocument document)
+        {
+            return new XDocument(Sort(document.Root));
+        }
+        
+        private static XElement Sort(XElement element)
+        {
+            XElement newElement = new XElement(
+                element.Name,
+                element
+                    .Elements()
+                    .OrderBy(x => x.Name.LocalName)
+                    .Select(Sort));
+                    
+            newElement.Add(
+                element
+                    .Attributes()
+                    .OrderBy(attr => attr.Name.LocalName));
+
+            return newElement;
         }
     }
 }

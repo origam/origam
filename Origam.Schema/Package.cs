@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -35,9 +36,9 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaExtension")]
     [XmlPackageRoot("package")]
-	public class SchemaExtension : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
+    [ClassMetaVersion("6.1.0")]
+	public class Package : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
-       // public const string NAMESPACE = "http://schemas.origam.com/*.*.*/package";
 
         SchemaItemProviderGroup _commonModelGroup = new SchemaItemProviderGroup("COMMON", "Common", "icon_01_common.png", 0);
 		SchemaItemProviderGroup _dataModelGroup = new SchemaItemProviderGroup("DATA", "Data", "icon_05_data.png", 1);
@@ -45,12 +46,12 @@ namespace Origam.Schema
 		SchemaItemProviderGroup _businessLogicModelGroup = new SchemaItemProviderGroup("BL", "Business Logic", "icon_26_business-logic.png", 3);
 		SchemaItemProviderGroup _apiModelGroup = new SchemaItemProviderGroup("API", "API", "icon_35_API.png", 4);
 		
-		public SchemaExtension()
+		public Package()
 		{
 			this.PrimaryKey = new ModelElementKey();
 		}
 
-		public SchemaExtension(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) 
+		public Package(Key primaryKey) : base(primaryKey, new ModelElementKey().KeyArray) 
 		{
 			this._childNodes.Add(_dataModelGroup);
 			this._childNodes.Add(_businessLogicModelGroup);
@@ -129,17 +130,17 @@ namespace Origam.Schema
         [XmlAttribute(AttributeName = "description")]
         public string Description { get; set; } = "";
 
-		public IList<SchemaExtension> IncludedPackages
+		public IList<Package> IncludedPackages
         {
             get
             {
-	            List<SchemaExtension> result = new List<SchemaExtension>();
+	            List<Package> result = new List<Package>();
                 SortPackages(this, result);
                 return result;
             }
         }
 
-        private static void SortPackages(SchemaExtension package, IList<SchemaExtension> packages)
+        private static void SortPackages(Package package, IList<Package> packages)
         {
             foreach (PackageReference reference in package.References)
             {
@@ -242,7 +243,7 @@ namespace Origam.Schema
 
 		public bool IsFolder => true;
 
-		public IDictionary<ElementName, Guid> ParentFolderIds => new Dictionary<ElementName, Guid>();
+		public IDictionary<string, Guid> ParentFolderIds => new Dictionary<string, Guid>();
 
 		public string Path => null;
 		#endregion

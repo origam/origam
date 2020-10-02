@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -32,10 +33,11 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Sequential Workflow Reference", "icon_sequential-workflow-reference.png")]
     [HelpTopic("Sequential+Workflow+Reference")]
     [DefaultProperty("Workflow")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkflowReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "WorkflowReference";
+		public const string CategoryConst = "WorkflowReference";
 
 		public WorkflowReference() : base() {}
 
@@ -46,7 +48,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractDataEntityColumn Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetParameterReferences(AbstractSchemaItem parentItem, System.Collections.Hashtable list)
 		{

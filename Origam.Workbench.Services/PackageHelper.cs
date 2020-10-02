@@ -32,7 +32,7 @@ namespace Origam.Workbench.Services
             IPersistenceService persistenceService = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
             StopFileEventQueue(persistenceService);
             string versionNumber = "1.0.0";
-            SchemaExtension newExtension = new SchemaExtension(new ModelElementKey(packageId));
+            Package newExtension = new Package(new ModelElementKey(packageId));
             newExtension.PersistenceProvider = persistenceService.SchemaListProvider;
             newExtension.Name = packageName;
             newExtension.VersionString = versionNumber;

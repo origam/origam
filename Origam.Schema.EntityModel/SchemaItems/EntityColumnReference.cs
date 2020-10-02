@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -31,11 +32,12 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Field Reference", "icon_field-reference.png")]
     [HelpTopic("Field+Reference")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
+    [ClassMetaVersion("6.0.0")]
     public class EntityColumnReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "EntityColumnReference";
+		public const string CategoryConst = "EntityColumnReference";
 
 		public EntityColumnReference() : base() {}
 
@@ -50,7 +52,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

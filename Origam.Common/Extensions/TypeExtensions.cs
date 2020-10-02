@@ -53,6 +53,16 @@ namespace Origam.Extensions
                     throw new NotImplementedException();
             }
         } 
+        
+        public static IEnumerable<Type> GetAllBaseTypes(this Type type)
+        {
+            Type baseType = type.BaseType;
+            while (baseType != typeof(object))
+            {
+                yield return baseType;
+                baseType = baseType.BaseType;
+            }
+        }
 
         private static IEnumerable<Type> GetExportedTypes(Assembly assembly)
         {

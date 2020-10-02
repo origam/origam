@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -32,10 +33,11 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for AbstractService.
 	/// </summary>
 	[SchemaItemDescription("Work Queue Class", "work-queue-class.png")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkQueueClass : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "WorkQueueClass";
+		public const string CategoryConst = "WorkQueueClass";
 
 		public WorkQueueClass() : base() {Init();}
 		public WorkQueueClass(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -43,7 +45,7 @@ namespace Origam.Schema.WorkflowModel
 
 		public WorkQueueWorkflowCommand GetCommand(string name)
 		{
-			WorkQueueWorkflowCommand cmd = this.GetChildByName(name, WorkQueueWorkflowCommand.ItemTypeConst) as WorkQueueWorkflowCommand;
+			WorkQueueWorkflowCommand cmd = this.GetChildByName(name, WorkQueueWorkflowCommand.CategoryConst) as WorkQueueWorkflowCommand;
 
 			if(cmd == null) throw new ArgumentOutOfRangeException("name", name, ResourceUtils.GetString("ErrorUknownWorkQueueCommand"));
 
@@ -52,7 +54,7 @@ namespace Origam.Schema.WorkflowModel
 
 		public WorkqueueLoader GetLoader(string name)
 		{
-			WorkqueueLoader loader = this.GetChildByName(name, WorkqueueLoader.ItemTypeConst) as WorkqueueLoader;
+			WorkqueueLoader loader = this.GetChildByName(name, WorkqueueLoader.CategoryConst) as WorkqueueLoader;
 
 			if(loader == null) throw new ArgumentOutOfRangeException("name", name, ResourceUtils.GetString("ErrorUknownWorkQueueLoader"));
 
@@ -69,7 +71,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
@@ -98,7 +100,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Properties
 		[Browsable(false)]
 		public ArrayList EntityMappings => 
-			this.ChildItemsByType(WorkQueueClassEntityMapping.ItemTypeConst);
+			this.ChildItemsByType(WorkQueueClassEntityMapping.CategoryConst);
 
 		[EntityColumn("G01")]  
 		public Guid EntityId;

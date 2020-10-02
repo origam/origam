@@ -23,6 +23,7 @@ using System;
 using System.Drawing;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 
@@ -31,10 +32,11 @@ namespace Origam.Schema.MenuModel
     /// <summary>
     /// Summary description for AbstractMenuItem.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationContextContainer
 	{
-		public const string ItemTypeConst = "MenuItem";
+		public const string CategoryConst = "MenuItem";
 
 		public AbstractMenuItem() : base() {}
 
@@ -47,7 +49,7 @@ namespace Origam.Schema.MenuModel
 		public override string ToString() => this.Path;
 
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override string NodeText
 		{

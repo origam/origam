@@ -47,7 +47,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return AbstractDashboardWidget.ItemTypeConst;
+				return AbstractDashboardWidget.CategoryConst;
 			}
 		}
 		public override string Group

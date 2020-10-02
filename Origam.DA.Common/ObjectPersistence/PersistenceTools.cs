@@ -47,12 +47,12 @@ namespace Origam.DA.ObjectPersistence
 //            {
 //                return null;
 //            }
-//            return rootAtt.Namespace + rootAtt.ElementName;
+//            return rootAtt.Namespace + rootAtt.string;
 //        }
 //
-//        public static string FullElementName(string nameSpace, string elementName)
+//        public static string FullElementName(string nameSpace, string category)
 //        {
-//            return nameSpace + elementName;
+//            return nameSpace + category;
 //        }
 //    }
 }

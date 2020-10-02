@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:tonc="http://schemas.origam.com/Origam.DA.ServiceTests.TestOldNameClass/6.0.0">
+  <tonc:TestOldNameClass
+    tonc:name="test"
+/>
+</x:file>

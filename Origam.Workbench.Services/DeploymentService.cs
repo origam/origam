@@ -116,7 +116,7 @@ namespace Origam.Workbench.Services
 
         private void SaveVersionAfterUpdate()
         {
-            IList <SchemaExtension> packages = _schema.ActiveExtension.IncludedPackages;
+            IList <Package> packages = _schema.ActiveExtension.IncludedPackages;
             packages.Add(_schema.ActiveExtension);
 
             AddMissingDeploymentDependencies(packages);
@@ -126,13 +126,13 @@ namespace Origam.Workbench.Services
             ClearVersions();
         }
 
-        public bool CanUpdate(SchemaExtension extension)
+        public bool CanUpdate(Package extension)
 		{
 			TryLoadVersions();
 			return CurrentDeployedVersion(extension) < extension.Version;
 		}
 
-		public PackageVersion CurrentDeployedVersion(SchemaExtension extension)
+		public PackageVersion CurrentDeployedVersion(Package extension)
 		{
 			foreach(OrigamModelVersionData.OrigamModelVersionRow versionRow in VersionData.OrigamModelVersion)
 			{
@@ -304,7 +304,7 @@ namespace Origam.Workbench.Services
             Log("=======================================================================" + Environment.NewLine);
 			Log(DateTime.Now + " Starting update");
 
-			IList<SchemaExtension> packages = _schema.ActiveExtension.IncludedPackages;
+			IList<Package> packages = _schema.ActiveExtension.IncludedPackages;
 			packages.Add(_schema.ActiveExtension);
 			
 			AddMissingDeploymentDependencies(packages);
@@ -325,12 +325,12 @@ namespace Origam.Workbench.Services
 		private bool WasNotRunAlready(DeploymentVersion deplversion)
 		{
 			PackageVersion currentDeployedVersion =
-				CurrentDeployedVersion(deplversion.SchemaExtension);
+				CurrentDeployedVersion(deplversion.Package);
 
 			return deplversion.Version > currentDeployedVersion;
 		}
 
-		private void UpdateVersionData(SchemaExtension package)
+		private void UpdateVersionData(Package package)
 		{
 			TryLoadVersions();
 			bool found = false;
@@ -354,9 +354,9 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		private void AddMissingDeploymentDependencies(IList<SchemaExtension> packages)
+		private void AddMissingDeploymentDependencies(IList<Package> packages)
 		{
-			foreach (SchemaExtension package in packages)
+			foreach (Package package in packages)
 			{
 				GetDeploymentVersions(package)
 					.Where(deplVerstion =>
@@ -366,7 +366,7 @@ namespace Origam.Workbench.Services
 			}
 		}
 
-		private void AddDeploymentDependencies(SchemaExtension package,
+		private void AddDeploymentDependencies(Package package,
 			DeploymentVersion deplVersion)
 		{
 			if (IsOrigamOwned(package) && deplVersion.Version >= PackageVersion.Five)
@@ -380,7 +380,7 @@ namespace Origam.Workbench.Services
 		}
 
 		private void AddDependencyOnPreviousDeploymentVersion(
-			DeploymentVersion deplVersion, SchemaExtension package)
+			DeploymentVersion deplVersion, Package package)
 		{
 			Maybe<PackageVersion> mayBePackageVersion =
 				GetPreviousVersion(deplVersion.Version, package);
@@ -392,7 +392,7 @@ namespace Origam.Workbench.Services
 		}
 
 		private DeploymentDependency FindVersionToDependOn(
-			SchemaExtension dependentPackage)
+			Package dependentPackage)
 		{
 			PackageVersion dependentVersion =
 				IsOrigamOwned(dependentPackage)
@@ -401,7 +401,7 @@ namespace Origam.Workbench.Services
 			return new DeploymentDependency(dependentPackage.Id, dependentVersion);
 		}
 
-		private bool IsOrigamOwned(SchemaExtension dependentPackage) => 
+		private bool IsOrigamOwned(Package dependentPackage) => 
 			OrigamOwnedPackages.ContainsValue(dependentPackage.Id);
 
 		public bool IsEmptyDatabase()
@@ -515,10 +515,10 @@ namespace Origam.Workbench.Services
 			return true;
 		}
 		
-		private List<DeploymentVersion> GetDeploymentVersions(SchemaExtension extension)
+		private List<DeploymentVersion> GetDeploymentVersions(Package extension)
 		{
 			return _schema.GetProvider<DeploymentSchemaItemProvider>()
-				.ChildItemsByType(DeploymentVersion.ItemTypeConst)
+				.ChildItemsByType(DeploymentVersion.CategoryConst)
 				.Cast<DeploymentVersion>()
 				.Where(deplVersion => deplVersion.SchemaExtensionId == extension.Id)
 				.OrderBy(deplVersion => deplVersion)
@@ -526,10 +526,10 @@ namespace Origam.Workbench.Services
 		}
 
 		public Maybe<PackageVersion> GetPreviousVersion(PackageVersion version,
-			SchemaExtension extension)
+			Package extension)
 		{
 			return _schema.GetProvider<DeploymentSchemaItemProvider>()
-				.ChildItemsByType(DeploymentVersion.ItemTypeConst)
+				.ChildItemsByType(DeploymentVersion.CategoryConst)
 			    .Cast<DeploymentVersion>()
 				.Where(depVersion => depVersion.SchemaExtensionId == extension.Id)
 				.OrderBy(depVersion => depVersion.Version)

@@ -70,11 +70,11 @@ namespace Origam.DA.ObjectPersistence
         /// <param name="filter"></param>
         /// <returns></returns>
         List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
-		List<T> RetrieveListByType<T>(string itemType);
+		List<T> RetrieveListByCategory<T>(string category);
 		List<T> RetrieveListByPackage<T>(Guid packageId);
-		T[] FullTextSearch<T>( string text);
-		List<T> RetrieveListByParent<T>( Key primaryKey, string parentTableName, string childTableName, bool useCache);
-		List<T> RetrieveListByGroup<T>( Key primaryKey);
+		T[] FullTextSearch<T>(string text);
+		List<T> RetrieveListByParent<T>(Key primaryKey, string parentTableName, string childTableName, bool useCache);
+		List<T> RetrieveListByGroup<T>(Key primaryKey);
 
 		/// <summary>
 		/// Persist (inserts or updates) an object.
@@ -85,7 +85,7 @@ namespace Origam.DA.ObjectPersistence
 		void FlushCache();
 
 		void DeletePackage(Guid packageId);
-		bool  IsInTransaction { get; }
+		bool IsInTransaction { get; }
 		void RunInTransaction(Action action);
         void BeginTransaction();
         void EndTransaction();

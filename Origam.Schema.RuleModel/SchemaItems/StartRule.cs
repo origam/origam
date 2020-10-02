@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using Origam.Schema.EntityModel;
 using System;
 using System.Xml.Serialization;
@@ -29,7 +30,7 @@ namespace Origam.Schema.RuleModel
     [HelpTopic("Condition+Rule")]
     public class StartRule : XPathRule, IStartRule
     {
-		public StartRule() : base() {}
+        public StartRule() : base() {}
 		public StartRule(Guid schemaExtensionId) : base(schemaExtensionId) {}
         public StartRule(Key primaryKey) : base(primaryKey) { }
     }

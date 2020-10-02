@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -31,6 +32,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Parameter", "Parameters", "parameter-blm.png")]
     [HelpTopic("Service+Method+Parameter")]
+    [ClassMetaVersion("6.0.0")]
     public class ServiceMethodParameter : SchemaItemParameter
 	{
 		public ServiceMethodParameter() : base() {}

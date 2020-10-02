@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -29,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.DA;
+using Origam.DA.Common.ObjectPersistence.Attributes;
 
 namespace Origam.Schema
 {
@@ -37,6 +39,8 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("SchemaItemGroup")]
     [XmlModelRoot("group")]
+    [ClassMetaVersion("6.0.0")]
+	[XmlNamespaceName("g")]
     public class SchemaItemGroup : AbstractPersistent, IBrowserNode2, 
         ISchemaItemFactory, ISchemaItemProvider, IComparable, IFilePersistent
 	{
@@ -66,18 +70,18 @@ namespace Origam.Schema
         public string Name { get; set; }
 
 		[EntityColumn("refSchemaExtensionId")]
-        [XmlParent(typeof(SchemaExtension))]
+        [XmlParent(typeof(Package))]
         public Guid SchemaExtensionId;
 
         [Browsable(false)]
-		public SchemaExtension SchemaExtension
+		public Package Package
 		{
 			get
 			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.SchemaExtensionId;
 
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), key);
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), key);
 			}
 			set => this.SchemaExtensionId = (Guid)value.PrimaryKey["Id"];
         }
@@ -408,7 +412,7 @@ namespace Origam.Schema
 
 		public event Action<ISchemaItem> ItemCreated;
 
-		public string RelativeFilePath => SchemaExtension.Name + "\\" + RootItemType + "\\" + Path.Replace("/", "\\") + "\\"+PersistenceFiles.GroupFileName;
+		public string RelativeFilePath => Package.Name + "\\" + RootItemType + "\\" + Path.Replace("/", "\\") + "\\"+PersistenceFiles.GroupFileName;
 
 		public bool IsFolder => true;
 
@@ -418,19 +422,19 @@ namespace Origam.Schema
 			set { }
 		}
 
-		public IDictionary<ElementName, Guid> ParentFolderIds
+		public IDictionary<string, Guid> ParentFolderIds
         {
             get
             {
 	            return 
-		            new Dictionary<ElementName, Guid>
+		            new Dictionary<string, Guid>
 		            {
 			            {
-				            ElementNameFactory.Create(typeof(SchemaExtension)),
+				            CategoryFactory.Create(typeof(Package)),
 				            SchemaExtensionId
 			            },
 			            {
-				            ElementNameFactory.Create(typeof(SchemaItemGroup)),
+				            CategoryFactory.Create(typeof(SchemaItemGroup)),
 				            ParentGroupId
 			            }
 		            };

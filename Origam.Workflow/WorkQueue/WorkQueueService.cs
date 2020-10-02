@@ -609,7 +609,7 @@ namespace Origam.Workflow.WorkQueue
         {
             DataStructureMethod getOneEntryMethod =
                 wqc.WorkQueueStructure.GetChildByName("GetById",
-                DataStructureMethod.ItemTypeConst) as DataStructureMethod;
+                DataStructureMethod.CategoryConst) as DataStructureMethod;
             if (getOneEntryMethod == null)
             {
                 throw new OrigamException(String.Format("Programming Error: Can't find a filterset called `GetById' in DataStructure `{0}'. Please add the filterset to the DataStructure.",
@@ -667,7 +667,7 @@ namespace Origam.Workflow.WorkQueue
             if (wqc != null)
             {
                 // get queue entries for this row and queue
-                DataStructureMethod pkMethod = wqc.WorkQueueStructure.GetChildByName("GetByMasterId", DataStructureMethod.ItemTypeConst) as DataStructureMethod;
+                DataStructureMethod pkMethod = wqc.WorkQueueStructure.GetChildByName("GetByMasterId", DataStructureMethod.CategoryConst) as DataStructureMethod;
 
                 if (pkMethod == null)
                 {
@@ -731,7 +731,7 @@ namespace Origam.Workflow.WorkQueue
                 throw new ArgumentOutOfRangeException("relationNo", relationNo, ResourceUtils.GetString("ErrorMaxWorkQueueEntities"));
             }
 
-            fs = (DataStructureFilterSet)wqc.WorkQueueStructure.GetChildByName(filterSetName, DataStructureFilterSet.ItemTypeConst);
+            fs = (DataStructureFilterSet)wqc.WorkQueueStructure.GetChildByName(filterSetName, DataStructureFilterSet.CategoryConst);
 
             if (fs == null)
             {

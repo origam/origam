@@ -78,7 +78,7 @@ namespace Origam.Gui.Win
             if(this.Workflow == null) return;
 
             // create any missing parameter mappings
-            foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.ItemTypeConst))
+            foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
             {
                 string parameterName = store.Name;
 
@@ -91,10 +91,10 @@ namespace Origam.Gui.Win
 
             ArrayList toDelete = new ArrayList();
             // delete all parameter mappings whose's context stores do not exist anymore
-            foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
+            foreach(AbstractSchemaItem mapping in this._origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst))
             {
                 bool found = false;
-                foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.ItemTypeConst))
+                foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
                 {
                     if(store.Name == mapping.Name) found = true;
                 }
@@ -120,7 +120,7 @@ namespace Origam.Gui.Win
             {
                 if(_origamMetadata == null) return;
 
-                ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.ItemTypeConst));
+                ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
 
                 foreach(ColumnParameterMapping mapping in col)
                 {
@@ -144,7 +144,7 @@ namespace Origam.Gui.Win
 
             ParameterMappings.Clear();
 
-            foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
+            foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
             {
                 if(!mapInfo.IsDeleted)	// skip any deleted mapping infos
                 {
@@ -375,7 +375,7 @@ namespace Origam.Gui.Win
 
                             ContextStore context = null;
                             Key contextKey = null;
-                            foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.ItemTypeConst))
+                            foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
                             {
                                 if(store.Name == name)
                                 {
@@ -526,7 +526,7 @@ namespace Origam.Gui.Win
             {
                 ContextStore context = null;
                 Key contextKey = null;
-                foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.ItemTypeConst))
+                foreach(ContextStore store in this.Workflow.ChildItemsByType(ContextStore.CategoryConst))
                 {
                     if(store.Name == mapping.Name)
                     {

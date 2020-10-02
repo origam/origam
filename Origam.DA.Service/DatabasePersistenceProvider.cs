@@ -1139,9 +1139,9 @@ namespace Origam.DA.ObjectPersistence.Providers
             return RetrieveList<T>( "refSchemaExtensionId", packageId);
         }
 
-        public override List<T> RetrieveListByType<T>(string itemType)
+        public override List<T> RetrieveListByCategory<T>(string category)
         {
-            return RetrieveList<T>("ItemType", itemType);
+            return RetrieveList<T>("ItemType", category);
         }
 
 	    public override object RetrieveValue(Guid instanceId, Type parentType,

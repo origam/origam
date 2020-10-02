@@ -68,12 +68,14 @@ namespace Origam.ServerCore.Controller
         private readonly IOptions<RequestLocalizationOptions> 
             localizationOptions;
         private readonly CustomAssetsConfig customAssetsConfig;
+        private readonly ChatConfig chatConfig;
 
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log,
-            IOptions<RequestLocalizationOptions> localizationOptions, IOptions<CustomAssetsConfig> customAssetsOptions) 
+            IOptions<RequestLocalizationOptions> localizationOptions, IOptions<CustomAssetsConfig> customAssetsOptions,
+            IOptions<ChatConfig> chatConfigOptions)
             : base(log, sessionObjects)
         {
             this.localizer = localizer;
@@ -82,6 +84,7 @@ namespace Origam.ServerCore.Controller
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
             dataService = DataService.GetDataService();
+            chatConfig = chatConfigOptions.Value;
         }
         #region Endpoints
         [HttpGet("[action]")]
@@ -104,19 +107,12 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return FindItem<AbstractMenuItem>(
-                        new Guid(request.ObjectId))
-                    .Bind(Authorize)
-                    .Map(menuItem => sessionObjects.UIManager.InitUI(
-                        request: request,
-                        addChildSession: false,
-                        parentSession: null,
-                        basicUIService: sessionObjects.UIService))
-                    .Map(ToActionResult)
-                    .Finally(UnwrapReturnValue);
-            });
+            return RunWithErrorHandler(() => 
+                Ok(sessionObjects.UIManager.InitUI(
+                    request: request,
+                    addChildSession: false,
+                    parentSession: null,
+                    basicUIService: sessionObjects.UIService)));
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
@@ -614,7 +610,7 @@ namespace Origam.ServerCore.Controller
                 dataServiceDataLookup.ListDataStructure);
             var comboListTable = comboListDataset.Tables[
                 ((DataStructureEntity) dataServiceDataLookup.ListDataStructure
-                    .ChildItemsByType(DataStructureEntity.ItemTypeConst)[0])
+                    .ChildItemsByType(DataStructureEntity.CategoryConst)[0])
                 .Name];
             var tableName = FormXmlBuilder.DatabaseTableName(comboListTable);
             if(tableName != null)
@@ -1050,7 +1046,8 @@ namespace Origam.ServerCore.Controller
         {
             result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.IdentityGuiLogoUrl)
                 ? "./img/logo-left.png"
-                : customAssetsConfig.IdentityGuiLogoUrl;            
+                : customAssetsConfig.IdentityGuiLogoUrl;
+            result.ChatRefreshInterval = chatConfig.ChatRefreshInterval;
             result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
         }
     }

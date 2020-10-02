@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -39,10 +40,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Parameter Mapping", "Parameter Mappings", "parameter-blm.png")]
     [HelpTopic("Data+Event+Parameter+Mapping")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.1")]
 	public class StateMachineEventParameterMapping : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "WorkflowEntityParameterMapping";
+		public const string CategoryConst = "WorkflowEntityParameterMapping";
 
 		public StateMachineEventParameterMapping() : base() {}
 
@@ -53,7 +55,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
@@ -68,7 +70,7 @@ namespace Origam.Schema.WorkflowModel
 
 		#region Properties
 		[EntityColumn("I01")] 
-		[XmlAttribute ("wfParameterTpe")]
+		[XmlAttribute ("wfParameterType")]
 		public WorkflowEntityParameterMappingType Type { get; set; } = 
 			WorkflowEntityParameterMappingType.Current;
 

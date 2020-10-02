@@ -24,6 +24,7 @@ using System.ComponentModel;
 using System.Collections;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using System.Linq;
 
 namespace Origam.Schema.EntityModel
@@ -31,7 +32,8 @@ namespace Origam.Schema.EntityModel
 	/// <summary>
 	/// Maps physical table to an entity.
 	/// </summary>
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+	[ClassMetaVersion("6.0.0")]
 	public abstract class AbstractDataEntity : AbstractSchemaItem, IDataEntity, ISchemaItemFactory
 	{
 		public AbstractDataEntity() : base() {Init();}
@@ -40,7 +42,7 @@ namespace Origam.Schema.EntityModel
 
 		public AbstractDataEntity(Key primaryKey) : base(primaryKey)	{Init();}
 
-		public const string  ItemTypeConst = "DataEntity";
+		public const string  CategoryConst = "DataEntity";
 
 		private void Init()
 		{
@@ -69,7 +71,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(SchemaItemParameter.ItemTypeConst);
+				return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
 			}
 		}
 
@@ -191,14 +193,14 @@ namespace Origam.Schema.EntityModel
 					{
 						if(!_columnsPopulated)
 						{
-							_columns = this.ChildItemsByType(AbstractDataEntityColumn.ItemTypeConst);
+							_columns = this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
 							_columnsPopulated = true;
 						}
 					}
 				}
 				return _columns;
 #else
-				return this.ChildItemsByType(AbstractDataEntityColumn.ItemTypeConst);
+				return this.ChildItemsByType(AbstractDataEntityColumn.CategoryConst);
 #endif
 			}
 		}
@@ -208,7 +210,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityRelationItem.ItemTypeConst);
+				return this.ChildItemsByType(EntityRelationItem.CategoryConst);
 			}
 		}
 
@@ -248,7 +250,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityFilter.ItemTypeConst);
+				return this.ChildItemsByType(EntityFilter.CategoryConst);
 			}
 		}
 
@@ -257,7 +259,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataEntityIndex.ItemTypeConst);
+				return this.ChildItemsByType(DataEntityIndex.CategoryConst);
 			}
 		}
 
@@ -266,7 +268,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(AbstractEntitySecurityRule.ItemTypeConst);
+				return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 			}
 		}
 
@@ -275,7 +277,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityConditionalFormatting.ItemTypeConst);
+				return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 			}
 		}
 
@@ -305,7 +307,7 @@ namespace Origam.Schema.EntityModel
 		[Browsable(false)]
 		public  bool HasEntityAFieldDenyReadRule()
 		{
-				if (ChildItemsByTypeRecursive(EntityFieldSecurityRule.ItemTypeConst)
+				if (ChildItemsByTypeRecursive(EntityFieldSecurityRule.CategoryConst)
 				.ToArray().Cast<EntityFieldSecurityRule>()
 				.Where(rule => rule.Type == PermissionType.Deny && rule.ReadCredential)
 				.Count() > 0)
@@ -329,7 +331,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

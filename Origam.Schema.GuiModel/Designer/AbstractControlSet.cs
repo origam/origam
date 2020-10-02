@@ -37,7 +37,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get {
 				BrowserNodeCollection result = new BrowserNodeCollection ();
-				foreach (ControlSetItem item in ChildItemsByType(ControlSetItem.ItemTypeConst)) {
+				foreach (ControlSetItem item in ChildItemsByType(ControlSetItem.CategoryConst)) {
 					if (item.IsAlternative) {
 						result.Add (item);
 					}
@@ -49,7 +49,7 @@ namespace Origam.Schema.GuiModel
 		public ControlSetItem MainItem
 		{
 			get {
-				foreach (ControlSetItem item in ChildItemsByType(ControlSetItem.ItemTypeConst)) {
+				foreach (ControlSetItem item in ChildItemsByType(ControlSetItem.CategoryConst)) {
 					if (! item.IsAlternative) {
 						return item;
 					}

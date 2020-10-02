@@ -26,16 +26,18 @@ using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.LookupModel
 {
     /// <summary>
     /// Summary description for AbstractMenuItem.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractDataLookup : AbstractSchemaItem, IDataLookup
 	{
-		public const string ItemTypeConst = "DataLookup";
+		public const string CategoryConst = "DataLookup";
 
 		public AbstractDataLookup() : base() {}
 
@@ -58,7 +60,7 @@ namespace Origam.Schema.LookupModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 
@@ -87,7 +89,7 @@ namespace Origam.Schema.LookupModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataLookupMenuBinding.ItemTypeConst);
+				return this.ChildItemsByType(DataLookupMenuBinding.CategoryConst);
 			}
 		}
 
@@ -96,7 +98,7 @@ namespace Origam.Schema.LookupModel
 		{
 			get
 			{
-				ArrayList list = this.ChildItemsByType(AbstractDataTooltip.ItemTypeConst);
+				ArrayList list = this.ChildItemsByType(AbstractDataTooltip.CategoryConst);
 
 				if(list.Count > 0)
 				{
@@ -112,7 +114,7 @@ namespace Origam.Schema.LookupModel
 		{
 			get
 			{
-				return this.ChildItemsByType(AbstractDataTooltip.ItemTypeConst);
+				return this.ChildItemsByType(AbstractDataTooltip.CategoryConst);
 			}
 		}
 

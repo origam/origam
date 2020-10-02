@@ -87,7 +87,7 @@ namespace Origam.Schema
 		public virtual ArrayList ChildItemsByType(string itemType)
 		{
             List<AbstractSchemaItem> list = this.PersistenceProvider.
-	            RetrieveListByType<AbstractSchemaItem>(itemType);
+	            RetrieveListByCategory<AbstractSchemaItem>(itemType);
             ArrayList result = new ArrayList();
             foreach (AbstractSchemaItem item in list)
 			{
