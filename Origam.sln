@@ -210,7 +210,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "Identity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Documentation", "Origam.Documentation\Origam.Documentation.csproj", "{46FB3705-3B11-4A49-AE05-7BEE7AA9CFDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.SSRS", "Origam.BI.SSRS\Origam.BI.SSRS.csproj", "{720E0EBB-4B5C-491C-A621-8FA974E0307B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.BI.SSRS", "Origam.BI.SSRS\Origam.BI.SSRS.csproj", "{720E0EBB-4B5C-491C-A621-8FA974E0307B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -636,8 +636,8 @@ Global
 		{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}.Release Server|Any CPU.Build.0 = Release Server|Any CPU
 		{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}.Release|Any CPU.ActiveCfg = Release Server|Any CPU
 		{FFC2DCE2-B8B5-48A4-AA18-1E93F99E1D54}.Release|Any CPU.Build.0 = Release Server|Any CPU
-		{CC4C4334-335D-4369-B0ED-F3C17CD57364}.Debug Architect|Any CPU.ActiveCfg = Debug Architect|Any CPU
-		{CC4C4334-335D-4369-B0ED-F3C17CD57364}.Debug Architect|Any CPU.Build.0 = Debug Architect|Any CPU
+		{CC4C4334-335D-4369-B0ED-F3C17CD57364}.Debug Architect|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC4C4334-335D-4369-B0ED-F3C17CD57364}.Debug Architect|Any CPU.Build.0 = Debug|Any CPU
 		{CC4C4334-335D-4369-B0ED-F3C17CD57364}.Debug Client|Any CPU.ActiveCfg = Debug Client|Any CPU
 		{CC4C4334-335D-4369-B0ED-F3C17CD57364}.Debug Client|Any CPU.Build.0 = Debug Client|Any CPU
 		{CC4C4334-335D-4369-B0ED-F3C17CD57364}.Debug Server|Any CPU.ActiveCfg = Debug Server|Any CPU
