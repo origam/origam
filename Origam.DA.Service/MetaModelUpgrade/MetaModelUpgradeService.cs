@@ -118,11 +118,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             }
             catch (Exception ex)
             {
-                UpgradeProgress?.Invoke(
-                    null,
-                    new UpgradeProgressInfo(
-                        totalFileCount,
-                        totalFileCount));
+                UpgradeFinished?.Invoke(null, EventArgs.Empty);
                 throw new Exception($"An error has occured when trying to upgrade file: {fileData.FileInfo.FullName}", ex) ;
             }
 
