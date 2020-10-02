@@ -54,7 +54,7 @@ namespace Origam.DA.Common
             if (!xmlNamespace.StartsWith("http://schemas.origam.com"))
             {
                 throw new ArgumentException(
-                    $" {nameof(OrigamNameSpace)} must start with http://schemas.origam.com");
+                    $" {nameof(OrigamNameSpace)} must start with http://schemas.origam.com. The invalid namespace is: \"{xmlNamespace}\"");
             }
 
             if (!Uri.IsWellFormedUriString(xmlNamespace, UriKind.Absolute))
