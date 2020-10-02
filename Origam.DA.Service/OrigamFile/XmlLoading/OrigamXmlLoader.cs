@@ -57,14 +57,10 @@ namespace Origam.DA.Service
             {
                 return result.Error;
             }
-
-#if !ORIGAM_CLIENT
-            List<XmlFileData> dataToAdd = result.Value;
-#else
+            
             List<XmlFileData> dataToAdd = tryUpgrade
                 ? metaModelUpgradeService.Upgrade(result.Value)
                 : result.Value;
-#endif
 
             AddOrigamFiles(itemTracker, dataToAdd);
             RemoveOrigamFilesThatNoLongerExist(itemTracker);
