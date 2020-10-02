@@ -107,19 +107,12 @@ namespace Origam.ServerCore.Controller
         [HttpPost("[action]")]
         public IActionResult InitUI([FromBody]UIRequest request)
         {
-            return RunWithErrorHandler(() =>
-            {
-                return FindItem<AbstractMenuItem>(
-                        new Guid(request.ObjectId))
-                    .Bind(Authorize)
-                    .Map(menuItem => sessionObjects.UIManager.InitUI(
-                        request: request,
-                        addChildSession: false,
-                        parentSession: null,
-                        basicUIService: sessionObjects.UIService))
-                    .Map(ToActionResult)
-                    .Finally(UnwrapReturnValue);
-            });
+            return RunWithErrorHandler(() => 
+                Ok(sessionObjects.UIManager.InitUI(
+                    request: request,
+                    addChildSession: false,
+                    parentSession: null,
+                    basicUIService: sessionObjects.UIService)));
         }
         [HttpGet("[action]/{sessionFormIdentifier:guid}")]
         public IActionResult DestroyUI(Guid sessionFormIdentifier)
