@@ -24,6 +24,12 @@ namespace OrigamArchitect
             {
                 void ProgressAction()
                 {
+                    if (info.FilesDone == info.TotalFiles)
+                    {
+                       Close();
+                       return;
+                    }
+
                     progressBar.Minimum = 0;
                     progressBar.Maximum = info.TotalFiles;
                     progressBar.Step = 1;
