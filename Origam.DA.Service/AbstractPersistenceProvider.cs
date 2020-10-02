@@ -85,7 +85,7 @@ namespace Origam.DA.ObjectPersistence
         public abstract void RemoveFromCache(IPersistent instance);
         public abstract List<T> RetrieveList<T>(IDictionary<string, object> filter=null);
 
-        public abstract List<T> RetrieveListByType<T>(string itemType);
+        public abstract List<T> RetrieveListByCategory<T>(string category);
 
         public abstract List<T> RetrieveListByPackage<T>(Guid packageId);
 

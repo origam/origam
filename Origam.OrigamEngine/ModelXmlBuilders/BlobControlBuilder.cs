@@ -39,7 +39,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			XmlElement propertiesElement = propertyElement.OwnerDocument.CreateElement("Parameters");
 			propertyElement.AppendChild(propertiesElement);
 			
-			foreach(PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.ItemTypeConst))
+			foreach(PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
 			{
 				string name = property.ControlPropertyItem.Name;
 

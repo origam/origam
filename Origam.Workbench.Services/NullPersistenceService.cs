@@ -50,13 +50,13 @@ namespace Origam.Workbench.Services
         {
         }
 
-        public SchemaExtension LoadSchema(Guid schemaExtension, bool loadDocumentation, bool loadDeploymentScripts,
+        public Package LoadSchema(Guid schemaExtension, bool loadDocumentation, bool loadDeploymentScripts,
             string transactionId)
         {
             throw new NotImplementedException();
         }
 
-        public SchemaExtension LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation,
+        public Package LoadSchema(Guid schemaExtensionId, Guid extraExtensionId, bool loadDocumentation,
             bool loadDeploymentScripts, string transactionId)
         {
             throw new NotImplementedException();

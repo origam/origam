@@ -154,7 +154,7 @@
     <value>Error</value>
   </data>
   <data name="ErrorNotSchemaExtension" xml:space="preserve">
-    <value>Owner must be of type SchemaExtension</value>
+    <value>Owner must be of type Package</value>
   </data>
   <data name="ErrorDependenciesInPackagesNotReferencedByTargetPackage" xml:space="preserve">
     <value>Cannot move the item to "{0}" because it has dependencies in packages not referenced by the target package:

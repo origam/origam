@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +33,7 @@ namespace Origam.Schema.WorkflowModel
 {
 	[SchemaItemDescription("Workflow Page", "workflow-page.png")]
     [HelpTopic("Workflow+Page")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkflowPage : AbstractPage
 	{
 		public WorkflowPage() : base() {Init();}

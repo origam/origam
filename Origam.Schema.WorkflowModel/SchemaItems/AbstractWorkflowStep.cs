@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.RuleModel;
 using Origam.Schema.EntityModel;
@@ -32,10 +33,11 @@ namespace Origam.Schema.WorkflowModel
     /// <summary>
     /// Summary description for AbstractWorkflowStep.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractWorkflowStep : AbstractSchemaItem, IWorkflowStep
 	{															
-		public const string ItemTypeConst = "WorkflowTask";
+		public const string CategoryConst = "WorkflowTask";
 
 		public AbstractWorkflowStep() : base() {Init();}
 
@@ -54,7 +56,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 
@@ -111,7 +113,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return this.ChildItemsByType(WorkflowTaskDependency.ItemTypeConst);
+				return this.ChildItemsByType(WorkflowTaskDependency.CategoryConst);
 			}
 		}
 

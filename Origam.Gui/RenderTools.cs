@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Linq;
 using Origam;
 using Origam.Schema.GuiModel;
 using Origam.Workbench.Services;
@@ -34,7 +35,7 @@ namespace Origam.Gui
 			if(action is EntityDropdownAction)
 			{
 				foreach(EntityUIAction subAction in action.ChildItemsByType(
-                    EntityUIAction.ItemTypeConst))
+                    EntityUIAction.CategoryConst))
 				{
 					if(ShouldRenderAction(subAction, formId, panelId))
 					{
@@ -46,8 +47,8 @@ namespace Origam.Gui
 			else
 			{
 				return ShouldRender(action.Features, action.Roles) 
-					&& (action.ScreenId.Equals(Guid.Empty) || action.ScreenId.Equals(formId))
-					&& (action.ScreenSectionId.Equals(Guid.Empty) || action.ScreenSectionId.Equals(panelId));
+					&& (!action.ScreenIds.Any()|| action.ScreenIds.Contains(formId))
+					&& (!action.ScreenSectionIds.Any() || action.ScreenSectionIds.Contains(panelId));
 			}
 		}
 

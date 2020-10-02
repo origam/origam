@@ -393,6 +393,12 @@ namespace Origam
 					);
 			}
 		}
+		
+		public static Type GetTypeByName(string typeName)
+		{
+			string assemblyName = typeName.Substring(0, typeName.LastIndexOf('.'));
+			return Type.GetType(typeName + "," + assemblyName);
+		}
 
 #if DEBUG
 		public static string GenerateReflectorCacheMethods()

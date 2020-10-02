@@ -37,7 +37,7 @@ namespace Origam.Schema.TestModel
 		{
 			get
 			{
-				return TestChecklistRule.ItemTypeConst;
+				return TestChecklistRule.CategoryConst;
 			}
 		}
 		public override string Group

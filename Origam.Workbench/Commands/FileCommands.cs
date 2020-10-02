@@ -216,7 +216,7 @@ namespace Origam.Workbench.Commands
 			
 				if(dialog.ShowDialog() == DialogResult.OK)
 				{
-					SchemaExtension extension = _schema.ActiveExtension;
+					Package extension = _schema.ActiveExtension;
 				
 					IPersistenceService persistence = ServiceManager.Services.GetService<IPersistenceService>()
 					    .Clone() as IPersistenceService;
@@ -271,7 +271,7 @@ namespace Origam.Workbench.Commands
 			
 				if(dialog.ShowDialog() == DialogResult.OK)
 				{
-					SchemaExtension extension = schema.ActiveExtension;
+					Package extension = schema.ActiveExtension;
 				
 					IPersistenceService persistence = mainPersistence;
 					persistence.ExportPackage((Guid)extension.PrimaryKey["Id"], dialog.FileName);
@@ -405,7 +405,7 @@ namespace Origam.Workbench.Commands
 
 			if(schema.IsSchemaChanged) throw new Exception("Model not saved. Save the model before importing.");
 
-			Schema.SchemaExtension extension = this.Owner as Schema.SchemaExtension;
+			Schema.Package extension = this.Owner as Schema.Package;
 				
 			using(OpenFileDialog dialog = new OpenFileDialog())
 			{
@@ -430,7 +430,7 @@ namespace Origam.Workbench.Commands
 
 						}						
 						ArrayList extensionIds = new ArrayList();
-						foreach(DataRow row in data.Tables["SchemaExtension"].Rows)
+						foreach(DataRow row in data.Tables["Package"].Rows)
 						{
 							extensionIds.Add(row["Id"]);
 						}
@@ -464,7 +464,7 @@ namespace Origam.Workbench.Commands
 
 			if(schema.IsSchemaChanged) throw new Exception("Model not saved. Save the model before importing.");
 
-			Schema.SchemaExtension extension = this.Owner as Schema.SchemaExtension;
+			Schema.Package extension = this.Owner as Schema.Package;
 				
 			using(OpenFileDialog dialog = new OpenFileDialog())
 			{
@@ -482,7 +482,7 @@ namespace Origam.Workbench.Commands
                         data.ReadXml(dialog.FileName);
                         data.EnforceConstraints = false;
 						ArrayList extensionIds = new ArrayList();
-						foreach(DataRow row in data.Tables["SchemaExtension"].Rows)
+						foreach(DataRow row in data.Tables["Package"].Rows)
 						{
 							extensionIds.Add(row["Id"]);
 						}
@@ -627,7 +627,7 @@ namespace Origam.Workbench.Commands
 					try
 					{
 						IDeploymentService deployment = ServiceManager.Services.GetService(typeof(IDeploymentService)) as IDeploymentService;
-						foreach(SchemaExtension extension in _schema.LoadedPackages)
+						foreach(Package extension in _schema.LoadedPackages)
 						{
 							if(deployment.CanUpdate(extension))
 							{

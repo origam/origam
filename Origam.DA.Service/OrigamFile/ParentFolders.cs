@@ -27,13 +27,13 @@ using Origam.Extensions;
 
 namespace Origam.DA.Service
 {
-    public class ParentFolders : IDictionary<ElementName, Guid>
+    public class ParentFolders : IDictionary<string, Guid>
     {
-        private readonly Dictionary<ElementName, Guid> innerDict =
-            new Dictionary<ElementName, Guid>();
+        private readonly Dictionary<string, Guid> innerDict =
+            new Dictionary<string, Guid>();
 
         private static void CheckIsValid(
-            IDictionary<ElementName, Guid> parentFolderIds, OrigamPath parentOrigamFilePath)
+            IDictionary<string, Guid> parentFolderIds, OrigamPath parentOrigamFilePath)
         {
             if (parentOrigamFilePath.Relative.EndsWith(OrigamFile.PackageFileName))
             {
@@ -42,9 +42,9 @@ namespace Origam.DA.Service
             CheckIsValid(parentFolderIds);
         }
 
-        private static void CheckIsValid( IDictionary<ElementName, Guid> parentFolderIds)
+        private static void CheckIsValid( IDictionary<string, Guid> parentFolderIds)
         {
-            if(parentFolderIds[OrigamFile.PackageNameUri].Equals(Guid.Empty))
+            if(parentFolderIds[OrigamFile.PackageCategory].Equals(Guid.Empty))
                 throw new Exception("Package id cannot be empty");
             if (parentFolderIds.Count != 2)
                 throw new Exception("Wrong ParentFolderId number: "+parentFolderIds.Count);
@@ -52,14 +52,14 @@ namespace Origam.DA.Service
 
         public Guid PackageId
         {
-            get => this[OrigamFile.PackageNameUri];
-            set => this[OrigamFile.PackageNameUri] = value;
+            get => this[OrigamFile.PackageCategory];
+            set => this[OrigamFile.PackageCategory] = value;
         }
 
         public Guid GroupId
         {
-            get => this[OrigamFile.GroupNameUri];
-            set => this[OrigamFile.GroupNameUri] = value;
+            get => this[OrigamFile.GroupCategory];
+            set => this[OrigamFile.GroupCategory] = value;
         }
 
         public void CopyTo(ParentFolders other)
@@ -71,14 +71,14 @@ namespace Origam.DA.Service
         {
         }
 
-        public ParentFolders(IDictionary<ElementName,Guid> parentIdDict,
+        public ParentFolders(IDictionary<string,Guid> parentIdDict,
             OrigamPath patentFilePath)
         {
             CheckIsValid(parentIdDict,patentFilePath);
             this.AddRange(parentIdDict);
         }
 
-        public ParentFolders(IList<ElementName> defaultFolders)
+        public ParentFolders(IList<string> defaultFolders)
         {
             if (defaultFolders == null || defaultFolders.Count == 0)
             {
@@ -103,7 +103,7 @@ namespace Origam.DA.Service
         public bool CointainsNoEmptyIds => 
             this.All(item => !item.Value.Equals(Guid.Empty));
 
-        public IEnumerator<KeyValuePair<ElementName, Guid>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, Guid>> GetEnumerator()
         {
             return innerDict.GetEnumerator();
         }
@@ -113,8 +113,10 @@ namespace Origam.DA.Service
             return GetEnumerator();
         }
 
-        public void Add(KeyValuePair<ElementName, Guid> item)
+        public void Add(KeyValuePair<string, Guid> item)
         {
+            if (innerDict.Count == 2 && !innerDict.ContainsKey(item.Key))
+                throw new Exception("Max. Parent folder number is 2 ");
             innerDict.Add(item.Key, item.Value);
         }
 
@@ -123,12 +125,12 @@ namespace Origam.DA.Service
             innerDict.Clear();
         }
 
-        public bool Contains(KeyValuePair<ElementName, Guid> item)
+        public bool Contains(KeyValuePair<string, Guid> item)
         {
             return innerDict.ContainsKey(item.Key);
         }
 
-        public void CopyTo(KeyValuePair<ElementName, Guid>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, Guid>[] array, int arrayIndex)
         {
             foreach (var keyValuePair in array)
             {
@@ -136,40 +138,47 @@ namespace Origam.DA.Service
             }
         }
 
-        public bool Remove(KeyValuePair<ElementName, Guid> item)
+        public bool Remove(KeyValuePair<string, Guid> item)
         {
             return innerDict.Remove(item.Key);
         }
 
         public int Count => innerDict.Count;
         public bool IsReadOnly => false;
-        public bool ContainsKey(ElementName key)
+        public bool ContainsKey(string key)
         {
             return innerDict.ContainsKey(key);
         }
 
-        public void Add(ElementName key, Guid value)
+        public void Add(string key, Guid value)
         {
+            if (innerDict.Count == 2 && !innerDict.ContainsKey(key))
+                throw new Exception("Max. Parent folder number is 2 ");
             innerDict.Add(key, value);
         }
 
-        public bool Remove(ElementName key)
+        public bool Remove(string key)
         {
             return innerDict.Remove(key);
         }
 
-        public bool TryGetValue(ElementName key, out Guid value)
+        public bool TryGetValue(string key, out Guid value)
         {
             return innerDict.TryGetValue(key, out value);
         }
 
-        public Guid this[ElementName key]
+        public Guid this[string key]
         {
             get => innerDict[key];
-            set => innerDict[key] = value;
+            set
+            {
+                if (innerDict.Count == 2 && !innerDict.ContainsKey(key))
+                    throw new Exception("Max. Parent folder number is 2 ");
+                innerDict[key] = value;
+            }
         }
 
-        public ICollection<ElementName> Keys => innerDict.Keys;
+        public ICollection<string> Keys => innerDict.Keys;
         public ICollection<Guid> Values => innerDict.Values;
     }
 }

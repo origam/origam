@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -32,8 +33,9 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Index Field", "Fields", "icon_index-field.png")]
     [HelpTopic("Index+Field")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
 	[DefaultProperty("Field")]
+    [ClassMetaVersion("6.0.0")]
     public class DataEntityIndexField : AbstractSchemaItem
 	{
 		public DataEntityIndexField() : base(){}
@@ -42,7 +44,7 @@ namespace Origam.Schema.EntityModel
 
 		public DataEntityIndexField(Key primaryKey) : base(primaryKey)	{}
 
-		public const string ItemTypeConst = "DataEntityIndexField";
+		public const string CategoryConst = "DataEntityIndexField";
 
 		#region Properties
 		private DataEntityIndexSortOrder _sortOrder = DataEntityIndexSortOrder.Ascending;
@@ -119,7 +121,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

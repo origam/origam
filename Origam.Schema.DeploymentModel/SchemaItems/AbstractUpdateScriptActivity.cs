@@ -25,16 +25,18 @@ using System.ComponentModel;
 using Origam.UI;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.DeploymentModel
 {
     /// <summary>
     /// Summary description for AbstractUpdateScriptActivity.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractUpdateScriptActivity : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "DeploymentUpdateScriptActivity";
+		public const string CategoryConst = "DeploymentUpdateScriptActivity";
 
 		public AbstractUpdateScriptActivity() : base() {}
 
@@ -49,7 +51,7 @@ namespace Origam.Schema.DeploymentModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

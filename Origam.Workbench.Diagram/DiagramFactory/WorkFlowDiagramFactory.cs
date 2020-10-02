@@ -163,7 +163,7 @@ namespace Origam.Workbench.Diagram
 
 		private bool ShouldBeShownOnScreen(EntityUIAction action, Guid screenId)
 		{
-			return action.ScreenId == Guid.Empty || action.ScreenId == screenId;
+			return !action.ScreenIds.Any()|| action.ScreenIds.Contains(screenId);
 		}
 
 		private void AddNodeItems(IWorkflowStep step, Subgraph subgraphNode)
@@ -208,7 +208,7 @@ namespace Origam.Workbench.Diagram
 			IDictionary<Key, Node> ht = new Dictionary<Key, Node>();
 
 			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
-				AbstractWorkflowStep.ItemTypeConst))
+				AbstractWorkflowStep.CategoryConst))
 			{
 				if (step is IWorkflowBlock subBlock)
 				{
@@ -224,14 +224,14 @@ namespace Origam.Workbench.Diagram
 
 			// add connections
 			foreach (IWorkflowStep step in workFlowBlock.ChildItemsByType(
-				AbstractWorkflowStep.ItemTypeConst))
+				AbstractWorkflowStep.CategoryConst))
 			{
 				Node destinationShape = ht[step.PrimaryKey];
 				if (destinationShape == null)
 					throw new NullReferenceException(Strings.WorkFlowDiagramFactory_DestinationShape_not_found);
 				int i = 0;
 				foreach (WorkflowTaskDependency dependency in step.ChildItemsByType(
-					WorkflowTaskDependency.ItemTypeConst))
+					WorkflowTaskDependency.CategoryConst))
 				{
 					Node sourceShape = ht[dependency.Task.PrimaryKey];
 					if (sourceShape == null)

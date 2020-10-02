@@ -43,6 +43,7 @@ using Origam;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Excel;
 using Origam.Extensions;
 using Origam.Gui.UI;
@@ -1222,11 +1223,11 @@ namespace OrigamArchitect
 
         public void Connect()
         {
-            Connect(null);
+	        Connect(null);
 	        SubscribeToPersistenceServiceEvents();
         }
-		
-		private void SubscribeToPersistenceServiceEvents()
+
+        private void SubscribeToPersistenceServiceEvents()
 		{
 			var currentPersistenceService =
 				ServiceManager.Services.GetService<IPersistenceService>();
@@ -1322,23 +1323,12 @@ namespace OrigamArchitect
 
 		private Maybe<XmlLoadError> TryLoadModelFiles(FilePersistenceService filePersistService)
 		{
-			Maybe<XmlLoadError> maybeError =
-				filePersistService.Reload(tryUpdate: false);
+			Maybe<XmlLoadError> maybeError = filePersistService.Reload();
 
 			if (maybeError.HasNoValue) return null;
 			XmlLoadError error = maybeError.Value;
-			switch (error.Type)	
-			{
-				case ErrType.XmlGeneralError:
-				    this.RunWithInvoke(() => MessageBox.Show(this, error.Message));
-                    return maybeError;
-				case ErrType.XmlVersionIsOlderThanCurrent:
-					return TryHandleOldVersionFound(filePersistService, error.Message) 
-					    ? null 
-					    : maybeError;
-				default:
-					throw new NotImplementedException();
-			}
+			this.RunWithInvoke(() => MessageBox.Show(this, error.Message));
+            return maybeError;
 		}
 
 		private bool TryHandleOldVersionFound(FilePersistenceService filePersistService,
@@ -1350,13 +1340,12 @@ namespace OrigamArchitect
 			if (updateVersionsResult != DialogResult.Yes) return false;
 			MessageBox.Show(this,
 				$"This functionality has not been implemented yet.{Environment.NewLine}No files will be reloaded!");
-			Maybe<XmlLoadError> reloadError =
-				filePersistService.Reload(tryUpdate: true);
+			Maybe<XmlLoadError> reloadError = filePersistService.Reload();
 			if (reloadError.HasValue)
 			{
 				throw new NotImplementedException();
 			}
-			return false; // change to true, when filePersistService.Reload(tryUpdate: true) is implemented!
+			return false; 
 		}
 
 		private void ReloadOpenWindows(
@@ -1465,8 +1454,7 @@ namespace OrigamArchitect
             if (!LoadConfiguration(configurationName))
 			{
 				return;
-			}         
-
+			}
             Application.DoEvents();
 
             foreach (DockContent content in this.dockPanel.Documents.ToList())
@@ -1517,7 +1505,7 @@ namespace OrigamArchitect
                 CreateMainMenuConnect();
 				IsConnected = true;
 #if !ORIGAM_CLIENT
-                DoModelChecksAsync();
+				DoModelChecksAsync();
 #endif
 
 #if ORIGAM_CLIENT
@@ -1555,7 +1543,24 @@ namespace OrigamArchitect
 			cmd.Run();
 		}
 
-	    public void DoModelChecksAsync()
+		private void SubscribeToUpgradeServiceEvents()
+		{
+			var metaModelUpgradeService = ServiceManager.Services.GetService<IMetaModelUpgradeService>();
+
+			metaModelUpgradeService.UpgradeStarted += (sender, args) =>
+			{
+				Task.Run(() =>
+				{
+					using (var form = new ModelUpgradeForm(metaModelUpgradeService))
+					{
+						form.StartPosition = FormStartPosition.CenterScreen;
+						form.ShowDialog();
+					}
+				});
+			};
+		}
+
+		public void DoModelChecksAsync()
 	    {
 	       var currentPersistenceService =
 	            ServiceManager.Services.GetService<IPersistenceService>();
@@ -1632,7 +1637,7 @@ namespace OrigamArchitect
 	            }
 	        }
 	    }
-
+	    
 	    protected override void WndProc(ref Message m)
 		{
 			if(m.Msg == 16)
@@ -1839,7 +1844,7 @@ namespace OrigamArchitect
 		/// </summary>
 		private bool LoadSchemaList()
 		{
-            IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
+			IPersistenceService persistence = OrigamEngine.CreatePersistenceService();
 			ServiceManager.Services.AddService(persistence);
 
 			try
@@ -1924,6 +1929,7 @@ namespace OrigamArchitect
 			splash.Show();
 			Application.DoEvents();
 			InitializeDefaultServices();
+			SubscribeToUpgradeServiceEvents();
 			InitializeDefaultPads();
 
 			//this.LoadWorkspace();
@@ -2019,6 +2025,7 @@ namespace OrigamArchitect
 
 		private void InitializeDefaultServices()
 		{
+			ServiceManager.Services.AddService(new MetaModelUpgradeService());
 			// Status bar service
 			_statusBarService = new StatusBarService(statusBar);
 			ServiceManager.Services.AddService(_statusBarService);
@@ -2359,7 +2366,7 @@ namespace OrigamArchitect
 			if(! AdministratorMode)
 			{
 				bool found = false;
-				foreach(SchemaExtension extension in _schema.LoadedPackages)
+				foreach(Package extension in _schema.LoadedPackages)
 				{
 					if((Guid)extension.PrimaryKey["Id"] == new Guid("147FA70D-6519-4393-B5D0-87931F9FD609"))
 					{

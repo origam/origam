@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -32,10 +33,11 @@ namespace Origam.Schema.GuiModel
     /// </summary>
     [SchemaItemDescription("Style Property", "icon_style-property.png")]
     [HelpTopic("Styles")]
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class UIStyleProperty : AbstractSchemaItem
     {
-        public const string ItemTypeConst = "StyleProperty";
+        public const string CategoryConst = "StyleProperty";
 
         public UIStyleProperty() : base() { Init(); }
 
@@ -105,7 +107,7 @@ namespace Origam.Schema.GuiModel
         {
             get
             {
-                return ItemTypeConst;
+                return CategoryConst;
             }
         }
         #endregion

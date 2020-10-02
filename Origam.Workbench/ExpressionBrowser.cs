@@ -85,7 +85,7 @@ namespace Origam.Workbench
 		{
 			TreeNode rootNode = tvwExpressionBrowser.RootNode;
 			if (rootNode == null) return;
-			var rootNodeTag = (SchemaExtension) rootNode.Tag;
+			var rootNodeTag = (Package) rootNode.Tag;
 			rootNode.Text = rootNodeTag.Name;
 		}
 

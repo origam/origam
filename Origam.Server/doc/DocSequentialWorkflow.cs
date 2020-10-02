@@ -177,7 +177,7 @@ namespace Origam.Server.Doc
             }
 
             ArrayList result = new ArrayList();
-            foreach (wf.IWorkflowStep step in parentItem.ChildItemsByType(wf.AbstractWorkflowStep.ItemTypeConst))
+            foreach (wf.IWorkflowStep step in parentItem.ChildItemsByType(wf.AbstractWorkflowStep.CategoryConst))
             {
                 if (blockContent && step.Dependencies.Count == 0)
                 {
@@ -317,7 +317,7 @@ namespace Origam.Server.Doc
             }
             processedBlocks.Add(blockId);
 
-            ArrayList sortedList = new ArrayList(block.ChildItemsByType(wf.AbstractWorkflowStep.ItemTypeConst));
+            ArrayList sortedList = new ArrayList(block.ChildItemsByType(wf.AbstractWorkflowStep.CategoryConst));
             sortedList.Sort();
 
             foreach (wf.IWorkflowStep step in sortedList)

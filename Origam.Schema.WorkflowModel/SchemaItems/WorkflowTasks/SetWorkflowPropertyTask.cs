@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -45,6 +46,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Set Workflow Property", "Tasks", "task-set-workflow-property.png")]
     [HelpTopic("Set+Workflow+Property+Task")]
+    [ClassMetaVersion("6.0.0")]
 	public class SetWorkflowPropertyTask : AbstractWorkflowStep, ISchemaItemFactory
 	{
 		public SetWorkflowPropertyTask() : base() {}
@@ -60,7 +62,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

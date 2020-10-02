@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -32,10 +33,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Sort Field", "icon_sort-field.png")]
     [HelpTopic("Sort+Field")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureSortSetItem : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataStructureSortSetItem";
+		public const string CategoryConst = "DataStructureSortSetItem";
 
 		public DataStructureSortSetItem() : base(){}
 		
@@ -135,7 +137,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 
@@ -146,7 +148,7 @@ namespace Origam.Schema.EntityModel
 			/* return a column used in a sort set */
 			/* firstly look at columns defined on datastructure level */
 			foreach (DataStructureColumn dsColumn
-					in this.Entity.ChildItemsByType(DataStructureColumn.ItemTypeConst))
+					in this.Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
 			{
 				if (FieldName == dsColumn.Name)
 				{

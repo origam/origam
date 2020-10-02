@@ -44,7 +44,7 @@ namespace Origam.Schema.RuleModel
 		{
 			get
 			{
-				return AbstractRule.ItemTypeConst;
+				return AbstractRule.CategoryConst;
 			}
 		}
 		public override bool AutoCreateFolder

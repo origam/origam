@@ -618,7 +618,7 @@ namespace Origam.ServerCore.Controller
                 dataServiceDataLookup.ListDataStructure);
             var comboListTable = comboListDataset.Tables[
                 ((DataStructureEntity) dataServiceDataLookup.ListDataStructure
-                    .ChildItemsByType(DataStructureEntity.ItemTypeConst)[0])
+                    .ChildItemsByType(DataStructureEntity.CategoryConst)[0])
                 .Name];
             var tableName = FormXmlBuilder.DatabaseTableName(comboListTable);
             if(tableName != null)

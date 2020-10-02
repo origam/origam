@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -33,10 +34,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Lookup Reference", "icon_lookup-reference.png")]
     [HelpTopic("Lookup+Reference")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityFilterLookupReference : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "EntityFilterLookupReference";
+		public const string CategoryConst = "EntityFilterLookupReference";
 
 		public EntityFilterLookupReference() : base() {Init();}
 
@@ -64,7 +66,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

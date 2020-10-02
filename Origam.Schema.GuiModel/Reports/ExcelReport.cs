@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.Schema.EntityModel;
 
@@ -28,6 +29,7 @@ namespace Origam.Schema.GuiModel
 	/// Summary description for ExcelReport.
 	/// </summary>
 	[SchemaItemDescription("Excel Report", "icon_excel-report.png")]
+    [ClassMetaVersion("6.0.0")]
 	public class ExcelReport : AbstractDataReport, IDataStructureReference
 	{
 		public ExcelReport() : base() { }

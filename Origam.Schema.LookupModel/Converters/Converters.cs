@@ -48,7 +48,7 @@ namespace Origam.Schema.LookupModel
 			
 			if(reference.ListDataStructure == null) return null;
 
-			ArrayList methods = reference.ListDataStructure.ChildItemsByType(DataStructureMethod.ItemTypeConst);
+			ArrayList methods = reference.ListDataStructure.ChildItemsByType(DataStructureMethod.CategoryConst);
 
 			ArrayList methodArray = new ArrayList(methods.Count);
 			foreach(DataStructureMethod method in methods)
@@ -78,7 +78,7 @@ namespace Origam.Schema.LookupModel
 			
 				if(reference.ListDataStructure == null) return null;
 
-				ArrayList methods = reference.ListDataStructure.ChildItemsByType(DataStructureMethod.ItemTypeConst);
+				ArrayList methods = reference.ListDataStructure.ChildItemsByType(DataStructureMethod.CategoryConst);
 
 				foreach(DataStructureMethod item in methods)
 				{

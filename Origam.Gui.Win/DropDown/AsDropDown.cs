@@ -540,7 +540,7 @@ namespace Origam.Gui.Win
 				if(!_itemsLoaded)
 					return;
 
-				ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.ItemTypeConst));
+				ArrayList col = new ArrayList(_origamMetadata.ChildItemsByType(ColumnParameterMapping.CategoryConst));
 
 				foreach(ColumnParameterMapping mapping in col)
 				{
@@ -588,7 +588,7 @@ namespace Origam.Gui.Win
 			
 			parameterMappings.Clear();
 			
-			foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.ItemTypeConst))
+			foreach(ColumnParameterMapping mapInfo in controlItem.ChildItemsByType(ColumnParameterMapping.CategoryConst))
 			{
 				if(! mapInfo.IsDeleted)
 				{

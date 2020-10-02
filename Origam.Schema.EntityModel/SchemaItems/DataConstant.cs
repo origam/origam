@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -33,10 +34,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Data Constant", "icon_data-constant.png")]
     [HelpTopic("Data+Constants")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class DataConstant : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataConstant";
+		public const string CategoryConst = "DataConstant";
 
 		public DataConstant() : base() {}
 
@@ -431,7 +433,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

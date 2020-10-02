@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -37,10 +38,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Function", "icon_10_functions.png")]
     [HelpTopic("Functions")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class Function : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "Function";
+		public const string CategoryConst = "Function";
 
 		public Function() : base() {}
 
@@ -55,7 +57,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

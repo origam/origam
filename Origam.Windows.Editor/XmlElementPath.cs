@@ -40,9 +40,9 @@ namespace Origam.Windows.Editor
             get { return elements; }
         }
 
-        public void AddElement(QualifiedName elementName)
+        public void AddElement(QualifiedName category)
         {
-            elements.Add(elementName);
+            elements.Add(category);
         }
 
         public bool IsEmpty

@@ -52,7 +52,7 @@ namespace Origam.DA.ObjectPersistence.Attributes
                 }
             }
             // pro prohledavani childu a zjistovani jestli tam neni field.
-            ArrayList schemaItems = dataStructure.ChildItemsByType(DataStructureColumn.ItemTypeConst);
+            ArrayList schemaItems = dataStructure.ChildItemsByType(DataStructureColumn.CategoryConst);
             if (schemaItems.Count>0 && (relation is RelationType.LeftJoin || relation is RelationType.InnerJoin))
             {
                 return new DataException("Child Entities are DataField, but RelationType is set to LeftJoin or InnerJoin");

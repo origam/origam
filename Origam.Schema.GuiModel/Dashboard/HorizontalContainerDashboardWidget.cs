@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Origam.DA.ObjectPersistence;
 
@@ -26,6 +27,7 @@ using Origam.DA.ObjectPersistence;
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Horizontal Container", "icon_horizontal-container.png")]
+    [ClassMetaVersion("6.0.0")]
 	public class HorizontalContainerDashboardWidget : AbstractDashboardWidget
 	{
 		public HorizontalContainerDashboardWidget() : base() {Init();}
@@ -51,7 +53,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

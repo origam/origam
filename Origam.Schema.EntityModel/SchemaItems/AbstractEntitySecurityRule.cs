@@ -23,6 +23,7 @@ using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.EntityModel
 {
@@ -49,10 +50,11 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Summary description for EntitySecurityRule.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractEntitySecurityRule : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "EntitySecurityRule";
+		public const string CategoryConst = "EntitySecurityRule";
 
 		public AbstractEntitySecurityRule() : base() {}
 
@@ -67,7 +69,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 
@@ -131,8 +133,11 @@ namespace Origam.Schema.EntityModel
 				name += "_" + this.Rule.Name;
 			}
 
-			name += "_" + this.Roles.Replace(";", "_");
-
+			if (this.Roles != null)
+			{
+				name += "_" + this.Roles.Replace(";", "_");
+			}
+			
 			this.Name = name;
 		}
 		#endregion

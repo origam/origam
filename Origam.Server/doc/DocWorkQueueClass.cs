@@ -110,7 +110,7 @@ namespace Origam.Server.Doc
             writer.WriteEndElement();
 
             DocTools.WriteSectionStart(writer, "Queue Commands");
-            ArrayList commands = wqc.ChildItemsByType(WorkQueueWorkflowCommand.ItemTypeConst);
+            ArrayList commands = wqc.ChildItemsByType(WorkQueueWorkflowCommand.CategoryConst);
             if (commands.Count > 0)
             {
                 writer.WriteStartElement("table");

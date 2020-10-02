@@ -35,7 +35,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return FormControlSet.ItemTypeConst;
+				return FormControlSet.CategoryConst;
 			}
 		}
 		public override bool AutoCreateFolder

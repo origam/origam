@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using Schedule;
 
@@ -28,6 +29,7 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for ScheduleGroup.
 	/// </summary>
 	[SchemaItemDescription("Schedule Group", "schedule-group.png")]
+    [ClassMetaVersion("6.0.0")]
 	public class ScheduleGroup : AbstractScheduleTime
 	{
 		public ScheduleGroup() : base() {}

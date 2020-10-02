@@ -334,7 +334,7 @@ namespace Origam.Workbench.Diagram.NodeDrawing
         public string Text { get; }
 
         public bool IsFromActivePackage =>
-            SchemaItem.SchemaExtension.Id == schemaService.ActiveSchemaExtensionId;
+            SchemaItem.Package.Id == schemaService.ActiveSchemaExtensionId;
         public string Id => SchemaItem.Id.ToString();
         public int LeftMargin { get; protected set; } = 0;
 

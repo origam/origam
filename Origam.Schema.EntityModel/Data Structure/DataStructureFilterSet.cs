@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -31,6 +32,7 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Filter Set", "Filter Sets", "icon_filter-set.png")]
     [HelpTopic("Filter+Sets")]
+    [ClassMetaVersion("6.0.0")]
     public class DataStructureFilterSet : DataStructureMethod, ISchemaItemFactory
 	{
 		public DataStructureFilterSet() : base() {}

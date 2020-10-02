@@ -97,7 +97,7 @@ namespace TestSqlCommandGenerator
             schemaService.AddProvider(new DataStructureSchemaItemProvider());
 
             // create a test package
-            SchemaExtension package = new SchemaExtension(new ModelElementKey(_testPackageId));
+            Package package = new Package(new ModelElementKey(_testPackageId));
             package.Name = "TestPackage";
             package.PersistenceProvider = persistenceService.SchemaProvider;
             package.Persist();

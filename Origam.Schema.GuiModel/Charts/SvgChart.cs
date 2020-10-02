@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -29,6 +30,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("SVG Chart", "icon_svg-chart.png")]
     [HelpTopic("SVG+Chart")]
+    [ClassMetaVersion("6.0.0")]
 	public class SvgChart : AbstractChart
 	{
 		public SvgChart() : base() {Init();}

@@ -43,7 +43,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				left, top, width, height, captionLength, captionPosition, gridColumnWidth, style);
 		}
 
-			public static XmlElement CreateProperty(string elementName, XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
+			public static XmlElement CreateProperty(string category, XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
 			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition,
             string gridColumnWidth, UIStyle style)
 		{
@@ -53,7 +53,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			
             IDocumentationService documentationSvc = ServiceManager.Services.GetService(typeof(IDocumentationService)) as IDocumentationService;
 
-			XmlElement propertyElement = propertiesElement.OwnerDocument.CreateElement(elementName);
+			XmlElement propertyElement = propertiesElement.OwnerDocument.CreateElement(category);
 			propertiesElement.AppendChild(propertyElement);
 
 			if(propertyNamesElement != null)

@@ -35,7 +35,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return Menu.ItemTypeConst;
+				return Menu.CategoryConst;
 			}
 		}
 		public override string Group

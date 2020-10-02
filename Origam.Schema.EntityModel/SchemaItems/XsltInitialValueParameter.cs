@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace Origam.Schema.EntityModel
     /// </summary>
     [SchemaItemDescription("Xslt Initial Value Parameter", "Parameters", "icon_xslt-initial-value-parameter.png")]
     [HelpTopic("Xslt+Initial+ValueParameter")]
+    [ClassMetaVersion("6.0.0")]
     public class XsltInitialValueParameter : SchemaItemParameter
     {
         private List<OrigamDataType> osArray ;

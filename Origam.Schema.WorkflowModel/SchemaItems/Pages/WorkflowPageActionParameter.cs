@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -28,14 +29,15 @@ namespace Origam.Schema.WorkflowModel
 {
 	[SchemaItemDescription("Parameter", "Parameters", 17)]
     [HelpTopic("Action+Parameter")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class WorkflowPageActionParameter : AbstractSchemaItem
 	{
 		public WorkflowPageActionParameter() : base() {Init();}
 		public WorkflowPageActionParameter(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
 		public WorkflowPageActionParameter(Key primaryKey) : base(primaryKey) {Init();}
 
-		public const string ItemTypeConst = "WorkflowPageActionParameter";
+		public const string CategoryConst = "WorkflowPageActionParameter";
 
 		private void Init()
 		{
@@ -47,7 +49,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

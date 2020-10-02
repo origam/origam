@@ -94,7 +94,7 @@ namespace Origam.ServerCommon.Pages
 			object workflowResult = core.WorkflowService.ExecuteWorkflow(workflowPage.WorkflowId, qparams, null);
 
             bool handled = false;
-            ArrayList actions = workflowPage.ChildItemsByType(AbstractWorkflowPageAction.ItemTypeConst);
+            ArrayList actions = workflowPage.ChildItemsByType(AbstractWorkflowPageAction.CategoryConst);
             actions.Sort();
 
             RuleEngine re = new RuleEngine(new Hashtable(), null);

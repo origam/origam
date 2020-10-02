@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -36,10 +37,11 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("Image", "icon_image.png")]
     [HelpTopic("Images")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class Graphics : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "Graphics";
+		public const string CategoryConst = "Graphics";
 
 		public Graphics() : base()
 		{
@@ -71,7 +73,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

@@ -26,6 +26,7 @@ using System.ComponentModel;
 using Origam.DA;
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.EntityModel;
 
 namespace Origam.Schema.EntityModel
@@ -33,11 +34,12 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Abstract implementation of IDataEntityColumn.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public abstract class AbstractDataEntityColumn : AbstractSchemaItem, IDataEntityColumn
 	{
 
-		public const string ItemTypeConst = "DataEntityColumn";
+		public const string CategoryConst = "DataEntityColumn";
 		public AbstractDataEntityColumn() : base()
 		{
 			Init();
@@ -441,7 +443,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(AbstractEntitySecurityRule.ItemTypeConst);
+				return this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 			}
 		}
 		
@@ -450,7 +452,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityConditionalFormatting.ItemTypeConst);
+				return this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 			}
 		}
 
@@ -459,7 +461,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(EntityFieldDynamicLabel.ItemTypeConst);
+				return this.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 			}
 		}
 
@@ -494,7 +496,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return AbstractDataEntityColumn.ItemTypeConst;
+				return AbstractDataEntityColumn.CategoryConst;
 			}
 		}
 

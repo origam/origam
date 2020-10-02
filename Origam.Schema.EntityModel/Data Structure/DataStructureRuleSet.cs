@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,10 +33,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Rule Set", "Rule Sets", "icon_rule-set.png")]
     [HelpTopic("Rule+Sets")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureRuleSet : AbstractSchemaItem, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "DataStructureRuleSet";
+		public const string CategoryConst = "DataStructureRuleSet";
         private object _lock = new object();
 
 		public DataStructureRuleSet() : base() {}
@@ -47,9 +49,9 @@ namespace Origam.Schema.EntityModel
 		#region Public Methods
 		public ArrayList Rules()
 		{
-            ArrayList result = this.ChildItemsByType(DataStructureRule.ItemTypeConst);
+            ArrayList result = this.ChildItemsByType(DataStructureRule.CategoryConst);
             // add all child rulesets
-            foreach (DataStructureRuleSetReference childRuleSet in this.ChildItemsByType(DataStructureRuleSetReference.ItemTypeConst))
+            foreach (DataStructureRuleSetReference childRuleSet in this.ChildItemsByType(DataStructureRuleSetReference.CategoryConst))
             {
                 if (childRuleSet.RuleSet != null)
                 {
@@ -68,10 +70,10 @@ namespace Origam.Schema.EntityModel
                      this.Name, this.Id));
             }
             //
-            ArrayList references = this.ChildItemsByType(DataStructureRuleSetReference.ItemTypeConst);
+            ArrayList references = this.ChildItemsByType(DataStructureRuleSetReference.CategoryConst);
             bool addCurrent = true;
             foreach (DataStructureRuleSetReference ruleSetReference
-                in this.ChildItemsByType(DataStructureRuleSetReference.ItemTypeConst))
+                in this.ChildItemsByType(DataStructureRuleSetReference.CategoryConst))
             {
                 if (curRuleSetReference != null && curRuleSetReference.Id == ruleSetReference.Id)
                 {
@@ -159,7 +161,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

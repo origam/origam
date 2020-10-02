@@ -30,7 +30,7 @@ namespace Origam.Services
 		ISchemaItemProvider GetProvider(Type type);
 		Guid ActiveSchemaExtensionId { get; }
         Guid StorageSchemaExtensionId { get; set; }
-        SchemaExtension ActiveExtension { get; }
+        Package ActiveExtension { get; }
 
         bool IsSchemaLoaded { get; }
         bool UnloadSchema();

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Drawing;
 using System.ComponentModel;
@@ -35,10 +36,11 @@ namespace Origam.Schema.EntityModel
         "Conditional Formatting", 
         "icon_conditional-formatting-rule.png")]
     [HelpTopic("Conditional+Formatting+Rules")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityConditionalFormatting : AbstractSchemaItem, IComparable
 	{
-		public const string ItemTypeConst = "EntityConditionalFormatting";
+		public const string CategoryConst = "EntityConditionalFormatting";
 
 		public EntityConditionalFormatting() : base() {}
 
@@ -53,7 +55,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

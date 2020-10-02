@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -29,10 +30,11 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Vertical Axis", "Vertical Axes", "icon_vertical-axis.png")]
     [HelpTopic("Vertical+Axis")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class CartesianChartVerticalAxis : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "CartesianChartVerticalAxis";
+		public const string CategoryConst = "CartesianChartVerticalAxis";
 
 		public CartesianChartVerticalAxis() : base() {Init();}
 		public CartesianChartVerticalAxis(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -129,7 +131,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion			

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("File System Report", "icon_file-system-report.png")]
     [HelpTopic("File+System+Report")]
+    [ClassMetaVersion("6.0.0")]
     public class FileSystemReport : AbstractReport
     {
 		public FileSystemReport() : base() { }

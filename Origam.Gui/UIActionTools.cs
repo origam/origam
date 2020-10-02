@@ -42,7 +42,7 @@ namespace Origam.Gui
                     = (AbstractDataEntity)ps.SchemaProvider.RetrieveInstance(
                     typeof(AbstractDataEntity), new ModelElementKey(entityId));
                 ArrayList actionsSorted = entity.ChildItemsByTypeRecursive(
-                    EntityUIAction.ItemTypeConst);
+                    EntityUIAction.CategoryConst);
                 actionsSorted.Sort(new EntityUIActionOrderComparer());
                 foreach (EntityUIAction action in actionsSorted)
                 {
@@ -70,7 +70,7 @@ namespace Origam.Gui
             ArrayList originalDataParameters = new ArrayList();
             foreach(EntityUIActionParameterMapping mapping 
                 in action.ChildItemsByType(
-                EntityUIActionParameterMapping.ItemTypeConst))
+                EntityUIActionParameterMapping.CategoryConst))
             {
                 if(mapping.Type == EntityUIActionParameterMappingType.Original)
                 {

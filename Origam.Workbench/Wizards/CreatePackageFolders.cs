@@ -36,7 +36,7 @@ namespace Origam.Schema.Wizards
 		{
 			get
 			{
-				return _schema.ActiveNode is SchemaExtension;
+				return _schema.ActiveNode is Package;
 			}
 			set
 			{
@@ -53,7 +53,7 @@ namespace Origam.Schema.Wizards
 				group.Persist();
 			}
 
-			(_schema.ActiveNode as SchemaExtension).Refresh();
+			(_schema.ActiveNode as Package).Refresh();
 		}
 
 		private static void SetInheritance(AbstractSchemaItem item, bool value)

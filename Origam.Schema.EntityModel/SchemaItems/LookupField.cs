@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -34,11 +35,11 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Lookup Field", "Fields", "icon_lookup-field.png")]
     [HelpTopic("Lookup+Field")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class LookupField : AbstractSchemaItem, IDataEntityColumn
 	{
-
-		public const string ItemTypeConst = "DataEntityColumn";
+		public const string CategoryConst = "DataEntityColumn";
 		public LookupField() : base() {}
 
 		public LookupField(Guid schemaExtensionId) : base(schemaExtensionId) {}
@@ -230,13 +231,13 @@ namespace Origam.Schema.EntityModel
 		}
 
 		[Browsable(false)]
-		public ArrayList RowLevelSecurityRules => this.ChildItemsByType(AbstractEntitySecurityRule.ItemTypeConst);
+		public ArrayList RowLevelSecurityRules => this.ChildItemsByType(AbstractEntitySecurityRule.CategoryConst);
 
 		[Browsable(false)]
-		public ArrayList ConditionalFormattingRules => this.ChildItemsByType(EntityConditionalFormatting.ItemTypeConst);
+		public ArrayList ConditionalFormattingRules => this.ChildItemsByType(EntityConditionalFormatting.CategoryConst);
 
 		[Browsable(false)]
-		public ArrayList DynamicLabels => this.ChildItemsByType(EntityFieldDynamicLabel.ItemTypeConst);
+		public ArrayList DynamicLabels => this.ChildItemsByType(EntityFieldDynamicLabel.CategoryConst);
 		#endregion
 
 		#region Properties
@@ -265,7 +266,7 @@ namespace Origam.Schema.EntityModel
 		public override bool CanMove(Origam.UI.IBrowserNode2 newNode) => newNode is IDataEntity;
 
 		[EntityColumn("ItemType")]
-		public override string ItemType => AbstractDataEntityColumn.ItemTypeConst;
+		public override string ItemType => AbstractDataEntityColumn.CategoryConst;
 
 		public override void GetExtraDependencies(ArrayList dependencies)
 		{

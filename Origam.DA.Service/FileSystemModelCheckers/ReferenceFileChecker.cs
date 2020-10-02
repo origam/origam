@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,7 +71,7 @@ namespace Origam.DA.Service
                 return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
             }
 
-            if (filePersistenceProvider.RetrieveInstance<SchemaExtension>(packageId) == null)
+            if (filePersistenceProvider.RetrieveInstance<Package>(packageId) == null)
             {
                 return "Group \"" + groupId + "\" referenced in \"file://" + fileData.XmlFileData.FileInfo.FullName + "\" cannot be found.";
             }
@@ -80,7 +81,7 @@ namespace Origam.DA.Service
 
         private  ReferenceFileData ReadToFileData(FileInfo groupReferenceFile)
         {
-            var xmlFileDataFactory = new XmlFileDataFactory(new List<MetaVersionFixer>());
+            var xmlFileDataFactory = new XmlFileDataFactory();
             Result<XmlFileData, XmlLoadError> result = xmlFileDataFactory.Create(groupReferenceFile);
 
             var xmlFileData = new ReferenceFileData(result.Value, referenceFileFactory);
@@ -91,10 +92,10 @@ namespace Origam.DA.Service
     class ReferenceFileFactory: IOrigamFileFactory
     {
         private readonly OrigamPathFactory origamPathFactory;
-        private List<ElementName> parentFolders = new List<ElementName>
+        private List<string> parentFolders = new List<string>
         {
-            OrigamFile.PackageNameUri,
-            OrigamFile.GroupNameUri
+            OrigamFile.PackageCategory,
+            OrigamFile.GroupCategory
         };
 
         public ReferenceFileFactory(OrigamPathFactory origamPathFactory)
@@ -102,21 +103,21 @@ namespace Origam.DA.Service
             this.origamPathFactory = origamPathFactory;
         }
 
-        public ITrackeableFile New(FileInfo fileInfo, IDictionary<ElementName, Guid> parentFolderIds,
+        public ITrackeableFile New(FileInfo fileInfo, IDictionary<string, Guid> parentFolderIds,
             bool isAFullyWrittenFile = false)
         {
             OrigamPath path = origamPathFactory.Create(fileInfo);
             return new OrigamReferenceFile(path, parentFolders);
         }
 
-        public OrigamFile New(string relativePath, IDictionary<ElementName, Guid> parentFolderIds,
+        public OrigamFile New(string relativePath, IDictionary<string, Guid> parentFolderIds,
             bool isGroup, bool isAFullyWrittenFile = false)
         {
             throw new NotImplementedException();
         }
 
         public ITrackeableFile New(string relativePath, string fileHash,
-            IDictionary<ElementName, Guid> parentFolderIds)
+            IDictionary<string, Guid> parentFolderIds)
         {
             throw new NotImplementedException();
         }

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -31,6 +32,7 @@ namespace Origam.Schema.GuiModel
 	/// </summary>
 	[SchemaItemDescription("Web Report", "icon_web-report.png")]
     [HelpTopic("Web+Report")]
+    [ClassMetaVersion("6.0.0")]
 	public class WebReport : AbstractReport
 	{	
 		public WebReport() : base(){}

@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -33,10 +34,11 @@ namespace Origam.Schema.WorkflowModel
 	[SchemaItemDescription("Field Dependency", "Field Dependencies", "field-dependency.png")]
     [HelpTopic("Data+Event+Field+Dependency")]
     [DefaultProperty("Field")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class StateMachineEventFieldDependency : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "StateMachineEventFieldDependency";
+		public const string CategoryConst = "StateMachineEventFieldDependency";
 
 		public StateMachineEventFieldDependency() : base() {}
 
@@ -51,7 +53,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

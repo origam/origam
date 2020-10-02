@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -34,6 +35,7 @@ namespace Origam.Schema.WorkflowModel
         "icon_workflow-method.png")]
     [HelpTopic("Data+Structure+Workflow+Method")]
     [DefaultProperty("LoadWorkflow")]
+    [ClassMetaVersion("6.0.0")]
 	public class DataStructureWorkflowMethod : DataStructureMethod
 	{
 		public DataStructureWorkflowMethod() : base() {}
@@ -46,7 +48,7 @@ namespace Origam.Schema.WorkflowModel
 		// as input parameters except context stores marked with `IsReturnValue'
 		public override void GetParameterReferences(AbstractSchemaItem parentItem, Hashtable list)
 		{
-			foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.ItemTypeConst))
+			foreach (ContextStore context in LoadWorkflow.ChildItemsByType(ContextStore.CategoryConst))
 			{
 				if(context.IsReturnValue == false && context.isScalar())
 				{

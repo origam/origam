@@ -22,15 +22,17 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 
 
 namespace Origam.Schema.GuiModel
 {
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+	[ClassMetaVersion("6.0.0")]
     public abstract class AbstractChart : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "Chart";
+		public const string CategoryConst = "Chart";
 
 		public AbstractChart() : base() {Init();}
 		public AbstractChart(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -64,7 +66,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion			

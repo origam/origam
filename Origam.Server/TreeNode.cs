@@ -74,7 +74,7 @@ namespace Origam.Server
             this.CanDelete = true;
             this.CanUpdate = true;
 
-            foreach (TreeStructureNode child in node.ChildItemsByType(TreeStructureNode.ItemTypeConst))
+            foreach (TreeStructureNode child in node.ChildItemsByType(TreeStructureNode.CategoryConst))
             {
                 this.ChildTypes.Add(child.Id.ToString());
             }

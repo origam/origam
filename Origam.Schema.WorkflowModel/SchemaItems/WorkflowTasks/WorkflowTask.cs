@@ -22,6 +22,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Workbench.Services;
 
@@ -30,6 +31,7 @@ namespace Origam.Schema.WorkflowModel
 	/// <summary>
 	/// Summary description for WorkflowTask.
 	/// </summary>
+	[ClassMetaVersion("6.0.0")]
 	public abstract class WorkflowTask : AbstractWorkflowStep, ISchemaItemFactory, IWorkflowTask
 	{
 

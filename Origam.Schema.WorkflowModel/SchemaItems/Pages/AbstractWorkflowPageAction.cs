@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -32,10 +33,11 @@ namespace Origam.Schema.WorkflowModel
 	/// Summary description for ServiceMethod.
 	/// </summary>
 	[SchemaItemDescription("Action", "Actions", 18)]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class AbstractWorkflowPageAction : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "WorkflowPageAction";
+		public const string CategoryConst = "WorkflowPageAction";
 
 		public AbstractWorkflowPageAction() : base() {Init();}
 		public AbstractWorkflowPageAction(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -123,7 +125,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

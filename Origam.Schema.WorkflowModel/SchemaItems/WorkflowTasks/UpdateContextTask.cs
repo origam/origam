@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -32,6 +33,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) Update context by Xpath", "Tasks", "task-update-context-by-xpath.png")]
     [HelpTopic("Update+Context+Task")]
+    [ClassMetaVersion("6.0.0")]
 	public class UpdateContextTask : AbstractWorkflowStep, ISchemaItemFactory
 	{
 		public UpdateContextTask() : base()
@@ -47,7 +49,7 @@ namespace Origam.Schema.WorkflowModel
 		#region Overriden AbstractSchemaItem Members
 		
 		[EntityColumn("ItemType")]
-		public override string ItemType => ItemTypeConst;
+		public override string ItemType => CategoryConst;
 
 		public override void GetExtraDependencies(System.Collections.ArrayList dependencies)
 		{
@@ -235,7 +237,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			if (this.Entity == null) return null;
 			foreach (DataStructureColumn col in
-				Entity.ChildItemsByType(DataStructureColumn.ItemTypeConst))
+				Entity.ChildItemsByType(DataStructureColumn.CategoryConst))
 			{
 				if (col.Name == FieldName)
 				{

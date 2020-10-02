@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.Services;
@@ -36,7 +37,7 @@ namespace Origam.Schema.DeploymentModel
 		List<DeploymentDependency> DeploymentDependencies { get; set; }
 		bool HasDependencies { get; }
 		Guid SchemaExtensionId { get; }
-		string Package { get; }
+		string PackageName { get; }
 	}
 
 	/// <summary>
@@ -44,18 +45,19 @@ namespace Origam.Schema.DeploymentModel
 	/// </summary>
 	[SchemaItemDescription("Deployment Version", "icon_deployment-version.png")]
     [HelpTopic("Deployment+Version")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class DeploymentVersion : AbstractSchemaItem, ISchemaItemFactory, IDeploymentVersion
 	{
 		IPersistenceService _persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
 		ISchemaService _schemaService = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
-		public const string ItemTypeConst = "DeploymentVersion";
+		public const string CategoryConst = "DeploymentVersion";
 
 		public DeploymentVersion() : base() {}
 
 		public DeploymentVersion(Guid schemaExtensionId,
-			List<SchemaExtension> packagesToDependOn) : base(schemaExtensionId)
+			List<Package> packagesToDependOn) : base(schemaExtensionId)
 		{
 			deploymentDependencies = 
 				DeploymentDependency.FromPackages(packagesToDependOn);
@@ -100,7 +102,7 @@ namespace Origam.Schema.DeploymentModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 
@@ -136,7 +138,7 @@ namespace Origam.Schema.DeploymentModel
 		{
 			get
 			{
-				SchemaExtension ext = _persistence.SchemaListProvider.RetrieveInstance(typeof(SchemaExtension), SchemaExtension.PrimaryKey) as SchemaExtension;
+				Package ext = _persistence.SchemaListProvider.RetrieveInstance(typeof(Package), Package.PrimaryKey) as Package;
 				return ext.VersionString == this.VersionString;
 			}
 		}
@@ -210,7 +212,7 @@ namespace Origam.Schema.DeploymentModel
 			{
 				ISchemaService schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;
 
-				if(schema.ActiveExtension.PrimaryKey.Equals(this.SchemaExtension.PrimaryKey))
+				if(schema.ActiveExtension.PrimaryKey.Equals(this.Package.PrimaryKey))
 				{
 					return new Type[] {
 										  typeof(FileRestoreUpdateScriptActivity),
@@ -256,7 +258,7 @@ namespace Origam.Schema.DeploymentModel
 		private int MaxOrder()
 		{
 			int max = 0;
-			foreach(AbstractUpdateScriptActivity activity in this.ChildItemsByType(AbstractUpdateScriptActivity.ItemTypeConst))
+			foreach(AbstractUpdateScriptActivity activity in this.ChildItemsByType(AbstractUpdateScriptActivity.CategoryConst))
 			{
 				if(activity.ActivityOrder > max) max = activity.ActivityOrder;
 			}
@@ -308,7 +310,7 @@ namespace Origam.Schema.DeploymentModel
 		}
 		
 		public static List<DeploymentDependency> FromPackages(
-			List<SchemaExtension> packagesToDependOn)
+			List<Package> packagesToDependOn)
 		{
 			return packagesToDependOn
 				.Select(package =>new DeploymentDependency(package.Id, package.Version))

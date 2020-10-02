@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -34,6 +35,7 @@ namespace Origam.Schema
 	/// </summary>
 	[EntityName("PackageReference")]
     [XmlPackageRoot("packageReference")]
+    [ClassMetaVersion("6.0.0")]
     public class PackageReference : AbstractPersistent, IBrowserNode2, IComparable, IFilePersistent
 	{
 		public PackageReference()
@@ -55,11 +57,11 @@ namespace Origam.Schema
 		[EntityColumn("refPackageId")] 
 		public Guid PackageId;
 
-		public SchemaExtension Package
+		public Package Package
 		{
 			get
 			{
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(this.PackageId));
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), new ModelElementKey(this.PackageId));
 			}
 			set
 			{
@@ -71,11 +73,11 @@ namespace Origam.Schema
 		public Guid ReferencedPackageId;
 
         [XmlPackageReference("referencedPackage", "ReferencedPackageId")]
-        public SchemaExtension ReferencedPackage
+        public Package ReferencedPackage
 		{
 			get
 			{
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), new ModelElementKey(this.ReferencedPackageId));
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), new ModelElementKey(this.ReferencedPackageId));
 			}
 			set
 			{
@@ -252,11 +254,11 @@ namespace Origam.Schema
             }
         }
 
-        public IDictionary<ElementName, Guid> ParentFolderIds =>
-	        new Dictionary<ElementName, Guid>
+        public IDictionary<string, Guid> ParentFolderIds =>
+	        new Dictionary<string, Guid>
 	        {
 		        {
-			        ElementNameFactory.Create(typeof(SchemaExtension)),
+			        CategoryFactory.Create(typeof(Package)),
 			        PackageId
 		        }
 	        };

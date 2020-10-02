@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -42,6 +43,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("(Task) User Interface", "Tasks", "task-user-interface.png")]
     [HelpTopic("User+Interface+Task")]
+    [ClassMetaVersion("6.0.0")]
 	public class UIFormTask : WorkflowTask, ISchemaItemFactory
 	{
 		public UIFormTask() : base()

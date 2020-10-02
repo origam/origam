@@ -33,7 +33,7 @@ namespace Origam.Schema
 		/// <summary>
 		/// Gets or sets the schema extensions, under which this item was defined.
 		/// </summary>
-		SchemaExtension SchemaExtension{get; set;}
+		Package Package{get; set;}
 
 		ModelElementKey OldPrimaryKey{get; set;}
 
@@ -82,7 +82,7 @@ namespace Origam.Schema
 
 		object Clone(bool keepKeys);
 
-		void SetExtensionRecursive(SchemaExtension extension);
+		void SetExtensionRecursive(Package extension);
 
         string ModelDescription();
 

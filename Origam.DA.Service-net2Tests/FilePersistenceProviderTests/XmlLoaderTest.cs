@@ -29,6 +29,7 @@ using Origam.Schema.WorkflowModel;
 using NUnit.Framework;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.TestCommon;
 
 namespace Origam.DA.Service_net2Tests
@@ -39,14 +40,14 @@ namespace Origam.DA.Service_net2Tests
         protected override TestContext TestContext =>
             TestContext.CurrentContext;
         
-        private List<ElementName> parentFolders = new List<ElementName>
+        private List<string> parentFolders = new List<string>
         {
-            OrigamFile.PackageNameUri,
-            OrigamFile.GroupNameUri
+            OrigamFile.PackageCategory,
+            OrigamFile.GroupCategory
         };
 
-        private static readonly XmlFileDataFactory XmlFileDataFactory =
-            new XmlFileDataFactory(new List<MetaVersionFixer>());
+        private static readonly XmlFileDataFactory XmlFileDataFactory = 
+            new XmlFileDataFactory();
 
         private OrigamFileFactory MakeOrigamFileFactory(DirectoryInfo topDir)
         {
@@ -70,15 +71,14 @@ namespace Origam.DA.Service_net2Tests
             InitFilePersistenceProvider(parentFolders, TestProjectDir);
             var origamXmlLoader =
                 new OrigamXmlLoader(
+                    metaModelUpgradeService: new NullMetaModelUpgradeService(), 
                     objectFileDataFactory: MakeObjectFileDataFactory(TestProjectDir),
                     topDirectory: TestProjectDir,
-                    xmlFileDataFactory: new XmlFileDataFactory(new List<MetaVersionFixer>()));
+                    xmlFileDataFactory: new XmlFileDataFactory());
 
             var pathFactory = new OrigamPathFactory(TestProjectDir);
             ItemTracker itemTracker = new ItemTracker(pathFactory);
-            origamXmlLoader.LoadInto(
-                itemTracker: itemTracker,
-                tryUpdate: false);
+            origamXmlLoader.LoadInto(itemTracker, false);
         }
 
         [Test]
@@ -119,11 +119,11 @@ namespace Origam.DA.Service_net2Tests
 
             Assert.That(locationAttributes, Has.Count.EqualTo(2));
             
-            Guid actualPackageId = locationAttributes[OrigamFile.PackageNameUri];
+            Guid actualPackageId = locationAttributes[OrigamFile.PackageCategory];
             var expectedPackageId = new Guid("1112687f-be11-49ec-a2eb-fba58d945b3e");
             Assert.That(actualPackageId, Is.EqualTo(expectedPackageId));
             
-            Guid actualGroupId = locationAttributes[OrigamFile.GroupNameUri];
+            Guid actualGroupId = locationAttributes[OrigamFile.GroupCategory];
             var expectedGropupId = new Guid("1113687f-be11-49ec-a2eb-fba58d945b3e");
             Assert.That(actualGroupId, Is.EqualTo(expectedGropupId));
         }
@@ -139,14 +139,14 @@ namespace Origam.DA.Service_net2Tests
                         Path.Combine(TestFilesDir.FullName,"MultiEntityTest.origam"))).Value,
                 MakeOrigamFileFactory(TestFilesDir));
             
-            objectFileData.ParentFolderIds[OrigamFile.PackageNameUri] = 
+            objectFileData.ParentFolderIds[OrigamFile.PackageCategory] = 
                 new Guid("e002a017-75b8-4f6e-8539-576ca05d6952");
             ITrackeableFile origamFile = objectFileData.Read();
             
         }
         protected override string DirName => "FilePersistenceProviderTests";
         
-        private void InitFilePersistenceProvider(List<ElementName> parentFolders,
+        private void InitFilePersistenceProvider(List<string> parentFolders,
             DirectoryInfo topDir)
         {
             var fileChangesWatchDog = new FileChangesWatchDog(
@@ -171,7 +171,8 @@ namespace Origam.DA.Service_net2Tests
                 new ObjectFileDataFactory(origamFileFactory, parentFolders);          
             var trackerLoaderFactory =
                 new TrackerLoaderFactory(topDir, objectFileDataFactory,
-                    origamFileFactory,XmlFileDataFactory, pathToIndexBin,true,index);
+                    origamFileFactory,XmlFileDataFactory, pathToIndexBin,
+                    true,index, new NullMetaModelUpgradeService());
 
             var filePersistenceProvider =
                 new FilePersistenceProvider(

@@ -17,7 +17,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 #region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -231,7 +232,7 @@ namespace Origam.Server
         private void SetParameters(IDictionary parameters, DataRow row, AbstractSchemaItem item)
         {
             // map the parameters from the selection dialog data row
-            foreach (SelectionDialogParameterMapping mapping in item.ChildItemsByType(SelectionDialogParameterMapping.ItemTypeConst))
+            foreach (SelectionDialogParameterMapping mapping in item.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
             {
                 object value = row[mapping.SelectionDialogField.Name];
                 DataColumn column = row.Table.Columns[mapping.SelectionDialogField.Name];

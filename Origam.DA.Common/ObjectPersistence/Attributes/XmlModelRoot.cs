@@ -26,10 +26,8 @@ namespace Origam.DA.ObjectPersistence
 {
     public class XmlModelRoot: XmlRootAttribute
     {
-        public XmlModelRoot(string elementName) : base(elementName)
+        public XmlModelRoot(string category) : base(category)
         {
-            Namespace = "http://schemas.origam.com/" +
-                        VersionProvider.CurrentModelMeta + "/model-element";
         }
     }
 }

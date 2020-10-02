@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -29,10 +30,11 @@ namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("Horizontal Axis", "Horizontal Axes", "icon_horizontal-axis.png")]
     [HelpTopic("Horizontal+Axis")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class CartesianChartHorizontalAxis : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "CartesianChartHorizontalAxis";
+		public const string CategoryConst = "CartesianChartHorizontalAxis";
 
 		public CartesianChartHorizontalAxis() : base() {Init();}
 		public CartesianChartHorizontalAxis(Guid schemaExtensionId) : base(schemaExtensionId) {Init();}
@@ -97,7 +99,7 @@ namespace Origam.Schema.GuiModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion			

@@ -49,7 +49,7 @@ namespace Origam.Schema.EntityModel
 			{
 				ArrayList entities = new ArrayList();
 
-				foreach(DataStructureEntity entity in this.ChildItemsByType(DataStructureEntity.ItemTypeConst))
+				foreach(DataStructureEntity entity in this.ChildItemsByType(DataStructureEntity.CategoryConst))
 				{
 					entities.Add(entity);
 					entities.AddRange(GetChildEntities(entity));
@@ -82,7 +82,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataStructureDefaultSet.ItemTypeConst);
+				return this.ChildItemsByType(DataStructureDefaultSet.CategoryConst);
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataStructureTemplateSet.ItemTypeConst);
+				return this.ChildItemsByType(DataStructureTemplateSet.CategoryConst);
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataStructureMethod.ItemTypeConst);
+				return this.ChildItemsByType(DataStructureMethod.CategoryConst);
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataStructureRuleSet.ItemTypeConst);
+				return this.ChildItemsByType(DataStructureRuleSet.CategoryConst);
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return this.ChildItemsByType(DataStructureSortSet.ItemTypeConst);
+				return this.ChildItemsByType(DataStructureSortSet.CategoryConst);
 			}
 		}
 
@@ -126,7 +126,7 @@ namespace Origam.Schema.EntityModel
 		{
 			ArrayList entities = new ArrayList();
 
-			foreach(DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.ItemTypeConst))
+			foreach(DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
 			{
 				entities.Add(childEntity);
 				entities.AddRange(GetChildEntities(childEntity));

@@ -37,7 +37,7 @@ namespace Origam.Schema.WorkflowModel.WorkQueue
 		{
 			get
 			{
-				return WorkQueueClass.ItemTypeConst;
+				return WorkQueueClass.CategoryConst;
 			}
 		}
 		public override string Group

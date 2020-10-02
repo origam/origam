@@ -288,7 +288,7 @@ namespace Origam.Server
                         new List<DataStructureSortSetItem>();
                     foreach (DataStructureSortSetItem item in sortSet
                         .ChildItemsByType(
-                            DataStructureSortSetItem.ItemTypeConst))
+                            DataStructureSortSetItem.CategoryConst))
                     {
                         if (item.Entity.Name == panel.Entity)
                         {

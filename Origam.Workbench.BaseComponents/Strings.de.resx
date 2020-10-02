@@ -151,7 +151,7 @@
     <value>Fehler</value>
   </data>
   <data name="ErrorNotSchemaExtension" xml:space="preserve">
-    <value>Besitzer muss vom Typ SchemaExtension sein.</value>
+    <value>Besitzer muss vom Typ Package sein.</value>
   </data>
   <data name="ErrorEditObject" xml:space="preserve">
     <value>Das Objekt kann nicht editiert werden.</value>

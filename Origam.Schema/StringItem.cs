@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using Origam.DA.ObjectPersistence;
@@ -31,10 +32,11 @@ namespace Origam.Schema
 	/// </summary>
 	[SchemaItemDescription("String", "icon_string.png")]
     [HelpTopic("String+Library")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class StringItem : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "String";
+		public const string CategoryConst = "String";
 
 		public StringItem() : base(){}
 
@@ -49,7 +51,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

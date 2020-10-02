@@ -170,7 +170,7 @@ namespace OrigamArchitect.Commands
 							else
 							{
 								foreach(SelectionDialogParameterMapping mapping in 
-                                    formReferenceMenuItem.ChildItemsByType(SelectionDialogParameterMapping.ItemTypeConst))
+                                    formReferenceMenuItem.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
 								{
 									generator.SelectionParameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
 								}
@@ -246,7 +246,7 @@ namespace OrigamArchitect.Commands
 					}
 					else
 					{
-						foreach(SelectionDialogParameterMapping mapping in reportRef.ChildItemsByType(SelectionDialogParameterMapping.ItemTypeConst))
+						foreach(SelectionDialogParameterMapping mapping in reportRef.ChildItemsByType(SelectionDialogParameterMapping.CategoryConst))
 						{
 							parameters.Add(mapping.Name, row[mapping.SelectionDialogField.Name]);
 						}
@@ -1140,7 +1140,7 @@ namespace OrigamArchitect.Commands
 		protected void PersistAllData()
 		{
 		    newPersistenceService.SchemaProvider.BeginTransaction();
-            PersistFolders<SchemaExtension>();
+            PersistFolders<Package>();
 			PersistFolders<SchemaItemGroup>();
 			PersistFolders<PackageReference>();
 

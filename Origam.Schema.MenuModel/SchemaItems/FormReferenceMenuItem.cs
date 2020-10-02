@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -35,6 +36,7 @@ namespace Origam.Schema.MenuModel
 	
 	[SchemaItemDescription("Screen Reference", "menu_form.png")]
     [HelpTopic("Screen+Menu+Item")]
+    [ClassMetaVersion("6.0.0")]
 	public class FormReferenceMenuItem : AbstractMenuItem, ISchemaItemFactory
 	{
 		public FormReferenceMenuItem() : base() {}

@@ -43,8 +43,8 @@ namespace Origam.DA.Service
         private readonly IDictionary<Guid, PersistedObjectInfo> objectLocationIndex =
             new Dictionary<Guid, PersistedObjectInfo>();
 
-        private readonly ObjectInfoIndex<ElementName> elementNameIndex =
-            new ObjectInfoIndex<ElementName>();
+        private readonly ObjectInfoIndex<string> categoryIndex =
+            new ObjectInfoIndex<string>();
 
         private readonly ObjectInfoIndex<Guid> treeIndex =
             new ObjectInfoIndex<Guid>();
@@ -68,7 +68,7 @@ namespace Origam.DA.Service
         internal void CleanUp()
         {
             LogTreeIndexState("Cleaning up");
-            elementNameIndex.CleanUp();
+            categoryIndex.CleanUp();
             treeIndex.CleanUp();
             folderIndex.CleanUp();
             LogTreeIndexState("Clean up finished");
@@ -87,7 +87,7 @@ namespace Origam.DA.Service
             LogTreeIndexState("Clearing ItemTracker");
             fileHashIndex.Clear();
             objectLocationIndex.Clear();
-            elementNameIndex.Clear();
+            categoryIndex.Clear();
             treeIndex.Clear();
             folderIndex.Clear();
             LogTreeIndexState("ItemTracker cleared");
@@ -113,7 +113,7 @@ namespace Origam.DA.Service
 
             objectLocationIndex[objectInfo.Id] = objectInfo;
             treeIndex.AddOrReplace(objectInfo.ParentId, objectInfo);
-            elementNameIndex.AddOrReplace(objectInfo.ElementName, objectInfo);
+            categoryIndex.AddOrReplace(objectInfo.Category, objectInfo);
             if (objectInfo.ParentId.Equals(Guid.Empty))
             {
                 foreach (var item in objectInfo.OrigamFile.ParentFolderIds)
@@ -132,7 +132,7 @@ namespace Origam.DA.Service
 
             objectLocationIndex.Remove(objectInfo.Id);
             treeIndex.Remove(objectInfo.Id);
-            elementNameIndex.Remove(objectInfo.Id);
+            categoryIndex.Remove(objectInfo.Id);
             folderIndex.Remove(objectInfo.Id);
 
             LogTreeIndexState("Removed: " + objectInfo.Id);
@@ -156,9 +156,9 @@ namespace Origam.DA.Service
             treeIndex[parentId];
 
         public IEnumerable<PersistedObjectInfo> GetByParentFolder
-            (ElementName elementName, Guid folderId)
+            (string category, Guid folderId)
         {
-            string key = $"{elementName}{folderId}";
+            string key = $"{category}{folderId}";
             return folderIndex[key];
         }
 
@@ -169,10 +169,9 @@ namespace Origam.DA.Service
                 .SelectMany(x => x.ContainedObjects.Values);
         }
 
-        public IEnumerable<PersistedObjectInfo> GetListByElementName(
-            ElementName elementName)
+        public IEnumerable<PersistedObjectInfo> GetListByCategory(string category)
         {
-            return elementNameIndex[elementName];
+            return categoryIndex[category];
         }
 
         public void KeepOnly(IEnumerable<FileInfo> filesToKeep)
@@ -188,7 +187,7 @@ namespace Origam.DA.Service
             objectLocationIndex.RemoveByValueSelector(objInfo =>
                 !relativePathsToKeep.Contains(objInfo.OrigamFile.Path.Relative));
 
-            elementNameIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
+            categoryIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
             treeIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
             folderIndex.KeepOnlyItemsOnPaths(relativePathsToKeep);
 
@@ -228,7 +227,7 @@ namespace Origam.DA.Service
                 objInfo.OrigamFile == origamFile;
 
             objectLocationIndex.RemoveByValueSelector(removeFilter);
-            elementNameIndex.RemoveWhere(removeFilter);
+            categoryIndex.RemoveWhere(removeFilter);
             treeIndex.RemoveWhere(removeFilter);
             folderIndex.RemoveWhere(removeFilter);
 
@@ -241,7 +240,7 @@ namespace Origam.DA.Service
             {
                 {"fileHashIndex count", fileHashIndex.Count},
                 {"objectLocationIndex count", objectLocationIndex.Count},
-                {"elementNameIndex count", elementNameIndex.Count},
+                {"elementNameIndex count", categoryIndex.Count},
                 {"treeIndex count", treeIndex.Count},
                 {"folderIndex count", folderIndex.Count}
             };
@@ -379,17 +378,17 @@ namespace Origam.DA.Service
         {
         }
 
-        public int AddValueAndGetId(TValue elementName)
+        public int AddValueAndGetId(TValue category)
         {
-            if (ValueToId.ContainsKey(elementName))
+            if (ValueToId.ContainsKey(category))
             {
-                return ValueToId[elementName];
+                return ValueToId[category];
             } 
             else
             {
                 highestId++;
-                ValueToId.Add(elementName, highestId);
-                IdToValue.Add(highestId, elementName);
+                ValueToId.Add(category, highestId);
+                IdToValue.Add(highestId, category);
                 return highestId;
             }
         }

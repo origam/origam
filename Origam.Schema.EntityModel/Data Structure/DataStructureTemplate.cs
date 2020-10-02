@@ -30,10 +30,10 @@ namespace Origam.Schema.EntityModel
     /// <summary>
     /// Summary description for DataStructureTemplate.
     /// </summary>
-    [XmlModelRoot(ItemTypeConst)]
+    [XmlModelRoot(CategoryConst)]
     public abstract class DataStructureTemplate : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "DataStructureTemplate";
+		public const string CategoryConst = "DataStructureTemplate";
 
 		public DataStructureTemplate() : base(){}
 		
@@ -86,7 +86,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

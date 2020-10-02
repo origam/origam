@@ -78,7 +78,7 @@ namespace Origam.Workbench.Services
                 if (dependsOnItSelf)
                 {
                     throw new Exception("Deployment version: " + deploymentVersion.Version + " of package: " +
-                                        deploymentVersion.Package + " depends on it self! Remove the dependency to continue.");
+                                        deploymentVersion.PackageName + " depends on it self! Remove the dependency to continue.");
                 }
             }
 

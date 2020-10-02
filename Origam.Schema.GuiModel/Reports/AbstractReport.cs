@@ -28,10 +28,10 @@ using Origam.Schema.EntityModel;
 
 namespace Origam.Schema.GuiModel
 {
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
     public abstract class AbstractReport : AbstractSchemaItem, ISchemaItemFactory
 		{
-			public const string ItemTypeConst = "Report";
+			public const string CategoryConst = "Report";
 
 			public AbstractReport() : base() {}
 		
@@ -65,7 +65,7 @@ namespace Origam.Schema.GuiModel
 			{
 				get
 				{
-					return AbstractReport.ItemTypeConst;
+					return AbstractReport.CategoryConst;
 				}
 			}
 

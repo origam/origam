@@ -5,7 +5,7 @@
     name="test7"
     x:id="3e37fa44-cdb7-4804-8176-8df118a918ae"
     x:isFolder="true"
-    x:type="Origam.Schema.SchemaExtension" xmlns="http://schemas.origam.com/1.0.0/package">
+    x:type="Origam.Schema.Package" xmlns="http://schemas.origam.com/1.0.0/package">
     <packageReference
       referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4"
       x:id="456e5d57-3695-484d-9ad2-f764b09374ab"

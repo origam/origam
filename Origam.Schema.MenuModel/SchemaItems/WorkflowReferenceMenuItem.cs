@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Data;
 using System.ComponentModel;
@@ -39,6 +40,7 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Sequential Workflow Reference", "menu_workflow.png")]
     [HelpTopic("Sequential+Workflow+Menu+Item")]
+    [ClassMetaVersion("6.0.0")]
 	public class WorkflowReferenceMenuItem : AbstractMenuItem
 	{
 		private ISchemaService _schema = ServiceManager.Services.GetService(typeof(ISchemaService)) as ISchemaService;

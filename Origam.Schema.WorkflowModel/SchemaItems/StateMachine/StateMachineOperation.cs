@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
@@ -33,10 +34,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("Transition", "Operations", "transition-2.png")]
     [HelpTopic("State+Transition")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class StateMachineOperation : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "StateMachineOperation";
+		public const string CategoryConst = "StateMachineOperation";
 
 		public StateMachineOperation() : base() {}
 
@@ -51,7 +53,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

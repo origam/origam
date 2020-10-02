@@ -73,7 +73,7 @@ namespace Origam.ModelImport
 				return false;
 			}
 			ArrayList presentPackages = persistenceService.SchemaListProvider
-                .RetrieveList<SchemaExtension>(null)
+                .RetrieveList<Package>(null)
 				.ToArrayList();
             string transactionId = Guid.NewGuid().ToString();
             if (log.IsInfoEnabled)
@@ -167,7 +167,7 @@ namespace Origam.ModelImport
 		private bool IsPackageNew(string extensionId, ArrayList presentPackages)
 		{
 			bool retVal = true;
-			foreach(SchemaExtension extension in presentPackages)
+			foreach(Package extension in presentPackages)
 			{
 				if(extension.NodeId == extensionId)
 				{
@@ -267,7 +267,7 @@ namespace Origam.ModelImport
 				xmlReader = new XmlTextReader(xmlFile);
 				while(xmlReader.Read())
 				{
-					if(xmlReader.Name == "SchemaExtension")
+					if(xmlReader.Name == "Package")
 					{
 						ModelFileInfo modelFileInfo = new ModelFileInfo();
 						modelFileInfo.File = xmlFile;

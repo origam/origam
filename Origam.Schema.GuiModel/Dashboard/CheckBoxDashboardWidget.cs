@@ -19,12 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 
 
 namespace Origam.Schema.GuiModel
 {
 	[SchemaItemDescription("CheckBox Widget", "icon_checkbox-widget.png")]
+    [ClassMetaVersion("6.0.0")]
 	public class CheckBoxDashboardWidget : AbstractSimpleDashboardWidget
 	{
 		public CheckBoxDashboardWidget() : base() {Init();}

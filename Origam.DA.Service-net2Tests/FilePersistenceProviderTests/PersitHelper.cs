@@ -28,6 +28,7 @@ using Origam.OrigamEngine;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.ObjectPersistence.Providers;
 using Origam.DA.Service;
+using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Schema;
 using Origam.Workbench.Services;
 
@@ -37,23 +38,23 @@ namespace Origam.DA.Service_net2Tests
     {
         private readonly IPersistenceService persistenceService;
 
-        public IList<ElementName> DefaultFolders { get; }
+        public IList<string> DefaultFolders { get; }
         
         public PersitHelper(string testFolderPath)
         {
-            DefaultFolders = new List<ElementName>
+            DefaultFolders = new List<string>
             {
-                ElementNameFactory.Create(typeof(SchemaExtension)),
-                ElementNameFactory.Create(typeof(SchemaItemGroup))
+                CategoryFactory.Create(typeof(Package)),
+                CategoryFactory.Create(typeof(SchemaItemGroup))
             };
 
-            persistenceService = new FilePersistenceService(DefaultFolders,
-                testFolderPath);
+            persistenceService = new FilePersistenceService(
+                new NullMetaModelUpgradeService(), DefaultFolders, testFolderPath);
         }
 
         public void PersistAll()
         {
-            PersistFolders<SchemaExtension>();
+            PersistFolders<Package>();
             PersistFolders<SchemaItemGroup>();
 
             using (new DebugTimer())

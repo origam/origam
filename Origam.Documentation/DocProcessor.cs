@@ -86,7 +86,7 @@ namespace Origam.Utils
             string caption, gridCaption, bindingMember, panelTitle, section;
             caption = gridCaption = bindingMember = panelTitle = section = "";
             int tabIndex = 0;
-            foreach (PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.ItemTypeConst))
+            foreach (PropertyValueItem property in control.ChildItemsByType(PropertyValueItem.CategoryConst))
             {
                 if (property.ControlPropertyItem.Name == "TabIndex")
                 {
@@ -110,7 +110,7 @@ namespace Origam.Utils
                 }
             }
             caption = (gridCaption == "" | gridCaption == null) ? caption : gridCaption;
-            foreach (PropertyBindingInfo bindItem in control.ChildItemsByType(PropertyBindingInfo.ItemTypeConst))
+            foreach (PropertyBindingInfo bindItem in control.ChildItemsByType(PropertyBindingInfo.CategoryConst))
             {
                 bindingMember = bindItem.Value;
             }
@@ -154,11 +154,11 @@ namespace Origam.Utils
                 WriteEndElement();
                 WriteElement("description",
                     documentation.GetDocumentation(control.ControlItem.PanelControlSet.Id, DocumentationType.USER_LONG_HELP));
-                sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType(ControlSetItem.ItemTypeConst);
+                sortedControls = control.ControlItem.PanelControlSet.ChildItems[0].ChildItemsByType(ControlSetItem.CategoryConst);
             }
             else
             {
-                sortedControls = control.ChildItemsByType(ControlSetItem.ItemTypeConst);
+                sortedControls = control.ChildItemsByType(ControlSetItem.CategoryConst);
             }
             sortedControls.Sort(new ControlSetItemComparer());
             foreach (ControlSetItem subControl in sortedControls)

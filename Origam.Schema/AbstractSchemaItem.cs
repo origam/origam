@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace Origam.Schema
     /// any class that is contained under schema versions.
     /// </summary>
     [EntityName("SchemaItem", "TargetType")]
+    [ClassMetaVersion("6.0.0")]
 	public abstract class AbstractSchemaItem : AbstractPersistent, ISchemaItem, 
         IBrowserNode2, ISchemaItemFactory, ICloneable, IComparable, 
         ISchemaItemConvertible, INotifyPropertyChanged, IFilePersistent
@@ -241,9 +243,9 @@ namespace Origam.Schema
 		/// Recursively changes extension on all child items of the provided schema item.
 		/// </summary>
 		/// <param name="extension"></param>
-		public void SetExtensionRecursive(SchemaExtension extension)
+		public void SetExtensionRecursive(Package extension)
 		{
-			this.SchemaExtension = extension;
+			this.Package = extension;
 
 			foreach(ISchemaItem child in this.ChildItems)
 			{
@@ -625,30 +627,30 @@ namespace Origam.Schema
 		}
 
 	    [EntityColumn("refSchemaExtensionId")]
-	    [XmlParent(typeof(SchemaExtension))]
+	    [XmlParent(typeof(Package))]
         [Browsable(false)]
 	    public Guid SchemaExtensionId { get; set; }
     
 
 		[Category("(Info)")]
 		[Description("Name of the package this model element belongs to.")]
-		public string Package
+		public string PackageName
 		{
 			get
 			{
-				return this.SchemaExtension.ToString();
+				return this.Package.ToString();
 			}
 		}
 
 		[Browsable(false)]
-		public SchemaExtension SchemaExtension
+		public Package Package
 		{
 			get
 			{
 				ModelElementKey key = new ModelElementKey();
 				key.Id = this.SchemaExtensionId;
 
-				return (SchemaExtension)this.PersistenceProvider.RetrieveInstance(typeof(SchemaExtension), key);
+				return (Package)this.PersistenceProvider.RetrieveInstance(typeof(Package), key);
 			}
 			set
 			{
@@ -989,7 +991,7 @@ namespace Origam.Schema
 		{
 			get
 			{
-				return this.ChildItemsByType(SchemaItemParameter.ItemTypeConst);
+				return this.ChildItemsByType(SchemaItemParameter.CategoryConst);
 			}
 		}
 
@@ -1220,6 +1222,8 @@ namespace Origam.Schema
         #endregion
 
         #region IPersistent2 Members
+
+
         [Category("(Info)")]
         public string RelativeFilePath
         {
@@ -1231,7 +1235,7 @@ namespace Origam.Schema
                 {
                     groupPath = group.Path.Replace("/", "\\") + "\\";
                 }
-                return SchemaExtension.Name + "\\" + RootItem.ItemType
+                return Package.Name + "\\" + RootItem.ItemType
                     + "\\" + groupPath + RemoveIllegalCharactersFromPath(RootItem.Name) + PersistenceFiles.Extension;
             }
         }
@@ -1262,15 +1266,15 @@ namespace Origam.Schema
         }
 
         [Browsable(false)]
-        public IDictionary<ElementName, Guid> ParentFolderIds =>
-	        new Dictionary<ElementName, Guid>
+        public IDictionary<string, Guid> ParentFolderIds =>
+	        new Dictionary<string, Guid>
 	        {
 		        {
-			        ElementNameFactory.Create(typeof(SchemaExtension)),
+			        CategoryFactory.Create(typeof(Package)),
 			        SchemaExtensionId
 		        },
 		        {
-			        ElementNameFactory.Create(typeof(SchemaItemGroup)),
+			        CategoryFactory.Create(typeof(SchemaItemGroup)),
 			        GroupId
 		        }
 	        };
@@ -1298,7 +1302,7 @@ namespace Origam.Schema
 				{
 					// only count items of same type, from the same package and not derived
 					if(child.ItemType == item.ItemType 
-						& child.SchemaExtension.PrimaryKey.Equals(item.SchemaExtension.PrimaryKey)
+						& child.Package.PrimaryKey.Equals(item.Package.PrimaryKey)
 						& child.DerivedFrom == null
 						)
 					{

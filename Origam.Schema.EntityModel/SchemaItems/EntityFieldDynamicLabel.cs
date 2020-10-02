@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 
 using System.ComponentModel;
@@ -35,7 +36,8 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Dynamic Field Label", "Dynamic Labels", 5)]
     [HelpTopic("Dynamic+Field+Labels")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class EntityFieldDynamicLabel : AbstractSchemaItem, IComparable
 	{
 		public EntityFieldDynamicLabel() : base(){}
@@ -44,7 +46,7 @@ namespace Origam.Schema.EntityModel
 
 		public EntityFieldDynamicLabel(Key primaryKey) : base(primaryKey)	{}
 
-		public const string ItemTypeConst = "DataEntityFieldDynamicLabel";
+		public const string CategoryConst = "DataEntityFieldDynamicLabel";
 
 		#region Properties
 		private string _roles = "";
@@ -182,7 +184,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

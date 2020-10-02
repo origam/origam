@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -34,10 +35,11 @@ namespace Origam.Schema.MenuModel
 	/// </summary>
 	[SchemaItemDescription("Search Data Source", 9)]
     [HelpTopic("Search Data Sources")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
     public class SearchDataSource : AbstractSchemaItem, IDataStructureReference
     {
-		public const string ItemTypeConst = "SearchDataSource";
+		public const string CategoryConst = "SearchDataSource";
 
         public SearchDataSource() : base() { Init(); }
 
@@ -194,7 +196,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 

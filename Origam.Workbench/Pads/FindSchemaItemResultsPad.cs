@@ -200,7 +200,7 @@ namespace Origam.Workbench.Pads
                 TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
                 if (treenode != null)
                 {
-                    var itm = (SchemaExtension)treenode.Tag;
+                    var itm = (Package)treenode.Tag;
                     referencePackages = itm.IncludedPackages.Select(x =>{ return x.Id; }).ToList();
                     referencePackages.Add(itm.Id);
                     //if (!((SchemaExtension)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
@@ -245,7 +245,7 @@ namespace Origam.Workbench.Pads
 			if(rootName == null) rootName = item.RootItem.ItemType;
 
 			ListViewItem newItem = new ListViewItem(new string[] {item.Path, rootName, name,
-            item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.Package,
+            item.RootItem.Group == null ? "" : item.RootItem.Group.Path,item.PackageName,
                 referencePackages.Contains(item.SchemaExtensionId)?"Yes":"No"});
 			newItem.Tag = item;
 			newItem.ImageIndex = _schemaBrowser.ImageIndex(item.RootItem.Icon);

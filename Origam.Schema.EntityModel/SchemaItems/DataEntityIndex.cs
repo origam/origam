@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.ComponentModel;
 
@@ -38,7 +39,8 @@ namespace Origam.Schema.EntityModel
 	/// </summary>
 	[SchemaItemDescription("Index", "Indexes", "icon_index.png")]
     [HelpTopic("Indexes")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class DataEntityIndex : AbstractSchemaItem, ISchemaItemFactory
 	{
 		public DataEntityIndex() : base(){}
@@ -47,7 +49,7 @@ namespace Origam.Schema.EntityModel
 
 		public DataEntityIndex(Key primaryKey) : base(primaryKey)	{}
 
-		public const string ItemTypeConst = "DataEntityIndex";
+		public const string CategoryConst = "DataEntityIndex";
 
 		#region Properties
 		private bool _isUnique = false;
@@ -98,7 +100,7 @@ namespace Origam.Schema.EntityModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion

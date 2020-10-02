@@ -36,10 +36,10 @@ namespace Origam.Windows.Editor
 
         void SeparateIntoPathsByNamespace(XmlElementPath path)
         {
-            foreach (QualifiedName elementName in path.Elements)
+            foreach (QualifiedName category in path.Elements)
             {
-                XmlElementPath matchedPath = FindOrCreatePath(elementName.Namespace);
-                matchedPath.AddElement(elementName);
+                XmlElementPath matchedPath = FindOrCreatePath(category.Namespace);
+                matchedPath.AddElement(category);
             }
         }
 

@@ -346,15 +346,15 @@ namespace Origam.Server.Doc
         public void WritePackages(XmlWriter writer, AbstractSchemaItem item)
         {
             DocTools.WriteSectionStart(writer, "Packages");
-            writer.WriteElementString("p", "Defined in package " + item.SchemaExtension.Name);
+            writer.WriteElementString("p", "Defined in package " + item.Package.Name);
 
             Dictionary<string, List<AbstractSchemaItem>> extensions = new Dictionary<string, List<AbstractSchemaItem>>();
             foreach (AbstractSchemaItem child in item.ChildItems)
             {
-                if (! child.SchemaExtension.PrimaryKey.Equals(item.SchemaExtension.PrimaryKey)
+                if (! child.Package.PrimaryKey.Equals(item.Package.PrimaryKey)
                     && child.DerivedFrom == null)
                 {
-                    string packageName = child.SchemaExtension.Name;
+                    string packageName = child.Package.Name;
                     List<AbstractSchemaItem> list;
                     if (extensions.ContainsKey(packageName))
                     {
@@ -363,7 +363,7 @@ namespace Origam.Server.Doc
                     else
                     {
                         list = new List<AbstractSchemaItem>();
-                        extensions.Add(child.SchemaExtension.Name, list);
+                        extensions.Add(child.Package.Name, list);
                     }
                     list.Add(child);
                 }

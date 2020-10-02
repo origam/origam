@@ -124,7 +124,8 @@ namespace Origam.DA.Service
         public override void EndTransactionDontSave()
         {
             persistor.EndTransactionDontSave();
-            ReloadFiles(tryUpdate: false);
+            Maybe<XmlLoadError> result = ReloadFiles();
+            if(result.HasValue) throw new Exception(result.Value.Message);
             PersistIndex(false);
         }
 
@@ -277,11 +278,11 @@ namespace Origam.DA.Service
 
         private IEnumerable<object> RetrieveAll(Type type)
         {
-            ElementName elementName = ElementNameFactory.Create(type);
-            if (elementName == null) return new List<object>();
+            string category = CategoryFactory.Create(type);
+            if (string.IsNullOrWhiteSpace(category)) return new List<object>();
 
             return index
-                .GetListByElementName(elementName)
+                .GetListByCategory(category)
                 .Select(objInfo => RetrieveInstance(objInfo));
         }
 
@@ -290,19 +291,19 @@ namespace Origam.DA.Service
         {
             return RetrieveListByParent(
                     (Guid) primaryKey["Id"],
-                    ElementNameFactory.Create(typeof(T)),
+                    CategoryFactory.Create(typeof(T)),
                     typeof(T),
                     useCache)
                 .ToList<T>();
         }
 
-        private ArrayList RetrieveListByParent(Guid id, ElementName elementName,
+        private ArrayList RetrieveListByParent(Guid id, string category,
             Type type, bool useCache)
         {         
             ArrayList result = new ArrayList();
             foreach (PersistedObjectInfo objInfo in index.GetByParentId(id))    
             {
-                if (elementName == null || objInfo.ElementName == elementName)
+                if (string.IsNullOrWhiteSpace(category) || objInfo.Category == category)
                 {
                     object instance = RetrieveInstance(objInfo, useCache);
                     if (type == null || type.IsInstanceOfType(instance))
@@ -340,7 +341,8 @@ namespace Origam.DA.Service
             DirectoryInfo packageDir = index.FindPackageDirectory(packageId);
             origamFileManager.RemoveDirectoryWithContents(packageDir);
 
-            ReloadFiles(false);
+            Maybe<XmlLoadError> result = ReloadFiles();
+            if(result.HasValue) throw new Exception(result.Value.Message);
         }
 
         public override object Clone()
@@ -395,12 +397,10 @@ namespace Origam.DA.Service
                 .ToList();
         }
 
-        public override List<T> RetrieveListByType<T>(string itemType)
+        public override List<T> RetrieveListByCategory<T>(string category)
         {
-            ElementName elName =
-                ElementNameFactory.Create(OrigamFile.GroupUri, itemType);
             return index                       
-                .GetListByElementName(elName)
+                .GetListByCategory(category)
                 .Select(objInfo => RetrieveInstance(objInfo))
                 .Cast<T>()
                 .ToList();
@@ -408,19 +408,19 @@ namespace Origam.DA.Service
 
         public override List<T> RetrieveListByGroup<T>(Key primaryKey)
         {
-            ElementName elementName = ElementNameFactory.Create(typeof(T));
+            string category = CategoryFactory.Create(typeof(T));
             return index
-                .GetByParentFolder(elementName,  (Guid)primaryKey["Id"])
+                .GetByParentFolder(category,  (Guid)primaryKey["Id"])
                 .Select(objInfo => RetrieveInstance(objInfo))
                 .Where(x => x is T)
                 .Cast<T>()
                 .ToList();
         }
 
-        public Maybe<XmlLoadError> ReloadFiles(bool tryUpdate)
+        public Maybe<XmlLoadError> ReloadFiles()
         {
             localizationCache.Reload();
-            return index.ReloadFiles(trackerLoaderFactory, tryUpdate);
+            return index.ReloadFiles(trackerLoaderFactory);
         }
 
         public DirectoryInfo GetParentPackageDirectory(Guid itemId)

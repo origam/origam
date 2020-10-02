@@ -28,7 +28,7 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	public class ServiceSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
 	{
-		public const string ItemTypeConst = "Service";
+		public const string CategoryConst = "Service";
 		
 		public ServiceSchemaItemProvider()
 		{
@@ -39,7 +39,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return Service.ItemTypeConst;
+				return Service.CategoryConst;
 			}
 		}
 		public override string Group

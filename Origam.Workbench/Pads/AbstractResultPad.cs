@@ -34,7 +34,7 @@ namespace Origam.Workbench.Pads
             TreeNode treenode = (WorkbenchSingleton.Workbench.GetPad(typeof(SchemaBrowser)) as SchemaBrowser).EbrSchemaBrowser.GetFirstNode();
             if (treenode != null)
             {
-                if (!((SchemaExtension)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
+                if (!((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
                 {
                     DialogResult dialogResult = MessageBox.Show("Do you want to change the Package?", "Package change", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.No)
@@ -58,9 +58,9 @@ namespace Origam.Workbench.Pads
             {
                 schema.UnloadSchema();
             }
-            if (treenode == null || !((SchemaExtension)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
+            if (treenode == null || !((Package)treenode.Tag).Id.Equals(SchemaExtensionIdItem))
             {
-                foreach (SchemaExtension sch in schema.AllPackages)
+                foreach (Package sch in schema.AllPackages)
                 {
                     if (sch.Id.Equals(SchemaExtensionIdItem))
                     {

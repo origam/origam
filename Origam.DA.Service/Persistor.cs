@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using MoreLinq;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 using Origam.Schema;
@@ -86,14 +87,13 @@ namespace Origam.DA.Service
 
         private void UpdateFile(IFilePersistent instance, OrigamFile newFile)
         {
-            ElementName elementName = ElementNameFactory.Create(instance.GetType());
             if (instance.IsFileRootElement)
             {
                 newFile.ParentFolderIds.AddRange(instance.ParentFolderIds);
             }
 
-            var objectInfo = CreateObjectInfo(elementName, instance, newFile);
-            WriteToXmlDocument(newFile, instance, elementName); 
+            var objectInfo = CreateObjectInfo(instance, newFile);
+            WriteToXmlDocument(newFile, instance); 
             UpdateIndex(instance, objectInfo);
             transactionStore.AddOrReplace(newFile);
         }
@@ -170,21 +170,21 @@ namespace Origam.DA.Service
             return null;
         }
 
-        private PersistedObjectInfo CreateObjectInfo(ElementName elementName,
-            IFilePersistent instance, OrigamFile origamFile)
+        private PersistedObjectInfo CreateObjectInfo(IFilePersistent instance, OrigamFile origamFile)
         {
             PersistedObjectInfo updatedObjectInfo = new PersistedObjectInfo(
-                elementName: elementName,
+                category: CategoryFactory.Create(instance.GetType()),
                 id: instance.Id,
                 parentId: instance.FileParentId,
                 isFolder: instance.IsFolder,
-                origamFile: origamFile);
+                origamFile: origamFile,
+                fullTypeName: instance.GetType().FullName,
+                version: Versions.GetCurrentClassVersion(instance.GetType()));
             origamFile.ContainedObjects[instance.Id] = updatedObjectInfo;
             return updatedObjectInfo;
         }
 
-        private void WriteToXmlDocument(OrigamFile origamFile, IFilePersistent instance,
-            ElementName elementName)
+        private void WriteToXmlDocument(OrigamFile origamFile, IFilePersistent instance)
         {
             origamFile.DeferredSaveDocument = GetDocumentToWriteTo(origamFile);
             if (instance.IsDeleted)
@@ -193,7 +193,7 @@ namespace Origam.DA.Service
             }
             else
             {
-                origamFile.WriteInstance(instance, elementName);
+                origamFile.WriteInstance(instance);
             }
         }
 
@@ -202,7 +202,7 @@ namespace Origam.DA.Service
         {
             switch (instance)
             {
-                case SchemaExtension extension:
+                case Package extension:
                     RenameSchemaExtension(containingFile, extension);
                     break;
                 case SchemaItemGroup group:
@@ -214,18 +214,18 @@ namespace Origam.DA.Service
         }
 
         private void RenameSchemaExtension(OrigamFile containingFile,
-            SchemaExtension schemaExtension)
+            Package package)
         {
-            if (!schemaExtension.WasRenamed) return;
+            if (!package.WasRenamed) return;
             if (containingFile == null) return;
 
             try
             {
                 origamFileManager.RenameDirectory(containingFile.Path.Directory,
-                    schemaExtension.Name);
+                    package.Name);
                 persistenceProvider.RetrieveList<SchemaItemGroup>(null)
-                    .Where(group => group.Name == schemaExtension.OldName)
-                    .ForEach(group => RenameGroup(group, schemaExtension.Name));
+                    .Where(group => group.Name == package.OldName)
+                    .ForEach(group => RenameGroup(group, package.Name));
             }
             catch (Exception e)
             {
@@ -300,20 +300,16 @@ namespace Origam.DA.Service
                      isGroup: instance.IsFolder);
         }
 
-        private XmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
+        private OrigamXmlDocument GetDocumentToWriteTo(OrigamFile origamFile)
         {
             if (IsInTransaction && transactionStore.Contains(origamFile.Path.Relative))
             {
                 return transactionStore.Get(origamFile.Path.Relative)
                     .DeferredSaveDocument;
             }
-            if (origamFile.Path.Exists)
-            {
-                XmlDocument openDoc = new XmlDocument();
-                openDoc.Load(origamFile.Path.Absolute);
-                return openDoc;
-            }
-            return OrigamXmlManager.NewDocument();
+            return origamFile.Path.Exists 
+                ? new OrigamXmlDocument(origamFile.Path.Absolute) 
+                : new OrigamXmlDocument();
         }
 
         private static void CheckObjectCanBePersisted(IPersistent obj, bool checkRules)
@@ -336,14 +332,14 @@ namespace Origam.DA.Service
         {
             switch (instance)
             {
-                case SchemaExtension schemaExtension:
+                case Package schemaExtension:
                     transactionStore.FolderRenamingTasks.Enqueue(
                         new RenameSchemaExtensionTask(
                             origamFileManager: origamFileManager,
                             index: index,
                             persistenceProvider: persistenceProvider,
                             origamFile: origamFile,
-                            schemaExtension: schemaExtension));
+                            package: schemaExtension));
                     break;
                 case SchemaItemGroup group:
                     transactionStore.FolderRenamingTasks.Enqueue(
@@ -361,7 +357,7 @@ namespace Origam.DA.Service
 
     class RenameSchemaExtensionTask: IDeferredTask
     {
-        private readonly SchemaExtension schemaExtension;
+        private readonly Package _package;
         private readonly OrigamFile origamFile;
         private readonly IPersistenceProvider persistenceProvider;
         private readonly FilePersistenceIndex index;
@@ -369,9 +365,9 @@ namespace Origam.DA.Service
         public RenameSchemaExtensionTask(OrigamFileManager origamFileManager,
             FilePersistenceIndex index,
             IPersistenceProvider persistenceProvider, OrigamFile origamFile,
-            SchemaExtension schemaExtension)
+            Package package)
         {
-            this.schemaExtension = schemaExtension;
+            this._package = package;
             this.origamFile = origamFile;
             this.origamFileManager = origamFileManager;
             this.index = index;
@@ -380,16 +376,16 @@ namespace Origam.DA.Service
 
         public void Run()
         {
-            if (!schemaExtension.WasRenamed) return;
+            if (!_package.WasRenamed) return;
             if (origamFile == null) return;
             try
             {
                 origamFileManager.RenameDirectory(origamFile.Path.Directory,
-                    schemaExtension.Name);
+                    _package.Name);
                 persistenceProvider
                     .RetrieveList<SchemaItemGroup>(null)
-                    .Where(group => group.Name == schemaExtension.OldName)
-                    .ForEach(group => RenameGroup(group, schemaExtension.Name));
+                    .Where(group => group.Name == _package.OldName)
+                    .ForEach(group => RenameGroup(group, _package.Name));
             }
             catch (Exception e)
             {

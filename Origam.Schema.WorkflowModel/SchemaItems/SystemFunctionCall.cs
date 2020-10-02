@@ -19,6 +19,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
+using Origam.DA.Common;
 using System;
 using System.Xml.Serialization;
 using Origam.DA.ObjectPersistence;
@@ -37,10 +38,11 @@ namespace Origam.Schema.WorkflowModel
 	/// </summary>
 	[SchemaItemDescription("System Function Call", "Parameters", "icon_system-function-call-ui.png")]
     [HelpTopic("System+Function+Call")]
-	[XmlModelRoot(ItemTypeConst)]
+	[XmlModelRoot(CategoryConst)]
+    [ClassMetaVersion("6.0.0")]
 	public class SystemFunctionCall : AbstractSchemaItem
 	{
-		public const string ItemTypeConst = "SystemFunctionCall";
+		public const string CategoryConst = "SystemFunctionCall";
 
 		public SystemFunctionCall() : base() {}
 
@@ -55,7 +57,7 @@ namespace Origam.Schema.WorkflowModel
 		{
 			get
 			{
-				return ItemTypeConst;
+				return CategoryConst;
 			}
 		}
 		#endregion
