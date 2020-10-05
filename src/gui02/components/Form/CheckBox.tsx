@@ -36,9 +36,11 @@ export const CheckBox: React.FC<{
         display: "none",
       };
     }
+    // 20 is expected checkbox width, might be needed to be set dynamically
+    // if there is some difference in chekbox sizes between various platforms.
     return {
       top: top,
-      left: left + height,
+      left: left + 20,
     };
   }
 
