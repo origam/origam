@@ -60,6 +60,20 @@
       onCopyAction="Copy"
       x:type="Origam.Schema.EntityModel.FieldMappingItem"
       xmlMappingType="Attribute" />
+    <DataEntityColumn
+      abstract="false"
+      allowNulls="true"
+      arrayRelation="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessageBusinessPartner/d752940d-cb29-4e2a-bc06-0bc9a0356b4b"
+      arrayValueField="Chat/DataEntity/Chat/OrigamChatMessageBusinessPartner.origam#OrigamChatMessageBusinessPartner/refOrigamChatMessageId/7ccb6016-26bc-4197-aa03-88476e60f50a"
+      autoIncrement="false"
+      dataType="Array"
+      excludeFromAllFields="false"
+      x:id="ffb67780-34aa-4000-b893-755a36e25662"
+      isPrimaryKey="false"
+      name="Mentions"
+      onCopyAction="Copy"
+      x:type="Origam.Schema.EntityModel.DetachedField"
+      xmlMappingType="Attribute" />
     <DataEntityIndex
       abstract="false"
       generateDeploymentScript="true"
