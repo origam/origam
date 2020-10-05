@@ -1,18 +1,18 @@
-import {computed} from "mobx";
-import {inject, observer} from "mobx-react";
-import {IDockType} from "model/entities/types/IProperty";
-import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import { computed } from "mobx";
+import { inject, observer } from "mobx-react";
+import { IDockType } from "model/entities/types/IProperty";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
 import S from "./FormField.module.scss";
-import {getRowStateMayCauseFlicker} from "model/selectors/RowState/getRowStateMayCauseFlicker";
-import {getRowStateDynamicLabel} from "model/selectors/RowState/getRowStateNameOverride";
+import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
+import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
 
 export enum ICaptionPosition {
   Left = "Left",
   Right = "Right",
   Top = "Top",
-  None = "None"
+  None = "None",
 }
 
 @inject(({ property }, { caption }) => {
@@ -21,15 +21,11 @@ export enum ICaptionPosition {
     !getRowStateAllowRead(property, rowId || "", property.id) ||
     getRowStateMayCauseFlicker(property);
 
-  const ovrCaption = getRowStateDynamicLabel(
-    property,
-    rowId || "",
-    property.id
-  );
+  const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
 
   return {
     isHidden,
-    caption: !!ovrCaption ? ovrCaption : caption
+    caption: !!ovrCaption ? ovrCaption : caption,
   };
 })
 @observer
@@ -50,7 +46,7 @@ export class FormField extends React.Component<{
   get captionStyle() {
     if (this.props.isHidden) {
       return {
-        display: "none"
+        display: "none",
       };
     }
     switch (this.props.captionPosition) {
@@ -59,20 +55,20 @@ export class FormField extends React.Component<{
         return {
           top: this.props.top,
           left: this.props.left - this.props.captionLength,
-          width: this.props.captionLength
+          width: this.props.captionLength,
           //  height: this.props.height
         };
       case ICaptionPosition.Right:
+        // 20 is expected checkbox width, might be needed to be set dynamically
+        // if there is some difference in chekbox sizes between various platforms.
         return {
           top: this.props.top,
-          left: this.props.isCheckbox
-            ? this.props.left + this.props.height
-            : this.props.left + this.props.width
+          left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width,
         };
       case ICaptionPosition.Top:
         return {
           top: this.props.top - 20, // TODO: Move this constant somewhere else...
-          left: this.props.left
+          left: this.props.left,
         };
     }
   }
@@ -80,7 +76,7 @@ export class FormField extends React.Component<{
   get formFieldStyle() {
     if (this.props.isHidden) {
       return {
-        display: "none"
+        display: "none",
       };
     }
     if (this.props.dock === IDockType.Fill) {
@@ -88,14 +84,14 @@ export class FormField extends React.Component<{
         top: 0,
         left: 0,
         width: "100%",
-        height: "100%"
+        height: "100%",
       };
     }
     return {
       left: this.props.left,
       top: this.props.top,
       width: this.props.width,
-      height: this.props.height
+      height: this.props.height,
     };
   }
 
