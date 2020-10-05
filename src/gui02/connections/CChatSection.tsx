@@ -35,9 +35,9 @@ export class CChatSection extends React.Component {
           icon={<Icon src="./icons/add.svg" tooltip={T("New Chat", "new_chat")} />}
           label={<>{T("New Chat", "new_chat")}</>}
           onClick={(event) => {
-            const _this = this;
+            const self = this;
             flow(function* () {
-              yield* openNewUrl(_this.workbench)(
+              yield* openNewUrl(self.workbench)(
                 `chatrooms/index.html#/chatroom`,
                 IUrlUpenMethod.OrigamTab,
                 "New Chat"
