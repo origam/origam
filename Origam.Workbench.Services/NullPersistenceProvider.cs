@@ -68,6 +68,21 @@ namespace Origam.Workbench.Services
             return null;
         }
 
+        public T RetrieveInstance<T>(Guid instanceId)
+        {
+            return default;
+        }
+
+        public T RetrieveInstance<T>(Guid instanceId, bool useCache)
+        {
+            return default;
+        }
+
+        public T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException)
+        {
+            return default;
+        }
+
         public void RefreshInstance(IPersistent persistentObject)
         {
         }
