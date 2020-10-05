@@ -360,5 +360,20 @@ namespace Origam.Workbench.ServicesTests
         {
             throw new NotImplementedException();
         }
+
+        public T RetrieveInstance<T>(Guid instanceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T RetrieveInstance<T>(Guid instanceId, bool useCache)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T RetrieveInstance<T>(Guid instanceId, bool useCache, bool throwNotFoundException)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
