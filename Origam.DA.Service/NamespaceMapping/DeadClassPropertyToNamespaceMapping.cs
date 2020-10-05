@@ -26,7 +26,7 @@ namespace Origam.DA.Service.NamespaceMapping
         public void AddNamespacesToDocumentAndAdjustMappings(OrigamXDocument document)
         {
             xmlNamespaceName = document.AddNamespace(
-                nameSpaceName: xmlNamespaceName, 
+                nameSpaceShortCut: xmlNamespaceName, 
                 nameSpace: NodeNamespace.ToString());
         }
     }

@@ -44,13 +44,20 @@ namespace Origam.DA.Service
             XDocument = XDocument.Load(file.FullName);
         }
 
-        public string AddNamespace(string nameSpaceName, string nameSpace)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameSpaceShortCut"> example: "asi"</param>
+        /// <param name="nameSpace">example: "http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0"</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public string AddNamespace(string nameSpaceShortCut, string nameSpace)
         {
             if (IsEmpty)
             {
                 throw new Exception("Cannot add namespace to an empty document");
             }
-            var nextNamespaceName = GetNextNamespaceName(nameSpaceName, nameSpace);
+            var nextNamespaceName = GetNextNamespaceName(nameSpaceShortCut, nameSpace);
             FileElement.SetAttributeValue(
                 XName.Get( nextNamespaceName, "http://www.w3.org/2000/xmlns/"),
                 nameSpace);

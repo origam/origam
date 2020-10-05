@@ -57,7 +57,7 @@ namespace Origam.DA.Service
             {
                 return result.Error;
             }
-
+            
             List<XmlFileData> dataToAdd = tryUpgrade
                 ? metaModelUpgradeService.Upgrade(result.Value)
                 : result.Value;

@@ -51,7 +51,7 @@ namespace Origam.Workbench.Services
             
         public FilePersistenceService(IMetaModelUpgradeService metaModelUpgradeService, IList<string> defaultFolders,
             string basePath = null, bool watchFileChanges = true, bool useBinFile = true,
-            bool checkRules = true)
+            bool checkRules = true, bool tryUpgrade = false)
         {
             this.metaModelUpgradeService = metaModelUpgradeService;
             this.defaultFolders = defaultFolders;
@@ -88,7 +88,7 @@ namespace Origam.Workbench.Services
                                             metaModelUpgradeService);
             index.InitItemTracker(
                 trackerLoaderFactory: trackerLoaderFactory, 
-                tryUpgrade: useBinFile);
+                tryUpgrade: tryUpgrade);
             
             schemaProvider = new FilePersistenceProvider(
                 topDirectory: topDirectory,
@@ -212,7 +212,7 @@ namespace Origam.Workbench.Services
 
         public object Clone()
         {
-            return new FilePersistenceService(metaModelUpgradeService, defaultFolders);
+            return new FilePersistenceService(metaModelUpgradeService, defaultFolders, tryUpgrade: false);
         }
 
         public void MergeSchema(System.Data.DataSet schema, Key activePackage)

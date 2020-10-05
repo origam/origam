@@ -63,11 +63,19 @@ namespace Origam.OrigamEngine
 
             var metaModelUpgradeService = ServiceManager.Services
                 .GetService<MetaModelUpgradeService>();
+            
+            
+#if !ORIGAM_CLIENT
+            bool tryUpgrade = true;
+#else
+            bool tryUpgrade = false;
+#endif
             return new FilePersistenceService(
                 metaModelUpgradeService: metaModelUpgradeService,
                 defaultFolders: defaultFolders,
                 watchFileChanges: watchFileChanges,
-                checkRules: checkRules,useBinFile: useBinFile);
+                checkRules: checkRules,useBinFile: useBinFile,
+                tryUpgrade: tryUpgrade);
         }
 
         public FilePersistenceService CreateNoBinFilePersistenceService()
@@ -82,7 +90,8 @@ namespace Origam.OrigamEngine
                 new NullMetaModelUpgradeService(), 
                 defaultFolders: defaultFolders,
                 watchFileChanges: false,
-                useBinFile: false);
+                useBinFile: false,
+                tryUpgrade: false);
         }
 
         public static void Clear()

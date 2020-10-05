@@ -114,7 +114,7 @@ namespace Origam.DA.Service.NamespaceMapping
             foreach (var propertyMapping in propertyMappings)
             {
                 propertyMapping.XmlNamespaceName = document.AddNamespace(
-                    nameSpaceName: propertyMapping.XmlNamespaceName, 
+                    nameSpaceShortCut: propertyMapping.XmlNamespaceName, 
                     nameSpace: propertyMapping.XmlNamespace);
             }
         }
