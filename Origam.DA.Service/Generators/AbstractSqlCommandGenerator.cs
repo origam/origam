@@ -2035,7 +2035,8 @@ namespace Origam.DA.Service
 
                 if (!found) processColumn = true;
             }
-            else if (columnsInfo.RenderSqlForDetachedFields &&
+            else if (columnsInfo.RenderSqlForDetachedFields && 
+                     columnsInfo.ColumnNames.Contains(column.Name) &&
                      column.Field is DetachedField)
             {
                 processColumn = true;
