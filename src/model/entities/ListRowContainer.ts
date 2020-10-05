@@ -94,6 +94,7 @@ export class ListRowContainer implements IRowsContainer {
   insert(index: number, row: any[]): void {
     this.allRows.splice(index, 0, row);
     this.forcedFirstRowId = this.rowIdGetter(row);
+    this.updateSortAndFilter();
   }
 
   set(rows: any[][]) {
