@@ -489,17 +489,6 @@ export class LookupFilterSetting implements IFilterSetting {
 
 
 export function FilterBuildDropdownEditor(props: {
-  // xmlNode: any;
-  // isReadOnly: boolean;
-  // isInvalid?: boolean;
-  // invalidMessage?: string;
-  // backgroundColor?: string;
-  // foregroundColor?: string;
-  // customStyle?: any;
-  // tagEditor?: JSX.Element;
-  // onDoubleClick?: (event: any) => void;
-  // subscribeToFocusManager?: (obj: IFocusable) => () => void;
-  // onKeyDown?(event: any): void;
   lookup: ILookup;
   property: IProperty;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
@@ -514,14 +503,8 @@ export function FilterBuildDropdownEditor(props: {
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
-    // const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
-    //   () => dropdownEditorSetup,
-    //   dataViewRowCursor,
-    //   dataViewApi,
-    //   () => dropdownEditorBehavior
-    // );
     const dropdownEditorData: IDropdownEditorData =
-      new FilterEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup, props.onChange)
+      new FilterEditorData(props.onChange)
 
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
@@ -539,120 +522,14 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorLookupListCache,
       false,
     );
-
-
-    // const rat = props.xmlNode.attributes;
-    // const lookupId = rat.LookupId;
-    // const propertyId = props.propertyId;
-    // const showUniqueValues = true;
-    // const identifier = rat.Identifier;
-    // let identifierIndex = 0;
-    // const dropdownType = rat.DropDownType;
-    // const cached = rat.Cached === "true";
-    // const searchByFirstColumnOnly = rat.SearchByFirstColumnOnly === "true";
-    //
-    // const columnNames: string[] = [identifier];
-    // const visibleColumnNames: string[] = [];
-    // const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
-    // let index = 0;
-    // const drivers = new DropdownColumnDrivers();
-    // for (let ddp of findStopping(props.xmlNode, (n) => n.name === "Property")) {
-    //   index++;
-    //   const pat = ddp.attributes;
-    //   const id = pat.Id;
-    //   columnNames.push(id);
-    //   columnNameToIndex.set(id, index);
-    //
-    //   visibleColumnNames.push(id);
-    //   const name = pat.Name;
-    //   const column = pat.Column;
-    //
-    //   let bodyCellDriver;
-    //   switch (column) {
-    //     case "Text":
-    //       bodyCellDriver = new TextCellDriver(
-    //         index,
-    //         dropdownEditorDataTable,
-    //         dropdownEditorBehavior
-    //       );
-    //       break;
-    //     case "Number":
-    //       bodyCellDriver = new NumberCellDriver(
-    //         index,
-    //         dropdownEditorDataTable,
-    //         dropdownEditorBehavior
-    //       );
-    //       break;
-    //     case "CheckBox":
-    //       bodyCellDriver = new BooleanCellDriver(
-    //         index,
-    //         dropdownEditorDataTable,
-    //         dropdownEditorBehavior
-    //       );
-    //       break;
-    //     default:
-    //       throw new Error("Unknown column type " + column);
-    //   }
-    //
-    //   drivers.drivers.push({
-    //     headerCellDriver: new DefaultHeaderCellDriver(name),
-    //     bodyCellDriver,
-    //   });
-    // }
-
-    // const parameters: { [k: string]: any } = {};
-    //
-    // for (let ddp of findStopping(props.xmlNode, (n) => n.name === "ComboBoxParameterMapping")) {
-    //   const pat = ddp.attributes;
-    //   parameters[pat.ParameterName] = pat.FieldName;
-    // }
-
     const lookupColumn = props.lookup.dropDownColumns[0];
 
     const drivers = new DropdownColumnDrivers();
 
-    // const columnNames = [props.property.identifier!];
     let identifierIndex = 0;
     const columnNameToIndex = new Map<string, number>([[props.property.identifier!, identifierIndex]]);
     const visibleColumnNames: string[]=[];
 
-    // let index=0;
-    // for (let dropDownColumn of props.lookup.dropDownColumns) {
-    //   index++;
-    //   // columnNames.push(dropDownColumn.id);
-    //   // columnNameToIndex.set(dropDownColumn.id, index);
-    //
-    //   // visibleColumnNames.push(dropDownColumn.id);
-    //
-    //   let bodyCellDriver;
-    //   switch (dropDownColumn.column) {
-    //     case "Text":
-    //       bodyCellDriver = new TextCellDriver(
-    //         index,
-    //         dropdownEditorDataTable,
-    //         dropdownEditorBehavior
-    //       );
-    //       break;
-    //     case "Number":
-    //       bodyCellDriver = new NumberCellDriver(
-    //         index,
-    //         dropdownEditorDataTable,
-    //         dropdownEditorBehavior
-    //       );
-    //       break;
-    //     case "CheckBox":
-    //       bodyCellDriver = new BooleanCellDriver(
-    //         index,
-    //         dropdownEditorDataTable,
-    //         dropdownEditorBehavior
-    //       );
-    //       break;
-    //     default:
-    //       throw new Error("Unknown column type " + dropDownColumn.column);
-    //   }
-    // }
-
-    // columnNames.push(props.property.name);
     columnNameToIndex.set(props.property.name, 1);
     visibleColumnNames.push(props.property.name);
 
@@ -692,9 +569,6 @@ export function FilterBuildDropdownEditor(props: {
     };
   });
 
-  // useEffect(() => {
-  //   dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
-  // }, [props.isReadOnly]);
 
   function onItemRemoved(event: any, item: any){
     props.onChange(props.values);
@@ -708,22 +582,11 @@ export function FilterBuildDropdownEditor(props: {
           value={value}
           isReadOnly={false}
           isInvalid={false}
-          // invalidMessage={invalidMessage}
           isFocused={false}
-          // backgroundColor={backgroundColor}
-          // foregroundColor={foregroundColor}
-          // customStyle={this.props.property?.style}
           refocuser={undefined}
           onChange={onItemRemoved}
-          // onKeyDown={this.MakeOnKeyDownCallBack()}
           onClick={undefined}
-          // onEditorBlur={this.props.onEditorBlur}
         />}
-        // isInvalid={props.isInvalid}
-        // invalidMessage={props.invalidMessage}
-        // backgroundColor={props.backgroundColor}
-        // foregroundColor={props.foregroundColor}
-        // customStyle={props.customStyle}
       />
     </CtxDropdownEditor.Provider>
   );
@@ -732,15 +595,10 @@ export function FilterBuildDropdownEditor(props: {
 
 // @bind
 export class FilterEditorData implements IDropdownEditorData {
-  // dropdownEditorData: IDropdownEditorData;
 
   constructor(
-    private dataTable: DataViewData,
-    private rowCursor: RowCursor,
-    private setup: () => DropdownEditorSetup,
     private onChange: (selectedItems: Array<any>) => void
   ) {
-     //this.dropdownEditorData = new DropdownEditorData(dataTable, rowCursor, setup);
   }
 
   @computed get value(): string | string[] | null {
@@ -751,11 +609,11 @@ export class FilterEditorData implements IDropdownEditorData {
   _value:  any[] = [];
 
   @computed get text(): string {
-    return ""; //this.dropdownEditorData.text;
+    return "";
   }
 
   get isResolving() {
-    return false; //this.dropdownEditorData.isResolving;
+    return false;
   }
 
   @action.bound chooseNewValue(value: any) {
@@ -763,9 +621,6 @@ export class FilterEditorData implements IDropdownEditorData {
       this._value = [ ...this._value, value];
       this.onChange(this._value);
     }
-    // if (this.rowCursor.selectedId) {
-    //   this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
-    // }
   }
 
   get idsInEditor() {
