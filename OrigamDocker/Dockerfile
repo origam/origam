@@ -3,9 +3,10 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 RUN apt-get update
-RUN apt-get -y install git
+RUN apt-get -y install git sudo
 RUN apt-get -y install libgdiplus
 RUN useradd -ms /bin/bash origam
+RUN usermod -aG sudo origam
 WORKDIR /root
 COPY ["updateTimezone.sh", "/root"]
 RUN chmod +x updateTimezone.sh
@@ -23,6 +24,4 @@ WORKDIR HTML5
 RUN mkdir data
 RUN mkdir logs
 RUN chmod +x startServer.sh
-RUN exit
-USER root
-CMD /root/updateTimezone.sh; su -m origam -c '/home/origam/HTML5/startServer.sh'
+CMD sudo /root/updateTimezone.sh & ./startServer.sh
