@@ -1,18 +1,9 @@
-import {
-  TagInput,
-  TagInputDeleteBtn,
-  TagInputEdit,
-  TagInputItem,
-  TagInputPlus,
-} from "gui02/components/TagInput/TagInput";
-import _ from "lodash";
-import { action, computed, flow, observable, runInAction, toJS } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import React, { useContext, useState } from "react";
 import { Grid, GridCellProps } from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
@@ -31,14 +22,8 @@ import {
 } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
 import { IDataView } from "model/entities/types/IDataView";
-import {
-  DropdownEditorApi,
-  IDropdownEditorApi
-} from "modules/Editors/DropdownEditor/DropdownEditorApi";
-import {
-  DropdownEditorData,
-  IDropdownEditorData,
-} from "modules/Editors/DropdownEditor/DropdownEditorData";
+import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
+import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 import {
   DropdownColumnDrivers,
   DropdownDataTable,
@@ -46,15 +31,9 @@ import {
 import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
 import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
-import { NumberCellDriver } from "modules/Editors/DropdownEditor/Cells/NumberCellDriver";
-import { BooleanCellDriver } from "modules/Editors/DropdownEditor/Cells/BooleanCellDriver";
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
-import { DataViewData } from "modules/DataView/DataViewData";
-import { RowCursor } from "modules/DataView/TableCursor";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
-import {DataViewAPI} from "modules/DataView/DataViewAPI";
-import {TagInputEditorData} from "modules/Editors/DropdownEditor/TagInputEditorData";
 
 const OPERATORS = () =>
   [
@@ -173,7 +152,12 @@ class OpEditors extends React.Component<{
     this.selectedItems = items;
     this.props.onChange(
       produce(this.props.setting, (draft: IFilterSetting) => {
-        draft.val1 = toJS(items.map(item => {return {value: item}}), { recurseEverything: true });
+        draft.val1 = toJS(
+          items.map((item) => {
+            return { value: item };
+          }),
+          { recurseEverything: true }
+        );
         draft.val2 = undefined;
         draft.isComplete = draft.val1 !== undefined && draft.val1.length > 0;
       })
@@ -290,7 +274,6 @@ export class LookupFilterSetting implements IFilterSetting {
   }
 }
 
-
 export function FilterBuildDropdownEditor(props: {
   lookup: ILookup;
   property: IProperty;
@@ -306,8 +289,7 @@ export function FilterBuildDropdownEditor(props: {
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
-    const dropdownEditorData: IDropdownEditorData =
-      new FilterEditorData(props.onChange)
+    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.onChange);
 
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
@@ -323,24 +305,22 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorDataTable,
       () => dropdownEditorSetup,
       dropdownEditorLookupListCache,
-      false,
+      false
     );
     const lookupColumn = props.lookup.dropDownColumns[0];
 
     const drivers = new DropdownColumnDrivers();
 
     let identifierIndex = 0;
-    const columnNameToIndex = new Map<string, number>([[props.property.identifier!, identifierIndex]]);
-    const visibleColumnNames: string[]=[];
+    const columnNameToIndex = new Map<string, number>([
+      [props.property.identifier!, identifierIndex],
+    ]);
+    const visibleColumnNames: string[] = [];
 
     columnNameToIndex.set(props.property.name, 1);
     visibleColumnNames.push(props.property.name);
 
-    const bodyCellDriver = new TextCellDriver(
-      1,
-      dropdownEditorDataTable,
-      dropdownEditorBehavior
-    );
+    const bodyCellDriver = new TextCellDriver(1, dropdownEditorDataTable, dropdownEditorBehavior);
 
     drivers.drivers.push({
       headerCellDriver: new DefaultHeaderCellDriver(props.property.name),
@@ -372,8 +352,7 @@ export function FilterBuildDropdownEditor(props: {
     };
   });
 
-
-  function onItemRemoved(event: any, item: any){
+  function onItemRemoved(event: any, item: any) {
     props.onChange(props.values);
   }
 
@@ -381,34 +360,31 @@ export function FilterBuildDropdownEditor(props: {
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       <DropdownEditor
-        editor={<TagInputEditor
-          value={value}
-          isReadOnly={false}
-          isInvalid={false}
-          isFocused={false}
-          refocuser={undefined}
-          onChange={onItemRemoved}
-          onClick={undefined}
-        />}
+        editor={
+          <TagInputEditor
+            value={value}
+            isReadOnly={false}
+            isInvalid={false}
+            isFocused={false}
+            refocuser={undefined}
+            onChange={onItemRemoved}
+            onClick={undefined}
+          />
+        }
       />
     </CtxDropdownEditor.Provider>
   );
 }
 
-
 export class FilterEditorData implements IDropdownEditorData {
-
-  constructor(
-    private onChange: (selectedItems: Array<any>) => void
-  ) {
-  }
+  constructor(private onChange: (selectedItems: Array<any>) => void) {}
 
   @computed get value(): string | string[] | null {
     return this._value;
   }
 
   @observable
-  _value:  any[] = [];
+  _value: any[] = [];
 
   @computed get text(): string {
     return "";
@@ -419,22 +395,21 @@ export class FilterEditorData implements IDropdownEditorData {
   }
 
   @action.bound chooseNewValue(value: any) {
-    if(value !== null){
-      this._value = [ ...this._value, value];
+    if (value !== null) {
+      this._value = [...this._value, value];
       this.onChange(this._value);
     }
   }
 
   get idsInEditor() {
-    return  this._value as string[];
+    return this._value as string[];
   }
 }
 
-class DropDownApi implements IDropdownEditorApi{
-    constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>){
-    }
+class DropDownApi implements IDropdownEditorApi {
+  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
 
-    *getLookupList(searchTerm: string): any {
-      return yield this.getOptions("");
-    }
+  *getLookupList(searchTerm: string): any {
+    return yield this.getOptions("");
+  }
 }
