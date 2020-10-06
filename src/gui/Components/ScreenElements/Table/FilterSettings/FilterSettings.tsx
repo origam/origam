@@ -60,17 +60,15 @@ export const FilterSettings: React.FC = observer((props) => {
           getOptions={flow(function* (searchTerm: string) {
             const allIds = dataView.infiniteScrollLoader
               ? yield dataView.infiniteScrollLoader.getAllValuesOfProp(property)
-              : new Set(dataTable.getAllValuesOfProp(property));
+              :  Array.from(new Set(dataTable.getAllValuesOfProp(property)).values());
             const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allIds);
+
             return Array.from(allIds.values())
-              .map((item) => ({
-                content: lookupMap.get(item),
-                value: item,
-              }))
+              .map(item => [ item, lookupMap.get(item)])
               .filter(
-                (item) =>
-                  item.content &&
-                  item.content.toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
+                (array) =>
+                  array[1] &&
+                  array[1].toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
               );
           })}
         />

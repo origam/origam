@@ -53,6 +53,7 @@ import { DataViewData } from "modules/DataView/DataViewData";
 import { RowCursor } from "modules/DataView/TableCursor";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
+import {DataViewAPI} from "modules/DataView/DataViewAPI";
 
 const OPERATORS = () =>
   [
@@ -353,7 +354,7 @@ class OpEditors extends React.Component<{
   setting: IFilterSetting | undefined;
   onChange: (newSetting: any) => void;
   onChangeDebounced: (newSetting: any) => void;
-  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
 }> {
@@ -410,7 +411,7 @@ class OpEditors extends React.Component<{
 
 @observer
 export class FilterSettingsLookup extends React.Component<{
-  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
   setting: IFilterSetting | undefined;
@@ -498,7 +499,7 @@ export function FilterBuildDropdownEditor(props: {
   // onKeyDown?(event: any): void;
   lookup: ILookup;
   property: IProperty;
-  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -507,7 +508,7 @@ export function FilterBuildDropdownEditor(props: {
   const { lookupListCache } = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
-    const dropdownEditorApi = new DropDownApi(props.getOptions);
+    const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
     // const dropdownEditorApi: DropdownEditorApi = new DropdownEditorApi(
     //   () => dropdownEditorSetup,
     //   dataViewRowCursor,
@@ -605,59 +606,68 @@ export function FilterBuildDropdownEditor(props: {
 
     const drivers = new DropdownColumnDrivers();
 
-    const columnNames = [props.property.identifier!];
+    // const columnNames = [props.property.identifier!];
     let identifierIndex = 0;
     const columnNameToIndex = new Map<string, number>([[props.property.identifier!, identifierIndex]]);
-    const visibleColumnNames=[];
+    const visibleColumnNames: string[]=[];
 
-    let index=0;
-    for (let dropDownColumn of props.lookup.dropDownColumns) {
-      index++;
-      columnNames.push(dropDownColumn.id);
-      columnNameToIndex.set(dropDownColumn.id, index);
+    // let index=0;
+    // for (let dropDownColumn of props.lookup.dropDownColumns) {
+    //   index++;
+    //   // columnNames.push(dropDownColumn.id);
+    //   // columnNameToIndex.set(dropDownColumn.id, index);
+    //
+    //   // visibleColumnNames.push(dropDownColumn.id);
+    //
+    //   let bodyCellDriver;
+    //   switch (dropDownColumn.column) {
+    //     case "Text":
+    //       bodyCellDriver = new TextCellDriver(
+    //         index,
+    //         dropdownEditorDataTable,
+    //         dropdownEditorBehavior
+    //       );
+    //       break;
+    //     case "Number":
+    //       bodyCellDriver = new NumberCellDriver(
+    //         index,
+    //         dropdownEditorDataTable,
+    //         dropdownEditorBehavior
+    //       );
+    //       break;
+    //     case "CheckBox":
+    //       bodyCellDriver = new BooleanCellDriver(
+    //         index,
+    //         dropdownEditorDataTable,
+    //         dropdownEditorBehavior
+    //       );
+    //       break;
+    //     default:
+    //       throw new Error("Unknown column type " + dropDownColumn.column);
+    //   }
+    // }
 
-      visibleColumnNames.push(dropDownColumn.id);
+    // columnNames.push(props.property.name);
+    columnNameToIndex.set(props.property.name, 1);
+    visibleColumnNames.push(props.property.name);
 
-      let bodyCellDriver;
-      switch (dropDownColumn.column) {
-        case "Text":
-          bodyCellDriver = new TextCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "Number":
-          bodyCellDriver = new NumberCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        case "CheckBox":
-          bodyCellDriver = new BooleanCellDriver(
-            index,
-            dropdownEditorDataTable,
-            dropdownEditorBehavior
-          );
-          break;
-        default:
-          throw new Error("Unknown column type " + dropDownColumn.column);
-      }
+    const bodyCellDriver = new TextCellDriver(
+      1,
+      dropdownEditorDataTable,
+      dropdownEditorBehavior
+    );
 
-      drivers.drivers.push({
-        headerCellDriver: new DefaultHeaderCellDriver(dropDownColumn.name),
-        bodyCellDriver,
-      });
-    }
-    
+    drivers.drivers.push({
+      headerCellDriver: new DefaultHeaderCellDriver(props.property.name),
+      bodyCellDriver,
+    });
 
     const showUniqueValues = true;
 
     const dropdownEditorSetup = new DropdownEditorSetup(
       props.property.id,
       props.lookup.lookupId,
-      columnNames,
+      [],
       visibleColumnNames,
       columnNameToIndex,
       showUniqueValues,
@@ -747,12 +757,10 @@ export class FilterEditorData implements IDropdownEditorData {
 }
 
 class DropDownApi implements IDropdownEditorApi{
+    constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>){
+    }
 
-  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>) {
-
-  }
-
-  *getLookupList(searchTerm: string): any {
-    yield this.getOptions("");
-  }
+    *getLookupList(searchTerm: string): any {
+      return yield this.getOptions("");
+    }
 }
