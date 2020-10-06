@@ -759,8 +759,10 @@ export class FilterEditorData implements IDropdownEditorData {
   }
 
   @action.bound chooseNewValue(value: any) {
-    this._value = [ ...this._value, value];
-    this.onChange(this._value);
+    if(value !== null){
+      this._value = [ ...this._value, value];
+      this.onChange(this._value);
+    }
     // if (this.rowCursor.selectedId) {
     //   this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
     // }
