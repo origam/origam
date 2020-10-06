@@ -53,7 +53,7 @@ export class CChatSection extends React.Component {
               isEmphasized={item.unreadMessageCount > 0}
               isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}
-              icon={<Icon src="./icons/work-queue.svg" tooltip={item.topic} />}
+              icon={<Icon src="./icons/chat.svg" tooltip={item.topic} />}
               label={
                 <>
                   {item.topic}

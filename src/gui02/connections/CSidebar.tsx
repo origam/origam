@@ -125,7 +125,7 @@ export class CSidebar extends React.Component {
           isActive={this.activeSection === ISidebarSection.Chat}
           icon={
             <>
-              <Icon src="./icons/work-queue.svg" tooltip={T("Chat", "chat")} />
+              <Icon src="./icons/chat.svg" tooltip={T("Chat", "chat")} />
               {totalUnreadMessages > 0 && (
                 <SidebarAlertCounter>{totalUnreadMessages}</SidebarAlertCounter>
               )}
