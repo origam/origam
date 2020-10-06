@@ -24,7 +24,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Xml.Serialization;
 using CSharpFunctionalExtensions;
@@ -46,9 +45,6 @@ namespace Origam.DA.Service
     public class FilePersistenceProvider : AbstractPersistenceProvider,
         IFilePersistenceProvider
     {
-        private static readonly log4net.ILog log
-            = log4net.LogManager.GetLogger(
-                MethodBase.GetCurrentMethod().DeclaringType);
         private FilePersistenceIndex index;
         private readonly Persistor persistor;
         private readonly FileEventQueue fileEventQueue;
@@ -81,7 +77,6 @@ namespace Origam.DA.Service
             persistor = new Persistor(
                 this,index,origamFileFactory,origamFileManager, trackerLoaderFactory);
             fileEventQueue.Start();
-            
             InstancePersisted += (sender, persistent) =>
                 ReferenceIndexManager.UpdateReferenceIndex(persistent);
         }
@@ -125,21 +120,24 @@ namespace Origam.DA.Service
         {
             persistor.EndTransactionDontSave();
             Maybe<XmlLoadError> result = ReloadFiles();
-            if(result.HasValue) throw new Exception(result.Value.Message);
+            if(result.HasValue)
+            {
+                throw new Exception(result.Value.Message);
+            }
             PersistIndex(false);
         }
 
         public override bool IsInTransaction => persistor.IsInTransaction;
 
-        public bool CheckRules { get; private set; } = true;
+        public bool CheckRules { get; }
 
         private IFilePersistent RetrieveInstance(PersistedObjectInfo persistedObjInfo,
             bool useCache=true)
         {
-            Guid id = persistedObjInfo.Id;
-            IFilePersistent retrievedInstance =
-                persistedObjInfo.OrigamFile.LoadObject(id, this, useCache);
-            if (retrievedInstance == null)
+            var id = persistedObjInfo.Id;
+            var retrievedInstance = persistedObjInfo.OrigamFile.LoadObject(
+                id, this, useCache);
+            if(retrievedInstance == null)
             {
                 // we know the instance was persisted (we found PersistedObjectInfo),
                 // but we could not find it...
@@ -151,11 +149,12 @@ namespace Origam.DA.Service
         public override object RetrieveValue(Guid instanceId, Type parentType,
             string fieldName)
         {
-            PersistedObjectInfo objInfo = index.GetById(instanceId);
-            return objInfo?.OrigamFile.GetFromExternalFile(instanceId,fieldName);
+            var objInfo = index.GetById(instanceId);
+            return objInfo?.OrigamFile.GetFromExternalFile(
+                instanceId,fieldName);
         }
 
-        public T RetrieveInstance<T>(Guid id)
+        public new T RetrieveInstance<T>(Guid id)
         {
             return (T)RetrieveInstance(typeof(T) ,new Key{{"Id",id}});
         }
@@ -178,13 +177,12 @@ namespace Origam.DA.Service
         private IFilePersistent RetrieveInstance(Key primaryKey, bool useCache, 
             bool throwNotFoundException)
         {
-            if (((Guid)primaryKey["Id"]) == Guid.Empty)
+            if((Guid)primaryKey["Id"] == Guid.Empty)
             {
                 return null;
             }
-            PersistedObjectInfo persistedObjectInfo =
-                FindPersistedObjectInfo(primaryKey);
-            if (persistedObjectInfo == null && throwNotFoundException)
+            var persistedObjectInfo = FindPersistedObjectInfo(primaryKey);
+            if(persistedObjectInfo == null && throwNotFoundException)
             {
                 throw new Exception("Could not find instance with id: "+primaryKey["Id"]);
             }
@@ -194,12 +192,8 @@ namespace Origam.DA.Service
 
         private PersistedObjectInfo FindPersistedObjectInfo(Key primaryKey)
         {
-            Guid id = (Guid)primaryKey["Id"];
-            if (id.Equals(Guid.Empty))
-            {
-                return null;
-            }
-            return FindPersistedObjectInfo(id);
+            var id = (Guid)primaryKey["Id"];
+            return id.Equals(Guid.Empty) ? null : FindPersistedObjectInfo(id);
         }
 
         public PersistedObjectInfo FindPersistedObjectInfo(Guid id)
@@ -210,11 +204,11 @@ namespace Origam.DA.Service
 
         public override List<string> Files(IPersistent persistentObject)
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
             var fileInfo = FindPersistedObjectInfo(persistentObject.Id);
-            if (fileInfo == null)
+            if(fileInfo == null)
             {
-                // new not yet persited instance
+                // new not yet persisted instance
                 return new List<string>();
             }
             result.Add(fileInfo.OrigamFile.Path.Relative);
@@ -226,24 +220,22 @@ namespace Origam.DA.Service
 
         public override void RefreshInstance(IPersistent persistentObject)
         {
-            if (!(persistentObject is IFilePersistent origObject))
+            if(!(persistentObject is IFilePersistent origObject))
             {
                 throw new InvalidOperationException(
                     $"Object does not implement {nameof(IFilePersistent)}");
             }
-            if (!origObject.IsPersisted)
+            if(!origObject.IsPersisted)
             {
                 throw new InvalidOperationException(
                     ResourceUtils.GetString("NoRefreshForNotPersisted"));
             }
-            
-            IFilePersistent upToDateObject =
+            var upToDateObject =
                 this.RetrieveInstance(
                     primaryKey: origObject.PrimaryKey, 
                     useCache: true, 
                     throwNotFoundException: false) 
                 ?? throw new Exception("Cannot refresh object that does not exist any more. Object id: "+persistentObject.Id);
-            
             Reflector.CopyMembers(
                 source: upToDateObject,
                 target: origObject,
@@ -256,6 +248,7 @@ namespace Origam.DA.Service
                 }
             );
         }
+
         public override void RemoveFromCache(IPersistent instance)
         {
             index.GetById(instance.Id)?.OrigamFile.RemoveFromCache(instance);
@@ -263,7 +256,7 @@ namespace Origam.DA.Service
 
         public override List<T> RetrieveList<T>(IDictionary<string, object> filter=null)
         {
-            if (filter != null && filter.Count > 0)
+            if(filter != null && filter.Count > 0)
             {
                 throw new NotImplementedException("Filtering not implemented.");
             }
@@ -278,9 +271,11 @@ namespace Origam.DA.Service
 
         private IEnumerable<object> RetrieveAll(Type type)
         {
-            string category = CategoryFactory.Create(type);
-            if (string.IsNullOrWhiteSpace(category)) return new List<object>();
-
+            var category = CategoryFactory.Create(type);
+            if(string.IsNullOrWhiteSpace(category))
+            {
+                return new List<object>();
+            }
             return index
                 .GetListByCategory(category)
                 .Select(objInfo => RetrieveInstance(objInfo));
@@ -300,16 +295,18 @@ namespace Origam.DA.Service
         private ArrayList RetrieveListByParent(Guid id, string category,
             Type type, bool useCache)
         {         
-            ArrayList result = new ArrayList();
-            foreach (PersistedObjectInfo objInfo in index.GetByParentId(id))    
+            var result = new ArrayList();
+            foreach (var objInfo in index.GetByParentId(id))
             {
-                if (string.IsNullOrWhiteSpace(category) || objInfo.Category == category)
+                if(!string.IsNullOrWhiteSpace(category)
+                && (objInfo.Category != category))
                 {
-                    object instance = RetrieveInstance(objInfo, useCache);
-                    if (type == null || type.IsInstanceOfType(instance))
-                    {
-                        result.Add(instance);
-                    }
+                    continue;
+                }
+                object instance = RetrieveInstance(objInfo, useCache);
+                if(type == null || type.IsInstanceOfType(instance))
+                {
+                    result.Add(instance);
                 }
             }
             return result;
@@ -328,21 +325,22 @@ namespace Origam.DA.Service
 
         public override void DeletePackage(Guid packageId)
         {
-            string dependentPackages = string.Join(", ",
+            var dependentPackages = string.Join(", ",
                 RetrieveList<PackageReference>()
                     .Where(x => x.ReferencedPackage.Id == packageId)
                     .Select(x => x.Package.Name)
                 );
-            if (dependentPackages != "")
+            if(dependentPackages != "")
             {
                 throw new Exception("Cannot delete this package because it is referenced by: "+dependentPackages);
             }
-
-            DirectoryInfo packageDir = index.FindPackageDirectory(packageId);
+            var packageDir = index.FindPackageDirectory(packageId);
             origamFileManager.RemoveDirectoryWithContents(packageDir);
-
             Maybe<XmlLoadError> result = ReloadFiles();
-            if(result.HasValue) throw new Exception(result.Value.Message);
+            if(result.HasValue)
+            {
+                throw new Exception(result.Value.Message);
+            }
         }
 
         public override object Clone()
@@ -360,9 +358,8 @@ namespace Origam.DA.Service
 
         public override T[] FullTextSearch<T>(string text)
         {
-            bool lookingForAGuid =
-                Guid.TryParse(text, out Guid guidToLookFor);
-
+            var lookingForAGuid 
+                = Guid.TryParse(text, out Guid guidToLookFor);
             return lookingForAGuid
                 ? FindSingleItemById<T>(guidToLookFor)
                 : FindStringInPersistedFiles<T>(text);
@@ -380,10 +377,10 @@ namespace Origam.DA.Service
 
         private T[] FindSingleItemById<T>(Guid guidToLookFor)
         {
-            PersistedObjectInfo objInfo = index.GetById(guidToLookFor);
-            if (objInfo != null)
+            var objInfo = index.GetById(guidToLookFor);
+            if(objInfo != null)
             {
-                return new T[] { (T)RetrieveInstance(objInfo) };
+                return new[] { (T)RetrieveInstance(objInfo) };
             }
             return new T[0];
         }
@@ -408,7 +405,7 @@ namespace Origam.DA.Service
 
         public override List<T> RetrieveListByGroup<T>(Key primaryKey)
         {
-            string category = CategoryFactory.Create(typeof(T));
+            var category = CategoryFactory.Create(typeof(T));
             return index
                 .GetByParentFolder(category,  (Guid)primaryKey["Id"])
                 .Select(objInfo => RetrieveInstance(objInfo))
@@ -428,12 +425,11 @@ namespace Origam.DA.Service
             var item = (AbstractSchemaItem)RetrieveInstance(
                     type: null, 
                     primaryKey: new Key {{"Id", itemId}});
-            if (item == null)
+            if(item == null)
             {
                 throw new Exception("Item "+itemId+" not found in model");
             }
-
-            Guid packageId = item.SchemaExtensionId;
+            var packageId = item.SchemaExtensionId;
             index
                 .GetLoadedPackageDirectories()
                 .TryGetValue(packageId, out var directory);
@@ -442,12 +438,12 @@ namespace Origam.DA.Service
 
         public bool Has(Guid id)
         {
-            object retrieveInstance = RetrieveInstance(
+            var retrievedInstance = RetrieveInstance(
                 type: null,
                 primaryKey: new Key {{"Id", id}}, 
                 useCache: true, 
                 throwNotFoundException: false);
-            return retrieveInstance != null;
+            return retrievedInstance != null;
         }
 
         public List<ModelErrorSection> GetFileErrors(string[] ignoreDirectoryNames, CancellationToken cancellationToken)
