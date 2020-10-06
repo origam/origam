@@ -70,7 +70,7 @@ export class FilterConfiguration implements IFilterConfiguration {
     };
   }
 
-  userFilterPredicate(row: any[], term: any) {
+  userFilterPredicate(row: any[], term: IFilter) {
     const dataTable = getDataTable(this);
     const prop = dataTable.getPropertyById(term.propertyId)!;
     switch (prop.column) {

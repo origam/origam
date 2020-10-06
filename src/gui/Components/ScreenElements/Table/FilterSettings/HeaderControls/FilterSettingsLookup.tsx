@@ -54,6 +54,7 @@ import { RowCursor } from "modules/DataView/TableCursor";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import {DataViewAPI} from "modules/DataView/DataViewAPI";
+import {TagInputEditorData} from "modules/Editors/DropdownEditor/TagInputEditorData";
 
 const OPERATORS = () =>
   [
@@ -358,13 +359,13 @@ class OpEditors extends React.Component<{
   lookup: ILookup;
   property: IProperty;
 }> {
-  @observable selectedItems: Array<{ value: any; content: any }> = [];
+  @observable selectedItems: Array<Array<any>> = [];
 
-  @action.bound handleSelectedItemsChange(items: Array<{ value: any; content: any }>) {
+  @action.bound handleSelectedItemsChange(items: Array<any>) {
     this.selectedItems = items;
     this.props.onChange(
       produce(this.props.setting, (draft: IFilterSetting) => {
-        draft.val1 = toJS(items, { recurseEverything: true });
+        draft.val1 = toJS(items.map(item => {return {value: item}}), { recurseEverything: true });
         draft.val2 = undefined;
         draft.isComplete = draft.val1 !== undefined && draft.val1.length > 0;
       })
@@ -391,6 +392,8 @@ class OpEditors extends React.Component<{
             lookup={this.props.lookup}
             property={this.props.property}
             getOptions={this.props.getOptions}
+            onChange={this.handleSelectedItemsChange}
+            values={this.selectedItems}
           />
           // <TagInputStateful
           //   selectedItems={setting.val1 ? this.selectedItems : []}
@@ -500,6 +503,8 @@ export function FilterBuildDropdownEditor(props: {
   lookup: ILookup;
   property: IProperty;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
+  onChange(selectedItems: Array<any>): void;
+  values: Array<any>;
 }) {
   const mobxContext = useContext(MobXProviderContext);
   const dataView = mobxContext.dataView as IDataView;
@@ -516,7 +521,7 @@ export function FilterBuildDropdownEditor(props: {
     //   () => dropdownEditorBehavior
     // );
     const dropdownEditorData: IDropdownEditorData =
-      new FilterEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup)
+      new FilterEditorData(dataViewData, dataViewRowCursor, () => dropdownEditorSetup, props.onChange)
 
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
@@ -691,11 +696,16 @@ export function FilterBuildDropdownEditor(props: {
   //   dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
   // }, [props.isReadOnly]);
 
+  function onItemRemoved(event: any, item: any){
+    props.onChange(props.values);
+  }
+
+  const value = props.values;
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       <DropdownEditor
         editor={<TagInputEditor
-          value={[]}
+          value={value}
           isReadOnly={false}
           isInvalid={false}
           // invalidMessage={invalidMessage}
@@ -704,7 +714,7 @@ export function FilterBuildDropdownEditor(props: {
           // foregroundColor={foregroundColor}
           // customStyle={this.props.property?.style}
           refocuser={undefined}
-          //onChange={this.props.onChange}
+          onChange={onItemRemoved}
           // onKeyDown={this.MakeOnKeyDownCallBack()}
           onClick={undefined}
           // onEditorBlur={this.props.onEditorBlur}
@@ -722,37 +732,42 @@ export function FilterBuildDropdownEditor(props: {
 
 // @bind
 export class FilterEditorData implements IDropdownEditorData {
-  dropdownEditorData: IDropdownEditorData;
+  // dropdownEditorData: IDropdownEditorData;
 
   constructor(
     private dataTable: DataViewData,
     private rowCursor: RowCursor,
-    private setup: () => DropdownEditorSetup
+    private setup: () => DropdownEditorSetup,
+    private onChange: (selectedItems: Array<any>) => void
   ) {
-    this.dropdownEditorData = new DropdownEditorData(dataTable, rowCursor, setup);
+     //this.dropdownEditorData = new DropdownEditorData(dataTable, rowCursor, setup);
   }
 
   @computed get value(): string | string[] | null {
-    return this.dropdownEditorData.value;
+    return this._value;
   }
 
+  @observable
+  _value:  any[] = [];
+
   @computed get text(): string {
-    return this.dropdownEditorData.text;
+    return ""; //this.dropdownEditorData.text;
   }
 
   get isResolving() {
-    return this.dropdownEditorData.isResolving;
+    return false; //this.dropdownEditorData.isResolving;
   }
 
   @action.bound chooseNewValue(value: any) {
-    // const newArray = [...this.value, value];
+    this._value = [ ...this._value, value];
+    this.onChange(this._value);
     // if (this.rowCursor.selectedId) {
     //   this.dataTable.setNewValue(this.rowCursor.selectedId, this.setup().propertyId, newArray);
     // }
   }
 
   get idsInEditor() {
-    return (this.value ? this.value : []) as string[];
+    return  this._value as string[];
   }
 }
 
