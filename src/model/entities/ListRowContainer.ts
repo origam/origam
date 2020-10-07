@@ -1,10 +1,12 @@
-import {computed, observable, action, reaction, IReactionDisposer} from "mobx";
+import {computed, observable, action, reaction, IReactionDisposer, flow} from "mobx";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { IOrderingConfiguration } from "./types/IOrderingConfiguration";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { trace } from "mobx"
 import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
 import {getDataView} from "model/selectors/DataView/getDataView";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { IProperty } from "./types/IProperty";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
@@ -47,16 +49,44 @@ export class ListRowContainer implements IRowsContainer {
     this.reactionDisposer?.();
   }
 
+  *preloadLookups(){
+    const dataView = getDataView(this.orderingConfiguration);
+    const dataTable = getDataTable(dataView);
+
+    const orderingComboProps = this.orderingConfiguration.userOrderings
+      .map((term) => getDataViewPropertyById(this.orderingConfiguration, term.columnId)!)
+      .filter((prop) => prop.column === "ComboBox");
+
+    const filterComboProps = this.filterConfiguration.filters
+      .map((term) => getDataViewPropertyById(this.filterConfiguration, term.propertyId)!)
+      .filter((prop) => prop.column === "ComboBox");
+    const allcomboProps = Array.from(new Set(filterComboProps.concat(orderingComboProps)));
+
+    yield Promise.all(
+      allcomboProps.map(async (prop) => {
+        return prop.lookupEngine?.lookupResolver.resolveList(
+          new Set(dataTable.getAllValuesOfProp(prop))
+        );
+      })
+    );
+  }
+
   @action
   updateSortAndFilter() {
-    let rows = this.allRows;
-    if (this.filterConfiguration.filteringFunction) {
-      rows = rows.filter((row) => this.filterConfiguration.filteringFunction()(row));
-    }
-    if (this.orderingConfiguration.orderings.length !== 0) {
-      rows = rows.sort((row1: any[], row2: any[]) => this.internalRowOrderingFunc(row1, row2));
-    }
-    this.sortedIds = rows.map(row => this.rowIdGetter(row));
+    const self = this;
+    flow(
+      function* () {
+        yield * self.preloadLookups();
+        let rows = self.allRows;
+        if (self.filterConfiguration.filteringFunction) {
+          rows = rows.filter((row) => self.filterConfiguration.filteringFunction()(row));
+        }
+        if (self.orderingConfiguration.orderings.length !== 0) {
+          rows = rows.sort((row1: any[], row2: any[]) => self.internalRowOrderingFunc(row1, row2));
+        }
+        self.sortedIds = rows.map(row => self.rowIdGetter(row));
+      }
+    )();
   }
 
   @computed get rows() {
