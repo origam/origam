@@ -245,7 +245,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       AggregatedColumns: [],
     });
 
-    return groups.map(group => group[property.id]);
+    return groups.map(group => group[property.id]).filter(group => group);
   }
 }
 

@@ -25,6 +25,11 @@ import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { observable } from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
+import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
+import { openNewUrl } from "model/actions/Workbench/openNewUrl";
+import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
+import { IPortalSettings } from "../types/IPortalSettings";
+import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -37,7 +42,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1 = 1;
 
   @observable
-  notificationBox: any;
+  portalSettings: IPortalSettings | undefined;
   @observable
   userInfo: IUserInfo | undefined;
   @observable
@@ -45,11 +50,20 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
+
   *onMainMenuItemClick(args: { event: any; item: any }): Generator {
-    const { type, id, label, dialogWidth, dialogHeight, dontRequestData, urlOpenMethod } = args.item.attributes;
+    const {
+      type,
+      id,
+      label,
+      dialogWidth,
+      dialogHeight,
+      dontRequestData,
+      urlOpenMethod,
+    } = args.item.attributes;
     const { event } = args;
 
-    if(urlOpenMethod === "LaunchBrowserWindow"){
+    if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
       window.open(url);
       return;
@@ -81,11 +95,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           }
         }
       } else {
-        if(type ===  IMainMenuItemType.ReportReferenceMenuItem){
+        if (type === IMainMenuItemType.ReportReferenceMenuItem) {
           const url = (yield this.getReportTabUrl(id)) as string;
           yield* this.openNewUrl(url, "");
           return;
-        }else {
+        } else {
           yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
         }
       }
@@ -94,9 +108,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  async getReportTabUrl(menuId: string){
+  async getReportTabUrl(menuId: string) {
     const api = getApi(this);
-    const url = (await api.getReportFromMenu({menuId: menuId})) ;
+    const url = await api.getReportFromMenu({ menuId: menuId });
     return url;
   }
 
@@ -135,6 +149,38 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
+  *onChatroomsListItemClick(event: any, item: any) {
+    console.log(event, item);
+
+    const openedScreens = getOpenedScreens(this);
+    const url = `/chatrooms/index.html#/chatroom?chatroomId=${item.id}`;
+    const id = url;
+
+    let dialogInfo: IDialogInfo | undefined;
+
+    const existingItem = openedScreens.findLastExistingItem(id);
+    if (existingItem) {
+      openedScreens.activateItem(id, existingItem.order);
+      const openedScreen = existingItem;
+      if (openedScreen.isSleeping) {
+        openedScreen.isSleeping = false;
+        const initUIResult = yield* this.initUIForScreen(openedScreen, false);
+        yield* openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
+      } else if (
+        openedScreen.content &&
+        openedScreen.content.formScreen &&
+        openedScreen.content.formScreen.refreshOnFocus &&
+        !openedScreen.content.isLoading
+      ) {
+        if (!getIsFormScreenDirty(openedScreen.content.formScreen)) {
+          yield* reloadScreen(openedScreen.content.formScreen)();
+        }
+      }
+    } else {
+      yield* openNewUrl(this)(url, IUrlUpenMethod.OrigamTab, item.topic);
+    }
+  }
+
   *onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator {
     const openedScreens = getOpenedScreens(this);
     openedScreens.activateItem(openedScreen.menuItemId, openedScreen.order);
@@ -159,8 +205,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     // TODO: Refactor to get rid of code duplication
     const openedScreens = getOpenedScreens(openedScreen);
     const screenToActivate = openedScreen.parentContext
-         ? getOpenedScreen(openedScreen.parentContext)
-         : openedScreens.findClosestItem(openedScreen.menuItemId, openedScreen.order);
+      ? getOpenedScreen(openedScreen.parentContext)
+      : openedScreens.findClosestItem(openedScreen.menuItemId, openedScreen.order);
 
     openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
     if (openedScreen.dialogInfo) {
@@ -241,7 +287,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     formSessionId?: string,
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
-    refreshOnReturnType?: IRefreshOnReturnType,
+    refreshOnReturnType?: IRefreshOnReturnType
   ) {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
@@ -270,7 +316,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         return;
       }
 
-      const initUIResult = yield* this.initUIForScreen(newScreen, !isSessionRebirth, additionalRequestParameters);
+      const initUIResult = yield* this.initUIForScreen(
+        newScreen,
+        !isSessionRebirth,
+        additionalRequestParameters
+      );
 
       yield* newFormScreen.start(initUIResult);
       const formScreen = newScreen.content.formScreen;
@@ -284,7 +334,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
   }
 
-  *initUIForScreen(screen: IOpenedScreen, isNewSession: boolean, additionalRequestParameters?: object | undefined) {
+  *initUIForScreen(
+    screen: IOpenedScreen,
+    isNewSession: boolean,
+    additionalRequestParameters?: object | undefined
+  ) {
     const api = getApi(this);
     const initUIResult = yield api.initUI({
       Type: screen.menuItemType,
@@ -295,7 +349,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       RegisterSession: true, //!!registerSession,
       DataRequested: !screen.dontRequestData,
       Parameters: screen.parameters,
-      AdditionalRequestParameters: additionalRequestParameters
+      AdditionalRequestParameters: additionalRequestParameters,
     });
     console.log(initUIResult);
     return initUIResult;
@@ -315,13 +369,16 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     console.log("portalInfo:");
     console.log(portalInfo);
-    this.startNotificationBoxPolling(portalInfo.notificationBoxRefreshInterval);
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
-    }
+    };
     this.logoUrl = portalInfo.logoUrl;
     this.customAssetsRoute = portalInfo.customAssetsRoute;
+    this.portalSettings = {
+      showChat: portalInfo.chatRefreshInterval > 0,
+      showWorkQueues: portalInfo.workQueueListRefreshInterval > 0
+    }
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
@@ -367,9 +424,17 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       }
     }
 
-    const workQueues = getWorkQueues(this);
-    yield* workQueues.setRefreshInterval(portalInfo.workQueueListRefreshInterval);
-    yield* workQueues.startTimer();
+    if(this.portalSettings?.showWorkQueues){
+      yield* getWorkQueues(this).startTimer(portalInfo.workQueueListRefreshInterval);
+    }
+
+    if(this.portalSettings?.showChat) {
+      yield* getChatrooms(this).startTimer(portalInfo.chatRefreshInterval);
+    }
+
+    if(portalInfo.notificationBoxRefreshInterval > 0) {
+      yield* getNotifications(this).startTimer(portalInfo.notificationBoxRefreshInterval);
+    }
   }
 
   *run(): Generator {
@@ -377,14 +442,4 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   parent?: any;
-
-  private startNotificationBoxPolling(notificationBoxRefreshInterval: number) {
-    if(!notificationBoxRefreshInterval)
-    {
-      return;
-    }
-    setInterval(async ()=>{
-      this.notificationBox = await getApi(this).getNotificationBoxContent();
-    }, notificationBoxRefreshInterval)
-  }
 }

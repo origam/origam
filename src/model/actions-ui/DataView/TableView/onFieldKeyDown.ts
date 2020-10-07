@@ -7,9 +7,8 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "../../../selectors/DataView/getDataView";
-import { isInfiniteScrollingActive } from "../../../selectors/isInfiniteScrollingActive";
-import { getFormScreenLifecycle } from "../../../selectors/FormScreen/getFormScreenLifecycle";
-import { getFormScreen } from "../../../selectors/FormScreen/getFormScreen";
+import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
+
 
 export function onFieldKeyDown(ctx: any) {
 
@@ -17,17 +16,7 @@ export function onFieldKeyDown(ctx: any) {
     return  (getTablePanelView(ctx).isFirstColumnSelected() && tabEvent.shiftKey) ||
             (getTablePanelView(ctx).isLastColumnSelected() && !tabEvent.shiftKey)
   }
-
-
-  async function shouldProceedToChangeRow(){
-    const dataView = getDataView(ctx);
-    const isDirty = getFormScreen(dataView).isDirty;
-    if (isDirty && isInfiniteScrollingActive(dataView)) {
-      return await getFormScreenLifecycle(dataView).handleUserInputOnChangingRow(dataView);
-    }
-    return true;
-  }
-
+  
   return flow(function* onFieldKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
@@ -38,7 +27,7 @@ export function onFieldKeyDown(ctx: any) {
             getTablePanelView(ctx).setEditing(false);
             yield* flushCurrentRowData(ctx)();
 
-            if (!(yield shouldProceedToChangeRow())) {
+            if (!(yield shouldProceedToChangeRow(dataView))) {
               return;
             }
 
@@ -75,7 +64,7 @@ export function onFieldKeyDown(ctx: any) {
 
           yield* flushCurrentRowData(ctx)();
 
-          if (!(yield shouldProceedToChangeRow())) {
+          if (!(yield shouldProceedToChangeRow(dataView))) {
             return;
           }
 

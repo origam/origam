@@ -2,6 +2,7 @@ import {IWorkQueues} from "./types/IWorkQueues";
 import {getApi} from "model/selectors/getApi";
 import {onRefreshWorkQueues} from "model/actions-ui/WorkQueues/onRefreshWorkQueues";
 import {computed, observable} from "mobx";
+import {PeriodicLoader} from "utils/PeriodicLoader";
 
 export class WorkQueues implements IWorkQueues {
   $type_IWorkQueues: 1 = 1;
@@ -9,7 +10,6 @@ export class WorkQueues implements IWorkQueues {
   *getWorkQueueList() {
     const api = getApi(this);
     const workQueues = yield api.getWorkQueueList();
-    // console.log(workQueues);
     this.items = workQueues;
   }
 
@@ -18,42 +18,22 @@ export class WorkQueues implements IWorkQueues {
     return this.items.map(item => item.countTotal).reduce((a, b) => a + b, 0);
   }
 
+  loader = new PeriodicLoader(onRefreshWorkQueues(this));
+
+
+  *startTimer(refreshIntervalMs: number) {
+    yield* this.loader.start(refreshIntervalMs);
+  }
+
+  *stopTimer() {
+    yield* this.loader.stop();
+  }
+
   hRefreshTimer: any;
   refreshInterval = 0;
 
   get isTimerRunning() {
     return !!this.hRefreshTimer;
-  }
-
-  *startTimer() {
-    if (this.refreshInterval === 0) {
-      return
-    }
-    if (this.hRefreshTimer) {
-      yield* this.stopTimer();
-    }
-    onRefreshWorkQueues(this)();
-    this.hRefreshTimer = setInterval(
-      onRefreshWorkQueues(this),
-      this.refreshInterval
-    );
-    
-  }
-
-  *stopTimer() {
-    clearInterval(this.hRefreshTimer);
-    this.hRefreshTimer = undefined;
-  }
-
-  *setRefreshInterval(ms: number) {
-    const willRestart = this.isTimerRunning;
-    if (willRestart) {
-      yield* this.stopTimer();
-    }
-    this.refreshInterval = ms;
-    if (willRestart) {
-      yield* this.startTimer();
-    }
   }
 
   parent?: any;

@@ -1,17 +1,19 @@
 import {IDialogInfo, IOpenedScreen} from "./IOpenedScreen";
 import {IMainMenuItemType} from "./IMainMenu";
 import {IUserInfo} from "model/entities/types/IUserInfo";
+import {IPortalSettings} from "model/entities/types/IPortalSettings";
 
 export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;
 
   onMainMenuItemClick(args: { event: any; item: any }): Generator;
   onWorkQueueListItemClick(event: any, item: any): Generator;
+  onChatroomsListItemClick(event: any, item: any): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
-  notificationBox: any;
   userInfo: IUserInfo | undefined;
   logoUrl: string | undefined;
   customAssetsRoute: string | undefined;
+  portalSettings: IPortalSettings | undefined;
   openNewForm(
     id: string,
     type: IMainMenuItemType,

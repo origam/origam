@@ -21,6 +21,10 @@ export class DropdownEditorLookupListCache {
   hasCachedListRows(): boolean {
     return this.cache.hasLookupList(this.lookupId);
   }
+
+  clean() {
+    return this.cache.deleteLookup(this.lookupId);
+  }
 }
 export const IDropdownEditorLookupListCache = TypeSymbol<DropdownEditorLookupListCache>(
   "IDropdownEditorLookupListCache"

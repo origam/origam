@@ -36,6 +36,18 @@ export class ScrollRowContainer implements IRowsContainer {
     return this._maxRowNumberSeen;
   }
 
+  updateSortAndFilter(){
+
+  }
+
+  start(){
+
+  }
+
+  stop(){
+
+  }
+
   @computed
   get rows() {
     return this.rowChunks.flatMap((chunk) => chunk.rows);

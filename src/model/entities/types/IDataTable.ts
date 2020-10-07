@@ -15,6 +15,8 @@ export interface IDataTableData {
 }
 
 export interface IDataTable {
+  start(): void;
+  stop(): void;
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
@@ -25,12 +27,15 @@ export interface IDataTable {
   groups: IGroupTreeNode[];
   rowsContainer: IRowsContainer;
   isEmpty: boolean;
-  rowRemovedListeners: (()=>void)[];
+  rowRemovedListeners: (() => void)[];
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
+  getOriginalCellValue(row: any[], property: IProperty): any;
+  updateSortAndFilter(): void;
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField): any;
   getCellText(row: any[], property: IProperty): any;
+  getOriginalCellText(row: any[], property: IProperty): any;
   resolveCellText(property: IProperty, value: any): any;
   isCellTextResolving(property: IProperty, value: any): boolean;
   getRowByExistingIdx(idx: number): any[];

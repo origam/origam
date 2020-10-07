@@ -409,6 +409,9 @@ export class DataView implements IDataView {
   @action.bound
   setSelectedRowId(id: string | undefined): void {
     this.selectedRowId = id;
+    if(this.isBindingParent){
+      this.childBindings.forEach(binding => binding.childDataView.dataTable.updateSortAndFilter());
+    }
   }
 
   @action.bound
@@ -458,10 +461,12 @@ export class DataView implements IDataView {
         }
       )
     );
+    this.dataTable.start();
   }
 
   @action.bound stop() {
     this.properties.forEach((prop) => prop.stop());
+    this.dataTable.stop();
   }
 
   @computed get tableRows() {

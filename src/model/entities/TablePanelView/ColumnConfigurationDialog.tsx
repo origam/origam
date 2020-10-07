@@ -1,13 +1,13 @@
 import React from "react";
-import {action, computed} from "mobx";
+import { action, computed } from "mobx";
 
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
-import {getDialogStack} from "../../selectors/DialogStack/getDialogStack";
-import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
-import {ColumnsDialog, ITableColumnsConf} from "gui/Components/Dialogs/ColumnsDialog";
-import {onColumnConfigurationSubmit} from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
-import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
-import {getDontRequestData} from "../../selectors/getDontRequestData";
+import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
+import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
+import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
+import { ColumnsDialog, ITableColumnsConf } from "gui/Components/Dialogs/ColumnsDialog";
+import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getDontRequestData } from "../../selectors/getDontRequestData";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {
@@ -25,8 +25,12 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         groupingIndex: groupingConf.groupingIndices.get(prop.id) || 0,
         aggregationType: this.tablePanelView.aggregations.getType(prop.id)!,
         entity: prop.entity,
-        canGroup: groupingOnClient || (!prop.isAggregatedColumn && !prop.isLookupColumn),
-        canAggregate: groupingOnClient || (!prop.isAggregatedColumn && !prop.isLookupColumn),
+        canGroup:
+          groupingOnClient ||
+          (!prop.isAggregatedColumn && !prop.isLookupColumn && prop.column !== "TagInput"),
+        canAggregate:
+          groupingOnClient ||
+          (!prop.isAggregatedColumn && !prop.isLookupColumn && prop.column !== "TagInput"),
       });
     }
     return conf;
@@ -63,7 +67,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       if (column.groupingIndex) {
         groupingConf.setGrouping(column.id, column.groupingIndex);
       }
-      this.tablePanelView.aggregations.setType(column.id, column.aggregationType)
+      this.tablePanelView.aggregations.setType(column.id, column.aggregationType);
     }
     getDialogStack(this).closeDialog(this.dialogKey);
   }

@@ -13,6 +13,8 @@ import { SCOPE_Workbench } from "../../modules/Workbench/WorkbenchModule";
 import {registerScope} from "../../dic/Container";
 import { createMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { getApi } from "model/selectors/getApi";
+import { Chatrooms } from "model/entities/Chatrooms";
+import { Notifications } from "model/entities/Notifications";
 
 export function createWorkbench() {
   const clock = new Clock();
@@ -26,7 +28,9 @@ export function createWorkbench() {
     openedScreens: new OpenedScreens(),
     openedDialogScreens: new OpenedScreens(),
     workQueues: new WorkQueues(),
+    chatrooms: new Chatrooms(),
     recordInfo: new RecordInfo(),
+    notifications: new Notifications(),
 
     lookupListCache: workbenchLookupListCache,
     lookupMultiEngine,

@@ -8,6 +8,8 @@ import { IWorkQueues } from "./types/IWorkQueues";
 import { IRecordInfo } from "./types/IRecordInfo";
 import { LookupListCacheMulti } from "../../modules/Lookup/LookupListCacheMulti";
 import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
+import { Chatrooms } from "./Chatrooms";
+import { Notifications } from "./Notifications";
 
 export class Workbench implements IWorkbench {
   $type_IWorkbench: 1 = 1;
@@ -19,6 +21,8 @@ export class Workbench implements IWorkbench {
     this.openedScreens.parent = this;
     this.openedDialogScreens.parent = this;
     this.workQueues.parent = this;
+    this.chatrooms.parent = this;
+    this.notifications.parent = this;
     this.recordInfo.parent = this;
   }
 
@@ -28,6 +32,8 @@ export class Workbench implements IWorkbench {
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;
   workQueues: IWorkQueues = null as any;
+  chatrooms!: Chatrooms;
+  notifications: Notifications = null as any;
   recordInfo: IRecordInfo = null as any;
   lookupListCache: LookupListCacheMulti = null as any;
   lookupMultiEngine: IMultiLookupEngine = null as any;

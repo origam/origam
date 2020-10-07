@@ -36,6 +36,14 @@ export class DataTable implements IDataTable {
     this.rowRemovedListeners.forEach(listener => listener());
   }
 
+  start(){
+    this.rowsContainer.start();
+  }
+
+  stop(){
+    this.rowsContainer.stop();
+  }
+
   get allRows() {
     return this.rowsContainer.rows;
   }
@@ -89,7 +97,15 @@ export class DataTable implements IDataTable {
         return ard.dirtyValues.get(property.id);
       }
     }
+    return this.getOriginalCellValue(row, property);
+  }
+
+  getOriginalCellValue(row: any[], property: IProperty) {
     return row[property.dataIndex];
+  }
+
+  updateSortAndFilter(){
+    this.rowsContainer.updateSortAndFilter();
   }
 
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField) {
@@ -107,11 +123,18 @@ export class DataTable implements IDataTable {
 
   // Returns all values from currently loaded rows (in case thhe table is infinitelly scrolled)
   getAllValuesOfProp(property: IProperty): any[] {
-      return this.rowsContainer.allRows.map((row) => this.getCellValue(row, property));
+      return this.rowsContainer.allRows
+        .map((row) => this.getCellValue(row, property))
+        .filter(row => row);
   }
 
   getCellText(row: any[], property: IProperty) {
     const value = this.getCellValue(row, property);
+    return this.resolveCellText(property, value);
+  }
+
+  getOriginalCellText(row: any[], property: IProperty) {
+    const value = this.getOriginalCellValue(row, property);
     return this.resolveCellText(property, value);
   }
 

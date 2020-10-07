@@ -49,6 +49,11 @@ import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
+import {getDataView} from "model/selectors/DataView/getDataView";
+import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
+import {selectPrevColumn} from "model/actions/DataView/TableView/selectPrevColumn";
+import {selectNextColumn} from "model/actions/DataView/TableView/selectNextColumn";
+import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -352,12 +357,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
               ]);
               return [] as any;
             },
-            () => this.readFirstChunkOfRowsWithGateDebounced(rootDataView)
+            () => this.sortAndFilterReaction(rootDataView)
           )
         );
       }
     }
     yield* this.startAutorefreshIfNeeded();
+  }
+
+  sortAndFilterReaction(dataView : IDataView){
+    const self=this;
+    flow(function* () {
+      if (!(yield shouldProceedToChangeRow(dataView))) {
+        return;
+      }
+      yield dataView.lifecycle.runRecordChangedReaction(function*() {
+        self.readFirstChunkOfRowsWithGateDebounced(dataView);
+      });
+    })();
   }
 
   *applyInitUIResult(args: { initUIResult: any }) {

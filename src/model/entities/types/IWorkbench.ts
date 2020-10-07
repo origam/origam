@@ -6,6 +6,8 @@ import { IWorkQueues } from "./IWorkQueues";
 import { IRecordInfo } from "./IRecordInfo";
 import { LookupListCacheMulti } from "../../../modules/Lookup/LookupListCacheMulti";
 import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
+import { Chatrooms } from "../Chatrooms";
+import { Notifications } from "../Notifications";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -14,6 +16,8 @@ export interface IWorkbenchData {
   openedScreens: IOpenedScreens;
   openedDialogScreens: IOpenedScreens;
   workQueues: IWorkQueues;
+  chatrooms: Chatrooms;
+  notifications: Notifications;
   recordInfo: IRecordInfo;
 
   lookupListCache: LookupListCacheMulti;

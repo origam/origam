@@ -224,6 +224,11 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound
+  handleTriggerContextMenu(event: any) {
+    this.dropUp();
+  }
+
+  @action.bound
   handleControlMouseDown(event: any) {
     if (this.isDropped) {
       event.stopPropagation();
@@ -328,6 +333,11 @@ export class DropdownEditorBehavior {
         this.userEnteredValue = undefined;
       }
     );
+  }
+
+  @action.bound
+  clearCache() {
+    this.cache.clean();
   }
 
   _refInputDisposer: any;

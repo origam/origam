@@ -1,11 +1,13 @@
-import { computed, observable } from "mobx";
+import {computed, observable, action, reaction, IReactionDisposer} from "mobx";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { IOrderingConfiguration } from "./types/IOrderingConfiguration";
 import { IRowsContainer } from "./types/IRowsContainer";
+import { trace } from "mobx"
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
   private filterConfiguration: IFilterConfiguration;
+  private reactionDisposer: IReactionDisposer | undefined;
   @observable
   private forcedFirstRowId: string | undefined;
   constructor(
@@ -19,18 +21,47 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   @observable.shallow allRows: any[][] = [];
-  rowIdGetter: (row: any[]) => string;
+  rowIdGetter: (row: any[]) => any;
 
-  @computed get rows() {
+  @observable
+  sortedIds: any[] | undefined;
+
+  @computed get idToRow() {
+    const entries = this.allRows.map(row => [this.rowIdGetter(row), row] as [any, any[]]);
+    return new Map<any, any[]>(entries);
+  }
+
+  start() {
+    this.reactionDisposer = reaction(
+      () => [this.filterConfiguration.filters, this.orderingConfiguration.orderings],
+      () => this.updateSortAndFilter(),
+      {fireImmediately: true}
+    );
+  }
+
+  stop(){
+    this.reactionDisposer?.();
+  }
+
+  @action
+  updateSortAndFilter() {
     let rows = this.allRows;
     if (this.filterConfiguration.filteringFunction) {
       rows = rows.filter((row) => this.filterConfiguration.filteringFunction()(row));
     }
-    if (this.orderingConfiguration.orderings.length === 0) {
-      return rows;
-    } else {
-      return rows.sort((row1: any[], row2: any[]) => this.internalRowOrderingFunc(row1, row2));
+    if (this.orderingConfiguration.orderings.length !== 0) {
+      rows = rows.sort((row1: any[], row2: any[]) => this.internalRowOrderingFunc(row1, row2));
     }
+    this.sortedIds = rows.map(row => this.rowIdGetter(row));
+  }
+
+  @computed get rows() {
+    if(!this.sortedIds){
+      return this.allRows;
+    }
+    return this.sortedIds
+      .map(id => this.idToRow.get(id))
+      .filter(row => row) as any[][];
   }
 
   @computed get loadedRowsCount() {
@@ -63,11 +94,13 @@ export class ListRowContainer implements IRowsContainer {
   insert(index: number, row: any[]): void {
     this.allRows.splice(index, 0, row);
     this.forcedFirstRowId = this.rowIdGetter(row);
+    this.updateSortAndFilter();
   }
 
   set(rows: any[][]) {
     this.clear();
     this.allRows.push(...rows);
+    this.updateSortAndFilter();
   }
 
   substitute(row: any[]): void {
