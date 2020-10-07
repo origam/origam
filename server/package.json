@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "ts-node-dev --debounce --respawn --no-deps --dedupe ./src/main.ts",
-    "build": "fcli remove ./build && tsc"
+    "build": "fcli remove ./build && tsc",
+    "start-dev-proxy": "node-dev --respawn --no-deps --dedupe ./index-proxy.js"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.2",
@@ -19,8 +20,12 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-winston": "^4.0.5",
     "file-cli": "^1.2.0",
     "http-proxy-middleware": "^1.0.4",
-    "typescript": "^3.9.5"
+    "node-dev": "^5.2.0",
+    "selfsigned": "^1.10.8",
+    "typescript": "^3.9.5",
+    "winston": "^3.3.3"
   }
 }
