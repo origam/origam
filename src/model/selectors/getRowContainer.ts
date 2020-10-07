@@ -7,8 +7,9 @@ import {ListRowContainer} from "../entities/ListRowContainer";
 export function getRowContainer(ctx: any, dataViewAttributes: any,
                                 orderingConfiguration: IOrderingConfiguration,
                                 filterConfiguration: IFilterConfiguration,
-                                rowIdGetter: (row: any[]) => string) {
+                                rowIdGetter: (row: any[]) => string,
+                                parent: any) {
   return isInfiniteScrollingActive(ctx, dataViewAttributes)
-    ? new ScrollRowContainer(rowIdGetter)
-    : new ListRowContainer(orderingConfiguration, filterConfiguration, rowIdGetter);
+    ? new ScrollRowContainer(rowIdGetter, parent)
+    : new ListRowContainer(orderingConfiguration, filterConfiguration, rowIdGetter, parent);
 }

@@ -26,7 +26,8 @@ export class DataTable implements IDataTable {
       data.dataViewAttributes,
       data.orderingConfiguration,
       data.filterConfiguration,
-      (row: any[]) => this.getRowId(row)
+      (row: any[]) => this.getRowId(row),
+      this
     );
   }
 

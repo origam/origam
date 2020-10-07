@@ -57,7 +57,9 @@ export class ClientSideGroupItem implements IGroupTreeNode {
 export class ServerSideGroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
     const dataTable = getDataTable(data.grouper);
-    this._childRows = new ScrollRowContainer((row: any[]) => dataTable.getRowId(row));
+    this._childRows = new ScrollRowContainer(
+      (row: any[]) => dataTable.getRowId(row),
+      dataTable);
     Object.assign(this, data);
 
     const dataView = getDataView(this.grouper);

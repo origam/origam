@@ -26,4 +26,6 @@ export interface IRowsContainer {
   start(): void;
 
   stop():void;
+
+  parent?: any;
 }

@@ -3,6 +3,8 @@ import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { IOrderingConfiguration } from "./types/IOrderingConfiguration";
 import { IRowsContainer } from "./types/IRowsContainer";
 import { trace } from "mobx"
+import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
@@ -13,11 +15,13 @@ export class ListRowContainer implements IRowsContainer {
   constructor(
     orderingConfiguration: IOrderingConfiguration,
     filterConfiguration: IFilterConfiguration,
-    rowIdGetter: (row: any[]) => string
+    rowIdGetter: (row: any[]) => string,
+    parent: any
   ) {
     this.orderingConfiguration = orderingConfiguration;
     this.filterConfiguration = filterConfiguration;
     this.rowIdGetter = rowIdGetter;
+    this.parent = parent;
   }
 
   @observable.shallow allRows: any[][] = [];
@@ -115,4 +119,6 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   registerResetListener(listener: () => void): void {}
+
+  parent: any;
 }
