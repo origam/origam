@@ -39,6 +39,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       onClick?(event: any): void;
       onDoubleClick?(event: any): void;
       onEditorBlur?(event: any): void;
+      customInputCalss?: string;
     }) => {
 
       function getStyle() {
@@ -112,7 +113,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               : null}
             <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />
             <input
-              className={S.filterInput}
+              className={S.filterInput + " " + props.customInputCalss}
               ref={refInput}
               placeholder={data.isResolving ? "Loading..." : ""}
               onChange={beh.handleInputChange}
