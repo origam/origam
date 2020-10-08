@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Function
-    abstract="false"
-    dataType="Boolean"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Boolean"
     x:id="eb654e87-6c71-4219-9c0e-cdfd0c01f382"
-    name="GreaterThanOrEqual"
-    type="Standard"
-    x:type="Origam.Schema.EntityModel.Function">
-    <FunctionParameter
-      abstract="false"
+    asi:name="GreaterThanOrEqual"
+    f:type="Standard">
+    <fp:FunctionParameter
+      asi:abstract="false"
       x:id="88ef0007-3fc8-4898-b39d-e31d4a20c1b7"
-      name="Left"
-      x:type="Origam.Schema.EntityModel.FunctionParameter" />
-    <FunctionParameter
-      abstract="false"
+      asi:name="Left" />
+    <fp:FunctionParameter
+      asi:abstract="false"
       x:id="751618a5-8643-41d1-9512-f62e6444b1de"
-      name="Right"
-      ordinalPosition="1"
-      x:type="Origam.Schema.EntityModel.FunctionParameter" />
-  </Function>
+      asi:name="Right"
+      fp:ordinalPosition="1" />
+  </f:Function>
 </x:file>

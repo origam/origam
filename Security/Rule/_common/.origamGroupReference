@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence">
-    <x:groupReference x:type="http://schemas.origam.com/1.0.0/packagepackage" x:refId="951f2cda-2867-4b99-8824-071fa8749ead"/>
-    <x:groupReference x:type="http://schemas.origam.com/5.0.0/model-elementgroup" x:refId="8f68b20d-035d-416f-ad07-c97ed6bb5b86"/>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <x:groupReference
+    x:refId="951f2cda-2867-4b99-8824-071fa8749ead"
+    x:type="package" />
+  <x:groupReference
+    x:refId="8f68b20d-035d-416f-ad07-c97ed6bb5b86"
+    x:type="group" />
 </x:file>

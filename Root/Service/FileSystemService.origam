@@ -1,507 +1,467 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Service
-    abstract="false"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.WorkflowModel.Service/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:sm="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethod/6.0.0" xmlns:smp="http://schemas.origam.com/Origam.Schema.WorkflowModel.ServiceMethodParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <s:Service
+    asi:abstract="false"
     x:id="7cad95cc-f0a3-4379-a626-133fb1738600"
-    name="FileSystemService"
-    x:type="Origam.Schema.WorkflowModel.Service">
-    <ServiceMethod
-      abstract="false"
+    asi:name="FileSystemService">
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="dcde0489-5fcc-4d33-97f1-004cc80585f0"
-      name="GetFileSystemInfo"
-      returnValueDataType="Xml"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataLength="255"
-        dataType="String"
+      asi:name="GetFileSystemInfo"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataLength="255"
+        sip:dataType="String"
         x:id="da12b41d-9f93-4603-ba55-ba69730a69f6"
-        name="Mask"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+        asi:name="Mask" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="a95b2022-f37b-4352-aad6-d0f2a00a9c09"
-        name="Recursive"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="Memo"
+        asi:name="Recursive" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="Memo"
         x:id="182a7abc-07e9-4d67-8c91-e8bc2b2c77b8"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="61353b7f-64c5-4ccc-b0f3-17c8c1c36471"
-      name="LoadXml"
-      returnValueDataType="Xml"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+      asi:name="LoadXml"
+      sm:returnValueDataType="Xml">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="91c5e80d-20e7-4f5f-905c-5a17399b474b"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="55203595-46a8-48d4-be43-1cbecbb856fa"
-      name="DeleteFile"
-      returnValueDataType="Boolean"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+      asi:name="DeleteFile"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="ce4a560a-86de-4dfb-b984-38590d5a8859"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="e698c547-5fb5-4986-bb9b-236cd29cb028"
-      name="LoadText"
-      returnValueDataType="String"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+      asi:name="LoadText"
+      sm:returnValueDataType="String">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="ec9f3ed8-f695-458b-8497-45e3c9615db1"
-        name="Encoding"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="Encoding" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="dcd1e3fd-3ff9-4675-ae40-9c5ad6082875"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="6357e96f-a5b0-4c07-83c9-4ca61fc8f96a"
-      name="SaveXml"
-      returnValueDataType="Boolean"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="false"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="1"
-        dataType="Xml"
+      asi:name="SaveXml"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Xml"
         x:id="c840feb0-f481-46a3-8a82-3b11dcc80794"
-        name="Data"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="7a105221-ed0b-4cff-8b7f-53b9304a08bb"
-        name="CreateDirectory"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="true"
-        allowNulls="false"
-        allowReportReference="true"
-        allowSystemFunctionCall="true"
-        allowTransformationReference="true"
-        allowWorkflowReference="true"
-        callElements="127"
-        dataType="String"
+        asi:name="CreateDirectory" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="true"
+        sip:allowNulls="false"
+        smp:allowReportReference="true"
+        smp:allowSystemFunctionCall="true"
+        smp:allowTransformationReference="true"
+        smp:allowWorkflowReference="true"
+        smp:callElements="127"
+        sip:dataType="String"
         x:id="0e8e635e-7bab-490e-ac44-ef69f25e730f"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="f1c28680-b07e-453d-9bfd-fafa29146291"
-        name="Encoding"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Encoding" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="5bd9f3a7-f069-4466-a448-8e9dafedd39e"
-      name="SaveText"
-      returnValueDataType="Boolean"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+      asi:name="SaveText"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="6fe02d86-06b0-49b5-bc2f-0275c3fc7ac2"
-        name="Data"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="d6b077ef-f422-45fe-a585-14c72c51a1b5"
-        name="CreateDirectory"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="CreateDirectory" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="b2bc4386-092b-4a32-bb0d-3fb39e59efa5"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="f42f6179-aed6-487b-ae6c-64a8b1e39db0"
-        name="Encoding"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Encoding" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="37c24d31-d4cd-4467-b7d0-977c8b8f1c5a"
-      name="CopyFile"
-      returnValueDataType="Boolean"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+      asi:name="CopyFile"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="f9908051-f127-41f8-af53-7a7ea1ef2501"
-        name="CreateDirectory"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="CreateDirectory" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="15341421-0736-4f56-ac09-7bd391629e00"
-        name="DestinationPath"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="DestinationPath" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="c6fd06ce-a3fa-4302-acdf-c16058a29485"
-        name="SourcePath"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+        asi:name="SourcePath" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="7c02c9d0-ca94-43db-b605-c6369f755bbb"
-        name="Overwrite"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Overwrite" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="265b71bb-ef21-4d6a-89c4-a811730a2b05"
-      name="MoveFile"
-      returnValueDataType="Boolean"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+      asi:name="MoveFile"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="28d19db5-dac1-4899-8a45-9218311fff5d"
-        name="CreateDirectory"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="CreateDirectory" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="67762f0d-00c2-4b1b-8c08-a1b9e51223b5"
-        name="DestinationPath"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+        asi:name="DestinationPath" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="3dcdd0e3-2990-45fe-8912-f9d9d3c12835"
-        name="Overwrite"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+        asi:name="Overwrite" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="7f485c93-fbd0-4751-bf2d-fb1a5593e2c0"
-        name="SourcePath"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="SourcePath" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="f7a8e488-bab1-48e5-98a2-b12c762bf849"
-      name="SaveBlob"
-      returnValueDataType="Boolean"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+      asi:name="SaveBlob"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="7a753317-9f00-4591-89c8-53ca9c18ed87"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="false"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="1"
-        dataType="Blob"
+        asi:name="Path" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="false"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="1"
+        sip:dataType="Blob"
         x:id="1c941dbe-708d-4fab-99e2-71ceb281a292"
-        name="Data"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-      <Parameter
-        abstract="false"
-        allowContextReference="false"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="true"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="2"
-        dataType="Boolean"
+        asi:name="Data" />
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="false"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="true"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="2"
+        sip:dataType="Boolean"
         x:id="b723407b-833a-4859-970e-9c0e5e12510b"
-        name="CreateDirectory"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="CreateDirectory" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="2ca7340c-60d8-4b73-b389-b8006d7f05ab"
-      name="LoadBlob"
-      returnValueDataType="Blob"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+      asi:name="LoadBlob"
+      sm:returnValueDataType="Blob">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="5e784b29-af7d-4d58-ae03-6e9827d93206"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-    <ServiceMethod
-      abstract="false"
+        asi:name="Path" />
+    </sm:ServiceMethod>
+    <sm:ServiceMethod
+      asi:abstract="false"
       x:id="33ce7d57-a0f1-4d4c-ae0a-2d2623ed445a"
-      name="CreateDirectory"
-      returnValueDataType="Boolean"
-      x:type="Origam.Schema.WorkflowModel.ServiceMethod">
-      <Parameter
-        abstract="false"
-        allowContextReference="true"
-        allowDataConstantReference="true"
-        allowDataStructureReference="false"
-        allowNulls="false"
-        allowReportReference="false"
-        allowSystemFunctionCall="false"
-        allowTransformationReference="false"
-        allowWorkflowReference="false"
-        callElements="3"
-        dataType="String"
+      asi:name="CreateDirectory"
+      sm:returnValueDataType="Boolean">
+      <smp:Parameter
+        asi:abstract="false"
+        smp:allowContextReference="true"
+        smp:allowDataConstantReference="true"
+        smp:allowDataStructureReference="false"
+        sip:allowNulls="false"
+        smp:allowReportReference="false"
+        smp:allowSystemFunctionCall="false"
+        smp:allowTransformationReference="false"
+        smp:allowWorkflowReference="false"
+        smp:callElements="3"
+        sip:dataType="String"
         x:id="cb3fb41b-8756-4dec-9fd9-ea67109407f3"
-        name="Path"
-        x:type="Origam.Schema.WorkflowModel.ServiceMethodParameter" />
-    </ServiceMethod>
-  </Service>
+        asi:name="Path" />
+    </sm:ServiceMethod>
+  </s:Service>
 </x:file>

@@ -1,70 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DataEntity
-    abstract="false"
-    audit="None"
-    databaseObjectType="Table"
-    generateDeploymentScript="true"
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
     x:id="058f3c2e-cb3a-4c3d-bbe6-e00b5c29a5a0"
-    label="Organization Mapping"
-    mappedObjectName="OrganizationMapping"
-    name="OrganizationMapping"
-    readOnly="false"
-    x:type="Origam.Schema.EntityModel.TableMappingItem">
-    <ancestor
-      ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
-      x:id="20a29aa0-b15a-4757-9c25-863301764c09"
-      x:type="Origam.Schema.SchemaItemAncestor" />
-    <DataEntityColumn
-      abstract="false"
-      allowNulls="false"
-      autoIncrement="false"
-      dataType="UniqueIdentifier"
-      defaultLookup="Root/DataLookup/Organization Management/Organization.origam#Organization/a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
-      excludeFromAllFields="false"
-      excludeFromAuditing="false"
-      foreignKeyEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
-      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+    ade:label="Organization Mapping"
+    tmi:mappedObjectName="OrganizationMapping"
+    asi:name="OrganizationMapping"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="20a29aa0-b15a-4757-9c25-863301764c09" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Organization Management/Organization.origam#Organization/a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="9b691a79-8e00-4c25-9957-c59ab38c5410"
-      isPrimaryKey="false"
-      label="Parent Organization"
-      mappedColumnName="refParentOrganizationId"
-      name="refParentOrganizationId"
-      onCopyAction="Copy"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem"
-      xmlMappingType="Attribute" />
-    <DataEntityColumn
-      abstract="false"
-      allowNulls="false"
-      autoIncrement="false"
-      dataType="UniqueIdentifier"
-      defaultLookup="Root/DataLookup/Organization Management/Organization.origam#Organization/a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
-      excludeFromAllFields="false"
-      excludeFromAuditing="false"
-      foreignKeyEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
-      foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      adec:isPrimaryKey="false"
+      adec:label="Parent Organization"
+      fmi:mappedColumnName="refParentOrganizationId"
+      asi:name="refParentOrganizationId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Organization Management/Organization.origam#Organization/a53c6d95-67be-4c8c-a7b0-75ad20dc79ee"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Organization Management/Organization.origam#Organization/5b590143-c85f-4c7d-a7f3-ae0a6d246f18"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
       x:id="ec9c37eb-1336-4a97-935c-d07fef58b09a"
-      isPrimaryKey="false"
-      label="Assigned Organization"
-      mappedColumnName="refOrganizationId"
-      name="refOrganizationId"
-      onCopyAction="Copy"
-      x:type="Origam.Schema.EntityModel.FieldMappingItem"
-      xmlMappingType="Attribute" />
-    <DataEntityIndex
-      abstract="false"
-      generateDeploymentScript="false"
+      adec:isPrimaryKey="false"
+      adec:label="Assigned Organization"
+      fmi:mappedColumnName="refOrganizationId"
+      asi:name="refOrganizationId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
       x:id="5387b14f-4531-42c2-8007-5a63b4c80f2c"
-      name="ix_Organization"
-      x:type="Origam.Schema.EntityModel.DataEntityIndex"
-      unique="false">
-      <DataEntityIndexField
-        abstract="false"
-        field="Root/DataEntity/Organization Management/OrganizationMapping.origam#OrganizationMapping/refParentOrganizationId/9b691a79-8e00-4c25-9957-c59ab38c5410"
+      asi:name="ix_Organization"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Organization Management/OrganizationMapping.origam#OrganizationMapping/refParentOrganizationId/9b691a79-8e00-4c25-9957-c59ab38c5410"
         x:id="548691f3-9447-4ebc-a1ea-18390ef6006f"
-        name="0_refOrganizationId"
-        sortOrder="Ascending"
-        x:type="Origam.Schema.EntityModel.DataEntityIndexField" />
-    </DataEntityIndex>
-  </DataEntity>
+        asi:name="0_refOrganizationId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+  </tmi:DataEntity>
 </x:file>

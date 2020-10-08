@@ -1,102 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Control
-    abstract="false"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:cpi="http://schemas.origam.com/Origam.Schema.GuiModel.ControlPropertyItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ci:Control
+    asi:abstract="false"
     x:id="48dc8d6a-21c1-4e12-96de-c3a5eb67434d"
-    isComplex="false"
-    name="AsCheckBox"
-    namespace="Origam.Gui.Win"
-    requestSaveAfterChangeAllowed="true"
-    toolboxVisibility="PanelDesigner"
-    x:type="Origam.Schema.GuiModel.ControlItem"
-    typeName="Origam.Gui.Win.AsCheckBox">
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+    ci:isComplex="false"
+    asi:name="AsCheckBox"
+    ci:namespace="Origam.Gui.Win"
+    ci:requestSaveAfterChangeAllowed="true"
+    ci:toolboxVisibility="PanelDesigner"
+    ci:typeName="Origam.Gui.Win.AsCheckBox">
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="b424c509-cf88-4dfa-938d-2005d5adf5e3"
-      localizable="false"
-      name="Left"
-      propertyType="Integer"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="Left"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="4e4711db-5d57-4673-9344-20cf03953e15"
-      localizable="false"
-      name="GridColumnWidth"
-      propertyType="Integer"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="GridColumnWidth"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="99ff07e3-5f43-4bb2-b3de-46657a2f4bfb"
-      localizable="false"
-      name="Width"
-      propertyType="Integer"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="Width"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="a53a1860-c6dd-4659-ac33-6d6c7bf8d6f2"
-      localizable="false"
-      name="Value"
-      propertyType="Boolean"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="Value"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="c750fd0e-7553-4e96-9293-6e089f6ade74"
-      localizable="false"
-      name="HideOnForm"
-      propertyType="Boolean"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="HideOnForm"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="340d9566-e8ca-4eff-af06-80221a495f71"
-      localizable="false"
-      name="Top"
-      propertyType="Integer"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="Top"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="627a6911-cb5c-483c-bfdf-8d1d7a71f928"
-      localizable="false"
-      name="ReadOnly"
-      propertyType="Boolean"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="ReadOnly"
+      cpi:propertyType="Boolean" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="3e03172f-fc92-4f7b-b09d-9f562c256040"
-      localizable="false"
-      name="TabIndex"
-      propertyType="Integer"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="TabIndex"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="cb27c257-509d-4121-bdef-caf2ebf9fa2a"
-      localizable="false"
-      name="Height"
-      propertyType="Integer"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="Height"
+      cpi:propertyType="Integer" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="d41d1c01-1aea-436c-aa9f-dd681134b003"
-      localizable="false"
-      name="StyleId"
-      propertyType="UniqueIdentifier"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-    <ControlPropertyItem
-      abstract="false"
-      bindOnly="false"
+      cpi:localizable="false"
+      asi:name="StyleId"
+      cpi:propertyType="UniqueIdentifier" />
+    <cpi:ControlPropertyItem
+      asi:abstract="false"
+      cpi:bindOnly="false"
       x:id="562004f3-48f7-460d-b8f6-e8c911235a36"
-      localizable="true"
-      name="Text"
-      propertyType="String"
-      x:type="Origam.Schema.GuiModel.ControlPropertyItem" />
-  </Control>
+      cpi:localizable="true"
+      asi:name="Text"
+      cpi:propertyType="String" />
+  </ci:Control>
 </x:file>
