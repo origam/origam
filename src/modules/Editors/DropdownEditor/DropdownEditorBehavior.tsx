@@ -2,7 +2,7 @@ import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
 import { action, computed, decorate, flow, observable, reaction } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
-import { DropdownEditorApi } from "./DropdownEditorApi";
+import { DropdownEditorApi, IDropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
@@ -11,7 +11,7 @@ import { IFocusable } from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
   constructor(
-    private api: DropdownEditorApi,
+    private api: IDropdownEditorApi,
     private data: IDropdownEditorData,
     private dataTable: DropdownDataTable,
     private setup: () => DropdownEditorSetup,
@@ -58,14 +58,15 @@ export class DropdownEditorBehavior {
   @action.bound dropDown() {
     const setup = this.setup();
     if (!this.isDropped) {
-      if (setup.dropdownType === EagerlyLoadedGrid && setup.cached) {
+      if(setup.dropdownType === EagerlyLoadedGrid){
         this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-        if (this.cache.hasCachedListRows()) {
-          this.dataTable.setData(this.cache.getCachedListRows());
-        } else {
-          this.ensureRequestRunning();
-        }
-      } else if (setup.dropdownType === LazilyLoadedGrid || !setup.cached) {
+      }
+      if (setup.dropdownType === EagerlyLoadedGrid &&
+          setup.cached &&
+          this.cache.hasCachedListRows())
+      {
+        this.dataTable.setData(this.cache.getCachedListRows());
+      }else{
         this.ensureRequestRunning();
       }
     }
@@ -189,17 +190,19 @@ export class DropdownEditorBehavior {
     this.userEnteredValue = event.target.value;
     this.isDropped = true;
 
-    if (this.setup().dropdownType === EagerlyLoadedGrid && this.setup().cached) {
-      if (this.cache.hasCachedListRows()) {
-        this.dataTable.setData(this.cache.getCachedListRows());
-      } else {
-        this.ensureRequestRunning();
-      }
+    if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-      if (this.userEnteredValue) {
-        this.trySelectFirstRow();
+      if(this.setup().cached){
+        if (this.cache.hasCachedListRows()) {
+          this.dataTable.setData(this.cache.getCachedListRows());
+        } else {
+          this.ensureRequestRunning();
+        }
+        if (this.userEnteredValue) {
+          this.trySelectFirstRow();
+        }
       }
-    } else if (this.setup().dropdownType === LazilyLoadedGrid || !this.setup().cached) {
+    } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
     }
   }
@@ -303,10 +306,12 @@ export class DropdownEditorBehavior {
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
         items.sort(compareLookupItems);
-        if (setup.dropdownType === EagerlyLoadedGrid && setup.cached) {
+        if (setup.dropdownType === EagerlyLoadedGrid) {
           self.dataTable.setData(items);
-          self.cache.setCachedListRows(items);
-        } else if (setup.dropdownType === LazilyLoadedGrid || !setup.cached) {
+          if(setup.cached){
+            self.cache.setCachedListRows(items);
+          }
+        } else if (setup.dropdownType === LazilyLoadedGrid) {
           if (items.length < self.pageSize) {
             self.willLoadNextPage = false;
           }

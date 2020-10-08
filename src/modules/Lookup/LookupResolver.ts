@@ -89,9 +89,6 @@ export class LookupResolver {
       atom.reportObserved();
     }
 
-    if (!this.atoms.has(key)) {
-      throw new Error("Not in a tracking context.");
-    }
 
     return value;
   }

@@ -14,6 +14,7 @@ import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMon
 import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
 import { IProperty } from "model/entities/types/IProperty";
+import {IDataTable} from "model/entities/types/IDataTable";
 
 
 export interface IInfiniteScrollLoaderData {
@@ -58,6 +59,7 @@ export class NullIScrollLoader implements IInfiniteScrollLoader {
 }
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
+  $type_InfiniteScrollLoader: 1 = 1;
   private debugDisposer: IReactionDisposer | undefined;
   private reactionDisposer: IReactionDisposer | undefined;
   visibleRowsMonitor: IVisibleRowsMonitor;
@@ -291,3 +293,7 @@ class FlowQueueProcessor {
     }
   };
 }
+
+export const isInfiniteScrollLoader = (o: any): o is InfiniteScrollLoader =>
+  o?.$type?.InfiniteScrollLoader;
+

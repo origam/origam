@@ -19,7 +19,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   implicitFilters: IImplicitFilter[];
   @observable.ref filters: IFilter[] = [];
 
-  getSettingByPropertyId(propertyId: string): any {
+  getSettingByPropertyId(propertyId: string): IFilter | undefined {
     return this.filters.find((item) => item.propertyId === propertyId);
   }
 
@@ -70,7 +70,7 @@ export class FilterConfiguration implements IFilterConfiguration {
     };
   }
 
-  userFilterPredicate(row: any[], term: any) {
+  userFilterPredicate(row: any[], term: IFilter) {
     const dataTable = getDataTable(this);
     const prop = dataTable.getPropertyById(term.propertyId)!;
     switch (prop.column) {

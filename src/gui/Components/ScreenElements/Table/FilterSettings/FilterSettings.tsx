@@ -11,7 +11,8 @@ import { MobXProviderContext } from "mobx-react";
 import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
 import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
-import {getDataView} from "model/selectors/DataView/getDataView";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 
 export const FilterSettings: React.FC = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
@@ -55,21 +56,20 @@ export const FilterSettings: React.FC = observer((props) => {
         <FilterSettingsLookup
           setting={setting as any}
           onTriggerApplySetting={handleApplyFilterSetting}
-          lookupId={property.lookup!.lookupId}
+          property={property}
+          lookup={property.lookup!}
           getOptions={flow(function* (searchTerm: string) {
-            const allIds = dataView.infiniteScrollLoader
+            const allIds = isInfiniteScrollLoader(dataView.infiniteScrollLoader)
               ? yield dataView.infiniteScrollLoader.getAllValuesOfProp(property)
-              : new Set(dataTable.getAllValuesOfProp(property));
+              :  Array.from(new Set(dataTable.getAllValuesOfProp(property)).values());
             const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allIds);
+
             return Array.from(allIds.values())
-              .map((item) => ({
-                content: lookupMap.get(item),
-                value: item,
-              }))
+              .map(item => [ item, lookupMap.get(item)])
               .filter(
-                (item) =>
-                  item.content &&
-                  item.content.toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
+                (array) =>
+                  array[1] &&
+                  array[1].toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
               );
           })}
         />

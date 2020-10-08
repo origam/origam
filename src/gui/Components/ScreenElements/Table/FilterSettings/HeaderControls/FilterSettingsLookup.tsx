@@ -1,18 +1,9 @@
-import {
-  TagInput,
-  TagInputDeleteBtn,
-  TagInputEdit,
-  TagInputItem,
-  TagInputPlus,
-} from "gui02/components/TagInput/TagInput";
-import _ from "lodash";
-import { action, computed, flow, observable, runInAction, toJS } from "mobx";
-import { observer } from "mobx-react";
+import { action, computed, observable, toJS } from "mobx";
+import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Grid, GridCellProps } from "react-virtualized";
 import Highlighter from "react-highlight-words";
-import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
@@ -23,6 +14,26 @@ import { IFilterSetting } from "model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { T } from "utils/translation";
+import {
+  CtxDropdownEditor,
+  DropdownEditor,
+  DropdownEditorSetup,
+  IDropdownEditorContext,
+} from "modules/Editors/DropdownEditor/DropdownEditor";
+import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
+import { IDataView } from "model/entities/types/IDataView";
+import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
+import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
+import {
+  DropdownColumnDrivers,
+  DropdownDataTable,
+} from "modules/Editors/DropdownEditor/DropdownTableModel";
+import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/DropdownEditorLookupListCache";
+import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
+import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
+import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
+import { ILookup } from "model/entities/types/ILookup";
+import { IProperty } from "model/entities/types/IProperty";
 
 const OPERATORS = () =>
   [
@@ -127,211 +138,26 @@ export class OptionGrid extends React.Component<{
 }
 
 @observer
-export class TagInputStateful extends React.Component<{
-  selectedItems: Array<{ value: any; content: any }>;
-  onChange?(selectedItems: Array<{ value: any; content: any }>): void;
-  getOptions(searchTerm: string): CancellablePromise<Array<{ value: any; content: any }>>;
-}> {
-  @observable cursorAfterIndex = this.props.selectedItems.length - 1;
-  @observable searchTerm = "";
-  @observable.shallow availOptions: Array<{ content: any; value: any }> = [];
-
-  @computed get offeredOptions() {
-    const selectedIds = new Set(this.props.selectedItems.map((item) => item.value));
-    return this.availOptions.filter((option) => !selectedIds.has(option.value));
-  }
-
-  componentDidUpdate() {
-    runInAction(() => {
-      this.cursorAfterIndex = Math.min(this.cursorAfterIndex, this.props.selectedItems.length - 1);
-      // TODO: detect that the component updated due to its own event
-      // (otherwise there might be mess caused by a focus avalanche)
-    });
-  }
-
-  @action.bound handleFakeEditKeyDown(event: any) {
-    event.stopPropagation();
-    switch (event.key) {
-      case "ArrowLeft":
-        if (this.cursorAfterIndex > -1) {
-          this.cursorAfterIndex--;
-          setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
-        }
-
-        break;
-      case "ArrowRight":
-        if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
-          this.cursorAfterIndex++;
-        }
-        if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
-          setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
-        } else {
-          setTimeout(() => this.elmInput && this.elmInput.focus());
-        }
-        break;
-      case "Delete":
-        if (this.cursorAfterIndex < this.props.selectedItems.length - 1) {
-          if (this.props.onChange) {
-            const newItems = [...this.props.selectedItems];
-            newItems.splice(this.cursorAfterIndex + 1, 1);
-            this.props.onChange(newItems);
-          }
-        }
-        break;
-      case "Backspace":
-        if (this.cursorAfterIndex > -1) {
-          if (this.props.onChange) {
-            const newItems = [...this.props.selectedItems];
-            newItems.splice(this.cursorAfterIndex, 1);
-            this.cursorAfterIndex--;
-            this.props.onChange(newItems);
-          }
-        }
-        break;
-    }
-  }
-
-  @action.bound handleEditKeyDown(event: any) {
-    switch (event.key) {
-      case "ArrowLeft":
-        if (this.elmInput) {
-          if (this.elmInput.selectionStart === 0 && this.elmInput.selectionEnd === 0) {
-            this.cursorAfterIndex--;
-            setTimeout(() => this.elmFakeInput && this.elmFakeInput.focus());
-          }
-        }
-        break;
-      case "Backspace":
-        if (
-          this.cursorAfterIndex > -1 &&
-          this.elmInput &&
-          this.elmInput.selectionStart === 0 &&
-          this.elmInput.selectionEnd === 0
-        ) {
-          if (this.props.onChange) {
-            const newItems = [...this.props.selectedItems];
-            newItems.splice(this.cursorAfterIndex, 1);
-            this.cursorAfterIndex--;
-            this.props.onChange(newItems);
-          }
-        }
-        break;
-    }
-  }
-
-  @action.bound handleDeleteBtnClick(event: any, value: any) {
-    const idx = this.props.selectedItems.findIndex((item) => item.value === value);
-    const newItems = [...this.props.selectedItems];
-    newItems.splice(idx, 1);
-    this.props.onChange && this.props.onChange(newItems);
-  }
-
-  @action.bound handleEditFocus(event: any) {
-    this.cursorAfterIndex = this.props.selectedItems.length - 1;
-    setTimeout(() => this.elmInput && this.elmInput.focus());
-  }
-
-  elmInput: HTMLInputElement | null = null;
-  refInput = (elm: any) => (this.elmInput = elm);
-
-  elmFakeInput: HTMLInputElement | null = null;
-  refFakeInput = (elm: any) => (this.elmFakeInput = elm);
-
-  elmDropdowner: Dropdowner | null = null;
-  refDropdowner = (elm: any) => (this.elmDropdowner = elm);
-
-  handlePlusClick = flow(
-    function* (this: TagInputStateful, event: any) {
-      yield* this.getOptions();
-    }.bind(this)
-  );
-
-  @action.bound handleSearchTermChange(event: any) {
-    this.searchTerm = event.target.value;
-    this.handleSearchTermChangeDeb(event);
-  }
-
-  handleSearchTermChangeImm = flow(function* (this: TagInputStateful, event: any) {
-    yield* this.getOptions();
-  });
-
-  handleSearchTermChangeDeb = _.debounce(this.handleSearchTermChangeImm, 100);
-
-  *getOptions() {
-    const options = yield this.props.getOptions(this.searchTerm);
-    this.availOptions = options;
-    this.elmDropdowner && this.elmDropdowner.setDropped(true);
-  }
-
-  @action.bound handleOptionCellClick(event: AnalyserNode, rowIndex: number, columnIndex: number) {
-    const newSelectedItems = [...this.props.selectedItems];
-    newSelectedItems.push(this.offeredOptions[rowIndex]);
-    this.elmDropdowner && this.elmDropdowner.setDropped(false);
-    this.props.onChange && this.props.onChange(newSelectedItems);
-  }
-
-  render() {
-    return (
-      <TagInput>
-        {this.props.selectedItems.map((item, idx) => {
-          return (
-            <React.Fragment key={item.value}>
-              <TagInputItem key={item.value}>
-                {item.content}
-                <TagInputDeleteBtn
-                  onClick={(event) => this.handleDeleteBtnClick(event, item.value)}
-                />
-              </TagInputItem>
-            </React.Fragment>
-          );
-        })}
-        <Dropdowner
-          ref={this.refDropdowner}
-          trigger={({ refTrigger, setDropped }) => (
-            <>
-              <TagInputPlus domRef={refTrigger} onClick={this.handlePlusClick} />
-              <TagInputEdit
-                domRef={this.refInput}
-                onKeyDown={this.handleEditKeyDown}
-                onFocus={this.handleEditFocus}
-                onChange={this.handleSearchTermChange}
-                value={this.searchTerm}
-              />
-            </>
-          )}
-          content={({ setDropped }) => (
-            <div className={S.droppedPanel}>
-              {this.offeredOptions.length > 0 ? (
-                <OptionGrid
-                  items={this.offeredOptions}
-                  onCellClick={this.handleOptionCellClick}
-                  searchPhrase={this.searchTerm}
-                />
-              ) : (
-                <div className={S.noItemsFound}>No items found</div>
-              )}
-            </div>
-          )}
-        />
-      </TagInput>
-    );
-  }
-}
-
-@observer
 class OpEditors extends React.Component<{
-  setting: any;
+  setting: IFilterSetting | undefined;
   onChange: (newSetting: any) => void;
   onChangeDebounced: (newSetting: any) => void;
-  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
+  lookup: ILookup;
+  property: IProperty;
 }> {
-  @observable selectedItems: Array<{ value: any; content: any }> = [];
+  @observable selectedItems: Array<Array<any>> = [];
 
-  @action.bound handleSelectedItemsChange(items: Array<{ value: any; content: any }>) {
+  @action.bound handleSelectedItemsChange(items: Array<any>) {
     this.selectedItems = items;
     this.props.onChange(
       produce(this.props.setting, (draft: IFilterSetting) => {
-        draft.val1 = toJS(items, { recurseEverything: true });
+        draft.val1 = toJS(
+          items.map((item) => {
+            return { value: item };
+          }),
+          { recurseEverything: true }
+        );
         draft.val2 = undefined;
         draft.isComplete = draft.val1 !== undefined && draft.val1.length > 0;
       })
@@ -350,14 +176,16 @@ class OpEditors extends React.Component<{
 
   render() {
     const { setting } = this.props;
-    switch (setting.type) {
+    switch (setting?.type) {
       case "in":
       case "nin":
         return (
-          <TagInputStateful
-            selectedItems={setting.val1 ? this.selectedItems : []}
-            onChange={this.handleSelectedItemsChange}
+          <FilterBuildDropdownEditor
+            lookup={this.props.lookup}
+            property={this.props.property}
             getOptions={this.props.getOptions}
+            onChange={this.handleSelectedItemsChange}
+            values={this.selectedItems}
           />
         );
       case "contains":
@@ -373,9 +201,10 @@ class OpEditors extends React.Component<{
 
 @observer
 export class FilterSettingsLookup extends React.Component<{
-  getOptions: (searchTerm: string) => CancellablePromise<Array<{ value: any; content: any }>>;
-  lookupId: string;
-  setting: any;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
+  lookup: ILookup;
+  property: IProperty;
+  setting: IFilterSetting | undefined;
   onTriggerApplySetting?(setting: any): void;
 }> {
   @observable.ref setting: FilterSetting = new LookupFilterSetting(
@@ -386,7 +215,7 @@ export class FilterSettingsLookup extends React.Component<{
   @action.bound handleChange(newSetting: any) {
     newSetting.lookupId =
       newSetting.type === "contains" || newSetting.type === "ncontains"
-        ? this.props.lookupId
+        ? this.props.lookup.lookupId
         : undefined;
     this.setting = newSetting;
 
@@ -402,6 +231,8 @@ export class FilterSettingsLookup extends React.Component<{
           onChange={this.handleChange}
           onChangeDebounced={this.handleChange}
           getOptions={this.props.getOptions}
+          lookup={this.props.lookup}
+          property={this.props.property}
         />
       </>
     );
@@ -440,5 +271,146 @@ export class LookupFilterSetting implements IFilterSetting {
     this.type = type;
     this.caption = caption;
     this.isComplete = false;
+  }
+}
+
+export function FilterBuildDropdownEditor(props: {
+  lookup: ILookup;
+  property: IProperty;
+  getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
+  onChange(selectedItems: Array<any>): void;
+  values: Array<any>;
+}) {
+  const mobxContext = useContext(MobXProviderContext);
+  const dataView = mobxContext.dataView as IDataView;
+  const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
+  const workbench = mobxContext.workbench;
+  const { lookupListCache } = workbench;
+
+  const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
+    const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
+    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.onChange);
+
+    const dropdownEditorDataTable = new DropdownDataTable(
+      () => dropdownEditorSetup,
+      dropdownEditorData
+    );
+    const dropdownEditorLookupListCache = new DropdownEditorLookupListCache(
+      () => dropdownEditorSetup,
+      lookupListCache
+    );
+    const dropdownEditorBehavior = new DropdownEditorBehavior(
+      dropdownEditorApi,
+      dropdownEditorData,
+      dropdownEditorDataTable,
+      () => dropdownEditorSetup,
+      dropdownEditorLookupListCache,
+      false
+    );
+    const lookupColumn = props.lookup.dropDownColumns[0];
+
+    const drivers = new DropdownColumnDrivers();
+
+    let identifierIndex = 0;
+    const columnNameToIndex = new Map<string, number>([
+      [props.property.identifier!, identifierIndex],
+    ]);
+    const visibleColumnNames: string[] = [];
+
+    columnNameToIndex.set(props.property.name, 1);
+    visibleColumnNames.push(props.property.name);
+
+    const bodyCellDriver = new TextCellDriver(1, dropdownEditorDataTable, dropdownEditorBehavior);
+
+    drivers.drivers.push({
+      headerCellDriver: new DefaultHeaderCellDriver(props.property.name),
+      bodyCellDriver,
+    });
+
+    const showUniqueValues = true;
+
+    const dropdownEditorSetup = new DropdownEditorSetup(
+      props.property.id,
+      props.lookup.lookupId,
+      [],
+      visibleColumnNames,
+      columnNameToIndex,
+      showUniqueValues,
+      props.property.identifier!,
+      identifierIndex,
+      props.property.parameters,
+      props.property.lookup?.dropDownType!,
+      props.property.lookup?.cached!,
+      !props.property.lookup?.searchByFirstColumnOnly
+    );
+
+    return {
+      behavior: dropdownEditorBehavior,
+      editorData: dropdownEditorData,
+      columnDrivers: drivers,
+      editorDataTable: dropdownEditorDataTable,
+    };
+  });
+
+  function onItemRemoved(event: any, item: any) {
+    props.onChange(props.values);
+  }
+
+  const value = props.values;
+  return (
+    <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
+      <DropdownEditor
+        editor={
+          <TagInputEditor
+            customInputCalss={S.tagInput}
+            value={value}
+            isReadOnly={false}
+            isInvalid={false}
+            isFocused={false}
+            refocuser={undefined}
+            onChange={onItemRemoved}
+            onClick={undefined}
+          />
+        }
+      />
+    </CtxDropdownEditor.Provider>
+  );
+}
+
+export class FilterEditorData implements IDropdownEditorData {
+  constructor(private onChange: (selectedItems: Array<any>) => void) {}
+
+  @computed get value(): string | string[] | null {
+    return this._value;
+  }
+
+  @observable
+  _value: any[] = [];
+
+  @computed get text(): string {
+    return "";
+  }
+
+  get isResolving() {
+    return false;
+  }
+
+  @action.bound chooseNewValue(value: any) {
+    if (value !== null) {
+      this._value = [...this._value, value];
+      this.onChange(this._value);
+    }
+  }
+
+  get idsInEditor() {
+    return this._value as string[];
+  }
+}
+
+class DropDownApi implements IDropdownEditorApi {
+  constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
+
+  *getLookupList(searchTerm: string): any {
+    return yield this.getOptions("");
   }
 }

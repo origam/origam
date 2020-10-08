@@ -19,7 +19,7 @@ import { CtxDropdownRefCtrl } from "../../../../modules/Editors/DropdownEditor/D
 export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
   return {
-    textualValues: dataTable.resolveCellText(property, value),
+    textualValues: value.map((valueItem: any) => dataTable.resolveCellText(property, valueItem)),
   };
 })(
   observer(
@@ -34,11 +34,12 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       foregroundColor?: string;
       customStyle?: any;
       refocuser?: (cb: () => void) => () => void;
-      onChange?(event: any, value: any): void;
+      onChange?(event: any, value: string[]): void;
       onKeyDown?(event: any): void;
       onClick?(event: any): void;
       onDoubleClick?(event: any): void;
       onEditorBlur?(event: any): void;
+      customInputCalss?: string;
     }) => {
 
       function getStyle() {
@@ -112,7 +113,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               : null}
             <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />
             <input
-              className={S.filterInput}
+              className={S.filterInput + " " + props.customInputCalss}
               ref={refInput}
               placeholder={data.isResolving ? "Loading..." : ""}
               onChange={beh.handleInputChange}

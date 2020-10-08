@@ -13,10 +13,12 @@ import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
 export class ScrollRowContainer implements IRowsContainer {
   $type_ScrollRowContainer: 1 = 1;
 
-  constructor(rowIdGetter: (row: any[]) => string) {
+  constructor(rowIdGetter: (row: any[]) => string, parent: any) {
     this.rowIdGetter = rowIdGetter;
+    this.parent = parent;
   }
 
+  parent: any;
   @observable
   rowChunks: RowChunk[] = [];
   private readonly rowIdGetter: (row: any[]) => string;
@@ -53,7 +55,6 @@ export class ScrollRowContainer implements IRowsContainer {
     return this.rowChunks.flatMap((chunk) => chunk.rows);
   }
 
-  @computed
   get allRows() {
     return this.rows;
   }

@@ -6,8 +6,12 @@ import { DropdownEditorSetup } from "./DropdownEditor";
 import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { EagerlyLoadedGrid } from "./DropdownEditorCommon";
 
+export interface IDropdownEditorApi{
+  getLookupList(searchTerm: string): any;
+}
+
 @bind
-export class DropdownEditorApi {
+export class DropdownEditorApi implements IDropdownEditorApi{
   constructor(
     private setup: () => DropdownEditorSetup,
     private rowCursor: RowCursor,
