@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Rule
-    abstract="false"
-    dataType="Boolean"
+<x:file xmlns:ar="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:er="http://schemas.origam.com/Origam.Schema.RuleModel.EndRule/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xr="http://schemas.origam.com/Origam.Schema.RuleModel.XslRule/6.0.0">
+  <er:Rule
+    asi:abstract="false"
+    ar:dataType="Boolean"
     x:id="cb164d4d-d971-4fa7-be5b-80f4348a2f3f"
-    name="ER_WQ_Unlock"
-    x:type="Origam.Schema.RuleModel.EndRule"
-    xsl="-***-ExternalFile:ER_WQ_Unlock.origam___xsl___cb164d4d-d971-4fa7-be5b-80f4348a2f3f.xslt" />
+    asi:name="ER_WQ_Unlock"
+    xr:xsl="-***-ExternalFile:ER_WQ_Unlock.origam___xsl___cb164d4d-d971-4fa7-be5b-80f4348a2f3f.xslt" />
 </x:file>

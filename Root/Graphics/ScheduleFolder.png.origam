@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Graphics
-    abstract="false"
-    graphicsDataByte="-***-ExternalFile:ScheduleFolder.png.origam___graphicsDataByte___4c1cb57c-4f1a-4ba8-ae90-ce7e925bc52f.png"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.GuiModel.Graphics/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:Graphics
+    asi:abstract="false"
+    g:graphicsDataByte="-***-ExternalFile:ScheduleFolder.png.origam___graphicsDataByte___4c1cb57c-4f1a-4ba8-ae90-ce7e925bc52f.png"
     x:id="4c1cb57c-4f1a-4ba8-ae90-ce7e925bc52f"
-    name="ScheduleFolder.png"
-    x:type="Origam.Schema.GuiModel.Graphics" />
+    asi:name="ScheduleFolder.png" />
 </x:file>

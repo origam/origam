@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <group
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
     x:id="a0d905d1-4bf4-4e59-93e0-a716dba0c9ea"
     x:isFolder="true"
-    name="Synchronization"
-    rootItemType="Workflow"
-    x:type="Origam.Schema.SchemaItemGroup" />
+    g:name="Synchronization"
+    g:rootItemType="Workflow" />
 </x:file>
