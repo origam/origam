@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataStructure
+    abstract="false"
+    x:id="4d9974db-9f3e-4b84-af12-20583c44810a"
+    localized="false"
+    name="MapElement"
+    x:type="Origam.Schema.EntityModel.DataStructure">
+    <DataStructureEntity
+      abstract="false"
+      allFields="true"
+      concurrencyHandling="Standard"
+      entity="Map/DataEntity/Map/MapElement.origam#MapElement/5ac7847d-c97c-4ba0-8c5c-2c00285fc27b"
+      x:id="2cf41e47-7020-4156-b6d2-ebd70d2b1967"
+      ignoreCondition="None"
+      ignoreImplicitFilters="false"
+      name="MapElement"
+      relationType="Normal"
+      x:type="Origam.Schema.EntityModel.DataStructureEntity"
+      useUpsert="false" />
+  </DataStructure>
+</x:file>

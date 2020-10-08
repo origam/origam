@@ -1,0 +1,1 @@
+﻿ALTER TABLE "MapElement" ADD "Azimuth" Numeric(28,10) NULL

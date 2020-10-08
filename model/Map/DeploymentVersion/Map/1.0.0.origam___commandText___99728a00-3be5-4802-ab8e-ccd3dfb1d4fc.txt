@@ -1,0 +1,8 @@
+﻿CREATE TABLE [MapElement] (
+	[Name] NVarChar(100) NOT NULL,
+	[Location] geography NOT NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

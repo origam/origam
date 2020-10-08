@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <DataConstant
+    abstract="false"
+    dataType="Integer"
+    x:id="32a71da6-cbb6-4eeb-b8e0-a13909cdee35"
+    name="MapRefreshInterval"
+    x:type="Origam.Schema.EntityModel.DataConstant"
+    userDefinable="false"
+    value="10" />
+</x:file>
