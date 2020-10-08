@@ -22,11 +22,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Service;
 using Origam.Git;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using static Origam.DA.Common.Enums;
 using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
@@ -34,14 +32,15 @@ namespace Origam.ProjectAutomation
     public class FileModelImportBuilder: AbstractBuilder
     {
         private const string ModelZipName = "DefaultModel.zip";
-        private string sourcesFolder;
-        
+        private string modelSourcesFolder;
+      
         public override string Name => "Import Model";
 
         public override void Execute(Project project)
         {
-            sourcesFolder = project.SourcesFolder;
+            modelSourcesFolder = project.ModelSourceFolder;
             CreateSourceFolder();
+            CreateCustomAssetsFolder(project.SourcesFolder);
             switch(project.TypeTemplate)
             {
                 case TypeTemplate.Default:
@@ -59,20 +58,20 @@ namespace Origam.ProjectAutomation
         private void CloneGitRepository(Project project)
         {
             GitManager gitManager = new GitManager();
-            gitManager.CloneRepository(project.GitRepositoryLink, sourcesFolder,
+            gitManager.CloneRepository(project.GitRepositoryLink, modelSourcesFolder,
                 project.RepositoryUsername,project.RepositoryPassword);
             project.NewPackageId = GetPackageId();
         }
 
         private string GetPackageId()
         {
-            DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
+            DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
             String modelId = "";
             if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
             {
                 string[] exclude_dirs = new [] {"Root","Root Menu","Security","l10n", ".git" };
                 DirectoryInfo model = dir.EnumerateDirectories().Where(it => !exclude_dirs.Contains(it.Name)).First() ;
-                string xmlPath = Path.Combine(sourcesFolder, model.Name, ".origamPackage");
+                string xmlPath = Path.Combine(modelSourcesFolder, model.Name, ".origamPackage");
                 if (File.Exists(xmlPath))
                 {
                     FileInfo fi = new FileInfo(xmlPath);
@@ -98,24 +97,31 @@ namespace Origam.ProjectAutomation
         {
             string zipPath =
                 Path.Combine(project.ServerTemplateFolder,"Model", ModelZipName);
-            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, sourcesFolder);
+            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, modelSourcesFolder);
         }
 
         private void CreateSourceFolder()
         {
-            DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
+            DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
             if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
             {
-                throw new Exception($"Sources folder {sourcesFolder} already exists and is not empty.");
+                throw new Exception($"Sources folder {modelSourcesFolder} already exists and is not empty.");
             }
             dir.Create();
         }
-
+        private void CreateCustomAssetsFolder(string sourcesFolder)
+        {
+            DirectoryInfo dir = new DirectoryInfo(Path.Combine(sourcesFolder, "customAssets"));
+            if (!dir.Exists)
+            {
+                dir.Create();
+            }
+        }
         public override void Rollback()
         {
-            if (Directory.Exists(sourcesFolder))
+            if (Directory.Exists(modelSourcesFolder))
             {
-                GitManager.DeleteDirectory(sourcesFolder);
+                GitManager.DeleteDirectory(modelSourcesFolder);
             }
         }
         

@@ -59,7 +59,7 @@ namespace Origam.ProjectAutomation
             _setting.DataDataService = project.GetDataDataService;
             _setting.SchemaDataService = project.GetDataDataService;
             _setting.ServerLocalPath = project.BinFolder;
-            _setting.ModelSourceControlLocation = project.SourcesFolder;
+            _setting.ModelSourceControlLocation = project.ModelSourceFolder;
             _settingsIndex = _settings.Add(_setting);
             ConfigurationManager.SetActiveConfiguration(_setting);
             try

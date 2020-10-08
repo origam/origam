@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 using System;
+using System.IO;
 using static Origam.DA.Common.Enums;
 using static Origam.NewProjectEnums;
 
@@ -87,6 +88,14 @@ namespace Origam.ProjectAutomation
             set
             {
                 _name = value;
+            }
+        }
+
+        public string ModelSourceFolder
+        {
+            get
+            {
+                return Path.Combine(SourcesFolder,"model");
             }
         }
 

@@ -68,7 +68,7 @@ namespace Origam.ProjectAutomation
         private void AddPermissionsToSourceFolder(Project project)
         {
             string accountName = @"IIS APPPOOL\" + project.Name;
-            DirectoryInfo sourceDirInfo = new DirectoryInfo(project.SourcesFolder);
+            DirectoryInfo sourceDirInfo = new DirectoryInfo(project.ModelSourceFolder);
 
             DirectorySecurity dSecurity = sourceDirInfo.GetAccessControl();
 
