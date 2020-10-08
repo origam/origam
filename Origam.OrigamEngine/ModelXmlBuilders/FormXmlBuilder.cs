@@ -418,8 +418,24 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				XmlElement memoPropertyNamesElement = doc.CreateElement("PropertyNames");
 				memoFormRootElement.AppendChild(memoPropertyNamesElement);
 
-				XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(memoPropertiesElement, memoPropertyNamesElement, memoId, memoName, "", null, table,
-					true, 0, 0, 100, 16, 100, "None", "500", null, -1);
+				XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
+					propertiesElement: memoPropertiesElement,
+					propertyNamesElement: memoPropertyNamesElement, 
+					modelId: memoId, 
+					bindingMember: memoName, 
+					caption: "", 
+					gridCaption: null, 
+					table: table,
+					readOnly: true, 
+					left: 0, 
+					top: 0, 
+					width: 100, 
+					height: 16, 
+					captionLength: 100, 
+					captionPosition: "None", 
+					gridColumnWidth: "500", 
+					style: null, 
+					tabIndex: -1);
 				TextBoxBuildDefinition buildDefinition = new TextBoxBuildDefinition(OrigamDataType.Memo);
 				buildDefinition.Dock = "Fill";
 				buildDefinition.Multiline = true;
@@ -528,8 +544,24 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					string caption = label == "" ? (col.Caption == "" ? col.Field.Caption : col.Caption) : label;
 					height = GENERIC_FIELD_HEIGHT * (col.Field.DataType == OrigamDataType.Memo ? 6 : 1);
 
-					XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(propertiesElement, propertyNamesElement, col.Id, col.Name, caption, null, table,
-						readOnly, 160, lastPos, 600, height, 150, "Left", "100", style, -1);
+					XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
+						propertiesElement: propertiesElement, 
+						propertyNamesElement: propertyNamesElement, 
+						modelId: col.Id, 
+						bindingMember: col.Name, 
+						caption: caption,
+						gridCaption: null, 
+						table: table,
+						readOnly: readOnly, 
+						left: 160, 
+						top: lastPos,
+						width: 600, 
+						height: height,
+						captionLength: 150, 
+						captionPosition: "Left",
+						gridColumnWidth: "100", 
+						style: style,
+						tabIndex: -1);
 
 					switch(col.Field.DataType)
 					{
@@ -1497,8 +1529,25 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					{
 						if(! table.Columns.Contains(bindingMember)) throw new Exception("Field '" + bindingMember + "' not found in a data structure for the form '" + panel.RootItem.Path + "'");
 						
-						XmlElement controlElement = AsPanelPropertyBuilder.CreateProperty("Control", formExclusiveControlsElement, null, csi.Id, bindingMember, caption, gridCaption, table,
-							readOnly, left, top, width, height, captionLength, captionPosition, gridColumnWidth == "0" ? "" : gridColumnWidth, style, tabIndex);
+						XmlElement controlElement = AsPanelPropertyBuilder.CreateProperty(
+							category: "Control", 
+							propertiesElement: formExclusiveControlsElement,
+							propertyNamesElement: null, 
+							modelId: csi.Id,
+							bindingMember: bindingMember,
+							caption: caption, 
+							gridCaption: gridCaption, 
+							table: table,
+							readOnly: readOnly,
+							left: left, 
+							top: top, 
+							width: width, 
+							height: height, 
+							captionLength: captionLength,
+							captionPosition: captionPosition, 
+							gridColumnWidth: gridColumnWidth == "0" ? "" : gridColumnWidth, 
+							style: style,
+							tabIndex: tabIndex);
 
 						IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 						string value = (string)parameterService.GetParameterValue(dataConstantId, OrigamDataType.String);
@@ -1528,8 +1577,24 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						{
 							tabIndex = decimal.Parse(parentTabIndex + "." + tabIndex);
 						}
-						XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(propertiesElement, hideOnForm ? null : propertyNamesElement, csi.Id, bindingMember, caption, gridCaption, table,
-							readOnly, left, top, width, height, captionLength, captionPosition, gridColumnWidth == "0" ? "" : gridColumnWidth, style, tabIndex);
+						XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
+							propertiesElement: propertiesElement, 
+							propertyNamesElement: hideOnForm ? null : propertyNamesElement, 
+							modelId: csi.Id, 
+							bindingMember: bindingMember, 
+							caption: caption, 
+							gridCaption: gridCaption, 
+							table: table,
+							readOnly: readOnly, 
+							left: left, 
+							top: top, 
+							width: width, 
+							height: height, 
+							captionLength: captionLength, 
+							captionPosition: captionPosition, 
+							gridColumnWidth: gridColumnWidth == "0" ? "" : gridColumnWidth,
+							style: style, 
+							tabIndex: tabIndex);
 
 						switch(csi.ControlItem.Name)
 						{
