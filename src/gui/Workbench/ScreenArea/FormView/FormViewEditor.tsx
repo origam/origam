@@ -97,7 +97,7 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
             }
           />
         );
@@ -121,7 +121,7 @@ export class FormViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
             isRichText={this.props.isRichText}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
             }
           />
         );
@@ -141,7 +141,7 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
           />
@@ -157,7 +157,7 @@ export class FormViewEditor extends React.Component<{
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
             }
           />
         );
@@ -168,7 +168,7 @@ export class FormViewEditor extends React.Component<{
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id)
+              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
             }
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
@@ -185,7 +185,7 @@ export class FormViewEditor extends React.Component<{
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(firstCheckInput) =>
-              this.focusManager.subscribe(firstCheckInput, this.props.property?.id)
+              this.focusManager.subscribe(firstCheckInput, this.props.property?.id, this.props.property?.tabIndex)
             }
             tagEditor={
               <TagInputEditor
@@ -214,7 +214,7 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             subscribeToFocusManager={(firstCheckInput) =>
-              this.focusManager.subscribe(firstCheckInput, this.props.property?.id)
+              this.focusManager.subscribe(firstCheckInput, this.props.property?.id, this.props.property?.tabIndex)
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
           />
@@ -229,7 +229,7 @@ export class FormViewEditor extends React.Component<{
             invalidMessage={invalidMessage}
             onKeyDown={this.MakeOnKeyDownCallBack()}
             subscribeToFocusManager={(inputEditor) =>
-              this.focusManager.subscribe(inputEditor, this.props.property?.id)
+              this.focusManager.subscribe(inputEditor, this.props.property?.id, this.props.property?.tabIndex)
             }
           />
         );

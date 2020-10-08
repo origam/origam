@@ -10,6 +10,7 @@ export enum IDockType {
 
 export interface IPropertyData {
   id: string;
+  tabIndex: string | undefined;
   modelInstanceId: string;
   name: string;
   readOnly: boolean;

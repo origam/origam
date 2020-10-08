@@ -90,7 +90,7 @@ export class FormBuilder extends React.Component<{
             value={xfo.attributes.Value}
             checked={checked}
             subscribeToFocusManager={(radioInput) =>
-              focusManager.subscribe(radioInput, xfo.attributes.Id)
+              focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
@@ -131,7 +131,7 @@ export class FormBuilder extends React.Component<{
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
                         subscribeToFocusManager={(radioInput) =>
-                          focusManager.subscribe(radioInput, property.id)
+                          focusManager.subscribe(radioInput, property.id, property.tabIndex)
                         }
                       />
                     </Provider>

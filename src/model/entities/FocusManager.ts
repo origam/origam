@@ -2,9 +2,10 @@ export class FocusManager {
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusableContainers: IFocusableObjectContainer[] = [];
 
-  subscribe(focusableObject: IFocusable, name: string | undefined) {
-    const focusableContainer = { name: name, focusable: focusableObject };
+  subscribe(focusableObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
+    const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex);
     this.focusableContainers.push(focusableContainer);
+    this.focusableContainers = this.focusableContainers.sort(FocusableObjectContainer.compare);
     return () => this.unsubscribe(focusableContainer);
   }
 
@@ -63,7 +64,43 @@ export class FocusManager {
 
 interface IFocusableObjectContainer {
   name: string | undefined;
+  tabIndexFractions: number[];
   focusable: IFocusable;
+}
+
+class FocusableObjectContainer implements IFocusableObjectContainer {
+  get tabIndexFractions(): number[] {
+    if (this.tabIndexNullable) {
+      return this.tabIndexNullable
+        .split(".")
+        .filter((x) => x != "")
+        .map((x) => parseInt(x));
+    }
+    return [1e6];
+  }
+
+  constructor(
+    public focusable: IFocusable,
+    public name: string | undefined,
+    private tabIndexNullable: string | undefined
+  ) {}
+
+  // TabIndex is a string separated by decimal points for example: 13, 14.0, 14.2, 14.15
+  // The "fractions" have to be compared separately because 14.15 is greater than 14.2
+  // Comparison as numbers would give different results
+  static compare(x: IFocusableObjectContainer, y: IFocusableObjectContainer) {
+    const firstFraction = x.tabIndexFractions[0] - y.tabIndexFractions[0];
+    if (firstFraction !== 0) {
+      return firstFraction;
+    }
+    if (x.tabIndexFractions.length > y.tabIndexFractions.length) {
+      return 1;
+    }
+    if (x.tabIndexFractions.length < y.tabIndexFractions.length) {
+      return -1;
+    }
+    return x.tabIndexFractions[1] - y.tabIndexFractions[1];
+  }
 }
 
 export interface IFocusable {

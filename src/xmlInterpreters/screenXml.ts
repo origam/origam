@@ -220,6 +220,7 @@ export function interpretScreenXml(
           return new Property({
             xmlNode: property,
             id: property.attributes.Id,
+            tabIndex: property.attributes.TabIndex,
             modelInstanceId: property.attributes.ModelInstanceId || "",
             name: property.attributes.Name,
             readOnly: property.attributes.ReadOnly === "true",

@@ -20,6 +20,7 @@ export class Property implements IProperty {
   }
 
   id: string = "";
+  tabIndex: string | undefined;
   modelInstanceId: string = "";
   name: string = "";
   nameOverride: string | null | undefined = null;
