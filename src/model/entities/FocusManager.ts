@@ -6,14 +6,6 @@ export class FocusManager {
     const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex);
     this.focusableContainers.push(focusableContainer);
     this.focusableContainers = this.focusableContainers.sort(FocusableObjectContainer.compare);
-    return () => this.unsubscribe(focusableContainer);
-  }
-
-  private unsubscribe(container: IFocusableObjectContainer) {
-    const index = this.focusableContainers.indexOf(container);
-    if (index > -1) {
-      this.focusableContainers.splice(index, 1);
-    }
   }
 
   focus(name: string) {

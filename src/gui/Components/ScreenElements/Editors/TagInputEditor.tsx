@@ -77,11 +77,8 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
 
       useEffect(() => {
         if(beh.subscribeToFocusManager && beh.elmInputElement){
-          beh.unsubscribeFromFocusManager = beh.subscribeToFocusManager(beh.elmInputElement);
+          beh.subscribeToFocusManager(beh.elmInputElement);
         }
-        return () => {
-          beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
-        };
       }, []);
 
       const previousValueRef = useRef<string[]>();

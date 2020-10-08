@@ -19,11 +19,8 @@ export function DropdownEditorInput(props:{
 
   useEffect(() => {
     if(beh.subscribeToFocusManager && beh.elmInputElement){
-      beh.unsubscribeFromFocusManager = beh.subscribeToFocusManager(beh.elmInputElement);
+      beh.subscribeToFocusManager(beh.elmInputElement);
     }
-    return () => {
-      beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
-    };
   }, []);
 
   function getStyle() {

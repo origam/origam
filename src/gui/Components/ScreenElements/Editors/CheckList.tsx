@@ -29,7 +29,7 @@ export interface IRawCheckListProps {
   menuItemId: string;
   isInvalid: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 
   onChange?(newValue: string[]): void;
   onKeyDown(event: any): void;
@@ -91,7 +91,7 @@ export const CheckList: React.FC<{
   onChange?(newValue: string[]): void;
   isInvalid: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown(event: any): void;
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
@@ -206,19 +206,15 @@ export const CheckListItem: React.FC<{
   focusUp: (x: number, y: number)=>void;
   focusDown: (x: number, y: number)=>void;
   label: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown(event: any): void;
 }> = (props) => {
 
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [ unsubscribeFromFocusManager, setUnsubscribeFromFocusManager] = useState<() => void>();
 
   useEffect(() => {
     if(props.subscribeToFocusManager && refInput.current){
-      setUnsubscribeFromFocusManager(props.subscribeToFocusManager(refInput.current));
-    }
-    return () => {
-      unsubscribeFromFocusManager && unsubscribeFromFocusManager();
+      props.subscribeToFocusManager(refInput.current);
     }
   }, [])
 

@@ -56,7 +56,7 @@ export class BlobEditor extends React.Component<{
   Entity?: string;
   SessionFormIdentifier?: string;
   parameters?: any;
-  subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   isInvalid: boolean;
   invalidMessage?: string;
   onKeyDown?(event: any): void;
@@ -65,19 +65,14 @@ export class BlobEditor extends React.Component<{
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
   };
-  unsubscribeFromFocusManager?: () => void;
 
   @observable
   focused = false;
 
   componentDidMount() {
     if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(this.elmInput);
     }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   handleFileChange(event: any) {

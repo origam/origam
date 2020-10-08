@@ -13,22 +13,17 @@ export class RadioButton extends React.Component<{
   value: string;
   onSelected: (value: any) => void;
   checked: boolean;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
   };
-  unsubscribeFromFocusManager?: () => void;
 
   componentDidMount() {
     if(this.elmInput && this.props.subscribeToFocusManager){
-      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(this.elmInput);
     }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   onChange(event: any){

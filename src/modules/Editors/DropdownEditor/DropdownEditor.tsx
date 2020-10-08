@@ -92,7 +92,7 @@ export function XmlBuildDropdownEditor(props: {
   customStyle?: any;
   tagEditor?: JSX.Element;
   onDoubleClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);

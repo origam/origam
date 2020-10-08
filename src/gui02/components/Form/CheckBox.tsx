@@ -14,7 +14,7 @@ export const CheckBox: React.FC<{
   isHidden?: boolean;
   onChange?: (event: any, value: any) => void;
   property?: IProperty;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> = inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
   return {

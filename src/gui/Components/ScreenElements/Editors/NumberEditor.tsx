@@ -30,14 +30,13 @@ export class NumberEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   disposers: any[] = [];
 
   @observable hasFocus = false;
   @observable editingValue: null | string = "";
   @observable wasChanged = false;
-  unsubscribeFromFocusManager?: () => void;
 
   @computed get numeralFormattedValue() {
     if (this.props.value === null) {
@@ -58,13 +57,12 @@ export class NumberEditor extends React.Component<{
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
     if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(this.elmInput);
     }
   }
 
   componentWillUnmount() {
     this.disposers.forEach((d) => d());
-    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   componentDidUpdate(prevProps: { isFocused: boolean, value: any }) {
