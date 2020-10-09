@@ -69,7 +69,7 @@ namespace Origam.DA
 		public QueryParameterCollection Parameters = new QueryParameterCollection();
 		public IsolationLevel IsolationLevel = IsolationLevel.ReadCommitted;
 
-	    public List<Ordering> CustomOrdering { get; set; }
+	    public CustomOrderings CustomOrderings { get; set; }
 	    public CustomFilters CustomFilters { get; set; }
 
 	    public bool Paging
@@ -137,5 +137,27 @@ namespace Origam.DA
 		public Dictionary<string, Guid> FilterLookups { get; set; } = new Dictionary<string, Guid>();
 		public bool IsEmpty => string.IsNullOrWhiteSpace(Filters);
 		public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
-	}	
+	}
+
+	public class CustomOrderings
+	{
+		public List<Ordering> Orderings { get; }
+
+		public bool IsEmpty => Orderings == null || Orderings.Count == 0;
+		public CustomOrderings(List<Ordering> orderings)
+		{
+			Orderings = orderings;
+			FilterLookups = orderings == null 
+				? new Dictionary<string, Guid>() 
+				: orderings
+					.Where(ordering => ordering.LookupId != Guid.Empty)
+					.ToDictionary(
+						ordering => ordering.ColumnName, 
+						ordering => ordering.LookupId);
+		}
+
+		public Dictionary<string, Guid> FilterLookups { get; } = new Dictionary<string, Guid>();
+		
+		public bool HasLookups => FilterLookups != null && FilterLookups.Count > 0;
+	}
 }

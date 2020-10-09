@@ -69,7 +69,17 @@ namespace Origam.DA.Service.Generators
             this.nameRightBracket = nameRightBracket;
             this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
-                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
+                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket, GetLookupExpression);
+        }
+
+        private string GetLookupExpression(string columnName)
+        {
+            if (!lookupExpressions.ContainsKey(columnName))
+            {
+                throw new Exception($"No lookup expression fo {columnName} was set");
+            }
+
+            return lookupExpressions[columnName];
         }
 
         /// <summary>
@@ -180,11 +190,13 @@ namespace Origam.DA.Service.Generators
     {
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
+        private readonly Func<string, string> lookupExpressionGetter;
 
-        public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket)
+        public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket, Func<string, string> lookupExpressionGetter)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
+            this.lookupExpressionGetter = lookupExpressionGetter;
         }
 
         internal string ToSqlOrderBy(List<Ordering> orderings)
@@ -196,12 +208,12 @@ namespace Origam.DA.Service.Generators
 
         private string ToSql(Ordering ordering)
         {
+            string orderingSql = OrderingToSQLName(ordering.Direction);
             if (ordering.LookupId == Guid.Empty)
             {
-                string orderingSql = OrderingToSQLName(ordering.Direction);
                 return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
             }
-            return "";
+            return $"{lookupExpressionGetter(ordering.ColumnName)} {orderingSql}";
         }
 
         private string OrderingToSQLName(string orderingName)
