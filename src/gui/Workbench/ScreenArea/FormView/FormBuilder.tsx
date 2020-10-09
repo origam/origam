@@ -171,7 +171,7 @@ export class FormBuilder extends React.Component<{
 
     const form = recursive(this.props.xmlFormRootObject);
     if(this.props.dataView?.isFirst){
-     // focusManager.focusFirst();
+      focusManager.focusFirst();
     }
     return form;
   }

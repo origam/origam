@@ -17,6 +17,10 @@ export class FocusManager {
       return;
     }
     const focusable = this.focusableContainers[0].focusable;
+    if(focusable.disabled){ //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
+      this.focusNext(focusable);
+      return;
+    }
     setTimeout(() => {
       focusable.focus();
     }, 0);
@@ -65,7 +69,7 @@ class FocusableObjectContainer implements IFocusableObjectContainer {
     if (this.tabIndexNullable) {
       return this.tabIndexNullable
         .split(".")
-        .filter((x) => x != "")
+        .filter((x) => x !== "")
         .map((x) => parseInt(x));
     }
     return [1e6];
