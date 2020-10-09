@@ -133,7 +133,7 @@ export class ListRowContainer implements IRowsContainer {
 
   set(rows: any[][]) {
     this.clear();
-    this.allRows.push(...rows);
+    for(let row of rows) this.allRows.push(row);
     this.updateSortAndFilter();
   }
 
