@@ -103,6 +103,7 @@ export class FormBuilder extends React.Component<{
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
+            onKeyDown={event => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
               focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }

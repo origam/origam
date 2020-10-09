@@ -13,6 +13,7 @@ export class RadioButton extends React.Component<{
   value: string;
   onSelected: (value: any) => void;
   checked: boolean;
+  onKeyDown: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   elmInput: HTMLInputElement | null = null;
@@ -51,6 +52,7 @@ export class RadioButton extends React.Component<{
           name={this.props.name}
           value={this.props.value}
           checked={this.props.checked}
+          onKeyDown={event => this.props.onKeyDown(event)}
           onChange={event => this.onChange(event)}/>
         <label htmlFor={this.props.value}>
           {this.props.caption}
