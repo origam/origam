@@ -35,6 +35,10 @@ export class DropdownEditorBehavior {
   pageSize = 100;
   unsubscribeFromFocusManager?: () => void;
 
+  @computed get isBodyDisplayed() {
+    return this.isDropped && this.dataTable.rowCount > 0;
+  }
+
   @computed get choosenRowId() {
     return this.data.value;
   }
@@ -58,15 +62,16 @@ export class DropdownEditorBehavior {
   @action.bound dropDown() {
     const setup = this.setup();
     if (!this.isDropped) {
-      if(setup.dropdownType === EagerlyLoadedGrid){
+      if (setup.dropdownType === EagerlyLoadedGrid) {
         this.dataTable.setFilterPhrase(this.userEnteredValue || "");
       }
-      if (setup.dropdownType === EagerlyLoadedGrid &&
-          setup.cached &&
-          this.cache.hasCachedListRows())
-      {
+      if (
+        setup.dropdownType === EagerlyLoadedGrid &&
+        setup.cached &&
+        this.cache.hasCachedListRows()
+      ) {
         this.dataTable.setData(this.cache.getCachedListRows());
-      }else{
+      } else {
         this.ensureRequestRunning();
       }
     }
@@ -192,7 +197,7 @@ export class DropdownEditorBehavior {
 
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-      if(this.setup().cached){
+      if (this.setup().cached) {
         if (this.cache.hasCachedListRows()) {
           this.dataTable.setData(this.cache.getCachedListRows());
         } else {
@@ -308,7 +313,7 @@ export class DropdownEditorBehavior {
         items.sort(compareLookupItems);
         if (setup.dropdownType === EagerlyLoadedGrid) {
           self.dataTable.setData(items);
-          if(setup.cached){
+          if (setup.cached) {
             self.cache.setCachedListRows(items);
           }
         } else if (setup.dropdownType === LazilyLoadedGrid) {
