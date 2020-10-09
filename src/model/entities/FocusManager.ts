@@ -58,13 +58,14 @@ export class FocusManager {
   }
 }
 
-interface IFocusableObjectContainer {
+export interface IFocusableObjectContainer {
   name: string | undefined;
   tabIndexFractions: number[];
   focusable: IFocusable;
+  has(fractionIndex: number): boolean;
 }
 
-class FocusableObjectContainer implements IFocusableObjectContainer {
+export class FocusableObjectContainer implements IFocusableObjectContainer {
   get tabIndexFractions(): number[] {
     if (this.tabIndexNullable) {
       return this.tabIndexNullable
@@ -85,17 +86,30 @@ class FocusableObjectContainer implements IFocusableObjectContainer {
   // The "fractions" have to be compared separately because 14.15 is greater than 14.2
   // Comparison as numbers would give different results
   static compare(x: IFocusableObjectContainer, y: IFocusableObjectContainer) {
-    const firstFraction = x.tabIndexFractions[0] - y.tabIndexFractions[0];
-    if (firstFraction !== 0) {
-      return firstFraction;
-    }
-    if (x.tabIndexFractions.length > y.tabIndexFractions.length) {
+    return FocusableObjectContainer.compareFraction(x, y, 0);
+  }
+
+  static compareFraction(x: IFocusableObjectContainer, y: IFocusableObjectContainer, fractionIndex: number): number{
+    if (x.has(fractionIndex) && !y.has(fractionIndex)) {
       return 1;
     }
-    if (x.tabIndexFractions.length < y.tabIndexFractions.length) {
+    if (!x.has(fractionIndex) && y.has(fractionIndex)) {
       return -1;
     }
-    return x.tabIndexFractions[1] - y.tabIndexFractions[1];
+    if(!x.has(fractionIndex) && !y.has(fractionIndex)){
+      return 0;
+    }
+
+    const fraction = x.tabIndexFractions[fractionIndex] - y.tabIndexFractions[fractionIndex];
+    if (fraction !== 0) {
+      return fraction;
+    }
+
+    return FocusableObjectContainer.compareFraction(x, y,fractionIndex + 1 )
+  }
+
+  has(fractionIndex: number ){
+    return this.tabIndexFractions.length - 1 >= fractionIndex;
   }
 }
 
