@@ -435,7 +435,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					captionPosition: "None", 
 					gridColumnWidth: "500", 
 					style: null, 
-					tabIndex: -1);
+					tabIndex: null);
 				TextBoxBuildDefinition buildDefinition = new TextBoxBuildDefinition(OrigamDataType.Memo);
 				buildDefinition.Dock = "Fill";
 				buildDefinition.Multiline = true;
@@ -561,7 +561,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						captionPosition: "Left",
 						gridColumnWidth: "100", 
 						style: style,
-						tabIndex: -1);
+						tabIndex: null);
 
 					switch(col.Field.DataType)
 					{
@@ -1388,12 +1388,19 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 		}
 
-		private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table, XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item, bool processContainers, bool processEditControls, bool forceReadOnly)
+		private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table,
+			XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item,
+			bool processContainers, bool processEditControls, bool forceReadOnly, string itemTabIndex = null)
 		{
-			int parentTabIndex = item.ChildItemsByType(PropertyValueItem.CategoryConst)
-				.Cast<PropertyValueItem>()
-				.FirstOrDefault(prop => prop.ControlPropertyItem.Name == "TabIndex")?.IntValue ?? -1;
-			
+
+			if (string.IsNullOrWhiteSpace(itemTabIndex))
+			{
+				int parentTabIndex = item.ChildItemsByType(PropertyValueItem.CategoryConst)
+					.Cast<PropertyValueItem>()
+					.FirstOrDefault(prop => prop.ControlPropertyItem.Name == "TabIndex")?.IntValue ?? -1;
+				itemTabIndex = parentTabIndex.ToString();
+			}
+
 			XmlElement childrenElement = xmlOutput.Document.CreateElement("Children");
 			parentElement.AppendChild(childrenElement);
 
@@ -1414,7 +1421,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					string caption = "";
 					string gridCaption = "";
 					string bindingMember = "";
-					decimal tabIndex = 0;
+					string tabIndex = "0";
 					Guid lookupId = Guid.Empty;
                     bool readOnly = forceReadOnly;
                     if (!forceReadOnly)
@@ -1455,7 +1462,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 						switch(property.ControlPropertyItem.Name)
 						{
-							case "TabIndex":			tabIndex = property.IntValue;											break;
+							case "TabIndex":			tabIndex = property.IntValue.ToString();   							    break;
 							case "Text":				text = stringValue;														break;
 							case "Caption":				caption = stringValue;													break;
 							case "GridColumnCaption":	gridCaption = stringValue;												break;
@@ -1520,6 +1527,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					{
 						bindingMember = bindItem.Value;
 					}
+					
+					if (itemTabIndex != "0" && int.Parse(tabIndex) >= 0)
+					{
+						tabIndex = itemTabIndex + "." + tabIndex;
+					}
 
 					if(csi.ControlItem.Name == "Label" && processContainers)
 					{
@@ -1567,16 +1579,22 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						formElement.SetAttribute("Width", XmlConvert.ToString(width));
 						formElement.SetAttribute("Height", XmlConvert.ToString(height));
 
-						RenderPanel(panel, xmlOutput, table, formElement, propertiesElement, csi, true, true, readOnly);
+						RenderPanel(
+							panel: panel, 
+							xmlOutput: xmlOutput, 
+							table: table, 
+							parentElement: formElement, 
+							propertiesElement: propertiesElement, 
+							item: csi, 
+							processContainers: true, 
+							processEditControls: true, 
+							forceReadOnly: readOnly, 
+							itemTabIndex: tabIndex);
 					}
 					else if(bindingMember != "" & processEditControls) // property (entry field)
 					{
 						if(! table.Columns.Contains(bindingMember)) throw new Exception("Field '" + bindingMember + "' not found in a data structure for the form '" + panel.RootItem.Path + "'");
 						
-						if (parentTabIndex > 0 && tabIndex >= 0)
-						{
-							tabIndex = decimal.Parse(parentTabIndex + "." + tabIndex);
-						}
 						XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
 							propertiesElement: propertiesElement, 
 							propertyNamesElement: hideOnForm ? null : propertyNamesElement, 

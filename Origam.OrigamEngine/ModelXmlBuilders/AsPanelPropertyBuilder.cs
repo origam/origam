@@ -37,7 +37,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 	{
 		public static XmlElement CreateProperty(XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
 			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition, 
-			string gridColumnWidth, UIStyle style, decimal tabIndex)
+			string gridColumnWidth, UIStyle style, string tabIndex)
 		{
 			return CreateProperty("Property", propertiesElement, propertyNamesElement, modelId, bindingMember, caption, gridCaption, table, readOnly, 
 				left, top, width, height, captionLength, captionPosition, gridColumnWidth, style, tabIndex);
@@ -45,7 +45,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 			public static XmlElement CreateProperty(string category, XmlElement propertiesElement, XmlElement propertyNamesElement, Guid modelId, string bindingMember, string caption, 
 			string gridCaption, DataTable table, bool readOnly, int left, int top, int width, int height, int captionLength, string captionPosition,
-            string gridColumnWidth, UIStyle style, decimal tabIndex)
+            string gridColumnWidth, UIStyle style, string tabIndex)
 		{
 			IPersistenceProvider persistenceProvider = ServiceManager.Services
 				.GetService<IPersistenceService>()
@@ -93,9 +93,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			propertyElement.SetAttribute("Height", XmlConvert.ToString(height));
 			propertyElement.SetAttribute("CaptionLength", XmlConvert.ToString(captionLength));
 			propertyElement.SetAttribute("CaptionPosition", captionPosition);
-			if (tabIndex != -1)
+			if (!string.IsNullOrWhiteSpace(tabIndex))
 			{
-				propertyElement.SetAttribute("TabIndex", tabIndex.ToString());
+				propertyElement.SetAttribute("TabIndex", tabIndex);
 			}
 
 
