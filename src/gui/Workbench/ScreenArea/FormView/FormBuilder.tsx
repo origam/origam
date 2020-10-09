@@ -20,6 +20,7 @@ import { flow } from "mobx";
 import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
 import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
 import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
+import {DomEvent} from "leaflet";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -29,6 +30,19 @@ export class FormBuilder extends React.Component<{
   xmlFormRootObject?: any;
   dataView?: IDataView;
 }> {
+  onKeyDown(event: any){
+    if (event.key === "Tab") {
+      DomEvent.preventDefault(event);
+      if(event.shiftKey){
+        this.props.dataView!.focusManager.focusPrevious(document.activeElement);
+      }
+      else{
+        this.props.dataView!.focusManager.focusNext(document.activeElement);
+      }
+      return;
+    }
+  }
+
   buildForm() {
     const self = this;
     const row = getSelectedRow(this.props.dataView);
@@ -130,6 +144,7 @@ export class FormBuilder extends React.Component<{
                       <CheckBox
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
+                        onKeyDown={event => self.onKeyDown(event)}
                         subscribeToFocusManager={(radioInput) =>
                           focusManager.subscribe(radioInput, property.id, property.tabIndex)
                         }

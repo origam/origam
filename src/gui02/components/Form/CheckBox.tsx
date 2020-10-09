@@ -14,6 +14,7 @@ export const CheckBox: React.FC<{
   isHidden?: boolean;
   onChange?: (event: any, value: any) => void;
   property?: IProperty;
+  onKeyDown: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusable) => void;
 }> = inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -80,6 +81,7 @@ export const CheckBox: React.FC<{
           onBlur={onInputBlur}
           onFocus={onInputFocus}
           onChange={onChange}
+          onKeyDown={event => props.onKeyDown(event)}
           subscribeToFocusManager={props.subscribeToFocusManager}
         />
       </div>
