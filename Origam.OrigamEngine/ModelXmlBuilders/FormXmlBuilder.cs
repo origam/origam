@@ -23,6 +23,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Xml;
 using Origam.DA;
 using Origam.DA.Service;
@@ -417,8 +418,24 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 				XmlElement memoPropertyNamesElement = doc.CreateElement("PropertyNames");
 				memoFormRootElement.AppendChild(memoPropertyNamesElement);
 
-				XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(memoPropertiesElement, memoPropertyNamesElement, memoId, memoName, "", null, table,
-					true, 0, 0, 100, 16, 100, "None", "500", null);
+				XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
+					propertiesElement: memoPropertiesElement,
+					propertyNamesElement: memoPropertyNamesElement, 
+					modelId: memoId, 
+					bindingMember: memoName, 
+					caption: "", 
+					gridCaption: null, 
+					table: table,
+					readOnly: true, 
+					left: 0, 
+					top: 0, 
+					width: 100, 
+					height: 16, 
+					captionLength: 100, 
+					captionPosition: "None", 
+					gridColumnWidth: "500", 
+					style: null, 
+					tabIndex: null);
 				TextBoxBuildDefinition buildDefinition = new TextBoxBuildDefinition(OrigamDataType.Memo);
 				buildDefinition.Dock = "Fill";
 				buildDefinition.Multiline = true;
@@ -527,8 +544,24 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					string caption = label == "" ? (col.Caption == "" ? col.Field.Caption : col.Caption) : label;
 					height = GENERIC_FIELD_HEIGHT * (col.Field.DataType == OrigamDataType.Memo ? 6 : 1);
 
-					XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(propertiesElement, propertyNamesElement, col.Id, col.Name, caption, null, table,
-						readOnly, 160, lastPos, 600, height, 150, "Left", "100", style);
+					XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
+						propertiesElement: propertiesElement, 
+						propertyNamesElement: propertyNamesElement, 
+						modelId: col.Id, 
+						bindingMember: col.Name, 
+						caption: caption,
+						gridCaption: null, 
+						table: table,
+						readOnly: readOnly, 
+						left: 160, 
+						top: lastPos,
+						width: 600, 
+						height: height,
+						captionLength: 150, 
+						captionPosition: "Left",
+						gridColumnWidth: "100", 
+						style: style,
+						tabIndex: null);
 
 					switch(col.Field.DataType)
 					{
@@ -1355,8 +1388,19 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 			}
 		}
 
-		private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table, XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item, bool processContainers, bool processEditControls, bool forceReadOnly)
+		private static void RenderPanel(ControlSetItem panel, XmlOutput xmlOutput, DataTable table,
+			XmlElement parentElement, XmlElement propertiesElement, AbstractSchemaItem item,
+			bool processContainers, bool processEditControls, bool forceReadOnly, string itemTabIndex = null)
 		{
+
+			if (string.IsNullOrWhiteSpace(itemTabIndex))
+			{
+				int parentTabIndex = item.ChildItemsByType(PropertyValueItem.CategoryConst)
+					.Cast<PropertyValueItem>()
+					.FirstOrDefault(prop => prop.ControlPropertyItem.Name == "TabIndex")?.IntValue ?? -1;
+				itemTabIndex = parentTabIndex.ToString();
+			}
+
 			XmlElement childrenElement = xmlOutput.Document.CreateElement("Children");
 			parentElement.AppendChild(childrenElement);
 
@@ -1377,7 +1421,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					string caption = "";
 					string gridCaption = "";
 					string bindingMember = "";
-					int tabIndex = 0;
+					string tabIndex = "0";
 					Guid lookupId = Guid.Empty;
                     bool readOnly = forceReadOnly;
                     if (!forceReadOnly)
@@ -1418,7 +1462,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 
 						switch(property.ControlPropertyItem.Name)
 						{
-							case "TabIndex":			tabIndex = property.IntValue;											break;
+							case "TabIndex":			tabIndex = property.IntValue.ToString();   							    break;
 							case "Text":				text = stringValue;														break;
 							case "Caption":				caption = stringValue;													break;
 							case "GridColumnCaption":	gridCaption = stringValue;												break;
@@ -1483,6 +1527,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					{
 						bindingMember = bindItem.Value;
 					}
+					
+					if (itemTabIndex != "0" && int.Parse(tabIndex) >= 0)
+					{
+						tabIndex = itemTabIndex + "." + tabIndex;
+					}
 
 					if(csi.ControlItem.Name == "Label" && processContainers)
 					{
@@ -1491,9 +1540,26 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					else if(csi.ControlItem.Name == "RadioButton" && processEditControls)
 					{
 						if(! table.Columns.Contains(bindingMember)) throw new Exception("Field '" + bindingMember + "' not found in a data structure for the form '" + panel.RootItem.Path + "'");
-
-						XmlElement controlElement = AsPanelPropertyBuilder.CreateProperty("Control", formExclusiveControlsElement, null, csi.Id, bindingMember, caption, gridCaption, table,
-							readOnly, left, top, width, height, captionLength, captionPosition, gridColumnWidth == "0" ? "" : gridColumnWidth, style);
+						
+						XmlElement controlElement = AsPanelPropertyBuilder.CreateProperty(
+							category: "Control", 
+							propertiesElement: formExclusiveControlsElement,
+							propertyNamesElement: null, 
+							modelId: csi.Id,
+							bindingMember: bindingMember,
+							caption: caption, 
+							gridCaption: gridCaption, 
+							table: table,
+							readOnly: readOnly,
+							left: left, 
+							top: top, 
+							width: width, 
+							height: height, 
+							captionLength: captionLength,
+							captionPosition: captionPosition, 
+							gridColumnWidth: gridColumnWidth == "0" ? "" : gridColumnWidth, 
+							style: style,
+							tabIndex: tabIndex);
 
 						IParameterService parameterService = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
 						string value = (string)parameterService.GetParameterValue(dataConstantId, OrigamDataType.String);
@@ -1513,14 +1579,40 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						formElement.SetAttribute("Width", XmlConvert.ToString(width));
 						formElement.SetAttribute("Height", XmlConvert.ToString(height));
 
-						RenderPanel(panel, xmlOutput, table, formElement, propertiesElement, csi, true, true, readOnly);
+						RenderPanel(
+							panel: panel, 
+							xmlOutput: xmlOutput, 
+							table: table, 
+							parentElement: formElement, 
+							propertiesElement: propertiesElement, 
+							item: csi, 
+							processContainers: true, 
+							processEditControls: true, 
+							forceReadOnly: readOnly, 
+							itemTabIndex: tabIndex);
 					}
 					else if(bindingMember != "" & processEditControls) // property (entry field)
 					{
 						if(! table.Columns.Contains(bindingMember)) throw new Exception("Field '" + bindingMember + "' not found in a data structure for the form '" + panel.RootItem.Path + "'");
-
-						XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(propertiesElement, hideOnForm ? null : propertyNamesElement, csi.Id, bindingMember, caption, gridCaption, table,
-							readOnly, left, top, width, height, captionLength, captionPosition, gridColumnWidth == "0" ? "" : gridColumnWidth, style);
+						
+						XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
+							propertiesElement: propertiesElement, 
+							propertyNamesElement: hideOnForm ? null : propertyNamesElement, 
+							modelId: csi.Id, 
+							bindingMember: bindingMember, 
+							caption: caption, 
+							gridCaption: gridCaption, 
+							table: table,
+							readOnly: readOnly, 
+							left: left, 
+							top: top, 
+							width: width, 
+							height: height, 
+							captionLength: captionLength, 
+							captionPosition: captionPosition, 
+							gridColumnWidth: gridColumnWidth == "0" ? "" : gridColumnWidth,
+							style: style, 
+							tabIndex: tabIndex);
 
 						switch(csi.ControlItem.Name)
 						{
