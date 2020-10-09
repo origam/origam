@@ -116,5 +116,4 @@ export class FocusableObjectContainer implements IFocusableObjectContainer {
 export interface IFocusable {
   focus(): void;
   disabled: boolean;
-  tabIndex: number;
 }
