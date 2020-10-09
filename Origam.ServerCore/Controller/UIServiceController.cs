@@ -800,9 +800,9 @@ namespace Origam.ServerCore.Controller
                 .All(colName => actualColumnNames.Contains(colName));
         }
 
-        private List<Ordering> GetOrderings(List<InputRowOrdering> orderingList)
+        private CustomOrderings GetOrderings(List<InputRowOrdering> orderingList)
         {
-            return orderingList
+            var orderings = orderingList
                 .Select((inputOrdering, i) => 
                     new Ordering(
                         columnName: inputOrdering.ColumnId, 
@@ -810,6 +810,7 @@ namespace Origam.ServerCore.Controller
                         lookupId: inputOrdering.LookupId, 
                         sortOrder: i + 1000)
                 ).ToList();
+            return new CustomOrderings(orderings);
         }
         
         private Result<DataStructureQuery, IActionResult> GetRowsGetAggregationQuery(
@@ -834,9 +835,9 @@ namespace Origam.ServerCore.Controller
         private Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
             GetRowsInput input, EntityData entityData)
         {
-            var customOrdering = GetOrderings(input.Ordering);
+            var customOrderings = GetOrderings(input.Ordering);
 
-            if(input.RowOffset != 0 && customOrdering.Count == 0)
+            if(input.RowOffset != 0 && !customOrderings.IsEmpty)
             {
                 return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
             }
@@ -848,7 +849,7 @@ namespace Origam.ServerCore.Controller
                         Filters = input.Filter,
                         FilterLookups = input.FilterLookups
                     },
-                CustomOrdering = customOrdering,
+                CustomOrderings = customOrderings,
                 RowLimit = input.RowLimit,
                 RowOffset = input.RowOffset,
                 ColumnsInfo = new ColumnsInfo(input.ColumnNames
@@ -903,7 +904,7 @@ namespace Origam.ServerCore.Controller
             {
                 Entity = entityData.Entity.Name,
                 CustomFilters = new CustomFilters{Filters = input.Filter},
-                CustomOrdering = customOrdering,
+                CustomOrderings = customOrdering,
                 RowLimit = input.RowLimit,
                 ColumnsInfo = new ColumnsInfo(
                     columns: columns, 

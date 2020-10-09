@@ -37,7 +37,7 @@ namespace Origam.DA.Service
         public CustomFilters CustomFilters { get; set; } = new CustomFilters();
         public int? RowLimit { get; set; }
         public int? RowOffset { get; set; }
-        public List<Ordering> CustomOrdering { get; set; }
+        public CustomOrderings CustomOrderings { get; set; } = new CustomOrderings(null);
         public bool ForceDatabaseCalculation { get; set; }
         public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
         public Grouping CustomGrouping { get; set; }

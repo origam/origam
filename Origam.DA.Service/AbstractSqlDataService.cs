@@ -1591,7 +1591,7 @@ namespace Origam.DA.Service
                 Paging = query.Paging,
                 ColumnsInfo = query.ColumnsInfo,
                 CustomFilters = query.CustomFilters,
-                CustomOrdering = query.CustomOrdering,
+                CustomOrderings = query.CustomOrderings,
                 CustomGrouping = query.CustomGrouping,
                 RowLimit = query.RowLimit,
                 RowOffset = query.RowOffset,
