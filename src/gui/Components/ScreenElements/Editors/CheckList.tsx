@@ -27,12 +27,12 @@ export interface IRawCheckListProps {
   LookupId: string;
   Parameters: any;
   menuItemId: string;
-  tabIndex?: number;
   isInvalid: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 
   onChange?(newValue: string[]): void;
+  onKeyDown(event: any): void;
 }
 
 export class CheckListControler {
@@ -89,10 +89,10 @@ export class CheckListControler {
 export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
-  tabIndex?: number;
   isInvalid: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
+  onKeyDown(event: any): void;
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
 
@@ -111,10 +111,10 @@ export const CheckList: React.FC<{
       menuItemId={getMenuItemId(property)}
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
-      tabIndex={props.tabIndex}
       isInvalid={props.isInvalid}
       invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
+      onKeyDown={props.onKeyDown}
     />
   );
 });
@@ -174,13 +174,14 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
             onClick={(event) => {
               controller.handleClick(event, item);
             }}
-            tabIndex={i === 0 ? props.tabIndex : -1}
+            // tabIndex={i === 0 ? props.tabIndex : -1}
             subscribeToFocusManager={i === 0 ? props.subscribeToFocusManager : undefined}
             inputSetter={(inputRef: InputReference) => inputRefs.push(inputRef)}
             focusLeft={focusLeft}
             focusRight={focusRight}
             focusUp={focusUp}
             focusDown={focusDown}
+            onKeyDown={props.onKeyDown}
             label={item.label}/>
         ))}
       </div>
@@ -205,24 +206,24 @@ export const CheckListItem: React.FC<{
   focusUp: (x: number, y: number)=>void;
   focusDown: (x: number, y: number)=>void;
   label: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
+  onKeyDown(event: any): void;
 }> = (props) => {
 
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [ unsubscribeFromFocusManager, setUnsubscribeFromFocusManager] = useState<() => void>();
 
   useEffect(() => {
     if(props.subscribeToFocusManager && refInput.current){
-      setUnsubscribeFromFocusManager(props.subscribeToFocusManager(refInput.current));
-    }
-    return () => {
-      unsubscribeFromFocusManager && unsubscribeFromFocusManager();
+      props.subscribeToFocusManager(refInput.current);
     }
   }, [])
 
   function onKeyDown(event: any) {
     const boundingRect = refInput.current?.getBoundingClientRect()!;
     switch (event.key) {
+      case "Tab":
+        props.onKeyDown(event);
+        break;
       case "ArrowUp":
         event.preventDefault();
         props.focusUp(boundingRect.x, boundingRect.y);

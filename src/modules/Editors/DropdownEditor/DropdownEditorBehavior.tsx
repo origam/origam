@@ -18,8 +18,7 @@ export class DropdownEditorBehavior {
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
-    public subscribeToFocusManager?: (obj: IFocusable) => () => void,
-    public tabIndex?: number,
+    public subscribeToFocusManager?: (obj: IFocusable) => void,
     private onKeyDown?: (event: any) => void
   ) {}
 
@@ -33,7 +32,6 @@ export class DropdownEditorBehavior {
   willLoadPage = 1;
   willLoadNextPage = true;
   pageSize = 100;
-  unsubscribeFromFocusManager?: () => void;
 
   @computed get isBodyDisplayed() {
     return this.isDropped && this.dataTable.rowCount > 0;
@@ -348,9 +346,6 @@ export class DropdownEditorBehavior {
   _refInputDisposer: any;
   refInputElement = (elm: any) => {
     this.elmInputElement = elm;
-    if (this.elmInputElement && this.subscribeToFocusManager) {
-      this.unsubscribeFromFocusManager = this.subscribeToFocusManager(this.elmInputElement);
-    }
   };
 
   elmInputElement: any;

@@ -1,5 +1,5 @@
 import { Observer } from "mobx-react";
-import React, { useContext, useEffect, useMemo } from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
 import S from './DropdownEditor.module.scss';
@@ -18,10 +18,9 @@ export function DropdownEditorInput(props:{
   }, []);
 
   useEffect(() => {
-    beh.elmInputElement.focus();
-    return () => {
-      beh.unsubscribeFromFocusManager && beh.unsubscribeFromFocusManager();
-    };
+    if(beh.subscribeToFocusManager && beh.elmInputElement){
+      beh.subscribeToFocusManager(beh.elmInputElement);
+    }
   }, []);
 
   function getStyle() {
@@ -50,7 +49,6 @@ export function DropdownEditorInput(props:{
           onBlur={!beh.isReadOnly ? beh.handleInputBlur : undefined}
           onDoubleClick={beh.onDoubleClick}
           value={beh.inputValue}
-          tabIndex={beh.tabIndex ? beh.tabIndex : undefined}
           style={getStyle()}
         />
       )}

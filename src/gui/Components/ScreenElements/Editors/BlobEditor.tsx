@@ -56,25 +56,23 @@ export class BlobEditor extends React.Component<{
   Entity?: string;
   SessionFormIdentifier?: string;
   parameters?: any;
-  tabIndex?: number;
-  subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
   isInvalid: boolean;
   invalidMessage?: string;
+  onKeyDown?(event: any): void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
   };
-  unsubscribeFromFocusManager?: () => void;
+
+  @observable
+  focused = false;
 
   componentDidMount() {
     if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(this.elmInput);
     }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   handleFileChange(event: any) {
@@ -259,11 +257,21 @@ export class BlobEditor extends React.Component<{
     );
   }
 
+  private onFocus(){
+    this.focused = true;
+  }
+
+  private onBlur(){
+    this.focused = false;
+  }
+
   private renderInput() {
     return (
       <div className={S.blobEditor}>
         {/*this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />*/}
-        <input readOnly={true} className="fileName" value={this.props.value || ""}/>
+        <input readOnly={true}
+               className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
+               value={this.props.value || ""}/>
         <div className="controls">
           {this.props.value && (
             <>
@@ -290,8 +298,10 @@ export class BlobEditor extends React.Component<{
               type="file"
               multiple={false}
               onChange={(event) => this.handleFileChange(event)}
-              tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
               ref={this.refInput}
+              onFocus={()=>this.onFocus()}
+              onBlur={()=>this.onBlur()}
+              onKeyDown={(event)=> this.props.onKeyDown && this.props.onKeyDown(event)}
             />
             <i className="fas fa-upload"></i>
           </label>

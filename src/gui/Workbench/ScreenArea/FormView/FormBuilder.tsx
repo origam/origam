@@ -20,6 +20,7 @@ import { flow } from "mobx";
 import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
 import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
 import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
+import {DomEvent} from "leaflet";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -29,8 +30,20 @@ export class FormBuilder extends React.Component<{
   xmlFormRootObject?: any;
   dataView?: IDataView;
 }> {
+  onKeyDown(event: any){
+    if (event.key === "Tab") {
+      DomEvent.preventDefault(event);
+      if(event.shiftKey){
+        this.props.dataView!.focusManager.focusPrevious(document.activeElement);
+      }
+      else{
+        this.props.dataView!.focusManager.focusNext(document.activeElement);
+      }
+      return;
+    }
+  }
+
   buildForm() {
-    let tabIndex = getStartTabIndex(this.props.dataView!);
     const self = this;
     const row = getSelectedRow(this.props.dataView);
     const rowId = getSelectedRowId(this.props.dataView);
@@ -79,7 +92,6 @@ export class FormBuilder extends React.Component<{
           ? dataTable.getCellValueByDataSourceField(row, sourceField!) === xfo.attributes.Value
           : false;
 
-        tabIndex++;
         return (
           <RadioButton
             key={xfo.$iid}
@@ -91,9 +103,9 @@ export class FormBuilder extends React.Component<{
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
-            tabIndex={tabIndex}
+            onKeyDown={event => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
-              focusManager.subscribe(radioInput, xfo.attributes.Id)
+              focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
@@ -123,7 +135,6 @@ export class FormBuilder extends React.Component<{
                     textualValue = dataTable.getCellText(row, property);
                   }
                 }
-                tabIndex++;
                 if(!property){
                   return (<></>);
                 }
@@ -134,7 +145,10 @@ export class FormBuilder extends React.Component<{
                       <CheckBox
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
-                        tabIndex={tabIndex}
+                        onKeyDown={event => self.onKeyDown(event)}
+                        subscribeToFocusManager={(radioInput) =>
+                          focusManager.subscribe(radioInput, property.id, property.tabIndex)
+                        }
                       />
                     </Provider>
                   );
@@ -154,7 +168,6 @@ export class FormBuilder extends React.Component<{
                       editor={
                         <FormViewEditor
                           value={value}
-                          tabIndex={tabIndex}
                           isRichText={property.isRichText}
                           textualValue={textualValue}
                           xmlNode={property.xmlNode}
@@ -174,7 +187,7 @@ export class FormBuilder extends React.Component<{
 
     const form = recursive(this.props.xmlFormRootObject);
     if(this.props.dataView?.isFirst){
-     // focusManager.focusFirst();
+      focusManager.focusFirst();
     }
     return form;
   }
@@ -182,26 +195,4 @@ export class FormBuilder extends React.Component<{
   render() {
     return this.buildForm();
   }
-}
-
-const startTabInduces = new Map<string, number>();
-
-function getNextTabIndex(){
-  if(startTabInduces.size === 0){
-    return 0;
-  }
-  const nextTabIndex = Array.from(startTabInduces.values()).sort().reverse()[0] + 100;
-  if(nextTabIndex > 32767){
-    console.error("TabIndex Overflow!");
-    startTabInduces.clear();
-    return 0;
-  }
-  return nextTabIndex;
-}
-
-function getStartTabIndex(dataView: IDataView): number {
-  if(!startTabInduces.has(dataView.id)){
-    startTabInduces.set(dataView.id, getNextTabIndex());
-  }
-  return startTabInduces.get(dataView.id)!;
 }

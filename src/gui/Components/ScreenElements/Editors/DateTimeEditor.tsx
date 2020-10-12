@@ -141,8 +141,7 @@ export class DateTimeEditor extends React.Component<{
   onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
-  subscribeToFocusManager?: (obj: IFocusable) => () => void;
-  tabIndex?: number;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   @observable isDroppedDown = false;
 
@@ -175,19 +174,17 @@ export class DateTimeEditor extends React.Component<{
   }
 
   disposers: any[] = [];
-  unsubscribeFromFocusManager?: () => void;
 
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
     if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(this.elmInput);
     }
   }
 
   componentWillUnmount() {
     this.disposers.forEach((d) => d());
-    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   componentDidUpdate(prevProps: { isFocused?: boolean; value: string | null }) {
@@ -358,7 +355,6 @@ export class DateTimeEditor extends React.Component<{
                 onClick={this.props.onClick}
                 onDoubleClick={this.props.onDoubleClick}
                 onKeyDown={this.handleKeyDown}
-                tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
               />
             </Tooltip>
             {this.props.isInvalid && (

@@ -11,25 +11,20 @@ export class RadioButton extends React.Component<{
   height: number;
   name: string;
   value: string;
-  tabIndex: number;
   onSelected: (value: any) => void;
   checked: boolean;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  onKeyDown: (event: any) => void;
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
   };
-  unsubscribeFromFocusManager?: () => void;
 
   componentDidMount() {
     if(this.elmInput && this.props.subscribeToFocusManager){
-      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+      this.props.subscribeToFocusManager(this.elmInput);
     }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
   }
 
   onChange(event: any){
@@ -55,9 +50,9 @@ export class RadioButton extends React.Component<{
           type={"radio"}
           id={this.props.value}
           name={this.props.name}
-          tabIndex={this.props.tabIndex}
           value={this.props.value}
           checked={this.props.checked}
+          onKeyDown={event => this.props.onKeyDown(event)}
           onChange={event => this.onChange(event)}/>
         <label htmlFor={this.props.value}>
           {this.props.caption}
