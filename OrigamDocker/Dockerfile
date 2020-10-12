@@ -7,6 +7,7 @@ RUN apt-get -y install git sudo
 RUN apt-get -y install libgdiplus
 RUN useradd -ms /bin/bash origam
 RUN usermod -aG sudo origam
+RUN echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
 WORKDIR /root
 COPY ["updateTimezone.sh", "/root"]
 RUN chmod +x updateTimezone.sh
