@@ -1,0 +1,1 @@
+﻿ALTER TABLE "MapElement" ADD "Icon" Varchar(100) NULL

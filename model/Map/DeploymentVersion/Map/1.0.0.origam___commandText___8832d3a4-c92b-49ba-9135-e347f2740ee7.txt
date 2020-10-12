@@ -1,0 +1,8 @@
+﻿INSERT INTO [OrigamMapLayer] ([Id], [ReferenceCode], [Name], [refOrigamMapLayerTypeId])
+VALUES ('50037985-9d67-4305-932f-a8194348aaf0', 'MAPLAYER', 'Map Layer', '1EE61797-3F5D-4FB1-9C50-E033DEE563AB')
+INSERT INTO [OrigamMapLayerParameter] ([Id], [refOrigamMapLayerId], [Name], [Value])
+VALUES ('859515d9-2908-4512-b728-09a1695f1be9', '50037985-9d67-4305-932f-a8194348aaf0', 'url', 'https://a.tile.openstreetmap.org/')
+INSERT INTO [OrigamMap] ([Id], [ReferenceCode], [Description])
+VALUES ('867b7d52-6958-454e-8b2c-8337b4b6760e', 'MAP', 'Map')
+INSERT INTO [OrigamMapOrigamMapLayer] ([Id], [refOrigamMapId], [refOrigamMapLayerId], [DefaultEnabled], [SortOrder])
+VALUES ('08476d12-9514-4c21-ac8c-1bd38217ec31', '867b7d52-6958-454e-8b2c-8337b4b6760e', '50037985-9d67-4305-932f-a8194348aaf0', 1, 1)

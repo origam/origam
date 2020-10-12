@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="c6e99c3b-6fe7-44f2-a0b7-8fcdb72de947"
+    x:isFolder="true"
+    name="Map"
+    rootItemType="WorkflowStateMachine"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

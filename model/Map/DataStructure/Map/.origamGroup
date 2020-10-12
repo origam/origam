@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
+  <group
+    x:id="af446cdd-65b1-4a4c-a5ff-9adfd9d8ecfc"
+    x:isFolder="true"
+    name="Map"
+    rootItemType="DataStructure"
+    x:type="Origam.Schema.SchemaItemGroup" />
+</x:file>

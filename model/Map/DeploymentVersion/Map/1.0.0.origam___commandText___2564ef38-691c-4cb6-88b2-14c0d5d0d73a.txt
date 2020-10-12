@@ -1,0 +1,1 @@
+﻿ALTER TABLE [MapElement] ADD [Color] Int NULL
