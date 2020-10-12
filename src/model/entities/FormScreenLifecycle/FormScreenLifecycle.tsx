@@ -748,6 +748,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
         if (!processQueryInfoResult.canContinue) return;
         result = yield api.saveSession(getSessionId(this));
+        getFormScreen(this).dataViews
+          .forEach(dataView => dataView.dataTable.unlockAddedRowPosition());
       } finally {
         formScreen.dataUpdateCRS.leave();
       }

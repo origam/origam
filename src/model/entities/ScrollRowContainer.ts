@@ -202,6 +202,8 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   unlockAddedRowPosition(): void {}
+
+  addedRowPositionLocked: boolean = false;
 }
 
 class RowChunk {

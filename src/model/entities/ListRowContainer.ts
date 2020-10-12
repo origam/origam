@@ -151,4 +151,8 @@ export class ListRowContainer implements IRowsContainer {
   registerResetListener(listener: () => void): void {}
 
   parent: any;
+
+  get addedRowPositionLocked(): boolean {
+    return this.forcedFirstRowId !== undefined;
+  }
 }
