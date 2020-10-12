@@ -656,6 +656,23 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     500
   );
 
+  private getNewRowValues(){
+    const dataView = getFormScreen(this).dataViews.find(dataView => dataView.orderProperty);
+    if(!dataView) {
+      return {}
+    }
+
+    const orderProperty = dataView.orderProperty!;
+    const orderValues = dataView.tableRows
+      .filter(row => Array.isArray)
+      .map(row => (row as any[])[orderProperty.dataIndex] as number);
+    const nextOrderValue = Math.max(...orderValues) + 1
+    const orderPropName = orderProperty.name;
+    const values = {} as any;
+    values[orderProperty.name] = nextOrderValue;
+    return values
+  }
+
   *createRow(entity: string, gridId: string) {
     try {
       this.monitor.inFlow++;
@@ -669,7 +686,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           SessionFormIdentifier: getSessionId(this),
           Entity: entity,
           RequestingGridId: gridId,
-          Values: {},
+          Values: this.getNewRowValues(),
           Parameters: { ...getBindingParametersFromParent(targetDataView) },
         });
       } finally {

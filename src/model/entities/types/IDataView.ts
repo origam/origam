@@ -65,6 +65,7 @@ export interface IDataViewData {
 export interface IDataView extends IDataViewData {
   $type_IDataView: 1;
 
+  orderProperty: IProperty | undefined;
   isBindingRoot: boolean;
   isBindingParent: boolean;
   isAnyBindingAncestorWorking: boolean;

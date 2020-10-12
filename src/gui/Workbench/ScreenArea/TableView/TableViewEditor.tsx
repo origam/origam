@@ -57,7 +57,9 @@ export class TableViewEditor extends React.Component<{
       rowId || "",
       this.props.property!.id
     );
-    const readOnly = isReadOnly(this.props.property!, rowId);
+    const dataView = getDataView(this.props.property);
+    const readOnly = isReadOnly(this.props.property!, rowId) ||
+      dataView.orderProperty != undefined && this.props.property?.name === dataView.orderProperty.name;
 
     switch (this.props.property!.column) {
       case "Number":
