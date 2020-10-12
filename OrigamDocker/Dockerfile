@@ -3,12 +3,17 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 RUN apt-get update
-RUN apt-get -y install git sudo
+RUN apt-get -y install git sudo nginx
 RUN apt-get -y install libgdiplus
 RUN useradd -ms /bin/bash origam
 RUN usermod -aG sudo origam
+RUN echo "%sudo   ALL=NOPASSWD: ALL" >> /etc/sudoers
 WORKDIR /root
 COPY ["updateTimezone.sh", "/root"]
+RUN unlink /etc/nginx/sites-enabled/default
+COPY ["reverse-proxy.conf", "/etc/nginx/sites-available"]
+RUN ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
+RUN nginx -t
 RUN chmod +x updateTimezone.sh
 RUN su origam
 USER origam
@@ -24,4 +29,4 @@ WORKDIR HTML5
 RUN mkdir data
 RUN mkdir logs
 RUN chmod +x startServer.sh
-CMD sudo /root/updateTimezone.sh & ./startServer.sh
+CMD sudo /etc/init.d/nginx start & sudo /root/updateTimezone.sh & ./startServer.sh
