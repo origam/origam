@@ -483,6 +483,7 @@ namespace OrigamArchitect
                 return;
             }
             _project.SourcesFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text);
+            _project.ModelSourceFolder = Path.Combine(txtSourcesFolder.Text, txtName.Text,"model");
             _project.RootSourceFolder = txtSourcesFolder.Text;
             _project.GitRepository = gitrepo.Checked;
             _project.Gitusername = txtGitUser.Text;
@@ -685,7 +686,7 @@ namespace OrigamArchitect
         {
             label21.Text = "It will create file "+_project.SourcesFolder + ".env and "+_project.SourcesFolder + ".cmd ";
             label21.Text += Environment.NewLine;
-            label21.Text += "After create new project run "+ _project.SourcesFolder + ".cmd and this script run docker with new project.";
+            label21.Text += "After create new project run "+ Path.Combine(_project.SourcesFolder,_project.Url, _project.Url) + ".cmd and this script run docker with new project.";
         }
         private void pageDocker_Commit(object sender, WizardPageConfirmEventArgs e)
         {
