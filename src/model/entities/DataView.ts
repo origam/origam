@@ -316,6 +316,7 @@ export class DataView implements IDataView {
     nextRow[positionIndex] -= 1;
     this.dataTable.substituteRecord(selectedRow);
     this.dataTable.substituteRecord(nextRow);
+    this.dataTable.setRecords(this.dataTable.rows);
     this.dataTable.setDirtyValue(selectedRow, this.orderProperty.id, selectedRow[positionIndex]);
     this.dataTable.setDirtyValue(nextRow, this.orderProperty.id, nextRow[positionIndex]);
   }
@@ -336,6 +337,7 @@ export class DataView implements IDataView {
     previous[positionIndex] += 1;
     this.dataTable.substituteRecord(selectedRow);
     this.dataTable.substituteRecord(previous);
+    this.dataTable.setRecords(this.dataTable.rows);
     this.dataTable.setDirtyValue(selectedRow, this.orderProperty.id, selectedRow[positionIndex]);
     this.dataTable.setDirtyValue(previous, this.orderProperty.id, previous[positionIndex]);
   }
