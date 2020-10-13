@@ -122,6 +122,7 @@ export class ListRowContainer implements IRowsContainer {
     const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === this.rowIdGetter(row));
     if (idx > -1) {
       this.allRows.splice(idx, 1);
+      this.updateSortAndFilter();
     }
   }
 
