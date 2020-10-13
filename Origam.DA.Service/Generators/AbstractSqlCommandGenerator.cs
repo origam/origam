@@ -349,7 +349,7 @@ namespace Origam.DA.Service
             CustomCommandParser commandParser =
                 new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter)
                     .Where(selectParameters.CustomFilters.Filters)
-                    .OrderBy(selectParameters.CustomOrdering);
+                    .OrderBy(selectParameters.CustomOrderings.Orderings);
 
             Hashtable selectParameterReferences = new Hashtable();
             DataStructure dataStructure = selectParameters.DataStructure;
@@ -972,7 +972,7 @@ namespace Origam.DA.Service
             var sortSet = selectParameters.SortSet;
             var columnsInfo = selectParameters.ColumnsInfo;
             var dynamicParameters = selectParameters.Parameters;
-            var customOrdering = selectParameters.CustomOrdering;
+            var customOrdering = selectParameters.CustomOrderings;
             var filter = selectParameters.Filter;
             var rowLimit = selectParameters.RowLimit;
             var rowOffset = selectParameters.RowOffset;
@@ -1732,7 +1732,7 @@ namespace Origam.DA.Service
             var entity = selectParameters.Entity;
             var columnsInfo = selectParameters.ColumnsInfo;
             var sortSet = selectParameters.SortSet;
-            var customOrderings = selectParameters.CustomOrdering;
+            var customOrderings = selectParameters.CustomOrderings;
             var customGrouping = selectParameters.CustomGrouping;
             var aggregatedColumns = selectParameters.AggregatedColumns;
             var dynamicParameters = selectParameters.Parameters;
@@ -1773,7 +1773,7 @@ namespace Origam.DA.Service
                     groupByColumn = column;
                 }
                 LookupOrderingInfo customOrderingInfo =
-                    LookupOrderingInfo.TryCreate(customOrderings, column.Name );
+                    LookupOrderingInfo.TryCreate(customOrderings.Orderings, column.Name );
                 var expression = RenderDataStructureColumn(ds, entity,
                         replaceParameterTexts, dynamicParameters,
                         sortSet, selectParameterReferences, isInRecursion,
@@ -1804,10 +1804,14 @@ namespace Origam.DA.Service
                     isInRecursion: isInRecursion,
                     noColumnsRenderedYet: i == 0);
             }
-
-            if (!customFilters.IsEmpty && customFilters.HasLookups && customCommandParser != null)
+            
+            if (!customFilters.IsEmpty && customFilters.HasLookups && customCommandParser != null ||
+                customOrderings.HasLookups)
             {
-                foreach (var columnNameAndLookupId in customFilters.FilterLookups)
+                var lookupDict = new Dictionary<string, Guid>();
+                lookupDict.AddRange(customOrderings.FilterLookups);
+                lookupDict.AddRange(customFilters.FilterLookups);
+                foreach (var columnNameAndLookupId in lookupDict)
                 {
                     string columnName = columnNameAndLookupId.Key;
                     Guid lookupId =  columnNameAndLookupId.Value;

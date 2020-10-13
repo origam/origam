@@ -101,6 +101,11 @@ namespace Origam.Extensions
         public static void AddRange<K, V>(this IDictionary<K, V> dict,
             IDictionary<K, V> otherDict)
         {
+            if (otherDict == null)
+            {
+                return;
+            }
+
             foreach (var keyValuePair in otherDict)
             {
                 dict[keyValuePair.Key] = keyValuePair.Value;
