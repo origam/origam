@@ -691,14 +691,6 @@ export class OrigamAPI implements IApi {
       })
     ).data;
   }
-
-  async saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void> {
-    await this.axiosInstance.get(`/UIService/SaveDataQuery/${data.sessionFormIdentifier}`);
-  }
-
-  async saveData(data: { sessionFormIdentifier: string }): Promise<void> {
-    await this.axiosInstance.get(`/UIService/SaveData/${data.sessionFormIdentifier}`);
-  }
 }
 
 export const IOrigamAPI = TypeSymbol<OrigamAPI>("IOrigamAPI");

@@ -955,8 +955,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       case IQuestionChangeRecordAnswer.Cancel:
         return false;
       case IQuestionChangeRecordAnswer.Yes:
-        await api.saveDataQuery({ sessionFormIdentifier: sessionId });
-        await api.saveData({ sessionFormIdentifier: sessionId });
+        await api.saveSessionQuery(sessionId);
+        await api.saveSession(sessionId);
         return true;
       case IQuestionChangeRecordAnswer.No:
         await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
