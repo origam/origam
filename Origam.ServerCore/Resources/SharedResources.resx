@@ -327,4 +327,64 @@
   <data name="UnknownError" xml:space="preserve">
     <value>An unexpected error has occured. Please contact support.</value>
   </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Passwords must be at least {0} characters.</value>
+  </data>
+  <data name="EmailTaken" xml:space="preserve">
+    <value>Email {0} is already taken.</value>
+  </data>
+  <data name="UnknownFailure" xml:space="preserve">
+    <value>An unknown failure has occurred.</value>
+  </data>
+  <data name="ObjectModified" xml:space="preserve">
+    <value>Optimistic concurrency failure, object has been modified.</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Incorrect password.</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Invalid token.</value>
+  </data>
+  <data name="LoginExists" xml:space="preserve">
+    <value>A user with this login already exists.</value>
+  </data>
+  <data name="UserNameTooLong" xml:space="preserve">
+    <value>User name {0} is invalid, can only contain letters or digits.</value>
+  </data>
+  <data name="EmailIsInvalid" xml:space="preserve">
+    <value>Email {0} is invalid.</value>
+  </data>
+  <data name="UserNameTaken" xml:space="preserve">
+    <value>User Name {0} is already taken.</value>
+  </data>
+  <data name="RoleInvalid" xml:space="preserve">
+    <value>Role name {0} is invalid.</value>
+  </data>
+  <data name="RoleNameTaken" xml:space="preserve">
+    <value>Role name {0} is already taken.</value>
+  </data>
+  <data name="PasswordAlreadySet" xml:space="preserve">
+    <value>User already has a password set.</value>
+  </data>
+  <data name="LockOutEnabled" xml:space="preserve">
+    <value>Lockout is not enabled for this user.</value>
+  </data>
+  <data name="UserInRole" xml:space="preserve">
+    <value>User already in role {0}.</value>
+  </data>
+  <data name="UserNotInRole" xml:space="preserve">
+    <value>User is not in role {0}.</value>
+  </data>
+  <data name="MustBeNonAlphaNumeric" xml:space="preserve">
+    <value>Passwords must have at least one non alphanumeric character.</value>
+  </data>
+  <data name="MustContainDigit" xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9').</value>
+  </data>
+  <data name="MustHaveLowerCase" xml:space="preserve">
+    <value>Passwords must have at least one lowercase ('a'-'z').</value>
+  </data>
+  <data name="MustHaveUpperCase" xml:space="preserve">
+    <value>Passwords must have at least one uppercase ('A'-'Z').</value>
+  </data>
 </root>
