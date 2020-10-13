@@ -14,6 +14,7 @@ export class Notifications {
   loader = new PeriodicLoader(getNotificationBoxContent(this));
 
   *startTimer(refreshIntervalMs: number) {
+    if(localStorage.getItem('debugNoPolling')) return
     yield* this.loader.start(refreshIntervalMs);
   }
 
