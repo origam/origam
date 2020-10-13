@@ -22,6 +22,7 @@ export class WorkQueues implements IWorkQueues {
 
 
   *startTimer(refreshIntervalMs: number) {
+    if(localStorage.getItem('debugNoPolling')) return
     yield* this.loader.start(refreshIntervalMs);
   }
 
