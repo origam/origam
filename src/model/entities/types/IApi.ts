@@ -187,6 +187,14 @@ export interface IApi {
 
   deleteObject(data: { SessionFormIdentifier: string; Entity: string; Id: string }): Promise<any>;
 
+  deleteObjectInOrderedList(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    OrderProperty: string;
+    UpdatedOrderValues: {};
+  }): Promise<any>
+
   executeActionQuery(data: {
     SessionFormIdentifier: string;
     Entity: string;

@@ -379,6 +379,16 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post("/UIService/DeleteObject", data)).data;
   }
 
+  async deleteObjectInOrderedList(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    OrderProperty: string;
+    UpdatedOrderValues: {};
+  }): Promise<any> {
+    return (await this.axiosInstance.post("/UIService/DeleteObjectInOrderedList", data)).data;
+  }
+
   async executeActionQuery(data: {
     SessionFormIdentifier: string;
     Entity: string;
