@@ -18,7 +18,7 @@ export const DataViewHeaderAction: React.FC<{
 
   return (
     <div
-      className={cx(S.root, props.className, { isActive: props.isActive })}
+      className={cx(S.root, props.className, { isActive: props.isActive }, props.isDisabled ? S.isDisabled : "")}
       onClick={onClick}
       ref={props.refDom}
     >

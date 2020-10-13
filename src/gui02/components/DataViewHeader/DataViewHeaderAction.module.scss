@@ -58,3 +58,12 @@
   }
 }
 
+.isDisabled{
+  svg {
+    stroke: $grey3 !important;
+    stroke-width: 1 !important;
+    &:hover {
+      stroke: $grey3;
+    }
+  }
+}
