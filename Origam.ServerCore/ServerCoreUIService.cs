@@ -45,6 +45,7 @@ using System.Xml;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Schema.WorkflowModel;
+using Origam.ServerCore.Controller;
 using Origam.ServerCore.Resources;
 using core = Origam.Workbench.Services.CoreServices;
 
@@ -355,6 +356,17 @@ namespace Origam.ServerCore
             IList output = sessionStore.DeleteObject(input.Entity, input.Id);
             CreateUpdateOrigamOnlineUser();
             return output;
+        }
+        
+        public IList DeleteObjectInOrderedList(DeleteObjectInOrderedListInput input)
+        {
+            SessionStore ss = sessionManager.GetSession(new Guid(input.SessionFormIdentifier));
+            ArrayList changes = ss.UpdateObjectBatch(input.Entity, input.OrderProperty, input.UpdatedOrderValues);
+            changes.AddRange(ss.DeleteObject(input.Entity, input.Id));
+            Task.Run(() => SecurityTools.CreateUpdateOrigamOnlineUser(
+                SecurityManager.CurrentPrincipal.Identity.Name,
+                sessionManager.GetSessionStats()));
+            return changes;
         }
         public ArrayList GetRowData(MasterRecordInput input)
         {

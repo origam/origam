@@ -196,6 +196,14 @@ namespace Origam.ServerCore.Controller
             //todo: handle deleting non existing objects
             return RunWithErrorHandler(() 
                 => Ok(sessionObjects.UIService.DeleteObject(input)));
+        }        
+        [HttpPost("[action]")]
+        public IActionResult DeleteObjectInOrderedList(
+            [FromBody][Required]DeleteObjectInOrderedListInput input)
+        {
+            //todo: handle deleting non existing objects
+            return RunWithErrorHandler(() 
+                => Ok(sessionObjects.UIService.DeleteObjectInOrderedList(input)));
         }
         [HttpPost("[action]")]
         public IActionResult ExecuteActionQuery(
