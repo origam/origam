@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DataConstant
-    abstract="false"
-    dataType="String"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="String"
     x:id="df1b2345-18c5-4aec-a79d-e6f9204b5ac5"
-    name="ReportFormat_CSV"
-    x:type="Origam.Schema.EntityModel.DataConstant"
-    userDefinable="false"
-    value="CSV" />
+    asi:name="ReportFormat_CSV"
+    dc:userDefinable="false"
+    dc:value="CSV" />
 </x:file>

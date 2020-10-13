@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DeploymentVersion
-    abstract="false"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
     x:id="bf107b5f-010a-4109-bc32-539db7c2744a"
-    name="4.26"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
-    version="4.26">
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="10"
-      commandText="-***-ExternalFile:4.26.origam___commandText___d139240d-ba68-4f30-bf8d-14dcfbe74ab3.txt"
+    asi:name="4.26"
+    dv:version="4.26">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:4.26.origam___commandText___d139240d-ba68-4f30-bf8d-14dcfbe74ab3.txt"
       x:id="d139240d-ba68-4f30-bf8d-14dcfbe74ab3"
-      name="00010_Database_Field_OrigamOnlineUser.ClearSessionRequestTimestamp"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-  </DeploymentVersion>
+      asi:name="00010_Database_Field_OrigamOnlineUser.ClearSessionRequestTimestamp"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
 </x:file>

@@ -1,74 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DataStructure
-    abstract="false"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dsc="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureColumn/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
     x:id="68d748cd-7f41-489d-8ba6-7c5590bee2e1"
-    localized="false"
-    name="ClockData"
-    x:type="Origam.Schema.EntityModel.DataStructure">
-    <DataStructureEntity
-      abstract="false"
-      allFields="false"
-      concurrencyHandling="Standard"
-      entity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+    ds:localized="false"
+    asi:name="ClockData">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="false"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
       x:id="016bb4d0-85f8-4c27-9f7b-0120e8a03c99"
-      ignoreCondition="None"
-      ignoreImplicitFilters="false"
-      name="BusinessPartner"
-      relationType="Normal"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity"
-      useUpsert="false">
-      <DataStructureColumn
-        abstract="false"
-        aggregation="None"
-        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="BusinessPartner"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
         x:id="ef11e8f9-12a0-4417-8097-44fa8feb8cc0"
-        name="Id"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn"
-        upsertType="Replace"
-        useCopiedValue="false"
-        useLookupValue="false"
-        writeOnly="false"
-        xmlMappingType="Default" />
-      <DataStructureColumn
-        abstract="false"
-        aggregation="None"
-        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstName/6d9c8b71-337e-4572-87ff-1dd7e1fa3c53"
+        asi:name="Id"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/FirstName/6d9c8b71-337e-4572-87ff-1dd7e1fa3c53"
         x:id="1d83c277-1220-492e-8191-1345ca0a42d8"
-        name="FirstName"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn"
-        upsertType="Replace"
-        useCopiedValue="false"
-        useLookupValue="false"
-        writeOnly="false"
-        xmlMappingType="Default" />
-      <DataStructureColumn
-        abstract="false"
-        aggregation="None"
-        field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Name/7a5f60a2-895a-49d7-b009-929b4a6a4c5a"
+        asi:name="FirstName"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+      <dsc:DataStructureColumn
+        asi:abstract="false"
+        dsc:aggregation="None"
+        dsc:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/Name/7a5f60a2-895a-49d7-b009-929b4a6a4c5a"
         x:id="78e6c2d2-5137-4307-b706-2176f3866241"
-        name="Name"
-        x:type="Origam.Schema.EntityModel.DataStructureColumn"
-        upsertType="Replace"
-        useCopiedValue="false"
-        useLookupValue="false"
-        writeOnly="false"
-        xmlMappingType="Default" />
-    </DataStructureEntity>
-    <DataStructureFilterSet
-      abstract="false"
-      dynamic="false"
+        asi:name="Name"
+        dsc:upsertType="Replace"
+        dsc:useCopiedValue="false"
+        dsc:useLookupValue="false"
+        dsc:writeOnly="false"
+        dsc:xmlMappingType="Default" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
       x:id="7fea0c67-e05f-453a-8219-8f27fe5e82c1"
-      name="CurrentUser"
-      x:type="Origam.Schema.EntityModel.DataStructureFilterSet">
-      <DataStructureFilterSetFilter
-        abstract="false"
-        entity="Notification Box/DataStructure/Notification Box/ClockData.origam#ClockData/BusinessPartner/016bb4d0-85f8-4c27-9f7b-0120e8a03c99"
-        filter="Notification Box/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/CurrentUser/ef31999f-ab15-47be-90f3-06644d9ec4f3"
+      asi:name="CurrentUser">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Notification Box/DataStructure/Notification Box/ClockData.origam#ClockData/BusinessPartner/016bb4d0-85f8-4c27-9f7b-0120e8a03c99"
+        dsfsf:filter="Notification Box/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/CurrentUser/ef31999f-ab15-47be-90f3-06644d9ec4f3"
         x:id="629f0676-fa5a-4dad-a093-ae848b8fa9e5"
-        name="BusinessPartner_CurrentUser"
-        passWhenParameterMatch="false"
-        x:type="Origam.Schema.EntityModel.DataStructureFilterSetFilter" />
-    </DataStructureFilterSet>
-  </DataStructure>
+        asi:name="BusinessPartner_CurrentUser"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
 </x:file>

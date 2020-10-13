@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Transformation
-    abstract="false"
-    engineType="XslCompiledTransform"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xt="http://schemas.origam.com/Origam.Schema.EntityModel.XslTransformation/6.0.0">
+  <xt:Transformation
+    asi:abstract="false"
+    xt:engineType="XslCompiledTransform"
     x:id="e5584955-7e1c-4bf1-9b09-0549f4b8d514"
-    name="WQ_TextFile_Split"
-    text="-***-ExternalFile:WQ_TextFile_Split.origam___text___e5584955-7e1c-4bf1-9b09-0549f4b8d514.xslt"
-    x:type="Origam.Schema.EntityModel.XslTransformation" />
+    asi:name="WQ_TextFile_Split"
+    xt:text="-***-ExternalFile:WQ_TextFile_Split.origam___text___e5584955-7e1c-4bf1-9b09-0549f4b8d514.xslt" />
 </x:file>

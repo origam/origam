@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <NotificationBox
-    abstract="false"
+<x:file xmlns:adt="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataTooltip/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdt="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataTooltip/6.0.0" xmlns:nb="http://schemas.origam.com/Origam.Schema.LookupModel.NotificationBox/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <nb:NotificationBox
+    asi:abstract="false"
     x:id="83a34440-d106-42bd-b609-98a42a842cd8"
-    name="Clock"
-    refreshInterval="1"
-    type="Logo"
-    x:type="Origam.Schema.LookupModel.NotificationBox">
-    <DataTooltip
-      abstract="false"
+    asi:name="Clock"
+    nb:refreshInterval="1"
+    nb:type="Logo">
+    <dsdt:DataTooltip
+      asi:abstract="false"
       x:id="c94a948e-54e5-4591-94d2-324c382f4302"
-      level="100"
-      looltipDataStructure="Notification Box/DataStructure/Notification Box/ClockData.origam#ClockData/68d748cd-7f41-489d-8ba6-7c5590bee2e1"
-      name="MainTooltip"
-      roles="*"
-      tooltipLoadMethod="Notification Box/DataStructure/Notification Box/ClockData.origam#ClockData/CurrentUser/7fea0c67-e05f-453a-8219-8f27fe5e82c1"
-      tooltipTransformation="Notification Box/Transformation/Notification Box/Clock.origam#Clock/0a03450f-b2d8-4293-a4d6-04a463ea033b"
-      x:type="Origam.Schema.LookupModel.DataServiceDataTooltip" />
-  </NotificationBox>
+      adt:level="100"
+      adt:looltipDataStructure="Notification Box/DataStructure/Notification Box/ClockData.origam#ClockData/68d748cd-7f41-489d-8ba6-7c5590bee2e1"
+      asi:name="MainTooltip"
+      adt:roles="*"
+      adt:tooltipLoadMethod="Notification Box/DataStructure/Notification Box/ClockData.origam#ClockData/CurrentUser/7fea0c67-e05f-453a-8219-8f27fe5e82c1"
+      adt:tooltipTransformation="Notification Box/Transformation/Notification Box/Clock.origam#Clock/0a03450f-b2d8-4293-a4d6-04a463ea033b" />
+  </nb:NotificationBox>
 </x:file>

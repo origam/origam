@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DeploymentVersion
-    abstract="false"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
     x:id="7565dbcc-a394-4418-b431-a771de06461a"
-    name="4.15"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
-    version="4.15">
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="10"
-      commandText="-***-ExternalFile:4.15.origam___commandText___2e74e60f-8b01-48a2-ae3e-59f88c3f55b2.txt"
+    asi:name="4.15"
+    dv:version="4.15">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:4.15.origam___commandText___2e74e60f-8b01-48a2-ae3e-59f88c3f55b2.txt"
       x:id="2e74e60f-8b01-48a2-ae3e-59f88c3f55b2"
-      name="00010_OrigamNotificationChannelType_InsertValues"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="20"
-      commandText="-***-ExternalFile:4.15.origam___commandText___6c013e19-1232-42d7-9b8c-85f43e9ab261.txt"
+      asi:name="00010_OrigamNotificationChannelType_InsertValues"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:4.15.origam___commandText___6c013e19-1232-42d7-9b8c-85f43e9ab261.txt"
       x:id="6c013e19-1232-42d7-9b8c-85f43e9ab261"
-      name="00020_OrigamNotificationChannelType_Transalations"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-  </DeploymentVersion>
+      asi:name="00020_OrigamNotificationChannelType_Transalations"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
 </x:file>

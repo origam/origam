@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <package
+<x:file xmlns:p="http://schemas.origam.com/Origam.Schema.Package/6.1.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.PackageReference/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <p:package
     x:id="d970d7f2-82ea-4447-8426-0e08a9194f51"
     x:isFolder="true"
-    name="Map"
-    x:type="Origam.Schema.SchemaExtension"
-    version="1.0.0" xmlns="http://schemas.origam.com/1.0.0/package">
-    <packageReference
+    p:name="Map"
+    p:version="1.0.0">
+    <pr:packageReference
       x:id="883d8da7-fb54-4b3e-b11c-5c81946e991a"
-      referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4"
-      x:type="Origam.Schema.PackageReference" />
-    <packageReference
+      pr:referencedPackage="Root Menu/.origamPackage#b9ab12fe-7f7d-43f7-bedc-93747647d6e4" />
+    <pr:packageReference
       x:id="a6670776-cbcb-4374-ac85-2de2187e5c9b"
-      referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609"
-      x:type="Origam.Schema.PackageReference" />
-  </package>
+      pr:referencedPackage="Root/.origamPackage#147fa70d-6519-4393-b5d0-87931f9fd609" />
+  </p:package>
 </x:file>

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Function
-    abstract="false"
-    dataType="Float"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Float"
     x:id="577f7109-b555-4485-b778-12ae6524c309"
-    name="Longitude"
-    type="Database"
-    x:type="Origam.Schema.EntityModel.Function">
-    <FunctionParameter
-      abstract="false"
+    asi:name="Longitude"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
       x:id="6e0c3ec5-d6fb-4cdb-b5fb-757cec2ce551"
-      name="Point"
-      x:type="Origam.Schema.EntityModel.FunctionParameter" />
-  </Function>
+      asi:name="Point" />
+  </f:Function>
 </x:file>

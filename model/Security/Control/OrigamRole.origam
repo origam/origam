@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Control
-    abstract="false"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ci:Control
+    asi:abstract="false"
     x:id="0b864dd5-1611-4b93-9360-43af1882809f"
-    isComplex="true"
-    name="OrigamRole"
-    namespace="Origam.Schema.GuiModel"
-    requestSaveAfterChangeAllowed="false"
-    screenSection="Security/PanelControlSet/Security/OrigamRole.origam#OrigamRole/f0928912-1d04-4c89-9615-9ffd85b9fd0e"
-    toolboxVisibility="FormDesigner"
-    x:type="Origam.Schema.GuiModel.ControlItem"
-    typeName="Origam.Schema.GuiModel.PanelControlSet">
-    <ancestor
-      ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
-      x:id="d9fdbad7-4d33-444c-a05b-9ff837ff78f9"
-      x:type="Origam.Schema.SchemaItemAncestor" />
-  </Control>
+    ci:isComplex="true"
+    asi:name="OrigamRole"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="Security/PanelControlSet/Security/OrigamRole.origam#OrigamRole/f0928912-1d04-4c89-9615-9ffd85b9fd0e"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="d9fdbad7-4d33-444c-a05b-9ff837ff78f9" />
+  </ci:Control>
 </x:file>

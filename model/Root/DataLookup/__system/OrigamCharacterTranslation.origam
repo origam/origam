@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DataLookup
-    abstract="false"
-    alwaysAllowReturnToForm="false"
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
     x:id="b03e8420-09de-4403-a9b5-fa9bc1034e7b"
-    isFilteredServerside="false"
-    isTree="false"
-    listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
-    listDisplayMember="Name"
-    listValueMember="Id"
-    name="OrigamCharacterTranslation"
-    searchByFirstColumnOnly="false"
-    suppressEmptyColumns="false"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
-    valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
-    valueDisplayMember="Name"
-    valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/GetId/222808eb-209a-444a-9d7c-0520aae7dfca"
-    valueValueMember="Id" />
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="OrigamCharacterTranslation"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/00dff251-8c32-4686-8609-0e1b42eab353"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamCharacterTranslation.origam#LookupOrigamCharacterTranslation/GetId/222808eb-209a-444a-9d7c-0520aae7dfca"
+    adl:valueValueMember="Id" />
 </x:file>

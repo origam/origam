@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <group
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
     x:id="230b6b67-2028-454f-a3bb-a70f86620d94"
     x:isFolder="true"
-    name="Map"
-    rootItemType="Rule"
-    x:type="Origam.Schema.SchemaItemGroup" />
+    g:name="Map"
+    g:rootItemType="Rule" />
 </x:file>

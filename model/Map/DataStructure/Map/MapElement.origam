@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DataStructure
-    abstract="false"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
     x:id="4d9974db-9f3e-4b84-af12-20583c44810a"
-    localized="false"
-    name="MapElement"
-    x:type="Origam.Schema.EntityModel.DataStructure">
-    <DataStructureEntity
-      abstract="false"
-      allFields="true"
-      concurrencyHandling="Standard"
-      entity="Map/DataEntity/Map/MapElement.origam#MapElement/5ac7847d-c97c-4ba0-8c5c-2c00285fc27b"
+    ds:localized="false"
+    asi:name="MapElement">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Map/DataEntity/Map/MapElement.origam#MapElement/5ac7847d-c97c-4ba0-8c5c-2c00285fc27b"
       x:id="2cf41e47-7020-4156-b6d2-ebd70d2b1967"
-      ignoreCondition="None"
-      ignoreImplicitFilters="false"
-      name="MapElement"
-      relationType="Normal"
-      x:type="Origam.Schema.EntityModel.DataStructureEntity"
-      useUpsert="false" />
-  </DataStructure>
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="MapElement"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+  </ds:DataStructure>
 </x:file>

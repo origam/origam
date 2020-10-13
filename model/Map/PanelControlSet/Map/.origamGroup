@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <group
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
     x:id="453373d7-7140-4963-8eca-4e9930ca51df"
     x:isFolder="true"
-    name="Map"
-    rootItemType="PanelControlSet"
-    x:type="Origam.Schema.SchemaItemGroup" />
+    g:name="Map"
+    g:rootItemType="PanelControlSet" />
 </x:file>
