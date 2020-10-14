@@ -43,6 +43,24 @@ namespace Origam.DA.Service
                 OrigamFile.IdAttribute,
                 OrigamFile.ModelPersistenceUri);
 
+        public static string ReadNewModelId(XmlFileData xmlFileData)
+        {
+            return xmlFileData
+                               ?.XmlDocument
+                               ?.SelectSingleNode("//p:package", xmlFileData.NamespaceManager)
+                               ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
+                               ?.Value;
+        }
+
+        public static string ReadId(XmlFileData xmlFileData)
+        {
+            return xmlFileData
+                               ?.XmlDocument
+                               ?.SelectSingleNode("package", xmlFileData.NamespaceManager)
+                               ?.Attributes?[$"x:{OrigamFile.IdAttribute}"]
+                               ?.Value;
+        }
+
         private static Guid? ReadGuid(XmlReader xmlReader, 
             string attrName, string attrNamespace)
         {

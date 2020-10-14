@@ -44,7 +44,7 @@ namespace Origam.DA.Service
         public const string GroupFileName = PersistenceFiles.GroupFileName; 
         public static readonly string OrigamExtension = PersistenceFiles.Extension;
         public static readonly string ModelPersistenceUri =
-             $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}";        
+             $"http://schemas.origam.com/model-persistence/{VersionProvider.CurrentPersistenceMeta}";
         public static readonly string PackageUri =
             $"http://schemas.origam.com/Origam.Schema.Package/{Versions.GetCurrentClassVersion(typeof(Package))}";
         public static readonly string GroupUri =

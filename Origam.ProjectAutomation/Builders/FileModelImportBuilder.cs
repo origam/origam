@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
@@ -101,25 +102,19 @@ namespace Origam.ProjectAutomation
 
                 if (File.Exists(xmlPath))
                 {
-                    FileInfo fi = new FileInfo(xmlPath);
-                    using (XmlReader xmlReader = new XmlTextReader(fi.OpenRead()))
-                    {
-                        while (xmlReader.Read())
-                        {
-                            if (xmlReader.NodeType == XmlNodeType.EndElement) continue;
-                            Guid? retrievedId = XmlUtils.ReadId(xmlReader);
-                            if (retrievedId.HasValue)
-                            {
-                                modelId = retrievedId.ToString();
-                                break;
-                            }
-                        }
-                    }
+                    FileInfo fileInfo = new FileInfo(xmlPath);
+                    OrigamXmlDocument xmlDocument = null;
+                    var xmlFileData = new XmlFileData(xmlDocument, fileInfo);
+                    modelId = XmlUtils.ReadId(xmlFileData)??XmlUtils.ReadNewModelId(xmlFileData);
                 }
                 else
                 {
                     throw new Exception("Can´t find package for guidId. It looks like that it is not origam project.");
                 }
+            }
+            if(string.IsNullOrEmpty(modelId))
+            {
+                throw new Exception("Can´t find package ID. It looks like that it is problem with parse origamPackage. Please Contact Origam Team.");
             }
             return modelId;
         }

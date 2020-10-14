@@ -20,7 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 
+using System;
 using System.IO;
+using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
 {
@@ -54,12 +56,12 @@ namespace Origam.ProjectAutomation
             _setting.TitleText = project.Name;
             _setting.DataConnectionString = project.BuilderDataConnectionString;
             _setting.SchemaConnectionString = project.BuilderModelConnectionString;
-            _setting.ModelSourceControlLocation = Path.Combine(project.ServerTemplateFolder, "Model");
+            _setting.ModelSourceControlLocation = GetModelSourceLocation(project);
             _setting.ServerUrl = project.FullUrl;
             _setting.DataDataService = project.GetDataDataService;
             _setting.SchemaDataService = project.GetDataDataService;
             _setting.ServerLocalPath = project.BinFolder;
-            _setting.ModelSourceControlLocation = project.ModelSourceFolder;
+            //_setting.ModelSourceControlLocation = project.SourcesFolder;
             _settingsIndex = _settings.Add(_setting);
             ConfigurationManager.SetActiveConfiguration(_setting);
             try
@@ -71,6 +73,21 @@ namespace Origam.ProjectAutomation
                 Rollback();
                 throw;
             }
+        }
+
+        private string GetModelSourceLocation(Project project)
+        {
+            switch (project.TypeTemplate)
+            {
+                case TypeTemplate.Default:
+                    return project.ModelSourceFolder;
+                case TypeTemplate.Open:
+                case TypeTemplate.Template:
+                    return project.SourcesFolder;
+                default:
+                    throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
+            }
+            
         }
 
         public override void Rollback()
