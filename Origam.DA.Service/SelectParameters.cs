@@ -28,6 +28,7 @@ namespace Origam.DA.Service
 {
     public class SelectParameters
     {
+        private CustomOrderings customOrderings = new CustomOrderings(null);
         public DataStructure DataStructure { get; set; }
         public DataStructureEntity Entity { get; set; }
         public DataStructureFilterSet Filter { get; set; }
@@ -37,7 +38,13 @@ namespace Origam.DA.Service
         public CustomFilters CustomFilters { get; set; } = new CustomFilters();
         public int? RowLimit { get; set; }
         public int? RowOffset { get; set; }
-        public CustomOrderings CustomOrderings { get; set; } = new CustomOrderings(null);
+
+        public CustomOrderings CustomOrderings
+        {
+            get => customOrderings;
+            set => customOrderings = value ?? new CustomOrderings(null);
+        }
+
         public bool ForceDatabaseCalculation { get; set; }
         public ColumnsInfo ColumnsInfo { get; set; } = ColumnsInfo.Empty;
         public Grouping CustomGrouping { get; set; }
