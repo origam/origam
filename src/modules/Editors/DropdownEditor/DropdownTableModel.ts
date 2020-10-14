@@ -9,18 +9,23 @@ export class DropdownDataTable {
   constructor(
     private setup: () => DropdownEditorSetup,
     private dropdownEditorData: IDropdownEditorData
-  ) {}
+  ) {
+  }
 
   @observable.shallow allRows: any[][] = [];
   @observable filterPhrase: string = "";
-  fulltext: any;
+
+  @computed
+  get index() {
+    return new Index(this.allRows);
+  }
 
   get rowsBeforeRedundancyFilter(): any[][] {
     const setup = this.setup();
     switch (setup.dropdownType) {
       case EagerlyLoadedGrid: {
-        if (this.filterPhrase !== "" && this.fulltext) {
-          return this.fulltext.search(this.filterPhrase);
+        if (this.filterPhrase !== "") {
+          return this.index.search(this.filterPhrase);
         }
         return this.allRows;
       }
@@ -91,13 +96,6 @@ export class DropdownDataTable {
 
   @action.bound setData(rows: any[][]) {
     this.allRows = rows;
-    const setup = this.setup();
-    switch (setup.dropdownType) {
-      case EagerlyLoadedGrid: {
-        this.fulltext = this.createFulltext(rows);
-        break;
-      }
-    }
   }
 
   @action.bound appendData(rows: any[][]) {
@@ -110,42 +108,6 @@ export class DropdownDataTable {
 
   @action.bound setFilterPhrase(phrase: string) {
     this.filterPhrase = phrase;
-  }
-
-  createFulltext(rows: any[][]) {
-    const flexFields: string[] = [];
-    const setup = this.setup();
-    const isOnlyFirstColumn = setup.searchByFirstColumnOnly;
-    for (
-      let i = 0;
-      i <
-      (isOnlyFirstColumn
-        ? Math.min(1, setup.visibleColumnNames.length)
-        : setup.visibleColumnNames.length);
-      i++
-    ) {
-      flexFields.push(`${setup.columnNameToIndex.get(setup.visibleColumnNames[i])}`);
-    }
-    const flexIndex = FlexSearch.create({
-      encode: "icase",
-      doc: {
-        id: `${setup.identifierIndex}`,
-        field: flexFields,
-      },
-    });
-
-    function arr2obj(arr: any[]) {
-      const result: { [k: string]: any } = {};
-      for (let i = 0; i < arr.length; i++) {
-        result[`${i}`] = arr[i];
-      }
-      return result;
-    }
-
-    for (let i = 0; i < rows.length; i++) {
-      flexIndex.add(arr2obj(rows[i]));
-    }
-    return flexIndex;
   }
 }
 
@@ -177,3 +139,32 @@ export class DropdownColumnDrivers {
 }
 
 export const IDropdownColumnDrivers = TypeSymbol<DropdownColumnDrivers>("IDropdownColumnDrivers");
+
+
+class Index {
+
+  private items: IndexItem[] = [];
+
+  constructor(rows: any[][]){
+    if(rows.length > 0){
+      this.items = rows.map(row => new IndexItem(row));
+    }
+  }
+  search(phrase: string){
+    const phraseLower = phrase.toLowerCase();
+    return this.items.filter(item => item.matches(phraseLower)).map(item => item.row);
+  }
+}
+
+class IndexItem {
+  private textInLower : string;
+  public row: any[];
+  constructor(row: any[]){
+    this.row = row;
+    this.textInLower = row.slice(1).join().toLowerCase();
+  }
+
+  matches(phraseInLower: string){
+    return this.textInLower.includes(phraseInLower);
+  }
+}
