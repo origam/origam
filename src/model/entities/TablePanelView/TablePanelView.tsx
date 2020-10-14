@@ -123,23 +123,24 @@ export class TablePanelView implements ITablePanelView {
   }
 
   *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
-    getTablePanelView(this).setEditing(false);
-    yield* flushCurrentRowData(this)();
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);
-    const isDirty = getFormScreen(dataView).isDirty;
 
-    if (dataView.selectedRowId === rowId || !isDirty || !isInfiniteScrollingActive(dataView)) {
-      yield* this.onCellClickInternal(event, row, columnId, isControlInteraction);
-      return;
-    }
-    const shouldProceedToSelectRow = yield getFormScreenLifecycle(
-      dataView
-    ).handleUserInputOnChangingRow(dataView);
+    if (dataView.selectedRowId !== rowId && isInfiniteScrollingActive(dataView)){
+      getTablePanelView(this).setEditing(false);
+      yield* flushCurrentRowData(this)();
+      const isDirty = getFormScreen(dataView).isDirty;
 
-    if (shouldProceedToSelectRow) {
-      yield* this.onCellClickInternal(event, row, columnId, isControlInteraction);
+      if (isDirty) {
+        const shouldProceedToSelectRow = yield getFormScreenLifecycle(
+          dataView
+        ).handleUserInputOnChangingRow(dataView);
+        if (!shouldProceedToSelectRow) {
+          return;
+        }
+      }
     }
+    yield* this.onCellClickInternal(event, row, columnId, isControlInteraction);
   }
 
   *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
