@@ -35,14 +35,16 @@ namespace Origam.ProjectAutomation
 
         public override void Execute(Project project)
         {
-            OrigamSettings activeSettings = ConfigurationManager.GetActiveConfiguration()
-                as OrigamSettings;
-            activeSettings.DataConnectionString = project.DataConnectionString;
+            OrigamSettings activeSettings = ConfigurationManager.GetActiveConfiguration().Clone() as OrigamSettings;
+            var collection = SettingsBuilder.GetSettings();
+            collection.RemoveAt(project.ActiveConfigurationIndex);
+            activeSettings.DataConnectionString = project.BuilderDataConnectionString;
             activeSettings.SchemaConnectionString = project.ModelConnectionString;
-            activeSettings.ModelSourceControlLocation = project.SourcesFolder;
+            activeSettings.ModelSourceControlLocation = project.ModelSourceFolder;
             activeSettings.DataDataService = project.GetDataDataService;
             activeSettings.SchemaDataService = project.GetDataDataService;
-            SettingsBuilder.SaveSettings(SettingsBuilder.GetSettings());
+            collection.Add(activeSettings);
+            SettingsBuilder.SaveSettings(collection);
         }
 
         public override void Rollback()

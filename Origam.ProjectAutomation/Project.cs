@@ -21,6 +21,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 
 using System;
+using System.IO;
 using static Origam.DA.Common.Enums;
 using static Origam.NewProjectEnums;
 
@@ -50,6 +51,7 @@ namespace Origam.ProjectAutomation
         private bool _gitrepo;
         private string _gitusername;
         private string _gitemail;
+        private string _modelSourceFolder;
         public string Gitusername { get => _gitusername; set => _gitusername = value; }
         public string Gitemail { get => _gitemail; set => _gitemail = value; }
         public DatabaseType DatabaseType { get; set; }
@@ -87,6 +89,18 @@ namespace Origam.ProjectAutomation
             set
             {
                 _name = value;
+            }
+        }
+
+        public string ModelSourceFolder
+        {
+            get
+            {
+                return _modelSourceFolder;
+            }
+            set
+            {
+                _modelSourceFolder = value;
             }
         }
 
@@ -347,6 +361,7 @@ namespace Origam.ProjectAutomation
         public string WebFirstName { get;  set; }
         public string WebSurname { get;  set; }
         public string WebEmail { get;  set; }
+        public int ActiveConfigurationIndex { get; set; }
         #endregion
     }
     public enum DeploymentType
