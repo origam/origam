@@ -112,7 +112,8 @@ namespace Origam.ServerCore
             services.AddSingleton<LanguageConfig>();
             services.AddLocalization();
             services.AddIdentity<IOrigamUser, Role>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddErrorDescriber<MultiLanguageIdentityErrorDescriber>();
 
             services.Configure<IdentityOptions>(options =>
             {
