@@ -103,7 +103,7 @@ export class FormBuilder extends React.Component<{
             name={xfo.attributes.Id}
             value={xfo.attributes.Value}
             checked={checked}
-            onKeyDown={event => self.onKeyDown(event)}
+            onKeyDown={(event) => self.onKeyDown(event)}
             subscribeToFocusManager={(radioInput) =>
               focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }
@@ -135,17 +135,17 @@ export class FormBuilder extends React.Component<{
                     textualValue = dataTable.getCellText(row, property);
                   }
                 }
-                if(!property){
-                  return (<></>);
+                if (!property) {
+                  return <></>;
                 }
 
-                if(property.column === "CheckBox"){
+                if (property.column === "CheckBox") {
                   return (
                     <Provider property={property}>
                       <CheckBox
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
-                        onKeyDown={event => self.onKeyDown(event)}
+                        onKeyDown={(event) => self.onKeyDown(event)}
                         subscribeToFocusManager={(radioInput) =>
                           focusManager.subscribe(radioInput, property.id, property.tabIndex)
                         }
@@ -187,7 +187,7 @@ export class FormBuilder extends React.Component<{
 
     const form = recursive(this.props.xmlFormRootObject);
     if(this.props.dataView?.isFirst){
-      focusManager.focusFirst();
+      focusManager.autoFocus();
     }
     return form;
   }
