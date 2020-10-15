@@ -31,6 +31,7 @@ using Origam.Schema.MenuModel;
 using Origam.Workbench;
 using Origam.Workbench.Services;
 using Origam.Gui;
+using System.Linq;
 
 namespace Origam.Gui.Win
 {
@@ -51,22 +52,23 @@ namespace Origam.Gui.Win
             string actionId, Hashtable parameterMappings,
             Hashtable inputParameters)
         {
+            string dataTableName = entity.Split(".".ToCharArray()).Last();
             var processData = new ExecuteActionProcessData();
             processData.SessionFormIdentifier = sessionFormIdentifier;
             processData.RequestingGrid = requestingGrid;
             processData.ActionId = actionId;
-            processData.Entity = entity;
+            processData.Entity = dataTableName;
             processData.SelectedItems = selectedItems;
             processData.Type = (PanelActionType)Enum.Parse(
                 typeof(PanelActionType), actionType);
-            processData.DataTable = dataSource.Tables[entity];
+            processData.DataTable = dataSource.Tables[dataTableName];
             IList<DataRow> rows = new List<DataRow>();
             foreach(object selectedItem in selectedItems)
             {
                 DataRow row = null;
-                if((dataSource != null) && dataSource.Tables.Contains(entity))
+                if((dataSource != null) && dataSource.Tables.Contains(dataTableName))
                 {
-                    row = dataSource.Tables[entity].Rows.Find(
+                    row = dataSource.Tables[dataTableName].Rows.Find(
                         selectedItem);
                 }
                 if (row == null)
