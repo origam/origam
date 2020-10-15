@@ -348,7 +348,7 @@
   <data name="LoginExists" xml:space="preserve">
     <value>A user with this login already exists.</value>
   </data>
-  <data name="UserNameTooLong" xml:space="preserve">
+  <data name="UserNameInvalid" xml:space="preserve">
     <value>User name {0} is invalid, can only contain letters or digits.</value>
   </data>
   <data name="EmailIsInvalid" xml:space="preserve">
@@ -366,7 +366,7 @@
   <data name="PasswordAlreadySet" xml:space="preserve">
     <value>User already has a password set.</value>
   </data>
-  <data name="LockOutEnabled" xml:space="preserve">
+  <data name="LockOutNotEnabled" xml:space="preserve">
     <value>Lockout is not enabled for this user.</value>
   </data>
   <data name="UserInRole" xml:space="preserve">
@@ -386,5 +386,11 @@
   </data>
   <data name="MustHaveUpperCase" xml:space="preserve">
     <value>Passwords must have at least one uppercase ('A'-'Z').</value>
+  </data>
+  <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>Recovery code redemption failed.</value>
+  </data>
+  <data name="PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>Passwords must use at least {0} different characters.</value>
   </data>
 </root>

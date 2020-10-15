@@ -44,7 +44,7 @@ namespace Origam.ServerCore
 
         public override IdentityError InvalidToken()
         {
-            return new IdentityError {Code = nameof(InvalidToken), Description = _localizer["Invalid token."]};
+            return new IdentityError {Code = nameof(InvalidToken), Description = _localizer["InvalidToken"]};
         }
 
         public override IdentityError LoginAlreadyAssociated()
@@ -61,7 +61,7 @@ namespace Origam.ServerCore
             return new IdentityError
             {
                 Code = nameof(InvalidUserName),
-                Description = string.Format(_localizer["UserNameTooLong"],
+                Description = string.Format(_localizer["UserNameInvalid"],
                     userName)
             };
         }
@@ -80,8 +80,6 @@ namespace Origam.ServerCore
                 Description = string.Format(_localizer["UserNameTaken"], userName)
             };
         }
-
-        //public override IdentityError DuplicateEmail(string email) { return new IdentityError { Code = nameof(DuplicateEmail), Description = string.Format(_localizer["Email {0} is already taken."] , email) }; }
         public override IdentityError InvalidRoleName(string role)
         {
             return new IdentityError
@@ -110,7 +108,7 @@ namespace Origam.ServerCore
         {
             return new IdentityError
             {
-                Code = nameof(UserLockoutNotEnabled), Description = _localizer["LockOutEnabled"]
+                Code = nameof(UserLockoutNotEnabled), Description = _localizer["LockOutNotEnabled"]
             };
         }
 
@@ -172,10 +170,26 @@ namespace Origam.ServerCore
             return new IdentityError
             {
                 Code = nameof(PasswordRequiresUpper),
-                Description = _localizer["Passwords must have at least one uppercase ('A'-'Z')."]
+                Description = _localizer["MustHaveUpperCase"]
+            };            
+        }
+
+        public override IdentityError PasswordRequiresUniqueChars(int uniqueChars)
+        {
+            return new IdentityError
+            {
+                Code = nameof(PasswordRequiresUniqueChars),
+                Description = _localizer["PasswordRequiresUniqueChars"]
             };
         }
 
-        // DuplicateUserName, InvalidEmail, DuplicateUserName etc
+        public override IdentityError RecoveryCodeRedemptionFailed()
+        {
+            return new IdentityError
+            {
+                Code = nameof(RecoveryCodeRedemptionFailed),
+                Description = _localizer["RecoveryCodeRedemptionFailed"]
+            }; 
+        }
     }
 }
