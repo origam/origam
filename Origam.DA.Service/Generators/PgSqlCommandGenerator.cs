@@ -470,8 +470,8 @@ namespace Origam.DA.Service
             return string.Format("LENGTH({0})", expresion);
         }
         internal override string TextSql(string expresion)
-        {
-            return string.Format("CAST ({0} AS {1} )", expresion, "TEXT");
+        { 
+	        return string.Format("CAST ({0} AS {1} )", expresion, "TEXT");
         }
         internal override string DatePartSql(string datetype, string expresion)
         {
