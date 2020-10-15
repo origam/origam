@@ -24,6 +24,7 @@ using System.ComponentModel;
 
 using Origam.DA.ObjectPersistence;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 
 namespace Origam.Schema.EntityModel
 {
@@ -31,7 +32,8 @@ namespace Origam.Schema.EntityModel
     /// Summary description for DataStructureTemplate.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    public abstract class DataStructureTemplate : AbstractSchemaItem
+	[ClassMetaVersion("6.0.0")]
+	public abstract class DataStructureTemplate : AbstractSchemaItem
 	{
 		public const string CategoryConst = "DataStructureTemplate";
 
