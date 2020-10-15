@@ -1,7 +1,7 @@
 export class FocusManager {
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusableContainers: IFocusableObjectContainer[] = [];
-  private focusRequestedByUser = false;
+  private focusRequested = false;
 
   subscribe(focusableObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
     const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex);
@@ -14,7 +14,7 @@ export class FocusManager {
   }
 
   autoFocus() {
-    if (this.focusableContainers.length === 0 || this.focusRequestedByUser) {
+    if (this.focusableContainers.length === 0 || this.focusRequested) {
       return;
     }
     const focusable = this.focusableContainers[0].focusable;
@@ -25,6 +25,7 @@ export class FocusManager {
     setTimeout(() => {
       focusable.focus();
     }, 0);
+    this.focusRequested = true;
   }
 
   focusNext(activeElement: any) {
@@ -40,7 +41,7 @@ export class FocusManager {
     else{
       focusable.focus();
     }
-    this.focusRequestedByUser = true;
+    this.focusRequested = true;
   }
 
   focusPrevious(activeElement: any) {
@@ -57,7 +58,7 @@ export class FocusManager {
     else{
       focusable.focus();
     }
-    this.focusRequestedByUser = true;
+    this.focusRequested = true;
   }
 }
 
