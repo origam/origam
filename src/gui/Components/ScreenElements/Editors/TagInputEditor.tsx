@@ -55,6 +55,9 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       }
 
       function removeItem(event: any, item: string) {
+        if(props.isReadOnly){
+          return;
+        }
         const index = props.value.indexOf(item);
         if (index > -1) {
           props.value.splice(index, 1);
@@ -118,8 +121,11 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
                   </TagInputItem>
                 ))
               : null}
-            <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />
+            {props.isReadOnly
+              ? null
+              : <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />}
             <input
+              disabled={props.isReadOnly}
               className={S.filterInput + " " + props.customInputCalss}
               ref={refInput}
               placeholder={data.isResolving ? "Loading..." : ""}
