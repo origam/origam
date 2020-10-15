@@ -134,6 +134,15 @@
                         <Component Id="ORIGAM.SECURITY.DLL" DiskId="1" Guid="4CE7A817-4F26-4091-A33F-39BE95F0E60C">
                             <File Id="ORIGAM.SECURITY.DLL" Name="Origam.Security.dll" Source="source\Origam.Security.dll" />
                         </Component>
+			<Component Id="ORIGAM.SECURITY.NETFX.DLL" DiskId="1" Guid="f69bc226-2cef-482e-8e7a-ddb3a218e9c3">
+			    <File Id="ORIGAM.SECURITY.NETFX.DLL" Name="Origam.Security.NetFx.dll" Source="source\Origam.Security.NetFx.dll" />
+			</Component>
+			<Component Id="ORIGAM.SECURITY.IDENTITY.DLL" DiskId="1" Guid="CDF9CB51-AA1F-4086-B196-F12EE0F8B438">
+			    <File Id="ORIGAM.SECURITY.IDENTITY.DLL" Name="Origam.Security.Identity.dll" Source="source\Origam.Security.Identity.dll" />
+			</Component>
+			<Component Id="ORIGAM.SECURITY.COMMON.DLL" DiskId="1" Guid="453d8088-1083-4aca-8c8c-397d9dfccc76">
+			    <File Id="ORIGAM.SECURITY.COMMON.DLL" Name="Origam.Security.Common.dll" Source="source\Origam.Security.Common.dll" />
+			</Component>
                         <Component Id="ORIGAM.SERVICES.DLL" DiskId="1" Guid="5273BC9B-339F-4E9C-AC88-0747FFB67D07">
                             <File Id="ORIGAM.SERVICES.DLL" Name="Origam.Services.dll" Source="source\Origam.Services.dll" />
                         </Component>
@@ -290,6 +299,9 @@
                         <Component Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Guid="275D7fEf-22C1-40EC-b4E7-115D96B8EFC0" DiskId="1">
                             <File Id="MICROSOFT.EXTENSIONS.DEPENDENCYINJECTION.ABSTRACTIONS.DLL" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Source="source\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
                         </Component>
+			<Component Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" DiskId="1" Guid="6EF1CE47-EB66-4DBE-8C1B-00CB0964A198">
+			    <File Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" Name="Microsoft.AspNet.Identity.Core.dll" Source="source\Microsoft.AspNet.Identity.Core.dll" />
+			</Component>
                         <Directory Id="lib" Name="lib">
                             <Directory Id="win32" Name="win32">
                                 <Directory Id="dir_x64" Name="x64">
@@ -1175,8 +1187,8 @@
                                         <Component Id="MARKDOWNSHARP.DLL" DiskId="1" Guid="6C4032B9-6CFA-4E2F-A4D4-73CB9A3FF059">
                                             <File Id="MARKDOWNSHARP.DLL" Name="MarkdownSharp.dll" Source="server_source\bin\MarkdownSharp.dll" />
                                         </Component>
-                                        <Component Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" DiskId="1" Guid="6EF1CE47-EB66-4DBE-8C1B-00CB0964A198">
-                                            <File Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" Name="Microsoft.AspNet.Identity.Core.dll" Source="server_source\bin\Microsoft.AspNet.Identity.Core.dll" />
+                                        <Component Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL_1" DiskId="1" Guid="6EF1CE47-EB66-4DBE-8C1B-00CB0964A198">
+                                            <File Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL_1" Name="Microsoft.AspNet.Identity.Core.dll" Source="server_source\bin\Microsoft.AspNet.Identity.Core.dll" />
                                         </Component>
                                         <Component Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" DiskId="1" Guid="175B027F-6DB9-44C7-920C-EE11B6F31F5C">
                                             <File Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" Name="Microsoft.AspNet.Identity.Owin.dll" Source="server_source\bin\Microsoft.AspNet.Identity.Owin.dll" />
@@ -1241,14 +1253,14 @@
                                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL_1" DiskId="1" Guid="A836EDF8-89F6-4B88-B20E-8F68BE589260">
                                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL_1" Name="Origam.ProjectAutomation.dll" Source="server_source\bin\Origam.ProjectAutomation.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.SECURITY.IDENTITY.DLL" DiskId="1" Guid="CDF9CB51-AA1F-4086-B196-F12EE0F8B438">
-                                            <File Id="ORIGAM.SECURITY.IDENTITY.DLL" Name="Origam.Security.Identity.dll" Source="server_source\bin\Origam.Security.Identity.dll" />
+                                        <Component Id="ORIGAM.SECURITY.IDENTITY.DLL_1" DiskId="1" Guid="CDF9CB51-AA1F-4086-B196-F12EE0F8B438">
+                                            <File Id="ORIGAM.SECURITY.IDENTITY.DLL_1" Name="Origam.Security.Identity.dll" Source="server_source\bin\Origam.Security.Identity.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.SECURITY.NETFX.DLL" DiskId="1" Guid="f69bc226-2cef-482e-8e7a-ddb3a218e9c3">
-                                            <File Id="ORIGAM.SECURITY.NETFX.DLL" Name="Origam.Security.NetFx.dll" Source="server_source\bin\Origam.Security.NetFx.dll" />
+                                        <Component Id="ORIGAM.SECURITY.NETFX.DLL_1" DiskId="1" Guid="f69bc226-2cef-482e-8e7a-ddb3a218e9c3">
+                                            <File Id="ORIGAM.SECURITY.NETFX.DLL_1" Name="Origam.Security.NetFx.dll" Source="server_source\bin\Origam.Security.NetFx.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.SECURITY.COMMON.DLL" DiskId="1" Guid="453d8088-1083-4aca-8c8c-397d9dfccc76">
-                                            <File Id="ORIGAM.SECURITY.COMMON.DLL" Name="Origam.Security.Common.dll" Source="server_source\bin\Origam.Security.Common.dll" />
+                                        <Component Id="ORIGAM.SECURITY.COMMON.DLL_1" DiskId="1" Guid="453d8088-1083-4aca-8c8c-397d9dfccc76">
+                                            <File Id="ORIGAM.SECURITY.COMMON.DLL_1" Name="Origam.Security.Common.dll" Source="server_source\bin\Origam.Security.Common.dll" />
                                         </Component>
                                         <Component Id="ORIGAM.SERVER.DLL" DiskId="1" Guid="1FC09EB7-002D-412B-AFB3-F3085209B06F">
                                             <File Id="ORIGAM.SERVER.DLL" Name="Origam.Server.dll" Source="server_source\bin\Origam.Server.dll" />
@@ -1646,6 +1658,9 @@
             <ComponentRef Id="ORIGAM.SCHEMA.WORKFLOWMODEL.DLL" />
             <ComponentRef Id="ORIGAM.SCHEMA.WORKFLOWMODEL.UI.DLL" />
             <ComponentRef Id="ORIGAM.SECURITY.DLL" />
+            <ComponentRef Id="ORIGAM.SECURITY.IDENTITY.DLL" />
+            <ComponentRef Id="ORIGAM.SECURITY.NETFX.DLL" />
+            <ComponentRef Id="ORIGAM.SECURITY.COMMON.DLL" />
             <ComponentRef Id="ORIGAM.SERVICES.DLL" />
             <ComponentRef Id="ORIGAM.SERVICES.NETFX.DLL" />
             <ComponentRef Id="ORIGAM.UI.COMMON.DLL" />
@@ -1960,6 +1975,7 @@
             <ComponentRef Id="MARKDOWNSHARP.DLL" />
             <ComponentRef Id="MARKDOWNSHARP.DLL_1" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL" />
+            <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL_1" />
             <ComponentRef Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" />
             <ComponentRef Id="MICROSOFT.OFFICE.INTEROP.EXCEL.DLL_1" />
             <ComponentRef Id="MICROSOFT.OWIN.DLL" />
@@ -1981,9 +1997,9 @@
             <ComponentRef Id="NPOI.OPENXMLFORMATS.DLL_1" />
             <ComponentRef Id="OFFICE.DLL_1" />
             <ComponentRef Id="ORIGAM.PROJECTAUTOMATION.DLL_1" />
-            <ComponentRef Id="ORIGAM.SECURITY.IDENTITY.DLL" />
-            <ComponentRef Id="ORIGAM.SECURITY.NETFX.DLL" />
-            <ComponentRef Id="ORIGAM.SECURITY.COMMON.DLL" />
+            <ComponentRef Id="ORIGAM.SECURITY.IDENTITY.DLL_1" />
+            <ComponentRef Id="ORIGAM.SECURITY.NETFX.DLL_1" />
+            <ComponentRef Id="ORIGAM.SECURITY.COMMON.DLL_1" />
             <ComponentRef Id="ORIGAM.SERVER.DLL" />
             <ComponentRef Id="ORIGAM.SERVERCOMMON.DLL" />
             <ComponentRef Id="ORIGAM.SERVER.HANDLERS.DLL" />
