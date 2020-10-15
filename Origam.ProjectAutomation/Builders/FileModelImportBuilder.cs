@@ -103,7 +103,7 @@ namespace Origam.ProjectAutomation
                 if (File.Exists(xmlPath))
                 {
                     FileInfo fileInfo = new FileInfo(xmlPath);
-                    OrigamXmlDocument xmlDocument = null;
+                    OrigamXmlDocument xmlDocument = new OrigamXmlDocument(xmlPath);
                     var xmlFileData = new XmlFileData(xmlDocument, fileInfo);
                     modelId = XmlUtils.ReadId(xmlFileData)??XmlUtils.ReadNewModelId(xmlFileData);
                 }

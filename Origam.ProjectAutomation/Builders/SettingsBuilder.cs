@@ -63,6 +63,7 @@ namespace Origam.ProjectAutomation
             _setting.ServerLocalPath = project.BinFolder;
             //_setting.ModelSourceControlLocation = project.SourcesFolder;
             _settingsIndex = _settings.Add(_setting);
+            project.ActiveConfigurationIndex = _settingsIndex;
             ConfigurationManager.SetActiveConfiguration(_setting);
             try
             {

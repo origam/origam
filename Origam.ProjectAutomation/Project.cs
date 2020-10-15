@@ -361,6 +361,7 @@ namespace Origam.ProjectAutomation
         public string WebFirstName { get;  set; }
         public string WebSurname { get;  set; }
         public string WebEmail { get;  set; }
+        public int ActiveConfigurationIndex { get; set; }
         #endregion
     }
     public enum DeploymentType
