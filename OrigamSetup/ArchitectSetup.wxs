@@ -8,7 +8,7 @@
 -->
 <?define OrigamProductName = "ORIGAM Architect (@branch@)" ?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="0.0.0.0" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="d2bdcf34-60e8-4f6f-a882-c555f9651758">
+    <Product Id="*" Name="$(var.OrigamProductName)" Language="1033" Version="0.0.0.0" Manufacturer="Advantage Solutions s. r. o." UpgradeCode="C2952F44-ED44-4935-B703-16E8438E71C7">
         <Package Id="*" Keywords="Installer" Description="ORIGAM Architect" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
         <Media Id="1" Cabinet="install.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1" CompressionLevel="high" />
         <Property Id="DiskPrompt" Value="Advantage Solutions's ORIGAM Architect Installation [1]" />
