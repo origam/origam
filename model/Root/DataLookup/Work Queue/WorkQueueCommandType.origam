@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DataLookup
-    abstract="false"
-    alwaysAllowReturnToForm="false"
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
     x:id="122a4b55-9069-4f5a-a771-0e861af68791"
-    isFilteredServerside="false"
-    isTree="false"
-    listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommandType.origam#LookupWorkQueueCommandType/de3c3be4-9390-4c97-b23f-9dd64d7b2612"
-    listDisplayMember="Name"
-    listValueMember="Id"
-    name="WorkQueueCommandType"
-    searchByFirstColumnOnly="false"
-    suppressEmptyColumns="false"
-    x:type="Origam.Schema.LookupModel.DataServiceDataLookup"
-    valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommandType.origam#LookupWorkQueueCommandType/de3c3be4-9390-4c97-b23f-9dd64d7b2612"
-    valueDisplayMember="Name"
-    valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommandType.origam#LookupWorkQueueCommandType/GetId/fbb6ab74-3b2f-42e3-8600-f6dc6d73149f"
-    valueValueMember="Id" />
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommandType.origam#LookupWorkQueueCommandType/de3c3be4-9390-4c97-b23f-9dd64d7b2612"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="WorkQueueCommandType"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommandType.origam#LookupWorkQueueCommandType/de3c3be4-9390-4c97-b23f-9dd64d7b2612"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Work Queue/Lookups/LookupWorkQueueCommandType.origam#LookupWorkQueueCommandType/GetId/fbb6ab74-3b2f-42e3-8600-f6dc6d73149f"
+    adl:valueValueMember="Id" />
 </x:file>

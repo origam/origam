@@ -1,173 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <DeploymentVersion
-    abstract="false"
-    deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.0"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.1.0"
     x:id="4be98dd5-354c-43b2-8dcb-f15f598bb1c7"
-    name="1.0.0"
-    x:type="Origam.Schema.DeploymentModel.DeploymentVersion"
-    version="1.0.0">
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="10"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___8832d3a4-c92b-49ba-9135-e347f2740ee7.txt"
+    asi:name="1.0.0"
+    dv:version="1.0.0">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___8832d3a4-c92b-49ba-9135-e347f2740ee7.txt"
       x:id="8832d3a4-c92b-49ba-9135-e347f2740ee7"
-      name="00010_Map_Setup_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="11"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___037982f5-d0c0-454f-a2e8-b21cbb02b08f.txt"
+      asi:name="00010_Map_Setup_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="11"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___037982f5-d0c0-454f-a2e8-b21cbb02b08f.txt"
       x:id="037982f5-d0c0-454f-a2e8-b21cbb02b08f"
-      name="00011_Map_Setup_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="20"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___99728a00-3be5-4802-ab8e-ccd3dfb1d4fc.txt"
+      asi:name="00011_Map_Setup_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___99728a00-3be5-4802-ab8e-ccd3dfb1d4fc.txt"
       x:id="99728a00-3be5-4802-ab8e-ccd3dfb1d4fc"
-      name="00020_Database_Entity_MapElement_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="21"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___99e356ff-37a6-437d-aa73-7e2cde530d90.txt"
+      asi:name="00020_Database_Entity_MapElement_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="21"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___99e356ff-37a6-437d-aa73-7e2cde530d90.txt"
       x:id="99e356ff-37a6-437d-aa73-7e2cde530d90"
-      name="00021_Database_Entity_MapElement_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="30"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___2564ef38-691c-4cb6-88b2-14c0d5d0d73a.txt"
+      asi:name="00021_Database_Entity_MapElement_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___2564ef38-691c-4cb6-88b2-14c0d5d0d73a.txt"
       x:id="2564ef38-691c-4cb6-88b2-14c0d5d0d73a"
-      name="00030_Database_Field_MapElement.Color_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="40"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___d23fb75e-9289-4b98-a49e-01d96e275734.txt"
+      asi:name="00030_Database_Field_MapElement.Color_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="40"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___d23fb75e-9289-4b98-a49e-01d96e275734.txt"
       x:id="d23fb75e-9289-4b98-a49e-01d96e275734"
-      name="00040_Database_Field_MapElement.Azimuth_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="50"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___f8a321e0-0dec-4a05-8fa9-3337b493d9d7.txt"
+      asi:name="00040_Database_Field_MapElement.Azimuth_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="50"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___f8a321e0-0dec-4a05-8fa9-3337b493d9d7.txt"
       x:id="f8a321e0-0dec-4a05-8fa9-3337b493d9d7"
-      name="00050_Database_Field_MapElement.Icon_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="60"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___abffb8fb-2190-4f45-bf6f-4c33bfcff817.txt"
+      asi:name="00050_Database_Field_MapElement.Icon_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="60"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___abffb8fb-2190-4f45-bf6f-4c33bfcff817.txt"
       x:id="abffb8fb-2190-4f45-bf6f-4c33bfcff817"
-      name="00060_Database_Field_MapElement.NameLocation_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="70"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___aa8de8e3-6e4f-4905-88b8-07d364426186.txt"
+      asi:name="00060_Database_Field_MapElement.NameLocation_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="70"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___aa8de8e3-6e4f-4905-88b8-07d364426186.txt"
       x:id="aa8de8e3-6e4f-4905-88b8-07d364426186"
-      name="00070_Database_Field_MapElement.NameRotation_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="80"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___3fc0da8f-d9e3-4535-9d54-547031324a0f.txt"
+      asi:name="00070_Database_Field_MapElement.NameRotation_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="80"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___3fc0da8f-d9e3-4535-9d54-547031324a0f.txt"
       x:id="3fc0da8f-d9e3-4535-9d54-547031324a0f"
-      name="00080_Database_Field_MapElement.NameColor_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="31"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___d371a8ec-25b8-4a81-857e-27f786d11668.txt"
+      asi:name="00080_Database_Field_MapElement.NameColor_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="31"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___d371a8ec-25b8-4a81-857e-27f786d11668.txt"
       x:id="d371a8ec-25b8-4a81-857e-27f786d11668"
-      name="00031_Database_Field_MapElement.Color_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="41"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___7a0ed745-187f-44d7-a5be-42ffc471ffcf.txt"
+      asi:name="00031_Database_Field_MapElement.Color_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="41"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___7a0ed745-187f-44d7-a5be-42ffc471ffcf.txt"
       x:id="7a0ed745-187f-44d7-a5be-42ffc471ffcf"
-      name="00041_Database_Field_MapElement.Azimuth_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="51"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___47922c8c-1f85-4748-bf7d-dd718d72bb53.txt"
+      asi:name="00041_Database_Field_MapElement.Azimuth_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="51"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___47922c8c-1f85-4748-bf7d-dd718d72bb53.txt"
       x:id="47922c8c-1f85-4748-bf7d-dd718d72bb53"
-      name="00051_Database_Field_MapElement.Icon_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="61"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___65791175-411f-49f1-aac9-7fcf7d0660b4.txt"
+      asi:name="00051_Database_Field_MapElement.Icon_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="61"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___65791175-411f-49f1-aac9-7fcf7d0660b4.txt"
       x:id="65791175-411f-49f1-aac9-7fcf7d0660b4"
-      name="00061_Database_Field_MapElement.NameLocation_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="71"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___88d8f2ee-852b-4dc4-a905-e015b215e548.txt"
+      asi:name="00061_Database_Field_MapElement.NameLocation_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="71"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___88d8f2ee-852b-4dc4-a905-e015b215e548.txt"
       x:id="88d8f2ee-852b-4dc4-a905-e015b215e548"
-      name="00071_Database_Field_MapElement.NameRotation_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="81"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___caf094d0-2eb5-45cf-a38b-928dd3acaf7c.txt"
+      asi:name="00071_Database_Field_MapElement.NameRotation_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="81"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___caf094d0-2eb5-45cf-a38b-928dd3acaf7c.txt"
       x:id="caf094d0-2eb5-45cf-a38b-928dd3acaf7c"
-      name="00081_Database_Field_MapElement.NameColor_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="90"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___e982b72c-1af0-46e9-ae39-5f9c3fe0c1ce.txt"
+      asi:name="00081_Database_Field_MapElement.NameColor_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="90"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___e982b72c-1af0-46e9-ae39-5f9c3fe0c1ce.txt"
       x:id="e982b72c-1af0-46e9-ae39-5f9c3fe0c1ce"
-      name="00090_LPIS_Layer_Setup_MS"
-      platform="MsSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-    <DeploymentUpdateScriptActivity
-      abstract="false"
-      activityOrder="91"
-      commandText="-***-ExternalFile:1.0.0.origam___commandText___7584fdb3-0684-4474-be9a-0fdbdf4c2914.txt"
+      asi:name="00090_LPIS_Layer_Setup_MS"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="91"
+      scusa:commandText="-***-ExternalFile:1.0.0.origam___commandText___7584fdb3-0684-4474-be9a-0fdbdf4c2914.txt"
       x:id="7584fdb3-0684-4474-be9a-0fdbdf4c2914"
-      name="00091_LPIS_Layer_Setup_PG"
-      platform="PgSql"
-      service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4"
-      x:type="Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity" />
-  </DeploymentVersion>
+      asi:name="00091_LPIS_Layer_Setup_PG"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
 </x:file>

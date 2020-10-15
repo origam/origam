@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Function
-    abstract="false"
-    dataType="Date"
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Date"
     x:id="6d6b42c0-1a8e-4e2b-9741-a3e64e837999"
-    name="AddSeconds"
-    type="Database"
-    x:type="Origam.Schema.EntityModel.Function">
-    <FunctionParameter
-      abstract="false"
+    asi:name="AddSeconds"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
       x:id="9aa8fcc0-42a5-42a3-8834-5467b3546054"
-      name="Seconds"
-      ordinalPosition="1"
-      x:type="Origam.Schema.EntityModel.FunctionParameter" />
-    <FunctionParameter
-      abstract="false"
+      asi:name="Seconds"
+      fp:ordinalPosition="1" />
+    <fp:FunctionParameter
+      asi:abstract="false"
       x:id="3c148fdc-f2fe-4a76-abfa-8b163685f1ec"
-      name="Date"
-      x:type="Origam.Schema.EntityModel.FunctionParameter" />
-  </Function>
+      asi:name="Date" />
+  </f:Function>
 </x:file>

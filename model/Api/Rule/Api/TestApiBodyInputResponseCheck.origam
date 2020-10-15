@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <Rule
-    abstract="false"
-    dataType="Boolean"
+<x:file xmlns:ar="http://schemas.origam.com/Origam.Schema.RuleModel.AbstractRule/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:er="http://schemas.origam.com/Origam.Schema.RuleModel.EndRule/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:xr="http://schemas.origam.com/Origam.Schema.RuleModel.XslRule/6.0.0">
+  <er:Rule
+    asi:abstract="false"
+    ar:dataType="Boolean"
     x:id="e0b5439a-3a4c-45d8-98f5-865271c14797"
-    name="TestApiBodyInputResponseCheck"
-    x:type="Origam.Schema.RuleModel.EndRule"
-    xsl="-***-ExternalFile:TestApiBodyInputResponseCheck.origam___xsl___e0b5439a-3a4c-45d8-98f5-865271c14797.xslt" />
+    asi:name="TestApiBodyInputResponseCheck"
+    xr:xsl="-***-ExternalFile:TestApiBodyInputResponseCheck.origam___xsl___e0b5439a-3a4c-45d8-98f5-865271c14797.xslt" />
 </x:file>

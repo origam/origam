@@ -1,51 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/1.0.0/model-persistence" xmlns="http://schemas.origam.com/5.0.0/model-element" xmlns:p="http://schemas.origam.com/1.0.0/package">
-  <EntityFilter
-    abstract="true"
+<x:file xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ef:EntityFilter
+    asi:abstract="true"
     x:id="ef31999f-ab15-47be-90f3-06644d9ec4f3"
-    name="CurrentUser"
-    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
-    x:type="Origam.Schema.EntityModel.EntityFilter">
-    <DataEntityColumn
-      abstract="true"
-      allowNulls="true"
-      autoIncrement="false"
-      dataType="Boolean"
-      excludeFromAllFields="false"
-      forceDatabaseCalculation="false"
-      function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+    asi:name="CurrentUser"
+    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6">
+    <fc:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fc:forceDatabaseCalculation="false"
+      fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
       x:id="ace01068-4afa-49d5-a304-23d845025993"
-      isPrimaryKey="false"
-      name="Equal"
-      onCopyAction="Copy"
-      x:type="Origam.Schema.EntityModel.FunctionCall"
-      xmlMappingType="Attribute">
-      <FunctionCallParameter
-        abstract="true"
+      adec:isPrimaryKey="false"
+      asi:name="Equal"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute">
+      <fcp:FunctionCallParameter
+        asi:abstract="true"
         x:id="bb6b29f2-1f81-43e3-bd13-9664ef0d8d46"
-        name="Right"
-        parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34"
-        x:type="Origam.Schema.EntityModel.FunctionCallParameter">
-        <ParameterReference
-          abstract="true"
+        asi:name="Right"
+        fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+        <pr:ParameterReference
+          asi:abstract="true"
           x:id="6dd1718c-8905-4cfb-a1e8-7eb612465a5b"
-          name="parCurrentUserId"
-          parameter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/parCurrentUserId/e876ab29-a75c-41b4-a469-6d0c6e44d527"
-          x:type="Origam.Schema.ParameterReference" />
-      </FunctionCallParameter>
-      <FunctionCallParameter
-        abstract="true"
+          asi:name="parCurrentUserId"
+          pr:parameter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/parCurrentUserId/e876ab29-a75c-41b4-a469-6d0c6e44d527" />
+      </fcp:FunctionCallParameter>
+      <fcp:FunctionCallParameter
+        asi:abstract="true"
         x:id="0b4f2745-124f-4740-ad46-301b10bfd833"
-        name="Left"
-        parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498"
-        x:type="Origam.Schema.EntityModel.FunctionCallParameter">
-        <EntityColumnReference
-          abstract="true"
-          field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+        asi:name="Left"
+        fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+        <ecr:EntityColumnReference
+          asi:abstract="true"
+          ecr:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
           x:id="ac39e18c-cedf-4786-9818-0208648ad681"
-          name="Id"
-          x:type="Origam.Schema.EntityModel.EntityColumnReference" />
-      </FunctionCallParameter>
-    </DataEntityColumn>
-  </EntityFilter>
+          asi:name="Id" />
+      </fcp:FunctionCallParameter>
+    </fc:DataEntityColumn>
+  </ef:EntityFilter>
 </x:file>
