@@ -35,14 +35,14 @@ namespace Origam.ProjectAutomation
     {
         private const string ModelZipName = "DefaultModel.zip";
         private string modelSourcesFolder;
-        private string SourcesFolder;
+        private string sourcesFolder;
 
         public override string Name => "Import Model";
 
         public override void Execute(Project project)
         {
             modelSourcesFolder = project.ModelSourceFolder;
-            SourcesFolder = project.SourcesFolder;
+            sourcesFolder = project.SourcesFolder;
             CreateSourceFolder();
             switch(project.TypeTemplate)
             {
@@ -65,7 +65,7 @@ namespace Origam.ProjectAutomation
         private void CloneGitRepository(Project project)
         {
             GitManager gitManager = new GitManager();
-            gitManager.CloneRepository(project.GitRepositoryLink, SourcesFolder,
+            gitManager.CloneRepository(project.GitRepositoryLink, sourcesFolder,
                 project.RepositoryUsername,project.RepositoryPassword);
         }
         private void CheckModelDirectory(Project project)
@@ -73,8 +73,8 @@ namespace Origam.ProjectAutomation
             DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
             if (!dir.Exists)
             {
-                modelSourcesFolder = SourcesFolder;
-                project.ModelSourceFolder = SourcesFolder;
+                modelSourcesFolder = sourcesFolder;
+                project.ModelSourceFolder = sourcesFolder;
             }
         }
         private string GetPackageId()
@@ -88,10 +88,10 @@ namespace Origam.ProjectAutomation
                 string xmlPath = "";
                 do
                 {
-                    DirectoryInfo model = dir.EnumerateDirectories().Where(it => !list_exclude_dirs.Contains(it.Name)).First();
+                    DirectoryInfo model = dir.EnumerateDirectories().Where(directoryInfo => !list_exclude_dirs.Contains(directoryInfo.Name)).First();
                     if(model==null)
                     {
-                        throw new Exception("Can´t find package for guidId. It looks like that it is not origam project.");
+                        throw new Exception("Can't find package for guidId. It looks like that it is not origam project.");
                     }
                     xmlPath = Path.Combine(modelSourcesFolder, model.Name, ".origamPackage");
                     if(!File.Exists(xmlPath))
@@ -105,16 +105,16 @@ namespace Origam.ProjectAutomation
                     FileInfo fileInfo = new FileInfo(xmlPath);
                     OrigamXmlDocument xmlDocument = new OrigamXmlDocument(xmlPath);
                     var xmlFileData = new XmlFileData(xmlDocument, fileInfo);
-                    modelId = XmlUtils.ReadId(xmlFileData)??XmlUtils.ReadNewModelId(xmlFileData);
+                    modelId = XmlUtils.ReadId(xmlFileData) ?? XmlUtils.ReadNewModelId(xmlFileData);
                 }
                 else
                 {
-                    throw new Exception("Can´t find package for guidId. It looks like that it is not origam project.");
+                    throw new Exception("Can't find package for guidId. It looks like that it is not origam project.");
                 }
             }
             if(string.IsNullOrEmpty(modelId))
             {
-                throw new Exception("Can´t find package ID. It looks like that it is problem with parse origamPackage. Please Contact Origam Team.");
+                throw new Exception("Can't find package ID. It looks like that it is problem with parse origamPackage. Please Contact Origam Team.");
             }
             return modelId;
         }
@@ -128,10 +128,10 @@ namespace Origam.ProjectAutomation
 
         private void CreateSourceFolder()
         {
-            DirectoryInfo dir = new DirectoryInfo(SourcesFolder);
+            DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
             if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
             {
-                throw new Exception($"Sources folder {SourcesFolder} already exists and is not empty.");
+                throw new Exception($"Sources folder {sourcesFolder} already exists and is not empty.");
             }
             dir.Create();
         }
@@ -140,7 +140,7 @@ namespace Origam.ProjectAutomation
             DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
             if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
             {
-                throw new Exception($"Sources folder {SourcesFolder} already exists and is not empty.");
+                throw new Exception($"Sources folder {sourcesFolder} already exists and is not empty.");
             }
             dir.Create();
         }
