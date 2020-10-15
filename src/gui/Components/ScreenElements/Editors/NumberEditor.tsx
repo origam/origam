@@ -70,7 +70,6 @@ export class NumberEditor extends React.Component<{
       this.makeFocusedIfNeeded();
     }
     if(this.props.value !== prevProps.value) {
-      this.editingValue = this.numeralFormattedValue;
       this.wasChanged = false;
     }
   }
