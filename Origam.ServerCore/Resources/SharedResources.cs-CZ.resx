@@ -169,10 +169,10 @@
     <value>Nesprávné jméno nebo heslo</value>
   </data>
   <data name="UserLockedOut" xml:space="preserve">
-    <value>Uživateli byl zablokován přístup</value>
+    <value>Uživateli byl zablokován přístup.</value>
   </data>
   <data name="ErrorUserNotFound" xml:space="preserve">
-    <value>Uživatel nebyl nalezen</value>
+    <value>Uživatel nebyl nalezen.</value>
   </data>
   <data name="EmailInvalid" xml:space="preserve">
     <value>Nesprávný e-mail</value>
@@ -184,13 +184,13 @@
     <value>Nový účet byl vytvořen a aktivován.</value>
   </data>
   <data name="ActivateAccount" xml:space="preserve">
-    <value>Nový účet byl vytvořen. Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme vám právě odeslali na e-mail.</value>
+    <value>Nový účet byl vytvořen. Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme Vám právě odeslali na e-mail.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Zrušit</value>
   </data>
   <data name="CheckEmail" xml:space="preserve">
-    <value>Pro resetování hesla postupujte podle instrukcí, které jsme vám odeslali na e-mail.</value>
+    <value>Pro resetování hesla postupujte podle instrukcí, které jsme Vám odeslali na e-mail.</value>
   </data>
   <data name="ConfirmLogout" xml:space="preserve">
     <value>Chcete se odhlásit?</value>
@@ -202,7 +202,7 @@
     <value>Vytvořit nový účet</value>
   </data>
   <data name="EmailSent" xml:space="preserve">
-    <value>Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme vám právě odeslali na e-mail.</value>
+    <value>Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme Vám právě odeslali na e-mail.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
     <value>Origam přihlášení</value>
@@ -223,7 +223,7 @@
     <value>Odhlásit</value>
   </data>
   <data name="NoAccessToResource" xml:space="preserve">
-    <value>Sem nemáte povolený přistup.</value>
+    <value>Sem nemáte povolený přístup.</value>
   </data>
   <data name="NoLoginSchemes" xml:space="preserve">
     <value>Není nastaven žádný způsob přihlášení.</value>
@@ -325,31 +325,31 @@
     <value>Přihlášení se nezdařilo. Zkontrolujte prosím kód.</value>
   </data>
   <data name="UnknownError" xml:space="preserve">
-    <value>Objevila se neočekávaná chyba. Kontaktujte prosím support.</value>
+    <value>Objevila se neočekávaná chyba. Kontaktujte prosím podporu.</value>
   </data>
   <data name="EmailIsInvalid" xml:space="preserve">
-    <value>Email {0} není validní.</value>
+    <value>Email {0} není platný.</value>
   </data>
   <data name="EmailTaken" xml:space="preserve">
     <value>Email {0} už má někdo jiný.</value>
   </data>
   <data name="IncorrectPassword" xml:space="preserve">
-    <value>Nesprávné heslo.</value>
+    <value>Nesprávné heslo</value>
   </data>
   <data name="InvalidToken" xml:space="preserve">
-    <value>Nevalidní token.</value>
+    <value>Neplatný token</value>
   </data>
-  <data name="LockOutEnabled" xml:space="preserve">
-    <value>Zamčení není pro tohoto uživatele aktivováno.</value>
+  <data name="LockOutNotEnabled" xml:space="preserve">
+    <value>Uzamčení není pro tohoto uživatele povoleno.</value>
   </data>
   <data name="LoginExists" xml:space="preserve">
-    <value>Uživatelské jméno už má někdo jiný.</value>
+    <value>Toto uživatelské jméno už používá někdo jiný.</value>
   </data>
   <data name="MustBeNonAlphaNumeric" xml:space="preserve">
     <value>Heslo musí obsahovat alespoň jeden znak, který není číslo ani písmeno.</value>
   </data>
   <data name="MustContainDigit" xml:space="preserve">
-    <value>Heslo musí obsahovat alespoň jedno číslo ('0'-'9')</value>
+    <value>Heslo musí obsahovat alespoň jedno číslo ('0'-'9').</value>
   </data>
   <data name="MustHaveLowerCase" xml:space="preserve">
     <value>Heslo musí obsahovat alespoň jedno malé písmeno ('a'-'z').</value>
@@ -361,13 +361,13 @@
     <value>Nastala chyba, objekt byl změněn.</value>
   </data>
   <data name="PasswordAlreadySet" xml:space="preserve">
-    <value>Uživatel už má heslo.</value>
+    <value>Uživatel už má nastavené heslo.</value>
   </data>
   <data name="PasswordTooShort" xml:space="preserve">
-    <value>Heslo musí být alespoň {0} znaků.</value>
+    <value>Heslo musí obsahovat alespoň {0} znaků.</value>
   </data>
   <data name="RoleInvalid" xml:space="preserve">
-    <value>Jméno role {0} není validní.</value>
+    <value>Jméno role {0} není platné.</value>
   </data>
   <data name="RoleNameTaken" xml:space="preserve">
     <value>Jméno role {0} je už použito.</value>
@@ -376,15 +376,21 @@
     <value>Nastala neznámá chyba.</value>
   </data>
   <data name="UserInRole" xml:space="preserve">
-    <value>Uživatel je už přidělěn do role {0}. </value>
+    <value>Uživatel už má přidělenou roli {0}.</value>
   </data>
   <data name="UserNameTaken" xml:space="preserve">
-    <value>Uživatelské jméno {0} už má někdo jiný.</value>
+    <value>Uživatelské jméno {0} už používá někdo jiný.</value>
   </data>
-  <data name="UserNameTooLong" xml:space="preserve">
-    <value>Uživatelské jméno {0} není validní, musí obsahoaet pouze písmena a číslice.</value>
+  <data name="UserNameInvalid" xml:space="preserve">
+    <value>Uživatelské jméno {0} není platné, musí obsahovat pouze písmena a číslice.</value>
   </data>
   <data name="UserNotInRole" xml:space="preserve">
-    <value>Uživatel není v roli {0}.</value>
+    <value>Uživatel nemá přidělenou roli {0}.</value>
+  </data>
+  <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>Uplatnění kódu pro obnovení se nezdařilo</value>
+  </data>
+  <data name="PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>Heslo musí obsahovat alespoň {0} různých znaků.</value>
   </data>
 </root>

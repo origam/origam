@@ -333,4 +333,72 @@
   <data name="UnknownError" xml:space="preserve">
     <value>Ein unerwarteter Fehler ist aufgetreten. Bitte kontaktieren Sie den Support.</value>
   </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Das Passwort muss mindestens {0} Zeichen lang sein.</value>
+  </data>
+  <data name="EmailTaken" xml:space="preserve">
+    <value>E-Mail-Adresse {0} wird bereits verwendet.</value>
+  </data>
+  <data name="UnknownFailure" xml:space="preserve">
+    <value>Ein unbekannter Fehler ist aufgetreten.</value>
+  </data>
+  <data name="ObjectModified" xml:space="preserve">
+    <value>Ein Fehler ist aufgetreten, das Objekt wurde geändert.</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Falsches Passwort</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Ungültiger Token</value>
+  </data>
+  <data name="LoginExists" xml:space="preserve">
+    <value>Ein Benutzer mit diesem Login existiert bereits.</value>
+  </data>
+  <data name="UserNameInvalid" xml:space="preserve">
+    <value>Der Benutzername {0} ist ungültig, er darf nur Buchstaben oder Ziffern enthalten.</value>
+  </data>
+  <data name="EmailIsInvalid" xml:space="preserve">
+    <value>E-Mail-Adresse {0} ist ungültig.</value>
+  </data>
+  <data name="UserNameTaken" xml:space="preserve">
+    <value>Der Benutzername {0} wird bereits verwendet.</value>
+  </data>
+  <data name="RoleInvalid" xml:space="preserve">
+    <value>Der Rollenname {0} ist ungültig.</value>
+  </data>
+  <data name="RoleNameTaken" xml:space="preserve">
+    <value>Der Rollenname {0} wird bereits verwendet.</value>
+  </data>
+  <data name="PasswordAlreadySet" xml:space="preserve">
+    <value>Der Benutzer hat bereits ein Passwort gesetzt.</value>
+  </data>
+  <data name="LockOutNotEnabled" xml:space="preserve">
+    <value>Die Sperrung ist für diesen Benutzer nicht aktiviert.</value>
+  </data>
+  <data name="UserInRole" xml:space="preserve">
+    <value>Benutzer ist bereits zur Rolle {0} zugeordnet.</value>
+  </data>
+  <data name="UserNotInRole" xml:space="preserve">
+    <value>Benutzer ist nicht zur Rolle {0} zugeordnet.</value>
+  </data>
+  <data name="MustBeNonAlphaNumeric" xml:space="preserve">
+    <value>Das Passwort muss mindestens ein nicht alphanumerisches Zeichen enthalten.</value>
+  </data>
+  <data name="MustContainDigit" xml:space="preserve">
+    <value>Das Passwort muss mindestens eine Ziffer ('0'-'9') enthalten.</value>
+  </data>
+  <data name="MustHaveLowerCase" xml:space="preserve">
+    <value>Das Passwort muss mindestens einen Kleinbuchstaben ('a'-'z') enthalten.</value>
+  </data>
+  <data name="MustHaveUpperCase" xml:space="preserve">
+    <value>Das Passwort muss mindestens einen Grossbuchstaben ('A'-'Z') enthalten.</value>
+  </data>
+  <data name="PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>Das Passwort muss mindestens {0} verschiedene Zeichen enthalten.</value>
+  </data>
+  <data name="RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>Einlösung des Wiederherstellungscodes fehlgeschlagen.
+
+</value>
+  </data>
 </root>
