@@ -1187,7 +1187,7 @@
                                         <Component Id="MARKDOWNSHARP.DLL" DiskId="1" Guid="6C4032B9-6CFA-4E2F-A4D4-73CB9A3FF059">
                                             <File Id="MARKDOWNSHARP.DLL" Name="MarkdownSharp.dll" Source="server_source\bin\MarkdownSharp.dll" />
                                         </Component>
-                                        <Component Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL_1" DiskId="1" Guid="6EF1CE47-EB66-4DBE-8C1B-00CB0964A198">
+                                        <Component Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL_1" DiskId="1" Guid="B6692897-C950-4EAA-B98A-5268B7CAA4FB">
                                             <File Id="MICROSOFT.ASPNET.IDENTITY.CORE.DLL_1" Name="Microsoft.AspNet.Identity.Core.dll" Source="server_source\bin\Microsoft.AspNet.Identity.Core.dll" />
                                         </Component>
                                         <Component Id="MICROSOFT.ASPNET.IDENTITY.OWIN.DLL" DiskId="1" Guid="175B027F-6DB9-44C7-920C-EE11B6F31F5C">
@@ -1253,13 +1253,13 @@
                                         <Component Id="ORIGAM.PROJECTAUTOMATION.DLL_1" DiskId="1" Guid="A836EDF8-89F6-4B88-B20E-8F68BE589260">
                                             <File Id="ORIGAM.PROJECTAUTOMATION.DLL_1" Name="Origam.ProjectAutomation.dll" Source="server_source\bin\Origam.ProjectAutomation.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.SECURITY.IDENTITY.DLL_1" DiskId="1" Guid="CDF9CB51-AA1F-4086-B196-F12EE0F8B438">
+                                        <Component Id="ORIGAM.SECURITY.IDENTITY.DLL_1" DiskId="1" Guid="210486EA-2323-4E27-8015-9835AA85B172">
                                             <File Id="ORIGAM.SECURITY.IDENTITY.DLL_1" Name="Origam.Security.Identity.dll" Source="server_source\bin\Origam.Security.Identity.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.SECURITY.NETFX.DLL_1" DiskId="1" Guid="f69bc226-2cef-482e-8e7a-ddb3a218e9c3">
+                                        <Component Id="ORIGAM.SECURITY.NETFX.DLL_1" DiskId="1" Guid="E72B0644-DD56-4DAF-9C71-77B471D28E28">
                                             <File Id="ORIGAM.SECURITY.NETFX.DLL_1" Name="Origam.Security.NetFx.dll" Source="server_source\bin\Origam.Security.NetFx.dll" />
                                         </Component>
-                                        <Component Id="ORIGAM.SECURITY.COMMON.DLL_1" DiskId="1" Guid="453d8088-1083-4aca-8c8c-397d9dfccc76">
+                                        <Component Id="ORIGAM.SECURITY.COMMON.DLL_1" DiskId="1" Guid="A32405F8-E4D8-4B65-99CA-83E4657F683B">
                                             <File Id="ORIGAM.SECURITY.COMMON.DLL_1" Name="Origam.Security.Common.dll" Source="server_source\bin\Origam.Security.Common.dll" />
                                         </Component>
                                         <Component Id="ORIGAM.SERVER.DLL" DiskId="1" Guid="1FC09EB7-002D-412B-AFB3-F3085209B06F">
