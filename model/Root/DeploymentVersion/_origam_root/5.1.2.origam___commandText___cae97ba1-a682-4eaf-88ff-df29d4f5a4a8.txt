@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamFormPanelConfig] ALTER COLUMN [SettingsData] nvarchar(max) NULL

@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamDataAuditLog] ALTER COLUMN [NewValue] nvarchar(max) NULL

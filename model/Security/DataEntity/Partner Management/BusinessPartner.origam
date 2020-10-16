@@ -179,7 +179,7 @@
       asi:name="UserProfile_Screen"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="7008a265-29e1-4697-8749-5cb6cc639727"
+      x:id="3df264ed-e691-4c4d-aeeb-9582015e6de8"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UserProfile.origam#UserProfile/e5cfa7bb-1eb4-429a-a0c0-8840359de4a1" />
   </ewa:EntityUIAction>
@@ -217,7 +217,7 @@
       asi:name="UserName"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="74381154-b857-4ac4-a9b2-de719ef7c24e"
+      x:id="a6050c21-bc53-47be-bd17-9ace24b1b4ac"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
   </ewa:EntityUIAction>
@@ -257,7 +257,7 @@
       asi:name="BusinessPartnerId"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="01441614-1a3a-4975-bb78-d5723ee3ebe4"
+      x:id="105775cd-6a83-4b53-ba5d-00d709d4b887"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
   </ewa:EntityUIAction>
@@ -293,7 +293,7 @@
       asi:name="UserProfile_New"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="6bdaf6c0-a6cb-483e-93ec-5e3c182d7f3b"
+      x:id="d7778bb8-1cf5-48fb-8a86-ee1f23c99396"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/CreateNewMembershipUser.origam#CreateNewMembershipUser/6672d3c7-79f2-4a95-a2ec-605686f447ad" />
   </ewa:EntityUIAction>
@@ -338,7 +338,7 @@
       asi:name="BusinessPartnerId"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="fa4dadec-df18-4dcf-bd48-9bdaa70a152b"
+      x:id="f56f1210-c15c-40f5-ad0f-70790c341af6"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
   </ewa:EntityUIAction>
@@ -374,7 +374,7 @@
       asi:name="UserProfile_New"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="3c593e27-eb40-4987-8dc7-41a57fa8e7ba"
+      x:id="7966d28f-65e9-45e2-9401-7e96c98f07a5"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/NewUser.origam#NewUser/ea3e6bf4-d9f6-4324-af8f-6a00439374ef" />
   </ewa:EntityUIAction>
@@ -411,7 +411,7 @@
       asi:name="UserId"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="bef3eb9d-adae-4257-bc1f-39e6678427c2"
+      x:id="8a15fd65-587c-4f77-a31c-1a8c72aa8ef4"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
   </ewa:EntityUIAction>
@@ -448,7 +448,7 @@
       asi:name="UserId"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="f6b7ceb6-6ed4-4c1c-8ef5-3f528c1be4d3"
+      x:id="bcc76e71-589f-4b85-88fc-26b25b26cfdc"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
   </ewa:EntityUIAction>
@@ -484,7 +484,7 @@
       asi:name="UserProfile_Screen"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="6c1bc5b2-7382-453a-931e-8ff0d103debd"
+      x:id="18976714-2fcd-421f-bd5c-7153e0e015bd"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UserProfile_ChangePassword.origam#UserProfile_ChangePassword/ba02ab58-a633-4356-b8ee-d6cab9f3b8f6" />
   </ewa:EntityUIAction>
@@ -521,7 +521,7 @@
       asi:name="UserId"
       euiapm:type="Current" />
     <sc:ScreenCondition
-      x:id="903d7dd1-0c87-4977-bba3-14c4e0123acc"
+      x:id="5816281d-51e8-4d0d-8b31-4d81e735d4d9"
       asi:name="ScreenSectionCondition1"
       sc:screen="Security/FormControlSet/Security/UsersAndRoles.origam#UsersAndRoles/65c96bc7-2fdf-4867-b9f9-17b5b0026a75" />
   </ewa:EntityUIAction>

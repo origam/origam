@@ -269,6 +269,34 @@
       asi:name="EmailConfirmed"
       adec:onCopyAction="Copy"
       adec:xmlMappingType="Element" />
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Blob"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="bb3e0e9a-3471-4bc7-92e9-481a4304a009"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="AvatarFile"
+      asi:name="AvatarFile"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="true"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="200"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="88a6496f-0bda-4032-81ba-3b413baced65"
+      adec:isPrimaryKey="false"
+      adec:label="Avatar"
+      fmi:mappedColumnName="AvatarFilename"
+      asi:name="AvatarFilename"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
     <dei:DataEntityIndex
       asi:abstract="true"
       dei:generateDeploymentScript="false"
@@ -571,6 +599,47 @@
             ecr:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/ReferenceCode/b19baf6b-56ac-4506-a076-769c663be977"
             x:id="21fd5e81-cfcc-4eee-9a47-df2b9b37bc20"
             asi:name="ReferenceCode" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="true"
+      x:id="2b30ff66-91ae-441c-97d1-533d3f5ac7b4"
+      asi:name="GetUsersWithoutME">
+      <fc:DataEntityColumn
+        asi:abstract="true"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/NotEqual.origam#NotEqual/4da95828-d10e-4224-8461-debfa6284dfd"
+        x:id="bb49db7b-f949-424d-b956-c9bd3a99edba"
+        adec:isPrimaryKey="false"
+        asi:name="NotEqual"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="95a3cd9e-962e-4a26-aaf1-932a55561847"
+          asi:name="Left"
+          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Left/a85bea50-ed47-4db4-937a-7bcdddee61fe">
+          <ecr:EntityColumnReference
+            asi:abstract="true"
+            ecr:field="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+            x:id="d2d0d8af-f63a-48db-99e0-6c8d0e12f23e"
+            asi:name="Id" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="true"
+          x:id="9a130a01-f965-4b0a-bbd9-f2921c042a61"
+          asi:name="Right"
+          fcp:parameter="Root/Function/NotEqual.origam#NotEqual/Right/437f1b6e-3fee-44cf-9954-e0e4e816d80e">
+          <pr:ParameterReference
+            asi:abstract="true"
+            x:id="eceb3a04-efd3-44f0-a86d-1428e540ac0f"
+            asi:name="parCurrentUserId"
+            pr:parameter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/parCurrentUserId/e876ab29-a75c-41b4-a469-6d0c6e44d527" />
         </fcp:FunctionCallParameter>
       </fc:DataEntityColumn>
     </ef:EntityFilter>

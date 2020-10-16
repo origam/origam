@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="ae1cd694-9354-49bf-a68e-93b1c241afd2"
+    ds:localized="false"
+    asi:name="OrigamChatRoom">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/f0d1ff00-2bab-4f75-9cde-eb795e604f4b"
+      x:id="133eebe4-a2fc-4650-ae0f-c11ea9a0bea5"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamChatRoom"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/OrigamChatMessage/544a39c8-b9c4-44c7-899f-edd5e9abacb6"
+        x:id="8315107b-b620-4217-8273-6847eb617fcf"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamChatMessage"
+        dse:relationType="Normal"
+        dse:useUpsert="false">
+        <dse:DataStructureEntity
+          asi:abstract="false"
+          dse:allFields="true"
+          dse:concurrencyHandling="Standard"
+          dse:entity="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/OrigamChatMessageBusinessPartner/d752940d-cb29-4e2a-bc06-0bc9a0356b4b"
+          x:id="fb50dffa-ed57-460f-ba8f-a4d3eaa9eae7"
+          dse:ignoreCondition="None"
+          dse:ignoreImplicitFilters="false"
+          asi:name="OrigamChatMessageBusinessPartner"
+          dse:relationType="Normal"
+          dse:useUpsert="false" />
+      </dse:DataStructureEntity>
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Chat/DataEntity/Chat/OrigamChatRoom.origam#OrigamChatRoom/OrigamChatRoomBusinessPartner/a4b42991-e739-4090-bcc5-12343ddaf5f5"
+        x:id="a923977f-ab6c-4c53-91c1-77d8dd1f3081"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamChatRoomBusinessPartner"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="a2d56dbe-6807-48ef-9765-7fd8cdaa09c7"
+      asi:name="GetById">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Chat/DataStructure/Chat/OrigamChatRoom.origam#OrigamChatRoom/OrigamChatRoom/133eebe4-a2fc-4650-ae0f-c11ea9a0bea5"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="edf1368a-afd9-4e8e-a47c-55a32a30bfa5"
+        asi:name="OrigamChatRoom_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>
