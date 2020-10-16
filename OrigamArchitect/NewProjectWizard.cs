@@ -116,6 +116,7 @@ namespace OrigamArchitect
         private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             pageReview.AllowNext = false;
+            SaveSettings();
             InitTaskList();
             WorkbenchSingleton.Workbench.Disconnect();
             WorkbenchSingleton.Workbench.PopulateEmptyDatabaseOnLoad = false;
@@ -130,12 +131,13 @@ namespace OrigamArchitect
                 schema.LoadSchema(new Guid(_project.NewPackageId), false, true);
                 ViewSchemaBrowserPad cmdViewBrowser = new ViewSchemaBrowserPad();
                 cmdViewBrowser.Run();
-                SaveSettings();
             }
             catch (Exception ex)
             {
+                e.Cancel = true;
                 AsMessageBox.ShowError(this, ex.Message, strings.NewProjectFailed_Message, ex);
                 WorkbenchSingleton.Workbench.Disconnect();
+                pageReview.AllowNext = true;
             }
             finally
             {
@@ -177,11 +179,14 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if (string.IsNullOrEmpty(cboWebRoot.Text))
+            if (Deployment == DeploymentType.Local)
             {
-                AsMessageBox.ShowError(this, strings.SelectWebRoot_Message, strings.NewProjectWizard_Title, null);
-                e.Cancel = true;
-                return;
+                if (string.IsNullOrEmpty(cboWebRoot.Text))
+                {
+                    AsMessageBox.ShowError(this, strings.SelectWebRoot_Message, strings.NewProjectWizard_Title, null);
+                    e.Cancel = true;
+                    return;
+                }
             }
             if (string.IsNullOrEmpty(txtServerName.Text))
             {
@@ -246,16 +251,16 @@ namespace OrigamArchitect
         {
             txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text) ? _settings.DatabaseServerName : txtServerName.Text;
             cboWebRoot.Items.Clear();
-            cboWebRoot.Items.AddRange(_builder.WebSites());
-            if (cboWebRoot.Items.Count > 0)
-            {
-                cboWebRoot.SelectedIndex = 0;
-            }
             cboWebRoot.Visible = false;
             lblWebRoot.Visible = false;
             label2.Visible = false;
             if (Deployment == DeploymentType.Local )
             {
+                cboWebRoot.Items.AddRange(_builder.WebSites());
+                if (cboWebRoot.Items.Count > 0)
+                {
+                    cboWebRoot.SelectedIndex = 0;
+                }
                 cboWebRoot.Visible = true;
                 lblWebRoot.Visible = true;
                 label2.Visible = true;
