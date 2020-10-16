@@ -161,7 +161,7 @@ class IndexItem {
   public row: any[];
   constructor(row: any[]){
     this.row = row;
-    this.textInLower = row.slice(1).join().toLowerCase();
+    this.textInLower = row.slice(1).join("").toLowerCase();
   }
 
   matches(phraseInLower: string){
