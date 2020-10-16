@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamFavoritesUserConfig] ALTER COLUMN [ConfigXml] nvarchar(max) NULL

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="763e029f-b306-40bd-98f9-36f89297cfbf"
+    ds:localized="false"
+    asi:name="OrigamChatMessageBusinessPartner">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Chat/DataEntity/Chat/OrigamChatMessageBusinessPartner.origam#OrigamChatMessageBusinessPartner/73f17bd5-6763-461b-afe4-7865101868d4"
+      x:id="4e0d5e22-3848-48d7-b358-6e7dce42e9e6"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamChatMessageBusinessPartner"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+  </ds:DataStructure>
+</x:file>

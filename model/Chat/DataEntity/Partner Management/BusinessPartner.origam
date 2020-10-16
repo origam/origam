@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <eri:EntityRelation
+    asi:abstract="true"
+    x:id="d7b5f24e-1319-4224-b021-8d4fee9e46ef"
+    asi:name="OrigamUser"
+    eri:or="false"
+    eri:parentChild="false"
+    x:parentId="457a4391-e94f-424c-89d0-dc3804121ce6"
+    eri:relatedEntity="Security/DataEntity/Security/OrigamUser.origam#OrigamUser/a6cca53b-1bdd-4b1a-a7e9-a462c88e9bc1"
+    eri:selfJoin="false">
+    <ercpi:EntityRelationColumnPair
+      asi:abstract="true"
+      ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="decd47fb-7d14-4681-9139-ca9ee74cd8ae"
+      asi:name="OrigamUserKey1"
+      ercpi:relatedEntityField="Security/DataEntity/Security/OrigamUser.origam#OrigamUser/refBusinessPartnerId/2ecb3314-77d4-477c-9d2e-38d7b28cfaec" />
+  </eri:EntityRelation>
+</x:file>

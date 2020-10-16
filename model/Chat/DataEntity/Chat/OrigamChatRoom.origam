@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="f0d1ff00-2bab-4f75-9cde-eb795e604f4b"
+    tmi:mappedObjectName="OrigamChatRoom"
+    asi:name="OrigamChatRoom"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="4ed7b1b1-7b2d-4f58-8c60-510f8f6f2a57" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="a161d727-97b7-44d3-a314-037183e7c43e"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="Name"
+      asi:name="Name"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="9437df39-e464-4117-bce7-109d985cac82"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="ReferenceId"
+      asi:name="ReferenceId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="98fdd11b-a908-438a-9775-53a6945a7013"
+      adec:isPrimaryKey="false"
+      fmi:mappedColumnName="ReferenceEntity"
+      asi:name="ReferenceEntity"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="544a39c8-b9c4-44c7-899f-edd5e9abacb6"
+      asi:name="OrigamChatMessage"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/478da4a8-dc69-42bb-b10a-7fab3eaa8d6d"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="b14fd585-eacc-4367-910c-2346885fe10f"
+        asi:name="OrigamChatMessageKey1"
+        ercpi:relatedEntityField="Chat/DataEntity/Chat/OrigamChatMessage.origam#OrigamChatMessage/refOrigamChatRoomId/3d790088-fd29-44a1-bcbe-cb112aa3300a" />
+    </eri:EntityRelation>
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="a4b42991-e739-4090-bcc5-12343ddaf5f5"
+      asi:name="OrigamChatRoomBusinessPartner"
+      eri:or="false"
+      eri:parentChild="false"
+      eri:relatedEntity="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/1c33abd7-83b9-4a65-9acb-63cca9764cdd"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+        x:id="3b855f20-bd32-400a-be23-6c5cf51c642e"
+        asi:name="OrigamChatRoomBusinessPartnerKey1"
+        ercpi:relatedEntityField="Chat/DataEntity/Chat/OrigamChatRoomBusinessPartner.origam#OrigamChatRoomBusinessPartner/refOrigamChatRoomId/48044453-19bb-40a1-8bb4-bb3173fbbae7" />
+    </eri:EntityRelation>
+  </tmi:DataEntity>
+</x:file>

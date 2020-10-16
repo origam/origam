@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamTraceWorkflowStep] ALTER COLUMN [Data2] nvarchar(max) NULL

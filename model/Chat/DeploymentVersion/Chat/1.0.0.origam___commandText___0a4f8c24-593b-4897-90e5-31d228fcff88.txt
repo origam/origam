@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrigamChatRoomBusinessPartner" ADD CONSTRAINT FK_OrigamChatRoomBusinessPartner_refOrigamChatRoomId_OrigamChatRoom
+	FOREIGN KEY (
+		"refOrigamChatRoomId"
+	)
+
+	REFERENCES "OrigamChatRoom" (
+		"Id"
+	);
+ALTER TABLE "OrigamChatRoomBusinessPartner" ADD CONSTRAINT "FK_OrigamChatRoomBusinessPartner_refBusinessPartnerId_BusinessPartner"
+	FOREIGN KEY (
+		"refBusinessPartnerId"
+	)
+
+	REFERENCES "BusinessPartner" (
+		"Id"
+	);

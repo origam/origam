@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="7c2a1704-a8ed-4541-ab34-5886e9b5cf83"
+    x:isFolder="true"
+    g:name="Chat"
+    g:rootItemType="DataStructure" />
+</x:file>

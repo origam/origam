@@ -1,0 +1,1 @@
+﻿ALTER TABLE [OrigamNotificationTemplate] ALTER COLUMN [Template] nvarchar(max) NOT NULL
