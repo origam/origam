@@ -14,31 +14,26 @@ export class BoolEditor extends React.Component<{
   onChange?(event: any, value: boolean): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
-  tabIndex?: number;
   onBlur?: ()=>void;
   onFocus?: ()=>void;
   isInvalid: boolean;
   invalidMessage?: string;
   id?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => (()=>void);
+  subscribeToFocusManager?: (obj: IFocusable) => void;
 }> {
 
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
     this.elmInput = elm;
   };
-  unsubscribeFromFocusManager?: () => void;
+
 
   componentDidMount() {
     if(this.elmInput && this.props.subscribeToFocusManager){
-      this.unsubscribeFromFocusManager = this.props.subscribeToFocusManager(this.elmInput);
+     this.props.subscribeToFocusManager(this.elmInput);
     }
   }
 
-  componentWillUnmount() {
-    this.unsubscribeFromFocusManager && this.unsubscribeFromFocusManager();
-  }
-  
   render() {
     return (
       <div className={cx(S.editorContainer)}>
@@ -57,7 +52,6 @@ export class BoolEditor extends React.Component<{
           onClick={this.props.onClick}
           onBlur={this.props.onBlur}
           onFocus={this.props.onFocus}
-          tabIndex={this.props.tabIndex ? this.props.tabIndex : undefined}
           ref={this.refInput}
         />
         {this.props.isInvalid && (

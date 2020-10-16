@@ -9,7 +9,6 @@
   position: relative;
   :global(.fileName) {
     width: 100%;
-    border: 1px solid #b0afb7;
     border-radius: 3px;
   }
   :global(.controls) {
@@ -135,4 +134,12 @@
 
 .notification {
   @include notification;
+}
+
+.standardBorder{
+  border: 1px solid #b0afb7;
+}
+
+.focusedBorder{
+  border: 1px solid #0080ff;
 }

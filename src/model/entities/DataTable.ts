@@ -32,17 +32,17 @@ export class DataTable implements IDataTable {
     );
   }
 
-  rowRemovedListeners: (()=>void)[] = [];
+  rowRemovedListeners: (() => void)[] = [];
 
-  notifyRowRemovedListeners(){
-    this.rowRemovedListeners.forEach(listener => listener());
+  notifyRowRemovedListeners() {
+    this.rowRemovedListeners.forEach((listener) => listener());
   }
 
-  start(){
+  start() {
     this.rowsContainer.start();
   }
 
-  stop(){
+  stop() {
     this.rowsContainer.stop();
   }
 
@@ -106,7 +106,7 @@ export class DataTable implements IDataTable {
     return row[property.dataIndex];
   }
 
-  updateSortAndFilter(){
+  updateSortAndFilter() {
     this.rowsContainer.updateSortAndFilter();
   }
 
@@ -125,9 +125,9 @@ export class DataTable implements IDataTable {
 
   // Returns all values from currently loaded rows (in case thhe table is infinitelly scrolled)
   getAllValuesOfProp(property: IProperty): any[] {
-      return this.rowsContainer.allRows
-        .map((row) => this.getCellValue(row, property))
-        .filter(row => row);
+    return this.rowsContainer.allRows
+      .map((row) => this.getCellValue(row, property))
+      .filter((row) => row);
   }
 
   getCellText(row: any[], property: IProperty) {
@@ -146,6 +146,7 @@ export class DataTable implements IDataTable {
     if (property.isLookup && property.lookupEngine) {
       const { lookupEngine } = property;
       if (property.column === "TagInput") {
+        if (!Array.isArray(value)) value = [value];
         const textArray = value.map((valueItem: any) =>
           lookupEngine.lookupResolver.resolveValue(`${valueItem}`)
         );
