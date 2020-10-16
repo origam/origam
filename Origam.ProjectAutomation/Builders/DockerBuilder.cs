@@ -45,12 +45,17 @@ namespace Origam.ProjectAutomation.Builders
             Dockerenviroment += Environment.NewLine;
             Dockerenviroment += "DatabaseType=" + (_project.DatabaseType==DatabaseType.PgSql?"postgresql":_project.DatabaseType.ToString().ToLower());
             Dockerenviroment += Environment.NewLine;
-            Dockerenviroment += "ExternalDomain_SetOnStart=http://localhost:"+_project.DockerPort;
+            Dockerenviroment += "ExternalDomain_SetOnStart=" + WebSiteUrl(_project);
             return Dockerenviroment;
         }
 
         public override void Rollback()
         {
+        }
+
+        public string WebSiteUrl (Project project)
+        {
+            return "http://localhost:" + project.DockerPort;
         }
     }
 }

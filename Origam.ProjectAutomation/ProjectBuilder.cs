@@ -34,6 +34,7 @@ namespace Origam.ProjectAutomation
         private readonly SettingsBuilder settingsBuilder = new SettingsBuilder();
         private readonly DataDatabaseBuilder dataDatabaseBuilder = new DataDatabaseBuilder();
         private readonly ConfigureWebServerBuilder configureWebServerBuilder = new ConfigureWebServerBuilder();
+        private readonly DockerBuilder dockerBuilder = new DockerBuilder();
 
         public ProjectBuilder()
         {           
@@ -48,10 +49,18 @@ namespace Origam.ProjectAutomation
             //OrigamSettings
             project.BuilderDataConnectionString =
             dataDatabaseBuilder.BuildConnectionStringArchitect(project, false);
-            
 
-            project.BaseUrl =
-                configureWebServerBuilder.WebSiteUrl(project.WebRootName);
+            switch (project.Deployment)
+            {
+                case DeploymentType.Local:
+                    project.BaseUrl =
+                        configureWebServerBuilder.WebSiteUrl(project.WebRootName);
+                    break;
+                case DeploymentType.Docker:
+                    project.BaseUrl =
+                        dockerBuilder.WebSiteUrl(project);
+                    break;
+            }
 
             IProjectBuilder activeTask = null;
             try
