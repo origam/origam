@@ -179,11 +179,14 @@ namespace OrigamArchitect
                 e.Cancel = true;
                 return;
             }
-            if (string.IsNullOrEmpty(cboWebRoot.Text))
+            if (Deployment == DeploymentType.Local)
             {
-                AsMessageBox.ShowError(this, strings.SelectWebRoot_Message, strings.NewProjectWizard_Title, null);
-                e.Cancel = true;
-                return;
+                if (string.IsNullOrEmpty(cboWebRoot.Text))
+                {
+                    AsMessageBox.ShowError(this, strings.SelectWebRoot_Message, strings.NewProjectWizard_Title, null);
+                    e.Cancel = true;
+                    return;
+                }
             }
             if (string.IsNullOrEmpty(txtServerName.Text))
             {
