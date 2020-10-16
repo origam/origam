@@ -693,6 +693,10 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   async saveData(data: { sessionFormIdentifier: string }): Promise<void> {
     await this.axiosInstance.get(`/UIService/SaveData/${data.sessionFormIdentifier}`);
   }
+
+  async search(searchTerm: string) {
+    return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
+  }
 }
 
 export const IOrigamAPI = TypeSymbol<OrigamAPI>("IOrigamAPI");

@@ -344,4 +344,6 @@ export interface IApi {
   saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void>;
 
   saveData(data: { sessionFormIdentifier: string }): Promise<void>;
+
+  search(searchTerm: string):  Promise<any>;
 }
