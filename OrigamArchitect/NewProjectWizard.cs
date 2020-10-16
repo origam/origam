@@ -116,6 +116,7 @@ namespace OrigamArchitect
         private void PageReview_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             pageReview.AllowNext = false;
+            SaveSettings();
             InitTaskList();
             WorkbenchSingleton.Workbench.Disconnect();
             WorkbenchSingleton.Workbench.PopulateEmptyDatabaseOnLoad = false;
@@ -130,12 +131,13 @@ namespace OrigamArchitect
                 schema.LoadSchema(new Guid(_project.NewPackageId), false, true);
                 ViewSchemaBrowserPad cmdViewBrowser = new ViewSchemaBrowserPad();
                 cmdViewBrowser.Run();
-                SaveSettings();
             }
             catch (Exception ex)
             {
+                e.Cancel = true;
                 AsMessageBox.ShowError(this, ex.Message, strings.NewProjectFailed_Message, ex);
                 WorkbenchSingleton.Workbench.Disconnect();
+                pageReview.AllowNext = true;
             }
             finally
             {
