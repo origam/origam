@@ -246,16 +246,16 @@ namespace OrigamArchitect
         {
             txtServerName.Text = string.IsNullOrEmpty(txtServerName.Text) ? _settings.DatabaseServerName : txtServerName.Text;
             cboWebRoot.Items.Clear();
-            cboWebRoot.Items.AddRange(_builder.WebSites());
-            if (cboWebRoot.Items.Count > 0)
-            {
-                cboWebRoot.SelectedIndex = 0;
-            }
             cboWebRoot.Visible = false;
             lblWebRoot.Visible = false;
             label2.Visible = false;
             if (Deployment == DeploymentType.Local )
             {
+                cboWebRoot.Items.AddRange(_builder.WebSites());
+                if (cboWebRoot.Items.Count > 0)
+                {
+                    cboWebRoot.SelectedIndex = 0;
+                }
                 cboWebRoot.Visible = true;
                 lblWebRoot.Visible = true;
                 label2.Visible = true;
