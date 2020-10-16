@@ -187,6 +187,14 @@ export interface IApi {
 
   deleteObject(data: { SessionFormIdentifier: string; Entity: string; Id: string }): Promise<any>;
 
+  deleteObjectInOrderedList(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    OrderProperty: string;
+    UpdatedOrderValues: {};
+  }): Promise<any>
+
   executeActionQuery(data: {
     SessionFormIdentifier: string;
     Entity: string;
@@ -340,8 +348,4 @@ export interface IApi {
   pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>;
 
   changes(data: { SessionFormIdentifier: string; Entity: string; RowId: string }): Promise<any[]>;
-
-  saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void>;
-
-  saveData(data: { sessionFormIdentifier: string }): Promise<void>;
 }

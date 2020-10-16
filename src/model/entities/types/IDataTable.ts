@@ -70,6 +70,7 @@ export interface IDataTable {
   insertRecord(index: number, row: any[]): void;
   getLastRow(): any[] | undefined;
   unlockAddedRowPosition(): void;
+  addedRowPositionLocked: boolean;
   parent?: any;
 }
 

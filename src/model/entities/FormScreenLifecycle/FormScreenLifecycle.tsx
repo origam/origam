@@ -656,6 +656,22 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     500
   );
 
+  private getNewRowValues(){
+    if(!this.userOrderedDataView) {
+      return {}
+    }
+
+    const orderProperty = this.userOrderedDataView.orderProperty!;
+    const orderValues = this.userOrderedDataView.tableRows
+      .filter(row => Array.isArray)
+      .map(row => (row as any[])[orderProperty.dataIndex] as number);
+    const nextOrderValue = Math.max(...orderValues) + 1
+    const orderPropName = orderProperty.name;
+    const values = {} as any;
+    values[orderProperty.name] = nextOrderValue;
+    return values
+  }
+
   *createRow(entity: string, gridId: string) {
     try {
       this.monitor.inFlow++;
@@ -669,7 +685,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           SessionFormIdentifier: getSessionId(this),
           Entity: entity,
           RequestingGridId: gridId,
-          Values: {},
+          Values: this.getNewRowValues(),
           Parameters: { ...getBindingParametersFromParent(targetDataView) },
         });
       } finally {
@@ -710,6 +726,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  private get userOrderedDataView(){
+    return getFormScreen(this).dataViews.find(dataView => dataView.orderProperty);
+  }
+
   *deleteRow(entity: string, rowId: string) {
     try {
       this.monitor.inFlow++;
@@ -718,11 +738,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       let deleteObjectResult;
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
-        deleteObjectResult = yield api.deleteObject({
-          SessionFormIdentifier: getSessionId(this),
-          Entity: entity,
-          Id: rowId,
-        });
+
+        if(this.userOrderedDataView) {
+          deleteObjectResult = yield* this.deleteObjectInOrderedList(rowId, entity, this.userOrderedDataView);
+        }else{
+          deleteObjectResult = yield api.deleteObject({
+            SessionFormIdentifier: getSessionId(this),
+            Entity: entity,
+            Id: rowId,
+          });
+        }
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
@@ -731,6 +756,29 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     } finally {
       this.monitor.inFlow--;
     }
+  }
+
+  private *deleteObjectInOrderedList(rowId: string, entity: string, dataView: IDataView) {
+    const api = getApi(this);
+    const rowToDelete = dataView.dataTable.getRowById(rowId)!;
+    const orderProperty = dataView.orderProperty!;
+    const newRowOrderMap = {} as any;
+    if (orderProperty) {
+      dataView.dataTable.allRows
+        .filter(row => row[orderProperty.dataIndex] > rowToDelete[orderProperty.dataIndex])
+        .forEach(row => {
+          const rowId = dataView.dataTable.getRowId(row);
+          const newOrder = row[orderProperty.dataIndex] - 1;
+          newRowOrderMap[rowId] = newOrder;
+        })
+    }
+    return yield api.deleteObjectInOrderedList({
+      SessionFormIdentifier: getSessionId(this),
+      Entity: entity,
+      Id: rowId,
+      OrderProperty: orderProperty.name,
+      UpdatedOrderValues: newRowOrderMap
+    });
   }
 
   *saveSession() {
@@ -748,11 +796,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
         if (!processQueryInfoResult.canContinue) return;
         result = yield api.saveSession(getSessionId(this));
+        getFormScreen(this).dataViews
+          .forEach(dataView => dataView.dataTable.unlockAddedRowPosition());
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, result);
+      getFormScreen(this).dataViews
+        .forEach(dataView => dataView.dataTable.updateSortAndFilter());
     } finally {
       this.monitor.inFlow--;
     }
@@ -903,8 +955,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       case IQuestionChangeRecordAnswer.Cancel:
         return false;
       case IQuestionChangeRecordAnswer.Yes:
-        await api.saveDataQuery({ sessionFormIdentifier: sessionId });
-        await api.saveData({ sessionFormIdentifier: sessionId });
+        await api.saveSessionQuery(sessionId);
+        await api.saveSession(sessionId);
         return true;
       case IQuestionChangeRecordAnswer.No:
         await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();

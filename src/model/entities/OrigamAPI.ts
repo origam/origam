@@ -379,6 +379,16 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post("/UIService/DeleteObject", data)).data;
   }
 
+  async deleteObjectInOrderedList(data: {
+    SessionFormIdentifier: string;
+    Entity: string;
+    Id: string;
+    OrderProperty: string;
+    UpdatedOrderValues: {};
+  }): Promise<any> {
+    return (await this.axiosInstance.post("/UIService/DeleteObjectInOrderedList", data)).data;
+  }
+
   async executeActionQuery(data: {
     SessionFormIdentifier: string;
     Entity: string;
@@ -680,14 +690,6 @@ export class OrigamAPI implements IApi {
         RowId: data.RowId,
       })
     ).data;
-  }
-
-  async saveDataQuery(data: { sessionFormIdentifier: string }): Promise<void> {
-    await this.axiosInstance.get(`/UIService/SaveDataQuery/${data.sessionFormIdentifier}`);
-  }
-
-  async saveData(data: { sessionFormIdentifier: string }): Promise<void> {
-    await this.axiosInstance.get(`/UIService/SaveData/${data.sessionFormIdentifier}`);
   }
 }
 

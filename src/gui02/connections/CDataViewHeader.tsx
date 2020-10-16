@@ -41,6 +41,7 @@ import { onLastRowClick } from "../../model/actions-ui/DataView/onLastRowClick";
 import { T } from "../../utils/translation";
 import { onCopyRowClick } from "model/actions-ui/DataView/onCopyRowClick";
 import { onMoveRowUpClick } from "model/actions-ui/DataView/onMoveRowUpClick";
+import { getIsRowMovingDisabled } from "model/actions-ui/DataView/getIsRowMovingDisabled";
 import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick";
 import { getIsisMoveRowMenuVisible } from "model/selectors/DataView/getIsisMoveRowMenuVisible";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
@@ -71,6 +72,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     const onDeleteRowClickEvt = onDeleteRowClick(dataView);
     const onCreateRowClickEvt = onCreateRowClick(dataView);
     const onMoveRowUpClickEvt = onMoveRowUpClick(dataView);
+    const isRowMovingDisabled = getIsRowMovingDisabled(dataView);
     const onMoveRowDownClickEvt = onMoveRowDownClick(dataView);
     const onCopyRowClickEvt = onCopyRowClick(dataView);
     const onFilterButtonClickEvt = onFilterButtonClick(dataView);
@@ -103,13 +105,17 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                   <div className="fullspaceBlock" ref={refChild}>
                     {isMoveRowMenuVisible ? (
                       <DataViewHeaderGroup isHidden={false}>
-                        <DataViewHeaderAction onClick={onMoveRowUpClickEvt}>
+                        <DataViewHeaderAction
+                          onClick={onMoveRowUpClickEvt}
+                          isDisabled={isRowMovingDisabled}>
                           <Icon
                             src="./icons/move-up.svg"
                             tooltip={T("Move Up", "increase_tool_tip")}
                           />
                         </DataViewHeaderAction>
-                        <DataViewHeaderAction onClick={onMoveRowDownClickEvt}>
+                        <DataViewHeaderAction
+                          onClick={onMoveRowDownClickEvt}
+                          isDisabled={isRowMovingDisabled}>
                           <Icon
                             src="./icons/move-down.svg"
                             tooltip={T("Move Down", "decrease_tool_tip")}
