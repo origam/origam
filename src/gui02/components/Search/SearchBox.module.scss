@@ -1,0 +1,24 @@
+.searchBox{
+  height: 25px;
+  flex-shrink: 0;
+  color: #77767e;
+  cursor: pointer;
+  text-decoration: none;
+  font-style: normal;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  margin-left: 5px;
+}
+
+.icon {
+  width: 1.6667em;
+  min-width: 25px;
+  height: 1.6667em;
+  margin: 0 0 0 0.5em;
+}
+
+.input{
+  min-width: 25px;
+}

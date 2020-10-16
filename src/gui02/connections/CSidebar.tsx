@@ -30,7 +30,8 @@ import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import {getLoggedUserName} from "model/selectors/User/getLoggedUserName";
 import { getShowChat } from "model/selectors/PortalSettings/getShowChat";
 import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues";
-import {getNotifications} from "model/selectors/Chatrooms/getNotifications";
+import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
+import { SearchBox } from "gui02/components/Search/SearchBox";
 
 @observer
 export class CSidebar extends React.Component {
@@ -157,7 +158,9 @@ export class CSidebar extends React.Component {
             )}
           </div>
         </LogoSection>
-        
+
+        <SearchBox ctx={this.workbench}/>
+
         {showWorkQues ? this.renderWorkQuesSection() : null}
 
         {showChat ? this.renderChatSection() : null}
