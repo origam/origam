@@ -32,6 +32,8 @@ import { getShowChat } from "model/selectors/PortalSettings/getShowChat";
 import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import { SearchBox } from "gui02/components/Search/SearchBox";
+import { SearchResults } from "gui02/components/Search/SearchResults";
+import {ISearchResult} from "model/entities/types/ISearchResult";
 
 @observer
 export class CSidebar extends React.Component {
@@ -43,6 +45,7 @@ export class CSidebar extends React.Component {
     return this.context.workbench;
   }
 
+  @observable searchResults: ISearchResult[] = [];
   @observable _activeSection = ISidebarSection.Menu;
   @observable activeInfoSubsection = IInfoSubsection.Info;
 
@@ -87,6 +90,12 @@ export class CSidebar extends React.Component {
 
   componentWillUnmount() {
     this.disposers.forEach((disposer) => disposer());
+  }
+
+  @action
+  onSearchResultsChange(results: ISearchResult[]){
+    this.searchResults = results;
+    this.activeSection =ISidebarSection.Search;
   }
 
   renderWorkQuesSection(){
@@ -159,7 +168,9 @@ export class CSidebar extends React.Component {
           </div>
         </LogoSection>
 
-        <SearchBox ctx={this.workbench}/>
+        <SearchBox
+          ctx={this.workbench}
+          onSearchResultsChange={results => this.onSearchResultsChange(results)}/>
 
         {showWorkQues ? this.renderWorkQuesSection() : null}
 
@@ -205,12 +216,12 @@ export class CSidebar extends React.Component {
           <SidebarSectionDivider />
           <SidebarSectionHeader
             isActive={this.activeSection === ISidebarSection.Search}
-            icon={<Icon src="./icons/search.svg" tooltip={T("Search", "search_result", 0)} />}
-            label={T("Search", "search_result", 0)}
+            icon={<Icon src="./icons/search.svg" tooltip={T("Search", "search_result", this.searchResults.length)} />}
+            label={T("Search", "search_result", this.searchResults.length)}
             onClick={() => (this.activeSection = ISidebarSection.Search)}
           />
           <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Search}>
-            &nbsp;
+            <SearchResults results={this.searchResults}/>
           </SidebarSectionBody>
           <SidebarSectionDivider />
         </SidebarSection>

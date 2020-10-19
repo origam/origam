@@ -4,11 +4,13 @@ import React from "react";
 import {observable} from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { observer } from "mobx-react";
+import {ISearchResult} from "model/entities/types/ISearchResult";
 
 
 @observer
 export class SearchBox extends React.Component<{
   ctx: any;
+  onSearchResultsChange: (results: ISearchResult[]) => void;
 }> {
   @observable
   value = "";
@@ -16,8 +18,8 @@ export class SearchBox extends React.Component<{
   async onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key == "Enter") {
       const api = getApi(this.props.ctx);
-      const searchResult = await api.search(this.value);
-      console.log(searchResult);
+      const searchResults = await api.search(this.value);
+      this.props.onSearchResultsChange(searchResults);
     }
   }
 

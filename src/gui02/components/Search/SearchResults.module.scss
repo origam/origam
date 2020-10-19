@@ -1,0 +1,27 @@
+.root{
+
+}
+
+.resultItem{
+  padding: 0 1.6667em;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  text-decoration: none;
+  font-style: normal;
+  color: #3e3d45;
+  background-color: #f7f6fa;
+  transition: all 300ms linear;
+}
+
+.resultItemName{
+  font-weight: bold;
+}
+
+.resultItemDescription{
+  min-height: 18px;
+}
