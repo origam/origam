@@ -87,6 +87,7 @@ export class FormViewEditor extends React.Component<{
             isPassword={this.props.property!.isPassword}
             invalidMessage={invalidMessage}
             isFocused={false}
+            maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
