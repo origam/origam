@@ -99,7 +99,8 @@ class CMainMenuCommandItem extends React.Component<{
         // TODO: Implements selector for this idset
         isOpenedScreen={this.workbench.openedScreenIdSet.has(props.node.attributes.id)}
         isActiveScreen={activeMenuItemId === props.node.attributes.id}
-        onClick={(event) => onMainMenuItemClick(this.workbench)({ event, item: props.node })}
+        onClick={(event) =>
+          onMainMenuItemClick(this.workbench)({ event, item: props.node, idParameter: undefined })}
       />
     );
   }

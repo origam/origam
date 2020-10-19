@@ -18,8 +18,9 @@ export const MainMenuPanel: React.FC = observer(props => {
         menuUI={mainMenu.menuUI}
         onItemClick={(event: any, item: any) =>
           getWorkbenchLifecycle(application).onMainMenuItemClick({
-            event,
-            item
+            event: event,
+            item: item,
+            idParameter: undefined
           })
         }
       />

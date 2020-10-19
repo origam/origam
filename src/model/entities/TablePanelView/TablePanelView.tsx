@@ -153,6 +153,7 @@ export class TablePanelView implements ITablePanelView {
           yield onMainMenuItemClick(this)({
             event: undefined,
             item: menuItem,
+            idParameter: undefined
           });
         }
       } else {

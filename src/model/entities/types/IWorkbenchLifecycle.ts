@@ -6,7 +6,8 @@ import {IPortalSettings} from "model/entities/types/IPortalSettings";
 export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;
 
-  onMainMenuItemClick(args: { event: any; item: any }): Generator;
+  onMainMenuItemClick(args: { event: any; item: any, idParameter: string | undefined }): Generator;
+  onMainMenuItemIdClick(args: { event: any; itemId: any, idParameter: string }): Generator;
   onWorkQueueListItemClick(event: any, item: any): Generator;
   onChatroomsListItemClick(event: any, item: any): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
