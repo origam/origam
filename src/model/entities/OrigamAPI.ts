@@ -699,7 +699,7 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   }
 
   async getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>  {
-    return (await this.axiosInstance.post(`/Search/GetMenuId`, data)).data;
+    return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
   }
 }
 
