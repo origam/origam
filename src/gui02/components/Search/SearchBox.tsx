@@ -16,7 +16,7 @@ export class SearchBox extends React.Component<{
   value = "";
 
   async onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key == "Enter") {
+    if (event.key == "Enter" && this.value.trim()) {
       const api = getApi(this.props.ctx);
       const searchResults = await api.search(this.value);
       this.props.onSearchResultsChange(searchResults);

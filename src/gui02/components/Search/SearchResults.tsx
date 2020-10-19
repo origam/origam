@@ -18,7 +18,9 @@ export class SearchResults extends React.Component<{
   render(){
     return(
       <div className={S.root}>
-        {this.props.results.map(result => <SearchResultItem result={result}/>)}
+        {Array.isArray(this.props.results)
+          ? this.props.results.map(result => <SearchResultItem result={result}/>)
+          : null}
       </div>
     );
   }
