@@ -11,14 +11,6 @@ namespace Origam.ServerCore
 {
     public class SearchHandler
     {
-        public string GetMenuId(Guid lookupId, Guid ReferenceId)
-        {
-           return ServiceManager.Services
-               .GetService<IDataLookupService>()
-               .GetMenuBinding(lookupId, ReferenceId)
-               .MenuId;
-        }
-        
         public IEnumerable<SearchResult> Search(string searchTerm)
         {
             IOrigamAuthorizationProvider authorizationProvider 

@@ -46,14 +46,5 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() => Ok(searchHandler.Search(searchTerm)));
         }
-
-        [HttpPost("[action]")]
-        public IActionResult GetMenuId([FromBody]GetMenuInput input)
-        {
-            return RunWithErrorHandler(() => Ok(searchHandler.GetMenuId(
-                lookupId: input.LookupId, 
-                ReferenceId: input.ReferenceId))
-            );
-        }
     }
 }
