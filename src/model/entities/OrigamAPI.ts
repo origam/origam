@@ -697,6 +697,10 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   async search(searchTerm: string) {
     return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
   }
+
+  async getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>  {
+    return (await this.axiosInstance.post(`/Search/GetMenuId`, data)).data;
+  }
 }
 
 export const IOrigamAPI = TypeSymbol<OrigamAPI>("IOrigamAPI");

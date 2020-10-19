@@ -347,4 +347,6 @@ export interface IApi {
   saveData(data: { sessionFormIdentifier: string }): Promise<void>;
 
   search(searchTerm: string): Promise<ISearchResult[]>;
+
+  getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>;
 }
