@@ -567,8 +567,24 @@ namespace Origam.ServerCore.Controller
                     .Finally(UnwrapReturnValue);
             });
         }
+        
+        [HttpPost("[action]")]
+        public IActionResult GetMenuId([FromBody]GetMenuInput input)
+        {
+            return RunWithErrorHandler(() => Ok(GetMenuId(
+                lookupId: input.LookupId, 
+                ReferenceId: input.ReferenceId))
+            );
+        }
         #endregion
         
+        private string GetMenuId(Guid lookupId, Guid ReferenceId)
+        {
+            return ServiceManager.Services
+                .GetService<IDataLookupService>()
+                .GetMenuBinding(lookupId, ReferenceId)
+                .MenuId;
+        }
         private Result<IActionResult, IActionResult> ExtractAggregationList(IActionResult fullReaderResult)
         {
             var outerResultList = ((fullReaderResult as OkObjectResult)?.Value as List<IEnumerable<KeyValuePair<string, object>>>);

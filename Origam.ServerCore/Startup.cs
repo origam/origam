@@ -103,6 +103,7 @@ namespace Origam.ServerCore
             });
             services.AddScoped<IManager, CoreManagerAdapter>();
             services.AddSingleton<IMailService, MailService>();
+            services.AddSingleton<SearchHandler>();
             services.AddSingleton<SessionObjects, SessionObjects>();
             services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
