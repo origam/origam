@@ -1,20 +1,22 @@
-import {flow} from "mobx";
-import {closeForm} from "model/actions/closeForm";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {getOpenedScreen} from "model/selectors/getOpenedScreen";
-import {handleError} from "model/actions/handleError";
+import { flow } from "mobx";
+import { closeForm } from "model/actions/closeForm";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
+import { handleError } from "model/actions/handleError";
+
+const closingScreens = new WeakSet<any>();
 
 export function onScreenTabCloseClick(ctx: any) {
   return flow(function* onFormTabCloseClick(event: any) {
     try {
-      event.stopPropagation();
+      event?.stopPropagation?.();
       // TODO: Wait for other async operation to finish?
       const openedScreen = getOpenedScreen(ctx);
+      if (closingScreens.has(openedScreen)) return;
+      closingScreens.add(openedScreen);
       // TODO: Better lifecycle handling
       if (openedScreen.content && !openedScreen.content.isLoading) {
-        const lifecycle = getFormScreenLifecycle(
-          openedScreen.content.formScreen!
-        );
+        const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
         yield* lifecycle.onRequestScreenClose();
       } else {
         yield* closeForm(ctx)();
