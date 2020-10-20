@@ -12,6 +12,7 @@ export interface IGroupRow {
 export interface IGroupTreeNode {
   parent: IGroupTreeNode | undefined;
   childGroups: IGroupTreeNode[];
+  allChildGroups: IGroupTreeNode[];
   childRows: any[][];
   columnId: string;
   groupLabel: string;
@@ -20,6 +21,7 @@ export interface IGroupTreeNode {
   columnValue: string;
   columnDisplayValue: string;
   aggregations: IAggregation[] | undefined;
+  allParents: IGroupTreeNode[];
 }
 
 export type ITableRow = any[] | IGroupRow;
