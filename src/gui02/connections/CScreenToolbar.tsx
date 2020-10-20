@@ -63,6 +63,18 @@ export class CScreenToolbar extends React.Component<{}> {
     actionFilter: ((action: IAction) => boolean) | undefined
   ) {
     const customAssetsRoute = getCustomAssetsRoute(this.application);
+
+    const iconsWillBeShown = toolbarActions
+      .flatMap(toolbar => toolbar.actions)
+      .some(action => action.iconUrl)
+
+    function getIcon(action: IAction){
+     if(action.iconUrl){
+       return <Icon src={customAssetsRoute + "/" + action.iconUrl} />
+     }
+     return iconsWillBeShown ? <div/> : null;
+    }
+
     return toolbarActions
       .filter((actionGroup) => actionGroup.actions.length > 0)
       .map((actionGroup) => (
@@ -75,9 +87,7 @@ export class CScreenToolbar extends React.Component<{}> {
             .map((action, idx) => (
               <DropdownItem>
                 <ScreenToolbarAction
-                  icon={
-                    action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : <div/>
-                  }
+                  icon={getIcon(action)}
                   label={action.caption}
                   onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
                 />
