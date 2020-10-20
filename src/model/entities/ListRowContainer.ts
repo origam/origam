@@ -122,6 +122,7 @@ export class ListRowContainer implements IRowsContainer {
     const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === this.rowIdGetter(row));
     if (idx > -1) {
       this.allRows.splice(idx, 1);
+      this.updateSortAndFilter();
     }
   }
 
@@ -151,4 +152,8 @@ export class ListRowContainer implements IRowsContainer {
   registerResetListener(listener: () => void): void {}
 
   parent: any;
+
+  get addedRowPositionLocked(): boolean {
+    return this.forcedFirstRowId !== undefined;
+  }
 }

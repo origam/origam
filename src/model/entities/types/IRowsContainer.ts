@@ -13,6 +13,8 @@ export interface IRowsContainer {
 
   unlockAddedRowPosition(): void;
 
+  addedRowPositionLocked: boolean;
+
   maxRowCountSeen: number;
 
   loadedRowsCount: number;

@@ -12,6 +12,7 @@ import { IRowsContainer } from "./types/IRowsContainer";
 import { formatNumber } from "./NumberFormating";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
 import { isScrollRowContainer } from "./ScrollRowContainer";
+import {getProperties} from "model/selectors/DataView/getProperties";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -396,6 +397,10 @@ export class DataTable implements IDataTable {
 
   unlockAddedRowPosition(): void {
     this.rowsContainer.unlockAddedRowPosition();
+  }
+
+  get addedRowPositionLocked(): boolean {
+    return this.rowsContainer.addedRowPositionLocked;
   }
 
   parent?: any;

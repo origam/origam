@@ -20,7 +20,7 @@ import {IFocusable} from "model/entities/FocusManager";
 export const TagInputEditor = inject(({ property }: { property: IProperty }, { value }) => {
   const dataTable = getDataTable(property);
   return {
-    textualValues: value.map((valueItem: any) => dataTable.resolveCellText(property, valueItem)),
+    textualValues: value?.map((valueItem: any) => dataTable.resolveCellText(property, valueItem)),
   };
 })(
   observer(
