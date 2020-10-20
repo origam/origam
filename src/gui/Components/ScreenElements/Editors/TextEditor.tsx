@@ -16,6 +16,7 @@ export class TextEditor extends React.Component<{
   isFocused: boolean;
   backgroundColor?: string;
   foregroundColor?: string;
+  maxLength?: number;
   isRichText: boolean;
   customStyle?: any;
   subscribeToFocusManager?: (obj: IFocusable) => void;
@@ -94,6 +95,9 @@ export class TextEditor extends React.Component<{
   }
 
   private renderValueTag() {
+    const maxLength = this.props.maxLength === 0
+      ? undefined
+      : this.props.maxLength;
     if (this.props.isRichText) {
       return (
         <div className={S.editorContainer}>
@@ -119,6 +123,7 @@ export class TextEditor extends React.Component<{
           autoComplete={this.props.isPassword ? "new-password" : undefined}
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
+          maxLength={maxLength}
           ref={this.refInput}
           onChange={(event: any) =>
             this.props.onChange && this.props.onChange(event, event.target.value)
@@ -152,6 +157,7 @@ export class TextEditor extends React.Component<{
           value={this.props.value || ""}
           readOnly={this.props.isReadOnly}
           ref={this.refInput}
+          maxLength={maxLength}
           onChange={(event: any) =>
             this.props.onChange && this.props.onChange(event, event.target.value)
           }

@@ -23,6 +23,7 @@ export class NumberEditor extends React.Component<{
   backgroundColor?: string;
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
+  maxLength?: number;
   customStyle?: any;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string | null): void;
@@ -149,6 +150,9 @@ export class NumberEditor extends React.Component<{
   }
 
   render() {
+    const maxLength = this.props.maxLength === 0
+      ? undefined
+      : this.props.maxLength;
     return (
       <div className={S.editorContainer}>
         {!this.props.isMultiline ? (
@@ -161,6 +165,7 @@ export class NumberEditor extends React.Component<{
             value={this.editValue !== undefined && this.editValue !== "NaN" && this.editValue !== null
               ? this.editValue
               : ""}
+            maxLength={maxLength}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={this.handleChange}
@@ -175,6 +180,7 @@ export class NumberEditor extends React.Component<{
             style={this.getStyle()}
             className={S.input}
             value={this.props.value || ""}
+            maxLength={maxLength}
             readOnly={this.props.isReadOnly}
             ref={this.refInput}
             onChange={this.handleChange}

@@ -70,6 +70,7 @@ export class TableViewEditor extends React.Component<{
             isInvalid={false}
             isFocused={true}
             isPassword={this.props.property!.isPassword}
+            maxLength={this.props.property?.maxLength}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
@@ -91,6 +92,7 @@ export class TableViewEditor extends React.Component<{
             isPassword={this.props.property!.isPassword}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
+            maxLength={this.props.property?.maxLength}
             refocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.props.onEditorKeyDown}
