@@ -1,5 +1,6 @@
 import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
+import { ISearchResult } from "model/entities/types/ISearchResult";
 
 export interface IApi {
   accessToken: string;
@@ -348,4 +349,8 @@ export interface IApi {
   pendingChanges(data: { sessionFormIdentifier: string }): Promise<any[]>;
 
   changes(data: { SessionFormIdentifier: string; Entity: string; RowId: string }): Promise<any[]>;
+
+  search(searchTerm: string): Promise<ISearchResult[]>;
+
+  getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>;
 }

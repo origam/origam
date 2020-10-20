@@ -44,7 +44,8 @@ export const SearchResultsPanel: React.FC<{}> = observer(props => {
   const clientFulltextSearch = getClientFulltextSearch(application);
   const foundItems = clientFulltextSearch.foundItems;
   const handleMainMenuItemClick = (event: any, item: any) =>
-    getWorkbenchLifecycle(application).onMainMenuItemClick({ event, item });
+    getWorkbenchLifecycle(application).onMainMenuItemClick({
+      event: event, item: item, idParameter: undefined });
   return (
     <div className={S.searchResultsPanel}>
       {foundItems.map(searchResultSection => (

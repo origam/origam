@@ -36,7 +36,7 @@ export class OrigamAPI implements IApi {
     axiosInstance.interceptors.response.use(
       (response) => response,
       (error) => {
-        if(!axios.isCancel(error)){
+        if (!axios.isCancel(error)) {
           this.errorHandler(error);
         }
         throw error;
@@ -330,11 +330,13 @@ export class OrigamAPI implements IApi {
     canceller?: any
   ) {
     return (
-      await this.axiosInstance.post("/UIService/MasterRecord", data, {
-        headers: this.httpAuthHeader,
-        cancelToken: canceller && canceller.token,
-      })
-    )?.data ?? [];
+      (
+        await this.axiosInstance.post("/UIService/MasterRecord", data, {
+          headers: this.httpAuthHeader,
+          cancelToken: canceller && canceller.token,
+        })
+      )?.data ?? []
+    );
   }
 
   async restoreData(data: { SessionFormIdentifier: string; ObjectId: string }) {
@@ -428,6 +430,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any[]> {
     return (await this.axiosInstance.post(`/UIService/GetGroups`, data)).data;
   }
+
   async getAggregations(data: {
     MenuId: string;
     DataStructureEntityId: string;
@@ -462,6 +465,7 @@ export class OrigamAPI implements IApi {
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/GetData`, data)).data;
   }
+
   getReportFromMenu(data: { menuId: string }): Promise<any>;
 
   async getReportFromMenu(data: { menuId: string }): Promise<string> {
@@ -628,10 +632,10 @@ export class OrigamAPI implements IApi {
   async getBlob(data: { downloadToken: string }) {
     window.open(`${this.urlPrefix}/Blob/${data.downloadToken}`);
     /*return (
-      await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
-        headers: this.httpAuthHeader,
-      })
-    ).data;*/
+await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
+ headers: this.httpAuthHeader,
+})
+).data;*/
   }
 
   async getUploadToken(data: {
@@ -690,6 +694,14 @@ export class OrigamAPI implements IApi {
         RowId: data.RowId,
       })
     ).data;
+  }
+
+  async search(searchTerm: string) {
+    return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
+  }
+
+  async getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>  {
+    return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
   }
 }
 

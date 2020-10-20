@@ -30,6 +30,8 @@ import { openNewUrl } from "model/actions/Workbench/openNewUrl";
 import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
 import { IPortalSettings } from "../types/IPortalSettings";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
+import selectors from "model/selectors-tree";
+import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -50,8 +52,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
-
-  *onMainMenuItemClick(args: { event: any; item: any }): Generator {
+  *onMainMenuItemClick(
+      args: { event: any; item: any, idParameter: string | undefined }
+    ): Generator {
     const {
       type,
       id,
@@ -100,12 +103,39 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
           yield* this.openNewUrl(url, "");
           return;
         } else {
-          yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
+          yield* this.openNewForm(
+            id,
+            type,
+            label,
+            dontRequestData === "true",
+            dialogInfo,
+            args.idParameter ? {id: args.idParameter} : {});
         }
       }
     } else {
-      yield* this.openNewForm(id, type, label, dontRequestData === "true", dialogInfo, {});
+      yield* this.openNewForm(
+        id,
+        type,
+        label,
+        dontRequestData === "true",
+        dialogInfo,
+        args.idParameter ? {id: args.idParameter} : {});
     }
+  }
+
+  *onMainMenuItemIdClick(args: { event: any; itemId: any, idParameter: string | undefined}){
+    // const menuItem = this.menuUI.elements.find((elem: any)=> elem.attributes["id"] === args.itemId);
+
+    const menuItem =  args.itemId && selectors.mainMenu.getItemById(this,  args.itemId);
+    if (menuItem) {
+      yield onMainMenuItemClick(this)({
+        event: undefined,
+        item: menuItem,
+        idParameter: args.idParameter
+      });
+    }
+    // debugger;
+    // yield * this.onMainMenuItemClick({event: args.event, item: menuItem});
   }
 
   async getReportTabUrl(menuId: string) {
