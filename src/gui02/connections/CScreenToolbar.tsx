@@ -23,7 +23,7 @@ import { isIFormScreenEnvelope } from "model/entities/types/IFormScreen";
 import { isIWebScreen } from "model/entities/types/IWebScreen";
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { Dropdown } from "gui02/components/Dropdown/Dropdown";
-import { IAction } from "model/entities/types/IAction";
+import { IAction, IActionType } from "model/entities/types/IAction";
 import {
   CtxResponsiveToolbar,
   ResponsiveBlock,
@@ -32,7 +32,8 @@ import {
 } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 import { T } from "../../utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
-import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
+import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
+import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -58,28 +59,102 @@ export class CScreenToolbar extends React.Component<{}> {
     toolbarActions: Array<{
       section: string;
       actions: IAction[];
-    }>
+    }>,
+    actionFilter: ((action: IAction) => boolean) | undefined
   ) {
     const customAssetsRoute = getCustomAssetsRoute(this.application);
+
+    const iconsWillBeShown = toolbarActions
+      .flatMap(toolbar => toolbar.actions)
+      .some(action => action.iconUrl)
+
+    function getIcon(action: IAction){
+     if(action.iconUrl){
+       return <Icon src={customAssetsRoute + "/" + action.iconUrl} />
+     }
+     return iconsWillBeShown ? <div/> : null;
+    }
+
     return toolbarActions
       .filter((actionGroup) => actionGroup.actions.length > 0)
       .map((actionGroup) => (
         <Fragment key={actionGroup.section}>
+          {/*{this.renderActions(actionGroup.actions)}*/}
           {actionGroup.actions
             .filter(
-              (action) => this.state.hiddenActionIds.has(action.id) && getIsEnabledAction(action)
+              (action) => (actionFilter ? actionFilter(action) : true) && getIsEnabledAction(action)
             )
             .map((action, idx) => (
-              <ScreenToolbarAction
-                icon={action.iconUrl
-                  ? <Icon src={customAssetsRoute + "/" + action.iconUrl}/>
-                  : <div/>}
-                label={action.caption}
-                onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-              />
+              <DropdownItem>
+                <ScreenToolbarAction
+                  icon={getIcon(action)}
+                  label={action.caption}
+                  onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                />
+              </DropdownItem>
             ))}
         </Fragment>
       ));
+  }
+
+  renderActions(actions: IAction[]) {
+    const actionsToRender = actions.filter((action) => getIsEnabledAction(action));
+    return actionsToRender
+      .filter((action) => !action.groupId)
+      .map((action, idx) => this.renderAction(action, actionsToRender, idx));
+  }
+
+  renderAction(action: IAction, actionsToRender: IAction[], order: number) {
+    const customAssetsRoute = getCustomAssetsRoute(this.application);
+    if (action.type === IActionType.Dropdown) {
+      const childActions = actionsToRender.filter(
+        (otherAction) => otherAction.groupId === action.id
+      );
+      return (
+        <ResponsiveChild key={action.id} childKey={action.id} order={order}>
+          {({ refChild, isHidden }) => (
+            <Dropdowner
+              style={{ width: "auto" }}
+              trigger={({ refTrigger, setDropped }) => (
+                <ScreenToolbarAction
+                  rootRef={refTrigger}
+                  onClick={() => setDropped(true)}
+                  icon={
+                    action.iconUrl ? (
+                      <Icon src={customAssetsRoute + "/" + action.iconUrl} />
+                    ) : undefined
+                  }
+                  label={action.caption}
+                />
+              )}
+              content={() => (
+                <Dropdown>
+                  {this.getOverfullActionsDropdownContent(
+                    [{ section: "", actions: childActions }],
+                    undefined
+                  )}
+                </Dropdown>
+              )}
+            />
+          )}
+        </ResponsiveChild>
+      );
+    }
+    return (
+      <ResponsiveChild key={action.id} childKey={action.id} order={order}>
+        {({ refChild, isHidden }) => (
+          <ScreenToolbarAction
+            rootRef={refChild}
+            isHidden={isHidden}
+            icon={
+              action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined
+            }
+            label={action.caption}
+            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+          />
+        )}
+      </ResponsiveChild>
+    );
   }
 
   renderForFormScreen() {
@@ -126,25 +201,7 @@ export class CScreenToolbar extends React.Component<{}> {
                       .filter((actionGroup) => actionGroup.actions.length > 0)
                       .map((actionGroup) => (
                         <ScreenToolbarActionGroup key={actionGroup.section}>
-                          {actionGroup.actions
-                            .filter((action) => getIsEnabledAction(action))
-                            .map((action, idx) => (
-                              <ResponsiveChild key={action.id} childKey={action.id} order={idx}>
-                                {({ refChild, isHidden }) => (
-                                  <ScreenToolbarAction
-                                    rootRef={refChild}
-                                    isHidden={isHidden}
-                                    icon={action.iconUrl
-                                      ? <Icon src={customAssetsRoute + "/" + action.iconUrl}/>
-                                      : undefined}
-                                    label={action.caption}
-                                    onClick={(event) =>
-                                      uiActions.actions.onActionClick(action)(event, action)
-                                    }
-                                  />
-                                )}
-                              </ResponsiveChild>
-                            ))}
+                          {this.renderActions(actionGroup.actions)}
                         </ScreenToolbarActionGroup>
                       ))}
                   </ScreenToolbarActionGroup>
@@ -164,7 +221,11 @@ export class CScreenToolbar extends React.Component<{}> {
                 />
               )}
               content={() => (
-                <Dropdown>{this.getOverfullActionsDropdownContent(toolbarActions)}</Dropdown>
+                <Dropdown>
+                  {this.getOverfullActionsDropdownContent(toolbarActions, (action) =>
+                    this.state.hiddenActionIds.has(action.id)
+                  )}
+                </Dropdown>
               )}
             />
           )}

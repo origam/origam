@@ -45,6 +45,11 @@ import { getIsRowMovingDisabled } from "model/actions-ui/DataView/getIsRowMoving
 import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick";
 import { getIsisMoveRowMenuVisible } from "model/selectors/DataView/getIsisMoveRowMenuVisible";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
+import {IAction, IActionMode, IActionPlacement, IActionType} from "model/entities/types/IAction";
+import {ScreenToolbarAction} from "gui02/components/ScreenToolbar/ScreenToolbarAction";
+import {Action} from "model/entities/Action";
+import {IActionParameter} from "model/entities/types/IActionParameter";
+import { DataViewHeaderDropDownItem } from "gui02/components/DataViewHeader/DataViewHeaderDropDownItem";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -60,6 +65,55 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
   responsiveToolbar = new ResponsiveBlock((ids) => {
     this.setState({ ...this.state, hiddenActionIds: ids });
   });
+
+  renderActions(actions: IAction[]){
+    return actions
+      .filter((action) => !action.groupId)
+      .map((action, idx) => this.renderAction(action, actions));
+  }
+
+  renderAction(action: IAction, actionsToRender: IAction[]){
+    if (action.type === IActionType.Dropdown) {
+      const childActions = actionsToRender
+        .filter(otherAction => otherAction.groupId === action.id);
+      return (
+        <Dropdowner
+          style={{ width: "auto" }}
+          trigger={({ refTrigger, setDropped }) => (
+            <DataViewHeaderButton
+              disabled = {!getIsEnabledAction(action)}
+              onClick={() => setDropped(true)}
+              domRef={refTrigger}>
+              {action.caption}
+            </DataViewHeaderButton>
+          )}
+          content={() => (
+            <Dropdown>
+              {childActions
+                .map((action) => (
+                  <DropdownItem isDisabled={!getIsEnabledAction(action)}>
+                    <DataViewHeaderDropDownItem
+                      onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}>
+                        {action.caption}
+                    </DataViewHeaderDropDownItem>
+                  </DropdownItem>
+                ))}
+            </Dropdown>
+          )}
+        />
+      );
+    }
+    return(
+      <DataViewHeaderButton
+        onClick={(event) =>
+          uiActions.actions.onActionClick(action)(event, action)
+        }
+        disabled = {!getIsEnabledAction(action)}
+      >
+        {action.caption}
+      </DataViewHeaderButton>
+    );
+  }
 
   render() {
     const { dataView } = this;
@@ -163,17 +217,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                     </ResponsiveChild>
                     <DataViewHeaderGroup grovable={true}>
                       <DataViewHeaderButtonGroup>
-                        {actions
-                          .map((action) => (
-                            <DataViewHeaderButton
-                              onClick={(event) =>
-                                uiActions.actions.onActionClick(action)(event, action)
-                              }
-                              disabled = {!getIsEnabledAction(action)}
-                            >
-                              {action.caption}
-                            </DataViewHeaderButton>
-                          ))}
+                        {this.renderActions(actions)}
                         {/*<ResponsiveChild childKey={"action-1"} order={20}>
                           {({ refChild, isHidden }) => (
                             <DataViewHeaderButton
