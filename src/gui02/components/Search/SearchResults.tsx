@@ -11,6 +11,8 @@ import {IApplication} from "model/entities/types/IApplication";
 import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
 import { getApi } from "model/selectors/getApi";
 import { flow } from "mobx";
+import {selectNextRow} from "model/actions/DataView/selectNextRow";
+import {handleError} from "model/actions/handleError";
 
 export class SearchResults extends React.Component<{
   results: ISearchResult[];
@@ -34,18 +36,24 @@ function SearchResultItem(props: {
 
   async function onClick(event: any){
     flow(function* () {
-      const api = getApi(application);
-      const menuId = yield api.getMenuId({
-        LookupId: props.result.dataSourceLookupId,
-        ReferenceId: props.result.referenceId
-      })
-
-      yield *getWorkbenchLifecycle(application)
-        .onMainMenuItemIdClick({
-          event: event,
-          itemId:menuId,
-          idParameter: props.result.referenceId });
-    })();
+        try {
+          const api = getApi(application);
+          const menuId = yield api.getMenuId({
+            LookupId: props.result.dataSourceLookupId,
+            ReferenceId: props.result.referenceId
+          })
+          yield* getWorkbenchLifecycle(application)
+            .onMainMenuItemIdClick({
+              event: event,
+              itemId: menuId,
+              idParameter: props.result.referenceId
+            });
+        } catch (e) {
+          yield* handleError(application)(e);
+          throw e;
+        }
+      }
+     )();
   }
 
   return (
