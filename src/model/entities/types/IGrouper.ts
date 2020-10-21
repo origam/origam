@@ -3,6 +3,7 @@ import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering
 export interface IGrouper {
   topLevelGroups: IGroupTreeNode[];
   loadChildren(groupHeader: IGroupTreeNode): void;
+  notifyGroupClosed(group: IGroupTreeNode): void;
   parent?: any;
   start(): void;
 }

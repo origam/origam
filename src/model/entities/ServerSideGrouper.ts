@@ -15,6 +15,7 @@ export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
   parent?: any = null;
   disposers: IReactionDisposer[] = [];
+  groupDisposers: Map<IGroupTreeNode, IReactionDisposer> =  new Map<IGroupTreeNode, IReactionDisposer>()
 
   start() {
     this.disposers.push(
@@ -38,8 +39,19 @@ export class ServerSideGrouper implements IGrouper {
     );
   }
 
+  notifyGroupClosed(group: IGroupTreeNode){
+    if(this.groupDisposers.has(group)){
+      this.groupDisposers.get(group)!();
+      this.groupDisposers.delete(group);
+    }
+  }
+
   loadChildren(groupHeader: IGroupTreeNode) {
-    this.disposers.push(
+    if(this.groupDisposers.has(groupHeader)){
+      this.groupDisposers.get(groupHeader)!();
+    }
+    this.groupDisposers.set(
+      groupHeader,
       autorun(() => {
         const groupingConfiguration = getGroupingConfiguration(this);
         const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);

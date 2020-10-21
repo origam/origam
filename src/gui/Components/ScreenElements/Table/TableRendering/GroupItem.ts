@@ -133,9 +133,20 @@ export class ServerSideGroupItem implements IGroupTreeNode {
       return joinWithAND(andOperands);
     }
   }
+  @observable private _isExpanded = false;
 
-  @observable isExpanded = false;
+  get isExpanded(): boolean {
+    return this._isExpanded;
+  }
+
+  set isExpanded(value: boolean) {
+    if(!value){
+      this.grouper.notifyGroupClosed(this);
+    }
+    this._isExpanded = value;
+  }
 }
+
 function getallParents(group: IGroupTreeNode){
   const parents: IGroupTreeNode[] = [];
   let parent = group.parent;
