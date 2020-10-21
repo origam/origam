@@ -48,6 +48,7 @@ export class Property implements IProperty {
   lookup?: ILookup;
   lookupId?: string;
   lookupEngine?: ILookupIndividualEngine = null as any;
+  childProperties: IProperty[] = [];
   isAggregatedColumn: boolean = false;
   isLookupColumn: boolean = false;
   style: any;
