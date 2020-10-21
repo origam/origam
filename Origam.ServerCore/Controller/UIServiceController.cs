@@ -861,7 +861,7 @@ namespace Origam.ServerCore.Controller
         {
             var customOrderings = GetOrderings(input.Ordering);
 
-            if(input.RowOffset != 0 && !customOrderings.IsEmpty)
+            if(input.RowOffset != 0 && customOrderings.IsEmpty)
             {
                 return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
             }
