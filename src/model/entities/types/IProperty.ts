@@ -60,6 +60,8 @@ export interface IProperty extends IPropertyData {
   nameOverride: string | null | undefined;
   isFormField: boolean;
 
+  getPolymophicProperty(row: any[]): IProperty;
+
   setColumnWidth(width: number): void;
 
   stop(): void;

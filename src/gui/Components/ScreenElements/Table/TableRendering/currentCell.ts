@@ -2,7 +2,9 @@ import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMess
 import { Memoized } from "./common/Memoized";
 import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
 import {
+  context,
   currentDataRow,
+  currentRow,
   dataTable,
   drawingColumnIndex,
   gridLeadCellDimensions,
@@ -13,6 +15,8 @@ import {
   scRenderCell,
 } from "./renderingValues";
 import { dataRowColumnIds } from "./rowCells/dataRowCells";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 export function drawCurrentCell() {
   const colIdx = drawingColumnIndex();
@@ -73,7 +77,14 @@ export function currentColumnId() {
   return dataRowColumnIds()[drawingColumnIndex()];
 }
 
-export const currentProperty = () => propertyById().get(currentColumnId() as any)!;
+export const currentProperty = () =>{
+  const property = propertyById().get(currentColumnId() as any)!
+  if(property.column === "Polymorph"){
+    return property.getPolymophicProperty(currentRow() as any[]);
+  }else{
+    return property;
+  }
+};
 
 export const currentCellText = Memoized(() => {
   const value = currentCellValue();
@@ -82,14 +93,18 @@ export const currentCellText = Memoized(() => {
 scRenderCell.push(() => currentCellText.clear());
 
 export const currentCellValue = Memoized(() => {
-  const value = currentDataRow()[currentProperty().dataIndex];
-  return value;
+  const property = propertyById().get(currentColumnId() as any)!
+  if(property.column === "Polymorph"){
+    const polymorpichProperty = currentProperty();
+    return currentDataRow()[polymorpichProperty.dataIndex];
+  }else{
+    return currentDataRow()[property.dataIndex];
+  }
 });
 scRenderCell.push(() => currentCellValue.clear());
 
 export const currentCellErrorMessage = Memoized(() => {
-  const errMsg = getFieldErrorMessage(currentProperty())(currentDataRow(), currentProperty());
-  return errMsg;
+  return getFieldErrorMessage(currentProperty())(currentDataRow(), currentProperty());
 });
 scRenderCell.push(() => currentCellErrorMessage.clear());
 

@@ -126,7 +126,10 @@ export class FormBuilder extends React.Component<{
           return (
             <Observer key={propertyId}>
               {() => {
-                const property = getDataViewPropertyById(self.props.dataView, propertyId);
+                let property = getDataViewPropertyById(self.props.dataView, propertyId);
+                if(row && property?.column === "Polymorph"){
+                  property = property.getPolymophicProperty(row);
+                }
                 let value;
                 let textualValue = value;
                 if (row && property) {
@@ -147,7 +150,7 @@ export class FormBuilder extends React.Component<{
                         readOnly={!row || isReadOnly(property, rowId)}
                         onKeyDown={(event) => self.onKeyDown(event)}
                         subscribeToFocusManager={(radioInput) =>
-                          focusManager.subscribe(radioInput, property.id, property.tabIndex)
+                          focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
                         }
                       />
                     </Provider>

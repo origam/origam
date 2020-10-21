@@ -59,6 +59,7 @@ import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
 import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
 import { IDataView } from "modules/DataView/DataViewTypes";
 import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
+import { IProperty } from "model/entities/types/IProperty";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -97,7 +98,7 @@ function getPropertyParameters(node: any) {
   return result;
 }
 
-function parseProperty(property: any, idx: number) {
+function parseProperty(property: any, idx: number): IProperty {
   const propertyObject = new Property({
     xmlNode: property,
     id: property.attributes.Id,
@@ -172,11 +173,15 @@ function parseProperty(property: any, idx: number) {
     style: cssString2Object(property.attributes.Style),
   });
   if(property.elements && property.elements.length > 0){
-    const childProperties = property.elements
+    property.elements
       .filter((element: any) => element.name === "Property")
-      .map((childProperty: any ,idx: number) => parseProperty(childProperty, idx));
-
-    propertyObject.childProperties = childProperties.length > 0 ? childProperties : [];
+      .map((childProperty: any ,idx: number) => parseProperty(childProperty, idx))
+      .forEach((childProperty: IProperty) => {
+        childProperty.parent = propertyObject;
+        childProperty.x = childProperty.x + propertyObject.x ;
+        childProperty.y = propertyObject.y;
+        propertyObject.childProperties.push(childProperty);
+      })
   }
   return propertyObject;
 }
