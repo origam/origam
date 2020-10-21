@@ -42,14 +42,13 @@ namespace Origam.DA.Service
                     return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
 
                 case OrigamDataType.Boolean:
-                    if ((bool)value)
-                    {
-                        return trueValue;
-                    }
-                    else
-                    {
-                        return falseValue;
-                    }
+                    bool boolValue = value is string maybeBoolValue 
+                        ? bool.Parse(maybeBoolValue) 
+                        : (bool) value;
+
+                    return boolValue 
+                        ? trueValue 
+                        : falseValue;
 
                 case OrigamDataType.UniqueIdentifier:
                     return "'" + value + "'";
