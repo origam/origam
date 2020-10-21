@@ -34,12 +34,12 @@ export class FilterSettingsBoolean extends React.Component<{
   @action.bound handleValueClick(event: any) {
     this.setting = produce(this.setting, (draft: IFilterSetting) => {
       if (draft.val1 === undefined) {
-        draft.val1 = 0;
+        draft.val1 = false;
         draft.isComplete = true;
-      } else if (draft.val1 === 0) {
-        draft.val1 = 1;
+      } else if (draft.val1 === false) {
+        draft.val1 = true;
         draft.isComplete = true;
-      } else if (draft.val1 === 1) {
+      } else if (draft.val1 === true) {
         draft.val1 = undefined;
         draft.isComplete = false;
       }
