@@ -1,5 +1,5 @@
 import {computed, observable} from "mobx";
-import {IGroupTreeNode} from "./types";
+import {IGroupRow, IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 import {getOrderingConfiguration} from "../../../../../model/selectors/DataView/getOrderingConfiguration";
@@ -39,6 +39,14 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   grouper: IGrouper = null as any;
 
   @observable isExpanded = false;
+
+  get allChildGroups(): IGroupTreeNode[]{
+    return allChildGroups(this);
+  }
+
+  get allParents(): IGroupTreeNode[] {
+    return getallParents(this);
+  }
 
   @computed get childRows(){
     const orderingConfiguration = getOrderingConfiguration(this.grouper);
@@ -86,6 +94,14 @@ export class ServerSideGroupItem implements IGroupTreeNode {
 
   _childRows: ScrollRowContainer;
 
+  get allChildGroups(): IGroupTreeNode[]{
+    return allChildGroups(this);
+  }
+
+  get allParents(): IGroupTreeNode[] {
+    return getallParents(this);
+  }
+
   @computed get childRows(){
       return this._childRows.rows;
   }
@@ -117,6 +133,31 @@ export class ServerSideGroupItem implements IGroupTreeNode {
       return joinWithAND(andOperands);
     }
   }
+  @observable private _isExpanded = false;
 
-  @observable isExpanded = false;
+  get isExpanded(): boolean {
+    return this._isExpanded;
+  }
+
+  set isExpanded(value: boolean) {
+    if(!value){
+      this.grouper.notifyGroupClosed(this);
+    }
+    this._isExpanded = value;
+  }
+}
+
+function getallParents(group: IGroupTreeNode){
+  const parents: IGroupTreeNode[] = [];
+  let parent = group.parent;
+  while(parent){
+    parents.push(parent);
+    parent = parent.parent;
+  }
+  return parents;
+}
+
+function allChildGroups(group: IGroupTreeNode): IGroupTreeNode[]{
+  const allChildGroups = group.childGroups.flatMap(childGroup => childGroup.allChildGroups)
+  return [...group.childGroups, ... allChildGroups];
 }

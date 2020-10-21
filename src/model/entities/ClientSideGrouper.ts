@@ -126,5 +126,8 @@ export class ClientSideGrouper implements IGrouper {
     }
   }
 
+  notifyGroupClosed(group: IGroupTreeNode){
+  }
+
   start(): void {}
 }

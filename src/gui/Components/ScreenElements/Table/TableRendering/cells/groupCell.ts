@@ -102,15 +102,16 @@ export function drawGroupCell() {
       h: 20,
       handler(event: any) {
         flow(function* () {
-          console.log("click");
           if (!row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0) {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
           runInAction(()=> {
-            if (shouldCloseOtherGroups(row.sourceGroup, ctx)){
-              for (let group of getDataTable(ctx).groups) {
-                group.isExpanded = false;
-              }
+            const groups = getDataTable(ctx).groups.flatMap(group => group.allChildGroups);
+            if (shouldCloseOtherGroups(row.sourceGroup, groups, ctx)){
+              const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
+              groups
+                .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
+                .forEach(group => group.isExpanded = false);
             }
             row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
           });
@@ -120,13 +121,11 @@ export function drawGroupCell() {
   }
 }
 
-function shouldCloseOtherGroups(clickedGroup: IGroupTreeNode, ctx: any){
-  const groups = getDataTable(ctx).groups;
+function shouldCloseOtherGroups(clickedGroup: IGroupTreeNode, groups: IGroupTreeNode[], ctx: any){
   const someInfinitelyScrolledGroupsAreExpanded = groups
-    .some(group => group.rowCount >= SCROLL_ROW_CHUNK && group.isExpanded);
-  return !clickedGroup.isExpanded
-    && isInfiniteScrollingActive(ctx, undefined)
-    && (clickedGroup.rowCount >= SCROLL_ROW_CHUNK || someInfinitelyScrolledGroupsAreExpanded);
+    .some(group => group.rowCount >= SCROLL_ROW_CHUNK && group.isExpanded && group.childRows.length > 0);
+  return isInfiniteScrollingActive(ctx, undefined)
+    && (someInfinitelyScrolledGroupsAreExpanded);
 }
 
 function formatColumnValue(value: string){
