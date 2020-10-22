@@ -21,7 +21,8 @@ import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownE
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
 import {FocusManager} from "model/entities/FocusManager";
-import {DomEvent} from "leaflet";
+import { DomEvent } from "leaflet";
+import { observable } from "mobx";
 
 
 @inject(({ property, formPanelView }) => {
@@ -244,7 +245,6 @@ export class FormViewEditor extends React.Component<{
     const dataView = getDataView(this.props.property);
 
     return (event: any) => {
-      console.log("event.key: "+event.key)
       if (event.key === "Tab") {
         DomEvent.preventDefault(event);
         if(event.shiftKey){
