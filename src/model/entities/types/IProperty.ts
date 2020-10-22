@@ -34,6 +34,8 @@ export interface IPropertyData {
   isAggregatedColumn: boolean;
   isLookupColumn: boolean;
 
+  controlPropertyValue?: string;
+  controlPropertyId?: string;
   parameters?: any;
   allowReturnToForm?: boolean;
   isTree?: boolean;
@@ -51,12 +53,14 @@ export interface IProperty extends IPropertyData {
   dataIndex: number;
   isLookup: boolean;
   lookupEngine?: ILookupIndividualEngine;
-  
 
+  childProperties: IProperty[];
   linkToMenuId?: string;
   isLink: boolean;
   nameOverride: string | null | undefined;
   isFormField: boolean;
+
+  getPolymophicProperty(row: any[]): IProperty;
 
   setColumnWidth(width: number): void;
 

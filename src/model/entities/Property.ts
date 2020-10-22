@@ -8,6 +8,8 @@ import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSou
 import { IDataSourceField } from "./types/IDataSourceField";
 import { LookupResolver } from "modules/Lookup/LookupResolver";
 import { LookupLabelsCleanerReloader } from "modules/Lookup/LookupCleanerLoader";
+import {getDataTable} from "model/selectors/DataView/getDataTable";
+import {currentRow} from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -48,9 +50,11 @@ export class Property implements IProperty {
   lookup?: ILookup;
   lookupId?: string;
   lookupEngine?: ILookupIndividualEngine = null as any;
+  childProperties: IProperty[] = [];
   isAggregatedColumn: boolean = false;
   isLookupColumn: boolean = false;
   style: any;
+  controlPropertyId?: string;
 
   linkToMenuId?: string = undefined;
 
@@ -87,6 +91,13 @@ export class Property implements IProperty {
 
   parent: any;
   xmlNode = undefined;
+
+  getPolymophicProperty(row: any[]): IProperty {
+    const dataSourceField = getDataSourceFieldByName(this, this.controlPropertyId!)!;
+    const controlPropertyValue = getDataTable(this)
+      .getCellValueByDataSourceField(row, dataSourceField);
+    return this.childProperties.find(prop => prop.controlPropertyValue === controlPropertyValue)!;
+  }
 }
 
 

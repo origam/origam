@@ -24,12 +24,15 @@ import uiActions from "../../../../model/actions-ui-tree";
 import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import {rowHeight} from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
   const property = getSelectedProperty(tablePanelView)!;
   return {
-    property,
+    property: property.column === "Polymorph"
+      ? property.getPolymophicProperty(row)
+      : property,
     getCellValue: () => getCellValue(tablePanelView, row, property),
     onChange: (event: any, value: any) =>
       onFieldChange(tablePanelView)(event, row, property, value),

@@ -59,6 +59,7 @@ import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
 import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
 import { IDataView } from "modules/DataView/DataViewTypes";
 import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
+import { IProperty } from "model/entities/types/IProperty";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -86,6 +87,105 @@ export const findFormPropertyIds = (node: any) =>
   );
 
 export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];
+
+
+function getPropertyParameters(node: any) {
+  const parameters = findParameters(node);
+  const result: { [key: string]: any } = {};
+  for (let p of parameters) {
+    result[p.attributes.Name] = p.attributes.Value;
+  }
+  return result;
+}
+
+function parseProperty(property: any, idx: number): IProperty {
+  const propertyObject = new Property({
+    xmlNode: property,
+    id: property.attributes.Id,
+    tabIndex: property.attributes.TabIndex,
+    controlPropertyId: property.attributes.ControlPropertyId,
+    controlPropertyValue:  property.attributes.ControlPropertyValue,
+    modelInstanceId: property.attributes.ModelInstanceId || "",
+    name: property.attributes.Name,
+    readOnly: property.attributes.ReadOnly === "true",
+    x: parseInt(property.attributes.X, 10),
+    y: parseInt(property.attributes.Y, 10),
+    width: parseInt(property.attributes.Width, 10),
+    height: parseInt(property.attributes.Height, 10),
+    captionLength: parseInt(property.attributes.CaptionLength, 10),
+    captionPosition: property.attributes.CaptionPosition,
+    entity: property.attributes.Entity,
+    column: property.attributes.Column,
+    parameters: getPropertyParameters(property),
+    dock: property.attributes.Dock,
+    multiline: property.attributes.Multiline === "true",
+    isPassword: property.attributes.IsPassword === "true",
+    isRichText: property.attributes.IsRichText === "true",
+    maxLength: parseInt(property.attributes.MaxLength, 10),
+    formatterPattern: property.attributes.FormatterPattern
+      ? flf2mof(property.attributes.FormatterPattern)
+      : "",
+    customNumericFormat: property.attributes.CustomNumericFormat,
+    identifier: property.attributes.Identifier,
+    gridColumnWidth: property.attributes.GridColumnWidth
+      ? parseInt(property.attributes.GridColumnWidth)
+      : 100,
+    columnWidth: property.attributes.GridColumnWidth
+      ? parseInt(property.attributes.GridColumnWidth)
+      : 100,
+    lookupId: property.attributes.LookupId,
+    lookup: !property.attributes.LookupId
+      ? undefined
+      : new Lookup({
+        dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
+        lookupId: property.attributes.LookupId,
+        identifier: property.attributes.Identifier,
+        identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
+        dropDownType: property.attributes.DropDownType,
+        cached: property.attributes.Cached === "true",
+        searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
+        dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
+          (ddProperty) => {
+            return new DropDownColumn({
+              id: ddProperty.attributes.Id,
+              name: ddProperty.attributes.Name,
+              column: ddProperty.attributes.Column,
+              entity: ddProperty.attributes.Entity,
+              index: parseInt(ddProperty.attributes.Index, 10),
+            });
+          }
+        ),
+        dropDownParameters: findStopping(
+          property,
+          (n) => n.name === "ComboBoxParameterMapping"
+        ).map((ddParam) => {
+          return {
+            parameterName: ddParam.attributes.ParameterName,
+            fieldName: ddParam.attributes.FieldName,
+          };
+        }),
+      }),
+
+    allowReturnToForm: property.attributes.AllowReturnToForm === "true",
+    isTree: property.attributes.IsTree === "true",
+    isAggregatedColumn: property.attributes.Aggregated || false,
+    isLookupColumn: property.attributes.IsLookupColumn || false,
+    style: cssString2Object(property.attributes.Style),
+  });
+  if(property.elements && property.elements.length > 0){
+    property.elements
+      .filter((element: any) => element.name === "Property")
+      .map((childProperty: any ,idx: number) => parseProperty(childProperty, idx))
+      .forEach((childProperty: IProperty) => {
+        childProperty.parent = propertyObject;
+        childProperty.x = childProperty.x + propertyObject.x ;
+        childProperty.y = propertyObject.y;
+        propertyObject.childProperties.push(childProperty);
+      })
+  }
+  return propertyObject;
+}
+
 
 export function* interpretScreenXml(
   screenDoc: any,
@@ -127,15 +227,6 @@ export function* interpretScreenXml(
       case 0:
         return IPanelViewType.Form;
     }
-  }
-
-  function getPropertyParameters(node: any) {
-    const parameters = findParameters(node);
-    const result: { [key: string]: any } = {};
-    for (let p of parameters) {
-      result[p.attributes.Name] = p.attributes.Value;
-    }
-    return result;
   }
 
   const xmlComponentBindings = findStopping(
@@ -218,81 +309,8 @@ export function* interpretScreenXml(
     dataViews: dataViews.map((dataView, i) => {
       const configuration = findStopping(dataView, (n) => n.name === "Configuration");
 
-      const properties = findStopping(dataView, (n) => n.name === "Property").map(
-        (property, idx) => {
-          return new Property({
-            xmlNode: property,
-            id: property.attributes.Id,
-            tabIndex: property.attributes.TabIndex,
-            modelInstanceId: property.attributes.ModelInstanceId || "",
-            name: property.attributes.Name,
-            readOnly: property.attributes.ReadOnly === "true",
-            x: parseInt(property.attributes.X, 10),
-            y: parseInt(property.attributes.Y, 10),
-            width: parseInt(property.attributes.Width, 10),
-            height: parseInt(property.attributes.Height, 10),
-            captionLength: parseInt(property.attributes.CaptionLength, 10),
-            captionPosition: property.attributes.CaptionPosition,
-            entity: property.attributes.Entity,
-            column: property.attributes.Column,
-            parameters: getPropertyParameters(property),
-            dock: property.attributes.Dock,
-            multiline: property.attributes.Multiline === "true",
-            isPassword: property.attributes.IsPassword === "true",
-            isRichText: property.attributes.IsRichText === "true",
-            maxLength: parseInt(property.attributes.MaxLength, 10),
-            formatterPattern: property.attributes.FormatterPattern
-              ? flf2mof(property.attributes.FormatterPattern)
-              : "",
-            customNumericFormat: property.attributes.CustomNumericFormat,
-            identifier: property.attributes.Identifier,
-            gridColumnWidth: property.attributes.GridColumnWidth
-              ? parseInt(property.attributes.GridColumnWidth)
-              : 100,
-            columnWidth: property.attributes.GridColumnWidth
-              ? parseInt(property.attributes.GridColumnWidth)
-              : 100,
-            lookupId: property.attributes.LookupId,
-            lookup: !property.attributes.LookupId
-              ? undefined
-              : new Lookup({
-                  dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
-                  lookupId: property.attributes.LookupId,
-                  identifier: property.attributes.Identifier,
-                  identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
-                  dropDownType: property.attributes.DropDownType,
-                  cached: property.attributes.Cached === "true",
-                  searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
-                  dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
-                    (ddProperty) => {
-                      return new DropDownColumn({
-                        id: ddProperty.attributes.Id,
-                        name: ddProperty.attributes.Name,
-                        column: ddProperty.attributes.Column,
-                        entity: ddProperty.attributes.Entity,
-                        index: parseInt(ddProperty.attributes.Index, 10),
-                      });
-                    }
-                  ),
-                  dropDownParameters: findStopping(
-                    property,
-                    (n) => n.name === "ComboBoxParameterMapping"
-                  ).map((ddParam) => {
-                    return {
-                      parameterName: ddParam.attributes.ParameterName,
-                      fieldName: ddParam.attributes.FieldName,
-                    };
-                  }),
-                }),
+      const properties = findStopping(dataView, (n) => n.name === "Property").map(parseProperty);
 
-            allowReturnToForm: property.attributes.AllowReturnToForm === "true",
-            isTree: property.attributes.IsTree === "true",
-            isAggregatedColumn: property.attributes.Aggregated || false,
-            isLookupColumn: property.attributes.IsLookupColumn || false,
-            style: cssString2Object(property.attributes.Style),
-          });
-        }
-      );
 
       const formPropertyIds = new Set(findFormPropertyIds(dataView));
       for (let prop of properties) {
