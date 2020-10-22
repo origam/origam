@@ -9,22 +9,48 @@ import S from "./MapPerspectiveUI.module.scss";
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-export class MapPerspectiveCom extends React.Component {
+interface IMapPerspectiveComProps {
+  mapCenter: { lat: number; lng: number };
+}
+
+export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> {
   elmMapDiv: HTMLDivElement | null = null;
   refMapDiv = (elm: any) => (this.elmMapDiv = elm);
 
+  leafletMap?: L.DrawMap;
+
+  panToCenter() {
+    this.leafletMap?.panTo([this.props.mapCenter.lat, this.props.mapCenter.lng]);
+  }
+
+  isPropMapCenterDifferent(prevProps: IMapPerspectiveComProps) {
+    return (
+      this.props.mapCenter.lat !== prevProps.mapCenter.lat ||
+      this.props.mapCenter.lng !== prevProps.mapCenter.lng
+    );
+  }
+
+  componentDidUpdate(prevProps: IMapPerspectiveComProps) {
+    if (this.isPropMapCenterDifferent(prevProps)) {
+      this.panToCenter();
+    }
+  }
+
   componentDidMount() {
-    const osmUrl = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      osmAttrib =
-        '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      osm = L.tileLayer(osmUrl, { maxZoom: 18, attribution: osmAttrib }),
-      lmap = L.map(this.elmMapDiv!).setView([51.505, -0.09], 13),
-      drawnItems = L.featureGroup().addTo(lmap);
+    const osmUrl = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    const osmAttrib =
+      '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    const osm = L.tileLayer(osmUrl, { maxZoom: 18, attribution: osmAttrib });
+    const lmap = L.map(this.elmMapDiv!);
+    const drawnItems = L.featureGroup().addTo(lmap);
+    this.leafletMap = lmap;
+    lmap.setZoom(13);
+    this.panToCenter();
     L.control
       .layers(
         {
@@ -69,13 +95,13 @@ export class MapPerspectiveCom extends React.Component {
 
     lmap.on(L.Draw.Event.CREATED, function (event) {
       const layer = event.layer;
-      console.log(drawnItems.toGeoJSON())
+      console.log(drawnItems.toGeoJSON());
       drawnItems.addLayer(layer);
     });
 
-    lmap.on(L.Draw.Event.EDITED, function(event) {
-      console.log(drawnItems.toGeoJSON())
-    })
+    lmap.on(L.Draw.Event.EDITED, function (event) {
+      console.log(drawnItems.toGeoJSON());
+    });
 
     /*const drawControl = new L.Control.Draw();
     lmap.addControl(drawControl);*/

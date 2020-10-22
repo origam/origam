@@ -566,7 +566,9 @@ export function* interpretScreenXml(
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const mapPerspectiveSetup = constructMapViewSetup(dataViewXmlNode);
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
-      $mapPerspective.resolve(IMapPerspectiveDirector).setup();
+      const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);
+      mapPerspectiveDirector.mapPerspectiveSetup = mapPerspectiveSetup;
+      mapPerspectiveDirector.setup();
     }
 
     //***************** */
@@ -635,7 +637,7 @@ function constructMapViewSetup(xmlNode: any) {
   const attr = xmlNode.attributes;
   const mps = new MapPerspectiveSetup();
   mps.mapAzimuthMember = attr.MapAzimuthMember;
-  mps.mapCenter = attr.MapCenter;
+  mps.mapCenterRaw = attr.MapCenter;
   mps.mapColorMember = attr.MapColorMember;
   mps.mapIconMember = attr.MapIconMember;
   mps.mapLocationMember = attr.MapLocationMember;

@@ -1,15 +1,16 @@
 import React from "react";
-import {action, flow} from "mobx";
-import {IDataViewBodyUI, IDataViewToolbarUI} from "modules/DataView/DataViewUI";
-import {TypeSymbol} from "dic/Container";
-import {SectionViewSwitchers} from "modules/DataView/DataViewTypes";
-import {getIdent, IIId} from "utils/common";
-import {DataViewHeaderAction} from "gui02/components/DataViewHeader/DataViewHeaderAction";
-import {Icon} from "gui02/components/Icon/Icon";
-import {IMapPerspective} from "./MapPerspective";
-import {Observer} from "mobx-react";
-import {IPerspective} from "../Perspective";
-import {MapPerspectiveCom} from "./MapPerspectiveUI";
+import { action, flow } from "mobx";
+import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
+import { TypeSymbol } from "dic/Container";
+import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
+import { getIdent, IIId } from "utils/common";
+import { DataViewHeaderAction } from "gui02/components/DataViewHeader/DataViewHeaderAction";
+import { Icon } from "gui02/components/Icon/Icon";
+import { IMapPerspective } from "./MapPerspective";
+import { Observer } from "mobx-react";
+import { IPerspective } from "../Perspective";
+import { MapPerspectiveCom } from "./MapPerspectiveUI";
+import { MapPerspectiveSetup } from "./MapPerspectiveSetup";
 
 export class MapPerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -21,13 +22,23 @@ export class MapPerspectiveDirector implements IIId {
     public perspective = IPerspective()
   ) {}
 
+  mapPerspectiveSetup: MapPerspectiveSetup = null!;
+
   @action.bound
   setup() {
     this.dataViewBodyUI.contrib.put({
       $iid: this.$iid,
       render: () => (
         <Observer key={this.$iid}>
-          {() => (!this.mapPerspective.isActive ? <></> : <MapPerspectiveCom />)}
+          {() =>
+            !this.mapPerspective.isActive ? (
+              <></>
+            ) : (
+              <MapPerspectiveCom
+                mapCenter={this.mapPerspectiveSetup.mapCenter || { lat: 0, lng: 0 }}
+              />
+            )
+          }
         </Observer>
       ),
     });
