@@ -62,6 +62,10 @@ import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
 import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
 import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
+import {
+  MapLayer as MapLayerSetup,
+  MapPerspectiveSetup,
+} from "modules/DataView/Perspective/MapPerspective/MapPerspectiveSetup";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -98,6 +102,8 @@ function getPropertyParameters(node: any) {
   }
   return result;
 }
+
+const instance2XmlNode = new WeakMap<any, any>();
 
 function parseProperty(property: any, idx: number): IProperty {
   const propertyObject = new Property({
@@ -418,6 +424,8 @@ export function* interpretScreenXml(
         ),
       });
 
+      instance2XmlNode.set(dataViewInstance, dataView);
+
       let groupingColumnCounter = 1;
       configuration.forEach((conf) => {
         const defaultColumnConfigurations = findStopping(conf, (n) => n.name === "columnWidths");
@@ -555,6 +563,8 @@ export function* interpretScreenXml(
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
 
     if (dataView.isMapSupported) {
+      const dataViewXmlNode = instance2XmlNode.get(dataView)!;
+      const mapPerspectiveSetup = constructMapViewSetup(dataViewXmlNode);
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
       $mapPerspective.resolve(IMapPerspectiveDirector).setup();
     }
@@ -619,4 +629,41 @@ function checkInfiniteScrollWillWork(
       );
     }
   }
+}
+
+function constructMapViewSetup(xmlNode: any) {
+  const attr = xmlNode.attributes;
+  const mps = new MapPerspectiveSetup();
+  mps.mapAzimuthMember = attr.MapAzimuthMember;
+  mps.mapCenter = attr.MapCenter;
+  mps.mapColorMember = attr.MapColorMember;
+  mps.mapIconMember = attr.MapIconMember;
+  mps.mapLocationMember = attr.MapLocationMember;
+  mps.mapTextMember = attr.MapTextMember;
+  mps.textColorMember = attr.TextColorMember;
+  mps.textLocationMember = attr.TextLocationMember;
+  mps.textRotationMember = attr.TextRotationMember;
+
+  const layerXmlNodes = findStopping(
+    xmlNode,
+    (node) => node.name === "Layer" && node.parent.name === "MapViewLayers"
+  );
+  for (let layerXmlNode of layerXmlNodes) {
+    const layerAttr = layerXmlNode.attributes;
+    const mls = new MapLayerSetup();
+    mps.layers.push(mls);
+    mls.defaultEnabled = layerAttr.DefaultEnabled === "true";
+    mls.id = layerAttr.id;
+    mls.title = layerAttr.title;
+    mls.type = layerAttr.type;
+    const parameterXmlNodes = findStopping(layerXmlNode, (node) => node.name === "Parameter");
+    for (let parameterXmlnode of parameterXmlNodes) {
+      mls.mapLayerParameters.set(
+        parameterXmlnode.attributes.name,
+        parameterXmlnode.attributes.value
+      );
+    }
+  }
+
+  return mps;
 }
