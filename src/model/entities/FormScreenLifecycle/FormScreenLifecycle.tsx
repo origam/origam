@@ -54,6 +54,8 @@ import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActi
 import {selectPrevColumn} from "model/actions/DataView/TableView/selectPrevColumn";
 import {selectNextColumn} from "model/actions/DataView/TableView/selectNextColumn";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
+import { getColumnConfigurationDialog } from "model/selectors/getColumnConfigurationDialog";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -507,7 +509,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       for (let rootDataView of formScreen.rootDataViews) {
         rootDataView.saveViewState();
-        yield* this.readFirstChunkOfRows(rootDataView);
+        const groupingColumns = getGroupingConfiguration(rootDataView).groupingColumnCount;
+        if(groupingColumns === 0){
+          yield* this.readFirstChunkOfRows(rootDataView);
+        }
       }
     } finally {
       for (let dataView of formScreen.nonRootDataViews) {
@@ -854,6 +859,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
     yield* clearRowStates(this)();
     yield* refreshWorkQueues(this)();
+  }
+
+  loadInitialData(){
+    const self = this;
+    flow(function*(){
+      yield* self.loadData();
+    })();
   }
 
   *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
