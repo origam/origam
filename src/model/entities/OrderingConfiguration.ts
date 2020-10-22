@@ -29,6 +29,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
 
   constructor(defaultOrderings: IOrdering[] | undefined) {
     this.defaultOrderings = defaultOrderings ?? [];
+    this.userOrderings = this.defaultOrderings;
   }
 
   getDefaultOrderings() {
