@@ -593,5 +593,27 @@ namespace Origam.DA.Service
         {
             return string.Format("{0} = NULL;{1}", name, Environment.NewLine);
         }
+
+        internal override string ChangeColumnDef(FieldMappingItem field)
+        {
+            StringBuilder ddl = new StringBuilder();
+            if (field.AllowNulls)
+            {
+                ddl.Append(" DROP");
+            }
+            else
+            {
+                ddl.Append(" SET");
+            }
+            ddl.Append(" NOT NULL");
+            return ddl.ToString();
+        }
+
+        internal override string DropDefaultValue(FieldMappingItem field, string constraintName)
+        {
+            return string.Format("ALTER TABLE {0} ALTER COLUMN {1} DROP DEFAULT;",
+                    RenderExpression(field.ParentItem as TableMappingItem),
+                    NameLeftBracket + field.MappedColumnName + NameRightBracket);
+        }
     }
 }
