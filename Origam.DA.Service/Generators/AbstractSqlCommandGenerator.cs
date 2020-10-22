@@ -624,7 +624,8 @@ namespace Origam.DA.Service
 
                 ddl.AppendFormat("CONSTRAINT {1}",
                     NameLeftBracket + table.MappedObjectName + NameRightBracket,
-                    "FK_" + table.MappedObjectName + "_" + (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "_" + pkTableName);
+                    NameLeftBracket + "FK_" + table.MappedObjectName + "_" + 
+                    (constraint.Fields[0] as FieldMappingItem).MappedColumnName + "_" + pkTableName + NameRightBracket);
 
                 ddl.Append(Environment.NewLine + "\tFOREIGN KEY (");
                 int i = 0;
@@ -667,27 +668,40 @@ namespace Origam.DA.Service
             if (!field.AllowNulls && field.DefaultValue != null)
             {
                 string constraintName = "DF_" + (field.ParentItem as TableMappingItem).MappedObjectName + "_" + field.MappedColumnName;
-                ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1}",
+                ddl.AppendFormat(" CONSTRAINT {0} DEFAULT {1};",
                     NameLeftBracket + constraintName + NameRightBracket,
                     this.RenderConstant(field.DefaultValue, false));
 
                 ddl.Append(Environment.NewLine);
-                ddl.AppendFormat("ALTER TABLE {0} DROP CONSTRAINT {1}",
-                    RenderExpression(field.ParentItem as TableMappingItem),
-                    NameLeftBracket + constraintName + NameRightBracket);
+                ddl.Append(DropDefaultValue(field,constraintName));
             }
 
             return ddl.ToString();
         }
+
+        internal abstract string DropDefaultValue(FieldMappingItem field, string constraintName);
+
         public string AlterColumnDdl(FieldMappingItem field)
         {
             StringBuilder ddl = new StringBuilder();
 
             ddl.AppendFormat("ALTER TABLE {0} ALTER COLUMN {1}",
                 RenderExpression(field.ParentItem as TableMappingItem),
-                ColumnDefinitionDdl(field));
+                ChangeColumnDefinitionDdl(field));
             return ddl.ToString();
         }
+
+        private string ChangeColumnDefinitionDdl(FieldMappingItem field)
+        {
+            StringBuilder ddl = new StringBuilder();
+            ddl.AppendFormat("{0} ",
+               NameLeftBracket + field.MappedColumnName + NameRightBracket);
+            ddl.Append(ChangeColumnDef(field));
+            return ddl.ToString();
+        }
+
+        internal abstract string ChangeColumnDef(FieldMappingItem field);
+
         internal string ColumnDefinitionDdl(FieldMappingItem field)
         {
             StringBuilder ddl = new StringBuilder();

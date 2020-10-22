@@ -2022,13 +2022,12 @@ namespace Origam.DA.Service
                                 (differenceDescription == "" ? "" : "; ")
                                 + "AllowNulls: Schema-YES, Database-NO";
                         }
-                        if (((string)row["DATA_TYPE"]).ToUpper() !=
-                            gen.DdlDataType(fld.DataType, fld.MappedDataType).ToUpper())
+                        if (CompareType(row, gen.DdlDataType(fld.DataType, fld.MappedDataType).ToUpper()))
                         {
-                            differenceDescription = (differenceDescription == "" ? "" : "; ")
-                                + "DataType: Schema-"
-                                + gen.DdlDataType(fld.DataType, fld.MappedDataType)
-                                + ", Database-" + (string)row["DATA_TYPE"];
+								differenceDescription = (differenceDescription == "" ? "" : "; ")
+									+ "DataType: Schema-"
+									+ gen.DdlDataType(fld.DataType, fld.MappedDataType)
+									+ ", Database-" + (string)row["DATA_TYPE"];
                         }
                         if (fld.DataType == OrigamDataType.String
                             && !row.IsNull("CHARACTER_MAXIMUM_LENGTH")
@@ -2068,6 +2067,32 @@ namespace Origam.DA.Service
                 }
             }
         }
+
+        private bool CompareType(DataRow row, string modelType)
+        {
+			string columnType = GetColumnType(row);
+			if (columnType.Contains("TIMESTAMP") && modelType.Contains("TIMESTAMP"))
+			{
+				return false;
+			}
+			if(columnType.Contains("CHARACTER VARYING") && modelType.Contains("VARCHAR"))
+            {
+				return false;
+            }
+			return columnType != modelType;
+		}
+
+        private string GetColumnType(DataRow row)
+        {
+			StringBuilder finalDataType = new StringBuilder();
+			finalDataType.Append((string)row["DATA_TYPE"]);
+            int length = Convert.IsDBNull(row["CHARACTER_MAXIMUM_LENGTH"]) ? 0 : (int)row["CHARACTER_MAXIMUM_LENGTH"];
+			if (length ==-1)
+			{
+				finalDataType.Append("(MAX)");
+            }
+			return finalDataType.ToString().ToUpper();
+		}
 
         private void DoCompareModelInDatabase(ArrayList results, ArrayList schemaTables, Hashtable dbTableList, Hashtable schemaColumnList, DataSet columns)
         {
