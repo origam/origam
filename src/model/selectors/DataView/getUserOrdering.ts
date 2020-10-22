@@ -1,6 +1,7 @@
-import {getOrderingConfiguration} from "./getOrderingConfiguration";
-import {getDataStructureEntityId} from "./getDataStructureEntityId";
-import {getDataView} from "./getDataView";
+import { getOrderingConfiguration } from "./getOrderingConfiguration";
+import { getDataStructureEntityId } from "./getDataStructureEntityId";
+import { getDataView } from "./getDataView";
+import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 
 export function getUserOrdering(ctx: any) {
   const dataView =  getDataView(ctx);
@@ -12,5 +13,6 @@ export function getUserOrdering(ctx: any) {
   }
   return orderingConfiguration.userOrderings.length === 0
     ? defaultOrderings
-    : orderingConfiguration.userOrderings;
+    : orderingConfiguration.userOrderings
+      .filter(ordering => ordering.direction !== IOrderByDirection.NONE);
 }
