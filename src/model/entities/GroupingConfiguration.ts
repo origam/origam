@@ -49,11 +49,6 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     this.notifyOnOffHandlers();
   }
 
-  // @action.bound
-  // applyGrouping(): void {
-  //   getGrouper(this).apply(this.firstGroupingColumn)
-  // }
-
   parent?: any;
 
   notifyOnOffHandlers(){

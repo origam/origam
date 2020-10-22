@@ -15,7 +15,6 @@ export interface IGroupingConfiguration extends IGroupingConfigurationData {
 
   setGrouping(columnId: string, groupingIndex: number): void;
   clearGrouping(): void;
-  // applyGrouping(): void;
 
   parent?: any;
 }
