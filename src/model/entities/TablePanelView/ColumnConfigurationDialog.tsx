@@ -8,6 +8,7 @@ import { ColumnsDialog, ITableColumnsConf } from "gui/Components/Dialogs/Columns
 import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getDontRequestData } from "../../selectors/getDontRequestData";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {
@@ -69,6 +70,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       }
       this.tablePanelView.aggregations.setType(column.id, column.aggregationType);
     }
+    getFormScreenLifecycle(this).loadInitialData();
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 
