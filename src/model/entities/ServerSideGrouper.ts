@@ -2,7 +2,7 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IGrouper } from "./types/IGrouper";
-import { autorun, IReactionDisposer, observable } from "mobx";
+import {autorun, IReactionDisposer, observable, reaction, IReactionOptions, comparer} from "mobx";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
@@ -16,27 +16,40 @@ export class ServerSideGrouper implements IGrouper {
   parent?: any = null;
   disposers: IReactionDisposer[] = [];
   groupDisposers: Map<IGroupTreeNode, IReactionDisposer> =  new Map<IGroupTreeNode, IReactionDisposer>()
+  @observable refreshTrigger = 0;
 
   start() {
     this.disposers.push(
-      autorun(() => {
-        const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
-        if (!firstGroupingColumn) {
-          this.topLevelGroups.length = 0;
-          return;
-        }
-        const dataView = getDataView(this);
-        const property = getDataTable(this).getPropertyById(firstGroupingColumn);
-        const lookupId = property && property.lookup && property.lookup.lookupId;
-        const aggregations = getTablePanelView(this).aggregations.aggregationList;
-        getFormScreenLifecycle(this)
-          .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
-          .then(
-            (groupData) =>
-              (this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined))
-          );
-      })
+      reaction(
+        () => [
+          Array.from(getGroupingConfiguration(this).groupingIndices.values()),
+          Array.from(getGroupingConfiguration(this).groupingIndices.keys()),
+          this.refreshTrigger],
+        () => this.loadGroups(),
+        {fireImmediately: true, equals: comparer.structural,delay: 50})
     );
+  }
+
+  private loadGroups() {
+    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
+    if (!firstGroupingColumn) {
+      this.topLevelGroups.length = 0;
+      return;
+    }
+    const dataView = getDataView(this);
+    const property = getDataTable(this).getPropertyById(firstGroupingColumn);
+    const lookupId = property && property.lookup && property.lookup.lookupId;
+    const aggregations = getTablePanelView(this).aggregations.aggregationList;
+    getFormScreenLifecycle(this)
+      .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
+      .then(
+        (groupData) =>
+          (this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined))
+      );
+  }
+
+  refresh() {
+    this.refreshTrigger++;
   }
 
   notifyGroupClosed(group: IGroupTreeNode){

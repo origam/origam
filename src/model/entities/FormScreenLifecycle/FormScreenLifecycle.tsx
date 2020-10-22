@@ -49,12 +49,7 @@ import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
-import {getDataView} from "model/selectors/DataView/getDataView";
-import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
-import {selectPrevColumn} from "model/actions/DataView/TableView/selectPrevColumn";
-import {selectNextColumn} from "model/actions/DataView/TableView/selectNextColumn";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
-import { getColumnConfigurationDialog } from "model/selectors/getColumnConfigurationDialog";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 
 enum IQuestionSaveDataAnswer {
@@ -509,8 +504,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       for (let rootDataView of formScreen.rootDataViews) {
         rootDataView.saveViewState();
-        const groupingColumns = getGroupingConfiguration(rootDataView).groupingColumnCount;
-        if(groupingColumns === 0){
+        const groupingConfiguration = getGroupingConfiguration(rootDataView);
+        if (groupingConfiguration.isGrouping) {
+          rootDataView.serverSideGrouper.refresh();
+        } else {
           yield* this.readFirstChunkOfRows(rootDataView);
         }
       }
