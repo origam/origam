@@ -8,8 +8,8 @@ import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRe
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
-import { parseAggregations } from "./types/IAggregation";
 import { joinWithAND, toFilterItem } from "./OrigamApiHelpers";
+import { parseAggregations } from "./Aggregatioins";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];

@@ -5,8 +5,8 @@ import {currentColumnId, currentColumnLeft, currentColumnWidth, currentProperty,
 import {CPR} from "utils/canvas";
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {IGroupRow} from "../types";
-import {dataColumnsWidths} from "./dataCell";
-import {aggregationToString} from "model/entities/types/IAggregation";
+import { dataColumnsWidths } from "./dataCell";
+import { aggregationToString } from "model/entities/Aggregatioins";
 
 
 export function aggregationColumnsWidths() {

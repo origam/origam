@@ -32,9 +32,7 @@ import { getDataTable } from "../../../../model/selectors/DataView/getDataTable"
 import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {
-  aggregationToString,
   IAggregation,
-  parseAggregations,
 } from "model/entities/types/IAggregation";
 import {
   IInfiniteScrollLoader,
@@ -44,6 +42,12 @@ import {
 import { VisibleRowsMonitor } from "./VisibleRowsMonitor";
 import { ScrollRowContainer } from "../../../../model/entities/ScrollRowContainer";
 import {SelectionCheckBoxHeader} from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
+import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
+import {
+  parseAggregations,
+  calcAggregations,
+  aggregationToString,
+} from "model/entities/Aggregatioins";
 
 @inject(({ dataView }) => {
   return {
@@ -359,9 +363,13 @@ class HeaderRenderer implements IHeaderRendererData {
         this.aggregationData.length = 0;
         return;
       }
-      getFormScreenLifecycle(this.dataView)
-        .loadAggregations(this.dataView, aggregations)
-        .then((data) => (this.aggregationData = parseAggregations(data) || []));
+      if(isInfiniteScrollingActive(this.dataView)){
+        getFormScreenLifecycle(this.dataView)
+          .loadAggregations(this.dataView, aggregations)
+          .then((data) => (this.aggregationData = parseAggregations(data) || []));
+      }else{
+        this.aggregationData = calcAggregations(this.dataView, aggregations);
+      }
     });
   }
 }
