@@ -105,9 +105,8 @@ export function DropdownEditorControl(props: {
           {/*  <i className="fas fa-ellipsis-h"></i>*/}
           {/*</button>*/}
 
-          <button
+          <div
             className={cx("inputBtn", "lastOne", beh.isReadOnly && "readOnly")}
-            disabled={beh.isReadOnly}
             tabIndex={-1}
             onClick={!beh.isReadOnly ? beh.handleInputBtnClick : undefined}
             onContextMenu={(event) => {
@@ -121,7 +120,7 @@ export function DropdownEditorControl(props: {
             ) : (
               <i className="fas fa-spinner fa-spin"></i>
             )}
-          </button>
+          </div>
 
           <TriggerContextMenu state={triggerContextMenu} />
 
