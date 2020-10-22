@@ -60,6 +60,8 @@ import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
 import { IDataView } from "modules/DataView/DataViewTypes";
 import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
+import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
+import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -554,8 +556,8 @@ export function* interpretScreenXml(
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
 
-    /*const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
-    $mapPerspective.resolve(IMapPerspectiveDirector).setup();*/
+    const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
+    $mapPerspective.resolve(IMapPerspectiveDirector).setup();
 
     //***************** */
 
