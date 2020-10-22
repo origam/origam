@@ -32,10 +32,7 @@ import { getDataTable } from "../../../../model/selectors/DataView/getDataTable"
 import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import {
-  aggregationToString,
   IAggregation,
-  parseAggregations,
-  calcAggregations,
 } from "model/entities/types/IAggregation";
 import {
   IInfiniteScrollLoader,
@@ -46,6 +43,11 @@ import { VisibleRowsMonitor } from "./VisibleRowsMonitor";
 import { ScrollRowContainer } from "../../../../model/entities/ScrollRowContainer";
 import {SelectionCheckBoxHeader} from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
 import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
+import {
+  parseAggregations,
+  calcAggregations,
+  aggregationToString,
+} from "model/entities/Aggregatioins";
 
 @inject(({ dataView }) => {
   return {
