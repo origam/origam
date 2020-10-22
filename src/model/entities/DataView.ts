@@ -94,6 +94,7 @@ export class DataView implements IDataView {
   modelId = "";
   defaultPanelView = IPanelViewType.Table;
   isHeadless = false;
+  isMapSupported = false;
   disableActionButtons = false;
   showAddButton = false;
   showDeleteButton = false;
