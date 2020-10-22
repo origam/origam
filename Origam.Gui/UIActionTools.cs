@@ -82,21 +82,11 @@ namespace Origam.Gui
 
         public static EntityUIAction GetAction(string action)
         {
-            Guid actionId;
-            try
-            {
-                actionId = new Guid(action);
-            }
-            catch
-            {
-                return null;
-            }
-            IPersistenceService ps = ServiceManager.Services.GetService(
-                typeof(IPersistenceService)) as IPersistenceService;
-            return ps.SchemaProvider.RetrieveInstance(
-                typeof(EntityUIAction), new ModelElementKey(actionId)) 
-                as EntityUIAction;
+            return !Guid.TryParse(action, out Guid actionId)
+                ? null
+                : ServiceManager.Services
+                    .GetService<IPersistenceService>().SchemaProvider
+                    .RetrieveInstance<EntityUIAction>(actionId);
         }
-
     }
 }
