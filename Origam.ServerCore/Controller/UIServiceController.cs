@@ -1069,9 +1069,9 @@ namespace Origam.ServerCore.Controller
         
         private void AddConfigData(PortalResult result)
         {
-            result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.IdentityGuiLogoUrl)
+            result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.Html5ClientLogoUrl)
                 ? "./img/logo-left.png"
-                : customAssetsConfig.IdentityGuiLogoUrl;
+                : customAssetsConfig.Html5ClientLogoUrl;
             result.ChatRefreshInterval = chatConfig.ChatRefreshInterval;
             result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
         }
