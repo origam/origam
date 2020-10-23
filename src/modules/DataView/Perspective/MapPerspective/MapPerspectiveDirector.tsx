@@ -39,7 +39,7 @@ export class MapPerspectiveDirector implements IIId {
         <Observer key={this.$iid}>
           {() => (
             <DataViewHeaderAction
-              onClick={flow(this.mapPerspective.handleToolbarBtnClick)}
+              onMouseDown={flow(this.mapPerspective.handleToolbarBtnClick)}
               isActive={this.mapPerspective.isActive}
             >
               <Icon src="./icons/geo-coordinates.svg" />
