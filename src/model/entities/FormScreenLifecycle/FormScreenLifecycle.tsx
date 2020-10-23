@@ -51,6 +51,8 @@ import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {IDataViewToolbarUI} from "modules/DataView/DataViewUI";
+import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -696,6 +698,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
       yield* selectFirstRow(targetDataView)();
+      if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
+        yield* targetDataView.activateFormView();
+      }
     } finally {
       this.monitor.inFlow--;
     }

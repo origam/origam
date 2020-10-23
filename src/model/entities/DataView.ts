@@ -83,7 +83,7 @@ export class DataView implements IDataView {
   }
 
   orderProperty: IProperty;
-
+  activateFormView: (()=> Generator) | undefined;
   gridDimensions: IGridDimensions;
 
   isReorderedOnClient: boolean = true;

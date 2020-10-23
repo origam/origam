@@ -64,6 +64,7 @@ export interface IDataViewData {
 }
 
 export interface IDataView extends IDataViewData {
+  activateFormView: (()=> Generator) | undefined;
   $type_IDataView: 1;
 
   orderProperty: IProperty | undefined;

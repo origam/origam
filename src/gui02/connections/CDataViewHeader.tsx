@@ -50,6 +50,7 @@ import {ScreenToolbarAction} from "gui02/components/ScreenToolbar/ScreenToolbarA
 import {Action} from "model/entities/Action";
 import {IActionParameter} from "model/entities/types/IActionParameter";
 import { DataViewHeaderDropDownItem } from "gui02/components/DataViewHeader/DataViewHeaderDropDownItem";
+import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
