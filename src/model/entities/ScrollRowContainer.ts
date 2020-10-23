@@ -204,6 +204,13 @@ export class ScrollRowContainer implements IRowsContainer {
   unlockAddedRowPosition(): void {}
 
   addedRowPositionLocked: boolean = false;
+
+  getFirstRow(): any[] | undefined {
+    if(this.rows.length === 0){
+      return undefined
+    }
+    return this.rows[0]
+  }
 }
 
 class RowChunk {
