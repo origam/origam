@@ -27,6 +27,45 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	fi
 fi
 
+DIRCONFIG="configuredata"
+if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
+	if [[ -n ${gitConfUrl} ]]; then
+	   rm -rf $DIRCONFIG
+	   mkdir $DIRCONFIG
+	   cd $DIRCONFIG
+	   gitconfcredentials=""
+	   if [[ -n ${gitConfUsername} && -n ${gitConfPassword} ]]; then
+			gitconfcredentials="${gitConfUsername}:${gitConfPassword}@"
+	   fi
+	   if [[ ${gitConfUrl} == https:* ]]; then
+			fullconfgiturl="https://$gitconfcredentials${gitConfUrl//https:\/\//}"
+		git clone $fullconfgiturl
+	   fi
+	   if [[ ${gitConfUrl} == http:* ]]; then
+		fullconfgiturl="http://$gitconfcredentials${gitConfUrl//http:\/\//}"
+		git clone $fullconfgiturl
+	   fi
+	   cd `ls`
+	   if [[ -n ${gitConfBranch} ]]; then
+	    git checkout ${gitConfBranch}
+	   fi
+	   if [ -f _OrigamSettings.mssql.template ]; then
+		cp _OrigamSettings.mssql.template ../../
+	   fi
+	   if [ -f _OrigamSettings.postgres.template ]; then
+		cp _OrigamSettings.postgres.template ../../
+	   fi
+	   if [ -f _appsettings.template ]; then
+		cp _appsettings.template ../../
+	   fi
+	   if [ -f log4net.config ]; then
+		cp log4net.config ../../
+	   fi
+	   cd ..
+	   cd ..
+	fi
+fi
+
 if [ ! "$(ls -A $DIR)" ]; then 
 	echo “Server has no model!!!! Please set up with GIT.”;
 	echo "Mandatory: gitPullOnStart(true)"
