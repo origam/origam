@@ -359,6 +359,7 @@ export function* interpretScreenXml(
         modelInstanceId: dataView.attributes.ModelInstanceId,
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
+        newRecordView: dataView.attributes.NewRecordView,
         defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         isHeadless: dataView.attributes.IsHeadless === "true",

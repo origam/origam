@@ -56,6 +56,7 @@ export interface IDataViewData {
   serverSideGrouper: ServerSideGrouper;
   clientSideGrouper: ClientSideGrouper;
   isFirst: boolean;
+  newRecordView: string | undefined;
 
   dataViewRowCursor: RowCursor;
   dataViewApi: DataViewAPI;

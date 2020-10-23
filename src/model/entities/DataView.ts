@@ -107,6 +107,7 @@ export class DataView implements IDataView {
   isRootGrid = false;
   isRootEntity = false;
   isPreloaded = false;
+  newRecordView: string | undefined;
   requestDataAfterSelectionChange = false;
   confirmSelectionChange = false;
   properties: IProperty[] = [];
