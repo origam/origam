@@ -716,7 +716,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           OriginalId: rowId,
           RequestingGridId: gridId,
           Entities: [entity],
-          ForcedValues: {},
+          ForcedValues: this.getNewRowValues(),
         });
       } finally {
         formScreen.dataUpdateCRS.leave();
