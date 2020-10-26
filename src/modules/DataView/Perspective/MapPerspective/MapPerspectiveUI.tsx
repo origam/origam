@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType, MapSourceData } from "./MapSourceData";
 import { reaction } from "mobx";
+import { MapPerspectiveSetup } from "./MapPerspectiveSetup";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -19,6 +20,7 @@ L.Icon.Default.mergeOptions({
 interface IMapPerspectiveComProps {
   mapCenter: { type: "Point"; coordinates: [number, number] };
   mapSourceData: MapSourceData;
+  isReadOnly: boolean;
 }
 
 export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> {
@@ -55,7 +57,26 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     }
   }
 
-  componentDidMount() {
+  initLeafletDrawControls() {
+    this.leafletMap?.addControl(
+      new L.Control.Draw({
+        edit: {
+          featureGroup: this.leafletMapObjects,
+          poly: {
+            allowIntersection: true,
+          },
+        },
+        draw: {
+          polygon: {
+            allowIntersection: false,
+            showArea: true,
+          },
+        },
+      } as any) // 🦄
+    );
+  }
+
+  initLeaflet() {
     const osmUrl = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
     const osmAttrib =
       '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
@@ -117,22 +138,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         { position: "topleft", collapsed: true }
       )
       .addTo(lmap);
-    lmap.addControl(
-      new L.Control.Draw({
-        edit: {
-          featureGroup: drawnItems,
-          poly: {
-            allowIntersection: true,
-          },
-        },
-        draw: {
-          polygon: {
-            allowIntersection: false,
-            showArea: true,
-          },
-        },
-      } as any) // 🦄
-    );
+
 
     lmap.addLayer(this.leafletMapObjects);
 
@@ -193,6 +199,13 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         }
       )
     );
+  }
+
+  componentDidMount() {
+    this.initLeaflet();
+    if(!this.props.isReadOnly) {
+      this.initLeafletDrawControls();
+    }
   }
 
   componentWillUnmount() {

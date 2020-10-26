@@ -567,9 +567,12 @@ export function* interpretScreenXml(
     if (dataView.isMapSupported) {
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const mapPerspectiveSetup = constructMapViewSetup(dataViewXmlNode);
+      const isReadonly = dataView.properties.some((prop) => prop.readOnly);
+      mapPerspectiveSetup.isReadOnlyView = isReadonly;
       const mapSourceData = constructMapSourceData(dataView, mapPerspectiveSetup);
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
       const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);
+
       mapPerspectiveDirector.mapPerspectiveSetup = mapPerspectiveSetup;
       mapPerspectiveDirector.mapSourceData = mapSourceData;
       mapPerspectiveDirector.setup();

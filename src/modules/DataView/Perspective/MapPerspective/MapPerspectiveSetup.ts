@@ -20,6 +20,7 @@ export class MapPerspectiveSetup {
   textRotationMember: string = "";
   mapCenterRaw: string = "";
   layers: MapLayer[] = [];
+  isReadOnlyView: boolean = false;
 
   @computed
   get mapCenter() {

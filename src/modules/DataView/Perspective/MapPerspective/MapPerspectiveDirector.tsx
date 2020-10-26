@@ -39,6 +39,7 @@ export class MapPerspectiveDirector implements IIId {
               <MapPerspectiveCom
                 mapCenter={this.mapPerspectiveSetup.mapCenter || { lat: 0, lng: 0 }}
                 mapSourceData={this.mapSourceData}
+                isReadOnly={this.mapPerspectiveSetup.isReadOnlyView}
               />
             )
           }
