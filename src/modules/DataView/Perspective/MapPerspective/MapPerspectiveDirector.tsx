@@ -11,6 +11,7 @@ import { Observer } from "mobx-react";
 import { IPerspective } from "../Perspective";
 import { MapPerspectiveCom } from "./MapPerspectiveUI";
 import { MapPerspectiveSetup } from "./MapPerspectiveSetup";
+import { MapSourceData } from "./MapSourceData";
 
 export class MapPerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -23,6 +24,7 @@ export class MapPerspectiveDirector implements IIId {
   ) {}
 
   mapPerspectiveSetup: MapPerspectiveSetup = null!;
+  mapSourceData: MapSourceData = null!;
 
   @action.bound
   setup() {
@@ -36,6 +38,7 @@ export class MapPerspectiveDirector implements IIId {
             ) : (
               <MapPerspectiveCom
                 mapCenter={this.mapPerspectiveSetup.mapCenter || { lat: 0, lng: 0 }}
+                mapSourceData={this.mapSourceData}
               />
             )
           }

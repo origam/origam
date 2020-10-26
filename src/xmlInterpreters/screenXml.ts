@@ -34,7 +34,7 @@ import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPersp
 import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
 import { ITablePerspectiveDirector } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
 import { IPerspective } from "modules/DataView/Perspective/Perspective";
-import { flow } from "mobx";
+import { autorun, flow } from "mobx";
 import { IViewConfiguration, ViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
@@ -57,7 +57,7 @@ import { getApi } from "model/selectors/getApi";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
 import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
-import { IDataView } from "modules/DataView/DataViewTypes";
+import { IDataView as IDataViewTS } from "modules/DataView/DataViewTypes";
 import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
 import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
@@ -66,6 +66,8 @@ import {
   MapLayer as MapLayerSetup,
   MapPerspectiveSetup,
 } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveSetup";
+import { MapSourceData } from "modules/DataView/Perspective/MapPerspective/MapSourceData";
+import { IDataView } from "model/entities/types/IDataView";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -535,7 +537,7 @@ export function* interpretScreenXml(
 
   for (let dataView of scr.dataViews) {
     const $dataView = $formScreen.beginLifetimeScope(SCOPE_DataView);
-    $dataView.register(IDataView, () => dataView).scopedInstance(SCOPE_DataView);
+    $dataView.register(IDataViewTS, () => dataView).scopedInstance(SCOPE_DataView);
 
     $dataView
       .register(IRowCursor, () => new RowCursor(() => getSelectedRowId(dataView)))
@@ -554,7 +556,7 @@ export function* interpretScreenXml(
       )
       .scopedInstance(SCOPE_DataView);
 
-    $dataView.resolve(IDataView);
+    $dataView.resolve(IDataViewTS);
 
     const $tablePerspective = $dataView.beginLifetimeScope(SCOPE_TablePerspective);
     $tablePerspective.resolve(ITablePerspectiveDirector).setup();
@@ -565,9 +567,11 @@ export function* interpretScreenXml(
     if (dataView.isMapSupported) {
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const mapPerspectiveSetup = constructMapViewSetup(dataViewXmlNode);
+      const mapSourceData = constructMapSourceData(dataView, mapPerspectiveSetup);
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
       const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);
       mapPerspectiveDirector.mapPerspectiveSetup = mapPerspectiveSetup;
+      mapPerspectiveDirector.mapSourceData = mapSourceData;
       mapPerspectiveDirector.setup();
     }
 
@@ -668,4 +672,8 @@ function constructMapViewSetup(xmlNode: any) {
   }
 
   return mps;
+}
+
+function constructMapSourceData(dataView: IDataView, setup: MapPerspectiveSetup) {
+  return new MapSourceData(dataView, setup);
 }

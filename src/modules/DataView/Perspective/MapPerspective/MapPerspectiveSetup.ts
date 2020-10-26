@@ -1,4 +1,5 @@
 import { computed } from "mobx";
+import { parseGeoPoint, parseGeoString } from "./helpers/geoStrings";
 
 export class MapLayer {
   id: string = "";
@@ -22,13 +23,6 @@ export class MapPerspectiveSetup {
 
   @computed
   get mapCenter() {
-    const match = this.mapCenterRaw.match(/POINT \(([^)]+)\)/);
-    const coordsString = match?.[1];
-    const coordsSplStr = coordsString?.split(" ");
-    const coordLatStr = coordsSplStr?.[1];
-    const coordLngStr = coordsSplStr?.[0];
-    const lat = coordLatStr ? parseFloat(coordLatStr) : undefined;
-    const lng = coordLngStr ? parseFloat(coordLngStr) : undefined;
-    return lat !== undefined && lng !== undefined ? { lat, lng } : undefined;
+    return parseGeoPoint(this.mapCenterRaw);
   }
 }
