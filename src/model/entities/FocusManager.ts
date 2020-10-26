@@ -39,7 +39,9 @@ export class FocusManager {
       this.focusNext(focusable);
     }
     else{
-      focusable.focus();
+      setTimeout(()=>{
+        focusable.focus();
+      })
     }
     this.focusRequested = true;
   }
@@ -56,7 +58,9 @@ export class FocusManager {
       this.focusPrevious(focusable);
     }
     else{
-      focusable.focus();
+      setTimeout(()=>{
+        focusable.focus();
+      })
     }
     this.focusRequested = true;
   }
