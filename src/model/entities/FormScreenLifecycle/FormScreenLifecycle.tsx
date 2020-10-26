@@ -45,12 +45,14 @@ import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLook
 import _ from "lodash";
 import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
+import { selectFirstRow} from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {selectLastRow} from "model/actions/DataView/selectLastRow";
+import {startEditingFirstCell} from "model/actions/DataView/startEditingFirstCell";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -695,7 +697,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
-      yield* selectFirstRow(targetDataView)();
+      yield* selectLastRow(targetDataView)();
+      yield* startEditingFirstCell(targetDataView)();
     } finally {
       this.monitor.inFlow--;
     }
