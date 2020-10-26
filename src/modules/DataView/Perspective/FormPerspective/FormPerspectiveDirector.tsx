@@ -54,7 +54,7 @@ export class FormPerspectiveDirector implements IIId {
         <Observer key={this.$iid}>
           {() => (
             <DataViewHeaderAction
-              onClick={flow(this.formPerspective.handleToolbarBtnClick)}
+              onMouseDown={flow(this.formPerspective.handleToolbarBtnClick)}
               isActive={this.formPerspective.isActive}
             >
               <Icon src="./icons/detail-view.svg" tooltip={T("Grid", "form_tool_tip")} />

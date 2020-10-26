@@ -89,7 +89,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   icon={getIcon(action)}
                   label={action.caption}
-                  onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                  onMouseDown={(event) => uiActions.actions.onActionClick(action)(event, action)}
                 />
               </DropdownItem>
             ))}
@@ -118,7 +118,7 @@ export class CScreenToolbar extends React.Component<{}> {
               trigger={({ refTrigger, setDropped }) => (
                 <ScreenToolbarAction
                   rootRef={refTrigger}
-                  onClick={() => setDropped(true)}
+                  onMouseDown={() => setDropped(true)}
                   icon={
                     action.iconUrl ? (
                       <Icon src={customAssetsRoute + "/" + action.iconUrl} />
@@ -150,7 +150,7 @@ export class CScreenToolbar extends React.Component<{}> {
               action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined
             }
             label={action.caption}
-            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+            onMouseDown={(event) => uiActions.actions.onActionClick(action)(event, action)}
           />
         )}
       </ResponsiveChild>
@@ -175,7 +175,7 @@ export class CScreenToolbar extends React.Component<{}> {
               <ScreenToolbarActionGroup>
                 {!getIsSuppressSave(formScreen) && (
                   <ScreenToolbarAction
-                    onClick={onSaveSessionClick(formScreen)}
+                    onMouseDown={onSaveSessionClick(formScreen)}
                     icon={
                       <Icon
                         src="./icons/save.svg"
@@ -187,7 +187,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   />
                 )}
                 <ScreenToolbarAction
-                  onClick={onRefreshSessionClick(formScreen)}
+                  onMouseDown={onRefreshSessionClick(formScreen)}
                   icon={
                     <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />
                   }
@@ -215,7 +215,7 @@ export class CScreenToolbar extends React.Component<{}> {
               trigger={({ refTrigger, setDropped }) => (
                 <ScreenToolbarAction
                   rootRef={refTrigger}
-                  onClick={() => setDropped(true)}
+                  onMouseDown={() => setDropped(true)}
                   //onClick={this.handleLogoutClick}
                   icon={<Icon src="./icons/dot-menu.svg" tooltip={""} />}
                 />
@@ -257,7 +257,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 }
               />*/}
             <ScreenToolbarAction
-              onClick={onReloadWebScreenClick(activeScreen)}
+              onMouseDown={onReloadWebScreenClick(activeScreen)}
               icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
             />
           </ScreenToolbarActionGroup>
