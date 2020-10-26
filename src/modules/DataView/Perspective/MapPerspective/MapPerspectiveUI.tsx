@@ -5,6 +5,7 @@ import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
 
 import S from "./MapPerspectiveUI.module.scss";
+import cx from "classnames";
 import { IMapObject, IMapObjectType, MapSourceData } from "./MapSourceData";
 import { reaction } from "mobx";
 import { MapPerspectiveSetup } from "./MapPerspectiveSetup";
@@ -21,6 +22,8 @@ interface IMapPerspectiveComProps {
   mapCenter: { type: "Point"; coordinates: [number, number] };
   mapSourceData: MapSourceData;
   isReadOnly: boolean;
+  isActive: boolean;
+  onChange?(geoJson: any): void;
 }
 
 export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> {
@@ -74,6 +77,29 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         },
       } as any) // 🦄
     );
+
+    this.leafletMap?.on(L.Draw.Event.CREATED, (event) => {
+      const layer = event.layer;
+      this.leafletMapObjects.clearLayers();
+      this.leafletMapObjects.addLayer(layer);
+      console.log(layer.toGeoJSON());
+      const obj = layer.toGeoJSON().geometry;
+      this.props.onChange?.(obj);
+    });
+
+    this.leafletMap?.on(L.Draw.Event.EDITED, (event) => {
+      const layers = (event as any).layers;
+      console.log(layers.toGeoJSON());
+      const obj = layers.toGeoJSON().features?.[0]?.geometry;
+      console.log(obj);
+      if (obj) {
+        this.props.onChange?.(obj);
+      }
+    });
+
+    this.leafletMap?.on(L.Draw.Event.DELETED, (event) => {
+      this.props.onChange?.(undefined);
+    });
   }
 
   initLeaflet() {
@@ -81,7 +107,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     const osmAttrib =
       '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors';
     const lmap = L.map(this.elmMapDiv!, {});
-    const drawnItems = L.featureGroup().addTo(lmap);
+    //const drawnItems = L.featureGroup().addTo(lmap);
     this.leafletMap = lmap;
     lmap.setZoom(13);
     this.panToCenter();
@@ -133,24 +159,13 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             transparent: true,
             attribution: "Heigit",
           }),
-          drawlayer: drawnItems,
+          drawlayer: this.leafletMapObjects,
         },
         { position: "topleft", collapsed: true }
       )
       .addTo(lmap);
 
-
     lmap.addLayer(this.leafletMapObjects);
-
-    lmap.on(L.Draw.Event.CREATED, function (event) {
-      const layer = event.layer;
-      console.log(drawnItems.toGeoJSON());
-      drawnItems.addLayer(layer);
-    });
-
-    lmap.on(L.Draw.Event.EDITED, function (event) {
-      console.log(drawnItems.toGeoJSON());
-    });
 
     /*const drawControl = new L.Control.Draw();
     lmap.addControl(drawControl);*/
@@ -158,10 +173,10 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       reaction(
         () => this.props.mapSourceData.mapObjects,
         (objects) => {
-          console.log("Drawing layers");
-          console.log(objects);
+          console.log("Drawing layers", objects);
           this.leafletMapObjects.clearLayers();
           for (let obj of objects) {
+            console.log("Drawing object of layer", obj);
             switch (obj.type) {
               case IMapObjectType.POINT:
                 {
@@ -171,16 +186,21 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
                 }
                 break;
               case IMapObjectType.POLYGON:
+                console.log(
+                  "Drawing polygon",
+                  obj.coordinates.length,
+                  obj.coordinates.map((coords) => coords.map((coord) => [coord[1], coord[0]]))
+                );
                 {
                   const polygon = L.polygon(
-                    obj.coordinates.map((coords) => [coords[1], coords[0]]),
+                    obj.coordinates[0].map((coords) => [coords[1], coords[0]]),
                     { color: "blue" }
                   )
                     .bindTooltip(obj.name)
                     .addTo(this.leafletMapObjects);
                 }
                 break;
-              case IMapObjectType.POLYLINE:
+              case IMapObjectType.LINESTRING:
                 {
                   const polygon = L.polyline(
                     obj.coordinates.map((coords) => [coords[1], coords[0]]),
@@ -203,7 +223,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   componentDidMount() {
     this.initLeaflet();
-    if(!this.props.isReadOnly) {
+    if (!this.props.isReadOnly) {
       this.initLeafletDrawControls();
     }
   }
@@ -213,6 +233,8 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   }
 
   render() {
-    return <div className={S.mapDiv} ref={this.refMapDiv}></div>;
+    return (
+      <div className={cx(S.mapDiv, { isHidden: !this.props.isActive })} ref={this.refMapDiv}></div>
+    );
   }
 }

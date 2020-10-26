@@ -1,6 +1,11 @@
 .mapDiv {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  
+  &:global(.isHidden) {
+    display: none;
+  }
 
   :global(.leaflet-draw-actions) {
     overflow: hidden;

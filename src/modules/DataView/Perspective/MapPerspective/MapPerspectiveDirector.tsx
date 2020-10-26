@@ -32,17 +32,18 @@ export class MapPerspectiveDirector implements IIId {
       $iid: this.$iid,
       render: () => (
         <Observer key={this.$iid}>
-          {() =>
-            !this.mapPerspective.isActive ? (
-              <></>
-            ) : (
-              <MapPerspectiveCom
-                mapCenter={this.mapPerspectiveSetup.mapCenter || { lat: 0, lng: 0 }}
-                mapSourceData={this.mapSourceData}
-                isReadOnly={this.mapPerspectiveSetup.isReadOnlyView}
-              />
-            )
-          }
+          {() => (
+            <MapPerspectiveCom
+              mapCenter={this.mapPerspectiveSetup.mapCenter || { lat: 0, lng: 0 }}
+              mapSourceData={this.mapSourceData}
+              isReadOnly={this.mapPerspectiveSetup.isReadOnlyView}
+              isActive={this.mapPerspective.isActive}
+              onChange={(geoJson) => {
+                console.log("Change: ", geoJson);
+                this.mapSourceData.handleGeometryChange(geoJson);
+              }}
+            />
+          )}
         </Observer>
       ),
     });
