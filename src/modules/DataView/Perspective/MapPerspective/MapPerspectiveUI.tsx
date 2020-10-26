@@ -17,7 +17,7 @@ L.Icon.Default.mergeOptions({
 });
 
 interface IMapPerspectiveComProps {
-  mapCenter: { lat: number; lng: number };
+  mapCenter: { type: "Point"; coordinates: [number, number] };
   mapSourceData: MapSourceData;
 }
 
@@ -31,14 +31,21 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   _disposers: any[] = [];
 
+  constructor(props: IMapPerspectiveComProps) {
+    super(props);
+  }
+
   panToCenter() {
-    this.leafletMap?.panTo([this.props.mapCenter.lat, this.props.mapCenter.lng]);
+    this.leafletMap?.panTo([
+      this.props.mapCenter.coordinates[1],
+      this.props.mapCenter.coordinates[0],
+    ]);
   }
 
   isPropMapCenterDifferent(prevProps: IMapPerspectiveComProps) {
     return (
-      this.props.mapCenter.lat !== prevProps.mapCenter.lat ||
-      this.props.mapCenter.lng !== prevProps.mapCenter.lng
+      this.props.mapCenter.coordinates[0] !== prevProps.mapCenter.coordinates[0] ||
+      this.props.mapCenter.coordinates[1] !== prevProps.mapCenter.coordinates[1]
     );
   }
 
@@ -152,7 +159,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             switch (obj.type) {
               case IMapObjectType.POINT:
                 {
-                  const point = L.marker([obj.lat, obj.lng])
+                  const point = L.marker([obj.coordinates[1], obj.coordinates[0]])
                     .bindTooltip(obj.name)
                     .addTo(this.leafletMapObjects);
                 }
@@ -160,7 +167,17 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
               case IMapObjectType.POLYGON:
                 {
                   const polygon = L.polygon(
-                    obj.coords.map((loc) => [loc.lat, loc.lng]),
+                    obj.coordinates.map((coords) => [coords[1], coords[0]]),
+                    { color: "blue" }
+                  )
+                    .bindTooltip(obj.name)
+                    .addTo(this.leafletMapObjects);
+                }
+                break;
+              case IMapObjectType.POLYLINE:
+                {
+                  const polygon = L.polyline(
+                    obj.coordinates.map((coords) => [coords[1], coords[0]]),
                     { color: "blue" }
                   )
                     .bindTooltip(obj.name)

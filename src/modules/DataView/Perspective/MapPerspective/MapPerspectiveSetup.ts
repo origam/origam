@@ -1,5 +1,5 @@
 import { computed } from "mobx";
-import { parseGeoPoint, parseGeoString } from "./helpers/geoStrings";
+import { parse as wktParse } from "wkt";
 
 export class MapLayer {
   id: string = "";
@@ -23,6 +23,6 @@ export class MapPerspectiveSetup {
 
   @computed
   get mapCenter() {
-    return parseGeoPoint(this.mapCenterRaw);
+    return wktParse(this.mapCenterRaw);
   }
 }

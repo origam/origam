@@ -2,13 +2,13 @@ import _ from "lodash";
 import { computed } from "mobx";
 import { IDataView } from "model/entities/types/IDataView";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
-import { getCellValueByIdx } from "model/selectors/TablePanelView/getCellValue";
-import { parseGeoString } from "./helpers/geoStrings";
 import { MapPerspectiveSetup } from "./MapPerspectiveSetup";
+import { parse as wktParse } from "wkt";
 
 export enum IMapObjectType {
-  POINT = "POINT",
-  POLYGON = "POLYGON",
+  POINT = "Point",
+  POLYGON = "Polygon",
+  POLYLINE = "Polyline"
 }
 
 export interface IMapObjectBase {
@@ -18,16 +18,20 @@ export interface IMapObjectBase {
 
 export interface IMapPoint extends IMapObjectBase {
   type: IMapObjectType.POINT;
-  lat: number;
-  lng: number;
+  coordinates: [number, number];
 }
 
 export interface IMapPolygon extends IMapObjectBase {
   type: IMapObjectType.POLYGON;
-  coords: { lat: number; lng: number }[];
+  coordinates: [number, number][];
 }
 
-export type IMapObject = IMapPoint | IMapPolygon;
+export interface IMapPolyline extends IMapObjectBase {
+  type: IMapObjectType.POLYLINE;
+  coordinates: [number, number][];
+}
+
+export type IMapObject = IMapPoint | IMapPolygon | IMapPolyline;
 
 export class MapSourceData {
   constructor(public dataView: IDataView, public setup: MapPerspectiveSetup) {}
@@ -50,10 +54,10 @@ export class MapSourceData {
     const result: IMapObject[] = [];
     for (let row of tableRows) {
       if (_.isArray(row)) {
-        const parsedString = parseGeoString(row[this.fldLocationIndex]);
-        if (parsedString)
+        const objectGeoJson = wktParse(row[this.fldLocationIndex]);
+        if (objectGeoJson)
           result.push({
-            ...parsedString,
+            ...objectGeoJson,
             name: row[this.fldNameIndex],
             icon: row[this.fldIconIndex],
           });
