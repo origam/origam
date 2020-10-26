@@ -1,6 +1,7 @@
 export enum IMainMenuItemType {
   FormRef = "FormReferenceMenuItem",
   FormRefWithSelection = "FormReferenceMenuItem_WithSelection",
+  ReportRefWithSelection = "ReportReferenceMenuItem_WithSelection",
   WorkflowRef = "WorkflowReferenceMenuItem",
   WorkQueue = "WorkQueue",
   ReportReferenceMenuItem = "ReportReferenceMenuItem"
