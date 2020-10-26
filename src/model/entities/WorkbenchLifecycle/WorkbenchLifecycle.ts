@@ -80,7 +80,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
     if (event && !event.ctrlKey) {
       const existingItem = openedScreens.findLastExistingItem(id);
-      if (existingItem) {
+      if (existingItem && type !== IMainMenuItemType.FormRefWithSelection) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
         if (openedScreen.isSleeping) {
