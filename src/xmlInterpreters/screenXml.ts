@@ -60,6 +60,7 @@ import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
 import { IDataView } from "modules/DataView/DataViewTypes";
 import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
+import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -359,6 +360,7 @@ export function* interpretScreenXml(
         modelInstanceId: dataView.attributes.ModelInstanceId,
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
+        newRecordView: dataView.attributes.NewRecordView,
         defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         isHeadless: dataView.attributes.IsHeadless === "true",
@@ -553,7 +555,8 @@ export function* interpretScreenXml(
 
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
-
+    const formPerspective = $formPerspective.resolve(IFormPerspective);
+    dv.activateFormView = formPerspective.handleToolbarBtnClick.bind(formPerspective);
     /*const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
     $mapPerspective.resolve(IMapPerspectiveDirector).setup();*/
 
