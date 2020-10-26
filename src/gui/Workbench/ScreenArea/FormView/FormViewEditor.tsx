@@ -227,6 +227,7 @@ export class FormViewEditor extends React.Component<{
       case "Blob":
         return (
           <BlobEditor
+            isReadOnly={readOnly}
             value={this.props.value}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}

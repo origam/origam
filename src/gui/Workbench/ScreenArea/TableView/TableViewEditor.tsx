@@ -176,6 +176,7 @@ export class TableViewEditor extends React.Component<{
         );
       case "Blob":
         return <BlobEditor
+          isReadOnly={readOnly}
           value={this.props.getCellValue!()}
           isInvalid={false}/>;
       default:
