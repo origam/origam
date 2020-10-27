@@ -870,7 +870,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
+  private actionRunning = false;
+
   *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
+    if(this.actionRunning){
+      return;
+    }
+    this.actionRunning = true;
     try {
       this.monitor.inFlow++;
       const parameters: { [key: string]: any } = {};
@@ -913,6 +919,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* new_ProcessActionResult(action)(result);
     } finally {
       this.monitor.inFlow--;
+      this.actionRunning = false;
     }
   }
 
