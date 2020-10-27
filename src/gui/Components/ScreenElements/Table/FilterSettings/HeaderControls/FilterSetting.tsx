@@ -2,7 +2,7 @@ import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSe
 
 export class FilterSetting implements IFilterSetting {
   type: string;
-  caption: string;
+  caption: JSX.Element;
   val1?: any;
   val2?: any;
   isComplete: boolean;
@@ -16,7 +16,7 @@ export class FilterSetting implements IFilterSetting {
     return this.val2;
   }
 
-  constructor(type: string, caption: string) {
+  constructor(type: string, caption: JSX.Element) {
     this.type = type;
     this.caption = caption;
     this.isComplete = false;

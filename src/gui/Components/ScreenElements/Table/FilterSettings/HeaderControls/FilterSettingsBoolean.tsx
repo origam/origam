@@ -7,8 +7,9 @@ import { action, observable } from "mobx";
 import produce from "immer";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
+import { Operator } from "./Operatots";
 
-const OPERATORS: any[] = [{ dataType: "boolean", human: <>=</>, type: "eq", val1: undefined }];
+const OPERATORS: Operator[] = [Operator.equals];
 
 @observer
 export class FilterSettingsBoolean extends React.Component<{

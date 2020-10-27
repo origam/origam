@@ -10,35 +10,21 @@ import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
+import { Operator } from "./Operatots";
 
 const OPERATORS = () =>
   [
-    { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
-    {
-      human: <>{T("not contains", "filter_operator_not_contains")}</>,
-      type: "ncontains",
-    },
-    {
-      human: <>{T("begins with", "filter_operator_begins_with")}</>,
-      type: "starts",
-    },
-    {
-      human: <>{T("not begins with", "filter_operator_not_begins_with")}</>,
-      type: "nstarts",
-    },
-    { human: <>{T("ends with", "filter_operator_ends_with")}</>, type: "ends" },
-    {
-      human: <>{T("not ends with", "filter_operator_not_ends_with")}</>,
-      type: "nends",
-    },
-    { human: <>=</>, type: "eq" },
-    { human: <>&ne;</>, type: "neq" },
-    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
-    {
-      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
-      type: "nnull",
-    },
-  ] as any[];
+    Operator.contains,
+    Operator.notContains,
+    Operator.startsWith,
+    Operator.notStartsWith,
+    Operator.endsWith,
+    Operator.notEndsWith,
+    Operator.equals,
+    Operator.notEquals,
+    Operator.isNull,
+    Operator.isNotNull
+  ] as Operator[];
 
 const OpCombo: React.FC<{
   setting: any;
