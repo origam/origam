@@ -29,13 +29,14 @@ import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPrope
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
   const property = getSelectedProperty(tablePanelView)!;
+  const actualProperty = property.column === "Polymorph"
+    ? property.getPolymophicProperty(row)
+    : property
   return {
-    property: property.column === "Polymorph"
-      ? property.getPolymophicProperty(row)
-      : property,
-    getCellValue: () => getCellValue(tablePanelView, row, property),
+    property: actualProperty,
+    getCellValue: () => getCellValue(tablePanelView, row, actualProperty),
     onChange: (event: any, value: any) =>
-      onFieldChange(tablePanelView)(event, row, property, value),
+      onFieldChange(tablePanelView)(event, row, actualProperty, value),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
     onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event),
   };
@@ -175,6 +176,7 @@ export class TableViewEditor extends React.Component<{
         );
       case "Blob":
         return <BlobEditor
+          isReadOnly={readOnly}
           value={this.props.getCellValue!()}
           isInvalid={false}/>;
       default:
