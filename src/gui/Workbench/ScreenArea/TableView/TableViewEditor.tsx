@@ -144,6 +144,7 @@ export class TableViewEditor extends React.Component<{
             onDoubleClick={event => this.onDoubleClick(event)}
             isReadOnly={readOnly}
             onKeyDown={this.props.onEditorKeyDown}
+            subscribeToFocusManager={input => input.focus()} // will cause the editor to take focus after opening
           />
         );
       case "Checklist":
