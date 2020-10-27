@@ -66,6 +66,7 @@ import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/F
 import { IFilter } from "model/entities/types/IFilter";
 import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
 import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import { addFiltersToPanelConfiguration } from "./filterXml";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -317,35 +318,9 @@ export function* interpretScreenXml(
 
       const properties = findStopping(dataView, (n) => n.name === "Property").map(parseProperty);
 
-      for (let panelConfigurationJson of panelConfigurationsRaw.filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)) {
-
-        const initialFilter = panelConfigurationJson.initialFilter;
-        if(initialFilter){
-          const filters: IFilter[] = initialFilter.details
-            .map((detail: any) => {
-              const property = properties.find(prop => prop.id === detail.property)!;
-              return {
-                propertyId: detail.property,
-                dataType: property.column,
-                setting: new FilterSetting(
-                  filterTypeFromNumber(detail.operator),
-                  true,
-                  detail.value1,
-                  detail.value2)
-              }});
-          const filterGroup = {
-            filters: filters,
-            id: initialFilter.id,
-            isGlobal: initialFilter.isGlobal,
-            name: initialFilter.name
-          };
-          const panelConfiguration = panelConfigurations
-            .get(panelConfigurationJson.panel.instanceId);
-          if(panelConfiguration){
-            panelConfiguration.defaultFilter = filterGroup;
-          }
-        }
-      }
+      panelConfigurationsRaw
+        .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
+        .forEach((conf: any) => addFiltersToPanelConfiguration(panelConfigurations, properties, conf))
 
       const formPropertyIds = new Set(findFormPropertyIds(dataView));
       for (let prop of properties) {
