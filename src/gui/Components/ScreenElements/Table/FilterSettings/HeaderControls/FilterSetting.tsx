@@ -15,8 +15,10 @@ export class FilterSetting implements IFilterSetting {
     return this.val2;
   }
 
-  constructor(type: string) {
+  constructor(type: string, isComplete:boolean=false, val1?: any, val2?: any) {
     this.type = type;
-    this.isComplete = false;
+    this.isComplete = isComplete;
+    this.val1 = val1 ?? undefined;
+    this.val2 = val2 ?? undefined;
   }
 }

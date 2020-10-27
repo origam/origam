@@ -7,11 +7,16 @@ import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import produce from "immer";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
+import { IFilterGroup } from "./types/IFilterGroup";
 
 export class FilterConfiguration implements IFilterConfiguration {
-  constructor(implicitFilters: IImplicitFilter[]) {
+  constructor(implicitFilters: IImplicitFilter[], initialFilter: IFilterGroup | undefined) {
     this.implicitFilters = implicitFilters;
     this.start();
+    if(initialFilter){
+      initialFilter.filters.forEach(filter => this.setFilter(filter));
+      this.isFilterControlsDisplayed = true;
+    }
   }
 
   $type_IFilterConfigurationData: 1 = 1;
