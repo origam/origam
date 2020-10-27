@@ -134,10 +134,7 @@ export class FilterSettingsDate extends React.Component<{
     (this.setting as any).val2 = undefined;
   }
 
-  @observable.ref setting: FilterSetting = new FilterSetting(
-    OPERATORS()[0].type,
-    OPERATORS()[0].human
-  );
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
 
   componentDidMount() {
     this.takeSettingFromProps();

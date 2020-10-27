@@ -94,10 +94,7 @@ export class FilterSettingsString extends React.Component<{
   setting?: any;
   onTriggerApplySetting?: (setting: any) => void;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(
-    OPERATORS()[0].type,
-    OPERATORS()[0].human
-  );
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
 
   componentDidMount() {
     this.takeSettingFromProps();

@@ -130,10 +130,7 @@ export class FilterSettingsNumber extends React.Component<{
   onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(
-    OPERATORS()[0].type,
-    OPERATORS()[0].human
-  );
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
 
   componentDidMount() {
     this.takeSettingFromProps();
