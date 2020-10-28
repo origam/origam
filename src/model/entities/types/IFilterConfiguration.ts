@@ -11,7 +11,7 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
   isFilterControlsDisplayed: boolean;
   filterGroups: IFilterGroup[];
   defaultFilter: IFilterGroup | undefined;
-  filters: any[];
+  activeFilters: any[];
   filteringFunction: () => (row: any[]) => boolean;
   getSettingByPropertyId(propertyId: string): IFilter | undefined;
   setFilter(term: IFilter): void;
