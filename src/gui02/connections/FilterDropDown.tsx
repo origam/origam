@@ -23,49 +23,24 @@ import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSe
 import { getApi } from "model/selectors/getApi";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {getDataView} from "model/selectors/DataView/getDataView";
+import { getFilterGroupManager } from "model/selectors/DataView/getFilterGroupManager";
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
 
 @observer
 export class FilterDropDown extends React.Component<{ ctx: any }> {
   @observable
   selectedFilterGroupId: string | undefined;
 
-  filterConfig: IFilterConfiguration;
+  filterManager: FilterGroupManager;
 
   constructor(props: any) {
     super(props);
-    this.filterConfig = getFilterConfiguration(props.ctx)
+    this.filterManager = getFilterGroupManager(props.ctx)
   }
 
   onDropItemClick(filterGroup: IFilterGroup) {
     this.selectedFilterGroupId = filterGroup.id;
-    this.filterConfig.setFilterGroup(filterGroup);
-  }
-
-  filtreToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration{
-    return {
-      operator: filterTypeToNumber(filter.setting.type),
-      property: filter.propertyId,
-      value1: filter.setting.val1,
-      value2: filter.setting.val2
-    };
-  }
-
-  async saveFilter(name: string, isGlobal: boolean){
-    const filterGroupServerVerion: IUIGridFilterCoreConfiguration = {
-      details: this.filterConfig.activeFilters.map(filter => this.filtreToServerVersion(filter)),
-      id: undefined,
-      isGlobal: isGlobal,
-      name: name}
-
-    const api = getApi(this.props.ctx);
-    const filterGrouId = await api.saveFilter({
-      DataStructureEntityId: getDataStructureEntityId(this.props.ctx),
-      PanelId: getDataView(this.props.ctx).modelInstanceId,
-      Filter: filterGroupServerVerion,
-      IsDefault: false
-    });
-
-    console.log("filterGrouId: "+filterGrouId);
+    this.filterManager.setFilterGroup(filterGroup);
   }
 
   onSaveFilterClick(){
@@ -74,7 +49,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
       "",
       <SaveFilterDialog
         onOkClick={(name: string, isGlobal: boolean) => {
-          this.saveFilter(name, isGlobal);
+          this.filterManager.saveFilter(name, isGlobal);
           closeDialog();
         }}
         onCancelClick={() => {
@@ -84,8 +59,17 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
     );
   }
 
+  // async onDeleteFilterClick(){
+  //   if(this.selectedFilterGroupId){
+  //     const api = getApi(this.props.ctx);
+  //     await api.deleteFilter({ filterId: this.selectedFilterGroupId});
+  //     this.filterManager.deleteFilterGroup(this.selectedFilterGroupId);
+  //     this.selectedFilterGroupId = undefined;
+  //   }
+  // }
+
   render() {
-    const filterGroups = this.filterConfig.filterGroups ?? []
+    const filterGroups = this.filterManager.filterGroups ?? []
     const onDropItemClick = (filterGroup: IFilterGroup) => this.onDropItemClick(filterGroup);
 
     return (
@@ -138,9 +122,10 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Save Current Filter", "filter_menu_save_filter")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={true}
+              isDisabled={false}
               onClick={(event: any) => {
                 setDropped(false);
+                // this.onDeleteFilterClick();
               }}
             >
               {T("Delete", "filter_menu_delete")}

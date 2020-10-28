@@ -9,13 +9,11 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
   $type_IFilterConfigurationData: 1;
 
   isFilterControlsDisplayed: boolean;
-  filterGroups: IFilterGroup[];
-  defaultFilter: IFilterGroup | undefined;
   activeFilters: any[];
   filteringFunction: () => (row: any[]) => boolean;
   getSettingByPropertyId(propertyId: string): IFilter | undefined;
   setFilter(term: IFilter): void;
-  setFilterGroup(filterGroup: IFilterGroup | undefined): void;
+  setFilters(filters: IFilter[]): void;
   clearFilters(): void;
 
   onFilterDisplayClick(event: any): void;

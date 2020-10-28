@@ -4,6 +4,7 @@ import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/Filter
 import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
 import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
 
 function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
   const filters: IFilter[] = filterJson.details.map((detail: any) => {
@@ -28,16 +29,16 @@ function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
 }
 
 export function addFilterGroups(
-  filterConfiguration: IFilterConfiguration,
+  filterGroupManager: FilterGroupManager,
   properties: IProperty[],
   panelConfigurationJson: any
 ) {
 
-  filterConfiguration.filterGroups = panelConfigurationJson.filters
+  filterGroupManager.filterGroups = panelConfigurationJson.filters
     .map((filterJson: any) => filterJsonToFilterGroup(filterJson, properties))
 
   if (panelConfigurationJson.initialFilter) {
-    filterConfiguration.defaultFilter = filterJsonToFilterGroup(
+    filterGroupManager.defaultFilter = filterJsonToFilterGroup(
       panelConfigurationJson.initialFilter,
       properties
     );

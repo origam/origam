@@ -7,19 +7,8 @@ import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import produce from "immer";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
-import { IFilterGroup } from "./types/IFilterGroup";
 
 export class FilterConfiguration implements IFilterConfiguration {
-  get defaultFilter(): IFilterGroup | undefined {
-    return this._defaultFilter;
-  }
-
-  set defaultFilter(value: IFilterGroup | undefined) {
-    this._defaultFilter = value;
-    this.setFilterGroup(this._defaultFilter);
-  }
-  filterGroups: IFilterGroup[] = [];
-  private _defaultFilter: IFilterGroup | undefined;
   constructor(implicitFilters: IImplicitFilter[]) {
     this.implicitFilters = implicitFilters;
     this.start();
@@ -35,12 +24,10 @@ export class FilterConfiguration implements IFilterConfiguration {
   }
 
   @action.bound
-  setFilterGroup(filterGroup: IFilterGroup | undefined) {
+  setFilters(filters: IFilter[]) {
     this.clearFilters();
-    if(filterGroup){
-      filterGroup.filters.forEach((filter) => this.setFilter(filter));
-      this.isFilterControlsDisplayed = true;
-    }
+    filters.forEach((filter) => this.setFilter(filter));
+    this.isFilterControlsDisplayed = true;
   }
 
   @action.bound

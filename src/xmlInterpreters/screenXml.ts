@@ -9,7 +9,7 @@ import { DataSourceField } from "model/entities/DataSourceField";
 import { DataTable } from "model/entities/DataTable";
 import { DataView } from "model/entities/DataView";
 import { DropDownColumn } from "model/entities/DropDownColumn";
-import { FilterConfiguration } from "model/entities/FilterConfiguration";
+import { FilterConfiguration} from "model/entities/FilterConfiguration";
 import { FormPanelView } from "model/entities/FormPanelView/FormPanelView";
 import { FormScreen } from "model/entities/FormScreen";
 import { Lookup } from "model/entities/Lookup";
@@ -67,6 +67,7 @@ import { IFilter } from "model/entities/types/IFilter";
 import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
 import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
 import { addFilterGroups } from "./filterXml";
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -358,10 +359,10 @@ export function* interpretScreenXml(
       const implicitFilters = getImplicitFilters(dataView);
 
       const filterConfiguration = new FilterConfiguration(implicitFilters);
-
+      const filterGroupManager = new FilterGroupManager(filterConfiguration);
       panelConfigurationsRaw
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
-        .forEach((conf: any) => addFilterGroups(filterConfiguration, properties, conf))
+        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf))
 
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
@@ -410,6 +411,7 @@ export function* interpretScreenXml(
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
           filterConfiguration: filterConfiguration,
+          filterGroupManager: filterGroupManager,
           orderingConfiguration: orderingConfiguration,
           groupingConfiguration: new GroupingConfiguration(),
           rowHeight: 25,
