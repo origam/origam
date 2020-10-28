@@ -28,9 +28,6 @@ import {FilterGroupManager} from "model/entities/FilterGroupManager";
 
 @observer
 export class FilterDropDown extends React.Component<{ ctx: any }> {
-  @observable
-  selectedFilterGroupId: string | undefined;
-
   filterManager: FilterGroupManager;
 
   constructor(props: any) {
@@ -39,7 +36,6 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
   }
 
   onDropItemClick(filterGroup: IFilterGroup) {
-    this.selectedFilterGroupId = filterGroup.id;
     this.filterManager.setFilterGroup(filterGroup);
   }
 
@@ -59,14 +55,9 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
     );
   }
 
-  // async onDeleteFilterClick(){
-  //   if(this.selectedFilterGroupId){
-  //     const api = getApi(this.props.ctx);
-  //     await api.deleteFilter({ filterId: this.selectedFilterGroupId});
-  //     this.filterManager.deleteFilterGroup(this.selectedFilterGroupId);
-  //     this.selectedFilterGroupId = undefined;
-  //   }
-  // }
+  async onDeleteFilterClick(){
+    this.filterManager.deleteFilterGroup();
+  }
 
   render() {
     const filterGroups = this.filterManager.filterGroups ?? []
@@ -122,10 +113,12 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Save Current Filter", "filter_menu_save_filter")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={false}
+              isDisabled={
+                !this.filterManager.selectedFilterGroupId ||
+                this.filterManager.isSelectedFilterGroupDefault}
               onClick={(event: any) => {
                 setDropped(false);
-                // this.onDeleteFilterClick();
+                this.onDeleteFilterClick();
               }}
             >
               {T("Delete", "filter_menu_delete")}
@@ -142,7 +135,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
             {filterGroups.map((filterGroup) => (
               <DropdownItem
                 isDisabled={false}
-                isSelected={this.selectedFilterGroupId === filterGroup.id}
+                isSelected={this.filterManager.selectedFilterGroupId === filterGroup.id}
                 onClick={(event: any) => {
                   setDropped(false);
                   onDropItemClick(filterGroup);

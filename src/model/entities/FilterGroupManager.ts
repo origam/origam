@@ -1,20 +1,29 @@
-import { IFilterGroup } from "model/entities/types/IFilterGroup";
-import { IFilterConfiguration } from "model/entities/types/IFilterConfiguration";
-import { action } from "mobx";
-import { IFilter } from "model/entities/types/IFilter";
+import {IFilterGroup} from "model/entities/types/IFilterGroup";
+import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
+import {action, observable} from "mobx";
+import {IFilter} from "model/entities/types/IFilter";
 import {
   IUIGridFilterCoreConfiguration,
   IUIGridFilterFieldConfiguration,
 } from "model/entities/types/IApi";
-import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
-import { getApi } from "model/selectors/getApi";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getDataView } from "model/selectors/DataView/getDataView";
+import {filterTypeToNumber} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import {getApi} from "model/selectors/getApi";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 export class FilterGroupManager {
   ctx: any;
   filterGroups: IFilterGroup[] = [];
   private _defaultFilter: IFilterGroup | undefined;
+  @observable
+  selectedFilterGroupId: string | undefined;
+
+  get isSelectedFilterGroupDefault(){
+    if(!this.selectedFilterGroupId){
+      return false;
+    }
+    return this.defaultFilter?.id === this.selectedFilterGroupId;
+  }
 
   constructor(private filterConfiguration: IFilterConfiguration) {
     this.ctx = filterConfiguration;
@@ -39,6 +48,7 @@ export class FilterGroupManager {
     if (filterGroup?.filters) {
       this.filterConfiguration.setFilters(filterGroup.filters);
     }
+    this.selectedFilterGroupId = filterGroup?.id;
   }
 
   filtreToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
@@ -67,6 +77,21 @@ export class FilterGroupManager {
     });
 
     console.log("filterGrouId: " + filterGrouId);
+  }
+
+  async deleteFilterGroup() {
+    if(!this.selectedFilterGroupId){
+      return;
+    }
+    const api = getApi(this.ctx);
+    await api.deleteFilter({ filterId: this.selectedFilterGroupId});
+
+    const index = this.filterGroups.findIndex(group => group.id === this.selectedFilterGroupId);
+    if (index > -1) {
+      this.filterGroups.splice(index, 1);
+    }
+    this.filterConfiguration.clearFilters();
+    this.selectedFilterGroupId = undefined;
   }
 
   parent?: any;
