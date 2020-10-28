@@ -19,6 +19,7 @@ export enum IMapObjectType {
 export interface IMapObjectBase {
   name: string;
   icon: string;
+  azimuth: number;
 }
 
 export interface IMapPoint extends IMapObjectBase {
@@ -53,6 +54,10 @@ export class MapSourceData {
     return getDataSourceFieldIndexByName(this.dataView, this.setup.mapIconMember);
   }
 
+  @computed get fldIconAzimuth() {
+    return getDataSourceFieldIndexByName(this.dataView, this.setup.mapAzimuthMember);
+  }
+
   @computed
   get mapObjects() {
     const result: IMapObject[] = [];
@@ -67,6 +72,7 @@ export class MapSourceData {
               ...objectGeoJson,
               name: row[this.fldNameIndex],
               icon: row[this.fldIconIndex],
+              azimuth: row[this.fldIconAzimuth]
             });
         }
       }
@@ -81,6 +87,7 @@ export class MapSourceData {
               ...objectGeoJson,
               name: row[this.fldNameIndex],
               icon: row[this.fldIconIndex],
+              azimuth: row[this.fldIconAzimuth]
             });
           }
         }

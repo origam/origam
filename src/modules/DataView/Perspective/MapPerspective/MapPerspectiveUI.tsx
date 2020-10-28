@@ -1,5 +1,6 @@
 import React from "react";
 import L from "leaflet";
+import qs from "querystring";
 import "leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
@@ -180,7 +181,22 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             switch (obj.type) {
               case IMapObjectType.POINT:
                 {
-                  const point = L.marker([obj.coordinates[1], obj.coordinates[0]])
+                  //const iconUrl = "img/map/marker-icon.png#anchor=[12,41]";
+                  const iconUrl = obj.icon;
+                  const pq = qs.parse(iconUrl.split("#")[1] || "");
+                  const anchor = pq.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
+                  const iconAnchor: [number, number] = anchor;
+                  const iconRotation = obj.azimuth || 0;
+                  const myIcon = L.divIcon({
+                    html: `<img src="${iconUrl}" style="
+                      transform: rotate3d(0,0,1,${iconRotation}deg);
+                      transform-origin: ${iconAnchor[0]}px ${iconAnchor[1]}px;" />`,
+                    // iconSize: [38, 95],
+                    iconAnchor,
+                    className: "",
+                    //popupAnchor: [-3, -76],
+                  });
+                  const point = L.marker([obj.coordinates[1], obj.coordinates[0]], { icon: myIcon })
                     .bindTooltip(obj.name)
                     .addTo(this.leafletMapObjects);
                 }
