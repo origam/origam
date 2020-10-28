@@ -36,6 +36,7 @@ export class MapPerspectiveDirector implements IIId {
             <MapPerspectiveCom
               mapCenter={this.mapPerspectiveSetup.mapCenter || { lat: 0, lng: 0 }}
               mapSourceData={this.mapSourceData}
+              mapLayers={this.mapPerspectiveSetup.layers}
               isReadOnly={this.mapPerspectiveSetup.isReadOnlyView}
               isActive={this.mapPerspective.isActive}
               onChange={(geoJson) => {

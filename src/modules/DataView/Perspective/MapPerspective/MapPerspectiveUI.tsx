@@ -8,8 +8,8 @@ import "leaflet/dist/leaflet.css";
 import S from "./MapPerspectiveUI.module.scss";
 import cx from "classnames";
 import { IMapObject, IMapObjectType, MapSourceData } from "./MapSourceData";
-import { reaction } from "mobx";
-import { MapPerspectiveSetup } from "./MapPerspectiveSetup";
+import { computed, reaction } from "mobx";
+import { MapLayer, MapPerspectiveSetup } from "./MapPerspectiveSetup";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -22,6 +22,7 @@ L.Icon.Default.mergeOptions({
 interface IMapPerspectiveComProps {
   mapCenter: { type: "Point"; coordinates: [number, number] };
   mapSourceData: MapSourceData;
+  mapLayers: MapLayer[];
   isReadOnly: boolean;
   isActive: boolean;
   onChange?(geoJson: any): void;
@@ -61,6 +62,33 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     }
   }
 
+  @computed get layerList() {
+    return this.props.mapLayers
+      .map((rawLayer, index) => {
+        if (rawLayer.type === "OSM") {
+          return [
+            rawLayer,
+            L.tileLayer(rawLayer.getUrl(), { ...rawLayer.getOptions(), zIndex: index }),
+          ];
+        } else if (rawLayer.type === "WMS") {
+          return [
+            rawLayer,
+            L.tileLayer.wms(rawLayer.getUrl(), { ...rawLayer.getOptions(), zIndex: index }),
+          ];
+        }
+      })
+      .filter((layer) => layer) as [MapLayer, L.TileLayer][];
+  }
+
+  @computed get layerObject() {
+    console.log(this.layerList)
+    return Object.fromEntries(
+      this.layerList.map((layer) => {
+        return [layer[0].getTitle(), layer[1]];
+      })
+    );
+  }
+
   initLeafletDrawControls() {
     this.leafletMap?.addControl(
       new L.Control.Draw({
@@ -69,12 +97,16 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           poly: {
             allowIntersection: true,
           },
+          circle: false,
+          circlemarker: false,
         },
         draw: {
           polygon: {
             allowIntersection: false,
             showArea: true,
           },
+          circle: false,
+          circlemarker: false,
         },
       } as any) // 🦄
     );
@@ -113,57 +145,58 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     lmap.setZoom(13);
     this.panToCenter();
     L.control
-      .layers(
-        {},
-        {
-          osm: L.tileLayer(osmUrl, { maxZoom: 18, attribution: osmAttrib }),
-          "osm-mapbox": L.tileLayer(
-            "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
-            {
-              attribution:
-                'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-              maxZoom: 18,
-              id: "mapbox/streets-v11",
-              tileSize: 512,
-              zoomOffset: -1,
-              accessToken:
-                "pk.eyJ1IjoicHRvbWFzayIsImEiOiJjazhtNHIyY20wNWF3M2VtZDE4MThia2NzIn0.g3EBH4NfxZzDBQ7DlxUeMQ",
-            }
-          ),
-          /*googlePhoto: L.tileLayer("http://www.google.cz/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}", {
-            attribution: "google",
-          }),*/
-          mapycz: L.tileLayer("https://mapserver.mapy.cz/base-m/{z}-{x}-{y}", {
-            attribution: "Mapy.cz",
-            maxZoom: 38,
-            id: "mapycz-default",
-            tileSize: 256,
-            zoomOffset: 0,
-            //accessToken: 'your.mapbox.access.token'
-          }),
-          lpisPole: L.tileLayer.wms(`http://eagri.cz/public/app/wms/public_DPB_PB_OPV.fcgi?`, {
-            layers: "PB_UCINNE,DPB_UCINNE,DPB_UCINNE_KOD,DPB_VYM,DPB_KUL",
-            tiled: "false",
-            format: "image/png",
-            transparent: "true",
-            crs: L.CRS.EPSG4326,
-          } as any),
-          nexrad: L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
-            layers: "nexrad-n0r-900913",
-            format: "image/png",
-            transparent: true,
-            attribution: "Weather data © 2012 IEM Nexrad",
-          }),
-          Heigit: L.tileLayer.wms("https://maps.heigit.org/osm-wms/service?", {
-            layers: "europe_wms:hs_srtm_europa",
-            format: "image/png",
-            transparent: true,
-            attribution: "Heigit",
-          }),
-          drawlayer: this.leafletMapObjects,
-        },
-        { position: "topleft", collapsed: true }
-      )
+      .layers({}, this.layerObject, { position: "topleft", collapsed: true })
+      // .layers(
+      //   {},
+      //   {
+      //     osm: L.tileLayer(osmUrl, { maxZoom: 18, attribution: osmAttrib }),
+      //     "osm-mapbox": L.tileLayer(
+      //       "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+      //       {
+      //         attribution:
+      //           'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      //         maxZoom: 18,
+      //         id: "mapbox/streets-v11",
+      //         tileSize: 512,
+      //         zoomOffset: -1,
+      //         accessToken:
+      //           "pk.eyJ1IjoicHRvbWFzayIsImEiOiJjazhtNHIyY20wNWF3M2VtZDE4MThia2NzIn0.g3EBH4NfxZzDBQ7DlxUeMQ",
+      //       }
+      //     ),
+      //     /*googlePhoto: L.tileLayer("http://www.google.cz/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}", {
+      //       attribution: "google",
+      //     }),*/
+      //     mapycz: L.tileLayer("https://mapserver.mapy.cz/base-m/{z}-{x}-{y}", {
+      //       attribution: "Mapy.cz",
+      //       maxZoom: 38,
+      //       id: "mapycz-default",
+      //       tileSize: 256,
+      //       zoomOffset: 0,
+      //       //accessToken: 'your.mapbox.access.token'
+      //     }),
+      //     lpisPole: L.tileLayer.wms(`http://eagri.cz/public/app/wms/public_DPB_PB_OPV.fcgi?`, {
+      //       layers: "PB_UCINNE,DPB_UCINNE,DPB_UCINNE_KOD,DPB_VYM,DPB_KUL",
+      //       tiled: "false",
+      //       format: "image/png",
+      //       transparent: "true",
+      //       crs: L.CRS.EPSG4326,
+      //     } as any),
+      //     nexrad: L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
+      //       layers: "nexrad-n0r-900913",
+      //       format: "image/png",
+      //       transparent: true,
+      //       attribution: "Weather data © 2012 IEM Nexrad",
+      //     }),
+      //     Heigit: L.tileLayer.wms("https://maps.heigit.org/osm-wms/service?", {
+      //       layers: "europe_wms:hs_srtm_europa",
+      //       format: "image/png",
+      //       transparent: true,
+      //       attribution: "Heigit",
+      //     }),
+      //     drawlayer: this.leafletMapObjects,
+      //   },
+      //   { position: "topleft", collapsed: true }
+      // )
       .addTo(lmap);
 
     lmap.addLayer(this.leafletMapObjects);

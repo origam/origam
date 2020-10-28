@@ -7,6 +7,26 @@ export class MapLayer {
   defaultEnabled: boolean = false;
   type: string = "";
   mapLayerParameters = new Map<string, any>();
+
+  getUrl() {
+    return this.mapLayerParameters.get("url");
+  }
+
+  getTitle() {
+    return this.title;
+  }
+
+  getOptions() {
+    const rawOptions = Object.fromEntries(this.mapLayerParameters);
+    delete rawOptions.url;
+    delete rawOptions.title;
+    return {
+      ...rawOptions,
+      id: this.id,
+      minZoom: rawOptions.minZoom !== undefined ? parseInt(rawOptions.minZoom) : undefined,
+      maxZoom: rawOptions.maxZoom !== undefined ? parseInt(rawOptions.maxZoom) : undefined,
+    };
+  }
 }
 
 export class MapPerspectiveSetup {
