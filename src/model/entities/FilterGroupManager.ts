@@ -18,8 +18,8 @@ export class FilterGroupManager {
   @observable
   selectedFilterGroupId: string | undefined;
 
-  get isSelectedFilterGroupDefault(){
-    if(!this.selectedFilterGroupId){
+  get isSelectedFilterGroupDefault() {
+    if (!this.selectedFilterGroupId) {
       return false;
     }
     return this.defaultFilter?.id === this.selectedFilterGroupId;
@@ -60,7 +60,7 @@ export class FilterGroupManager {
     };
   }
 
-  async saveFilter(name: string, isGlobal: boolean) {
+  async saveSelectedFilterGroup(name: string, isGlobal: boolean) {
     const filterGroupServerVerion: IUIGridFilterCoreConfiguration = {
       details: this.activeFilters.map((filter) => this.filtreToServerVersion(filter)),
       id: undefined,
@@ -80,13 +80,13 @@ export class FilterGroupManager {
   }
 
   async deleteFilterGroup() {
-    if(!this.selectedFilterGroupId){
+    if (!this.selectedFilterGroupId) {
       return;
     }
     const api = getApi(this.ctx);
-    await api.deleteFilter({ filterId: this.selectedFilterGroupId});
+    await api.deleteFilter({filterId: this.selectedFilterGroupId});
 
-    const index = this.filterGroups.findIndex(group => group.id === this.selectedFilterGroupId);
+    const index = this.filterGroups.findIndex((group) => group.id === this.selectedFilterGroupId);
     if (index > -1) {
       this.filterGroups.splice(index, 1);
     }
