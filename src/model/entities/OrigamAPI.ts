@@ -701,7 +701,7 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     PanelId: string;
     Filter: IUIGridFilterCoreConfiguration
     IsDefault: boolean;
-  }): Promise<any[]> {
+  }): Promise<string> {
     return (
       await this.axiosInstance.post(`/UIService/SaveFilter`, data)
     ).data;

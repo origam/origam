@@ -14,6 +14,15 @@ import {QuestionSaveData} from "gui/Components/Dialogs/QuestionSaveData";
 import {getDialogStack} from "model/selectors/getDialogStack";
 import { SaveFilterDialog } from "gui/Components/Dialogs/SaveFilterDialog";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {IFilter} from "model/entities/types/IFilter";
+import {
+  IUIGridFilterCoreConfiguration,
+  IUIGridFilterFieldConfiguration
+} from "model/entities/types/IApi";
+import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import { getApi } from "model/selectors/getApi";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 @observer
 export class FilterDropDown extends React.Component<{ ctx: any }> {
@@ -32,13 +41,40 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
     this.filterConfig.setFilterGroup(filterGroup);
   }
 
+  filtreToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration{
+    return {
+      operator: filterTypeToNumber(filter.setting.type),
+      property: filter.propertyId,
+      value1: filter.setting.val1,
+      value2: filter.setting.val2
+    };
+  }
+
+  async saveFilter(name: string, isGlobal: boolean){
+    const filterGroupServerVerion: IUIGridFilterCoreConfiguration = {
+      details: this.filterConfig.activeFilters.map(filter => this.filtreToServerVersion(filter)),
+      id: undefined,
+      isGlobal: isGlobal,
+      name: name}
+
+    const api = getApi(this.props.ctx);
+    const filterGrouId = await api.saveFilter({
+      DataStructureEntityId: getDataStructureEntityId(this.props.ctx),
+      PanelId: getDataView(this.props.ctx).modelInstanceId,
+      Filter: filterGroupServerVerion,
+      IsDefault: false
+    });
+
+    console.log("filterGrouId: "+filterGrouId);
+  }
+
   onSaveFilterClick(){
     const formScreenLifecycle = getFormScreenLifecycle(this.props.ctx);
     const closeDialog = getDialogStack(formScreenLifecycle).pushDialog(
       "",
       <SaveFilterDialog
         onOkClick={(name: string, isGlobal: boolean) => {
-          console.log("name: "+name+", isGlobal: "+isGlobal);
+          this.saveFilter(name, isGlobal);
           closeDialog();
         }}
         onCancelClick={() => {

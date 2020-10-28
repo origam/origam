@@ -40,28 +40,35 @@ export class Operator {
   }
 }
 
+const filterMap = new Map<number, string>([
+  [0,"none"],
+  [1,"eq"],
+  [2,"between"],
+  [3,"starts"],
+  [4,"ends"],
+  [5,"contains"],
+  [6,"gt"],
+  [7,"lt"],
+  [8,"gte"],
+  [9,"lte"],
+  [10,"neq"],
+  [11,"nbetween"],
+  [12,"nstarts"],
+  [13,"nends"],
+  [14,"ncontains"],
+  [15,"null"],
+  [16,"nnull"],
+]);
+
+export function filterTypeToNumber(filterType: string){
+  const typeNumber = Array.from(filterMap).find(entry => entry[1] === filterType)?.[0];
+  if(!typeNumber){
+    throw new Error("Cannot find filter operator number for filter type: "+filterType)
+  }
+  return typeNumber;
+}
 
 export function filterTypeFromNumber(filterOperatorNum: number){
-  const filterMap = new Map<number, string>([
-    [0,"none"],
-    [1,"eq"],
-    [2,"between"],
-    [3,"starts"],
-    [4,"ends"],
-    [5,"contains"],
-    [6,"gt"],
-    [7,"lt"],
-    [8,"gte"],
-    [9,"lte"],
-    [10,"neq"],
-    [11,"nbetween"],
-    [12,"nstarts"],
-    [13,"nends"],
-    [14,"ncontains"],
-    [15,"null"],
-    [16,"nnull"],
-
-  ]);
   const stringValue = filterMap.get(filterOperatorNum);
   if(!stringValue){
     throw new Error("Cannot find string value for filter operator number: "+filterOperatorNum)
