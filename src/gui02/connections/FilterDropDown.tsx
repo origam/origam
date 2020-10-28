@@ -9,6 +9,11 @@ import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import {getFilterConfiguration} from "model/selectors/DataView/getFilterConfiguration";
 import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
+import {getOpenedScreen} from "model/selectors/getOpenedScreen";
+import {QuestionSaveData} from "gui/Components/Dialogs/QuestionSaveData";
+import {getDialogStack} from "model/selectors/getDialogStack";
+import { SaveFilterDialog } from "gui/Components/Dialogs/SaveFilterDialog";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 @observer
 export class FilterDropDown extends React.Component<{ ctx: any }> {
@@ -25,6 +30,22 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
   onDropItemClick(filterGroup: IFilterGroup) {
     this.selectedFilterGroupId = filterGroup.id;
     this.filterConfig.setFilterGroup(filterGroup);
+  }
+
+  onSaveFilterClick(){
+    const formScreenLifecycle = getFormScreenLifecycle(this.props.ctx);
+    const closeDialog = getDialogStack(formScreenLifecycle).pushDialog(
+      "",
+      <SaveFilterDialog
+        onOkClick={(name: string, isGlobal: boolean) => {
+          console.log("name: "+name+", isGlobal: "+isGlobal);
+          closeDialog();
+        }}
+        onCancelClick={() => {
+          closeDialog();
+        }}
+      />
+    );
   }
 
   render() {
@@ -72,10 +93,10 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Cancel Default Filter", "filter_menu_cancel_default_filter")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={true}
+              isDisabled={false}
               onClick={(event: any) => {
                 setDropped(false);
-                // onColumnConfigurationClickEvt(event);
+                this.onSaveFilterClick();
               }}
             >
               {T("Save Current Filter", "filter_menu_save_filter")}
@@ -84,7 +105,6 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               isDisabled={true}
               onClick={(event: any) => {
                 setDropped(false);
-                // onColumnConfigurationClickEvt(event);
               }}
             >
               {T("Delete", "filter_menu_delete")}
