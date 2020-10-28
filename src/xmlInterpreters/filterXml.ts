@@ -3,6 +3,7 @@ import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSetting
 import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
 import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
+import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
 
 function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
   const filters: IFilter[] = filterJson.details.map((detail: any) => {
@@ -26,24 +27,19 @@ function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
   };
 }
 
-export function addFiltersToPanelConfiguration(
-  panelConfigurations: Map<string, IPanelConfiguration>,
+export function addFilterGroups(
+  filterConfiguration: IFilterConfiguration,
   properties: IProperty[],
   panelConfigurationJson: any
 ) {
 
-  const panelConfiguration = panelConfigurations.get(panelConfigurationJson.panel.instanceId);
-  if (!panelConfiguration) {
-    return
-  }
+  filterConfiguration.filterGroups = panelConfigurationJson.filters
+    .map((filterJson: any) => filterJsonToFilterGroup(filterJson, properties))
 
   if (panelConfigurationJson.initialFilter) {
-    panelConfiguration.defaultFilter = filterJsonToFilterGroup(
+    filterConfiguration.defaultFilter = filterJsonToFilterGroup(
       panelConfigurationJson.initialFilter,
       properties
     );
   }
-
-  panelConfiguration.filterGroups = panelConfigurationJson.filters
-    .map((filterJson: any) => filterJsonToFilterGroup(filterJson, properties))
 }

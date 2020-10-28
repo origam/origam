@@ -66,7 +66,7 @@ import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/F
 import { IFilter } from "model/entities/types/IFilter";
 import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
 import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
-import { addFiltersToPanelConfiguration } from "./filterXml";
+import { addFilterGroups } from "./filterXml";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -318,10 +318,6 @@ export function* interpretScreenXml(
 
       const properties = findStopping(dataView, (n) => n.name === "Property").map(parseProperty);
 
-      panelConfigurationsRaw
-        .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
-        .forEach((conf: any) => addFiltersToPanelConfiguration(panelConfigurations, properties, conf))
-
       const formPropertyIds = new Set(findFormPropertyIds(dataView));
       for (let prop of properties) {
         if (formPropertyIds.has(prop.id)) {
@@ -360,9 +356,12 @@ export function* interpretScreenXml(
 
       const orderingConfiguration = new OrderingConfiguration(defaultOrderings);
       const implicitFilters = getImplicitFilters(dataView);
-      const defaultFilter = panelConfigurations
-        .get(dataView.attributes.ModelInstanceId)?.defaultFilter;
-      const filterConfiguration = new FilterConfiguration(implicitFilters, defaultFilter);
+
+      const filterConfiguration = new FilterConfiguration(implicitFilters);
+
+      panelConfigurationsRaw
+        .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
+        .forEach((conf: any) => addFilterGroups(filterConfiguration, properties, conf))
 
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,

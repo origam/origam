@@ -10,13 +10,19 @@ import { IFilter } from "./types/IFilter";
 import { IFilterGroup } from "./types/IFilterGroup";
 
 export class FilterConfiguration implements IFilterConfiguration {
-  constructor(implicitFilters: IImplicitFilter[], initialFilter: IFilterGroup | undefined) {
+  get defaultFilter(): IFilterGroup | undefined {
+    return this._defaultFilter;
+  }
+
+  set defaultFilter(value: IFilterGroup | undefined) {
+    this._defaultFilter = value;
+    this.setFilterGroup(this._defaultFilter);
+  }
+  filterGroups: IFilterGroup[] = [];
+  private _defaultFilter: IFilterGroup | undefined;
+  constructor(implicitFilters: IImplicitFilter[]) {
     this.implicitFilters = implicitFilters;
     this.start();
-    if(initialFilter){
-      initialFilter.filters.forEach(filter => this.setFilter(filter));
-      this.isFilterControlsDisplayed = true;
-    }
   }
 
   $type_IFilterConfigurationData: 1 = 1;
@@ -26,6 +32,15 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   getSettingByPropertyId(propertyId: string): IFilter | undefined {
     return this.filters.find((item) => item.propertyId === propertyId);
+  }
+
+  @action.bound
+  setFilterGroup(filterGroup: IFilterGroup | undefined) {
+    this.clearFilters();
+    if(filterGroup){
+      filterGroup.filters.forEach((filter) => this.setFilter(filter));
+      this.isFilterControlsDisplayed = true;
+    }
   }
 
   @action.bound
@@ -147,14 +162,15 @@ export class FilterConfiguration implements IFilterConfiguration {
         if (term.setting.type === "nnull") return txt1 !== null;
         if (term.setting.type === "null") return txt1 === null;
         if (
-            term.setting.val1 === "" ||
-            term.setting.val1 === undefined ||
-            term.setting.val1 === null
+          term.setting.val1 === "" ||
+          term.setting.val1 === undefined ||
+          term.setting.val1 === null
         )
           return true;
 
         const t1 = term.setting.val1.endsWith("T00:00:00.000")
-          ? txt1.substr(0, 10).concat("T00:00:00.000") : txt1;
+          ? txt1.substr(0, 10).concat("T00:00:00.000")
+          : txt1;
 
         switch (term.setting.type) {
           case "between": {
