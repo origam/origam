@@ -524,11 +524,11 @@ namespace Origam.ServerCore.Controller
 
         }
         [HttpPost("[action]")]
-        public IActionResult DeleteFilter([FromBody]Guid filterId)
+        public IActionResult DeleteFilter([FromBody]DeleteFilterInput deleteFilterInput)
         {
             return RunWithErrorHandler(() =>
             {
-                ServerCoreUIService.DeleteFilter(filterId);
+                ServerCoreUIService.DeleteFilter(deleteFilterInput.FilterId);
                 return Ok();
             });
         }
