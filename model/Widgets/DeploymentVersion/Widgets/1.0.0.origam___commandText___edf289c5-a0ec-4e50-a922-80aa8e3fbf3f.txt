@@ -1,0 +1,5 @@
+﻿ INSERT INTO "OrigamApplicationRole" ("Id", "Name", "Description", "IsSystemRole" , "RecordCreated")
+ VALUES ('e643e9f3-c0b0-498e-9a4c-a3036e8d0c35', 'WidgetPlainTextTest', '', true, now()); 
+-- add to the built-in SuperUser role 
+ INSERT INTO "OrigamRoleOrigamApplicationRole" ("Id", "refOrigamRoleId", "refOrigamApplicationRoleId", "RecordCreated", "IsFormReadOnly") 
+ VALUES (gen_random_uuid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', 'e643e9f3-c0b0-498e-9a4c-a3036e8d0c35', now(), false)

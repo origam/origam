@@ -1,0 +1,10 @@
+﻿CREATE TABLE [WidgetRichTextTest] (
+	[TextMandatoryMemo] nvarchar(max) NOT NULL,
+	[TextNullableMemo] nvarchar(max) NULL,
+	[TextMandatoryLimited20] NVarChar(20) NOT NULL,
+	[TextNullableLimited20] NVarChar(20) NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

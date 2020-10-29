@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="eefb16dd-a749-4ff2-a597-c07929103a7f"
+    tmi:mappedObjectName="WidgetPlainTextTest"
+    asi:name="WidgetPlainTextTest"
+    ade:readOnly="false">
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="beadd235-7e1a-4eb7-8909-4146cebd22b8"
+      adec:isPrimaryKey="false"
+      adec:label="Mandatory Text Unlimited"
+      fmi:mappedColumnName="TextMandatoryMemo"
+      asi:name="TextMandatoryMemo"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Memo"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="3de8668d-22ab-44f3-ad55-1db184b8d896"
+      adec:isPrimaryKey="false"
+      adec:label="Nullable Text Unlimited"
+      fmi:mappedColumnName="TextNullableMemo"
+      asi:name="TextNullableMemo"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="20"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="b10e2f5d-de98-4a74-8f2e-2b09cb970d20"
+      adec:isPrimaryKey="false"
+      adec:label="Nullable Text Limited 20 chars"
+      fmi:mappedColumnName="TextNullableLimited20"
+      asi:name="TextNullableLimited20"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="20"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="cfdcfea9-ed08-4825-baf2-7f4ac5fcc4ca"
+      adec:isPrimaryKey="false"
+      adec:label="Mandatory Text Limited 20 chars"
+      fmi:mappedColumnName="TextMandatoryLimited20"
+      asi:name="TextMandatoryLimited20"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="e3e8bb29-8741-4140-9314-6c826097773e" />
+  </tmi:DataEntity>
+</x:file>

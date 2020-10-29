@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ami="http://schemas.origam.com/Origam.Schema.MenuModel.AbstractMenuItem/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:frmi="http://schemas.origam.com/Origam.Schema.MenuModel.FormReferenceMenuItem/6.0.0" xmlns:s="http://schemas.origam.com/Origam.Schema.MenuModel.Submenu/6.0.0">
+  <s:MenuItem
+    asi:abstract="false"
+    ami:displayName="Widgets"
+    x:id="12580c7d-8b0f-4541-8250-dd337443eaca"
+    s:isHidden="false"
+    asi:name="Widgets"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6">
+    <frmi:MenuItem
+      asi:abstract="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="Widget PlainText Test"
+      x:id="93b65bdb-307a-4852-bde7-6428c6c84684"
+      asi:name="WidgetPlainTextTest"
+      ami:openExclusively="false"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="WidgetPlainTextTest"
+      frmi:screen="Widgets/FormControlSet/Widgets/WidgetPlainTextTest.origam#WidgetPlainTextTest/d5b55166-38a5-4f88-b568-ca220f52f8aa" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="Widget PlainText Test/Read Only"
+      x:id="e1e26e74-3f91-4051-99b2-4328a9dd71c4"
+      asi:name="WidgetPlainTextTest_ReadOnly"
+      ami:openExclusively="false"
+      frmi:readOnlyAccess="true"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="WidgetPlainTextTest"
+      frmi:screen="Widgets/FormControlSet/Widgets/WidgetPlainTextTest.origam#WidgetPlainTextTest/d5b55166-38a5-4f88-b568-ca220f52f8aa" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="Widget Rich Text Test"
+      x:id="a81c6fdf-5827-4b3a-b44a-1f296f4161b8"
+      asi:name="WidgetRichTextTest"
+      ami:openExclusively="false"
+      frmi:readOnlyAccess="false"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="WidgetRichTextTest"
+      frmi:screen="Widgets/FormControlSet/Widgets/WidgetRichTextTest.origam#WidgetRichTextTest/59b4b5cb-5e69-484a-a3cf-8e2cb933fdb9" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="Widget Rich Text Test/ReadOnly"
+      x:id="a87db7cc-54cb-4076-8baf-cb512da0ec45"
+      asi:name="WidgetRichTextTest_ReadOnly"
+      ami:openExclusively="false"
+      frmi:readOnlyAccess="true"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="WidgetRichTextTest"
+      frmi:screen="Widgets/FormControlSet/Widgets/WidgetRichTextTest.origam#WidgetRichTextTest/59b4b5cb-5e69-484a-a3cf-8e2cb933fdb9" />
+  </s:MenuItem>
+</x:file>

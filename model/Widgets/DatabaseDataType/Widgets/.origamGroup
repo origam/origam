@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="34b029c0-00a6-4d36-9e33-00e2d616d609"
+    x:isFolder="true"
+    g:name="Widgets"
+    g:rootItemType="DatabaseDataType" />
+</x:file>
