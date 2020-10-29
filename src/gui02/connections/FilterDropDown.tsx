@@ -124,10 +124,12 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Delete", "filter_menu_delete")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={true}
+              isDisabled={
+                !this.filterManager.selectedFilterGroupId ||
+                this.filterManager.isSelectedFilterGroupDefault}
               onClick={(event: any) => {
                 setDropped(false);
-                // onColumnConfigurationClickEvt(event);
+                this.filterManager.cancelSelectedFilter();
               }}
             >
               {T("Cancel Filter", "filter_menu_cancel")}

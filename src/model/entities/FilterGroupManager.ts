@@ -10,6 +10,7 @@ import {filterTypeToNumber} from "gui/Components/ScreenElements/Table/FilterSett
 import {getApi} from "model/selectors/getApi";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {getDataView} from "model/selectors/DataView/getDataView";
+import {getSessionId} from "model/selectors/getSessionId";
 
 export class FilterGroupManager {
   ctx: any;
@@ -92,6 +93,21 @@ export class FilterGroupManager {
     }
     this.filterConfiguration.clearFilters();
     this.selectedFilterGroupId = undefined;
+  }
+
+  @action.bound
+  cancelSelectedFilter() {
+    this.filterConfiguration.clearFilters();
+    this.selectedFilterGroupId = undefined;
+  }
+
+  @action.bound
+  async setSelectedFilterGroupAsDefault() {
+    const api = getApi(this.ctx);
+    await api.setDefaultFilter({
+      SessionFormIdentifier: getSessionId(this.ctx),
+      PanelInstanceId: getDataView(this.ctx).modelInstanceId,
+    });
   }
 
   parent?: any;
