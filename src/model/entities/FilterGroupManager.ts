@@ -62,7 +62,7 @@ export class FilterGroupManager {
   }
 
   @action.bound
-  async saveSelectedFilterGroup(name: string, isGlobal: boolean) {
+  async saveActiveFiltersAsNewFilterGroup(name: string, isGlobal: boolean) {
     const filterGroupServerVerion: IUIGridFilterCoreConfiguration = {
       details: this.activeFilters.map((filter) => this.filtreToServerVersion(filter)),
       id: undefined,
@@ -73,12 +73,17 @@ export class FilterGroupManager {
     const api = getApi(this.ctx);
     const filterGrouId = await api.saveFilter({
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
-      PanelId: getDataView(this.ctx).modelInstanceId,
+      PanelId: getDataView(this.ctx).modelId,
       Filter: filterGroupServerVerion,
       IsDefault: false,
     });
-
-    console.log("filterGrouId: " + filterGrouId);
+    const filterGroup = {
+      filters: this.activeFilters,
+      id: filterGrouId,
+      isGlobal: isGlobal,
+      name: name
+    }
+    this.filterGroups.push(filterGroup);
   }
 
   @action.bound

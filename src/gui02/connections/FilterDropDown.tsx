@@ -45,7 +45,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
       "",
       <SaveFilterDialog
         onOkClick={(name: string, isGlobal: boolean) => {
-          this.filterManager.saveSelectedFilterGroup(name, isGlobal);
+          this.filterManager.saveActiveFiltersAsNewFilterGroup(name, isGlobal);
           closeDialog();
         }}
         onCancelClick={() => {
