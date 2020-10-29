@@ -51,8 +51,6 @@ import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import {IDataViewToolbarUI} from "modules/DataView/DataViewUI";
-import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -402,7 +400,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     openedScreen.content.setFormScreen(screen);
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
-    getDataViewList(this).forEach((dv) => dv.start());
 
     setTimeout(() => {
       const fieldToSelect = getFormScreen(this).getFirstFormPropertyId();
@@ -1038,6 +1035,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         dataView.dataTable.setRecords((entityValue as any).data);
+        yield dataView.start();
         dataView.reselectOrSelectFirst();
       }
     }
