@@ -91,10 +91,10 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Remember The Current Filter", "filter_menu_set_default_filter")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={true}
+              isDisabled={this.filterManager.activeFilters.length === 0}
               onClick={(event: any) => {
                 setDropped(false);
-                // onColumnConfigurationClickEvt(event);
+                this.filterManager.setSelectedFilterGroupAsDefault();
               }}
             >
               {T("Cancel Default Filter", "filter_menu_cancel_default_filter")}
