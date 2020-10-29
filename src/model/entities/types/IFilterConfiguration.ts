@@ -9,7 +9,7 @@ export interface IFilterConfiguration extends IFilterConfigurationData {
   $type_IFilterConfigurationData: 1;
 
   isFilterControlsDisplayed: boolean;
-  activeFilters: any[];
+  activeFilters: IFilter[];
   filteringFunction: () => (row: any[]) => boolean;
   getSettingByPropertyId(propertyId: string): IFilter | undefined;
   setFilter(term: IFilter): void;

@@ -53,7 +53,7 @@ const OpCombo: React.FC<{
 };
 
 const OpEditors: React.FC<{
-  setting: any;
+  setting: FilterSetting;
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
 }> = (props) => {
