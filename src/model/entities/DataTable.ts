@@ -201,10 +201,7 @@ export class DataTable implements IDataTable {
   }
 
   getFirstRow(): any[] | undefined {
-    if (this.rows.length === 0) {
-      return undefined;
-    }
-    return this.rows[0];
+    return this.rowsContainer.getFirstRow();
   }
 
   getLastRow(): any[] | undefined {

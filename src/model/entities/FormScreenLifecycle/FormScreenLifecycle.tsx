@@ -51,6 +51,8 @@ import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {IDataViewToolbarUI} from "modules/DataView/DataViewUI";
+import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 import {selectLastRow} from "model/actions/DataView/selectLastRow";
 import {startEditingFirstCell} from "model/actions/DataView/startEditingFirstCell";
 
@@ -698,7 +700,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
       yield* selectLastRow(targetDataView)();
-      yield* startEditingFirstCell(targetDataView)();
+      if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
+        yield* targetDataView.activateFormView();
+      }else{
+        yield* startEditingFirstCell(targetDataView)();
+      }
     } finally {
       this.monitor.inFlow--;
     }
@@ -719,7 +725,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           OriginalId: rowId,
           RequestingGridId: gridId,
           Entities: [entity],
-          ForcedValues: {},
+          ForcedValues: this.getNewRowValues(),
         });
       } finally {
         formScreen.dataUpdateCRS.leave();
@@ -868,7 +874,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
+  private actionRunning = false;
+
   *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
+    if(this.actionRunning){
+      return;
+    }
+    this.actionRunning = true;
     try {
       this.monitor.inFlow++;
       const parameters: { [key: string]: any } = {};
@@ -911,6 +923,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* new_ProcessActionResult(action)(result);
     } finally {
       this.monitor.inFlow--;
+      this.actionRunning = false;
     }
   }
 

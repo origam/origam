@@ -72,11 +72,18 @@
     flex-shrink: 0;
     flex-basis: 20px;
     cursor: pointer;
-    border-radius: 3px 0px 0px 3px;
     overflow: hidden;
-    border-right: none;
     padding: 0;
     font: inherit;
+  }
+
+  :global(.btnDownloadFirst) {
+    border-radius: 3px 0px 0px 3px;
+    border-right: none;
+  }
+
+  :global(.btnDownloadOnly) {
+    border-radius: 3px 3px 3px 3px;
   }
 
   :global(.btnDelete) {

@@ -18,7 +18,7 @@ export const UserMenuDropdown: React.FC<{
       trigger={({refTrigger, setDropped}) => (
         <div
           ref={refTrigger}
-          onClick={() => setDropped(true)}>
+          onMouseDown={() => setDropped(true)}>
            <div className={S.avatarSection}>
             <div className={S.pictureSection}>
               <div className={S.avatarContainer}>

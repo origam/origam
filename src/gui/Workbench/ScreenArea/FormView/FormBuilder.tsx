@@ -158,7 +158,7 @@ export class FormBuilder extends React.Component<{
                 }
 
                 return (
-                  <Provider property={property}>
+                  <Provider property={property} key={property.id}>
                     <FormField
                       caption={property.name}
                       captionLength={property.captionLength}

@@ -396,8 +396,9 @@ export class FilterEditorData implements IDropdownEditorData {
   }
 
   @action.bound chooseNewValue(value: any) {
-    if (value !== null) {
+    if (value !== null && !this._value.includes(value)) {
       this._value = [...this._value, value];
+      console.log("Value: "+this._value)
       this.onChange(this._value);
     }
   }

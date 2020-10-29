@@ -156,4 +156,13 @@ export class ListRowContainer implements IRowsContainer {
   get addedRowPositionLocked(): boolean {
     return this.forcedFirstRowId !== undefined;
   }
+
+  getFirstRow(): any[] | undefined {
+    if (this.rows.length === 0) {
+      return undefined;
+    }
+    return this.addedRowPositionLocked
+      ? this.rows.find(row => this.rowIdGetter(row) === this.forcedFirstRowId)
+      : this.rows[0];
+  }
 }
