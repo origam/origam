@@ -20,7 +20,7 @@ namespace Origam.ProjectAutomation.Builders
 
         private string CreateDockerRunFile(Project _project)
         {
-            return "docker run --env-file " + _project.SourcesFolder + ".env -it  -v " + _project.RootSourceFolder + ":/home/origam/HTML5/data -p "+_project.DockerPort+":8080 origam/server";
+            return "docker run --env-file " + _project.SourcesFolder + ".env -it  -v " + _project.RootSourceFolder + ":/home/origam/HTML5/data -p "+_project.DockerPort+":8080 origam/server:master-latest";
         }
 
         private string CreateEnvFile(Project _project)
