@@ -45,7 +45,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
       "",
       <SaveFilterDialog
         onOkClick={(name: string, isGlobal: boolean) => {
-          this.filterManager.saveFilter(name, isGlobal);
+          this.filterManager.saveSelectedFilterGroup(name, isGlobal);
           closeDialog();
         }}
         onCancelClick={() => {
@@ -53,10 +53,6 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
         }}
       />
     );
-  }
-
-  async onDeleteFilterClick(){
-    this.filterManager.deleteFilterGroup();
   }
 
   render() {
@@ -118,7 +114,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
                 this.filterManager.isSelectedFilterGroupDefault}
               onClick={(event: any) => {
                 setDropped(false);
-                this.onDeleteFilterClick();
+                this.filterManager.deleteFilterGroup();
               }}
             >
               {T("Delete", "filter_menu_delete")}

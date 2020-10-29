@@ -61,6 +61,7 @@ export class FilterGroupManager {
     };
   }
 
+  @action.bound
   async saveSelectedFilterGroup(name: string, isGlobal: boolean) {
     const filterGroupServerVerion: IUIGridFilterCoreConfiguration = {
       details: this.activeFilters.map((filter) => this.filtreToServerVersion(filter)),
@@ -80,6 +81,7 @@ export class FilterGroupManager {
     console.log("filterGrouId: " + filterGrouId);
   }
 
+  @action.bound
   async deleteFilterGroup() {
     if (!this.selectedFilterGroupId) {
       return;
