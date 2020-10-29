@@ -661,7 +661,7 @@ function constructMapViewSetup(xmlNode: any) {
     const layerAttr = layerXmlNode.attributes;
     const mls = new MapLayerSetup();
     mps.layers.push(mls);
-    mls.defaultEnabled = layerAttr.DefaultEnabled === "true";
+    mls.defaultEnabled = layerAttr.defaultEnabled === "true";
     mls.id = layerAttr.id;
     mls.title = layerAttr.title;
     mls.type = layerAttr.type;
