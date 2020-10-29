@@ -9,7 +9,6 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
-import { T } from "utils/translation";
 import { Operator } from "./Operatots";
 
 const OPERATORS = () =>
@@ -23,7 +22,7 @@ const OPERATORS = () =>
     Operator.equals,
     Operator.notEquals,
     Operator.isNull,
-    Operator.isNotNull
+    Operator.isNotNull,
   ] as Operator[];
 
 const OpCombo: React.FC<{
@@ -70,7 +69,7 @@ const OpEditors: React.FC<{
       return (
         <input
           className={CS.input}
-          value={setting.val1}
+          value={setting.val1 ?? ""}
           onChange={(event: any) =>
             props.onChange &&
             props.onChange(
@@ -107,6 +106,20 @@ export class FilterSettingsString extends React.Component<{
   @action.bound takeSettingFromProps() {
     if (this.props.setting) {
       this.setting = this.props.setting;
+      return;
+    }
+    if (!this.setting) {
+      this.setting = new FilterSetting(OPERATORS()[0].type);
+      return;
+    }
+    if (
+      this.setting.val1 !== undefined ||
+      this.setting.val2 !== undefined ||
+      this.setting.type !== OPERATORS()[0].type ||
+      this.setting.isComplete !== false ||
+      this.setting.lookupId !== undefined
+    ) {
+      this.setting = new FilterSetting(OPERATORS()[0].type);
     }
   }
 

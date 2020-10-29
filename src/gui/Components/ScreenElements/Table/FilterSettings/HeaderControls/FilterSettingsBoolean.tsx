@@ -29,6 +29,20 @@ export class FilterSettingsBoolean extends React.Component<{
   @action.bound takeSettingFromProps() {
     if (this.props.setting) {
       this.setting = this.props.setting;
+      return;
+    }
+    if (!this.setting) {
+      this.setting = new FilterSetting(OPERATORS[0].type);
+      return;
+    }
+    if (
+      this.setting.val1 !== undefined ||
+      this.setting.val2 !== undefined ||
+      this.setting.type !== OPERATORS[0].type ||
+      this.setting.isComplete !== false ||
+      this.setting.lookupId !== undefined
+    ) {
+      this.setting = new FilterSetting(OPERATORS[0].type);
     }
   }
 
