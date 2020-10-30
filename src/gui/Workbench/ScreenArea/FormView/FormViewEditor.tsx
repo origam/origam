@@ -24,7 +24,6 @@ import {FocusManager} from "model/entities/FocusManager";
 import { DomEvent } from "leaflet";
 import { observable } from "mobx";
 
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;

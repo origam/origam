@@ -11,6 +11,8 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import { useCallback, useEffect, useState } from "react";
 
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 @observer
 export class TextEditor extends React.Component<{
   value: string | null;
