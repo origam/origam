@@ -7,6 +7,7 @@ import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
+import {runInAction} from "mobx";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -59,6 +60,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
         const dataSourceRow = result.wrappedObject;
         console.log("New row:", dataSourceRow);
         dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow);
+        dataView.dataTable.unlockAddedRowPosition();
         dataView.selectRow(dataSourceRow);
       }
       getFormScreen(ctx).setDirty(true);
