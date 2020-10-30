@@ -70,13 +70,13 @@ function registerClickHandler() {
         const rowId = dataTable.getRowId(row);
         const selectionMember = getSelectionMember(ctx);
         if (!!selectionMember) {
-          const dsField = getDataSourceFieldByName(ctx, selectionMember);
-          if (dsField) {
-            newSelectionState = !dataTable.getCellValueByDataSourceField(row, dsField);
+          const dataSourceField = getDataSourceFieldByName(ctx, selectionMember);
+          if (dataSourceField) {
+            newSelectionState = !dataTable.getCellValueByDataSourceField(row, dataSourceField);
             dataTable.setDirtyValue(row, selectionMember, newSelectionState);
             yield* getFormScreenLifecycle(ctx).onFlushData();
-            const dataSourceField = getDataSourceFieldByName(ctx, selectionMember)!;
-            newSelectionState = dataTable.getCellValueByDataSourceField(row, dataSourceField);
+            const updatedRow = dataTable.getRowById(rowId)!;
+            newSelectionState = dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
             yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
           }
         }else{

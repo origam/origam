@@ -166,9 +166,16 @@ export class DataView implements IDataView {
     return Array.from(this.selectedRowIdsMap.keys());
   }
 
-  isSelected(id: string): boolean {
-    if (!this.selectedRowIdsMap.has(id)) return false;
-    return this.selectedRowIdsMap.get(id)!;
+  isSelected(rowId: string): boolean {
+    const selectionMember = getSelectionMember(this);
+    if (!!selectionMember) {
+      const dataSourceField = getDataSourceFieldByName(this, selectionMember)!;
+      const updatedRow = this.dataTable.getRowById(rowId)!;
+      return this.dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
+    }
+    return !this.selectedRowIdsMap.has(rowId)
+      ? false
+      : this.selectedRowIdsMap.get(rowId)!;
   }
 
   @action.bound addSelectedRowId(id: string) {
