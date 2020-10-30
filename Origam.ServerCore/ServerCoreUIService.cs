@@ -344,8 +344,8 @@ namespace Origam.ServerCore
         {
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
-            IList output = sessionStore.UpdateObjectEx(
-                input.Entity, input.Id, input.Values);
+            IList output = sessionStore.UpdateObjectBatch(
+                input.Entity, input.UpdateData);
             CreateUpdateOrigamOnlineUser();
             return output;
         }

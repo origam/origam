@@ -21,6 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Origam.Server;
 
 namespace Origam.ServerCore.Model.UIService
 {
@@ -28,7 +31,7 @@ namespace Origam.ServerCore.Model.UIService
     {
         public Guid SessionFormIdentifier { get; set; }
         public string Entity { get; set; }
-        public object Id { get; set; }
-        public Hashtable Values { get; set; }
+        [Required]
+        public UpdateData[] UpdateData { get; set; }
     }
 }
