@@ -64,8 +64,6 @@ function registerClickHandler() {
     h: currentRowHeight(),
     handler(event: any) {
       flow(function* () {
-        console.log("click");
-
         // TODO: Move to tablePanelView
         let newSelectionState=false;
         const dataTable = getDataTable(ctx);
@@ -77,11 +75,10 @@ function registerClickHandler() {
             dataTable.setDirtyValue(row, selectionMember, newSelectionState);
             yield* getFormScreenLifecycle(ctx).onFlushData();
           }
-        } else {
-          const rowId = dataTable.getRowId(row);
-          newSelectionState = !hasSelectedRowId(ctx,  rowId);
-          yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
         }
+        const rowId = dataTable.getRowId(row);
+        newSelectionState = !hasSelectedRowId(ctx,  rowId);
+        yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
         if(!newSelectionState){
           getDataView(ctx).selectAllCheckboxChecked = false;
         }
