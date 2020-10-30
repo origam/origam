@@ -5,11 +5,19 @@ import cx from "classnames";
 export const DropdownItem: React.FC<{
   onClick?(event: any): void;
   isDisabled?: boolean;
-}> = props => (
-  <div
+  isSelected?: boolean;
+}> = props => {
+  function getStyle(){
+    if(props.isDisabled){
+      return "isDisabled"
+    }
+    return props.isSelected ? S.isSelected : ""
+  }
+
+  return <div
     onClick={props.onClick}
-    className={cx(S.root, { isDisabled: props.isDisabled })}
+    className={cx(S.root, getStyle())}
   >
     {props.children}
   </div>
-);
+};

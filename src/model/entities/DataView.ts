@@ -426,6 +426,9 @@ export class DataView implements IDataView {
 
   @action.bound
   setSelectedRowId(id: string | undefined): void {
+    if(this.dataTable.addedRowPositionLocked){
+      return;
+    }
     this.selectedRowId = id;
     if(this.isBindingParent){
       this.childBindings.forEach(binding => binding.childDataView.dataTable.updateSortAndFilter());

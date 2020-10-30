@@ -6,10 +6,13 @@ import { IGroupingConfiguration } from "model/entities/types/IGroupingConfigurat
 import { AggregationContainer } from "../TablePanelView";
 import { ICellRectangle } from "./ICellRectangle";
 
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
+
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
   columnConfigurationDialog: IColumnConfigurationDialog;
   filterConfiguration: IFilterConfiguration;
+  filterGroupManager: FilterGroupManager;
   orderingConfiguration: IOrderingConfiguration;
   groupingConfiguration: IGroupingConfiguration;
   rowHeight: number;

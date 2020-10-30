@@ -208,12 +208,16 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           });
         }
       }else{
-        data = yield api.getData({
-          SessionFormIdentifier: getSessionId(this),
-          ChildEntity: getEntity(this),
-          ParentRecordId: getParentRowId(this)!,
-          RootRecordId: getMasterRowId(this)!
-        });
+        const parentRowId = getParentRowId(this);
+        const masterRowId = getMasterRowId(this);
+        data = !parentRowId || !masterRowId
+          ? []
+          : yield api.getData({
+              SessionFormIdentifier: getSessionId(this),
+              ChildEntity: getEntity(this),
+              ParentRecordId: parentRowId,
+              RootRecordId: masterRowId
+            });
       }
       dataView.setRecords(data);
       dataView.selectFirstRow();

@@ -2,7 +2,6 @@ import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSe
 
 export class FilterSetting implements IFilterSetting {
   type: string;
-  caption: string;
   val1?: any;
   val2?: any;
   isComplete: boolean;
@@ -16,9 +15,10 @@ export class FilterSetting implements IFilterSetting {
     return this.val2;
   }
 
-  constructor(type: string, caption: string) {
+  constructor(type: string, isComplete:boolean=false, val1?: any, val2?: any) {
     this.type = type;
-    this.caption = caption;
-    this.isComplete = false;
+    this.isComplete = isComplete;
+    this.val1 = val1 ?? undefined;
+    this.val2 = val2 ?? undefined;
   }
 }

@@ -1,0 +1,22 @@
+.inpuContainer {
+  display: flex;
+  flex-flow: column;
+}
+
+.row{
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+}
+
+.label{
+  width: 50px;
+}
+
+.textInput{
+  width: 150px;
+}
+
+.chcekBoxinput{
+  margin: 3px 3px 3px 0;
+}

@@ -351,7 +351,34 @@ export interface IApi {
 
   search(searchTerm: string): Promise<ISearchResult[]>;
 
+  setDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string; }): Promise<any>;
+
+  resetDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string; }): Promise<any>;
+
+  saveFilter(data: {
+    DataStructureEntityId: string;
+    PanelId: string;
+    Filter: IUIGridFilterCoreConfiguration
+    IsDefault: boolean;
+  }): Promise<string>;
+
+  deleteFilter(data: { filterId: string }): Promise<any>;
+
   getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>;
+}
+
+export interface IUIGridFilterCoreConfiguration{
+  id: string | undefined;
+  name: string;
+  isGlobal: boolean;
+  details: IUIGridFilterFieldConfiguration[];
+}
+
+export interface IUIGridFilterFieldConfiguration{
+  property: string;
+  value1: any;
+  value2: any;
+  operator: number;
 }
 
 export interface IUpdateData {
