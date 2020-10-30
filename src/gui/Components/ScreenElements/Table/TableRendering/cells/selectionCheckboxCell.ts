@@ -67,6 +67,7 @@ function registerClickHandler() {
         // TODO: Move to tablePanelView
         let newSelectionState=false;
         const dataTable = getDataTable(ctx);
+        const rowId = dataTable.getRowId(row);
         const selectionMember = getSelectionMember(ctx);
         if (!!selectionMember) {
           const dsField = getDataSourceFieldByName(ctx, selectionMember);
@@ -74,11 +75,14 @@ function registerClickHandler() {
             newSelectionState = !dataTable.getCellValueByDataSourceField(row, dsField);
             dataTable.setDirtyValue(row, selectionMember, newSelectionState);
             yield* getFormScreenLifecycle(ctx).onFlushData();
+            const dataSourceField = getDataSourceFieldByName(ctx, selectionMember)!;
+            newSelectionState = dataTable.getCellValueByDataSourceField(row, dataSourceField);
+            yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
           }
+        }else{
+          newSelectionState = !hasSelectedRowId(ctx,  rowId);
+          yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
         }
-        const rowId = dataTable.getRowId(row);
-        newSelectionState = !hasSelectedRowId(ctx,  rowId);
-        yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
         if(!newSelectionState){
           getDataView(ctx).selectAllCheckboxChecked = false;
         }
