@@ -125,7 +125,6 @@ export class TextEditor extends React.Component<{
           <RichTextEditor
             value={this.props.value ?? ""}
             onChange={(newValue: any) => {
-              console.log(newValue);
               this.props.onChange?.(undefined, newValue);
             }}
             onBlur={this.props.onEditorBlur}
