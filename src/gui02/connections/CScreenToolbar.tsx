@@ -175,7 +175,7 @@ export class CScreenToolbar extends React.Component<{}> {
               <ScreenToolbarActionGroup>
                 {!getIsSuppressSave(formScreen) && (
                   <ScreenToolbarAction
-                    onMouseDown={onSaveSessionClick(formScreen)}
+                    onClick={onSaveSessionClick(formScreen)}
                     icon={
                       <Icon
                         src="./icons/save.svg"
@@ -187,7 +187,7 @@ export class CScreenToolbar extends React.Component<{}> {
                   />
                 )}
                 <ScreenToolbarAction
-                  onMouseDown={onRefreshSessionClick(formScreen)}
+                  onClick={onRefreshSessionClick(formScreen)}
                   icon={
                     <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />
                   }
