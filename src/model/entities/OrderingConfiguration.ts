@@ -125,7 +125,6 @@ export class OrderingConfiguration implements IOrderingConfiguration {
   );
 
   @computed get orderingFunction(): () => (row1: any[], row2: any[]) => number {
-    console.log("new orderingFunction generated!")
     return () => (row1: any[], row2: any) => {
       const dataTable = getDataTable(this);
       let mul = 10 * this.orderings.length;

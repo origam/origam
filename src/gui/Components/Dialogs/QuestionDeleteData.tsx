@@ -1,8 +1,8 @@
 import React from "react";
-import {ModalWindow} from "../Dialog/Dialog";
-import {observer} from "mobx-react";
+import { ModalWindow } from "../Dialog/Dialog";
+import { observer } from "mobx-react";
 import CS from "./DialogsCommon.module.css";
-import {T} from "../../../utils/translation";
+import { T } from "../../../utils/translation";
 
 @observer
 export class QuestionDeleteData extends React.Component<{

@@ -9,36 +9,21 @@ import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
-import { T } from "utils/translation";
+import { Operator } from "./Operatots";
 
 const OPERATORS = () =>
   [
-    { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
-    {
-      human: <>{T("not contains", "filter_operator_not_contains")}</>,
-      type: "ncontains",
-    },
-    {
-      human: <>{T("begins with", "filter_operator_begins_with")}</>,
-      type: "starts",
-    },
-    {
-      human: <>{T("not begins with", "filter_operator_not_begins_with")}</>,
-      type: "nstarts",
-    },
-    { human: <>{T("ends with", "filter_operator_ends_with")}</>, type: "ends" },
-    {
-      human: <>{T("not ends with", "filter_operator_not_ends_with")}</>,
-      type: "nends",
-    },
-    { human: <>=</>, type: "eq" },
-    { human: <>&ne;</>, type: "neq" },
-    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
-    {
-      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
-      type: "nnull",
-    },
-  ] as any[];
+    Operator.contains,
+    Operator.notContains,
+    Operator.startsWith,
+    Operator.notStartsWith,
+    Operator.endsWith,
+    Operator.notEndsWith,
+    Operator.equals,
+    Operator.notEquals,
+    Operator.isNull,
+    Operator.isNotNull,
+  ] as Operator[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -67,7 +52,7 @@ const OpCombo: React.FC<{
 };
 
 const OpEditors: React.FC<{
-  setting: any;
+  setting: FilterSetting;
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
 }> = (props) => {
@@ -84,7 +69,7 @@ const OpEditors: React.FC<{
       return (
         <input
           className={CS.input}
-          value={setting.val1}
+          value={setting.val1 ?? ""}
           onChange={(event: any) =>
             props.onChange &&
             props.onChange(
@@ -108,10 +93,7 @@ export class FilterSettingsString extends React.Component<{
   setting?: any;
   onTriggerApplySetting?: (setting: any) => void;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(
-    OPERATORS()[0].type,
-    OPERATORS()[0].human
-  );
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -124,6 +106,20 @@ export class FilterSettingsString extends React.Component<{
   @action.bound takeSettingFromProps() {
     if (this.props.setting) {
       this.setting = this.props.setting;
+      return;
+    }
+    if (!this.setting) {
+      this.setting = new FilterSetting(OPERATORS()[0].type);
+      return;
+    }
+    if (
+      this.setting.val1 !== undefined ||
+      this.setting.val2 !== undefined ||
+      this.setting.type !== OPERATORS()[0].type ||
+      this.setting.isComplete !== false ||
+      this.setting.lookupId !== undefined
+    ) {
+      this.setting = new FilterSetting(OPERATORS()[0].type);
     }
   }
 

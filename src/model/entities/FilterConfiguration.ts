@@ -17,15 +17,22 @@ export class FilterConfiguration implements IFilterConfiguration {
   $type_IFilterConfigurationData: 1 = 1;
 
   implicitFilters: IImplicitFilter[];
-  @observable.ref filters: IFilter[] = [];
+  @observable.ref activeFilters: IFilter[] = [];
 
   getSettingByPropertyId(propertyId: string): IFilter | undefined {
-    return this.filters.find((item) => item.propertyId === propertyId);
+    return this.activeFilters.find((item) => item.propertyId === propertyId);
+  }
+
+  @action.bound
+  setFilters(filters: IFilter[]) {
+    this.clearFilters();
+    filters.forEach((filter) => this.setFilter(filter));
+    this.isFilterControlsDisplayed = true;
   }
 
   @action.bound
   setFilter(term: IFilter): void {
-    this.filters = produce(this.filters, (draft: any) => {
+    this.activeFilters = produce(this.activeFilters, (draft: any) => {
       const oldIdx = draft.findIndex((item: any) => item.propertyId === term.propertyId);
       if (oldIdx > -1) {
         draft.splice(oldIdx, 1);
@@ -36,7 +43,7 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   clearFilters(): void {
-    this.filters = [];
+    this.activeFilters = [];
   }
 
   @observable isFilterControlsDisplayed: boolean = false;
@@ -61,7 +68,7 @@ export class FilterConfiguration implements IFilterConfiguration {
           return false;
         }
       }
-      for (let term of this.filters) {
+      for (let term of this.activeFilters) {
         if (!this.userFilterPredicate(row, term)) {
           return false;
         }
@@ -142,14 +149,15 @@ export class FilterConfiguration implements IFilterConfiguration {
         if (term.setting.type === "nnull") return txt1 !== null;
         if (term.setting.type === "null") return txt1 === null;
         if (
-            term.setting.val1 === "" ||
-            term.setting.val1 === undefined ||
-            term.setting.val1 === null
+          term.setting.val1 === "" ||
+          term.setting.val1 === undefined ||
+          term.setting.val1 === null
         )
           return true;
 
         const t1 = term.setting.val1.endsWith("T00:00:00.000")
-          ? txt1.substr(0, 10).concat("T00:00:00.000") : txt1;
+          ? txt1.substr(0, 10).concat("T00:00:00.000")
+          : txt1;
 
         switch (term.setting.type) {
           case "between": {
@@ -386,7 +394,7 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.disposers.push(
       reaction(
         () => {
-          const data: any[] = toJS(this.filters);
+          const data: any[] = toJS(this.activeFilters);
           data.forEach((item) => delete item.setting.caption);
           return data;
         },
@@ -403,8 +411,8 @@ export class FilterConfiguration implements IFilterConfiguration {
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (dataView.isReorderedOnClient) {
-      if (this.filters.length > 0) {
-        const comboProps = this.filters
+      if (this.activeFilters.length > 0) {
+        const comboProps = this.activeFilters
           .map((term) => getDataViewPropertyById(this, term.propertyId)!)
           .filter((prop) => prop.column === "ComboBox");
 

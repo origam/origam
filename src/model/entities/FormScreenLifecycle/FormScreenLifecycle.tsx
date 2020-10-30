@@ -351,7 +351,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           reaction(
             () => {
               orderingConfiguration.userOrderings.map((x) => x.direction);
-              filterConfiguration.filters.map((x) => [
+              filterConfiguration.activeFilters.map((x) => [
                 x.propertyId,
                 x.setting.type,
                 x.setting.val1,

@@ -13,6 +13,7 @@ import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSe
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {getFilterConfiguration} from "model/selectors/DataView/getFilterConfiguration";
 
 export const FilterSettings: React.FC = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
@@ -20,7 +21,6 @@ export const FilterSettings: React.FC = observer((props) => {
   const dataView = getDataView(property);
   const setting = getFilterSettingByProperty(property, property.id);
   const handleApplyFilterSetting = onApplyFilterSetting(property);
-  //console.log(setting);
 
   switch (property.column) {
     case "Text":
