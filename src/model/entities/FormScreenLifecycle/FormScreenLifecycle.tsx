@@ -556,22 +556,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const formScreen = getFormScreen(this);
         const dataViews = formScreen.dataViews;
         for (let dataView of dataViews) {
-          for (let row of dataView.dataTable.getDirtyValueRows()) {
-            const self = this;
-            const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
-              function* () {
-                return yield api.updateObject({
-                  SessionFormIdentifier: getSessionId(self),
-                  Entity: dataView.entity,
-                  Id: dataView.dataTable.getRowId(row),
-                  Values: map2obj(dataView.dataTable.getDirtyValues(row)),
-                });
-              }
-            );
+          const updateData = dataView.dataTable.getDirtyValueRows().map(row => {
+            return {
+              RowId: dataView.dataTable.getRowId(row),
+              Values: map2obj(dataView.dataTable.getDirtyValues(row))
+            }})
+          const self = this;
+          const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
+            function* () {
+              return yield api.updateObject({
+                SessionFormIdentifier: getSessionId(self),
+                Entity: dataView.entity,
+                UpdateData: updateData,
+              });
+            }
+          );
 
-            yield* refreshWorkQueues(this)();
-            yield* processCRUDResult(dataView, updateObjectResult);
-          }
+          yield* refreshWorkQueues(this)();
+          yield* processCRUDResult(dataView, updateObjectResult);
         }
         if (formScreen.requestSaveAfterUpdate) {
           yield* this.saveSession();
@@ -595,8 +597,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         return yield api.updateObject({
           SessionFormIdentifier: getSessionId(self),
           Entity: dataView.entity,
-          Id: dataView.dataTable.getRowId(row),
-          Values: changes,
+          UpdateData: [{
+            RowId: dataView.dataTable.getRowId(row),
+            Values: changes
+          }]
         });
       });
 
@@ -627,7 +631,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ColumnNames: getColumnNamesToLoad(rootDataView),
         MasterRowId: undefined,
       });
-      rootDataView.dataTable.setRecords(loadedData);
+      rootDataView.setRecords(loadedData);
       rootDataView.reselectOrSelectFirst();
 
       //debugger
@@ -1040,7 +1044,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
-        dataView.dataTable.setRecords((entityValue as any).data);
+        dataView.setRecords((entityValue as any).data);
         yield dataView.start();
         dataView.reselectOrSelectFirst();
       }
