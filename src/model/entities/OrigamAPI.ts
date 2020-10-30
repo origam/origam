@@ -2,7 +2,7 @@ import xmlJs from "xml-js";
 import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import { IApi } from "./types/IApi";
+import {IApi, IUpdateData} from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { IColumnSettings } from "./types/IColumnSettings";
@@ -346,8 +346,7 @@ export class OrigamAPI implements IApi {
   async updateObject(data: {
     SessionFormIdentifier: string;
     Entity: string;
-    Id: string;
-    Values: { [key: string]: any };
+    UpdateData: IUpdateData[];
   }): Promise<any> {
     return (await this.axiosInstance.post("/UIService/UpdateObject", data)).data;
   }

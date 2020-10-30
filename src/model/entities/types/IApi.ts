@@ -165,8 +165,7 @@ export interface IApi {
   updateObject(data: {
     SessionFormIdentifier: string;
     Entity: string;
-    Id: string;
-    Values: { [key: string]: any };
+    UpdateData: IUpdateData[];
   }): Promise<any>;
 
   createObject(data: {
@@ -353,4 +352,9 @@ export interface IApi {
   search(searchTerm: string): Promise<ISearchResult[]>;
 
   getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>;
+}
+
+export interface IUpdateData {
+  RowId: string;
+  Values: { [key: string]: any };
 }
