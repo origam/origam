@@ -5,6 +5,14 @@ import { Tooltip } from "react-tippy";
 import S from "./TextEditor.module.scss";
 import { IFocusable } from "../../../../model/entities/FocusManager";
 
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+import { useCallback, useEffect, useState } from "react";
+
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 @observer
 export class TextEditor extends React.Component<{
   value: string | null;
@@ -95,24 +103,35 @@ export class TextEditor extends React.Component<{
   }
 
   private renderValueTag() {
-    const maxLength = this.props.maxLength === 0
-      ? undefined
-      : this.props.maxLength;
+    const maxLength = this.props.maxLength === 0 ? undefined : this.props.maxLength;
     if (this.props.isRichText) {
-      return (
-        <div className={S.editorContainer}>
-          <div
-            style={this.getStyle()}
-            className={S.input}
-            dangerouslySetInnerHTML={{ __html: this.props.value ?? "" }}
-            onKeyDown={this.props.onKeyDown}
-            onClick={this.props.onClick}
-            onDoubleClick={this.props.onDoubleClick}
+      if (this.props.isReadOnly) {
+        return (
+          <div className={S.editorContainer}>
+            <div
+              style={this.getStyle()}
+              className={S.input}
+              dangerouslySetInnerHTML={{ __html: this.props.value ?? "" }}
+              onKeyDown={this.props.onKeyDown}
+              onClick={this.props.onClick}
+              onDoubleClick={this.props.onDoubleClick}
+              onBlur={this.props.onEditorBlur}
+              onFocus={this.handleFocus}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <RichTextEditor
+            value={this.props.value ?? ""}
+            onChange={(newValue: any) => {
+              this.props.onChange?.(undefined, newValue);
+            }}
             onBlur={this.props.onEditorBlur}
             onFocus={this.handleFocus}
           />
-        </div>
-      );
+        );
+      }
     }
     if (!this.props.isMultiline) {
       return (
@@ -136,20 +155,21 @@ export class TextEditor extends React.Component<{
         />
       );
     }
-    if(this.props.isReadOnly){
+    if (this.props.isReadOnly) {
       return (
-        <div className={S.input}
-             onClick={this.props.onClick}
-             onDoubleClick={this.props.onDoubleClick}
-             onBlur={this.props.onEditorBlur}
-             onFocus={this.handleFocus}>
-          <span style={this.getStyle()}
-            className={S.multiLine}>
+        <div
+          className={S.input}
+          onClick={this.props.onClick}
+          onDoubleClick={this.props.onDoubleClick}
+          onBlur={this.props.onEditorBlur}
+          onFocus={this.handleFocus}
+        >
+          <span style={this.getStyle()} className={S.multiLine}>
             {this.props.value || ""}
           </span>
         </div>
       );
-    }else{
+    } else {
       return (
         <textarea
           style={this.getStyle()}
@@ -170,4 +190,49 @@ export class TextEditor extends React.Component<{
       );
     }
   }
+}
+
+function RichTextEditor(props: {
+  value: any;
+  onChange?: (newValue: any) => void;
+  onBlur?: (event: any) => void;
+  onFocus?: (event: any) => void;
+}) {
+  const [internalEditorState, setInternalEditorState] = useState(() => EditorState.createEmpty());
+  const [internalEditorStateHtml, setInternalEditorStateHtml] = useState("");
+
+  const onEditorStateChange = useCallback(
+    (newEditorState: any) => {
+      setInternalEditorState(newEditorState);
+      const html = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
+      setInternalEditorStateHtml(html);
+      props.onChange?.(html);
+    },
+    [setInternalEditorState, setInternalEditorStateHtml, props.onChange]
+  );
+
+  useEffect(() => {
+    if (props.value !== internalEditorStateHtml) {
+      const blocksFromHtml = htmlToDraft(props.value);
+      const { contentBlocks, entityMap } = blocksFromHtml;
+      const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+      const editorState = EditorState.createWithContent(contentState);
+      setInternalEditorStateHtml(props.value);
+      setInternalEditorState(editorState);
+    }
+  }, [props.value, internalEditorStateHtml]);
+
+  return (
+    <div style={{ overflow: "auto", width: "100%", height: "100%" }}>
+      <div style={{ minWidth: 800, minHeight: 600 }}>
+        <Editor
+          editorState={internalEditorState}
+          wrapperClassName="demo-wrapper"
+          editorClassName="demo-editor"
+          onEditorStateChange={onEditorStateChange}
+          onBlur={props.onBlur}
+        />
+      </div>
+    </div>
+  );
 }

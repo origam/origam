@@ -39,7 +39,7 @@ export class ListRowContainer implements IRowsContainer {
 
   async start() {
     this.reactionDisposer = reaction(
-      () => [this.filterConfiguration.filters, this.orderingConfiguration.orderings],
+      () => [this.filterConfiguration.activeFilters, this.orderingConfiguration.orderings],
       () => this.updateSortAndFilter(),
     );
     await this.updateSortAndFilter();
@@ -57,7 +57,7 @@ export class ListRowContainer implements IRowsContainer {
       .map((term) => getDataViewPropertyById(this.orderingConfiguration, term.columnId)!)
       .filter((prop) => prop.column === "ComboBox");
 
-    const filterComboProps = this.filterConfiguration.filters
+    const filterComboProps = this.filterConfiguration.activeFilters
       .map((term) => getDataViewPropertyById(this.filterConfiguration, term.propertyId)!)
       .filter((prop) => prop.column === "ComboBox");
     const allcomboProps = Array.from(new Set(filterComboProps.concat(orderingComboProps)));

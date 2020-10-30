@@ -9,7 +9,7 @@ import { DataSourceField } from "model/entities/DataSourceField";
 import { DataTable } from "model/entities/DataTable";
 import { DataView } from "model/entities/DataView";
 import { DropDownColumn } from "model/entities/DropDownColumn";
-import { FilterConfiguration } from "model/entities/FilterConfiguration";
+import { FilterConfiguration} from "model/entities/FilterConfiguration";
 import { FormPanelView } from "model/entities/FormPanelView/FormPanelView";
 import { FormScreen } from "model/entities/FormScreen";
 import { Lookup } from "model/entities/Lookup";
@@ -37,7 +37,9 @@ import { IPerspective } from "modules/DataView/Perspective/Perspective";
 import { flow } from "mobx";
 import { IViewConfiguration, ViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
-import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
+import {
+  IPanelConfiguration,
+} from "model/entities/types/IPanelConfiguration";
 import { parseToOrdering } from "model/entities/types/IOrderingConfiguration";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { cssString2Object } from "utils/objects";
@@ -61,6 +63,11 @@ import { IDataView } from "modules/DataView/DataViewTypes";
 import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
 import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
+import { IFilter } from "model/entities/types/IFilter";
+import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
+import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import { addFilterGroups } from "./filterXml";
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -312,7 +319,6 @@ export function* interpretScreenXml(
 
       const properties = findStopping(dataView, (n) => n.name === "Property").map(parseProperty);
 
-
       const formPropertyIds = new Set(findFormPropertyIds(dataView));
       for (let prop of properties) {
         if (formPropertyIds.has(prop.id)) {
@@ -351,7 +357,13 @@ export function* interpretScreenXml(
 
       const orderingConfiguration = new OrderingConfiguration(defaultOrderings);
       const implicitFilters = getImplicitFilters(dataView);
+
       const filterConfiguration = new FilterConfiguration(implicitFilters);
+      const filterGroupManager = new FilterGroupManager(filterConfiguration);
+      panelConfigurationsRaw
+        .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
+        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf))
+
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
@@ -399,6 +411,7 @@ export function* interpretScreenXml(
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
           filterConfiguration: filterConfiguration,
+          filterGroupManager: filterGroupManager,
           orderingConfiguration: orderingConfiguration,
           groupingConfiguration: new GroupingConfiguration(),
           rowHeight: 25,

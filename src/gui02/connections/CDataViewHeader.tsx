@@ -45,12 +45,9 @@ import { getIsRowMovingDisabled } from "model/actions-ui/DataView/getIsRowMoving
 import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick";
 import { getIsisMoveRowMenuVisible } from "model/selectors/DataView/getIsisMoveRowMenuVisible";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import {IAction, IActionMode, IActionPlacement, IActionType} from "model/entities/types/IAction";
-import {ScreenToolbarAction} from "gui02/components/ScreenToolbar/ScreenToolbarAction";
-import {Action} from "model/entities/Action";
-import {IActionParameter} from "model/entities/types/IActionParameter";
+import { IAction, IActionType } from "model/entities/types/IAction";
 import { DataViewHeaderDropDownItem } from "gui02/components/DataViewHeader/DataViewHeaderDropDownItem";
-import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
+import { FilterDropDown } from "gui02/connections/FilterDropDown";
 
 @observer
 export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
@@ -144,7 +141,6 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
 
     const $cont = scopeFor(dataView);
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
-
     const selectedRow = getSelectedRow(dataView);
 
     return (
@@ -324,6 +320,82 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                               tooltip={T("Last", "filter_tool_tip")}
                             />
                           </DataViewHeaderAction>
+                          <FilterDropDown ctx={dataView} />
+                          {/*<Dropdowner*/}
+                          {/*  trigger={({ refTrigger, setDropped }) => (*/}
+                          {/*    <DataViewHeaderAction*/}
+                          {/*      refDom={refTrigger}*/}
+                          {/*      onMouseDown={() => setDropped(true)}*/}
+                          {/*      isActive={false}*/}
+                          {/*    >*/}
+                          {/*      <i className="fas fa-caret-down" />*/}
+                          {/*    </DataViewHeaderAction>*/}
+                          {/*  )}*/}
+                          {/*  content={({ setDropped }) => (*/}
+                          {/*    <Dropdown>*/}
+                          {/*      <DropdownItem*/}
+                          {/*        isDisabled={true}*/}
+                          {/*        onClick={(event: any) => {*/}
+                          {/*          setDropped(false);*/}
+                          {/*          // onColumnConfigurationClickEvt(event);*/}
+                          {/*        }}>*/}
+                          {/*        {T("Cancel and Hide Filter", "filter_menu_filter_off")}*/}
+                          {/*      </DropdownItem>*/}
+                          {/*      <DropdownItem*/}
+                          {/*        isDisabled={true}*/}
+                          {/*        onClick={(event: any) => {*/}
+                          {/*          setDropped(false);*/}
+                          {/*          // onColumnConfigurationClickEvt(event);*/}
+                          {/*        }}>*/}
+                          {/*        {T("Remember The Current Filter", "filter_menu_set_default_filter")}*/}
+                          {/*      </DropdownItem>*/}
+                          {/*      <DropdownItem*/}
+                          {/*        isDisabled={true}*/}
+                          {/*        onClick={(event: any) => {*/}
+                          {/*          setDropped(false);*/}
+                          {/*          // onColumnConfigurationClickEvt(event);*/}
+                          {/*        }}>*/}
+                          {/*        {T("Cancel Default Filter", "filter_menu_cancel_default_filter")}*/}
+                          {/*      </DropdownItem>*/}
+                          {/*      <DropdownItem*/}
+                          {/*        isDisabled={true}*/}
+                          {/*        onClick={(event: any) => {*/}
+                          {/*          setDropped(false);*/}
+                          {/*          // onColumnConfigurationClickEvt(event);*/}
+                          {/*        }}>*/}
+                          {/*        {T("Save Current Filter", "filter_menu_save_filter")}*/}
+                          {/*      </DropdownItem>*/}
+                          {/*      <DropdownItem*/}
+                          {/*        isDisabled={true}*/}
+                          {/*        onClick={(event: any) => {*/}
+                          {/*          setDropped(false);*/}
+                          {/*          // onColumnConfigurationClickEvt(event);*/}
+                          {/*        }}>*/}
+                          {/*        {T("Delete", "filter_menu_delete")}*/}
+                          {/*      </DropdownItem>*/}
+                          {/*      <DropdownItem*/}
+                          {/*        isDisabled={true}*/}
+                          {/*        onClick={(event: any) => {*/}
+                          {/*          setDropped(false);*/}
+                          {/*          // onColumnConfigurationClickEvt(event);*/}
+                          {/*        }}>*/}
+                          {/*        {T("Cancel Filter", "filter_menu_cancel")}*/}
+                          {/*      </DropdownItem>*/}
+                          {/*      {filterGroups.map(filterGroup =>*/}
+                          {/*        <DropdownItem*/}
+                          {/*          isDisabled={false}*/}
+                          {/*          isSelected={this.selectedFilterGroup === filterGroup}*/}
+                          {/*          onClick={(event: any) => {*/}
+                          {/*            setDropped(false);*/}
+                          {/*            this.selectedFilterGroup = filterGroup;*/}
+                          {/*            onFilterGroupClickEvt(filterGroup);*/}
+                          {/*          }}>*/}
+                          {/*          {filterGroup.name}*/}
+                          {/*        </DropdownItem>*/}
+                          {/*      )}*/}
+                          {/*    </Dropdown>*/}
+                          {/*  )}*/}
+                          {/*/>*/}
                         </DataViewHeaderGroup>
                       )}
                     </ResponsiveChild>
