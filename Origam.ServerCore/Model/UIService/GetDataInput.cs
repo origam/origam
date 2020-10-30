@@ -26,7 +26,9 @@ namespace Origam.ServerCore.Model.UIService
     {
         public Guid SessionFormIdentifier { get; set; }
         public string ChildEntity { get; set; }
-        public object ParentRecordId { get; set; }
-        public object RootRecordId { get; set; }
+        [RequiredNonDefault]
+        public Guid ParentRecordId { get; set; }
+        [RequiredNonDefault]
+        public Guid RootRecordId { get; set; }
     }
 }
