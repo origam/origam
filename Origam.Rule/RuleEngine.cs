@@ -2006,6 +2006,7 @@ namespace Origam.Rule
 		public static XPathNodeIterator ToXml(string value, string xpath)
 		{
 			XmlDocument doc = new XmlDocument();
+			doc.PreserveWhitespace = true;
 			doc.LoadXml(value);
 
 			XPathNavigator nav = doc.CreateNavigator();
