@@ -380,7 +380,11 @@ export class TablePanelView implements ITablePanelView {
   }
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
-    return this.rectangleMap.get(rowIndex)!.get(columnIndex)!;
+    const actualRowIndex = this.dataTable.addedRowPositionLocked
+      ? 0
+      : rowIndex
+
+    return this.rectangleMap.get(actualRowIndex)!.get(columnIndex)!;
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {
