@@ -64,21 +64,22 @@ function registerClickHandler() {
     h: currentRowHeight(),
     handler(event: any) {
       flow(function* () {
-        console.log("click");
-
         // TODO: Move to tablePanelView
         let newSelectionState=false;
         const dataTable = getDataTable(ctx);
+        const rowId = dataTable.getRowId(row);
         const selectionMember = getSelectionMember(ctx);
         if (!!selectionMember) {
-          const dsField = getDataSourceFieldByName(ctx, selectionMember);
-          if (dsField) {
-            newSelectionState = !dataTable.getCellValueByDataSourceField(row, dsField);
+          const dataSourceField = getDataSourceFieldByName(ctx, selectionMember);
+          if (dataSourceField) {
+            newSelectionState = !dataTable.getCellValueByDataSourceField(row, dataSourceField);
             dataTable.setDirtyValue(row, selectionMember, newSelectionState);
             yield* getFormScreenLifecycle(ctx).onFlushData();
+            const updatedRow = dataTable.getRowById(rowId)!;
+            newSelectionState = dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
+            yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
           }
-        } else {
-          const rowId = dataTable.getRowId(row);
+        }else{
           newSelectionState = !hasSelectedRowId(ctx,  rowId);
           yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
         }

@@ -18,6 +18,12 @@ export function setAllSelectionStates(ctx: any, selectionState: boolean) {
         }
       }
       yield* getFormScreenLifecycle(ctx).onFlushData();
+      for (let row of dataTable.rows) {
+        const dataSourceField = getDataSourceFieldByName(ctx, selectionMember)!;
+        const newSelectionState = dataTable.getCellValueByDataSourceField(row, dataSourceField);
+        const rowId = dataTable.getRowId(row);
+        yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
+      }
     } else {
       for (let row of dataTable.rows) {
         const rowId = dataTable.getRowId(row);

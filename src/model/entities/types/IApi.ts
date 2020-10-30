@@ -165,8 +165,7 @@ export interface IApi {
   updateObject(data: {
     SessionFormIdentifier: string;
     Entity: string;
-    Id: string;
-    Values: { [key: string]: any };
+    UpdateData: IUpdateData[];
   }): Promise<any>;
 
   createObject(data: {
@@ -380,4 +379,9 @@ export interface IUIGridFilterFieldConfiguration{
   value1: any;
   value2: any;
   operator: number;
+}
+
+export interface IUpdateData {
+  RowId: string;
+  Values: { [key: string]: any };
 }

@@ -44,8 +44,9 @@ import {
   IInfiniteScrollLoader,
   InfiniteScrollLoader, NullIScrollLoader
 } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
-import {VisibleRowsMonitor} from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
+import { ScrollRowContainer } from "model/entities/ScrollRowContainer";
+import { VisibleRowsMonitor } from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -154,13 +155,27 @@ export class DataView implements IDataView {
     return this.selectedRowIdsMap.size > 0;
   }
 
+  setRecords(rows: any[][]): void {
+    this.dataTable.setRecords(rows);
+    this.selectAllCheckboxChecked = this.dataTable.rows
+      .every((row) => this.isSelected(this.dataTable.getRowId(row)));
+  }
+
+
   @computed get selectedRowIds() {
     return Array.from(this.selectedRowIdsMap.keys());
   }
 
-  isSelected(id: string): boolean {
-    if (!this.selectedRowIdsMap.has(id)) return false;
-    return this.selectedRowIdsMap.get(id)!;
+  isSelected(rowId: string): boolean {
+    const selectionMember = getSelectionMember(this);
+    if (!!selectionMember) {
+      const dataSourceField = getDataSourceFieldByName(this, selectionMember)!;
+      const updatedRow = this.dataTable.getRowById(rowId)!;
+      return this.dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
+    }
+    return !this.selectedRowIdsMap.has(rowId)
+      ? false
+      : this.selectedRowIdsMap.get(rowId)!;
   }
 
   @action.bound addSelectedRowId(id: string) {
