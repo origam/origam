@@ -215,7 +215,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           RootRecordId: getMasterRowId(this)!
         });
       }
-      dataView.dataTable.setRecords(data);
+      dataView.setRecords(data);
       dataView.selectFirstRow();
     } finally {
       this.monitor.inFlow--;

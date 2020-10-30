@@ -630,7 +630,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ColumnNames: getColumnNamesToLoad(rootDataView),
         MasterRowId: undefined,
       });
-      rootDataView.dataTable.setRecords(loadedData);
+      rootDataView.setRecords(loadedData);
       rootDataView.reselectOrSelectFirst();
 
       //debugger
@@ -1041,7 +1041,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
-        dataView.dataTable.setRecords((entityValue as any).data);
+        dataView.setRecords((entityValue as any).data);
         dataView.reselectOrSelectFirst();
       }
     }

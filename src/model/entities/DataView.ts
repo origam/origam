@@ -44,8 +44,9 @@ import {
   IInfiniteScrollLoader,
   InfiniteScrollLoader, NullIScrollLoader
 } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
-import {VisibleRowsMonitor} from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
+import { ScrollRowContainer } from "model/entities/ScrollRowContainer";
+import { VisibleRowsMonitor } from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -153,6 +154,13 @@ export class DataView implements IDataView {
   @computed get isAnyRowIdSelected(): boolean {
     return this.selectedRowIdsMap.size > 0;
   }
+
+  setRecords(rows: any[][]): void {
+    this.dataTable.setRecords(rows);
+    this.selectAllCheckboxChecked = this.dataTable.rows
+      .every((row) => this.isSelected(this.dataTable.getRowId(row)));
+  }
+
 
   @computed get selectedRowIds() {
     return Array.from(this.selectedRowIdsMap.keys());
