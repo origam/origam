@@ -147,13 +147,15 @@ namespace Origam.ServerCore.Controller
                 return NotFound();
             }
             var mimeType = HttpTools.GetMimeType(filePath);
+            var fileName = Path.GetFileName(filePath);
             Response.Headers.Add(
                 HeaderNames.ContentDisposition,
                 httpTools.GetFileDisposition(
                     new CoreRequestWrapper(Request), 
-                    Path.GetFileName(filePath)));
+                    fileName));
             var stream = new FileStream(filePath, FileMode.Open);
-            return File(stream, mimeType);
+            // specifying filename forces content-disposition attachment;
+            return File(stream, mimeType, fileName);
         }
         private void RemoveRequest(Guid reportRequestId)
         {
