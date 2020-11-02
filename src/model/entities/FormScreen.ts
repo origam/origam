@@ -68,8 +68,10 @@ export class FormScreen implements IFormScreen {
     if (!dataSource) return undefined;
     const dataSourceField = dataSource!.getFieldByName(columnName);
     const dataTable = dataView!.dataTable;
-
-    return dataTable.getCellValueByDataSourceField(dataTable.rows[0], dataSourceField!);
+    const firstRow = dataTable.rows[0];
+    return firstRow
+      ? dataTable.getCellValueByDataSourceField(firstRow, dataSourceField!)
+      : undefined;
   }
 
   @computed get dontRequestData() {
@@ -143,9 +145,9 @@ export class FormScreen implements IFormScreen {
   }
 
   getFirstFormPropertyId() {
-    for(let dv of this.dataViews) {
-      for(let prop of dv.properties) {
-        if(prop.isFormField) return prop.id;
+    for (let dv of this.dataViews) {
+      for (let prop of dv.properties) {
+        if (prop.isFormField) return prop.id;
       }
     }
   }
