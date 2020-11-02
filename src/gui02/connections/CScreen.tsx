@@ -7,10 +7,11 @@ import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 import { WebScreen } from "gui02/components/WebScreen/WebScreen";
 import { IWebScreen } from "model/entities/types/IWebScreen";
 import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
-import { ErrorBoundary } from "gui02/components/Utilities/ErrorBoundary";
+import { ErrorBoundary, ErrorBoundaryEncapsulated } from "gui02/components/Utilities/ErrorBoundary";
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const { openedScreen } = props;
@@ -30,12 +31,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
 
   useEffect(() => {
     if (refIFrame.current?.contentDocument) {
-      console.log("Mutation observer will observe.");
       const mo = new MutationObserver(() => {
-        console.log("Detected tree change");
-        if (refIFrame.current?.contentDocument?.title) {
-          console.log("XXXXX", refIFrame.current.contentDocument.title);
-        }
         setTabTitleFromIFrame();
       });
       mo.observe(refIFrame.current?.contentDocument?.querySelector("head")!, {
@@ -86,37 +82,42 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
 export class CScreen extends React.Component<{
   openedScreen: IOpenedScreen;
 }> {
-  handleScreenError(error: any) {
-    const self = this;
-    flow(function* () {
-      try {
-        yield* handleError(self.props.openedScreen)(error);
-      } catch (e) {
-      } finally {
-        yield onScreenTabCloseClick(self.props.openedScreen)(undefined);
-      }
-    })();
-  }
-
   render() {
     const { openedScreen } = this.props;
     if (openedScreen.screenUrl) {
-      return <WebScreenComposite openedScreen={openedScreen} />;
+      return (
+        <ErrorBoundaryEncapsulated ctx={openedScreen}>
+          <WebScreenComposite openedScreen={openedScreen} />
+        </ErrorBoundaryEncapsulated>
+      );
     }
     if (!openedScreen.content) return null;
     const formScreen = openedScreen.content;
     return !formScreen.isLoading ? (
       <Provider key={formScreen.formScreen!.screenUI.$iid} formScreen={formScreen}>
-        <ErrorBoundary onErrorCaught={(error) => this.handleScreenError(error)}>
-          <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
-            <CtxPanelVisibility.Provider
-              value={{ isVisible: getIsTopmostNonDialogScreen(openedScreen) }}
-            >
-              <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI} />
-            </CtxPanelVisibility.Provider>
-          </Screen>
-        </ErrorBoundary>
+        <ErrorBoundaryEncapsulated ctx={openedScreen}>
+          <CScreenInner openedScreen={openedScreen} formScreen={formScreen} />
+        </ErrorBoundaryEncapsulated>
       </Provider>
     ) : null;
+  }
+}
+
+@observer
+class CScreenInner extends React.Component<{
+  openedScreen: IOpenedScreen;
+  formScreen: IFormScreenEnvelope;
+}> {
+  render() {
+    const { openedScreen, formScreen } = this.props;
+    return (
+      <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
+        <CtxPanelVisibility.Provider
+          value={{ isVisible: getIsTopmostNonDialogScreen(openedScreen) }}
+        >
+          <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI} />
+        </CtxPanelVisibility.Provider>
+      </Screen>
+    );
   }
 }
