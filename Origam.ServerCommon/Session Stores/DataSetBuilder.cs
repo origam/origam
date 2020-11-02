@@ -63,11 +63,10 @@ namespace Origam.ServerCommon.Session_Stores
                 new ModelElementKey(id)) as DataStructure;
         }
 
-        public DataSet LoadListData(IList<string> dataListLoadedColumns, DataSet data, string listEntity, DataStructureSortSet sortSet, FormReferenceMenuItem _menuItem)
+        public DataSet LoadListData(IList<string> dataListLoadedColumns, DataSet data, string listEntity, DataStructureSortSet sortSet, FormReferenceMenuItem _menuItem, QueryParameterCollection queryParameter = null)
         {
             dataListLoadedColumns.Clear();
-            string initialColumns = "";
-            initialColumns = ListPrimaryKeyColumns(data, listEntity);
+            string initialColumns = ListPrimaryKeyColumns(data, listEntity);
             if (sortSet != null)
             {
                 foreach (DataStructureSortSetItem sortItem in
@@ -82,7 +81,7 @@ namespace Origam.ServerCommon.Session_Stores
             }
             // load list entity
             DataSet result = DataService.LoadData(_menuItem.ListDataStructureId, _menuItem.ListMethodId,
-                Guid.Empty, _menuItem.ListSortSetId, null, null, data, listEntity, initialColumns);
+                Guid.Empty, _menuItem.ListSortSetId, null, queryParameter, data, listEntity, initialColumns);
             // load all array field child entities - there is no way how to read
             // only children of a specific record (inside LazyLoadListRowData) so
             // we preload all array fields here
@@ -94,7 +93,7 @@ namespace Origam.ServerCommon.Session_Stores
                     arrayColumns.Add(col.ColumnName);
                 }
             }
-            LoadArrayColumns(result, listEntity, null, arrayColumns, dataListLoadedColumns, _menuItem);
+            LoadArrayColumns(result, listEntity, queryParameter, arrayColumns, dataListLoadedColumns, _menuItem);
             return result;
         }
 
