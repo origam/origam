@@ -11,6 +11,7 @@ import { ErrorBoundary, ErrorBoundaryEncapsulated } from "gui02/components/Utili
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
+import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const { openedScreen } = props;
@@ -96,15 +97,28 @@ export class CScreen extends React.Component<{
     return !formScreen.isLoading ? (
       <Provider key={formScreen.formScreen!.screenUI.$iid} formScreen={formScreen}>
         <ErrorBoundaryEncapsulated ctx={openedScreen}>
-          <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
-            <CtxPanelVisibility.Provider
-              value={{ isVisible: getIsTopmostNonDialogScreen(openedScreen) }}
-            >
-              <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI} />
-            </CtxPanelVisibility.Provider>
-          </Screen>
+          <CScreenInner openedScreen={openedScreen} formScreen={formScreen} />
         </ErrorBoundaryEncapsulated>
       </Provider>
     ) : null;
+  }
+}
+
+@observer
+class CScreenInner extends React.Component<{
+  openedScreen: IOpenedScreen;
+  formScreen: IFormScreenEnvelope;
+}> {
+  render() {
+    const { openedScreen, formScreen } = this.props;
+    return (
+      <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
+        <CtxPanelVisibility.Provider
+          value={{ isVisible: getIsTopmostNonDialogScreen(openedScreen) }}
+        >
+          <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI} />
+        </CtxPanelVisibility.Provider>
+      </Screen>
+    );
   }
 }
