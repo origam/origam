@@ -38,8 +38,8 @@ export class DataTable implements IDataTable {
     this.rowRemovedListeners.forEach((listener) => listener());
   }
 
-  start() {
-    this.rowsContainer.start();
+  async start() {
+    await this.rowsContainer.start();
   }
 
   stop() {

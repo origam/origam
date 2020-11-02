@@ -404,7 +404,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     openedScreen.content.setFormScreen(screen);
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
-    getDataViewList(this).forEach((dv) => dv.start());
 
     setTimeout(() => {
       const fieldToSelect = getFormScreen(this).getFirstFormPropertyId();
@@ -1046,6 +1045,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         dataView.setRecords((entityValue as any).data);
+        yield dataView.start();
         dataView.reselectOrSelectFirst();
       }
     }

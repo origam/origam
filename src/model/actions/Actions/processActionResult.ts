@@ -128,6 +128,9 @@ export function processActionResult2(dep: {
             actionResultItem.urlOpenMethod,
             dep.getActionCaption()
           );
+          if(getOpenedScreen(dep.parentContext).isDialog){
+            yield* dep.closeForm();
+          }
           break;
         }
         case IActionResultType.Script: {

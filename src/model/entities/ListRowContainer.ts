@@ -37,12 +37,12 @@ export class ListRowContainer implements IRowsContainer {
     return new Map<any, any[]>(entries);
   }
 
-  start() {
+  async start() {
     this.reactionDisposer = reaction(
       () => [this.filterConfiguration.activeFilters, this.orderingConfiguration.orderings],
       () => this.updateSortAndFilter(),
-      {fireImmediately: true}
     );
+    await this.updateSortAndFilter();
   }
 
   stop(){
@@ -72,9 +72,9 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   @action
-  updateSortAndFilter() {
+  async updateSortAndFilter() {
     const self = this;
-    flow(
+    await flow(
       function* () {
         yield * self.preloadLookups();
         let rows = self.allRows;

@@ -459,13 +459,15 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound start() {
+  @action.bound
+  async start() {
     this.lifecycle.start();
     const serverSideGrouping = getDontRequestData(this)
     if(serverSideGrouping){
       this.serverSideGrouper.start();
     }
     getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
+    await this.dataTable.start();
     getFormScreenLifecycle(this).registerDisposer(
       reaction(
         () => ({
@@ -482,7 +484,7 @@ export class DataView implements IDataView {
         }
       )
     );
-    this.dataTable.start();
+    await this.dataTable.start();
   }
 
   @action.bound stop() {
