@@ -203,8 +203,7 @@ export class FilterSettingsLookup extends React.Component<{
   onTriggerApplySetting?(setting: any): void;
 }> {
   @observable.ref setting: FilterSetting = new LookupFilterSetting(
-    OPERATORS()[0].type,
-    OPERATORS()[0].human
+    OPERATORS()[0].type
   );
 
   @action.bound handleChange(newSetting: any) {
@@ -236,7 +235,6 @@ export class FilterSettingsLookup extends React.Component<{
 
 export class LookupFilterSetting implements IFilterSetting {
   type: string;
-  caption: JSX.Element;
   val1?: any;
   val2?: any;
   isComplete: boolean;
@@ -262,10 +260,11 @@ export class LookupFilterSetting implements IFilterSetting {
     return this.val2;
   }
 
-  constructor(type: string, caption: JSX.Element) {
+  constructor(type: string, isComplete=false, val1?:any, val2?: any) {
     this.type = type;
-    this.caption = caption;
-    this.isComplete = false;
+    this.isComplete = isComplete;
+    this.val1 = val1;
+    this.val1 = val2;
   }
 }
 

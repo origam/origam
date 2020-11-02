@@ -40,6 +40,10 @@ export class Operator {
   }
 }
 
+const filterMapComboBox = new Map<number, string>([
+  [1,"in"],
+  [10,"nin"]
+]);
 const filterMap = new Map<number, string>([
   [0,"none"],
   [1,"eq"],
@@ -61,15 +65,20 @@ const filterMap = new Map<number, string>([
 ]);
 
 export function filterTypeToNumber(filterType: string){
-  const typeNumber = Array.from(filterMap).find(entry => entry[1] === filterType)?.[0];
+  const typeNumber = Array.from(filterMap)
+    .find(entry => entry[1] === filterType)?.[0]
+    ?? Array.from(filterMapComboBox)
+      .find(entry => entry[1] === filterType)?.[0]
   if(!typeNumber){
     throw new Error("Cannot find filter operator number for filter type: "+filterType)
   }
   return typeNumber;
 }
 
-export function filterTypeFromNumber(filterOperatorNum: number){
-  const stringValue = filterMap.get(filterOperatorNum);
+export function filterTypeFromNumber(filterOperatorNum: number, columnType: string){
+  const stringValue = columnType === "ComboBox"
+    ? filterMapComboBox.get(filterOperatorNum) ?? filterMap.get(filterOperatorNum)
+    : filterMap.get(filterOperatorNum);
   if(!stringValue){
     throw new Error("Cannot find string value for filter operator number: "+filterOperatorNum)
   }
