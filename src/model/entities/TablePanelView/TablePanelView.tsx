@@ -50,7 +50,7 @@ export class TablePanelView implements ITablePanelView {
   groupingConfiguration: IGroupingConfiguration = null as any;
   rowHeight: number = null as any;
 
-  rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
+  @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
     number,
     Map<number, ICellRectangle>
   >();
@@ -387,6 +387,14 @@ export class TablePanelView implements ITablePanelView {
       ? 0
       : rowIndex
 
+    if(!this.rectangleMap.has(actualRowIndex)){
+      return {
+        columnLeft: 0,
+        columnWidth: 0,
+        rowTop: 0,
+        rowHeight: 0
+      }
+    }
     return this.rectangleMap.get(actualRowIndex)!.get(columnIndex)!;
   }
 
