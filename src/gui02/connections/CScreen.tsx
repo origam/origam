@@ -7,7 +7,7 @@ import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 import { WebScreen } from "gui02/components/WebScreen/WebScreen";
 import { IWebScreen } from "model/entities/types/IWebScreen";
 import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
-import { ErrorBoundary } from "gui02/components/Utilities/ErrorBoundary";
+import { ErrorBoundary, ErrorBoundaryEncapsulated } from "gui02/components/Utilities/ErrorBoundary";
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
@@ -86,18 +86,6 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
 export class CScreen extends React.Component<{
   openedScreen: IOpenedScreen;
 }> {
-  handleScreenError(error: any) {
-    const self = this;
-    flow(function* () {
-      try {
-        yield* handleError(self.props.openedScreen)(error);
-      } catch (e) {
-      } finally {
-        yield onScreenTabCloseClick(self.props.openedScreen)(undefined);
-      }
-    })();
-  }
-
   render() {
     const { openedScreen } = this.props;
     if (openedScreen.screenUrl) {
@@ -107,7 +95,7 @@ export class CScreen extends React.Component<{
     const formScreen = openedScreen.content;
     return !formScreen.isLoading ? (
       <Provider key={formScreen.formScreen!.screenUI.$iid} formScreen={formScreen}>
-        <ErrorBoundary onErrorCaught={(error) => this.handleScreenError(error)}>
+        <ErrorBoundaryEncapsulated ctx={openedScreen}>
           <Screen isHidden={!getIsTopmostNonDialogScreen(openedScreen)}>
             <CtxPanelVisibility.Provider
               value={{ isVisible: getIsTopmostNonDialogScreen(openedScreen) }}
@@ -115,7 +103,7 @@ export class CScreen extends React.Component<{
               <FormScreenBuilder xmlWindowObject={formScreen.formScreen!.screenUI} />
             </CtxPanelVisibility.Provider>
           </Screen>
-        </ErrorBoundary>
+        </ErrorBoundaryEncapsulated>
       </Provider>
     ) : null;
   }
