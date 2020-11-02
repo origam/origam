@@ -10,6 +10,8 @@ import cx from "classnames";
 import { IMapObject, IMapObjectType, MapSourceData } from "./MapSourceData";
 import { computed, reaction } from "mobx";
 import { MapLayer, MapPerspectiveSetup } from "./MapPerspectiveSetup";
+import { IDataViewHeaderExtensionItem } from "gui/Components/ScreenElements/DataView";
+import { getIdent } from "utils/common";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -232,3 +234,4 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     );
   }
 }
+
