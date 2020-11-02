@@ -90,7 +90,11 @@ export class CScreen extends React.Component<{
   render() {
     const { openedScreen } = this.props;
     if (openedScreen.screenUrl) {
-      return <WebScreenComposite openedScreen={openedScreen} />;
+      return (
+        <ErrorBoundaryEncapsulated ctx={openedScreen}>
+          <WebScreenComposite openedScreen={openedScreen} />
+        </ErrorBoundaryEncapsulated>
+      );
     }
     if (!openedScreen.content) return null;
     const formScreen = openedScreen.content;
