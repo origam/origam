@@ -31,12 +31,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
 
   useEffect(() => {
     if (refIFrame.current?.contentDocument) {
-      console.log("Mutation observer will observe.");
       const mo = new MutationObserver(() => {
-        console.log("Detected tree change");
-        if (refIFrame.current?.contentDocument?.title) {
-          console.log("XXXXX", refIFrame.current.contentDocument.title);
-        }
         setTabTitleFromIFrame();
       });
       mo.observe(refIFrame.current?.contentDocument?.querySelector("head")!, {
