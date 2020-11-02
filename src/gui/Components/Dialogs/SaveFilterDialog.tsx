@@ -5,6 +5,7 @@ import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 import { observable } from "mobx";
+import {MultiGrid} from "react-virtualized";
 
 @observer
 export class SaveFilterDialog extends React.Component<{
@@ -18,12 +19,18 @@ export class SaveFilterDialog extends React.Component<{
   @observable
   isGlobal: boolean = false;
 
+  refInput = React.createRef<HTMLInputElement>();
+
   onNameChanged(event: any){
     this.filterName = event.target.value;
   }
 
   onIsGlobalClicked(event: any){
     this.isGlobal = event.target.checked;
+  }
+
+  componentDidMount() {
+    this.refInput.current?.focus();
   }
 
   render() {
@@ -51,6 +58,7 @@ export class SaveFilterDialog extends React.Component<{
                 {T("Name:", "new_filter_name")}
               </div>
               <input
+                ref={this.refInput}
                 className={S.textInput}
                 value={this.filterName}
                 onChange={event => this.onNameChanged(event)}
