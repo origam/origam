@@ -105,6 +105,7 @@ class ToolbarActionsExtension implements IDataViewHeaderExtensionItem {
   render(): React.ReactNode {
     return this.mapPerspective.isActive ? (
       <CtxMapRootStore.Provider value={this.rootStore} key={this.$iid}>
+        <MapPerspectiveNavigation />
         <MapPerspectiveSearch />
       </CtxMapRootStore.Provider>
     ) : null;
@@ -115,12 +116,15 @@ function MapContentUI(props: {
   toolbarActionsExtension: ToolbarActionsExtension;
   mapPerspective: MapPerspective;
 }) {
-  const { mapSetupStore, mapObjectsStore, mapSearchStore } = useContext(CtxMapRootStore);
+  const { mapSetupStore, mapObjectsStore, mapSearchStore, mapNavigationStore } = useContext(
+    CtxMapRootStore
+  );
   return (
     <Observer>
       {() => (
         <MapPerspectiveComContainer toolbarActionsExtension={props.toolbarActionsExtension}>
           <MapPerspectiveCom
+            ref={mapNavigationStore.refMapComponent}
             lastDetailedObject={mapSearchStore.selectedSearchResult}
             mapCenter={mapSetupStore.mapCenter || { type: "Point", coordinates: [0, 0] }}
             getMapObjects={() => mapObjectsStore.mapObjects}
@@ -138,3 +142,20 @@ function MapContentUI(props: {
   );
 }
 
+function MapPerspectiveNavigation() {
+  const { mapSetupStore, mapNavigationStore } = useContext(CtxMapRootStore);
+  return (
+    <Observer>
+      {() => (
+        <>
+          <button onClick={mapNavigationStore.handleCenterMapClick}>
+            <i className="fas fa-crosshairs" />
+          </button>
+          <button onClick={mapNavigationStore.handleLookupObjectClick}>
+            <i className="fas fa-search-location"></i>
+          </button>
+        </>
+      )}
+    </Observer>
+  );
+}

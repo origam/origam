@@ -9,41 +9,45 @@ import S from "./MapPerspectiveUI.module.scss";
 import { CtxMapRootStore } from "./stores/MapRootStore";
 
 export function MapPerspectiveSearch() {
-  const { mapSearchStore } = useContext(CtxMapRootStore);
+  const { mapSearchStore, mapSetupStore } = useContext(CtxMapRootStore);
   return (
     <Observer>
       {() => (
-        <div className={S.mapSearch} ref={mapSearchStore.refSearchField}>
-          <input
-            className={"input"}
-            value={mapSearchStore.searchInputValue}
-            onChange={mapSearchStore.handleSearchInputChange}
-            onKeyDown={mapSearchStore.handleSearchInputKeyDown}
-            onFocus={mapSearchStore.handleSearchInputFocus}
-          />
-          <div className={"inputActions"}>
-            <button
-              className={"inputClear"}
-              onClick={mapSearchStore.handleClearClick}
-              onMouseDown={mapSearchStore.handleClearMouseDown}
-            >
-              <i className="fas fa-times" />
-            </button>
-            <button className={"inputCaret"} onMouseDown={mapSearchStore.handleCaretMouseDown}>
-              <i className="fas fa-caret-down" />
-            </button>
-          </div>
-          {mapSearchStore.isDropped &&
-            createPortal(
-              <MapPerspectiveSearchDropdown
-                domRef={mapSearchStore.refDropdown}
-                top={mapSearchStore.dropdownTop + 2}
-                left={mapSearchStore.dropdownLeft}
-                width={mapSearchStore.dropdownWidth}
-              />,
-              document.getElementById("dropdown-portal")!
-            )}
-        </div>
+        <>
+          {mapSetupStore.isReadOnlyView ? (
+            <div className={S.mapSearch} ref={mapSearchStore.refSearchField}>
+              <input
+                className={"input"}
+                value={mapSearchStore.searchInputValue}
+                onChange={mapSearchStore.handleSearchInputChange}
+                onKeyDown={mapSearchStore.handleSearchInputKeyDown}
+                onFocus={mapSearchStore.handleSearchInputFocus}
+              />
+              <div className={"inputActions"}>
+                <button
+                  className={"inputClear"}
+                  onClick={mapSearchStore.handleClearClick}
+                  onMouseDown={mapSearchStore.handleClearMouseDown}
+                >
+                  <i className="fas fa-times" />
+                </button>
+                <button className={"inputCaret"} onMouseDown={mapSearchStore.handleCaretMouseDown}>
+                  <i className="fas fa-caret-down" />
+                </button>
+              </div>
+              {mapSearchStore.isDropped &&
+                createPortal(
+                  <MapPerspectiveSearchDropdown
+                    domRef={mapSearchStore.refDropdown}
+                    top={mapSearchStore.dropdownTop + 2}
+                    left={mapSearchStore.dropdownLeft}
+                    width={mapSearchStore.dropdownWidth}
+                  />,
+                  document.getElementById("dropdown-portal")!
+                )}
+            </div>
+          ) : null}
+        </>
       )}
     </Observer>
   );

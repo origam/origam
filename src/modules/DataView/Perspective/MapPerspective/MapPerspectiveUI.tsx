@@ -29,6 +29,11 @@ interface IMapPerspectiveComProps {
   onChange?(geoJson: any): void;
 }
 
+const MAP_ANIMATE_SETTING = {
+  animate: true,
+  duration: 1.1,
+};
+
 export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> {
   elmMapDiv: HTMLDivElement | null = null;
   refMapDiv = (elm: any) => (this.elmMapDiv = elm);
@@ -44,10 +49,39 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   }
 
   panToCenter() {
-    this.leafletMap?.panTo([
-      this.props.mapCenter.coordinates[1],
-      this.props.mapCenter.coordinates[0],
-    ]);
+    this.leafletMap?.panTo(
+      [this.props.mapCenter.coordinates[1], this.props.mapCenter.coordinates[0]],
+      { ...MAP_ANIMATE_SETTING }
+    );
+  }
+
+  panToLoc(loc: [number, number]) {
+    this.leafletMap?.panTo(loc, { ...MAP_ANIMATE_SETTING });
+  }
+
+  panToSelectedObject() {
+    for (let [obj, lLayer] of this.mapDrawnObjectLayers) {
+      if (obj.id === this.props.lastDetailedObject?.id) {
+        this.panToLayer(lLayer);
+        return;
+      }
+    }
+  }
+
+  panToLayer(lLayer: L.Layer) {
+    if ((lLayer as any).getBounds) {
+      const bounds = (lLayer as any).getBounds() as L.LatLngBounds;
+      this.leafletMap?.fitBounds(bounds.pad(0.1), { ...MAP_ANIMATE_SETTING });
+    } else if ((lLayer as any).getLatLng) {
+      const latLng = (lLayer as any).getLatLng();
+      this.leafletMap?.panTo(latLng, { ...MAP_ANIMATE_SETTING });
+    }
+  }
+
+  panToFirstObject() {
+    if (this.mapDrawnObjectLayers.length > 0) {
+      this.panToLayer(this.mapDrawnObjectLayers[0][1]);
+    }
   }
 
   isPropMapCenterDifferent(prevProps: IMapPerspectiveComProps) {
@@ -68,19 +102,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         (!prevProps.lastDetailedObject ||
           !_.isEqual(lastDetailedObject, prevProps.lastDetailedObject))
       ) {
-        const layer = this.mapDrawnObjectLayers.find(
-          ([obj, layer]) => obj.id === lastDetailedObject.id
-        );
-        if (layer) {
-          const lLayer = layer[1];
-          if ((lLayer as any).getBounds) {
-            const bounds = (lLayer as any).getBounds() as L.LatLngBounds;
-            this.leafletMap?.fitBounds(bounds.pad(0.1), { animate: true, duration: 1.1 });
-          } else if ((lLayer as any).getLatLng) {
-            const latLng = (lLayer as any).getLatLng();
-            this.leafletMap?.panTo(latLng, { animate: true, duration: 1.1 });
-          }
-        }
+        this.panToSelectedObject();
         this.highlightSelectedLayer();
       }
       if (!lastDetailedObject && prevProps.lastDetailedObject) {

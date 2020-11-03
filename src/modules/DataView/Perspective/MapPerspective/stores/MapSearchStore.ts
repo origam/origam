@@ -125,6 +125,8 @@ export class SearchStore {
     }
   }
 
+  
+
   get dropdownTop() {
     return this.rect.bottom;
   }
