@@ -54,7 +54,7 @@ class SavedViewState {
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
-  focusManager: FocusManager = new FocusManager();
+  focusManager: FocusManager = new FocusManager(this);
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
