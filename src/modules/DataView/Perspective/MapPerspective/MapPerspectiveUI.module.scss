@@ -30,6 +30,11 @@
       }
     }
   }
+
+  :global(.markerHighlighted) img { 
+    border: 2px solid yellow;
+    background-color: rgba(255, 255, 0, 0.274);
+  }
 }
 
 .mapSearch {
@@ -38,11 +43,14 @@
   :global(.input) {
     width: 100%;
   }
-  :global(.inputCaret) {
+  :global(.inputActions) {
     position: absolute;
     top: 0;
     right: 0;
     height: 100%;
+  }
+  :global(.inputCaret) {
+
   }
 }
 
@@ -61,6 +69,11 @@
     overflow: hidden;
     padding-left: 5px;
     padding-right: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #cecece;
+    }
   }
   :global(.c1) {
     background-color: #f7f6fa;

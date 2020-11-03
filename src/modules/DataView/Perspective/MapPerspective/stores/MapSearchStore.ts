@@ -58,12 +58,27 @@ export class SearchStore {
     }
   }
 
+  @action.bound handleSearchInputFocus(event: any) {
+    event.target.select?.();
+  }
+
+  @action.bound handleSearchInputBlur(event: any) {
+    if (!this.searchPhrase) {
+      this.selectedSearchResult = undefined;
+    }
+  }
+
   @action.bound
   handleSearchInputKeyDown(event: any) {
     switch (event.key) {
       case "Escape":
         if (this.isDropped) {
           this.dropUp();
+        }
+        break;
+      case "Enter":
+        if (!this.searchPhrase) {
+          this.selectedSearchResult = undefined;
         }
         break;
     }
@@ -76,11 +91,31 @@ export class SearchStore {
   @action.bound
   handleCaretMouseDown(event: any) {
     event.stopPropagation();
+    event.preventDefault();
     if (this.isDropped) {
       this.dropUp();
     } else {
+      this.searchPhrase = "";
       this.dropDown();
     }
+  }
+
+  @action.bound
+  handleClearClick(event: any) {
+    this.searchPhrase = "";
+    this.selectedSearchResult = undefined;
+  }
+
+  @action.bound 
+  handleClearMouseDown(event: any) {
+
+  }
+
+  @action.bound
+  handleSearchResultClick(event: any, resultId: string) {
+    this.selectedSearchResult = this.searchResults.find((item) => item.id === resultId);
+    this.searchPhrase = this.selectedSearchResult?.name || "";
+    this.dropUp();
   }
 
   @action.bound

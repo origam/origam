@@ -115,12 +115,13 @@ function MapContentUI(props: {
   toolbarActionsExtension: ToolbarActionsExtension;
   mapPerspective: MapPerspective;
 }) {
-  const { mapSetupStore, mapObjectsStore } = useContext(CtxMapRootStore);
+  const { mapSetupStore, mapObjectsStore, mapSearchStore } = useContext(CtxMapRootStore);
   return (
     <Observer>
       {() => (
         <MapPerspectiveComContainer toolbarActionsExtension={props.toolbarActionsExtension}>
           <MapPerspectiveCom
+            lastDetailedObject={mapSearchStore.selectedSearchResult}
             mapCenter={mapSetupStore.mapCenter || { type: "Point", coordinates: [0, 0] }}
             getMapObjects={() => mapObjectsStore.mapObjects}
             mapLayers={mapSetupStore.layers}

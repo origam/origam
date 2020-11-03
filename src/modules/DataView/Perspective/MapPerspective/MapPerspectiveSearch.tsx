@@ -19,10 +19,20 @@ export function MapPerspectiveSearch() {
             value={mapSearchStore.searchInputValue}
             onChange={mapSearchStore.handleSearchInputChange}
             onKeyDown={mapSearchStore.handleSearchInputKeyDown}
+            onFocus={mapSearchStore.handleSearchInputFocus}
           />
-          <button className={"inputCaret"} onMouseDown={mapSearchStore.handleCaretMouseDown}>
-            <i className="fas fa-caret-down" />
-          </button>
+          <div className={"inputActions"}>
+            <button
+              className={"inputClear"}
+              onClick={mapSearchStore.handleClearClick}
+              onMouseDown={mapSearchStore.handleClearMouseDown}
+            >
+              <i className="fas fa-times" />
+            </button>
+            <button className={"inputCaret"} onMouseDown={mapSearchStore.handleCaretMouseDown}>
+              <i className="fas fa-caret-down" />
+            </button>
+          </div>
           {mapSearchStore.isDropped &&
             createPortal(
               <MapPerspectiveSearchDropdown
@@ -72,16 +82,18 @@ export function SearchResults(props: { width: number }) {
           rowCount={rowCount}
           columnCount={1}
           cellRenderer={({ key, style, rowIndex, columnIndex }) => {
+            const searchResult = mapSearchStore.searchResults[rowIndex];
             return (
               <Observer key={key}>
                 {() => (
                   <div
                     className={cx("cell", { c1: rowIndex % 2 === 0, c2: rowIndex % 2 === 1 })}
                     style={style}
+                    onClick={(e) => mapSearchStore.handleSearchResultClick(e, searchResult.id)}
                   >
                     <Highlighter
                       searchWords={[mapSearchStore.searchPhrase]}
-                      textToHighlight={mapSearchStore.searchResults[rowIndex].name}
+                      textToHighlight={searchResult.name}
                     />
                   </div>
                 )}
