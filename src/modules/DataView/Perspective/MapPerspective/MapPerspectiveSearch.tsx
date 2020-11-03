@@ -3,6 +3,7 @@ import { Observer } from "mobx-react";
 import React, { useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { AutoSizer, Grid } from "react-virtualized";
+import Highlighter from "react-highlight-words";
 import cx from "classnames";
 import S from "./MapPerspectiveUI.module.scss";
 import { CtxMapRootStore } from "./stores/MapRootStore";
@@ -78,7 +79,10 @@ export function SearchResults(props: { width: number }) {
                     className={cx("cell", { c1: rowIndex % 2 === 0, c2: rowIndex % 2 === 1 })}
                     style={style}
                   >
-                    {mapSearchStore.searchResults[rowIndex].name}
+                    <Highlighter
+                      searchWords={[mapSearchStore.searchPhrase]}
+                      textToHighlight={mapSearchStore.searchResults[rowIndex].name}
+                    />
                   </div>
                 )}
               </Observer>
