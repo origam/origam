@@ -127,8 +127,9 @@ export interface IFormScreen extends IFormScreenData {
 
   dataUpdateCRS: CriticalSection;
 
+  clearDataCache(): void;
   getPanelPosition(id: string): number | undefined;
-
+  getData(childEntity: string, parentRecordId: string, rootRecordId: string): Promise<any>;
   getBindingsByChildId(childId: string): IComponentBinding[];
   getBindingsByParentId(parentId: string): IComponentBinding[];
   getDataViewByModelInstanceId(modelInstanceId: string): IDataView | undefined;

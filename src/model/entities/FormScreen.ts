@@ -13,6 +13,9 @@ import {
 } from "./types/IFormScreen";
 import { IPanelConfiguration } from "./types/IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
+import {getSessionId} from "model/selectors/getSessionId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getApi } from "model/selectors/getApi";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -28,6 +31,7 @@ export class FormScreen implements IFormScreen {
   parent?: any;
 
   dataUpdateCRS = new CriticalSection();
+  getDataCache = new GetDataCache(this);
 
   @observable isDirty: boolean = false;
   dynamicTitleSource: string | undefined;
@@ -53,6 +57,15 @@ export class FormScreen implements IFormScreen {
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
+
+  getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
+    return this.getDataCache.getData(childEntity, parentRecordId, rootRecordId);
+  }
+
+  clearDataCache(){
+    this.getDataCache.clear();
+  }
+
 
   get dynamicTitle() {
     if (!this.dynamicTitleSource) {
@@ -213,4 +226,39 @@ export class FormScreenEnvelope implements IFormScreenEnvelope {
   }
 
   parent?: any;
+}
+
+
+class GetDataCache {
+  constructor(private ctx: any) {}
+
+  dataMap = new Map<string, Promise<any>>();
+
+  public async getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
+    const cacheKey = this.makeChacheKey(childEntity, parentRecordId, rootRecordId);
+    if (!this.dataMap.has(cacheKey)) {
+      const dataPromise = this.callGetData(childEntity, parentRecordId, rootRecordId);
+      this.dataMap.set(cacheKey, dataPromise);
+    }
+    return this.dataMap.get(cacheKey);
+  }
+
+  public clear(){
+    this.dataMap.clear();
+  }
+
+  private callGetData(childEntity: string, parentRecordId: string, rootRecordId: string) {
+    const api = getApi(this.ctx);
+    const dataPromise = api.getData({
+      SessionFormIdentifier: getSessionId(this.ctx),
+      ChildEntity: childEntity,
+      ParentRecordId: parentRecordId,
+      RootRecordId: rootRecordId,
+    });
+    return dataPromise;
+  }
+
+  private makeChacheKey(childEntity: string, parentRecordId: string, rootRecordId: string) {
+    return childEntity + parentRecordId + rootRecordId;
+  }
 }

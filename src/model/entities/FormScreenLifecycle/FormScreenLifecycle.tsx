@@ -860,6 +860,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.loadData();
       }
       yield* this.refreshLookups();
+      getFormScreen(this).clearDataCache();
     } finally {
       this.monitor.inFlow--;
       setTimeout(async () => {
