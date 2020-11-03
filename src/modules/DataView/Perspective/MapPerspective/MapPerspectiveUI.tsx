@@ -1,17 +1,15 @@
-import React from "react";
+import cx from "classnames";
 import L from "leaflet";
-import qs from "querystring";
 import "leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
-
-import S from "./MapPerspectiveUI.module.scss";
-import cx from "classnames";
-import { IMapObject, IMapObjectType, MapSourceData } from "./MapSourceData";
 import { computed, reaction } from "mobx";
-import { MapLayer, MapPerspectiveSetup } from "./MapPerspectiveSetup";
-import { IDataViewHeaderExtensionItem } from "gui/Components/ScreenElements/DataView";
-import { getIdent } from "utils/common";
+import qs from "querystring";
+import React from "react";
+import S from "./MapPerspectiveUI.module.scss";
+import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
+import { MapLayer } from "./stores/MapSetupStore";
+
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -23,7 +21,7 @@ L.Icon.Default.mergeOptions({
 
 interface IMapPerspectiveComProps {
   mapCenter: { type: "Point"; coordinates: [number, number] };
-  mapSourceData: MapSourceData;
+  getMapObjects: () => IMapObject[];
   mapLayers: MapLayer[];
   isReadOnly: boolean;
   isActive: boolean;
@@ -152,7 +150,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
     this._disposers.push(
       reaction(
-        () => this.props.mapSourceData.mapObjects,
+        () => this.props.getMapObjects(),
         (objects) => {
           console.log("Drawing layers", objects);
           this.leafletMapObjects.clearLayers();

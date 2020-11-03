@@ -62,12 +62,8 @@ import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
 import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
 import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
-import {
-  MapLayer as MapLayerSetup,
-  MapPerspectiveSetup,
-} from "modules/DataView/Perspective/MapPerspective/MapPerspectiveSetup";
-import { MapSourceData } from "modules/DataView/Perspective/MapPerspective/MapSourceData";
-import { IDataView } from "model/entities/types/IDataView";
+import { MapLayer as MapLayerSetup, MapSetupStore } from "modules/DataView/Perspective/MapPerspective/stores/MapSetupStore";
+import { MapRootStore } from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -566,15 +562,14 @@ export function* interpretScreenXml(
 
     if (dataView.isMapSupported) {
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
-      const mapPerspectiveSetup = constructMapViewSetup(dataViewXmlNode);
+      const rootStore = new MapRootStore(dataView);
+      populateMapViewSetup(rootStore.mapSetupStore, dataViewXmlNode);
       const isReadonly = dataView.properties.some((prop) => prop.readOnly);
-      mapPerspectiveSetup.isReadOnlyView = isReadonly;
-      const mapSourceData = constructMapSourceData(dataView, mapPerspectiveSetup);
+      rootStore.mapSetupStore.isReadOnlyView = isReadonly;
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
       const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);
 
-      mapPerspectiveDirector.mapPerspectiveSetup = mapPerspectiveSetup;
-      mapPerspectiveDirector.mapSourceData = mapSourceData;
+      mapPerspectiveDirector.rootStore = rootStore;
       mapPerspectiveDirector.setup();
     }
 
@@ -640,18 +635,17 @@ function checkInfiniteScrollWillWork(
   }
 }
 
-function constructMapViewSetup(xmlNode: any) {
+function populateMapViewSetup(mss: MapSetupStore, xmlNode: any) {
   const attr = xmlNode.attributes;
-  const mps = new MapPerspectiveSetup();
-  mps.mapAzimuthMember = attr.MapAzimuthMember;
-  mps.mapCenterRaw = attr.MapCenter;
-  mps.mapColorMember = attr.MapColorMember;
-  mps.mapIconMember = attr.MapIconMember;
-  mps.mapLocationMember = attr.MapLocationMember;
-  mps.mapTextMember = attr.MapTextMember;
-  mps.textColorMember = attr.TextColorMember;
-  mps.textLocationMember = attr.TextLocationMember;
-  mps.textRotationMember = attr.TextRotationMember;
+  mss.mapAzimuthMember = attr.MapAzimuthMember;
+  mss.mapCenterRaw = attr.MapCenter;
+  mss.mapColorMember = attr.MapColorMember;
+  mss.mapIconMember = attr.MapIconMember;
+  mss.mapLocationMember = attr.MapLocationMember;
+  mss.mapTextMember = attr.MapTextMember;
+  mss.textColorMember = attr.TextColorMember;
+  mss.textLocationMember = attr.TextLocationMember;
+  mss.textRotationMember = attr.TextRotationMember;
 
   const layerXmlNodes = findStopping(
     xmlNode,
@@ -660,7 +654,7 @@ function constructMapViewSetup(xmlNode: any) {
   for (let layerXmlNode of layerXmlNodes) {
     const layerAttr = layerXmlNode.attributes;
     const mls = new MapLayerSetup();
-    mps.layers.push(mls);
+    mss.layers.push(mls);
     mls.defaultEnabled = layerAttr.defaultEnabled === "true";
     mls.id = layerAttr.id;
     mls.title = layerAttr.title;
@@ -673,10 +667,4 @@ function constructMapViewSetup(xmlNode: any) {
       );
     }
   }
-
-  return mps;
-}
-
-function constructMapSourceData(dataView: IDataView, setup: MapPerspectiveSetup) {
-  return new MapSourceData(dataView, setup);
 }

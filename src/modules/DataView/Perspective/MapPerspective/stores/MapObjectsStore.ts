@@ -1,46 +1,24 @@
-import _ from "lodash";
-import { action, computed, flow } from "mobx";
-import { IDataView } from "model/entities/types/IDataView";
-import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
-import { MapPerspectiveSetup } from "./MapPerspectiveSetup";
+import { computed, flow } from "mobx";
 import { parse as wktParse, stringify as wtkStringify } from "wkt";
+import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
+import { MapRootStore } from "./MapRootStore";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { onFieldChange, onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
+import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import _ from "lodash";
 
-export enum IMapObjectType {
-  POINT = "Point",
-  POLYGON = "Polygon",
-  LINESTRING = "LineString",
-}
+export class MapObjectsStore {
+  constructor(private root: MapRootStore) {}
 
-export interface IMapObjectBase {
-  name: string;
-  icon: string;
-  azimuth: number;
-}
+  get dataView() {
+    return this.root.dataView;
+  }
 
-export interface IMapPoint extends IMapObjectBase {
-  type: IMapObjectType.POINT;
-  coordinates: [number, number];
-}
-
-export interface IMapPolygon extends IMapObjectBase {
-  type: IMapObjectType.POLYGON;
-  coordinates: [number, number][][];
-}
-
-export interface IMapPolyline extends IMapObjectBase {
-  type: IMapObjectType.LINESTRING;
-  coordinates: [number, number][][];
-}
-
-export type IMapObject = IMapPoint | IMapPolygon | IMapPolyline;
-
-export class MapSourceData {
-  constructor(public dataView: IDataView, public setup: MapPerspectiveSetup) {}
+  get setup() {
+    return this.root.mapSetupStore;
+  }
 
   @computed get fldLocationIndex() {
     return getDataSourceFieldIndexByName(this.dataView, this.setup.mapLocationMember);
@@ -58,6 +36,10 @@ export class MapSourceData {
     return getDataSourceFieldIndexByName(this.dataView, this.setup.mapAzimuthMember);
   }
 
+  @computed get fldIdentifier() {
+    return getDataSourceFieldIndexByName(this.dataView, "Id");
+  }
+
   @computed
   get mapObjects() {
     const result: IMapObject[] = [];
@@ -70,9 +52,10 @@ export class MapSourceData {
           if (objectGeoJson)
             result.push({
               ...objectGeoJson,
+              id: row[this.fldIdentifier],
               name: row[this.fldNameIndex],
               icon: row[this.fldIconIndex],
-              azimuth: row[this.fldIconAzimuth]
+              azimuth: row[this.fldIconAzimuth],
             });
         }
       }
@@ -85,9 +68,10 @@ export class MapSourceData {
           if (objectGeoJson) {
             result.push({
               ...objectGeoJson,
+              id: row[this.fldIdentifier],
               name: row[this.fldNameIndex],
               icon: row[this.fldIconIndex],
-              azimuth: row[this.fldIconAzimuth]
+              azimuth: row[this.fldIconAzimuth],
             });
           }
         }
@@ -116,3 +100,33 @@ export class MapSourceData {
     })();
   }
 }
+
+export enum IMapObjectType {
+  POINT = "Point",
+  POLYGON = "Polygon",
+  LINESTRING = "LineString",
+}
+
+export interface IMapObjectBase {
+  id: string;
+  name: string;
+  icon: string;
+  azimuth: number;
+}
+
+export interface IMapPoint extends IMapObjectBase {
+  type: IMapObjectType.POINT;
+  coordinates: [number, number];
+}
+
+export interface IMapPolygon extends IMapObjectBase {
+  type: IMapObjectType.POLYGON;
+  coordinates: [number, number][][];
+}
+
+export interface IMapPolyline extends IMapObjectBase {
+  type: IMapObjectType.LINESTRING;
+  coordinates: [number, number][][];
+}
+
+export type IMapObject = IMapPoint | IMapPolygon | IMapPolyline;

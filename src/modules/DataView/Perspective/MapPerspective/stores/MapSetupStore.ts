@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import { parse as wktParse } from "wkt";
+import { MapRootStore } from "./MapRootStore";
 
 export class MapLayer {
   id: string = "";
@@ -29,7 +30,9 @@ export class MapLayer {
   }
 }
 
-export class MapPerspectiveSetup {
+export class MapSetupStore {
+  constructor(private rootStore: MapRootStore) {}
+  
   mapLocationMember: string = "";
   mapAzimuthMember: string = "";
   mapColorMember: string = "";
@@ -39,8 +42,9 @@ export class MapPerspectiveSetup {
   textLocationMember: string = "";
   textRotationMember: string = "";
   mapCenterRaw: string = "";
-  layers: MapLayer[] = [];
   isReadOnlyView: boolean = false;
+
+  layers: MapLayer[] = [];
 
   @computed
   get mapCenter() {
