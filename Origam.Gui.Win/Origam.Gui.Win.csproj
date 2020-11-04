@@ -306,6 +306,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\ShowSqlConsole.cs" />
+    <Compile Include="Commands\ShowSqlConsoleMenuBuilder.cs" />
     <Compile Include="ComponentBinding.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -347,6 +348,7 @@
     </Compile>
     <Compile Include="Grid\IAsGridEditor.cs" />
     <Compile Include="DesktopEntityUIActionRunnerClient.cs" />
+    <Compile Include="Commands\SqlConsoleParameters.cs" />
     <Compile Include="Strings.Designer.cs" />
     <Compile Include="Wizards\CreateFormFromEntityCommand.cs">
       <SubType>Code</SubType>

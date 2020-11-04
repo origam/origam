@@ -44,7 +44,7 @@ namespace Origam.Workbench.Services.CoreServices
         public static IDataService GetDataService(Platform deployPlatform)
         {
             string dictionarykey = "primary";
-            if (deployPlatform != null)
+            if (deployPlatform != null && ! deployPlatform.IsPrimary)
             {
                 dictionarykey = deployPlatform.Name;
             }

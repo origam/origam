@@ -670,9 +670,10 @@ namespace OrigamArchitect
 			CreateMenuItem(strings.ConnectionConfig_MenuItem, new EditConfiguration(), Images.ConnectionConfiguration, Keys.None, _fileMenu);
 			AsMenuCommand mnuPersistSchema = CreateMenuItem(strings.UpdateModelRepository_MenuItem, new PersistSchema(), Images.SaveToDatabase, Keys.Control | Keys.Shift | Keys.S, _fileMenu);
 			AsMenuCommand mnuServerRestart = CreateMenuItem(strings.SetServerRestart_MenuItem, new Commands.SetServerRestart(), Images.RestartServer, Keys.None, _toolsMenu);
-            SqlViewer vwr = new SqlViewer();
-            AsMenuCommand mnuShowSqlConsole = CreateMenuItem(strings.SqlConsole_MenuItem, 
-                new ShowSqlConsole(""), vwr.Icon.ToBitmap(), Keys.None, _toolsMenu);
+			using (SqlViewer vwr = new SqlViewer(null))
+            {
+				CreateMenuWithSubmenu(strings.SqlConsole_MenuItem, vwr.Icon.ToBitmap(), new ShowSqlConsoleMenuBuilder(), _toolsMenu);
+			}
 
 			_fileMenu.SubItems.Add(CreateSeparator());
 			

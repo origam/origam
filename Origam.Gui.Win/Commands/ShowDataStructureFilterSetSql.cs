@@ -87,7 +87,7 @@ namespace Origam.Gui.Win.Commands
                 }
             }
             builder.AppendLine(generator.CreateDataStructureFooterSql(tmpTables));
-            new ShowSqlConsole(builder.ToString()).Run();
+            new ShowSqlConsole(new SqlConsoleParameters(builder.ToString())).Run();
         }
     }
 }
