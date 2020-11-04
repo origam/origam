@@ -4,7 +4,6 @@ import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSet
 import { Checkbox } from "../../../../Checkbox";
 import { observer } from "mobx-react";
 import { action, observable } from "mobx";
-import produce from "immer";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
 import { Operator } from "./Operatots";
@@ -16,49 +15,21 @@ export class FilterSettingsBoolean extends React.Component<{
   onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS[0].type);
-
-  componentDidMount() {
-    this.takeSettingFromProps();
-  }
-
-  componentDidUpdate() {
-    this.takeSettingFromProps();
-  }
-
-  @action.bound takeSettingFromProps() {
-    if (this.props.setting) {
-      this.setting = this.props.setting;
-      return;
-    }
-    if (!this.setting) {
-      this.setting = new FilterSetting(OPERATORS[0].type);
-      return;
-    }
-    if (
-      this.setting.val1 !== undefined ||
-      this.setting.val2 !== undefined ||
-      this.setting.type !== OPERATORS[0].type ||
-      this.setting.isComplete !== false ||
-      this.setting.lookupId !== undefined
-    ) {
-      this.setting = new FilterSetting(OPERATORS[0].type);
-    }
-  }
+  @observable.ref setting: FilterSetting = this.props.setting
+    ? this.props.setting
+    : new FilterSetting(OPERATORS[0].type);
 
   @action.bound handleValueClick(event: any) {
-    this.setting = produce(this.setting, (draft: IFilterSetting) => {
-      if (draft.val1 === undefined) {
-        draft.val1 = false;
-        draft.isComplete = true;
-      } else if (draft.val1 === false) {
-        draft.val1 = true;
-        draft.isComplete = true;
-      } else if (draft.val1 === true) {
-        draft.val1 = undefined;
-        draft.isComplete = false;
-      }
-    });
+      if (this.setting .val1 === undefined) {
+        this.setting .val1 = false;
+        this.setting .isComplete = true;
+      } else if (this.setting .val1 === false) {
+        this.setting .val1 = true;
+        this.setting .isComplete = true;
+      } else if (this.setting .val1 === true) {
+        this.setting .val1 = undefined;
+        this.setting .isComplete = false;
+    };
 
     this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
   }

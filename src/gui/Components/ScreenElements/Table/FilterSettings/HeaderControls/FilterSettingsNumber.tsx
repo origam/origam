@@ -7,7 +7,6 @@ import {
 import CS from "./FilterSettingsCommon.module.scss";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
-import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
 
@@ -42,12 +41,9 @@ const OpCombo: React.FC<{
       {OPERATORS().map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
-          onClick={() =>
-            props.onChange(
-              produce(props.setting, (draft: any) => {
-                draft.type = op.type;
-              })
-            )
+          onClick={() => {
+            props.setting.type = op.type;
+            props.onChange(props.setting);}
           }
         >
           {op.human}
@@ -75,12 +71,9 @@ const OpEditors: React.FC<{
           type="number"
           className={CS.input}
           value={setting.val1 ?? ""}
-          onChange={(event: any) =>
-            props.onChange(
-              produce(setting, (draft: any) => {
-                draft.val1 = event.target.value === "" ? undefined : event.target.value;
-              })
-            )
+          onChange={(event: any) => {
+            setting.val1 = event.target.value === "" ? undefined : event.target.value;
+            props.onChange(setting);}
           }
           onBlur={props.onBlur}
         />
@@ -94,12 +87,9 @@ const OpEditors: React.FC<{
             type="number"
             className={CS.input}
             value={setting.val1}
-            onChange={(event: any) =>
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val1 = event.target.value === "" ? undefined : event.target.value;
-                })
-              )
+            onChange={(event: any) => {
+              setting.val1 = event.target.value === "" ? undefined : event.target.value;
+              props.onChange(setting);}
             }
             onBlur={props.onBlur}
           />
@@ -107,12 +97,9 @@ const OpEditors: React.FC<{
             type="number"
             className={CS.input}
             value={setting.val2}
-            onChange={(event: any) =>
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val2 = event.target.value === "" ? undefined : event.target.value;
-                })
-              )
+            onChange={(event: any) => {
+              setting.val2 = event.target.value === "" ? undefined : event.target.value;
+              props.onChange(setting);}
             }
             onBlur={props.onBlur}
           />
@@ -130,35 +117,9 @@ export class FilterSettingsNumber extends React.Component<{
   onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
-
-  componentDidMount() {
-    this.takeSettingFromProps();
-  }
-
-  componentDidUpdate() {
-    this.takeSettingFromProps();
-  }
-
-  @action.bound takeSettingFromProps() {
-    if (this.props.setting) {
-      this.setting = this.props.setting;
-      return;
-    }
-    if (!this.setting) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-      return;
-    }
-    if (
-      this.setting.val1 !== undefined ||
-      this.setting.val2 !== undefined ||
-      this.setting.type !== OPERATORS()[0].type ||
-      this.setting.isComplete !== false ||
-      this.setting.lookupId !== undefined
-    ) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-    }
-  }
+  @observable.ref setting: FilterSetting = this.props.setting
+    ? this.props.setting
+    : new FilterSetting(OPERATORS()[0].type);
 
   @action.bound
   handleBlur() {
@@ -202,8 +163,6 @@ export class FilterSettingsNumber extends React.Component<{
       <>
         <OpCombo setting={this.setting} onChange={this.handleChange} />
         <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
-
-        {/*<input className={CS.input} />*/}
       </>
     );
   }

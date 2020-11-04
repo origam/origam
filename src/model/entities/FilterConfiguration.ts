@@ -4,7 +4,6 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
-import produce from "immer";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
 
@@ -32,13 +31,13 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   setFilter(term: IFilter): void {
-    this.activeFilters = produce(this.activeFilters, (draft: any) => {
-      const oldIdx = draft.findIndex((item: any) => item.propertyId === term.propertyId);
-      if (oldIdx > -1) {
-        draft.splice(oldIdx, 1);
-      }
-      draft.push(term);
-    });
+    const existingIndex = this.activeFilters
+      .findIndex(filter => filter.propertyId === term.propertyId);
+    if(existingIndex > -1){
+      this.activeFilters.splice(existingIndex, 1);
+    }
+    this.activeFilters.push(term);
+    this.activeFilters = [... this.activeFilters];
   }
 
   @action.bound

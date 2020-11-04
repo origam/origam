@@ -6,7 +6,6 @@ import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
-import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
 import { Operator } from "./Operatots";
@@ -36,12 +35,9 @@ const OpCombo: React.FC<{
       {OPERATORS().map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
-          onClick={() =>
-            props.onChange(
-              produce(props.setting, (draft: any) => {
-                draft.type = op.type;
-              })
-            )
+          onClick={() => {
+            props.setting.type = op.type;
+            props.onChange(props.setting);}
           }
         >
           {op.human}
@@ -69,13 +65,9 @@ const OpEditors: React.FC<{
         <DateTimeEditor
           value={setting.val1 ?? ""}
           outputFormat="D.M.YYYY"
-          onChange={(event, isoDay) =>
-            props.onChange &&
-            props.onChange(
-              produce(setting, (draft: any) => {
-                draft.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-              })
-            )
+          onChange={(event, isoDay) => {
+            setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+            props.onChange && props.onChange(setting);}
           }
           onEditorBlur={props.onBlur}
           onKeyDown={props.onKeyDown}
@@ -89,13 +81,10 @@ const OpEditors: React.FC<{
           <DateTimeEditor
             value={setting.val1}
             outputFormat="D.M.YYYY"
-            onChange={(event, isoDay) =>
+            onChange={(event, isoDay) => {
+              setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
               props.onChange &&
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-                })
-              )
+              props.onChange(setting);}
             }
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
@@ -103,13 +92,10 @@ const OpEditors: React.FC<{
           <DateTimeEditor
             value={setting.val2}
             outputFormat="D.M.YYYY"
-            onChange={(event, isoDay) =>
+            onChange={(event, isoDay) => {
+              setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
               props.onChange &&
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
-                })
-              )
+              props.onChange(setting);}
             }
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
@@ -128,41 +114,9 @@ export class FilterSettingsDate extends React.Component<{
   onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  constructor(props: any) {
-    super(props);
-    (this.setting as any).val1 = undefined;
-    (this.setting as any).val2 = undefined;
-  }
-
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
-
-  componentDidMount() {
-    this.takeSettingFromProps();
-  }
-
-  componentDidUpdate() {
-    this.takeSettingFromProps();
-  }
-
-  @action.bound takeSettingFromProps() {
-    if (this.props.setting) {
-      this.setting = this.props.setting;
-      return;
-    }
-    if (!this.setting) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-      return;
-    }
-    if (
-      this.setting.val1 !== undefined ||
-      this.setting.val2 !== undefined ||
-      this.setting.type !== OPERATORS()[0].type ||
-      this.setting.isComplete !== false ||
-      this.setting.lookupId !== undefined
-    ) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-    }
-  }
+  @observable.ref setting: FilterSetting = this.props.setting
+    ? this.props.setting
+    : new FilterSetting(OPERATORS()[0].type);
 
   @action.bound
   handleChange(newSetting: any) {

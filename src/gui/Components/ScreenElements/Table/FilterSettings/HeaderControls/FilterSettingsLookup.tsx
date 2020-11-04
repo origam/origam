@@ -58,14 +58,11 @@ const OpCombo: React.FC<{
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
-            props.onChange(
-              produce(props.setting, (draft: IFilterSetting) => {
-                draft.type = op.type;
-                draft.isComplete = op.type === "null" || op.type === "nnull";
-                draft.val1 = undefined;
-                draft.val2 = undefined;
-              })
-            );
+            props.setting.type = op.type;
+            props.setting.isComplete = op.type === "null" || op.type === "nnull";
+            props.setting.val1 = undefined;
+            props.setting.val2 = undefined;
+            props.onChange(props.setting);
           }}
         >
           {op.human}
@@ -134,9 +131,8 @@ export class OptionGrid extends React.Component<{
 
 @observer
 class OpEditors extends React.Component<{
-  setting: IFilterSetting | undefined;
+  setting: IFilterSetting;
   onChange: (newSetting: any) => void;
-  onChangeDebounced: (newSetting: any) => void;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
@@ -145,28 +141,22 @@ class OpEditors extends React.Component<{
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
     this.selectedItems = items;
-    this.props.onChange(
-      produce(this.props.setting, (draft: IFilterSetting) => {
-        draft.val1 = toJS(
-          items.map((item) => {
-            return { value: item };
-          }),
-          { recurseEverything: true }
-        );
-        draft.val2 = undefined;
-        draft.isComplete = draft.val1 !== undefined && draft.val1.length > 0;
-      })
+    this.props.setting.val1 = toJS(
+      items.map((item) => {
+        return { value: item };
+      }),
+      { recurseEverything: true }
     );
+    this.props.setting.val2 = undefined;
+    this.props.setting.isComplete = this.props.setting.val1 !== undefined && this.props.setting.val1.length > 0;
+    this.props.onChange(this.props.setting);
   }
 
   @action.bound handleTermChange(event: any) {
-    this.props.onChangeDebounced(
-      produce(this.props.setting, (draft: IFilterSetting) => {
-        draft.val1 = undefined;
-        draft.val2 = event.target.value;
-        draft.isComplete = !!draft.val2;
-      })
-    );
+    this.props.setting.val1 = undefined;
+    this.props.setting.val2 = event.target.value;
+    this.props.setting.isComplete = !!this.props.setting.val2;
+    this.props.onChange(this.props.setting);
   }
 
   render() {
@@ -200,30 +190,28 @@ export class FilterSettingsLookup extends React.Component<{
   lookup: ILookup;
   property: IProperty;
   setting: IFilterSetting | undefined;
-  onTriggerApplySetting?(setting: any): void;
+  onTriggerApplySetting(setting: any): void;
 }> {
-  @observable.ref setting: FilterSetting = new LookupFilterSetting(
-    OPERATORS()[0].type
-  );
+  @observable setting: FilterSetting;
+
+  constructor(props: any) {
+    super(props);
+    this.setting = props.setting ?? new LookupFilterSetting(OPERATORS()[0].type);
+  }
 
   @action.bound handleChange(newSetting: any) {
-    newSetting.lookupId =
-      newSetting.type === "contains" || newSetting.type === "ncontains"
-        ? this.props.lookup.lookupId
-        : undefined;
-    this.setting = newSetting;
-
-    this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+    this.props.onTriggerApplySetting(this.setting);
   }
 
   render() {
     return (
       <>
-        <OpCombo setting={this.setting} onChange={this.handleChange} />
+        <OpCombo setting={this.setting}
+                 onChange={this.handleChange}
+        />
         <OpEditors
           setting={this.setting}
           onChange={this.handleChange}
-          onChangeDebounced={this.handleChange}
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
           property={this.props.property}
