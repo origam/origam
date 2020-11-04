@@ -58,7 +58,7 @@ namespace Origam
 
         public object Clone()
         {
-            return Xml.Clone();
+            return new XmlContainer((XmlDocument)Xml.Clone());
         }
         public void DocumentElementAppendChild(XmlNode node)
         {
