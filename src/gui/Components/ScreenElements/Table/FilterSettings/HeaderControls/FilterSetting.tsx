@@ -15,6 +15,14 @@ export class FilterSetting implements IFilterSetting {
     return this.val2;
   }
 
+  get val1ServerForm(){
+    return this.val1;
+  }
+
+  get val2ServerForm(){
+    return this.val2;
+  }
+
   constructor(type: string, isComplete:boolean=false, val1?: any, val2?: any) {
     this.type = type;
     this.isComplete = isComplete;

@@ -52,19 +52,19 @@ export class FilterGroupManager {
     this.selectedFilterGroupId = filterGroup?.id;
   }
 
-  filtreToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
+  filterToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
     return {
       operator: filterTypeToNumber(filter.setting.type),
       property: filter.propertyId,
-      value1: filter.setting.val1,
-      value2: filter.setting.val2,
+      value1: filter.setting.val1ServerForm,
+      value2: filter.setting.val2ServerForm,
     };
   }
 
   @action.bound
   async saveActiveFiltersAsNewFilterGroup(name: string, isGlobal: boolean) {
     const filterGroupServerVerion: IUIGridFilterCoreConfiguration = {
-      details: this.activeFilters.map((filter) => this.filtreToServerVersion(filter)),
+      details: this.activeFilters.map((filter) => this.filterToServerVersion(filter)),
       id: undefined,
       isGlobal: isGlobal,
       name: name,

@@ -137,10 +137,8 @@ class OpEditors extends React.Component<{
   lookup: ILookup;
   property: IProperty;
 }> {
-  @observable selectedItems: Array<Array<any>> = this.props.setting.val1 ?? [];
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
-    this.selectedItems = items;
     this.props.setting.val1 = items;
     this.props.setting.val2 = undefined;
     this.props.setting.isComplete = this.props.setting.val1 !== undefined && this.props.setting.val1.length > 0;
@@ -165,7 +163,7 @@ class OpEditors extends React.Component<{
             property={this.props.property}
             getOptions={this.props.getOptions}
             onChange={this.handleSelectedItemsChange}
-            values={this.selectedItems}
+            values={this.props.setting.val1 ?? []}
           />
         );
       case "contains":
@@ -187,25 +185,17 @@ export class FilterSettingsLookup extends React.Component<{
   setting: IFilterSetting | undefined;
   onTriggerApplySetting(setting: any): void;
 }> {
-  @observable setting: FilterSetting;
-
-  constructor(props: any) {
-    super(props);
-    this.setting = props.setting ?? new LookupFilterSetting(OPERATORS()[0].type);
-  }
-
   @action.bound handleChange(newSetting: any) {
-    this.props.onTriggerApplySetting(this.setting);
+    this.props.onTriggerApplySetting(newSetting);
   }
 
   render() {
+    const setting = this.props.setting ?? new LookupFilterSetting(OPERATORS()[0].type);
     return (
       <>
-        <OpCombo setting={this.setting}
-                 onChange={this.handleChange}
-        />
+        <OpCombo setting={setting} onChange={this.handleChange} />
         <OpEditors
-          setting={this.setting}
+          setting={setting}
           onChange={this.handleChange}
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
@@ -218,8 +208,8 @@ export class FilterSettingsLookup extends React.Component<{
 
 export class LookupFilterSetting implements IFilterSetting {
   type: string;
-  val1?: any;
-  val2?: any;
+  val1?: any; // used for "in" operator ... string[]
+  val2?: any; // used for "contains" operator ... string
   isComplete: boolean;
   lookupId: string | undefined;
 
@@ -243,11 +233,22 @@ export class LookupFilterSetting implements IFilterSetting {
     return this.val2;
   }
 
-  constructor(type: string, isComplete=false, val1?:any, val2?: any) {
+
+  get val1ServerForm(){
+    return this.val1 ? this.val1.join(",") : this.val1;
+  }
+
+  get val2ServerForm(){
+    return this.val2;
+  }
+
+  constructor(type: string, isComplete=false, val1?:string, val2?: any) {
     this.type = type;
     this.isComplete = isComplete;
-    this.val1 = val1;
-    this.val1 = val2;
+    if(val1 !== undefined && val1 !== null){
+      this.val1 = [... new Set(val1.split(","))];
+    }
+    this.val2 = val2 ?? undefined;
   }
 }
 
