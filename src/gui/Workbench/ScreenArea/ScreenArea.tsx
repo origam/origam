@@ -12,7 +12,8 @@ import { DialogScreenBuilder } from "./ScreenBuilder";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 import { onWorkflowAbortClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowAbortClick";
 import { onWorkflowNextClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowNextClick";
-import {T} from "../../../utils/translation";
+import { T } from "../../../utils/translation";
+import { IActionPlacement } from "model/entities/types/IAction";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -97,7 +98,9 @@ export const DialogScreen: React.FC<{
                 {() =>
                   !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content.formScreen!.dialogActions.map((action) => (
+                      {props.openedScreen.content.formScreen!.dialogActions
+                        .filter(action => action.placement !== IActionPlacement.PanelHeader)
+                        .map((action) => (
                         <button
                           key={action.id}
                           onClick={(event: any) => {
