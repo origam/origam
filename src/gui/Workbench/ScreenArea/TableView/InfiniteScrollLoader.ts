@@ -295,5 +295,5 @@ class FlowQueueProcessor {
 }
 
 export const isInfiniteScrollLoader = (o: any): o is InfiniteScrollLoader =>
-  o?.$type?.InfiniteScrollLoader;
+  o?.$type_InfiniteScrollLoader;
 
