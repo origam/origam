@@ -137,18 +137,11 @@ class OpEditors extends React.Component<{
   lookup: ILookup;
   property: IProperty;
 }> {
-  @observable selectedItems: Array<Array<any>> = this.props.setting.val1
-    ? this.props.setting.val1.map((item: any) => item.value)
-    : [];
+  @observable selectedItems: Array<Array<any>> = this.props.setting.val1 ?? [];
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
     this.selectedItems = items;
-    this.props.setting.val1 = toJS(
-      items.map((item) => {
-        return { value: item };
-      }),
-      { recurseEverything: true }
-    );
+    this.props.setting.val1 = items;
     this.props.setting.val2 = undefined;
     this.props.setting.isComplete = this.props.setting.val1 !== undefined && this.props.setting.val1.length > 0;
     this.props.onChange(this.props.setting);
@@ -237,10 +230,10 @@ export class LookupFilterSetting implements IFilterSetting {
     switch (this.type) {
       case "contain":
       case "ncontain":
-        return this.val1.map((item: any) => item.content);
+        return this.val2;
       case "in":
       case "nin":
-        return this.val1.map((item: any) => item.value);
+        return this.val1;
       default:
         return undefined;
     }

@@ -274,7 +274,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             const val1 = term.setting.val1 || [];
             if (val1.length === 0) return true;
             if (txt1 === null) return false;
-            if (val1.findIndex((item: any) => item.value === txt1) > -1) {
+            if (val1.findIndex((item: any) => item === txt1) > -1) {
               return true;
             }
             return false;
@@ -285,7 +285,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             const val1 = term.setting.val1 || [];
             if (val1.length === 0) return true;
             if (txt1 === null) return false;
-            if (val1.findIndex((item: any) => item.value === txt1) > -1) {
+            if (val1.findIndex((item: any) => item === txt1) > -1) {
               return false;
             }
             return true;
