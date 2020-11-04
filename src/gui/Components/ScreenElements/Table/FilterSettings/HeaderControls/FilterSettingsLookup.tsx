@@ -137,7 +137,9 @@ class OpEditors extends React.Component<{
   lookup: ILookup;
   property: IProperty;
 }> {
-  @observable selectedItems: Array<Array<any>> = [];
+  @observable selectedItems: Array<Array<any>> = this.props.setting.val1
+    ? this.props.setting.val1.map((item: any) => item.value)
+    : [];
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
     this.selectedItems = items;
