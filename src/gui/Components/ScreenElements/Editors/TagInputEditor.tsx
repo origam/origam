@@ -43,6 +43,10 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       customInputCalss?: string;
     }) => {
 
+      const beh = useContext(CtxDropdownEditor).behavior;
+      const ref = useContext(CtxDropdownRefCtrl);
+      const data = useContext(CtxDropdownEditor).editorData;
+
       function getStyle() {
         if (props.customStyle) {
           return props.customStyle;
@@ -60,19 +64,17 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
         }
         const index = props.value.indexOf(item);
         if (index > -1) {
-          props.value.splice(index, 1);
+          const removedItem = props.value.splice(index, 1)[0];
           if (props.onChange) {
             props.onChange(event, props.value);
           }
           if (props.onEditorBlur) {
             props.onEditorBlur(event);
           }
+          data.remove(removedItem);
         }
       }
 
-      const beh = useContext(CtxDropdownEditor).behavior;
-      const ref = useContext(CtxDropdownRefCtrl);
-      const data = useContext(CtxDropdownEditor).editorData;
       const refInput = useMemo(() => {
         return (elm: any) => {
           beh.refInputElement(elm);

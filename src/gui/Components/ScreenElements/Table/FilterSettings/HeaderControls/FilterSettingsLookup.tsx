@@ -376,13 +376,19 @@ export class FilterEditorData implements IDropdownEditorData {
   @action.bound chooseNewValue(value: any) {
     if (value !== null && !this._value.includes(value)) {
       this._value = [...this._value, value];
-      console.log("Value: "+this._value)
       this.onChange(this._value);
     }
   }
 
   get idsInEditor() {
     return this._value as string[];
+  }
+
+  remove(valueToRemove: any): void {
+    const index = this._value.indexOf(valueToRemove)
+    if(index > -1){
+      this._value.splice(index, 1);
+    }
   }
 }
 

@@ -39,4 +39,8 @@ export class TagInputEditorData implements IDropdownEditorData {
   get idsInEditor() {
     return (this.value ? this.value : []) as string[];
   }
+
+  remove(value: any): void {
+    // not needed in TagInputEditorData
+  }
 }
