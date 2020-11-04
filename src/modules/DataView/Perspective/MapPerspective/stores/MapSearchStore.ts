@@ -5,6 +5,10 @@ import { MapRootStore } from "./MapRootStore";
 export class SearchStore {
   constructor(private root: MapRootStore) {}
 
+  get navigationStore() {
+    return this.root.mapNavigationStore;
+  }
+
   get allMapObjects() {
     return this.root.mapObjectsStore.mapObjects;
   }
@@ -65,6 +69,8 @@ export class SearchStore {
   @action.bound handleSearchInputBlur(event: any) {
     if (!this.searchPhrase) {
       this.selectedSearchResult = undefined;
+      this.navigationStore.fitToSelectedSearchResult();
+      this.navigationStore.highlightSelectedSearchResult();
     }
   }
 
@@ -79,6 +85,8 @@ export class SearchStore {
       case "Enter":
         if (!this.searchPhrase) {
           this.selectedSearchResult = undefined;
+          this.navigationStore.fitToSelectedSearchResult();
+          this.navigationStore.highlightSelectedSearchResult();
         }
         break;
     }
@@ -104,17 +112,24 @@ export class SearchStore {
   handleClearClick(event: any) {
     this.searchPhrase = "";
     this.selectedSearchResult = undefined;
+    this.navigationStore.fitToSelectedSearchResult();
+    this.navigationStore.highlightSelectedSearchResult();
   }
 
-  @action.bound 
-  handleClearMouseDown(event: any) {
+  @action.bound
+  handleClearMouseDown(event: any) {}
 
+  @action.bound
+  selectSearchResultById(resultId: string) {
+    this.selectedSearchResult = this.allMapObjects.find((item) => item.id === resultId);
+    this.searchPhrase = this.selectedSearchResult?.name || "";
   }
 
   @action.bound
   handleSearchResultClick(event: any, resultId: string) {
-    this.selectedSearchResult = this.searchResults.find((item) => item.id === resultId);
-    this.searchPhrase = this.selectedSearchResult?.name || "";
+    this.selectSearchResultById(resultId);
+    this.navigationStore.fitToSelectedSearchResult();
+    this.navigationStore.highlightSelectedSearchResult();
     this.dropUp();
   }
 
@@ -124,8 +139,6 @@ export class SearchStore {
       this.dropUp();
     }
   }
-
-  
 
   get dropdownTop() {
     return this.rect.bottom;

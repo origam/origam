@@ -1,4 +1,4 @@
-import { computed, flow } from "mobx";
+import { action, computed, flow } from "mobx";
 import { parse as wktParse, stringify as wtkStringify } from "wkt";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { MapRootStore } from "./MapRootStore";
@@ -8,6 +8,8 @@ import { onFieldChangeG } from "model/actions-ui/DataView/TableView/onFieldChang
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import _ from "lodash";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export class MapObjectsStore {
   constructor(private root: MapRootStore) {}
@@ -18,6 +20,14 @@ export class MapObjectsStore {
 
   get setup() {
     return this.root.mapSetupStore;
+  }
+
+  get search() {
+    return this.root.mapSearchStore;
+  }
+
+  get navigationStore() {
+    return this.root.mapNavigationStore;
   }
 
   @computed get fldLocationIndex() {
@@ -81,6 +91,7 @@ export class MapObjectsStore {
     return result;
   }
 
+  @action.bound
   handleGeometryChange(geoJson: any) {
     const self = this;
     return flow(function* () {
@@ -98,6 +109,23 @@ export class MapObjectsStore {
         yield* getFormScreenLifecycle(self.dataView).onFlushData();
       }
     })();
+  }
+
+  @action.bound
+  handleLayerClick(id: string) {
+    getDataView(this.dataView).selectRowById(id);
+    this.search.selectSearchResultById(id);
+    this.navigationStore.highlightSelectedSearchResult();
+    
+  }
+
+  @action.bound
+  handleMapActivated() {
+    const rowId = getSelectedRowId(this.dataView);
+    if (rowId) {
+      this.search.selectSearchResultById(rowId);
+      this.navigationStore.highlightSelectedSearchResult();
+    }
   }
 }
 

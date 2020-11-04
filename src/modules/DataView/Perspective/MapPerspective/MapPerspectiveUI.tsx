@@ -27,6 +27,7 @@ interface IMapPerspectiveComProps {
   isReadOnly: boolean;
   isActive: boolean;
   onChange?(geoJson: any): void;
+  onLayerClick?(id: string): void;
 }
 
 const MAP_ANIMATE_SETTING = {
@@ -96,7 +97,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       if (this.isPropMapCenterDifferent(prevProps)) {
         this.panToCenter();
       }
-      const { lastDetailedObject } = this.props;
+      /*const { lastDetailedObject } = this.props;
       if (
         lastDetailedObject &&
         (!prevProps.lastDetailedObject ||
@@ -107,7 +108,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       }
       if (!lastDetailedObject && prevProps.lastDetailedObject) {
         this.highlightSelectedLayer();
-      }
+      }*/
     });
   }
 
@@ -304,6 +305,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           this.leafletMapObjects.clearLayers();
           for (let layer of layers) {
             this.leafletMapObjects.addLayer(layer[1]);
+            layer[1].on("click", () => this.props.onLayerClick?.(layer[0].id));
           }
           this.highlightSelectedLayer();
         },

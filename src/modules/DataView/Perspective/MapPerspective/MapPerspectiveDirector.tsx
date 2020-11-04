@@ -135,6 +135,7 @@ function MapContentUI(props: {
               console.log("Change: ", geoJson);
               mapObjectsStore.handleGeometryChange(geoJson);
             }}
+            onLayerClick={mapObjectsStore.handleLayerClick}
           />
         </MapPerspectiveComContainer>
       )}
@@ -143,7 +144,8 @@ function MapContentUI(props: {
 }
 
 function MapPerspectiveNavigation() {
-  const { mapSetupStore, mapNavigationStore } = useContext(CtxMapRootStore);
+  const { mapObjectsStore, mapNavigationStore } = useContext(CtxMapRootStore);
+  useEffect(() => mapObjectsStore.handleMapActivated(), []);
   return (
     <Observer>
       {() => (

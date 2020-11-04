@@ -9,6 +9,7 @@ export class MapNavigationStore {
     panToCenter(): void;
     panToSelectedObject(): void;
     panToFirstObject(): void;
+    highlightSelectedLayer(): void;
   } | null = null;
 
   get setupStore() {
@@ -17,6 +18,20 @@ export class MapNavigationStore {
 
   get searchStore() {
     return this.root.mapSearchStore;
+  }
+
+  @action.bound
+  highlightSelectedSearchResult() {
+    // We might select some result right before this point in the same action.
+    // Wait for React to propagate props.
+    setTimeout(() => this.elmMapComponent?.highlightSelectedLayer(), 100);
+  }
+
+  @action.bound
+  fitToSelectedSearchResult() {
+    // We might select some result right before this point in the same action.
+    // Wait for React to propagate props.
+    setTimeout(() => this.elmMapComponent?.panToSelectedObject(), 100);
   }
 
   @action.bound
