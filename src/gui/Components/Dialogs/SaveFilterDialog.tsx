@@ -33,6 +33,12 @@ export class SaveFilterDialog extends React.Component<{
     this.refInput.current?.focus();
   }
 
+  onKeydown(event: React.KeyboardEvent<HTMLInputElement>){
+    if(event.key === "Enter"){
+      this.props.onOkClick(this.filterName, this.isGlobal);
+    }
+  }
+
   render() {
     return (
       <ModalWindow
@@ -62,6 +68,7 @@ export class SaveFilterDialog extends React.Component<{
                 className={S.textInput}
                 value={this.filterName}
                 onChange={event => this.onNameChanged(event)}
+                onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => this.onKeydown(event)}
               />
             </div>
             <div className={S.row}>
