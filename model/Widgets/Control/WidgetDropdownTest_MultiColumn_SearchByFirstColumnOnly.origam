@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="af2c6ded-c06f-45e2-a5da-12114f24b99f"
+    ci:isComplex="true"
+    asi:name="WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="Widgets/PanelControlSet/Widgets/WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly.origam#WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly/d4570023-2cbd-4523-9b72-9ce1d24c4fca"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="fbfe83ce-735b-4ecc-91a0-4b5f73f17adf" />
+  </ci:Control>
+</x:file>

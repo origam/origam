@@ -1,0 +1,12 @@
+﻿CREATE TABLE [AllDataTypes] (
+	[Text1] NVarChar(50) NOT NULL,
+	[Date1] DateTime NULL,
+	[Integer1] Int NULL,
+	[Currency1] Money NULL,
+	[Boolean1] Bit NULL,
+	[Long1] BigInt NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

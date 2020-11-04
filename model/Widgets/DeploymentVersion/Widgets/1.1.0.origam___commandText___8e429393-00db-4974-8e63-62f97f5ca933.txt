@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "WidgetDropdownTest" ADD CONSTRAINT "FK_WidgetDropdownTest_refAllDataTypesId_AllDataTypes"
+	FOREIGN KEY (
+		"refAllDataTypesId"
+	)
+
+	REFERENCES "AllDataTypes" (
+		"Id"
+	);

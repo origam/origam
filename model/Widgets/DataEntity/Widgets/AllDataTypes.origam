@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="7a2338f2-7290-4cec-b0ad-2c0ee6386885"
+    tmi:mappedObjectName="AllDataTypes"
+    asi:name="AllDataTypes"
+    ade:readOnly="false">
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="8954ae10-e0db-49b8-b04c-351e03249c36"
+      adec:isPrimaryKey="false"
+      adec:label="Text 1"
+      fmi:mappedColumnName="Text1"
+      asi:name="Text1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Date"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="591b8777-70c9-4526-99f9-c3de3ebc3a91"
+      adec:isPrimaryKey="false"
+      adec:label="Date 1"
+      fmi:mappedColumnName="Date1"
+      asi:name="Date1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="c5f2891f-b0b7-48e4-b7d6-5237b778d867"
+      adec:isPrimaryKey="false"
+      adec:label="Integer 1"
+      fmi:mappedColumnName="Integer1"
+      asi:name="Integer1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Currency"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="91e811e1-be8d-4eab-b66f-29c544939470"
+      adec:isPrimaryKey="false"
+      adec:label="Currency 1"
+      fmi:mappedColumnName="Currency1"
+      asi:name="Currency1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="f5997d8d-384f-4a20-9dc3-490bdc05f791"
+      adec:isPrimaryKey="false"
+      adec:label="Boolean 1"
+      fmi:mappedColumnName="Boolean1"
+      asi:name="Boolean1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Long"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="c32d22e2-3125-4a6a-a546-facae3acea0c"
+      adec:isPrimaryKey="false"
+      adec:label="Long 1"
+      fmi:mappedColumnName="Long1"
+      asi:name="Long1"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="50"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="40adf540-f1fb-4ade-9e29-f349c3a7433e"
+      adec:isPrimaryKey="false"
+      adec:label="Text 2"
+      fmi:mappedColumnName="Text2"
+      asi:name="Text2"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="f63bb67a-b8b6-4936-b5af-b158f97c1dab" />
+  </tmi:DataEntity>
+</x:file>

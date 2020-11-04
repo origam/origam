@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="6617e341-4a5d-4f80-ab17-925e30ca2ae3"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/71ef0806-6153-46fb-8e36-6f4c5d70cccb"
+    adl:listDisplayMember="Text1;Text2;Boolean1;Currency1;Date1;Integer1;Long1"
+    adl:listValueMember="Id"
+    asi:name="AllDataTypes_MultiColumn_SuppressEmptyColumns"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="true"
+    adl:valueDataStructure="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/71ef0806-6153-46fb-8e36-6f4c5d70cccb"
+    adl:valueDisplayMember="Text1"
+    adl:valueMethod="Widgets/DataStructure/Widgets/LookupAllDataTypes.origam#LookupAllDataTypes/GetId/b7403f66-240b-4ec9-b4b0-ae11e268fda5"
+    adl:valueValueMember="Id" />
+</x:file>

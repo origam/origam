@@ -1,0 +1,5 @@
+﻿INSERT INTO OrigamApplicationRole (Id, Name, Description, IsSystemRole , RecordCreated)
+VALUES ('94de86fe-79eb-435d-b953-4aa6c22997c2', 'WidgetDropdownTest_MultiColumn', '', 1, getdate())
+-- add to the built-in SuperUser role
+INSERT INTO OrigamRoleOrigamApplicationRole (Id, refOrigamRoleId, refOrigamApplicationRoleId, RecordCreated, IsFormReadOnly)
+VALUES (newid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', '94de86fe-79eb-435d-b953-4aa6c22997c2', getdate(), 0)

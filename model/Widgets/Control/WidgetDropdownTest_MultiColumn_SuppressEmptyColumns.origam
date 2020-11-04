@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ci="http://schemas.origam.com/Origam.Schema.GuiModel.ControlItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+  <ci:Control
+    asi:abstract="false"
+    x:id="fc588559-8c8e-42ee-a2cd-dd09de5c6b5a"
+    ci:isComplex="true"
+    asi:name="WidgetDropdownTest_MultiColumn_SuppressEmptyColumns"
+    ci:namespace="Origam.Schema.GuiModel"
+    ci:requestSaveAfterChangeAllowed="false"
+    ci:screenSection="Widgets/PanelControlSet/Widgets/WidgetDropdownTest_MultiColumn_SuppressEmptyColumns.origam#WidgetDropdownTest_MultiColumn_SuppressEmptyColumns/ba5abb0c-fca2-415e-80c7-18a9a15df865"
+    ci:toolboxVisibility="FormDesigner"
+    ci:typeName="Origam.Schema.GuiModel.PanelControlSet">
+    <sia:ancestor
+      sia:ancestor="Root/Control/_Basic Controls/AsPanel.origam#AsPanel/47a20d1a-ae4b-482c-949f-a81bee8ea28d"
+      x:id="04773d57-b337-4daf-b049-266accef1e92" />
+  </ci:Control>
+</x:file>
