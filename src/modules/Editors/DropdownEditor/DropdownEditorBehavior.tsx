@@ -195,15 +195,13 @@ export class DropdownEditorBehavior {
 
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-      if (this.setup().cached) {
-        if (this.cache.hasCachedListRows()) {
+        if (this.setup().cached && this.cache.hasCachedListRows()) {
           this.dataTable.setData(this.cache.getCachedListRows());
         } else {
           this.ensureRequestRunning();
         }
         if (this.userEnteredValue) {
           this.trySelectFirstRow();
-        }
       }
     } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
