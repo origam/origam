@@ -9,26 +9,21 @@ import {
 import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
+import { Operator } from "./Operatots";
 
 const OPERATORS = () =>
   [
-    { human: <>=</>, type: "eq" },
-    { human: <>&ne;</>, type: "neq" },
-    { human: <>&le;</>, type: "lte" },
-    { human: <>&ge;</>, type: "gte" },
-    { human: <>&#60;</>, type: "lt" },
-    { human: <>&#62;</>, type: "gt" },
-    { human: <>{T("between", "filter_operator_between")}</>, type: "between" },
-    {
-      human: <>{T("not between", "filter_operator_not_between")}</>,
-      type: "nbetween",
-    },
-    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
-    {
-      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
-      type: "nnull",
-    },
-  ] as any[];
+    Operator.equals,
+    Operator.notEquals,
+    Operator.lessThanOrEquals,
+    Operator.greaterThanOrEquals,
+    Operator.lessThan,
+    Operator.greaterThan,
+    Operator.between,
+    Operator.notBetween,
+    Operator.isNull,
+    Operator.isNotNull
+  ] as Operator[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -72,7 +67,7 @@ const OpEditors: React.FC<{
     case "gte":
       return (
         <DateTimeEditor
-          value={setting.val1}
+          value={setting.val1 ?? ""}
           outputFormat="D.M.YYYY"
           onChange={(event, isoDay) =>
             props.onChange &&
@@ -139,10 +134,7 @@ export class FilterSettingsDate extends React.Component<{
     (this.setting as any).val2 = undefined;
   }
 
-  @observable.ref setting: FilterSetting = new FilterSetting(
-    OPERATORS()[0].type,
-    OPERATORS()[0].human
-  );
+  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
 
   componentDidMount() {
     this.takeSettingFromProps();
@@ -155,6 +147,20 @@ export class FilterSettingsDate extends React.Component<{
   @action.bound takeSettingFromProps() {
     if (this.props.setting) {
       this.setting = this.props.setting;
+      return;
+    }
+    if (!this.setting) {
+      this.setting = new FilterSetting(OPERATORS()[0].type);
+      return;
+    }
+    if (
+      this.setting.val1 !== undefined ||
+      this.setting.val2 !== undefined ||
+      this.setting.type !== OPERATORS()[0].type ||
+      this.setting.isComplete !== false ||
+      this.setting.lookupId !== undefined
+    ) {
+      this.setting = new FilterSetting(OPERATORS()[0].type);
     }
   }
 

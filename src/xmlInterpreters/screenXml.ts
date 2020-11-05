@@ -62,8 +62,14 @@ import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
 import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
 import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
-import { MapLayer as MapLayerSetup, MapSetupStore } from "modules/DataView/Perspective/MapPerspective/stores/MapSetupStore";
+import {
+  MapLayer as MapLayerSetup,
+  MapSetupStore,
+} from "modules/DataView/Perspective/MapPerspective/stores/MapSetupStore";
 import { MapRootStore } from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
+import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
+import { addFilterGroups } from "./filterXml";
+import { FilterGroupManager } from "model/entities/FilterGroupManager";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -353,7 +359,13 @@ export function* interpretScreenXml(
 
       const orderingConfiguration = new OrderingConfiguration(defaultOrderings);
       const implicitFilters = getImplicitFilters(dataView);
+
       const filterConfiguration = new FilterConfiguration(implicitFilters);
+      const filterGroupManager = new FilterGroupManager(filterConfiguration);
+      panelConfigurationsRaw
+        .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
+        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
+
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
@@ -362,6 +374,7 @@ export function* interpretScreenXml(
         modelInstanceId: dataView.attributes.ModelInstanceId,
         name: dataView.attributes.Name,
         modelId: dataView.attributes.ModelId,
+        newRecordView: dataView.attributes.NewRecordView,
         defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         isMapSupported: dataView.attributes.IsMapSupported === "true",
@@ -401,6 +414,7 @@ export function* interpretScreenXml(
           tablePropertyIds: properties.slice(1).map((prop) => prop.id),
           columnConfigurationDialog: new ColumnConfigurationDialog(),
           filterConfiguration: filterConfiguration,
+          filterGroupManager: filterGroupManager,
           orderingConfiguration: orderingConfiguration,
           groupingConfiguration: new GroupingConfiguration(),
           rowHeight: 25,
@@ -559,7 +573,8 @@ export function* interpretScreenXml(
 
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
-
+    const formPerspective = $formPerspective.resolve(IFormPerspective);
+    dataView.activateFormView = formPerspective.handleToolbarBtnClick.bind(formPerspective);
     if (dataView.isMapSupported) {
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const rootStore = new MapRootStore(dataView);

@@ -29,5 +29,7 @@ export interface IRowsContainer {
 
   stop():void;
 
+  getFirstRow(): any[] | undefined;
+
   parent?: any;
 }

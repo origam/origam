@@ -38,8 +38,8 @@ export class DataTable implements IDataTable {
     this.rowRemovedListeners.forEach((listener) => listener());
   }
 
-  start() {
-    this.rowsContainer.start();
+  async start() {
+    await this.rowsContainer.start();
   }
 
   stop() {
@@ -201,10 +201,7 @@ export class DataTable implements IDataTable {
   }
 
   getFirstRow(): any[] | undefined {
-    if (this.rows.length === 0) {
-      return undefined;
-    }
-    return this.rows[0];
+    return this.rowsContainer.getFirstRow();
   }
 
   getLastRow(): any[] | undefined {

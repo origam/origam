@@ -183,7 +183,7 @@ export class ColumnsDialog extends React.Component<{
                 trigger={({refTrigger, setDropped}) => (
                   <DataViewHeaderAction
                     refDom={refTrigger}
-                    onClick={() => setDropped(true)}
+                    onMouseDown={() => setDropped(true)}
                     isActive={false}
                   >
                     {aggregationType}

@@ -45,12 +45,16 @@ import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLook
 import _ from "lodash";
 import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
+import { selectFirstRow} from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {IDataViewToolbarUI} from "modules/DataView/DataViewUI";
+import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
+import {selectLastRow} from "model/actions/DataView/selectLastRow";
+import {startEditingFirstCell} from "model/actions/DataView/startEditingFirstCell";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -347,7 +351,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           reaction(
             () => {
               orderingConfiguration.userOrderings.map((x) => x.direction);
-              filterConfiguration.filters.map((x) => [
+              filterConfiguration.activeFilters.map((x) => [
                 x.propertyId,
                 x.setting.type,
                 x.setting.val1,
@@ -400,7 +404,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     openedScreen.content.setFormScreen(screen);
     screen.printMasterDetailTree();
     yield* this.applyData(args.initUIResult.data);
-    getDataViewList(this).forEach((dv) => dv.start());
 
     setTimeout(() => {
       const fieldToSelect = getFormScreen(this).getFirstFormPropertyId();
@@ -553,22 +556,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const formScreen = getFormScreen(this);
         const dataViews = formScreen.dataViews;
         for (let dataView of dataViews) {
-          for (let row of dataView.dataTable.getDirtyValueRows()) {
-            const self = this;
-            const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
-              function* () {
-                return yield api.updateObject({
-                  SessionFormIdentifier: getSessionId(self),
-                  Entity: dataView.entity,
-                  Id: dataView.dataTable.getRowId(row),
-                  Values: map2obj(dataView.dataTable.getDirtyValues(row)),
-                });
-              }
-            );
+          const updateData = dataView.dataTable.getDirtyValueRows().map(row => {
+            return {
+              RowId: dataView.dataTable.getRowId(row),
+              Values: map2obj(dataView.dataTable.getDirtyValues(row))
+            }})
+          const self = this;
+          const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
+            function* () {
+              return yield api.updateObject({
+                SessionFormIdentifier: getSessionId(self),
+                Entity: dataView.entity,
+                UpdateData: updateData,
+              });
+            }
+          );
 
-            yield* refreshWorkQueues(this)();
-            yield* processCRUDResult(dataView, updateObjectResult);
-          }
+          yield* refreshWorkQueues(this)();
+          yield* processCRUDResult(dataView, updateObjectResult);
         }
         if (formScreen.requestSaveAfterUpdate) {
           yield* this.saveSession();
@@ -592,8 +597,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         return yield api.updateObject({
           SessionFormIdentifier: getSessionId(self),
           Entity: dataView.entity,
-          Id: dataView.dataTable.getRowId(row),
-          Values: changes,
+          UpdateData: [{
+            RowId: dataView.dataTable.getRowId(row),
+            Values: changes
+          }]
         });
       });
 
@@ -624,7 +631,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ColumnNames: getColumnNamesToLoad(rootDataView),
         MasterRowId: undefined,
       });
-      rootDataView.dataTable.setRecords(loadedData);
+      rootDataView.setRecords(loadedData);
       rootDataView.reselectOrSelectFirst();
 
       //debugger
@@ -695,7 +702,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
-      yield* selectFirstRow(targetDataView)();
+      yield* selectLastRow(targetDataView)();
+      if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
+        yield* targetDataView.activateFormView();
+      }else{
+        yield* startEditingFirstCell(targetDataView)();
+      }
     } finally {
       this.monitor.inFlow--;
     }
@@ -716,7 +728,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           OriginalId: rowId,
           RequestingGridId: gridId,
           Entities: [entity],
-          ForcedValues: {},
+          ForcedValues: this.getNewRowValues(),
         });
       } finally {
         formScreen.dataUpdateCRS.leave();
@@ -865,7 +877,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     })();
   }
 
+  private actionRunning = false;
+
   *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
+    if(this.actionRunning){
+      return;
+    }
+    this.actionRunning = true;
     try {
       this.monitor.inFlow++;
       const parameters: { [key: string]: any } = {};
@@ -908,6 +926,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       yield* new_ProcessActionResult(action)(result);
     } finally {
       this.monitor.inFlow--;
+      this.actionRunning = false;
     }
   }
 
@@ -1025,7 +1044,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
-        dataView.dataTable.setRecords((entityValue as any).data);
+        dataView.setRecords((entityValue as any).data);
+        yield dataView.start();
         dataView.reselectOrSelectFirst();
       }
     }

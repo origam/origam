@@ -44,6 +44,7 @@ import {Tooltip} from "react-tippy";
 export class BlobEditor extends React.Component<{
   value: string;
   api?: IApi;
+  isReadOnly: boolean;
   processCRUDResult?: IProcessCRUDResult;
   changeManyFields?: (values: Array<{ fieldId: string; value: any }>) => Generator;
   flushCurrentRowData?: () => Generator;
@@ -273,38 +274,44 @@ export class BlobEditor extends React.Component<{
                className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
                value={this.props.value || ""}/>
         <div className="controls">
-          {this.props.value && (
             <>
-              <button
-                className="btnDownload"
-                onClick={flow(this.download.bind(this))}
-                title={`Download: ${this.props.value}`}
-              >
-                <i className="fas fa-download"></i>
-              </button>
-              <button
-                onClick={flow(this.delete.bind(this))}
-                className="btnDelete"
-                title={`Delete: ${this.props.value}`}
-              >
-                <i className="far fa-trash-alt"></i>
-              </button>
+              {this.props.value &&
+                <button
+                  className={"btnDownload " + (this.props.isReadOnly
+                    ? "btnDownloadOnly"
+                    : "btnDownloadFirst")}
+                  onClick={flow(this.download.bind(this))}
+                  title={`Download: ${this.props.value}`}
+                >
+                  <i className="fas fa-download"></i>
+                </button>
+              }
+              {this.props.value && !this.props.isReadOnly &&
+                <button
+                  onClick={flow(this.delete.bind(this))}
+                  className="btnDelete"
+                  title={`Delete: ${this.props.value}`}
+                >
+                  <i className="far fa-trash-alt"></i>
+                </button>
+              }
             </>
-          )}
-          <label className="customBtnChoose" title={"Upload new file."}>
-            <input
-              className="btnChooseFile"
-              name="file"
-              type="file"
-              multiple={false}
-              onChange={(event) => this.handleFileChange(event)}
-              ref={this.refInput}
-              onFocus={()=>this.onFocus()}
-              onBlur={()=>this.onBlur()}
-              onKeyDown={(event)=> this.props.onKeyDown && this.props.onKeyDown(event)}
-            />
-            <i className="fas fa-upload"></i>
-          </label>
+          {!this.props.isReadOnly &&
+            <label className="customBtnChoose" title={"Upload new file."}>
+              <input
+                className="btnChooseFile"
+                name="file"
+                type="file"
+                multiple={false}
+                onChange={(event) => this.handleFileChange(event)}
+                ref={this.refInput}
+                onFocus={()=>this.onFocus()}
+                onBlur={()=>this.onBlur()}
+                onKeyDown={(event)=> this.props.onKeyDown && this.props.onKeyDown(event)}
+              />
+              <i className="fas fa-upload"></i>
+            </label>
+          }
         </div>
         {this.isUploading && (
           <div className="progress">

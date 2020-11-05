@@ -34,22 +34,17 @@ import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDri
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
+import { Operator } from "./Operatots";
 
 const OPERATORS = () =>
   [
-    { human: <>=</>, type: "in" },
-    { human: <>&ne;</>, type: "nin" },
-    { human: <>{T("contains", "filter_operator_contains")}</>, type: "contains" },
-    {
-      human: <>{T("not contains", "filter_operator_not_contains")}</>,
-      type: "ncontains",
-    },
-    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
-    {
-      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
-      type: "nnull",
-    },
-  ] as any[];
+    Operator.in,
+    Operator.notIn,
+    Operator.contains,
+    Operator.notContains,
+    Operator.isNull,
+    Operator.isNotNull
+  ] as Operator[];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -241,7 +236,7 @@ export class FilterSettingsLookup extends React.Component<{
 
 export class LookupFilterSetting implements IFilterSetting {
   type: string;
-  caption: string;
+  caption: JSX.Element;
   val1?: any;
   val2?: any;
   isComplete: boolean;
@@ -267,7 +262,7 @@ export class LookupFilterSetting implements IFilterSetting {
     return this.val2;
   }
 
-  constructor(type: string, caption: string) {
+  constructor(type: string, caption: JSX.Element) {
     this.type = type;
     this.caption = caption;
     this.isComplete = false;
@@ -396,8 +391,9 @@ export class FilterEditorData implements IDropdownEditorData {
   }
 
   @action.bound chooseNewValue(value: any) {
-    if (value !== null) {
+    if (value !== null && !this._value.includes(value)) {
       this._value = [...this._value, value];
+      console.log("Value: "+this._value)
       this.onChange(this._value);
     }
   }

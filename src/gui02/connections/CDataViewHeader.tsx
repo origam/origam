@@ -54,6 +54,8 @@ import {
   CtxDataViewHeaderExtension,
   DataViewHeaderExtension,
 } from "gui/Components/ScreenElements/DataView";
+import { FilterDropDown } from "gui02/connections/FilterDropDown";
+
 
 @observer
 export class CDataViewHeaderInner extends React.Component<{
@@ -150,7 +152,6 @@ export class CDataViewHeaderInner extends React.Component<{
 
     const $cont = scopeFor(dataView);
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
-
     const selectedRow = getSelectedRow(dataView);
 
     return (
@@ -167,7 +168,7 @@ export class CDataViewHeaderInner extends React.Component<{
                     {isMoveRowMenuVisible ? (
                       <DataViewHeaderGroup isHidden={false}>
                         <DataViewHeaderAction
-                          onClick={onMoveRowUpClickEvt}
+                          onMouseDown={onMoveRowUpClickEvt}
                           isDisabled={isRowMovingDisabled}
                         >
                           <Icon
@@ -176,7 +177,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           />
                         </DataViewHeaderAction>
                         <DataViewHeaderAction
-                          onClick={onMoveRowDownClickEvt}
+                          onMouseDown={onMoveRowDownClickEvt}
                           isDisabled={isRowMovingDisabled}
                         >
                           <Icon
@@ -192,7 +193,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           {isAddButton && (
                             <DataViewHeaderAction
                               className="isGreenHover"
-                              onClick={onCreateRowClickEvt}
+                              onMouseDown={onCreateRowClickEvt}
                             >
                               <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
                             </DataViewHeaderAction>
@@ -201,7 +202,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           {isDelButton && !!selectedRow && (
                             <DataViewHeaderAction
                               className="isRedHover"
-                              onClick={onDeleteRowClickEvt}
+                              onMouseDown={onDeleteRowClickEvt}
                             >
                               <Icon
                                 src="./icons/minus.svg"
@@ -213,7 +214,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           {isCopyButton && !!selectedRow && (
                             <DataViewHeaderAction
                               className="isOrangeHover"
-                              onClick={onCopyRowClickEvt}
+                              onMouseDown={onCopyRowClickEvt}
                             >
                               <Icon
                                 src="./icons/duplicate.svg"
@@ -233,25 +234,25 @@ export class CDataViewHeaderInner extends React.Component<{
                     <ResponsiveChild childKey={"cursor-move"} order={5}>
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
-                          <DataViewHeaderAction onClick={onFirstRowClickEvt}>
+                          <DataViewHeaderAction onMouseDown={onFirstRowClickEvt}>
                             <Icon
                               src="./icons/list-arrow-first.svg"
                               tooltip={T("First", "move_first_tool_tip")}
                             />
                           </DataViewHeaderAction>
-                          <DataViewHeaderAction onClick={onPrevRowClickEvt}>
+                          <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
                             <Icon
                               src="./icons/list-arrow-previous.svg"
                               tooltip={T("Previous", "move_prev_tool_tip")}
                             />
                           </DataViewHeaderAction>
-                          <DataViewHeaderAction onClick={onNextRowClickEvt}>
+                          <DataViewHeaderAction onMouseDown={onNextRowClickEvt}>
                             <Icon
                               src="./icons/list-arrow-next.svg"
                               tooltip={T("Next", "move_next_tool_tip")}
                             />
                           </DataViewHeaderAction>
-                          <DataViewHeaderAction onClick={onLastRowClickEvt}>
+                          <DataViewHeaderAction onMouseDown={onLastRowClickEvt}>
                             <Icon
                               src="./icons/list-arrow-last.svg"
                               tooltip={T("Last", "move_last_tool_tip")}
@@ -280,7 +281,7 @@ export class CDataViewHeaderInner extends React.Component<{
                       {({ refChild, isHidden }) => (
                         <DataViewHeaderGroup domRef={refChild} isHidden={isHidden}>
                           <DataViewHeaderAction
-                            onClick={onFilterButtonClickEvt}
+                            onMouseDown={onFilterButtonClickEvt}
                             isActive={isFilterSettingsVisible}
                             className={"test-filter-button"}
                           >
@@ -289,6 +290,8 @@ export class CDataViewHeaderInner extends React.Component<{
                               tooltip={T("Last", "filter_tool_tip")}
                             />
                           </DataViewHeaderAction>
+                          <FilterDropDown ctx={dataView} />
+                          
                         </DataViewHeaderGroup>
                       )}
                     </ResponsiveChild>
@@ -301,7 +304,7 @@ export class CDataViewHeaderInner extends React.Component<{
                   trigger={({ refTrigger, setDropped }) => (
                     <DataViewHeaderAction
                       refDom={refTrigger}
-                      onClick={() => setDropped(true)}
+                      onMouseDown={() => setDropped(true)}
                       isActive={false}
                     >
                       <Icon src="./icons/dot-menu.svg" tooltip={""} />

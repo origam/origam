@@ -29,6 +29,7 @@ import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurrentRowData";
 import { isReadOnly } from "../../selectors/RowState/isReadOnly";
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -37,17 +38,19 @@ export class TablePanelView implements ITablePanelView {
     Object.assign(this, data);
     this.columnConfigurationDialog.parent = this;
     this.filterConfiguration.parent = this;
+    this.filterGroupManager.parent = this;
     this.orderingConfiguration.parent = this;
     this.groupingConfiguration.parent = this;
   }
 
   columnConfigurationDialog: IColumnConfigurationDialog = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
+  filterGroupManager: FilterGroupManager = null as any;
   orderingConfiguration: IOrderingConfiguration = null as any;
   groupingConfiguration: IGroupingConfiguration = null as any;
   rowHeight: number = null as any;
 
-  rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
+  @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
     number,
     Map<number, ICellRectangle>
   >();
@@ -380,7 +383,19 @@ export class TablePanelView implements ITablePanelView {
   }
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
-    return this.rectangleMap.get(rowIndex)!.get(columnIndex)!;
+    const actualRowIndex = this.dataTable.addedRowPositionLocked
+      ? 0
+      : rowIndex
+
+    if(!this.rectangleMap.has(actualRowIndex)){
+      return {
+        columnLeft: 0,
+        columnWidth: 0,
+        rowTop: 0,
+        rowHeight: 0
+      }
+    }
+    return this.rectangleMap.get(actualRowIndex)!.get(columnIndex)!;
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {

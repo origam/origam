@@ -2,7 +2,7 @@ import xmlJs from "xml-js";
 import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import { IApi } from "./types/IApi";
+import {IApi, IUpdateData, IUIGridFilterCoreConfiguration} from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { IColumnSettings } from "./types/IColumnSettings";
@@ -346,8 +346,7 @@ export class OrigamAPI implements IApi {
   async updateObject(data: {
     SessionFormIdentifier: string;
     Entity: string;
-    Id: string;
-    Values: { [key: string]: any };
+    UpdateData: IUpdateData[];
   }): Promise<any> {
     return (await this.axiosInstance.post("/UIService/UpdateObject", data)).data;
   }
@@ -693,6 +692,36 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
         Entity: data.Entity,
         RowId: data.RowId,
       })
+    ).data;
+  }
+
+  async saveFilter(data: {
+    DataStructureEntityId: string;
+    PanelId: string;
+    Filter: IUIGridFilterCoreConfiguration
+    IsDefault: boolean;
+  }): Promise<string> {
+    return (
+      await this.axiosInstance.post(`/UIService/SaveFilter`, data)
+    ).data;
+  }
+
+
+  async deleteFilter(data: { filterId: string }): Promise<any[]> {
+    return (
+      await this.axiosInstance.post(`/UIService/DeleteFilter`, data)
+    ).data;
+  }
+
+  async resetDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string }): Promise<any[]> {
+    return (
+      await this.axiosInstance.post(`/UIService/ResetDefaultFilter`, data)
+    ).data;
+  }
+
+  async setDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string }): Promise<any[]> {
+    return (
+      await this.axiosInstance.post(`/UIService/SetDefaultFilter`, data)
     ).data;
   }
 

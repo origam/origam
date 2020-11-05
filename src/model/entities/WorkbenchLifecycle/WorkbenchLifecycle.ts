@@ -23,7 +23,7 @@ import { assignIIds } from "xmlInterpreters/xmlUtils";
 import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
-import { observable } from "mobx";
+import { observable, when } from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
@@ -32,6 +32,10 @@ import { IPortalSettings } from "../types/IPortalSettings";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
 import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getIsScreenOrAnyDataViewWorking} from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
+import { getFocusManager } from "model/selectors/DataView/getFocusManager";
+import { IDataView } from "../types/IDataView";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -80,7 +84,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
     if (event && !event.ctrlKey) {
       const existingItem = openedScreens.findLastExistingItem(id);
-      if (existingItem) {
+      if (existingItem &&
+          type !== IMainMenuItemType.FormRefWithSelection &&
+          type !== IMainMenuItemType.ReportReferenceMenuItem) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
         if (openedScreen.isSleeping) {
@@ -355,8 +361,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       yield* newFormScreen.start(initUIResult);
       const formScreen = newScreen.content.formScreen;
       if (formScreen?.autoWorkflowNext) {
-        onWorkflowNextClick(formScreen!)(undefined);
+        yield onWorkflowNextClick(formScreen!)(undefined);
       }
+      when(
+        () => !getIsScreenOrAnyDataViewWorking(formScreen),
+        () => {
+          formScreen.dataViews
+            .forEach((dataView: IDataView) => getFocusManager(dataView).canAutoFocus = true);
+        }
+      );
     } catch (e) {
       yield* handleError(this)(e);
       yield* this.closeForm(newScreen);

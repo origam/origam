@@ -44,8 +44,9 @@ import {
   IInfiniteScrollLoader,
   InfiniteScrollLoader, NullIScrollLoader
 } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
-import {VisibleRowsMonitor} from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
+import { ScrollRowContainer } from "model/entities/ScrollRowContainer";
+import { VisibleRowsMonitor } from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
+import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -53,7 +54,7 @@ class SavedViewState {
 
 export class DataView implements IDataView {
   $type_IDataView: 1 = 1;
-  focusManager: FocusManager = new FocusManager();
+  focusManager: FocusManager = new FocusManager(this);
 
   constructor(data: IDataViewData) {
     Object.assign(this, data);
@@ -83,7 +84,7 @@ export class DataView implements IDataView {
   }
 
   orderProperty: IProperty;
-
+  activateFormView: (()=> Generator) | undefined;
   gridDimensions: IGridDimensions;
 
   isReorderedOnClient: boolean = true;
@@ -108,6 +109,7 @@ export class DataView implements IDataView {
   isRootGrid = false;
   isRootEntity = false;
   isPreloaded = false;
+  newRecordView: string | undefined;
   requestDataAfterSelectionChange = false;
   confirmSelectionChange = false;
   properties: IProperty[] = [];
@@ -154,13 +156,27 @@ export class DataView implements IDataView {
     return this.selectedRowIdsMap.size > 0;
   }
 
+  setRecords(rows: any[][]): void {
+    this.dataTable.setRecords(rows);
+    this.selectAllCheckboxChecked = this.dataTable.rows
+      .every((row) => this.isSelected(this.dataTable.getRowId(row)));
+  }
+
+
   @computed get selectedRowIds() {
     return Array.from(this.selectedRowIdsMap.keys());
   }
 
-  isSelected(id: string): boolean {
-    if (!this.selectedRowIdsMap.has(id)) return false;
-    return this.selectedRowIdsMap.get(id)!;
+  isSelected(rowId: string): boolean {
+    const selectionMember = getSelectionMember(this);
+    if (!!selectionMember) {
+      const dataSourceField = getDataSourceFieldByName(this, selectionMember)!;
+      const updatedRow = this.dataTable.getRowById(rowId)!;
+      return this.dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
+    }
+    return !this.selectedRowIdsMap.has(rowId)
+      ? false
+      : this.selectedRowIdsMap.get(rowId)!;
   }
 
   @action.bound addSelectedRowId(id: string) {
@@ -411,6 +427,9 @@ export class DataView implements IDataView {
 
   @action.bound
   setSelectedRowId(id: string | undefined): void {
+    if(this.dataTable.addedRowPositionLocked){
+      return;
+    }
     this.selectedRowId = id;
     if(this.isBindingParent){
       this.childBindings.forEach(binding => binding.childDataView.dataTable.updateSortAndFilter());
@@ -441,13 +460,15 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound start() {
+  @action.bound
+  async start() {
     this.lifecycle.start();
     const serverSideGrouping = getDontRequestData(this)
     if(serverSideGrouping){
       this.serverSideGrouper.start();
     }
     getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
+    await this.dataTable.start();
     getFormScreenLifecycle(this).registerDisposer(
       reaction(
         () => ({
@@ -464,7 +485,7 @@ export class DataView implements IDataView {
         }
       )
     );
-    this.dataTable.start();
+    await this.dataTable.start();
   }
 
   @action.bound stop() {

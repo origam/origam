@@ -57,6 +57,7 @@ export interface IDataViewData {
   serverSideGrouper: ServerSideGrouper;
   clientSideGrouper: ClientSideGrouper;
   isFirst: boolean;
+  newRecordView: string | undefined;
 
   dataViewRowCursor: RowCursor;
   dataViewApi: DataViewAPI;
@@ -64,6 +65,7 @@ export interface IDataViewData {
 }
 
 export interface IDataView extends IDataViewData {
+  activateFormView: (()=> Generator) | undefined;
   $type_IDataView: 1;
 
   orderProperty: IProperty | undefined;
@@ -113,6 +115,7 @@ export interface IDataView extends IDataViewData {
   selectRow(row: any[]): void;
   setSelectedRowId(id: string | undefined): void;
   setEditing(state: boolean): void;
+  setRecords(rows: any[][]): void;
 
   saveViewState(): void;
   restoreViewState(): void;

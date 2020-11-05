@@ -46,7 +46,7 @@ export class TablePerspectiveDirector implements IIId {
         <Observer key={this.$iid}>
           {() => (
             <DataViewHeaderAction
-              onClick={flow(this.tablePerspective.handleToolbarBtnClick)}
+              onMouseDown={flow(this.tablePerspective.handleToolbarBtnClick)}
               isActive={this.tablePerspective.isActive}
             >
               <Icon src="./icons/table-view.svg" tooltip={T("Grid", "grid_tool_tip")} />
