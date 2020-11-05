@@ -133,7 +133,7 @@ export class DataView implements IDataView {
   dataViewData: DataViewData = null as any;
 
   @observable selectAllCheckboxChecked = false;
-  @observable selectedRowIdsMap: Map<string, boolean> = new Map();
+  @observable selectedRowIds: string[] = [];
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
   @observable isEditing: boolean = false;
@@ -149,22 +149,18 @@ export class DataView implements IDataView {
   }
 
   @bind hasSelectedRowId(id: string) {
-    return this.selectedRowIdsMap.has(id);
+    return this.selectedRowIds.includes(id);
   }
 
   @computed get isAnyRowIdSelected(): boolean {
-    return this.selectedRowIdsMap.size > 0;
+    return this.selectedRowIds.length > 0;
   }
 
   setRecords(rows: any[][]): void {
     this.dataTable.setRecords(rows);
-    this.selectAllCheckboxChecked = this.dataTable.rows
+    this.selectedRowIds.length = 0;
+    this.selectAllCheckboxChecked = this.dataTable.rows.length !== 0 && this.dataTable.rows
       .every((row) => this.isSelected(this.dataTable.getRowId(row)));
-  }
-
-
-  @computed get selectedRowIds() {
-    return Array.from(this.selectedRowIdsMap.keys());
   }
 
   isSelected(rowId: string): boolean {
@@ -174,17 +170,18 @@ export class DataView implements IDataView {
       const updatedRow = this.dataTable.getRowById(rowId)!;
       return this.dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
     }
-    return !this.selectedRowIdsMap.has(rowId)
-      ? false
-      : this.selectedRowIdsMap.get(rowId)!;
+    return this.selectedRowIds.includes(rowId);
   }
 
   @action.bound addSelectedRowId(id: string) {
-    this.selectedRowIdsMap.set(id, true);
+    this.selectedRowIds.push(id);
   }
 
   @action.bound removeSelectedRowId(id: string) {
-    this.selectedRowIdsMap.delete(id);
+    const index = this.selectedRowIds.indexOf(id);
+    if (index > -1) {
+      this.selectedRowIds.splice(index, 1);
+    }
   }
 
   @action.bound setSelectedState(rowId: string, newState: boolean){

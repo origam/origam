@@ -87,7 +87,6 @@ export interface IDataView extends IDataViewData {
   bindingParametersFromParent: { [key: string]: string };
   showSelectionCheckboxes: boolean;
   isReorderedOnClient: boolean;
-  selectedRowIdsMap: Map<string, boolean>;
   panelViewActions: IAction[];
   toolbarActions: IAction[];
   dialogActions: IAction[];
