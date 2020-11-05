@@ -351,7 +351,14 @@ export interface IApi {
 
   search(searchTerm: string): Promise<ISearchResult[]>;
 
-  setDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string; }): Promise<any>;
+  setDefaultFilter(data: {
+    SessionFormIdentifier: string;
+    PanelInstanceId: string;
+    DataStructureEntityId: string;
+    PanelId: string;
+    Filter: IUIGridFilterCoreConfiguration;
+    IsDefault: boolean;
+  }): Promise<any>;
 
   resetDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string; }): Promise<any>;
 
