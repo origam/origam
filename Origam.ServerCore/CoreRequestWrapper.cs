@@ -59,7 +59,7 @@ namespace Origam.ServerCore
         public Encoding ContentEncoding => throw new NotImplementedException();
         public long ContentLength => throw new NotImplementedException();
         public IDictionary BrowserCapabilities => throw new NotImplementedException();
-        public string UrlReferrerAbsolutePath => throw new NotImplementedException();
+        public string UrlReferrerAbsoluteUri => throw new NotImplementedException();
         public Parameters Params => throw new NotImplementedException();
         public PostedFile FilesGet(string name)
         {

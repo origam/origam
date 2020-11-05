@@ -81,7 +81,7 @@ namespace Origam.ServerCommon.Pages
         public long ContentLength => request.ContentLength ?? 0;
         public IDictionary BrowserCapabilities => new Dictionary<string,string>(); //
 
-        public string UrlReferrerAbsolutePath => headerDictionary[HeaderNames.Referer];
+        public string UrlReferrerAbsoluteUri => headerDictionary[HeaderNames.Referer];
         public Parameters Params { get; }
 
         public PostedFile FilesGet(string name)

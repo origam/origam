@@ -129,9 +129,9 @@ namespace Origam.ServerCommon.Pages
 
             if (!handled)
             {
-                if (request.UrlReferrer != null)
+                if (request.UrlReferrerAbsoluteUri != null)
                 {
-                    response.Redirect(request.UrlReferrerAbsolutePath);
+                    response.Redirect(request.UrlReferrerAbsoluteUri);
                 }
             }
         }
