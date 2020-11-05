@@ -19,7 +19,7 @@ import {
   IUIGridFilterCoreConfiguration,
   IUIGridFilterFieldConfiguration
 } from "model/entities/types/IApi";
-import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getApi } from "model/selectors/getApi";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {getDataView} from "model/selectors/DataView/getDataView";

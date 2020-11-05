@@ -65,7 +65,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
 import { IFilter } from "model/entities/types/IFilter";
 import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
-import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { addFilterGroups } from "./filterXml";
 import {FilterGroupManager} from "model/entities/FilterGroupManager";
 

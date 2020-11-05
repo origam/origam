@@ -1,6 +1,6 @@
 import { IFilter } from "model/entities/types/IFilter";
 import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
-import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
 import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";

@@ -14,7 +14,7 @@ import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
-import { Operator } from "./HeaderControls/Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {IFilterSetting} from "model/entities/types/IFilterSetting";
 
 export const FilterSettings: React.FC = observer((props) => {

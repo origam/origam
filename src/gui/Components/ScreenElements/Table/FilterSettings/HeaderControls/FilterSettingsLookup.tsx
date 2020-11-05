@@ -34,7 +34,7 @@ import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDri
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 
 const OPERATORS = [
     Operator.in,

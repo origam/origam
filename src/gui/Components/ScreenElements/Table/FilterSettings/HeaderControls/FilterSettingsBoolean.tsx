@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { action, observable } from "mobx";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
 const OPERATORS: Operator[] = [Operator.equals];

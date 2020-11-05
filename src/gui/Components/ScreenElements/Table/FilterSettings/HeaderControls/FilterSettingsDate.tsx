@@ -8,7 +8,7 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
 const OPERATORS = [

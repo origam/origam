@@ -8,7 +8,7 @@ import CS from "./FilterSettingsCommon.module.scss";
 import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
 import { FilterSetting } from "./FilterSetting";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
 const OPERATORS = [
