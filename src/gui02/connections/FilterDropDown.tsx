@@ -73,10 +73,10 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
         content={({ setDropped }) => (
           <Dropdown>
             <DropdownItem
-              isDisabled={true}
+              isDisabled={false}
               onClick={(event: any) => {
                 setDropped(false);
-                // onColumnConfigurationClickEvt(event);
+                this.filterManager.clearFiltersAndClose(event);
               }}
             >
               {T("Cancel and Hide Filter", "filter_menu_filter_off")}

@@ -78,6 +78,11 @@ export class FilterGroupManager {
   }
 
   @action.bound
+  clearFiltersAndClose(event: any) {
+    this.filterConfiguration.onFilterDisplayClick(event);
+  }
+
+  @action.bound
   async saveActiveFiltersAsNewFilterGroup(name: string, isGlobal: boolean) {
     const api = getApi(this.ctx);
     const filterGrouId = await api.saveFilter({
