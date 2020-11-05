@@ -68,9 +68,6 @@ import {
 } from "modules/DataView/Perspective/MapPerspective/stores/MapSetupStore";
 import { MapRootStore } from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
 import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
-import { IFilter } from "model/entities/types/IFilter";
-import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
-import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
 import { addFilterGroups } from "./filterXml";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 
