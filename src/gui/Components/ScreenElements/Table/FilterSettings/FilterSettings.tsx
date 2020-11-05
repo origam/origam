@@ -5,7 +5,7 @@ import { FilterSettingsString } from "./HeaderControls/FilterSettingsString";
 import { FilterSettingsDate } from "./HeaderControls/FilterSettingsDate";
 import { observer } from "mobx-react-lite";
 import { FilterSettingsNumber } from "./HeaderControls/FilterSettingsNumber";
-import { FilterSettingsLookup } from "./HeaderControls/FilterSettingsLookup";
+import {FilterSettingsLookup, LookupFilterSetting} from "./HeaderControls/FilterSettingsLookup";
 import { flow } from "mobx";
 import { MobXProviderContext } from "mobx-react";
 import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/TableView/onApplyFilterSetting";
@@ -13,49 +13,53 @@ import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSe
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
-import {getFilterConfiguration} from "model/selectors/DataView/getFilterConfiguration";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { Operator } from "./HeaderControls/Operatots";
+import {IFilterSetting} from "model/entities/types/IFilterSetting";
 
 export const FilterSettings: React.FC = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
   const dataTable = getDataTable(property);
   const dataView = getDataView(property);
-  const setting = getFilterSettingByProperty(property, property.id);
-  const handleApplyFilterSetting = onApplyFilterSetting(property);
+
+  function getSettings(defaultValue: IFilterSetting){
+    let setting = getFilterSettingByProperty(property, property.id);
+    if(!setting){
+      setting = defaultValue;
+      onApplyFilterSetting(property)(setting);
+    }
+    return setting;
+  }
 
   switch (property.column) {
     case "Text":
       return (
         <FilterSettingsString
-          onTriggerApplySetting={handleApplyFilterSetting}
-          setting={setting as any}
+          setting={getSettings(FilterSettingsString.defaultSettings)}
         />
       );
     case "CheckBox":
       return (
         <FilterSettingsBoolean
-          onTriggerApplySetting={handleApplyFilterSetting}
-          setting={setting as any}
+          setting={getSettings(FilterSettingsBoolean.defaultSettings)}
         />
       );
     case "Date":
       return (
         <FilterSettingsDate
-          onTriggerApplySetting={handleApplyFilterSetting}
-          setting={setting as any}
+          setting={getSettings(FilterSettingsDate.defaultSettings)}
         />
       );
     case "Number":
       return (
         <FilterSettingsNumber
-          onTriggerApplySetting={handleApplyFilterSetting}
-          setting={setting as any}
+          setting={getSettings(FilterSettingsNumber.defaultSettings)}
         />
       );
     case "ComboBox":
       return (
         <FilterSettingsLookup
-          setting={setting as any}
-          onTriggerApplySetting={handleApplyFilterSetting}
+          setting={getSettings(FilterSettingsLookup.defaultSettings)}
           property={property}
           lookup={property.lookup!}
           getOptions={flow(function* (searchTerm: string) {
@@ -65,7 +69,7 @@ export const FilterSettings: React.FC = observer((props) => {
             const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allIds);
 
             return Array.from(allIds.values())
-              .map(item => [ item, lookupMap.get(item)])
+              .map(id => [ id, lookupMap.get(id)])
               .filter(
                 (array) =>
                   array[1] &&

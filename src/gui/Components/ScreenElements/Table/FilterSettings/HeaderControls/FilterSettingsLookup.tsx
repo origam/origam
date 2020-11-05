@@ -36,25 +36,23 @@ import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { Operator } from "./Operatots";
 
-const OPERATORS = () =>
-  [
+const OPERATORS = [
     Operator.in,
     Operator.notIn,
     Operator.contains,
     Operator.notContains,
     Operator.isNull,
     Operator.isNotNull
-  ] as Operator[];
+  ];
 
 const OpCombo: React.FC<{
   setting: any;
-  onChange: (newSetting: any) => void;
 }> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS().find((op) => op.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS().map((op) => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
@@ -62,7 +60,6 @@ const OpCombo: React.FC<{
             props.setting.isComplete = op.type === "null" || op.type === "nnull";
             props.setting.val1 = undefined;
             props.setting.val2 = undefined;
-            props.onChange(props.setting);
           }}
         >
           {op.human}
@@ -132,24 +129,21 @@ export class OptionGrid extends React.Component<{
 @observer
 class OpEditors extends React.Component<{
   setting: IFilterSetting;
-  onChange: (newSetting: any) => void;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
 }> {
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
-    this.props.setting.val1 = items;
+    this.props.setting.val1 = [...items];
     this.props.setting.val2 = undefined;
     this.props.setting.isComplete = this.props.setting.val1 !== undefined && this.props.setting.val1.length > 0;
-    this.props.onChange(this.props.setting);
   }
 
   @action.bound handleTermChange(event: any) {
     this.props.setting.val1 = undefined;
     this.props.setting.val2 = event.target.value;
     this.props.setting.isComplete = !!this.props.setting.val2;
-    this.props.onChange(this.props.setting);
   }
 
   render() {
@@ -182,21 +176,19 @@ export class FilterSettingsLookup extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
-  setting: IFilterSetting | undefined;
-  onTriggerApplySetting(setting: any): void;
+  setting: IFilterSetting;
 }> {
-  @action.bound handleChange(newSetting: any) {
-    this.props.onTriggerApplySetting(newSetting);
+  static get defaultSettings(){
+    return new LookupFilterSetting(OPERATORS[0].type)
   }
 
   render() {
-    const setting = this.props.setting ?? new LookupFilterSetting(OPERATORS()[0].type);
+    const setting = this.props.setting;
     return (
       <>
-        <OpCombo setting={setting} onChange={this.handleChange} />
+        <OpCombo setting={setting} />
         <OpEditors
           setting={setting}
-          onChange={this.handleChange}
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
           property={this.props.property}
@@ -207,9 +199,9 @@ export class FilterSettingsLookup extends React.Component<{
 }
 
 export class LookupFilterSetting implements IFilterSetting {
-  type: string;
-  val1?: any; // used for "in" operator ... string[]
-  val2?: any; // used for "contains" operator ... string
+  @observable type: string;
+  @observable val1?: any; // used for "in" operator ... string[]
+  @observable val2?: any; // used for "contains" operator ... string
   isComplete: boolean;
   lookupId: string | undefined;
 

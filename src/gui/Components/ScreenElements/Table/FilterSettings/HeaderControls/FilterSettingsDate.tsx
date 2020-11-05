@@ -1,5 +1,5 @@
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import { action, observable } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import {
@@ -9,9 +9,9 @@ import {
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
 import { Operator } from "./Operatots";
+import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
-const OPERATORS = () =>
-  [
+const OPERATORS = [
     Operator.equals,
     Operator.notEquals,
     Operator.lessThanOrEquals,
@@ -22,7 +22,7 @@ const OPERATORS = () =>
     Operator.notBetween,
     Operator.isNull,
     Operator.isNotNull
-  ] as Operator[];
+  ];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -30,9 +30,9 @@ const OpCombo: React.FC<{
 }> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS().find((item) => item.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS().map((op) => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
@@ -52,7 +52,7 @@ const OpEditors: React.FC<{
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
   onKeyDown?: (event: any) => void;
-}> = (props) => {
+}> = observer((props) => {
   const { setting } = props;
   switch (setting.type) {
     case "eq":
@@ -66,9 +66,11 @@ const OpEditors: React.FC<{
           value={setting.val1 ?? ""}
           outputFormat="D.M.YYYY"
           onChange={(event, isoDay) => {
-            setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-            props.onChange && props.onChange(setting);}
-          }
+            runInAction(()=> {
+              setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+              props.onChange && props.onChange(setting)
+            })
+          }}
           onEditorBlur={props.onBlur}
           onKeyDown={props.onKeyDown}
         />
@@ -82,10 +84,12 @@ const OpEditors: React.FC<{
             value={setting.val1}
             outputFormat="D.M.YYYY"
             onChange={(event, isoDay) => {
-              setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-              props.onChange &&
-              props.onChange(setting);}
-            }
+              runInAction(()=> {
+                setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                props.onChange &&
+                props.onChange(setting)
+              })
+            }}
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
           />
@@ -93,10 +97,12 @@ const OpEditors: React.FC<{
             value={setting.val2}
             outputFormat="D.M.YYYY"
             onChange={(event, isoDay) => {
-              setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
-              props.onChange &&
-              props.onChange(setting);}
-            }
+              runInAction(()=> {
+                setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                props.onChange &&
+                props.onChange(setting)
+              })
+            }}
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
           />
@@ -107,54 +113,50 @@ const OpEditors: React.FC<{
     default:
       return null;
   }
-};
+});
 
 @observer
 export class FilterSettingsDate extends React.Component<{
-  onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  @observable.ref setting: FilterSetting = this.props.setting
-    ? this.props.setting
-    : new FilterSetting(OPERATORS()[0].type);
+
+  static get defaultSettings(){
+    return new FilterSetting(OPERATORS[0].type)
+  }
 
   @action.bound
   handleChange(newSetting: any) {
-    this.setting = newSetting;
     this.handleSettingChange();
   }
 
   handleSettingChange() {
-    switch (this.setting.type) {
+    const setting = this.props.setting;
+    switch (setting.type) {
       case "eq":
       case "neq":
       case "lt":
       case "gt":
       case "lte":
       case "gte":
-        this.setting.isComplete = this.setting.val1 !== undefined;
-        this.setting.val2 = undefined;
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        setting.isComplete = setting.val1 !== undefined;
+        setting.val2 = undefined;
         break;
       case "between":
       case "nbetween":
-        this.setting.isComplete =
-          this.setting.val1 !== undefined && this.setting.val2 !== undefined;
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        setting.isComplete = setting.val1 !== undefined && setting.val2 !== undefined;
         break;
       default:
-        this.setting.val1 = undefined;
-        this.setting.val2 = undefined;
-        this.setting.isComplete = this.setting.type === "null" || this.setting.type === "nnull";
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        setting.val1 = undefined;
+        setting.val2 = undefined;
+        setting.isComplete = setting.type === "null" || setting.type === "nnull";
     }
   }
 
   render() {
     return (
       <>
-        <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.setting} onChange={this.handleChange} />
+        <OpCombo setting={this.props.setting} onChange={this.handleChange} />
+        <OpEditors setting={this.props.setting} onChange={this.handleChange} />
       </>
     );
   }

@@ -16,7 +16,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   $type_IFilterConfigurationData: 1 = 1;
 
   implicitFilters: IImplicitFilter[];
-  @observable.ref activeFilters: IFilter[] = [];
+  @observable activeFilters: IFilter[] = [];
 
   getSettingByPropertyId(propertyId: string): IFilter | undefined {
     return this.activeFilters.find((item) => item.propertyId === propertyId);
@@ -393,25 +393,30 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.disposers.push(
       reaction(
         () => {
-          const data: any[] = toJS(this.activeFilters);
-          data.forEach((item) => delete item.setting.caption);
-          return data;
+          return this.activeFilters
+            .map(filter => [
+              filter.propertyId,
+              filter.setting.val1,
+              filter.setting.val2,
+              filter.setting.type
+            ])
         },
         () => {
           this.applyNewFiltering();
         },
+
         { equals: comparer.structural }
       )
     );
   }
 
   @action.bound applyNewFilteringImm = flow(function* (this: FilterConfiguration) {
-    //console.log("New filtering:", toJS(this.filters));
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (dataView.isReorderedOnClient) {
       if (this.activeFilters.length > 0) {
         const comboProps = this.activeFilters
+          .filter(filter => filter.setting.isComplete)
           .map((term) => getDataViewPropertyById(this, term.propertyId)!)
           .filter((prop) => prop.column === "ComboBox");
 
