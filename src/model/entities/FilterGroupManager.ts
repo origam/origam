@@ -103,6 +103,19 @@ export class FilterGroupManager {
   }
 
   @action.bound
+  async resetDefaultFilterGroup() {
+    if(!this._defaultFilter){
+      return;
+    }
+    const api = getApi(this.ctx);
+    await api.resetDefaultFilter({
+      SessionFormIdentifier: getSessionId(this.ctx),
+      PanelInstanceId: getDataView(this.ctx).modelInstanceId,
+    });
+    this._defaultFilter = undefined;
+  }
+
+  @action.bound
   cancelSelectedFilter() {
     this.filterConfiguration.clearFilters();
     this.selectedFilterGroupId = undefined;
