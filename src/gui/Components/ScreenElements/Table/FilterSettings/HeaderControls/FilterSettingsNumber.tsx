@@ -5,49 +5,41 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
-import { action, observable } from "mobx";
+import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
-import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
+import { LookupFilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
+import { Operator } from "./Operator";
 
-const OPERATORS = () =>
+const OPERATORS =
   [
-    { human: <>=</>, type: "eq" },
-    { human: <>&ne;</>, type: "neq" },
-    { human: <>&le;</>, type: "lte" },
-    { human: <>&ge;</>, type: "gte" },
-    { human: <>&#60;</>, type: "lt" },
-    { human: <>&#62;</>, type: "gt" },
-    { human: <>{T("between", "filter_operator_between")}</>, type: "between" },
-    {
-      human: <>{T("not between", "filter_operator_not_between")}</>,
-      type: "nbetween",
-    },
-    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
-    {
-      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
-      type: "nnull",
-    },
-  ] as any[];
+    Operator.equals,
+    Operator.notEquals,
+    Operator.lessThanOrEquals,
+    Operator.greaterThanOrEquals,
+    Operator.lessThan,
+    Operator.greaterThan,
+    Operator.between,
+    Operator.notBetween,
+    Operator.isNull,
+    Operator.isNotNull
+  ];
 
 const OpCombo: React.FC<{
   setting: any;
   onChange: (newSetting: any) => void;
-}> = (props) => {
+}> = observer((props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS().find((item) => item.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS().map((op) => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
-          onClick={() =>
-            props.onChange(
-              produce(props.setting, (draft: any) => {
-                draft.type = op.type;
-              })
-            )
+          onClick={() => {
+            props.setting.type = op.type;
+            props.onChange(props.setting);}
           }
         >
           {op.human}
@@ -55,13 +47,13 @@ const OpCombo: React.FC<{
       ))}
     </FilterSettingsComboBox>
   );
-};
+});
 
 const OpEditors: React.FC<{
   setting: any;
   onChange: (newSetting: any) => void;
   onBlur?: (event: any) => void;
-}> = (props) => {
+}> = observer((props) => {
   const { setting } = props;
   switch (setting.type) {
     case "eq":
@@ -75,13 +67,12 @@ const OpEditors: React.FC<{
           type="number"
           className={CS.input}
           value={setting.val1 ?? ""}
-          onChange={(event: any) =>
-            props.onChange(
-              produce(setting, (draft: any) => {
-                draft.val1 = event.target.value === "" ? undefined : event.target.value;
-              })
-            )
-          }
+          onChange={(event: any) => {
+            runInAction(() => {
+              setting.val1 = event.target.value === "" ? undefined : event.target.value;
+              props.onChange(setting);
+            })
+          }}
           onBlur={props.onBlur}
         />
       );
@@ -94,26 +85,24 @@ const OpEditors: React.FC<{
             type="number"
             className={CS.input}
             value={setting.val1}
-            onChange={(event: any) =>
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val1 = event.target.value === "" ? undefined : event.target.value;
-                })
-              )
-            }
+            onChange={(event: any) => {
+              runInAction(() => {
+                setting.val1 = event.target.value === "" ? undefined : event.target.value;
+                props.onChange(setting);
+              });
+            }}
             onBlur={props.onBlur}
           />
           <input
             type="number"
             className={CS.input}
             value={setting.val2}
-            onChange={(event: any) =>
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val2 = event.target.value === "" ? undefined : event.target.value;
-                })
-              )
-            }
+            onChange={(event: any) => {
+              runInAction(()=>{
+                setting.val2 = event.target.value === "" ? undefined : event.target.value;
+                props.onChange(setting);
+              });
+            }}
             onBlur={props.onBlur}
           />
         </>
@@ -123,41 +112,15 @@ const OpEditors: React.FC<{
     default:
       return null;
   }
-};
+});
 
 @observer
 export class FilterSettingsNumber extends React.Component<{
-  onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
 
-  componentDidMount() {
-    this.takeSettingFromProps();
-  }
-
-  componentDidUpdate() {
-    this.takeSettingFromProps();
-  }
-
-  @action.bound takeSettingFromProps() {
-    if (this.props.setting) {
-      this.setting = this.props.setting;
-      return;
-    }
-    if (!this.setting) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-      return;
-    }
-    if (
-      this.setting.val1 !== undefined ||
-      this.setting.val2 !== undefined ||
-      this.setting.type !== OPERATORS()[0].type ||
-      this.setting.isComplete !== false ||
-      this.setting.lookupId !== undefined
-    ) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-    }
+  static get defaultSettings(){
+    return new FilterSetting(OPERATORS[0].type)
   }
 
   @action.bound
@@ -167,43 +130,37 @@ export class FilterSettingsNumber extends React.Component<{
 
   @action.bound
   handleChange(newSetting: any) {
-    this.setting = newSetting;
     this.handleSettingChange();
   }
 
   private handleSettingChange() {
-    switch (this.setting.type) {
+    switch (this.props.setting.type) {
       case "eq":
       case "neq":
       case "lt":
       case "gt":
       case "lte":
       case "gte":
-        this.setting.isComplete = this.setting.val1 !== undefined;
-        this.setting.val2 = undefined;
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        this.props.setting.isComplete = this.props.setting.val1 !== undefined;
+        this.props.setting.val2 = undefined;
         break;
       case "between":
       case "nbetween":
-        this.setting.isComplete =
-          this.setting.val1 !== undefined && this.setting.val2 !== undefined;
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        this.props.setting.isComplete =
+          this.props.setting.val1 !== undefined && this.props.setting.val2 !== undefined;
         break;
       default:
-        this.setting.val1 = undefined;
-        this.setting.val2 = undefined;
-        this.setting.isComplete = this.setting.type === "null" || this.setting.type === "nnull";
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        this.props.setting.val1 = undefined;
+        this.props.setting.val2 = undefined;
+        this.props.setting.isComplete = this.props.setting.type === "null" || this.props.setting.type === "nnull";
     }
   }
 
   render() {
     return (
       <>
-        <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
-
-        {/*<input className={CS.input} />*/}
+        <OpCombo setting={this.props.setting} onChange={this.handleChange} />
+        <OpEditors setting={this.props.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
       </>
     );
   }

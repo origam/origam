@@ -1,18 +1,17 @@
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import { action, observable } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
-import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
-const OPERATORS = () =>
-  [
+const OPERATORS = [
     Operator.equals,
     Operator.notEquals,
     Operator.lessThanOrEquals,
@@ -23,7 +22,7 @@ const OPERATORS = () =>
     Operator.notBetween,
     Operator.isNull,
     Operator.isNotNull
-  ] as Operator[];
+  ];
 
 const OpCombo: React.FC<{
   setting: any;
@@ -31,17 +30,14 @@ const OpCombo: React.FC<{
 }> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS().find((item) => item.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS().map((op) => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
-          onClick={() =>
-            props.onChange(
-              produce(props.setting, (draft: any) => {
-                draft.type = op.type;
-              })
-            )
+          onClick={() => {
+            props.setting.type = op.type;
+            props.onChange(props.setting);}
           }
         >
           {op.human}
@@ -56,7 +52,7 @@ const OpEditors: React.FC<{
   onChange?: (newSetting: any) => void;
   onBlur?: (event: any) => void;
   onKeyDown?: (event: any) => void;
-}> = (props) => {
+}> = observer((props) => {
   const { setting } = props;
   switch (setting.type) {
     case "eq":
@@ -69,14 +65,12 @@ const OpEditors: React.FC<{
         <DateTimeEditor
           value={setting.val1 ?? ""}
           outputFormat="D.M.YYYY"
-          onChange={(event, isoDay) =>
-            props.onChange &&
-            props.onChange(
-              produce(setting, (draft: any) => {
-                draft.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-              })
-            )
-          }
+          onChange={(event, isoDay) => {
+            runInAction(()=> {
+              setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+              props.onChange && props.onChange(setting)
+            })
+          }}
           onEditorBlur={props.onBlur}
           onKeyDown={props.onKeyDown}
         />
@@ -89,28 +83,26 @@ const OpEditors: React.FC<{
           <DateTimeEditor
             value={setting.val1}
             outputFormat="D.M.YYYY"
-            onChange={(event, isoDay) =>
-              props.onChange &&
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
-                })
-              )
-            }
+            onChange={(event, isoDay) => {
+              runInAction(()=> {
+                setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                props.onChange &&
+                props.onChange(setting)
+              })
+            }}
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
           />
           <DateTimeEditor
             value={setting.val2}
             outputFormat="D.M.YYYY"
-            onChange={(event, isoDay) =>
-              props.onChange &&
-              props.onChange(
-                produce(setting, (draft: any) => {
-                  draft.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
-                })
-              )
-            }
+            onChange={(event, isoDay) => {
+              runInAction(()=> {
+                setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
+                props.onChange &&
+                props.onChange(setting)
+              })
+            }}
             onEditorBlur={props.onBlur}
             onKeyDown={props.onKeyDown}
           />
@@ -121,86 +113,50 @@ const OpEditors: React.FC<{
     default:
       return null;
   }
-};
+});
 
 @observer
 export class FilterSettingsDate extends React.Component<{
-  onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  constructor(props: any) {
-    super(props);
-    (this.setting as any).val1 = undefined;
-    (this.setting as any).val2 = undefined;
-  }
 
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
-
-  componentDidMount() {
-    this.takeSettingFromProps();
-  }
-
-  componentDidUpdate() {
-    this.takeSettingFromProps();
-  }
-
-  @action.bound takeSettingFromProps() {
-    if (this.props.setting) {
-      this.setting = this.props.setting;
-      return;
-    }
-    if (!this.setting) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-      return;
-    }
-    if (
-      this.setting.val1 !== undefined ||
-      this.setting.val2 !== undefined ||
-      this.setting.type !== OPERATORS()[0].type ||
-      this.setting.isComplete !== false ||
-      this.setting.lookupId !== undefined
-    ) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-    }
+  static get defaultSettings(){
+    return new FilterSetting(OPERATORS[0].type)
   }
 
   @action.bound
   handleChange(newSetting: any) {
-    this.setting = newSetting;
     this.handleSettingChange();
   }
 
   handleSettingChange() {
-    switch (this.setting.type) {
+    const setting = this.props.setting;
+    switch (setting.type) {
       case "eq":
       case "neq":
       case "lt":
       case "gt":
       case "lte":
       case "gte":
-        this.setting.isComplete = this.setting.val1 !== undefined;
-        this.setting.val2 = undefined;
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        setting.isComplete = setting.val1 !== undefined;
+        setting.val2 = undefined;
         break;
       case "between":
       case "nbetween":
-        this.setting.isComplete =
-          this.setting.val1 !== undefined && this.setting.val2 !== undefined;
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        setting.isComplete = setting.val1 !== undefined && setting.val2 !== undefined;
         break;
       default:
-        this.setting.val1 = undefined;
-        this.setting.val2 = undefined;
-        this.setting.isComplete = this.setting.type === "null" || this.setting.type === "nnull";
-        this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+        setting.val1 = undefined;
+        setting.val2 = undefined;
+        setting.isComplete = setting.type === "null" || setting.type === "nnull";
     }
   }
 
   render() {
     return (
       <>
-        <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.setting} onChange={this.handleChange} />
+        <OpCombo setting={this.props.setting} onChange={this.handleChange} />
+        <OpEditors setting={this.props.setting} onChange={this.handleChange} />
       </>
     );
   }

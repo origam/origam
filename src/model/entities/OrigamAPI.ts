@@ -719,7 +719,14 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     ).data;
   }
 
-  async setDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string }): Promise<any[]> {
+  async setDefaultFilter(data: {
+    SessionFormIdentifier: string;
+    PanelInstanceId: string;
+    DataStructureEntityId: string;
+    PanelId: string;
+    Filter: IUIGridFilterCoreConfiguration;
+    IsDefault: boolean;
+  }): Promise<any[]> {
     return (
       await this.axiosInstance.post(`/UIService/SetDefaultFilter`, data)
     ).data;

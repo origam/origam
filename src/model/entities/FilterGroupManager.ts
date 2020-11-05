@@ -6,7 +6,7 @@ import {
   IUIGridFilterCoreConfiguration,
   IUIGridFilterFieldConfiguration,
 } from "model/entities/types/IApi";
-import {filterTypeToNumber} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import {filterTypeToNumber} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {getApi} from "model/selectors/getApi";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {getDataView} from "model/selectors/DataView/getDataView";
@@ -28,6 +28,15 @@ export class FilterGroupManager {
 
   constructor(private filterConfiguration: IFilterConfiguration) {
     this.ctx = filterConfiguration;
+    filterConfiguration.registerFileriringOnOffHandler(filteringOn => {
+      if(!filteringOn){
+        this.selectedFilterGroupId = undefined;
+      }
+    });
+  }
+
+  get filtersHidden(){
+    return !this.filterConfiguration.isFilterControlsDisplayed;
   }
 
   get defaultFilter(): IFilterGroup | undefined {
@@ -43,6 +52,11 @@ export class FilterGroupManager {
     return this.filterConfiguration.activeFilters;
   }
 
+  get nofilterActive(){
+    return this.activeFilters.length === 0 ||
+      this.activeFilters.every(filter => !filter.setting.isComplete)
+  }
+
   @action.bound
   setFilterGroup(filterGroup: IFilterGroup | undefined) {
     this.filterConfiguration.clearFilters();
@@ -52,29 +66,38 @@ export class FilterGroupManager {
     this.selectedFilterGroupId = filterGroup?.id;
   }
 
-  filtreToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
+  filterToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
     return {
       operator: filterTypeToNumber(filter.setting.type),
       property: filter.propertyId,
-      value1: filter.setting.val1,
-      value2: filter.setting.val2,
+      value1: filter.setting.val1ServerForm,
+      value2: filter.setting.val2ServerForm,
     };
+  }
+
+  getFilterGroupServerVerion(name: string, isGlobal: boolean){
+    return {
+      details: this.activeFilters
+        .filter(filter=> filter.setting.isComplete)
+        .map((filter) => this.filterToServerVersion(filter)),
+      id: undefined,
+      isGlobal: isGlobal,
+      name: name,
+    }
+  }
+
+  @action.bound
+  clearFiltersAndClose(event: any) {
+    this.filterConfiguration.onFilterDisplayClick(event);
   }
 
   @action.bound
   async saveActiveFiltersAsNewFilterGroup(name: string, isGlobal: boolean) {
-    const filterGroupServerVerion: IUIGridFilterCoreConfiguration = {
-      details: this.activeFilters.map((filter) => this.filtreToServerVersion(filter)),
-      id: undefined,
-      isGlobal: isGlobal,
-      name: name,
-    };
-
     const api = getApi(this.ctx);
     const filterGrouId = await api.saveFilter({
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       PanelId: getDataView(this.ctx).modelId,
-      Filter: filterGroupServerVerion,
+      Filter: this.getFilterGroupServerVerion(name, isGlobal),
       IsDefault: false,
     });
     const filterGroup = {
@@ -103,6 +126,19 @@ export class FilterGroupManager {
   }
 
   @action.bound
+  async resetDefaultFilterGroup() {
+    if(!this._defaultFilter){
+      return;
+    }
+    const api = getApi(this.ctx);
+    await api.resetDefaultFilter({
+      SessionFormIdentifier: getSessionId(this.ctx),
+      PanelInstanceId: getDataView(this.ctx).modelInstanceId,
+    });
+    this._defaultFilter = undefined;
+  }
+
+  @action.bound
   cancelSelectedFilter() {
     this.filterConfiguration.clearFilters();
     this.selectedFilterGroupId = undefined;
@@ -114,6 +150,10 @@ export class FilterGroupManager {
     await api.setDefaultFilter({
       SessionFormIdentifier: getSessionId(this.ctx),
       PanelInstanceId: getDataView(this.ctx).modelInstanceId,
+      DataStructureEntityId:  getDataStructureEntityId(this.ctx),
+      PanelId: getDataView(this.ctx).modelId,
+      Filter: this.getFilterGroupServerVerion("DEFAULT", false),
+      IsDefault: true
     });
   }
 

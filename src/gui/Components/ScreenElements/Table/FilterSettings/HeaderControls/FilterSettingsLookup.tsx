@@ -34,38 +34,32 @@ import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDri
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
 import { ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 
-const OPERATORS = () =>
-  [
+const OPERATORS = [
     Operator.in,
     Operator.notIn,
     Operator.contains,
     Operator.notContains,
     Operator.isNull,
     Operator.isNotNull
-  ] as Operator[];
+  ];
 
 const OpCombo: React.FC<{
   setting: any;
-  onChange: (newSetting: any) => void;
 }> = (props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS().find((op) => op.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS().map((op) => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() => {
-            props.onChange(
-              produce(props.setting, (draft: IFilterSetting) => {
-                draft.type = op.type;
-                draft.isComplete = op.type === "null" || op.type === "nnull";
-                draft.val1 = undefined;
-                draft.val2 = undefined;
-              })
-            );
+            props.setting.type = op.type;
+            props.setting.isComplete = op.type === "null" || op.type === "nnull";
+            props.setting.val1 = undefined;
+            props.setting.val2 = undefined;
           }}
         >
           {op.human}
@@ -134,39 +128,22 @@ export class OptionGrid extends React.Component<{
 
 @observer
 class OpEditors extends React.Component<{
-  setting: IFilterSetting | undefined;
-  onChange: (newSetting: any) => void;
-  onChangeDebounced: (newSetting: any) => void;
+  setting: IFilterSetting;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
 }> {
-  @observable selectedItems: Array<Array<any>> = [];
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
-    this.selectedItems = items;
-    this.props.onChange(
-      produce(this.props.setting, (draft: IFilterSetting) => {
-        draft.val1 = toJS(
-          items.map((item) => {
-            return { value: item };
-          }),
-          { recurseEverything: true }
-        );
-        draft.val2 = undefined;
-        draft.isComplete = draft.val1 !== undefined && draft.val1.length > 0;
-      })
-    );
+    this.props.setting.val1 = [...items];
+    this.props.setting.val2 = undefined;
+    this.props.setting.isComplete = this.props.setting.val1 !== undefined && this.props.setting.val1.length > 0;
   }
 
   @action.bound handleTermChange(event: any) {
-    this.props.onChangeDebounced(
-      produce(this.props.setting, (draft: IFilterSetting) => {
-        draft.val1 = undefined;
-        draft.val2 = event.target.value;
-        draft.isComplete = !!draft.val2;
-      })
-    );
+    this.props.setting.val1 = undefined;
+    this.props.setting.val2 = event.target.value;
+    this.props.setting.isComplete = !!this.props.setting.val2;
   }
 
   render() {
@@ -180,7 +157,7 @@ class OpEditors extends React.Component<{
             property={this.props.property}
             getOptions={this.props.getOptions}
             onChange={this.handleSelectedItemsChange}
-            values={this.selectedItems}
+            values={this.props.setting.val1 ?? []}
           />
         );
       case "contains":
@@ -199,32 +176,19 @@ export class FilterSettingsLookup extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
-  setting: IFilterSetting | undefined;
-  onTriggerApplySetting?(setting: any): void;
+  setting: IFilterSetting;
 }> {
-  @observable.ref setting: FilterSetting = new LookupFilterSetting(
-    OPERATORS()[0].type,
-    OPERATORS()[0].human
-  );
-
-  @action.bound handleChange(newSetting: any) {
-    newSetting.lookupId =
-      newSetting.type === "contains" || newSetting.type === "ncontains"
-        ? this.props.lookup.lookupId
-        : undefined;
-    this.setting = newSetting;
-
-    this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+  static get defaultSettings(){
+    return new LookupFilterSetting(OPERATORS[0].type)
   }
 
   render() {
+    const setting = this.props.setting;
     return (
       <>
-        <OpCombo setting={this.setting} onChange={this.handleChange} />
+        <OpCombo setting={setting} />
         <OpEditors
-          setting={this.setting}
-          onChange={this.handleChange}
-          onChangeDebounced={this.handleChange}
+          setting={setting}
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
           property={this.props.property}
@@ -235,10 +199,9 @@ export class FilterSettingsLookup extends React.Component<{
 }
 
 export class LookupFilterSetting implements IFilterSetting {
-  type: string;
-  caption: JSX.Element;
-  val1?: any;
-  val2?: any;
+  @observable type: string;
+  @observable val1?: any; // used for "in" operator ... string[]
+  @observable val2?: any; // used for "contains" operator ... string
   isComplete: boolean;
   lookupId: string | undefined;
 
@@ -249,10 +212,10 @@ export class LookupFilterSetting implements IFilterSetting {
     switch (this.type) {
       case "contain":
       case "ncontain":
-        return this.val1.map((item: any) => item.content);
+        return this.val2;
       case "in":
       case "nin":
-        return this.val1.map((item: any) => item.value);
+        return this.val1;
       default:
         return undefined;
     }
@@ -262,10 +225,22 @@ export class LookupFilterSetting implements IFilterSetting {
     return this.val2;
   }
 
-  constructor(type: string, caption: JSX.Element) {
+
+  get val1ServerForm(){
+    return this.val1 ? this.val1.join(",") : this.val1;
+  }
+
+  get val2ServerForm(){
+    return this.val2;
+  }
+
+  constructor(type: string, isComplete=false, val1?:string, val2?: any) {
     this.type = type;
-    this.caption = caption;
-    this.isComplete = false;
+    this.isComplete = isComplete;
+    if(val1 !== undefined && val1 !== null){
+      this.val1 = [... new Set(val1.split(","))];
+    }
+    this.val2 = val2 ?? undefined;
   }
 }
 
@@ -393,13 +368,19 @@ export class FilterEditorData implements IDropdownEditorData {
   @action.bound chooseNewValue(value: any) {
     if (value !== null && !this._value.includes(value)) {
       this._value = [...this._value, value];
-      console.log("Value: "+this._value)
       this.onChange(this._value);
     }
   }
 
   get idsInEditor() {
     return this._value as string[];
+  }
+
+  remove(valueToRemove: any): void {
+    const index = this._value.indexOf(valueToRemove)
+    if(index > -1){
+      this._value.splice(index, 1);
+    }
   }
 }
 

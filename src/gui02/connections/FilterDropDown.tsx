@@ -19,7 +19,7 @@ import {
   IUIGridFilterCoreConfiguration,
   IUIGridFilterFieldConfiguration
 } from "model/entities/types/IApi";
-import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
+import { filterTypeToNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getApi } from "model/selectors/getApi";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {getDataView} from "model/selectors/DataView/getDataView";
@@ -73,35 +73,34 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
         content={({ setDropped }) => (
           <Dropdown>
             <DropdownItem
-              isDisabled={true}
+              isDisabled={this.filterManager.filtersHidden}
               onClick={(event: any) => {
                 setDropped(false);
-                // onColumnConfigurationClickEvt(event);
+                this.filterManager.clearFiltersAndClose(event);
               }}
             >
               {T("Cancel and Hide Filter", "filter_menu_filter_off")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={true}
-              onClick={(event: any) => {
-                setDropped(false);
-                // onColumnConfigurationClickEvt(event);
-              }}
-            >
-              {T("Remember The Current Filter", "filter_menu_set_default_filter")}
-            </DropdownItem>
-            <DropdownItem
-              isDisabled={true}
-              // isDisabled={this.filterManager.activeFilters.length === 0}
+              isDisabled={this.filterManager.nofilterActive}
               onClick={(event: any) => {
                 setDropped(false);
                 this.filterManager.setSelectedFilterGroupAsDefault();
               }}
             >
+              {T("Remember The Current Filter", "filter_menu_set_default_filter")}
+            </DropdownItem>
+            <DropdownItem
+              isDisabled={!this.filterManager.defaultFilter || this.filterManager.filtersHidden}
+              onClick={(event: any) => {
+                setDropped(false);
+                this.filterManager.resetDefaultFilterGroup();
+              }}
+            >
               {T("Cancel Default Filter", "filter_menu_cancel_default_filter")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={false}
+              isDisabled={this.filterManager.nofilterActive}
               onClick={(event: any) => {
                 setDropped(false);
                 this.onSaveFilterClick();

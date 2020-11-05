@@ -10,6 +10,7 @@ export interface IDropdownEditorData {
   text: string;
   isResolving: boolean;
   chooseNewValue(value: any): void;
+  remove(value: any): void;
 }
 
 @bind
@@ -43,4 +44,8 @@ export class DropdownEditorData implements IDropdownEditorData {
   }
 
   idsInEditor: string[] = [];
+
+  remove(value: any): void {
+    // not needed in DropdownEditorData
+  }
 }

@@ -4,7 +4,6 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
-import produce from "immer";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
 
@@ -13,11 +12,15 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.implicitFilters = implicitFilters;
     this.start();
   }
-
+  filteringOnOffHandlers: ((filteringOn: boolean)=> void)[] = [];
   $type_IFilterConfigurationData: 1 = 1;
 
   implicitFilters: IImplicitFilter[];
-  @observable.ref activeFilters: IFilter[] = [];
+  @observable activeFilters: IFilter[] = [];
+
+  registerFileriringOnOffHandler(handler: (filteringOn: boolean)=> void){
+    this.filteringOnOffHandlers.push(handler);
+  }
 
   getSettingByPropertyId(propertyId: string): IFilter | undefined {
     return this.activeFilters.find((item) => item.propertyId === propertyId);
@@ -32,13 +35,13 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   setFilter(term: IFilter): void {
-    this.activeFilters = produce(this.activeFilters, (draft: any) => {
-      const oldIdx = draft.findIndex((item: any) => item.propertyId === term.propertyId);
-      if (oldIdx > -1) {
-        draft.splice(oldIdx, 1);
-      }
-      draft.push(term);
-    });
+    const existingIndex = this.activeFilters
+      .findIndex(filter => filter.propertyId === term.propertyId);
+    if(existingIndex > -1){
+      this.activeFilters.splice(existingIndex, 1);
+    }
+    this.activeFilters.push(term);
+    this.activeFilters = [... this.activeFilters];
   }
 
   @action.bound
@@ -55,6 +58,9 @@ export class FilterConfiguration implements IFilterConfiguration {
       // TODO: Wait for data loaded?
     } else {
       this.clearFilters();
+    }
+    for (let filteringOnOffHandler of this.filteringOnOffHandlers) {
+      filteringOnOffHandler(this.isFilterControlsDisplayed);
     }
   }
 
@@ -275,7 +281,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             const val1 = term.setting.val1 || [];
             if (val1.length === 0) return true;
             if (txt1 === null) return false;
-            if (val1.findIndex((item: any) => item.value === txt1) > -1) {
+            if (val1.findIndex((item: any) => item === txt1) > -1) {
               return true;
             }
             return false;
@@ -286,7 +292,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             const val1 = term.setting.val1 || [];
             if (val1.length === 0) return true;
             if (txt1 === null) return false;
-            if (val1.findIndex((item: any) => item.value === txt1) > -1) {
+            if (val1.findIndex((item: any) => item === txt1) > -1) {
               return false;
             }
             return true;
@@ -394,25 +400,30 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.disposers.push(
       reaction(
         () => {
-          const data: any[] = toJS(this.activeFilters);
-          data.forEach((item) => delete item.setting.caption);
-          return data;
+          return this.activeFilters
+            .map(filter => [
+              filter.propertyId,
+              filter.setting.val1,
+              filter.setting.val2,
+              filter.setting.type
+            ])
         },
         () => {
           this.applyNewFiltering();
         },
+
         { equals: comparer.structural }
       )
     );
   }
 
   @action.bound applyNewFilteringImm = flow(function* (this: FilterConfiguration) {
-    //console.log("New filtering:", toJS(this.filters));
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
     if (dataView.isReorderedOnClient) {
       if (this.activeFilters.length > 0) {
         const comboProps = this.activeFilters
+          .filter(filter => filter.setting.isComplete)
           .map((term) => getDataViewPropertyById(this, term.propertyId)!)
           .filter((prop) => prop.column === "ComboBox");
 

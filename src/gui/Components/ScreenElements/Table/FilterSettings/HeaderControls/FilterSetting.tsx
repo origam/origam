@@ -1,9 +1,11 @@
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 
+import { observable } from "mobx";
+
 export class FilterSetting implements IFilterSetting {
-  type: string;
-  val1?: any;
-  val2?: any;
+  @observable type: string;
+  @observable val1?: any;
+  @observable val2?: any;
   isComplete: boolean;
   lookupId: string | undefined;
 
@@ -12,6 +14,14 @@ export class FilterSetting implements IFilterSetting {
   }
 
   get filterValue2() {
+    return this.val2;
+  }
+
+  get val1ServerForm(){
+    return this.val1;
+  }
+
+  get val2ServerForm(){
     return this.val2;
   }
 

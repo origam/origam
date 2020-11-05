@@ -4,63 +4,34 @@ import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSet
 import { Checkbox } from "../../../../Checkbox";
 import { observer } from "mobx-react";
 import { action, observable } from "mobx";
-import produce from "immer";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
 import { FilterSetting } from "./FilterSetting";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
 const OPERATORS: Operator[] = [Operator.equals];
 
 @observer
 export class FilterSettingsBoolean extends React.Component<{
-  onTriggerApplySetting?: (setting: any) => void;
   setting?: any;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS[0].type);
 
-  componentDidMount() {
-    this.takeSettingFromProps();
-  }
-
-  componentDidUpdate() {
-    this.takeSettingFromProps();
-  }
-
-  @action.bound takeSettingFromProps() {
-    if (this.props.setting) {
-      this.setting = this.props.setting;
-      return;
-    }
-    if (!this.setting) {
-      this.setting = new FilterSetting(OPERATORS[0].type);
-      return;
-    }
-    if (
-      this.setting.val1 !== undefined ||
-      this.setting.val2 !== undefined ||
-      this.setting.type !== OPERATORS[0].type ||
-      this.setting.isComplete !== false ||
-      this.setting.lookupId !== undefined
-    ) {
-      this.setting = new FilterSetting(OPERATORS[0].type);
-    }
+  static get defaultSettings(){
+    return new FilterSetting(OPERATORS[0].type)
   }
 
   @action.bound handleValueClick(event: any) {
-    this.setting = produce(this.setting, (draft: IFilterSetting) => {
-      if (draft.val1 === undefined) {
-        draft.val1 = false;
-        draft.isComplete = true;
-      } else if (draft.val1 === false) {
-        draft.val1 = true;
-        draft.isComplete = true;
-      } else if (draft.val1 === true) {
-        draft.val1 = undefined;
-        draft.isComplete = false;
-      }
-    });
-
-    this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+      const setting = this.props.setting;
+      if (setting .val1 === undefined) {
+        setting .val1 = false;
+        setting .isComplete = true;
+      } else if (setting .val1 === false) {
+        setting .val1 = true;
+        setting .isComplete = true;
+      } else if (setting .val1 === true) {
+        setting .val1 = undefined;
+        setting .isComplete = false;
+    };
   }
 
   render() {
@@ -70,8 +41,8 @@ export class FilterSettingsBoolean extends React.Component<{
           <FilterSettingsComboBoxItem>=</FilterSettingsComboBoxItem>
         </FilterSettingsComboBox>
         <Checkbox
-          indeterminate={this.setting.val1 === undefined}
-          checked={this.setting.val1}
+          indeterminate={this.props.setting.val1 === undefined}
+          checked={this.props.setting.val1}
           onClick={this.handleValueClick}
         />
       </>

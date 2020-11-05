@@ -5,14 +5,13 @@ import {
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 
 import CS from "./FilterSettingsCommon.module.scss";
-import { action, observable } from "mobx";
+import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
-import produce from "immer";
 import { FilterSetting } from "./FilterSetting";
-import { Operator } from "./Operatots";
+import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
-const OPERATORS = () =>
-  [
+const OPERATORS = [
     Operator.contains,
     Operator.notContains,
     Operator.startsWith,
@@ -23,39 +22,37 @@ const OPERATORS = () =>
     Operator.notEquals,
     Operator.isNull,
     Operator.isNotNull,
-  ] as Operator[];
+  ] ;
 
 const OpCombo: React.FC<{
   setting: any;
-  onChange: (newSetting: any) => void;
-}> = (props) => {
+  onChange: () => void;
+}> = observer((props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS().find((op) => op.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).human}</>}
     >
-      {OPERATORS().map((op) => (
+      {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
           key={op.type}
           onClick={() =>
-            props.onChange(
-              produce(props.setting, (draft: any) => {
-                draft.type = op.type;
-              })
-            )
-          }
+            runInAction(() => {
+              props.setting.type = op.type;
+              props.onChange()}
+            )}
         >
           {op.human}
         </FilterSettingsComboBoxItem>
       ))}
     </FilterSettingsComboBox>
   );
-};
+});
 
 const OpEditors: React.FC<{
   setting: FilterSetting;
-  onChange?: (newSetting: any) => void;
-  onBlur?: (event: any) => void;
-}> = (props) => {
+  onChange: () => void;
+}> = observer((props) => {
+
   const { setting } = props;
   switch (setting.type) {
     case "eq":
@@ -70,15 +67,13 @@ const OpEditors: React.FC<{
         <input
           className={CS.input}
           value={setting.val1 ?? ""}
-          onChange={(event: any) =>
-            props.onChange &&
-            props.onChange(
-              produce(setting, (draft: any) => {
-                draft.val1 = event.target.value === "" ? undefined : event.target.value;
+          onChange={(event: any) =>{
+            runInAction(()=> {
+                setting.val1 = event.target.value === "" ? undefined : event.target.value;
+                props.onChange()
               })
-            )
-          }
-          onBlur={props.onBlur}
+            }}
+          onBlur={props.onChange}
         />
       );
     case "null":
@@ -86,69 +81,30 @@ const OpEditors: React.FC<{
     default:
       return null;
   }
-};
+});
 
 @observer
 export class FilterSettingsString extends React.Component<{
   setting?: any;
-  onTriggerApplySetting?: (setting: any) => void;
 }> {
-  @observable.ref setting: FilterSetting = new FilterSetting(OPERATORS()[0].type);
-
-  componentDidMount() {
-    this.takeSettingFromProps();
-  }
-
-  componentDidUpdate() {
-    this.takeSettingFromProps();
-  }
-
-  @action.bound takeSettingFromProps() {
-    if (this.props.setting) {
-      this.setting = this.props.setting;
-      return;
-    }
-    if (!this.setting) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-      return;
-    }
-    if (
-      this.setting.val1 !== undefined ||
-      this.setting.val2 !== undefined ||
-      this.setting.type !== OPERATORS()[0].type ||
-      this.setting.isComplete !== false ||
-      this.setting.lookupId !== undefined
-    ) {
-      this.setting = new FilterSetting(OPERATORS()[0].type);
-    }
+  
+  static get defaultSettings(){
+    return new FilterSetting(OPERATORS[0].type)
   }
 
   @action.bound
-  handleBlur() {
-    this.handleSettingChange();
-  }
-
-  @action.bound
-  handleChange(newSetting: any) {
-    this.setting = newSetting;
-    this.handleSettingChange();
-  }
-
-  @action.bound
-  handleSettingChange() {
-    this.setting = produce(this.setting, (draft) => {
-      draft.isComplete =
-        draft.type === "null" || draft.type === "nnull" || draft.val1 !== undefined;
-      draft.val2 = undefined;
-    });
-    this.props.onTriggerApplySetting && this.props.onTriggerApplySetting(this.setting);
+  handleChange() {
+    const setting = this.props.setting;
+    setting.isComplete =
+    setting.type === "null" || setting.type === "nnull" || setting.val1 !== undefined;
+    setting.val2 = undefined;
   }
 
   render() {
     return (
       <>
-        <OpCombo setting={this.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
+        <OpCombo setting={this.props.setting} onChange={this.handleChange} />
+        <OpEditors setting={this.props.setting} onChange={this.handleChange}/>
       </>
     );
   }
