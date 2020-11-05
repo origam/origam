@@ -23,6 +23,7 @@ import {SCROLL_ROW_CHUNK} from "../../../gui/Workbench/ScreenArea/TableView/Infi
 import {getColumnNamesToLoad} from "../../selectors/DataView/getColumnNamesToLoad";
 import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
 import {FlowBusyMonitor} from "../../../utils/flow";
+import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -142,6 +143,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         this.changeMasterRowCanceller
       );
       yield* processCRUDResult(this, crudResult);
+      getFormScreen(this).clearDataCache();
     } catch (error) {
       if (Axios.isCancel(error)) {
         return;
@@ -212,12 +214,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
         const masterRowId = getMasterRowId(this);
         data = !parentRowId || !masterRowId
           ? []
-          : yield api.getData({
-              SessionFormIdentifier: getSessionId(this),
-              ChildEntity: getEntity(this),
-              ParentRecordId: parentRowId,
-              RootRecordId: masterRowId
-            });
+          : yield getFormScreen(this).getData(getEntity(this), parentRowId, masterRowId);
       }
       dataView.setRecords(data);
       dataView.selectFirstRow();

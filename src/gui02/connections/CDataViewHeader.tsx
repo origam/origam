@@ -29,7 +29,7 @@ import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowInde
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
-import React from "react";
+import React, { createContext, useContext } from "react";
 import {
   CtxResponsiveToolbar,
   ResponsiveBlock,
@@ -45,12 +45,23 @@ import { getIsRowMovingDisabled } from "model/actions-ui/DataView/getIsRowMoving
 import { onMoveRowDownClick } from "model/actions-ui/DataView/onMoveRowDownClick";
 import { getIsisMoveRowMenuVisible } from "model/selectors/DataView/getIsisMoveRowMenuVisible";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { IAction, IActionType } from "model/entities/types/IAction";
+import { IAction, IActionMode, IActionPlacement, IActionType } from "model/entities/types/IAction";
+import { ScreenToolbarAction } from "gui02/components/ScreenToolbar/ScreenToolbarAction";
+import { Action } from "model/entities/Action";
+import { IActionParameter } from "model/entities/types/IActionParameter";
 import { DataViewHeaderDropDownItem } from "gui02/components/DataViewHeader/DataViewHeaderDropDownItem";
+import {
+  CtxDataViewHeaderExtension,
+  DataViewHeaderExtension,
+} from "gui/Components/ScreenElements/DataView";
 import { FilterDropDown } from "gui02/connections/FilterDropDown";
 
+
 @observer
-export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
+export class CDataViewHeaderInner extends React.Component<{
+  isVisible: boolean;
+  extension: DataViewHeaderExtension;
+}> {
   static contextType = MobXProviderContext;
 
   get dataView() {
@@ -64,49 +75,49 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
     this.setState({ ...this.state, hiddenActionIds: ids });
   });
 
-  renderActions(actions: IAction[]){
+  renderActions(actions: IAction[]) {
     return actions
       .filter((action) => !action.groupId)
       .map((action, idx) => this.renderAction(action, actions));
   }
 
-  renderAction(action: IAction, actionsToRender: IAction[]){
+  renderAction(action: IAction, actionsToRender: IAction[]) {
     if (action.type === IActionType.Dropdown) {
-      const childActions = actionsToRender
-        .filter(otherAction => otherAction.groupId === action.id);
+      const childActions = actionsToRender.filter(
+        (otherAction) => otherAction.groupId === action.id
+      );
       return (
         <Dropdowner
           style={{ width: "auto" }}
           trigger={({ refTrigger, setDropped }) => (
             <DataViewHeaderButton
-              disabled = {!getIsEnabledAction(action)}
+              disabled={!getIsEnabledAction(action)}
               onClick={() => setDropped(true)}
-              domRef={refTrigger}>
+              domRef={refTrigger}
+            >
               {action.caption}
             </DataViewHeaderButton>
           )}
           content={() => (
             <Dropdown>
-              {childActions
-                .map((action) => (
-                  <DropdownItem isDisabled={!getIsEnabledAction(action)}>
-                    <DataViewHeaderDropDownItem
-                      onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}>
-                        {action.caption}
-                    </DataViewHeaderDropDownItem>
-                  </DropdownItem>
-                ))}
+              {childActions.map((action) => (
+                <DropdownItem isDisabled={!getIsEnabledAction(action)}>
+                  <DataViewHeaderDropDownItem
+                    onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                  >
+                    {action.caption}
+                  </DataViewHeaderDropDownItem>
+                </DropdownItem>
+              ))}
             </Dropdown>
           )}
         />
       );
     }
-    return(
+    return (
       <DataViewHeaderButton
-        onClick={(event) =>
-          uiActions.actions.onActionClick(action)(event, action)
-        }
-        disabled = {!getIsEnabledAction(action)}
+        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+        disabled={!getIsEnabledAction(action)}
       >
         {action.caption}
       </DataViewHeaderButton>
@@ -158,7 +169,8 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                       <DataViewHeaderGroup isHidden={false}>
                         <DataViewHeaderAction
                           onMouseDown={onMoveRowUpClickEvt}
-                          isDisabled={isRowMovingDisabled}>
+                          isDisabled={isRowMovingDisabled}
+                        >
                           <Icon
                             src="./icons/move-up.svg"
                             tooltip={T("Move Up", "increase_tool_tip")}
@@ -166,7 +178,8 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                         </DataViewHeaderAction>
                         <DataViewHeaderAction
                           onMouseDown={onMoveRowDownClickEvt}
-                          isDisabled={isRowMovingDisabled}>
+                          isDisabled={isRowMovingDisabled}
+                        >
                           <Icon
                             src="./icons/move-down.svg"
                             tooltip={T("Move Down", "decrease_tool_tip")}
@@ -213,52 +226,9 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                       )}
                     </ResponsiveChild>
                     <DataViewHeaderGroup grovable={true}>
+                      {this.props.extension.render("actions")}
                       <DataViewHeaderButtonGroup>
                         {this.renderActions(actions)}
-                        {/*<ResponsiveChild childKey={"action-1"} order={20}>
-                          {({ refChild, isHidden }) => (
-                            <DataViewHeaderButton
-                              domRef={refChild}
-                              isHidden={isHidden}
-                              onClick={undefined}
-                            >
-                              Action 1
-                            </DataViewHeaderButton>
-                          )}
-                        </ResponsiveChild>
-                        <ResponsiveChild childKey={"action-2"} order={20}>
-                          {({ refChild, isHidden }) => (
-                            <DataViewHeaderButton
-                              domRef={refChild}
-                              isHidden={isHidden}
-                              onClick={undefined}
-                            >
-                              Action 2
-                            </DataViewHeaderButton>
-                          )}
-                        </ResponsiveChild>
-                        <ResponsiveChild childKey={"action-3"} order={20}>
-                          {({ refChild, isHidden }) => (
-                            <DataViewHeaderButton
-                              domRef={refChild}
-                              isHidden={isHidden}
-                              onClick={undefined}
-                            >
-                              Action 3
-                            </DataViewHeaderButton>
-                          )}
-                        </ResponsiveChild>
-                        <ResponsiveChild childKey={"action-4"} order={20}>
-                          {({ refChild, isHidden }) => (
-                            <DataViewHeaderButton
-                              domRef={refChild}
-                              isHidden={isHidden}
-                              onClick={undefined}
-                            >
-                              Action 4
-                            </DataViewHeaderButton>
-                          )}
-                          </ResponsiveChild>*/}
                       </DataViewHeaderButtonGroup>
                     </DataViewHeaderGroup>
                     <ResponsiveChild childKey={"cursor-move"} order={5}>
@@ -321,81 +291,7 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
                             />
                           </DataViewHeaderAction>
                           <FilterDropDown ctx={dataView} />
-                          {/*<Dropdowner*/}
-                          {/*  trigger={({ refTrigger, setDropped }) => (*/}
-                          {/*    <DataViewHeaderAction*/}
-                          {/*      refDom={refTrigger}*/}
-                          {/*      onMouseDown={() => setDropped(true)}*/}
-                          {/*      isActive={false}*/}
-                          {/*    >*/}
-                          {/*      <i className="fas fa-caret-down" />*/}
-                          {/*    </DataViewHeaderAction>*/}
-                          {/*  )}*/}
-                          {/*  content={({ setDropped }) => (*/}
-                          {/*    <Dropdown>*/}
-                          {/*      <DropdownItem*/}
-                          {/*        isDisabled={true}*/}
-                          {/*        onClick={(event: any) => {*/}
-                          {/*          setDropped(false);*/}
-                          {/*          // onColumnConfigurationClickEvt(event);*/}
-                          {/*        }}>*/}
-                          {/*        {T("Cancel and Hide Filter", "filter_menu_filter_off")}*/}
-                          {/*      </DropdownItem>*/}
-                          {/*      <DropdownItem*/}
-                          {/*        isDisabled={true}*/}
-                          {/*        onClick={(event: any) => {*/}
-                          {/*          setDropped(false);*/}
-                          {/*          // onColumnConfigurationClickEvt(event);*/}
-                          {/*        }}>*/}
-                          {/*        {T("Remember The Current Filter", "filter_menu_set_default_filter")}*/}
-                          {/*      </DropdownItem>*/}
-                          {/*      <DropdownItem*/}
-                          {/*        isDisabled={true}*/}
-                          {/*        onClick={(event: any) => {*/}
-                          {/*          setDropped(false);*/}
-                          {/*          // onColumnConfigurationClickEvt(event);*/}
-                          {/*        }}>*/}
-                          {/*        {T("Cancel Default Filter", "filter_menu_cancel_default_filter")}*/}
-                          {/*      </DropdownItem>*/}
-                          {/*      <DropdownItem*/}
-                          {/*        isDisabled={true}*/}
-                          {/*        onClick={(event: any) => {*/}
-                          {/*          setDropped(false);*/}
-                          {/*          // onColumnConfigurationClickEvt(event);*/}
-                          {/*        }}>*/}
-                          {/*        {T("Save Current Filter", "filter_menu_save_filter")}*/}
-                          {/*      </DropdownItem>*/}
-                          {/*      <DropdownItem*/}
-                          {/*        isDisabled={true}*/}
-                          {/*        onClick={(event: any) => {*/}
-                          {/*          setDropped(false);*/}
-                          {/*          // onColumnConfigurationClickEvt(event);*/}
-                          {/*        }}>*/}
-                          {/*        {T("Delete", "filter_menu_delete")}*/}
-                          {/*      </DropdownItem>*/}
-                          {/*      <DropdownItem*/}
-                          {/*        isDisabled={true}*/}
-                          {/*        onClick={(event: any) => {*/}
-                          {/*          setDropped(false);*/}
-                          {/*          // onColumnConfigurationClickEvt(event);*/}
-                          {/*        }}>*/}
-                          {/*        {T("Cancel Filter", "filter_menu_cancel")}*/}
-                          {/*      </DropdownItem>*/}
-                          {/*      {filterGroups.map(filterGroup =>*/}
-                          {/*        <DropdownItem*/}
-                          {/*          isDisabled={false}*/}
-                          {/*          isSelected={this.selectedFilterGroup === filterGroup}*/}
-                          {/*          onClick={(event: any) => {*/}
-                          {/*            setDropped(false);*/}
-                          {/*            this.selectedFilterGroup = filterGroup;*/}
-                          {/*            onFilterGroupClickEvt(filterGroup);*/}
-                          {/*          }}>*/}
-                          {/*          {filterGroup.name}*/}
-                          {/*        </DropdownItem>*/}
-                          {/*      )}*/}
-                          {/*    </Dropdown>*/}
-                          {/*  )}*/}
-                          {/*/>*/}
+                          
                         </DataViewHeaderGroup>
                       )}
                     </ResponsiveChild>
@@ -458,4 +354,9 @@ export class CDataViewHeader extends React.Component<{ isVisible: boolean }> {
       </CtxResponsiveToolbar.Provider>
     );
   }
+}
+
+export function CDataViewHeader(props: { isVisible: boolean }) {
+  const extension = useContext(CtxDataViewHeaderExtension);
+  return <CDataViewHeaderInner isVisible={props.isVisible} extension={extension} />;
 }

@@ -18,6 +18,8 @@ import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusable } from "../../../model/entities/FocusManager";
+import { DateCellDriver } from "./Cells/DateCellDriver";
+import {flf2mof} from "utils/flashDateFormat";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
@@ -147,16 +149,19 @@ export function XmlBuildDropdownEditor(props: {
     const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
     let index = 0;
     const drivers = new DropdownColumnDrivers();
-    for (let ddp of findStopping(props.xmlNode, (n) => n.name === "Property")) {
+    for (let propertyXml of findStopping(props.xmlNode, (n) => n.name === "Property")) {
       index++;
-      const pat = ddp.attributes;
-      const id = pat.Id;
+      const attributes = propertyXml.attributes;
+      const id = attributes.Id;
       columnNames.push(id);
       columnNameToIndex.set(id, index);
 
+      const formatterPattern =  attributes.FormatterPattern
+        ? flf2mof(attributes.FormatterPattern)
+        : ""
       visibleColumnNames.push(id);
-      const name = pat.Name;
-      const column = pat.Column;
+      const name = attributes.Name;
+      const column = attributes.Column;
 
       let bodyCellDriver;
       switch (column) {
@@ -179,6 +184,14 @@ export function XmlBuildDropdownEditor(props: {
             index,
             dropdownEditorDataTable,
             dropdownEditorBehavior
+          );
+          break;
+        case "Date":
+          bodyCellDriver = new DateCellDriver(
+            index,
+            dropdownEditorDataTable,
+            dropdownEditorBehavior,
+            formatterPattern
           );
           break;
         default:

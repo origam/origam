@@ -557,25 +557,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const formScreen = getFormScreen(this);
         const dataViews = formScreen.dataViews;
         for (let dataView of dataViews) {
-          const updateData = dataView.dataTable.getDirtyValueRows().map(row => {
-            return {
-              RowId: dataView.dataTable.getRowId(row),
-              Values: map2obj(dataView.dataTable.getDirtyValues(row))
-            }})
-          const self = this;
-          const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
-            function* () {
-              return yield api.updateObject({
-                SessionFormIdentifier: getSessionId(self),
-                Entity: dataView.entity,
-                UpdateData: updateData,
-              });
-            }
-          );
-
-          yield* refreshWorkQueues(this)();
-          yield* processCRUDResult(dataView, updateObjectResult);
+          yield* this.update(dataView);
         }
+        yield* refreshWorkQueues(this)();
         if (formScreen.requestSaveAfterUpdate) {
           yield* this.saveSession();
         }
@@ -584,6 +568,30 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this._flushDataRunning = false;
       this.monitor.inFlow--;
     }
+  }
+
+  private *update(dataView: IDataView){
+    const updateData = dataView.dataTable.getDirtyValueRows().map(row => {
+      return {
+        RowId: dataView.dataTable.getRowId(row),
+        Values: map2obj(dataView.dataTable.getDirtyValues(row))
+      }})
+    if(!updateData || updateData.length === 0){
+      return;
+    }
+    const api = getApi(this);
+    const formScreen = getFormScreen(this);
+    const self = this;
+    const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
+      function* () {
+        return yield api.updateObject({
+          SessionFormIdentifier: getSessionId(self),
+          Entity: dataView.entity,
+          UpdateData: updateData,
+        });
+      }
+    );
+    yield* processCRUDResult(dataView, updateObjectResult);
   }
 
   *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
@@ -861,6 +869,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.loadData();
       }
       yield* this.refreshLookups();
+      getFormScreen(this).clearDataCache();
     } finally {
       this.monitor.inFlow--;
       setTimeout(async () => {
