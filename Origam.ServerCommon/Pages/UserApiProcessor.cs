@@ -858,7 +858,7 @@ namespace Origam.ServerCommon.Pages
         Encoding ContentEncoding { get;  }
         long ContentLength { get;  }
         IDictionary BrowserCapabilities { get;  }
-        string UrlReferrerAbsolutePath { get;  }
+        string UrlReferrerAbsoluteUri { get;  }
         Parameters Params { get; }
         PostedFile FilesGet(string name);
     }

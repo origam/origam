@@ -402,13 +402,9 @@ namespace OrigamArchitect
 			AbstractSqlDataService da = (AbstractSqlDataService)DataService.GetDataService();
             da.PersistenceProvider = persistence.SchemaProvider;
             Platform platform = (Platform)cboDatabaseType.SelectedItem;
-            _results = da.CompareSchema(persistence.SchemaProvider);
-            if (!platform.IsPrimary)
-            {
-                AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
-                DaPlatform.PersistenceProvider = persistence.SchemaProvider;
-                _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
-            }
+            AbstractSqlDataService DaPlatform = (AbstractSqlDataService)DataService.GetDataService(platform);
+            DaPlatform.PersistenceProvider = persistence.SchemaProvider;
+            _results = DaPlatform.CompareSchema(persistence.SchemaProvider);
             _results.ToArray().Select(x => ((SchemaDbCompareResult)x).Platform = platform).ToList();
             RenderList();
 		}

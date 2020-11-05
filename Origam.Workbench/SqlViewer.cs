@@ -29,9 +29,10 @@ namespace Origam.Workbench
 {
     public partial class SqlViewer : AbstractViewContent, IToolStripContainer
     {
-        public SqlViewer()
+        public SqlViewer(Platform platform)
         {
             InitializeComponent();
+            Platform = platform;
         }
 
         public override object Content
@@ -69,7 +70,8 @@ namespace Origam.Workbench
             {
                 return;
             }
-            string result = core.DataService.ExecuteSql(editor.Text);
+            var dataService = core.DataService.GetDataService(Platform);
+            string result = dataService.ExecuteUpdate(editor.Text, null);
             OutputPad outputPad = WorkbenchSingleton.Workbench.GetPad(
                 typeof(OutputPad)) as OutputPad;
             outputPad.SetOutputText(result);
@@ -94,6 +96,8 @@ namespace Origam.Workbench
                 base.IsViewOnly = value;
             }
         }
+
+        public Platform Platform { get; }
 
         public List<ToolStrip> GetToolStrips(int maxWidth = -1)
         {

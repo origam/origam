@@ -28,18 +28,14 @@ namespace Origam.Gui.Win.Commands
 {
     public class ShowSqlConsole : AbstractMenuCommand
     {
-        WorkbenchSchemaService _schemaService =
-            ServiceManager.Services.GetService(typeof(WorkbenchSchemaService))
-                as WorkbenchSchemaService;
-
-        public ShowSqlConsole(object owner)
+        public ShowSqlConsole(SqlConsoleParameters owner)
         {
             Owner = owner;
         }
 
         public override bool IsEnabled
         {
-            get { return _schemaService.IsSchemaLoaded; }
+            get { return WorkbenchSingleton.Workbench.IsConnected; }
             set
             {
                 throw new ArgumentException("Cannot set this property",
@@ -49,8 +45,17 @@ namespace Origam.Gui.Win.Commands
 
         public override void Run()
         {
-            SqlViewer viewer = new SqlViewer();
-            viewer.LoadObject(Owner as string);
+            SqlConsoleParameters parameters = Owner as SqlConsoleParameters;
+            if(parameters == null)
+            {
+                throw new ArgumentOutOfRangeException("SqlConsoleParameters input expected.");
+            }
+            SqlViewer viewer = new SqlViewer(parameters.Platform);
+            if (parameters.Platform != null)
+            {
+                viewer.Text += " [" + parameters.Platform.Name + "]";
+            }
+            viewer.LoadObject(parameters.Command);
             WorkbenchSingleton.Workbench.ShowView(viewer);
         }
     }
