@@ -9,26 +9,21 @@ import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
 import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
-import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
+import { LookupFilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
+import { Operator } from "./Operator";
 
 const OPERATORS =
   [
-    { human: <>=</>, type: "eq" },
-    { human: <>&ne;</>, type: "neq" },
-    { human: <>&le;</>, type: "lte" },
-    { human: <>&ge;</>, type: "gte" },
-    { human: <>&#60;</>, type: "lt" },
-    { human: <>&#62;</>, type: "gt" },
-    { human: <>{T("between", "filter_operator_between")}</>, type: "between" },
-    {
-      human: <>{T("not between", "filter_operator_not_between")}</>,
-      type: "nbetween",
-    },
-    { human: <>{T("is null", "filter_operator_is_null")}</>, type: "null" },
-    {
-      human: <>{T("is not null", "filter_operator_not_is_null")}</>,
-      type: "nnull",
-    },
+    Operator.equals,
+    Operator.notEquals,
+    Operator.lessThanOrEquals,
+    Operator.greaterThanOrEquals,
+    Operator.lessThan,
+    Operator.greaterThan,
+    Operator.between,
+    Operator.notBetween,
+    Operator.isNull,
+    Operator.isNotNull
   ];
 
 const OpCombo: React.FC<{
