@@ -149,19 +149,19 @@ export function XmlBuildDropdownEditor(props: {
     const columnNameToIndex = new Map<string, number>([[identifier, identifierIndex]]);
     let index = 0;
     const drivers = new DropdownColumnDrivers();
-    for (let ddp of findStopping(props.xmlNode, (n) => n.name === "Property")) {
+    for (let propertyXml of findStopping(props.xmlNode, (n) => n.name === "Property")) {
       index++;
-      const pat = ddp.attributes;
-      const id = pat.Id;
+      const attributes = propertyXml.attributes;
+      const id = attributes.Id;
       columnNames.push(id);
       columnNameToIndex.set(id, index);
 
-      const formatterPattern =  ddp.attributes.FormatterPattern
-        ? flf2mof(ddp.attributes.FormatterPattern)
+      const formatterPattern =  attributes.FormatterPattern
+        ? flf2mof(attributes.FormatterPattern)
         : ""
       visibleColumnNames.push(id);
-      const name = pat.Name;
-      const column = pat.Column;
+      const name = attributes.Name;
+      const column = attributes.Column;
 
       let bodyCellDriver;
       switch (column) {
