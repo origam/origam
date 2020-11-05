@@ -12,11 +12,15 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.implicitFilters = implicitFilters;
     this.start();
   }
-
+  filteringOnOffHandlers: ((filteringOn: boolean)=> void)[] = [];
   $type_IFilterConfigurationData: 1 = 1;
 
   implicitFilters: IImplicitFilter[];
   @observable activeFilters: IFilter[] = [];
+
+  registerFileriringOnOffHandler(handler: (filteringOn: boolean)=> void){
+    this.filteringOnOffHandlers.push(handler);
+  }
 
   getSettingByPropertyId(propertyId: string): IFilter | undefined {
     return this.activeFilters.find((item) => item.propertyId === propertyId);
@@ -54,6 +58,9 @@ export class FilterConfiguration implements IFilterConfiguration {
       // TODO: Wait for data loaded?
     } else {
       this.clearFilters();
+    }
+    for (let filteringOnOffHandler of this.filteringOnOffHandlers) {
+      filteringOnOffHandler(this.isFilterControlsDisplayed);
     }
   }
 

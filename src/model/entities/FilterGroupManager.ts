@@ -28,6 +28,15 @@ export class FilterGroupManager {
 
   constructor(private filterConfiguration: IFilterConfiguration) {
     this.ctx = filterConfiguration;
+    filterConfiguration.registerFileriringOnOffHandler(filteringOn => {
+      if(!filteringOn){
+        this.selectedFilterGroupId = undefined;
+      }
+    });
+  }
+
+  get filtersHidden(){
+    return !this.filterConfiguration.isFilterControlsDisplayed;
   }
 
   get defaultFilter(): IFilterGroup | undefined {
