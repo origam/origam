@@ -26,6 +26,7 @@ export interface IDataViewData {
   modelId: string;
   defaultPanelView: IPanelViewType;
   isHeadless: boolean;
+  isMapSupported: boolean;
   disableActionButtons: boolean;
   showAddButton: boolean;
   showDeleteButton: boolean;

@@ -9,7 +9,7 @@ import { DataSourceField } from "model/entities/DataSourceField";
 import { DataTable } from "model/entities/DataTable";
 import { DataView } from "model/entities/DataView";
 import { DropDownColumn } from "model/entities/DropDownColumn";
-import { FilterConfiguration} from "model/entities/FilterConfiguration";
+import { FilterConfiguration } from "model/entities/FilterConfiguration";
 import { FormPanelView } from "model/entities/FormPanelView/FormPanelView";
 import { FormScreen } from "model/entities/FormScreen";
 import { Lookup } from "model/entities/Lookup";
@@ -34,12 +34,10 @@ import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPersp
 import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
 import { ITablePerspectiveDirector } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
 import { IPerspective } from "modules/DataView/Perspective/Perspective";
-import { flow } from "mobx";
+import { autorun, flow } from "mobx";
 import { IViewConfiguration, ViewConfiguration } from "modules/DataView/ViewConfiguration";
 import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
-import {
-  IPanelConfiguration,
-} from "model/entities/types/IPanelConfiguration";
+import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
 import { parseToOrdering } from "model/entities/types/IOrderingConfiguration";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { cssString2Object } from "utils/objects";
@@ -59,15 +57,19 @@ import { getApi } from "model/selectors/getApi";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
 import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
-import { IDataView } from "modules/DataView/DataViewTypes";
+import { IDataView as IDataViewTS } from "modules/DataView/DataViewTypes";
 import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
 import { IProperty } from "model/entities/types/IProperty";
+import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
+import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
+import {
+  MapLayer as MapLayerSetup,
+  MapSetupStore,
+} from "modules/DataView/Perspective/MapPerspective/stores/MapSetupStore";
+import { MapRootStore } from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
 import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
-import { IFilter } from "model/entities/types/IFilter";
-import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
-import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operatots";
 import { addFilterGroups } from "./filterXml";
-import {FilterGroupManager} from "model/entities/FilterGroupManager";
+import { FilterGroupManager } from "model/entities/FilterGroupManager";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -96,7 +98,6 @@ export const findFormPropertyIds = (node: any) =>
 
 export const findFormRoot = (node: any) => findStopping(node, (n) => n.name === "FormRoot")[0];
 
-
 function getPropertyParameters(node: any) {
   const parameters = findParameters(node);
   const result: { [key: string]: any } = {};
@@ -106,13 +107,15 @@ function getPropertyParameters(node: any) {
   return result;
 }
 
+const instance2XmlNode = new WeakMap<any, any>();
+
 function parseProperty(property: any, idx: number): IProperty {
   const propertyObject = new Property({
     xmlNode: property,
     id: property.attributes.Id,
     tabIndex: property.attributes.TabIndex,
     controlPropertyId: property.attributes.ControlPropertyId,
-    controlPropertyValue:  property.attributes.ControlPropertyValue,
+    controlPropertyValue: property.attributes.ControlPropertyValue,
     modelInstanceId: property.attributes.ModelInstanceId || "",
     name: property.attributes.Name,
     readOnly: property.attributes.ReadOnly === "true",
@@ -145,34 +148,34 @@ function parseProperty(property: any, idx: number): IProperty {
     lookup: !property.attributes.LookupId
       ? undefined
       : new Lookup({
-        dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
-        lookupId: property.attributes.LookupId,
-        identifier: property.attributes.Identifier,
-        identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
-        dropDownType: property.attributes.DropDownType,
-        cached: property.attributes.Cached === "true",
-        searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
-        dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
-          (ddProperty) => {
-            return new DropDownColumn({
-              id: ddProperty.attributes.Id,
-              name: ddProperty.attributes.Name,
-              column: ddProperty.attributes.Column,
-              entity: ddProperty.attributes.Entity,
-              index: parseInt(ddProperty.attributes.Index, 10),
-            });
-          }
-        ),
-        dropDownParameters: findStopping(
-          property,
-          (n) => n.name === "ComboBoxParameterMapping"
-        ).map((ddParam) => {
-          return {
-            parameterName: ddParam.attributes.ParameterName,
-            fieldName: ddParam.attributes.FieldName,
-          };
+          dropDownShowUniqueValues: property.attributes.DropDownShowUniqueValues === "true",
+          lookupId: property.attributes.LookupId,
+          identifier: property.attributes.Identifier,
+          identifierIndex: parseInt(property.attributes.IdentifierIndex, 10),
+          dropDownType: property.attributes.DropDownType,
+          cached: property.attributes.Cached === "true",
+          searchByFirstColumnOnly: property.attributes.SearchByFirstColumnOnly === "true",
+          dropDownColumns: findStopping(property, (n) => n.name === "Property").map(
+            (ddProperty) => {
+              return new DropDownColumn({
+                id: ddProperty.attributes.Id,
+                name: ddProperty.attributes.Name,
+                column: ddProperty.attributes.Column,
+                entity: ddProperty.attributes.Entity,
+                index: parseInt(ddProperty.attributes.Index, 10),
+              });
+            }
+          ),
+          dropDownParameters: findStopping(
+            property,
+            (n) => n.name === "ComboBoxParameterMapping"
+          ).map((ddParam) => {
+            return {
+              parameterName: ddParam.attributes.ParameterName,
+              fieldName: ddParam.attributes.FieldName,
+            };
+          }),
         }),
-      }),
 
     allowReturnToForm: property.attributes.AllowReturnToForm === "true",
     isTree: property.attributes.IsTree === "true",
@@ -180,20 +183,19 @@ function parseProperty(property: any, idx: number): IProperty {
     isLookupColumn: property.attributes.IsLookupColumn || false,
     style: cssString2Object(property.attributes.Style),
   });
-  if(property.elements && property.elements.length > 0){
+  if (property.elements && property.elements.length > 0) {
     property.elements
       .filter((element: any) => element.name === "Property")
-      .map((childProperty: any ,idx: number) => parseProperty(childProperty, idx))
+      .map((childProperty: any, idx: number) => parseProperty(childProperty, idx))
       .forEach((childProperty: IProperty) => {
         childProperty.parent = propertyObject;
-        childProperty.x = childProperty.x + propertyObject.x ;
+        childProperty.x = childProperty.x + propertyObject.x;
         childProperty.y = propertyObject.y;
         propertyObject.childProperties.push(childProperty);
-      })
+      });
   }
   return propertyObject;
 }
-
 
 export function* interpretScreenXml(
   screenDoc: any,
@@ -362,7 +364,7 @@ export function* interpretScreenXml(
       const filterGroupManager = new FilterGroupManager(filterConfiguration);
       panelConfigurationsRaw
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
-        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf))
+        .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
 
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
@@ -375,6 +377,7 @@ export function* interpretScreenXml(
         newRecordView: dataView.attributes.NewRecordView,
         defaultPanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
         activePanelView: panelViewFromNumber(parseInt(dataView.attributes.DefaultPanelView)),
+        isMapSupported: dataView.attributes.IsMapSupported === "true",
         isHeadless: dataView.attributes.IsHeadless === "true",
         disableActionButtons: dataView.attributes.DisableActionButtons === "true",
         showAddButton: dataView.attributes.ShowAddButton === "true",
@@ -432,6 +435,8 @@ export function* interpretScreenXml(
           () => screenAPI
         ),
       });
+
+      instance2XmlNode.set(dataViewInstance, dataView);
 
       let groupingColumnCounter = 1;
       configuration.forEach((conf) => {
@@ -540,12 +545,12 @@ export function* interpretScreenXml(
 
   $formScreen.register(IFormScreen, () => scr).scopedInstance(SCOPE_Screen);
 
-  for (let dv of scr.dataViews) {
+  for (let dataView of scr.dataViews) {
     const $dataView = $formScreen.beginLifetimeScope(SCOPE_DataView);
-    $dataView.register(IDataView, () => dv).scopedInstance(SCOPE_DataView);
+    $dataView.register(IDataViewTS, () => dataView).scopedInstance(SCOPE_DataView);
 
     $dataView
-      .register(IRowCursor, () => new RowCursor(() => getSelectedRowId(dv)))
+      .register(IRowCursor, () => new RowCursor(() => getSelectedRowId(dataView)))
       .scopedInstance(SCOPE_DataView);
     $dataView
       .register(
@@ -553,15 +558,15 @@ export function* interpretScreenXml(
         () =>
           new ViewConfiguration(
             function* (perspectiveTag) {
-              dv.activePanelView = perspectiveTag as any;
-              yield* saveColumnConfigurations(dv)();
+              dataView.activePanelView = perspectiveTag as any;
+              yield* saveColumnConfigurations(dataView)();
             },
-            () => dv.activePanelView
+            () => dataView.activePanelView
           )
       )
       .scopedInstance(SCOPE_DataView);
 
-    $dataView.resolve(IDataView);
+    $dataView.resolve(IDataViewTS);
 
     const $tablePerspective = $dataView.beginLifetimeScope(SCOPE_TablePerspective);
     $tablePerspective.resolve(ITablePerspectiveDirector).setup();
@@ -569,15 +574,25 @@ export function* interpretScreenXml(
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
     const formPerspective = $formPerspective.resolve(IFormPerspective);
-    dv.activateFormView = formPerspective.handleToolbarBtnClick.bind(formPerspective);
-    /*const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
-    $mapPerspective.resolve(IMapPerspectiveDirector).setup();*/
+    dataView.activateFormView = formPerspective.handleToolbarBtnClick.bind(formPerspective);
+    if (dataView.isMapSupported) {
+      const dataViewXmlNode = instance2XmlNode.get(dataView)!;
+      const rootStore = new MapRootStore(dataView);
+      populateMapViewSetup(rootStore.mapSetupStore, dataViewXmlNode);
+      const isReadonly = dataView.properties.some((prop) => prop.readOnly);
+      rootStore.mapSetupStore.isReadOnlyView = isReadonly;
+      const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
+      const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);
+
+      mapPerspectiveDirector.rootStore = rootStore;
+      mapPerspectiveDirector.setup();
+    }
 
     //***************** */
 
     const { lookupMultiEngine } = workbench;
 
-    for (let property of dv.properties) {
+    for (let property of dataView.properties) {
       if (property.isLookup && property.lookupId) {
         const { lookupId } = property;
         foundLookupIds.add(lookupId);
@@ -598,10 +613,9 @@ export function* interpretScreenXml(
     flow($dataView.resolve(IPerspective).activateDefault)();
   }
 
-
   const rscr = $formScreen.resolve(IFormScreen); // Hack to associate FormScreen with its scope to dispose it later.
 
-  return {formScreen: scr, foundLookupIds};
+  return { formScreen: scr, foundLookupIds };
 }
 
 function getImplicitFilters(dataViewXml: any) {
@@ -631,6 +645,40 @@ function checkInfiniteScrollWillWork(
     if (isInfiniteScrollingActive(formScreenLifecycle, dataView.attributes) && !panelConfig) {
       throw new Error(
         `Table in: ${id} has undefined default ordering while infinite scrolling is on. Make sure the underlying DataStructure has a SortSet defined.`
+      );
+    }
+  }
+}
+
+function populateMapViewSetup(mss: MapSetupStore, xmlNode: any) {
+  const attr = xmlNode.attributes;
+  mss.mapAzimuthMember = attr.MapAzimuthMember;
+  mss.mapCenterRaw = attr.MapCenter;
+  mss.mapColorMember = attr.MapColorMember;
+  mss.mapIconMember = attr.MapIconMember;
+  mss.mapLocationMember = attr.MapLocationMember;
+  mss.mapTextMember = attr.MapTextMember;
+  mss.textColorMember = attr.TextColorMember;
+  mss.textLocationMember = attr.TextLocationMember;
+  mss.textRotationMember = attr.TextRotationMember;
+
+  const layerXmlNodes = findStopping(
+    xmlNode,
+    (node) => node.name === "Layer" && node.parent.name === "MapViewLayers"
+  );
+  for (let layerXmlNode of layerXmlNodes) {
+    const layerAttr = layerXmlNode.attributes;
+    const mls = new MapLayerSetup();
+    mss.layers.push(mls);
+    mls.defaultEnabled = layerAttr.defaultEnabled === "true";
+    mls.id = layerAttr.id;
+    mls.title = layerAttr.title;
+    mls.type = layerAttr.type;
+    const parameterXmlNodes = findStopping(layerXmlNode, (node) => node.name === "Parameter");
+    for (let parameterXmlnode of parameterXmlNodes) {
+      mls.mapLayerParameters.set(
+        parameterXmlnode.attributes.name,
+        parameterXmlnode.attributes.value
       );
     }
   }

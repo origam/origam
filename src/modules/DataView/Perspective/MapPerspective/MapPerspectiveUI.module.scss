@@ -1,6 +1,11 @@
 .mapDiv {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+
+  &:global(.isHidden) {
+    display: none;
+  }
 
   :global(.leaflet-draw-actions) {
     overflow: hidden;
@@ -24,5 +29,56 @@
         background-color: #eeeeee;
       }
     }
+  }
+
+  :global(.markerHighlighted) img { 
+    border: 2px solid yellow;
+    background-color: rgba(255, 255, 0, 0.274);
+  }
+}
+
+.mapSearch {
+  width: 100%;
+  position: relative;
+  :global(.input) {
+    width: 100%;
+  }
+  :global(.inputActions) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+  }
+  :global(.inputCaret) {
+
+  }
+}
+
+.mapSearchDropdown {
+  position: fixed;
+  z-index: 10000;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  max-height: 300px;
+
+  :global(.cell) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #cecece;
+    }
+  }
+  :global(.c1) {
+    background-color: #f7f6fa;
+  }
+  :global(.c2) {
+    background-color: white;
   }
 }
