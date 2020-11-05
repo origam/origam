@@ -355,6 +355,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                 x.propertyId,
                 x.setting.type,
                 x.setting.val1,
+                x.setting.val2,
               ]);
               return [] as any;
             },
