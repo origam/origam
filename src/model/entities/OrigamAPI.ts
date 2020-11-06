@@ -479,6 +479,12 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post(`/UIService/RowStates`, data)).data;
   }
 
+  async saveFavorites(data: {
+    ConfigXml: string;
+  }): Promise<any> {
+    return (await this.axiosInstance.post(`/UIService/SaveFavorites`, data)).data;
+  }
+
   async getWorkQueueList(): Promise<any> {
     return (await this.axiosInstance.get(`/UIService/WorkQueueList`)).data;
   }

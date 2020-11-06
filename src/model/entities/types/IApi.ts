@@ -266,6 +266,10 @@ export interface IApi {
     Ids: string[];
   }): Promise<any>;
 
+  saveFavorites(data: {
+    ConfigXml: string;
+  }): Promise<any>;
+
   getWorkQueueList(): Promise<any>;
 
   getChatroomList(): Promise<any>;

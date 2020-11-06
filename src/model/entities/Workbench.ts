@@ -25,6 +25,7 @@ export class Workbench implements IWorkbench {
     this.chatrooms.parent = this;
     this.notifications.parent = this;
     this.recordInfo.parent = this;
+    this.favorites.parent = this;
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
