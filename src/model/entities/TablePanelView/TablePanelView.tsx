@@ -129,18 +129,16 @@ export class TablePanelView implements ITablePanelView {
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);
 
-    if (dataView.selectedRowId !== rowId && isInfiniteScrollingActive(dataView)){
-      getTablePanelView(this).setEditing(false);
-      yield* flushCurrentRowData(this)();
-      const isDirty = getFormScreen(dataView).isDirty;
+    getTablePanelView(this).setEditing(false);
+    yield* flushCurrentRowData(this)();
+    const isDirty = getFormScreen(dataView).isDirty;
 
-      if (isDirty) {
-        const shouldProceedToSelectRow = yield getFormScreenLifecycle(
-          dataView
-        ).handleUserInputOnChangingRow(dataView);
-        if (!shouldProceedToSelectRow) {
-          return;
-        }
+    if (isDirty && dataView.selectedRowId !== rowId && isInfiniteScrollingActive(dataView)) {
+      const shouldProceedToSelectRow = yield getFormScreenLifecycle(
+        dataView
+      ).handleUserInputOnChangingRow(dataView);
+      if (!shouldProceedToSelectRow) {
+        return;
       }
     }
     yield* this.onCellClickInternal(event, row, columnId, isControlInteraction);
