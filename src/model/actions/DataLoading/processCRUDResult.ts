@@ -48,7 +48,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
       for (let dataView of dataViews) {
         dataView.dataTable.substituteRecord(resultItem.wrappedObject);
-        dataView.dataTable.clearRecordDirtyValues(resultItem.objectId);
+        dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
       }
       getFormScreen(ctx).setDirty(true);
       break;
