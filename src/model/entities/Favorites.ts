@@ -1,7 +1,9 @@
 import xmlJs from "xml-js";
+import {observable} from "mobx";
 
 export class Favorites {
-  // favoritesObject: xmlJs.Element | xmlJs.ElementCompact | undefined;
+
+  @observable
   favoriteIds: string[] = [];
 
   isFavorite(menuId: any) {
@@ -10,9 +12,19 @@ export class Favorites {
 
   setXml(xml: string) {
     const favoritesObject = xmlJs.xml2js(xml);
-    this.favoriteIds = favoritesObject.elements[0].elements[0]
-      .elements
+    this.favoriteIds = favoritesObject.elements[0].elements[0].elements
       .map((item: xmlJs.Element) => item.attributes?.["menuId"])
-      .filter((menuId: string) => menuId)
+      .filter((menuId: string) => menuId);
+  }
+
+  add(menuId: string) {
+    this.favoriteIds.push(menuId);
+  }
+
+  remove(menuId: any) {
+    const index = this.favoriteIds.indexOf(menuId);
+    if(index > -1){
+      this.favoriteIds.splice(index, 1);
+    }
   }
 }
