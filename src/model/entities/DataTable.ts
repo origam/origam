@@ -373,9 +373,15 @@ export class DataTable implements IDataTable {
     if (rowData) {
       const oldRow = this.getRowById(id)!;
       for(let i=0; i<newRow.length; i++){
+        const dataSourceField = getDataSourceFieldByIndex(this, i)!;
         if(newRow[i] !== oldRow[i]){
-          const dataSourceField = getDataSourceFieldByIndex(this, i)!;
           rowData.dirtyFormValues.delete(dataSourceField.name);
+          rowData.dirtyValues.delete(dataSourceField.name);
+        }
+        if(rowData.dirtyFormValues.get(dataSourceField.name) === newRow[i]){
+          rowData.dirtyFormValues.delete(dataSourceField.name);
+        }
+        if(rowData.dirtyValues.get(dataSourceField.name) === newRow[i]){
           rowData.dirtyValues.delete(dataSourceField.name);
         }
       }
