@@ -10,6 +10,7 @@ import { LookupListCacheMulti } from "../../modules/Lookup/LookupListCacheMulti"
 import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { Chatrooms } from "./Chatrooms";
 import { Notifications } from "./Notifications";
+import {Favorites} from "model/entities/Favorites";
 
 export class Workbench implements IWorkbench {
   $type_IWorkbench: 1 = 1;
@@ -37,6 +38,7 @@ export class Workbench implements IWorkbench {
   recordInfo: IRecordInfo = null as any;
   lookupListCache: LookupListCacheMulti = null as any;
   lookupMultiEngine: IMultiLookupEngine = null as any;
+  favorites: Favorites = null as any;
 
   @observable isFullScreen: boolean = false;
 

@@ -33,7 +33,7 @@ export class CMainMenu extends React.Component {
   }
 }
 
-function itemForNode(node: any, level: number, isOpen: boolean) {
+export function itemForNode(node: any, level: number, isOpen: boolean) {
   switch (node.name) {
     case "Submenu":
       return (

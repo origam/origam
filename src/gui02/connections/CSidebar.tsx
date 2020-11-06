@@ -33,7 +33,8 @@ import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues"
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import { SearchBox } from "gui02/components/Search/SearchBox";
 import { SearchResults } from "gui02/components/Search/SearchResults";
-import {ISearchResult} from "model/entities/types/ISearchResult";
+import { ISearchResult } from "model/entities/types/ISearchResult";
+import { CFavorites } from "./CFavorites";
 
 @observer
 export class CSidebar extends React.Component {
@@ -185,7 +186,7 @@ export class CSidebar extends React.Component {
             onClick={() => (this.activeSection = ISidebarSection.Favorites)}
           />
           <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Favorites}>
-            &nbsp;
+            <CFavorites/>
           </SidebarSectionBody>
         </SidebarSection>
         <SidebarSection isActive={this.activeSection === ISidebarSection.Menu}>
