@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useContext, useEffect } from "react";
+import cx from "classnames";
 import { action, flow } from "mobx";
 import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import { TypeSymbol } from "dic/Container";
@@ -16,6 +17,7 @@ import {
 } from "gui/Components/ScreenElements/DataView";
 import { MapPerspectiveSearch } from "./MapPerspectiveSearch";
 import { CtxMapRootStore, MapRootStore } from "./stores/MapRootStore";
+import S from "./MapPerspectiveUI.module.scss";
 
 export class MapPerspectiveDirector implements IIId {
   $iid = getIdent();
@@ -107,6 +109,7 @@ class ToolbarActionsExtension implements IDataViewHeaderExtensionItem {
       <CtxMapRootStore.Provider value={this.rootStore} key={this.$iid}>
         <MapPerspectiveNavigation />
         <MapPerspectiveSearch />
+        <MapPerspectiveRoutefind />
       </CtxMapRootStore.Provider>
     ) : null;
   }
@@ -116,9 +119,13 @@ function MapContentUI(props: {
   toolbarActionsExtension: ToolbarActionsExtension;
   mapPerspective: MapPerspective;
 }) {
-  const { mapSetupStore, mapObjectsStore, mapSearchStore, mapNavigationStore } = useContext(
-    CtxMapRootStore
-  );
+  const {
+    mapSetupStore,
+    mapObjectsStore,
+    mapSearchStore,
+    mapNavigationStore,
+    mapRoutefinderStore,
+  } = useContext(CtxMapRootStore);
   return (
     <Observer>
       {() => (
@@ -127,7 +134,9 @@ function MapContentUI(props: {
             ref={mapNavigationStore.refMapComponent}
             lastDetailedObject={mapSearchStore.selectedSearchResult}
             mapCenter={mapSetupStore.mapCenter || { type: "Point", coordinates: [0, 0] }}
-            getMapObjects={() => mapObjectsStore.mapObjects}
+            getMapObjects={() => (mapRoutefinderStore.isActive ? [] : mapObjectsStore.mapObjects)}
+            getRoutefinderRoute={() => mapRoutefinderStore.mapObjectsRoute}
+            getRoutefinderEditables={() => mapRoutefinderStore.mapObjectsEditable}
             mapLayers={mapSetupStore.layers}
             isReadOnly={mapSetupStore.isReadOnlyView}
             isActive={props.mapPerspective.isActive}
@@ -135,6 +144,7 @@ function MapContentUI(props: {
               console.log("Change: ", geoJson);
               mapObjectsStore.handleGeometryChange(geoJson);
             }}
+            onRoutefinderGeometryChange={mapRoutefinderStore.handleGeometryChange}
             onLayerClick={mapObjectsStore.handleLayerClick}
           />
         </MapPerspectiveComContainer>
@@ -145,7 +155,7 @@ function MapContentUI(props: {
 
 function MapPerspectiveNavigation() {
   const { mapObjectsStore, mapNavigationStore } = useContext(CtxMapRootStore);
-  useEffect(() => mapObjectsStore.handleMapActivated(), []);
+  useEffect(() => mapObjectsStore.handleMapMounted(), []);
   return (
     <Observer>
       {() => (
@@ -154,8 +164,28 @@ function MapPerspectiveNavigation() {
             <i className="fas fa-crosshairs" />
           </button>
           <button onClick={mapNavigationStore.handleLookupObjectClick}>
-            <i className="fas fa-search-location"></i>
+            <i className="fas fa-search-location" />
           </button>
+        </>
+      )}
+    </Observer>
+  );
+}
+
+function MapPerspectiveRoutefind() {
+  const { mapSetupStore, mapRoutefinderStore } = useContext(CtxMapRootStore);
+  return (
+    <Observer>
+      {() => (
+        <>
+          {!mapSetupStore.isReadOnlyView && (
+            <button
+              className={cx(S.mapToolbarButton, { isActive: mapRoutefinderStore.isActive })}
+              onClick={mapRoutefinderStore.handleRoutefinderButtonClick}
+            >
+              <i className="fas fa-route" />
+            </button>
+          )}
         </>
       )}
     </Observer>

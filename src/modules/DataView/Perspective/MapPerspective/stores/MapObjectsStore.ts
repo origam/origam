@@ -1,4 +1,4 @@
-import { action, computed, flow } from "mobx";
+import { action, computed, flow, reaction } from "mobx";
 import { parse as wktParse, stringify as wtkStringify } from "wkt";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { MapRootStore } from "./MapRootStore";
@@ -73,8 +73,14 @@ export class MapObjectsStore {
       const selectedRow = getSelectedRow(this.dataView);
       if (selectedRow) {
         const row = selectedRow;
-        if (_.isArray(row)) {
-          const objectGeoJson = wktParse(row[this.fldLocationIndex]);
+        if (_.isArray(row) && row[this.fldLocationIndex]) {
+          let objectGeoJson: any;
+          try {
+            objectGeoJson = wktParse(row[this.fldLocationIndex]);
+          } catch (e) {
+            // TODO: Erorr dialog?
+            console.error(e);
+          }
           if (objectGeoJson) {
             result.push({
               ...objectGeoJson,
@@ -113,19 +119,25 @@ export class MapObjectsStore {
 
   @action.bound
   handleLayerClick(id: string) {
-    getDataView(this.dataView).selectRowById(id);
-    this.search.selectSearchResultById(id);
-    this.navigationStore.highlightSelectedSearchResult();
-    
+    if (this.setup.isReadOnlyView) {
+      getDataView(this.dataView).selectRowById(id);
+      this.search.selectSearchResultById(id);
+      this.navigationStore.highlightSelectedSearchResult();
+    }
   }
 
   @action.bound
-  handleMapActivated() {
-    const rowId = getSelectedRowId(this.dataView);
-    if (rowId) {
-      this.search.selectSearchResultById(rowId);
-      this.navigationStore.highlightSelectedSearchResult();
-    }
+  handleMapMounted() {
+    return reaction(
+      () => getSelectedRowId(this.dataView),
+      (rowId: string | undefined) => {
+        if (this.setup.isReadOnlyView && rowId) {
+          this.search.selectSearchResultById(rowId);
+          this.navigationStore.highlightSelectedSearchResult();
+        }
+      },
+      { fireImmediately: true }
+    );
   }
 }
 

@@ -82,3 +82,10 @@
     background-color: white;
   }
 }
+
+
+.mapToolbarButton {
+  &:global(.isActive) {
+    color: #4c84ff;
+  }
+}
