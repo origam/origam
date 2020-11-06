@@ -4,7 +4,7 @@ import "leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
 import _ from "lodash";
-import { computed, reaction, runInAction } from "mobx";
+import { action, computed, reaction, runInAction } from "mobx";
 import qs from "querystring";
 import React from "react";
 import S from "./MapPerspectiveUI.module.scss";
@@ -22,11 +22,14 @@ L.Icon.Default.mergeOptions({
 interface IMapPerspectiveComProps {
   mapCenter: { type: "Point"; coordinates: [number, number] };
   getMapObjects: () => IMapObject[];
+  getRoutefinderRoute: () => any[];
+  getRoutefinderEditables: () => any[];
   lastDetailedObject?: IMapObject;
   mapLayers: MapLayer[];
   isReadOnly: boolean;
   isActive: boolean;
   onChange?(geoJson: any): void;
+  onRoutefinderGeometryChange?(obj: any): void;
   onLayerClick?(id: string): void;
 }
 
@@ -42,6 +45,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   leafletMap?: L.DrawMap;
 
   leafletMapObjects = new L.FeatureGroup();
+  leafletMapRoute = new L.FeatureGroup();
 
   _disposers: any[] = [];
 
@@ -186,8 +190,8 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           case IMapObjectType.POINT:
             {
               const iconUrl = obj.icon;
-              const pq = qs.parse(iconUrl.split("#")[1] || "");
-              const anchor = pq.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
+              const pq = iconUrl ? qs.parse(iconUrl.split("#")[1] || "") : null;
+              const anchor = pq?.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
               const iconAnchor: [number, number] = anchor;
               const iconRotation = obj.azimuth || 0;
               const myIcon = L.divIcon({
@@ -235,9 +239,157 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       .filter((layer) => layer) as [IMapObject, L.Layer][];
   }
 
+  @computed get mapRoutefinderRoute() {
+    return this.props
+      .getRoutefinderRoute()
+      .map((obj) => {
+        console.log(obj);
+        switch (obj.type) {
+          case "LineString":
+            {
+              return L.polyline(
+                obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
+                { color: "blue" }
+              );
+            }
+            break;
+        }
+      })
+      .filter((obj) => obj);
+  }
+
+  @computed get mapRoutefinderEditables() {
+    return this.props
+      .getRoutefinderEditables()
+      .map((obj) => {
+        console.log(obj);
+        switch (obj.type) {
+          case "LineString":
+            {
+              return L.polyline(
+                obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
+                { color: "green" }
+              );
+            }
+            break;
+        }
+      })
+      .filter((obj) => obj);
+  }
+
+  @action.bound handleOjectCreated(event: any) {
+    const layer = event.layer;
+    this.leafletMapObjects.clearLayers();
+    this.leafletMapObjects.addLayer(layer);
+    const obj = layer.toGeoJSON().geometry;
+    this.props.onChange?.(obj);
+  }
+
+  @action.bound handleObjectEdited(event: any) {
+    const layers = (event as any).layers;
+    const obj = layers.toGeoJSON().features?.[0]?.geometry;
+    if (obj) {
+      this.props.onChange?.(obj);
+    }
+  }
+
+  @action.bound handleObjectDeleted(event: any) {
+    this.props.onChange?.(undefined);
+  }
+
+  @action.bound handleRoutefinderOjectCreated(event: any) {
+    const layer = event.layer;
+    this.leafletMapObjects.clearLayers();
+    this.leafletMapObjects.addLayer(layer);
+    const obj = (this.leafletMapObjects as any).toGeoJSON().features?.[0]?.geometry;
+    console.log("Object created");
+    this.routefinderUpdate(obj);
+  }
+
+  @action.bound handleRoutefinderObjectEdited(event: any) {
+    const obj = (this.leafletMapObjects as any).toGeoJSON().features?.[0]?.geometry;
+    this.routefinderUpdate(obj);
+  }
+
+  @action.bound handleRoutefinderObjectDeleted(event: any) {
+    this.routefinderUpdate(undefined);
+  }
+
+  @action.bound handleRoutefinderVertexDrawn(event: any) {
+    console.log("Vertex drawn");
+    const obj = {
+      type: "LineString",
+      coordinates: event.layers
+        .getLayers()
+        .map((layer: any) => [layer.getLatLng().lng, layer.getLatLng().lat]),
+    };
+    this.routefinderUpdate(obj);
+  }
+
+  @action.bound handleRoutefinderVertexEdited(event: any) {
+    const obj = (this.leafletMapObjects as any).toGeoJSON().features?.[0]?.geometry;
+    this.routefinderUpdate(obj);
+  }
+
+  @action.bound routefinderUpdate(obj: any) {
+    this.props.onRoutefinderGeometryChange?.(obj);
+  }
+
   initLeafletDrawControls() {
+    this.activateNormalControls();
+  }
+
+  mapControl: L.Control.Draw | undefined;
+  mapControlDisposers: Array<() => void> = [];
+
+  activateRoutingControls() {
+    for (let h of this.mapControlDisposers) h();
+    this.mapControlDisposers = [];
+    this.leafletMapObjects.clearLayers();
+    this.leafletMapRoute.clearLayers();
     this.leafletMap?.addControl(
-      new L.Control.Draw({
+      (this.mapControl = new L.Control.Draw({
+        edit: {
+          featureGroup: this.leafletMapObjects,
+          poly: {
+            allowIntersection: true,
+          },
+          circle: false,
+          circlemarker: false,
+        },
+        draw: {
+          polygon: false,
+          point: false,
+          marker: false,
+          circle: false,
+          circlemarker: false,
+          rectangle: false,
+        },
+      } as any)) // 🦄
+    );
+
+    this.leafletMap?.on(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
+    this.leafletMap?.on(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
+    this.leafletMap?.on(L.Draw.Event.DELETED, this.handleRoutefinderObjectDeleted);
+    this.leafletMap?.on(L.Draw.Event.DRAWVERTEX, this.handleRoutefinderVertexDrawn);
+    this.leafletMap?.on(L.Draw.Event.EDITVERTEX, this.handleRoutefinderVertexEdited);
+
+    this.mapControlDisposers.push(() => {
+      // this.leafletMap?.off(L.Draw.Event.CREATED, this.handleOjectCreated);
+      // this.leafletMap?.off(L.Draw.Event.EDITED, this.handleObjectEdited);
+      // this.leafletMap?.off(L.Draw.Event.DELETED, this.handleObjectDeleted);
+      if (this.mapControl) this.leafletMap?.removeControl(this.mapControl);
+      this.mapControl = undefined;
+    });
+  }
+
+  activateNormalControls() {
+    for (let h of this.mapControlDisposers) h();
+    this.mapControlDisposers = [];
+    this.leafletMapObjects.clearLayers();
+    this.leafletMapRoute.clearLayers();
+    this.leafletMap?.addControl(
+      (this.mapControl = new L.Control.Draw({
         edit: {
           featureGroup: this.leafletMapObjects,
           poly: {
@@ -254,30 +406,17 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           circle: false,
           circlemarker: false,
         },
-      } as any) // 🦄
+      } as any)) // 🦄
     );
-
-    this.leafletMap?.on(L.Draw.Event.CREATED, (event) => {
-      const layer = event.layer;
-      this.leafletMapObjects.clearLayers();
-      this.leafletMapObjects.addLayer(layer);
-      console.log(layer.toGeoJSON());
-      const obj = layer.toGeoJSON().geometry;
-      this.props.onChange?.(obj);
-    });
-
-    this.leafletMap?.on(L.Draw.Event.EDITED, (event) => {
-      const layers = (event as any).layers;
-      console.log(layers.toGeoJSON());
-      const obj = layers.toGeoJSON().features?.[0]?.geometry;
-      console.log(obj);
-      if (obj) {
-        this.props.onChange?.(obj);
-      }
-    });
-
-    this.leafletMap?.on(L.Draw.Event.DELETED, (event) => {
-      this.props.onChange?.(undefined);
+    this.leafletMap?.on(L.Draw.Event.CREATED, this.handleOjectCreated);
+    this.leafletMap?.on(L.Draw.Event.EDITED, this.handleObjectEdited);
+    this.leafletMap?.on(L.Draw.Event.DELETED, this.handleObjectDeleted);
+    this.mapControlDisposers.push(() => {
+      this.leafletMap?.off(L.Draw.Event.CREATED, this.handleOjectCreated);
+      this.leafletMap?.off(L.Draw.Event.EDITED, this.handleObjectEdited);
+      this.leafletMap?.off(L.Draw.Event.DELETED, this.handleObjectDeleted);
+      if (this.mapControl) this.leafletMap?.removeControl(this.mapControl);
+      this.mapControl = undefined;
     });
   }
 
@@ -296,6 +435,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     L.control.scale().addTo(lmap);
 
     lmap.addLayer(this.leafletMapObjects);
+    lmap.addLayer(this.leafletMapRoute);
 
     this._disposers.push(
       reaction(
@@ -312,6 +452,26 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         {
           delay: 100,
           fireImmediately: true,
+        }
+      ),
+      reaction(
+        () => this.mapRoutefinderRoute,
+        (layers) => {
+          console.log(layers);
+          this.leafletMapRoute.clearLayers();
+          for (let layer of layers) {
+            this.leafletMapRoute.addLayer(layer!);
+          }
+        }
+      ),
+      reaction(
+        () => this.mapRoutefinderEditables,
+        (layers) => {
+          console.log(layers);
+          this.leafletMapObjects.clearLayers();
+          for (let layer of layers) {
+            this.leafletMapObjects.addLayer(layer!);
+          }
         }
       )
     );

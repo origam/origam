@@ -10,6 +10,8 @@ export class MapNavigationStore {
     panToSelectedObject(): void;
     panToFirstObject(): void;
     highlightSelectedLayer(): void;
+    activateRoutingControls(): void;
+    activateNormalControls(): void;
   } | null = null;
 
   get setupStore() {
@@ -37,6 +39,16 @@ export class MapNavigationStore {
   @action.bound
   handleCenterMapClick(event: any) {
     this.elmMapComponent?.panToCenter();
+  }
+
+  @action.bound
+  activateRoutingControls() {
+    this.elmMapComponent?.activateRoutingControls();
+  }
+
+  @action.bound
+  activateNormalControls() {
+    this.elmMapComponent?.activateNormalControls();
   }
 
   @action.bound
