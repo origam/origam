@@ -1,6 +1,6 @@
 import cx from "classnames";
 import L from "leaflet";
-import "leaflet-draw";
+import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
 import _ from "lodash";
@@ -46,6 +46,8 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   leafletMapObjects = new L.FeatureGroup();
   leafletMapRoute = new L.FeatureGroup();
+
+  editingObjectsRepaintDisabled = false;
 
   _disposers: any[] = [];
 
@@ -268,7 +270,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             {
               return L.polyline(
                 obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
-                { color: "green" }
+                { color: "green", dashArray: "10 5 3 5", opacity: 1.0, weight: 1.5 }
               );
             }
             break;
@@ -335,6 +337,14 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     this.props.onRoutefinderGeometryChange?.(obj);
   }
 
+  @action.bound handleRoutefinderEditStart() {
+    this.editingObjectsRepaintDisabled = true;
+  }
+
+  @action.bound handleRoutefinderEditStop() {
+    this.editingObjectsRepaintDisabled = false;
+  }
+
   initLeafletDrawControls() {
     this.activateNormalControls();
   }
@@ -374,10 +384,19 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     this.leafletMap?.on(L.Draw.Event.DRAWVERTEX, this.handleRoutefinderVertexDrawn);
     this.leafletMap?.on(L.Draw.Event.EDITVERTEX, this.handleRoutefinderVertexEdited);
 
+    this.leafletMap?.on(L.Draw.Event.EDITSTART, this.handleRoutefinderEditStart);
+    this.leafletMap?.on(L.Draw.Event.EDITSTOP, this.handleRoutefinderEditStop);
+
     this.mapControlDisposers.push(() => {
-      // this.leafletMap?.off(L.Draw.Event.CREATED, this.handleOjectCreated);
-      // this.leafletMap?.off(L.Draw.Event.EDITED, this.handleObjectEdited);
-      // this.leafletMap?.off(L.Draw.Event.DELETED, this.handleObjectDeleted);
+      this.leafletMap?.on(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
+      this.leafletMap?.on(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
+      this.leafletMap?.on(L.Draw.Event.DELETED, this.handleRoutefinderObjectDeleted);
+      this.leafletMap?.on(L.Draw.Event.DRAWVERTEX, this.handleRoutefinderVertexDrawn);
+      this.leafletMap?.on(L.Draw.Event.EDITVERTEX, this.handleRoutefinderVertexEdited);
+
+      this.leafletMap?.on(L.Draw.Event.EDITSTART, this.handleRoutefinderEditStart);
+      this.leafletMap?.on(L.Draw.Event.EDITSTOP, this.handleRoutefinderEditStop);
+
       if (this.mapControl) this.leafletMap?.removeControl(this.mapControl);
       this.mapControl = undefined;
     });
@@ -427,7 +446,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         .map(([rawLayer, leaLayer]) => leaLayer),
     });
     this.leafletMap = lmap;
-    lmap.setZoom(5);
+    lmap.setZoom(15);
     this.panToCenter();
     L.control
       .layers({}, this.leafletlayersDescriptor, { position: "topleft", collapsed: true })
@@ -468,6 +487,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         () => this.mapRoutefinderEditables,
         (layers) => {
           console.log(layers);
+          if (this.editingObjectsRepaintDisabled) return;
           this.leafletMapObjects.clearLayers();
           for (let layer of layers) {
             this.leafletMapObjects.addLayer(layer!);

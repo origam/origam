@@ -52,6 +52,7 @@ export class MapRoutefinderStore {
     if (obj) {
       const gjsCoords = obj.coordinates;
       this.driveThruPoints = gjsCoords;
+      console.log(this.mapObjectsEditable)
       if (gjsCoords.length > 1) {
         const smapCoords = gjsCoords.map((ll: any) =>
           (window as any).SMap.Coords.fromWGS84(ll[0], ll[1])
@@ -63,7 +64,6 @@ export class MapRoutefinderStore {
           } else {
             this.handleResultsReceived(results);
           }
-          //polyline.setLatLngs(coords);
         });
       }
     }
