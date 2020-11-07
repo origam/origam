@@ -29,8 +29,11 @@ interface IMapPerspectiveComProps {
   isReadOnly: boolean;
   isActive: boolean;
   onChange?(geoJson: any): void;
-  onRoutefinderGeometryChange?(obj: any): void;
   onLayerClick?(id: string): void;
+  onRoutefinderGeometryChange?(obj: any): void;
+  onRoutefinderGeometryEditStart?(): void;
+  onRoutefinderGeometryEditSave?(): void;
+  onRoutefinderGeometryEditCancel?(): void;
 }
 
 const MAP_ANIMATE_SETTING = {
@@ -339,10 +342,49 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   @action.bound handleRoutefinderEditStart() {
     this.editingObjectsRepaintDisabled = true;
+    this.props.onRoutefinderGeometryEditStart?.();
   }
+
+  @action.bound handleRoutefinderDrawStart() {
+    this.handleRoutefinderEditStart();
+  }
+
+  _isCancelAction = false;
 
   @action.bound handleRoutefinderEditStop() {
     this.editingObjectsRepaintDisabled = false;
+    if(this._isCancelAction) {
+      this.props.onRoutefinderGeometryEditCancel?.();
+    } else {
+      this.props.onRoutefinderGeometryEditSave?.();
+    }
+  }
+
+  @action.bound handleRoutefinderDrawStop() {
+    this.handleRoutefinderEditStop();
+  }
+
+  setMapControlCancelHack() {
+    /*
+      This is need to distinguish between Finish and Cancel button click.
+    */
+    const self = this;
+    
+    const edit = (this.mapControl! as any)._toolbars.edit;
+    const oldEditDisable = edit.disable;
+    (this.mapControl! as any)._toolbars.edit.disable = function() {
+      self._isCancelAction = true;
+      oldEditDisable.apply(edit, arguments);
+      self._isCancelAction = false;
+    }
+
+    const draw = (this.mapControl! as any)._toolbars.draw;
+    const oldDrawDisable = draw.disable;
+    (this.mapControl! as any)._toolbars.draw.disable = function() {
+      self._isCancelAction = true;
+      oldDrawDisable.apply(draw, arguments);
+      self._isCancelAction = false;
+    }
   }
 
   initLeafletDrawControls() {
@@ -378,6 +420,9 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       } as any)) // 🦄
     );
 
+    this.setMapControlCancelHack();
+
+
     this.leafletMap?.on(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
     this.leafletMap?.on(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
     this.leafletMap?.on(L.Draw.Event.DELETED, this.handleRoutefinderObjectDeleted);
@@ -386,16 +431,20 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
     this.leafletMap?.on(L.Draw.Event.EDITSTART, this.handleRoutefinderEditStart);
     this.leafletMap?.on(L.Draw.Event.EDITSTOP, this.handleRoutefinderEditStop);
+    this.leafletMap?.on(L.Draw.Event.DRAWSTART, this.handleRoutefinderDrawStart);
+    this.leafletMap?.on(L.Draw.Event.DRAWSTOP, this.handleRoutefinderDrawStop);
 
     this.mapControlDisposers.push(() => {
-      this.leafletMap?.on(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
-      this.leafletMap?.on(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
-      this.leafletMap?.on(L.Draw.Event.DELETED, this.handleRoutefinderObjectDeleted);
-      this.leafletMap?.on(L.Draw.Event.DRAWVERTEX, this.handleRoutefinderVertexDrawn);
-      this.leafletMap?.on(L.Draw.Event.EDITVERTEX, this.handleRoutefinderVertexEdited);
+      this.leafletMap?.off(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
+      this.leafletMap?.off(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
+      this.leafletMap?.off(L.Draw.Event.DELETED, this.handleRoutefinderObjectDeleted);
+      this.leafletMap?.off(L.Draw.Event.DRAWVERTEX, this.handleRoutefinderVertexDrawn);
+      this.leafletMap?.off(L.Draw.Event.EDITVERTEX, this.handleRoutefinderVertexEdited);
 
-      this.leafletMap?.on(L.Draw.Event.EDITSTART, this.handleRoutefinderEditStart);
-      this.leafletMap?.on(L.Draw.Event.EDITSTOP, this.handleRoutefinderEditStop);
+      this.leafletMap?.off(L.Draw.Event.EDITSTART, this.handleRoutefinderEditStart);
+      this.leafletMap?.off(L.Draw.Event.EDITSTOP, this.handleRoutefinderEditStop);
+      this.leafletMap?.off(L.Draw.Event.DRAWSTART, this.handleRoutefinderDrawStart);
+      this.leafletMap?.off(L.Draw.Event.DRAWSTOP, this.handleRoutefinderDrawStop);
 
       if (this.mapControl) this.leafletMap?.removeControl(this.mapControl);
       this.mapControl = undefined;

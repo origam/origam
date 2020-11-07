@@ -145,6 +145,9 @@ function MapContentUI(props: {
               mapObjectsStore.handleGeometryChange(geoJson);
             }}
             onRoutefinderGeometryChange={mapRoutefinderStore.handleGeometryChange}
+            onRoutefinderGeometryEditStart={mapRoutefinderStore.handleEditingStarted}
+            onRoutefinderGeometryEditSave={mapRoutefinderStore.handleEditingFinished}
+            onRoutefinderGeometryEditCancel={mapRoutefinderStore.handleEditingCancelled}
             onLayerClick={mapObjectsStore.handleLayerClick}
           />
         </MapPerspectiveComContainer>
