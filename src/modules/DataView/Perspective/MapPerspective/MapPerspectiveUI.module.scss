@@ -42,12 +42,33 @@
   position: relative;
   :global(.input) {
     width: 100%;
+    border-radius: 2px;
+    transition: all 300ms linear;
+    background: #F7F6FA;
+    border: 1px solid #B0AFB7;
+    color: #0D0D0D;
+    padding: 0.25em 0.34em;
   }
   :global(.inputActions) {
     position: absolute;
     top: 0;
     right: 0;
     height: 100%;
+
+    button {
+      border: none;
+      cursor: pointer;
+      background: none;
+      height: 100%;
+      color: #b1afb9;
+      transition: color 0.3s linear;
+      &:hover {
+        color: black;
+      }
+    }
+  }
+  :global(.inputClear) {
+
   }
   :global(.inputCaret) {
 
@@ -85,6 +106,16 @@
 
 
 .mapToolbarButton {
+  border: none;
+  cursor: pointer;
+  background-color: white;
+  color: #b1afb9;
+  
+  transition: color 0.3s linear;
+  &:hover {
+    color: black;
+  }
+
   &:global(.isActive) {
     color: #4c84ff;
   }

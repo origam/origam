@@ -163,11 +163,17 @@ function MapPerspectiveNavigation() {
     <Observer>
       {() => (
         <>
-          <button onClick={mapNavigationStore.handleCenterMapClick}>
-            <i className="fas fa-crosshairs" />
+          <button
+            className={cx(S.mapToolbarButton)}
+            onClick={mapNavigationStore.handleCenterMapClick}
+          >
+            <i className="fas fa-crosshairs fa-lg" />
           </button>
-          <button onClick={mapNavigationStore.handleLookupObjectClick}>
-            <i className="fas fa-search-location" />
+          <button
+            className={cx(S.mapToolbarButton)}
+            onClick={mapNavigationStore.handleLookupObjectClick}
+          >
+            <i className="fas fa-search-location fa-lg" />
           </button>
         </>
       )}
@@ -186,7 +192,7 @@ function MapPerspectiveRoutefind() {
               className={cx(S.mapToolbarButton, { isActive: mapRoutefinderStore.isActive })}
               onClick={mapRoutefinderStore.handleRoutefinderButtonClick}
             >
-              <i className="fas fa-route" />
+              <i className="fas fa-route fa-lg" />
             </button>
           )}
         </>
