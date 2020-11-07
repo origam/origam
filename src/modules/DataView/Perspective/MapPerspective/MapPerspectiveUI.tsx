@@ -1,6 +1,6 @@
 import cx from "classnames";
 import L from "leaflet";
-import "leaflet-draw";
+import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
 import _ from "lodash";
@@ -29,8 +29,11 @@ interface IMapPerspectiveComProps {
   isReadOnly: boolean;
   isActive: boolean;
   onChange?(geoJson: any): void;
-  onRoutefinderGeometryChange?(obj: any): void;
   onLayerClick?(id: string): void;
+  onRoutefinderGeometryChange?(obj: any): void;
+  onRoutefinderGeometryEditStart?(): void;
+  onRoutefinderGeometryEditSave?(): void;
+  onRoutefinderGeometryEditCancel?(): void;
 }
 
 const MAP_ANIMATE_SETTING = {
@@ -46,6 +49,8 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   leafletMapObjects = new L.FeatureGroup();
   leafletMapRoute = new L.FeatureGroup();
+
+  editingObjectsRepaintDisabled = false;
 
   _disposers: any[] = [];
 
@@ -189,7 +194,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         switch (obj.type) {
           case IMapObjectType.POINT:
             {
-              const iconUrl = obj.icon;
+              const iconUrl = obj.icon || "img/map/marker-icon.png#anchor=[12,41]";
               const pq = iconUrl ? qs.parse(iconUrl.split("#")[1] || "") : null;
               const anchor = pq?.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
               const iconAnchor: [number, number] = anchor;
@@ -268,7 +273,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
             {
               return L.polyline(
                 obj.coordinates.map((coords: any) => [coords[1], coords[0]]),
-                { color: "green" }
+                { color: "green", dashArray: "10 5 3 5", opacity: 1.0, weight: 1.5 }
               );
             }
             break;
@@ -335,6 +340,53 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     this.props.onRoutefinderGeometryChange?.(obj);
   }
 
+  @action.bound handleRoutefinderEditStart() {
+    this.editingObjectsRepaintDisabled = true;
+    this.props.onRoutefinderGeometryEditStart?.();
+  }
+
+  @action.bound handleRoutefinderDrawStart() {
+    this.handleRoutefinderEditStart();
+  }
+
+  _isCancelAction = false;
+
+  @action.bound handleRoutefinderEditStop() {
+    this.editingObjectsRepaintDisabled = false;
+    if (this._isCancelAction) {
+      this.props.onRoutefinderGeometryEditCancel?.();
+    } else {
+      this.props.onRoutefinderGeometryEditSave?.();
+    }
+  }
+
+  @action.bound handleRoutefinderDrawStop() {
+    this.handleRoutefinderEditStop();
+  }
+
+  setMapControlCancelHack() {
+    /*
+      This is need to distinguish between Finish and Cancel button click.
+    */
+    const self = this;
+
+    const edit = (this.mapControl! as any)._toolbars.edit;
+    const oldEditDisable = edit.disable;
+    (this.mapControl! as any)._toolbars.edit.disable = function () {
+      self._isCancelAction = true;
+      oldEditDisable.apply(edit, arguments);
+      self._isCancelAction = false;
+    };
+
+    const draw = (this.mapControl! as any)._toolbars.draw;
+    const oldDrawDisable = draw.disable;
+    (this.mapControl! as any)._toolbars.draw.disable = function () {
+      self._isCancelAction = true;
+      oldDrawDisable.apply(draw, arguments);
+      self._isCancelAction = false;
+    };
+  }
+
   initLeafletDrawControls() {
     this.activateNormalControls();
   }
@@ -368,16 +420,31 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       } as any)) // 🦄
     );
 
+    this.setMapControlCancelHack();
+
     this.leafletMap?.on(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
     this.leafletMap?.on(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
     this.leafletMap?.on(L.Draw.Event.DELETED, this.handleRoutefinderObjectDeleted);
     this.leafletMap?.on(L.Draw.Event.DRAWVERTEX, this.handleRoutefinderVertexDrawn);
     this.leafletMap?.on(L.Draw.Event.EDITVERTEX, this.handleRoutefinderVertexEdited);
 
+    this.leafletMap?.on(L.Draw.Event.EDITSTART, this.handleRoutefinderEditStart);
+    this.leafletMap?.on(L.Draw.Event.EDITSTOP, this.handleRoutefinderEditStop);
+    this.leafletMap?.on(L.Draw.Event.DRAWSTART, this.handleRoutefinderDrawStart);
+    this.leafletMap?.on(L.Draw.Event.DRAWSTOP, this.handleRoutefinderDrawStop);
+
     this.mapControlDisposers.push(() => {
-      // this.leafletMap?.off(L.Draw.Event.CREATED, this.handleOjectCreated);
-      // this.leafletMap?.off(L.Draw.Event.EDITED, this.handleObjectEdited);
-      // this.leafletMap?.off(L.Draw.Event.DELETED, this.handleObjectDeleted);
+      this.leafletMap?.off(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
+      this.leafletMap?.off(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
+      this.leafletMap?.off(L.Draw.Event.DELETED, this.handleRoutefinderObjectDeleted);
+      this.leafletMap?.off(L.Draw.Event.DRAWVERTEX, this.handleRoutefinderVertexDrawn);
+      this.leafletMap?.off(L.Draw.Event.EDITVERTEX, this.handleRoutefinderVertexEdited);
+
+      this.leafletMap?.off(L.Draw.Event.EDITSTART, this.handleRoutefinderEditStart);
+      this.leafletMap?.off(L.Draw.Event.EDITSTOP, this.handleRoutefinderEditStop);
+      this.leafletMap?.off(L.Draw.Event.DRAWSTART, this.handleRoutefinderDrawStart);
+      this.leafletMap?.off(L.Draw.Event.DRAWSTOP, this.handleRoutefinderDrawStop);
+
       if (this.mapControl) this.leafletMap?.removeControl(this.mapControl);
       this.mapControl = undefined;
     });
@@ -427,7 +494,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         .map(([rawLayer, leaLayer]) => leaLayer),
     });
     this.leafletMap = lmap;
-    lmap.setZoom(5);
+    lmap.setZoom(15);
     this.panToCenter();
     L.control
       .layers({}, this.leafletlayersDescriptor, { position: "topleft", collapsed: true })
@@ -468,6 +535,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         () => this.mapRoutefinderEditables,
         (layers) => {
           console.log(layers);
+          if (this.editingObjectsRepaintDisabled) return;
           this.leafletMapObjects.clearLayers();
           for (let layer of layers) {
             this.leafletMapObjects.addLayer(layer!);
