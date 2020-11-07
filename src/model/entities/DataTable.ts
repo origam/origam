@@ -13,6 +13,8 @@ import { formatNumber } from "./NumberFormating";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
 import { isScrollRowContainer } from "./ScrollRowContainer";
 import {getProperties} from "model/selectors/DataView/getProperties";
+import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getDataSourceFieldByIndex } from "model/selectors/DataSources/getDataSourceFieldByIndex";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -366,11 +368,23 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
-  clearRecordDirtyValues(id: string): void {
-    const ard = this.getAdditionalRowDataById(id);
-    if (ard) {
-      ard.dirtyFormValues.clear();
-      ard.dirtyValues.clear();
+  clearRecordDirtyValues(id: string, newRow: any[]): void {
+    const rowData = this.getAdditionalRowDataById(id);
+    if (rowData) {
+      const oldRow = this.getRowById(id)!;
+      for(let i=0; i<newRow.length; i++){
+        const dataSourceField = getDataSourceFieldByIndex(this, i)!;
+        if(newRow[i] !== oldRow[i]){
+          rowData.dirtyFormValues.delete(dataSourceField.name);
+          rowData.dirtyValues.delete(dataSourceField.name);
+        }
+        if(rowData.dirtyFormValues.get(dataSourceField.name) === newRow[i]){
+          rowData.dirtyFormValues.delete(dataSourceField.name);
+        }
+        if(rowData.dirtyValues.get(dataSourceField.name) === newRow[i]){
+          rowData.dirtyValues.delete(dataSourceField.name);
+        }
+      }
       this.clearUnneededAdditionalRowData();
     }
   }
