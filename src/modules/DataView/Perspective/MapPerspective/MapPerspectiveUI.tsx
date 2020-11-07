@@ -194,7 +194,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         switch (obj.type) {
           case IMapObjectType.POINT:
             {
-              const iconUrl = obj.icon;
+              const iconUrl = obj.icon || "img/map/marker-icon.png#anchor=[12,41]";
               const pq = iconUrl ? qs.parse(iconUrl.split("#")[1] || "") : null;
               const anchor = pq?.anchor ? JSON.parse(pq.anchor as string) : [0, 0];
               const iconAnchor: [number, number] = anchor;
@@ -353,7 +353,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
 
   @action.bound handleRoutefinderEditStop() {
     this.editingObjectsRepaintDisabled = false;
-    if(this._isCancelAction) {
+    if (this._isCancelAction) {
       this.props.onRoutefinderGeometryEditCancel?.();
     } else {
       this.props.onRoutefinderGeometryEditSave?.();
@@ -369,22 +369,22 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
       This is need to distinguish between Finish and Cancel button click.
     */
     const self = this;
-    
+
     const edit = (this.mapControl! as any)._toolbars.edit;
     const oldEditDisable = edit.disable;
-    (this.mapControl! as any)._toolbars.edit.disable = function() {
+    (this.mapControl! as any)._toolbars.edit.disable = function () {
       self._isCancelAction = true;
       oldEditDisable.apply(edit, arguments);
       self._isCancelAction = false;
-    }
+    };
 
     const draw = (this.mapControl! as any)._toolbars.draw;
     const oldDrawDisable = draw.disable;
-    (this.mapControl! as any)._toolbars.draw.disable = function() {
+    (this.mapControl! as any)._toolbars.draw.disable = function () {
       self._isCancelAction = true;
       oldDrawDisable.apply(draw, arguments);
       self._isCancelAction = false;
-    }
+    };
   }
 
   initLeafletDrawControls() {
@@ -421,7 +421,6 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     );
 
     this.setMapControlCancelHack();
-
 
     this.leafletMap?.on(L.Draw.Event.CREATED, this.handleRoutefinderOjectCreated);
     this.leafletMap?.on(L.Draw.Event.EDITED, this.handleRoutefinderObjectEdited);
