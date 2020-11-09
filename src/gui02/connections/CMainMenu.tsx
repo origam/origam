@@ -148,6 +148,7 @@ class CMainMenuCommandItem extends React.Component<{
             onContextMenu={(event) => {
               setDropped(true);
               event.preventDefault();
+              event.stopPropagation();
             }}
           />
         )}
@@ -170,7 +171,7 @@ class CMainMenuCommandItem extends React.Component<{
                   this.onRemoveFromFavoritesClicked();
                 }}
               >
-                {T("Remove from Favourites", "remove_from_favourites")}
+                {T("Add Folder", "remove_from_favourites")}
               </DropdownItem>
             }
           </Dropdown>
