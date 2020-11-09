@@ -195,7 +195,23 @@ export class CSidebar extends React.Component {
           </SidebarSectionBody>
         </SidebarSection>
         {
-
+          favorites.customFolderIds.map(folderId =>
+            <SidebarSection isActive={this.activeSection === folderId}>
+              <SidebarSectionDivider />
+              <SidebarSectionHeader
+                isActive={this.activeSection === folderId}
+                icon={<Icon src="./icons/favorites.svg" tooltip={folderId} />}
+                label={folderId}
+                onClick={() => (this.activeSection = folderId)}
+              />
+              <SidebarSectionBody isActive={this.activeSection === folderId}>
+                {favorites.dafaultFavoritesFolderId &&
+                <CFavorites
+                  ctx={this.workbench}
+                  folderName={folderId}/>}
+              </SidebarSectionBody>
+            </SidebarSection>
+          )
         }
         <SidebarSection isActive={this.activeSection === "Menu"}>
           <SidebarSectionDivider />

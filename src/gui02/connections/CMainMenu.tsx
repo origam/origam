@@ -154,7 +154,7 @@ class CMainMenuCommandItem extends React.Component<{
         )}
         content={({ setDropped }) => (
           <Dropdown>
-            {!this.favorites.isFavorite("Favoriten", this.menuId) &&
+            {!this.favorites.isInAnyFavoriteFolder(this.menuId) &&
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
@@ -164,7 +164,7 @@ class CMainMenuCommandItem extends React.Component<{
                 {T("Put to favourites", "put_to_favourites")}
               </DropdownItem>
             }
-            {this.favorites.isFavorite("Favoriten", this.menuId) &&
+            {this.favorites.isInAnyFavoriteFolder(this.menuId) &&
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);

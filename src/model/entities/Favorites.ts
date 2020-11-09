@@ -12,8 +12,16 @@ export class Favorites {
     return this.favoriteFolders.find((folder) => folderId === folder.id)?.has(menuId) === true;
   }
 
+  isInAnyFavoriteFolder( menuId: string){
+    return this.favoriteFolders.some(folder => folder.has(menuId));
+  }
+
   get dafaultFavoritesFolderId() {
     return this.favoriteFolders.length > 0 ? this.favoriteFolders[0].id : undefined;
+  }
+
+  get customFolderIds(){
+    return this.favoriteFolders.slice(1).map(folder => folder.id);
   }
 
   setXml(xml: string) {
@@ -60,8 +68,9 @@ class XmlToFavoritesConverter {
     const label = foldeXml.attributes["label"];
     const id = label;
     const itemIds = foldeXml.elements
-      .map((item: xmlJs.Element) => item.attributes?.["menuId"])
-      .filter((menuId: string) => menuId);
+      ?.map((item: xmlJs.Element) => item.attributes?.["menuId"])
+      ?.filter((menuId: string) => menuId)
+      ?? [];
 
     return new FavoriteFolder(id, label, isDefault, itemIds);
   }
