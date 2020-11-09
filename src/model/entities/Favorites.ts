@@ -27,10 +27,7 @@ export class Favorites {
   }
 
   remove(menuId: any) {
-    const index = this.favoriteIds.indexOf(menuId);
-    if (index > -1) {
-      this.favoriteIds.splice(index, 1);
-    }
+    this.favoriteIds.remove(menuId);
     this.saveFaforites();
   }
 
