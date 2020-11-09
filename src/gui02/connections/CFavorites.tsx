@@ -15,21 +15,19 @@ import {CreateFavoriteFolderDialog} from "gui/Components/Dialogs/CreateFavoriteF
 import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 @observer
-export class CFavorites extends React.Component {
-  static contextType = MobXProviderContext;
-
-  get application(): IApplication {
-    return this.context.application;
-  }
+export class CFavorites extends React.Component<{
+  folderName: string;
+  ctx: any;
+}> {
 
   onCreateNewFolderClick() {
-    const closeDialog = getDialogStack(this.application).pushDialog(
+    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
       "",
       <CreateFavoriteFolderDialog
         onOkClick={(name: string) => {
           runInFlowWithHandler({
-            ctx: this.application,
-            action: () => getFavorites(this.application).createFolder(name)
+            ctx: this.props.ctx,
+            action: () => getFavorites(this.props.ctx).createFolder(name)
           });
           closeDialog();
         }}
@@ -41,7 +39,7 @@ export class CFavorites extends React.Component {
   }
 
   listFromNode(node: any, level: number, isOpen: boolean) {
-    const favorites = getFavorites(this.application);
+    const favorites = getFavorites(this.props.ctx);
 
     return (
       <Dropdowner
@@ -57,7 +55,7 @@ export class CFavorites extends React.Component {
               .filter((childNode: any) =>
                 childNode.attributes.isHidden !== "true" &&
                 childNode.name !== "Submenu" &&
-                favorites.isFavorite(childNode.attributes["id"]))
+                favorites.isFavorite(this.props.folderName, childNode.attributes["id"]))
               .map((node: any) => itemForNode(node, level, isOpen))}
           </div>
         )}
@@ -78,9 +76,8 @@ export class CFavorites extends React.Component {
   }
 
   render() {
-    const {props, application} = this;
-    const isLoading = getIsMainMenuLoading(application);
-    const mainMenu = getMainMenu(application);
+    const isLoading = getIsMainMenuLoading(this.props.ctx);
+    const mainMenu = getMainMenu(this.props.ctx);
 
     if (isLoading || !mainMenu) {
       return null; // TODO: More intelligent menu loading indicator...

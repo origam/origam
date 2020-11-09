@@ -3,47 +3,40 @@ import { observable } from "mobx";
 import { getApi } from "model/selectors/getApi";
 
 export class Favorites {
-  favoritesNodeLabel: string = "";
-
   @observable
-  private favoriteIds: string[] = [];
+  private favoriteFolders: FavoriteFolder[] = [];
 
-  isFavorite(menuId: any) {
-    return this.favoriteIds.includes(menuId);
+  private xmlConverter =  new XmlToFavoritesConverter();
+
+  isFavorite(folderId: string, menuId: string) {
+    return this.favoriteFolders.find((folder) => folderId === folder.id)?.has(menuId) === true;
+  }
+
+  get dafaultFavoritesFolderId() {
+    return this.favoriteFolders.length > 0 ? this.favoriteFolders[0].id : undefined;
   }
 
   setXml(xml: string) {
-    const favoritesObject = xmlJs.xml2js(xml);
-    this.favoriteIds = favoritesObject.elements[0].elements[0].elements
-      .map((item: xmlJs.Element) => item.attributes?.["menuId"])
-      .filter((menuId: string) => menuId);
-
-    this.favoritesNodeLabel = favoritesObject.elements[0].elements[0].attributes["label"];
+    this.favoriteFolders = this.xmlConverter.xmlToFolders(xml);
   }
 
-  async add(menuId: string) {
-    this.favoriteIds.push(menuId);
+  async add(folderId: string, menuId: string) {
+    return this.favoriteFolders
+      .find((folder) => folderId === folder.id)
+      ?.add(menuId);
     await this.saveFavorites();
   }
 
-  async remove(menuId: any) {
-    this.favoriteIds.remove(menuId);
+  async remove(folderId: string, menuId: any) {
+    return this.favoriteFolders
+      .find((folder) => folderId === folder.id)
+      ?.remove(menuId);
     await this.saveFavorites();
-  }
-
-  private favoriteIdsToXml() {
-    return (
-      "<favourites>\n" +
-      `  <folder label=\"${this.favoritesNodeLabel}\">\n` +
-      this.favoriteIds.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
-      "  </folder>\n" +
-      "</favourites>"
-    );
   }
 
   private async saveFavorites() {
     const api = getApi(this);
-    const xmlFavorites = this.favoriteIdsToXml();
+    const xmlFavorites = this.xmlConverter.favoriteIdsToXml(this.favoriteFolders);
     await api.saveFavorites({ ConfigXml: xmlFavorites });
   }
 
@@ -52,4 +45,54 @@ export class Favorites {
   }
 
   parent: any;
+}
+
+class XmlToFavoritesConverter {
+  
+  public xmlToFolders(xml: string){
+    return xmlJs
+      .xml2js(xml)
+      .elements[0].elements
+      .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0));
+  }
+
+  private parseToFavoriteFolder(foldeXml: any, isDefault: boolean){
+    const label = foldeXml.attributes["label"];
+    const id = label;
+    const itemIds = foldeXml.elements
+      .map((item: xmlJs.Element) => item.attributes?.["menuId"])
+      .filter((menuId: string) => menuId);
+
+    return new FavoriteFolder(id, label, isDefault, itemIds);
+  }
+  
+  public favoriteIdsToXml(favoriteFolders: FavoriteFolder[]) {
+    return (
+      "<favourites>\n" +
+      favoriteFolders.map(folder => this.folderToXml(folder)).join("\n")+"\n"+
+      "</favourites>"
+    );
+  }
+
+  private folderToXml(folder: FavoriteFolder){
+    return  `  <folder label=\"${folder.name}\">\n` +
+      folder.items.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
+      "  </folder>";
+  }
+}
+
+class FavoriteFolder {
+  constructor(public id: string, public name: string, isDefault: boolean, public items: string[]) {}
+
+  public has(menuId: string){
+    return this.items.includes(menuId);
+  }
+
+  public add(menuId: string){
+    return this.items.push(menuId);
+  }
+
+  public remove(menuId: string){
+    return this.items.remove(menuId);
+  }
 }

@@ -102,14 +102,14 @@ class CMainMenuCommandItem extends React.Component<{
   onAddToFavoritesClicked(){
     runInFlowWithHandler({
       ctx: this.workbench,
-      action: () => this.favorites.add(this.menuId)
+      action: () => this.favorites.add("Favoriten", this.menuId)
     });
   }
 
   onRemoveFromFavoritesClicked(){
     runInFlowWithHandler({
       ctx: this.workbench,
-      action: () => this.favorites.remove(this.menuId)
+      action: () => this.favorites.remove("Favoriten", this.menuId)
     });
   }
 
@@ -154,7 +154,7 @@ class CMainMenuCommandItem extends React.Component<{
         )}
         content={({ setDropped }) => (
           <Dropdown>
-            {!this.favorites.isFavorite(this.menuId) &&
+            {!this.favorites.isFavorite("Favoriten", this.menuId) &&
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
@@ -164,14 +164,14 @@ class CMainMenuCommandItem extends React.Component<{
                 {T("Put to favourites", "put_to_favourites")}
               </DropdownItem>
             }
-            {this.favorites.isFavorite(this.menuId) &&
+            {this.favorites.isFavorite("Favoriten", this.menuId) &&
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
                   this.onRemoveFromFavoritesClicked();
                 }}
               >
-                {T("Add Folder", "remove_from_favourites")}
+                {T("Remove from Favourites", "remove_from_favourites")}
               </DropdownItem>
             }
           </Dropdown>

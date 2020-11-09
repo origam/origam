@@ -35,6 +35,7 @@ import { SearchBox } from "gui02/components/Search/SearchBox";
 import { SearchResults } from "gui02/components/Search/SearchResults";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { CFavorites } from "./CFavorites";
+import {getFavorites} from "model/selectors/MainMenu/getFavorites";
 
 @observer
 export class CSidebar extends React.Component {
@@ -157,6 +158,7 @@ export class CSidebar extends React.Component {
     const showWorkQues = getShowWorkQues(this.workbench);
     const notificationBox = getNotifications(this.workbench)?.notificationBox;
     const logoUrl = getLogoUrl(this.workbench);
+    const favorites = getFavorites(this.workbench);
     return (
       <Sidebar>
         <LogoSection>
@@ -186,7 +188,10 @@ export class CSidebar extends React.Component {
             onClick={() => (this.activeSection = ISidebarSection.Favorites)}
           />
           <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Favorites}>
-            <CFavorites/>
+            {favorites.dafaultFavoritesFolderId &&
+              <CFavorites
+                ctx={this.workbench}
+                folderName={favorites.dafaultFavoritesFolderId}/>}
           </SidebarSectionBody>
         </SidebarSection>
         <SidebarSection isActive={this.activeSection === ISidebarSection.Menu}>
