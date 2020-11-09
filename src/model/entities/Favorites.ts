@@ -1,6 +1,6 @@
 import xmlJs from "xml-js";
-import {observable} from "mobx";
-import {getApi} from "model/selectors/getApi";
+import { observable } from "mobx";
+import { getApi } from "model/selectors/getApi";
 
 export class Favorites {
   favoritesNodeLabel: string = "";
@@ -40,10 +40,15 @@ export class Favorites {
       "</favourites>"
     );
   }
+
   private async saveFavorites() {
     const api = getApi(this);
     const xmlFavorites = this.favoriteIdsToXml();
-    await api.saveFavorites({ConfigXml: xmlFavorites});
+    await api.saveFavorites({ ConfigXml: xmlFavorites });
+  }
+
+  async createFolder(name: string) {
+    throw new Error("Method not implemented.");
   }
 
   parent: any;
