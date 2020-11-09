@@ -17,6 +17,8 @@ import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import {getFavorites} from "model/selectors/MainMenu/getFavorites";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import {getDialogStack} from "model/selectors/getDialogStack";
+import {ChooseFavoriteFolderDialog} from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -100,16 +102,33 @@ class CMainMenuCommandItem extends React.Component<{
   }
 
   onAddToFavoritesClicked(){
-    runInFlowWithHandler({
-      ctx: this.workbench,
-      action: () => this.favorites.add("Favoriten", this.menuId)
-    });
+
+    const closeDialog = getDialogStack(this.workbench).pushDialog(
+      "",
+      <ChooseFavoriteFolderDialog
+        onOkClick={(folderId: string) => {
+          runInFlowWithHandler({
+            ctx: this.workbench,
+            action: () =>  this.favorites.add(folderId, this.menuId)
+          });
+          closeDialog();
+        }}
+        onCancelClick={() => closeDialog()}
+        favorites={getFavorites(this.workbench).favoriteFolders}
+      />
+    );
+
+
+    // runInFlowWithHandler({
+    //   ctx: this.workbench,
+    //   action: () => this.favorites.add("Favoriten", this.menuId)
+    // });
   }
 
   onRemoveFromFavoritesClicked(){
     runInFlowWithHandler({
       ctx: this.workbench,
-      action: () => this.favorites.remove("Favoriten", this.menuId)
+      action: () => this.favorites.remove(this.menuId)
     });
   }
 

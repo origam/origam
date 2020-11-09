@@ -4,7 +4,7 @@ import { getApi } from "model/selectors/getApi";
 
 export class Favorites {
   @observable
-  private favoriteFolders: FavoriteFolder[] = [];
+  public favoriteFolders: FavoriteFolder[] = [];
 
   private xmlConverter =  new XmlToFavoritesConverter();
 
@@ -35,9 +35,9 @@ export class Favorites {
     await this.saveFavorites();
   }
 
-  async remove(folderId: string, menuId: any) {
+  async remove(menuId: any) {
     return this.favoriteFolders
-      .find((folder) => folderId === folder.id)
+      .find((folder) => folder.has(menuId))
       ?.remove(menuId);
     await this.saveFavorites();
   }
@@ -90,7 +90,7 @@ class XmlToFavoritesConverter {
   }
 }
 
-class FavoriteFolder {
+export class FavoriteFolder {
   constructor(public id: string, public name: string, isDefault: boolean, public items: string[]) {}
 
   public has(menuId: string){
