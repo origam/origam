@@ -21,14 +21,14 @@ export class Favorites {
     this.favoritesNodeLabel = favoritesObject.elements[0].elements[0].attributes["label"];
   }
 
-  add(menuId: string) {
+  async add(menuId: string) {
     this.favoriteIds.push(menuId);
-    this.saveFavorites();
+    await this.saveFavorites();
   }
 
-  remove(menuId: any) {
+  async remove(menuId: any) {
     this.favoriteIds.remove(menuId);
-    this.saveFavorites();
+    await this.saveFavorites();
   }
 
   private favoriteIdsToXml() {

@@ -16,6 +16,7 @@ import { Dropdown } from "gui02/components/Dropdown/Dropdown";
 import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
 import {getFavorites} from "model/selectors/MainMenu/getFavorites";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -99,11 +100,17 @@ class CMainMenuCommandItem extends React.Component<{
   }
 
   onAddToFavoritesClicked(){
-    this.favorites.add(this.menuId);
+    runInFlowWithHandler({
+      ctx: this.workbench,
+      action: () => this.favorites.add(this.menuId)
+    });
   }
 
   onRemoveFromFavoritesClicked(){
-    this.favorites.remove(this.menuId);
+    runInFlowWithHandler({
+      ctx: this.workbench,
+      action: () => this.favorites.remove(this.menuId)
+    });
   }
 
   render() {
