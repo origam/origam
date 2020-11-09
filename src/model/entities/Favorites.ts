@@ -23,12 +23,12 @@ export class Favorites {
 
   add(menuId: string) {
     this.favoriteIds.push(menuId);
-    this.saveFaforites();
+    this.saveFavorites();
   }
 
   remove(menuId: any) {
     this.favoriteIds.remove(menuId);
-    this.saveFaforites();
+    this.saveFavorites();
   }
 
   private favoriteIdsToXml() {
@@ -40,8 +40,7 @@ export class Favorites {
       "</favourites>"
     );
   }
-
-  private async saveFaforites() {
+  private async saveFavorites() {
     const api = getApi(this);
     const xmlFavorites = this.favoriteIdsToXml();
     await api.saveFavorites({ConfigXml: xmlFavorites});
