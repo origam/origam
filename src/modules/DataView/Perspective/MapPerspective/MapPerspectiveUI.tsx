@@ -41,6 +41,14 @@ const MAP_ANIMATE_SETTING = {
   duration: 1.1,
 };
 
+function getOptionsEPSG(options: any) {
+  switch(options.crs?.toUpperCase()) {
+    case "EPSG4326":
+      return L.CRS.EPSG4326;
+  }
+  return undefined;
+}
+
 export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> {
   elmMapDiv: HTMLDivElement | null = null;
   refMapDiv = (elm: any) => (this.elmMapDiv = elm);
@@ -170,7 +178,11 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         } else if (rawLayer.type === "WMS") {
           return [
             rawLayer,
-            L.tileLayer.wms(rawLayer.getUrl(), { ...rawLayer.getOptions(), zIndex: index }),
+            L.tileLayer.wms(rawLayer.getUrl(), {
+              ...rawLayer.getOptions(),
+              zIndex: index,
+              crs: getOptionsEPSG(rawLayer.getOptions()),
+            }),
           ];
         }
       })
