@@ -13,7 +13,7 @@ import { MobXProviderContext, observer } from "mobx-react";
 import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
 import { IWorkbench } from "model/entities/types/IWorkbench";
 import { CWorkQueues } from "./CWorkQueues";
-import { IInfoSubsection, ISidebarSection } from "./types";
+import { IInfoSubsection } from "./types";
 import { CSidebarInfoSection } from "./CSidebarInfoSection";
 import { addRecordInfoExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordInfoExpandRequestHandler";
 import { addRecordAuditExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordAuditExpandRequestHandler";
@@ -48,7 +48,7 @@ export class CSidebar extends React.Component {
   }
 
   @observable searchResults: ISearchResult[] = [];
-  @observable _activeSection = ISidebarSection.Menu;
+  @observable _activeSection = "Menu";
   @observable activeInfoSubsection = IInfoSubsection.Info;
 
   get activeSection() {
@@ -56,10 +56,10 @@ export class CSidebar extends React.Component {
   }
 
   set activeSection(value) {
-    if (this._activeSection === ISidebarSection.Info && value !== this._activeSection) {
+    if (this._activeSection === "Info" && value !== this._activeSection) {
       onSidebarInfoSectionCollapsed(this.workbench)();
     }
-    if (this._activeSection !== ISidebarSection.Info && value === ISidebarSection.Info) {
+    if (this._activeSection !== "Info" && value === "Info") {
       if (this.activeInfoSubsection === IInfoSubsection.Info) {
         onSidebarInfoSectionExpanded(this.workbench)();
       }
@@ -72,12 +72,12 @@ export class CSidebar extends React.Component {
 
   @action.bound handleExpandRecordAuditLog() {
     this.activeInfoSubsection = IInfoSubsection.Audit;
-    this.activeSection = ISidebarSection.Info;
+    this.activeSection = "Info";
   }
 
   @action.bound handleExpandRecordInfo() {
     this.activeInfoSubsection = IInfoSubsection.Info;
-    this.activeSection = ISidebarSection.Info;
+    this.activeSection = "Info";
   }
 
   disposers: any[] = [];
@@ -97,16 +97,16 @@ export class CSidebar extends React.Component {
   @action
   onSearchResultsChange(results: ISearchResult[]){
     this.searchResults = results;
-    this.activeSection =ISidebarSection.Search;
+    this.activeSection ="Search";
   }
 
   renderWorkQuesSection(){
     const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
     return(
-      <SidebarSection isActive={this.activeSection === ISidebarSection.WorkQueues}>
+      <SidebarSection isActive={this.activeSection === "WorkQueues"}>
         <SidebarSectionDivider />
         <SidebarSectionHeader
-          isActive={this.activeSection === ISidebarSection.WorkQueues}
+          isActive={this.activeSection === "WorkQueues"}
           icon={
             <>
               <Icon
@@ -119,9 +119,9 @@ export class CSidebar extends React.Component {
             </>
           }
           label={<>{T("Work Queues", "work_queue_measure")}</>}
-          onClick={() => (this.activeSection = ISidebarSection.WorkQueues)}
+          onClick={() => (this.activeSection = "WorkQueues")}
         />
-        <SidebarSectionBody isActive={this.activeSection === ISidebarSection.WorkQueues}>
+        <SidebarSectionBody isActive={this.activeSection === "WorkQueues"}>
           <CWorkQueues />
         </SidebarSectionBody>
       </SidebarSection>
@@ -131,10 +131,10 @@ export class CSidebar extends React.Component {
   renderChatSection(): React.ReactNode {
     const totalUnreadMessages = getChatrooms(this.workbench).totalItemCount;
     return(
-      <SidebarSection isActive={this.activeSection === ISidebarSection.Chat}>
+      <SidebarSection isActive={this.activeSection === "Chat"}>
         <SidebarSectionDivider />
         <SidebarSectionHeader
-          isActive={this.activeSection === ISidebarSection.Chat}
+          isActive={this.activeSection === "Chat"}
           icon={
             <>
               <Icon src="./icons/chat.svg" tooltip={T("Chat", "chat")} />
@@ -144,9 +144,9 @@ export class CSidebar extends React.Component {
             </>
           }
           label={<>{T("Chat", "chat")}</>}
-          onClick={() => (this.activeSection = ISidebarSection.Chat)}
+          onClick={() => (this.activeSection = "Chat")}
         />
-        <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Chat}>
+        <SidebarSectionBody isActive={this.activeSection === "Chat"}>
           <CChatSection />
         </SidebarSectionBody>
       </SidebarSection>
@@ -179,54 +179,57 @@ export class CSidebar extends React.Component {
 
         {showChat ? this.renderChatSection() : null}
 
-        <SidebarSection isActive={this.activeSection === ISidebarSection.Favorites}>
+        <SidebarSection isActive={this.activeSection === "Favorites"}>
           <SidebarSectionDivider />
           <SidebarSectionHeader
-            isActive={this.activeSection === ISidebarSection.Favorites}
+            isActive={this.activeSection === "Favorites"}
             icon={<Icon src="./icons/favorites.svg" tooltip={T("Favorites", "default_group")} />}
             label={T("Favorites", "default_group")}
-            onClick={() => (this.activeSection = ISidebarSection.Favorites)}
+            onClick={() => (this.activeSection = "Favorites")}
           />
-          <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Favorites}>
+          <SidebarSectionBody isActive={this.activeSection === "Favorites"}>
             {favorites.dafaultFavoritesFolderId &&
               <CFavorites
                 ctx={this.workbench}
                 folderName={favorites.dafaultFavoritesFolderId}/>}
           </SidebarSectionBody>
         </SidebarSection>
-        <SidebarSection isActive={this.activeSection === ISidebarSection.Menu}>
+        {
+
+        }
+        <SidebarSection isActive={this.activeSection === "Menu"}>
           <SidebarSectionDivider />
           <SidebarSectionHeader
-            isActive={this.activeSection === ISidebarSection.Menu}
+            isActive={this.activeSection === "Menu"}
             icon={<Icon src="./icons/menu.svg" tooltip={T("Menu", "menu")} />}
             label={T("Menu", "menu")}
-            onClick={() => (this.activeSection = ISidebarSection.Menu)}
+            onClick={() => (this.activeSection = "Menu")}
           />
-          <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Menu}>
+          <SidebarSectionBody isActive={this.activeSection === "Menu"}>
             <CMainMenu />
           </SidebarSectionBody>
         </SidebarSection>
-        <SidebarSection isActive={this.activeSection === ISidebarSection.Info}>
+        <SidebarSection isActive={this.activeSection === "Info"}>
           <SidebarSectionDivider />
           <SidebarSectionHeader
-            isActive={this.activeSection === ISidebarSection.Info}
+            isActive={this.activeSection === "Info"}
             icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")} />}
             label={T("Info", "infopanel_title")}
-            onClick={() => (this.activeSection = ISidebarSection.Info)}
+            onClick={() => (this.activeSection = "Info")}
           />
-          <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Info}>
+          <SidebarSectionBody isActive={this.activeSection === "Info"}>
             <CSidebarInfoSection activeSubsection={this.activeInfoSubsection} />
           </SidebarSectionBody>
         </SidebarSection>
-        <SidebarSection isActive={this.activeSection === ISidebarSection.Search}>
+        <SidebarSection isActive={this.activeSection === "Search"}>
           <SidebarSectionDivider />
           <SidebarSectionHeader
-            isActive={this.activeSection === ISidebarSection.Search}
+            isActive={this.activeSection === "Search"}
             icon={<Icon src="./icons/search.svg" tooltip={T("Search", "search_result", this.searchResults.length)} />}
             label={T("Search", "search_result", this.searchResults.length)}
-            onClick={() => (this.activeSection = ISidebarSection.Search)}
+            onClick={() => (this.activeSection = "Search")}
           />
-          <SidebarSectionBody isActive={this.activeSection === ISidebarSection.Search}>
+          <SidebarSectionBody isActive={this.activeSection === "Search"}>
             <SearchResults results={this.searchResults}/>
           </SidebarSectionBody>
           <SidebarSectionDivider />
