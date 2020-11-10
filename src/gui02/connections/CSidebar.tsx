@@ -6,7 +6,7 @@ import { SidebarSection } from "gui02/components/Sidebar/SidebarSection";
 import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDivider";
 import { SidebarSectionHeader } from "gui02/components/Sidebar/SidebarSectionHeader";
 import React from "react";
-import { CMainMenu } from "./CMainMenu";
+import {CMainMenu, itemForNode} from "./CMainMenu";
 import { action, observable } from "mobx";
 import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
 import { MobXProviderContext, observer } from "mobx-react";
@@ -36,6 +36,12 @@ import { SearchResults } from "gui02/components/Search/SearchResults";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { CFavorites } from "./CFavorites";
 import {getFavorites} from "model/selectors/MainMenu/getFavorites";
+import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
+import {Dropdown} from "gui02/components/Dropdown/Dropdown";
+import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
+import cx from "classnames";
+import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
+import { CFavoritesHeader } from "./CFavoritesHeader";
 
 @observer
 export class CSidebar extends React.Component {
@@ -179,38 +185,24 @@ export class CSidebar extends React.Component {
 
         {showChat ? this.renderChatSection() : null}
 
-        <SidebarSection isActive={this.activeSection === "Favorites"}>
-          <SidebarSectionDivider />
-          <SidebarSectionHeader
-            isActive={this.activeSection === "Favorites"}
-            icon={<Icon src="./icons/favorites.svg" tooltip={T("Favorites", "default_group")} />}
-            label={T("Favorites", "default_group")}
-            onClick={() => (this.activeSection = "Favorites")}
-          />
-          <SidebarSectionBody isActive={this.activeSection === "Favorites"}>
-            {favorites.dafaultFavoritesFolderId &&
-              <CFavorites
-                ctx={this.workbench}
-                folderId={favorites.dafaultFavoritesFolderId}/>}
-          </SidebarSectionBody>
-        </SidebarSection>
+        <CFavorites
+          ctx={this.workbench}
+          folderId={favorites.dafaultFavoritesFolderId}
+          folderName={T("Favorites", "default_group")}
+          canBeDeleted={false}
+          isActive={this.activeSection === favorites.dafaultFavoritesFolderId}
+          onHeaderClick={() => (this.activeSection = favorites.dafaultFavoritesFolderId)}
+        />
         {
           favorites.customFolders.map(folder =>
-            <SidebarSection isActive={this.activeSection === folder.id}>
-              <SidebarSectionDivider />
-              <SidebarSectionHeader
-                isActive={this.activeSection === folder.id}
-                icon={<Icon src="./icons/favorites.svg" tooltip={folder.name} />}
-                label={folder.name}
-                onClick={() => (this.activeSection = folder.id)}
-              />
-              <SidebarSectionBody isActive={this.activeSection === folder.id}>
-                {favorites.dafaultFavoritesFolderId &&
-                <CFavorites
-                  ctx={this.workbench}
-                  folderId={folder.id}/>}
-              </SidebarSectionBody>
-            </SidebarSection>
+            <CFavorites
+              ctx={this.workbench}
+              folderId={folder.id}
+              folderName={folder.name}
+              canBeDeleted={true}
+              isActive={this.activeSection === folder.id}
+              onHeaderClick={() => (this.activeSection = folder.id)}
+            />
           )
         }
         <SidebarSection isActive={this.activeSection === "Menu"}>
