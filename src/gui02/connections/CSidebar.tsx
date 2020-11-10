@@ -191,24 +191,24 @@ export class CSidebar extends React.Component {
             {favorites.dafaultFavoritesFolderId &&
               <CFavorites
                 ctx={this.workbench}
-                folderName={favorites.dafaultFavoritesFolderId}/>}
+                folderId={favorites.dafaultFavoritesFolderId}/>}
           </SidebarSectionBody>
         </SidebarSection>
         {
-          favorites.customFolderIds.map(folderId =>
-            <SidebarSection isActive={this.activeSection === folderId}>
+          favorites.customFolders.map(folder =>
+            <SidebarSection isActive={this.activeSection === folder.id}>
               <SidebarSectionDivider />
               <SidebarSectionHeader
-                isActive={this.activeSection === folderId}
-                icon={<Icon src="./icons/favorites.svg" tooltip={folderId} />}
-                label={folderId}
-                onClick={() => (this.activeSection = folderId)}
+                isActive={this.activeSection === folder.id}
+                icon={<Icon src="./icons/favorites.svg" tooltip={folder.name} />}
+                label={folder.name}
+                onClick={() => (this.activeSection = folder.id)}
               />
-              <SidebarSectionBody isActive={this.activeSection === folderId}>
+              <SidebarSectionBody isActive={this.activeSection === folder.id}>
                 {favorites.dafaultFavoritesFolderId &&
                 <CFavorites
                   ctx={this.workbench}
-                  folderName={folderId}/>}
+                  folderId={folder.id}/>}
               </SidebarSectionBody>
             </SidebarSection>
           )

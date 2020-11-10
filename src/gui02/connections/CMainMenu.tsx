@@ -117,12 +117,6 @@ class CMainMenuCommandItem extends React.Component<{
         favorites={getFavorites(this.workbench).favoriteFolders}
       />
     );
-
-
-    // runInFlowWithHandler({
-    //   ctx: this.workbench,
-    //   action: () => this.favorites.add("Favoriten", this.menuId)
-    // });
   }
 
   onRemoveFromFavoritesClicked(){

@@ -16,7 +16,7 @@ import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 @observer
 export class CFavorites extends React.Component<{
-  folderName: string;
+  folderId: string;
   ctx: any;
 }> {
 
@@ -55,7 +55,7 @@ export class CFavorites extends React.Component<{
               .filter((childNode: any) =>
                 childNode.attributes.isHidden !== "true" &&
                 childNode.name !== "Submenu" &&
-                favorites.isFavorite(this.props.folderName, childNode.attributes["id"]))
+                favorites.isFavorite(this.props.folderId, childNode.attributes["id"]))
               .map((node: any) => itemForNode(node, level, isOpen))}
           </div>
         )}

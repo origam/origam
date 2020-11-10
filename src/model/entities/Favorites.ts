@@ -1,6 +1,7 @@
 import xmlJs from "xml-js";
 import {observable} from "mobx";
 import {getApi} from "model/selectors/getApi";
+import { uuidv4 } from "utils/uuid";
 
 export class Favorites {
   @observable
@@ -20,8 +21,8 @@ export class Favorites {
     return this.favoriteFolders.length > 0 ? this.favoriteFolders[0].id : undefined;
   }
 
-  get customFolderIds() {
-    return this.favoriteFolders.slice(1).map((folder) => folder.id);
+  get customFolders() {
+    return this.favoriteFolders.slice(1);
   }
 
   setXml(xml: string) {
@@ -45,14 +46,14 @@ export class Favorites {
   }
 
   async createFolder(name: string) {
-    throw new Error("Method not implemented.");
+    this.favoriteFolders.push(new FavoriteFolder(uuidv4(), name, false, []));
+    this.saveFavorites();
   }
 
   parent: any;
 }
 
 class XmlToFavoritesConverter {
-
   public xmlToFolders(xml: string) {
     return xmlJs
       .xml2js(xml)
@@ -62,7 +63,7 @@ class XmlToFavoritesConverter {
 
   private parseToFavoriteFolder(foldeXml: any, isDefault: boolean) {
     const label = foldeXml.attributes["label"];
-    const id = label;
+    const id = foldeXml.attributes["id"] ?? label;
     const itemIds = foldeXml.elements
         ?.map((item: xmlJs.Element) => item.attributes?.["menuId"])
         ?.filter((menuId: string) => menuId)
@@ -80,15 +81,19 @@ class XmlToFavoritesConverter {
   }
 
   private folderToXml(folder: FavoriteFolder) {
-    return `  <folder label=\"${folder.name}\">\n` +
+    return `  <folder label=\"${folder.name}\" id=\"${folder.id}\">\n` +
       folder.items.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
       "  </folder>";
   }
 }
 
 export class FavoriteFolder {
-  constructor(public id: string, public name: string, isDefault: boolean, public items: string[]) {
-  }
+  constructor(
+    public id: string,
+    public name: string,
+    public isDefault: boolean,
+    public items: string[]
+  ) {}
 
   public has(menuId: string) {
     return this.items.includes(menuId);
