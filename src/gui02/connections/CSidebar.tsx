@@ -180,7 +180,6 @@ export class CSidebar extends React.Component {
               ctx={this.workbench}
               folderId={folder.id}
               folderName={folder.name}
-              canBeDeleted={true}
               isActive={true}
               forceOpen={true}
             />
@@ -195,7 +194,6 @@ export class CSidebar extends React.Component {
             ctx={this.workbench}
             folderId={defaultFavoritesFolder.id}
             folderName={T("Favorites", "default_group")}
-            canBeDeleted={false}
             isActive={this.activeSection === defaultFavoritesFolder.id}
             onHeaderClick={() => (this.activeSection = defaultFavoritesFolder.id)}
           />
@@ -207,7 +205,6 @@ export class CSidebar extends React.Component {
               ctx={this.workbench}
               folderId={folder.id}
               folderName={folder.name}
-              canBeDeleted={true}
               isActive={this.activeSection === folder.id}
               onHeaderClick={() => (this.activeSection = folder.id)}
             />

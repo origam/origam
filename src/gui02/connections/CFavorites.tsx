@@ -25,7 +25,6 @@ export class CFavorites extends React.Component<{
   folderName: string;
   isActive: boolean;
   forceOpen?: boolean;
-  canBeDeleted: boolean;
   onHeaderClick?: () => void;
   ctx: any;
 }> {
@@ -34,6 +33,10 @@ export class CFavorites extends React.Component<{
   constructor(props: any) {
     super(props);
     this.favorites = getFavorites(this.props.ctx);
+  }
+
+  get canBeDeleted(){
+    return this.props.folderId !== this.favorites.dafaultFavoritesFolderId;
   }
 
   onCreateNewFolderClick() {
@@ -133,7 +136,7 @@ export class CFavorites extends React.Component<{
         )}
         content={({ setDropped }) => (
           <Dropdown>
-            {this.props.canBeDeleted && (
+            {this.canBeDeleted && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
