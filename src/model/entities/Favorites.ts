@@ -1,27 +1,27 @@
 import xmlJs from "xml-js";
-import { observable } from "mobx";
-import { getApi } from "model/selectors/getApi";
+import {observable} from "mobx";
+import {getApi} from "model/selectors/getApi";
 
 export class Favorites {
   @observable
   public favoriteFolders: FavoriteFolder[] = [];
 
-  private xmlConverter =  new XmlToFavoritesConverter();
+  private xmlConverter = new XmlToFavoritesConverter();
 
   isFavorite(folderId: string, menuId: string) {
     return this.favoriteFolders.find((folder) => folderId === folder.id)?.has(menuId) === true;
   }
 
-  isInAnyFavoriteFolder( menuId: string){
-    return this.favoriteFolders.some(folder => folder.has(menuId));
+  isInAnyFavoriteFolder(menuId: string) {
+    return this.favoriteFolders.some((folder) => folder.has(menuId));
   }
 
   get dafaultFavoritesFolderId() {
     return this.favoriteFolders.length > 0 ? this.favoriteFolders[0].id : undefined;
   }
 
-  get customFolderIds(){
-    return this.favoriteFolders.slice(1).map(folder => folder.id);
+  get customFolderIds() {
+    return this.favoriteFolders.slice(1).map((folder) => folder.id);
   }
 
   setXml(xml: string) {
@@ -29,23 +29,19 @@ export class Favorites {
   }
 
   async add(folderId: string, menuId: string) {
-    return this.favoriteFolders
-      .find((folder) => folderId === folder.id)
-      ?.add(menuId);
+    return this.favoriteFolders.find((folder) => folderId === folder.id)?.add(menuId);
     await this.saveFavorites();
   }
 
   async remove(menuId: any) {
-    return this.favoriteFolders
-      .find((folder) => folder.has(menuId))
-      ?.remove(menuId);
+    return this.favoriteFolders.find((folder) => folder.has(menuId))?.remove(menuId);
     await this.saveFavorites();
   }
 
   private async saveFavorites() {
     const api = getApi(this);
     const xmlFavorites = this.xmlConverter.favoriteIdsToXml(this.favoriteFolders);
-    await api.saveFavorites({ ConfigXml: xmlFavorites });
+    await api.saveFavorites({ConfigXml: xmlFavorites});
   }
 
   async createFolder(name: string) {
@@ -56,52 +52,53 @@ export class Favorites {
 }
 
 class XmlToFavoritesConverter {
-  
-  public xmlToFolders(xml: string){
+
+  public xmlToFolders(xml: string) {
     return xmlJs
       .xml2js(xml)
       .elements[0].elements
       .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0));
   }
 
-  private parseToFavoriteFolder(foldeXml: any, isDefault: boolean){
+  private parseToFavoriteFolder(foldeXml: any, isDefault: boolean) {
     const label = foldeXml.attributes["label"];
     const id = label;
     const itemIds = foldeXml.elements
-      ?.map((item: xmlJs.Element) => item.attributes?.["menuId"])
-      ?.filter((menuId: string) => menuId)
+        ?.map((item: xmlJs.Element) => item.attributes?.["menuId"])
+        ?.filter((menuId: string) => menuId)
       ?? [];
 
     return new FavoriteFolder(id, label, isDefault, itemIds);
   }
-  
+
   public favoriteIdsToXml(favoriteFolders: FavoriteFolder[]) {
     return (
       "<favourites>\n" +
-      favoriteFolders.map(folder => this.folderToXml(folder)).join("\n")+"\n"+
+      favoriteFolders.map(folder => this.folderToXml(folder)).join("\n") + "\n" +
       "</favourites>"
     );
   }
 
-  private folderToXml(folder: FavoriteFolder){
-    return  `  <folder label=\"${folder.name}\">\n` +
+  private folderToXml(folder: FavoriteFolder) {
+    return `  <folder label=\"${folder.name}\">\n` +
       folder.items.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
       "  </folder>";
   }
 }
 
 export class FavoriteFolder {
-  constructor(public id: string, public name: string, isDefault: boolean, public items: string[]) {}
+  constructor(public id: string, public name: string, isDefault: boolean, public items: string[]) {
+  }
 
-  public has(menuId: string){
+  public has(menuId: string) {
     return this.items.includes(menuId);
   }
 
-  public add(menuId: string){
+  public add(menuId: string) {
     return this.items.push(menuId);
   }
 
-  public remove(menuId: string){
+  public remove(menuId: string) {
     return this.items.remove(menuId);
   }
 }
