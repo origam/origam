@@ -22,10 +22,6 @@ export class Favorites {
     return this.favoriteFolders.length > 0 ? this.favoriteFolders[0].id : "Favorites";
   }
 
-  public get customFolders() {
-    return this.favoriteFolders.slice(1);
-  }
-
   public setXml(xml: string) {
     const foldersFromXml = this.xmlConverter.xmlToFolders(xml);
     if(foldersFromXml.length === 0){

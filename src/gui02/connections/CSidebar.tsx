@@ -189,16 +189,7 @@ export class CSidebar extends React.Component {
 
         {showChat ? this.renderChatSection() : null}
 
-        {defaultFavoritesFolder && !defaultFavoritesFolder?.isPinned && (
-          <CFavorites
-            ctx={this.workbench}
-            folderId={defaultFavoritesFolder.id}
-            folderName={defaultFavoritesFolder.name}
-            isActive={this.activeSection === defaultFavoritesFolder.id}
-            onHeaderClick={() => (this.activeSection = defaultFavoritesFolder.id)}
-          />
-        )}
-        {favorites.customFolders
+        {favorites.favoriteFolders
           .filter((folder) => !folder.isPinned)
           .map((folder) => (
             <CFavorites
