@@ -17,7 +17,7 @@ import { Icon } from "gui02/components/Icon/Icon";
 import { SidebarSection } from "gui02/components/Sidebar/SidebarSection";
 import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDivider";
 import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
-import {FavoriteFolder, Favorites} from "model/entities/Favorites";
+import { FavoriteFolder, Favorites } from "model/entities/Favorites";
 
 @observer
 export class CFavorites extends React.Component<{
@@ -34,7 +34,7 @@ export class CFavorites extends React.Component<{
     this.favorites = getFavorites(this.props.ctx);
   }
 
-  get canBeDeleted(){
+  get canBeDeleted() {
     return this.props.folder.id !== this.favorites.dafaultFavoritesFolderId;
   }
 
@@ -46,7 +46,7 @@ export class CFavorites extends React.Component<{
         onOkClick={(name, isPinned) => {
           runInFlowWithHandler({
             ctx: this.props.ctx,
-            action: () => getFavorites(this.props.ctx).createFolder(name, isPinned),
+            action: () => this.favorites.createFolder(name, isPinned),
           });
           closeDialog();
         }}
@@ -55,19 +55,18 @@ export class CFavorites extends React.Component<{
     );
   }
 
-  onFolderProperiesClick(folderId: string) {
-    const folder = this.favorites.getFolder(folderId)!;
+  onFolderProperiesClick() {
     const closeDialog = getDialogStack(this.props.ctx).pushDialog(
       "",
       <FavoriteFolderPropertiesDialog
         title={T("Favourites Folder Properties", "group_properties_title")}
-        name={folder.name}
-        isPinned={folder.isPinned}
-        nameReadOnly={folder.id === this.favorites.dafaultFavoritesFolderId}
+        name={this.props.folder.name}
+        isPinned={this.props.folder.isPinned}
+        nameReadOnly={this.props.folder.id === this.favorites.dafaultFavoritesFolderId}
         onOkClick={(name, isPinned) => {
           runInFlowWithHandler({
             ctx: this.props.ctx,
-            action: () => getFavorites(this.props.ctx).updateFolder(folderId, name, isPinned),
+            action: () => this.favorites.updateFolder(this.props.folder.id, name, isPinned),
           });
           closeDialog();
         }}
@@ -77,8 +76,6 @@ export class CFavorites extends React.Component<{
   }
 
   listFromNode(node: any, level: number, isOpen: boolean) {
-    const favorites = getFavorites(this.props.ctx);
-
     return (
       <Dropdowner
         trigger={({ refTrigger, setDropped }) => (
@@ -96,7 +93,7 @@ export class CFavorites extends React.Component<{
                 (childNode: any) =>
                   childNode.attributes.isHidden !== "true" &&
                   childNode.name !== "Submenu" &&
-                  favorites.isFavorite(this.props.folder.id, childNode.attributes["id"])
+                  this.props.folder.has(childNode.attributes["id"])
               )
               .map((node: any) => itemForNode(node, level, isOpen))}
           </div>
@@ -123,8 +120,7 @@ export class CFavorites extends React.Component<{
         trigger={({ refTrigger, setDropped }) => (
           <SidebarSectionHeader
             isActive={this.props.isActive}
-            icon={<Icon src="./icons/favorites.svg"
-            tooltip={this.props.folder.name} />}
+            icon={<Icon src="./icons/favorites.svg" tooltip={this.props.folder.name} />}
             label={this.props.folder.name}
             onClick={() => this.props.onHeaderClick?.()}
             refDom={refTrigger}
@@ -150,7 +146,7 @@ export class CFavorites extends React.Component<{
                 {T("Remove Folder", "remove_group")}
               </DropdownItem>
             )}
-            { !this.props.folder.isPinned &&
+            {!this.props.folder.isPinned && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
@@ -159,8 +155,8 @@ export class CFavorites extends React.Component<{
               >
                 {T("Pin to the top", "group_pin")}
               </DropdownItem>
-            }
-            { this.props.folder.isPinned &&
+            )}
+            {this.props.folder.isPinned && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
@@ -169,11 +165,11 @@ export class CFavorites extends React.Component<{
               >
                 {T("Unpin", "group_unpin")}
               </DropdownItem>
-            }
+            )}
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                this.onFolderProperiesClick(this.props.folder.id);
+                this.onFolderProperiesClick();
               }}
             >
               {T("Properties", "group_properties")}
