@@ -10,6 +10,7 @@ import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 export class FavoriteFolderPropertiesDialog extends React.Component<{
   title: string;
   name?: string;
+  nameReadOnly?: boolean;
   isPinned?: boolean;
   onCancelClick: (event: any) => void;
   onOkClick: (name: string, isPinned: boolean) => void;
@@ -64,6 +65,8 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
                 ref={this.refInput}
                 className={S.textInput}
                 value={this.groupName}
+                readOnly={this.props.nameReadOnly}
+                disabled={this.props.nameReadOnly}
                 onChange={(event) => this.onNameChanged(event)}
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => this.onKeydown(event)}
               />

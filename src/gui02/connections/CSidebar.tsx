@@ -193,7 +193,7 @@ export class CSidebar extends React.Component {
           <CFavorites
             ctx={this.workbench}
             folderId={defaultFavoritesFolder.id}
-            folderName={T("Favorites", "default_group")}
+            folderName={defaultFavoritesFolder.name}
             isActive={this.activeSection === defaultFavoritesFolder.id}
             onHeaderClick={() => (this.activeSection = defaultFavoritesFolder.id)}
           />
