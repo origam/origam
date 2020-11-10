@@ -2,6 +2,7 @@ import xmlJs from "xml-js";
 import {observable} from "mobx";
 import {getApi} from "model/selectors/getApi";
 import {uuidv4} from "utils/uuid";
+import { T } from "utils/translation";
 
 export class Favorites {
   @observable
@@ -10,7 +11,7 @@ export class Favorites {
   private xmlConverter = new XmlToFavoritesConverter();
 
   public isFavorite(folderId: string, menuId: string) {
-    return this.favoriteFolders.find((folder) => folderId === folder.id)?.has(menuId) === true;
+    return this.getFolder(folderId)?.has(menuId) === true;
   }
 
   public isInAnyFavoriteFolder(menuId: string) {
@@ -26,16 +27,20 @@ export class Favorites {
   }
 
   public setXml(xml: string) {
-    this.favoriteFolders = this.xmlConverter.xmlToFolders(xml);
+    const foldersFromXml = this.xmlConverter.xmlToFolders(xml);
+    if(foldersFromXml.length === 0){
+      foldersFromXml.push(new FavoriteFolder(uuidv4(), T("Favorites", "default_group"), true, [], false));
+    }
+    this.favoriteFolders = foldersFromXml;
   }
 
   public async add(folderId: string, menuId: string) {
-    return this.favoriteFolders.find((folder) => folderId === folder.id)?.add(menuId);
+    this.getFolder(folderId)?.add(menuId);
     await this.saveFavorites();
   }
 
   public async remove(menuId: any) {
-    return this.favoriteFolders.find((folder) => folder.has(menuId))?.remove(menuId);
+    this.favoriteFolders.find((folder) => folder.has(menuId))?.remove(menuId);
     await this.saveFavorites();
   }
 
@@ -45,13 +50,13 @@ export class Favorites {
     await api.saveFavorites({ConfigXml: xmlFavorites});
   }
 
-  public async createFolder(name: string) {
-    this.favoriteFolders.push(new FavoriteFolder(uuidv4(), name, false, []));
+  public async createFolder(name: string, isPinned: boolean) {
+    this.favoriteFolders.push(new FavoriteFolder(uuidv4(), name, false, [], isPinned));
     await this.saveFavorites();
   }
 
-  public async removeFolder(id: string) {
-    const folderToRemove = this.favoriteFolders.find((folder) => folder.id === id);
+  public async removeFolder(folderId: string) {
+    const folderToRemove = this.getFolder(folderId);
     if (folderToRemove) {
       this.favoriteFolders.remove(folderToRemove);
     }
@@ -59,19 +64,25 @@ export class Favorites {
   }
 
   public getFolderName(folderId: string): string {
-    return this.favoriteFolders.find((folder) => folder.id === folderId)?.name ?? "";
+    return this.getFolder(folderId)?.name ?? "";
   }
 
-  public async renameFolder(folderId: string, newName: string): Promise<any> {
-    this.favoriteFolders.find((folder) => folder.id === folderId)!.name = newName;
+  public async updateFolder(folderId: string, newName: string, isPinned: boolean): Promise<any> {
+    const folder = this.getFolder(folderId)!;
+    folder.name = newName;
+    folder.isPinned = isPinned;
     await this.saveFavorites();
+  }
+
+  public getFolder(folderId: string) {
+    return this.favoriteFolders.find((folder) => folder.id === folderId);
   }
 
   parent: any;
 }
 
 class XmlToFavoritesConverter {
-  public xmlToFolders(xml: string) {
+  public xmlToFolders(xml: string): FavoriteFolder[] {
     return xmlJs
       .xml2js(xml)
       .elements[0].elements
@@ -82,12 +93,13 @@ class XmlToFavoritesConverter {
   private parseToFavoriteFolder(foldeXml: any, isDefault: boolean) {
     const label = foldeXml.attributes["label"];
     const id = foldeXml.attributes["id"] ?? label;
+    const isPinned = foldeXml.attributes["isPinned"] === 'true';
     const itemIds =
       foldeXml.elements
         ?.map((item: xmlJs.Element) => item.attributes?.["menuId"])
         ?.filter((menuId: string) => menuId) ?? [];
 
-    return new FavoriteFolder(id, label, isDefault, itemIds);
+    return new FavoriteFolder(id, label, isDefault, itemIds, isPinned);
   }
 
   public favoriteIdsToXml(favoriteFolders: FavoriteFolder[]) {
@@ -101,7 +113,7 @@ class XmlToFavoritesConverter {
 
   private folderToXml(folder: FavoriteFolder) {
     return (
-      `  <folder label=\"${folder.name}\" id=\"${folder.id}\">\n` +
+      `  <folder label=\"${folder.name}\" id=\"${folder.id}\" isPinned=\"${folder.isPinned}\">\n` +
       folder.items.map((menuId) => `    <item menuId="${menuId}"/>`).join("\n") +
       "  </folder>"
     );
@@ -113,10 +125,19 @@ export class FavoriteFolder {
     public id: string,
     name: string,
     public isDefault: boolean,
-    public items: string[]
+    items: string[],
+    isPinned: boolean
   ) {
     this.name = name;
+    this.isPinned = isPinned;
+    this.items = items;
   }
+
+  @observable
+  items: string[];
+
+  @observable
+  isPinned: boolean;
 
   @observable
   name: string;

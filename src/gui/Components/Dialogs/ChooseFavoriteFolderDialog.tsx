@@ -14,7 +14,7 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
   favorites: FavoriteFolder[];
 }> {
   @observable
-  selectdFolderId: string = "";
+  selectdFolderId: string = this.props.favorites[0].id;
 
   refInput = React.createRef<HTMLSelectElement>();
 

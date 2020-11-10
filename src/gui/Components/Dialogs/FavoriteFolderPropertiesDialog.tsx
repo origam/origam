@@ -9,16 +9,25 @@ import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 @observer
 export class FavoriteFolderPropertiesDialog extends React.Component<{
   title: string;
+  name?: string;
+  isPinned?: boolean;
   onCancelClick: (event: any) => void;
-  onOkClick: (name: string) => void;
+  onOkClick: (name: string, isPinned: boolean) => void;
 }> {
   @observable
-  groupName: string = "";
+  groupName: string = this.props.name ?? "";
+
+  @observable
+  isPinned: boolean = this.props.isPinned ?? false;
 
   refInput = React.createRef<HTMLInputElement>();
 
   onNameChanged(event: any) {
     this.groupName = event.target.value;
+  }
+
+  onIsPinnedClicked(event: any){
+    this.isPinned = event.target.checked;
   }
 
   componentDidMount() {
@@ -27,7 +36,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
 
   onKeydown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      this.props.onOkClick(this.groupName);
+      this.props.onOkClick(this.groupName, this.isPinned);
     }
   }
 
@@ -38,7 +47,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={() => this.props.onOkClick(this.groupName)}>
+            <button onClick={() => this.props.onOkClick(this.groupName, this.isPinned)}>
               {T("Ok", "button_ok")}
             </button>
             <button onClick={this.props.onCancelClick}>{T("Cancel", "button_cancel")}</button>
@@ -57,6 +66,17 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
                 value={this.groupName}
                 onChange={(event) => this.onNameChanged(event)}
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => this.onKeydown(event)}
+              />
+            </div>
+            <div className={S.row}>
+              <div className={S.label}>
+                {T("Pin to the Top:", "group_pinned")}
+              </div>
+              <input
+                className={S.chcekBoxinput}
+                type="checkbox"
+                checked={this.isPinned}
+                onChange={event => this.onIsPinnedClicked(event)}
               />
             </div>
           </div>

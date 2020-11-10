@@ -1,46 +1,40 @@
-import { Icon } from "gui02/components/Icon/Icon";
-import { SidebarAlertCounter } from "gui02/components/Sidebar/AlertCounter";
-import { LogoSection } from "gui02/components/Sidebar/LogoSection";
-import { Sidebar } from "gui02/components/Sidebar/Sidebar";
-import { SidebarSection } from "gui02/components/Sidebar/SidebarSection";
-import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDivider";
-import { SidebarSectionHeader } from "gui02/components/Sidebar/SidebarSectionHeader";
+import {Icon} from "gui02/components/Icon/Icon";
+import {SidebarAlertCounter} from "gui02/components/Sidebar/AlertCounter";
+import {LogoSection} from "gui02/components/Sidebar/LogoSection";
+import {Sidebar} from "gui02/components/Sidebar/Sidebar";
+import {SidebarSection} from "gui02/components/Sidebar/SidebarSection";
+import {SidebarSectionDivider} from "gui02/components/Sidebar/SidebarSectionDivider";
+import {SidebarSectionHeader} from "gui02/components/Sidebar/SidebarSectionHeader";
 import React from "react";
-import {CMainMenu, itemForNode} from "./CMainMenu";
-import { action, observable } from "mobx";
-import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
-import { MobXProviderContext, observer } from "mobx-react";
-import { getWorkQueuesTotalItemsCount } from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
-import { IWorkbench } from "model/entities/types/IWorkbench";
-import { CWorkQueues } from "./CWorkQueues";
-import { IInfoSubsection } from "./types";
-import { CSidebarInfoSection } from "./CSidebarInfoSection";
-import { addRecordInfoExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordInfoExpandRequestHandler";
-import { addRecordAuditExpandRequestHandler } from "model/actions-ui/RecordInfo/addRecordAuditExpandRequestHandler";
-import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
-import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
-import { onSidebarInfoSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
-import { T } from "../../utils/translation";
-import { getWorkbenchLifecycle } from "model/selectors/getWorkbenchLifecycle";
-import { IWorkbenchLifecycle } from "model/entities/types/IWorkbenchLifecycle";
+import {CMainMenu} from "./CMainMenu";
+import {action, observable} from "mobx";
+import {SidebarSectionBody} from "gui02/components/Sidebar/SidebarSectionBody";
+import {MobXProviderContext, observer} from "mobx-react";
+import {getWorkQueuesTotalItemsCount} from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
+import {IWorkbench} from "model/entities/types/IWorkbench";
+import {CWorkQueues} from "./CWorkQueues";
+import {IInfoSubsection} from "./types";
+import {CSidebarInfoSection} from "./CSidebarInfoSection";
+import {addRecordInfoExpandRequestHandler} from "model/actions-ui/RecordInfo/addRecordInfoExpandRequestHandler";
+import {addRecordAuditExpandRequestHandler} from "model/actions-ui/RecordInfo/addRecordAuditExpandRequestHandler";
+import {onSidebarInfoSectionCollapsed} from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
+import {onSidebarAuditSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
+import {onSidebarInfoSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
+import {T} from "../../utils/translation";
+import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
+import {IWorkbenchLifecycle} from "model/entities/types/IWorkbenchLifecycle";
 import S from "gui02/connections/CSidebar.module.scss";
-import { getLogoUrl } from "model/selectors/getLogoUrl";
-import { CChatSection } from "./CChatSection";
-import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
-import {getLoggedUserName} from "model/selectors/User/getLoggedUserName";
-import { getShowChat } from "model/selectors/PortalSettings/getShowChat";
-import { getShowWorkQues } from "model/selectors/PortalSettings/getShowWorkQues";
-import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
-import { SearchBox } from "gui02/components/Search/SearchBox";
-import { SearchResults } from "gui02/components/Search/SearchResults";
-import { ISearchResult } from "model/entities/types/ISearchResult";
-import { CFavorites } from "./CFavorites";
+import {getLogoUrl} from "model/selectors/getLogoUrl";
+import {CChatSection} from "./CChatSection";
+import {getChatrooms} from "model/selectors/Chatrooms/getChatrooms";
+import {getShowChat} from "model/selectors/PortalSettings/getShowChat";
+import {getShowWorkQues} from "model/selectors/PortalSettings/getShowWorkQues";
+import {getNotifications} from "model/selectors/Chatrooms/getNotifications";
+import {SearchBox} from "gui02/components/Search/SearchBox";
+import {SearchResults} from "gui02/components/Search/SearchResults";
+import {ISearchResult} from "model/entities/types/ISearchResult";
+import {CFavorites} from "./CFavorites";
 import {getFavorites} from "model/selectors/MainMenu/getFavorites";
-import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import {Dropdown} from "gui02/components/Dropdown/Dropdown";
-import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
-import cx from "classnames";
-import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 @observer
 export class CSidebar extends React.Component {
@@ -100,24 +94,21 @@ export class CSidebar extends React.Component {
   }
 
   @action
-  onSearchResultsChange(results: ISearchResult[]){
+  onSearchResultsChange(results: ISearchResult[]) {
     this.searchResults = results;
-    this.activeSection ="Search";
+    this.activeSection = "Search";
   }
 
-  renderWorkQuesSection(){
+  renderWorkQuesSection() {
     const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
-    return(
+    return (
       <SidebarSection isActive={this.activeSection === "WorkQueues"}>
-        <SidebarSectionDivider />
+        <SidebarSectionDivider/>
         <SidebarSectionHeader
           isActive={this.activeSection === "WorkQueues"}
           icon={
             <>
-              <Icon
-                src="./icons/work-queue.svg"
-                tooltip={T("Work Queues", "work_queue_measure")}
-              />
+              <Icon src="./icons/work-queue.svg" tooltip={T("Work Queues", "work_queue_measure")}/>
               {workQueuesItemsCount > 0 && (
                 <SidebarAlertCounter>{workQueuesItemsCount}</SidebarAlertCounter>
               )}
@@ -127,22 +118,22 @@ export class CSidebar extends React.Component {
           onClick={() => (this.activeSection = "WorkQueues")}
         />
         <SidebarSectionBody isActive={this.activeSection === "WorkQueues"}>
-          <CWorkQueues />
+          <CWorkQueues/>
         </SidebarSectionBody>
       </SidebarSection>
     );
   }
-  
+
   renderChatSection(): React.ReactNode {
     const totalUnreadMessages = getChatrooms(this.workbench).totalItemCount;
-    return(
+    return (
       <SidebarSection isActive={this.activeSection === "Chat"}>
-        <SidebarSectionDivider />
+        <SidebarSectionDivider/>
         <SidebarSectionHeader
           isActive={this.activeSection === "Chat"}
           icon={
             <>
-              <Icon src="./icons/chat.svg" tooltip={T("Chat", "chat")} />
+              <Icon src="./icons/chat.svg" tooltip={T("Chat", "chat")}/>
               {totalUnreadMessages > 0 && (
                 <SidebarAlertCounter>{totalUnreadMessages}</SidebarAlertCounter>
               )}
@@ -152,7 +143,7 @@ export class CSidebar extends React.Component {
           onClick={() => (this.activeSection = "Chat")}
         />
         <SidebarSectionBody isActive={this.activeSection === "Chat"}>
-          <CChatSection />
+          <CChatSection/>
         </SidebarSectionBody>
       </SidebarSection>
     );
@@ -164,36 +155,54 @@ export class CSidebar extends React.Component {
     const notificationBox = getNotifications(this.workbench)?.notificationBox;
     const logoUrl = getLogoUrl(this.workbench);
     const favorites = getFavorites(this.workbench);
+    const defaultFavoritesFolder = favorites.getFolder(favorites.dafaultFavoritesFolderId);
     return (
       <Sidebar>
         <LogoSection>
           <div className={S.logoLeft}>
             {notificationBox ? (
-              <div dangerouslySetInnerHTML={{ __html: notificationBox }} />
+              <div dangerouslySetInnerHTML={{__html: notificationBox}}/>
             ) : (
-              <img src={logoUrl} />
+              <img src={logoUrl}/>
             )}
           </div>
         </LogoSection>
 
         <SearchBox
           ctx={this.workbench}
-          onSearchResultsChange={results => this.onSearchResultsChange(results)}/>
+          onSearchResultsChange={(results) => this.onSearchResultsChange(results)}
+        />
+
+        {favorites.favoriteFolders
+          .filter((folder) => folder.isPinned)
+          .map((folder) => (
+            <CFavorites
+              ctx={this.workbench}
+              folderId={folder.id}
+              folderName={folder.name}
+              canBeDeleted={true}
+              isActive={true}
+              forceOpen={true}
+            />
+          ))}
 
         {showWorkQues ? this.renderWorkQuesSection() : null}
 
         {showChat ? this.renderChatSection() : null}
 
-        <CFavorites
-          ctx={this.workbench}
-          folderId={favorites.dafaultFavoritesFolderId}
-          folderName={T("Favorites", "default_group")}
-          canBeDeleted={false}
-          isActive={this.activeSection === favorites.dafaultFavoritesFolderId}
-          onHeaderClick={() => (this.activeSection = favorites.dafaultFavoritesFolderId)}
-        />
-        {
-          favorites.customFolders.map(folder =>
+        {defaultFavoritesFolder && !defaultFavoritesFolder?.isPinned && (
+          <CFavorites
+            ctx={this.workbench}
+            folderId={defaultFavoritesFolder.id}
+            folderName={T("Favorites", "default_group")}
+            canBeDeleted={false}
+            isActive={this.activeSection === defaultFavoritesFolder.id}
+            onHeaderClick={() => (this.activeSection = defaultFavoritesFolder.id)}
+          />
+        )}
+        {favorites.customFolders
+          .filter((folder) => !folder.isPinned)
+          .map((folder) => (
             <CFavorites
               ctx={this.workbench}
               folderId={folder.id}
@@ -202,44 +211,48 @@ export class CSidebar extends React.Component {
               isActive={this.activeSection === folder.id}
               onHeaderClick={() => (this.activeSection = folder.id)}
             />
-          )
-        }
+          ))}
         <SidebarSection isActive={this.activeSection === "Menu"}>
-          <SidebarSectionDivider />
+          <SidebarSectionDivider/>
           <SidebarSectionHeader
             isActive={this.activeSection === "Menu"}
-            icon={<Icon src="./icons/menu.svg" tooltip={T("Menu", "menu")} />}
+            icon={<Icon src="./icons/menu.svg" tooltip={T("Menu", "menu")}/>}
             label={T("Menu", "menu")}
             onClick={() => (this.activeSection = "Menu")}
           />
           <SidebarSectionBody isActive={this.activeSection === "Menu"}>
-            <CMainMenu />
+            <CMainMenu/>
           </SidebarSectionBody>
         </SidebarSection>
         <SidebarSection isActive={this.activeSection === "Info"}>
-          <SidebarSectionDivider />
+          <SidebarSectionDivider/>
           <SidebarSectionHeader
             isActive={this.activeSection === "Info"}
-            icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")} />}
+            icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
             label={T("Info", "infopanel_title")}
             onClick={() => (this.activeSection = "Info")}
           />
           <SidebarSectionBody isActive={this.activeSection === "Info"}>
-            <CSidebarInfoSection activeSubsection={this.activeInfoSubsection} />
+            <CSidebarInfoSection activeSubsection={this.activeInfoSubsection}/>
           </SidebarSectionBody>
         </SidebarSection>
         <SidebarSection isActive={this.activeSection === "Search"}>
-          <SidebarSectionDivider />
+          <SidebarSectionDivider/>
           <SidebarSectionHeader
             isActive={this.activeSection === "Search"}
-            icon={<Icon src="./icons/search.svg" tooltip={T("Search", "search_result", this.searchResults.length)} />}
+            icon={
+              <Icon
+                src="./icons/search.svg"
+                tooltip={T("Search", "search_result", this.searchResults.length)}
+              />
+            }
             label={T("Search", "search_result", this.searchResults.length)}
             onClick={() => (this.activeSection = "Search")}
           />
           <SidebarSectionBody isActive={this.activeSection === "Search"}>
             <SearchResults results={this.searchResults}/>
           </SidebarSectionBody>
-          <SidebarSectionDivider />
+          <SidebarSectionDivider/>
         </SidebarSection>
       </Sidebar>
     );

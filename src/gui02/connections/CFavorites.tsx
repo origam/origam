@@ -12,23 +12,23 @@ import S from "gui02/connections/CFavorites.module.scss";
 import { getDialogStack } from "model/selectors/getDialogStack";
 import { FavoriteFolderPropertiesDialog } from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import {SidebarSectionHeader} from "gui02/components/Sidebar/SidebarSectionHeader";
-import {Icon} from "gui02/components/Icon/Icon";
-import {SidebarSection} from "gui02/components/Sidebar/SidebarSection";
-import {SidebarSectionDivider} from "gui02/components/Sidebar/SidebarSectionDivider";
-import {SidebarSectionBody} from "gui02/components/Sidebar/SidebarSectionBody";
-import {Favorites} from "model/entities/Favorites";
+import { SidebarSectionHeader } from "gui02/components/Sidebar/SidebarSectionHeader";
+import { Icon } from "gui02/components/Icon/Icon";
+import { SidebarSection } from "gui02/components/Sidebar/SidebarSection";
+import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDivider";
+import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
+import { Favorites } from "model/entities/Favorites";
 
 @observer
 export class CFavorites extends React.Component<{
   folderId: string;
   folderName: string;
   isActive: boolean;
+  forceOpen?: boolean;
   canBeDeleted: boolean;
-  onHeaderClick: ()=> void;
+  onHeaderClick?: () => void;
   ctx: any;
 }> {
-
   favorites: Favorites;
 
   constructor(props: any) {
@@ -41,10 +41,10 @@ export class CFavorites extends React.Component<{
       "",
       <FavoriteFolderPropertiesDialog
         title={T("New Favourites Folder", "new_group_title")}
-        onOkClick={(name: string) => {
+        onOkClick={(name, isPinned) => {
           runInFlowWithHandler({
             ctx: this.props.ctx,
-            action: () => getFavorites(this.props.ctx).createFolder(name),
+            action: () => getFavorites(this.props.ctx).createFolder(name, isPinned),
           });
           closeDialog();
         }}
@@ -54,14 +54,17 @@ export class CFavorites extends React.Component<{
   }
 
   onFolderProperiesClick(folderId: string) {
+    const folder = this.favorites.getFolder(folderId)!;
     const closeDialog = getDialogStack(this.props.ctx).pushDialog(
       "",
       <FavoriteFolderPropertiesDialog
         title={T("Favourites Folder Properties", "group_properties_title")}
-        onOkClick={(newName: string) => {
+        name={folder.name}
+        isPinned={folder.isPinned}
+        onOkClick={(name, isPinned) => {
           runInFlowWithHandler({
             ctx: this.props.ctx,
-            action: () => getFavorites(this.props.ctx).renameFolder(folderId, newName),
+            action: () => getFavorites(this.props.ctx).updateFolder(folderId, name, isPinned),
           });
           closeDialog();
         }}
@@ -117,10 +120,9 @@ export class CFavorites extends React.Component<{
         trigger={({ refTrigger, setDropped }) => (
           <SidebarSectionHeader
             isActive={this.props.isActive}
-            icon={<Icon src="./icons/favorites.svg"
-                        tooltip={this.props.folderName} />}
+            icon={<Icon src="./icons/favorites.svg" tooltip={this.props.folderName} />}
             label={this.props.folderName}
-            onClick={() => this.props.onHeaderClick()}
+            onClick={() => this.props.onHeaderClick?.()}
             refDom={refTrigger}
             onContextMenu={(event) => {
               setDropped(true, event);
@@ -131,17 +133,19 @@ export class CFavorites extends React.Component<{
         )}
         content={({ setDropped }) => (
           <Dropdown>
-            { this.props.canBeDeleted && <DropdownItem
-              onClick={(event: any) => {
-                setDropped(false);
-                runInFlowWithHandler({
-                  ctx: this.props.ctx,
-                  action: () => this.favorites.removeFolder(this.props.folderId),
-                });
-              }}
-            >
-              {T("Remove Folder", "remove_group")}
-            </DropdownItem>}
+            {this.props.canBeDeleted && (
+              <DropdownItem
+                onClick={(event: any) => {
+                  setDropped(false);
+                  runInFlowWithHandler({
+                    ctx: this.props.ctx,
+                    action: () => this.favorites.removeFolder(this.props.folderId),
+                  });
+                }}
+              >
+                {T("Remove Folder", "remove_group")}
+              </DropdownItem>
+            )}
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
@@ -165,13 +169,20 @@ export class CFavorites extends React.Component<{
       return null; // TODO: More intelligent menu loading indicator...
     }
 
-    return(
+    return this.props.forceOpen ? (
+      <div className={S.forceOpenSection}>
+        <SidebarSectionDivider />
+        {this.renderHeader()}
+        <SidebarSectionBody isActive={true}>
+          {this.props.folderId && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
+        </SidebarSectionBody>
+      </div>
+    ) : (
       <SidebarSection isActive={this.props.isActive}>
         <SidebarSectionDivider />
-          {this.renderHeader()}
+        {this.renderHeader()}
         <SidebarSectionBody isActive={this.props.isActive}>
-          {this.props.folderId &&
-          <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
+          {this.props.folderId && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
         </SidebarSectionBody>
       </SidebarSection>
     );
