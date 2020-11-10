@@ -87,6 +87,8 @@
   "group_properties": "Properties",
   "group_properties_title": "Favourites Folder Properties",
   "group_pinned": "Pin to the top:",
+  "group_pin": "Pin to the top",
+  "group_unpin": "Unpin",
   "select_group_title": "Select Favourites Folder",
   "group": "Folder:",
   "work_queue_measure": "Work Queue",

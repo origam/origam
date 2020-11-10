@@ -17,12 +17,11 @@ import { Icon } from "gui02/components/Icon/Icon";
 import { SidebarSection } from "gui02/components/Sidebar/SidebarSection";
 import { SidebarSectionDivider } from "gui02/components/Sidebar/SidebarSectionDivider";
 import { SidebarSectionBody } from "gui02/components/Sidebar/SidebarSectionBody";
-import { Favorites } from "model/entities/Favorites";
+import {FavoriteFolder, Favorites} from "model/entities/Favorites";
 
 @observer
 export class CFavorites extends React.Component<{
-  folderId: string;
-  folderName: string;
+  folder: FavoriteFolder;
   isActive: boolean;
   forceOpen?: boolean;
   onHeaderClick?: () => void;
@@ -36,7 +35,7 @@ export class CFavorites extends React.Component<{
   }
 
   get canBeDeleted(){
-    return this.props.folderId !== this.favorites.dafaultFavoritesFolderId;
+    return this.props.folder.id !== this.favorites.dafaultFavoritesFolderId;
   }
 
   onCreateNewFolderClick() {
@@ -97,7 +96,7 @@ export class CFavorites extends React.Component<{
                 (childNode: any) =>
                   childNode.attributes.isHidden !== "true" &&
                   childNode.name !== "Submenu" &&
-                  favorites.isFavorite(this.props.folderId, childNode.attributes["id"])
+                  favorites.isFavorite(this.props.folder.id, childNode.attributes["id"])
               )
               .map((node: any) => itemForNode(node, level, isOpen))}
           </div>
@@ -124,8 +123,9 @@ export class CFavorites extends React.Component<{
         trigger={({ refTrigger, setDropped }) => (
           <SidebarSectionHeader
             isActive={this.props.isActive}
-            icon={<Icon src="./icons/favorites.svg" tooltip={this.props.folderName} />}
-            label={this.props.folderName}
+            icon={<Icon src="./icons/favorites.svg"
+            tooltip={this.props.folder.name} />}
+            label={this.props.folder.name}
             onClick={() => this.props.onHeaderClick?.()}
             refDom={refTrigger}
             onContextMenu={(event) => {
@@ -143,17 +143,37 @@ export class CFavorites extends React.Component<{
                   setDropped(false);
                   runInFlowWithHandler({
                     ctx: this.props.ctx,
-                    action: () => this.favorites.removeFolder(this.props.folderId),
+                    action: () => this.favorites.removeFolder(this.props.folder.id),
                   });
                 }}
               >
                 {T("Remove Folder", "remove_group")}
               </DropdownItem>
             )}
+            { !this.props.folder.isPinned &&
+              <DropdownItem
+                onClick={(event: any) => {
+                  setDropped(false);
+                  this.props.folder.isPinned = true;
+                }}
+              >
+                {T("Pin to the top", "group_pin")}
+              </DropdownItem>
+            }
+            { this.props.folder.isPinned &&
+              <DropdownItem
+                onClick={(event: any) => {
+                  setDropped(false);
+                  this.props.folder.isPinned = false;
+                }}
+              >
+                {T("Unpin", "group_unpin")}
+              </DropdownItem>
+            }
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                this.onFolderProperiesClick(this.props.folderId);
+                this.onFolderProperiesClick(this.props.folder.id);
               }}
             >
               {T("Properties", "group_properties")}
@@ -178,7 +198,7 @@ export class CFavorites extends React.Component<{
         <SidebarSectionDivider />
         {this.renderHeader()}
         <SidebarSectionBody isActive={true}>
-          {this.props.folderId && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
+          {this.props.folder && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
         </SidebarSectionBody>
       </div>
     ) : (
@@ -186,7 +206,7 @@ export class CFavorites extends React.Component<{
         <SidebarSectionDivider />
         {this.renderHeader()}
         <SidebarSectionBody isActive={this.props.isActive}>
-          {this.props.folderId && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
+          {this.props.folder && <>{this.listFromNode(mainMenu.menuUI, 1, true)}</>}
         </SidebarSectionBody>
       </SidebarSection>
     );

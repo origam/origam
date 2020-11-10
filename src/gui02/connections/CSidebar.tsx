@@ -178,8 +178,7 @@ export class CSidebar extends React.Component {
           .map((folder) => (
             <CFavorites
               ctx={this.workbench}
-              folderId={folder.id}
-              folderName={folder.name}
+              folder={folder}
               isActive={true}
               forceOpen={true}
             />
@@ -194,8 +193,7 @@ export class CSidebar extends React.Component {
           .map((folder) => (
             <CFavorites
               ctx={this.workbench}
-              folderId={folder.id}
-              folderName={folder.name}
+              folder={folder}
               isActive={this.activeSection === folder.id}
               onHeaderClick={() => (this.activeSection = folder.id)}
             />
