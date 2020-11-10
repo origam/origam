@@ -41,7 +41,6 @@ import {Dropdown} from "gui02/components/Dropdown/Dropdown";
 import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
 import cx from "classnames";
 import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
-import { CFavoritesHeader } from "./CFavoritesHeader";
 
 @observer
 export class CSidebar extends React.Component {

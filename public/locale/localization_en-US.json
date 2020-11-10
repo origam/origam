@@ -84,6 +84,8 @@
   "remove_from_favourites": "Remove from Favourites",
   "new_group_title": "New Favourites Folder",
   "group_name": "Name:",
+  "group_properties": "Properties",
+  "group_properties_title": "Favourites Folder Properties",
   "select_group_title": "Select Favourites Folder",
   "group": "Folder:",
   "work_queue_measure": "Work Queue",

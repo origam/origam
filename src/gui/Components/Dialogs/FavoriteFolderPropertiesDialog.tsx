@@ -7,7 +7,8 @@ import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 
 @observer
-export class CreateFavoriteFolderDialog extends React.Component<{
+export class FavoriteFolderPropertiesDialog extends React.Component<{
+  title: string;
   onCancelClick: (event: any) => void;
   onOkClick: (name: string) => void;
 }> {
@@ -33,7 +34,7 @@ export class CreateFavoriteFolderDialog extends React.Component<{
   render() {
     return (
       <ModalWindow
-        title={T("New Favourites Folder", "new_group_title")}
+        title={this.props.title}
         titleButtons={null}
         buttonsCenter={
           <>

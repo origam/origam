@@ -81,6 +81,8 @@
   "remove_from_favourites": "Von Favoriten entfernen",
   "new_group_title": "Neues Favoriten Verzeichnis",
   "group_name": "Name:",
+  "group_properties": "Eigenschaften",
+  "group_properties_title": "Favoriten Verzeichnis Eigenschaften",
   "select_group_title": "Favoriten Verzeichnis auswählen",
   "group": "Verzeichnis:",
   "work_queue_measure": "Work Queue",

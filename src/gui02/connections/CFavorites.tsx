@@ -10,13 +10,12 @@ import { T } from "utils/translation";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import S from "gui02/connections/CFavorites.module.scss";
 import { getDialogStack } from "model/selectors/getDialogStack";
-import { CreateFavoriteFolderDialog } from "gui/Components/Dialogs/CreateFavoriteFolderDialog";
+import { FavoriteFolderPropertiesDialog } from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import {SidebarSectionHeader} from "gui02/components/Sidebar/SidebarSectionHeader";
 import {Icon} from "gui02/components/Icon/Icon";
 import {SidebarSection} from "gui02/components/Sidebar/SidebarSection";
 import {SidebarSectionDivider} from "gui02/components/Sidebar/SidebarSectionDivider";
-import {CFavoritesHeader} from "gui02/connections/CFavoritesHeader";
 import {SidebarSectionBody} from "gui02/components/Sidebar/SidebarSectionBody";
 import {Favorites} from "model/entities/Favorites";
 
@@ -40,7 +39,8 @@ export class CFavorites extends React.Component<{
   onCreateNewFolderClick() {
     const closeDialog = getDialogStack(this.props.ctx).pushDialog(
       "",
-      <CreateFavoriteFolderDialog
+      <FavoriteFolderPropertiesDialog
+        title={T("New Favourites Folder", "new_group_title")}
         onOkClick={(name: string) => {
           runInFlowWithHandler({
             ctx: this.props.ctx,
@@ -48,9 +48,24 @@ export class CFavorites extends React.Component<{
           });
           closeDialog();
         }}
-        onCancelClick={() => {
+        onCancelClick={() => closeDialog()}
+      />
+    );
+  }
+
+  onFolderProperiesClick(folderId: string) {
+    const closeDialog = getDialogStack(this.props.ctx).pushDialog(
+      "",
+      <FavoriteFolderPropertiesDialog
+        title={T("Favourites Folder Properties", "group_properties_title")}
+        onOkClick={(newName: string) => {
+          runInFlowWithHandler({
+            ctx: this.props.ctx,
+            action: () => getFavorites(this.props.ctx).renameFolder(folderId, newName),
+          });
           closeDialog();
         }}
+        onCancelClick={() => closeDialog()}
       />
     );
   }
@@ -127,6 +142,14 @@ export class CFavorites extends React.Component<{
             >
               {T("Remove Folder", "remove_group")}
             </DropdownItem>}
+            <DropdownItem
+              onClick={(event: any) => {
+                setDropped(false);
+                this.onFolderProperiesClick(this.props.folderId);
+              }}
+            >
+              {T("Properties", "group_properties")}
+            </DropdownItem>
           </Dropdown>
         )}
         style={{ height: "auto" }}

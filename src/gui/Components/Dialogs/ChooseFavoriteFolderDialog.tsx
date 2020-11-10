@@ -52,6 +52,14 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
           <div className={S.inpuContainer}>
             <div className={S.row}>
               <div className={S.label}>{T("Name:", "group_name")}</div>
+
+              {/*<div className="Dropdown_control">*/}
+              {/*  <input className="input" placeholder="" value=""/>*/}
+              {/*  <div className="inputBtn lastOne">*/}
+              {/*    <i className="fas fa-caret-down"></i>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+
               <select
                 ref={this.refInput}
                 onChange={(event) => this.onNameChanged(event)}
