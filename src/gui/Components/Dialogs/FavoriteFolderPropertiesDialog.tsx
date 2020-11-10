@@ -4,7 +4,7 @@ import { observable } from "mobx";
 import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
-import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
+import S from "gui/Components/Dialogs/FavoriteFolderPropertiesDialog.module.css";
 
 @observer
 export class FavoriteFolderPropertiesDialog extends React.Component<{
