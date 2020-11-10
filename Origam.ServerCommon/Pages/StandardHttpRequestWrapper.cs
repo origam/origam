@@ -99,7 +99,17 @@ namespace Origam.ServerCommon.Pages
         private ClientInfo GetClientInfo()
         {
             var uaParser = Parser.GetDefault();
-            return uaParser.Parse(httpContext.Request.Headers[HeaderNames.UserAgent]);
+            if(string.IsNullOrEmpty(
+                httpContext.Request.Headers[HeaderNames.UserAgent]))
+            {
+                return uaParser.Parse("Unknown-Agent/0.0.0");
+
+            }
+            else
+            {
+                return uaParser.Parse(
+                        httpContext.Request.Headers[HeaderNames.UserAgent]);
+            }
         }
 
         private Parameters GetParameters()
