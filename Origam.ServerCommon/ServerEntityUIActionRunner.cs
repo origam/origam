@@ -168,7 +168,7 @@ namespace Origam.Server
         private void ExecuteReportAction(ExecuteActionProcessData processData)
         {
             if (processData.Action == null
-                || processData.Action.Mode != PanelActionMode.Always)
+            || processData.Action.Mode != PanelActionMode.Always)
             {
                 CheckSelectedRowsCountPositive(processData.SelectedItems.Count);
                 if (processData.SelectedItems.Count > 1)
@@ -176,22 +176,33 @@ namespace Origam.Server
                     throw new Exception(Resources.ErrorChangeUIMultipleRecords);
                 }
             }
-            EntityReportAction reportAction = processData.Action as EntityReportAction;
-            PanelActionResult result = new PanelActionResult(ActionResultType.OpenUrl);
-            result.Url = reportManager.GetReportStandalone(reportAction.ReportId.ToString(), 
-                processData.Parameters,
-				reportAction.ExportFormatType);
-            WebReport wr = reportAction.Report as WebReport;
-            if (wr != null)
+            var reportAction = processData.Action as EntityReportAction;
+            var result = new PanelActionResult(ActionResultType.OpenUrl)
             {
-                result.UrlOpenMethod = wr.OpenMethod.ToString();
+                Url = reportManager.GetReportStandalone(
+                    reportAction.ReportId.ToString(),
+                    processData.Parameters,
+                    reportAction.ExportFormatType)
+            };
+            switch(reportAction.Report)
+            {
+                case WebReport webReport:
+                    result.UrlOpenMethod = webReport.OpenMethod.ToString();
+                    break;
+                case FileSystemReport _:
+                    result.UrlOpenMethod = WebPageOpenMethod.NoUI.ToString();
+                    break;
             }
-            result.Request = new UIRequest();
-            result.Request.Caption = processData.Action.Caption;
+            result.Request = new UIRequest
+            {
+                Caption = processData.Action.Caption
+            };
             if (processData.Action.RefreshAfterReturn != ReturnRefreshType.None)
             {
-                result.RefreshOnReturnSessionId = processData.SessionFormIdentifier;
-                result.RefreshOnReturnType = processData.Action.RefreshAfterReturn.ToString();
+                result.RefreshOnReturnSessionId 
+                    = processData.SessionFormIdentifier;
+                result.RefreshOnReturnType 
+                    = processData.Action.RefreshAfterReturn.ToString();
             }
             resultList.Add(result);
         }

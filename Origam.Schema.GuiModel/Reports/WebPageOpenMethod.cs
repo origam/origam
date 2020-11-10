@@ -27,6 +27,7 @@ namespace Origam.Schema.GuiModel
 	public enum WebPageOpenMethod
 	{
 		OrigamTab,
-		LaunchBrowserWindow
+		LaunchBrowserWindow,
+		NoUI
 	}
 }
