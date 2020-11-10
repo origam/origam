@@ -32,7 +32,7 @@ export class MapLayer {
 
 export class MapSetupStore {
   constructor(private rootStore: MapRootStore) {}
-  
+
   mapLocationMember: string = "";
   mapAzimuthMember: string = "";
   mapColorMember: string = "";
@@ -48,6 +48,11 @@ export class MapSetupStore {
 
   @computed
   get mapCenter() {
-    return wktParse(this.mapCenterRaw);
+    try {
+      return this.mapCenterRaw ? wktParse(this.mapCenterRaw) : undefined;
+    } catch (e) {
+      console.error(e);
+      return;
+    }
   }
 }
