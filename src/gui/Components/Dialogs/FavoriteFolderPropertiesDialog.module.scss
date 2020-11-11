@@ -1,3 +1,5 @@
+@import "src/gui/Components/ScreenElements/Editors/_EditorsCommon.scss";
+
 .inpuContainer {
   display: flex;
   flex-flow: column;
@@ -24,4 +26,10 @@
 
 .chcekBoxinput{
   margin: 3px 3px 3px 0;
+}
+
+.notification {
+  @include notification;
+  position: relative;
+  right: -3px;
 }

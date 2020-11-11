@@ -62,7 +62,6 @@ export class CFavorites extends React.Component<{
         title={T("Favourites Folder Properties", "group_properties_title")}
         name={this.props.folder.name}
         isPinned={this.props.folder.isPinned}
-        nameReadOnly={this.props.folder.id === this.favorites.dafaultFavoritesFolderId}
         onOkClick={(name, isPinned) => {
           runInFlowWithHandler({
             ctx: this.props.ctx,
