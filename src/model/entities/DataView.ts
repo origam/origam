@@ -469,11 +469,11 @@ export class DataView implements IDataView {
     getFormScreenLifecycle(this).registerDisposer(
       reaction(
         () => ({
-          selectedRow: this.selectedRow,
+          selectedRowId: this.selectedRowId,
           rowsCount: getDataTable(this).allRows.length,
         }),
-        (reData: { selectedRow: any[] | undefined; rowsCount: number }) => {
-          if (reData.selectedRow === undefined && reData.rowsCount > 0) {
+        (reData: { selectedRowId: string | undefined; rowsCount: number }) => {
+          if (reData.selectedRowId === undefined && reData.rowsCount > 0) {
             this.reselectOrSelectFirst();
           }
         },
