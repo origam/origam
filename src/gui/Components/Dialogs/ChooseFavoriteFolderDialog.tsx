@@ -1,4 +1,4 @@
-import { observer } from "mobx-react";
+import {observer, Provider} from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
 import { ModalWindow } from "gui/Components/Dialog/Dialog";
@@ -6,6 +6,7 @@ import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 import { FavoriteFolder } from "model/entities/Favorites";
+import { SimpleDropdown, IOption } from "modules/Editors/SimpleDropdown";
 
 @observer
 export class ChooseFavoriteFolderDialog extends React.Component<{
@@ -13,13 +14,18 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
   onOkClick: (selectdFolderId: string) => void;
   favorites: FavoriteFolder[];
 }> {
+
+  options: IOption<FavoriteFolder>[];
+
   @observable
-  selectdFolderId: string = this.props.favorites[0].id;
+  selectedOption: IOption<FavoriteFolder>;
 
   refInput = React.createRef<HTMLSelectElement>();
 
-  onNameChanged(event: any) {
-    this.selectdFolderId = event.target.value;
+  constructor(props: any) {
+    super(props);
+    this.options = this.props.favorites.map(favorite => { return {value: favorite, label: favorite.name}});
+    this.selectedOption = this.options[0];
   }
 
   componentDidMount() {
@@ -28,7 +34,7 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
 
   onKeydown(event: React.KeyboardEvent<HTMLSelectElement>) {
     if (event.key === "Enter") {
-      this.props.onOkClick(this.selectdFolderId);
+      this.props.onOkClick(this.selectedOption.value.id);
     }
   }
 
@@ -39,7 +45,7 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={() => this.props.onOkClick(this.selectdFolderId)}>
+            <button onClick={() => this.props.onOkClick(this.selectedOption.value.id)}>
               {T("Ok", "button_ok")}
             </button>
             <button onClick={this.props.onCancelClick}>{T("Cancel", "button_cancel")}</button>
@@ -52,21 +58,12 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
           <div className={S.inpuContainer}>
             <div className={S.row}>
               <div className={S.label}>{T("Name:", "group_name")}</div>
-
-              {/*<div className="Dropdown_control">*/}
-              {/*  <input className="input" placeholder="" value=""/>*/}
-              {/*  <div className="inputBtn lastOne">*/}
-              {/*    <i className="fas fa-caret-down"></i>*/}
-              {/*  </div>*/}
-              {/*</div>*/}
-
-              <select
-                ref={this.refInput}
-                onChange={(event) => this.onNameChanged(event)}
-                onKeyDown={(event: React.KeyboardEvent<HTMLSelectElement>) => this.onKeydown(event)}
-              >
-                {this.props.favorites.map(folder => <option value={folder.id}>{folder.name}</option>)}
-              </select>
+                <SimpleDropdown
+                  width={"150px"}
+                  options={this.options}
+                  selectedOption={this.selectedOption}
+                  onOptionClick={option => this.selectedOption = option}
+                />
             </div>
           </div>
         </div>
