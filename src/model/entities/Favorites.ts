@@ -1,7 +1,7 @@
 import xmlJs from "xml-js";
-import {observable} from "mobx";
-import {getApi} from "model/selectors/getApi";
-import {uuidv4} from "utils/uuid";
+import { observable } from "mobx";
+import { getApi } from "model/selectors/getApi";
+import { uuidv4 } from "utils/uuid";
 import { T } from "utils/translation";
 
 export class Favorites {
@@ -72,6 +72,11 @@ export class Favorites {
 
   public getFolder(folderId: string) {
     return this.favoriteFolders.find((folder) => folder.id === folderId);
+  }
+
+  public async setPinned(folderId: string, isPinned: boolean): Promise<any> {
+    this.getFolder(folderId)!.isPinned = isPinned;
+    await this.saveFavorites();
   }
 
   parent: any;

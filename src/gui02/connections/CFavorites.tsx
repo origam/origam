@@ -118,7 +118,7 @@ export class CFavorites extends React.Component<{
       <Dropdowner
         trigger={({ refTrigger, setDropped }) => (
           <SidebarSectionHeader
-            isActive={this.props.isActive}
+            isActive={!this.props.forceOpen && this.props.isActive}
             icon={<Icon src="./icons/favorites.svg" tooltip={this.props.folder.name} />}
             label={this.props.folder.name}
             onClick={() => this.props.onHeaderClick?.()}
@@ -149,7 +149,10 @@ export class CFavorites extends React.Component<{
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
-                  this.props.folder.isPinned = true;
+                  runInFlowWithHandler({
+                    ctx: this.props.ctx,
+                    action: () => this.favorites.setPinned(this.props.folder.id, true),
+                  });
                 }}
               >
                 {T("Pin to the top", "group_pin")}
@@ -159,7 +162,10 @@ export class CFavorites extends React.Component<{
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
-                  this.props.folder.isPinned = false;
+                  runInFlowWithHandler({
+                    ctx: this.props.ctx,
+                    action: () => this.favorites.setPinned(this.props.folder.id, false),
+                  });
                 }}
               >
                 {T("Unpin", "group_unpin")}
