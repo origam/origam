@@ -3,10 +3,15 @@
   flex-flow: column;
 }
 
+#lastRow{
+  padding-bottom: 0px
+}
+
 .row{
   display: flex;
   flex-flow: row;
   justify-content: flex-start;
+  padding-bottom: 5px
 }
 
 .label{

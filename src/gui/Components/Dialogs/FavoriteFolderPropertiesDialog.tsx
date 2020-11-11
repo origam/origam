@@ -71,7 +71,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => this.onKeydown(event)}
               />
             </div>
-            <div className={S.row}>
+            <div id={S.lastRow} className={S.row}>
               <div className={S.label}>
                 {T("Pin to the Top:", "group_pinned")}
               </div>
