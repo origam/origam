@@ -44,7 +44,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeByOneVersion()
         {
             XFileData xFileData = LoadFile("TestPersistedClassV6.0.1.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(xFileData);
             
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
@@ -67,7 +67,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldReplaceClass()
         {
             XFileData xFileData = LoadFile("TestDeadClassV6.0.1.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(xFileData);
             
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
@@ -88,7 +88,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldReplaceClassOfVersion5()
         {
             XFileData xFileData = LoadFile("TestDeadClassV5.0.0.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(xFileData);
             
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
@@ -109,7 +109,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeTwoVersions()
         {
             XFileData xFileData = LoadFile("TestPersistedClassV5.0.0.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(xFileData);
             
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
@@ -133,7 +133,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldRemoveDeadBaseClass()
         {
             XFileData xFileData = LoadFile("TestPersistedClassV6.0.2_WithDeadBaseClass.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(xFileData);
 
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
@@ -164,7 +164,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             mockWriter.Setup(mock => mock.Delete(It.IsAny<FileInfo>()));
             
             XFileData xFileData = LoadFile("TestDeadClass2V6.0.1.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, mockWriter.Object);
+            var sut = new MetaModelUpgrader(GetType().Assembly, mockWriter.Object);
             sut.TryUpgrade(xFileData);
 
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
@@ -181,7 +181,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeRenamedClass()
         {
             XFileData xFileData = LoadFile("TestRenamedClassV6.0.0.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(xFileData);
         
             XNamespace toncNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestOldNameClass/6.0.0";
@@ -201,7 +201,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeRenamedClassWithChild()
         {
             XFileData xFileData = LoadFile("TestRenamedClassV6.0.0_WithChild.origam");
-            var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+            var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
             sut.TryUpgrade(xFileData);
 
             XNamespace tpcNamespace = "http://schemas.origam.com/Origam.DA.ServiceTests.TestPersistedClass/6.0.2";
@@ -236,7 +236,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.Throws<ClassUpgradeException>(() =>
             {
                 XFileData xFileData = LoadFile("TestPersistedClass2V6.0.0.origam");
-                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
                 sut.TryUpgrade(xFileData);
             });
         }  
@@ -247,7 +247,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.Throws<ClassUpgradeException>(() =>
             {
                 XFileData xFileData = LoadFile("TestPersistedClass3V6.0.0.origam");
-                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
                 sut.TryUpgrade(xFileData);
             });
         }  
@@ -258,7 +258,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.Throws<ClassUpgradeException>(() =>
             {
                 XFileData xFileData = LoadFile("TestPersistedClass4V6.0.0.origam");
-                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
                 sut.TryUpgrade(xFileData);
             });
         }  
@@ -269,7 +269,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
             Assert.Throws<ClassUpgradeException>(() =>
             {
                 XFileData xFileData = LoadFile("TestPersistedClassV6.0.1_WrongVersion.origam");
-                var sut = new MetaModelUpGrader(GetType().Assembly, new NullFileWriter());
+                var sut = new MetaModelUpgrader(GetType().Assembly, new NullFileWriter());
                 sut.TryUpgrade(xFileData);
             });
         }

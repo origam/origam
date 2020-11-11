@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
@@ -23,30 +23,23 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using Origam.Extensions;
-using Origam.Schema.WorkflowModel;
+using System.Text;
+using Origam.Schema.GuiModel;
 
 namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 {
-    class StateMachineEventParameterMappingScriptContainer : UpgradeScriptContainer
+    class WebReportScriptContainer : UpgradeScriptContainer
     {
-        public override string FullTypeName { get; } = typeof(StateMachineEventParameterMapping).FullName;
+        public override string FullTypeName { get; } = typeof(WebReport).FullName;
         public override List<string> OldFullTypeNames { get; }
-        public override string[] OldPropertyXmlNames { get; } 
-            = {"wfParameterTpe"};
-        
-        public StateMachineEventParameterMappingScriptContainer() 
+        public override string[] OldPropertyXmlNames { get; }
+
+        public WebReportScriptContainer()
         {
             upgradeScripts.Add(new UpgradeScript(
-                new Version("6.0.0"), 
+                new Version("6.0.0"),
                 new Version("6.0.1"),
-                (node, doc) =>
-                {
-                    node.RenameAttribute( "wfParameterTpe", "wfParameterType");
-                })
-            );
+                (node, doc) => { }));
         }
     }
 }
