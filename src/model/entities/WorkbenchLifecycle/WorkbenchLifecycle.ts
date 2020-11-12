@@ -130,8 +130,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   *onMainMenuItemIdClick(args: { event: any; itemId: any, idParameter: string | undefined}){
-    // const menuItem = this.menuUI.elements.find((elem: any)=> elem.attributes["id"] === args.itemId);
-
     const menuItem =  args.itemId && selectors.mainMenu.getItemById(this,  args.itemId);
     if (menuItem) {
       yield onMainMenuItemClick(this)({
