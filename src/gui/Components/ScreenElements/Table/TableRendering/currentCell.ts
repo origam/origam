@@ -80,7 +80,7 @@ export function currentColumnId() {
 export const currentProperty = () =>{
   const property = propertyById().get(currentColumnId() as any)!;
   if(property.column === "Polymorph"){
-    return property.getPolymophicProperty(currentRow() as any[]) ?? property;
+    return property.getPolymophicProperty(currentRow() as any[]);
   }else{
     return property;
   }
