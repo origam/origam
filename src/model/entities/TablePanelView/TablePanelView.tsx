@@ -49,6 +49,7 @@ export class TablePanelView implements ITablePanelView {
   orderingConfiguration: IOrderingConfiguration = null as any;
   groupingConfiguration: IGroupingConfiguration = null as any;
   rowHeight: number = null as any;
+  firstColumn: IProperty | undefined;
 
   @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
     number,

@@ -1,5 +1,5 @@
 import {context2d, currentRow, recordId, tableColumnIds, tablePanelView} from "../renderingValues";
-import {applyScrollTranslation, clipCell, fontSize, numberCellPaddingLeft, topTextOffset} from "./cellsCommon";
+import {applyScrollTranslation, clipCell, fontSize, numberCellPaddingRight, topTextOffset} from "./cellsCommon";
 import {getRowStateAllowRead} from "model/selectors/RowState/getRowStateAllowRead";
 import {currentColumnId, currentColumnLeft, currentColumnWidth, currentProperty, currentRowTop} from "../currentCell";
 import {CPR} from "utils/canvas";
@@ -53,6 +53,6 @@ function drawAggregationText(){
     ctx2d.textAlign = "right";
     ctx2d.fillText(
       aggregationToString(aggregation) ,
-        CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
+        CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingRight()),
         CPR() * (currentRowTop() + topTextOffset));
 }
