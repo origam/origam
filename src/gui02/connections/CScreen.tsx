@@ -8,10 +8,8 @@ import { WebScreen } from "gui02/components/WebScreen/WebScreen";
 import { IWebScreen } from "model/entities/types/IWebScreen";
 import { getIsTopmostNonDialogScreen } from "model/selectors/getIsTopmostNonDialogScreen";
 import { ErrorBoundary, ErrorBoundaryEncapsulated } from "gui02/components/Utilities/ErrorBoundary";
-import { flow } from "mobx";
-import { handleError } from "model/actions/handleError";
-import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScreenTabCloseClick";
 import { IFormScreenEnvelope } from "model/entities/types/IFormScreen";
+import { onIFrameClick } from "model/actions/WebScreen/onIFrameClick";
 
 const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((props) => {
   const { openedScreen } = props;
@@ -30,11 +28,14 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   }, []);
 
   useEffect(() => {
-    if (refIFrame.current?.contentDocument) {
+    const frameWindow = refIFrame.current;
+    const contentDocument = frameWindow?.contentDocument;
+
+    if (contentDocument) {
       const mo = new MutationObserver(() => {
         setTabTitleFromIFrame();
       });
-      mo.observe(refIFrame.current?.contentDocument?.querySelector("head")!, {
+      mo.observe(contentDocument.querySelector("head")!, {
         subtree: true,
         characterData: true,
         childList: true,
@@ -44,8 +45,28 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
   });
   const setTabTitleFromIFrame = useMemo(
     () => () => {
-      if (refIFrame.current?.contentDocument?.title) {
-        ((openedScreen as unknown) as IWebScreen).setTitle(refIFrame.current.contentDocument.title);
+      const frameWindow = refIFrame.current;
+      const contentDocument = frameWindow?.contentDocument;
+      if (contentDocument?.title) {
+        ((openedScreen as unknown) as IWebScreen).setTitle(contentDocument.title);
+      }
+    },
+    []
+  );
+
+  const initIFrame = useMemo(
+    () => () => {
+      const frameWindow = refIFrame.current;
+      const contentDocument = frameWindow?.contentDocument;
+
+      if (contentDocument) {
+        contentDocument.addEventListener(
+          "click",
+          (event: any) => {
+            onIFrameClick(openedScreen)(event);
+          },
+          true
+        );
       }
     },
     []
@@ -58,6 +79,7 @@ const WebScreenComposite: React.FC<{ openedScreen: IOpenedScreen }> = observer((
         onLoad={(event: any) => {
           event.persist();
           setTabTitleFromIFrame();
+          initIFrame();
           setLoading(false);
         }}
         refIFrame={(elm: any) => {
