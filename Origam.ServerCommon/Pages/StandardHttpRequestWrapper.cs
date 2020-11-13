@@ -62,8 +62,12 @@ namespace Origam.ServerCommon.Pages
         public string Url => request.Host.ToUriComponent() + "/" + request.Path.ToUriComponent();
         public string UrlReferrer => headerDictionary[HeaderNames.Referer].ToString();
         public string UserAgent => headerDictionary[HeaderNames.UserAgent].ToString();
-        public string Browser => clientInfo.UserAgent.Family;
-        public string BrowserVersion => clientInfo.UserAgent.Major+"."+ clientInfo.UserAgent.Minor;
+        public string Browser 
+            => clientInfo != null ? clientInfo.UserAgent.Family : "";
+        public string BrowserVersion 
+            => clientInfo != null 
+                ? clientInfo.UserAgent.Major + "." + clientInfo.UserAgent.Minor
+                : "";
         public string UserHostAddress => httpContext.Connection.RemoteIpAddress?.ToString();
         public string UserHostName => request.Host.Value;
         public IEnumerable<string> UserLanguages
@@ -98,8 +102,12 @@ namespace Origam.ServerCommon.Pages
 
         private ClientInfo GetClientInfo()
         {
+            if (string.IsNullOrEmpty(request.Headers[HeaderNames.UserAgent]))
+            {
+                return null;
+            }
             var uaParser = Parser.GetDefault();
-            return uaParser.Parse(httpContext.Request.Headers[HeaderNames.UserAgent]);
+            return uaParser.Parse(request.Headers[HeaderNames.UserAgent]);
         }
 
         private Parameters GetParameters()
