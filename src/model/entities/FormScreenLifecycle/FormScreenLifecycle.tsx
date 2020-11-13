@@ -552,15 +552,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this._flushDataRunning = true;
       this.monitor.inFlow++;
       const api = getApi(this);
+      let updateObjectDidRun = false;
       do {
         this._flushDataShallRerun = false;
         const formScreen = getFormScreen(this);
         const dataViews = formScreen.dataViews;
         for (let dataView of dataViews) {
-          yield* this.update(dataView);
+          updateObjectDidRun = updateObjectDidRun || (yield* this.runUpdateObject(dataView));
         }
-        yield* refreshWorkQueues(this)();
-        if (formScreen.requestSaveAfterUpdate) {
+        if (formScreen.requestSaveAfterUpdate && updateObjectDidRun) {
           yield* this.saveSession();
         }
       } while (this._flushDataShallRerun);
@@ -570,14 +570,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  private *update(dataView: IDataView){
+  private *runUpdateObject(dataView: IDataView){
     const updateData = dataView.dataTable.getDirtyValueRows().map(row => {
       return {
         RowId: dataView.dataTable.getRowId(row),
         Values: map2obj(dataView.dataTable.getDirtyValues(row))
       }})
     if(!updateData || updateData.length === 0){
-      return;
+      return false;
     }
     const api = getApi(this);
     const formScreen = getFormScreen(this);
@@ -592,6 +592,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     );
     yield* processCRUDResult(dataView, updateObjectResult);
+    return true;
   }
 
   *updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string) {
@@ -709,7 +710,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
       if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
         yield* targetDataView.activateFormView();
@@ -741,7 +741,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
     } finally {
       this.monitor.inFlow--;
@@ -773,7 +772,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, deleteObjectResult);
     } finally {
       this.monitor.inFlow--;
@@ -931,7 +929,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
 
-      yield* refreshWorkQueues(this)();
       yield* new_ProcessActionResult(action)(result);
     } finally {
       this.monitor.inFlow--;
