@@ -713,7 +713,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
-      yield* selectLastRow(targetDataView)();
       if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
         yield* targetDataView.activateFormView();
       }else{

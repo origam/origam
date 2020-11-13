@@ -287,7 +287,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           >
                             <Icon
                               src="./icons/search-filter.svg"
-                              tooltip={T("Last", "filter_tool_tip")}
+                              tooltip={T("Filter", "filter_tool_tip")}
                             />
                           </DataViewHeaderAction>
                           <FilterDropDown ctx={dataView} />

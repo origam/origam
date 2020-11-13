@@ -15,6 +15,7 @@ import { createMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { getApi } from "model/selectors/getApi";
 import { Chatrooms } from "model/entities/Chatrooms";
 import { Notifications } from "model/entities/Notifications";
+import { Favorites } from "model/entities/Favorites";
 
 export function createWorkbench() {
   const clock = new Clock();
@@ -23,6 +24,7 @@ export function createWorkbench() {
 
   const instance = new Workbench({
     mainMenuEnvelope: new MainMenuEnvelope(),
+    favorites: new Favorites(),
     workbenchLifecycle: new WorkbenchLifecycle(),
     clientFulltextSearch: new ClientFulltextSearch(),
     openedScreens: new OpenedScreens(),
