@@ -84,11 +84,12 @@ export class Favorites {
 
 class XmlToFavoritesConverter {
   public xmlToFolders(xml: string): FavoriteFolder[] {
-    return xmlJs
-      .xml2js(xml)
-      .elements[0].elements
-      .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0)
-      );
+    return !xml
+      ? []
+      : xmlJs
+        .xml2js(xml)
+        .elements[0].elements
+        .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0));
   }
 
   private parseToFavoriteFolder(foldeXml: any, isDefault: boolean) {
