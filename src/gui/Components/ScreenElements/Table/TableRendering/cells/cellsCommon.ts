@@ -26,11 +26,12 @@ export function clipCell() {
   ctx2d.clip();
 }
 
-export const numberCellPaddingLeft = Memoized(() =>  drawingColumnIndex() === 0 ? 25 : 15)
-scRenderCell.push(() => numberCellPaddingLeft.clear());
+export const numberCellPaddingRight = Memoized(() =>  drawingColumnIndex() === 0 ? cellPaddingRightFirstCell : 15)
+scRenderCell.push(() => numberCellPaddingRight.clear());
 
 export const cellPaddingLeft = 5
 export const cellPaddingLeftFirstCell = 25;
+export const cellPaddingRightFirstCell = 25;
 export const topTextOffset = 17;
 export const fontSize = 12;
 export const checkSymbolFontSize = 15;

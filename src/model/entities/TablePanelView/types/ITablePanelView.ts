@@ -24,6 +24,7 @@ export interface ITableCanvas {
 }
 
 export interface ITablePanelView extends ITablePanelViewData {
+  firstColumn: IProperty | undefined;
   $type_ITablePanelView: 1;
   selectedColumnId: string | undefined;
   selectedColumnIndex: number | undefined;
