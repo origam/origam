@@ -9,6 +9,7 @@ class DroppedBox extends React.Component<{
   triggerRect: ContentRect;
   dropdownRect: ContentRect;
   dropdownRef: any;
+  openEvent?: MouseEvent;
   onCloseRequest?: (event: any) => void;
 }> {
   elmDropdown: HTMLDivElement | null = null;
@@ -42,7 +43,7 @@ class DroppedBox extends React.Component<{
     }
   }
 
-  render() {
+  calcPosition(){
     let style: any = {};
 
     const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -62,6 +63,13 @@ class DroppedBox extends React.Component<{
     } else {
       style.left = tBounds.left + tBounds.width - dBounds.width || 0;
     }
+    return style
+  }
+
+  render() {
+    const style: any = this.props.openEvent
+      ? {left: this.props.openEvent.clientX, top: this.props.openEvent.clientY}
+      : this.calcPosition();
 
     return ReactDOM.createPortal(
       <div ref={this.refDropdown} style={style} className={S.droppedBox}>
@@ -79,7 +87,7 @@ export class Dropdowner extends React.Component<{
   trigger: (args: {
     refTrigger: any;
     measure: () => void;
-    setDropped: (state: boolean) => void;
+    setDropped: (state: boolean, event?: any) => void;
   }) => React.ReactNode;
   content: (args: { setDropped: (state: boolean) => void }) => React.ReactNode;
   onDroppedDown?: () => void;
@@ -92,6 +100,8 @@ export class Dropdowner extends React.Component<{
   elmMeasDropdown: any | null = null;
 
   @observable _isDropped = false;
+  openEvent: any;
+
   get isDropped() {
     return this._isDropped;
   }
@@ -102,7 +112,9 @@ export class Dropdowner extends React.Component<{
   }
 
   @action.bound
-  setDropped(state: boolean) {
+  setDropped(state: boolean, event?: any) {
+    event?.persist();
+    this.openEvent = event;
     this.isDropped = state;
     if (state) {
       this.reMeasure();
@@ -155,6 +167,7 @@ export class Dropdowner extends React.Component<{
                     })}
                     {this.isDropped && (
                       <DroppedBox
+                        openEvent={this.openEvent}
                         triggerRect={cRectTrigger}
                         dropdownRect={cRectDropdown}
                         dropdownRef={mRefDropdown}

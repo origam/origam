@@ -1,0 +1,35 @@
+@import "src/gui/Components/ScreenElements/Editors/_EditorsCommon.scss";
+
+.inpuContainer {
+  display: flex;
+  flex-flow: column;
+}
+
+#lastRow{
+  padding-bottom: 0px
+}
+
+.row{
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  padding-bottom: 5px
+}
+
+.label{
+  width: 95px;
+}
+
+.textInput{
+  width: 150px;
+}
+
+.chcekBoxinput{
+  margin: 3px 3px 3px 0;
+}
+
+.notification {
+  @include notification;
+  position: relative;
+  right: -3px;
+}
