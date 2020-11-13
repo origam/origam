@@ -178,10 +178,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound removeSelectedRowId(id: string) {
-    const index = this.selectedRowIds.indexOf(id);
-    if (index > -1) {
-      this.selectedRowIds.splice(index, 1);
-    }
+    this.selectedRowIds.remove(id);
   }
 
   @action.bound setSelectedState(rowId: string, newState: boolean){
