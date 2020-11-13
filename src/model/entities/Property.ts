@@ -96,7 +96,9 @@ export class Property implements IProperty {
     const dataSourceField = getDataSourceFieldByName(this, this.controlPropertyId!)!;
     const controlPropertyValue = getDataTable(this)
       .getCellValueByDataSourceField(row, dataSourceField);
-    return this.childProperties.find(prop => prop.controlPropertyValue === controlPropertyValue)!;
+    return this.childProperties
+      .find(prop => prop.controlPropertyValue === controlPropertyValue)
+      ?? this;
   }
 }
 
