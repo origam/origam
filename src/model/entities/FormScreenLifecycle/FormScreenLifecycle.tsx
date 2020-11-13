@@ -560,7 +560,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         for (let dataView of dataViews) {
           updateObjectDidRun = updateObjectDidRun || (yield* this.runUpdateObject(dataView));
         }
-        yield* refreshWorkQueues(this)();
         if (formScreen.requestSaveAfterUpdate && updateObjectDidRun) {
           yield* this.saveSession();
         }
@@ -711,7 +710,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
       if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
         yield* targetDataView.activateFormView();
@@ -743,7 +741,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(targetDataView, createObjectResult);
     } finally {
       this.monitor.inFlow--;
@@ -775,7 +772,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, deleteObjectResult);
     } finally {
       this.monitor.inFlow--;
@@ -933,7 +929,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
 
-      yield* refreshWorkQueues(this)();
       yield* new_ProcessActionResult(action)(result);
     } finally {
       this.monitor.inFlow--;
