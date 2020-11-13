@@ -12,10 +12,10 @@ import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/Hea
 import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
 const OPERATORS = [
-    Operator.contains,
-    Operator.notContains,
     Operator.startsWith,
     Operator.notStartsWith,
+    Operator.contains,
+    Operator.notContains,
     Operator.endsWith,
     Operator.notEndsWith,
     Operator.equals,

@@ -39,7 +39,14 @@ export class ListRowContainer implements IRowsContainer {
 
   async start() {
     this.reactionDisposer = reaction(
-      () => [this.filterConfiguration.activeFilters, this.orderingConfiguration.orderings],
+      () => [
+        this.filterConfiguration.activeFilters.map((filter) => [
+          filter.propertyId,
+          filter.setting.val1,
+          filter.setting.val2,
+          filter.setting.type,
+        ]),
+        this.orderingConfiguration.orderings],
       () => this.updateSortAndFilter(),
     );
     await this.updateSortAndFilter();
