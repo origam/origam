@@ -89,8 +89,7 @@ class XmlToFavoritesConverter {
       : xmlJs
         .xml2js(xml)
         .elements[0].elements
-        .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0)
-        );
+        .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0));
   }
 
   private parseToFavoriteFolder(foldeXml: any, isDefault: boolean) {
