@@ -1616,11 +1616,17 @@ namespace Origam.Server
         private static void UpdateRowValue(string property, object newValue, DataRow row)
         {
             if (newValue == null
-                || (row.Table.Columns[property].DataType == typeof(string) & string.Empty.Equals(newValue))
-                || (row.Table.Columns[property].DataType == typeof(Guid) & string.Empty.Equals(newValue))
+            || (row.Table.Columns[property].DataType == typeof(string) & string.Empty.Equals(newValue))
+            || (row.Table.Columns[property].DataType == typeof(Guid) & string.Empty.Equals(newValue))
                 )
             {
                 row[property] = DBNull.Value;
+            }
+            else if ((row.Table.Columns[property].DataType == typeof(decimal))
+            && (newValue is string stringValue))
+            {
+                row[property] = decimal.Parse(
+                    stringValue, new CultureInfo("en-US"));
             }
             else
             {
