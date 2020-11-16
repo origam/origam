@@ -131,7 +131,6 @@ namespace Origam.ServerCore.Controller
             var internalRequest = new LookupListRequest
             {
                 LookupId = hashT.LookupId,
-                //FieldName = hashT.Lookup.ValueValueMember,
                 CurrentRow = null,
                 ShowUniqueValues = false,
                 SearchText = "%" + (string.IsNullOrEmpty(searchPhrase)?"":searchPhrase) + "%",

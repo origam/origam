@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -19,25 +19,10 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 
-namespace Origam.Schema.EntityModel
+namespace Origam.Schema.EntityModel.Interfaces
 {
-	/// <summary>
-	/// Summary description for AbstractMenuItem.
-	/// </summary>
-	public interface IDataLookup : ISchemaItem
-	{
-		DataStructure ListDataStructure{get; set;}
-		string ListValueMember{get; set;}
-		string ListDisplayMember{get; set;}
-
-		DataStructure ValueDataStructure{get; set;}
-		string ValueValueMember{get; set;}
-		string ValueDisplayMember{get; set;}
-		DataStructureColumn ValueColumn{get;}
-		DataStructureColumn ValueDisplayColumn{get;}
-
-		string RoleFilterMember{get; set;}
-		string FeatureFilterMember{get; set;}
-		bool IsFilteredServerside { get; set; }
-	}
+    public interface IHashTag
+    {
+        IDataLookup Lookup { get; set; }
+    }
 }

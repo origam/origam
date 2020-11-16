@@ -21,10 +21,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Schema.EntityModel;
+using Origam.Schema.EntityModel.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace Origam.Schema.MenuModel
@@ -33,7 +32,7 @@ namespace Origam.Schema.MenuModel
     [HelpTopic("Hash Tags")]
     [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
-    public class HashTag : AbstractSchemaItem
+    public class HashTag : AbstractSchemaItem , IHashTag
     {
         public const string CategoryConst = "HashTag";
 
@@ -69,7 +68,7 @@ namespace Origam.Schema.MenuModel
 
         [Category("Reference")]
         [TypeConverter(typeof(DataLookupConverter))]
-        [NotNullModelElementRule()]
+        [LookupServerSideElementRule()]
         [XmlReference("lookup", "LookupId")]
         public IDataLookup Lookup
         {
