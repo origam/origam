@@ -67,6 +67,44 @@ namespace Origam.ServerCore.Controller
                 Ok(GetObjets(categoryId,limit,offset,searchPhrase)));
         }
 
+        [HttpPost("{categoryId}/labels")]
+        public IActionResult GetLookupLabelRequest(string categoryId,[FromBody] HashTagLabel label)
+        {
+            return RunWithErrorHandler(() =>
+                Ok(GetLookupLabel(categoryId,label.LabelIds)));
+        }
+
+        private object GetLookupLabel(string categoryId, object[] labelIds)
+        {
+            var hashtagProvider = GetHasTagProvider();
+            HashTag hashTag = hashtagProvider.GetChildByName(categoryId, HashTag.CategoryConst) as HashTag;
+            if(TestRole(hashTag.Roles))
+            {
+                var labelDictionary = GetLookupLabelsInternal(hashTag, labelIds);
+                return Ok(labelDictionary);
+            }
+            throw new Exception("No rights");
+        }
+
+        private Dictionary<object, string> GetLookupLabelsInternal(
+           HashTag input, object[] labelIds)
+        {
+            IDataLookupService lookupService
+                   = ServiceManager.Services.GetService<IDataLookupService>();
+            var labelDictionary = labelIds.ToDictionary(
+                    id => id,
+                    id =>
+                    {
+                        object lookupResult
+                            = lookupService.GetDisplayText(
+                                input.LookupId, id, false, true, null);
+                        return lookupResult is decimal result
+                            ? result.ToString("0.#")
+                            : lookupResult.ToString();
+                    });
+            return labelDictionary;
+        }
+
         private object GetObjets(string categoryId, int limit, int offset, string searchPhrase)
         {
             
@@ -93,10 +131,10 @@ namespace Origam.ServerCore.Controller
             var internalRequest = new LookupListRequest
             {
                 LookupId = hashT.LookupId,
-                FieldName = hashT.Lookup.ValueValueMember,
+                //FieldName = hashT.Lookup.ValueValueMember,
                 CurrentRow = null,
                 ShowUniqueValues = false,
-                SearchText = "%" + searchPhrase + "%",
+                SearchText = "%" + (string.IsNullOrEmpty(searchPhrase)?"":searchPhrase) + "%",
                 PageSize = limit,
                 PageNumber = offset,
                 ParameterMappings = null
@@ -104,9 +142,15 @@ namespace Origam.ServerCore.Controller
             var dataTable = lookupService.GetList(internalRequest);
             return AreColumnNamesValid(hashT.Lookup.ValueDisplayMember.Split(";"), dataTable)
                 ? Result.Success<IEnumerable<object[]>, IActionResult>(
-                    GetRowData(internalRequest, dataTable,hashT.Lookup.ValueDisplayMember.Split(";")))
+                    GetRowData(internalRequest, dataTable,GetListColumn(hashT)))
                 : Result.Failure<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
+        }
+
+        private string[] GetListColumn(HashTag hashT)
+        {
+            string displayColumn = hashT.Lookup.ValueDisplayMember + ";" + hashT.Lookup.ValueValueMember;
+            return displayColumn.Split(";");
         }
 
         private IEnumerable<object[]> GetRowData(
@@ -120,7 +164,7 @@ namespace Origam.ServerCore.Controller
                     .Select(row => GetColumnValues(row, columnNames));
             }
 
-            throw new Exception("Lookup is not Server Side !");
+            throw new Exception("Lookup has property IsFilteredServerSide set to false !");
         }
 
         private static object[] GetColumnValues(
