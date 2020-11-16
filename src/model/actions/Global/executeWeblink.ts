@@ -16,10 +16,10 @@ export function executeWeblink(ctx: any) {
           }
         }
         break;
-      case "openOneRecordWindow":
+      case "objectTag":
         {
-          const referenceId = urlQuery?.referenceId;
-          const lookupId = urlQuery?.lookupId;
+          const referenceId = urlQuery?.objectId;
+          const lookupId = urlQuery?.categoryId;
           if (referenceId && lookupId) {
             yield* openScreenByReference(ctx)(lookupId, referenceId);
           }

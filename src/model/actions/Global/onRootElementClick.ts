@@ -11,8 +11,8 @@ export function onRootElementClick(ctx: any) {
 
       if (`${nodeName}`.toLowerCase() === "a") {
         const href = target.getAttribute("href");
-        if (href && `${href}`.startsWith("web+origam-action://")) {
-          const actionUrl = href.replace("web+origam-action://", "");
+        if (href && `${href}`.startsWith("web+origam-link://")) {
+          const actionUrl = href.replace("web+origam-link://", "");
           event.preventDefault();
           const urlParts = actionUrl.split("?");
           const urlPath = urlParts[0];
