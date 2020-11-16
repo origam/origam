@@ -69,16 +69,21 @@ namespace Origam.ServerCore.Controller
 
         private object GetObjets(string categoryId, int limit, int offset, string searchPhrase)
         {
-            IPersistenceService persistence = ServiceManager.Services.GetService(
-                   typeof(IPersistenceService)) as IPersistenceService;
-            var hashTag = persistence.SchemaProvider.RetrieveListByCategory<HashTag>(HashTag.CategoryConst)
-                .Where(hashtag => hashtag.Name == categoryId);
-            if(hashTag.Any())
+            
+            var hashtagProvider = GetHasTagProvider(); 
+            HashTag hashTag = hashtagProvider.GetChildByName(categoryId,HashTag.CategoryConst) as HashTag;
+
+            if(hashTag!=null)
             {
-                HashTag hashT = hashTag.First();
-                return GetLookupData(hashT,limit,offset,searchPhrase);
+                 return GetLookupData(hashTag,limit,offset,searchPhrase);
             }
             return new Exception("No Data");
+        }
+
+        private HashTagSchemaItemProvider GetHasTagProvider()
+        {
+            var schemaservice = ServiceManager.Services.GetService<SchemaService>();
+            return schemaservice.GetProvider<HashTagSchemaItemProvider>();
         }
 
         private object GetLookupData(HashTag hashT, int limit, int offset, string searchPhrase)
@@ -108,20 +113,14 @@ namespace Origam.ServerCore.Controller
             LookupListRequest input, DataTable dataTable, string[] columnNames)
         {
             var lookup = FindItem<DataServiceDataLookup>(input.LookupId).Value;
-            if (lookup.IsFilteredServerside || string.IsNullOrEmpty(input.SearchText))
+            if (lookup.IsFilteredServerside)
             {
                 return dataTable.Rows
                     .Cast<DataRow>()
                     .Select(row => GetColumnValues(row, columnNames));
             }
-            var columnNamesWithoutPrimaryKey = FilterOutPrimaryKey(
-                columnNames, dataTable.PrimaryKey);
-            var result =  dataTable.Rows
-                .Cast<DataRow>()
-                .Where(row => Filter(row, columnNamesWithoutPrimaryKey,
-                    input.SearchText))
-                .Select(row => GetColumnValues(row, columnNames));
-            return result;
+
+            throw new Exception("Lookup is not Server Side !");
         }
 
         private static object[] GetColumnValues(
@@ -129,25 +128,7 @@ namespace Origam.ServerCore.Controller
         {
             return columnNames.Select(colName => row[colName]).ToArray();
         }
-        private static string[] FilterOutPrimaryKey(
-            IEnumerable<string> columnNames, DataColumn[] primaryKey)
-        {
-            return columnNames
-                .Where(columnName => primaryKey.All(
-                    dataColumn => dataColumn.ColumnName != columnName))
-                .ToArray();
-        }
-        private static bool Filter(
-            DataRow row, IEnumerable<string> columnNames, string likeParameter)
-        {
-            string search = likeParameter.Replace("%", "");
-            return columnNames
-                .Select(colName => row[colName])
-                .Any(colValue =>
-                    colValue.ToString().Contains(
-                        search,
-                        StringComparison.InvariantCultureIgnoreCase));
-        }
+               
         private static bool AreColumnNamesValid(
            string[] columnNames, DataTable dataTable)
         {
@@ -161,11 +142,11 @@ namespace Origam.ServerCore.Controller
 
         private List<HashTagCategory> GetCategories()
         {
+            var hashtagProvider = GetHasTagProvider();
+            var hashTagcollection = hashtagProvider.ChildItems;
+
             List<HashTagCategory> hashtagCategoryList = new List<HashTagCategory>();
-            IPersistenceService persistence = ServiceManager.Services.GetService(
-                   typeof(IPersistenceService)) as IPersistenceService;
-            List<HashTag> listOfHastags = persistence.SchemaProvider.RetrieveListByCategory<HashTag>(HashTag.CategoryConst);
-            foreach (HashTag hashTag in listOfHastags)
+            foreach (HashTag hashTag in hashTagcollection)
             {
                 if (TestRole(hashTag.Roles))
                 {
