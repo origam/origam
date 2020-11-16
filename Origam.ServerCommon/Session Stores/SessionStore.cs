@@ -1626,7 +1626,7 @@ namespace Origam.Server
             && (newValue is string stringValue))
             {
                 row[property] = decimal.Parse(
-                    stringValue, new CultureInfo("en-US"));
+                    stringValue, CultureInfo.InvariantCulture);
             }
             else
             {
