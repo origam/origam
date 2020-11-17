@@ -47,6 +47,10 @@ import {
 import { ScrollRowContainer } from "model/entities/ScrollRowContainer";
 import { VisibleRowsMonitor } from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
+import { getApi } from "model/selectors/getApi";
+import {getSessionId} from "model/selectors/getSessionId";
+import {IPolymorphRules} from "model/entities/types/IApi";
+import { downloadFile } from "utils/download";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -551,4 +555,29 @@ export class DataView implements IDataView {
   }
 
   attributes: any;
+
+  async exportToExcel() {
+    const fields = this.properties.map(property => {
+      return {
+        Caption: property.name,
+        FieldName: property.id,
+        LookupId: property.lookupId,
+        Format: property.formatterPattern,
+        PolymorphRules: property.controlPropertyId
+          ? {
+            ControlField: property.controlPropertyId,
+            Rules: new Map<string, string>()
+          }
+          : undefined
+      }
+    });
+    const api = getApi(this);
+    const url = await api.getExcelFileUrl({
+      Entity: this.entity,
+      Fields: fields,
+      SessionFormIdentifier: getSessionId(this),
+      RowIds: this.dataTable.rows.map(row => this.dataTable.getRowId(row))
+    });
+    window.open(url);
+  }
 }

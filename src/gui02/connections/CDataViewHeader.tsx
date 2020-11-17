@@ -55,6 +55,7 @@ import {
   DataViewHeaderExtension,
 } from "gui/Components/ScreenElements/DataView";
 import { FilterDropDown } from "gui02/connections/FilterDropDown";
+import { onExportToExcelClick } from "model/actions-ui/DataView/onExportToExcelClick";
 
 
 @observer
@@ -132,6 +133,7 @@ export class CDataViewHeaderInner extends React.Component<{
     const isFilterSettingsVisible = getIsFilterControlsDisplayed(dataView);
     const actions = getPanelViewActions(dataView);
     const onColumnConfigurationClickEvt = onColumnConfigurationClick(dataView);
+    const onExportToExcelClickEvt = onExportToExcelClick(dataView);
     const onDeleteRowClickEvt = onDeleteRowClick(dataView);
     const onCreateRowClickEvt = onCreateRowClick(dataView);
     const onMoveRowUpClickEvt = onMoveRowUpClick(dataView);
@@ -312,7 +314,12 @@ export class CDataViewHeaderInner extends React.Component<{
                   )}
                   content={({ setDropped }) => (
                     <Dropdown>
-                      <DropdownItem isDisabled={true}>
+                      <DropdownItem
+                          onClick={(event: any) => {
+                            setDropped(false);
+                            onExportToExcelClickEvt(event);
+                          }}
+                      >
                         {T("Export to Excel", "excel_tool_tip")}
                       </DropdownItem>
                       <DropdownItem

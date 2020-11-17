@@ -376,6 +376,25 @@ export interface IApi {
   deleteFilter(data: { filterId: string }): Promise<any>;
 
   getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>;
+
+  getExcelFileUrl(data: {
+    Entity: string;
+    Fields: IEntityExportField[];
+    RowIds: string[];
+    SessionFormIdentifier: string;}): Promise<string>;
+}
+
+export interface IEntityExportField{
+  Caption: string;
+  FieldName: string;
+  LookupId: string | undefined;
+  Format: string;
+  PolymorphRules: IPolymorphRules | undefined;
+}
+
+export interface IPolymorphRules{
+  ControlField: string;
+  Rules: Map<string, string>;
 }
 
 export interface IUIGridFilterCoreConfiguration{
