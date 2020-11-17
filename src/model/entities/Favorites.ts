@@ -92,12 +92,12 @@ class XmlToFavoritesConverter {
         .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0));
   }
 
-  private parseToFavoriteFolder(foldeXml: any, isDefault: boolean) {
-    const label = foldeXml.attributes["label"];
-    const id = foldeXml.attributes["id"] ?? label;
-    const isPinned = foldeXml.attributes["isPinned"] === 'true';
+  private parseToFavoriteFolder(folderXml: any, isDefault: boolean) {
+    const label = folderXml.attributes["label"];
+    const id = folderXml.attributes["id"] ?? label;
+    const isPinned = folderXml.attributes["isPinned"] === 'true';
     const itemIds =
-      foldeXml.elements
+      folderXml.elements
         ?.map((item: xmlJs.Element) => item.attributes?.["menuId"])
         ?.filter((menuId: string) => menuId) ?? [];
 
