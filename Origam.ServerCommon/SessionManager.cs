@@ -37,6 +37,8 @@ namespace Origam.Server
         private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
         private readonly Dictionary<Guid, SessionStore> formSessions;
         private readonly Dictionary<Guid, ReportRequest> reportRequests;
+        private readonly Dictionary<Guid, EntityExportInfo> excelFileRequests 
+            = new Dictionary<Guid, EntityExportInfo>();
         private readonly Dictionary<Guid, BlobDownloadRequest> 
             blobDownloadRequests;
         private readonly Dictionary<Guid, BlobUploadRequest> 
@@ -321,6 +323,20 @@ namespace Origam.Server
                 ? reportRequests[key] : null;
         }
         public void RemoveReportRequest(Guid key)
+        {
+            excelFileRequests.Remove(key);
+        }        
+        public void AddExcelFileRequest(Guid key, EntityExportInfo request)
+        {
+            excelFileRequests.Add(key, request);
+        }
+        public EntityExportInfo GetExcelFileRequest(Guid key)
+        {
+            return excelFileRequests.ContainsKey(key) 
+                ? excelFileRequests[key] : null;
+
+        }
+        public void RemoveExcelFileRequest(Guid key)
         {
             reportRequests.Remove(key);
         }
