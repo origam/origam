@@ -356,6 +356,16 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
+  deleteAdditionalCellData(row: any[], propertyId: string) {
+    const additionalData = this.additionalRowData.get(this.getRowId(row));
+    if(!additionalData){
+      return;
+    }
+    additionalData.dirtyFormValues.delete(propertyId);
+    additionalData.dirtyValues.delete(propertyId);
+  }
+
+  @action.bound
   deleteAdditionalRowData(row: any[]) {
     this.additionalRowData.delete(this.getRowId(row));
   }

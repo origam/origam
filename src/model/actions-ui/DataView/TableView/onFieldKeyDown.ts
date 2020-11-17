@@ -81,9 +81,14 @@ export function onFieldKeyDown(ctx: any) {
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         }
-        case "F2":
+        case "F2": {
+          getTablePanelView(ctx).setEditing(false);
+          getTablePanelView(ctx).triggerOnFocusTable();
+          break;
+        }
         case "Escape": {
           getTablePanelView(ctx).setEditing(false);
+          getTablePanelView(ctx).clearCurrentCellEditData();
           getTablePanelView(ctx).triggerOnFocusTable();
           break;
         }
