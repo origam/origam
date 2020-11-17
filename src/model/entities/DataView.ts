@@ -83,8 +83,19 @@ export class DataView implements IDataView {
     this.dataTable.rowRemovedListeners.push(() => this.selectAllCheckboxChecked = false);
   }
 
+  private _isFormViewActive = ()=> false;
+
+  set isFormViewActive(value: () => boolean){
+    this._isFormViewActive = value;
+  }
+
+  get isFormViewActive(){
+    return this._isFormViewActive;
+  }
+
   orderProperty: IProperty;
   activateFormView: (()=> Generator) | undefined;
+  
   gridDimensions: IGridDimensions;
 
   isReorderedOnClient: boolean = true;

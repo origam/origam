@@ -715,7 +715,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
         yield* targetDataView.activateFormView();
       }else{
-        yield* startEditingFirstCell(targetDataView)();
+        if(!targetDataView.isFormViewActive()){
+          yield* startEditingFirstCell(targetDataView)();
+        }
       }
     } finally {
       this.monitor.inFlow--;
