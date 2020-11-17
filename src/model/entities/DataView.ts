@@ -566,7 +566,10 @@ export class DataView implements IDataView {
         PolymorphRules: property.controlPropertyId
           ? {
             ControlField: property.controlPropertyId,
-            Rules: new Map<string, string>()
+            Rules: new Map<string, string>(this.orderProperty
+              .childProperties
+              .filter(prop => prop.controlPropertyValue)
+              .map(prop => [prop.controlPropertyValue!, prop.id]))
           }
           : undefined
       }
