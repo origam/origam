@@ -50,7 +50,6 @@ import { getSelectionMember } from "model/selectors/DataView/getSelectionMember"
 import { getApi } from "model/selectors/getApi";
 import {getSessionId} from "model/selectors/getSessionId";
 import {IPolymorphRules} from "model/entities/types/IApi";
-import { downloadFile } from "utils/download";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}

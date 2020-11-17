@@ -2,7 +2,7 @@ import xmlJs from "xml-js";
 import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import {IApi, IUpdateData, IUIGridFilterCoreConfiguration, IEntityExportField, IExcelFile} from "./types/IApi";
+import {IApi, IUpdateData, IUIGridFilterCoreConfiguration, IEntityExportField} from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { IColumnSettings } from "./types/IColumnSettings";
