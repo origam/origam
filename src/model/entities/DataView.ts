@@ -565,10 +565,7 @@ export class DataView implements IDataView {
         PolymorphRules: property.controlPropertyId
           ? {
             ControlField: property.controlPropertyId,
-            Rules: new Map<string, string>(this.orderProperty
-              .childProperties
-              .filter(prop => prop.controlPropertyValue)
-              .map(prop => [prop.controlPropertyValue!, prop.id]))
+            Rules: this.getPolymorphicRules(property)
           }
           : undefined
       }
@@ -581,5 +578,14 @@ export class DataView implements IDataView {
       RowIds: this.dataTable.rows.map(row => this.dataTable.getRowId(row))
     });
     window.open(url);
+  }
+
+  private getPolymorphicRules(property: IProperty){
+    return property.childProperties
+      .filter(prop => prop.controlPropertyValue)
+      .reduce((map: {[key: string]: string}, prop: IProperty) => {
+        map[prop.controlPropertyValue!] = prop.id;
+        return map;
+    }, {});
   }
 }

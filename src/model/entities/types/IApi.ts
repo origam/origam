@@ -394,7 +394,7 @@ export interface IEntityExportField{
 
 export interface IPolymorphRules{
   ControlField: string;
-  Rules: Map<string, string>;
+  Rules: any;
 }
 
 export interface IUIGridFilterCoreConfiguration{
