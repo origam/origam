@@ -48,6 +48,7 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="NPOI" Version="2.4.1" />
     <PackageReference Include="UAParser" Version="3.1.36" />
   </ItemGroup>
 
@@ -55,6 +56,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Origam.DA.Common\Origam.DA.Common.csproj" />
     <ProjectReference Include="..\Origam.DA.Service\Origam.DA.Service.csproj" />
+    <ProjectReference Include="..\Origam.Excel\Origam.Excel.csproj" />
     <ProjectReference Include="..\Origam.Gui\Origam.Gui.csproj" />
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj" />
     <ProjectReference Include="..\Origam.Rule\Origam.Rule.csproj" />

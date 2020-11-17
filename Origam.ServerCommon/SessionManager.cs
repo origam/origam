@@ -34,29 +34,23 @@ namespace Origam.Server
 {
     public class SessionManager
     {
-        private readonly Dictionary<Guid, PortalSessionStore> portalSessions;
-        private readonly Dictionary<Guid, SessionStore> formSessions;
-        private readonly Dictionary<Guid, ReportRequest> reportRequests;
-        private readonly Dictionary<Guid, BlobDownloadRequest> 
-            blobDownloadRequests;
-        private readonly Dictionary<Guid, BlobUploadRequest> 
-            blobUploadRequests;
+        private readonly Dictionary<Guid, PortalSessionStore> portalSessions 
+            = new Dictionary<Guid, PortalSessionStore>();
+        private readonly Dictionary<Guid, SessionStore> formSessions 
+            = new Dictionary<Guid, SessionStore>();
+        private readonly Dictionary<Guid, ReportRequest> reportRequests 
+            = new Dictionary<Guid, ReportRequest>();
+        private readonly Dictionary<Guid, EntityExportInfo> excelFileRequests 
+            = new Dictionary<Guid, EntityExportInfo>();
+        private readonly Dictionary<Guid, BlobDownloadRequest> blobDownloadRequests 
+            = new Dictionary<Guid, BlobDownloadRequest>();
+        private readonly Dictionary<Guid, BlobUploadRequest> blobUploadRequests 
+            = new Dictionary<Guid, BlobUploadRequest>();
         private readonly Analytics analytics;
 
-        public SessionManager(
-            Dictionary<Guid, PortalSessionStore> portalSessions,
-            Dictionary<Guid, SessionStore> formSessions, 
-            Analytics analytics,
-            Dictionary<Guid, ReportRequest> reportRequests,
-            Dictionary<Guid, BlobDownloadRequest> blobDownloadRequests,
-            Dictionary<Guid, BlobUploadRequest> blobUploadRequests)
+        public SessionManager(Analytics analytics)
         {
             this.analytics = analytics;
-            this.portalSessions = portalSessions;
-            this.formSessions = formSessions;
-            this.reportRequests = reportRequests;
-            this.blobDownloadRequests = blobDownloadRequests;
-            this.blobUploadRequests = blobUploadRequests;
         }
         
         public int PortalSessionCount => portalSessions.Count;
@@ -321,6 +315,20 @@ namespace Origam.Server
                 ? reportRequests[key] : null;
         }
         public void RemoveReportRequest(Guid key)
+        {
+            excelFileRequests.Remove(key);
+        }        
+        public void AddExcelFileRequest(Guid key, EntityExportInfo request)
+        {
+            excelFileRequests.Add(key, request);
+        }
+        public EntityExportInfo GetExcelFileRequest(Guid key)
+        {
+            return excelFileRequests.ContainsKey(key) 
+                ? excelFileRequests[key] : null;
+
+        }
+        public void RemoveExcelFileRequest(Guid key)
         {
             reportRequests.Remove(key);
         }
