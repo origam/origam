@@ -55,6 +55,7 @@ import {IDataViewToolbarUI} from "modules/DataView/DataViewUI";
 import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
 import {selectLastRow} from "model/actions/DataView/selectLastRow";
 import {startEditingFirstCell} from "model/actions/DataView/startEditingFirstCell";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,

@@ -100,9 +100,10 @@ export class ScrollRowContainer implements IRowsContainer {
     };
   }
 
-  insert(index: number, row: any[]): void {
+  insert(index: number, row: any[]): Promise<any> {
     const { chunk, indexInChunk } = this.findChunkByRowIndex(index);
     chunk.insert(indexInChunk, row);
+    return Promise.resolve();
   }
 
   @action.bound

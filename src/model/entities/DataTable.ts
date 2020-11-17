@@ -395,8 +395,8 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
-  insertRecord(index: number, row: any[]): void {
-    this.rowsContainer.insert(index, row);
+  async insertRecord(index: number, row: any[]): Promise<any> {
+    await this.rowsContainer.insert(index, row);
   }
 
   @action.bound
