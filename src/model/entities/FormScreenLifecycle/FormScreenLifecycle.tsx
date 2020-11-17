@@ -56,6 +56,7 @@ import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspec
 import {selectLastRow} from "model/actions/DataView/selectLastRow";
 import {startEditingFirstCell} from "model/actions/DataView/startEditingFirstCell";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -717,6 +718,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }else{
         if(!targetDataView.isFormViewActive()){
           yield* startEditingFirstCell(targetDataView)();
+        }else{
+          getFocusManager(targetDataView).forceAutoFocus();
         }
       }
     } finally {

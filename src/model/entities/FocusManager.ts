@@ -1,3 +1,5 @@
+import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
+
 export class FocusManager {
   objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
   focusableContainers: IFocusableObjectContainer[] = [];
@@ -6,8 +8,6 @@ export class FocusManager {
 
   constructor(public parent: any){
   }
-
-
 
   subscribe(focusableObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
     const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex);
@@ -19,10 +19,7 @@ export class FocusManager {
     this.focusableContainers.find((container) => container.name === name)?.focusable.focus();
   }
 
-  autoFocus() {
-    if (!this.canAutoFocus || this.focusableContainers.length === 0 || this.focusRequested) {
-      return;
-    }
+  forceAutoFocus() {
     const focusable = this.focusableContainers[0].focusable;
     if(focusable.disabled){ //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
       this.focusNext(focusable);
@@ -32,6 +29,13 @@ export class FocusManager {
       focusable.focus();
     }, 0);
     this.focusRequested = true;
+  }
+  
+  autoFocus() {
+    if (!this.canAutoFocus || this.focusableContainers.length === 0 || this.focusRequested) {
+      return;
+    }
+    this.forceAutoFocus();
   }
 
   focusNext(activeElement: any) {
