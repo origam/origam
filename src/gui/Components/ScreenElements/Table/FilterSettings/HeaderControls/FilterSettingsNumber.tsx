@@ -32,7 +32,7 @@ const OpCombo: React.FC<{
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
-      trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).human}</>}
+      trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).caption}</>}
     >
       {OPERATORS.map((op) => (
         <FilterSettingsComboBoxItem
@@ -42,7 +42,7 @@ const OpCombo: React.FC<{
             props.onChange(props.setting);}
           }
         >
-          {op.human}
+          {op.caption}
         </FilterSettingsComboBoxItem>
       ))}
     </FilterSettingsComboBox>
