@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
+using System;
 using System.Collections.Generic;
 
 namespace Origam.ServerCore.Model.Chat
@@ -26,6 +27,7 @@ namespace Origam.ServerCore.Model.Chat
     {
         public string topic { get; set; }
         public List<InviteUser> inviteUsers { get; set; }
-        public Dictionary<object, object> references { get; set; }
+        public string ReferenceCategory { get; set; }
+        public Guid? ReferenceRecordId { get; set; }
     }
 }
