@@ -155,7 +155,8 @@ export class CSidebar extends React.Component {
     const notificationBox = getNotifications(this.workbench)?.notificationBox;
     const logoUrl = getLogoUrl(this.workbench);
     const favorites = getFavorites(this.workbench);
-    const defaultFavoritesFolder = favorites.getFolder(favorites.dafaultFavoritesFolderId);
+    const defaultFavoritesFolder = favorites.getFolder(favorites.defaultFavoritesFolderId);
+
     return (
       <Sidebar>
         <LogoSection>

@@ -35,7 +35,7 @@ export class CFavorites extends React.Component<{
   }
 
   get canBeDeleted() {
-    return this.props.folder.id !== this.favorites.dafaultFavoritesFolderId;
+    return this.props.folder.id !== this.favorites.defaultFavoritesFolderId;
   }
 
   onCreateNewFolderClick() {
