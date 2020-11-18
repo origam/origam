@@ -60,11 +60,11 @@ namespace Origam.ServerCore.Controller
 
         [HttpGet("{categoryId}/objects")]
         public IActionResult GetObjectsRequest(string categoryId, [FromQuery] int limit,
-            [FromQuery] int offset,
+            [FromQuery] int pageNumber,
             [FromQuery] string searchPhrase)
         {
             return RunWithErrorHandler(() =>
-                Ok(GetObjets(categoryId,limit,offset,searchPhrase)));
+                Ok(GetObjets(categoryId,limit,pageNumber,searchPhrase)));
         }
 
         [HttpPost("{categoryId}/labels")]
@@ -105,7 +105,7 @@ namespace Origam.ServerCore.Controller
             return labelDictionary;
         }
 
-        private object GetObjets(string categoryId, int limit, int offset, string searchPhrase)
+        private object GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
         {
             
             var hashtagProvider = GetHasTagProvider(); 
@@ -113,7 +113,7 @@ namespace Origam.ServerCore.Controller
 
             if(hashTag!=null)
             {
-                 return GetLookupData(hashTag,limit,offset,searchPhrase);
+                 return GetLookupData(hashTag,limit,pageNumber,searchPhrase);
             }
             return new Exception("No Data");
         }
@@ -124,7 +124,7 @@ namespace Origam.ServerCore.Controller
             return schemaservice.GetProvider<HashTagSchemaItemProvider>();
         }
 
-        private object GetLookupData(HashTag hashT, int limit, int offset, string searchPhrase)
+        private object GetLookupData(HashTag hashT, int limit, int pageNumber, string searchPhrase)
         {
             IDataLookupService lookupService
                     = ServiceManager.Services.GetService<IDataLookupService>();
@@ -135,7 +135,7 @@ namespace Origam.ServerCore.Controller
                 ShowUniqueValues = false,
                 SearchText = "%" + (string.IsNullOrEmpty(searchPhrase)?"":searchPhrase) + "%",
                 PageSize = limit,
-                PageNumber = offset,
+                PageNumber = pageNumber,
                 ParameterMappings = null
             };
             var dataTable = lookupService.GetList(internalRequest);
