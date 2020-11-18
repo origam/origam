@@ -136,6 +136,7 @@ export interface IDataView extends IDataViewData {
   moveSelectedRowDown(): void;
 
   initializeNewScrollLoader(): void;
+  exportToExcel(): void;
 }
 
 export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;
