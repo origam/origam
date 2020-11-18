@@ -512,6 +512,7 @@ namespace Origam.Security.Identity
                 ? Parameters["Email"].ToString() : null;
             user.IsApproved = Parameters.ContainsKey("IsApproved") 
                 ? (Boolean)Parameters["IsApproved"] : false;
+            user.TransactionId = TransactionId;
             Task<InternalIdentityResult> task = userManager.UpdateAsync(user);
             if (task.IsFaulted)
             {
