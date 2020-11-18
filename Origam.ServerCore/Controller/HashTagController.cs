@@ -76,14 +76,20 @@ namespace Origam.ServerCore.Controller
 
         private object GetLookupLabel(string categoryId, object[] labelIds)
         {
-            var hashtagProvider = GetHasTagProvider();
-            HashTag hashTag = hashtagProvider.GetChildByName(categoryId, HashTag.CategoryConst) as HashTag;
-            if(TestRole(hashTag.Roles))
+            HashTag hashTag = GetHashtag(categoryId);
+            if (TestRole(hashTag.Roles))
             {
                 var labelDictionary = GetLookupLabelsInternal(hashTag, labelIds);
                 return Ok(labelDictionary);
             }
             throw new Exception("No rights");
+        }
+
+        private HashTag GetHashtag(string categoryId)
+        {
+            var hashtagProvider = GetHasTagProvider();
+            HashTag hashTag = hashtagProvider.GetChildByName(categoryId, HashTag.CategoryConst) as HashTag;
+            return hashTag;
         }
 
         private Dictionary<object, string> GetLookupLabelsInternal(
@@ -105,13 +111,27 @@ namespace Origam.ServerCore.Controller
             return labelDictionary;
         }
 
+        [HttpPost("[action]")]
+        public IActionResult GetMenuId([FromBody] GetHashtagMenuInput input)
+        {
+            return RunWithErrorHandler(() => Ok(GetMenuId(
+                hashtagName: input.HashtagName,
+                ReferenceId: input.ReferenceId))
+            );
+        }
+
+        private string GetMenuId(string hashtagName, Guid ReferenceId)
+        {
+            return ServiceManager.Services
+                .GetService<IDataLookupService>()
+                .GetMenuBinding(GetHashtag(hashtagName).LookupId, ReferenceId)
+                .MenuId;
+        }
+
         private object GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
         {
-            
-            var hashtagProvider = GetHasTagProvider(); 
-            HashTag hashTag = hashtagProvider.GetChildByName(categoryId,HashTag.CategoryConst) as HashTag;
-
-            if(hashTag!=null)
+            HashTag hashTag = GetHashtag(categoryId);
+            if (hashTag!=null)
             {
                  return GetLookupData(hashTag,limit,pageNumber,searchPhrase);
             }
