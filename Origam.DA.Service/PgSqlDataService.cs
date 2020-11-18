@@ -114,10 +114,10 @@ namespace Origam.DA.Service
                 {
                     int firstApostrophe = ex.Message.IndexOf("\"");
                     string procedureName = ex.Message;
-                    if (ex.Message.Length > firstApostrophe && firstApostrophe!=-1)
+                    if (ex.Message.Length > firstApostrophe && firstApostrophe != -1 )
                     {
                         int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
-                        if (secondApostrophe != -1 && secondApostrophe>firstApostrophe)
+                        if (secondApostrophe != -1 && secondApostrophe > firstApostrophe)
                         {
                             procedureName = ex.Message.Substring(firstApostrophe + 1,
                                 secondApostrophe - firstApostrophe - 1);
