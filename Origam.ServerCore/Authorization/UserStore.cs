@@ -324,13 +324,13 @@ namespace Origam.ServerCore
             return origamUserDataSet.Tables["OrigamUser"].Rows[0];
         }
         
-        private DataSet GetOrigamUserDataSet(
+        public static DataSet GetOrigamUserDataSet(
             Guid methodId, string paramName, object paramValue)
         {
             return GetOrigamUserDataSet(methodId, paramName, paramValue, null);
         }
 
-        private DataSet GetOrigamUserDataSet(
+        public static DataSet GetOrigamUserDataSet(
             Guid methodId, string paramName, object paramValue, 
             string transactionId)
         {
