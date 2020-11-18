@@ -148,7 +148,7 @@ namespace Origam.ServerCore.Controller
 
         private string[] GetListColumn(HashTag hashT)
         {
-            string displayColumn = hashT.Lookup.ValueDisplayMember + ";" + hashT.Lookup.ValueValueMember;
+            string displayColumn = hashT.Lookup.ValueValueMember +";" +hashT.Lookup.ValueDisplayMember;
             return displayColumn.Split(";");
         }
 
