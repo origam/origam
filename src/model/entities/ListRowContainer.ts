@@ -133,10 +133,10 @@ export class ListRowContainer implements IRowsContainer {
     }
   }
 
-  insert(index: number, row: any[]): void {
+  async insert(index: number, row: any[]): Promise<any> {
     this.allRows.splice(index, 0, row);
     this.forcedFirstRowId = this.rowIdGetter(row);
-    this.updateSortAndFilter();
+    await this.updateSortAndFilter();
   }
 
   set(rows: any[][]) {

@@ -197,7 +197,7 @@ export class TreeDataTable implements IDataTable {
     throw new Error("Not implemented");
   }
 
-  insertRecord(index: number, row: any[]): void {
+  insertRecord(index: number, row: any[]): Promise<any> {
     throw new Error("Not implemented");
   }
 

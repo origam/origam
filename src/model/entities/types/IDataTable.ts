@@ -68,7 +68,7 @@ export interface IDataTable {
   clear(): void;
   clearRecordDirtyValues(id: string, newRow: any[]): void;
   substituteRecord(row: any[]): void;
-  insertRecord(index: number, row: any[]): void;
+  insertRecord(index: number, row: any[]): Promise<any>;
   getLastRow(): any[] | undefined;
   unlockAddedRowPosition(): void;
   addedRowPositionLocked: boolean;

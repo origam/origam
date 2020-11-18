@@ -10,7 +10,8 @@ export function startEditingFirstCell(ctx: any) {
           .filter(prop =>  prop.id !== "Id" && prop.id !== orderingPropertyId)?.[0];
     getTablePanelView(ctx).selectedColumnId = firstProperty?.id;
     if(getTablePanelView(ctx).selectedColumnId){
-      getTablePanelView(ctx).setEditing(true);
+      getTablePanelView(ctx).scrollToCurrentRow();
+      setTimeout(()=> getTablePanelView(ctx).setEditing(true));
     }
   };
 }

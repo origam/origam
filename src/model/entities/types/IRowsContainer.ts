@@ -3,7 +3,7 @@ export interface IRowsContainer {
 
   delete(row: any[]): void;
 
-  insert(index: number, row: any[]): void;
+  insert(index: number, row: any[]): Promise<any>;
 
   set(rows: any[][]): void;
 
