@@ -34,14 +34,7 @@ namespace Origam.ServerCore
         public SessionObjects()
         {
             var analytics = Analytics.Instance;
-            SessionManager = new SessionManager(
-                portalSessions: new Dictionary<Guid, PortalSessionStore>(),
-                formSessions: new Dictionary<Guid, SessionStore>(),
-                reportRequests: new Dictionary<Guid, ReportRequest>(),
-                blobDownloadRequests: new Dictionary<Guid, 
-                    BlobDownloadRequest>(),
-                blobUploadRequests: new Dictionary<Guid, BlobUploadRequest>(),
-                analytics: analytics);
+            SessionManager = new SessionManager(analytics);
             UIManager = new UIManager(50, SessionManager, analytics);
             UIService = new ServerCoreUIService(UIManager, SessionManager);
         }
