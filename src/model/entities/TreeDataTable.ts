@@ -41,6 +41,10 @@ export class TreeDataTable implements IDataTable {
     this.parentIdProperty = parentIdProperty;
     this.idProperty = idProperty;
   }
+  
+  deleteAdditionalCellData(row: any[], propertyId: string): void {
+    throw new Error("Method not implemented.");
+  }
 
   rowRemovedListeners: (()=>void)[]=[];
 

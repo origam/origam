@@ -126,6 +126,14 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
+  clearCurrentCellEditData(){
+    const row = getDataView(this).selectedRow;
+    const propertyId = this.selectedProperty?.id;
+    if(row && propertyId){
+      getDataView(this).dataTable.deleteAdditionalCellData(row, propertyId);
+    }
+  }
+
   *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     const dataView = getDataView(this);
     const rowId = this.dataTable.getRowId(row);

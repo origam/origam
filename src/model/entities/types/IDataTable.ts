@@ -62,6 +62,7 @@ export interface IDataTable {
   flushFormToTable(row: any[]): void;
   setDirtyDeleted(row: any[]): void;
   setDirtyNew(row: any[]): void;
+  deleteAdditionalCellData(row: any[], propertyId: string): void;
   deleteAdditionalRowData(row: any[]): void;
   deleteRow(row: any[]): void;
   clear(): void;
