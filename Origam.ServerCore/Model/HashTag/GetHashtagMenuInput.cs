@@ -25,7 +25,7 @@ namespace Origam.ServerCore.Model.HashTag
 {
     public class GetHashtagMenuInput
     {
-        public string HashtagName { get; set; }
+        public string Category { get; set; }
         public Guid ReferenceId { get; set; }
     }
 }

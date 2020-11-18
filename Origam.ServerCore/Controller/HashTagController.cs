@@ -115,16 +115,16 @@ namespace Origam.ServerCore.Controller
         public IActionResult GetMenuId([FromBody] GetHashtagMenuInput input)
         {
             return RunWithErrorHandler(() => Ok(GetMenuId(
-                hashtagName: input.HashtagName,
+                hashtagCategory: input.Category,
                 ReferenceId: input.ReferenceId))
             );
         }
 
-        private string GetMenuId(string hashtagName, Guid ReferenceId)
+        private string GetMenuId(string hashtagCategory, Guid ReferenceId)
         {
             return ServiceManager.Services
                 .GetService<IDataLookupService>()
-                .GetMenuBinding(GetHashtag(hashtagName).LookupId, ReferenceId)
+                .GetMenuBinding(GetHashtag(hashtagCategory).LookupId, ReferenceId)
                 .MenuId;
         }
 
