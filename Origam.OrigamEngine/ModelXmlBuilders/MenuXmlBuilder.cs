@@ -203,6 +203,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             el.SetAttribute("icon", 
                 ResolveMenuIcon(menu.GetType().Name, menu.MenuIcon));
             el.SetAttribute("showInfoPanel", "false");
+            el.SetAttribute("alwaysOpenNew", XmlConvert.ToString(menu.AlwaysOpenNew));
             return el;
         }
 

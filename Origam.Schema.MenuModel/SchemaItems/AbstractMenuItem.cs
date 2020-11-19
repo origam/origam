@@ -33,7 +33,7 @@ namespace Origam.Schema.MenuModel
     /// Summary description for AbstractMenuItem.
     /// </summary>
     [XmlModelRoot(CategoryConst)]
-    [ClassMetaVersion("6.0.0")]
+    [ClassMetaVersion("6.0.1")]
     public abstract class AbstractMenuItem : AbstractSchemaItem, IAuthorizationContextContainer
 	{
 		public const string CategoryConst = "MenuItem";
@@ -91,6 +91,12 @@ namespace Origam.Schema.MenuModel
         [Description("When set to true it will be possible to execute this menu item only when other screens are closed.")]
         [XmlAttribute ("openExclusively")]
         public bool OpenExclusively { get; set; } = false;
+
+		[DefaultValue(false)]
+		[EntityColumn("B07")]
+		[Description("When set to true it will always open a new tab.")]
+		[XmlAttribute("alwaysOpenNew")]
+		public bool AlwaysOpenNew { get; set; } = false;
 
 		[Category("Menu Item")]
 		[EntityColumn("SS01")]
