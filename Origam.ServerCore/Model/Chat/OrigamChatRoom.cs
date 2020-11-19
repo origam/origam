@@ -26,15 +26,20 @@ namespace Origam.ServerCore.Model.Chat
 {
     public class OrigamChatRoom
     {
-        public OrigamChatRoom(Guid id, string topic,int unreadMessageCount)
+        public OrigamChatRoom(Guid id, string topic,int unreadMessageCount, 
+            string categoryName, Nullable<Guid> referenceId)
         {
             this.id = id;
             this.topic = topic;
             this.unreadMessageCount = unreadMessageCount;
+            this.categoryName = categoryName;
+            this.referenceId = referenceId;
         }
         public Guid id { get; set; }
         public string topic { get; set; }
-        
+        public string categoryName { get; set; }
+        public Nullable<Guid> referenceId { get; set; }
+
         public int unreadMessageCount { get; private set; }
         internal static List<OrigamChatRoom> CreateJson(DataSet ChatRoomDataSet, Dictionary<Guid, int> unreadMessages)
         {
@@ -43,8 +48,13 @@ namespace Origam.ServerCore.Model.Chat
             foreach (DataRow row in table.Rows)
             {
                 Guid chatRoomId = row.Field<Guid>("Id");
-                chatRoom.Add(new OrigamChatRoom(row.Field<Guid>("Id"), row.Field<string>("Name"),
-                    unreadMessages.ContainsKey(chatRoomId)?unreadMessages[chatRoomId]:0));
+                chatRoom.Add(new OrigamChatRoom(
+                    row.Field<Guid>("Id"),
+                    row.Field<string>("Name"),
+                    unreadMessages.ContainsKey(chatRoomId) ? unreadMessages[chatRoomId] : 0,
+                    row.Field<string>("ReferenceEntity"),
+                    row.Field<Nullable<Guid>>("ReferenceId")
+                    ));
             }
             return chatRoom;
         }
