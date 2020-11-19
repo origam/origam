@@ -2,7 +2,7 @@ import xmlJs from "xml-js";
 import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import {IApi, IUpdateData, IUIGridFilterCoreConfiguration} from "./types/IApi";
+import { IApi, IUpdateData, IUIGridFilterCoreConfiguration } from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { IColumnSettings } from "./types/IColumnSettings";
@@ -698,25 +698,21 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   async saveFilter(data: {
     DataStructureEntityId: string;
     PanelId: string;
-    Filter: IUIGridFilterCoreConfiguration
+    Filter: IUIGridFilterCoreConfiguration;
     IsDefault: boolean;
   }): Promise<string> {
-    return (
-      await this.axiosInstance.post(`/UIService/SaveFilter`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/SaveFilter`, data)).data;
   }
-
 
   async deleteFilter(data: { filterId: string }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/DeleteFilter`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/DeleteFilter`, data)).data;
   }
 
-  async resetDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/ResetDefaultFilter`, data)
-    ).data;
+  async resetDefaultFilter(data: {
+    SessionFormIdentifier: string;
+    PanelInstanceId: string;
+  }): Promise<any[]> {
+    return (await this.axiosInstance.post(`/UIService/ResetDefaultFilter`, data)).data;
   }
 
   async setDefaultFilter(data: {
@@ -727,17 +723,19 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     Filter: IUIGridFilterCoreConfiguration;
     IsDefault: boolean;
   }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/SetDefaultFilter`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/SetDefaultFilter`, data)).data;
   }
 
   async search(searchTerm: string) {
     return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
   }
 
-  async getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>  {
+  async getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string> {
     return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
+  }
+
+  async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {
+    return (await this.axiosInstance.post(`/HashTag/GetMenuId`, data)).data;
   }
 }
 

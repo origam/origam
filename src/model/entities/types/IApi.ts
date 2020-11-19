@@ -193,7 +193,7 @@ export interface IApi {
     Id: string;
     OrderProperty: string;
     UpdatedOrderValues: {};
-  }): Promise<any>
+  }): Promise<any>;
 
   executeActionQuery(data: {
     SessionFormIdentifier: string;
@@ -360,28 +360,33 @@ export interface IApi {
     IsDefault: boolean;
   }): Promise<any>;
 
-  resetDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string; }): Promise<any>;
+  resetDefaultFilter(data: {
+    SessionFormIdentifier: string;
+    PanelInstanceId: string;
+  }): Promise<any>;
 
   saveFilter(data: {
     DataStructureEntityId: string;
     PanelId: string;
-    Filter: IUIGridFilterCoreConfiguration
+    Filter: IUIGridFilterCoreConfiguration;
     IsDefault: boolean;
   }): Promise<string>;
 
   deleteFilter(data: { filterId: string }): Promise<any>;
 
-  getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>;
+  getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string>;
+
+  getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string>;
 }
 
-export interface IUIGridFilterCoreConfiguration{
+export interface IUIGridFilterCoreConfiguration {
   id: string | undefined;
   name: string;
   isGlobal: boolean;
   details: IUIGridFilterFieldConfiguration[];
 }
 
-export interface IUIGridFilterFieldConfiguration{
+export interface IUIGridFilterFieldConfiguration {
   property: string;
   value1: any;
   value2: any;

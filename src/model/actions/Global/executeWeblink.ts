@@ -19,9 +19,9 @@ export function executeWeblink(ctx: any) {
       case "objectTag":
         {
           const referenceId = urlQuery?.objectId;
-          const lookupId = urlQuery?.categoryId;
-          if (referenceId && lookupId) {
-            yield* openScreenByReference(ctx)(lookupId, referenceId);
+          const categoryId = urlQuery?.categoryId;
+          if (referenceId && categoryId) {
+            yield* openScreenByReference(ctx)(categoryId, referenceId);
           }
         }
         break;
