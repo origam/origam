@@ -217,7 +217,7 @@ namespace Origam.DA.Service
                 {
                     Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
                         itemTracker: itemTracker,
-                        tryUpgrade: tryUpgrade);
+                        tryUpgrade: true);
                     if(error.HasValue)
                     {
                         throw new Exception(error.Value.Message);
