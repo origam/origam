@@ -148,7 +148,7 @@ namespace Origam.DA.Service
             {
                 if (xPathRule.XPath == null)
                 {
-                    throw new NullReferenceException(string.Format(Strings.XPathIsNull, xPathRule.Id));
+                    throw new NullReferenceException(string.Format(Origam.Strings.XPathIsNull, xPathRule.Id));
                 }
                 mc = Regex.Matches(xPathRule.XPath, pattern);
             }

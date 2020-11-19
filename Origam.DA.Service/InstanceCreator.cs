@@ -246,11 +246,16 @@ namespace Origam.DA.Service
                        xmlNamespace.FullTypeName ==
                        currentPropertyNamespace.FullTypeName)
                ?? throw new Exception(
-                   $"Cannot find namespace: \"{currentPropertyNamespace.StringValue}\" in xml file");
+                   string.Format(Strings.CannotFindNamespace,
+                       currentPropertyNamespace.StringValue));
             if (matchingXmlFileNamespace.Version != currentPropertyNamespace.Version)
             {
                 throw new Exception(
-                    $"The current meta version of type: \"{currentPropertyNamespace.FullTypeName}\" is {currentPropertyNamespace.Version}, but the xml file contains version {matchingXmlFileNamespace.Version}");
+                    string.Format(
+                        Strings.WrongMetaVersion,
+                        currentPropertyNamespace.FullTypeName,
+                        currentPropertyNamespace.Version,
+                        matchingXmlFileNamespace.Version));
             }
 
             return currentPropertyNamespace;

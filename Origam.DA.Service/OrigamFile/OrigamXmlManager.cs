@@ -114,15 +114,19 @@ namespace Origam.DA.Service
                     Maybe<IFilePersistent> mayBeObject = loadedLocalizedObjects.Get(id);
                     if (mayBeObject.HasNoValue)
                     {
-                        throw new Exception("Could not find object with id:" + id +
-                                            " in file: " + Path.Absolute);
+                        throw new Exception(
+                            string.Format(
+                                Strings.CouldNotFindObject,
+                                id, Path.Absolute));
                     }
                     return mayBeObject.Value;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error when loading objects from file: \"{Path}\"", ex);
+                throw new Exception(
+                    string.Format(
+                        Strings.ErrorWhenLoadingObjects, Path), ex);
             }
         }
 
