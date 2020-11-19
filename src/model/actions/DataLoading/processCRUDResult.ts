@@ -49,6 +49,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       for (let dataView of dataViews) {
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
         dataView.dataTable.substituteRecord(resultItem.wrappedObject);
+        dataView.dataTable.updateSortAndFilter();
       }
       getFormScreen(ctx).setDirty(true);
       break;
