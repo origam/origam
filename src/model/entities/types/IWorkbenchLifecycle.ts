@@ -1,13 +1,17 @@
-import {IDialogInfo, IOpenedScreen} from "./IOpenedScreen";
-import {IMainMenuItemType} from "./IMainMenu";
-import {IUserInfo} from "model/entities/types/IUserInfo";
-import {IPortalSettings} from "model/entities/types/IPortalSettings";
+import { IDialogInfo, IOpenedScreen } from "./IOpenedScreen";
+import { IMainMenuItemType } from "./IMainMenu";
+import { IUserInfo } from "model/entities/types/IUserInfo";
+import { IPortalSettings } from "model/entities/types/IPortalSettings";
 
 export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;
 
-  onMainMenuItemClick(args: { event: any; item: any, idParameter: string | undefined }): Generator;
-  onMainMenuItemIdClick(args: { event: any; itemId: any, idParameter: string }): Generator;
+  onMainMenuItemClick(args: { event: any; item: any; idParameter: string | undefined }): Generator;
+  onMainMenuItemIdClick(args: {
+    event: any;
+    itemId: any;
+    idParameter: string | undefined;
+  }): Generator;
   onWorkQueueListItemClick(event: any, item: any): Generator;
   onChatroomsListItemClick(event: any, item: any): Generator;
   onScreenTabHandleClick(event: any, openedScreen: IOpenedScreen): Generator;
@@ -23,7 +27,7 @@ export interface IWorkbenchLifecycle {
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext: any,
-    additionalRequestParameters?: object | undefined,
+    additionalRequestParameters?: object | undefined
   ): Generator;
 
   openNewUrl(url: string, title: string): Generator;

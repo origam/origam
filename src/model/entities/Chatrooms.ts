@@ -22,7 +22,10 @@ export class Chatrooms {
   }
 
   *startTimer(refreshIntervalMs: number) {
-    if (localStorage.getItem("debugNoPolling")) return;
+    if (localStorage.getItem("debugNoPolling_chatrooms")) return;
+    if (localStorage.getItem("debugPollingMs_chatrooms")) {
+      refreshIntervalMs = parseInt(localStorage.getItem("debugPollingMs_chatrooms") || "30000");
+    }
     yield* this.loader.start(refreshIntervalMs);
   }
 

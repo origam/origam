@@ -704,25 +704,21 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   async saveFilter(data: {
     DataStructureEntityId: string;
     PanelId: string;
-    Filter: IUIGridFilterCoreConfiguration
+    Filter: IUIGridFilterCoreConfiguration;
     IsDefault: boolean;
   }): Promise<string> {
-    return (
-      await this.axiosInstance.post(`/UIService/SaveFilter`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/SaveFilter`, data)).data;
   }
-
 
   async deleteFilter(data: { filterId: string }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/DeleteFilter`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/DeleteFilter`, data)).data;
   }
 
-  async resetDefaultFilter(data: { SessionFormIdentifier: string; PanelInstanceId: string }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/ResetDefaultFilter`, data)
-    ).data;
+  async resetDefaultFilter(data: {
+    SessionFormIdentifier: string;
+    PanelInstanceId: string;
+  }): Promise<any[]> {
+    return (await this.axiosInstance.post(`/UIService/ResetDefaultFilter`, data)).data;
   }
 
   async setDefaultFilter(data: {
@@ -733,16 +729,14 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     Filter: IUIGridFilterCoreConfiguration;
     IsDefault: boolean;
   }): Promise<any[]> {
-    return (
-      await this.axiosInstance.post(`/UIService/SetDefaultFilter`, data)
-    ).data;
+    return (await this.axiosInstance.post(`/UIService/SetDefaultFilter`, data)).data;
   }
 
   async search(searchTerm: string) {
     return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
   }
 
-  async getMenuId(data: { LookupId: string; ReferenceId: string}): Promise<string>  {
+  async getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string> {
     return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
   }
 
@@ -753,6 +747,10 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     SessionFormIdentifier: string;}): Promise<string>
   {
      return (await this.axiosInstance.post(`/ExcelExport/GetFileUrl`, data)).data;
+  }
+
+  async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {
+    return (await this.axiosInstance.post(`/HashTag/GetMenuId`, data)).data;
   }
 }
 
