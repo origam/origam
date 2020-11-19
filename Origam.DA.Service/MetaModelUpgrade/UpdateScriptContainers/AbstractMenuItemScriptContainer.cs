@@ -1,4 +1,5 @@
-#region license
+﻿#region license
+
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -17,19 +18,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Text;
+using Origam.Schema.GuiModel;
 
-namespace Origam.ServerCore.Model.Search
+namespace Origam.DA.Service.MetaModelUpgrade.UpdateScriptContainers
 {
-    public class SearchResult
+    class AbstractMenuItemScriptContainer : UpgradeScriptContainer
     {
-        public string Group { get; set; }
-        public Guid DataSourceId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public Guid DataSourceLookupId { get; set; }
-        public string ReferenceId { get; set; }
+        public override string FullTypeName { get; } = "Origam.Schema.MenuModel.AbstractMenuItem";
+        public override List<string> OldFullTypeNames { get; }
+        public override string[] OldPropertyXmlNames { get; }
+
+        public AbstractMenuItemScriptContainer()
+        {
+            upgradeScripts.Add(new UpgradeScript(
+                new Version("6.0.0"),
+                new Version("6.0.1"),
+                (node, doc) => { }));
+        }
     }
 }

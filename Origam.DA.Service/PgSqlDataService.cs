@@ -113,13 +113,17 @@ namespace Origam.DA.Service
                 else if (postgresException.SqlState == "42883")
                 {
                     int firstApostrophe = ex.Message.IndexOf("\"");
-                    if (ex.Message.Length > firstApostrophe)
+                    string procedureName = ex.Message;
+                    if (ex.Message.Length > firstApostrophe && firstApostrophe != -1 )
                     {
                         int secondApostrophe = ex.Message.IndexOf("\"", firstApostrophe + 1);
-                        string procedureName = ex.Message.Substring(firstApostrophe + 1,
-                            secondApostrophe - firstApostrophe - 1);
-                        throw new DatabaseProcedureNotFoundException(procedureName, ex);
+                        if (secondApostrophe != -1 && secondApostrophe > firstApostrophe)
+                        {
+                            procedureName = ex.Message.Substring(firstApostrophe + 1,
+                                secondApostrophe - firstApostrophe - 1);
+                        }
                     }
+                    throw new DatabaseProcedureNotFoundException(procedureName, ex);
                 }
                 else if(postgresException.SqlState.StartsWith("23"))
                 {

@@ -152,7 +152,7 @@ namespace Origam.ServerCore.Authorization
 
         public async Task<InternalIdentityResult> UpdateAsync(IOrigamUser user)
         {
-            IdentityResult coreIdentityResult = await coreUserManager.UpdateAsync( user);
+            IdentityResult coreIdentityResult = await coreUserManager.UpdateAsync(user);
             return ToInternalIdentityResult(coreIdentityResult);
         }
 

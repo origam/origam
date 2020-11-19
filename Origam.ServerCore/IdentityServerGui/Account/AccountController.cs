@@ -368,7 +368,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 var user = await _userManager.FindByNameAsync(model.Username);
-                if (result.Succeeded)
+                if (result.Succeeded && user != null)
                 {
                     if (!await _userManager.IsEmailConfirmedAsync(user))
                     {

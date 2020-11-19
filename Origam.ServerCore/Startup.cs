@@ -105,11 +105,11 @@ namespace Origam.ServerCore
             services.AddSingleton<IMailService, MailService>();
             services.AddSingleton<SearchHandler>();
             services.AddSingleton<SessionObjects, SessionObjects>();
-            services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<IPasswordHasher<IOrigamUser>, CorePasswordHasher>();
             services.AddScoped<SignInManager<IOrigamUser>>();
             services.AddScoped<IUserClaimsPrincipalFactory<IOrigamUser>, UserClaimsPrincipalFactory<IOrigamUser>>();
-            services.AddScoped<UserManager<IOrigamUser>>();
+            services.AddScoped<UserManager<IOrigamUser>, CoreUserManager>();
+            services.AddTransient<IUserStore<IOrigamUser>, UserStore>();
             services.AddSingleton<LanguageConfig>();
             services.AddLocalization();
             services.AddIdentity<IOrigamUser, Role>()
