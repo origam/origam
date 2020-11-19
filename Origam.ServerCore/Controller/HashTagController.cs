@@ -30,6 +30,7 @@ using Origam.ServerCore.Resources;
 using Origam.Services;
 using Origam.Workbench.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -120,12 +121,22 @@ namespace Origam.ServerCore.Controller
             );
         }
 
-        private string GetMenuId(string hashtagCategory, Guid ReferenceId)
+        private object GetMenuId(string hashtagCategory, Guid ReferenceId)
         {
-            return ServiceManager.Services
+            var hashTag = GetHashtag(hashtagCategory);
+            ArrayList datalookupMenuBinding = hashTag.Lookup.ChildItemsByType(DataLookupMenuBinding.CategoryConst);
+            if(datalookupMenuBinding.Count!=1)
+            {
+                return new Exception("Problem with MenuBinding!");
+            }
+            if (datalookupMenuBinding.Count == 1 && TestRole(datalookupMenuBinding.Cast<DataLookupMenuBinding>().First().Roles))
+            {
+                var menuBinding = ServiceManager.Services
                 .GetService<IDataLookupService>()
-                .GetMenuBinding(GetHashtag(hashtagCategory).LookupId, ReferenceId)
-                .MenuId;
+                .GetMenuBinding(GetHashtag(hashtagCategory).LookupId, ReferenceId);
+                return menuBinding.MenuId;
+            }
+            return new Exception("No rights");
         }
 
         private object GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
