@@ -36,6 +36,7 @@ import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLi
 import {getIsScreenOrAnyDataViewWorking} from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { IDataView } from "../types/IDataView";
+import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -422,6 +423,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
+    getFavorites(this).setXml(portalInfo.favorites);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
     getClientFulltextSearch(this).indexMainMenu(menuUI);
 

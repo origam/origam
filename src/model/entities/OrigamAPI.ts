@@ -2,7 +2,7 @@ import xmlJs from "xml-js";
 import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import { IApi, IUpdateData, IUIGridFilterCoreConfiguration } from "./types/IApi";
+import {IApi, IUpdateData, IUIGridFilterCoreConfiguration, IEntityExportField} from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { IColumnSettings } from "./types/IColumnSettings";
@@ -479,6 +479,12 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post(`/UIService/RowStates`, data)).data;
   }
 
+  async saveFavorites(data: {
+    ConfigXml: string;
+  }): Promise<any> {
+    return (await this.axiosInstance.post(`/UIService/SaveFavorites`, data)).data;
+  }
+
   async getWorkQueueList(): Promise<any> {
     return (await this.axiosInstance.get(`/UIService/WorkQueueList`)).data;
   }
@@ -732,6 +738,15 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
 
   async getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string> {
     return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
+  }
+
+  async getExcelFileUrl(data: {
+    Entity: string;
+    Fields: IEntityExportField[];
+    RowIds: string[];
+    SessionFormIdentifier: string;}): Promise<string>
+  {
+     return (await this.axiosInstance.post(`/ExcelExport/GetFileUrl`, data)).data;
   }
 
   async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {

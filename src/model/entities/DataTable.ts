@@ -356,6 +356,16 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
+  deleteAdditionalCellData(row: any[], propertyId: string) {
+    const additionalData = this.additionalRowData.get(this.getRowId(row));
+    if(!additionalData){
+      return;
+    }
+    additionalData.dirtyFormValues.delete(propertyId);
+    additionalData.dirtyValues.delete(propertyId);
+  }
+
+  @action.bound
   deleteAdditionalRowData(row: any[]) {
     this.additionalRowData.delete(this.getRowId(row));
   }
@@ -395,8 +405,8 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
-  insertRecord(index: number, row: any[]): void {
-    this.rowsContainer.insert(index, row);
+  async insertRecord(index: number, row: any[]): Promise<any> {
+    await this.rowsContainer.insert(index, row);
   }
 
   @action.bound

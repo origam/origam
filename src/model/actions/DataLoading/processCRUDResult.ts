@@ -47,8 +47,9 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
     case IResponseOperation.Update: {
       const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
       for (let dataView of dataViews) {
-        dataView.dataTable.substituteRecord(resultItem.wrappedObject);
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
+        dataView.dataTable.substituteRecord(resultItem.wrappedObject);
+        dataView.dataTable.updateSortAndFilter();
       }
       getFormScreen(ctx).setDirty(true);
       break;
@@ -59,7 +60,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
         const tablePanelView = dataView.tablePanelView;
         const dataSourceRow = result.wrappedObject;
         console.log("New row:", dataSourceRow);
-        dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow);
+        yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow);
         dataView.dataTable.unlockAddedRowPosition();
         dataView.selectRow(dataSourceRow);
       }

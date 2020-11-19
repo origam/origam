@@ -129,8 +129,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         style={{ width: this.props.width, height: this.props.height }}
         onScroll={this.handleScroll}
         onClick={(e) => this.clickHandler.handleClick(e)}
-        onMouseDown={(e) => e.preventDefault()} // To prevent selection when double clicking
-        onKeyDown={this.props.onKeyDown}
+        onKeyDown={(event) => this.props.onKeyDown?.(event)}
         ref={this.refScrollerDiv}
       >
         <div

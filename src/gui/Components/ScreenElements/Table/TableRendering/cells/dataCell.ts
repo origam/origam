@@ -45,7 +45,7 @@ import {
   checkBoxCharacterFontSize,
   clipCell,
   fontSize,
-  numberCellPaddingLeft,
+  numberCellPaddingRight,
   topTextOffset,
 } from "./cellsCommon";
 
@@ -186,7 +186,9 @@ export function drawDataCellBackground() {
     rowHeight: currentRowHeight(),
   };
   getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
-
+  if(drawingColumnIndex() === 0){
+    getTablePanelView(ctx).firstColumn = currentProperty();
+  }
   ctx2d.fillStyle = getUnderLineColor();
   ctx2d.fillRect(0, 0, currentColumnWidth() * CPR(), rowHeight() * CPR());
 
@@ -304,7 +306,7 @@ function drawCellValue() {
           ctx2d.textAlign = "right";
           ctx2d.fillText(
             "" + currentCellText()!,
-            CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingLeft()),
+            CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingRight()),
             CPR() * (currentRowTop() + topTextOffset)
           );
           ctx2d.restore();
@@ -319,7 +321,7 @@ function drawCellValue() {
               CPR() * (currentRowTop() + topTextOffset)
             );
           } else {
-            ctx2d.fillText("*******", numberCellPaddingLeft() * CPR(), 15 * CPR());
+            ctx2d.fillText("*******", numberCellPaddingRight() * CPR(), 15 * CPR());
           }
         }
     }

@@ -65,7 +65,6 @@ export interface IDataViewData {
 }
 
 export interface IDataView extends IDataViewData {
-  activateFormView: (()=> Generator) | undefined;
   $type_IDataView: 1;
 
   orderProperty: IProperty | undefined;
@@ -135,7 +134,11 @@ export interface IDataView extends IDataViewData {
   moveSelectedRowUp(): void;
   moveSelectedRowDown(): void;
 
+  isFormViewActive: () => boolean;
+  activateFormView: (()=> Generator) | undefined;
+
   initializeNewScrollLoader(): void;
+  exportToExcel(): void;
 }
 
 export const isIDataView = (o: any): o is IDataView => o.$type_IDataView;

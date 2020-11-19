@@ -89,7 +89,7 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   icon={getIcon(action)}
                   label={action.caption}
-                  onMouseDown={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                  onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
                 />
               </DropdownItem>
             ))}
@@ -150,7 +150,7 @@ export class CScreenToolbar extends React.Component<{}> {
               action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined
             }
             label={action.caption}
-            onMouseDown={(event) => uiActions.actions.onActionClick(action)(event, action)}
+            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
           />
         )}
       </ResponsiveChild>
@@ -216,7 +216,6 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   rootRef={refTrigger}
                   onMouseDown={() => setDropped(true)}
-                  //onClick={this.handleLogoutClick}
                   icon={<Icon src="./icons/dot-menu.svg" tooltip={""} />}
                 />
               )}

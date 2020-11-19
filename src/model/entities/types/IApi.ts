@@ -266,6 +266,10 @@ export interface IApi {
     Ids: string[];
   }): Promise<any>;
 
+  saveFavorites(data: {
+    ConfigXml: string;
+  }): Promise<any>;
+
   getWorkQueueList(): Promise<any>;
 
   getChatroomList(): Promise<any>;
@@ -377,9 +381,28 @@ export interface IApi {
   getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string>;
 
   getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string>;
+
+  getExcelFileUrl(data: {
+    Entity: string;
+    Fields: IEntityExportField[];
+    RowIds: string[];
+    SessionFormIdentifier: string;}): Promise<string>;
 }
 
-export interface IUIGridFilterCoreConfiguration {
+export interface IEntityExportField{
+  Caption: string;
+  FieldName: string;
+  LookupId: string | undefined;
+  Format: string;
+  PolymorphRules: IPolymorphRules | undefined;
+}
+
+export interface IPolymorphRules{
+  ControlField: string;
+  Rules: any;
+}
+
+export interface IUIGridFilterCoreConfiguration{
   id: string | undefined;
   name: string;
   isGlobal: boolean;

@@ -41,6 +41,10 @@ export class TreeDataTable implements IDataTable {
     this.parentIdProperty = parentIdProperty;
     this.idProperty = idProperty;
   }
+  
+  deleteAdditionalCellData(row: any[], propertyId: string): void {
+    throw new Error("Method not implemented.");
+  }
 
   rowRemovedListeners: (()=>void)[]=[];
 
@@ -193,7 +197,7 @@ export class TreeDataTable implements IDataTable {
     throw new Error("Not implemented");
   }
 
-  insertRecord(index: number, row: any[]): void {
+  insertRecord(index: number, row: any[]): Promise<any> {
     throw new Error("Not implemented");
   }
 

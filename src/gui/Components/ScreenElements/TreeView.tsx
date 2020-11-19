@@ -8,25 +8,27 @@ import { isTreeDataTable, TreeDataTable } from "../../../model/entities/TreeData
 
 @observer
 export class TreeView extends React.Component<{ dataView: IDataView }> {
-  nodes: Node[] = [];
-
   constructor(props: Readonly<{ dataView: IDataView }>) {
     super(props);
 
     if (!isTreeDataTable(this.props.dataView.dataTable)) {
       throw new Error("TreeView requires TreeDataTable to work properly");
     }
+  }
 
-    this.nodes = this.props.dataView.dataTable.rows.map(
+  @computed
+  get nodes(){
+    const nodes = this.props.dataView.dataTable.rows.map(
       (row) => new Node(this.getRowId(row), this.getLabel(row), row)
     );
 
-    for (let node of this.nodes) {
+    for (let node of nodes) {
       const parentId = this.getParentId(node.row);
       if (parentId) {
-        node.parent = this.nodes.find((otherNode) => otherNode.id === parentId);
+        node.parent = nodes.find((otherNode) => otherNode.id === parentId);
       }
     }
+    return nodes;
   }
 
   getRowId(row: any) {

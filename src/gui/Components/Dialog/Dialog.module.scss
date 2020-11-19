@@ -46,7 +46,7 @@
   height: 40px;
   font-size: $h1-fontsize;
   line-height: $h1-lineheight;
-  padding: 0 0 0 0.65em;
+  padding: 0 0.65em 0 0.65em;
   @include border-radius(4px 4px 0 0);
 }
 

@@ -24,6 +24,7 @@ export interface ITableCanvas {
 }
 
 export interface ITablePanelView extends ITablePanelViewData {
+  firstColumn: IProperty | undefined;
   $type_ITablePanelView: 1;
   selectedColumnId: string | undefined;
   selectedColumnIndex: number | undefined;
@@ -72,6 +73,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   setPropertyHidden(propertyId: string, state: boolean): void;
   getCellRectangle(rowIndex: number, columnIndex: number): ICellRectangle;
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle): void;
+  clearCurrentCellEditData(): void;
   parent?: any;
 
   isLastColumnSelected(): boolean;

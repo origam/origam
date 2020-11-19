@@ -49,6 +49,7 @@ export class TablePanelView implements ITablePanelView {
   orderingConfiguration: IOrderingConfiguration = null as any;
   groupingConfiguration: IGroupingConfiguration = null as any;
   rowHeight: number = null as any;
+  firstColumn: IProperty | undefined;
 
   @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
     number,
@@ -123,6 +124,14 @@ export class TablePanelView implements ITablePanelView {
     const property = this.tableProperties[columnIdx]!;
     const row = this.dataTable.getRowByExistingIdx(rowIdx);
     return this.dataTable.getCellText(row, property);
+  }
+
+  clearCurrentCellEditData(){
+    const row = getDataView(this).selectedRow;
+    const propertyId = this.selectedProperty?.id;
+    if(row && propertyId){
+      getDataView(this).dataTable.deleteAdditionalCellData(row, propertyId);
+    }
   }
 
   *onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
