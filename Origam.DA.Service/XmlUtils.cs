@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Linq;
 using System.Xml;
 using Origam.DA.Common;
 using Origam.Schema;
@@ -94,6 +95,14 @@ namespace Origam.DA.Service
         public static string ReadType(XmlReader xmlReader)
         {
             return xmlReader.NamespaceURI.Split('/')[3];
+        }
+
+        public static OrigamNameSpace[] ReadNamespaces(XmlReader xmlReader)
+        {
+            return Enumerable.Range(0, xmlReader.AttributeCount)
+                .Select(xmlReader.GetAttribute)
+                .Select(OrigamNameSpace.CreateOrGet)
+                .ToArray();
         }
     }
 }

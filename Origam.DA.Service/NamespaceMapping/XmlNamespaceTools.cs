@@ -9,23 +9,18 @@ namespace Origam.DA.Service.NamespaceMapping
 {
     static class XmlNamespaceTools
     {
-        private static readonly ConcurrentDictionary<Type, string> namespaces 
-            =  new ConcurrentDictionary<Type, string>();
+        private static readonly ConcurrentDictionary<Type, OrigamNameSpace> namespaces 
+            =  new ConcurrentDictionary<Type, OrigamNameSpace>();
         private static readonly ConcurrentDictionary<Type, string> namespaceNames
             =  new ConcurrentDictionary<Type, string>();
-        public static string GetXmlNameSpace(Type type)
+        public static OrigamNameSpace GetXmlNameSpace(Type type)
         {
             return
                 namespaces.GetOrAdd(type, type1 =>
                 {
                     Version currentClassVersion = Versions.GetCurrentClassVersion(type1);
-                    return GetXmlNamespace(type1.FullName, currentClassVersion);
+                    return OrigamNameSpace.CreateOrGet(type1, currentClassVersion);
                 });
-        }
-
-        public static string GetXmlNamespace(string fullTypeName, Version version)
-        {
-            return $"http://schemas.origam.com/{fullTypeName}/{version}";
         }
 
         public static string GetXmlNamespaceName(Type type)

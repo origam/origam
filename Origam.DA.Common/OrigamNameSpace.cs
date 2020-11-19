@@ -35,10 +35,31 @@ namespace Origam.DA.Common
         
         private static readonly ConcurrentDictionary<string, OrigamNameSpace> instances 
             =  new ConcurrentDictionary<string, OrigamNameSpace>();
+
+        public static implicit operator string(OrigamNameSpace nameSpace) => nameSpace.StringValue;
+
+        private static string MakeNamespaceString(string fullTypeName, Version version)
+        {
+            return $"http://schemas.origam.com/{fullTypeName}/{version}";
+        }
+
+        public static OrigamNameSpace CreateOrGet(Type type, Version version)
+        {
+            string namespaceString = MakeNamespaceString(type.FullName, version);
+            return instances.GetOrAdd(
+                namespaceString, 
+                new OrigamNameSpace(
+                    version: version, 
+                    stringValue: namespaceString, 
+                    fullTypeName: type.FullName)
+                );
+        }
+
         
         public static OrigamNameSpace CreateOrGet(string fullTypeName, Version version)
         {
-            return CreateOrGet( $"http://schemas.origam.com/{fullTypeName}/{version}");
+            string namespaceString = MakeNamespaceString(fullTypeName, version);
+            return CreateOrGet(namespaceString);
         }
 
         public static OrigamNameSpace CreateOrGet(string xmlNamespace)

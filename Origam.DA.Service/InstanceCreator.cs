@@ -21,12 +21,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.NamespaceMapping;
 using Origam.Extensions;
+using Origam.Schema;
+using Origam.Schema.MenuModel;
 
 namespace Origam.DA.Service
 {
@@ -161,6 +165,7 @@ namespace Origam.DA.Service
     {
         private readonly ExternalFileManager externalFileManger;
         private readonly XmlReader reader;
+        private OrigamNameSpace[] _currentFileNamespaces;
 
         public InstanceCreator( XmlReader reader, ParentFolders parentFolderIds,
             ExternalFileManager externalFileManger) : base(parentFolderIds)
@@ -168,7 +173,13 @@ namespace Origam.DA.Service
             this.externalFileManger = externalFileManger;
             this.reader = reader;
         }
-        
+
+        public OrigamNameSpace[] CurrentXmlFileNamespaces
+        {
+            get => _currentFileNamespaces ?? throw new InvalidOperationException("Trying to create instances before namespaces from the xml file were red.");
+            set => _currentFileNamespaces = value;
+        }
+
         protected override void SetReferences(IFilePersistent instance, 
             PropertyToNamespaceMapping namespaceMapping)
         {
@@ -216,11 +227,33 @@ namespace Origam.DA.Service
             foreach (MemberAttributeInfo mi in members)
             {
                 XmlAttributeAttribute attribute = mi.Attribute as XmlAttributeAttribute;
+                var currentPropertyNamespace = GetPropertyNamespace(namespaceMapping, mi);
+
                 string value = reader.GetAttribute(
                     attribute.AttributeName,
-                    namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name));
+                    currentPropertyNamespace);
                 SetValue(instance, mi, value, provider);
             }
+        }
+
+        private OrigamNameSpace GetPropertyNamespace(
+            PropertyToNamespaceMapping namespaceMapping, MemberAttributeInfo mi)
+        {
+            var currentPropertyNamespace =
+                namespaceMapping.GetNamespaceByPropertyName(mi.MemberInfo.Name);
+            var matchingXmlFileNamespace = CurrentXmlFileNamespaces
+                   .FirstOrDefault(xmlNamespace =>
+                       xmlNamespace.FullTypeName ==
+                       currentPropertyNamespace.FullTypeName)
+               ?? throw new Exception(
+                   $"Cannot find namespace: \"{currentPropertyNamespace.StringValue}\" in xml file");
+            if (matchingXmlFileNamespace.Version != currentPropertyNamespace.Version)
+            {
+                throw new Exception(
+                    $"The current meta version of type: \"{currentPropertyNamespace.FullTypeName}\" is {currentPropertyNamespace.Version}, but the xml file contains version {matchingXmlFileNamespace.Version}");
+            }
+
+            return currentPropertyNamespace;
         }
 
         protected override void SetValue(IFilePersistent instance, MemberAttributeInfo mi,

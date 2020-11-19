@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using Origam.DA.Common;
 using Origam.Extensions;
 
 namespace Origam.DA.Service.NamespaceMapping
@@ -12,7 +13,7 @@ namespace Origam.DA.Service.NamespaceMapping
         public DeadClassPropertyToNamespaceMapping(string fullTypeName, Version version)
         {
             string typeName = fullTypeName.Split(".").Last();
-            NodeNamespace =  XmlNamespaceTools.GetXmlNamespace(fullTypeName, version);
+            NodeNamespace =  OrigamNameSpace.CreateOrGet(fullTypeName, version).StringValue;
             xmlNamespaceName = XmlNamespaceTools.GetXmlNamespaceName(typeName);
         }
 
