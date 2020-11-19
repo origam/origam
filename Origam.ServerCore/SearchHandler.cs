@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Principal;
 using Microsoft.Extensions.Logging;
 using Origam.Schema.MenuModel;
+using Origam.ServerCore.Model.Search;
 using Origam.Workbench.Services;
 
 namespace Origam.ServerCore
