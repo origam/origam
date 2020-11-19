@@ -222,6 +222,7 @@ namespace Origam.DA.Service
                     {
                         throw new Exception(error.Value.Message);
                     }
+                    trackerLoaderFactory.BinLoader.Persist(itemTracker);
                     itemTrackerWasJustLoadedFromBin = false;
                 }
                 else
