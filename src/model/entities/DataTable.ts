@@ -125,7 +125,7 @@ export class DataTable implements IDataTable {
     return row[dsField.index];
   }
 
-  // Returns all values from currently loaded rows (in case thhe table is infinitelly scrolled)
+  // Returns all values from currently loaded rows (in case the table is infinitely scrolled)
   getAllValuesOfProp(property: IProperty): any[] {
     if(this.groups.length > 0){
       return this.groups
