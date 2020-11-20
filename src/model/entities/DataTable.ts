@@ -127,9 +127,17 @@ export class DataTable implements IDataTable {
 
   // Returns all values from currently loaded rows (in case thhe table is infinitelly scrolled)
   getAllValuesOfProp(property: IProperty): any[] {
-    return this.rowsContainer.allRows
-      .map((row) => this.getCellValue(row, property))
-      .filter((row) => row);
+    if(this.groups.length > 0){
+      return this.groups
+        .filter(group => group.isExpanded)
+        .flatMap(group => group.childRows)
+        .map((row) => this.getCellValue(row, property))
+        .filter((row) => row)
+    }else{
+      return this.rowsContainer.allRows
+        .map((row) => this.getCellValue(row, property))
+        .filter((row) => row);
+    }
   }
 
   getCellText(row: any[], property: IProperty) {

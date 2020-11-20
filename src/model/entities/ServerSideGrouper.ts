@@ -2,7 +2,7 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IGrouper } from "./types/IGrouper";
-import {autorun, IReactionDisposer, observable, reaction, IReactionOptions, comparer} from "mobx";
+import { IReactionDisposer, observable, reaction, comparer, flow} from "mobx";
 import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
@@ -10,6 +10,8 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
 import { joinWithAND, toFilterItem } from "./OrigamApiHelpers";
 import { parseAggregations } from "./Aggregatioins";
+import { getUserFilters } from "model/selectors/DataView/getUserFilters";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -75,30 +77,41 @@ export class ServerSideGrouper implements IGrouper {
     }
     this.groupDisposers.set(
       groupHeader,
-      autorun(() => {
-        const groupingConfiguration = getGroupingConfiguration(this);
-        const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
-        const dataView = getDataView(this);
-        const filter = this.composeGroupingFilter(groupHeader);
-        const lifeCycle = getFormScreenLifecycle(this);
-        const aggregations = getTablePanelView(this).aggregations.aggregationList;
-        const orderingConfiguration = getOrderingConfiguration(this);
-        if (nextColumnName) {
-          const property = getDataTable(this).getPropertyById(nextColumnName);
-          const lookupId = property && property.lookup && property.lookup.lookupId;
-          lifeCycle
-            .loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
-            .then(
-              (groupData) =>
-                (groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader))
-            );
-        } else {
-          lifeCycle
-            .loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
-            .then((rows) => (groupHeader.childRows = rows));
-        }
-      })
+      reaction(
+        ()=> [
+          getGroupingConfiguration(this).nextColumnToGroupBy(groupHeader.columnId),
+          this.composeFinalFilter(groupHeader),
+          [ ...getFilterConfiguration(groupHeader).activeFilters],
+          [ ...getTablePanelView(this).aggregations.aggregationList],
+          getOrderingConfiguration(this).groupChildrenOrdering
+        ], 
+        ()=> this.reload(groupHeader),
+        { fireImmediately: true }
+      )
     );
+  }
+
+  private reload(groupHeader: IGroupTreeNode) {
+    const groupingConfiguration = getGroupingConfiguration(this);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
+    const dataView = getDataView(this);
+    const filter = this.composeFinalFilter(groupHeader);
+    const lifeCycle = getFormScreenLifecycle(this);
+    const aggregations = getTablePanelView(this).aggregations.aggregationList;
+    const orderingConfiguration = getOrderingConfiguration(this);
+    if (nextColumnName) {
+      const property = getDataTable(this).getPropertyById(nextColumnName);
+      const lookupId = property && property.lookup && property.lookup.lookupId;
+      lifeCycle
+        .loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
+        .then(
+          (groupData) => (groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader))
+        );
+    } else {
+      lifeCycle
+        .loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
+        .then((rows) => (groupHeader.childRows = rows));
+    }
   }
 
   getAllParents(rowGroup: IGroupTreeNode) {
@@ -109,6 +122,15 @@ export class ServerSideGrouper implements IGrouper {
       parent = parent.parent;
     }
     return parents;
+  }
+
+  composeFinalFilter(rowGroup: IGroupTreeNode){
+    const groupingFilter = this.composeGroupingFilter(rowGroup);
+    const userFilters = getUserFilters(this);
+
+    return userFilters 
+      ? joinWithAND([groupingFilter, userFilters])
+      : groupingFilter;
   }
 
   composeGroupingFilter(rowGroup: IGroupTreeNode) {
