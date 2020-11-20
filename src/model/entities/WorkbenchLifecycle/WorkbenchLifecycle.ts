@@ -70,6 +70,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       urlOpenMethod,
     } = args.item.attributes;
     const { event } = args;
+    const alwaysOpenNew = args.item.attributes.alwaysOpenNew === 'true';
 
     if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
@@ -87,7 +88,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const existingItem = openedScreens.findLastExistingItem(id);
       if (existingItem &&
           type !== IMainMenuItemType.FormRefWithSelection &&
-          type !== IMainMenuItemType.ReportReferenceMenuItem) {
+          type !== IMainMenuItemType.ReportReferenceMenuItem &&
+          !alwaysOpenNew) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
         if (openedScreen.isSleeping) {
