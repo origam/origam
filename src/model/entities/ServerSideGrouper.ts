@@ -36,15 +36,25 @@ export class ServerSideGrouper implements IGrouper {
       this.topLevelGroups.length = 0;
       return;
     }
+    const expandedGroupDisplayValues = this.topLevelGroups
+      .filter(group => group.isExpanded)
+      .map(group => group.columnDisplayValue)
     const dataView = getDataView(this);
     const property = getDataTable(this).getPropertyById(firstGroupingColumn);
     const lookupId = property && property.lookup && property.lookup.lookupId;
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
     getFormScreenLifecycle(this)
       .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
-      .then(
-        (groupData) =>
-          (this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined))
+      .then( groupData =>
+          {
+            this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined)
+            this.topLevelGroups
+              .filter(group => expandedGroupDisplayValues.includes(group.columnDisplayValue))
+              .forEach(group => {
+                group.isExpanded = true;
+                this.loadChildren(group);
+              })
+          }
       );
   }
 
