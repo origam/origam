@@ -43,14 +43,14 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   get allChildGroups(): IGroupTreeNode[]{
     return allChildGroups(this);
   }
-
+  
   get allParents(): IGroupTreeNode[] {
     return getallParents(this);
   }
-
+  
   @computed get childRows(){
     const orderingConfiguration = getOrderingConfiguration(this.grouper);
-
+    
     if(orderingConfiguration.userOrderings.length === 0){
       return this._childRows;
     }else{
@@ -59,6 +59,10 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   }
   set childRows(rows: any[][]){
     this._childRows = rows;
+  }
+
+  composeGroupingFilter(): string {
+    throw new Error("Method not implemented.");
   }
 }
 
@@ -69,7 +73,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
       (row: any[]) => dataTable.getRowId(row),
       dataTable);
     Object.assign(this, data);
-
+    
     const dataView = getDataView(this.grouper);
     this.scrollLoader = new InfiniteScrollLoader({
       ctx: this.grouper,
@@ -89,15 +93,15 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
-
+  
   scrollLoader: InfiniteScrollLoader;
-
+  
   _childRows: ScrollRowContainer;
-
+  
   get allChildGroups(): IGroupTreeNode[]{
     return allChildGroups(this);
   }
-
+  
   get allParents(): IGroupTreeNode[] {
     return getallParents(this);
   }
@@ -111,7 +115,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
     }
     this._childRows.set(rows);
   }
-
+  
   getAllParents() {
     let parent = this.parent
     const parents = []
@@ -122,16 +126,26 @@ export class ServerSideGroupItem implements IGroupTreeNode {
     return parents;
   }
 
-  composeGroupingFilter() {
+  composeGroupingFilter(): string {
     const parents = this.getAllParents();
     if(parents.length === 0){
-      return toFilterItem(this.columnId, "eq" ,this.columnValue)
+      return toFilterItem(this.columnId, null, "eq" ,this.columnValue)
     }else{
       const andOperands = parents
         .concat([this])
-        .map(row => toFilterItem(row.columnId, "eq", row.columnValue))
+        .map(row => toFilterItem(row.columnId, null, "eq", row.columnValue))
       return joinWithAND(andOperands);
     }
+
+  //   const parents = this.getAllParents(rowGroup);
+  //   if (parents.length === 0) {
+  //     return toFilterItem(rowGroup.columnId, null, "eq", rowGroup.columnValue);
+  //   } else {
+  //     const andOperands = parents
+  //       .concat([rowGroup])
+  //       .map((row) => toFilterItem(row.columnId, null, "eq", row.columnValue));
+  //     return joinWithAND(andOperands);
+  //   }
   }
   @observable private _isExpanded = false;
 

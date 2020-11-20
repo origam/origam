@@ -114,18 +114,9 @@ export class ServerSideGrouper implements IGrouper {
     }
   }
 
-  getAllParents(rowGroup: IGroupTreeNode) {
-    let parent = rowGroup.parent;
-    const parents = [];
-    while (parent) {
-      parents.push(parent);
-      parent = parent.parent;
-    }
-    return parents;
-  }
 
   composeFinalFilter(rowGroup: IGroupTreeNode){
-    const groupingFilter = this.composeGroupingFilter(rowGroup);
+    const groupingFilter = rowGroup.composeGroupingFilter();
     const userFilters = getUserFilters(this);
 
     return userFilters 
@@ -133,17 +124,6 @@ export class ServerSideGrouper implements IGrouper {
       : groupingFilter;
   }
 
-  composeGroupingFilter(rowGroup: IGroupTreeNode) {
-    const parents = this.getAllParents(rowGroup);
-    if (parents.length === 0) {
-      return toFilterItem(rowGroup.columnId, null, "eq", rowGroup.columnValue);
-    } else {
-      const andOperands = parents
-        .concat([rowGroup])
-        .map((row) => toFilterItem(row.columnId, null, "eq", row.columnValue));
-      return joinWithAND(andOperands);
-    }
-  }
 
   group(groupData: any[], columnId: string, parent: IGroupTreeNode | undefined): IGroupTreeNode[] {
     const groupingConfiguration = getGroupingConfiguration(this);

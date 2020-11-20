@@ -22,6 +22,7 @@ export interface IGroupTreeNode {
   columnDisplayValue: string;
   aggregations: IAggregation[] | undefined;
   allParents: IGroupTreeNode[];
+  composeGroupingFilter(): string;
 }
 
 export type ITableRow = any[] | IGroupRow;
