@@ -55,7 +55,7 @@ export class CFavorites extends React.Component<{
     );
   }
 
-  onFolderProperiesClick() {
+  onFolderPropertiesClick() {
     const closeDialog = getDialogStack(this.props.ctx).pushDialog(
       "",
       <FavoriteFolderPropertiesDialog
@@ -171,10 +171,18 @@ export class CFavorites extends React.Component<{
                 {T("Unpin", "group_unpin")}
               </DropdownItem>
             )}
+             <DropdownItem
+              onClick={(event: any) => {
+                setDropped(false);
+                this.onCreateNewFolderClick();
+              }}
+            >
+              {T("Put to favourites", "add_group")}
+            </DropdownItem>
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                this.onFolderProperiesClick();
+                this.onFolderPropertiesClick();
               }}
             >
               {T("Properties", "group_properties")}
