@@ -123,16 +123,22 @@ namespace Origam.DA.Service.NamespaceMapping
         public OrigamNameSpace GetNamespaceByPropertyName(string propertyName)
         {
             PropertyMapping propertyMapping = propertyMappings
-                                                  .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\" in {typeFullName} and its base types");
+                .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
+                  ?? throw new Exception(string.Format(
+                                          Strings.CouldNotFindXmlNamespace,
+                                          propertyName,
+                                          typeFullName));
             return propertyMapping.XmlNamespace;
         }      
         
         public XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName)
         {
             PropertyMapping propertyMapping = propertyMappings
-                                                  .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{xmlAttributeName}\" in {typeFullName} and its base types");
+                .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
+                  ?? throw new Exception(string.Format(
+                                          Strings.CouldNotFindXmlNamespace,
+                                          xmlAttributeName,
+                                          typeFullName));
             return propertyMapping.XmlNamespace.StringValue;
         }
 

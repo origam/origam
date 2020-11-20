@@ -19,7 +19,7 @@ namespace Origam.DA.Service {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -120,6 +120,15 @@ namespace Origam.DA.Service {
         internal static string CouldNotFindObject {
             get {
                 return ResourceManager.GetString("CouldNotFindObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Could not find xmlNamespace for  \&quot;{0}\&quot; in {1} and its base types&quot;.
+        /// </summary>
+        internal static string CouldNotFindXmlNamespace {
+            get {
+                return ResourceManager.GetString("CouldNotFindXmlNamespace", resourceCulture);
             }
         }
         
