@@ -11,7 +11,7 @@ export function executeWeblink(ctx: any) {
             yield* getWorkbenchLifecycle(ctx).onMainMenuItemIdClick({
               event: undefined,
               itemId: menuId,
-              idParameter: undefined
+              idParameter: undefined,
             });
           }
         }

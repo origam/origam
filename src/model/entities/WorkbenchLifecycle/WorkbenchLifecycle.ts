@@ -31,9 +31,9 @@ import { IUrlUpenMethod } from "../types/IUrlOpenMethod";
 import { IPortalSettings } from "../types/IPortalSettings";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
-import {onMainMenuItemClick} from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import {getIsScreenOrAnyDataViewWorking} from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { IDataView } from "../types/IDataView";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
@@ -57,9 +57,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   @observable
   customAssetsRoute: string | undefined;
 
-  *onMainMenuItemClick(
-      args: { event: any; item: any, idParameter: string | undefined }
-    ): Generator {
+  *onMainMenuItemClick(args: {
+    event: any;
+    item: any;
+    idParameter: string | undefined;
+    isSingleRecordEdit?: boolean;
+  }): Generator {
     const {
       type,
       id,
@@ -70,7 +73,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       urlOpenMethod,
     } = args.item.attributes;
     const { event } = args;
-    const alwaysOpenNew = args.item.attributes.alwaysOpenNew === 'true';
+    const alwaysOpenNew = args.item.attributes.alwaysOpenNew === "true";
 
     if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
@@ -86,15 +89,22 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     }
     if (event && !event.ctrlKey) {
       const existingItem = openedScreens.findLastExistingItem(id);
-      if (existingItem &&
-          type !== IMainMenuItemType.FormRefWithSelection &&
-          type !== IMainMenuItemType.ReportReferenceMenuItem &&
-          !alwaysOpenNew) {
+      if (
+        existingItem &&
+        type !== IMainMenuItemType.FormRefWithSelection &&
+        type !== IMainMenuItemType.ReportReferenceMenuItem &&
+        !alwaysOpenNew
+      ) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
         if (openedScreen.isSleeping) {
           openedScreen.isSleeping = false;
-          const initUIResult = yield* this.initUIForScreen(openedScreen, false);
+          const initUIResult = yield* this.initUIForScreen(
+            openedScreen,
+            false,
+            undefined,
+            args.isSingleRecordEdit
+          );
           yield* openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
         } else if (
           openedScreen.content &&
@@ -118,7 +128,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             label,
             dontRequestData === "true",
             dialogInfo,
-            args.idParameter ? {id: args.idParameter} : {});
+            args.idParameter ? { id: args.idParameter } : {},
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            args.isSingleRecordEdit
+          );
         }
       }
     } else {
@@ -128,17 +146,31 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         label,
         dontRequestData === "true",
         dialogInfo,
-        args.idParameter ? {id: args.idParameter} : {});
+        args.idParameter ? { id: args.idParameter } : {},
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        args.isSingleRecordEdit
+      );
     }
   }
 
-  *onMainMenuItemIdClick(args: { event: any; itemId: any, idParameter: string | undefined}){
-    const menuItem =  args.itemId && selectors.mainMenu.getItemById(this,  args.itemId);
+  *onMainMenuItemIdClick(args: {
+    event: any;
+    itemId: any;
+    idParameter: string | undefined;
+    isSingleRecordEdit?: boolean;
+  }) {
+    const menuItem = args.itemId && selectors.mainMenu.getItemById(this, args.itemId);
     if (menuItem) {
       yield onMainMenuItemClick(this)({
         event: undefined,
         item: menuItem,
-        idParameter: args.idParameter
+        idParameter: args.idParameter,
+        isSingleRecordEdit: args.isSingleRecordEdit,
       });
     }
     // debugger;
@@ -166,7 +198,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         const openedScreen = existingItem;
         if (openedScreen.isSleeping) {
           openedScreen.isSleeping = false;
-          const initUIResult = yield* this.initUIForScreen(openedScreen, false);
+          const initUIResult = yield* this.initUIForScreen(openedScreen, false, undefined);
           yield* openedScreen.content!.start(initUIResult, openedScreen.isSleepingDirty);
         } else if (
           openedScreen.content &&
@@ -324,7 +356,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     formSessionId?: string,
     isSessionRebirth?: boolean,
     isSleepingDirty?: boolean,
-    refreshOnReturnType?: IRefreshOnReturnType
+    refreshOnReturnType?: IRefreshOnReturnType,
+    isSingleRecordEdit?: boolean
   ) {
     const openedScreens = getOpenedScreens(this);
     const existingItem = openedScreens.findLastExistingItem(id);
@@ -356,7 +389,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const initUIResult = yield* this.initUIForScreen(
         newScreen,
         !isSessionRebirth,
-        additionalRequestParameters
+        additionalRequestParameters,
+        isSingleRecordEdit
       );
 
       yield* newFormScreen.start(initUIResult);
@@ -367,8 +401,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       when(
         () => !getIsScreenOrAnyDataViewWorking(formScreen),
         () => {
-          formScreen.dataViews
-            .forEach((dataView: IDataView) => getFocusManager(dataView).canAutoFocus = true);
+          formScreen.dataViews.forEach(
+            (dataView: IDataView) => (getFocusManager(dataView).canAutoFocus = true)
+          );
         }
       );
     } catch (e) {
@@ -381,7 +416,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *initUIForScreen(
     screen: IOpenedScreen,
     isNewSession: boolean,
-    additionalRequestParameters?: object | undefined
+    additionalRequestParameters?: object | undefined,
+    isSingleRecordEdit?: boolean
   ) {
     const api = getApi(this);
     const initUIResult = yield api.initUI({
@@ -394,8 +430,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       DataRequested: !screen.dontRequestData,
       Parameters: screen.parameters,
       AdditionalRequestParameters: additionalRequestParameters,
+      IsSingleRecordEdit: isSingleRecordEdit
     });
-    console.log(initUIResult);
     return initUIResult;
   }
 
@@ -421,8 +457,8 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     this.customAssetsRoute = portalInfo.customAssetsRoute;
     this.portalSettings = {
       showChat: portalInfo.chatRefreshInterval > 0,
-      showWorkQueues: portalInfo.workQueueListRefreshInterval > 0
-    }
+      showWorkQueues: portalInfo.workQueueListRefreshInterval > 0,
+    };
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
     getFavorites(this).setXml(portalInfo.favorites);
@@ -469,15 +505,15 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       }
     }
 
-    if(this.portalSettings?.showWorkQueues){
+    if (this.portalSettings?.showWorkQueues) {
       yield* getWorkQueues(this).startTimer(portalInfo.workQueueListRefreshInterval);
     }
 
-    if(this.portalSettings?.showChat) {
+    if (this.portalSettings?.showChat) {
       yield* getChatrooms(this).startTimer(portalInfo.chatRefreshInterval);
     }
 
-    if(portalInfo.notificationBoxRefreshInterval > 0) {
+    if (portalInfo.notificationBoxRefreshInterval > 0) {
       yield* getNotifications(this).startTimer(portalInfo.notificationBoxRefreshInterval);
     }
   }
