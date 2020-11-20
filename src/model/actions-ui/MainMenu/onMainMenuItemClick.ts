@@ -7,6 +7,7 @@ export function onMainMenuItemClick(ctx: any) {
     event: any;
     item: any;
     idParameter: string | undefined;
+    isSingleRecordEdit?: boolean;
   }) {
     try {
       yield* getWorkbenchLifecycle(ctx).onMainMenuItemClick(args);

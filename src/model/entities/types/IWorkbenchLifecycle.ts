@@ -11,6 +11,7 @@ export interface IWorkbenchLifecycle {
     event: any;
     itemId: any;
     idParameter: string | undefined;
+    isSingleRecordEdit?: boolean;
   }): Generator;
   onWorkQueueListItemClick(event: any, item: any): Generator;
   onChatroomsListItemClick(event: any, item: any): Generator;
