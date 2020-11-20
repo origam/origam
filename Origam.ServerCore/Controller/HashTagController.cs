@@ -30,7 +30,6 @@ using Origam.ServerCore.Resources;
 using Origam.Services;
 using Origam.Workbench.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -42,14 +41,14 @@ namespace Origam.ServerCore.Controller
     [Route("internalApi/[controller]")]
     public class HashTagController : AbstractController
     {
-        private readonly IStringLocalizer<SharedResources> localizer;
+        private readonly ILogger<AbstractController> logger;
 
         public HashTagController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log) : base(log, sessionObjects)
         {
-            this.localizer = localizer;
+            this.logger = log;
         }
 
         [HttpGet("categories")]
@@ -65,17 +64,17 @@ namespace Origam.ServerCore.Controller
             [FromQuery] string searchPhrase)
         {
             return RunWithErrorHandler(() =>
-                Ok(GetObjets(categoryId,limit,pageNumber,searchPhrase)));
+                GetObjets(categoryId,limit,pageNumber,searchPhrase));
         }
 
         [HttpPost("{categoryId}/labels")]
         public IActionResult GetLookupLabelRequest(string categoryId,[FromBody] HashTagLabel label)
         {
             return RunWithErrorHandler(() =>
-                Ok(GetLookupLabel(categoryId,label.LabelIds)));
+                GetLookupLabel(categoryId,label.LabelIds));
         }
 
-        private object GetLookupLabel(string categoryId, object[] labelIds)
+        private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
         {
             HashTag hashTag = GetHashtag(categoryId);
             if (TestRole(hashTag.Roles))
@@ -83,7 +82,7 @@ namespace Origam.ServerCore.Controller
                 var labelDictionary = GetLookupLabelsInternal(hashTag, labelIds);
                 return Ok(labelDictionary);
             }
-            throw new Exception("No rights");
+            return StatusCode(403,"You have No rights");
         }
 
         private HashTag GetHashtag(string categoryId)
@@ -121,32 +120,23 @@ namespace Origam.ServerCore.Controller
             );
         }
 
-        private object GetMenuId(string hashtagCategory, Guid ReferenceId)
+        private string GetMenuId(string hashtagCategory, Guid ReferenceId)
         {
-            var hashTag = GetHashtag(hashtagCategory);
-            ArrayList datalookupMenuBinding = hashTag.Lookup.ChildItemsByType(DataLookupMenuBinding.CategoryConst);
-            if(datalookupMenuBinding.Count!=1)
-            {
-                return new Exception("Problem with MenuBinding!");
-            }
-            if (datalookupMenuBinding.Count == 1 && TestRole(datalookupMenuBinding.Cast<DataLookupMenuBinding>().First().Roles))
-            {
-                var menuBinding = ServiceManager.Services
+            return ServiceManager.Services
                 .GetService<IDataLookupService>()
-                .GetMenuBinding(GetHashtag(hashtagCategory).LookupId, ReferenceId);
-                return menuBinding.MenuId;
-            }
-            return new Exception("No rights");
+                .GetMenuBinding(GetHashtag(hashtagCategory).LookupId, ReferenceId)
+                .MenuId;
         }
 
-        private object GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
+        private IActionResult GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
         {
             HashTag hashTag = GetHashtag(categoryId);
             if (hashTag!=null)
             {
-                 return GetLookupData(hashTag,limit,pageNumber,searchPhrase);
+                 var lookupData =  GetLookupData(hashTag,limit,pageNumber,searchPhrase);
+                return lookupData.IsSuccess ? Ok(lookupData.Value) : lookupData.Error;
             }
-            return new Exception("No Data");
+            return StatusCode(404, "No data");
         }
 
         private HashTagSchemaItemProvider GetHasTagProvider()
@@ -155,7 +145,7 @@ namespace Origam.ServerCore.Controller
             return schemaservice.GetProvider<HashTagSchemaItemProvider>();
         }
 
-        private object GetLookupData(HashTag hashT, int limit, int pageNumber, string searchPhrase)
+        private Result<IEnumerable<object[]>, IActionResult> GetLookupData(HashTag hashT, int limit, int pageNumber, string searchPhrase)
         {
             IDataLookupService lookupService
                     = ServiceManager.Services.GetService<IDataLookupService>();
@@ -193,8 +183,9 @@ namespace Origam.ServerCore.Controller
                     .Cast<DataRow>()
                     .Select(row => GetColumnValues(row, columnNames));
             }
-
-            throw new Exception("Lookup has property IsFilteredServerSide set to false !");
+            logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false !",input.LookupId));
+            return (IEnumerable<object[]>)BadRequest("Data is not filtered on server!");
+           
         }
 
         private static object[] GetColumnValues(

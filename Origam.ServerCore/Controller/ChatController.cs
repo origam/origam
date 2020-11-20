@@ -247,12 +247,12 @@ namespace Origam.ServerCore.Controller
             var row = dataset.Tables["OrigamChatRoom"].NewRow();
             row["Id"] = newChatRoomId;
             row["Name"] = newChatRoom.topic;
-            if (newChatRoom.referenceRecordId.HasValue 
-            && ! string.IsNullOrEmpty(newChatRoom.referenceCategory))
+            if (newChatRoom.ReferenceRecordId.HasValue 
+            && ! string.IsNullOrEmpty(newChatRoom.ReferenceCategory))
             {
-                row["ReferenceId"] = newChatRoom.referenceRecordId.Value;
+                row["ReferenceId"] = newChatRoom.ReferenceRecordId.Value;
                 row["ReferenceEntity"] 
-                    = newChatRoom.referenceCategory;
+                    = newChatRoom.ReferenceCategory;
             }
             row["RecordCreated"] = DateTime.Now;
             row["RecordCreatedBy"] = profile.Id;

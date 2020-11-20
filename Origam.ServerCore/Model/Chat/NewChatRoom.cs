@@ -27,28 +27,7 @@ namespace Origam.ServerCore.Model.Chat
     {
         public string topic { get; set; }
         public List<InviteUser> inviteUsers { get; set; }
-        public Dictionary<string,object> references { get; set; }
-        public string referenceCategory 
-        { 
-            get
-            {
-                if (references.Count > 0 && references.ContainsKey("referenceCategory"))
-                {
-                    return references["referenceCategory"].ToString();
-                }
-                return null;
-            }
-        }
-        public Guid? referenceRecordId 
-        { 
-            get
-            {
-                if (references.Count > 0 && references.ContainsKey("referenceRecordId"))
-                {
-                    return Guid.Parse(references["referenceRecordId"].ToString());
-                }
-                return null;
-            }
-        }
+        public string ReferenceCategory { get; set; }
+        public Guid? ReferenceRecordId { get; set; }
     }
 }
