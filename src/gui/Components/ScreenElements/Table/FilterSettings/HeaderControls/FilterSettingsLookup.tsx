@@ -47,7 +47,7 @@ const OPERATORS = [
 
 const OpCombo: React.FC<{
   setting: any;
-}> = (props) => {
+}> = observer((props) => {
   return (
     <FilterSettingsComboBox
       trigger={<>{(OPERATORS.find((op) => op.type === props.setting.type) || {}).caption}</>}
@@ -67,7 +67,7 @@ const OpCombo: React.FC<{
       ))}
     </FilterSettingsComboBox>
   );
-};
+});
 
 export interface ITagEditorItem {
   text: string;
