@@ -37,6 +37,7 @@ import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getI
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { IDataView } from "../types/IDataView";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
+import produce from "immer";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -164,7 +165,16 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     idParameter: string | undefined;
     isSingleRecordEdit?: boolean;
   }) {
-    const menuItem = args.itemId && selectors.mainMenu.getItemById(this, args.itemId);
+    let menuItem = args.itemId && selectors.mainMenu.getItemById(this, args.itemId);
+    if (args.isSingleRecordEdit) {
+      // Temporary hack o allow filtered screens to work unless single record edit is
+      // implemented for paginated screens on server side. There is no need to paginate 
+      // when we have just one record, hence it is ok to execute the screen in without
+      // pagination
+      menuItem = produce(menuItem, (draft: any) => {
+        draft.attributes.dontRequestData = "false";
+      });
+    }
     if (menuItem) {
       yield onMainMenuItemClick(this)({
         event: undefined,
@@ -430,7 +440,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       DataRequested: !screen.dontRequestData,
       Parameters: screen.parameters,
       AdditionalRequestParameters: additionalRequestParameters,
-      IsSingleRecordEdit: isSingleRecordEdit
+      IsSingleRecordEdit: isSingleRecordEdit,
     });
     return initUIResult;
   }
