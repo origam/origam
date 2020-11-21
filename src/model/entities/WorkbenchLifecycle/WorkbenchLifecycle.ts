@@ -175,7 +175,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         draft.attributes.dontRequestData = "false";
       });
     }
-    debugger;
     if (menuItem) {
       yield onMainMenuItemClick(this)({
         event: undefined,
