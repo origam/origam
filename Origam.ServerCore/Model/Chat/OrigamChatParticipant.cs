@@ -28,15 +28,15 @@ namespace Origam.ServerCore.Model.Chat
     {
         public OrigamChatParticipant(Guid id, string username, string avatarUrl, string status)
         {
-            this.id = id;
-            name = username;
-            this.avatarUrl = avatarUrl;
-            this.status = status;
+            this.Id = id;
+            Name = username;
+            this.AvatarUrl = avatarUrl;
+            this.Status = status;
         }
-        public Guid id { get; }
-        public string name { get;  }
-        public string avatarUrl { get; }
-        public string status { get;  }
+        public Guid Id { get; }
+        public string Name { get;  }
+        public string AvatarUrl { get; }
+        public string Status { get;  }
         internal static List<OrigamChatParticipant> CreateJson(DataSet datasetParticipants, DataSet onlineUsers)
         {
             List<OrigamChatParticipant> messages = new List<OrigamChatParticipant>();

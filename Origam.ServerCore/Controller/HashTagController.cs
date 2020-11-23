@@ -129,7 +129,7 @@ namespace Origam.ServerCore.Controller
             HashtagCategory category = GetCategory(categoryId);
             if (category != null)
             {
-                 var lookupData =  GetLookupData(category, limit, pageNumber, searchPhrase);
+                 var lookupData = GetLookupData(category, limit, pageNumber, searchPhrase);
                 return lookupData.IsSuccess ? Ok(lookupData.Value) : lookupData.Error;
             }
             return NotFound();
@@ -160,9 +160,9 @@ namespace Origam.ServerCore.Controller
                 : Result.Failure<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
         }
-        private string[] GetListColumn(HashtagCategory hashT)
+        private string[] GetListColumn(HashtagCategory hashtagCategory)
         {
-            string displayColumn = hashT.Lookup.ValueValueMember +";" +hashT.Lookup.ValueDisplayMember;
+            string displayColumn = hashtagCategory.Lookup.ValueValueMember +";" +hashtagCategory.Lookup.ValueDisplayMember;
             return displayColumn.Split(";");
         }
         private IEnumerable<object[]> GetRowData(

@@ -199,7 +199,7 @@ namespace Origam.ServerCore.Controller
             [FromBody]RequestUserId requestId)
         {
             return RunWithErrorHandler(() => 
-                PostInviteUser(requestChatRoomId, requestId.userId));
+                PostInviteUser(requestChatRoomId, requestId.UserId));
         }
         [HttpPost("chatrooms/{requestChatRoomId:guid}/outviteUser")]
         public IActionResult PostRoomAbandonRequest(
@@ -223,7 +223,7 @@ namespace Origam.ServerCore.Controller
         {
             var roomInfo = GetChatRoom(requestChatRoomId);
             var dataRow = roomInfo.Tables[0].Rows[0];
-            dataRow["Name"] = topic.topic;
+            dataRow["Name"] = topic.Topic;
             DataService.StoreData(
                 OrigamChatRoomDatastructureId, roomInfo, false, null);
             return Ok();
@@ -246,9 +246,9 @@ namespace Origam.ServerCore.Controller
             var dataset = datasetGenerator.CreateDataSet(dataStructure);
             var row = dataset.Tables["OrigamChatRoom"].NewRow();
             row["Id"] = newChatRoomId;
-            row["Name"] = newChatRoom.topic;
+            row["Name"] = newChatRoom.Topic;
             if (newChatRoom.ReferenceRecordId.HasValue 
-            && ! string.IsNullOrEmpty(newChatRoom.ReferenceCategory))
+            && !string.IsNullOrEmpty(newChatRoom.ReferenceCategory))
             {
                 row["ReferenceId"] = newChatRoom.ReferenceRecordId.Value;
                 row["ReferenceEntity"] 
@@ -259,8 +259,8 @@ namespace Origam.ServerCore.Controller
             dataset.Tables["OrigamChatRoom"].Rows.Add(row);
             DataService.StoreData(OrigamChatRoomDatastructureId, dataset, 
                 false, null);
-            newChatRoom.inviteUsers.Add(new InviteUser(profile.Id));
-            AddUsersIntoChatRoom(newChatRoomId, newChatRoom.inviteUsers);
+            newChatRoom.InviteUsers.Add(new InviteUser(profile.Id));
+            AddUsersIntoChatRoom(newChatRoomId, newChatRoom.InviteUsers);
             return newChatRoomId;
         }
         private void AddUsersIntoChatRoom(
@@ -311,7 +311,7 @@ namespace Origam.ServerCore.Controller
             {
                  new QueryParameter(
                      "OrigamChatRoomBusinessPartner_parBusinessPartnerId", 
-                     outviteUser.userId),
+                     outviteUser.UserId),
                  new QueryParameter(
                      "OrigamChatRoomBusinessPartner_parOrigamChatRoomId", 
                      requestChatRoomId)
@@ -506,13 +506,13 @@ namespace Origam.ServerCore.Controller
             var messageDataset = datasetGenerator.CreateDataSet(
                 messageDataStructure);
             var messageRow = messageDataset.Tables["OrigamChatMessage"].NewRow();
-            messageRow["Id"] = chatMessages.id;
-            messageRow["TextMessage"] = chatMessages.text;
+            messageRow["Id"] = chatMessages.Id;
+            messageRow["TextMessage"] = chatMessages.Text;
             messageRow["refOrigamChatRoomId"] = requestChatRoomId;
             messageRow["RecordCreated"] = DateTime.Now;
             messageRow["RecordCreatedBy"] = profile.Id;
             messageRow["refBusinessPartnerId"] = profile.Id;
-            messageRow["Mentions"] = chatMessages.mentions.Count;
+            messageRow["Mentions"] = chatMessages.Mentions.Count;
             messageDataset.Tables["OrigamChatMessage"].Rows.Add(messageRow);
             DataService.StoreData(
                 OrigamChatMessageDataStructureId, messageDataset, false, null);
@@ -523,7 +523,7 @@ namespace Origam.ServerCore.Controller
                             OrigamChatMessageBusinessPartnerDataStructureId));
             var messageBusinessPartnerDataSet = datasetGenerator.CreateDataSet(
                 messageBusinessPartnerDataStructure);
-            foreach (var messageMention in chatMessages.mentions)
+            foreach (var messageMention in chatMessages.Mentions)
             {
                 var messageBusinessPartnerRow 
                     = messageBusinessPartnerDataSet.Tables[
@@ -533,7 +533,7 @@ namespace Origam.ServerCore.Controller
                 messageBusinessPartnerRow["RecordCreatedBy"] = profile.Id;
                 messageBusinessPartnerRow["refBusinessPartnerId"] = messageMention;
                 messageBusinessPartnerRow["refOrigamChatMessageId"] 
-                    = chatMessages.id;
+                    = chatMessages.Id;
                 messageBusinessPartnerDataSet.Tables[
                     "OrigamChatMessageBusinessPartner"].Rows.Add(
                     messageBusinessPartnerRow);
@@ -554,7 +554,7 @@ namespace Origam.ServerCore.Controller
             var pollData = new Dictionary<string, object>();
             var participants = GetChatRoomParticipants(requestChatRoomId);
             var activeUser = (OrigamChatBusinessPartner)GetLocalUser();
-            if(participants.All(participant => participant.id != activeUser.id))
+            if(participants.All(participant => participant.Id != activeUser.id))
             {
                 return StatusCode(403, 
                     "You are not allowed to join this chatroom.");

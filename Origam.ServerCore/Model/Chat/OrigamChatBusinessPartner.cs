@@ -47,14 +47,14 @@ namespace Origam.ServerCore.Model.Chat
                 Guid ChatUser = row.Field<Guid>("Id");
                 if (usersNotExistsInRoom)
                 {
-                    if (participants == null || !participants.Where(participant => participant.id == ChatUser).Any())
+                    if (participants == null || !participants.Where(participant => participant.Id == ChatUser).Any())
                     {
                         mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
                     }
                 }
                 else
                 {
-                    if (participants.Where(participant => participant.id == ChatUser).Any())
+                    if (participants.Where(participant => participant.Id == ChatUser).Any())
                     {
                         mentions.Add(new OrigamChatBusinessPartner(row.Field<Guid>("Id"), row.Field<string>("FirstNameAndName"), row.Field<Guid>("Id").ToString()));
                     }

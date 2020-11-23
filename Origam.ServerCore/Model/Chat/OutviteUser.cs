@@ -19,16 +19,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
-
 namespace Origam.ServerCore.Model.Chat
 {
     public class OutviteUser
     {
         public OutviteUser(Guid id)
         {
-            userId = id;
+            UserId = id;
         }
-
-        public Guid userId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

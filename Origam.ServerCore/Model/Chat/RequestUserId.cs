@@ -24,6 +24,6 @@ namespace Origam.ServerCore.Model.Chat
 {
     public class RequestUserId
     {
-        public Guid userId { get; set; }
+        public Guid UserId { get; set; }
     }
 }
