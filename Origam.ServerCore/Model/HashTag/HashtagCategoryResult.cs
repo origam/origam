@@ -24,6 +24,6 @@ namespace Origam.ServerCore.Model.HashTag
     {
         public string HashtagName { get; set; }
         public string HashtagLabel { get; set; }
-        public string ObjectComboboxMetada { get; set; }
+        public string ObjectComboboxMetadata { get; set; }
     }
 }
