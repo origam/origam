@@ -103,11 +103,11 @@ export class ServerSideGrouper implements IGrouper {
     yield* this.reload(groupHeader);
   }
 
-  private *reload(groupHeader: IGroupTreeNode) {
+  private *reload(group: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
     const dataView = getDataView(this);
-    const filter = this.composeFinalFilter(groupHeader);
+    const filter = this.composeFinalFilter(group);
     const lifeCycle = getFormScreenLifecycle(this);
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
     const orderingConfiguration = getOrderingConfiguration(this);
@@ -117,12 +117,12 @@ export class ServerSideGrouper implements IGrouper {
       yield lifeCycle
         .loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
         .then(
-          (groupData) => (groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader))
+          (groupData) => (group.childGroups = this.group(groupData, nextColumnName, group))
         );
     } else {
       yield lifeCycle
         .loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
-        .then((rows) => (groupHeader.childRows = rows));
+        .then((rows) => (group.childRows = rows));
     }
   }
 
