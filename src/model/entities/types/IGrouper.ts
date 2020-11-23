@@ -5,6 +5,7 @@ export interface IGrouper {
   getAllValuesOfProp(property: IProperty): Promise<Set<any>>
   topLevelGroups: IGroupTreeNode[];
   allGroups: IGroupTreeNode[];
+  getRowById(id: string): any[] | undefined;
   loadChildren(groupHeader: IGroupTreeNode): Generator;
   notifyGroupClosed(group: IGroupTreeNode): void;
   parent?: any;

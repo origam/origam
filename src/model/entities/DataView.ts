@@ -215,9 +215,18 @@ export class DataView implements IDataView {
   }
 
   @computed get selectedRow(): any[] | undefined {
-    return this.selectedRowIndex !== undefined
-      ? this.dataTable.getRowByExistingIdx(this.selectedRowIndex)
-      : undefined;
+    if(!this.selectedRowId){
+      return undefined;
+    }
+    if(getGroupingConfiguration(this).isGrouping){
+      return getGrouper(this).getRowById(this.selectedRowId!);
+    }
+    else
+    {
+      return this.selectedRowIndex !== undefined
+        ? this.dataTable.getRowByExistingIdx(this.selectedRowIndex)
+        : undefined;  
+    }
   }
 
   @computed get isValidRowSelection(): boolean {

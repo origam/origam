@@ -49,6 +49,10 @@ export class ClientSideGroupItem implements IGroupTreeNode {
     return getAllParents(this);
   }
   
+  getRowById(id: string): any[] | undefined{
+    return this._childRows.find(row => getDataTable(this.grouper).getRowId(row) === id);
+  }
+
   @computed get childRows(){
     const orderingConfiguration = getOrderingConfiguration(this.grouper);
     
@@ -109,6 +113,10 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
+  }
+
+  getRowById(id: string): any[] | undefined{
+    return this.childRows.find(row => getDataTable(this.grouper).getRowId(row) === id);
   }
 
   @computed get childRows(){
