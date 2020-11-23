@@ -18,6 +18,7 @@ import {flow, runInAction} from "mobx";
 import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTable";
 import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInfiniteScrollingActive";
 import {SCROLL_ROW_CHUNK} from "../../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -106,10 +107,10 @@ export function drawGroupCell() {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
           runInAction(()=> {
-            const groups = getDataTable(ctx).groups.flatMap(group => group.allChildGroups);
-            if (shouldCloseOtherGroups(groups, ctx)){
+            const allGroups = getGrouper(ctx).allGroups;
+            if (shouldCloseOtherGroups(allGroups, ctx)){
               const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
-              groups
+              allGroups
                 .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
                 .forEach(group => group.isExpanded = false);
             }

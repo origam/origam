@@ -50,6 +50,7 @@ import { getSelectionMember } from "model/selectors/DataView/getSelectionMember"
 import { getApi } from "model/selectors/getApi";
 import {getSessionId} from "model/selectors/getSessionId";
 import {IPolymorphRules} from "model/entities/types/IApi";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -505,7 +506,7 @@ export class DataView implements IDataView {
     const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnIds;
     return groupedColumnIds.length === 0
       ? getDataTable(this).rows
-      : flattenToTableRows(getDataTable(this).groups);
+      : flattenToTableRows(getGrouper(this).topLevelGroups);
   }
 
   scrollState = new SimpleScrollState(0, 0);

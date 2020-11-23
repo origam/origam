@@ -24,7 +24,6 @@ export interface IDataTable {
   allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
   maxRowCountSeen: number;
-  groups: IGroupTreeNode[];
   rowsContainer: IRowsContainer;
   isEmpty: boolean;
   rowRemovedListeners: (() => void)[];
