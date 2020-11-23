@@ -12,11 +12,12 @@ import { onApplyFilterSetting } from "../../../../../model/actions-ui/DataView/T
 import { getFilterSettingByProperty } from "model/selectors/DataView/getFilterSettingByProperty";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {IFilterSetting} from "model/entities/types/IFilterSetting";
+import { getAllLookupIds } from "../../../../../model/entities/getAllLookupIds";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export const FilterSettings: React.FC = observer((props) => {
@@ -65,18 +66,10 @@ export const FilterSettings: React.FC = observer((props) => {
           property={property}
           lookup={property.lookup!}
           getOptions={flow(function* (searchTerm: string) {
-            let allIds=[];
-            if(getGroupingConfiguration(dataView).isGrouping){
-              const grouper = getGrouper(dataView);
-              allIds = yield grouper.getAllValuesOfProp(property);
-            }
+            let allLookupIds = yield* getAllLookupIds(property);
+            const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allLookupIds);
 
-            allIds = isInfiniteScrollLoader(dataView.infiniteScrollLoader)
-              ? yield dataView.infiniteScrollLoader.getAllValuesOfProp(property)
-              :  Array.from(new Set(dataTable.getAllValuesOfProp(property)).values());
-            const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allIds);
-
-            return Array.from(allIds.values())
+            return Array.from(allLookupIds.values())
               .map(id => [ id, lookupMap.get(id)])
               .filter(
                 (array) =>

@@ -170,10 +170,13 @@ export class ServerSideGrouper implements IGrouper {
     const infinitelyScrolledGroups = openGroups.filter(group => group.isInfinitelyScrolled);
 
     let values = await this.getPropValuesFromInfinitelyScrolledGroups(infinitelyScrolledGroups, property);
-    return Array.from(new Set( ...getAllLoadedValuesOfProp(property, this), ...values));
+    return Array.from(new Set([...getAllLoadedValuesOfProp(property, this), ...values]));
   }
 
   private async getPropValuesFromInfinitelyScrolledGroups(groups: IGroupTreeNode[], property: IProperty){
+    if(groups.length === 0){
+      return [];
+    }
     const filter = joinWithOR(groups.map(group => this.composeFinalFilter(group)))
 
     const dataView = getDataView(this);
