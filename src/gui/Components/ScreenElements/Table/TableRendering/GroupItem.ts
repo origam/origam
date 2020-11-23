@@ -3,7 +3,7 @@ import {IGroupRow, IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 import {getOrderingConfiguration} from "../../../../../model/selectors/DataView/getOrderingConfiguration";
-import {InfiniteScrollLoader} from "../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {InfiniteScrollLoader, SCROLL_ROW_CHUNK} from "../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {getDataView} from "../../../../../model/selectors/DataView/getDataView";
 import {joinWithAND, toFilterItem} from "../../../../../model/entities/OrigamApiHelpers";
 import {OpenGroupVisibleRowsMonitor} from "../../../../Workbench/ScreenArea/TableView/VisibleRowsMonitor";
@@ -27,6 +27,7 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
     Object.assign(this, data);
   }
+  isInfinitelyScrolled = false;
   @observable childGroups: IGroupTreeNode[] = null as any;
   @observable _childRows: any[][] = null as any;
   columnId: string = null as any;
@@ -97,6 +98,10 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   scrollLoader: InfiniteScrollLoader;
   
   _childRows: ScrollRowContainer;
+  
+  get isInfinitelyScrolled(){
+    return this.rowCount >= SCROLL_ROW_CHUNK && this.isExpanded && this.childRows.length > 0
+  }
   
   get allChildGroups(): IGroupTreeNode[]{
     return allChildGroups(this);
