@@ -29,28 +29,28 @@ namespace Origam.ServerCore.Model.Chat
     {
         public OrigamChatMessage(Guid id, Guid authorId, string authorName, string authorAvatarUrl, DateTime dateCreated, string TextMessages, List<Guid> mentions)
         {
-            this.id = id;
-            this.authorId = authorId;
-            this.authorName = authorName;
-            this.authorAvatarUrl = authorAvatarUrl;
-            this.dateCreated = dateCreated;
-            text = TextMessages;
-            this.mentions = mentions;
+            this.Id = id;
+            this.AuthorId = authorId;
+            this.AuthorName = authorName;
+            this.AuthorAvatarUrl = authorAvatarUrl;
+            this.DateCreated = dateCreated;
+            Text = TextMessages;
+            this.Mentions = mentions;
         }
-        public Guid id { get; set; }
-        public Guid authorId { get; set; }
-        public string authorName { get; set; }
-        public string authorAvatarUrl { get; set; }
-        public DateTime timeSent 
+        public Guid Id { get; set; }
+        public Guid AuthorId { get; set; }
+        public string AuthorName { get; set; }
+        public string AuthorAvatarUrl { get; set; }
+        public DateTime TimeSent 
         { 
             get 
             {
-                return dateCreated;
+                return DateCreated;
             } 
         }
-        public DateTime dateCreated { get; set; }
-        public string text { get; set; }
-        public List<Guid> mentions { get; set; }
+        public DateTime DateCreated { get; set; }
+        public string Text { get; set; }
+        public List<Guid> Mentions { get; set; }
         internal static List<OrigamChatMessage> CreateJson(DataSet MessagesDataSet, List<OrigamChatBusinessPartner> allusers)
         {
             List<OrigamChatMessage> messages = new List<OrigamChatMessage>();
