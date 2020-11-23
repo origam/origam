@@ -16,7 +16,7 @@ const sockPort = process.env.WDS_SOCKET_PORT;
 
 function makeProxyTarget() {
   if (process.env.WDS_PROXY_TARGET) return process.env.WDS_PROXY_TARGET;
-  else return "http://localhost:81";
+  else return "https://localhost:44356";
   //"http://admintesth5.wy.by";
   //"http://admindevh5.wy.by";
 }

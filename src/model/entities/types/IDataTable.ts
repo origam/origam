@@ -51,7 +51,7 @@ export interface IDataTable {
   getDirtyValueRows(): any[][];
   getDirtyDeletedRows(): any[][];
   getDirtyNewRows(): any[][];
-  getAllValuesOfProp(property: IProperty): any[];
+  getAllValuesOfProp(property: IProperty): Set<any>;
 
   /*setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
   | undefined): void;*/

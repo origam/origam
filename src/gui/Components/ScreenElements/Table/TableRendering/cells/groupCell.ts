@@ -107,7 +107,7 @@ export function drawGroupCell() {
           }
           runInAction(()=> {
             const groups = getDataTable(ctx).groups.flatMap(group => group.allChildGroups);
-            if (shouldCloseOtherGroups(row.sourceGroup, groups, ctx)){
+            if (shouldCloseOtherGroups(groups, ctx)){
               const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
               groups
                 .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
@@ -121,11 +121,9 @@ export function drawGroupCell() {
   }
 }
 
-function shouldCloseOtherGroups(clickedGroup: IGroupTreeNode, groups: IGroupTreeNode[], ctx: any){
-  const someInfinitelyScrolledGroupsAreExpanded = groups
-    .some(group => group.rowCount >= SCROLL_ROW_CHUNK && group.isExpanded && group.childRows.length > 0);
+function shouldCloseOtherGroups(groups: IGroupTreeNode[], ctx: any){
   return isInfiniteScrollingActive(ctx, undefined)
-    && (someInfinitelyScrolledGroupsAreExpanded);
+    && groups.some(group => group.isInfinitelyScrolled);
 }
 
 function formatColumnValue(value: string){

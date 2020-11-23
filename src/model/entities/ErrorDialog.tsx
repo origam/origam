@@ -41,9 +41,22 @@ export class ErrorDialogController {
         _.get(errItem.error, "response.headers.content-type", "").startsWith("text/plain") &&
         errItem.error.response.data;
 
-      const handleMessageField = () =>
-        _.get(errItem.error, "response.data.message") ||
-        _.get(errItem.error, "response.data.Message");
+      const handleMessageField = () =>{
+        if(!errItem.error.response?.data){return ""}
+        let exception = errItem.error.response.data;  
+        let message = "";
+        do {
+          const exMessage = _.get(exception, "message") ||
+                            _.get(exception, "Message");
+          if(exMessage){
+            message += exMessage;
+            message += "\n\n";
+          }
+          exception = exception.InnerException;
+        }
+        while(exception)
+        return message;
+      }
 
       const handleRuntimeException = () => "" + errItem.error;
 
@@ -66,6 +79,9 @@ export class ErrorDialogController {
       };
     });
   }
+
+
+
 
   idGen = 0;
   @bind

@@ -8,10 +8,11 @@ import { IAggregationInfo } from "./types/IAggregationInfo";
 import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
+import { IProperty } from "./types/IProperty";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
-
+  
   @computed get topLevelGroups() {
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (firstGroupingColumn === undefined) {
@@ -21,6 +22,14 @@ export class ClientSideGrouper implements IGrouper {
     const groups = this.makeGroups(dataTable.allRows, firstGroupingColumn);
     this.loadRecursively(groups);
     return groups;
+  }
+  
+  get allGroups(){
+    return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
+  }
+  
+  getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
+    return Promise.resolve(getAllLoadedValuesOfProp(property, this));
   }
 
   loadRecursively(groups: IGroupTreeNode[]) {
@@ -117,7 +126,7 @@ export class ClientSideGrouper implements IGrouper {
     return property.dataIndex;
   }
 
-  loadChildren(groupHeader: IGroupTreeNode): void {
+  *loadChildren(groupHeader: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
 
@@ -130,4 +139,15 @@ export class ClientSideGrouper implements IGrouper {
   }
 
   start(): void {}
+}
+
+export function getAllLoadedValuesOfProp(property: IProperty, grouper: IGrouper): Set<any> {
+  const dataTable = getDataTable(grouper);
+  return new Set(
+    grouper.allGroups
+      .filter(group => group.isExpanded)
+      .flatMap(group => group.childRows)
+      .map((row) => dataTable.getCellValue(row, property))
+      .filter((row) => row)
+    );
 }

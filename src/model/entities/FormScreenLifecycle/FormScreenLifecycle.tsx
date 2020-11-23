@@ -376,7 +376,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         return;
       }
       yield dataView.lifecycle.runRecordChangedReaction(function*() {
-        self.readFirstChunkOfRowsWithGateDebounced(dataView);
+        const groupingConfig = getGroupingConfiguration(dataView);
+        if(groupingConfig.isGrouping){
+          dataView.serverSideGrouper.refresh();
+        }else{
+          yield self.readFirstChunkOfRowsWithGateDebounced(dataView);
+        }
       });
     })();
   }

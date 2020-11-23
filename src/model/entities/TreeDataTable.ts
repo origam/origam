@@ -132,7 +132,7 @@ export class TreeDataTable implements IDataTable {
     return [];
   }
 
-  getAllValuesOfProp(property: IProperty): any[] {
+  getAllValuesOfProp(property: IProperty): Set<any> {
     throw new Error("Not implemented");
   }
 

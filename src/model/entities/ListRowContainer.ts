@@ -72,7 +72,7 @@ export class ListRowContainer implements IRowsContainer {
     yield Promise.all(
       allcomboProps.map(async (prop) => {
         return prop.lookupEngine?.lookupResolver.resolveList(
-          new Set(dataTable.getAllValuesOfProp(prop))
+          dataTable.getAllValuesOfProp(prop)
         );
       })
     );

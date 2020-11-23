@@ -3,7 +3,7 @@ import {IGroupRow, IGroupTreeNode} from "./types";
 import {IGrouper} from "../../../../../model/entities/types/IGrouper";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 import {getOrderingConfiguration} from "../../../../../model/selectors/DataView/getOrderingConfiguration";
-import {InfiniteScrollLoader} from "../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import {InfiniteScrollLoader, SCROLL_ROW_CHUNK} from "../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import {getDataView} from "../../../../../model/selectors/DataView/getDataView";
 import {joinWithAND, toFilterItem} from "../../../../../model/entities/OrigamApiHelpers";
 import {OpenGroupVisibleRowsMonitor} from "../../../../Workbench/ScreenArea/TableView/VisibleRowsMonitor";
@@ -27,6 +27,7 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   constructor(data: IGroupItemData) {
     Object.assign(this, data);
   }
+  isInfinitelyScrolled = false;
   @observable childGroups: IGroupTreeNode[] = null as any;
   @observable _childRows: any[][] = null as any;
   columnId: string = null as any;
@@ -43,14 +44,14 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   get allChildGroups(): IGroupTreeNode[]{
     return allChildGroups(this);
   }
-
+  
   get allParents(): IGroupTreeNode[] {
-    return getallParents(this);
+    return getAllParents(this);
   }
-
+  
   @computed get childRows(){
     const orderingConfiguration = getOrderingConfiguration(this.grouper);
-
+    
     if(orderingConfiguration.userOrderings.length === 0){
       return this._childRows;
     }else{
@@ -59,6 +60,10 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   }
   set childRows(rows: any[][]){
     this._childRows = rows;
+  }
+
+  composeGroupingFilter(): string {
+    throw new Error("Method not implemented.");
   }
 }
 
@@ -69,7 +74,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
       (row: any[]) => dataTable.getRowId(row),
       dataTable);
     Object.assign(this, data);
-
+    
     const dataView = getDataView(this.grouper);
     this.scrollLoader = new InfiniteScrollLoader({
       ctx: this.grouper,
@@ -89,17 +94,21 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
-
+  
   scrollLoader: InfiniteScrollLoader;
-
+  
   _childRows: ScrollRowContainer;
-
+  
+  get isInfinitelyScrolled(){
+    return this.rowCount >= SCROLL_ROW_CHUNK && this.isExpanded && this.childRows.length > 0
+  }
+  
   get allChildGroups(): IGroupTreeNode[]{
     return allChildGroups(this);
   }
-
+  
   get allParents(): IGroupTreeNode[] {
-    return getallParents(this);
+    return getAllParents(this);
   }
 
   @computed get childRows(){
@@ -112,27 +121,18 @@ export class ServerSideGroupItem implements IGroupTreeNode {
     this._childRows.set(rows);
   }
 
-  getAllParents() {
-    let parent = this.parent
-    const parents = []
-    while (parent) {
-      parents.push(parent);
-      parent = parent.parent
-    }
-    return parents;
-  }
-
-  composeGroupingFilter() {
-    const parents = this.getAllParents();
+  composeGroupingFilter(): string {
+    const parents = getAllParents(this);
     if(parents.length === 0){
-      return toFilterItem(this.columnId, "eq" ,this.columnValue)
+      return toFilterItem(this.columnId, null, "eq" ,this.columnValue)
     }else{
       const andOperands = parents
         .concat([this])
-        .map(row => toFilterItem(row.columnId, "eq", row.columnValue))
+        .map(row => toFilterItem(row.columnId, null, "eq", row.columnValue))
       return joinWithAND(andOperands);
     }
   }
+  
   @observable private _isExpanded = false;
 
   get isExpanded(): boolean {
@@ -147,7 +147,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   }
 }
 
-function getallParents(group: IGroupTreeNode){
+function getAllParents(group: IGroupTreeNode){
   const parents: IGroupTreeNode[] = [];
   let parent = group.parent;
   while(parent){
