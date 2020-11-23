@@ -28,7 +28,7 @@ export class ClientSideGrouper implements IGrouper {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
   
-  getAllValuesOfProp(property: IProperty): Promise<any[]> {
+  getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
     return Promise.resolve(getAllLoadedValuesOfProp(property, this));
   }
 
@@ -141,12 +141,13 @@ export class ClientSideGrouper implements IGrouper {
   start(): void {}
 }
 
-export function getAllLoadedValuesOfProp(property: IProperty, grouper: IGrouper): any[] {
+export function getAllLoadedValuesOfProp(property: IProperty, grouper: IGrouper): Set<any> {
   const dataTable = getDataTable(grouper);
-  return grouper.allGroups
+  return new Set(
+    grouper.allGroups
       .filter(group => group.isExpanded)
       .flatMap(group => group.childRows)
       .map((row) => dataTable.getCellValue(row, property))
       .filter((row) => row)
-
+    );
 }

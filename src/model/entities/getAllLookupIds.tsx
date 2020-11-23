@@ -9,18 +9,17 @@ export function* getAllLookupIds(property: IProperty): Generator {
   const dataView = getDataView(property);
   if (getGroupingConfiguration(dataView).isGrouping) {
     const grouper = getGrouper(dataView);
-    const newLocal = yield grouper.getAllValuesOfProp(property);
-    return newLocal;
+    return yield grouper.getAllValuesOfProp(property);
   }
 
   else {
     if (isInfiniteScrollLoader(dataView.infiniteScrollLoader)) {
-      yield dataView.infiniteScrollLoader.getAllValuesOfProp(property);
+      return yield dataView.infiniteScrollLoader.getAllValuesOfProp(property);
     }
 
     else {
       const dataTable = getDataTable(property);
-      yield Array.from(new Set(dataTable.getAllValuesOfProp(property)).values());
+      return yield dataTable.getAllValuesOfProp(property);
     }
   }
 }

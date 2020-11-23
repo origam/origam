@@ -116,7 +116,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
         yield Promise.all(
           comboProps.map(async (prop) => {
             return prop.lookupEngine?.lookupResolver.resolveList(
-              new Set(dataTable.getAllValuesOfProp(prop))
+              dataTable.getAllValuesOfProp(prop)
             );
           })
         );

@@ -430,7 +430,7 @@ export class FilterConfiguration implements IFilterConfiguration {
         yield Promise.all(
           comboProps.map(async (prop) => {
             return prop.lookupEngine?.lookupResolver.resolveList(
-              new Set(dataTable.getAllValuesOfProp(prop))
+              dataTable.getAllValuesOfProp(prop)
             );
           })
         );

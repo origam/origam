@@ -164,13 +164,13 @@ export class ServerSideGrouper implements IGrouper {
     });
   }
 
-  async getAllValuesOfProp(property: IProperty): Promise<any[]> {
+  async getAllValuesOfProp(property: IProperty): Promise<Set<any>>{
     const openGroups = this.allGroups
       .filter(group => group.isExpanded && group.childRows.length );
     const infinitelyScrolledGroups = openGroups.filter(group => group.isInfinitelyScrolled);
 
     let values = await this.getPropValuesFromInfinitelyScrolledGroups(infinitelyScrolledGroups, property);
-    return Array.from(new Set([...getAllLoadedValuesOfProp(property, this), ...values]));
+    return new Set([...getAllLoadedValuesOfProp(property, this), ...values]);
   }
 
   private async getPropValuesFromInfinitelyScrolledGroups(groups: IGroupTreeNode[], property: IProperty){

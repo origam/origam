@@ -126,10 +126,12 @@ export class DataTable implements IDataTable {
   }
 
   // Returns all values from currently loaded rows (in case the table is infinitely scrolled)
-  getAllValuesOfProp(property: IProperty): any[] {
-      return this.rowsContainer.allRows
-        .map((row) => this.getCellValue(row, property))
-        .filter((row) => row);
+  getAllValuesOfProp(property: IProperty): Set<any> {
+      return new Set( 
+        this.rowsContainer.allRows
+          .map((row) => this.getCellValue(row, property))
+          .filter((row) => row)
+        );
   }
 
   getCellText(row: any[], property: IProperty) {
