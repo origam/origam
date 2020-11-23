@@ -87,7 +87,7 @@ export class CFavorites extends React.Component<{
               event.stopPropagation();
             }}
           >
-            {node.elements
+            {getAllElements(node)
               .filter(
                 (childNode: any) =>
                   childNode.attributes.isHidden !== "true" &&
@@ -221,3 +221,19 @@ export class CFavorites extends React.Component<{
     );
   }
 }
+
+
+function getAllElements(node: any): any{
+  return Array.from(getAllElementsRecursive(node.elements));
+}
+
+function *getAllElementsRecursive(elements: any[]): any{
+  for(let childNode of elements){
+    if(childNode.name === "Submenu"){
+      yield* getAllElementsRecursive(childNode.elements); 
+    }else{
+      yield childNode;
+    }
+  }
+}
+
