@@ -78,6 +78,10 @@ namespace Origam.ServerCore.Controller
         private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
         {
             HashtagCategory category = GetCategory(categoryId);
+            if (category == null)
+            {
+                return NotFound();
+            }
             if (TestRole(category.Roles))
             {
                 var labelDictionary = GetLookupLabelsInternal(category, labelIds);
