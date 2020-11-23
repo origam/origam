@@ -127,8 +127,9 @@ export class DataTable implements IDataTable {
 
   // Returns all values from currently loaded rows (in case the table is infinitely scrolled)
   getAllValuesOfProp(property: IProperty): any[] {
-    if(this.groups.length > 0){
-      return this.groups
+    const allGroups = getGrouper(this).allGroups;
+    if(allGroups.length > 0){
+      return allGroups
         .filter(group => group.isExpanded)
         .flatMap(group => group.childRows)
         .map((row) => this.getCellValue(row, property))

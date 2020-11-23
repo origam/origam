@@ -23,6 +23,10 @@ export class ClientSideGrouper implements IGrouper {
     return groups;
   }
 
+  get allGroups(){
+    return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
+  }
+
   loadRecursively(groups: IGroupTreeNode[]) {
     for (let group of groups) {
       this.loadChildren(group);
