@@ -45,7 +45,7 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   }
   
   get allParents(): IGroupTreeNode[] {
-    return getallParents(this);
+    return getAllParents(this);
   }
   
   @computed get childRows(){
@@ -103,7 +103,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   }
   
   get allParents(): IGroupTreeNode[] {
-    return getallParents(this);
+    return getAllParents(this);
   }
 
   @computed get childRows(){
@@ -115,19 +115,9 @@ export class ServerSideGroupItem implements IGroupTreeNode {
     }
     this._childRows.set(rows);
   }
-  
-  getAllParents() {
-    let parent = this.parent
-    const parents = []
-    while (parent) {
-      parents.push(parent);
-      parent = parent.parent
-    }
-    return parents;
-  }
 
   composeGroupingFilter(): string {
-    const parents = this.getAllParents();
+    const parents = getAllParents(this);
     if(parents.length === 0){
       return toFilterItem(this.columnId, null, "eq" ,this.columnValue)
     }else{
@@ -136,17 +126,8 @@ export class ServerSideGroupItem implements IGroupTreeNode {
         .map(row => toFilterItem(row.columnId, null, "eq", row.columnValue))
       return joinWithAND(andOperands);
     }
-
-  //   const parents = this.getAllParents(rowGroup);
-  //   if (parents.length === 0) {
-  //     return toFilterItem(rowGroup.columnId, null, "eq", rowGroup.columnValue);
-  //   } else {
-  //     const andOperands = parents
-  //       .concat([rowGroup])
-  //       .map((row) => toFilterItem(row.columnId, null, "eq", row.columnValue));
-  //     return joinWithAND(andOperands);
-  //   }
   }
+  
   @observable private _isExpanded = false;
 
   get isExpanded(): boolean {
@@ -161,7 +142,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   }
 }
 
-function getallParents(group: IGroupTreeNode){
+function getAllParents(group: IGroupTreeNode){
   const parents: IGroupTreeNode[] = [];
   let parent = group.parent;
   while(parent){
