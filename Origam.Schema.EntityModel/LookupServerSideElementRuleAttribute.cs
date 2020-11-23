@@ -15,7 +15,7 @@ namespace Origam.Schema.EntityModel
         public override Exception CheckRule(object instance, string memberName)
         {
             if (memberName == String.Empty | memberName == null) CheckRule(instance);
-            var iDataLookup = ((IHashTag)instance).Lookup;
+            var iDataLookup = ((ILookupReference)instance).Lookup;
             
             if(iDataLookup.IsFilteredServerside)
             {

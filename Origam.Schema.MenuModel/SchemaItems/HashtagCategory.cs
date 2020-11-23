@@ -28,19 +28,19 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.MenuModel
 {
-    [SchemaItemDescription("Hash Tag", 151)]
-    [HelpTopic("Hash Tags")]
+    [SchemaItemDescription("Hashtag Category", 151)]
+    [HelpTopic("Hashtag+Categories")]
     [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
-    public class HashTag : AbstractSchemaItem , IHashTag
+    public class HashtagCategory : AbstractSchemaItem , ILookupReference
     {
-        public const string CategoryConst = "HashTag";
+        public const string CategoryConst = "HashtagCategory";
 
-        public HashTag() : base() { Init(); }
+        public HashtagCategory() : base() { Init(); }
 
-        public HashTag(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
+        public HashtagCategory(Guid schemaExtensionId) : base(schemaExtensionId) { Init(); }
 
-        public HashTag(Key primaryKey) : base(primaryKey) { Init(); }
+        public HashtagCategory(Key primaryKey) : base(primaryKey) { Init(); }
 
         private void Init()
         {
@@ -49,7 +49,7 @@ namespace Origam.Schema.MenuModel
         private string _Label;
         [Category("Reference")]
         [DisplayName("Label")]
-        [Description("A text what will be Name in list of Lookup HashTags")]
+        [Description("A name of the hashtag category that will appear to the user when creating a hashtag.")]
         [NotNullModelElementRule()]
         [Localizable(true)]
         [XmlAttribute("label")]
@@ -69,6 +69,7 @@ namespace Origam.Schema.MenuModel
         [Category("Reference")]
         [TypeConverter(typeof(DataLookupConverter))]
         [LookupServerSideElementRule()]
+        [Description("A lookup which will resolve the list of available values for the hashtag. It must be server-side filtered and must be connected to a menu item so the user can use the hashtag as a link.")]
         [XmlReference("lookup", "LookupId")]
         public IDataLookup Lookup
         {

@@ -18,12 +18,11 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-namespace Origam.ServerCore.Model.HashTag
+
+namespace Origam.Schema.EntityModel.Interfaces
 {
-    public class HashTagCategory
+    public interface ILookupReference
     {
-        public string hashtagName { get; set; }
-        public string hashtagLabel { get; set; }
-        public string objectComboboxMetada { get; set; }
+        IDataLookup Lookup { get; set; }
     }
 }

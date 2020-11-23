@@ -20,7 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 namespace Origam.ServerCore.Model.HashTag
 {
-    public class HashTagLabel
+    public class HashtagLabelInput
     {
            public object[] LabelIds { get; set; }
     }

@@ -28,7 +28,7 @@ namespace Origam.Schema.MenuModel
     {
         public HashTagSchemaItemProvider()
         {
-            this.ChildItemTypes.Add(typeof(HashTag));
+            this.ChildItemTypes.Add(typeof(HashtagCategory));
         }
 
 		#region ISchemaItemProvider Members
@@ -36,7 +36,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return HashTag.CategoryConst;
+				return HashtagCategory.CategoryConst;
 			}
 		}
 		public override string Group

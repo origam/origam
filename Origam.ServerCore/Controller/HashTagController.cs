@@ -68,7 +68,8 @@ namespace Origam.ServerCore.Controller
         }
 
         [HttpPost("{categoryId}/labels")]
-        public IActionResult GetLookupLabelRequest(string categoryId,[FromBody] HashTagLabel label)
+        public IActionResult GetLookupLabelRequest(string categoryId,
+            [FromBody] HashtagLabelInput label)
         {
             return RunWithErrorHandler(() =>
                 GetLookupLabel(categoryId,label.LabelIds));
@@ -76,24 +77,25 @@ namespace Origam.ServerCore.Controller
 
         private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
         {
-            HashTag hashTag = GetHashtag(categoryId);
-            if (TestRole(hashTag.Roles))
+            HashtagCategory category = GetCategory(categoryId);
+            if (TestRole(category.Roles))
             {
-                var labelDictionary = GetLookupLabelsInternal(hashTag, labelIds);
+                var labelDictionary = GetLookupLabelsInternal(category, labelIds);
                 return Ok(labelDictionary);
             }
-            return StatusCode(403,"You have No rights");
+            return Forbid();
         }
 
-        private HashTag GetHashtag(string categoryId)
+        private HashtagCategory GetCategory(string categoryId)
         {
             var hashtagProvider = GetHasTagProvider();
-            HashTag hashTag = hashtagProvider.GetChildByName(categoryId, HashTag.CategoryConst) as HashTag;
-            return hashTag;
+            HashtagCategory category = hashtagProvider.GetChildByName(
+                categoryId, HashtagCategory.CategoryConst) as HashtagCategory;
+            return category;
         }
 
         private Dictionary<object, string> GetLookupLabelsInternal(
-           HashTag input, object[] labelIds)
+           HashtagCategory input, object[] labelIds)
         {
             IDataLookupService lookupService
                    = ServiceManager.Services.GetService<IDataLookupService>();
@@ -124,19 +126,19 @@ namespace Origam.ServerCore.Controller
         {
             return ServiceManager.Services
                 .GetService<IDataLookupService>()
-                .GetMenuBinding(GetHashtag(hashtagCategory).LookupId, ReferenceId)
+                .GetMenuBinding(GetCategory(hashtagCategory).LookupId, ReferenceId)
                 .MenuId;
         }
 
         private IActionResult GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
         {
-            HashTag hashTag = GetHashtag(categoryId);
-            if (hashTag!=null)
+            HashtagCategory category = GetCategory(categoryId);
+            if (category != null)
             {
-                 var lookupData =  GetLookupData(hashTag,limit,pageNumber,searchPhrase);
+                 var lookupData =  GetLookupData(category,limit,pageNumber,searchPhrase);
                 return lookupData.IsSuccess ? Ok(lookupData.Value) : lookupData.Error;
             }
-            return StatusCode(404, "No data");
+            return NotFound();
         }
 
         private HashTagSchemaItemProvider GetHasTagProvider()
@@ -145,7 +147,7 @@ namespace Origam.ServerCore.Controller
             return schemaservice.GetProvider<HashTagSchemaItemProvider>();
         }
 
-        private Result<IEnumerable<object[]>, IActionResult> GetLookupData(HashTag hashT, int limit, int pageNumber, string searchPhrase)
+        private Result<IEnumerable<object[]>, IActionResult> GetLookupData(HashtagCategory hashT, int limit, int pageNumber, string searchPhrase)
         {
             IDataLookupService lookupService
                     = ServiceManager.Services.GetService<IDataLookupService>();
@@ -167,7 +169,7 @@ namespace Origam.ServerCore.Controller
                     BadRequest("Some of the supplied column names are not in the table."));
         }
 
-        private string[] GetListColumn(HashTag hashT)
+        private string[] GetListColumn(HashtagCategory hashT)
         {
             string displayColumn = hashT.Lookup.ValueValueMember +";" +hashT.Lookup.ValueDisplayMember;
             return displayColumn.Split(";");
@@ -183,8 +185,8 @@ namespace Origam.ServerCore.Controller
                     .Cast<DataRow>()
                     .Select(row => GetColumnValues(row, columnNames));
             }
-            logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false !",input.LookupId));
-            return (IEnumerable<object[]>)BadRequest("Data is not filtered on server!");
+            logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false!",input.LookupId));
+            return (IEnumerable<object[]>)BadRequest("Invalid lookup configuration. Data could not be retrieved. See log for more details.");
            
         }
 
@@ -205,23 +207,22 @@ namespace Origam.ServerCore.Controller
                 .All(colName => actualColumnNames.Contains(colName));
         }
 
-        private List<HashTagCategory> GetCategories()
+        private List<HashtagCategoryResult> GetCategories()
         {
             var hashtagProvider = GetHasTagProvider();
-            var hashTagcollection = hashtagProvider.ChildItems;
-
-            List<HashTagCategory> hashtagCategoryList = new List<HashTagCategory>();
-            foreach (HashTag hashTag in hashTagcollection)
+            var categories = hashtagProvider.ChildItems;
+            List<HashtagCategoryResult> hashtagCategoryList = new List<HashtagCategoryResult>();
+            foreach (HashtagCategory category in categories)
             {
-                if (TestRole(hashTag.Roles))
+                if (TestRole(category.Roles))
                 {
-                    HashTagCategory hashtagCategory = new HashTagCategory
+                    var result = new HashtagCategoryResult
                     {
-                        hashtagName = hashTag.Name,
-                        hashtagLabel = hashTag.Label,
-                        objectComboboxMetada = CreateComboBox(hashTag)
+                        HashtagName = category.Name,
+                        HashtagLabel = category.Label,
+                        ObjectComboboxMetada = CreateComboBox(category)
                     };
-                    hashtagCategoryList.Add(hashtagCategory);
+                    hashtagCategoryList.Add(result);
                 }
             }
             return hashtagCategoryList;
@@ -229,19 +230,16 @@ namespace Origam.ServerCore.Controller
 
         private bool TestRole(string roles)
         {
-            if (!SecurityManager.GetAuthorizationProvider().Authorize(SecurityManager.CurrentPrincipal, roles))
-            {
-               return false;
-            }
-            return true;
+            return SecurityManager.GetAuthorizationProvider()
+                .Authorize(SecurityManager.CurrentPrincipal, roles);
         }
 
-        private string CreateComboBox(HashTag hasTag)
+        private string CreateComboBox(HashtagCategory category)
         {
             XmlDocument doc = new XmlDocument();
             XmlElement controlElement = doc.CreateElement("control");
             doc.AppendChild(controlElement);
-            ComboBoxBuilder.Build(controlElement, hasTag.LookupId, false, null, null);
+            ComboBoxBuilder.Build(controlElement, category.LookupId, false, null, null);
             return doc.InnerXml;
         }
     }
