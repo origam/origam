@@ -16,6 +16,8 @@ import { isInfiniteScrollLoader } from "gui/Workbench/ScreenArea/TableView/Infin
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {IFilterSetting} from "model/entities/types/IFilterSetting";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export const FilterSettings: React.FC = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
@@ -63,7 +65,13 @@ export const FilterSettings: React.FC = observer((props) => {
           property={property}
           lookup={property.lookup!}
           getOptions={flow(function* (searchTerm: string) {
-            const allIds = isInfiniteScrollLoader(dataView.infiniteScrollLoader)
+            let allIds=[];
+            if(getGroupingConfiguration(dataView).isGrouping){
+              const grouper = getGrouper(dataView);
+              allIds = yield grouper.getAllValuesOfProp(property);
+            }
+
+            allIds = isInfiniteScrollLoader(dataView.infiniteScrollLoader)
               ? yield dataView.infiniteScrollLoader.getAllValuesOfProp(property)
               :  Array.from(new Set(dataTable.getAllValuesOfProp(property)).values());
             const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allIds);

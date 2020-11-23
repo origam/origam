@@ -6,6 +6,12 @@ export function joinWithAND(filterItems: string[]) {
   return '["$AND", ' + filterItems.join(", ") + "]";
 }
 
+export function joinWithOR(filterItems: string[]) {
+  if (filterItems.length === 0) return "";
+  if (filterItems.length === 1) return filterItems[0];
+  return '["$OR", ' + filterItems.join(", ") + "]";
+}
+
 export function filterToFilterItem(filter: IFilter) {
   return toFilterItem(
     filter.propertyId,

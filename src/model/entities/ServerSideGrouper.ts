@@ -8,10 +8,12 @@ import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRe
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
-import { joinWithAND, toFilterItem } from "./OrigamApiHelpers";
+import { joinWithAND, joinWithOR, toFilterItem } from "./OrigamApiHelpers";
 import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import { IProperty } from "./types/IProperty";
+import { getAllLoadedValuesOfProp } from "./ClientSideGrouper";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -112,7 +114,8 @@ export class ServerSideGrouper implements IGrouper {
     if (nextColumnName) {
       const property = getDataTable(this).getPropertyById(nextColumnName);
       const lookupId = property && property.lookup && property.lookup.lookupId;
-      yield lifeCycle.loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
+      yield lifeCycle
+        .loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
         .then(
           (groupData) => (groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader))
         );
@@ -159,6 +162,27 @@ export class ServerSideGrouper implements IGrouper {
         grouper: this,
       });
     });
+  }
+
+  async getAllValuesOfProp(property: IProperty): Promise<any[]> {
+    const openGroups = this.allGroups
+      .filter(group => group.isExpanded && group.childRows.length );
+    const infinitelyScrolledGroups = openGroups.filter(group => group.isInfinitelyScrolled);
+
+    let values = await this.getPropValuesFromInfinitelyScrolledGroups(infinitelyScrolledGroups, property);
+    return Array.from(new Set( ...getAllLoadedValuesOfProp(property, this), ...values));
+  }
+
+  private async getPropValuesFromInfinitelyScrolledGroups(groups: IGroupTreeNode[], property: IProperty){
+    const filter = joinWithOR(groups.map(group => this.composeFinalFilter(group)))
+
+    const dataView = getDataView(this);
+    const lifeCycle = getFormScreenLifecycle(this);
+    const aggregations = getTablePanelView(this).aggregations.aggregationList;
+
+    const lookupId = property && property.lookup && property.lookup.lookupId;
+    const groupList = await lifeCycle.loadChildGroups(dataView, filter, property.id, aggregations, lookupId)
+    return groupList.map(group => group[property.id]).filter(group => group);
   }
 
   dispose() {
