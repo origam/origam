@@ -206,7 +206,7 @@ namespace Origam.ServerCore.Controller
                     {
                         HashtagName = category.Name,
                         HashtagLabel = category.Label,
-                        ObjectComboboxMetada = CreateComboBox(category)
+                        ObjectComboboxMetadata = CreateComboBox(category)
                     };
                     hashtagCategoryList.Add(result);
                 }
