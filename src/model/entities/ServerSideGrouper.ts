@@ -32,32 +32,38 @@ export class ServerSideGrouper implements IGrouper {
     );
   }
 
-  private loadGroups() {
+  get allGroups(){
+    return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
+  } 
+
+  private async  loadGroups() {
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (!firstGroupingColumn) {
       this.topLevelGroups.length = 0;
       return;
     }
-    const expandedGroupDisplayValues = this.topLevelGroups
+    const expandedGroupDisplayValues = this.allGroups
       .filter(group => group.isExpanded)
       .map(group => group.columnDisplayValue)
     const dataView = getDataView(this);
     const property = getDataTable(this).getPropertyById(firstGroupingColumn);
     const lookupId = property && property.lookup && property.lookup.lookupId;
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
-    getFormScreenLifecycle(this)
+    await getFormScreenLifecycle(this)
       .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
       .then( groupData =>
-          {
-            this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined)
-            this.topLevelGroups
-              .filter(group => expandedGroupDisplayValues.includes(group.columnDisplayValue))
-              .forEach(group => {
-                group.isExpanded = true;
-                this.loadChildren(group);
-              })
-          }
-      );
+            this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
+      this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
+  }
+
+  private loadAndExpandChildren(childGroups: IGroupTreeNode[], expandedGroupDisplayValues: string[]){
+    childGroups
+      .filter(group => expandedGroupDisplayValues.includes(group.columnDisplayValue))
+      .forEach(async group => {
+        group.isExpanded = true;
+        await this.loadChildren(group);
+        await this.loadAndExpandChildren(group.childGroups, expandedGroupDisplayValues)
+      })
   }
 
   refresh() {
@@ -71,7 +77,7 @@ export class ServerSideGrouper implements IGrouper {
     }
   }
 
-  loadChildren(groupHeader: IGroupTreeNode) {
+  async loadChildren(groupHeader: IGroupTreeNode) {
     if(this.groupDisposers.has(groupHeader)){
       this.groupDisposers.get(groupHeader)!();
     }
@@ -86,12 +92,13 @@ export class ServerSideGrouper implements IGrouper {
           getOrderingConfiguration(this).groupChildrenOrdering
         ], 
         ()=> this.reload(groupHeader),
-        { fireImmediately: true }
+        // { fireImmediately: true }
       )
     );
+    await this.reload(groupHeader);
   }
 
-  private reload(groupHeader: IGroupTreeNode) {
+  private async reload(groupHeader: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
     const dataView = getDataView(this);
@@ -102,13 +109,12 @@ export class ServerSideGrouper implements IGrouper {
     if (nextColumnName) {
       const property = getDataTable(this).getPropertyById(nextColumnName);
       const lookupId = property && property.lookup && property.lookup.lookupId;
-      lifeCycle
-        .loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
+      await lifeCycle.loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
         .then(
           (groupData) => (groupHeader.childGroups = this.group(groupData, nextColumnName, groupHeader))
         );
     } else {
-      lifeCycle
+      await lifeCycle
         .loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
         .then((rows) => (groupHeader.childRows = rows));
     }
