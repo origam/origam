@@ -117,7 +117,7 @@ export class ClientSideGrouper implements IGrouper {
     return property.dataIndex;
   }
 
-  loadChildren(groupHeader: IGroupTreeNode): void {
+  *loadChildren(groupHeader: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
 
