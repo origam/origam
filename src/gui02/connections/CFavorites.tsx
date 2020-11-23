@@ -35,7 +35,7 @@ export class CFavorites extends React.Component<{
   }
 
   get canBeDeleted() {
-    return this.props.folder.id !== this.favorites.dafaultFavoritesFolderId;
+    return this.props.folder.id !== this.favorites.defaultFavoritesFolderId;
   }
 
   onCreateNewFolderClick() {
@@ -55,7 +55,7 @@ export class CFavorites extends React.Component<{
     );
   }
 
-  onFolderProperiesClick() {
+  onFolderPropertiesClick() {
     const closeDialog = getDialogStack(this.props.ctx).pushDialog(
       "",
       <FavoriteFolderPropertiesDialog
@@ -87,7 +87,7 @@ export class CFavorites extends React.Component<{
               event.stopPropagation();
             }}
           >
-            {node.elements
+            {getAllElements(node)
               .filter(
                 (childNode: any) =>
                   childNode.attributes.isHidden !== "true" &&
@@ -171,10 +171,18 @@ export class CFavorites extends React.Component<{
                 {T("Unpin", "group_unpin")}
               </DropdownItem>
             )}
+             <DropdownItem
+              onClick={(event: any) => {
+                setDropped(false);
+                this.onCreateNewFolderClick();
+              }}
+            >
+              {T("Put to favourites", "add_group")}
+            </DropdownItem>
             <DropdownItem
               onClick={(event: any) => {
                 setDropped(false);
-                this.onFolderProperiesClick();
+                this.onFolderPropertiesClick();
               }}
             >
               {T("Properties", "group_properties")}
@@ -213,3 +221,19 @@ export class CFavorites extends React.Component<{
     );
   }
 }
+
+
+function getAllElements(node: any): any{
+  return Array.from(getAllElementsRecursive(node.elements));
+}
+
+function *getAllElementsRecursive(elements: any[]): any{
+  for(let childNode of elements){
+    if(childNode.name === "Submenu"){
+      yield* getAllElementsRecursive(childNode.elements); 
+    }else{
+      yield childNode;
+    }
+  }
+}
+

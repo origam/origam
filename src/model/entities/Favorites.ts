@@ -18,7 +18,7 @@ export class Favorites {
     return this.favoriteFolders.some((folder) => folder.has(menuId));
   }
 
-  public get dafaultFavoritesFolderId() {
+  public get defaultFavoritesFolderId() {
     return this.favoriteFolders.length > 0 ? this.favoriteFolders[0].id : "Favorites";
   }
 
