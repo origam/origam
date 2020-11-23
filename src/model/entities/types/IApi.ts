@@ -147,6 +147,7 @@ export interface IApi {
     Caption: string;
     Parameters: { [key: string]: any } | undefined;
     AdditionalRequestParameters?: object | undefined;
+    IsSingleRecordEdit?: boolean;
   }): Promise<any>;
 
   destroyUI(data: { FormSessionId: string }): Promise<any>;

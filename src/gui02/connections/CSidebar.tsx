@@ -7,7 +7,7 @@ import {SidebarSectionDivider} from "gui02/components/Sidebar/SidebarSectionDivi
 import {SidebarSectionHeader} from "gui02/components/Sidebar/SidebarSectionHeader";
 import React from "react";
 import {CMainMenu} from "./CMainMenu";
-import {action, observable} from "mobx";
+import {action, observable, reaction} from "mobx";
 import {SidebarSectionBody} from "gui02/components/Sidebar/SidebarSectionBody";
 import {MobXProviderContext, observer} from "mobx-react";
 import {getWorkQueuesTotalItemsCount} from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
@@ -87,6 +87,18 @@ export class CSidebar extends React.Component {
       addRecordAuditExpandRequestHandler(this.workbench)(this.handleExpandRecordAuditLog)
     );
     this.workbenchLifecycle = getWorkbenchLifecycle(this.workbench);
+    
+    this.disposers.push(
+      reaction(
+        () => getFavorites(this.workbench).defaultFavoritesFolderId,
+        defaultFavoritesFolderId => {
+          const favorites = getFavorites(this.workbench);
+          const defaultFolder = favorites.getFolder(defaultFavoritesFolderId);
+          if(defaultFolder?.items.length?? 0 > 0){
+            this.activeSection = defaultFolder!.id;
+          } 
+      })
+    );
   }
 
   componentWillUnmount() {
@@ -155,7 +167,8 @@ export class CSidebar extends React.Component {
     const notificationBox = getNotifications(this.workbench)?.notificationBox;
     const logoUrl = getLogoUrl(this.workbench);
     const favorites = getFavorites(this.workbench);
-    const defaultFavoritesFolder = favorites.getFolder(favorites.dafaultFavoritesFolderId);
+    const defaultFavoritesFolder = favorites.getFolder(favorites.defaultFavoritesFolderId);
+
     return (
       <Sidebar>
         <LogoSection>

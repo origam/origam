@@ -12,6 +12,7 @@ export function openScreenByReference(ctx: any) {
       event: undefined,
       itemId: menuId,
       idParameter: referenceId,
+      isSingleRecordEdit: true
     });
   };
 }

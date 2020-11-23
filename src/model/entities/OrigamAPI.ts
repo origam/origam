@@ -110,6 +110,7 @@ export class OrigamAPI implements IApi {
     Caption: string;
     Parameters: { [key: string]: any };
     AdditionalRequestParameters: object | undefined;
+    IsSingleRecordEdit?: boolean;
   }) {
     let requestData;
     if (data.AdditionalRequestParameters) {
