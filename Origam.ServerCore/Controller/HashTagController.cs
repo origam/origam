@@ -42,7 +42,6 @@ namespace Origam.ServerCore.Controller
     public class HashTagController : AbstractController
     {
         private readonly ILogger<AbstractController> logger;
-
         public HashTagController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
@@ -50,31 +49,27 @@ namespace Origam.ServerCore.Controller
         {
             this.logger = log;
         }
-
         [HttpGet("categories")]
         public IActionResult GetCategoriesRequest()
         {
             return RunWithErrorHandler(() =>
                 Ok(GetCategories()));
         }
-
         [HttpGet("{categoryId}/objects")]
         public IActionResult GetObjectsRequest(string categoryId, [FromQuery] int limit,
             [FromQuery] int pageNumber,
             [FromQuery] string searchPhrase)
         {
             return RunWithErrorHandler(() =>
-                GetObjets(categoryId,limit,pageNumber,searchPhrase));
+                GetObjets(categoryId, limit, pageNumber, searchPhrase));
         }
-
         [HttpPost("{categoryId}/labels")]
         public IActionResult GetLookupLabelRequest(string categoryId,
             [FromBody] HashtagLabelInput label)
         {
             return RunWithErrorHandler(() =>
-                GetLookupLabel(categoryId,label.LabelIds));
+                GetLookupLabel(categoryId, label.LabelIds));
         }
-
         private IActionResult GetLookupLabel(string categoryId, object[] labelIds)
         {
             HashtagCategory category = GetCategory(categoryId);
@@ -89,7 +84,6 @@ namespace Origam.ServerCore.Controller
             }
             return Forbid();
         }
-
         private HashtagCategory GetCategory(string categoryId)
         {
             var hashtagProvider = GetHasTagProvider();
@@ -97,7 +91,6 @@ namespace Origam.ServerCore.Controller
                 categoryId, HashtagCategory.CategoryConst) as HashtagCategory;
             return category;
         }
-
         private Dictionary<object, string> GetLookupLabelsInternal(
            HashtagCategory input, object[] labelIds)
         {
@@ -116,7 +109,6 @@ namespace Origam.ServerCore.Controller
                     });
             return labelDictionary;
         }
-
         [HttpPost("[action]")]
         public IActionResult GetMenuId([FromBody] GetHashtagMenuInput input)
         {
@@ -125,7 +117,6 @@ namespace Origam.ServerCore.Controller
                 ReferenceId: input.ReferenceId))
             );
         }
-
         private string GetMenuId(string hashtagCategory, Guid ReferenceId)
         {
             return ServiceManager.Services
@@ -133,24 +124,21 @@ namespace Origam.ServerCore.Controller
                 .GetMenuBinding(GetCategory(hashtagCategory).LookupId, ReferenceId)
                 .MenuId;
         }
-
         private IActionResult GetObjets(string categoryId, int limit, int pageNumber, string searchPhrase)
         {
             HashtagCategory category = GetCategory(categoryId);
             if (category != null)
             {
-                 var lookupData =  GetLookupData(category,limit,pageNumber,searchPhrase);
+                 var lookupData =  GetLookupData(category, limit, pageNumber, searchPhrase);
                 return lookupData.IsSuccess ? Ok(lookupData.Value) : lookupData.Error;
             }
             return NotFound();
         }
-
         private HashTagSchemaItemProvider GetHasTagProvider()
         {
             var schemaservice = ServiceManager.Services.GetService<SchemaService>();
             return schemaservice.GetProvider<HashTagSchemaItemProvider>();
         }
-
         private Result<IEnumerable<object[]>, IActionResult> GetLookupData(HashtagCategory hashT, int limit, int pageNumber, string searchPhrase)
         {
             IDataLookupService lookupService
@@ -160,7 +148,7 @@ namespace Origam.ServerCore.Controller
                 LookupId = hashT.LookupId,
                 CurrentRow = null,
                 ShowUniqueValues = false,
-                SearchText = "%" + (string.IsNullOrEmpty(searchPhrase)?"":searchPhrase) + "%",
+                SearchText = "%" + (string.IsNullOrEmpty(searchPhrase)? "": searchPhrase) + "%",
                 PageSize = limit,
                 PageNumber = pageNumber,
                 ParameterMappings = null
@@ -168,17 +156,15 @@ namespace Origam.ServerCore.Controller
             var dataTable = lookupService.GetList(internalRequest);
             return AreColumnNamesValid(hashT.Lookup.ValueDisplayMember.Split(";"), dataTable)
                 ? Result.Success<IEnumerable<object[]>, IActionResult>(
-                    GetRowData(internalRequest, dataTable,GetListColumn(hashT)))
+                    GetRowData(internalRequest, dataTable, GetListColumn(hashT)))
                 : Result.Failure<IEnumerable<object[]>, IActionResult>(
                     BadRequest("Some of the supplied column names are not in the table."));
         }
-
         private string[] GetListColumn(HashtagCategory hashT)
         {
             string displayColumn = hashT.Lookup.ValueValueMember +";" +hashT.Lookup.ValueDisplayMember;
             return displayColumn.Split(";");
         }
-
         private IEnumerable<object[]> GetRowData(
             LookupListRequest input, DataTable dataTable, string[] columnNames)
         {
@@ -189,17 +175,14 @@ namespace Origam.ServerCore.Controller
                     .Cast<DataRow>()
                     .Select(row => GetColumnValues(row, columnNames));
             }
-            logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false!",input.LookupId));
+            logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false!", input.LookupId));
             return (IEnumerable<object[]>)BadRequest("Invalid lookup configuration. Data could not be retrieved. See log for more details.");
-           
         }
-
         private static object[] GetColumnValues(
             DataRow row, IEnumerable<string> columnNames)
         {
             return columnNames.Select(colName => row[colName]).ToArray();
         }
-               
         private static bool AreColumnNamesValid(
            string[] columnNames, DataTable dataTable)
         {
@@ -210,7 +193,6 @@ namespace Origam.ServerCore.Controller
             return columnNames
                 .All(colName => actualColumnNames.Contains(colName));
         }
-
         private List<HashtagCategoryResult> GetCategories()
         {
             var hashtagProvider = GetHasTagProvider();
@@ -231,13 +213,11 @@ namespace Origam.ServerCore.Controller
             }
             return hashtagCategoryList;
         }
-
         private bool TestRole(string roles)
         {
             return SecurityManager.GetAuthorizationProvider()
                 .Authorize(SecurityManager.CurrentPrincipal, roles);
         }
-
         private string CreateComboBox(HashtagCategory category)
         {
             XmlDocument doc = new XmlDocument();
