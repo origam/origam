@@ -25,7 +25,7 @@ export class NumberEditor extends React.Component<{
   customNumberFormat?: string | undefined;
   maxLength?: number;
   customStyle?: any;
-  refocuser?: (cb: () => void) => () => void;
+  reFocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
@@ -55,7 +55,7 @@ export class NumberEditor extends React.Component<{
   }
 
   componentDidMount() {
-    this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+    this.props.reFocuser && this.disposers.push(this.props.reFocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
     if (this.elmInput && this.props.subscribeToFocusManager) {
       this.props.subscribeToFocusManager(this.elmInput);
@@ -73,7 +73,7 @@ export class NumberEditor extends React.Component<{
     if(this.props.value !== prevProps.value) {
       this.wasChanged = false;
     }
-    if(!this.props.isFocused){
+    if(!this.props.isFocused && this.elmInput !== document.activeElement){
       this.editingValue = this.numeralFormattedValue;
     }
   }
@@ -136,8 +136,8 @@ export class NumberEditor extends React.Component<{
     this.props.onKeyDown && this.props.onKeyDown(event);
   }
 
-  elmInput: HTMLInputElement | null = null;
-  refInput = (elm: HTMLInputElement | any) => {
+  elmInput: HTMLInputElement | HTMLTextAreaElement | null = null;
+  refInput = (elm: HTMLInputElement | HTMLTextAreaElement | null) => {
     this.elmInput = elm;
   };
 

@@ -93,7 +93,7 @@ export class FormViewEditor extends React.Component<{
             foregroundColor={foregroundColor}
             customNumberFormat={this.props.property!.customNumericFormat}
             customStyle={this.props.property?.style}
-            refocuser={undefined}
+            reFocuser={undefined}
             onChange={this.props.onChange}
             onKeyDown={this.MakeOnKeyDownCallBack()}
             onClick={undefined}
@@ -268,7 +268,10 @@ export class FormViewEditor extends React.Component<{
         return;
       }
       if (event.key === "Enter") {
+        if(dataView.firstEnabledDefaultAction){
+          this.props.onEditorBlur?.(null);
           uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(event, dataView.firstEnabledDefaultAction);
+        }
       }
     };
   }
