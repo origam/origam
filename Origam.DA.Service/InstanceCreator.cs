@@ -165,7 +165,7 @@ namespace Origam.DA.Service
     {
         private readonly ExternalFileManager externalFileManger;
         private readonly XmlReader reader;
-        private OrigamNameSpace[] _currentFileNamespaces;
+        private OrigamNameSpace[] currentFileNamespaces;
 
         public InstanceCreator( XmlReader reader, ParentFolders parentFolderIds,
             ExternalFileManager externalFileManger) : base(parentFolderIds)
@@ -176,8 +176,8 @@ namespace Origam.DA.Service
 
         public OrigamNameSpace[] CurrentXmlFileNamespaces
         {
-            get => _currentFileNamespaces ?? throw new InvalidOperationException("Trying to create instances before namespaces from the xml file were red.");
-            set => _currentFileNamespaces = value;
+            get => currentFileNamespaces ?? throw new InvalidOperationException("Trying to create instances before namespaces from the xml file were red.");
+            set => currentFileNamespaces = value;
         }
 
         protected override void SetReferences(IFilePersistent instance, 
