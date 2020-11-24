@@ -207,6 +207,7 @@ namespace Origam.DA.Service
         {
             readWriteLock.RunWriter(() =>
             {
+#if ORIGAM_CLIENT // temporary solution of: https://bitbucket.org/origamsource/origam-source/issues/198/architect-does-not-upgrade-meta-model-if
                 if (itemTracker.IsEmpty)
                 {
                     trackerLoaderFactory.BinLoader.LoadInto(itemTracker);
@@ -216,17 +217,28 @@ namespace Origam.DA.Service
                 {
                     Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
                         itemTracker: itemTracker,
-                        tryUpgrade: tryUpgrade);
+                        tryUpgrade: true);
                     if(error.HasValue)
                     {
                         throw new Exception(error.Value.Message);
                     }
+                    trackerLoaderFactory.BinLoader.Persist(itemTracker);
                     itemTrackerWasJustLoadedFromBin = false;
                 }
                 else
                 {
                     itemTrackerWasJustLoadedFromBin = true;
                 }
+#else
+                Maybe<XmlLoadError> error = trackerLoaderFactory.XmlLoader.LoadInto(
+                    itemTracker: itemTracker,
+                    tryUpgrade: tryUpgrade);
+                if(error.HasValue)
+                {
+                    throw new Exception(error.Value.Message);
+                }
+                itemTrackerWasJustLoadedFromBin = false;
+#endif
             });
         }
 

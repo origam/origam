@@ -22,6 +22,6 @@ namespace Origam.ServerCore.Model.Chat
 {
     public class Info
     {
-        public string topic { get; set; }
+        public string Topic { get; set; }
     }
 }

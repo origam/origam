@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.DA.Service.MetaModelUpgrade;
 using Origam.Extensions;
@@ -65,14 +66,8 @@ namespace Origam.DA.Service.NamespaceMapping
                     
             return new PropertyMapping(
                 propertyNames: GetXmlPropertyNames(type).Concat(oldPropertyNames),
-                xmlNamespace: TypeToV6Namespace(type),
-                xmlNamespaceName: XmlNamespaceTools.GetXmlNamespaceName(
-                    type));
-        }
-
-        private static string TypeToV6Namespace(Type type)
-        {
-            return XmlNamespaceTools.GetXmlNamespace(type.FullName, version6);
+                xmlNamespace: OrigamNameSpace.CreateOrGet(type, version6),
+                xmlNamespaceName: XmlNamespaceTools.GetXmlNamespaceName(type));
         }
     }
 }

@@ -18,12 +18,12 @@ You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
-using System;
-
-namespace Origam.ServerCore.Model.Chat
+namespace Origam.ServerCore.Model.HashTag
 {
-    public class RequestUserId
+    public class HashtagCategoryResult
     {
-        public Guid UserId { get; set; }
+        public string HashtagName { get; set; }
+        public string HashtagLabel { get; set; }
+        public string ObjectComboboxMetadata { get; set; }
     }
 }

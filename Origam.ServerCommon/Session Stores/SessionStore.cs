@@ -115,7 +115,7 @@ namespace Origam.Server
             _ruleHandler = new DatasetRuleHandler();
             _ruleEngine = new RuleEngine(null, null);
             this.CacheExpiration = DateTime.Now.AddMinutes(5);
-            dataRequested = request.DataRequested;
+            dataRequested = request.DataRequested || request.IsSingleRecordEdit;
         }
 
         public string TransationId

@@ -38,5 +38,6 @@ namespace Origam.Schema.EntityModel
 
 		string RoleFilterMember{get; set;}
 		string FeatureFilterMember{get; set;}
+		bool IsFilteredServerside { get; set; }
 	}
 }

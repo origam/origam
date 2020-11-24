@@ -97,25 +97,36 @@ namespace Origam.DA.Service
 
         private IFilePersistent GetCachedObject(Guid id, IPersistenceProvider provider, bool useCache)
         {
-            lock (Lock)
+            try
             {
-                if (loadedLocalizedObjects == null)
+                lock (Lock)
                 {
-                    loadedLocalizedObjects = new LocalizedObjectCache();
-                    loadedLocalizedObjects.AddRange(LoadAllObjectsFromDisk(provider, useCache));
-                }
-                if (!loadedLocalizedObjects.Contains(id))
-                {
-                    AddObjectsFromDisk(provider, useCache);
-                }
+                    if (loadedLocalizedObjects == null)
+                    {
+                        loadedLocalizedObjects = new LocalizedObjectCache();
+                        loadedLocalizedObjects.AddRange(LoadAllObjectsFromDisk(provider, useCache));
+                    }
+                    if (!loadedLocalizedObjects.Contains(id))
+                    {
+                        AddObjectsFromDisk(provider, useCache);
+                    }
 
-                Maybe<IFilePersistent> mayBeObject = loadedLocalizedObjects.Get(id);
-                if (mayBeObject.HasNoValue)
-                {
-                    throw new Exception("Could not find object with id:" + id +
-                                        " in file: " + Path.Absolute);
+                    Maybe<IFilePersistent> mayBeObject = loadedLocalizedObjects.Get(id);
+                    if (mayBeObject.HasNoValue)
+                    {
+                        throw new Exception(
+                            string.Format(
+                                Strings.CouldNotFindObject,
+                                id, Path.Absolute));
+                    }
+                    return mayBeObject.Value;
                 }
-                return mayBeObject.Value;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format(
+                        Strings.ErrorWhenLoadingObjects, Path), ex);
             }
         }
 
@@ -138,9 +149,22 @@ namespace Origam.DA.Service
                     new InstanceCreator(xmlReader, ParentFolderIds, externalFileManger);
                 while (xmlReader.Read())
                 {
-                    if (xmlReader.NodeType == XmlNodeType.EndElement) continue;
+                    if (xmlReader.NodeType == XmlNodeType.EndElement)
+                    {
+                        continue;
+                    }
+                    if (xmlReader.Name == "x:file")
+                    {
+                        instanceCreator.CurrentXmlFileNamespaces =
+                            XmlUtils.ReadNamespaces(xmlReader);
+                        continue;
+                    }
+
                     Guid? retrievedId = XmlUtils.ReadId(xmlReader);
-                    if (!retrievedId.HasValue) continue;
+                    if (!retrievedId.HasValue)
+                    {
+                        continue;
+                    }
                     parentIdTracker.SetParent(retrievedId.Value, xmlReader.Depth + 1);
 
                     Guid parentId = parentIdTracker.Get(xmlReader.Depth);

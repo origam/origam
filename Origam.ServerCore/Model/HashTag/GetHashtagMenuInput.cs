@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -19,11 +19,11 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
-
-namespace Origam.ServerCore.Model.Chat
+namespace Origam.ServerCore.Model.HashTag
 {
-    public class RequestUserId
+    public class GetHashtagMenuInput
     {
-        public Guid UserId { get; set; }
+        public string Category { get; set; }
+        public Guid ReferenceId { get; set; }
     }
 }

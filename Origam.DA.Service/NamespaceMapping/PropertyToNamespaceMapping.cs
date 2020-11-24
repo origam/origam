@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Origam.DA.Common;
 using Origam.DA.ObjectPersistence;
 using Origam.Extensions;
 
@@ -31,7 +32,7 @@ namespace Origam.DA.Service.NamespaceMapping
             });
         }
 
-        private static List<PropertyMapping> GetPropertyMappings(Type instanceType, Func<Type, string> xmlNamespaceGetter)
+        private static List<PropertyMapping> GetPropertyMappings(Type instanceType, Func<Type, OrigamNameSpace> xmlNamespaceGetter)
         {
             var propertyMappings = instanceType
                 .GetAllBaseTypes()
@@ -89,7 +90,7 @@ namespace Origam.DA.Service.NamespaceMapping
             
             var mappingForTheInstanceType = propertyMappings.Last();
             NodeNamespaceName = mappingForTheInstanceType.XmlNamespaceName;
-            NodeNamespace = mappingForTheInstanceType.XmlNamespace;
+            NodeNamespace = mappingForTheInstanceType.XmlNamespace.StringValue;
         }
 
         public PropertyToNamespaceMapping DeepCopy()
@@ -119,20 +120,26 @@ namespace Origam.DA.Service.NamespaceMapping
             }
         }
 
-        public string GetNamespaceByPropertyName(string propertyName)
+        public OrigamNameSpace GetNamespaceByPropertyName(string propertyName)
         {
             PropertyMapping propertyMapping = propertyMappings
-                                                  .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{propertyName}\" in {typeFullName} and its base types");
+                .FirstOrDefault(mapping => mapping.ContainsPropertyNamed(propertyName))
+                  ?? throw new Exception(string.Format(
+                                          Strings.CouldNotFindXmlNamespace,
+                                          propertyName,
+                                          typeFullName));
             return propertyMapping.XmlNamespace;
         }      
         
         public XNamespace GetNamespaceByXmlAttributeName(string xmlAttributeName)
         {
             PropertyMapping propertyMapping = propertyMappings
-                                                  .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
-                                              ?? throw new Exception($"Could not find xmlNamespace for  \"{xmlAttributeName}\" in {typeFullName} and its base types");
-            return propertyMapping.XmlNamespace;
+                .FirstOrDefault(mapping => mapping.ContainsXmlAttributeNamed(xmlAttributeName))
+                  ?? throw new Exception(string.Format(
+                                          Strings.CouldNotFindXmlNamespace,
+                                          xmlAttributeName,
+                                          typeFullName));
+            return propertyMapping.XmlNamespace.StringValue;
         }
 
         protected class PropertyName
@@ -144,10 +151,10 @@ namespace Origam.DA.Service.NamespaceMapping
         protected class PropertyMapping
         {
             public List<PropertyName> PropertyNames { get; }
-            public string XmlNamespace { get; }
+            public OrigamNameSpace XmlNamespace { get; }
             public string XmlNamespaceName { get; set; }
 
-            public PropertyMapping(IEnumerable<PropertyName> propertyNames, string xmlNamespace, string xmlNamespaceName)
+            public PropertyMapping(IEnumerable<PropertyName> propertyNames, OrigamNameSpace xmlNamespace, string xmlNamespaceName)
             {
                 PropertyNames = propertyNames.ToList();
                 XmlNamespace = xmlNamespace;

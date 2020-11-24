@@ -357,4 +357,19 @@
   <data name="ErrorSettingsNotFound" xml:space="preserve">
     <value>OrigamSettings not found.</value>
   </data>
+  <data name="CannotFindNamespace" xml:space="preserve">
+    <value>Cannot find namespace: \"{0}\" in xml file</value>
+  </data>
+  <data name="CouldNotFindObject" xml:space="preserve">
+    <value>Could not find object with id: {0} in file</value>
+  </data>
+  <data name="ErrorWhenLoadingObjects" xml:space="preserve">
+    <value>Error when loading objects from file: \"{0}\"</value>
+  </data>
+  <data name="WrongMetaVersion" xml:space="preserve">
+    <value>The current meta version of type: \"{0}\" is {1}, but the xml file contains version {2}</value>
+  </data>
+  <data name="CouldNotFindXmlNamespace" xml:space="preserve">
+    <value>"Could not find xmlNamespace for  \"{0}\" in {1} and its base types"</value>
+  </data>
 </root>
