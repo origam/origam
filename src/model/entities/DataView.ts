@@ -206,7 +206,9 @@ export class DataView implements IDataView {
 
   @computed get selectedRowIndex(): number | undefined {
     if(getGroupingConfiguration(this).isGrouping){
-      return getGrouper(this).getRowIndex(this.selectedRowId!);
+      return getGrouper(this).allGroups.some(group => group.isExpanded) 
+        ? getGrouper(this).getRowIndex(this.selectedRowId!)
+        : undefined;
     }
     else
     {
@@ -218,8 +220,9 @@ export class DataView implements IDataView {
 
   @computed get maxRowCountSeen() {
     if(getGroupingConfiguration(this).isGrouping){
-      const bal = getGrouper(this).getMaxRowCountSeen(this.selectedRowId!)
-      return bal;
+      return getGrouper(this).allGroups.some(group => group.isExpanded) 
+        ? getGrouper(this).getMaxRowCountSeen(this.selectedRowId!) 
+        : 0;
     }else{
       return this.dataTable.maxRowCountSeen;
     }
@@ -415,6 +418,9 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectFirstRow() {
+    if(getGroupingConfiguration(this).isGrouping){
+      return;
+    }
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
@@ -425,6 +431,9 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectLastRow() {
+    if(getGroupingConfiguration(this).isGrouping){
+      return;
+    }
     const dataTable = getDataTable(this);
     const lastRow = dataTable.getLastRow();
     if (lastRow) {

@@ -19,6 +19,7 @@ import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTa
 import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInfiniteScrollingActive";
 import {SCROLL_ROW_CHUNK} from "../../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -114,9 +115,21 @@ export function drawGroupCell() {
               .forEach(group => group.isExpanded = false);
           }
           row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
+
+          unselectRowIfInClosedGroup(ctx, row);
         })();
       },
     });
+  }
+}
+
+function unselectRowIfInClosedGroup(ctx: any, row: IGroupRow) {
+  const dataView = getDataView(ctx);
+  if (!row.sourceGroup.isExpanded && dataView.selectedRowId) {
+    const containsSelectedRow = !!row.sourceGroup.getRowById(dataView.selectedRowId);
+    if (containsSelectedRow) {
+      dataView.selectedRowId = undefined;
+    }
   }
 }
 
