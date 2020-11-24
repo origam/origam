@@ -9,7 +9,7 @@ import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -35,6 +35,10 @@ export class ClientSideGrouper implements IGrouper {
 
   getRowById(id: string): any[] | undefined {
     return getRowById(this, id);
+  }
+
+  getMaxRowCountSeen(rowId: string): number {
+    return getMaxRowCountSeen(this, rowId);
   }
   
   getAllValuesOfProp(property: IProperty): Promise<Set<any>> {

@@ -13,7 +13,7 @@ import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -83,6 +83,10 @@ export class ServerSideGrouper implements IGrouper {
     return getRowById(this, id);
   }
   
+  getMaxRowCountSeen(rowId: string): number {
+    return getMaxRowCountSeen(this, rowId);
+  }
+
   notifyGroupClosed(group: IGroupTreeNode){
     if(this.groupDisposers.has(group)){
       this.groupDisposers.get(group)!();

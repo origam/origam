@@ -206,7 +206,6 @@ export class DataView implements IDataView {
 
   @computed get selectedRowIndex(): number | undefined {
     if(getGroupingConfiguration(this).isGrouping){
-      const bal = getGrouper(this).getRowIndex(this.selectedRowId!)
       return getGrouper(this).getRowIndex(this.selectedRowId!);
     }
     else
@@ -218,7 +217,12 @@ export class DataView implements IDataView {
   }
 
   @computed get maxRowCountSeen() {
-    return this.dataTable.maxRowCountSeen;
+    if(getGroupingConfiguration(this).isGrouping){
+      const bal = getGrouper(this).getMaxRowCountSeen(this.selectedRowId!)
+      return bal;
+    }else{
+      return this.dataTable.maxRowCountSeen;
+    }
   }
 
   @computed get selectedRow(): any[] | undefined {
