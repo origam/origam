@@ -482,7 +482,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       MenuId: getMenuItemId(rootDataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
-      Filter: "",
+      Filter: getUserFilters(rootDataView),
       Ordering: [ordering],
       RowLimit: 999999,
       GroupBy: groupBy,
