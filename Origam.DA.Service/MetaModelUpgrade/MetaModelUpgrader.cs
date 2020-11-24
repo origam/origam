@@ -354,7 +354,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
     {
         private readonly XFileData fileData;
         public OrigamXDocument Document => fileData.Document;
-        public FileInfo File { get; set; }
+        public FileInfo File => fileData.File;
         private readonly Dictionary<UpgradeScriptContainer, Version> scriptVersionPairs 
             = new Dictionary<UpgradeScriptContainer, Version>();
 
