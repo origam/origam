@@ -80,6 +80,8 @@ export interface IApi {
 
   refreshSession(sessionFormIdentifier: string): Promise<any>;
 
+  revertChanges(data: {sessionFormIdentifier: string}): Promise<any>;
+
   sessionChangeMasterRecord(data: {
     SessionFormIdentifier: string;
     Entity: string;
