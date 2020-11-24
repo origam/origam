@@ -106,25 +106,24 @@ export function drawGroupCell() {
           if (!row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0) {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
-          runInAction(()=> {
-            const allGroups = getGrouper(ctx).allGroups;
-            if (shouldCloseOtherGroups(allGroups, ctx)){
-              const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
-              allGroups
-                .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
-                .forEach(group => group.isExpanded = false);
-            }
-            row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
-          });
+          const allGroups = getGrouper(ctx).allGroups;
+          if (shouldCloseOtherGroups(row.sourceGroup, allGroups, ctx)){
+            const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
+            allGroups
+              .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
+              .forEach(group => group.isExpanded = false);
+          }
+          row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
         })();
       },
     });
   }
 }
 
-function shouldCloseOtherGroups(groups: IGroupTreeNode[], ctx: any){
+function shouldCloseOtherGroups(sourceGroup: IGroupTreeNode, allGroups: IGroupTreeNode[], ctx: any){
+  const otherGroups = Array.from(allGroups).remove(sourceGroup);
   return isInfiniteScrollingActive(ctx, undefined)
-    && groups.some(group => group.isInfinitelyScrolled);
+    && otherGroups.some(group => group.isInfinitelyScrolled);
 }
 
 function formatColumnValue(value: string){
