@@ -12,15 +12,18 @@ import { IProperty } from "./types/IProperty";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
-  
-  @computed get topLevelGroups() {
+  expandedGroupDisplayValues: string[] = [];
+
+  @computed
+  get topLevelGroups(){
     const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (firstGroupingColumn === undefined) {
       return [];
     }
     const dataTable = getDataTable(this);
-    const groups = this.makeGroups(dataTable.allRows, firstGroupingColumn);
+    const groups = this.makeGroups(dataTable.rows, firstGroupingColumn);
     this.loadRecursively(groups);
+    console.log("topLevelGroups: "+groups.length);
     return groups;
   }
   
@@ -34,15 +37,28 @@ export class ClientSideGrouper implements IGrouper {
 
   loadRecursively(groups: IGroupTreeNode[]) {
     for (let group of groups) {
-      this.loadChildren(group);
-      this.loadRecursively(group.childGroups);
+      if(this.expandedGroupDisplayValues.includes(group.columnDisplayValue)){
+        group.isExpanded = true;
+        this.loadChildrenInternal(group);
+        this.loadRecursively(group.childGroups);
+      }
+    }
+  }
+
+  expansionListener(item: ClientSideGroupItem){
+    if(item.isExpanded){
+      this.expandedGroupDisplayValues.push(item.columnDisplayValue);
+    }
+    else
+    {
+      this.expandedGroupDisplayValues.remove(item.columnDisplayValue);
     }
   }
 
   makeGroups(rows: any[][], groupingColumn: string): IGroupTreeNode[] {
     const groupMap = this.makeGroupMap(groupingColumn, rows);
 
-    let dataTable = getDataTable(this);
+    const dataTable = getDataTable(this);
     const property = dataTable.getPropertyById(groupingColumn);
 
     return Array.from(groupMap.entries())
@@ -60,6 +76,7 @@ export class ClientSideGrouper implements IGrouper {
           columnDisplayValue: property ? dataTable.resolveCellText(property, groupName) : groupName,
           aggregations: this.calcAggregations(rows),
           grouper: this,
+          expansionListener: this.expansionListener.bind(this)
         });
       })
       .sort((a, b) => {
@@ -126,14 +143,19 @@ export class ClientSideGrouper implements IGrouper {
     return property.dataIndex;
   }
 
-  *loadChildren(groupHeader: IGroupTreeNode) {
+  *loadChildren(group: IGroupTreeNode) {
+   this.loadChildrenInternal(group);
+  }
+
+  loadChildrenInternal(group: IGroupTreeNode){
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(groupHeader.columnId);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
 
     if (nextColumnName) {
-      groupHeader.childGroups = this.makeGroups(groupHeader.childRows, nextColumnName);
+      group.childGroups = this.makeGroups(group.childRows, nextColumnName);
     }
   }
+
 
   notifyGroupClosed(group: IGroupTreeNode){
   }

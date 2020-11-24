@@ -889,10 +889,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   loadInitialData(){
-    const self = this;
-    flow(function*(){
-      yield* self.loadData();
-    })();
+    if (!this.isReadData) {
+      const self = this;
+      flow(function*(){
+        yield* self.loadData();
+      })();
+    }
   }
 
   private actionRunning = false;
