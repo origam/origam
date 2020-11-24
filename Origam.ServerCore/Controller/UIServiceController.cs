@@ -152,6 +152,15 @@ namespace Origam.ServerCore.Controller
                     sessionFormIdentifier)));
         }
         [HttpPost("[action]")]
+        public IActionResult RevertChanges([FromBody]RevertChangesInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                sessionObjects.UIService.RevertChanges(input);
+                return Ok();
+            });
+        }        
+        [HttpPost("[action]")]
         public IActionResult MasterRecord([FromBody]MasterRecordInput input)
         {
             return RunWithErrorHandler(() 
