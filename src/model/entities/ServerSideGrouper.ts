@@ -13,7 +13,7 @@ import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getRowById } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getRowById, getRowIndex } from "./GrouperCommon";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -21,7 +21,7 @@ export class ServerSideGrouper implements IGrouper {
   disposers: IReactionDisposer[] = [];
   groupDisposers: Map<IGroupTreeNode, IReactionDisposer> =  new Map<IGroupTreeNode, IReactionDisposer>()
   @observable refreshTrigger = 0;
-
+  
   start() {
     this.disposers.push(
       reaction(
@@ -29,38 +29,38 @@ export class ServerSideGrouper implements IGrouper {
           Array.from(getGroupingConfiguration(this).groupingIndices.values()),
           Array.from(getGroupingConfiguration(this).groupingIndices.keys()),
           this.refreshTrigger],
-        () => {
-          const self = this;
-          flow(function* () {yield* self.loadGroups()})();
-        },
-        {fireImmediately: true, equals: comparer.structural,delay: 50})
-    );
-  }
-
-  get allGroups(){
-    return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
-  } 
-
-  private *loadGroups() {
-    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
+          () => {
+            const self = this;
+            flow(function* () {yield* self.loadGroups()})();
+          },
+          {fireImmediately: true, equals: comparer.structural,delay: 50})
+          );
+        }
+        
+        get allGroups(){
+          return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
+        } 
+        
+        private *loadGroups() {
+          const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (!firstGroupingColumn) {
       this.topLevelGroups.length = 0;
       return;
     }
     const expandedGroupDisplayValues = this.allGroups
-      .filter(group => group.isExpanded)
-      .map(group => group.columnDisplayValue)
+    .filter(group => group.isExpanded)
+    .map(group => group.columnDisplayValue)
     const dataView = getDataView(this);
     const property = getDataTable(this).getPropertyById(firstGroupingColumn);
     const lookupId = property && property.lookup && property.lookup.lookupId;
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
     yield getFormScreenLifecycle(this)
-      .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
+    .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
       .then( groupData =>
-            this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
-    yield* this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
-  }
-
+        this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
+        yield* this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
+      }
+      
   private *loadAndExpandChildren(childGroups: IGroupTreeNode[], expandedGroupDisplayValues: string[]): Generator {
     for (const group of childGroups) {
       if( expandedGroupDisplayValues.includes(group.columnDisplayValue)){
@@ -70,22 +70,26 @@ export class ServerSideGrouper implements IGrouper {
       }
     }
   }
-
+  
   refresh() {
     this.refreshTrigger++;
   }
 
+  getRowIndex(rowId: string): number | undefined {
+    return getRowIndex(this, rowId);
+  }
+  
   getRowById(id: string): any[] | undefined {
     return getRowById(this, id);
   }
-
+  
   notifyGroupClosed(group: IGroupTreeNode){
     if(this.groupDisposers.has(group)){
       this.groupDisposers.get(group)!();
       this.groupDisposers.delete(group);
     }
   }
-
+  
   *loadChildren(groupHeader: IGroupTreeNode) {
     if(this.groupDisposers.has(groupHeader)){
       this.groupDisposers.get(groupHeader)!();

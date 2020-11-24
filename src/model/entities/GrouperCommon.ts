@@ -21,3 +21,8 @@ export function getRowById(grouper: IGrouper, id: string): any[] | undefined {
       .find(row => row)
 }
 
+export function getRowIndex(grouper: IGrouper, rowId: string): number | undefined {
+  return grouper.allGroups
+  .map(group => group.getRowIndex(rowId))
+  .find(index => index !== -1);
+}

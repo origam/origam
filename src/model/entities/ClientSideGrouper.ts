@@ -9,7 +9,7 @@ import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getRowById } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getRowById, getRowIndex } from "./GrouperCommon";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -27,6 +27,10 @@ export class ClientSideGrouper implements IGrouper {
   
   get allGroups(){
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
+  }
+  
+  getRowIndex(rowId: string): number | undefined {
+    return getRowIndex(this, rowId);
   }
 
   getRowById(id: string): any[] | undefined {

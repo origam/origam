@@ -205,9 +205,16 @@ export class DataView implements IDataView {
   }
 
   @computed get selectedRowIndex(): number | undefined {
-    return this.selectedRowId
-      ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
-      : undefined;
+    if(getGroupingConfiguration(this).isGrouping){
+      const bal = getGrouper(this).getRowIndex(this.selectedRowId!)
+      return getGrouper(this).getRowIndex(this.selectedRowId!);
+    }
+    else
+    {
+      return this.selectedRowId
+        ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
+        : undefined;
+    }
   }
 
   @computed get maxRowCountSeen() {
