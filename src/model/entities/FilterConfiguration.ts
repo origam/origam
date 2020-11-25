@@ -18,7 +18,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   implicitFilters: IImplicitFilter[];
   @observable activeFilters: IFilter[] = [];
 
-  registerFileriringOnOffHandler(handler: (filteringOn: boolean)=> void){
+  registerFilteringOnOffHandler(handler: (filteringOn: boolean)=> void){
     this.filteringOnOffHandlers.push(handler);
   }
 
@@ -46,7 +46,9 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   clearFilters(): void {
-    this.activeFilters = [];
+    if(this.activeFilters.length !== 0){
+      this.activeFilters = [];
+    }
   }
 
   @observable isFilterControlsDisplayed: boolean = false;
