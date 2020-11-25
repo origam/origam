@@ -178,11 +178,6 @@ namespace Origam.ServerCore.Controller
             logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false!", input.LookupId));
             return (IEnumerable<object[]>)BadRequest("Invalid lookup configuration. Data could not be retrieved. See log for more details.");
         }
-        private static object[] GetColumnValues(
-            DataRow row, IEnumerable<string> columnNames)
-        {
-            return columnNames.Select(colName => row[colName]).ToArray();
-        }
         private static bool AreColumnNamesValid(
            string[] columnNames, DataTable dataTable)
         {
