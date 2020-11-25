@@ -24,9 +24,9 @@ using System.Text;
 
 namespace Origam.Schema.MenuModel
 {
-    public class HashTagSchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
+    public class HashTagCategorySchemaItemProvider : AbstractSchemaItemProvider, ISchemaItemFactory
     {
-        public HashTagSchemaItemProvider()
+        public HashTagCategorySchemaItemProvider()
         {
             this.ChildItemTypes.Add(typeof(HashtagCategory));
         }
@@ -61,7 +61,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return "Hash Tag";
+				return "Hashtag Categories";
 			}
 			set
 			{
@@ -73,7 +73,7 @@ namespace Origam.Schema.MenuModel
 		{
 			get
 			{
-				return "List of Hash Tags";
+				return "List of Hashtags";
 			}
 		}
 
