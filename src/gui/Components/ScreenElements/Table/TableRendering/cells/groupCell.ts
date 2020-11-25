@@ -18,6 +18,8 @@ import {flow, runInAction} from "mobx";
 import {getDataTable} from "../../../../../../model/selectors/DataView/getDataTable";
 import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInfiniteScrollingActive";
 import {SCROLL_ROW_CHUNK} from "../../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -105,25 +107,36 @@ export function drawGroupCell() {
           if (!row.sourceGroup.isExpanded && row.sourceGroup.childGroups.length === 0) {
             yield onGroupHeaderToggleClick(ctx)(event, groupRow);
           }
-          runInAction(()=> {
-            const groups = getDataTable(ctx).groups.flatMap(group => group.allChildGroups);
-            if (shouldCloseOtherGroups(groups, ctx)){
-              const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
-              groups
-                .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
-                .forEach(group => group.isExpanded = false);
-            }
-            row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
-          });
+          const allGroups = getGrouper(ctx).allGroups;
+          if (shouldCloseOtherGroups(row.sourceGroup, allGroups, ctx)){
+            const groupsToKeepOpen = [row.sourceGroup, ...row.sourceGroup.allParents]
+            allGroups
+              .filter(group => !groupsToKeepOpen.includes(group) && group.isExpanded)
+              .forEach(group => group.isExpanded = false);
+          }
+          row.sourceGroup.isExpanded = !row.sourceGroup.isExpanded;
+
+          unselectRowIfInClosedGroup(ctx, row);
         })();
       },
     });
   }
 }
 
-function shouldCloseOtherGroups(groups: IGroupTreeNode[], ctx: any){
+function unselectRowIfInClosedGroup(ctx: any, row: IGroupRow) {
+  const dataView = getDataView(ctx);
+  if (!row.sourceGroup.isExpanded && dataView.selectedRowId) {
+    const containsSelectedRow = !!row.sourceGroup.getRowById(dataView.selectedRowId);
+    if (containsSelectedRow) {
+      dataView.selectedRowId = undefined;
+    }
+  }
+}
+
+function shouldCloseOtherGroups(sourceGroup: IGroupTreeNode, allGroups: IGroupTreeNode[], ctx: any){
+  const otherGroups = Array.from(allGroups).remove(sourceGroup);
   return isInfiniteScrollingActive(ctx, undefined)
-    && groups.some(group => group.isInfinitelyScrolled);
+    && otherGroups.some(group => group.isInfinitelyScrolled);
 }
 
 function formatColumnValue(value: string){

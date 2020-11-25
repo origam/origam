@@ -10,6 +10,7 @@ export interface IGroupRow {
 }
 
 export interface IGroupTreeNode {
+  getRowIndex(rowId: string): number | undefined;
   parent: IGroupTreeNode | undefined;
   childGroups: IGroupTreeNode[];
   allChildGroups: IGroupTreeNode[];
@@ -24,6 +25,7 @@ export interface IGroupTreeNode {
   allParents: IGroupTreeNode[];
   composeGroupingFilter(): string;
   isInfinitelyScrolled: boolean;
+  getRowById(id: string): any[] | undefined;
 }
 
 export type ITableRow = any[] | IGroupRow;

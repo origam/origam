@@ -32,7 +32,6 @@ export class TreeDataTable implements IDataTable {
 
   additionalRowData: Map<string, IAdditionalRowData> = new Map();
   maxRowCountSeen: number = 0;
-  groups: IGroupTreeNode[] = [];
   parentIdProperty: string;
   isEmpty: boolean = false;
   idProperty: string;

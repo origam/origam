@@ -38,15 +38,23 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
-
+  
   @observable isExpanded = false;
-
+  
   get allChildGroups(): IGroupTreeNode[]{
     return allChildGroups(this);
   }
   
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
+  }
+  
+  getRowIndex(rowId: string): number | undefined {
+    return this._childRows.findIndex(row => getDataTable(this.grouper).getRowId(row) === rowId);
+  }
+  
+  getRowById(id: string): any[] | undefined{
+    return this._childRows.find(row => getDataTable(this.grouper).getRowId(row) === id);
   }
   
   @computed get childRows(){
@@ -110,9 +118,17 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
   }
+  
+  getRowIndex(rowId: string): number | undefined {
+    return this.childRows.findIndex(row => getDataTable(this.grouper).getRowId(row) === rowId);
+  }
+
+  getRowById(id: string): any[] | undefined{
+    return this.childRows.find(row => getDataTable(this.grouper).getRowId(row) === id);
+  }
 
   @computed get childRows(){
-      return this._childRows.rows;
+    return this._childRows.rows;
   }
   set childRows(rows: any[][]){
     if(rows.length > 0){

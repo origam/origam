@@ -50,6 +50,7 @@ import { getSelectionMember } from "model/selectors/DataView/getSelectionMember"
 import { getApi } from "model/selectors/getApi";
 import {getSessionId} from "model/selectors/getSessionId";
 import {IPolymorphRules} from "model/entities/types/IApi";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -204,19 +205,42 @@ export class DataView implements IDataView {
   }
 
   @computed get selectedRowIndex(): number | undefined {
-    return this.selectedRowId
-      ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
-      : undefined;
+    if(getGroupingConfiguration(this).isGrouping){
+      return getGrouper(this).allGroups.some(group => group.isExpanded) 
+        ? getGrouper(this).getRowIndex(this.selectedRowId!)
+        : undefined;
+    }
+    else
+    {
+      return this.selectedRowId
+        ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
+        : undefined;
+    }
   }
 
   @computed get maxRowCountSeen() {
-    return this.dataTable.maxRowCountSeen;
+    if(getGroupingConfiguration(this).isGrouping){
+      return getGrouper(this).allGroups.some(group => group.isExpanded) 
+        ? getGrouper(this).getMaxRowCountSeen(this.selectedRowId!) 
+        : 0;
+    }else{
+      return this.dataTable.maxRowCountSeen;
+    }
   }
 
   @computed get selectedRow(): any[] | undefined {
-    return this.selectedRowIndex !== undefined
-      ? this.dataTable.getRowByExistingIdx(this.selectedRowIndex)
-      : undefined;
+    if(!this.selectedRowId){
+      return undefined;
+    }
+    if(getGroupingConfiguration(this).isGrouping){
+      return getGrouper(this).getRowById(this.selectedRowId!);
+    }
+    else
+    {
+      return this.selectedRowIndex !== undefined
+        ? this.dataTable.getRowByExistingIdx(this.selectedRowIndex)
+        : undefined;  
+    }
   }
 
   @computed get isValidRowSelection(): boolean {
@@ -394,6 +418,9 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectFirstRow() {
+    if(getGroupingConfiguration(this).isGrouping){
+      return;
+    }
     const dataTable = getDataTable(this);
     const firstRow = dataTable.getFirstRow();
     if (firstRow) {
@@ -404,6 +431,9 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectLastRow() {
+    if(getGroupingConfiguration(this).isGrouping){
+      return;
+    }
     const dataTable = getDataTable(this);
     const lastRow = dataTable.getLastRow();
     if (lastRow) {
@@ -505,7 +535,7 @@ export class DataView implements IDataView {
     const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnIds;
     return groupedColumnIds.length === 0
       ? getDataTable(this).rows
-      : flattenToTableRows(getDataTable(this).groups);
+      : flattenToTableRows(getGrouper(this).topLevelGroups);
   }
 
   scrollState = new SimpleScrollState(0, 0);
