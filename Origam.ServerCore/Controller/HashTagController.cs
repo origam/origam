@@ -134,10 +134,10 @@ namespace Origam.ServerCore.Controller
             }
             return NotFound();
         }
-        private HashTagSchemaItemProvider GetHasTagProvider()
+        private HashTagCategorySchemaItemProvider GetHasTagProvider()
         {
             var schemaservice = ServiceManager.Services.GetService<SchemaService>();
-            return schemaservice.GetProvider<HashTagSchemaItemProvider>();
+            return schemaservice.GetProvider<HashTagCategorySchemaItemProvider>();
         }
         private Result<IEnumerable<object[]>, IActionResult> GetLookupData(HashtagCategory hashT, int limit, int pageNumber, string searchPhrase)
         {
@@ -148,13 +148,13 @@ namespace Origam.ServerCore.Controller
                 LookupId = hashT.LookupId,
                 CurrentRow = null,
                 ShowUniqueValues = false,
-                SearchText = "%" + (string.IsNullOrEmpty(searchPhrase)? "": searchPhrase) + "%",
+                SearchText =(string.IsNullOrEmpty(searchPhrase)? "": searchPhrase),
                 PageSize = limit,
                 PageNumber = pageNumber,
                 ParameterMappings = null
             };
             var dataTable = lookupService.GetList(internalRequest);
-            return AreColumnNamesValid(hashT.Lookup.ValueDisplayMember.Split(";"), dataTable)
+            return AreColumnNamesValid(hashT.Lookup.ListDisplayMember.Split(";"), dataTable)
                 ? Result.Success<IEnumerable<object[]>, IActionResult>(
                     GetRowData(internalRequest, dataTable, GetListColumn(hashT)))
                 : Result.Failure<IEnumerable<object[]>, IActionResult>(
@@ -162,7 +162,7 @@ namespace Origam.ServerCore.Controller
         }
         private string[] GetListColumn(HashtagCategory hashtagCategory)
         {
-            string displayColumn = hashtagCategory.Lookup.ValueValueMember +";" +hashtagCategory.Lookup.ValueDisplayMember;
+            string displayColumn = hashtagCategory.Lookup.ListValueMember +";" +hashtagCategory.Lookup.ListDisplayMember;
             return displayColumn.Split(";");
         }
         private IEnumerable<object[]> GetRowData(
@@ -173,7 +173,7 @@ namespace Origam.ServerCore.Controller
             {
                 return dataTable.Rows
                     .Cast<DataRow>()
-                    .Select(row => GetColumnValues(row, columnNames));
+                    .Select(row => row.ItemArray);
             }
             logger.LogError(string.Format("Lookup {0} has property IsFilteredServerSide set to false!", input.LookupId));
             return (IEnumerable<object[]>)BadRequest("Invalid lookup configuration. Data could not be retrieved. See log for more details.");
