@@ -597,7 +597,7 @@ export class DataView implements IDataView {
   attributes: any;
 
   async exportToExcel() {
-    const fields = this.properties.map(property => {
+    const fields = getTablePanelView(this).allTableProperties.map(property => {
       return {
         Caption: property.name,
         FieldName: property.id,
