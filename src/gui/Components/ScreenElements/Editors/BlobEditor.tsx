@@ -21,7 +21,7 @@ import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldCha
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { handleError } from "model/actions/handleError";
 import { IFocusable } from "model/entities/FocusManager";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -174,6 +174,8 @@ export class BlobEditor extends React.Component<{
                 buttonsCenter={
                   <>
                     <button
+                      tabIndex={0}
+                      autoFocus={true}
                       onClick={() => {
                         closeDialog();
                         resolve(true);
@@ -182,6 +184,7 @@ export class BlobEditor extends React.Component<{
                       OK
                     </button>
                     <button
+                      tabIndex={0}
                       onClick={() => {
                         closeDialog();
                         resolve(false);
@@ -243,26 +246,25 @@ export class BlobEditor extends React.Component<{
   imageObjectUrl: any;
 
   render() {
-
     return (
-    <div className={S.editorContainer}>
-      {this.renderInput()}
-      {this.props.isInvalid && (
-        <div className={S.notification}>
-          <Tooltip html={this.props.invalidMessage} arrow={true}>
-            <i className="fas fa-exclamation-circle red" />
-          </Tooltip>
-        </div>
-      )}
-    </div>
+      <div className={S.editorContainer}>
+        {this.renderInput()}
+        {this.props.isInvalid && (
+          <div className={S.notification}>
+            <Tooltip html={this.props.invalidMessage} arrow={true}>
+              <i className="fas fa-exclamation-circle red" />
+            </Tooltip>
+          </div>
+        )}
+      </div>
     );
   }
 
-  private onFocus(){
+  private onFocus() {
     this.focused = true;
   }
 
-  private onBlur(){
+  private onBlur() {
     this.focused = false;
   }
 
@@ -270,33 +272,35 @@ export class BlobEditor extends React.Component<{
     return (
       <div className={S.blobEditor}>
         {/*this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />*/}
-        <input readOnly={true}
-               className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
-               value={this.props.value || ""}/>
+        <input
+          readOnly={true}
+          className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
+          value={this.props.value || ""}
+        />
         <div className="controls">
-            <>
-              {this.props.value &&
-                <button
-                  className={"btnDownload " + (this.props.isReadOnly
-                    ? "btnDownloadOnly"
-                    : "btnDownloadFirst")}
-                  onClick={flow(this.download.bind(this))}
-                  title={`Download: ${this.props.value}`}
-                >
-                  <i className="fas fa-download"></i>
-                </button>
-              }
-              {this.props.value && !this.props.isReadOnly &&
-                <button
-                  onClick={flow(this.delete.bind(this))}
-                  className="btnDelete"
-                  title={`Delete: ${this.props.value}`}
-                >
-                  <i className="far fa-trash-alt"></i>
-                </button>
-              }
-            </>
-          {!this.props.isReadOnly &&
+          <>
+            {this.props.value && (
+              <button
+                className={
+                  "btnDownload " + (this.props.isReadOnly ? "btnDownloadOnly" : "btnDownloadFirst")
+                }
+                onClick={flow(this.download.bind(this))}
+                title={`Download: ${this.props.value}`}
+              >
+                <i className="fas fa-download"></i>
+              </button>
+            )}
+            {this.props.value && !this.props.isReadOnly && (
+              <button
+                onClick={flow(this.delete.bind(this))}
+                className="btnDelete"
+                title={`Delete: ${this.props.value}`}
+              >
+                <i className="far fa-trash-alt"></i>
+              </button>
+            )}
+          </>
+          {!this.props.isReadOnly && (
             <label className="customBtnChoose" title={"Upload new file."}>
               <input
                 className="btnChooseFile"
@@ -305,17 +309,17 @@ export class BlobEditor extends React.Component<{
                 multiple={false}
                 onChange={(event) => this.handleFileChange(event)}
                 ref={this.refInput}
-                onFocus={()=>this.onFocus()}
-                onBlur={()=>this.onBlur()}
-                onKeyDown={(event)=> this.props.onKeyDown && this.props.onKeyDown(event)}
+                onFocus={() => this.onFocus()}
+                onBlur={() => this.onBlur()}
+                onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
               />
               <i className="fas fa-upload"></i>
             </label>
-          }
+          )}
         </div>
         {this.isUploading && (
           <div className="progress">
-            <div className="progressBar" style={{width: `${this.progressValue * 100}%`}}>
+            <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
               {(this.progressValue * 100).toFixed(0)}%
             </div>
           </div>

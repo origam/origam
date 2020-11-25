@@ -56,7 +56,7 @@ export const DialogScreen: React.FC<{
             className={S.workflowActionBtn}
             onClick={onWorkflowAbortClick(content.formScreen!)}
           >
-            {T("Cancel","button_cancel")}
+            {T("Cancel", "button_cancel")}
           </button>
         )}
         {isNextButton && (
@@ -64,7 +64,7 @@ export const DialogScreen: React.FC<{
             className={S.workflowActionBtn}
             onClick={onWorkflowNextClick(content.formScreen!)}
           >
-            {T("Next","button_next")}
+            {T("Next", "button_next")}
           </button>
         )}
       </div>
@@ -98,18 +98,22 @@ export const DialogScreen: React.FC<{
                 {() =>
                   !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content.formScreen!.dialogActions
-                        .filter(action => action.placement !== IActionPlacement.PanelHeader)
-                        .map((action) => (
-                        <button
-                          key={action.id}
-                          onClick={(event: any) => {
-                            onSelectionDialogActionButtonClick(action)(event, action);
-                          }}
-                        >
-                          {action.caption}
-                        </button>
-                      ))}
+                      {props.openedScreen.content
+                        .formScreen!.dialogActions.filter(
+                          (action) => action.placement !== IActionPlacement.PanelHeader
+                        )
+                        .map((action, idx) => (
+                          <button
+                            tabIndex={0}
+                            autoFocus={action.isDefault}
+                            key={action.id}
+                            onClick={(event: any) => {
+                              onSelectionDialogActionButtonClick(action)(event, action);
+                            }}
+                          >
+                            {action.caption}
+                          </button>
+                        ))}
                     </>
                   ) : (
                     <></>

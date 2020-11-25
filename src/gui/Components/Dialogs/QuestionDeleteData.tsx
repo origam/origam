@@ -13,18 +13,22 @@ export class QuestionDeleteData extends React.Component<{
   render() {
     return (
       <ModalWindow
-        title={T("Question","question_title")}
+        title={T("Question", "question_title")}
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={this.props.onYesClick}>{T("Yes","button_yes")}</button>
-            <button onClick={this.props.onNoClick}>{T("No","button_no")}</button>
+            <button tabIndex={0} autoFocus={true} onClick={this.props.onYesClick}>
+              {T("Yes", "button_yes")}
+            </button>
+            <button tabIndex={0} onClick={this.props.onNoClick}>
+              {T("No", "button_no")}
+            </button>
           </>
         }
         buttonsLeft={null}
         buttonsRight={null}
       >
-        <div className={CS.dialogContent}>{T("Delete selected row?","delete_confirmation")}</div>
+        <div className={CS.dialogContent}>{T("Delete selected row?", "delete_confirmation")}</div>
       </ModalWindow>
     );
   }
