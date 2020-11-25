@@ -24,7 +24,7 @@ export class ErrorBoundaryEncapsulated extends React.Component<PropsWithChildren
         yield* handleError(self.props.ctx)(error);
       } catch (e) {
       } finally {
-        yield onScreenTabCloseClick(self.props.ctx)(undefined);
+        yield onScreenTabCloseClick(self.props.ctx)(undefined, true);
       }
     })();
   }

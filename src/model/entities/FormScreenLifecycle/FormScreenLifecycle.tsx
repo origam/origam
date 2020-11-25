@@ -152,11 +152,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *onRequestScreenClose(): Generator<unknown, any, unknown> {
+  *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
     const formScreen = getFormScreen(this);
     // Just wait if there is some data manipulation in progress.
     yield formScreen.dataUpdateCRS.runAsync(() => Promise.resolve());
-    if (!getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
+    if (isDueToError || !getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield* this.closeForm();
       return;
     }
