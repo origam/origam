@@ -29,14 +29,31 @@ app.use(
 );
 
 app.use(
+  ["/sockjs-node-origam"],
+  createProxyMiddleware({
+    logLevel: "debug",
+    target: "wss://localhost:3001",
+    secure: false,
+  })
+);
+
+app.use(
+  ["/sockjs-node-orichat"],
+  createProxyMiddleware({
+    logLevel: "debug",
+    target: "ws://localhost:3002",
+    secure: false,
+  })
+);
+
+app.use(
   ["/chatrooms/Chat", "/chatrooms/Avatar", "/internalApi/HashTag"],
   createProxyMiddleware({
     // logProvider: () => winston,
     logLevel: "debug",
-    target: "https://localhost:44356/",
+    target: "https://localhost:5001/",
     secure: false,
     changeOrigin: false,
-    ws: true,
     router: {
       // 'localhost:5566/internalApi': 'https://localhost:44356'
     },
@@ -51,13 +68,11 @@ app.use(
     target: "http://localhost:3002/",
     secure: false,
     changeOrigin: false,
-    ws: true,
     router: {
       // 'localhost:5566/internalApi': 'https://localhost:44356'
     },
   })
 );
-
 
 app.use(
   "/",
@@ -67,7 +82,6 @@ app.use(
     target: "https://localhost:3001/",
     secure: false,
     changeOrigin: false,
-    ws: true,
     router: {
       // 'localhost:5566/internalApi': 'https://localhost:44356'
     },
