@@ -28,7 +28,7 @@ export class FilterGroupManager {
 
   constructor(private filterConfiguration: IFilterConfiguration) {
     this.ctx = filterConfiguration;
-    filterConfiguration.registerFileriringOnOffHandler(filteringOn => {
+    filterConfiguration.registerFilteringOnOffHandler(filteringOn => {
       if(!filteringOn){
         this.selectedFilterGroupId = undefined;
       }
