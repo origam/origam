@@ -1,6 +1,7 @@
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import { Memoized } from "./common/Memoized";
 import { currentRowCellsDimensions, currentRowCellsDraws } from "./currentRowCells";
+import stripHtml from "string-strip-html";
 import {
   context,
   currentDataRow,
@@ -88,7 +89,11 @@ export const currentProperty = () =>{
 
 export const currentCellText = Memoized(() => {
   const value = currentCellValue();
-  return dataTable().resolveCellText(currentProperty(), value);
+  let text = dataTable().resolveCellText(currentProperty(), value);
+  if(text && currentProperty().multiline) {
+    text = stripHtml(text).result;
+  }
+  return text;
 });
 scRenderCell.push(() => currentCellText.clear());
 
