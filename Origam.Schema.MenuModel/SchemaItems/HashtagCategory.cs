@@ -28,7 +28,7 @@ using System.Xml.Serialization;
 
 namespace Origam.Schema.MenuModel
 {
-    [SchemaItemDescription("Hashtag Category", 151)]
+    [SchemaItemDescription("Hashtag Category", "hashtag_category.png")]
     [HelpTopic("Hashtag+Categories")]
     [XmlModelRoot(CategoryConst)]
     [ClassMetaVersion("1.0.0")]
@@ -115,14 +115,6 @@ namespace Origam.Schema.MenuModel
             get
             {
                 return CategoryConst;
-            }
-        }
-
-        public override string Icon
-        {
-            get
-            {
-                return "151";
             }
         }
     }

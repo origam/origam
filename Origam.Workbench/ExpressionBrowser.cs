@@ -454,6 +454,8 @@ namespace Origam.Workbench
             this.imgList.Images.SetKeyName(312, "transition-2.png");
             this.imgList.Images.SetKeyName(313, "event-4.png");
             this.imgList.Images.SetKeyName(314, "loader-3.png");
+            this.imgList.Images.SetKeyName(315, "hashtag_category.png");
+            this.imgList.Images.SetKeyName(316, "hashtag_category_group.png");
             // 
             // cboFilter
             // 
