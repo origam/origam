@@ -487,7 +487,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       MenuId: getMenuItemId(rootDataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
-      Filter: "",
+      Filter: getUserFilters(rootDataView),
       Ordering: [ordering],
       RowLimit: 999999,
       GroupBy: groupBy,
@@ -503,7 +503,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       MenuId: getMenuItemId(rootDataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
-      Filter: "",
+      Filter: getUserFilters(rootDataView),
       MasterRowId: undefined,
       AggregatedColumns: aggregations,
     });
@@ -894,10 +894,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   loadInitialData(){
-    const self = this;
-    flow(function*(){
-      yield* self.loadData();
-    })();
+    if (!this.isReadData) {
+      const self = this;
+      flow(function*(){
+        yield* self.loadData();
+      })();
+    }
   }
 
   private actionRunning = false;
