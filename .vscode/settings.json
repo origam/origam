@@ -1,7 +1,9 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "cSpell.words": [
-    "Unmount"
+    "Millis",
+    "Origam",
+    "Unmount",
     "autorun",
     "esnext",
     "immer",
