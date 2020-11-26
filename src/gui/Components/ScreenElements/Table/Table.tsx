@@ -372,7 +372,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           isVisible={true}
                           scrollingDisabled={false /*this.props.isEditorMounted*/}
                           contentWidth={this.props.gridDimensions.contentWidth}
-                          contentHeight={this.props.gridDimensions.contentHeight}
+                          // +30px to make the last row visible on some dirty browsers
+                          contentHeight={this.props.gridDimensions.contentHeight + 30}
                           onScroll={this.handleScroll}
                           onClick={this.handleScrollerClick}
                           onKeyDown={this.props.onKeyDown}
