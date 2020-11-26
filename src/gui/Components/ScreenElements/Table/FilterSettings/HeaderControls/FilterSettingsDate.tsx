@@ -27,7 +27,7 @@ const OPERATORS = [
 const OpCombo: React.FC<{
   setting: any;
   onChange: (newSetting: any) => void;
-}> = (props) => {
+}> = observer((props) => {
   return (
     <FilterSettingsComboBox
       trigger={<>{(OPERATORS.find((item) => item.type === props.setting.type) || {}).caption}</>}
@@ -45,7 +45,7 @@ const OpCombo: React.FC<{
       ))}
     </FilterSettingsComboBox>
   );
-};
+});
 
 const OpEditors: React.FC<{
   setting: any;
