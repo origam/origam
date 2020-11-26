@@ -57,6 +57,7 @@ import {selectLastRow} from "model/actions/DataView/selectLastRow";
 import {startEditingFirstCell} from "model/actions/DataView/startEditingFirstCell";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
+import { wait } from "@testing-library/react";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -428,22 +429,28 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }, 100);
   }
 
-  loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined) {
-    const api = getApi(this);
-    return api.getRows({
-      MenuId: getMenuItemId(rootDataView),
-      SessionFormIdentifier: getSessionId(this),
-      DataStructureEntityId: getDataStructureEntityId(rootDataView),
-      Filter: filter,
-      Ordering: ordering ? [ordering] : [],
-      RowLimit: SCROLL_ROW_CHUNK,
-      RowOffset: 0,
-      ColumnNames: getColumnNamesToLoad(rootDataView),
-      MasterRowId: undefined,
-    });
+  async loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined) {
+    try {
+      this.monitor.inFlow++;
+      const api = getApi(this);
+      return await api.getRows({
+        MenuId: getMenuItemId(rootDataView),
+        SessionFormIdentifier: getSessionId(this),
+        DataStructureEntityId: getDataStructureEntityId(rootDataView),
+        Filter: filter,
+        Ordering: ordering ? [ordering] : [],
+        RowLimit: SCROLL_ROW_CHUNK,
+        RowOffset: 0,
+        ColumnNames: getColumnNamesToLoad(rootDataView),
+        MasterRowId: undefined,
+      });
+    }
+    finally{
+      this.monitor.inFlow--;
+    }
   }
 
-  loadChildGroups(
+  async loadChildGroups(
     rootDataView: IDataView,
     filter: string,
     groupByColumn: string,
@@ -455,22 +462,28 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       direction: IOrderByDirection.ASC,
       lookupId: lookupId,
     };
-    const api = getApi(this);
-    return api.getGroups({
-      MenuId: getMenuItemId(rootDataView),
-      SessionFormIdentifier: getSessionId(this),
-      DataStructureEntityId: getDataStructureEntityId(rootDataView),
-      Filter: filter,
-      Ordering: [ordering],
-      RowLimit: 999999,
-      GroupBy: groupByColumn,
-      GroupByLookupId: lookupId,
-      MasterRowId: undefined,
-      AggregatedColumns: aggregations,
-    });
+    try {
+      this.monitor.inFlow++;
+      const api = getApi(this);
+      return await api.getGroups({
+        MenuId: getMenuItemId(rootDataView),
+        SessionFormIdentifier: getSessionId(this),
+        DataStructureEntityId: getDataStructureEntityId(rootDataView),
+        Filter: filter,
+        Ordering: [ordering],
+        RowLimit: 999999,
+        GroupBy: groupByColumn,
+        GroupByLookupId: lookupId,
+        MasterRowId: undefined,
+        AggregatedColumns: aggregations,
+      });
+    }
+    finally{
+      this.monitor.inFlow--;
+    }
   }
 
-  loadGroups(
+  async loadGroups(
     rootDataView: IDataView,
     groupBy: string,
     groupByLookupId: string | undefined,
@@ -482,19 +495,24 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       direction: IOrderByDirection.ASC,
       lookupId: groupByLookupId,
     };
-
-    return api.getGroups({
-      MenuId: getMenuItemId(rootDataView),
-      SessionFormIdentifier: getSessionId(this),
-      DataStructureEntityId: getDataStructureEntityId(rootDataView),
-      Filter: "",
-      Ordering: [ordering],
-      RowLimit: 999999,
-      GroupBy: groupBy,
-      GroupByLookupId: groupByLookupId,
-      MasterRowId: undefined,
-      AggregatedColumns: aggregations,
-    });
+    try {
+      this.monitor.inFlow++;
+      return await api.getGroups({
+        MenuId: getMenuItemId(rootDataView),
+        SessionFormIdentifier: getSessionId(this),
+        DataStructureEntityId: getDataStructureEntityId(rootDataView),
+        Filter: "",
+        Ordering: [ordering],
+        RowLimit: 999999,
+        GroupBy: groupBy,
+        GroupByLookupId: groupByLookupId,
+        MasterRowId: undefined,
+        AggregatedColumns: aggregations,
+      });
+    }
+    finally{
+      this.monitor.inFlow--;
+    }
   }
 
   loadAggregations(rootDataView: IDataView, aggregations: IAggregationInfo[]) {

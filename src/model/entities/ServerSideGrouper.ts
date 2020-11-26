@@ -54,12 +54,10 @@ export class ServerSideGrouper implements IGrouper {
     const property = getDataTable(this).getPropertyById(firstGroupingColumn);
     const lookupId = property && property.lookup && property.lookup.lookupId;
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
-    yield getFormScreenLifecycle(this)
-    .loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
-      .then( groupData =>
-        this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined));
-        yield* this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
-      }
+    const  groupData = yield getFormScreenLifecycle(this).loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
+    this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined);
+    yield* this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
+  }
       
   private *loadAndExpandChildren(childGroups: IGroupTreeNode[], expandedGroupDisplayValues: string[]): Generator {
     for (const group of childGroups) {
@@ -108,8 +106,7 @@ export class ServerSideGrouper implements IGrouper {
           [ ...getTablePanelView(this).aggregations.aggregationList],
           getOrderingConfiguration(this).groupChildrenOrdering
         ], 
-        ()=> this.reload(groupHeader),
-        // { fireImmediately: true }
+        ()=> flow(() => this.reload(groupHeader))(),
       )
     );
     yield* this.reload(groupHeader);
@@ -126,15 +123,11 @@ export class ServerSideGrouper implements IGrouper {
     if (nextColumnName) {
       const property = getDataTable(this).getPropertyById(nextColumnName);
       const lookupId = property && property.lookup && property.lookup.lookupId;
-      yield lifeCycle
-        .loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
-        .then(
-          (groupData) => (group.childGroups = this.group(groupData, nextColumnName, group))
-        );
+      const groupData = yield lifeCycle.loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
+      group.childGroups = this.group(groupData, nextColumnName, group);
     } else {
-      yield lifeCycle
-        .loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
-        .then((rows) => (group.childRows = rows));
+      const rows = yield lifeCycle.loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
+      group.childRows = rows;
     }
   }
 
