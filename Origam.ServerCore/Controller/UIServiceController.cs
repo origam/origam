@@ -49,7 +49,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Origam.Extensions;
-using Origam.Schema;
 using Origam.Workbench;
 using Origam.ServerCommon.Session_Stores;
 using Origam.ServerCore.Configuration;
@@ -318,6 +317,7 @@ namespace Origam.ServerCore.Controller
                             dataStructureQuery: dataStructureQuery,
                             methodId: input.MenuId,
                             returnKeyValuePairs: false))
+                    .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             });
         }       
@@ -333,6 +333,7 @@ namespace Origam.ServerCore.Controller
                         dataStructureQuery: dataStructureQuery, 
                         methodId: input.MenuId, 
                         returnKeyValuePairs: true))
+                    .Map(ToActionResult)
                     .Bind(ExtractAggregationList)
                     .Finally(UnwrapReturnValue);
             });
@@ -349,6 +350,7 @@ namespace Origam.ServerCore.Controller
                         dataStructureQuery: dataStructureQuery,
                         methodId: input.MenuId,
                         returnKeyValuePairs: true))
+                    .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             });
         }
@@ -568,7 +570,6 @@ namespace Origam.ServerCore.Controller
                     .Finally(UnwrapReturnValue);
             });
         }
-        
         [HttpPost("[action]")]
         public IActionResult GetMenuId([FromBody]GetMenuInput input)
         {
@@ -576,6 +577,24 @@ namespace Origam.ServerCore.Controller
                 lookupId: input.LookupId, 
                 ReferenceId: input.ReferenceId))
             );
+        }
+        [HttpPost("[action]")]
+        public IActionResult GetFilterListValues(
+            [FromBody] GetFilterListValuesInput input)
+        {
+            return RunWithErrorHandler(() =>
+            {
+                return EntityIdentificationToEntityData(input)
+                    .Bind(entityData => GetFilterListValuesQuery(
+                        input, entityData))                    
+                    .Bind(dataStructureQuery => ExecuteDataReader(
+                        dataStructureQuery: dataStructureQuery,
+                        methodId: input.MenuId,
+                        returnKeyValuePairs: true))
+                    .Bind(StreamlineFilterListValues)
+                    .Map(ToActionResult)
+                    .Finally(UnwrapReturnValue);
+            });
         }
         #endregion
         
@@ -601,6 +620,18 @@ namespace Origam.ServerCore.Controller
             }
 
             return Result.Ok<IActionResult, IActionResult>(Ok(innerDictionary["aggregations"]));
+        }
+        private Result<IEnumerable<object>, IActionResult> StreamlineFilterListValues(
+            IEnumerable<object> fullReaderResult)
+        {
+            var streamlinedList = new List<object>();
+            foreach(var entry 
+                in (List<IEnumerable<KeyValuePair<string, object>>>) 
+                fullReaderResult)
+            {
+                streamlinedList.Add(entry.First().Value);
+            }
+            return Result.Ok<IEnumerable<object>, IActionResult>(streamlinedList);
         }
         private Dictionary<object, string> GetLookupLabelsInternal(
             LookupLabelsInput input)
@@ -665,7 +696,7 @@ namespace Origam.ServerCore.Controller
             }
             return null;
         }
-        private Result<IActionResult, IActionResult> ExecuteDataReader(
+        private Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
             DataStructureQuery dataStructureQuery, Guid methodId, bool returnKeyValuePairs)
         {
             Result<DataStructureMethod, IActionResult> method 
@@ -677,25 +708,24 @@ namespace Origam.ServerCore.Controller
                 {
                     var menuItem = FindItem<FormReferenceMenuItem>(methodId)
                         .Value;
-                    IEnumerable<object> result2 = LoadData(
+                    IEnumerable<object> result = LoadData(
                         menuItem,dataStructureQuery).ToList();
-                    return Result.Ok<IActionResult, IActionResult>(Ok(result2));
+                    return Result.Ok<IEnumerable<object>, IActionResult>(result);
                 }
             }
-
             if(returnKeyValuePairs)
             {
                 var linesAsPairs = dataService
                     .ExecuteDataReaderReturnPairs(dataStructureQuery)
                     .ToList();
-                return Result.Ok<IActionResult, IActionResult>(Ok(linesAsPairs));
+                return Result.Ok<IEnumerable<object>, IActionResult>(linesAsPairs);
             }
             else
             {
                 var linesAsArrays = dataService
                     .ExecuteDataReader(dataStructureQuery)
                     .ToList();
-                return Result.Ok<IActionResult, IActionResult>(Ok(linesAsArrays));
+                return Result.Ok<IEnumerable<object>, IActionResult>(linesAsArrays);
             }
         }
         private Result<FormReferenceMenuItem, IActionResult> CheckLookupIsAllowedInMenu(
@@ -896,7 +926,61 @@ namespace Origam.ServerCore.Controller
             return AddMethodAndSource(
                 input.SessionFormIdentifier, input.MasterRowId, entityData, query);
         }
-        
+        private Result<DataStructureQuery, IActionResult> GetFilterListValuesQuery(
+            GetFilterListValuesInput input, EntityData entityData)
+        {
+            var column = entityData.Entity.Column(input.Property);
+            if (column == null)
+            {
+                return Result.Failure<DataStructureQuery, IActionResult>(
+                    BadRequest($"Cannot get values for \"{input.Property}\" because the column does not exist."));
+            }
+            var field = column.Field;
+            ColumnData columnData;
+            string entity;
+            if((field is DetachedField detachedField)
+                && (detachedField.ArrayRelation != null))
+            {
+                columnData = new ColumnData(
+                    name: detachedField.ArrayValueField.Name,
+                    isVirtual: (detachedField.ArrayValueField is DetachedField),
+                    defaultValue: (detachedField.ArrayValueField 
+                        as DetachedField)
+                    ?.DefaultValue?.Value,
+                    hasRelation: (detachedField.ArrayValueField 
+                        as DetachedField) ?.ArrayRelation != null);
+                entity = detachedField.ArrayRelation.AssociatedEntity.Name;
+            }
+            else
+            {
+                columnData = new ColumnData(
+                    name: input.Property,
+                    isVirtual: (field is DetachedField),
+                    defaultValue: (field as DetachedField)
+                    ?.DefaultValue?.Value,
+                    hasRelation: (field as DetachedField)
+                    ?.ArrayRelation != null);
+                entity = entityData.Entity.Name;
+            }
+            var columns = new List<ColumnData>
+                {columnData, ColumnData.GroupByCountColumn};
+            var query = new DataStructureQuery
+            {
+                Entity = entity,
+                CustomFilters = new CustomFilters{Filters = ""},
+                CustomOrderings = new CustomOrderings(new List<Ordering>()),
+                RowLimit = 999999,
+                ColumnsInfo = new ColumnsInfo(
+                    columns: columns, 
+                    renderSqlForDetachedFields: true),
+                ForceDatabaseCalculation = true,
+                CustomGrouping = new Grouping(
+                    columnData.Name, Guid.Empty),
+                AggregatedColumns = new List<Aggregation>()
+            };
+            return AddMethodAndSource(
+                input.SessionFormIdentifier, Guid.Empty, entityData, query);
+        }
         private Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
             GetGroupsInput input, EntityData entityData)
         {
