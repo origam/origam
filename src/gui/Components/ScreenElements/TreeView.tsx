@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
-import { computed, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import S from "./TreeView.module.css";
 import cx from "classnames";
 import { isTreeDataTable, TreeDataTable } from "../../../model/entities/TreeDataTable";
@@ -17,7 +17,7 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   }
 
   @computed
-  get nodes(){
+  get nodes() {
     const nodes = this.props.dataView.dataTable.rows.map(
       (row) => new Node(this.getRowId(row), this.getLabel(row), row)
     );
@@ -121,8 +121,26 @@ class Row extends React.Component<{
     return this.props.node.level * 20 + "px";
   }
 
-  onExpandClick() {
+  @action.bound
+  toggleExpanded() {
     this.props.node.isExpanded = !this.props.node.isExpanded;
+  }
+
+  @action.bound
+  handleRowClick(event: any) {
+    if (!this.props.node?.isExpanded) {
+      this.toggleExpanded();
+    }
+    this.props.onRowClick?.();
+  }
+
+  @action.bound
+  handleCaretClick(event: any) {
+    if (this.props.node?.isExpanded) {
+      this.toggleExpanded();
+      event.stopPropagation();
+      this.props.onRowClick?.();
+    }
   }
 
   render() {
@@ -130,13 +148,13 @@ class Row extends React.Component<{
     return (
       <div
         className={S.node + " " + (this.props.isSelected ? S.nodeSelected : "")}
-        onClick={this.props.onRowClick}
+        onClick={this.handleRowClick}
       >
         <div className={S.nodeLabel} style={{ paddingLeft: this.getIndent() }}>
           {this.props.node.label}
         </div>
         {this.props.node.isFolder ? (
-          <div className={S.noSelect + " " + S.expander} onClick={() => this.onExpandClick()}>
+          <div className={S.noSelect + " " + S.expander} onClick={this.handleCaretClick}>
             <i
               className={cx({ "fas fa-caret-right": !isExpanded, "fas fa-caret-down": isExpanded })}
             />
