@@ -95,6 +95,7 @@ export class ListRowContainer implements IRowsContainer {
           rows = rows.sort((row1: any[], row2: any[]) => self.internalRowOrderingFunc(row1, row2));
         }
         self.sortedIds = rows.map(row => self.rowIdGetter(row));
+        getDataView(self).reselectOrSelectFirst();
       }
     )();
   }
