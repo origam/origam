@@ -11,6 +11,7 @@ import {
 import { IFocusable } from "../../../../model/entities/FocusManager";
 import { getLocaleFromCookie } from "../../../../utils/cookies";
 import numeral from "numeral";
+import { IProperty } from "model/entities/types/IProperty";
 @observer
 export class NumberEditor extends React.Component<{
   value: string | null;
@@ -20,6 +21,7 @@ export class NumberEditor extends React.Component<{
   isInvalid: boolean;
   invalidMessage?: string;
   isFocused: boolean;
+  property?: IProperty;
   backgroundColor?: string;
   foregroundColor?: string;
   customNumberFormat?: string | undefined;
@@ -43,7 +45,10 @@ export class NumberEditor extends React.Component<{
     if (this.props.value === null) {
       return "";
     }
-    return formatNumber(this.props.customNumberFormat, "", Number(this.props.value));
+    return formatNumber(
+      this.props.customNumberFormat,
+      this.props.property?.entity ?? '',
+      Number(this.props.value));
   }
 
   @computed get editValue() {
