@@ -144,15 +144,19 @@
 .footer button {
   @include dialogButton;
 
-  background: $blue;
+  background: $grey1;
   color: $white;
-  border: 1px solid $blue;
+  border: 1px solid $grey3;
   box-sizing: border-box;
   font-weight: 700;
   margin: 0 0.5em;
   min-width: 75px;
   padding: 0 1.5em;
   @include border-radius(3em);
+
+  background: #e9e8f0;
+  border-color: #b0afb7;
+  color: #3e3d45;
 
   &:first-of-type {
     margin-left: 0;
@@ -161,8 +165,18 @@
     margin-right: 0;
   }
   &:hover {
-    background: $grey2;
-    color: $blue;
+    background: #b0afb7;
+    color: #0d0d0d;
+  }
+  &:focus {
+    background: #4c84ff;
+    border-color: #4c84ff;
+    color: #ffffff;
+
+    &:hover {
+      background: #ffffff;
+      color: #4c84ff;
+    }
   }
 }
 

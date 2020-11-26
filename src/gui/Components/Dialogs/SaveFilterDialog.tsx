@@ -5,14 +5,13 @@ import { T } from "utils/translation";
 import CS from "gui/Components/Dialogs/DialogsCommon.module.css";
 import S from "gui/Components/Dialogs/SaveFilterDialog.module.css";
 import { observable } from "mobx";
-import {MultiGrid} from "react-virtualized";
+import { MultiGrid } from "react-virtualized";
 
 @observer
 export class SaveFilterDialog extends React.Component<{
   onCancelClick: (event: any) => void;
   onOkClick: (name: string, isGlobal: boolean) => void;
 }> {
-
   @observable
   filterName: string = "";
 
@@ -21,11 +20,11 @@ export class SaveFilterDialog extends React.Component<{
 
   refInput = React.createRef<HTMLInputElement>();
 
-  onNameChanged(event: any){
+  onNameChanged(event: any) {
     this.filterName = event.target.value;
   }
 
-  onIsGlobalClicked(event: any){
+  onIsGlobalClicked(event: any) {
     this.isGlobal = event.target.checked;
   }
 
@@ -33,8 +32,8 @@ export class SaveFilterDialog extends React.Component<{
     this.refInput.current?.focus();
   }
 
-  onKeydown(event: React.KeyboardEvent<HTMLInputElement>){
-    if(event.key === "Enter"){
+  onKeydown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
       this.props.onOkClick(this.filterName, this.isGlobal);
     }
   }
@@ -46,10 +45,14 @@ export class SaveFilterDialog extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={() => this.props.onOkClick(this.filterName, this.isGlobal)}>
+            <button
+              tabIndex={0}
+              autoFocus={true}
+              onClick={() => this.props.onOkClick(this.filterName, this.isGlobal)}
+            >
               {T("Ok", "button_ok")}
             </button>
-            <button onClick={this.props.onCancelClick}>
+            <button tabIndex={0} onClick={this.props.onCancelClick}>
               {T("Cancel", "button_cancel")}
             </button>
           </>
@@ -60,26 +63,22 @@ export class SaveFilterDialog extends React.Component<{
         <div className={CS.dialogContent}>
           <div className={S.inpuContainer}>
             <div className={S.row}>
-              <div className={S.label}>
-                {T("Name:", "new_filter_name")}
-              </div>
+              <div className={S.label}>{T("Name:", "new_filter_name")}</div>
               <input
                 ref={this.refInput}
                 className={S.textInput}
                 value={this.filterName}
-                onChange={event => this.onNameChanged(event)}
+                onChange={(event) => this.onNameChanged(event)}
                 onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => this.onKeydown(event)}
               />
             </div>
             <div className={S.row}>
-              <div className={S.label}>
-                {T("Global:", "new_filter_global")}
-              </div>
+              <div className={S.label}>{T("Global:", "new_filter_global")}</div>
               <input
                 className={S.chcekBoxinput}
                 type="checkbox"
                 checked={this.isGlobal}
-                onChange={event => this.onIsGlobalClicked(event)}
+                onChange={(event) => this.onIsGlobalClicked(event)}
               />
             </div>
           </div>

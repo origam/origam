@@ -1,4 +1,4 @@
-import {observer, Provider} from "mobx-react";
+import { observer, Provider } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
 import { ModalWindow } from "gui/Components/Dialog/Dialog";
@@ -14,7 +14,6 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
   onOkClick: (selectdFolderId: string) => void;
   favorites: FavoriteFolder[];
 }> {
-
   options: IOption<FavoriteFolder>[];
 
   @observable
@@ -24,7 +23,9 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
 
   constructor(props: any) {
     super(props);
-    this.options = this.props.favorites.map(favorite => { return {value: favorite, label: favorite.name}});
+    this.options = this.props.favorites.map((favorite) => {
+      return { value: favorite, label: favorite.name };
+    });
     this.selectedOption = this.options[0];
   }
 
@@ -38,6 +39,10 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
     }
   }
 
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+
   render() {
     return (
       <ModalWindow
@@ -45,10 +50,17 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={() => this.props.onOkClick(this.selectedOption.value.id)}>
+            <button
+              tabIndex={0}
+              autoFocus={true}
+              ref={this.refPrimaryBtn}
+              onClick={() => this.props.onOkClick(this.selectedOption.value.id)}
+            >
               {T("Ok", "button_ok")}
             </button>
-            <button onClick={this.props.onCancelClick}>{T("Cancel", "button_cancel")}</button>
+            <button tabIndex={0} onClick={this.props.onCancelClick}>
+              {T("Cancel", "button_cancel")}
+            </button>
           </>
         }
         buttonsLeft={null}
@@ -58,12 +70,12 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
           <div className={S.inpuContainer}>
             <div className={S.row}>
               <div className={S.label}>{T("Name:", "group_name")}</div>
-                <SimpleDropdown
-                  width={"150px"}
-                  options={this.options}
-                  selectedOption={this.selectedOption}
-                  onOptionClick={option => this.selectedOption = option}
-                />
+              <SimpleDropdown
+                width={"150px"}
+                options={this.options}
+                selectedOption={this.selectedOption}
+                onOptionClick={(option) => (this.selectedOption = option)}
+              />
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { ModalWindow } from "../Dialog/Dialog";
 import CS from "./DialogsCommon.module.css";
-import {T} from "../../../utils/translation";
+import { T } from "../../../utils/translation";
 
 @observer
 export class ChangeMasterRecordDialog extends React.Component<{
@@ -11,22 +11,49 @@ export class ChangeMasterRecordDialog extends React.Component<{
   onDontSaveClick?: (event: any) => void;
   onCancelClick?: (event: any) => void;
 }> {
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.elmPrimaryBtn) {
+        this.elmPrimaryBtn.focus?.();
+      }
+    }, 159);
+  }
+
   render() {
     return (
       <ModalWindow
-        title={T("Question","question_title")}
+        title={T("Question", "question_title")}
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={this.props.onSaveClick}>{T("Yes","button_yes")}</button>
-            <button onClick={this.props.onDontSaveClick}>{T("No","button_no")}</button>
-            <button onClick={this.props.onCancelClick}>{T("Cancel","button_cancel")}</button>
+            <button
+              tabIndex={0}
+              autoFocus={true}
+              ref={this.refPrimaryBtn}
+              onClick={this.props.onSaveClick}
+            >
+              {T("Yes", "button_yes")}
+            </button>
+            <button tabIndex={0} onClick={this.props.onDontSaveClick}>
+              {T("No", "button_no")}
+            </button>
+            <button tabIndex={0} onClick={this.props.onCancelClick}>
+              {T("Cancel", "button_cancel")}
+            </button>
           </>
         }
         buttonsLeft={null}
         buttonsRight={null}
       >
-        <div className={CS.dialogContent}> {T("Record has been changed. Do you want to save the changes?","record_changed_info").split("\\n").join("\n")}</div>
+        <div className={CS.dialogContent}>
+          {" "}
+          {T("Record has been changed. Do you want to save the changes?", "record_changed_info")
+            .split("\\n")
+            .join("\n")}
+        </div>
       </ModalWindow>
     );
   }

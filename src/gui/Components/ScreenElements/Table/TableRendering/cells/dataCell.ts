@@ -178,6 +178,8 @@ function getCheckboxClickableArea() {
 export function drawDataCellBackground() {
   const ctx2d = context2d();
   const ctx = context();
+  const selectedRowId = getSelectedRowId(tablePanelView());
+  const isRowCursor = recordId() === selectedRowId;
 
   const thisCellRectangle = {
     columnLeft: currentColumnLeft(),
@@ -186,7 +188,7 @@ export function drawDataCellBackground() {
     rowHeight: currentRowHeight(),
   };
   getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
-  if(drawingColumnIndex() === 0){
+  if (drawingColumnIndex() === 0) {
     getTablePanelView(ctx).firstColumn = currentProperty();
   }
   ctx2d.fillStyle = getUnderLineColor();
@@ -199,6 +201,22 @@ export function drawDataCellBackground() {
     CPR() * currentColumnWidth(),
     CPR() * currentRowHeight()
   );
+  if (isRowCursor) {
+    ctx2d.beginPath();
+    ctx2d.strokeStyle = "#4C84FF";
+    ctx2d.lineWidth = 1 * CPR();
+    ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
+    ctx2d.lineTo(
+      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+      CPR() * (currentRowTop() + 1.5)
+    );
+    ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
+    ctx2d.lineTo(
+      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+      CPR() * (currentRowTop() + currentRowHeight() - 1.5)
+    );
+    ctx2d.stroke();
+  }
 }
 
 function drawCellValue() {
@@ -353,9 +371,9 @@ function getBackGroundColor() {
     return "#eeeeff";
     //} else if(cell.isColumnOrderChangeTarget){
   } else if (isCellCursor) {
-    return "#eaf0f9";
+    return "#EDF2FF";
   } else if (isRowCursor) {
-    return "#ebf3ff";
+    return "#EDF2FF";
   } else {
     if (backgroundColor) {
       return backgroundColor;

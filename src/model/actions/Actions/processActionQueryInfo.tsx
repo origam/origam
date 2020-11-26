@@ -1,8 +1,8 @@
 import React from "react";
-import {action} from "mobx";
-import {getDialogStack} from "model/selectors/DialogStack/getDialogStack";
-import {ModalWindow} from "gui/Components/Dialog/Dialog";
-import {T} from "utils/translation";
+import { action } from "mobx";
+import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
+import { ModalWindow } from "gui/Components/Dialog/Dialog";
+import { T } from "utils/translation";
 import S from "./processActionQueryResult.module.scss";
 
 export interface IQueryInfo {
@@ -31,28 +31,31 @@ export function processActionQueryInfo(ctx: any) {
           const closeDialog = getDialogStack(ctx).pushDialog(
             "",
             <ModalWindow
-              title={T("Action Error","question_title")}
+              title={T("Action Error", "question_title")}
               titleButtons={null}
               buttonsCenter={
                 <>
                   <button
+                    tabIndex={0}
                     onClick={() => {
                       canContinue = false;
                       closeDialog();
                       resolve();
                     }}
                   >
-                      {T("Cancel", "button_cancel")}
+                    {T("Cancel", "button_cancel")}
                   </button>
                   {canContinue && (
                     <button
+                      tabIndex={0}
+                      autoFocus={true}
                       onClick={() => {
                         canContinue = true;
                         closeDialog();
                         resolve();
                       }}
                     >
-                        {T("Continue", "button_continue")}
+                      {T("Continue", "button_continue")}
                     </button>
                   )}
                 </>
@@ -61,15 +64,15 @@ export function processActionQueryInfo(ctx: any) {
               buttonsRight={null}
             >
               <div className={S.dialogContent}>
-                  {T("There has been a problem:",
-                      "there_has_been_a_problem")}
+                {T("There has been a problem:", "there_has_been_a_problem")}
                 <ul>
                   {queryInfo.map((item, idx) => (
                     <li key={idx}>{item.message}</li>
                   ))}
                 </ul>
-                {canContinue && <>{T("Do you wish to continue anyway?",
-                    "do_you_wish_to_continue")}</>}
+                {canContinue && (
+                  <>{T("Do you wish to continue anyway?", "do_you_wish_to_continue")}</>
+                )}
               </div>
             </ModalWindow>
           );
@@ -79,4 +82,3 @@ export function processActionQueryInfo(ctx: any) {
     return { canContinue };
   };
 }
-
