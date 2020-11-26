@@ -1,20 +1,19 @@
-import {IGridDimensions} from "../../../Components/ScreenElements/Table/types";
-import {SimpleScrollState} from "../../../Components/ScreenElements/Table/SimpleScrollState";
+import {IGridDimensions} from "gui/Components/ScreenElements/Table/types";
+import {SimpleScrollState} from "gui/Components/ScreenElements/Table/SimpleScrollState";
 import {action, autorun, computed, flow, IReactionDisposer, reaction} from "mobx";
-import {getApi} from "../../../../model/selectors/getApi";
-import {getFormScreenLifecycle} from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
-import {getMenuItemId} from "../../../../model/selectors/getMenuItemId";
-import {getSessionId} from "../../../../model/selectors/getSessionId";
-import {getDataStructureEntityId} from "../../../../model/selectors/DataView/getDataStructureEntityId";
-import {getColumnNamesToLoad} from "../../../../model/selectors/DataView/getColumnNamesToLoad";
-import {joinWithAND} from "../../../../model/entities/OrigamApiHelpers";
-import {getUserFilters} from "../../../../model/selectors/DataView/getUserFilters";
-import {getUserOrdering} from "../../../../model/selectors/DataView/getUserOrdering";
+import {getApi} from "model/selectors/getApi";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getMenuItemId} from "model/selectors/getMenuItemId";
+import {getSessionId} from "model/selectors/getSessionId";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getColumnNamesToLoad} from "model/selectors/DataView/getColumnNamesToLoad";
+import {joinWithAND} from "model/entities/OrigamApiHelpers";
+import {getUserFilters} from "model/selectors/DataView/getUserFilters";
+import {getUserOrdering} from "model/selectors/DataView/getUserOrdering";
 import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMonitor";
-import {ScrollRowContainer} from "../../../../model/entities/ScrollRowContainer";
+import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
 import { IProperty } from "model/entities/types/IProperty";
-import {IDataTable} from "model/entities/types/IDataTable";
 
 
 export interface IInfiniteScrollLoaderData {
@@ -234,23 +233,16 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
   async getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
     const api = getApi(this.ctx);
-    const groups = await api.getGroups({
+    const listValues = await api.getFilterListValues({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(this.ctx),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
-      Filter: undefined,
-      Ordering: [],
-      RowLimit: 999999,
-      GroupBy: property.id,
-      GroupByLookupId: undefined,
-      MasterRowId: undefined,
-      AggregatedColumns: [],
+      Property: property.id
     });
-
     return new Set(
-      groups
-        .map(group => group[property.id])
-        .filter(group => group)
+      listValues
+        .map(listValue => listValue)
+        .filter(listValue => listValue)
       );
   }
 }
