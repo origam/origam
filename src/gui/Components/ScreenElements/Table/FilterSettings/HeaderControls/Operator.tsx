@@ -2,7 +2,7 @@ import React from "react";
 import { T } from "utils/translation";
 
 export class Operator {
-  static opertors: Operator[]=[]
+  static operators: Operator[]=[]
 
   private captionGetter:  ()=>JSX.Element;
   private _caption: JSX.Element | undefined;
@@ -20,7 +20,7 @@ export class Operator {
     captionGetter: () => JSX.Element)
   {
     this.captionGetter = captionGetter;
-    Operator.opertors.push(this);
+    Operator.operators.push(this);
   }
 
   static equals = new Operator("eq", 1, ()=> <>=</> )
@@ -44,7 +44,7 @@ export class Operator {
   static notIn = new Operator("nin", 10, ()=> <>&ne;</>)
 
   static fromNumber(operatorNumber: number){
-    const operator = Operator.opertors.find(operator => operator.numberValue === operatorNumber);
+    const operator = Operator.operators.find(operator => operator.numberValue === operatorNumber);
     if(!operator){
       throw new Error("Cannot find string value for filter operator number: "+operatorNumber);
     }
