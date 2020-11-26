@@ -232,6 +232,10 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.get(`/UIService/RefreshData/${sessionFormIdentifier}`)).data;
   }
 
+  async revertChanges(data: {sessionFormIdentifier: string}) {
+    await this.axiosInstance.post("/UIService/RevertChanges", data);
+  }
+
   async sessionChangeMasterRecord(data: {
     SessionFormIdentifier: string;
     Entity: string;

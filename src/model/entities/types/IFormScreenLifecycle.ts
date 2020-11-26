@@ -24,7 +24,7 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
     selectedItems: string[]
   ): Promise<any>;
 
-  onRequestScreenClose(): void;
+  onRequestScreenClose(isDueToError?: boolean): void;
 
   start(): void;
   parent?: any;
@@ -54,7 +54,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
     selectedItems: string[]
   ): Generator;
 
-  onRequestScreenClose(): Generator;
+  onRequestScreenClose(isDueToError?: boolean): Generator;
 
   clearAutorefreshInterval(): void;
 

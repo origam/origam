@@ -24,8 +24,10 @@ export class Favorites {
 
   public setXml(xml: string) {
     const foldersFromXml = this.xmlConverter.xmlToFolders(xml);
-    if(foldersFromXml.length === 0){
-      foldersFromXml.push(new FavoriteFolder(uuidv4(), T("Favorites", "default_group"), true, [], false));
+    if (foldersFromXml.length === 0) {
+      foldersFromXml.push(
+        new FavoriteFolder(uuidv4(), T("Favorites", "default_group"), true, [], false)
+      );
     }
     this.favoriteFolders = foldersFromXml;
   }
@@ -43,7 +45,7 @@ export class Favorites {
   private async saveFavorites() {
     const api = getApi(this);
     const xmlFavorites = this.xmlConverter.favoriteIdsToXml(this.favoriteFolders);
-    await api.saveFavorites({ConfigXml: xmlFavorites});
+    await api.saveFavorites({ ConfigXml: xmlFavorites });
   }
 
   public async createFolder(name: string, isPinned: boolean) {
@@ -84,18 +86,18 @@ export class Favorites {
 
 class XmlToFavoritesConverter {
   public xmlToFolders(xml: string): FavoriteFolder[] {
-    return !xml
-      ? []
-      : xmlJs
-        .xml2js(xml)
-        .elements[0].elements
-        .map((folderXml: any, i: number) => this.parseToFavoriteFolder(folderXml, i === 0));
+    if (!xml) return [];
+    const parsedXml = xmlJs.xml2js(xml);
+    if (!parsedXml?.elements?.[0]?.elements) return [];
+    return parsedXml.elements[0].elements.map((folderXml: any, i: number) =>
+      this.parseToFavoriteFolder(folderXml, i === 0)
+    );
   }
 
   private parseToFavoriteFolder(folderXml: any, isDefault: boolean) {
     const label = folderXml.attributes["label"];
     const id = folderXml.attributes["id"] ?? label;
-    const isPinned = folderXml.attributes["isPinned"] === 'true';
+    const isPinned = folderXml.attributes["isPinned"] === "true";
     const itemIds =
       folderXml.elements
         ?.map((item: xmlJs.Element) => item.attributes?.["menuId"])

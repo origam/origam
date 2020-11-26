@@ -5,6 +5,7 @@ import {getDataView} from "../../../../model/selectors/DataView/getDataView";
 import {rangeQuery} from "../../../../utils/arrays";
 import {IDataTable} from "../../../../model/entities/types/IDataTable";
 import {getDataTable} from "../../../../model/selectors/DataView/getDataTable";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 
 export interface IVisibleRowsMonitor {
@@ -65,7 +66,7 @@ export class OpenGroupVisibleRowsMonitor implements IVisibleRowsMonitor{
 
   @computed
   get firstIndex() {
-    const expandedGroupIndex = this.dataTable.groups
+    const expandedGroupIndex = getGrouper(this.ctx).topLevelGroups
       .findIndex(group => group.isExpanded);
     return expandedGroupIndex > this.visibleRowsAll.firstIndex
       ? 0
@@ -74,7 +75,7 @@ export class OpenGroupVisibleRowsMonitor implements IVisibleRowsMonitor{
 
   @computed
   get lastIndex() {
-    const expandedGroupIndex = this.dataTable.groups
+    const expandedGroupIndex = getGrouper(this.ctx).topLevelGroups
       .findIndex(group => group.isExpanded);
     return this.visibleRowsAll.lastIndex - expandedGroupIndex;
   }

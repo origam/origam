@@ -7,7 +7,7 @@ import { handleError } from "model/actions/handleError";
 const closingScreens = new WeakSet<any>();
 
 export function onScreenTabCloseClick(ctx: any) {
-  return flow(function* onFormTabCloseClick(event: any) {
+  return flow(function* onFormTabCloseClick(event: any, isDueToError?: boolean) {
     try {
       event?.stopPropagation?.();
       // TODO: Wait for other async operation to finish?
@@ -17,7 +17,7 @@ export function onScreenTabCloseClick(ctx: any) {
       // TODO: Better lifecycle handling
       if (openedScreen.content && !openedScreen.content.isLoading) {
         const lifecycle = getFormScreenLifecycle(openedScreen.content.formScreen!);
-        yield* lifecycle.onRequestScreenClose();
+        yield* lifecycle.onRequestScreenClose(isDueToError);
       } else {
         yield* closeForm(ctx)();
       }

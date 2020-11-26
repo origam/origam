@@ -56,10 +56,6 @@ export class DataTable implements IDataTable {
     return this.rowsContainer.loadedRowsCount;
   }
 
-  @computed get groups(): IGroupTreeNode[] {
-    return getGrouper(this).topLevelGroups;
-  }
-
   @computed get rows(): any[][] {
     return this.rowsContainer.rows.filter((row) => !this.isRowDirtyDeleted(row));
   }
@@ -80,8 +76,9 @@ export class DataTable implements IDataTable {
   }
 
   @computed get maxRowCountSeen() {
-    if (this.groups.length > 0) {
-      return this.groups.map((group) => group.rowCount).reduce((x, y) => x + y);
+    const groups = getGrouper(this).topLevelGroups;
+    if (groups.length > 0) {
+      return groups.map((group) => group.rowCount).reduce((x, y) => x + y);
     } else {
       return this.rowsContainer.maxRowCountSeen;
     }

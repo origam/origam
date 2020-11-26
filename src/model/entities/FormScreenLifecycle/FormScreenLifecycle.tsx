@@ -152,11 +152,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *onRequestScreenClose(): Generator<unknown, any, unknown> {
+  *onRequestScreenClose(isDueToError?: boolean): Generator<unknown, any, unknown> {
     const formScreen = getFormScreen(this);
     // Just wait if there is some data manipulation in progress.
     yield formScreen.dataUpdateCRS.runAsync(() => Promise.resolve());
-    if (!getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
+    if (isDueToError || !getIsFormScreenDirty(this) || getIsSuppressSave(this)) {
       yield* this.closeForm();
       return;
     }
@@ -187,9 +187,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.refreshSession();
         return;
       case IQuestionSaveDataAnswer.NoSave:
+        yield* this.revertChanges();
         yield* this.refreshSession();
         return;
     }
+  }
+  *revertChanges(): Generator<unknown, any, unknown> {
+    const api = getApi(this);
+    yield api.revertChanges({sessionFormIdentifier: getSessionId(this)});
   }
 
   *onWorkflowNextClick(event: any): Generator {
