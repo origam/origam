@@ -11,6 +11,17 @@ export class ChangeMasterRecordDialog extends React.Component<{
   onDontSaveClick?: (event: any) => void;
   onCancelClick?: (event: any) => void;
 }> {
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.elmPrimaryBtn) {
+        this.elmPrimaryBtn.focus?.();
+      }
+    }, 159);
+  }
+
   render() {
     return (
       <ModalWindow
@@ -18,7 +29,12 @@ export class ChangeMasterRecordDialog extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button tabIndex={0} autoFocus={true} onClick={this.props.onSaveClick}>
+            <button
+              tabIndex={0}
+              autoFocus={true}
+              ref={this.refPrimaryBtn}
+              onClick={this.props.onSaveClick}
+            >
               {T("Yes", "button_yes")}
             </button>
             <button tabIndex={0} onClick={this.props.onDontSaveClick}>

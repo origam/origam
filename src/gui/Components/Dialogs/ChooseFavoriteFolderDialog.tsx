@@ -39,6 +39,10 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
     }
   }
 
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+
   render() {
     return (
       <ModalWindow
@@ -49,6 +53,7 @@ export class ChooseFavoriteFolderDialog extends React.Component<{
             <button
               tabIndex={0}
               autoFocus={true}
+              ref={this.refPrimaryBtn}
               onClick={() => this.props.onOkClick(this.selectedOption.value.id)}
             >
               {T("Ok", "button_ok")}

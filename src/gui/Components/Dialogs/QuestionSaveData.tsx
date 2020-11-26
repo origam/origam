@@ -11,6 +11,17 @@ export class QuestionSaveData extends React.Component<{
   onDontSaveClick?: (event: any) => void;
   onCancelClick?: (event: any) => void;
 }> {
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.elmPrimaryBtn) {
+        this.elmPrimaryBtn.focus?.();
+      }
+    }, 150);
+  }
+
   render() {
     return (
       <ModalWindow
@@ -18,7 +29,12 @@ export class QuestionSaveData extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button autoFocus={true} tabIndex={0} onClick={this.props.onSaveClick}>
+            <button
+              autoFocus={true}
+              tabIndex={0}
+              ref={this.refPrimaryBtn}
+              onClick={this.props.onSaveClick}
+            >
               {T("Save", "save")}
             </button>
             <button tabIndex={0} onClick={this.props.onDontSaveClick}>

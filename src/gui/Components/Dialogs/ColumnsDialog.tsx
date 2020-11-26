@@ -99,7 +99,6 @@ export class ColumnsDialog extends React.Component<{
           <>
             <button
               tabIndex={0}
-              autoFocus={true}
               onClick={(event: any) =>
                 this.props.onOkClick && this.props.onOkClick(event, this.configuration)
               }

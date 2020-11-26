@@ -59,7 +59,7 @@ export class FavoriteFolderPropertiesDialog extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button tabIndex={0} autoFocus={true} onClick={() => this.onOkClick()}>
+            <button tabIndex={0} onClick={() => this.onOkClick()}>
               {T("Ok", "button_ok")}
             </button>
             <button tabIndex={0} onClick={this.props.onCancelClick}>{T("Cancel", "button_cancel")}</button>

@@ -4,7 +4,7 @@ import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScr
 import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 import { getDialogStack } from "model/selectors/getDialogStack";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
 import S from "./ScreenArea.module.scss";
@@ -71,6 +71,8 @@ export const DialogScreen: React.FC<{
     );
   }
 
+  const refPrimaryBtn = useRef<any>();
+
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
       key,
@@ -105,7 +107,6 @@ export const DialogScreen: React.FC<{
                         .map((action, idx) => (
                           <button
                             tabIndex={0}
-                            autoFocus={action.isDefault}
                             key={action.id}
                             onClick={(event: any) => {
                               onSelectionDialogActionButtonClick(action)(event, action);

@@ -8,6 +8,17 @@ export class CannotChangeRowDialog extends React.Component<{
   onCloseClick?: (event: any) => void;
   onOkClick?: (event: any) => void;
 }> {
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.elmPrimaryBtn) {
+        this.elmPrimaryBtn.focus?.();
+      }
+    }, 159);
+  }
+
   render() {
     return (
       <ModalWindow
@@ -15,7 +26,12 @@ export class CannotChangeRowDialog extends React.Component<{
         titleButtons={<CloseButton onClick={this.props.onCloseClick} />}
         buttonsCenter={
           <>
-            <button tabIndex={0} autoFocus={true} onClick={this.props.onOkClick}>
+            <button
+              tabIndex={0}
+              autoFocus={true}
+              ref={this.refPrimaryBtn}
+              onClick={this.props.onOkClick}
+            >
               OK
             </button>
           </>

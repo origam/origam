@@ -10,6 +10,18 @@ export class QuestionDeleteData extends React.Component<{
   onNoClick?: (event: any) => void;
   onYesClick?: (event: any) => void;
 }> {
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.elmPrimaryBtn) {
+        this.elmPrimaryBtn.focus?.();
+      }
+    }, 150);
+  }
+
+
   render() {
     return (
       <ModalWindow
@@ -17,7 +29,12 @@ export class QuestionDeleteData extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button tabIndex={0} autoFocus={true} onClick={this.props.onYesClick}>
+            <button
+              ref={this.refPrimaryBtn}
+              tabIndex={0}
+              autoFocus={true}
+              onClick={this.props.onYesClick}
+            >
               {T("Yes", "button_yes")}
             </button>
             <button tabIndex={0} onClick={this.props.onNoClick}>

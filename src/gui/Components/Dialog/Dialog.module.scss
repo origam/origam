@@ -154,9 +154,9 @@
   padding: 0 1.5em;
   @include border-radius(3em);
 
-  background: #E9E8F0;
-  border-color: #B0AFB7;
-  color: #3E3D45;
+  background: #e9e8f0;
+  border-color: #b0afb7;
+  color: #3e3d45;
 
   &:first-of-type {
     margin-left: 0;
@@ -165,17 +165,18 @@
     margin-right: 0;
   }
   &:hover {
-    background: #B0AFB7;
-    color: #0D0D0D;
+    background: #b0afb7;
+    color: #0d0d0d;
   }
   &:focus {
-    background: #4C84FF;
-    border-color: #4C84FF;
-    color: #FFFFFF;
-  }
-  &:focus:hover {
-    background: #FFFFFF;
-    color: #4C84FF;
+    background: #4c84ff;
+    border-color: #4c84ff;
+    color: #ffffff;
+
+    &:hover {
+      background: #ffffff;
+      color: #4c84ff;
+    }
   }
 }
 
