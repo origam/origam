@@ -1,5 +1,8 @@
 .root {
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
   height: 30px;
+  flex: 0 0 30px;
+  border-bottom: 2px solid white;
 }
