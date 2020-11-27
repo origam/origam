@@ -51,6 +51,7 @@ namespace Origam.DA.Service
                         : falseValue;
 
                 case OrigamDataType.UniqueIdentifier:
+                case OrigamDataType.Array:
                     return "'" + value + "'";
 
                 case OrigamDataType.Xml:

@@ -389,7 +389,9 @@ namespace Origam.DA.Service.Generators
                 return renderer.BinaryOperator(
                     leftValue: RenderedColumnName, 
                     rightValues: rightHandValues, 
-                    operatorName: operatorName);
+                    operatorName: operatorName,
+                    isColumnArray: columnNameToType[ColumnName] 
+                                   == OrigamDataType.Array);
             }
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");

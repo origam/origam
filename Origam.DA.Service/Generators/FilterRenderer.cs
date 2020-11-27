@@ -59,7 +59,8 @@ namespace Origam.DA.Service
         }
         
         public string BinaryOperator(string leftValue,
-            string[] rightValues, string operatorName)
+            string[] rightValues, string operatorName,
+            bool isColumnArray)
         {
             switch (operatorName)
             {
@@ -70,9 +71,23 @@ namespace Origam.DA.Service
                     CheckArgumentLength("NotBetween", rightValues, 2);
                     return $"{leftValue} NOT BETWEEN {rightValues[0]} AND {rightValues[1]}";                
                 case "In":
-                    return leftValue+" IN (" + string.Join(", ",rightValues) + ")";                
+                    if (isColumnArray)
+                    {
+                        return "<" + leftValue + " IN (" + string.Join(", ", rightValues) + ")>";                
+                    }
+                    else
+                    {
+                        return leftValue + " IN (" + string.Join(", ", rightValues) + ")";                
+                    }
                 case "NotIn":
-                    return leftValue+" NOT IN (" + string.Join(", ",rightValues) + ")";
+                    if(isColumnArray)
+                    {
+                        return "<" + leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")>";
+                    }
+                    else
+                    {
+                        return leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")";
+                    }
                 default:
                     if (rightValues.Length == 1)
                     {
@@ -98,20 +113,6 @@ namespace Origam.DA.Service
                         leftValue, GetOperator(operatorName), rightValue);
             }
         }
-        //
-        // public string BinaryOperator(string leftValue,
-        //     string rightValue1,string rightValue2, string operatorName)
-        // {
-        //     switch (operatorName)
-        //     {
-        //         case "Between":
-        //             return $"{leftValue} BETWEEN {rightValue1} AND {rightValue2}";
-        //         case "NotBetween":
-        //             return $"{leftValue} NOT BETWEEN {rightValue1} AND {rightValue2}";
-        //         default:
-        //             throw new NotImplementedException();
-        //     }
-        // }
 
         public string NotEqual(string leftValue, string rightValue)
         {
