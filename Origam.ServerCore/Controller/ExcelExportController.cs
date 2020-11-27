@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Origam.ServerCore.Controller
                 {
                     Entity = input.Entity,
                     Fields = input.Fields,
-                    RowIds = input.RowIds.Cast<object>().ToList(),
+                    RowIds = new List<object>(), //input.RowIds.Cast<object>().ToList(),
                     SessionFormIdentifier = input.SessionFormIdentifier,
                     Store = sessionObjects.SessionManager
                         .GetSession(new Guid(input.SessionFormIdentifier))
