@@ -2087,5 +2087,9 @@ namespace Origam.Server
 
             return result;
         }
+        public virtual void RevertChanges()
+        {
+            throw new Exception("RevertChanges not available for " + GetType().Name);
+        }
     }
 }

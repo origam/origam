@@ -1204,5 +1204,12 @@ namespace Origam.ServerCore
             doc.LoadXml("<div class=\"logo-left\"><img src=\"./img/logo-left.png\"/></div>");
             return doc;
         }
+
+        public void RevertChanges(RevertChangesInput input)
+        {
+            sessionManager
+                .GetSession(input.SessionFormIdentifier)
+                .RevertChanges();
+        }
     }
 }

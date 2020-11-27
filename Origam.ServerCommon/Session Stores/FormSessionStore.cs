@@ -387,6 +387,14 @@ namespace Origam.ServerCommon
 
             return result;
         }
+        
+        public override void RevertChanges()
+        {
+            lock (_getRowDataLock)
+            {
+                Data.RejectChanges();
+            }
+        }
 
         public override ArrayList GetData(string childEntity, object parentRecordId, object rootRecordId)
         {
