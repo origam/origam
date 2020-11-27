@@ -388,7 +388,7 @@ export interface IApi {
   getExcelFileUrl(data: {
     Entity: string;
     Fields: IEntityExportField[];
-    RowIds: string[];
+    Filters: string;
     SessionFormIdentifier: string;}): Promise<string>;
 }
 

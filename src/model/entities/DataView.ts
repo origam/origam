@@ -51,6 +51,7 @@ import { getApi } from "model/selectors/getApi";
 import {getSessionId} from "model/selectors/getSessionId";
 import {IPolymorphRules} from "model/entities/types/IApi";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
+import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -616,7 +617,7 @@ export class DataView implements IDataView {
       Entity: this.entity,
       Fields: fields,
       SessionFormIdentifier: getSessionId(this),
-      RowIds: this.dataTable.rows.map(row => this.dataTable.getRowId(row))
+      Filters: getUserFilters(this)
     });
     window.open(url);
   }
