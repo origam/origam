@@ -1,12 +1,12 @@
 import bind from "bind-decorator";
-import {ModalWindow} from "gui/Components/Dialog/Dialog";
+import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import _ from "lodash";
-import {action, computed, observable} from "mobx";
-import {observer, Observer} from "mobx-react";
-import {getDialogStack} from "model/selectors/getDialogStack";
+import { action, computed, observable } from "mobx";
+import { observer, Observer } from "mobx-react";
+import { getDialogStack } from "model/selectors/getDialogStack";
 import React from "react";
 import CS from "./ErrorDialog.module.scss";
-import moment, {Moment} from "moment";
+import moment, { Moment } from "moment";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -34,36 +34,36 @@ export class ErrorDialogController {
   @observable isDialogDisplayed = false;
 
   @computed get errorMessages() {
-    return this.errorStack.map(errItem => {
+    return this.errorStack.map((errItem) => {
       console.log(errItem.error, "response.");
 
       const handlePlainText = () =>
         _.get(errItem.error, "response.headers.content-type", "").startsWith("text/plain") &&
         errItem.error.response.data;
 
-      const handleMessageField = () =>{
-        if(!errItem.error.response?.data){return ""}
-        let exception = errItem.error.response.data;  
+      const handleMessageField = () => {
+        if (!errItem.error.response?.data) {
+          return "";
+        }
+        let exception = errItem.error.response.data;
         let message = "";
         do {
-          const exMessage = _.get(exception, "message") ||
-                            _.get(exception, "Message");
-          if(exMessage){
+          const exMessage = _.get(exception, "message") || _.get(exception, "Message");
+          if (exMessage) {
             message += exMessage;
             message += "\n\n";
           }
           exception = exception.InnerException;
-        }
-        while(exception)
+        } while (exception);
         return message;
-      }
+      };
 
       const handleRuntimeException = () => "" + errItem.error;
 
       const handleLoginValidation = () =>
         [
           ..._.get(errItem.error, "response.data.UserName", []),
-          ..._.get(errItem.error, "response.data.Password", [])
+          ..._.get(errItem.error, "response.data.Password", []),
         ].join(" ");
 
       const errorMessage =
@@ -75,13 +75,10 @@ export class ErrorDialogController {
       return {
         message: errorMessage,
         id: errItem.id,
-        timestamp: errItem.timestamp.format("YYYY-MM-DD HH:mm:ss")
+        timestamp: errItem.timestamp.format("YYYY-MM-DD HH:mm:ss"),
       };
     });
   }
-
-
-
 
   idGen = 0;
   @bind
@@ -118,7 +115,7 @@ export class ErrorDialogController {
 
   @action.bound
   dismissError(id: number) {
-    const errItemIndex = this.errorStack.findIndex(item => item.id === id);
+    const errItemIndex = this.errorStack.findIndex((item) => item.id === id);
     if (errItemIndex > -1) {
       const errItem = this.errorStack[errItemIndex];
       errItem.promise.resolve(null);
@@ -166,7 +163,9 @@ export class ErrorDialogComponent extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={this.props.onOkClick}>OK</button>
+            <button tabIndex={0} autoFocus={true} onClick={this.props.onOkClick}>
+              OK
+            </button>
           </>
         }
         buttonsLeft={null}
@@ -177,7 +176,7 @@ export class ErrorDialogComponent extends React.Component<{
             this.props.errorMessages[0].message
           ) : (
             <div className={CS.errorMessageList}>
-              {this.props.errorMessages.map(errMessage => (
+              {this.props.errorMessages.map((errMessage) => (
                 <div key={errMessage.id} className={CS.errorMessageListItem}>
                   <span className={CS.errorMessageDatetime}>{errMessage.timestamp}</span>
                   {errMessage.message}

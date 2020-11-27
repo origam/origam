@@ -23,11 +23,16 @@ export interface IGroupItemData{
   grouper: IGrouper;
 }
 
-export class ClientSideGroupItem implements IGroupTreeNode {
-  constructor(data: IGroupItemData) {
+export interface IClientSideGroupItemData extends IGroupItemData{
+  expansionListener: (item: ClientSideGroupItem) => void;
+}
+
+export class ClientSideGroupItem implements IClientSideGroupItemData {
+  constructor(data: IClientSideGroupItemData) {
     Object.assign(this, data);
   }
   isInfinitelyScrolled = false;
+  expansionListener: (item: ClientSideGroupItem) => void = null as any;
   @observable childGroups: IGroupTreeNode[] = null as any;
   @observable _childRows: any[][] = null as any;
   columnId: string = null as any;
@@ -38,9 +43,18 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
-  
-  @observable isExpanded = false;
-  
+
+  @observable
+  private _isExpanded = false;
+
+  public get isExpanded() {
+    return this._isExpanded;
+  }
+  public set isExpanded(value) {
+    this._isExpanded = value;
+    this.expansionListener(this);
+  }
+
   get allChildGroups(): IGroupTreeNode[]{
     return allChildGroups(this);
   }
@@ -52,11 +66,11 @@ export class ClientSideGroupItem implements IGroupTreeNode {
   getRowIndex(rowId: string): number | undefined {
     return this._childRows.findIndex(row => getDataTable(this.grouper).getRowId(row) === rowId);
   }
-  
+
   getRowById(id: string): any[] | undefined{
     return this._childRows.find(row => getDataTable(this.grouper).getRowId(row) === id);
   }
-  
+
   @computed get childRows(){
     const orderingConfiguration = getOrderingConfiguration(this.grouper);
     
@@ -118,7 +132,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
   }
-  
+
   getRowIndex(rowId: string): number | undefined {
     return this.childRows.findIndex(row => getDataTable(this.grouper).getRowId(row) === rowId);
   }

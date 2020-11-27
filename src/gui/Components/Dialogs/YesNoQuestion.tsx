@@ -11,6 +11,17 @@ export class YesNoQuestion extends React.Component<{
   onYesClick?: (event: any) => void;
   onNoClick?: (event: any) => void;
 }> {
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.elmPrimaryBtn) {
+        this.elmPrimaryBtn.focus?.();
+      }
+    }, 150);
+  }
+
   render() {
     return (
       <ModalWindow
@@ -18,16 +29,23 @@ export class YesNoQuestion extends React.Component<{
         titleButtons={null}
         buttonsCenter={
           <>
-            <button onClick={this.props.onYesClick}>{T("Yes", "button_yes")}</button>
-            <button onClick={this.props.onNoClick}>{T("No", "button_no")}</button>
+            <button
+              tabIndex={0}
+              autoFocus={true}
+              ref={this.refPrimaryBtn}
+              onClick={this.props.onYesClick}
+            >
+              {T("Yes", "button_yes")}
+            </button>
+            <button tabIndex={0} onClick={this.props.onNoClick}>
+              {T("No", "button_no")}
+            </button>
           </>
         }
         buttonsLeft={null}
         buttonsRight={null}
       >
-        <div className={CS.dialogContent}>
-          {this.props.message}
-        </div>
+        <div className={CS.dialogContent}>{this.props.message}</div>
       </ModalWindow>
     );
   }

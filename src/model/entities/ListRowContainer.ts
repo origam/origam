@@ -7,6 +7,7 @@ import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPrope
 import {getDataView} from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { IProperty } from "./types/IProperty";
+import _ from "lodash";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
@@ -47,7 +48,7 @@ export class ListRowContainer implements IRowsContainer {
           filter.setting.type,
         ]),
         this.orderingConfiguration.orderings],
-      () => this.updateSortAndFilter(),
+      () => this.updateSortAndFilterDebounced(),
     );
     await this.updateSortAndFilter();
   }
@@ -78,6 +79,8 @@ export class ListRowContainer implements IRowsContainer {
     );
   }
 
+  updateSortAndFilterDebounced = _.debounce(this.updateSortAndFilter, 10);
+
   @action
   async updateSortAndFilter() {
     const self = this;
@@ -92,6 +95,7 @@ export class ListRowContainer implements IRowsContainer {
           rows = rows.sort((row1: any[], row2: any[]) => self.internalRowOrderingFunc(row1, row2));
         }
         self.sortedIds = rows.map(row => self.rowIdGetter(row));
+        getDataView(self).reselectOrSelectFirst();
       }
     )();
   }

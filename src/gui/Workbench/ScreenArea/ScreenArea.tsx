@@ -4,7 +4,7 @@ import { onScreenTabCloseClick } from "model/actions-ui/ScreenTabHandleRow/onScr
 import { onSelectionDialogActionButtonClick } from "model/actions-ui/SelectionDialog/onSelectionDialogActionButtonClick";
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 import { getDialogStack } from "model/selectors/getDialogStack";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
 import S from "./ScreenArea.module.scss";
@@ -56,7 +56,7 @@ export const DialogScreen: React.FC<{
             className={S.workflowActionBtn}
             onClick={onWorkflowAbortClick(content.formScreen!)}
           >
-            {T("Cancel","button_cancel")}
+            {T("Cancel", "button_cancel")}
           </button>
         )}
         {isNextButton && (
@@ -64,12 +64,14 @@ export const DialogScreen: React.FC<{
             className={S.workflowActionBtn}
             onClick={onWorkflowNextClick(content.formScreen!)}
           >
-            {T("Next","button_next")}
+            {T("Next", "button_next")}
           </button>
         )}
       </div>
     );
   }
+
+  const refPrimaryBtn = useRef<any>();
 
   useEffect(() => {
     getDialogStack(workbenchLifecycle).pushDialog(
@@ -98,18 +100,21 @@ export const DialogScreen: React.FC<{
                 {() =>
                   !props.openedScreen.content.isLoading ? (
                     <>
-                      {props.openedScreen.content.formScreen!.dialogActions
-                        .filter(action => action.placement !== IActionPlacement.PanelHeader)
-                        .map((action) => (
-                        <button
-                          key={action.id}
-                          onClick={(event: any) => {
-                            onSelectionDialogActionButtonClick(action)(event, action);
-                          }}
-                        >
-                          {action.caption}
-                        </button>
-                      ))}
+                      {props.openedScreen.content
+                        .formScreen!.dialogActions.filter(
+                          (action) => action.placement !== IActionPlacement.PanelHeader
+                        )
+                        .map((action, idx) => (
+                          <button
+                            tabIndex={0}
+                            key={action.id}
+                            onClick={(event: any) => {
+                              onSelectionDialogActionButtonClick(action)(event, action);
+                            }}
+                          >
+                            {action.caption}
+                          </button>
+                        ))}
                     </>
                   ) : (
                     <></>

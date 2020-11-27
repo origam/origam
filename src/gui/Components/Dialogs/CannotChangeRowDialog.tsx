@@ -1,13 +1,24 @@
 import React from "react";
-import {CloseButton, ModalWindow} from "../Dialog/Dialog";
-import {observer} from "mobx-react";
-import {getDialogStack} from "../../../model/selectors/DialogStack/getDialogStack";
+import { CloseButton, ModalWindow } from "../Dialog/Dialog";
+import { observer } from "mobx-react";
+import { getDialogStack } from "../../../model/selectors/DialogStack/getDialogStack";
 
 @observer
 export class CannotChangeRowDialog extends React.Component<{
   onCloseClick?: (event: any) => void;
   onOkClick?: (event: any) => void;
 }> {
+  refPrimaryBtn = (elm: any) => (this.elmPrimaryBtn = elm);
+  elmPrimaryBtn: any;
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.elmPrimaryBtn) {
+        this.elmPrimaryBtn.focus?.();
+      }
+    }, 159);
+  }
+
   render() {
     return (
       <ModalWindow
@@ -15,7 +26,14 @@ export class CannotChangeRowDialog extends React.Component<{
         titleButtons={<CloseButton onClick={this.props.onCloseClick} />}
         buttonsCenter={
           <>
-            <button onClick={this.props.onOkClick}>OK</button>
+            <button
+              tabIndex={0}
+              autoFocus={true}
+              ref={this.refPrimaryBtn}
+              onClick={this.props.onOkClick}
+            >
+              OK
+            </button>
           </>
         }
         buttonsLeft={null}
@@ -31,7 +49,7 @@ let nextId = 0;
 
 export function cannotChangeRowDialog(ctx: any) {
   const key = `CannotChangeRowDialog@${nextId}`;
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     getDialogStack(ctx).pushDialog(
       key,
       <CannotChangeRowDialog

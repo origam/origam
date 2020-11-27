@@ -8,10 +8,10 @@ const closingScreens = new WeakSet<any>();
 
 export function onScreenTabCloseClick(ctx: any) {
   return flow(function* onFormTabCloseClick(event: any, isDueToError?: boolean) {
+    const openedScreen = getOpenedScreen(ctx);
     try {
       event?.stopPropagation?.();
       // TODO: Wait for other async operation to finish?
-      const openedScreen = getOpenedScreen(ctx);
       if (closingScreens.has(openedScreen)) return;
       closingScreens.add(openedScreen);
       // TODO: Better lifecycle handling
@@ -24,6 +24,8 @@ export function onScreenTabCloseClick(ctx: any) {
     } catch (e) {
       yield* handleError(ctx)(e);
       throw e;
+    } finally {
+      closingScreens.delete(openedScreen);
     }
   });
 }

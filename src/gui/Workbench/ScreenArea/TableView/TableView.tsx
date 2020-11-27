@@ -1,5 +1,5 @@
 import bind from "bind-decorator";
-import { action, autorun, computed, observable } from "mobx";
+import { action, autorun, computed, observable, reaction } from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
 import React from "react";
@@ -48,6 +48,8 @@ import {
   calcAggregations,
   aggregationToString,
 } from "model/entities/Aggregatioins";
+import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
+import _ from "lodash";
 
 @inject(({ dataView }) => {
   return {
@@ -357,7 +359,24 @@ class HeaderRenderer implements IHeaderRendererData {
   }
 
   start() {
-    return autorun(() => {
+    return reaction(
+      ()=> [
+        [...getTablePanelView(this.dataView).aggregations.aggregationList],
+        getFilterConfiguration(this.dataView).activeFilters.map((x) => [
+          x.propertyId,
+          x.setting.type,
+          x.setting.val1,
+          x.setting.val2,
+        ])
+      ],
+      ()=> this.reloadAggregationsDebounced(),
+      { fireImmediately: true }
+    )
+  }
+
+  reloadAggregationsDebounced = _.debounce(this.reloadAggregations, 10); 
+
+  reloadAggregations(){
       const aggregations = getTablePanelView(this.dataView).aggregations.aggregationList;
       if (aggregations.length === 0) {
         this.aggregationData.length = 0;
@@ -370,9 +389,10 @@ class HeaderRenderer implements IHeaderRendererData {
       }else{
         this.aggregationData = calcAggregations(this.dataView, aggregations);
       }
-    });
+    
   }
 }
+
 
 export interface IHeaderContainer {
   header: JSX.Element;
