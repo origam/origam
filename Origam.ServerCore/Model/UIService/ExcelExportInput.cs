@@ -9,7 +9,7 @@ namespace Origam.ServerCore.Model.UIService
 
         public List<EntityExportField> Fields { get; set; }
 
-        public List<string> RowIds { get; set; }
+        public string Filters { get; set; }
 
         public string SessionFormIdentifier { get; set; }
     }
