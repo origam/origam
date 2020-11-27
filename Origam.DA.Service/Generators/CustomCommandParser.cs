@@ -29,6 +29,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
@@ -70,6 +71,16 @@ namespace Origam.DA.Service.Generators
             this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
                 = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket, GetLookupExpression);
+        }
+
+        public CustomCommandParser(string nameLeftBracket, string nameRightBracket,
+            SQLValueFormatter sqlValueFormatter, List<DataStructureColumn> dataStructureColumns)
+        :this(nameLeftBracket, nameRightBracket, sqlValueFormatter)
+        {
+            foreach (var column in dataStructureColumns)
+            {
+                AddDataType(column.Name, column.DataType); 
+            }
         }
 
         private string GetLookupExpression(string columnName)

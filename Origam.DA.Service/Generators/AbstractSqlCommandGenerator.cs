@@ -346,14 +346,15 @@ namespace Origam.DA.Service
         public void BuildCommands(IDbDataAdapter adapter, SelectParameters selectParameters,
             bool forceDatabaseCalculation)
         {
-            CustomCommandParser commandParser =
-                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter)
-                    .Where(selectParameters.CustomFilters.Filters)
-                    .OrderBy(selectParameters.CustomOrderings.Orderings);
-
             Hashtable selectParameterReferences = new Hashtable();
             DataStructure dataStructure = selectParameters.DataStructure;
             DataStructureEntity entity = selectParameters.Entity;
+            
+            CustomCommandParser commandParser =
+                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, entity.Columns)
+                    .Where(selectParameters.CustomFilters.Filters)
+                    .OrderBy(selectParameters.CustomOrderings.Orderings);
+
             adapter.SelectCommand =
                 GetCommand(SelectSql(
                     selectParameters: selectParameters,
@@ -1805,7 +1806,6 @@ namespace Origam.DA.Service
                         orderByExpression = expression.Split("AS")[0].Trim();
                     }
                 }
-                customCommandParser?.AddDataType(column.Name, column.DataType);
             }
 
             if (aggregatedColumns != null)
