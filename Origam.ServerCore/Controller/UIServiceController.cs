@@ -771,7 +771,7 @@ namespace Origam.ServerCore.Controller
                 FieldName = input.Property,
                 CurrentRow = rowData.Row,
                 ShowUniqueValues = input.ShowUniqueValues,
-                SearchText = "%" + input.SearchText + "%",
+                SearchText = input.SearchText,
                 PageSize = input.PageSize,
                 PageNumber = input.PageNumber,
                 ParameterMappings = DictionaryToHashtable(input.Parameters)
