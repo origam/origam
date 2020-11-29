@@ -117,6 +117,7 @@ export class Header extends React.Component<{
           onMouseUp={this.handleMouseUp}
           onMouseEnter={this.handleMouseEnter}
           onMouseLeave={this.handleMouseLeave}
+          title={this.props.label}
         >
           <div className={S.inHeaderRow} onMouseDown={this.handleHeaderMouseDown}>
             <div className={S.label}>{this.props.label}</div>
