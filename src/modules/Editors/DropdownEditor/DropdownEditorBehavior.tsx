@@ -195,13 +195,13 @@ export class DropdownEditorBehavior {
 
     if (this.setup().dropdownType === EagerlyLoadedGrid) {
       this.dataTable.setFilterPhrase(this.userEnteredValue || "");
-        if (this.setup().cached && this.cache.hasCachedListRows()) {
-          this.dataTable.setData(this.cache.getCachedListRows());
-        } else {
-          this.ensureRequestRunning();
-        }
-        if (this.userEnteredValue) {
-          this.trySelectFirstRow();
+      if (this.setup().cached && this.cache.hasCachedListRows()) {
+        this.dataTable.setData(this.cache.getCachedListRows());
+      } else {
+        this.ensureRequestRunning();
+      }
+      if (!this.dataTable.getRowById(this.cursorRowId) && this.userEnteredValue) {
+        this.trySelectFirstRow();
       }
     } else if (this.setup().dropdownType === LazilyLoadedGrid) {
       this.handleInputChangeDeb();
@@ -319,7 +319,8 @@ export class DropdownEditorBehavior {
           self.scrollToRowIndex = undefined;
           self.dataTable.appendData(items);
         }
-        if (!self.cursorRowId && self.userEnteredValue) self.trySelectFirstRow();
+        if (!self.dataTable.getRowById(self.cursorRowId) && self.userEnteredValue)
+          self.trySelectFirstRow();
       } finally {
         self.isWorking = false;
         self.runningPromise = undefined;
