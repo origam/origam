@@ -28,7 +28,7 @@
   "sign_out": "Odhlásit",
   "signing_out": "Probíhá odhlašování...",
   "sign_out_question": "Stále jsou otevřené formuláře. Opravdu si přejete odhlásit?",
-  "sign_out_data_lost_question": "Nejsou uložena data v {0}. Opravdu si přejete se odhlásit?",
+  "sign_out_data_lost_question": "Některá data ještě nebyla uložena. Opravdu si přejete se odhlásit?",
   "sign_out_without_saving": "Neuložit",
   "menu_switch_tool_tip": "Přepínač menu",
   "menu_switch_text": "Menu",

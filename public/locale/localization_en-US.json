@@ -28,7 +28,7 @@
   "sign_out": "Sign Out",
   "signing_out": "Signing out...",
   "sign_out_question": "There are some forms opened. Do you wish to sign out?",
-  "sign_out_data_lost_question": "The information entered in {0} has not been saved. Do you still wish to sign out?",
+  "sign_out_data_lost_question": "Some data has not been saved yet. Do you still wish to sign out?",
   "sign_out_without_saving": "Sign Out without Saving",
   "menu_switch_tool_tip": "Menu Switch",
   "menu_switch_text": "Menu",
