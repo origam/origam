@@ -748,7 +748,7 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   async getExcelFileUrl(data: {
     Entity: string;
     Fields: IEntityExportField[];
-    RowIds: string[];
+    Filters: string;
     SessionFormIdentifier: string;}): Promise<string>
   {
      return (await this.axiosInstance.post(`/ExcelExport/GetFileUrl`, data)).data;
