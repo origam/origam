@@ -26,6 +26,7 @@ export interface IOpenedScreen extends IOpenedScreenData {
 
   isActive: boolean;
   isDialog: boolean;
+  isClosed: boolean;
   stackPosition: number;
 
   setActive(state: boolean): void;

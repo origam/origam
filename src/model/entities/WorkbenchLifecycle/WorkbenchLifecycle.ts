@@ -168,7 +168,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     let menuItem = args.itemId && selectors.mainMenu.getItemById(this, args.itemId);
     if (args.isSingleRecordEdit) {
       // Temporary hack o allow filtered screens to work unless single record edit is
-      // implemented for paginated screens on server side. There is no need to paginate 
+      // implemented for paginated screens on server side. There is no need to paginate
       // when we have just one record, hence it is ok to execute the screen in without
       // pagination
       menuItem = produce(menuItem, (draft: any) => {
@@ -283,8 +283,13 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   *closeForm(openedScreen: IOpenedScreen): Generator {
     // TODO: Refactor to get rid of code duplication
     const openedScreens = getOpenedScreens(openedScreen);
-    const screenToActivate = openedScreen.parentContext
+
+    const parentScreen = openedScreen.parentContext
       ? getOpenedScreen(openedScreen.parentContext)
+      : undefined;
+
+    const screenToActivate = !parentScreen?.isClosed
+      ? parentScreen
       : openedScreens.findClosestItem(openedScreen.menuItemId, openedScreen.order);
 
     openedScreens.deleteItem(openedScreen.menuItemId, openedScreen.order);
@@ -340,6 +345,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       const scope = scopeFor(openedScreen.content.formScreen);
       if (scope) scope.disposeWithChildren();
     }
+    openedScreen.isClosed = true;
   }
 
   *destroyUI(openedScreen: IOpenedScreen) {

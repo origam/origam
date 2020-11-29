@@ -28,6 +28,7 @@ export class OpenedScreen implements IOpenedScreen {
   _title: string = "";
   @observable isSleeping?: boolean = false;
   @observable isSleepingDirty?: boolean = false;
+  isClosed: boolean = false;
   @observable content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
 
