@@ -24,6 +24,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
   @observable title = "";
   @observable isActive = false;
   isDialog = false;
+  isClosed = false;
 
   @action.bound
   setActive(state: boolean): void {
