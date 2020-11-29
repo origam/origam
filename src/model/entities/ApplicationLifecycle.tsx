@@ -1,11 +1,16 @@
-import {action, computed, observable} from "mobx";
-import {createWorkbench} from "../factories/createWorkbench";
-import {getApi} from "../selectors/getApi";
-import {getApplication} from "../selectors/getApplication";
-import {IApplicationLifecycle, IApplicationPage} from "./types/IApplicationLifecycle";
-import {stopWorkQueues} from "model/actions/WorkQueues/stopWorkQueues";
-import {stopAllFormsAutorefresh} from "model/actions/Workbench/stopAllFormsAutorefresh";
-import {userManager} from "oauth";
+import { action, computed, observable } from "mobx";
+import { createWorkbench } from "../factories/createWorkbench";
+import { getApi } from "../selectors/getApi";
+import { getApplication } from "../selectors/getApplication";
+import { IApplicationLifecycle, IApplicationPage } from "./types/IApplicationLifecycle";
+import { stopWorkQueues } from "model/actions/WorkQueues/stopWorkQueues";
+import { stopAllFormsAutorefresh } from "model/actions/Workbench/stopAllFormsAutorefresh";
+import { userManager } from "oauth";
+import { getWorkbench } from "model/selectors/getWorkbench";
+import { getOpenedScreens } from "model/selectors/getOpenedScreens";
+import { QuestionLogoutWithDirtyData } from "gui/Components/Dialogs/QuestionLogoutWithDirtyData";
+import React from "react";
+import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 
 export class ApplicationLifecycle implements IApplicationLifecycle {
   $type_IApplicationLifecycle: 1 = 1;
@@ -36,6 +41,36 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
   }
 
   *onSignOutClick(args: { event: any }) {
+    yield* this.requestSignout();
+  }
+
+  *requestSignout() {
+    const workbench = getWorkbench(this);
+    const openedScreens = workbench && getOpenedScreens(workbench);
+    let isSomeDirtyScreen = false;
+    for (let openedScreen of openedScreens.items) {
+      isSomeDirtyScreen = !!(isSomeDirtyScreen || openedScreen.content?.formScreen?.isDirty);
+    }
+    if (isSomeDirtyScreen) {
+      const isReallySignOut = yield new Promise((resolve: (answer: boolean) => void) => {
+        const closeDialog = getDialogStack(this).pushDialog(
+          "",
+          <QuestionLogoutWithDirtyData
+            onYesClick={() => {
+              closeDialog();
+              resolve(true);
+            }}
+            onNoClick={() => {
+              closeDialog();
+              resolve(false);
+            }}
+          />
+        );
+      });
+
+      if (!isReallySignOut) return;
+    }
+
     yield* this.performLogout();
   }
 
@@ -48,7 +83,7 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
       const api = getApi(this);
       const token = yield api.login({
         UserName: args.userName,
-        Password: args.password
+        Password: args.password,
       });
       yield* this.anounceAuthToken(token);
     } catch (error) {
