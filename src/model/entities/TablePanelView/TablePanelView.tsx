@@ -328,6 +328,15 @@ export class TablePanelView implements ITablePanelView {
   }
 
   @action.bound
+  moveColumnBehind(id1: string, id2: string): void {
+    const idx1 = this.tablePropertyIds.findIndex((id) => id === id1);
+    const tmp = this.tablePropertyIds[idx1];
+    this.tablePropertyIds.splice(idx1, 1);
+    const idx2 = this.tablePropertyIds.findIndex((id) => id === id2);
+    this.tablePropertyIds.splice(idx2 + 1, 0, tmp);
+  }
+
+  @action.bound
   setColumnOrderChangeAttendants(idSource: string | undefined, idTarget: string | undefined): void {
     this.columnOrderChangingTargetId = idTarget;
     this.columnOrderChangingSourceId = idSource;

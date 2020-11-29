@@ -91,6 +91,9 @@
   &:last-of-type {
     border-right-color: $grey2;
   }
+  &:global(.isColumnDropTarget) {
+    border-color: #6b4c23;
+  }
 }
 
 
