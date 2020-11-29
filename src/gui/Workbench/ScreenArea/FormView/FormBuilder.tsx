@@ -19,8 +19,10 @@ import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/g
 import { flow } from "mobx";
 import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
 import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
-import {isReadOnly} from "../../../../model/selectors/RowState/isReadOnly";
-import {DomEvent} from "leaflet";
+import { isReadOnly } from "../../../../model/selectors/RowState/isReadOnly";
+import { DomEvent } from "leaflet";
+import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
+import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -30,13 +32,12 @@ export class FormBuilder extends React.Component<{
   xmlFormRootObject?: any;
   dataView?: IDataView;
 }> {
-  onKeyDown(event: any){
+  onKeyDown(event: any) {
     if (event.key === "Tab") {
       DomEvent.preventDefault(event);
-      if(event.shiftKey){
+      if (event.shiftKey) {
         this.props.dataView!.focusManager.focusPrevious(document.activeElement);
-      }
-      else{
+      } else {
         this.props.dataView!.focusManager.focusNext(document.activeElement);
       }
       return;
@@ -127,7 +128,7 @@ export class FormBuilder extends React.Component<{
             <Observer key={propertyId}>
               {() => {
                 let property = getDataViewPropertyById(self.props.dataView, propertyId);
-                if(row && property?.column === "Polymorph"){
+                if (row && property?.column === "Polymorph") {
                   property = property.getPolymophicProperty(row);
                 }
                 let value;
@@ -142,10 +143,15 @@ export class FormBuilder extends React.Component<{
                   return <></>;
                 }
 
+                const isHidden =
+                  !getRowStateAllowRead(property, rowId || "", property.id) ||
+                  getRowStateMayCauseFlicker(property);
+
                 if (property.column === "CheckBox") {
                   return (
                     <Provider property={property}>
                       <CheckBox
+                        isHidden={isHidden}
                         checked={value}
                         readOnly={!row || isReadOnly(property, rowId)}
                         onKeyDown={(event) => self.onKeyDown(event)}
@@ -160,6 +166,7 @@ export class FormBuilder extends React.Component<{
                 return (
                   <Provider property={property} key={property.id}>
                     <FormField
+                      isHidden={isHidden}
                       caption={property.name}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
@@ -189,7 +196,7 @@ export class FormBuilder extends React.Component<{
     }
 
     const form = recursive(this.props.xmlFormRootObject);
-    if(this.props.dataView?.isFirst){
+    if (this.props.dataView?.isFirst) {
       focusManager.autoFocus();
     }
     return form;

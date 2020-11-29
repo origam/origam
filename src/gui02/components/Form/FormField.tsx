@@ -17,14 +17,10 @@ export enum ICaptionPosition {
 
 @inject(({ property }, { caption }) => {
   const rowId = getSelectedRowId(property);
-  const isHidden =
-    !getRowStateAllowRead(property, rowId || "", property.id) ||
-    getRowStateMayCauseFlicker(property);
 
   const ovrCaption = getRowStateDynamicLabel(property, rowId || "", property.id);
 
   return {
-    isHidden,
     caption: !!ovrCaption ? ovrCaption : caption,
   };
 })
