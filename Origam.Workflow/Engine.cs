@@ -400,7 +400,8 @@ namespace Origam.Workflow
 		#endregion
 
 		#region Public Methods
-		public void RunWorkflowFromHost(CultureInfo uiCulture, CultureInfo culture)
+		public void RunWorkflowFromHost(CultureInfo uiCulture,
+			CultureInfo culture)
 		{
 			Thread.CurrentThread.CurrentCulture = culture;
 			Thread.CurrentThread.CurrentUICulture = uiCulture;
