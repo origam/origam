@@ -90,14 +90,14 @@ export class CSidebar extends React.Component {
     
     this.disposers.push(
       reaction(
-        () => getFavorites(this.workbench).defaultFavoritesFolderId,
-        defaultFavoritesFolderId => {
-          const favorites = getFavorites(this.workbench);
-          const defaultFolder = favorites.getFolder(defaultFavoritesFolderId);
-          if(defaultFolder?.items.length?? 0 > 0){
-            this.activeSection = defaultFolder!.id;
+        () => getFavorites(this.workbench).favoriteFolders,
+        favoriteFolders => {
+          const firstNonEmpty = favoriteFolders.find(folder => folder.items.length > 0)
+          if(firstNonEmpty){
+            this.activeSection = firstNonEmpty.id;
           } 
-      })
+      },
+      {fireImmediately: true})
     );
   }
 
