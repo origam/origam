@@ -187,15 +187,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.saveSession();
         yield* this.refreshSession();
         return;
-      case IQuestionSaveDataAnswer.NoSave:
-        yield* this.revertChanges();
+        case IQuestionSaveDataAnswer.NoSave:
+        if(!this.isReadData){
+          yield* this.revertChanges();
+        }
         yield* this.refreshSession();
         return;
     }
   }
   *revertChanges(): Generator<unknown, any, unknown> {
-    const api = getApi(this);
-    yield api.revertChanges({sessionFormIdentifier: getSessionId(this)});
+      const api = getApi(this);
+      yield api.revertChanges({sessionFormIdentifier: getSessionId(this)});
   }
 
   *onWorkflowNextClick(event: any): Generator {
