@@ -26,6 +26,7 @@ using System.Threading;
 using Origam.Schema.EntityModel;
 using Origam.Schema.GuiModel;
 using Origam.Schema.RuleModel;
+using System.Globalization;
 
 namespace Origam.Workflow
 {
@@ -87,11 +88,15 @@ namespace Origam.Workflow
                 _runningWorkflows.Add(engine);
             }
 			engine.Host = this;
+			string currentUICulture = 
+				Thread.CurrentThread.CurrentUICulture.Name;
+			string currentCulture = 
+				Thread.CurrentThread.CurrentCulture.Name;
 
 			return System.Threading.Tasks.Task.Run(() => 
 				engine.RunWorkflowFromHost(
-					Thread.CurrentThread.CurrentUICulture,
-					Thread.CurrentThread.CurrentCulture));
+					new CultureInfo(currentUICulture),
+					new CultureInfo(currentCulture)));
 		}
 
 		internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
