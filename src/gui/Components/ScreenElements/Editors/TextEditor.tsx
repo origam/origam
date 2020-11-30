@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import * as React from "react";
 import { Tooltip } from "react-tippy";
 import S from "./TextEditor.module.scss";
-import { IFocusable } from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FocusManager";
 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -27,7 +27,7 @@ export class TextEditor extends React.Component<{
   maxLength?: number;
   isRichText: boolean;
   customStyle?: any;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
   onKeyDown?(event: any): void;

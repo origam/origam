@@ -8,7 +8,7 @@ import {
   formatNumber,
   getCurrentDecimalSeparator,
 } from "../../../../model/entities/NumberFormating";
-import { IFocusable } from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FocusManager";
 import { getLocaleFromCookie } from "../../../../utils/cookies";
 import numeral from "numeral";
 import { IProperty } from "model/entities/types/IProperty";
@@ -33,7 +33,7 @@ export class NumberEditor extends React.Component<{
   onClick?(event: any): void;
   onDoubleClick?(event: any): void;
   onEditorBlur?(event: any): void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
 }> {
   disposers: any[] = [];
 

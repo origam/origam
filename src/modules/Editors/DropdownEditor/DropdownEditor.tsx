@@ -17,7 +17,7 @@ import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownColumnDrivers, DropdownDataTable } from "./DropdownTableModel";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
-import { IFocusable } from "../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../model/entities/FocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
 import {flf2mof} from "utils/flashDateFormat";
 
@@ -95,7 +95,7 @@ export function XmlBuildDropdownEditor(props: {
   customStyle?: any;
   tagEditor?: JSX.Element;
   onDoubleClick?: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown?(event: any): void;
 }) {
   const mobxContext = useContext(MobXProviderContext);

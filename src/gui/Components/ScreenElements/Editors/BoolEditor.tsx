@@ -2,7 +2,7 @@ import * as React from "react";
 import {observer} from "mobx-react";
 import S from './BoolEditor.module.scss';
 import cx from 'classnames';
-import {IFocusable} from "../../../../model/entities/FocusManager";
+import {IFocusAble} from "../../../../model/entities/FocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import {Tooltip} from "react-tippy";
 
@@ -19,7 +19,7 @@ export class BoolEditor extends React.Component<{
   isInvalid: boolean;
   invalidMessage?: string;
   id?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
 }> {
 
   elmInput: HTMLInputElement | null = null;

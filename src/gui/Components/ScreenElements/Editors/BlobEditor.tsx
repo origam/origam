@@ -20,7 +20,7 @@ import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { handleError } from "model/actions/handleError";
-import { IFocusable } from "model/entities/FocusManager";
+import { IFocusAble } from "model/entities/FocusManager";
 import { Tooltip } from "react-tippy";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
@@ -57,7 +57,7 @@ export class BlobEditor extends React.Component<{
   Entity?: string;
   SessionFormIdentifier?: string;
   parameters?: any;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
   isInvalid: boolean;
   invalidMessage?: string;
   onKeyDown?(event: any): void;

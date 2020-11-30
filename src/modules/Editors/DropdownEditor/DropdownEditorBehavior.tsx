@@ -7,7 +7,7 @@ import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./Dropd
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
 import { DropdownDataTable } from "./DropdownTableModel";
-import { IFocusable } from "../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../model/entities/FocusManager";
 
 export class DropdownEditorBehavior {
   constructor(
@@ -18,7 +18,7 @@ export class DropdownEditorBehavior {
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
-    public subscribeToFocusManager?: (obj: IFocusable) => void,
+    public subscribeToFocusManager?: (obj: IFocusAble) => void,
     private onKeyDown?: (event: any) => void
   ) {}
 
