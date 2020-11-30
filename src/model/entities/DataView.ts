@@ -447,7 +447,7 @@ export class DataView implements IDataView {
   reselectOrSelectFirst() {
     const previouslySelectedRowExists =
       this.selectedRowId && this.dataTable.getRowById(this.selectedRowId);
-    if (!this.isRootGrid || !previouslySelectedRowExists || this.selectedRow) {
+    if (!this.isRootGrid || !previouslySelectedRowExists || !this.selectedRow) {
       this.selectFirstRow();
     }
   }
