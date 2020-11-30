@@ -4,9 +4,9 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 
 export function startEditingFirstCell(ctx: any) {
-  return function* stertEditingFirstCell() {
+  return function* startEditingFirstCell() {
     const orderingPropertyId = getDataView(ctx)?.orderProperty?.id;
-    const firstProperty = getProperties(ctx) //getTableViewProperties(ctx) // getTableViewProperties will return visible properties in the order shown in the table. This led to strange editor positioning and was therefore replaced. To be solved later.
+    const firstProperty = getTableViewProperties(ctx) 
           .filter(prop =>  prop.id !== "Id" && prop.id !== orderingPropertyId)?.[0];
     getTablePanelView(ctx).selectedColumnId = firstProperty?.id;
     if(getTablePanelView(ctx).selectedColumnId){
