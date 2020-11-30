@@ -195,7 +195,7 @@ export class CDataViewHeaderInner extends React.Component<{
                           {isAddButton && (
                             <DataViewHeaderAction
                               className="isGreenHover"
-                              onMouseDown={onCreateRowClickEvt}
+                              onClick={onCreateRowClickEvt}
                             >
                               <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
                             </DataViewHeaderAction>
