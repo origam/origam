@@ -88,7 +88,9 @@ namespace Origam.Workflow
             }
 			engine.Host = this;
 
-			return System.Threading.Tasks.Task.Run(() => engine.RunWorkflowFromHost());
+			return System.Threading.Tasks.Task.Run(() => engine.RunWorkflowFromHost(
+				Thread.CurrentThread.CurrentUICulture,
+				Thread.CurrentThread.CurrentCulture));
 		}
 
 		internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
