@@ -73,7 +73,7 @@ namespace Origam.DA.Service
                 case "In":
                     if (isColumnArray)
                     {
-                        return "<" + leftValue + " IN (" + string.Join(", ", rightValues) + ")>";                
+                        return "\0" + leftValue + " IN (" + string.Join(", ", rightValues) + ")\0";                
                     }
                     else
                     {
@@ -82,7 +82,7 @@ namespace Origam.DA.Service
                 case "NotIn":
                     if(isColumnArray)
                     {
-                        return "<" + leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")>";
+                        return "\0" + leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")\0";
                     }
                     else
                     {

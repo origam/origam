@@ -3718,7 +3718,7 @@ namespace Origam.DA.Service
                 if ((column.DataType == OrigamDataType.Array)
                 && input.Contains(column.Name))
                 {
-                    var regex = new Regex($"<.*{column.Name}.*>");
+                    var regex = new Regex($"\0.*{column.Name}.*\0");
                     var placeholder = regex.Match(input, 0).Value;
                     var arrayRelation = (column.Field as DetachedField).ArrayRelation;
                     var stringBuilder = new StringBuilder("EXISTS(SELECT * FROM ");
@@ -3772,7 +3772,7 @@ namespace Origam.DA.Service
                             dynamicParameters, 
                             parameterReferences));
                     var placeholderElements 
-                        = placeholder.Replace(">", "").Split(" ");
+                        = placeholder.Replace("\0", "").Split(" ");
                     for (var i = 1; i < placeholderElements.Length; i++)
                     {
                         stringBuilder.Append(" ");
