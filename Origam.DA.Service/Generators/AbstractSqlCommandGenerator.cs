@@ -26,6 +26,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Origam.DA.Service.Generators;
 using Origam.Extensions;
 using Origam.Schema;
@@ -1173,7 +1174,11 @@ namespace Origam.DA.Service
                     PrettyLine(sqlExpression);
                     sqlExpression.Append("WHERE ");
                 }
-                sqlExpression.Append(customCommandParser.WhereClause);
+                sqlExpression.Append(
+                    PostProcessCustomCommandParserWhereClause(
+                        customCommandParser.WhereClause, entity,
+                        replaceParameterTexts, dynamicParameters, 
+                        selectParameterReferences));
             }
 
             // GROUP BY
@@ -3465,7 +3470,7 @@ namespace Origam.DA.Service
         internal abstract string DatePartSql(string datetype, string expresion);
         internal abstract string FunctionPrefixSql();
 
-        internal  string RenderBuiltinFunction(FunctionCall item, DataStructureEntity entity,
+        internal string RenderBuiltinFunction(FunctionCall item, DataStructureEntity entity,
            Hashtable replaceParameterTexts, Hashtable dynamicParameters,
            Hashtable parameterReferences)
         {
@@ -3701,6 +3706,84 @@ namespace Origam.DA.Service
         }
 
         internal abstract string TextSql(string expresion);
+
+        internal string PostProcessCustomCommandParserWhereClause(
+            string input, DataStructureEntity entity,
+            Hashtable replaceParameterTexts, Hashtable dynamicParameters, 
+            Hashtable parameterReferences)
+        {
+            var output = input;
+            foreach (var column in entity.Columns)
+            {
+                if ((column.DataType == OrigamDataType.Array)
+                && input.Contains(column.Name))
+                {
+                    var regex = new Regex($"\0.*{column.Name}.*\0");
+                    var placeholder = regex.Match(input, 0).Value;
+                    var arrayRelation = (column.Field as DetachedField).ArrayRelation;
+                    var stringBuilder = new StringBuilder("EXISTS(SELECT * FROM ");
+                    stringBuilder.Append(
+                        RenderExpression(arrayRelation as EntityRelationItem));
+                    stringBuilder.Append(" WHERE");
+                    DataStructureEntity arrayEntity = null;
+                    foreach (DataStructureEntity relatedEntity
+                        in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+                    {
+                        if (relatedEntity.EntityDefinition.Id 
+                        == arrayRelation.AssociatedEntity.Id)
+                        {
+                            arrayEntity = relatedEntity;
+                            break;
+                        }
+                    }
+                    if (arrayEntity == null)
+                    {
+                        throw new Exception(
+                            $@"Array entity {arrayRelation.AssociatedEntity.Name} 
+                            not found among child entities of {entity.Name}");
+                    }
+                    var andNeeded = false;
+                    foreach (EntityRelationColumnPairItem pairItem 
+                        in arrayRelation.ChildItemsByType(
+                            EntityRelationColumnPairItem.CategoryConst))
+                    {
+                        stringBuilder.Append(" ");
+                        if(andNeeded)
+                        {
+                            stringBuilder.Append("AND ");
+                        }
+                        RenderSelectRelationKey(stringBuilder,
+                            pairItem, entity,
+                            arrayEntity,
+                            replaceParameterTexts, 
+                            dynamicParameters, 
+                            parameterReferences);
+                        andNeeded = true;
+                    }
+                    stringBuilder.Append(" ");
+                    if (andNeeded)
+                    {
+                        stringBuilder.Append("AND ");
+                    }
+                    stringBuilder.Append(
+                        RenderExpression(
+                            (column.Field as DetachedField).ArrayValueField, arrayEntity,
+                            replaceParameterTexts, 
+                            dynamicParameters, 
+                            parameterReferences));
+                    var placeholderElements 
+                        = placeholder.Replace("\0", "").Split(" ");
+                    for (var i = 1; i < placeholderElements.Length; i++)
+                    {
+                        stringBuilder.Append(" ");
+                        stringBuilder.Append(placeholderElements[i]);
+                    }
+                    stringBuilder.Append(")");
+                    output = regex.Replace(output, stringBuilder.ToString());
+                }
+            }
+            return output;
+        }
         #endregion
 
         #region Operators
