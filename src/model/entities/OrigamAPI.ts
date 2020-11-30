@@ -420,6 +420,15 @@ export class OrigamAPI implements IApi {
     return (await this.axiosInstance.post(`/UIService/ExecuteAction`, data)).data;
   }
 
+  async getFilterListValues(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    Property: string;
+    SessionFormIdentifier: string | undefined;
+  }): Promise<any[]> {
+    return (await this.axiosInstance.post(`/UIService/GetFilterListValues`, data)).data;
+  }
+
   async getGroups(data: {
     MenuId: string;
     DataStructureEntityId: string;

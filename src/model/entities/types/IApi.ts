@@ -232,6 +232,13 @@ export interface IApi {
     FilterLookups?: { [key: string]: string };
   }): Promise<any>;
 
+  getFilterListValues(data: {
+    MenuId: string;
+    DataStructureEntityId: string;
+    Property: string;
+    SessionFormIdentifier: string | undefined;
+  }): Promise<any[]>;
+
   getGroups(data: {
     MenuId: string;
     DataStructureEntityId: string;
