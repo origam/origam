@@ -92,7 +92,7 @@ export class CSidebar extends React.Component {
       reaction(
         () => getFavorites(this.workbench).favoriteFolders,
         favoriteFolders => {
-          const firstNonEmpty = favoriteFolders.find(folder => folder.items.length > 0)
+          const firstNonEmpty = favoriteFolders.find(folder => folder.items.length > 0 && !folder.isPinned)
           if(firstNonEmpty){
             this.activeSection = firstNonEmpty.id;
           } 
