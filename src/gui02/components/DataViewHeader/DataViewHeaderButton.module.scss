@@ -21,9 +21,11 @@
   border-width: 1px;
   box-sizing: border-box;
   white-space: nowrap;
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  //width: -webkit-min-content;
+  //width: -moz-min-content;
+  //width: min-content;
   cursor: pointer;
   font-size: 0.9em;
   @include hoverItemAnimation;
@@ -35,6 +37,13 @@
     left: 0;
   }
 
+  border-radius: 3em;
+  margin-left: 0.2em;
+
+  &:not(:global(.hidden)):first-of-type {
+    margin-left: 0;
+  }
+/*
   &:not(:global(.hidden)):first-of-type {
     border-radius: 3em 0em 0em 3em;
     border-right: none;
@@ -52,5 +61,5 @@
     border-color: #b0afb7;
     border-style: solid;
     border-width: 1px;
-  }
+  }*/
 }

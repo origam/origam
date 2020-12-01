@@ -2,7 +2,7 @@ import { scopeFor } from "dic/Container";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import {
   CtxDataViewHeaderExtension,
-  DataViewHeaderExtension
+  DataViewHeaderExtension,
 } from "gui/Components/ScreenElements/DataView";
 import { DataViewHeader } from "gui02/components/DataViewHeader/DataViewHeader";
 import { DataViewHeaderAction } from "gui02/components/DataViewHeader/DataViewHeaderAction";
@@ -79,6 +79,7 @@ export class CDataViewHeaderInner extends React.Component<{
           style={{ width: "auto" }}
           trigger={({ refTrigger, setDropped }) => (
             <DataViewHeaderButton
+              title={action.caption}
               disabled={!getIsEnabledAction(action)}
               onClick={() => setDropped(true)}
               domRef={refTrigger}
@@ -104,6 +105,7 @@ export class CDataViewHeaderInner extends React.Component<{
     }
     return (
       <DataViewHeaderButton
+        title={action.caption}
         onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
         disabled={!getIsEnabledAction(action)}
       >
@@ -148,12 +150,12 @@ export class CDataViewHeaderInner extends React.Component<{
         {this.props.isVisible && (
           <>
             <span>
-              <h2>{label}</h2>
+              <h2 title={label}>{label}</h2>
             </span>
 
             <div className="fullspaceBlock">
               {isMoveRowMenuVisible ? (
-                <DataViewHeaderGroup isHidden={false}>
+                <DataViewHeaderGroup isHidden={false} noShrink={true}>
                   <DataViewHeaderAction
                     onMouseDown={onMoveRowUpClickEvt}
                     isDisabled={isRowMovingDisabled}
@@ -172,7 +174,7 @@ export class CDataViewHeaderInner extends React.Component<{
                 </DataViewHeaderGroup>
               ) : null}
 
-              <DataViewHeaderGroup>
+              <DataViewHeaderGroup noShrink={true}>
                 {isAddButton && (
                   <DataViewHeaderAction className="isGreenHover" onClick={onCreateRowClickEvt}>
                     <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
@@ -200,7 +202,7 @@ export class CDataViewHeaderInner extends React.Component<{
                 <DataViewHeaderButtonGroup>{this.renderActions(actions)}</DataViewHeaderButtonGroup>
               </DataViewHeaderGroup>
 
-              <DataViewHeaderGroup>
+              <DataViewHeaderGroup noShrink={true}>
                 <DataViewHeaderAction onMouseDown={onFirstRowClickEvt}>
                   <Icon
                     src="./icons/list-arrow-first.svg"
@@ -227,17 +229,17 @@ export class CDataViewHeaderInner extends React.Component<{
                 </DataViewHeaderAction>
               </DataViewHeaderGroup>
 
-              <DataViewHeaderGroup>
+              <DataViewHeaderGroup noShrink={true}>
                 {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
                 &nbsp;/&nbsp;
                 {maxRowCountSeen}
               </DataViewHeaderGroup>
 
-              <DataViewHeaderGroup>
+              <DataViewHeaderGroup noShrink={true}>
                 {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
               </DataViewHeaderGroup>
 
-              <DataViewHeaderGroup>
+              <DataViewHeaderGroup noShrink={true}>
                 <DataViewHeaderAction
                   onMouseDown={onFilterButtonClickEvt}
                   isActive={isFilterSettingsVisible}
@@ -249,7 +251,7 @@ export class CDataViewHeaderInner extends React.Component<{
               </DataViewHeaderGroup>
             </div>
 
-            <DataViewHeaderGroup>
+            <DataViewHeaderGroup noShrink={true}>
               <Dropdowner
                 trigger={({ refTrigger, setDropped }) => (
                   <DataViewHeaderAction

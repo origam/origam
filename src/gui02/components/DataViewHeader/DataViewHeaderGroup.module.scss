@@ -7,7 +7,8 @@
   flex-wrap: nowrap;
 
   border-right: 1px solid $grey2;
-  padding: 0 1.5em;
+  padding: 0 0.5em;
+  overflow: hidden;
 
   /*&:global(.isHidden) {
     position: absolute;
@@ -16,10 +17,15 @@
   }*/
 
 
-  flex-shrink: 0;
+  flex: 0 1 auto;
+  min-width: 0;
 
   &:global(.grovable) {
-    flex: 1 1;
+    flex: 1 1 auto;
+  }
+
+  &:global(.noShrink) {
+    flex-shrink: 0;
   }
 
   &:global(.isHidden) {

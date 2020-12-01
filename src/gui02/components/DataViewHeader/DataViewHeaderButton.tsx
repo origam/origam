@@ -6,15 +6,13 @@ export const DataViewHeaderButton: React.FC<{
   domRef?: any;
   isHidden?: boolean;
   disabled?: boolean;
+  title?: string;
   onClick?(event: any): void;
 }> = (props) => (
   <button
+    title={props.title}
     ref={props.domRef}
-    className={ cx(
-      props.disabled ? S.disabled : S.enabled,
-      S.root,
-      { hidden: props.isHidden })
-    }
+    className={cx(props.disabled ? S.disabled : S.enabled, S.root, { hidden: props.isHidden })}
     onClick={props.onClick}
     disabled={props.disabled}
   >
