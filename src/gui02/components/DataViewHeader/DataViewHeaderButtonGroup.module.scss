@@ -1,8 +1,10 @@
 .root {
+  flex: 0 1 auto;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0 (1.15em/2);
+  min-width: 0;
 
   &:global(.isHidden) {
     position: fixed;

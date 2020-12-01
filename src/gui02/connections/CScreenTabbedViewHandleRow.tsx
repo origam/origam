@@ -43,8 +43,10 @@ class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
 
   render() {
     const { item } = this.props;
+    const label = this.getLabel(item);
     return (
       <TabbedViewHandle
+        title={label}
         key={`${item.menuItemId}@${item.order}`}
         isActive={item.isActive}
         hasCloseBtn={true}
@@ -52,7 +54,7 @@ class CScreenTabbedViewHandle extends React.Component<{ item: IOpenedScreen }> {
         onClick={(event: any) => onScreenTabHandleClick(item)(event)}
         onCloseClick={(event: any) => onScreenTabCloseClick(item)(event)}
       >
-        {this.getLabel(item)}
+        {label}
       </TabbedViewHandle>
     );
   }
