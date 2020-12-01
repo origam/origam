@@ -1,10 +1,14 @@
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 
 export class FocusManager {
+
+  autoFocusDisabled = false;
+
+  stopAutoFocus() {
+    this.autoFocusDisabled = true;
+  }
   objectMap: Map<string, IFocusAble> = new Map<string, IFocusAble>();
   focusAbleContainers: IFocusAbleObjectContainer[] = [];
-  private focusRequested = false;
-  canAutoFocus: boolean = false;
 
   constructor(public parent: any){
   }
@@ -28,11 +32,10 @@ export class FocusManager {
     setTimeout(() => {
       focusAble.focus();
     }, 0);
-    this.focusRequested = true;
   }
   
   autoFocus() {
-    if (!this.canAutoFocus || this.focusAbleContainers.length === 0 || this.focusRequested) {
+    if (this.focusAbleContainers.length === 0 || this.autoFocusDisabled) {
       return;
     }
     this.forceAutoFocus();
@@ -53,7 +56,6 @@ export class FocusManager {
         focusAble.focus();
       })
     }
-    this.focusRequested = true;
   }
 
   focusPrevious(activeElement: any) {
@@ -72,7 +74,6 @@ export class FocusManager {
         focusAble.focus();
       })
     }
-    this.focusRequested = true;
   }
 }
 

@@ -623,6 +623,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         });
       }
     );
+    dataView.focusManager.stopAutoFocus();
     yield* processCRUDResult(dataView, updateObjectResult);
     return true;
   }
