@@ -30,6 +30,14 @@ export class TreeDataTable implements IDataTable {
 
   }
 
+  @computed get identifierProperty() {
+    return this.properties.find((prop) => prop.id === this.dataSource.identifier);
+  }
+
+  get identifierDataIndex() {
+    return this.identifierProperty!.dataIndex;
+  }
+
   additionalRowData: Map<string, IAdditionalRowData> = new Map();
   maxRowCountSeen: number = 0;
   parentIdProperty: string;
