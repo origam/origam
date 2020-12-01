@@ -168,7 +168,7 @@
     background: #b0afb7;
     color: #0d0d0d;
   }
-  &:focus {
+  &:focus,&:global(.isPrimary) {
     background: #4c84ff;
     border-color: #4c84ff;
     color: #ffffff;
