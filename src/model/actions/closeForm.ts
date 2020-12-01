@@ -38,6 +38,12 @@ export function closeForm(ctx: any) {
           for (let change of changes) {
             yield* processCRUDResult(openedScreen.parentContext, change);
           }
+          const dataViews = parentScreen?.content?.formScreen?.dataViews ?? [];
+          for (const dataView of dataViews) {
+            dataView.dataTable.unlockAddedRowPosition();
+            dataView.dataTable.updateSortAndFilter();
+          }
+          
           break;
       }
     }

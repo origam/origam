@@ -61,7 +61,6 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
         const dataSourceRow = result.wrappedObject;
         console.log("New row:", dataSourceRow);
         yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow);
-        dataView.dataTable.unlockAddedRowPosition();
         dataView.selectRow(dataSourceRow);
       }
       getFormScreen(ctx).setDirty(true);

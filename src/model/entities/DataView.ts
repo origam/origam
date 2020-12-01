@@ -466,7 +466,8 @@ export class DataView implements IDataView {
 
   @action.bound
   setSelectedRowId(id: string | undefined): void {
-    if(this.dataTable.addedRowPositionLocked){
+    const firstRow = this.dataTable.getFirstRow();
+    if(this.dataTable.addedRowPositionLocked && firstRow && id != this.dataTable.getRowId(firstRow)){
       return;
     }
     this.selectedRowId = id;
