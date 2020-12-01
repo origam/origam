@@ -1,6 +1,6 @@
-import { FocusableObjectContainer, IFocusable } from "../model/entities/FocusManager";
+import { FocusAbleObjectContainer, IFocusAble } from "../model/entities/FocusManager";
 
-class DummyFocusable implements IFocusable{
+class DummyFocusable implements IFocusAble{
   disabled: boolean = false;
   tabIndex: number = 0;
   focus(): void {
@@ -23,9 +23,9 @@ test.each([
   [[undefined, "1"], 1],
   [["1", undefined], -1],
 ])('Compare %s to: %s', (values, expectedNormalizedResult) => {
-  const val1 = new FocusableObjectContainer(new DummyFocusable(), "", values[0])
-  const val2 = new FocusableObjectContainer(new DummyFocusable(), "", values[1])
-  const comparisonResult = FocusableObjectContainer.compare(val1, val2)
+  const val1 = new FocusAbleObjectContainer(new DummyFocusable(), "", values[0])
+  const val2 = new FocusAbleObjectContainer(new DummyFocusable(), "", values[1])
+  const comparisonResult = FocusAbleObjectContainer.compare(val1, val2)
 
   const sign = Math.sign(comparisonResult);
   const normalizedResult = sign != 0

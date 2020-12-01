@@ -9,7 +9,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
-import {IFocusable} from "../../../../model/entities/FocusManager";
+import {IFocusAble} from "../../../../model/entities/FocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
 import {Tooltip} from "react-tippy";
 
@@ -29,7 +29,7 @@ export interface IRawCheckListProps {
   menuItemId: string;
   isInvalid: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
 
   onChange?(newValue: string[]): void;
   onKeyDown(event: any): void;
@@ -91,7 +91,7 @@ export const CheckList: React.FC<{
   onChange?(newValue: string[]): void;
   isInvalid: boolean;
   invalidMessage?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown(event: any): void;
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
@@ -206,7 +206,7 @@ export const CheckListItem: React.FC<{
   focusUp: (x: number, y: number)=>void;
   focusDown: (x: number, y: number)=>void;
   label: string;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown(event: any): void;
 }> = (props) => {
 

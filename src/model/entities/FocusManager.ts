@@ -1,89 +1,90 @@
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 
 export class FocusManager {
-  objectMap: Map<string, IFocusable> = new Map<string, IFocusable>();
-  focusableContainers: IFocusableObjectContainer[] = [];
-  private focusRequested = false;
-  canAutoFocus: boolean = false;
+
+  autoFocusDisabled = false;
+
+  stopAutoFocus() {
+    this.autoFocusDisabled = true;
+  }
+  objectMap: Map<string, IFocusAble> = new Map<string, IFocusAble>();
+  focusAbleContainers: IFocusAbleObjectContainer[] = [];
 
   constructor(public parent: any){
   }
 
-  subscribe(focusableObject: IFocusable, name: string | undefined, tabIndex: string | undefined) {
-    const focusableContainer = new FocusableObjectContainer(focusableObject, name, tabIndex);
-    this.focusableContainers.push(focusableContainer);
-    this.focusableContainers = this.focusableContainers.sort(FocusableObjectContainer.compare);
+  subscribe(focusAbleObject: IFocusAble, name: string | undefined, tabIndex: string | undefined) {
+    const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex);
+    this.focusAbleContainers.push(focusAbleContainer);
+    this.focusAbleContainers = this.focusAbleContainers.sort(FocusAbleObjectContainer.compare);
   }
 
   focus(name: string) {
-    this.focusableContainers.find((container) => container.name === name)?.focusable.focus();
+    this.focusAbleContainers.find((container) => container.name === name)?.focusAble.focus();
   }
 
   forceAutoFocus() {
-    const focusable = this.focusableContainers[0].focusable;
-    if(focusable.disabled){ //  (focusable as any).readOnly returns always false => readonly fields cannot be skipped
-      this.focusNext(focusable);
+    const focusAble = this.focusAbleContainers[0].focusAble;
+    if(focusAble.disabled){ //  (focusAble as any).readOnly returns always false => readonly fields cannot be skipped
+      this.focusNext(focusAble);
       return;
     }
     setTimeout(() => {
-      focusable.focus();
+      focusAble.focus();
     }, 0);
-    this.focusRequested = true;
   }
   
   autoFocus() {
-    if (!this.canAutoFocus || this.focusableContainers.length === 0 || this.focusRequested) {
+    if (this.focusAbleContainers.length === 0 || this.autoFocusDisabled) {
       return;
     }
     this.forceAutoFocus();
   }
 
   focusNext(activeElement: any) {
-    const currentContainerIndex = this.focusableContainers.findIndex(
-      (container) => container.focusable === activeElement
+    const currentContainerIndex = this.focusAbleContainers.findIndex(
+      (container) => container.focusAble === activeElement
     );
     const nextIndex =
-      this.focusableContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
-    const focusable = this.focusableContainers[nextIndex].focusable;
-    if(focusable.disabled){
-      this.focusNext(focusable);
+      this.focusAbleContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
+    const focusAble = this.focusAbleContainers[nextIndex].focusAble;
+    if(focusAble.disabled){
+      this.focusNext(focusAble);
     }
     else{
       setTimeout(()=>{
-        focusable.focus();
+        focusAble.focus();
       })
     }
-    this.focusRequested = true;
   }
 
   focusPrevious(activeElement: any) {
-    const currentContainerIndex = this.focusableContainers.findIndex(
-      (container) => container.focusable === activeElement
+    const currentContainerIndex = this.focusAbleContainers.findIndex(
+      (container) => container.focusAble === activeElement
     );
-    const previosIndex =
-      currentContainerIndex === 0 ? this.focusableContainers.length - 1 : currentContainerIndex - 1;
-    console.log("nextIndex: "+previosIndex)
-    const focusable = this.focusableContainers[previosIndex].focusable;
-    if(focusable.disabled){
-      this.focusPrevious(focusable);
+    const previousIndex =
+      currentContainerIndex === 0 ? this.focusAbleContainers.length - 1 : currentContainerIndex - 1;
+    console.log("nextIndex: "+previousIndex)
+    const focusAble = this.focusAbleContainers[previousIndex].focusAble;
+    if(focusAble.disabled){
+      this.focusPrevious(focusAble);
     }
     else{
       setTimeout(()=>{
-        focusable.focus();
+        focusAble.focus();
       })
     }
-    this.focusRequested = true;
   }
 }
 
-export interface IFocusableObjectContainer {
+export interface IFocusAbleObjectContainer {
   name: string | undefined;
   tabIndexFractions: number[];
-  focusable: IFocusable;
+  focusAble: IFocusAble;
   has(fractionIndex: number): boolean;
 }
 
-export class FocusableObjectContainer implements IFocusableObjectContainer {
+export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
   get tabIndexFractions(): number[] {
     if (this.tabIndexNullable) {
       return this.tabIndexNullable
@@ -95,7 +96,7 @@ export class FocusableObjectContainer implements IFocusableObjectContainer {
   }
 
   constructor(
-    public focusable: IFocusable,
+    public focusAble: IFocusAble,
     public name: string | undefined,
     private tabIndexNullable: string | undefined
   ) {}
@@ -103,11 +104,11 @@ export class FocusableObjectContainer implements IFocusableObjectContainer {
   // TabIndex is a string separated by decimal points for example: 13, 14.0, 14.2, 14.15
   // The "fractions" have to be compared separately because 14.15 is greater than 14.2
   // Comparison as numbers would give different results
-  static compare(x: IFocusableObjectContainer, y: IFocusableObjectContainer) {
-    return FocusableObjectContainer.compareFraction(x, y, 0);
+  static compare(x: IFocusAbleObjectContainer, y: IFocusAbleObjectContainer) {
+    return FocusAbleObjectContainer.compareFraction(x, y, 0);
   }
 
-  static compareFraction(x: IFocusableObjectContainer, y: IFocusableObjectContainer, fractionIndex: number): number{
+  static compareFraction(x: IFocusAbleObjectContainer, y: IFocusAbleObjectContainer, fractionIndex: number): number{
     if (x.has(fractionIndex) && !y.has(fractionIndex)) {
       return 1;
     }
@@ -123,7 +124,7 @@ export class FocusableObjectContainer implements IFocusableObjectContainer {
       return fraction;
     }
 
-    return FocusableObjectContainer.compareFraction(x, y,fractionIndex + 1 )
+    return FocusAbleObjectContainer.compareFraction(x, y,fractionIndex + 1 )
   }
 
   has(fractionIndex: number ){
@@ -131,7 +132,7 @@ export class FocusableObjectContainer implements IFocusableObjectContainer {
   }
 }
 
-export interface IFocusable {
+export interface IFocusAble {
   focus(): void;
   disabled: boolean;
 }

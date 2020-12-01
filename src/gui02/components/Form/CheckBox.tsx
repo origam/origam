@@ -6,7 +6,7 @@ import { inject } from "mobx-react";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
-import {IFocusable} from "model/entities/FocusManager";
+import {IFocusAble} from "model/entities/FocusManager";
 
 export const CheckBox: React.FC<{
   checked: boolean;
@@ -15,7 +15,7 @@ export const CheckBox: React.FC<{
   onChange?: (event: any, value: any) => void;
   property?: IProperty;
   onKeyDown: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
 }> = inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
   return {
