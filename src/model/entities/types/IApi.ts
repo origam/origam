@@ -1,8 +1,11 @@
 import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { ISearchResult } from "model/entities/types/ISearchResult";
+import { IAboutInfo } from "./IAboutInfo";
 
 export interface IApi {
+  getAboutInfo(): Promise<IAboutInfo>;
+
   accessToken: string;
 
   setAccessToken(token: string | undefined): void;

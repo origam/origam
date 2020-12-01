@@ -5,7 +5,7 @@ import { ScreenToolbarPusher } from "gui02/components/ScreenToolbar/ScreenToolba
 import { MobXProviderContext, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
-import { action } from "mobx";
+import { action, flow, observable } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { ScreenToolbarActionGroup } from "gui02/components/ScreenToolbar/ScreenToolbarActionGroup";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
@@ -34,10 +34,21 @@ import { T } from "../../utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
+import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { getApi } from "model/selectors/getApi";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
   static contextType = MobXProviderContext;
+
+  @observable
+  aboutInfo: IAboutInfo = { 
+    serverVersion: "",
+    clientCommitId: "",
+    clientCommitLink: "",
+    clientBuildDate: ""
+  };
 
   state = {
     hiddenActionIds: new Set<string>(),
@@ -48,6 +59,28 @@ export class CScreenToolbar extends React.Component<{}> {
 
   get application(): IApplication {
     return this.context.application;
+  }
+
+  componentDidMount(){
+    // this.aboutInfo = getAboutInfo(this.application)();
+    // const self = this;
+    runInFlowWithHandler(
+      {
+        ctx: this.application,
+        action: async () => {
+        const api = getApi(this.application);
+        this.aboutInfo = await api.getAboutInfo();
+      }
+    });
+    // flow(function*() {
+    //   try {
+    //     const api = getApi(self.application);
+    //     self.aboutInfo = yield api.getAboutInfo();
+    //   } catch (e) {
+    //     yield* handleError(self.application)(e);
+    //     throw e;
+    //   }
+    // });
   }
 
   @action.bound
@@ -232,6 +265,8 @@ export class CScreenToolbar extends React.Component<{}> {
             avatarLink={avatarLink}
             userName={userName}
             handleLogoutClick={(event) => this.handleLogoutClick(event)}
+            ctx={this.application}
+            aboutInfo={this.aboutInfo}
           />
         </ScreenToolbar>
       </CtxResponsiveToolbar.Provider>
@@ -281,6 +316,8 @@ export class CScreenToolbar extends React.Component<{}> {
           avatarLink={avatarLink}
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
+          ctx={this.application}
+          aboutInfo={this.aboutInfo}
         />
       </ScreenToolbar>
     );
@@ -300,6 +337,8 @@ export class CScreenToolbar extends React.Component<{}> {
           avatarLink={avatarLink}
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
+          ctx={this.application}
+          aboutInfo={this.aboutInfo}
         />
       </ScreenToolbar>
     );
