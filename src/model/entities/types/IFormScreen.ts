@@ -6,6 +6,7 @@ import { IAction } from "./IAction";
 import { IRefreshOnReturnType } from "../WorkbenchLifecycle/WorkbenchLifecycle";
 import { IPanelConfiguration } from "./IPanelConfiguration";
 import { CriticalSection } from "utils/sync";
+import { ScreenPictureCache } from "../ScreenPictureCache";
 
 /*
 export interface ILoadedFormScreenData {
@@ -126,6 +127,8 @@ export interface IFormScreen extends IFormScreenData {
   dynamicTitle: string | undefined;
 
   dataUpdateCRS: CriticalSection;
+
+  pictureCache: ScreenPictureCache;
 
   clearDataCache(): void;
   getPanelPosition(id: string): number | undefined;

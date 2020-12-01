@@ -17,6 +17,7 @@ import {getSessionId} from "model/selectors/getSessionId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getApi } from "model/selectors/getApi";
 import {getRowStates} from "model/selectors/RowState/getRowStates";
+import { ScreenPictureCache } from "./ScreenPictureCache";
 
 export class FormScreen implements IFormScreen {
   $type_IFormScreen: 1 = 1;
@@ -32,6 +33,7 @@ export class FormScreen implements IFormScreen {
   parent?: any;
 
   dataUpdateCRS = new CriticalSection();
+  pictureCache = new ScreenPictureCache();
   getDataCache = new GetDataCache(this);
 
   @observable isDirty: boolean = false;

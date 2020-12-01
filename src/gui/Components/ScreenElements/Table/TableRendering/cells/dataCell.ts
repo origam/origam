@@ -16,6 +16,7 @@ import { getDataView } from "../../../../../../model/selectors/DataView/getDataV
 import {
   currentCellErrorMessage,
   currentCellText,
+  currentCellValue,
   currentColumnLeft,
   currentColumnLeftVisible,
   currentColumnWidth,
@@ -32,6 +33,7 @@ import {
   context2d,
   currentDataRow,
   drawingColumnIndex,
+  formScreen,
   recordId,
   rowHeight,
   rowIndex,
@@ -330,6 +332,16 @@ function drawCellValue() {
           ctx2d.restore();
         }
         break;
+      case "Image": {
+        const value = currentCellValue();
+        if (!value) break;
+        const { pictureCache } = formScreen();
+        const img = pictureCache.getImage(value);
+        //console.log("DRAW:", value, img);
+        if (!img || !img.complete) break;
+        ctx2d.drawImage(img, CPR() * currentColumnLeft(), CPR() * currentRowTop());
+        break;
+      }
       default:
         if (currentCellText() !== null) {
           if (!currentProperty().isPassword) {
