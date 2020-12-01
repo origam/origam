@@ -8,6 +8,7 @@ import {getDataView} from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { IProperty } from "./types/IProperty";
 import _ from "lodash";
+import { fixRowIdentifier } from "utils/dataRow";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
@@ -138,18 +139,27 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   async insert(index: number, row: any[]): Promise<any> {
+    const dataTable = getDataTable(this);
+    row = fixRowIdentifier(row, dataTable.identifierDataIndex);
     this.allRows.splice(index, 0, row);
     this.forcedFirstRowId = this.rowIdGetter(row);
     await this.updateSortAndFilter();
   }
 
-  set(rows: any[][]) {
+  set(rowsIn: any[][]) {
+    const dataTable = getDataTable(this);
+    const rows: any[][] = [];
+    for (let row of rowsIn) {
+      rows.push(fixRowIdentifier(row, dataTable.identifierDataIndex));
+    }
     this.clear();
     for(let row of rows) this.allRows.push(row);
     this.updateSortAndFilter();
   }
 
   substitute(row: any[]): void {
+    const dataTable = getDataTable(this);
+    row = fixRowIdentifier(row, dataTable.identifierDataIndex);
     const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === this.rowIdGetter(row));
     if (idx > -1) {
       this.allRows.splice(idx, 1, row);
