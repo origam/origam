@@ -44,6 +44,7 @@ import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/get
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
 import React, { useContext } from "react";
+import Measure from "react-measure";
 import { onFirstRowClick } from "../../model/actions-ui/DataView/onFirstRowClick";
 import { onLastRowClick } from "../../model/actions-ui/DataView/onLastRowClick";
 import { T } from "../../utils/translation";
@@ -146,168 +147,197 @@ export class CDataViewHeaderInner extends React.Component<{
     const selectedRow = getSelectedRow(dataView);
 
     return (
-      <DataViewHeader isVisible={this.props.isVisible}>
-        {this.props.isVisible && (
-          <>
-            <span>
-              <h2 title={label}>{label}</h2>
-            </span>
+      <Measure bounds={true}>
+        {({ measureRef, contentRect }) => {
+          const containerWidth = contentRect.bounds?.width || 0;
+          const isBreak640 = containerWidth < 640;
+          return (
+            <DataViewHeader domRef={measureRef} isVisible={this.props.isVisible}>
+              {this.props.isVisible && (
+                <>
+                  <span>
+                    <h2 title={label}>{label}</h2>
+                  </span>
 
-            <div className="fullspaceBlock">
-              {isMoveRowMenuVisible ? (
-                <DataViewHeaderGroup isHidden={false} noShrink={true}>
-                  <DataViewHeaderAction
-                    onMouseDown={onMoveRowUpClickEvt}
-                    isDisabled={isRowMovingDisabled}
-                  >
-                    <Icon src="./icons/move-up.svg" tooltip={T("Move Up", "increase_tool_tip")} />
-                  </DataViewHeaderAction>
-                  <DataViewHeaderAction
-                    onMouseDown={onMoveRowDownClickEvt}
-                    isDisabled={isRowMovingDisabled}
-                  >
-                    <Icon
-                      src="./icons/move-down.svg"
-                      tooltip={T("Move Down", "decrease_tool_tip")}
+                  <div className="fullspaceBlock">
+                    {isMoveRowMenuVisible ? (
+                      <DataViewHeaderGroup isHidden={false} noShrink={true}>
+                        <DataViewHeaderAction
+                          onMouseDown={onMoveRowUpClickEvt}
+                          isDisabled={isRowMovingDisabled}
+                        >
+                          <Icon
+                            src="./icons/move-up.svg"
+                            tooltip={T("Move Up", "increase_tool_tip")}
+                          />
+                        </DataViewHeaderAction>
+                        <DataViewHeaderAction
+                          onMouseDown={onMoveRowDownClickEvt}
+                          isDisabled={isRowMovingDisabled}
+                        >
+                          <Icon
+                            src="./icons/move-down.svg"
+                            tooltip={T("Move Down", "decrease_tool_tip")}
+                          />
+                        </DataViewHeaderAction>
+                      </DataViewHeaderGroup>
+                    ) : null}
+
+                    <DataViewHeaderGroup noShrink={true}>
+                      {isAddButton && (
+                        <DataViewHeaderAction
+                          className="isGreenHover"
+                          onClick={onCreateRowClickEvt}
+                        >
+                          <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
+                        </DataViewHeaderAction>
+                      )}
+
+                      {isDelButton && !!selectedRow && (
+                        <DataViewHeaderAction
+                          className="isRedHover"
+                          onMouseDown={onDeleteRowClickEvt}
+                        >
+                          <Icon src="./icons/minus.svg" tooltip={T("Delete", "delete_tool_tip")} />
+                        </DataViewHeaderAction>
+                      )}
+
+                      {isCopyButton && !!selectedRow && (
+                        <DataViewHeaderAction
+                          className="isOrangeHover"
+                          onMouseDown={onCopyRowClickEvt}
+                        >
+                          <Icon
+                            src="./icons/duplicate.svg"
+                            tooltip={T("Duplicate", "add_duplicate_tool_tip")}
+                          />
+                        </DataViewHeaderAction>
+                      )}
+                    </DataViewHeaderGroup>
+
+                    <DataViewHeaderGroup grovable={true}>
+                      {this.props.extension.render("actions")}
+                      <DataViewHeaderButtonGroup>
+                        {this.renderActions(actions)}
+                      </DataViewHeaderButtonGroup>
+                    </DataViewHeaderGroup>
+
+                    {!isBreak640 && (
+                      <>
+                        <DataViewHeaderGroup noShrink={true}>
+                          <DataViewHeaderAction onMouseDown={onFirstRowClickEvt}>
+                            <Icon
+                              src="./icons/list-arrow-first.svg"
+                              tooltip={T("First", "move_first_tool_tip")}
+                            />
+                          </DataViewHeaderAction>
+                          <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
+                            <Icon
+                              src="./icons/list-arrow-previous.svg"
+                              tooltip={T("Previous", "move_prev_tool_tip")}
+                            />
+                          </DataViewHeaderAction>
+                          <DataViewHeaderAction onMouseDown={onNextRowClickEvt}>
+                            <Icon
+                              src="./icons/list-arrow-next.svg"
+                              tooltip={T("Next", "move_next_tool_tip")}
+                            />
+                          </DataViewHeaderAction>
+                          <DataViewHeaderAction onMouseDown={onLastRowClickEvt}>
+                            <Icon
+                              src="./icons/list-arrow-last.svg"
+                              tooltip={T("Last", "move_last_tool_tip")}
+                            />
+                          </DataViewHeaderAction>
+                        </DataViewHeaderGroup>
+
+                        <DataViewHeaderGroup noShrink={true}>
+                          {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
+                          &nbsp;/&nbsp;
+                          {maxRowCountSeen}
+                        </DataViewHeaderGroup>
+                      </>
+                    )}
+
+                    <DataViewHeaderGroup noShrink={true}>
+                      {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
+                    </DataViewHeaderGroup>
+
+                    <DataViewHeaderGroup noShrink={true}>
+                      <DataViewHeaderAction
+                        onMouseDown={onFilterButtonClickEvt}
+                        isActive={isFilterSettingsVisible}
+                        className={"test-filter-button"}
+                      >
+                        <Icon
+                          src="./icons/search-filter.svg"
+                          tooltip={T("Filter", "filter_tool_tip")}
+                        />
+                      </DataViewHeaderAction>
+                      <FilterDropDown ctx={dataView} />
+                    </DataViewHeaderGroup>
+                  </div>
+
+                  <DataViewHeaderGroup noShrink={true}>
+                    <Dropdowner
+                      trigger={({ refTrigger, setDropped }) => (
+                        <DataViewHeaderAction
+                          refDom={refTrigger}
+                          onMouseDown={() => setDropped(true)}
+                          isActive={false}
+                        >
+                          <Icon src="./icons/dot-menu.svg" tooltip={""} />
+                        </DataViewHeaderAction>
+                      )}
+                      content={({ setDropped }) => (
+                        <Dropdown>
+                          <DropdownItem
+                            onClick={(event: any) => {
+                              setDropped(false);
+                              onExportToExcelClickEvt(event);
+                            }}
+                          >
+                            {T("Export to Excel", "excel_tool_tip")}
+                          </DropdownItem>
+                          <DropdownItem
+                            onClick={(event: any) => {
+                              setDropped(false);
+                              onColumnConfigurationClickEvt(event);
+                            }}
+                          >
+                            {T("Column configuration", "column_config_tool_tip")}
+                          </DropdownItem>
+                          <DropdownItem
+                            isDisabled={false}
+                            onClick={(event: any) => {
+                              setDropped(false);
+                              onRecordAuditClick(dataView)(event);
+                            }}
+                          >
+                            {T("Show audit", "audit_title")}
+                          </DropdownItem>
+                          <DropdownItem isDisabled={true}>
+                            {T("Show attachments", "attachment_button_tool_tip")}
+                          </DropdownItem>
+                          <DropdownItem
+                            isDisabled={false}
+                            onClick={(event: any) => {
+                              setDropped(false);
+                              onRecordInfoClick(dataView)(event);
+                            }}
+                          >
+                            {T("Show record information", "info_button_tool_tip")}
+                          </DropdownItem>
+                        </Dropdown>
+                      )}
                     />
-                  </DataViewHeaderAction>
-                </DataViewHeaderGroup>
-              ) : null}
-
-              <DataViewHeaderGroup noShrink={true}>
-                {isAddButton && (
-                  <DataViewHeaderAction className="isGreenHover" onClick={onCreateRowClickEvt}>
-                    <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
-                  </DataViewHeaderAction>
-                )}
-
-                {isDelButton && !!selectedRow && (
-                  <DataViewHeaderAction className="isRedHover" onMouseDown={onDeleteRowClickEvt}>
-                    <Icon src="./icons/minus.svg" tooltip={T("Delete", "delete_tool_tip")} />
-                  </DataViewHeaderAction>
-                )}
-
-                {isCopyButton && !!selectedRow && (
-                  <DataViewHeaderAction className="isOrangeHover" onMouseDown={onCopyRowClickEvt}>
-                    <Icon
-                      src="./icons/duplicate.svg"
-                      tooltip={T("Duplicate", "add_duplicate_tool_tip")}
-                    />
-                  </DataViewHeaderAction>
-                )}
-              </DataViewHeaderGroup>
-
-              <DataViewHeaderGroup grovable={true}>
-                {this.props.extension.render("actions")}
-                <DataViewHeaderButtonGroup>{this.renderActions(actions)}</DataViewHeaderButtonGroup>
-              </DataViewHeaderGroup>
-
-              <DataViewHeaderGroup noShrink={true}>
-                <DataViewHeaderAction onMouseDown={onFirstRowClickEvt}>
-                  <Icon
-                    src="./icons/list-arrow-first.svg"
-                    tooltip={T("First", "move_first_tool_tip")}
-                  />
-                </DataViewHeaderAction>
-                <DataViewHeaderAction onMouseDown={onPrevRowClickEvt}>
-                  <Icon
-                    src="./icons/list-arrow-previous.svg"
-                    tooltip={T("Previous", "move_prev_tool_tip")}
-                  />
-                </DataViewHeaderAction>
-                <DataViewHeaderAction onMouseDown={onNextRowClickEvt}>
-                  <Icon
-                    src="./icons/list-arrow-next.svg"
-                    tooltip={T("Next", "move_next_tool_tip")}
-                  />
-                </DataViewHeaderAction>
-                <DataViewHeaderAction onMouseDown={onLastRowClickEvt}>
-                  <Icon
-                    src="./icons/list-arrow-last.svg"
-                    tooltip={T("Last", "move_last_tool_tip")}
-                  />
-                </DataViewHeaderAction>
-              </DataViewHeaderGroup>
-
-              <DataViewHeaderGroup noShrink={true}>
-                {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
-                &nbsp;/&nbsp;
-                {maxRowCountSeen}
-              </DataViewHeaderGroup>
-
-              <DataViewHeaderGroup noShrink={true}>
-                {uiToolbar && uiToolbar.renderSection(SectionViewSwitchers)}
-              </DataViewHeaderGroup>
-
-              <DataViewHeaderGroup noShrink={true}>
-                <DataViewHeaderAction
-                  onMouseDown={onFilterButtonClickEvt}
-                  isActive={isFilterSettingsVisible}
-                  className={"test-filter-button"}
-                >
-                  <Icon src="./icons/search-filter.svg" tooltip={T("Filter", "filter_tool_tip")} />
-                </DataViewHeaderAction>
-                <FilterDropDown ctx={dataView} />
-              </DataViewHeaderGroup>
-            </div>
-
-            <DataViewHeaderGroup noShrink={true}>
-              <Dropdowner
-                trigger={({ refTrigger, setDropped }) => (
-                  <DataViewHeaderAction
-                    refDom={refTrigger}
-                    onMouseDown={() => setDropped(true)}
-                    isActive={false}
-                  >
-                    <Icon src="./icons/dot-menu.svg" tooltip={""} />
-                  </DataViewHeaderAction>
-                )}
-                content={({ setDropped }) => (
-                  <Dropdown>
-                    <DropdownItem
-                      onClick={(event: any) => {
-                        setDropped(false);
-                        onExportToExcelClickEvt(event);
-                      }}
-                    >
-                      {T("Export to Excel", "excel_tool_tip")}
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(event: any) => {
-                        setDropped(false);
-                        onColumnConfigurationClickEvt(event);
-                      }}
-                    >
-                      {T("Column configuration", "column_config_tool_tip")}
-                    </DropdownItem>
-                    <DropdownItem
-                      isDisabled={false}
-                      onClick={(event: any) => {
-                        setDropped(false);
-                        onRecordAuditClick(dataView)(event);
-                      }}
-                    >
-                      {T("Show audit", "audit_title")}
-                    </DropdownItem>
-                    <DropdownItem isDisabled={true}>
-                      {T("Show attachments", "attachment_button_tool_tip")}
-                    </DropdownItem>
-                    <DropdownItem
-                      isDisabled={false}
-                      onClick={(event: any) => {
-                        setDropped(false);
-                        onRecordInfoClick(dataView)(event);
-                      }}
-                    >
-                      {T("Show record information", "info_button_tool_tip")}
-                    </DropdownItem>
-                  </Dropdown>
-                )}
-              />
-            </DataViewHeaderGroup>
-          </>
-        )}
-      </DataViewHeader>
+                  </DataViewHeaderGroup>
+                </>
+              )}
+            </DataViewHeader>
+          );
+        }}
+      </Measure>
     );
   }
 }
