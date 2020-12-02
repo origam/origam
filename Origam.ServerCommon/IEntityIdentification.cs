@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -20,17 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.ServerCommon;
 
-namespace Origam.ServerCore.Model.UIService
+namespace Origam.ServerCommon
 {
-    public class GetFilterListValuesInput : IEntityIdentification
+    public interface IEntityIdentification
     {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        public Guid SessionFormIdentifier { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        public string Property { get; set; }
+        Guid DataStructureEntityId { get; set; }
+        Guid MenuId { get; set; }
+        Guid SessionFormIdentifier { get; set; }
     }
 }

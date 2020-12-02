@@ -911,7 +911,7 @@ namespace Origam.ServerCore.Controller
         private Result<DataStructureQuery, IActionResult> GetRowsGetGroupQuery(
             GetGroupsInput input, EntityData entityData)
         {
-            var customOrdering = GetOrderings(input.Ordering);
+            var customOrdering = GetOrderings(input.OrderingList);
 
             DataStructureColumn column = entityData.Entity.Column(input.GroupBy);
             if (column == null)

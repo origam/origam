@@ -34,6 +34,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.Server;
+using Origam.ServerCommon;
 using Origam.ServerCommon.Session_Stores;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model;
@@ -317,7 +318,7 @@ namespace Origam.ServerCore.Controller
             return Result.Ok<DataStructureQuery, IActionResult>(query);
         }
 
-        protected CustomOrderings GetOrderings(List<InputRowOrdering> orderingList)
+        protected CustomOrderings GetOrderings(List<IRowOrdering> orderingList)
         {
             var orderings = orderingList
                 .Select((inputOrdering, i) => 
@@ -331,9 +332,9 @@ namespace Origam.ServerCore.Controller
         }
         
         protected Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
-            GetRowsInput input, EntityData entityData)
+            ILazyRowLoadInput input, EntityData entityData)
         {
-            var customOrderings = GetOrderings(input.Ordering);
+            var customOrderings = GetOrderings(input.OrderingList);
 
             if(input.RowOffset != 0 && customOrderings.IsEmpty)
             {

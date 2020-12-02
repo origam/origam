@@ -24,11 +24,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Origam.Extensions;
+using Origam.Server;
+using Origam.ServerCommon;
 
 namespace Origam.ServerCore.Model.UIService
 
 {
-    public class GetRowsInput: IEntityIdentification
+    public class GetRowsInput: IEntityIdentification, ILazyRowLoadInput
     {
         [RequiredNonDefault]
         public Guid MenuId { get; set; }
@@ -37,6 +39,10 @@ namespace Origam.ServerCore.Model.UIService
         public string Filter { get; set; }
         public Dictionary<string, Guid> FilterLookups { get; set; }
         public List<InputRowOrdering> Ordering { get; set; }
+
+        public List<IRowOrdering> OrderingList =>
+            Ordering.ToList<IRowOrdering>();
+
         [Required]
         public int RowLimit { get; set; }        
         public int RowOffset { get; set; }

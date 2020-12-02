@@ -25,6 +25,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Origam.DA;
 using Origam.Extensions;
+using Origam.Server;
+using Origam.ServerCommon;
 
 namespace Origam.ServerCore.Model.UIService
 
@@ -45,5 +47,8 @@ namespace Origam.ServerCore.Model.UIService
         public Guid GroupByLookupId { get; set; }
         public Guid SessionFormIdentifier { get; set; }
         public List<Aggregation> AggregatedColumns { get; set; }
+
+        public List<IRowOrdering> OrderingList =>
+            Ordering.ToList<IRowOrdering>();
     }
 }
