@@ -45,11 +45,7 @@ namespace Origam.ServerCore.Controller
         {
             return Ok(new AboutInfo
             {
-                ServerVersion = "123456",
-                ClientCommitId = "d78d6bce120fe4ee7df97369670f3dc31b0cb5a3",
-                ClientCommitLink =
-                    "https://bitbucket.org/origamsource/origam-html5/commits/d78d6bce120fe4ee7df97369670f3dc31b0cb5a3",
-                ClientBuildDate = DateTime.Now.ToString()
+                ServerVersion = "Placeholder to be changed at build time",
             });
         }
     }
