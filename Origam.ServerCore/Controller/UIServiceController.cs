@@ -64,7 +64,6 @@ namespace Origam.ServerCore.Controller
     {
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IDataLookupService lookupService;
-        private readonly IDataService dataService;
         private readonly IOptions<RequestLocalizationOptions> 
             localizationOptions;
         private readonly CustomAssetsConfig customAssetsConfig;
@@ -83,7 +82,6 @@ namespace Origam.ServerCore.Controller
             customAssetsConfig = customAssetsOptions.Value;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
-            dataService = DataService.GetDataService();
             chatConfig = chatConfigOptions.Value;
         }
         #region Endpoints
@@ -705,38 +703,7 @@ namespace Origam.ServerCore.Controller
             }
             return null;
         }
-        private Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
-            DataStructureQuery dataStructureQuery, Guid methodId, bool returnKeyValuePairs)
-        {
-            Result<DataStructureMethod, IActionResult> method 
-                = FindItem<DataStructureMethod>(dataStructureQuery.MethodId);
-            if(method.IsSuccess)
-            {
-                var structureMethod = method.Value;
-                if(structureMethod is DataStructureWorkflowMethod)
-                {
-                    var menuItem = FindItem<FormReferenceMenuItem>(methodId)
-                        .Value;
-                    IEnumerable<object> result = LoadData(
-                        menuItem,dataStructureQuery).ToList();
-                    return Result.Ok<IEnumerable<object>, IActionResult>(result);
-                }
-            }
-            if(returnKeyValuePairs)
-            {
-                var linesAsPairs = dataService
-                    .ExecuteDataReaderReturnPairs(dataStructureQuery)
-                    .ToList();
-                return Result.Ok<IEnumerable<object>, IActionResult>(linesAsPairs);
-            }
-            else
-            {
-                var linesAsArrays = dataService
-                    .ExecuteDataReader(dataStructureQuery)
-                    .ToList();
-                return Result.Ok<IEnumerable<object>, IActionResult>(linesAsArrays);
-            }
-        }
+      
         private Result<FormReferenceMenuItem, IActionResult> CheckLookupIsAllowedInMenu(
             FormReferenceMenuItem menuItem, Guid lookupId)
         {
@@ -864,18 +831,7 @@ namespace Origam.ServerCore.Controller
                 .All(colName => actualColumnNames.Contains(colName));
         }
 
-        private CustomOrderings GetOrderings(List<InputRowOrdering> orderingList)
-        {
-            var orderings = orderingList
-                .Select((inputOrdering, i) => 
-                    new Ordering(
-                        columnName: inputOrdering.ColumnId, 
-                        direction: inputOrdering.Direction, 
-                        lookupId: inputOrdering.LookupId, 
-                        sortOrder: i + 1000)
-                ).ToList();
-            return new CustomOrderings(orderings);
-        }
+     
         
         private Result<DataStructureQuery, IActionResult> GetRowsGetAggregationQuery(
             GetGroupsAggregations input, EntityData entityData)
@@ -896,45 +852,7 @@ namespace Origam.ServerCore.Controller
             return AddMethodAndSource(
                 input.SessionFormIdentifier, input.MasterRowId, entityData, query);
         }
-        private Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
-            GetRowsInput input, EntityData entityData)
-        {
-            var customOrderings = GetOrderings(input.Ordering);
-
-            if(input.RowOffset != 0 && customOrderings.IsEmpty)
-            {
-                return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
-            }
-            var query = new DataStructureQuery
-            {
-                Entity = entityData.Entity.Name,
-                CustomFilters = new CustomFilters
-                    {
-                        Filters = input.Filter,
-                        FilterLookups = input.FilterLookups
-                    },
-                CustomOrderings = customOrderings,
-                RowLimit = input.RowLimit,
-                RowOffset = input.RowOffset,
-                ColumnsInfo = new ColumnsInfo(input.ColumnNames
-                    .Select(colName =>
-                    {
-                        var field = entityData.Entity.Column(colName).Field;
-                        return new ColumnData(
-                            name: colName,
-                            isVirtual: (field is DetachedField),
-                            defaultValue: (field as DetachedField)
-                                ?.DefaultValue?.Value,
-                            hasRelation: (field as DetachedField)
-                                ?.ArrayRelation != null);
-                    })
-                    .ToList(),
-                    renderSqlForDetachedFields: true),
-                ForceDatabaseCalculation = true,
-            };
-            return AddMethodAndSource(
-                input.SessionFormIdentifier, input.MasterRowId, entityData, query);
-        }
+      
         private Result<DataStructureQuery, IActionResult> GetFilterListValuesQuery(
             GetFilterListValuesInput input, EntityData entityData)
         {
@@ -1116,49 +1034,6 @@ namespace Origam.ServerCore.Controller
                     auditLog.Tables[0], false));
             }
             return Ok();
-        }
-        private IEnumerable<object> LoadData(
-            FormReferenceMenuItem menuItem, 
-            DataStructureQuery dataStructureQuery)
-        {
-            var datasetBuilder = new DataSetBuilder();
-            var data = datasetBuilder.InitializeFullStructure(
-                menuItem.ListDataStructureId,menuItem.DefaultSet);
-            var listData = datasetBuilder.InitializeListStructure(
-                data,menuItem.ListEntity.Name,false);
-            return TransformData(datasetBuilder.LoadListData(
-                new List<string>(), listData, 
-                menuItem.ListEntity.Name, menuItem.ListSortSet,menuItem), 
-                dataStructureQuery);
-        }
-
-        private IEnumerable<object> TransformData(
-            DataSet dataSet, DataStructureQuery query)
-        {
-            var table = dataSet.Tables[0];
-            foreach(DataRow dataRow in table.Rows)
-            {
-                var values = new object[query.ColumnsInfo.Count];
-                for(var i = 0; i < query.ColumnsInfo.Count; i++)
-                {
-                    values[i] = dataRow.Field<object>(query.ColumnsInfo.Columns[i].Name);
-                }
-                yield return ProcessReaderOutput(
-                    values, query.ColumnsInfo);
-            }
-        }
-        private List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
-        {
-            if(columnsInfo == null)
-            {
-                throw new ArgumentNullException(nameof(columnsInfo));
-            }
-            var updatedValues = new List<object>();
-            for(var i = 0; i < columnsInfo.Count; i++)
-            {
-                updatedValues.Add(values[i]);
-            }
-            return updatedValues;
         }
         
         private void AddConfigData(PortalResult result)
