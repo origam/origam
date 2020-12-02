@@ -206,7 +206,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
             RowLimit: SCROLL_ROW_CHUNK,
             RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(dataView),
-            MasterRowId: undefined,
           });
         }
       }else{
