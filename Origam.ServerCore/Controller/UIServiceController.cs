@@ -322,8 +322,7 @@ namespace Origam.ServerCore.Controller
                     .Bind(dataStructureQuery=>
                         ExecuteDataReader(
                             dataStructureQuery: dataStructureQuery,
-                            methodId: input.MenuId,
-                            returnKeyValuePairs: false))
+                            methodId: input.MenuId))
                     .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             });
@@ -336,10 +335,7 @@ namespace Origam.ServerCore.Controller
             {
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetAggregationQuery(input, entityData))                    
-                    .Bind(dataStructureQuery => ExecuteDataReader(
-                        dataStructureQuery: dataStructureQuery, 
-                        methodId: input.MenuId, 
-                        returnKeyValuePairs: true))
+                    .Bind(ExecuteDataReaderGetPairs)
                     .Map(ToActionResult)
                     .Bind(ExtractAggregationList)
                     .Finally(UnwrapReturnValue);
@@ -353,10 +349,7 @@ namespace Origam.ServerCore.Controller
             {
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetGroupQuery(input, entityData))                    
-                    .Bind(dataStructureQuery => ExecuteDataReader(
-                        dataStructureQuery: dataStructureQuery,
-                        methodId: input.MenuId,
-                        returnKeyValuePairs: true))
+                    .Bind(ExecuteDataReaderGetPairs)
                     .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             });
@@ -594,10 +587,7 @@ namespace Origam.ServerCore.Controller
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetFilterListValuesQuery(
                         input, entityData))                    
-                    .Bind(dataStructureQuery => ExecuteDataReader(
-                        dataStructureQuery: dataStructureQuery,
-                        methodId: input.MenuId,
-                        returnKeyValuePairs: true))
+                    .Bind(ExecuteDataReaderGetPairs)
                     .Bind(StreamlineFilterListValues)
                     .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);

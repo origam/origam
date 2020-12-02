@@ -370,9 +370,19 @@ namespace Origam.ServerCore.Controller
             return AddMethodAndSource(
                 input.SessionFormIdentifier, input.MasterRowId, entityData, query);
         }
-        
+
+
+        protected Result<IEnumerable<IEnumerable<KeyValuePair<string, object>>>, IActionResult> 
+            ExecuteDataReaderGetPairs(
+            DataStructureQuery dataStructureQuery)
+        {
+            var linesAsPairs = dataService
+                .ExecuteDataReaderReturnPairs(dataStructureQuery);
+            return Result.Ok<IEnumerable<IEnumerable<KeyValuePair<string, object>>>, IActionResult>(linesAsPairs);
+        }
+
         protected Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
-            DataStructureQuery dataStructureQuery, Guid methodId, bool returnKeyValuePairs)
+            DataStructureQuery dataStructureQuery, Guid methodId)
         {
             Result<DataStructureMethod, IActionResult> method 
                 = FindItem<DataStructureMethod>(dataStructureQuery.MethodId);
@@ -388,20 +398,10 @@ namespace Origam.ServerCore.Controller
                     return Result.Ok<IEnumerable<object>, IActionResult>(result);
                 }
             }
-            if(returnKeyValuePairs)
-            {
-                var linesAsPairs = dataService
-                    .ExecuteDataReaderReturnPairs(dataStructureQuery)
-                    .ToList();
-                return Result.Ok<IEnumerable<object>, IActionResult>(linesAsPairs);
-            }
-            else
-            {
-                var linesAsArrays = dataService
-                    .ExecuteDataReader(dataStructureQuery)
-                    .ToList();
-                return Result.Ok<IEnumerable<object>, IActionResult>(linesAsArrays);
-            }
+            var linesAsArrays = dataService
+                .ExecuteDataReader(dataStructureQuery)
+                .ToList();
+            return Result.Ok<IEnumerable<object>, IActionResult>(linesAsArrays);
         }
         
         private IEnumerable<object> LoadData(
