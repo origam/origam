@@ -44,10 +44,7 @@ export class CScreenToolbar extends React.Component<{}> {
 
   @observable
   aboutInfo: IAboutInfo = { 
-    serverVersion: "",
-    clientCommitId: "",
-    clientCommitLink: "",
-    clientBuildDate: ""
+    serverVersion: ""
   };
 
   state = {

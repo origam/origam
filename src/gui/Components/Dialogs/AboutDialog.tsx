@@ -12,6 +12,8 @@ export class AboutDialog extends React.Component<{
   onOkClick: () => void;
 }> {
   render() {
+    const commitId = (window as any).ORIGAM_CLIENT_REVISION_HASH;
+    const commitDate = (window as any).ORIGAM_CLIENT_REVISION_DATE;
     return (
       <ModalWindow
         title={T("About", "about_application")}
@@ -33,10 +35,10 @@ export class AboutDialog extends React.Component<{
           <div>Client version: </div>
           <div className={S.version}>
             <div>{"Commit ID: "} 
-              <a href={this.props.aboutInfo.clientCommitLink}>{this.props.aboutInfo.clientCommitId}</a>
+              <a href={"https://bitbucket.org/origamsource/origam-html5/commits/"+commitId}>{commitId}</a>
               </div>
             {/* <div>Commit Link: {this.props.aboutInfo.clientCommitLink}</div> */}
-            <div>Build Date: {this.props.aboutInfo.clientBuildDate}</div>
+            <div>Commit Date: {commitDate}</div>
           </div>
           <br/>
           <div>Copyright 2020 Advantage Solutions, s. r. o.</div>
