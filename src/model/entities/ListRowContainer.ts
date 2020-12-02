@@ -110,10 +110,6 @@ export class ListRowContainer implements IRowsContainer {
       .filter(row => row) as any[][];
   }
 
-  @computed get loadedRowsCount() {
-    return this.rows.length;
-  }
-
   internalRowOrderingFunc(row1: any[], row2: any[]) {
     if(this.forcedFirstRowId !== undefined){
       if (this.forcedFirstRowId === this.rowIdGetter(row1)) return -1;

@@ -52,10 +52,6 @@ export class DataTable implements IDataTable {
     return this.rowsContainer.rows;
   }
 
-  get loadedRowsCount() {
-    return this.rowsContainer.loadedRowsCount;
-  }
-
   @computed get rows(): any[][] {
     return this.rowsContainer.rows.filter((row) => !this.isRowDirtyDeleted(row));
   }
