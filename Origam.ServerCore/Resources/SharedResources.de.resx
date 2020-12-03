@@ -407,4 +407,22 @@
   <data name="Required" xml:space="preserve">
     <value>{0} is required</value>
   </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email ist erforderlich</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>Vorname ist erforderlich</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Name ist erforderlich</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Passwort ist erforderlich</value>
+  </data>
+  <data name="TwoFactorCodeRequired" xml:space="preserve">
+    <value>Bestätigungscode ist erforderlich</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>Benutzername ist erforderlich</value>
+  </data>
 </root>
