@@ -52,6 +52,12 @@ import {getSessionId} from "model/selectors/getSessionId";
 import {IPolymorphRules} from "model/entities/types/IApi";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getUserOrdering } from "model/selectors/DataView/getUserOrdering";
+import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
+import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
+import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -613,13 +619,36 @@ export class DataView implements IDataView {
           : undefined
       }
     });
+    const excelMaxRowCount = 1048576;
     const api = getApi(this);
-    const url = await api.getExcelFileUrl({
-      Entity: this.entity,
-      Fields: fields,
-      SessionFormIdentifier: getSessionId(this),
-      Filters: getUserFilters(this)
-    });
+    let url;
+    if(isInfiniteScrollingActive(this)){
+      url = await api.getExcelFileUrl({
+        Entity: this.entity,
+        Fields: fields,
+        SessionFormIdentifier: getSessionId(this),
+        RowIds: [],
+        LazyLoadedEntityInput: {
+          SessionFormIdentifier: getSessionId(this),
+          Filter: getUserFilters(this),
+          MenuId: getMenuItemId(this),
+          DataStructureEntityId: getDataStructureEntityId(this),
+          Ordering: getUserOrdering(this),
+          RowLimit: excelMaxRowCount,
+          RowOffset: 0,
+          ColumnNames: getColumnNamesToLoad(this),
+          FilterLookups: getUserFilterLookups(this)
+        }
+      });
+    }else{
+      url = await api.getExcelFileUrl({
+        Entity: this.entity,
+        Fields: fields,
+        SessionFormIdentifier: getSessionId(this),
+        RowIds: this.dataTable.rows.map(row => this.dataTable.getRowId(row)),
+        LazyLoadedEntityInput: undefined
+      });
+    }
     window.open(url);
   }
 
