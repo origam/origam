@@ -159,29 +159,22 @@ namespace Origam.ServerCommon.Pages
                         resultContentType);
                 }
                 string message;
-                if (resultContentType == "application/json")
+                context.Response.TrySkipIisCustomErrors = true;
+                if (ex is RuleException ruleEx)
                 {
-                    context.Response.TrySkipIisCustomErrors = true;
-                    if (ex is RuleException ruleEx)
-                    {
-                        message =
-                            $@"{{""Message"" : 
-                            {JsonConvert.SerializeObject(ruleEx.Message)}, 
-                            ""RuleResult"" : 
-                            {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
-                    }
-                    else
-                    {
-                        message = JsonConvert.SerializeObject(ex);
-                    }
+                    message =
+                        $@"{{""Message"" : 
+                        {JsonConvert.SerializeObject(ruleEx.Message)}, 
+                        ""RuleResult"" : 
+                        {JsonConvert.SerializeObject(ruleEx.RuleResult)}}}";
                 }
                 else
                 {
-                    message = ex.Message + ex.StackTrace;
+                    message = JsonConvert.SerializeObject(ex);
                 }
-                context.Response.StatusCode = 400;
-                context.Response.ContentType = resultContentType;
                 context.Response.Clear();
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";   
                 context.Response.Write(message);
                 context.Response.End();
             }
