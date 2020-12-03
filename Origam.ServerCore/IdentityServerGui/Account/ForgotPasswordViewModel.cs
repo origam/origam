@@ -4,7 +4,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 {
     public class ForgotPasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "EmailRequired")]
         [EmailAddress]
         public string Email { get; set; }
     }

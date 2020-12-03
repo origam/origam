@@ -8,9 +8,9 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 {
     public class LoginInputModel
     {
-        [Required]
+        [Required(ErrorMessage = "UserNameRequired")]
         public string Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "PasswordRequired")]
         public string Password { get; set; }
         public bool RememberLogin { get; set; }
         public string ReturnUrl { get; set; }
