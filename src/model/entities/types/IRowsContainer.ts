@@ -21,7 +21,7 @@ export interface IRowsContainer {
 
   allRows: any[];
 
-  updateSortAndFilter(): void;
+  updateSortAndFilter(data?: {retainPreviousSelection?: true}): void;
 
   start(): void;
 
