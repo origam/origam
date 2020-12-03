@@ -86,7 +86,7 @@ export class RowState implements IRowState {
     }.bind(this)
   );
 
-  triggerLoad = _.debounce(this.triggerLoadImm, 100);
+  triggerLoad = _.debounce(this.triggerLoadImm, 666);
 
   getValue(key: string) {
     //console.log("getValue", key);
