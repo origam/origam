@@ -55,10 +55,6 @@ export class ScrollRowContainer implements IRowsContainer {
     return this.rows;
   }
 
-  @computed get loadedRowsCount() {
-    return this.rows.length;
-  }
-
   clear(): void {
     this.rowChunks.length = 0;
   }

@@ -36,7 +36,7 @@ export class Action implements IAction {
       return true;
     }
     const dataTable = getDataTable(this);
-    if(dataTable.loadedRowsCount === 0) {
+    if(dataTable.maxRowCountSeen === 0) {
       return false
     }
     const selRowId = getSelectedRowId(this);
