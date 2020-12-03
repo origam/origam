@@ -14,7 +14,7 @@ import { Dropdown } from "gui02/components/Dropdown/Dropdown";
 import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { Icon } from "gui02/components/Icon/Icon";
 import { FilterDropDown } from "gui02/connections/FilterDropDown";
-import { MobXProviderContext, observer } from "mobx-react";
+import { MobXProviderContext, Observer, observer } from "mobx-react";
 import uiActions from "model/actions-ui-tree";
 import { getIsRowMovingDisabled } from "model/actions-ui/DataView/getIsRowMovingDisabled";
 import { onColumnConfigurationClick } from "model/actions-ui/DataView/onColumnConfigurationClick";
@@ -79,25 +79,33 @@ export class CDataViewHeaderInner extends React.Component<{
         <Dropdowner
           style={{ width: "auto" }}
           trigger={({ refTrigger, setDropped }) => (
-            <DataViewHeaderButton
-              title={action.caption}
-              disabled={!getIsEnabledAction(action)}
-              onClick={() => setDropped(true)}
-              domRef={refTrigger}
-            >
-              {action.caption}
-            </DataViewHeaderButton>
+            <Observer key={action.id}>
+              {() => (
+                <DataViewHeaderButton
+                  title={action.caption}
+                  disabled={!getIsEnabledAction(action)}
+                  onClick={() => setDropped(true)}
+                  domRef={refTrigger}
+                >
+                  {action.caption}
+                </DataViewHeaderButton>
+              )}
+            </Observer>
           )}
           content={() => (
             <Dropdown>
               {childActions.map((action) => (
-                <DropdownItem isDisabled={!getIsEnabledAction(action)}>
-                  <DataViewHeaderDropDownItem
-                    onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-                  >
-                    {action.caption}
-                  </DataViewHeaderDropDownItem>
-                </DropdownItem>
+                <Observer key={action.id}>
+                  {() => (
+                    <DropdownItem isDisabled={!getIsEnabledAction(action)}>
+                      <DataViewHeaderDropDownItem
+                        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+                      >
+                        {action.caption}
+                      </DataViewHeaderDropDownItem>
+                    </DropdownItem>
+                  )}
+                </Observer>
               ))}
             </Dropdown>
           )}
@@ -105,13 +113,17 @@ export class CDataViewHeaderInner extends React.Component<{
       );
     }
     return (
-      <DataViewHeaderButton
-        title={action.caption}
-        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-        disabled={!getIsEnabledAction(action)}
-      >
-        {action.caption}
-      </DataViewHeaderButton>
+      <Observer key={action.id}>
+        {() => (
+          <DataViewHeaderButton
+            title={action.caption}
+            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+            disabled={!getIsEnabledAction(action)}
+          >
+            {action.caption}
+          </DataViewHeaderButton>
+        )}
+      </Observer>
     );
   }
 
