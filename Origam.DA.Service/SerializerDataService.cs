@@ -220,7 +220,7 @@ namespace Origam.DA.Service
 	        throw new NotImplementedException();
         }
 
-        public IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
+        public IEnumerable<Dictionary<string, object>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
         {
 	        throw new NotImplementedException();
         }

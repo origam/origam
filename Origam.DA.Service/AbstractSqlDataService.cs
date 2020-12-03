@@ -1618,7 +1618,7 @@ namespace Origam.DA.Service
 			        => line.Select(pair => pair.Value));
         }
 
-        public override IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
+        public override IEnumerable<Dictionary<string, object>> ExecuteDataReaderReturnPairs(DataStructureQuery query)
         {
 	        return ExecuteDataReaderInternal(query)
 		        .Select(line => ExpandAggregationData(line, query))

@@ -81,7 +81,7 @@ namespace Origam.DA
         IEnumerable<IEnumerable<object>> ExecuteDataReader
 	        (DataStructureQuery dataStructureQuery);
 
-        IEnumerable<IEnumerable<KeyValuePair<string, object>>>
+        IEnumerable<Dictionary<string, object>>
 	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
 	}
 }

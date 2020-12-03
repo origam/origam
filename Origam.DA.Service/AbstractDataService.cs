@@ -826,7 +826,7 @@ namespace Origam.DA.Service
         public abstract IEnumerable<IEnumerable<object>> ExecuteDataReader
 	        (DataStructureQuery dataStructureQuery);
 
-        public abstract IEnumerable<IEnumerable<KeyValuePair<string, object>>>
+        public abstract IEnumerable<Dictionary<string, object>>
 	        ExecuteDataReaderReturnPairs(DataStructureQuery query);
         
         #endregion

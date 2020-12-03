@@ -336,8 +336,8 @@ namespace Origam.ServerCore.Controller
                 return EntityIdentificationToEntityData(input)
                     .Bind(entityData => GetRowsGetAggregationQuery(input, entityData))                    
                     .Bind(ExecuteDataReaderGetPairs)
-                    .Map(ToActionResult)
                     .Bind(ExtractAggregationList)
+                    .Map(ToActionResult)
                     .Finally(UnwrapReturnValue);
             });
         }
@@ -602,21 +602,21 @@ namespace Origam.ServerCore.Controller
                 .GetMenuBinding(lookupId, ReferenceId)
                 .MenuId;
         }
-        private Result<IActionResult, IActionResult> ExtractAggregationList(IActionResult fullReaderResult)
+        private Result<object, IActionResult> ExtractAggregationList(IEnumerable<Dictionary<string, object>> readerResult)
         {
-            var outerResultList = ((fullReaderResult as OkObjectResult)?.Value as List<IEnumerable<KeyValuePair<string, object>>>);
-            if(outerResultList == null || outerResultList.Count == 0)
+            var rowList = readerResult?.ToList();
+            if(rowList == null || rowList.Count == 0)
             {
-                return Result.Ok<IActionResult, IActionResult>(fullReaderResult);
+                return Result.Ok<object, IActionResult>(new List<Dictionary<string, object>>());
             }
 
-            var innerDictionary = outerResultList[0] as Dictionary<string, object>;
-            if(innerDictionary == null || !innerDictionary.ContainsKey("aggregations"))
+            var firstRow = rowList[0];
+            if(firstRow == null || !firstRow.ContainsKey("aggregations"))
             {
-                return Result.Ok<IActionResult, IActionResult>(fullReaderResult);
+                return Result.Ok<object, IActionResult>(new List<Dictionary<string, object>>());
             }
 
-            return Result.Ok<IActionResult, IActionResult>(Ok(innerDictionary["aggregations"]));
+            return Result.Ok<object, IActionResult>(firstRow["aggregations"]);
         }
         private Result<IEnumerable<object>, IActionResult> StreamlineFilterListValues(
             IEnumerable<IEnumerable<KeyValuePair<string, object>>> fullReaderResult)

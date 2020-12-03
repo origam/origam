@@ -372,13 +372,13 @@ namespace Origam.ServerCore.Controller
         }
 
 
-        protected Result<IEnumerable<IEnumerable<KeyValuePair<string, object>>>, IActionResult> 
+        protected Result<IEnumerable<Dictionary<string, object>>, IActionResult> 
             ExecuteDataReaderGetPairs(
             DataStructureQuery dataStructureQuery)
         {
             var linesAsPairs = dataService
                 .ExecuteDataReaderReturnPairs(dataStructureQuery);
-            return Result.Ok<IEnumerable<IEnumerable<KeyValuePair<string, object>>>, IActionResult>(linesAsPairs);
+            return Result.Ok<IEnumerable<Dictionary<string, object>>, IActionResult>(linesAsPairs);
         }
 
         protected Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
