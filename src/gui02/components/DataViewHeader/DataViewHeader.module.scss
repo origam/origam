@@ -2,8 +2,8 @@
 @import "src/styles/definitions.scss";
 
 .root {
-  min-height: 0px;
-  max-height: 0px;
+  min-height: 35px;
+  max-height: 35px;
   flex-shrink: 0;
   background: #ffffff;
   padding: 0 1em 0 2em;
@@ -23,8 +23,8 @@
   border-width: 0 0 1px 0;
   
   &:global(.isVisible) {
-    min-height: 30px;
-    max-height: 30px;
+    min-height: 35px;
+    max-height: 35px;
     border-bottom: 1px solid #dddddd;
   }
 
@@ -39,6 +39,7 @@
   }
 
   :global(.fullspaceBlock) {
+    min-height: 30px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
