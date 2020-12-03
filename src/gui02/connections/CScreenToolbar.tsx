@@ -59,8 +59,6 @@ export class CScreenToolbar extends React.Component<{}> {
   }
 
   componentDidMount(){
-    // this.aboutInfo = getAboutInfo(this.application)();
-    // const self = this;
     runInFlowWithHandler(
       {
         ctx: this.application,
@@ -69,15 +67,6 @@ export class CScreenToolbar extends React.Component<{}> {
         this.aboutInfo = await api.getAboutInfo();
       }
     });
-    // flow(function*() {
-    //   try {
-    //     const api = getApi(self.application);
-    //     self.aboutInfo = yield api.getAboutInfo();
-    //   } catch (e) {
-    //     yield* handleError(self.application)(e);
-    //     throw e;
-    //   }
-    // });
   }
 
   @action.bound
