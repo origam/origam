@@ -1622,7 +1622,9 @@ namespace Origam.DA.Service
         {
 	        return ExecuteDataReaderInternal(query)
 		        .Select(line => ExpandAggregationData(line, query))
-		        .Select( line=> line.ToDictionary(
+		        .Select( line=> line
+			        .Where(pair => pair.Key != null)
+			        .ToDictionary(
 			        pair => pair.Key, 
 			        pair => pair.Value));
         }
@@ -1635,7 +1637,7 @@ namespace Origam.DA.Service
 	        foreach (var pair in line)
 	        {
 		        var aggregatedColumn = query.AggregatedColumns
-			        .FirstOrDefault(column => column.SqlQueryColumnName == pair.Key);
+			        ?.FirstOrDefault(column => column.SqlQueryColumnName == pair.Key);
 		        if (aggregatedColumn != null)
 		        {
 			        aggregationData.Add(
