@@ -619,12 +619,10 @@ namespace Origam.ServerCore.Controller
             return Result.Ok<IActionResult, IActionResult>(Ok(innerDictionary["aggregations"]));
         }
         private Result<IEnumerable<object>, IActionResult> StreamlineFilterListValues(
-            IEnumerable<object> fullReaderResult)
+            IEnumerable<IEnumerable<KeyValuePair<string, object>>> fullReaderResult)
         {
             var streamlinedList = new List<object>();
-            foreach(var entry 
-                in (List<IEnumerable<KeyValuePair<string, object>>>) 
-                fullReaderResult)
+            foreach(var entry in fullReaderResult)
             {
                 streamlinedList.Add(entry.First().Value);
             }

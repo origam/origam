@@ -1,4 +1,4 @@
-#region license
+﻿#region license
 /*
 Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
@@ -20,14 +20,26 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Origam.Server;
+using Origam.ServerCore.Model.UIService;
 
-public class InputRowOrdering: IRowOrdering
+namespace Origam.ServerCore.Model.Excel
 {
-    [Required] public string ColumnId { get; set; }
+    public class ExcelExportInput
+    {
+        [Required]
+        public string Entity { get; set; }
 
-    [Required] public string Direction { get; set; }
+        [Required]
+        public List<EntityExportField> Fields { get; set; }
 
-    public Guid LookupId { get; set; }
+        [Required]
+        public Guid SessionFormIdentifier { get; set; }
+        
+        public List<object> RowIds { get; set; }
+        
+        public GetRowsInput LazyLoadedEntityInput { get; set; }
+    }
 }

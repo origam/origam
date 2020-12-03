@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
@@ -56,7 +57,29 @@ namespace Origam.ServerCommon
         public ExcelFormat ExportFormat => settings.GUIExcelExportFormat == "XLSX"
             ? ExcelFormat.XLSX
             : ExcelFormat.XLS;
-        
+
+        public IWorkbook FillWorkBook(EntityExportInfo info, IEnumerable< IEnumerable<KeyValuePair<string, object>>> rows)
+        {
+            IWorkbook workbook = CreateWorkbook();
+            SetupDateCellStyle(workbook);
+            ISheet sheet = workbook.CreateSheet("Data");
+            SetupSheetHeader(sheet, info);
+            
+            int rowNumber = 0;
+            foreach (var row in rows)
+            {
+                if (!isExportUnlimited && (settings.ExportRecordsLimit > -1)
+                                       && (rowNumber > settings.ExportRecordsLimit))
+                {
+                    FillExportLimitExceeded(workbook, sheet, rowNumber);
+                    break;
+                }
+                rowNumber++;
+                AddRowToSheet(info, workbook, sheet, rowNumber, row.ToList());
+            }
+            return workbook;
+        }
+
         public IWorkbook FillWorkBook(EntityExportInfo info)
         {
             IWorkbook workbook = CreateWorkbook();
@@ -94,6 +117,52 @@ namespace Origam.ServerCommon
             {
                 return new XSSFWorkbook();
             }
+        }
+
+        private void AddRowToSheet(
+            EntityExportInfo info, IWorkbook workbook, ISheet sheet,
+            int rowNumber, List<KeyValuePair<string, object>> row)
+        {
+            if (ExportFormat == ExcelFormat.XLS && rowNumber >= 65536)
+            {
+                throw new Exception("Cannot export more than 65536 lines into a .xls file. Try changing output format to .xlsx");
+            }
+
+            IRow excelRow = sheet.CreateRow(rowNumber);
+            for (int i = 0; i < info.Fields.Count; i++)
+            {
+                AddCellToRow(info, workbook, excelRow, i, row);
+            }
+        }
+        
+        private void AddCellToRow(
+            EntityExportInfo info, IWorkbook workbook, IRow excelRow,
+            int columnIndex, List<KeyValuePair<string, object>> row)
+        {
+            EntityExportField field = info.Fields[columnIndex];
+            ICell cell = excelRow.CreateCell(columnIndex);
+            object val = GetValue(field, row);
+            SetCellValue(workbook, val, cell);
+        }
+
+
+        private object GetValue(EntityExportField field, List<KeyValuePair<string, object>> row)
+        {
+            object val = row.First(pair => pair.Key == field.FieldName).Value;
+            if (val == null)
+            {
+                return null;
+            }
+            if (!string.IsNullOrEmpty(field.LookupId))
+            {
+                if (val is string[] valArray)
+                {
+                    return valArray.Select(value =>
+                        GetLookupValue(value, field.LookupId)).ToArray();
+                }
+                return GetLookupValue(val, field.LookupId);
+            }
+            return val;
         }
 
         private void AddRowToSheet(
@@ -255,12 +324,12 @@ namespace Origam.ServerCommon
 
         private void SetCellValue(IWorkbook workbook, object val, ICell cell)
         {
-            if ((val != null) && (val.GetType() == typeof(ArrayList)))
+            if (val is IEnumerable enumerable && !(val is string))
             {
                 String delimiter = ",";
                 String escapeDelimiter = "\\,";
                 StringBuilder sb = new StringBuilder();
-                foreach (object arrayItem in (ArrayList) val)
+                foreach (object arrayItem in enumerable)
                 {
                     // add array item to stream
                     if (sb.Length > 0) sb.Append(delimiter);
