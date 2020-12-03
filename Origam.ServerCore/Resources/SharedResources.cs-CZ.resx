@@ -393,4 +393,28 @@
   <data name="PasswordRequiresUniqueChars" xml:space="preserve">
     <value>Heslo musí obsahovat alespoň {0} různých znaků.</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>{0} je nutné vyplnit</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Heslo musí být vyplněno</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>Uživatelské jméno musí být vyplněno</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email musí být vyplněn</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Příjmení musí být vyplněno</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>Jméno musí být vyplněno</value>
+  </data>
+  <data name="TwoFactorCodeRequired" xml:space="preserve">
+    <value>Kód pro dvoufaktorové přihlášení musí být vyplněn</value>
+  </data>
 </root>

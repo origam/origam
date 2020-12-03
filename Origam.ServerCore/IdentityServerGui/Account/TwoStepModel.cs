@@ -27,7 +27,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 {
     public class TwoStepModel
     {
-        [Required]
+        [Required(ErrorMessage = "TwoFactorCodeRequired")]
         [DataType(DataType.Text)]
         public string TwoFactorCode { get; set; }
         public bool RememberLogin { get; set; }

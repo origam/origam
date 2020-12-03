@@ -333,4 +333,13 @@
   <data name="UnknownError" xml:space="preserve">
     <value>Ein unerwarteter Fehler ist aufgetreten. Bitte kontaktieren Sie den Support.</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>{0} is required</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
 </root>

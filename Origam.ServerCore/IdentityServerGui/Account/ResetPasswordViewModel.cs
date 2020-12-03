@@ -8,11 +8,11 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 {
     public class ResetPasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "EmailRequired")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "PasswordRequired")]
         [StringLength(100, ErrorMessage = "StringTooShort", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }

@@ -4,26 +4,26 @@ namespace Origam.ServerCore.IdentityServerGui.Account
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "EmailRequired")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "UserNameRequired")]
         [StringLength(100, ErrorMessage = "StringTooShort", MinimumLength = 6)]
         [DataType(DataType.Text)]
         public string UserName { get; set; }   
         
-        [Required]
+        [Required(ErrorMessage = "NameRequired")]
         [StringLength(100)]
         [DataType(DataType.Text)]
         public string Name { get; set; } 
         
-        [Required]
+        [Required(ErrorMessage = "FirstNameRequired")]
         [StringLength(100)]
         [DataType(DataType.Text)]
         public string FirstName { get; set; }
         
-        [Required]
+        [Required(ErrorMessage = "PasswordRequired")]
         [StringLength(100, ErrorMessage = "StringTooShort", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
