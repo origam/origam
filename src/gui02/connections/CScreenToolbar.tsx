@@ -32,6 +32,7 @@ import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { getApi } from "model/selectors/getApi";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { CtxResponsiveToolbar, ResponsiveBlock, ResponsiveContainer } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -45,6 +46,9 @@ export class CScreenToolbar extends React.Component<{}> {
   state = {
     hiddenActionIds: new Set<string>(),
   };
+  responsiveToolbar = new ResponsiveBlock((ids) => {
+    this.setState({ ...this.state, hiddenActionIds: ids });
+  });
 
   get application(): IApplication {
     return this.context.application;
