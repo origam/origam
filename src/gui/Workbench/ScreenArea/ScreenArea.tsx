@@ -14,6 +14,7 @@ import { onWorkflowAbortClick } from "../../../model/actions-ui/ScreenHeader/onW
 import { onWorkflowNextClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { T } from "../../../utils/translation";
 import { IActionPlacement } from "model/entities/types/IAction";
+import cx from "classnames";
 
 @observer
 class MainViewHandle extends React.Component<{
@@ -106,6 +107,7 @@ export const DialogScreen: React.FC<{
                         )
                         .map((action, idx) => (
                           <button
+                            className={cx({ isPrimary: action.isDefault })}
                             tabIndex={0}
                             key={action.id}
                             onClick={(event: any) => {

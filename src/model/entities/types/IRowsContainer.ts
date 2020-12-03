@@ -17,8 +17,6 @@ export interface IRowsContainer {
 
   maxRowCountSeen: number;
 
-  loadedRowsCount: number;
-
   rows: any[];
 
   allRows: any[];

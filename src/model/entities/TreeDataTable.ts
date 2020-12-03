@@ -15,10 +15,6 @@ export class TreeDataTable implements IDataTable {
 
   @observable.shallow rows: any[] = [];
 
-  get loadedRowsCount() {
-    return this.rows.length;
-  }
-
   get allRows(): any[][] {
     return this.rows;
   }
@@ -28,6 +24,14 @@ export class TreeDataTable implements IDataTable {
   }
   stop(){
 
+  }
+
+  @computed get identifierProperty() {
+    return this.properties.find((prop) => prop.id === this.dataSource.identifier);
+  }
+
+  get identifierDataIndex() {
+    return this.identifierProperty!.dataIndex;
   }
 
   additionalRowData: Map<string, IAdditionalRowData> = new Map();

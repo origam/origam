@@ -9,7 +9,7 @@ import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import DateCompleter from "./DateCompleter";
 import { getLocaleFromCookie } from "../../../../utils/cookies";
 import cx from "classnames";
-import { IFocusable } from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FocusManager";
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -141,7 +141,7 @@ export class DateTimeEditor extends React.Component<{
   onKeyDown?: (event: any) => void;
   onEditorBlur?: (event: any) => void;
   refocuser?: (cb: () => void) => () => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
 }> {
   @observable isDroppedDown = false;
 

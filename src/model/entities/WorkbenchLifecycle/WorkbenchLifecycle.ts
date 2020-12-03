@@ -414,14 +414,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (formScreen?.autoWorkflowNext) {
         yield onWorkflowNextClick(formScreen!)(undefined);
       }
-      when(
-        () => !getIsScreenOrAnyDataViewWorking(formScreen),
-        () => {
-          formScreen.dataViews.forEach(
-            (dataView: IDataView) => (getFocusManager(dataView).canAutoFocus = true)
-          );
-        }
-      );
     } catch (e) {
       yield* handleError(this)(e);
       yield* this.closeForm(newScreen);

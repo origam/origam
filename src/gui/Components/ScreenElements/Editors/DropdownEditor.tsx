@@ -18,7 +18,7 @@ import { getMenuItemId } from "../../../../model/selectors/getMenuItemId";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { getEntity } from "../../../../model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
-import { IFocusable } from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FocusManager";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 
 export interface IDropdownEditorProps {
@@ -41,7 +41,7 @@ export interface IDropdownEditorProps {
   LookupId?: string;
   Parameters?: { [key: string]: any };
   menuItemId?: string;
-  subscribeToFocusManager?: (obj: IFocusable) => () => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => () => void;
 
   refocuser?: (cb: () => void) => () => void;
   onTextChange?(event: any, value: string): void;

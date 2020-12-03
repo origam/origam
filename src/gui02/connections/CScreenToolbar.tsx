@@ -2,7 +2,7 @@ import { Icon } from "gui02/components/Icon/Icon";
 import { ScreenToolbar } from "gui02/components/ScreenToolbar/ScreenToolbar";
 import { ScreenToolbarAction } from "gui02/components/ScreenToolbar/ScreenToolbarAction";
 import { ScreenToolbarPusher } from "gui02/components/ScreenToolbar/ScreenToolbarPusher";
-import { MobXProviderContext, observer } from "mobx-react";
+import { MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
 import { action, flow, observable } from "mobx";
@@ -24,12 +24,7 @@ import { isIWebScreen } from "model/entities/types/IWebScreen";
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
 import { Dropdown } from "gui02/components/Dropdown/Dropdown";
 import { IAction, IActionType } from "model/entities/types/IAction";
-import {
-  CtxResponsiveToolbar,
-  ResponsiveBlock,
-  ResponsiveChild,
-  ResponsiveContainer,
-} from "gui02/components/ResponsiveBlock/ResponsiveBlock";
+
 import { T } from "../../utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
@@ -43,16 +38,13 @@ export class CScreenToolbar extends React.Component<{}> {
   static contextType = MobXProviderContext;
 
   @observable
-  aboutInfo: IAboutInfo = { 
+  aboutInfo: IAboutInfo = {
     serverVersion: ""
   };
 
   state = {
     hiddenActionIds: new Set<string>(),
   };
-  responsiveToolbar = new ResponsiveBlock((ids) => {
-    this.setState({ ...this.state, hiddenActionIds: ids });
-  });
 
   get application(): IApplication {
     return this.context.application;
@@ -84,14 +76,14 @@ export class CScreenToolbar extends React.Component<{}> {
     const customAssetsRoute = getCustomAssetsRoute(this.application);
 
     const iconsWillBeShown = toolbarActions
-      .flatMap(toolbar => toolbar.actions)
-      .some(action => action.iconUrl)
+      .flatMap((toolbar) => toolbar.actions)
+      .some((action) => action.iconUrl);
 
-    function getIcon(action: IAction){
-     if(action.iconUrl){
-       return <Icon src={customAssetsRoute + "/" + action.iconUrl} />
-     }
-     return iconsWillBeShown ? <div/> : null;
+    function getIcon(action: IAction) {
+      if (action.iconUrl) {
+        return <Icon src={customAssetsRoute + "/" + action.iconUrl} />;
+      }
+      return iconsWillBeShown ? <div /> : null;
     }
 
     return toolbarActions
@@ -130,11 +122,11 @@ export class CScreenToolbar extends React.Component<{}> {
         (otherAction) => otherAction.groupId === action.id
       );
       return (
-        <ResponsiveChild key={action.id} childKey={action.id} order={order}>
-          {({ refChild, isHidden }) => (
-            <Dropdowner
-              style={{ width: "auto" }}
-              trigger={({ refTrigger, setDropped }) => (
+        <Dropdowner
+          style={{ width: "auto" }}
+          trigger={({ refTrigger, setDropped }) => (
+            <Observer key={action.id}>
+              {() => (
                 <ScreenToolbarAction
                   rootRef={refTrigger}
                   onMouseDown={() => setDropped(true)}
@@ -146,25 +138,23 @@ export class CScreenToolbar extends React.Component<{}> {
                   label={action.caption}
                 />
               )}
-              content={() => (
-                <Dropdown>
-                  {this.getOverfullActionsDropdownContent(
-                    [{ section: "", actions: childActions }],
-                    undefined
-                  )}
-                </Dropdown>
-              )}
-            />
+            </Observer>
           )}
-        </ResponsiveChild>
+          content={() => (
+            <Dropdown>
+              {this.getOverfullActionsDropdownContent(
+                [{ section: "", actions: childActions }],
+                undefined
+              )}
+            </Dropdown>
+          )}
+        />
       );
     }
     return (
-      <ResponsiveChild key={action.id} childKey={action.id} order={order}>
-        {({ refChild, isHidden }) => (
+      <Observer key={action.id}>
+        {() => (
           <ScreenToolbarAction
-            rootRef={refChild}
-            isHidden={isHidden}
             icon={
               action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined
             }
@@ -172,7 +162,7 @@ export class CScreenToolbar extends React.Component<{}> {
             onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
           />
         )}
-      </ResponsiveChild>
+      </Observer>
     );
   }
 

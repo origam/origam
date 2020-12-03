@@ -4,7 +4,9 @@ import {
   SCROLL_ROW_CHUNK,
 } from "../../gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { IRowsContainer } from "./types/IRowsContainer";
-import {IOpenedScreen} from "model/entities/types/IOpenedScreen";
+import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { fixRowIdentifier } from "utils/dataRow";
 
 // The constants have to be defined here for the unit tests to work.
 // const MAX_CHUNKS_TO_HOLD = 20;
@@ -38,17 +40,11 @@ export class ScrollRowContainer implements IRowsContainer {
     return this._maxRowNumberSeen;
   }
 
-  updateSortAndFilter(){
+  updateSortAndFilter() {}
 
-  }
+  start() {}
 
-  start(){
-
-  }
-
-  stop(){
-
-  }
+  stop() {}
 
   @computed
   get rows() {
@@ -57,10 +53,6 @@ export class ScrollRowContainer implements IRowsContainer {
 
   get allRows() {
     return this.rows;
-  }
-
-  @computed get loadedRowsCount() {
-    return this.rows.length;
   }
 
   clear(): void {
@@ -101,13 +93,20 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   insert(index: number, row: any[]): Promise<any> {
+    const dataTable = getDataTable(this);
+    row = fixRowIdentifier(row, dataTable.identifierDataIndex);
     const { chunk, indexInChunk } = this.findChunkByRowIndex(index);
     chunk.insert(indexInChunk, row);
     return Promise.resolve();
   }
 
   @action.bound
-  set(rows: any[][]) {
+  set(rowsIn: any[][]) {
+    const dataTable = getDataTable(this);
+    const rows: any[][] = [];
+    for (let row of rowsIn) {
+      rows.push(fixRowIdentifier(row, dataTable.identifierDataIndex));
+    }
     this.clear();
     this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
     this.notifyResetListeners();
@@ -115,6 +114,8 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   substitute(row: any[]): void {
+    const dataTable = getDataTable(this);
+    row = fixRowIdentifier(row, dataTable.identifierDataIndex);
     for (let chunk of this.rowChunks) {
       const foundAndSubstituted = chunk.trySubstitute(row);
       if (foundAndSubstituted) {
@@ -148,7 +149,12 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   @action.bound
-  prependRecords(rows: any[][]) {
+  prependRecords(rowsIn: any[][]) {
+    const dataTable = getDataTable(this);
+    const rows: any[][] = [];
+    for (let row of rowsIn) {
+      rows.push(fixRowIdentifier(row, dataTable.identifierDataIndex));
+    }
     if (this.rowChunks.length === 0) {
       this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
       return;
@@ -164,7 +170,12 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   @action.bound
-  appendRecords(rows: any[][]) {
+  appendRecords(rowsIn: any[][]) {
+    const dataTable = getDataTable(this);
+    const rows: any[][] = [];
+    for (let row of rowsIn) {
+      rows.push(fixRowIdentifier(row, dataTable.identifierDataIndex));
+    }
     if (this.rowChunks.length === 0) {
       this.rowChunks.push(new RowChunk(0, rows, this.rowIdGetter, undefined));
       return;
@@ -207,10 +218,10 @@ export class ScrollRowContainer implements IRowsContainer {
   addedRowPositionLocked: boolean = false;
 
   getFirstRow(): any[] | undefined {
-    if(this.rows.length === 0){
-      return undefined
+    if (this.rows.length === 0) {
+      return undefined;
     }
-    return this.rows[0]
+    return this.rows[0];
   }
 }
 
@@ -339,5 +350,4 @@ class RowChunk {
   }
 }
 
-export const isScrollRowContainer = (o: any): o is ScrollRowContainer =>
-  o.$type_ScrollRowContainer;
+export const isScrollRowContainer = (o: any): o is ScrollRowContainer => o.$type_ScrollRowContainer;

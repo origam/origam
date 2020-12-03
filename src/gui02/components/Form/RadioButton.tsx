@@ -1,6 +1,6 @@
 import React from "react";
 import S from "./RadioButton.module.scss";
-import {IFocusable} from "../../../model/entities/FocusManager";
+import {IFocusAble} from "../../../model/entities/FocusManager";
 
 
 export class RadioButton extends React.Component<{
@@ -14,7 +14,7 @@ export class RadioButton extends React.Component<{
   onSelected: (value: any) => void;
   checked: boolean;
   onKeyDown: (event: any) => void;
-  subscribeToFocusManager?: (obj: IFocusable) => void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {

@@ -20,13 +20,13 @@ export interface IDataTable {
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
-  loadedRowsCount: number;
   allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
   maxRowCountSeen: number;
   rowsContainer: IRowsContainer;
   isEmpty: boolean;
   rowRemovedListeners: (() => void)[];
+  identifierDataIndex: number;
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;

@@ -7,6 +7,7 @@
   padding: 1.2em 0.9em;
   position: relative;
   white-space: nowrap;
+  min-width: 0;
   cursor: pointer;
 
   &:global(.isHidden) {
@@ -58,4 +59,8 @@
 
 .label {
   @include hoverItemAnimation;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

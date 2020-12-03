@@ -12,8 +12,8 @@ import { IRowsContainer } from "./types/IRowsContainer";
 import { formatNumber } from "./NumberFormating";
 import { getDataSource } from "model/selectors/DataSources/getDataSource";
 import { isScrollRowContainer } from "./ScrollRowContainer";
-import {getProperties} from "model/selectors/DataView/getProperties";
-import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getProperties } from "model/selectors/DataView/getProperties";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getDataSourceFieldByIndex } from "model/selectors/DataSources/getDataSourceFieldByIndex";
 
 export class DataTable implements IDataTable {
@@ -52,10 +52,6 @@ export class DataTable implements IDataTable {
     return this.rowsContainer.rows;
   }
 
-  get loadedRowsCount() {
-    return this.rowsContainer.loadedRowsCount;
-  }
-
   @computed get rows(): any[][] {
     return this.rowsContainer.rows.filter((row) => !this.isRowDirtyDeleted(row));
   }
@@ -75,6 +71,10 @@ export class DataTable implements IDataTable {
     return this.properties.find((prop) => prop.id === this.dataSource.identifier);
   }
 
+  get identifierDataIndex() {
+    return this.identifierProperty!.dataIndex;
+  }
+
   @computed get maxRowCountSeen() {
     const groups = getGrouper(this).topLevelGroups;
     if (groups.length > 0) {
@@ -84,8 +84,10 @@ export class DataTable implements IDataTable {
     }
   }
 
+
+
   getRowId(row: any[]): string {
-    return row[this.identifierProperty!.dataIndex];
+    return row[this.identifierDataIndex];
   }
 
   getCellValue(row: any[], property: IProperty) {
@@ -124,11 +126,9 @@ export class DataTable implements IDataTable {
 
   // Returns all values from currently loaded rows (in case the table is infinitely scrolled)
   getAllValuesOfProp(property: IProperty): Set<any> {
-      return new Set( 
-        this.rowsContainer.allRows
-          .map((row) => this.getCellValue(row, property))
-          .filter((row) => row)
-        );
+    return new Set(
+      this.rowsContainer.allRows.map((row) => this.getCellValue(row, property)).filter((row) => row)
+    );
   }
 
   getCellText(row: any[], property: IProperty) {
@@ -357,7 +357,7 @@ export class DataTable implements IDataTable {
   @action.bound
   deleteAdditionalCellData(row: any[], propertyId: string) {
     const additionalData = this.additionalRowData.get(this.getRowId(row));
-    if(!additionalData){
+    if (!additionalData) {
       return;
     }
     additionalData.dirtyFormValues.delete(propertyId);
@@ -381,16 +381,16 @@ export class DataTable implements IDataTable {
     const rowData = this.getAdditionalRowDataById(id);
     if (rowData) {
       const oldRow = this.getRowById(id)!;
-      for(let i=0; i<newRow.length; i++){
+      for (let i = 0; i < newRow.length; i++) {
         const dataSourceField = getDataSourceFieldByIndex(this, i)!;
-        if(newRow[i] !== oldRow[i]){
+        if (newRow[i] !== oldRow[i]) {
           rowData.dirtyFormValues.delete(dataSourceField.name);
           rowData.dirtyValues.delete(dataSourceField.name);
         }
-        if(rowData.dirtyFormValues.get(dataSourceField.name) === newRow[i]){
+        if (rowData.dirtyFormValues.get(dataSourceField.name) === newRow[i]) {
           rowData.dirtyFormValues.delete(dataSourceField.name);
         }
-        if(rowData.dirtyValues.get(dataSourceField.name) === newRow[i]){
+        if (rowData.dirtyValues.get(dataSourceField.name) === newRow[i]) {
           rowData.dirtyValues.delete(dataSourceField.name);
         }
       }
