@@ -212,19 +212,23 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleInputBlur(event: any) {
+    //debugger
     const dateCompleter = this.getDateCompleter();
 
-    const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
-    if (completedMoment) {
-      this.props.onChange && this.props.onChange(event, completedMoment.toISOString(true));
-    }
+    //const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
+    //if (completedMoment) {
+    //  this.props.onChange && this.props.onChange(event, completedMoment.toISOString(true));
+    // }
+
+
+    this.props.onChange && this.props.onChange(event, this.momentValue?.toISOString(true));
 
     this.dirtyTextualValue = undefined;
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Enter" || event.key ==="Tab") {
+    if (event.key === "Enter" || event.key === "Tab") {
       const dateCompleter = this.getDateCompleter();
       const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
       if (completedMoment) {
@@ -258,10 +262,14 @@ export class DateTimeEditor extends React.Component<{
   @observable dirtyTextualValue: string | undefined;
 
   @computed get momentValue() {
+    if (this.dirtyTextualValue !== "") {
+      const maybeNewMomentValue = moment(this.dirtyTextualValue, this.props.outputFormat);
+      if (maybeNewMomentValue.isValid()) return maybeNewMomentValue;
+    }
     return !!this.props.value ? moment(this.props.value) : null;
   }
 
-  @computed get formattedMomentValue() {
+  get formattedMomentValue() {
     if (!this.momentValue) return "";
     if (
       this.momentValue.hour() === 0 &&
@@ -290,6 +298,8 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleTextfieldChange(event: any) {
     this.dirtyTextualValue = event.target.value;
+    debugger;
+    console.log(this.formattedMomentValue);
     if (this.dirtyTextualValue === "") {
       this.props.onChange && this.props.onChange(event, null);
       return;
