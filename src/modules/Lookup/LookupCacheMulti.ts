@@ -29,7 +29,6 @@ export class LookupCacheMulti {
 
   @action.bound
   handleOutdatingTimerTick() {
-    console.log("*");
     const now = this.clock.getTimeMs();
     const idsToClean: string[] = [];
     for (let lookupId of this.labels.keys()) {
