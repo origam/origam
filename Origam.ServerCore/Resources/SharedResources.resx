@@ -393,4 +393,25 @@
   <data name="PasswordRequiresUniqueChars" xml:space="preserve">
     <value>Passwords must use at least {0} different characters.</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>User name is required</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Name is required</value>
+  </data>
+  <data name="FirstNameRequired" xml:space="preserve">
+    <value>First Name is required</value>
+  </data>
+  <data name="TwoFactorCodeRequired" xml:space="preserve">
+    <value>Two factor code is required</value>
+  </data>
 </root>

@@ -1,5 +1,4 @@
-#region license
-
+﻿#region license
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -18,19 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #endregion
 
-using System.ComponentModel.DataAnnotations;
-
-namespace Origam.ServerCore.IdentityServerGui.Account
+namespace Origam.ServerCore.Model.About
 {
-    public class TwoStepModel
+    public class AboutInfo
     {
-        [Required(ErrorMessage = "TwoFactorCodeRequired")]
-        [DataType(DataType.Text)]
-        public string TwoFactorCode { get; set; }
-        public bool RememberLogin { get; set; }
-        public string ReturnUrl { get; set; }
+        public string ServerVersion { get; set; }
     }
 }
