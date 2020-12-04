@@ -21,13 +21,16 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using Origam.Server;
+using Origam.ServerCommon;
 
-public class InputRowOrdering: IRowOrdering
+namespace Origam.ServerCore.Model.UIService
 {
-    [Required] public string ColumnId { get; set; }
+    public class InputRowOrdering : IRowOrdering
+    {
+        [Required] public string ColumnId { get; set; }
 
-    [Required] public string Direction { get; set; }
+        [Required] public string Direction { get; set; }
 
-    public Guid LookupId { get; set; }
+        public Guid LookupId { get; set; }
+    }
 }
