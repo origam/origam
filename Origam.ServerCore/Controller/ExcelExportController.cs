@@ -22,13 +22,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using NPOI.SS.UserModel;
 using Origam.Excel;
 using Origam.Server;
@@ -115,31 +115,32 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
-                using (MemoryStream excelStream = new MemoryStream())
+                var excelEntityExporter = new ExcelEntityExporter();
+                var  workbookResult = FillWorkbook(entityExportInfo, excelEntityExporter);
+                if (workbookResult.IsFailure)
                 {
-                    var excelEntityExporter = new ExcelEntityExporter();
-                    var  workbookResult = FillWorkbook(entityExportInfo, excelEntityExporter);
-                    if (workbookResult.IsFailure)
-                    {
-                        return workbookResult.Error;
-                    }
-
-                    workbookResult.Value.Write(excelStream);
-                    if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
-                    {
-                        Response.ContentType = "application/vnd.ms-excel";
-                        Response.Headers.Add(
-                            "content-disposition", "attachment; filename=export.xls");
-                    }
-                    else
-                    {
-                        Response.ContentType
-                            = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                        Response.Headers.Add(
-                            "content-disposition", "attachment; filename=export.xlsx");
-                    }
-                    return File(excelStream.ToArray(), Response.ContentType);
+                    return workbookResult.Error;
                 }
+                if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
+                {
+                    Response.ContentType = "application/vnd.ms-excel";
+                    Response.Headers.Add(
+                        "content-disposition", "attachment; filename=export.xls");
+                }
+                else
+                {
+                    Response.ContentType
+                        = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.Headers.Add(
+                        "content-disposition", "attachment; filename=export.xlsx");
+                }
+#pragma warning disable 1998 
+                return new FileCallbackResult(new MediaTypeHeaderValue(Response.ContentType),
+                    async (outputStream, _) =>
+                    {
+                        workbookResult.Value.Write(outputStream);
+                    });
+#pragma warning restore 1998
             });
         }
 
