@@ -89,7 +89,13 @@ namespace Origam.Server
                 FluorineFx.Context.FluorineContext.Current.ApplicationState["forms"] = formSessions;
             }
 
-            sessionManager = new SessionManager(Analytics.Instance);
+            sessionManager = new SessionManager(
+                portalSessions: portalSessions,
+                formSessions: formSessions,
+                reportRequests: null,
+                blobDownloadRequests: null,
+                blobUploadRequests: null,
+                analytics: Analytics.Instance);
             uiManager = new UIManager(INITIAL_PAGE_NUMBER_OF_RECORDS,sessionManager, Analytics.Instance);
             reportManager = new ReportManager(sessionManager);
             sessionHelper = new SessionHelper(sessionManager);
