@@ -229,7 +229,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   *onChatroomsListItemClick(event: any, item: any) {
-    console.log(event, item);
 
     const openedScreens = getOpenedScreens(this);
     const url = `/chatrooms/index.html#/chatroom?chatroomId=${item.id}`;
@@ -444,7 +443,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   *openNewUrl(url: string, title: string) {
-    console.log("open new ", url);
     const openedScreens = getOpenedScreens(this);
     const newScreen = new WebScreen(title, url, url, 0);
     openedScreens.pushItem(newScreen);
@@ -455,8 +453,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 
-    console.log("portalInfo:");
-    console.log(portalInfo);
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
