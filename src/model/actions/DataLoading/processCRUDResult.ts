@@ -29,7 +29,7 @@ export interface ICRUDResult {
   wrappedObject: any[];
 }
 
-export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
+export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?: boolean | undefined): Generator {
   if (_.isArray(result)) {
     for (let resultItem of result) {
       yield* processCRUDResult(ctx, resultItem);
@@ -49,7 +49,9 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       for (let dataView of dataViews) {
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
         dataView.dataTable.substituteRecord(resultItem.wrappedObject);
-        dataView.dataTable.updateSortAndFilter();
+        if(resortTables){
+          dataView.dataTable.updateSortAndFilter();
+        }
       }
       getFormScreen(ctx).setDirty(true);
       break;

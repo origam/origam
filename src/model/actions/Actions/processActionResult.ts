@@ -50,7 +50,7 @@ export interface IRefreshForm {
 }
 
 export interface IProcessCRUDResult {
-  (result: ICRUDResult): Generator;
+  (data:{crudResult: ICRUDResult, resortTables?: boolean}): Generator;
 }
 
 export function new_ProcessActionResult(ctx: any) {
@@ -63,7 +63,7 @@ export function new_ProcessActionResult(ctx: any) {
     closeForm: closeForm(ctx),
     refreshForm: actions.formScreen.refresh(ctx),
     getActionCaption: () => getActionCaption(ctx),
-    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult(ctx, crudResult),
+    processCRUDResult: (data:{crudResult: ICRUDResult, resortTables?: boolean}) => processCRUDResult(ctx, data.crudResult, data.resortTables),
     parentContext: ctx
   });
 }
@@ -119,7 +119,9 @@ export function processActionResult2(dep: {
           break;
         }
         case IActionResultType.UpdateData: {
-          yield* dep.processCRUDResult(actionResultItem.changes);
+          yield* dep.processCRUDResult(
+            {crudResult: actionResultItem.changes,  resortTables: true}
+          );
           break;
         }
         case IActionResultType.OpenUrl: {
