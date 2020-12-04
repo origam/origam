@@ -395,8 +395,22 @@ export interface IApi {
   getExcelFileUrl(data: {
     Entity: string;
     Fields: IEntityExportField[];
-    Filters: string;
-    SessionFormIdentifier: string;}): Promise<string>;
+    SessionFormIdentifier: string;
+    RowIds: any[];
+    LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
+  }): Promise<string>;
+}
+
+export interface ILazyLoadedEntityInput{
+  MenuId: string;
+  DataStructureEntityId: string;
+  Filter: string;
+  Ordering: IOrdering[];
+  RowLimit: number;
+  RowOffset: number;
+  ColumnNames: string[];
+  FilterLookups?: { [key: string]: string };
+  SessionFormIdentifier: string;
 }
 
 export interface IEntityExportField{
