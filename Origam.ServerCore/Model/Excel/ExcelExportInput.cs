@@ -1,6 +1,6 @@
-#region license
+﻿#region license
 /*
-Copyright 2005 - 2020 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -22,33 +22,24 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Origam.DA;
-using Origam.Extensions;
 using Origam.Server;
-using Origam.ServerCommon;
+using Origam.ServerCore.Model.UIService;
 
-namespace Origam.ServerCore.Model.UIService
-
+namespace Origam.ServerCore.Model.Excel
 {
-    public class GetGroupsInput : IEntityIdentification
+    public class ExcelExportInput
     {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        public string Filter { get; set; }
-        public List<InputRowOrdering> Ordering { get; set; }
         [Required]
-        public int RowLimit { get; set; }
-        [Required]
-        public string GroupBy { get; set; }
-        public Guid MasterRowId { get; set; }
-        public Guid GroupByLookupId { get; set; }
-        public Guid SessionFormIdentifier { get; set; }
-        public List<Aggregation> AggregatedColumns { get; set; }
+        public string Entity { get; set; }
 
-        public List<IRowOrdering> OrderingList =>
-            Ordering.ToList<IRowOrdering>();
+        [Required]
+        public List<EntityExportField> Fields { get; set; }
+
+        [Required]
+        public Guid SessionFormIdentifier { get; set; }
+        
+        public List<object> RowIds { get; set; }
+        
+        public GetRowsInput LazyLoadedEntityInput { get; set; }
     }
 }

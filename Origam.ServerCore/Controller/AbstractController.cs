@@ -23,6 +23,7 @@ using IdentityServer4;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,10 @@ using Origam.DA;
 using Origam.DA.Service;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
+using Origam.Schema.WorkflowModel;
 using Origam.Server;
+using Origam.ServerCommon;
+using Origam.ServerCommon.Session_Stores;
 using Origam.ServerCore.Extensions;
 using Origam.ServerCore.Model;
 using Origam.ServerCore.Model.UIService;
@@ -46,6 +50,7 @@ namespace Origam.ServerCore.Controller
     public abstract class AbstractController: ControllerBase
     {
         protected readonly SessionObjects sessionObjects;
+        protected readonly IDataService dataService;
         protected class EntityData
         {
             public FormReferenceMenuItem MenuItem { get; set; }
@@ -57,6 +62,7 @@ namespace Origam.ServerCore.Controller
         {
             this.log = log;
             this.sessionObjects = sessionObjects;
+            dataService = DataService.GetDataService();
         }
         protected static MenuLookupIndex MenuLookupIndex {
             get
@@ -310,6 +316,137 @@ namespace Origam.ServerCore.Controller
             }
 
             return Result.Ok<DataStructureQuery, IActionResult>(query);
+        }
+
+        protected CustomOrderings GetOrderings(List<IRowOrdering> orderingList)
+        {
+            var orderings = orderingList
+                .Select((inputOrdering, i) => 
+                    new Ordering(
+                        columnName: inputOrdering.ColumnId, 
+                        direction: inputOrdering.Direction, 
+                        lookupId: inputOrdering.LookupId, 
+                        sortOrder: i + 1000)
+                ).ToList();
+            return new CustomOrderings(orderings);
+        }
+        
+        protected Result<DataStructureQuery, IActionResult> GetRowsGetQuery(
+            ILazyRowLoadInput input, EntityData entityData)
+        {
+            var customOrderings = GetOrderings(input.OrderingList);
+
+            if(input.RowOffset != 0 && customOrderings.IsEmpty)
+            {
+                return Result.Failure<DataStructureQuery, IActionResult>(BadRequest( $"Ordering must be specified if \"{nameof(input.RowOffset)}\" is specified"));
+            }
+            var query = new DataStructureQuery
+            {
+                Entity = entityData.Entity.Name,
+                CustomFilters = new CustomFilters
+                {
+                    Filters = input.Filter,
+                    FilterLookups = input.FilterLookups
+                },
+                CustomOrderings = customOrderings,
+                RowLimit = input.RowLimit,
+                RowOffset = input.RowOffset,
+                ColumnsInfo = new ColumnsInfo(input.ColumnNames
+                        .Select(colName =>
+                        {
+                            var field = entityData.Entity.Column(colName).Field;
+                            return new ColumnData(
+                                name: colName,
+                                isVirtual: (field is DetachedField),
+                                defaultValue: (field as DetachedField)
+                                ?.DefaultValue?.Value,
+                                hasRelation: (field as DetachedField)
+                                ?.ArrayRelation != null);
+                        })
+                        .ToList(),
+                    renderSqlForDetachedFields: true),
+                ForceDatabaseCalculation = true,
+            };
+            return AddMethodAndSource(
+                input.SessionFormIdentifier, input.MasterRowId, entityData, query);
+        }
+
+
+        protected Result<IEnumerable<Dictionary<string, object>>, IActionResult> 
+            ExecuteDataReaderGetPairs(
+            DataStructureQuery dataStructureQuery)
+        {
+            var linesAsPairs = dataService
+                .ExecuteDataReaderReturnPairs(dataStructureQuery);
+            return Result.Ok<IEnumerable<Dictionary<string, object>>, IActionResult>(linesAsPairs);
+        }
+
+        protected Result<IEnumerable<object>, IActionResult> ExecuteDataReader(
+            DataStructureQuery dataStructureQuery, Guid methodId)
+        {
+            Result<DataStructureMethod, IActionResult> method 
+                = FindItem<DataStructureMethod>(dataStructureQuery.MethodId);
+            if(method.IsSuccess)
+            {
+                var structureMethod = method.Value;
+                if(structureMethod is DataStructureWorkflowMethod)
+                {
+                    var menuItem = FindItem<FormReferenceMenuItem>(methodId)
+                        .Value;
+                    IEnumerable<object> result = LoadData(
+                        menuItem,dataStructureQuery).ToList();
+                    return Result.Ok<IEnumerable<object>, IActionResult>(result);
+                }
+            }
+            var linesAsArrays = dataService
+                .ExecuteDataReader(dataStructureQuery)
+                .ToList();
+            return Result.Ok<IEnumerable<object>, IActionResult>(linesAsArrays);
+        }
+        
+        private IEnumerable<object> LoadData(
+            FormReferenceMenuItem menuItem, 
+            DataStructureQuery dataStructureQuery)
+        {
+            var datasetBuilder = new DataSetBuilder();
+            var data = datasetBuilder.InitializeFullStructure(
+                menuItem.ListDataStructureId,menuItem.DefaultSet);
+            var listData = datasetBuilder.InitializeListStructure(
+                data,menuItem.ListEntity.Name,false);
+            return TransformData(datasetBuilder.LoadListData(
+                    new List<string>(), listData, 
+                    menuItem.ListEntity.Name, menuItem.ListSortSet,menuItem), 
+                dataStructureQuery);
+        }
+        
+        private IEnumerable<object> TransformData(
+            DataSet dataSet, DataStructureQuery query)
+        {
+            var table = dataSet.Tables[0];
+            foreach(DataRow dataRow in table.Rows)
+            {
+                var values = new object[query.ColumnsInfo.Count];
+                for(var i = 0; i < query.ColumnsInfo.Count; i++)
+                {
+                    values[i] = dataRow.Field<object>(query.ColumnsInfo.Columns[i].Name);
+                }
+                yield return ProcessReaderOutput(
+                    values, query.ColumnsInfo);
+            }
+        }
+        
+        private List<object> ProcessReaderOutput(object[] values, ColumnsInfo columnsInfo)
+        {
+            if(columnsInfo == null)
+            {
+                throw new ArgumentNullException(nameof(columnsInfo));
+            }
+            var updatedValues = new List<object>();
+            for(var i = 0; i < columnsInfo.Count; i++)
+            {
+                updatedValues.Add(values[i]);
+            }
+            return updatedValues;
         }
 
     }

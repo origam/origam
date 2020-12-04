@@ -1,6 +1,6 @@
 ﻿#region license
 /*
-Copyright 2005 - 2020 Advantage Solutions, s. r. o.
+Copyright 2005 - 2019 Advantage Solutions, s. r. o.
 
 This file is part of ORIGAM (http://www.origam.org).
 
@@ -20,17 +20,21 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Origam.ServerCommon;
 
-namespace Origam.ServerCore.Model.UIService
+namespace Origam.Server
 {
-    public class GetFilterListValuesInput : IEntityIdentification
+    public interface ILazyRowLoadInput: IEntityIdentification
     {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        public Guid SessionFormIdentifier { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        public string Property { get; set; }
+        string Filter { get; set; }
+        Dictionary<string, Guid> FilterLookups { get; set; }
+        List<IRowOrdering> OrderingList { get; }
+
+        int RowLimit { get; set; }        
+        int RowOffset { get; set; }
+
+        string[] ColumnNames { get; set; }
+        Guid MasterRowId { get; set; }
     }
 }

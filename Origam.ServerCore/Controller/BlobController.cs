@@ -50,7 +50,6 @@ namespace Origam.ServerCore.Controller
     public class BlobController : AbstractController
     {
         private readonly IStringLocalizer<SharedResources> localizer;
-        private readonly IDataService dataService;
         private readonly CoreHttpTools httpTools = new CoreHttpTools();
         public BlobController(
             SessionObjects sessionObjects, 
@@ -58,7 +57,6 @@ namespace Origam.ServerCore.Controller
             ILogger<AbstractController> log) : base(log, sessionObjects)
         {
             this.localizer = localizer;
-            dataService = DataService.GetDataService();
         }
         [HttpPost("[action]")]
         public IActionResult DownloadToken(

@@ -20,17 +20,15 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using Origam.ServerCommon;
 
-namespace Origam.ServerCore.Model.UIService
+namespace Origam.ServerCommon
 {
-    public class GetFilterListValuesInput : IEntityIdentification
+    public interface IRowOrdering
     {
-        [RequiredNonDefault]
-        public Guid MenuId { get; set; }
-        public Guid SessionFormIdentifier { get; set; }
-        [RequiredNonDefault]
-        public Guid DataStructureEntityId { get; set; }
-        public string Property { get; set; }
+        string ColumnId { get; set; }
+
+        string Direction { get; set; }
+
+        Guid LookupId { get; set; }
     }
 }

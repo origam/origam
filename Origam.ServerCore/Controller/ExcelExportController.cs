@@ -22,15 +22,18 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
+using CSharpFunctionalExtensions;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
+using NPOI.SS.UserModel;
 using Origam.Excel;
 using Origam.Server;
 using Origam.ServerCommon;
+using Origam.ServerCore.Model.Excel;
 using Origam.ServerCore.Model.UIService;
 
 namespace Origam.ServerCore.Controller
@@ -52,15 +55,34 @@ namespace Origam.ServerCore.Controller
         {
             return RunWithErrorHandler(() =>
             {
+                SessionStore sessionStore = sessionObjects.SessionManager
+                    .GetSession(new Guid(input.SessionFormIdentifier.ToString()));
+                
+                bool isLazyLoaded =
+                    sessionStore.IsLazyLoadedEntity(input.Entity);
+                if (isLazyLoaded && input.LazyLoadedEntityInput == null)
+                {
+                    return BadRequest(
+                        "Export from lazy loaded entities requires " +
+                        nameof(input.LazyLoadedEntityInput));
+                }
+
+                if (!isLazyLoaded && (input.RowIds == null || input.RowIds.Count == 0 ))
+                {
+                    return BadRequest(
+                        "Export from non lazy loaded entities requires "+nameof(input.RowIds));
+                }
+                
                 var entityExportInfo = new EntityExportInfo
                 {
                     Entity = input.Entity,
                     Fields = input.Fields,
-                    RowIds = new List<object>(), //input.RowIds.Cast<object>().ToList(),
-                    SessionFormIdentifier = input.SessionFormIdentifier,
-                    Store = sessionObjects.SessionManager
-                        .GetSession(new Guid(input.SessionFormIdentifier))
+                    RowIds = input.RowIds,
+                    SessionFormIdentifier = input.SessionFormIdentifier.ToString(),
+                    Store = sessionStore,
+                    LazyLoadedEntityInput = input.LazyLoadedEntityInput
                 };
+                
                 Guid itemId = Guid.NewGuid();
                 sessionObjects.SessionManager
                     .AddExcelFileRequest( itemId, entityExportInfo);
@@ -91,12 +113,14 @@ namespace Origam.ServerCore.Controller
 
         private IActionResult GetExcelFile(EntityExportInfo entityExportInfo)
         {
-            var excelEntityExporter = new ExcelEntityExporter();
-            using (MemoryStream excelStream = new MemoryStream())
+            return RunWithErrorHandler(() =>
             {
-                excelEntityExporter
-                    .FillWorkBook(entityExportInfo)
-                    .Write(excelStream);
+                var excelEntityExporter = new ExcelEntityExporter();
+                var  workbookResult = FillWorkbook(entityExportInfo, excelEntityExporter);
+                if (workbookResult.IsFailure)
+                {
+                    return workbookResult.Error;
+                }
                 if (excelEntityExporter.ExportFormat == ExcelFormat.XLS)
                 {
                     Response.ContentType = "application/vnd.ms-excel";
@@ -110,8 +134,34 @@ namespace Origam.ServerCore.Controller
                     Response.Headers.Add(
                         "content-disposition", "attachment; filename=export.xlsx");
                 }
-                return File(excelStream.ToArray(), Response.ContentType);
+#pragma warning disable 1998 
+                return new FileCallbackResult(new MediaTypeHeaderValue(Response.ContentType),
+                    async (outputStream, _) =>
+                    {
+                        workbookResult.Value.Write(outputStream);
+                    });
+#pragma warning restore 1998
+            });
+        }
+
+        private Result<IWorkbook, IActionResult> FillWorkbook(EntityExportInfo entityExportInfo,
+            ExcelEntityExporter excelEntityExporter)
+        {
+            bool isLazyLoaded =
+                entityExportInfo.Store.IsLazyLoadedEntity(entityExportInfo.Entity);
+
+            if (isLazyLoaded)
+            {
+                ILazyRowLoadInput input = entityExportInfo.LazyLoadedEntityInput;
+
+                return EntityIdentificationToEntityData(input)
+                    .Bind(entityData => GetRowsGetQuery(input, entityData))
+                    .Bind(ExecuteDataReaderGetPairs)
+                    .Map(rows => excelEntityExporter
+                        .FillWorkBook(entityExportInfo, rows));
             }
+            IWorkbook workBook = excelEntityExporter.FillWorkBook(entityExportInfo);
+            return Result.Ok<IWorkbook, IActionResult>(workBook) ;
         }
     }
 }
