@@ -107,8 +107,8 @@ export class DataTable implements IDataTable {
     return row[property.dataIndex];
   }
 
-  updateSortAndFilter() {
-    this.rowsContainer.updateSortAndFilter();
+  updateSortAndFilter(data?: {retainPreviousSelection?: true}) {
+    this.rowsContainer.updateSortAndFilter(data);
   }
 
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField) {
