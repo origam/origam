@@ -17,10 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
-#endregion
+#endregion
+
 using Origam.ServerCommon;
 using Origam.ServerCommon.Pages;
 using System.Net;
+using System.Text;
 
 namespace Origam.ServerCore
 {
@@ -35,7 +37,14 @@ namespace Origam.ServerCore
         public void WriteFile(IRequestWrapper request, IResponseWrapper response, byte[] file,
             string fileName, bool isPreview, string overrideContentType)
         {
-            throw new System.NotImplementedException();
+            response.ContentType = overrideContentType ?? HttpTools.GetMimeType(fileName);
+            string disposition = GetFileDisposition(request, fileName);
+            if (!isPreview)
+            {
+                disposition = "attachment; " + disposition;
+            }
+            response.AppendHeader("content-disposition", disposition);
+            response.OutputStreamWrite(file, 0, file.Length);
         }
 
         public string GetFileDisposition(IRequestWrapper request, string fileName)
