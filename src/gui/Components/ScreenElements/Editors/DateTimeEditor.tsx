@@ -257,7 +257,7 @@ export class DateTimeEditor extends React.Component<{
   refInput = (elm: HTMLInputElement | null) => (this.elmInput = elm);
   elmInput: HTMLInputElement | null = null;
 
-  @observable dirtyTextualValue: string | fined;
+  @observable dirtyTextualValue: string | undefined;
 
   get momentValue() {
     if (this.dirtyTextualValue) {
