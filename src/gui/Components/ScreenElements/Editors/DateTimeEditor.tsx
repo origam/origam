@@ -213,10 +213,11 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleInputBlur(event: any) {
     const dateCompleter = this.getDateCompleter();
-
     const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
     if (completedMoment) {
-      this.props.onChange && this.props.onChange(event, completedMoment.toISOString(true));
+      this.props.onChange?.(event, completedMoment.toISOString(true));
+    } else if (this.momentValue?.isValid()) {
+      this.props.onChange?.(event, this.momentValue?.toISOString(true));
     }
 
     this.dirtyTextualValue = undefined;
@@ -224,11 +225,13 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleKeyDown(event: any) {
-    if (event.key === "Enter" || event.key ==="Tab") {
+    if (event.key === "Enter" || event.key === "Tab") {
       const dateCompleter = this.getDateCompleter();
       const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
       if (completedMoment) {
         this.props.onChange?.(event, completedMoment.toISOString(true));
+      } else if (this.momentValue?.isValid()) {
+        this.props.onChange?.(event, this.momentValue?.toISOString(true));
       }
       this.dirtyTextualValue = undefined;
     }
@@ -244,7 +247,6 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleContainerMouseDown(event: any) {
-    // event.preventDefault();
     setTimeout(() => {
       this.elmInput?.focus();
     }, 30);
@@ -257,11 +259,14 @@ export class DateTimeEditor extends React.Component<{
 
   @observable dirtyTextualValue: string | undefined;
 
-  @computed get momentValue() {
+  get momentValue() {
+    if (this.dirtyTextualValue) {
+      return moment(this.dirtyTextualValue, this.props.outputFormat);
+    }
     return !!this.props.value ? moment(this.props.value) : null;
   }
 
-  @computed get formattedMomentValue() {
+  get formattedMomentValue() {
     if (!this.momentValue) return "";
     if (
       this.momentValue.hour() === 0 &&
@@ -379,8 +384,8 @@ export class DateTimeEditor extends React.Component<{
           <div className={S.droppedPanelContainer}>
             <CalendarWidget
               onDayClick={this.handleDayClick}
-              initialDisplayDate={this.momentValue || moment()}
-              selectedDay={this.momentValue || moment()}
+              initialDisplayDate={this.momentValue?.isValid() ? this.momentValue : moment()}
+              selectedDay={this.momentValue?.isValid() ? this.momentValue : moment()}
             />
           </div>
         )}
