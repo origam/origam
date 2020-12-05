@@ -8,6 +8,7 @@ import { IOrdering } from "./types/IOrderingConfiguration";
 import { IColumnSettings } from "./types/IColumnSettings";
 import { compareByGroupingIndex } from "./ColumnSettings";
 import { TypeSymbol } from "dic/Container";
+import { IAboutInfo } from "./types/IAboutInfo";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -464,7 +465,6 @@ export class OrigamAPI implements IApi {
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];
-    MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/GetRows`, data)).data;
@@ -748,6 +748,10 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
 
   async search(searchTerm: string) {
     return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
+  }
+
+  async getAboutInfo() {
+    return (await this.axiosInstance.get("/About")).data as IAboutInfo;
   }
 
   async getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string> {

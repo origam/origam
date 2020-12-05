@@ -444,7 +444,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         RowLimit: SCROLL_ROW_CHUNK,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
-        MasterRowId: undefined,
       });
     }
     finally{
@@ -672,7 +671,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         RowLimit: SCROLL_ROW_CHUNK,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
-        MasterRowId: undefined,
       });
       rootDataView.setRecords(loadedData);
       rootDataView.reselectOrSelectFirst();
