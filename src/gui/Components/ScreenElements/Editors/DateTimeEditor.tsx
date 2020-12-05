@@ -212,13 +212,12 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleInputBlur(event: any) {
-    //debugger
     const dateCompleter = this.getDateCompleter();
     const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
     if (completedMoment) {
-      this.props.onChange && this.props.onChange(event, completedMoment.toISOString(true));
+      this.props.onChange?.(event, completedMoment.toISOString(true));
     } else if (this.momentValue?.isValid()) {
-      this.props.onChange && this.props.onChange(event, this.momentValue?.toISOString(true));
+      this.props.onChange?.(event, this.momentValue?.toISOString(true));
     }
 
     this.dirtyTextualValue = undefined;
@@ -232,7 +231,7 @@ export class DateTimeEditor extends React.Component<{
       if (completedMoment) {
         this.props.onChange?.(event, completedMoment.toISOString(true));
       } else if (this.momentValue?.isValid()) {
-        this.props.onChange && this.props.onChange(event, this.momentValue?.toISOString(true));
+        this.props.onChange?.(event, this.momentValue?.toISOString(true));
       }
       this.dirtyTextualValue = undefined;
     }
@@ -248,7 +247,6 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @action.bound handleContainerMouseDown(event: any) {
-    // event.preventDefault();
     setTimeout(() => {
       this.elmInput?.focus();
     }, 30);
@@ -259,7 +257,7 @@ export class DateTimeEditor extends React.Component<{
   refInput = (elm: HTMLInputElement | null) => (this.elmInput = elm);
   elmInput: HTMLInputElement | null = null;
 
-  @observable dirtyTextualValue: string | undefined;
+  @observable dirtyTextualValue: string | fined;
 
   get momentValue() {
     if (this.dirtyTextualValue) {
@@ -297,8 +295,6 @@ export class DateTimeEditor extends React.Component<{
 
   @action.bound handleTextfieldChange(event: any) {
     this.dirtyTextualValue = event.target.value;
-    debugger;
-    console.log(this.formattedMomentValue);
     if (this.dirtyTextualValue === "") {
       this.props.onChange && this.props.onChange(event, null);
       return;
