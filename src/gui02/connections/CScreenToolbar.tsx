@@ -5,7 +5,7 @@ import { ScreenToolbarPusher } from "gui02/components/ScreenToolbar/ScreenToolba
 import { MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
-import { action, flow, observable } from "mobx";
+import { action, observable } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { ScreenToolbarActionGroup } from "gui02/components/ScreenToolbar/ScreenToolbarActionGroup";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
@@ -28,40 +28,35 @@ import { IAction, IActionType } from "model/entities/types/IAction";
 import { T } from "../../utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
-import {DropdownItem} from "gui02/components/Dropdown/DropdownItem";
+import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
-import { getApi } from "model/selectors/getApi";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { CtxResponsiveToolbar, ResponsiveBlock, ResponsiveContainer } from "gui02/components/ResponsiveBlock/ResponsiveBlock";
+import { getApi } from "model/selectors/getApi";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
   static contextType = MobXProviderContext;
 
-  @observable
-  aboutInfo: IAboutInfo = {
-    serverVersion: ""
-  };
-
   state = {
     hiddenActionIds: new Set<string>(),
   };
-  responsiveToolbar = new ResponsiveBlock((ids) => {
-    this.setState({ ...this.state, hiddenActionIds: ids });
-  });
 
   get application(): IApplication {
     return this.context.application;
   }
 
-  componentDidMount(){
-    runInFlowWithHandler(
-      {
-        ctx: this.application,
-        action: async () => {
+  @observable
+  aboutInfo: IAboutInfo = {
+    serverVersion: "",
+  };
+
+  componentDidMount() {
+    runInFlowWithHandler({
+      ctx: this.application,
+      action: async () => {
         const api = getApi(this.application);
         this.aboutInfo = await api.getAboutInfo();
-      }
+      },
     });
   }
 
@@ -181,75 +176,71 @@ export class CScreenToolbar extends React.Component<{}> {
     const avatarLink = getUserAvatarLink(this.application);
     const customAssetsRoute = getCustomAssetsRoute(this.application);
     return (
-      <CtxResponsiveToolbar.Provider value={this.responsiveToolbar}>
-        <ScreenToolbar>
-          {formScreen ? (
-            <>
-              <ScreenToolbarActionGroup>
-                {!getIsSuppressSave(formScreen) && (
-                  <ScreenToolbarAction
-                    onClick={onSaveSessionClick(formScreen)}
-                    icon={
-                      <Icon
-                        src="./icons/save.svg"
-                        className={isDirty ? "isRed isHoverGreen" : ""}
-                        tooltip={T("Save", "save_tool_tip")}
-                      />
-                    }
-                    label={T("Save", "save_tool_tip")}
-                  />
-                )}
+      <ScreenToolbar>
+        {formScreen ? (
+          <>
+            <ScreenToolbarActionGroup>
+              {!getIsSuppressSave(formScreen) && (
                 <ScreenToolbarAction
-                  onClick={onRefreshSessionClick(formScreen)}
+                  onClick={onSaveSessionClick(formScreen)}
                   icon={
-                    <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />
+                    <Icon
+                      src="./icons/save.svg"
+                      className={isDirty ? "isRed isHoverGreen" : ""}
+                      tooltip={T("Save", "save_tool_tip")}
+                    />
                   }
-                  label={T("Refresh", "refresh_tool_tip")}
+                  label={T("Save", "save_tool_tip")}
                 />
-              </ScreenToolbarActionGroup>
-              <ResponsiveContainer>
-                {({ refChild }) => (
-                  <ScreenToolbarActionGroup grovable={true} domRef={refChild}>
-                    {toolbarActions
-                      .filter((actionGroup) => actionGroup.actions.length > 0)
-                      .map((actionGroup) => (
-                        <ScreenToolbarActionGroup key={actionGroup.section}>
-                          {this.renderActions(actionGroup.actions)}
-                        </ScreenToolbarActionGroup>
-                      ))}
-                  </ScreenToolbarActionGroup>
+              )}
+              <ScreenToolbarAction
+                onClick={onRefreshSessionClick(formScreen)}
+                icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
+                label={T("Refresh", "refresh_tool_tip")}
+              />
+            </ScreenToolbarActionGroup>
+            <Observer>
+              {() => (
+                <ScreenToolbarActionGroup grovable={true}>
+                  {toolbarActions
+                    .filter((actionGroup) => actionGroup.actions.length > 0)
+                    .map((actionGroup) => (
+                      <ScreenToolbarActionGroup key={actionGroup.section}>
+                        {this.renderActions(actionGroup.actions)}
+                      </ScreenToolbarActionGroup>
+                    ))}
+                </ScreenToolbarActionGroup>
+              )}
+            </Observer>
+          </>
+        ) : null}
+        {this.state.hiddenActionIds.size > 0 && (
+          <Dropdowner
+            style={{ width: "auto" }}
+            trigger={({ refTrigger, setDropped }) => (
+              <ScreenToolbarAction
+                rootRef={refTrigger}
+                onMouseDown={() => setDropped(true)}
+                icon={<Icon src="./icons/dot-menu.svg" tooltip={""} />}
+              />
+            )}
+            content={() => (
+              <Dropdown>
+                {this.getOverfullActionsDropdownContent(toolbarActions, (action) =>
+                  this.state.hiddenActionIds.has(action.id)
                 )}
-              </ResponsiveContainer>
-            </>
-          ) : null}
-          {this.state.hiddenActionIds.size > 0 && (
-            <Dropdowner
-              style={{ width: "auto" }}
-              trigger={({ refTrigger, setDropped }) => (
-                <ScreenToolbarAction
-                  rootRef={refTrigger}
-                  onMouseDown={() => setDropped(true)}
-                  icon={<Icon src="./icons/dot-menu.svg" tooltip={""} />}
-                />
-              )}
-              content={() => (
-                <Dropdown>
-                  {this.getOverfullActionsDropdownContent(toolbarActions, (action) =>
-                    this.state.hiddenActionIds.has(action.id)
-                  )}
-                </Dropdown>
-              )}
-            />
-          )}
-          <UserMenuDropdown
-            avatarLink={avatarLink}
-            userName={userName}
-            handleLogoutClick={(event) => this.handleLogoutClick(event)}
-            ctx={this.application}
-            aboutInfo={this.aboutInfo}
+              </Dropdown>
+            )}
           />
-        </ScreenToolbar>
-      </CtxResponsiveToolbar.Provider>
+        )}
+        <UserMenuDropdown
+          avatarLink={avatarLink}
+          userName={userName}
+          handleLogoutClick={(event) => this.handleLogoutClick(event)}
+          ctx={this.application}
+          aboutInfo={this.aboutInfo}
+        />
+      </ScreenToolbar>
     );
   }
 
