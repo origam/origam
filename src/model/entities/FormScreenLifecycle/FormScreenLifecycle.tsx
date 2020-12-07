@@ -1,6 +1,6 @@
 import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, autorun, flow, observable, reaction, when } from "mobx";
+import { action, autorun, comparer, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -45,16 +45,16 @@ import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLook
 import _ from "lodash";
 import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { selectFirstRow} from "../../actions/DataView/selectFirstRow";
+import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import {IDataViewToolbarUI} from "modules/DataView/DataViewUI";
-import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
-import {selectLastRow} from "model/actions/DataView/selectLastRow";
-import {startEditingFirstCell} from "model/actions/DataView/startEditingFirstCell";
+import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
+import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
+import { selectLastRow } from "model/actions/DataView/selectLastRow";
+import { startEditingFirstCell } from "model/actions/DataView/startEditingFirstCell";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
@@ -187,8 +187,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.saveSession();
         yield* this.refreshSession();
         return;
-        case IQuestionSaveDataAnswer.NoSave:
-        if(!this.isReadData){
+      case IQuestionSaveDataAnswer.NoSave:
+        if (!this.isReadData) {
           yield* this.revertChanges();
         }
         yield* this.refreshSession();
@@ -196,8 +196,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
   *revertChanges(): Generator<unknown, any, unknown> {
-      const api = getApi(this);
-      yield api.revertChanges({sessionFormIdentifier: getSessionId(this)});
+    const api = getApi(this);
+    yield api.revertChanges({ sessionFormIdentifier: getSessionId(this) });
   }
 
   *onWorkflowNextClick(event: any): Generator {
@@ -360,16 +360,45 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         this.disposers.push(
           reaction(
             () => {
-              orderingConfiguration.userOrderings.map((x) => x.direction);
-              filterConfiguration.activeFilters.map((x) => [
-                x.propertyId,
-                x.setting.type,
-                x.setting.val1,
-                x.setting.val2,
-              ]);
-              return [] as any;
+              const orderings = orderingConfiguration.userOrderings.map((x) => x.direction);
+              const filters = filterConfiguration.activeFilters
+                .map((x) => [x.propertyId, x.setting.type, x.setting.val1, x.setting.val2])
+                .filter((item) => {
+                  if (
+                    item[1] === "in" ||
+                    item[1] === "eq" ||
+                    item[1] === "neq" ||
+                    item[1] === "nin" ||
+                    item[1] === "neq" ||
+                    item[1] === "contains" ||
+                    item[1] === "ncontains" ||
+                    item[1] === "lt" ||
+                    item[1] === "lte" ||
+                    item[1] === "gt" ||
+                    item[1] === "gte" ||
+                    item[1] === "between" ||
+                    item[1] === "nbetween" ||
+                    item[1] === "starts" ||
+                    item[1] === "nstarts" ||
+                    item[1] === "ends" ||
+                    item[1] === "nends"
+                  ) {
+                    return item[2] !== undefined || item[3] !== undefined;
+                  } else {
+                    return true;
+                  }
+                });
+              console.log(filters);
+              return {
+                orderings,
+                filters,
+              } as any;
             },
-            () => this.sortAndFilterReaction(rootDataView)
+            () => this.sortAndFilterReaction(rootDataView),
+            {
+              equals: comparer.structural,
+              delay: 100,
+            }
           )
         );
       }
@@ -377,17 +406,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.startAutorefreshIfNeeded();
   }
 
-  sortAndFilterReaction(dataView : IDataView){
-    const self=this;
+  sortAndFilterReaction(dataView: IDataView) {
+    const self = this;
     flow(function* () {
       if (!(yield shouldProceedToChangeRow(dataView))) {
         return;
       }
-      yield dataView.lifecycle.runRecordChangedReaction(function*() {
+      yield dataView.lifecycle.runRecordChangedReaction(function* () {
         const groupingConfig = getGroupingConfiguration(dataView);
-        if(groupingConfig.isGrouping){
+        if (groupingConfig.isGrouping) {
           dataView.serverSideGrouper.refresh();
-        }else{
+        } else {
           yield self.readFirstChunkOfRowsWithGateDebounced(dataView);
         }
       });
@@ -445,8 +474,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });
-    }
-    finally{
+    } finally {
       this.monitor.inFlow--;
     }
   }
@@ -478,8 +506,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MasterRowId: undefined,
         AggregatedColumns: aggregations,
       });
-    }
-    finally{
+    } finally {
       this.monitor.inFlow--;
     }
   }
@@ -510,8 +537,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MasterRowId: undefined,
         AggregatedColumns: aggregations,
       });
-    }
-    finally{
+    } finally {
       this.monitor.inFlow--;
     }
   }
@@ -601,27 +627,26 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  private *runUpdateObject(dataView: IDataView){
-    const updateData = dataView.dataTable.getDirtyValueRows().map(row => {
+  private *runUpdateObject(dataView: IDataView) {
+    const updateData = dataView.dataTable.getDirtyValueRows().map((row) => {
       return {
         RowId: dataView.dataTable.getRowId(row),
-        Values: map2obj(dataView.dataTable.getDirtyValues(row))
-      }})
-    if(!updateData || updateData.length === 0){
+        Values: map2obj(dataView.dataTable.getDirtyValues(row)),
+      };
+    });
+    if (!updateData || updateData.length === 0) {
       return false;
     }
     const api = getApi(this);
     const formScreen = getFormScreen(this);
     const self = this;
-    const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(
-      function* () {
-        return yield api.updateObject({
-          SessionFormIdentifier: getSessionId(self),
-          Entity: dataView.entity,
-          UpdateData: updateData,
-        });
-      }
-    );
+    const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
+      return yield api.updateObject({
+        SessionFormIdentifier: getSessionId(self),
+        Entity: dataView.entity,
+        UpdateData: updateData,
+      });
+    });
     dataView.focusManager.stopAutoFocus();
     yield* processCRUDResult(dataView, updateObjectResult);
     return true;
@@ -639,10 +664,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         return yield api.updateObject({
           SessionFormIdentifier: getSessionId(self),
           Entity: dataView.entity,
-          UpdateData: [{
-            RowId: dataView.dataTable.getRowId(row),
-            Values: changes
-          }]
+          UpdateData: [
+            {
+              RowId: dataView.dataTable.getRowId(row),
+              Values: changes,
+            },
+          ],
         });
       });
 
@@ -706,20 +733,20 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     500
   );
 
-  private getNewRowValues(){
-    if(!this.userOrderedDataView) {
-      return {}
+  private getNewRowValues() {
+    if (!this.userOrderedDataView) {
+      return {};
     }
 
     const orderProperty = this.userOrderedDataView.orderProperty!;
     const orderValues = this.userOrderedDataView.tableRows
-      .filter(row => Array.isArray)
-      .map(row => (row as any[])[orderProperty.dataIndex] as number);
-    const nextOrderValue = Math.max(...orderValues) + 1
+      .filter((row) => Array.isArray)
+      .map((row) => (row as any[])[orderProperty.dataIndex] as number);
+    const nextOrderValue = Math.max(...orderValues) + 1;
     const orderPropName = orderProperty.name;
     const values = {} as any;
     values[orderProperty.name] = nextOrderValue;
-    return values
+    return values;
   }
 
   *createRow(entity: string, gridId: string) {
@@ -742,12 +769,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         formScreen.dataUpdateCRS.leave();
       }
       yield* processCRUDResult(targetDataView, createObjectResult);
-      if(targetDataView.newRecordView === "0" && targetDataView.activateFormView){
+      if (targetDataView.newRecordView === "0" && targetDataView.activateFormView) {
         yield* targetDataView.activateFormView();
-      }else{
-        if(!targetDataView.isFormViewActive()){
+      } else {
+        if (!targetDataView.isFormViewActive()) {
           yield* startEditingFirstCell(targetDataView)();
-        }else{
+        } else {
           getFocusManager(targetDataView).forceAutoFocus();
         }
       }
@@ -782,8 +809,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  private get userOrderedDataView(){
-    return getFormScreen(this).dataViews.find(dataView => dataView.orderProperty);
+  private get userOrderedDataView() {
+    return getFormScreen(this).dataViews.find((dataView) => dataView.orderProperty);
   }
 
   *deleteRow(entity: string, rowId: string) {
@@ -795,9 +822,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
 
-        if(this.userOrderedDataView) {
-          deleteObjectResult = yield* this.deleteObjectInOrderedList(rowId, entity, this.userOrderedDataView);
-        }else{
+        if (this.userOrderedDataView) {
+          deleteObjectResult = yield* this.deleteObjectInOrderedList(
+            rowId,
+            entity,
+            this.userOrderedDataView
+          );
+        } else {
           deleteObjectResult = yield api.deleteObject({
             SessionFormIdentifier: getSessionId(this),
             Entity: entity,
@@ -820,19 +851,19 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const newRowOrderMap = {} as any;
     if (orderProperty) {
       dataView.dataTable.allRows
-        .filter(row => row[orderProperty.dataIndex] > rowToDelete[orderProperty.dataIndex])
-        .forEach(row => {
+        .filter((row) => row[orderProperty.dataIndex] > rowToDelete[orderProperty.dataIndex])
+        .forEach((row) => {
           const rowId = dataView.dataTable.getRowId(row);
           const newOrder = row[orderProperty.dataIndex] - 1;
           newRowOrderMap[rowId] = newOrder;
-        })
+        });
     }
     return yield api.deleteObjectInOrderedList({
       SessionFormIdentifier: getSessionId(this),
       Entity: entity,
       Id: rowId,
       OrderProperty: orderProperty.name,
-      UpdatedOrderValues: newRowOrderMap
+      UpdatedOrderValues: newRowOrderMap,
     });
   }
 
@@ -851,15 +882,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
         if (!processQueryInfoResult.canContinue) return;
         result = yield api.saveSession(getSessionId(this));
-        getFormScreen(this).dataViews
-          .forEach(dataView => dataView.dataTable.unlockAddedRowPosition());
+        getFormScreen(this).dataViews.forEach((dataView) =>
+          dataView.dataTable.unlockAddedRowPosition()
+        );
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, result);
-      getFormScreen(this).dataViews
-        .forEach(dataView => dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true}));
+      getFormScreen(this).dataViews.forEach((dataView) =>
+        dataView.dataTable.updateSortAndFilter({ retainPreviousSelection: true })
+      );
     } finally {
       this.monitor.inFlow--;
     }
@@ -912,10 +945,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* refreshWorkQueues(this)();
   }
 
-  loadInitialData(){
+  loadInitialData() {
     if (!this.isReadData) {
       const self = this;
-      flow(function*(){
+      flow(function* () {
         yield* self.loadData();
       })();
     }
@@ -924,7 +957,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   private actionRunning = false;
 
   *executeAction(gridId: string, entity: string, action: IAction, selectedItems: string[]) {
-    if(this.actionRunning){
+    if (this.actionRunning) {
       return;
     }
     this.actionRunning = true;
