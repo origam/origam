@@ -39,17 +39,18 @@ import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../modules/DataView/TableCursor";
-import {getDontRequestData} from "model/selectors/getDontRequestData";
+import { getDontRequestData } from "model/selectors/getDontRequestData";
 import {
   IInfiniteScrollLoader,
-  InfiniteScrollLoader, NullIScrollLoader
+  InfiniteScrollLoader,
+  NullIScrollLoader,
 } from "gui/Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { ScrollRowContainer } from "model/entities/ScrollRowContainer";
 import { VisibleRowsMonitor } from "gui/Workbench/ScreenArea/TableView/VisibleRowsMonitor";
 import { getSelectionMember } from "model/selectors/DataView/getSelectionMember";
 import { getApi } from "model/selectors/getApi";
-import {getSessionId} from "model/selectors/getSessionId";
-import {IPolymorphRules} from "model/entities/types/IApi";
+import { getSessionId } from "model/selectors/getSessionId";
+import { IPolymorphRules } from "model/entities/types/IApi";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
@@ -90,23 +91,23 @@ export class DataView implements IDataView {
       defaultRowHeight: this.tablePanelView.rowHeight,
     });
 
-    this.orderProperty = this.properties.find(prop => prop.name === this.orderMember)!;
-    this.dataTable.rowRemovedListeners.push(() => this.selectAllCheckboxChecked = false);
+    this.orderProperty = this.properties.find((prop) => prop.name === this.orderMember)!;
+    this.dataTable.rowRemovedListeners.push(() => (this.selectAllCheckboxChecked = false));
   }
 
-  private _isFormViewActive = ()=> false;
+  private _isFormViewActive = () => false;
 
-  set isFormViewActive(value: () => boolean){
+  set isFormViewActive(value: () => boolean) {
     this._isFormViewActive = value;
   }
 
-  get isFormViewActive(){
+  get isFormViewActive() {
     return this._isFormViewActive;
   }
 
   orderProperty: IProperty;
-  activateFormView: (()=> Generator) | undefined;
-  
+  activateFormView: (() => Generator) | undefined;
+
   gridDimensions: IGridDimensions;
 
   isReorderedOnClient: boolean = true;
@@ -166,8 +167,8 @@ export class DataView implements IDataView {
     return this.showSelectionCheckboxesSetting || !!this.selectionMember;
   }
 
-  @computed get firstEnabledDefaultAction(){
-    return this.defaultActions.find(action  => action.isEnabled);
+  @computed get firstEnabledDefaultAction() {
+    return this.defaultActions.find((action) => action.isEnabled);
   }
 
   @bind hasSelectedRowId(id: string) {
@@ -181,8 +182,9 @@ export class DataView implements IDataView {
   setRecords(rows: any[][]): void {
     this.dataTable.setRecords(rows);
     this.selectedRowIds.length = 0;
-    this.selectAllCheckboxChecked = this.dataTable.rows.length !== 0 && this.dataTable.rows
-      .every((row) => this.isSelected(this.dataTable.getRowId(row)));
+    this.selectAllCheckboxChecked =
+      this.dataTable.rows.length !== 0 &&
+      this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
   }
 
   isSelected(rowId: string): boolean {
@@ -203,7 +205,7 @@ export class DataView implements IDataView {
     this.selectedRowIds.remove(id);
   }
 
-  @action.bound setSelectedState(rowId: string, newState: boolean){
+  @action.bound setSelectedState(rowId: string, newState: boolean) {
     if (newState) {
       this.addSelectedRowId(rowId);
     } else {
@@ -212,13 +214,11 @@ export class DataView implements IDataView {
   }
 
   @computed get selectedRowIndex(): number | undefined {
-    if(getGroupingConfiguration(this).isGrouping){
-      return getGrouper(this).allGroups.some(group => group.isExpanded) 
+    if (getGroupingConfiguration(this).isGrouping) {
+      return getGrouper(this).allGroups.some((group) => group.isExpanded)
         ? getGrouper(this).getRowIndex(this.selectedRowId!)
         : undefined;
-    }
-    else
-    {
+    } else {
       return this.selectedRowId
         ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
         : undefined;
@@ -226,27 +226,25 @@ export class DataView implements IDataView {
   }
 
   @computed get maxRowCountSeen() {
-    if(getGroupingConfiguration(this).isGrouping){
-      return getGrouper(this).allGroups.some(group => group.isExpanded) 
-        ? getGrouper(this).getMaxRowCountSeen(this.selectedRowId!) 
+    if (getGroupingConfiguration(this).isGrouping) {
+      return getGrouper(this).allGroups.some((group) => group.isExpanded)
+        ? getGrouper(this).getMaxRowCountSeen(this.selectedRowId!)
         : 0;
-    }else{
+    } else {
       return this.dataTable.maxRowCountSeen;
     }
   }
 
   @computed get selectedRow(): any[] | undefined {
-    if(!this.selectedRowId){
+    if (!this.selectedRowId) {
       return undefined;
     }
-    if(getGroupingConfiguration(this).isGrouping){
+    if (getGroupingConfiguration(this).isGrouping) {
       return getGrouper(this).getRowById(this.selectedRowId!);
-    }
-    else
-    {
+    } else {
       return this.selectedRowIndex !== undefined
         ? this.dataTable.getRowByExistingIdx(this.selectedRowIndex)
-        : undefined;  
+        : undefined;
     }
   }
 
@@ -356,16 +354,16 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound moveSelectedRowUp(){
-    if(!this.selectedRowId){
+  @action.bound moveSelectedRowUp() {
+    if (!this.selectedRowId) {
       return;
     }
     const dataTable = getDataTable(this);
     const selectedRow = dataTable.getRowById(this.selectedRowId)!;
     const positionIndex = this.orderProperty.dataIndex;
     const selectedRowPosition = selectedRow[positionIndex];
-    const nextRow = dataTable.rows.find(row => row[positionIndex] ===  selectedRowPosition + 1);
-    if(!nextRow){
+    const nextRow = dataTable.rows.find((row) => row[positionIndex] === selectedRowPosition + 1);
+    if (!nextRow) {
       return;
     }
     selectedRow[positionIndex] += 1;
@@ -377,16 +375,16 @@ export class DataView implements IDataView {
     this.dataTable.setDirtyValue(nextRow, this.orderProperty.id, nextRow[positionIndex]);
   }
 
-  @action.bound moveSelectedRowDown(){
-    if(!this.selectedRowId){
+  @action.bound moveSelectedRowDown() {
+    if (!this.selectedRowId) {
       return;
     }
     const dataTable = getDataTable(this);
     const selectedRow = dataTable.getRowById(this.selectedRowId)!;
     const positionIndex = this.orderProperty.dataIndex;
     const selectedRowPosition = selectedRow[positionIndex];
-    const previous = dataTable.rows.find(row => row[positionIndex] ===  selectedRowPosition - 1);
-    if(!previous){
+    const previous = dataTable.rows.find((row) => row[positionIndex] === selectedRowPosition - 1);
+    if (!previous) {
       return;
     }
     selectedRow[positionIndex] -= 1;
@@ -425,7 +423,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectFirstRow() {
-    if(getGroupingConfiguration(this).isGrouping){
+    if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
     const dataTable = getDataTable(this);
@@ -438,7 +436,7 @@ export class DataView implements IDataView {
   }
 
   @action.bound selectLastRow() {
-    if(getGroupingConfiguration(this).isGrouping){
+    if (getGroupingConfiguration(this).isGrouping) {
       return;
     }
     const dataTable = getDataTable(this);
@@ -473,12 +471,19 @@ export class DataView implements IDataView {
   @action.bound
   setSelectedRowId(id: string | undefined): void {
     const firstRow = this.dataTable.getFirstRow();
-    if(this.dataTable.addedRowPositionLocked && firstRow && id != this.dataTable.getRowId(firstRow)){
+    if (
+      getDontRequestData(this) &&
+      this.dataTable.addedRowPositionLocked &&
+      firstRow &&
+      id != this.dataTable.getRowId(firstRow)
+    ) {
       return;
     }
     this.selectedRowId = id;
-    if(this.isBindingParent){
-      this.childBindings.forEach(binding => binding.childDataView.dataTable.updateSortAndFilter());
+    if (this.isBindingParent) {
+      this.childBindings.forEach((binding) =>
+        binding.childDataView.dataTable.updateSortAndFilter()
+      );
     }
   }
 
@@ -509,8 +514,8 @@ export class DataView implements IDataView {
   @action.bound
   async start() {
     this.lifecycle.start();
-    const serverSideGrouping = getDontRequestData(this)
-    if(serverSideGrouping){
+    const serverSideGrouping = getDontRequestData(this);
+    if (serverSideGrouping) {
       this.serverSideGrouper.start();
     }
     getFormScreenLifecycle(this).registerDisposer(() => this.serverSideGrouper.dispose());
@@ -562,8 +567,7 @@ export class DataView implements IDataView {
   }
 
   getScrollLoader() {
-    const isGroupingOff =
-      getGroupingConfiguration(this).orderedGroupingColumnIds.length === 0;
+    const isGroupingOff = getGroupingConfiguration(this).orderedGroupingColumnIds.length === 0;
     const rowsContainer = getDataTable(this).rowsContainer;
     if (rowsContainer instanceof ScrollRowContainer && isGroupingOff) {
       return new InfiniteScrollLoader({
@@ -572,11 +576,7 @@ export class DataView implements IDataView {
         scrollState: this.scrollState,
         rowsContainer: rowsContainer as ScrollRowContainer,
         groupFilter: undefined,
-        visibleRowsMonitor: new VisibleRowsMonitor(
-          this,
-          this.gridDimensions,
-          this.scrollState
-        ),
+        visibleRowsMonitor: new VisibleRowsMonitor(this, this.gridDimensions, this.scrollState),
       });
     } else {
       return new NullIScrollLoader();
@@ -605,7 +605,7 @@ export class DataView implements IDataView {
   attributes: any;
 
   async exportToExcel() {
-    const fields = getTablePanelView(this).allTableProperties.map(property => {
+    const fields = getTablePanelView(this).allTableProperties.map((property) => {
       return {
         Caption: property.name,
         FieldName: property.id,
@@ -613,16 +613,16 @@ export class DataView implements IDataView {
         Format: property.formatterPattern,
         PolymorphRules: property.controlPropertyId
           ? {
-            ControlField: property.controlPropertyId,
-            Rules: this.getPolymorphicRules(property)
-          }
-          : undefined
-      }
+              ControlField: property.controlPropertyId,
+              Rules: this.getPolymorphicRules(property),
+            }
+          : undefined,
+      };
     });
     const excelMaxRowCount = 1048576;
     const api = getApi(this);
     let url;
-    if(isInfiniteScrollingActive(this)){
+    if (isInfiniteScrollingActive(this)) {
       url = await api.getExcelFileUrl({
         Entity: this.entity,
         Fields: fields,
@@ -637,27 +637,27 @@ export class DataView implements IDataView {
           RowLimit: excelMaxRowCount,
           RowOffset: 0,
           ColumnNames: getColumnNamesToLoad(this),
-          FilterLookups: getUserFilterLookups(this)
-        }
+          FilterLookups: getUserFilterLookups(this),
+        },
       });
-    }else{
+    } else {
       url = await api.getExcelFileUrl({
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
-        RowIds: this.dataTable.rows.map(row => this.dataTable.getRowId(row)),
-        LazyLoadedEntityInput: undefined
+        RowIds: this.dataTable.rows.map((row) => this.dataTable.getRowId(row)),
+        LazyLoadedEntityInput: undefined,
       });
     }
     window.open(url);
   }
 
-  private getPolymorphicRules(property: IProperty){
+  private getPolymorphicRules(property: IProperty) {
     return property.childProperties
-      .filter(prop => prop.controlPropertyValue)
-      .reduce((map: {[key: string]: string}, prop: IProperty) => {
+      .filter((prop) => prop.controlPropertyValue)
+      .reduce((map: { [key: string]: string }, prop: IProperty) => {
         map[prop.controlPropertyValue!] = prop.id;
         return map;
-    }, {});
+      }, {});
   }
 }
