@@ -98,7 +98,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
       // TODO: Throw away all data and force further navigation / throw away all rowstates
       const dataViews = getDataViewList(ctx);
       for (let dataView of dataViews) {
-        if (getIsBindingRoot(dataView)) {
+        if (getIsBindingRoot(dataView) && dataView.requestDataAfterSelectionChange) {
           yield* dataView.lifecycle.changeMasterRow();
           yield* dataView.lifecycle.navigateChildren();
         }
