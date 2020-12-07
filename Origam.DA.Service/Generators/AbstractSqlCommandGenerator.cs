@@ -1844,7 +1844,16 @@ namespace Origam.DA.Service
                     var resultExpression = 
                         RenderLookupColumnExpression(ds, entity, dataStructureColumn,
                             replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
-                    customCommandParser.AddLookupExpression(columnName ,resultExpression);
+                    if (customOrderings.FilterLookups != null && 
+                        customOrderings.FilterLookups.ContainsKey(columnName))
+                    {
+                        customCommandParser.AddOrderingLookupExpression(columnName ,resultExpression);
+                    }                    
+                    if (customFilters.FilterLookups != null && 
+                        customFilters.FilterLookups.ContainsKey(columnName))
+                    {
+                        customCommandParser.AddFilterLookupExpression(columnName ,resultExpression);
+                    }
                 }
             }
             if (customGrouping != null)
