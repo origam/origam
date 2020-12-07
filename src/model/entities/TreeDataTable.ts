@@ -193,11 +193,14 @@ export class TreeDataTable implements IDataTable {
   }
 
   clearRecordDirtyValues(id: string): void {
-    throw new Error("Not implemented");
+
   }
 
   substituteRecord(row: any[]): void {
-    throw new Error("Not implemented");
+    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
+    if (idx > -1) {
+      this.allRows.splice(idx, 1, row);
+    }
   }
 
   insertRecord(index: number, row: any[]): Promise<any> {
