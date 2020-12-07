@@ -170,7 +170,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
         {controller.items.map((item, i) => (
           <CheckListItem
             key={item.value}
-            checked={!!props.value.find((v) => v === item.value)}
+            checked={props.value && !!props.value.find((v) => v === item.value)}
             onClick={(event) => {
               controller.handleClick(event, item);
             }}
