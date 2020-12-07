@@ -44,7 +44,7 @@ namespace Origam.DA.Service.Generators
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
         private string whereFilterInput;
         private List<Ordering> orderingsInput;
-        private Dictionary<string, string> lookupExpressions = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> filterLookupExpressions = new Dictionary<string, string>();
         private readonly Dictionary<string, OrigamDataType> columnNameToType = new Dictionary<string, OrigamDataType>();
         public string WhereClause {
             get
@@ -55,14 +55,10 @@ namespace Origam.DA.Service.Generators
                 return root.SqlRepresentation();
             }
         }
-        public string OrderByClause {
-            get
-            {
-                return orderingsInput != null 
-                    ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
-                    : null;
-            }
-        }
+        public string OrderByClause =>
+            orderingsInput != null 
+                ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
+                : null;
 
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket, SQLValueFormatter sqlValueFormatter)
         {
@@ -70,7 +66,7 @@ namespace Origam.DA.Service.Generators
             this.nameRightBracket = nameRightBracket;
             this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
-                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket, GetLookupExpression);
+                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
         }
 
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket,
@@ -81,16 +77,6 @@ namespace Origam.DA.Service.Generators
             {
                 AddDataType(column.Name, column.DataType); 
             }
-        }
-
-        private string GetLookupExpression(string columnName)
-        {
-            if (!lookupExpressions.ContainsKey(columnName))
-            {
-                throw new Exception($"No lookup expression fo {columnName} was set");
-            }
-
-            return lookupExpressions[columnName];
         }
 
         /// <summary>
@@ -114,9 +100,13 @@ namespace Origam.DA.Service.Generators
             return this;
         }
 
-        public void AddLookupExpression(string columnName, string expression)
+        public void AddFilterLookupExpression(string columnName, string expression)
         {
-            lookupExpressions.Add(columnName, expression);
+            filterLookupExpressions.Add(columnName, expression);
+        }
+        public void AddOrderingLookupExpression(string columnName, string expression)
+        {
+            columnOrderingRenderer.AddLookupExpression(columnName, expression);
         }
 
         private void ParseToNodeTree(string filter)
@@ -147,7 +137,8 @@ namespace Origam.DA.Service.Generators
         private void AddNode()
         {
             Node newNode = new Node(
-                nameLeftBracket, nameRightBracket, lookupExpressions, sqlValueFormatter, columnNameToType);
+                nameLeftBracket, nameRightBracket,  
+                filterLookupExpressions, sqlValueFormatter, columnNameToType);
             newNode.Parent = currentNode;
             currentNode?.Children.Add(newNode);
             currentNode = newNode;
@@ -201,13 +192,17 @@ namespace Origam.DA.Service.Generators
     {
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
-        private readonly Func<string, string> lookupExpressionGetter;
+        private Dictionary<string, string> lookupExpressions = new Dictionary<string, string>();
 
-        public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket, Func<string, string> lookupExpressionGetter)
+        public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
-            this.lookupExpressionGetter = lookupExpressionGetter;
+        }
+        
+        public void AddLookupExpression(string columnName, string expression)
+        {
+            lookupExpressions.Add(columnName, expression);
         }
 
         internal string ToSqlOrderBy(List<Ordering> orderings)
@@ -224,7 +219,12 @@ namespace Origam.DA.Service.Generators
             {
                 return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
             }
-            return $"{lookupExpressionGetter(ordering.ColumnName)} {orderingSql}";
+
+            if (!lookupExpressions.ContainsKey(ordering.ColumnName))
+            {
+                throw new InvalidOperationException($"Lookup expression for {ordering.ColumnName} was not set");
+            }
+            return $"{lookupExpressions[ordering.ColumnName]} {orderingSql}";
         }
 
         private string OrderingToSQLName(string orderingName)
