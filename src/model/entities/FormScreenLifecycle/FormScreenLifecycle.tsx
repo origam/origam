@@ -858,8 +858,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* refreshWorkQueues(this)();
       yield* processCRUDResult(this, result);
-      getFormScreen(this).dataViews
-        .forEach(dataView => dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true}));
     } finally {
       this.monitor.inFlow--;
     }
