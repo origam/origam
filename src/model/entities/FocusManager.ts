@@ -1,7 +1,6 @@
 import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 
 export class FocusManager {
-
   autoFocusDisabled = false;
 
   stopAutoFocus() {
@@ -10,8 +9,7 @@ export class FocusManager {
   objectMap: Map<string, IFocusAble> = new Map<string, IFocusAble>();
   focusAbleContainers: IFocusAbleObjectContainer[] = [];
 
-  constructor(public parent: any){
-  }
+  constructor(public parent: any) {}
 
   subscribe(focusAbleObject: IFocusAble, name: string | undefined, tabIndex: string | undefined) {
     const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex);
@@ -25,7 +23,8 @@ export class FocusManager {
 
   forceAutoFocus() {
     const focusAble = this.focusAbleContainers[0].focusAble;
-    if(focusAble.disabled){ //  (focusAble as any).readOnly returns always false => readonly fields cannot be skipped
+    if (focusAble.disabled) {
+      //  (focusAble as any).readOnly returns always false => readonly fields cannot be skipped
       this.focusNext(focusAble);
       return;
     }
@@ -33,7 +32,7 @@ export class FocusManager {
       focusAble.focus();
     }, 0);
   }
-  
+
   autoFocus() {
     if (this.focusAbleContainers.length === 0 || this.autoFocusDisabled) {
       return;
@@ -48,13 +47,12 @@ export class FocusManager {
     const nextIndex =
       this.focusAbleContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
     const focusAble = this.focusAbleContainers[nextIndex].focusAble;
-    if(focusAble.disabled){
+    if (focusAble !== activeElement && focusAble.disabled) {
       this.focusNext(focusAble);
-    }
-    else{
-      setTimeout(()=>{
+    } else {
+      setTimeout(() => {
         focusAble.focus();
-      })
+      });
     }
   }
 
@@ -64,15 +62,14 @@ export class FocusManager {
     );
     const previousIndex =
       currentContainerIndex === 0 ? this.focusAbleContainers.length - 1 : currentContainerIndex - 1;
-    console.log("nextIndex: "+previousIndex)
+    console.log("nextIndex: " + previousIndex);
     const focusAble = this.focusAbleContainers[previousIndex].focusAble;
-    if(focusAble.disabled){
+    if (focusAble.disabled) {
       this.focusPrevious(focusAble);
-    }
-    else{
-      setTimeout(()=>{
+    } else {
+      setTimeout(() => {
         focusAble.focus();
-      })
+      });
     }
   }
 }
@@ -108,14 +105,18 @@ export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
     return FocusAbleObjectContainer.compareFraction(x, y, 0);
   }
 
-  static compareFraction(x: IFocusAbleObjectContainer, y: IFocusAbleObjectContainer, fractionIndex: number): number{
+  static compareFraction(
+    x: IFocusAbleObjectContainer,
+    y: IFocusAbleObjectContainer,
+    fractionIndex: number
+  ): number {
     if (x.has(fractionIndex) && !y.has(fractionIndex)) {
       return 1;
     }
     if (!x.has(fractionIndex) && y.has(fractionIndex)) {
       return -1;
     }
-    if(!x.has(fractionIndex) && !y.has(fractionIndex)){
+    if (!x.has(fractionIndex) && !y.has(fractionIndex)) {
       return 0;
     }
 
@@ -124,10 +125,10 @@ export class FocusAbleObjectContainer implements IFocusAbleObjectContainer {
       return fraction;
     }
 
-    return FocusAbleObjectContainer.compareFraction(x, y,fractionIndex + 1 )
+    return FocusAbleObjectContainer.compareFraction(x, y, fractionIndex + 1);
   }
 
-  has(fractionIndex: number ){
+  has(fractionIndex: number) {
     return this.tabIndexFractions.length - 1 >= fractionIndex;
   }
 }
