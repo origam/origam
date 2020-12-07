@@ -50,7 +50,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
         dataView.dataTable.substituteRecord(resultItem.wrappedObject);
         if(resortTables){
-          dataView.dataTable.updateSortAndFilter();
+          dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
         }
       }
       getFormScreen(ctx).setDirty(true);
