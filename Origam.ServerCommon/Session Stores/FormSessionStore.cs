@@ -422,6 +422,13 @@ namespace Origam.ServerCommon
             // get parent row again (the one before was most probably loaded from the list
             // now we have it in the cache
             DataRow parentRow = GetSessionRow(parentRelation.ParentTable.TableName, parentRecordId);
+            if (parentRow == null)
+            {
+                throw new ArgumentOutOfRangeException($"Parent record id " +
+                    $"{parentRecordId} not found in " +
+                    $"{parentRelation.ParentTable.TableName} - " +
+                    $"parent of {childEntity}.");
+            }
             // get the requested entity data
             string[] columns = GetColumnNames(childTable);
             foreach (DataRow r in parentRow.GetChildRows(parentRelation.RelationName))
