@@ -42,6 +42,7 @@ const OPERATORS = [
 
 const OpCombo: React.FC<{
   setting: any;
+  onClick:()=> void;
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
@@ -55,6 +56,7 @@ const OpCombo: React.FC<{
             props.setting.isComplete = op.type === "null" || op.type === "nnull";
             props.setting.val1 = undefined;
             props.setting.val2 = undefined;
+            props.onClick();
           }}
         >
           {op.caption}
@@ -127,6 +129,7 @@ class OpEditors extends React.Component<{
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   lookup: ILookup;
   property: IProperty;
+  dropdownEditorData: FilterEditorData;
 }> {
 
   @action.bound handleSelectedItemsChange(items: Array<any>) {
@@ -143,6 +146,7 @@ class OpEditors extends React.Component<{
 
   render() {
     const { setting } = this.props;
+    this.props.dropdownEditorData.onChange = this.handleSelectedItemsChange.bind(this);
     switch (setting?.type) {
       case "in":
       case "nin":
@@ -153,6 +157,7 @@ class OpEditors extends React.Component<{
             getOptions={this.props.getOptions}
             onChange={this.handleSelectedItemsChange}
             values={this.props.setting.val1 ?? []}
+            dropdownEditorData={this.props.dropdownEditorData}
           />
         );
       case "null":
@@ -174,16 +179,21 @@ export class FilterSettingsTagInput extends React.Component<{
     return new TagInputFilterSetting(OPERATORS[0].type)
   }
 
+  dropdownEditorData = new FilterEditorData();
+
   render() {
     const setting = this.props.setting;
     return (
       <>
-        <OpCombo setting={setting} />
+        <OpCombo 
+          setting={setting}
+         onClick={()=> this.dropdownEditorData.clear()} />
         <OpEditors
           setting={setting}
           getOptions={this.props.getOptions}
           lookup={this.props.lookup}
           property={this.props.property}
+          dropdownEditorData = {this.dropdownEditorData}
         />
       </>
     );
@@ -238,6 +248,7 @@ export function FilterBuildDropdownEditor(props: {
   property: IProperty;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
   onChange(selectedItems: Array<any>): void;
+  dropdownEditorData :IDropdownEditorData;
   values: Array<any>;
 }) {
   const mobxContext = useContext(MobXProviderContext);
@@ -248,7 +259,7 @@ export function FilterBuildDropdownEditor(props: {
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
-    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.onChange);
+    const dropdownEditorData: IDropdownEditorData = props.dropdownEditorData; 
 
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
@@ -337,7 +348,7 @@ export function FilterBuildDropdownEditor(props: {
 }
 
 export class FilterEditorData implements IDropdownEditorData {
-  constructor(private onChange: (selectedItems: Array<any>) => void) {}
+  constructor(public onChange?: (selectedItems: Array<any>) => void) {}
 
   @computed get value(): string | string[] | null {
     return this._value;
@@ -354,10 +365,14 @@ export class FilterEditorData implements IDropdownEditorData {
     return false;
   }
 
+  clear(){
+    this._value.length = 0;
+  }
+
   @action.bound chooseNewValue(value: any) {
     if (value !== null && !this._value.includes(value)) {
       this._value = [...this._value, value];
-      this.onChange(this._value);
+      this.onChange?.(this._value);
     }
   }
 
