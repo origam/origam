@@ -350,10 +350,10 @@ export class FilterConfiguration implements IFilterConfiguration {
               );
           }
           case "null": {
-            return values === null || values.length === 0;
+            return !values || values.length === 0;
           }
           case "nnull": {
-            return values !== null && values.length > 0;
+            return values && values.length > 0;
           }
 
         }
