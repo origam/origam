@@ -12,7 +12,16 @@ export class FocusManager {
   constructor(public parent: any) {}
 
   subscribe(focusAbleObject: IFocusAble, name: string | undefined, tabIndex: string | undefined) {
+    if(!focusAbleObject){
+      return;
+    }
     const focusAbleContainer = new FocusAbleObjectContainer(focusAbleObject, name, tabIndex);
+    const existingContainer = this.focusAbleContainers
+      .find(container => container.name && container.name === name ||
+            container.focusAble === focusAbleObject);
+    if(existingContainer){
+      this.focusAbleContainers.remove(existingContainer);
+    }
     this.focusAbleContainers.push(focusAbleContainer);
     this.focusAbleContainers = this.focusAbleContainers.sort(FocusAbleObjectContainer.compare);
   }
