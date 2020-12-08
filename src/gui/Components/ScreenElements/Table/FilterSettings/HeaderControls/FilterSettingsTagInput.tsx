@@ -41,7 +41,7 @@ const OPERATORS = [
   ];
 
 const OpCombo: React.FC<{
-  setting: any;
+  setting: IFilterSetting
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
@@ -129,18 +129,6 @@ class OpEditors extends React.Component<{
   property: IProperty;
 }> {
 
-  @action.bound handleSelectedItemsChange(items: Array<any>) {
-    this.props.setting.val1 = [...items];
-    this.props.setting.val2 = undefined;
-    this.props.setting.isComplete = this.props.setting.val1 !== undefined && this.props.setting.val1.length > 0;
-  }
-
-  @action.bound handleTermChange(event: any) {
-    this.props.setting.val1 = undefined;
-    this.props.setting.val2 = event.target.value;
-    this.props.setting.isComplete = !!this.props.setting.val2;
-  }
-
   render() {
     const { setting } = this.props;
     switch (setting?.type) {
@@ -151,8 +139,8 @@ class OpEditors extends React.Component<{
             lookup={this.props.lookup}
             property={this.props.property}
             getOptions={this.props.getOptions}
-            onChange={this.handleSelectedItemsChange}
-            values={this.props.setting.val1 ?? []}
+            values={setting.val1 ?? []}
+            setting={setting}
           />
         );
       case "null":
@@ -178,7 +166,7 @@ export class FilterSettingsTagInput extends React.Component<{
     const setting = this.props.setting;
     return (
       <>
-        <OpCombo setting={setting} />
+        <OpCombo setting={setting}/>
         <OpEditors
           setting={setting}
           getOptions={this.props.getOptions}
@@ -237,18 +225,16 @@ export function FilterBuildDropdownEditor(props: {
   lookup: ILookup;
   property: IProperty;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
-  onChange(selectedItems: Array<any>): void;
   values: Array<any>;
+  setting: IFilterSetting;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-  const dataView = mobxContext.dataView as IDataView;
-  const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
   const workbench = mobxContext.workbench;
   const { lookupListCache } = workbench;
 
   const [dropdownEditorInfrastructure] = useState<IDropdownEditorContext>(() => {
     const dropdownEditorApi: IDropdownEditorApi = new DropDownApi(props.getOptions);
-    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.onChange);
+    const dropdownEditorData: IDropdownEditorData = new FilterEditorData(props.setting); 
 
     const dropdownEditorDataTable = new DropdownDataTable(
       () => dropdownEditorSetup,
@@ -266,7 +252,6 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorLookupListCache,
       false
     );
-    const lookupColumn = props.lookup.dropDownColumns[0];
 
     const drivers = new DropdownColumnDrivers();
 
@@ -311,10 +296,6 @@ export function FilterBuildDropdownEditor(props: {
     };
   });
 
-  function onItemRemoved(event: any, item: any) {
-    props.onChange(props.values);
-  }
-
   const value = props.values;
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
@@ -327,7 +308,6 @@ export function FilterBuildDropdownEditor(props: {
             isInvalid={false}
             isFocused={false}
             refocuser={undefined}
-            onChange={onItemRemoved}
             onClick={undefined}
           />
         }
@@ -337,14 +317,12 @@ export function FilterBuildDropdownEditor(props: {
 }
 
 export class FilterEditorData implements IDropdownEditorData {
-  constructor(private onChange: (selectedItems: Array<any>) => void) {}
+  constructor( private setting: IFilterSetting) {
+    }
 
   @computed get value(): string | string[] | null {
-    return this._value;
+    return this.setting.val1;
   }
-
-  @observable
-  _value: any[] = [];
 
   @computed get text(): string {
     return "";
@@ -354,22 +332,37 @@ export class FilterEditorData implements IDropdownEditorData {
     return false;
   }
 
+  onChange(){
+    this.setting.val2 = undefined;
+    this.setting.isComplete = this.setting.val1 !== undefined && this.setting.val1.length > 0;
+  }
+
   @action.bound chooseNewValue(value: any) {
-    if (value !== null && !this._value.includes(value)) {
-      this._value = [...this._value, value];
-      this.onChange(this._value);
+    if (value !== null && !this.setting.val1?.includes(value)) {
+      if(this.setting.val1 === undefined){
+        this.setting.val1 = [value];
+      }else{
+        this.setting.val1 = [...this.setting.val1, value];
+      }
+      this.onChange();
     }
   }
 
   get idsInEditor() {
-    return this._value as string[];
+    return this.setting.val1 ?? [] as string[];
   }
 
   remove(valueToRemove: any): void {
-    const index = this._value.indexOf(valueToRemove)
+    const index = this.setting.val1.indexOf(valueToRemove)
     if(index > -1){
-      this._value.splice(index, 1);
+      this.setting.val1.splice(index, 1);
     }
+    if(this.setting.val1?.length === 0){
+      this.setting.val1 = undefined;
+    }else{
+      this.setting.val1 = [...this.setting.val1];
+    }
+    this.onChange();
   }
 }
 
