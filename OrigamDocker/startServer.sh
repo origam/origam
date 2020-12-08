@@ -7,21 +7,20 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   mkdir $DIR
 	   cd $DIR
 	   gitcredentials=""
+	   gitcloneBranch="-b master"
+	   if [[ -n ${gitBranch} ]]; then
+	    gitcloneBranch="-b $gitBranch"
+	   fi
 	   if [[ -n ${gitUsername} && -n ${gitPassword} ]]; then
 			gitcredentials="${gitUsername}:${gitPassword}@"
 	   fi
 	   if [[ ${gitUrl} == https:* ]]; then
 			fullgiturl="https://$gitcredentials${gitUrl//https:\/\//}"
-		git clone $fullgiturl
+		git clone $gitcloneBranch --single-branch $fullgiturl
 	   fi
 	   if [[ ${gitUrl} == http:* ]]; then
 		fullgiturl="http://$gitcredentials${gitUrl//http:\/\//}"
-		git clone $fullgiturl
-	   fi
-	   if [[ -n ${gitBranch} ]]; then
-	    cd `ls`
-	    git checkout ${gitBranch}
-		cd ..
+		git clone $gitcloneBranch --single-branch $fullgiturl
 	   fi
 	   cd ..
 	fi
@@ -34,20 +33,20 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   mkdir $DIRCONFIG
 	   cd $DIRCONFIG
 	   gitconfcredentials=""
+	   gitconfcloneBranch="-b master"
+	   if [[ -n ${gitConfBranch} ]]; then
+	    gitconfcloneBranch="-b $gitConfBranch"
+	   fi
 	   if [[ -n ${gitConfUsername} && -n ${gitConfPassword} ]]; then
 			gitconfcredentials="${gitConfUsername}:${gitConfPassword}@"
 	   fi
 	   if [[ ${gitConfUrl} == https:* ]]; then
 			fullconfgiturl="https://$gitconfcredentials${gitConfUrl//https:\/\//}"
-		git clone $fullconfgiturl
+		git clone $gitconfcloneBranch --single-branch $fullconfgiturl
 	   fi
 	   if [[ ${gitConfUrl} == http:* ]]; then
 		fullconfgiturl="http://$gitconfcredentials${gitConfUrl//http:\/\//}"
-		git clone $fullconfgiturl
-	   fi
-	   cd `ls`
-	   if [[ -n ${gitConfBranch} ]]; then
-	    git checkout ${gitConfBranch}
+		git clone $gitconfcloneBranch --single-branch $fullconfgiturl
 	   fi
 	   if [ -f _OrigamSettings.mssql.template ]; then
 		cp _OrigamSettings.mssql.template ../../
