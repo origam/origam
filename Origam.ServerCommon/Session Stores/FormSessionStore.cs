@@ -392,7 +392,15 @@ namespace Origam.ServerCommon
         {
             lock (_getRowDataLock)
             {
-                Data.RejectChanges();
+                try
+                {
+                    UnregisterEvents();
+                    Data.RejectChanges();
+                }
+                finally
+                {
+                    RegisterEvents();
+                }
             }
         }
 
