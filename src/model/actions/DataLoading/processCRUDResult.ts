@@ -32,7 +32,7 @@ export interface ICRUDResult {
 export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?: boolean | undefined): Generator {
   if (_.isArray(result)) {
     for (let resultItem of result) {
-      yield* processCRUDResult(ctx, resultItem);
+      yield* processCRUDResult(ctx, resultItem, resortTables);
     }
     return;
   }
