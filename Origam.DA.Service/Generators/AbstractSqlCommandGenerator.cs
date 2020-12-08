@@ -1799,7 +1799,7 @@ namespace Origam.DA.Service
                         sortSet, selectParameterReferences, isInRecursion,
                         forceDatabaseCalculation, group, order, ref groupByNeeded,
                         columnsInfo ?? ColumnsInfo.Empty, column,
-                        customOrderingInfo, selectParameters.RowOffset);
+                        customOrderingInfo, customCommandParser, selectParameters.RowOffset);
                 if (expression != null)
                 {
                     if (i > 0) sqlExpression.Append(",");
@@ -1847,12 +1847,12 @@ namespace Origam.DA.Service
                     if (customOrderings.FilterLookups != null && 
                         customOrderings.FilterLookups.ContainsKey(columnName))
                     {
-                        customCommandParser.AddOrderingLookupExpression(columnName ,resultExpression);
+                        customCommandParser.SetOrderingColumnExpression(columnName ,resultExpression);
                     }                    
                     if (customFilters.FilterLookups != null && 
                         customFilters.FilterLookups.ContainsKey(columnName))
                     {
-                        customCommandParser.AddFilterLookupExpression(columnName ,resultExpression);
+                        customCommandParser.SetFilterColumnExpression(columnName ,resultExpression);
                     }
                 }
             }
@@ -2018,7 +2018,7 @@ namespace Origam.DA.Service
             bool forceDatabaseCalculation, List<string> group, SortedList order,
             ref bool groupByNeeded, ColumnsInfo columnsInfo,
             DataStructureColumn column, LookupOrderingInfo orderingInfo,
-            int? rowOffset = null)
+            CustomCommandParser customCommandParser, int? rowOffset = null)
         {
             string result = null;
             bool processColumn = false;
@@ -2083,6 +2083,11 @@ namespace Origam.DA.Service
                     GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
                         dynamicParameters, selectParameterReferences, isInRecursion,
                         ref groupByNeeded, columnsInfo, column, ref groupExpression);
+                if (customCommandParser != null)
+                {
+                    customCommandParser.SetOrderingColumnExpression(column.Name ,resultExpression);
+                    customCommandParser.SetFilterColumnExpression(column.Name ,resultExpression);
+                }
 
                 if (processColumn && !string.IsNullOrWhiteSpace(resultExpression))
                 {
