@@ -80,7 +80,6 @@ export class FilterConfiguration implements IFilterConfiguration {
       for (let term of this.activeFilters) {
         let res = !this.userFilterPredicate(row, term);
         if (res) {
-          debugger;
         }
         if (!this.userFilterPredicate(row, term)) {
           return false;
@@ -330,6 +329,34 @@ export class FilterConfiguration implements IFilterConfiguration {
         break;
       }
       case "TagInput": {
+        const values = dataTable.getOriginalCellValue(row, prop);
+        switch (term.setting.type) {
+          case "in":
+          case "eq": {
+            if (term.setting.val1 === undefined || term.setting.val1.length === 0) return true;
+            if (!values || values.length === 0) return false; 
+            return values.some( (val: any) =>
+              term.setting.val1.some(
+                (filterVal: any) => filterVal === val)
+              );
+          }
+          case "nin":
+          case "neq": {
+            if (term.setting.val1 === undefined || term.setting.val1.length === 0) return true;
+            if (!values || values.length === 0) return true; 
+            return values.every( (val: any) =>
+              term.setting.val1.every(
+                (filterVal: any) => filterVal !== val)
+              );
+          }
+          case "null": {
+            return values === null || values.length === 0;
+          }
+          case "nnull": {
+            return values !== null && values.length > 0;
+          }
+
+        }
         return true;
         break;
       }
