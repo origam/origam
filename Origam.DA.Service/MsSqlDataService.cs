@@ -174,11 +174,10 @@ namespace Origam.DA.Service
 				else
 				{
 					customMessage = ResourceUtils.GetString("ExceptionWhenUpdate");
-                    foreach(var columnInError in row.GetColumnsInError())
+                    foreach(DataColumn column in row.Table.Columns)
                     {
-                        recordErrorMessage += 
-                            string.Format("\nColumns {0} is in error with value: {1}", 
-                                columnInError.ColumnName, row[columnInError]);
+                        recordErrorMessage += string.Format("\nColumn {0}: {1}", 
+                                column.ColumnName, row[column]);
                     }
 				}	
 			}
