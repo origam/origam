@@ -15,6 +15,7 @@ import { isScrollRowContainer } from "./ScrollRowContainer";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getDataSourceFieldByIndex } from "model/selectors/DataSources/getDataSourceFieldByIndex";
+import { isArray } from "lodash";
 
 export class DataTable implements IDataTable {
   $type_IDataTable: 1 = 1;
@@ -126,9 +127,11 @@ export class DataTable implements IDataTable {
 
   // Returns all values from currently loaded rows (in case the table is infinitely scrolled)
   getAllValuesOfProp(property: IProperty): Set<any> {
-    return new Set(
-      this.rowsContainer.allRows.map((row) => this.getCellValue(row, property)).filter((row) => row)
-    );
+    const values = this.rowsContainer.allRows.map((row) => this.getCellValue(row, property)).filter((row) => row);
+    if(values.some(value => isArray(value))){
+      return new Set(values.flatMap(array => array));
+    }
+    return new Set(values);
   }
 
   getCellText(row: any[], property: IProperty) {
