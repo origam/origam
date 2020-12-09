@@ -14,6 +14,7 @@ import { flow } from "mobx";
 import { selectNextRow } from "model/actions/DataView/selectNextRow";
 import { handleError } from "model/actions/handleError";
 import { openScreenByReference } from "model/actions/Workbench/openScreenByReference";
+import { openScreenByReferenceAndLookup } from "model/actions/Workbench/openScreenByReferenceAndLookup";
 
 export class SearchResults extends React.Component<{
   results: ISearchResult[];
@@ -35,7 +36,7 @@ function SearchResultItem(props: { result: ISearchResult }) {
   async function onClick(event: any) {
     flow(function* () {
       try {
-        yield* openScreenByReference(application)(
+        yield* openScreenByReferenceAndLookup(application)(
           props.result.dataSourceLookupId,
           props.result.referenceId
         );
