@@ -58,6 +58,7 @@ import { startEditingFirstCell } from "model/actions/DataView/startEditingFirstC
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
+import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -105,8 +106,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.copyRow(entity, gridId, rowId);
   }
 
-  *onDeleteRow(entity: string, rowId: string): Generator<unknown, any, unknown> {
-    yield* this.onRequestDeleteRow(entity, rowId);
+  *onDeleteRow(
+    entity: string,
+    rowId: string,
+    dataView: IDataView
+  ): Generator<unknown, any, unknown> {
+    yield* this.onRequestDeleteRow(entity, rowId, dataView);
   }
 
   *onSaveSession(): Generator<unknown, any, unknown> {
@@ -147,9 +152,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  *onRequestDeleteRow(entity: string, rowId: string) {
+  *onRequestDeleteRow(entity: string, rowId: string, dataView: IDataView) {
     if ((yield this.questionDeleteData()) === IQuestionDeleteDataAnswer.Yes) {
-      yield* this.deleteRow(entity, rowId);
+      yield* this.deleteRow(entity, rowId, dataView);
     }
   }
 
@@ -407,6 +412,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     }
     yield* this.startAutorefreshIfNeeded();
+
+    console.log("----- DataViews debug -----");
+    for (let dv of getFormScreen(this).dataViews) {
+      console.log(dv.id, "-", dv.name, "-", dv.orderProperty, "-", dv.orderMember);
+    }
+    console.log("----- =============== -----");
   }
 
   sortAndFilterReaction(dataView: IDataView) {
@@ -736,21 +747,19 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     500
   );
 
-  private getNewRowValues() {
-    if (!this.userOrderedDataView) {
-      return {};
-    }
-
-    const orderProperty = this.userOrderedDataView.orderProperty!;
-    const orderValues = this.userOrderedDataView.tableRows
+  private getNewRowValues(targetDataView: IDataView) {
+    if (!targetDataView.orderMember) {
+      return;
+    } 
+    const orderMember = targetDataView.orderMember;
+    const dataSourceField = getDataSourceFieldByName(targetDataView, orderMember);
+    const orderValues = targetDataView.tableRows
       .filter((row) => Array.isArray)
-      .map((row) => (row as any[])[orderProperty.dataIndex] as number);
-    const nextOrderValue = Math.max(...orderValues) + 1;
-    const orderPropName = orderProperty.name;
+      .map((row) => (row as any[])[dataSourceField!.index] as number);
+    const nextOrderValue = orderValues.length > 0 ? Math.max(...orderValues) + 1 : 0;
     const values = {} as any;
-    values[orderProperty.name] = nextOrderValue;
-    return values;
-  }
+    values[orderMember] = nextOrderValue;
+    return values;  }
 
   *createRow(entity: string, gridId: string) {
     try {
@@ -765,7 +774,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           SessionFormIdentifier: getSessionId(this),
           Entity: entity,
           RequestingGridId: gridId,
-          Values: this.getNewRowValues(),
+          Values: this.getNewRowValues(targetDataView),
           Parameters: { ...getBindingParametersFromParent(targetDataView) },
         });
       } finally {
@@ -801,7 +810,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           OriginalId: rowId,
           RequestingGridId: gridId,
           Entities: [entity],
-          ForcedValues: this.getNewRowValues(),
+          ForcedValues: this.getNewRowValues(targetDataView),
         });
       } finally {
         formScreen.dataUpdateCRS.leave();
@@ -812,11 +821,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  private get userOrderedDataView() {
-    return getFormScreen(this).dataViews.find((dataView) => dataView.orderProperty);
-  }
 
-  *deleteRow(entity: string, rowId: string) {
+  *deleteRow(entity: string, rowId: string, targetDataView: IDataView) {
     try {
       this.monitor.inFlow++;
       const api = getApi(this);
@@ -825,14 +831,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
 
-        if (this.userOrderedDataView) {
-          deleteObjectResult = yield* this.deleteObjectInOrderedList(
-            rowId,
-            entity,
-            this.userOrderedDataView
-          );
-        } else {
-          deleteObjectResult = yield api.deleteObject({
+        if (targetDataView.orderMember) {
+          deleteObjectResult = yield* this.deleteObjectInOrderedList(rowId, entity, targetDataView);
+        } else {          deleteObjectResult = yield api.deleteObject({
             SessionFormIdentifier: getSessionId(this),
             Entity: entity,
             Id: rowId,
@@ -847,27 +848,28 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  private *deleteObjectInOrderedList(rowId: string, entity: string, dataView: IDataView) {
+  private *deleteObjectInOrderedList(rowId: string, entity: string, targetDataView: IDataView) {
     const api = getApi(this);
-    const rowToDelete = dataView.dataTable.getRowById(rowId)!;
-    const orderProperty = dataView.orderProperty!;
+    const rowToDelete = targetDataView.dataTable.getRowById(rowId)!;
+    const orderMember = targetDataView.orderMember;
     const newRowOrderMap = {} as any;
-    if (orderProperty) {
-      dataView.dataTable.allRows
-        .filter((row) => row[orderProperty.dataIndex] > rowToDelete[orderProperty.dataIndex])
+    if (orderMember) {
+      const dataSourceField = getDataSourceFieldByName(targetDataView, orderMember)!;
+      targetDataView.dataTable.allRows
+        .filter((row) => row[dataSourceField.index] > rowToDelete[dataSourceField.index])
         .forEach((row) => {
-          const rowId = dataView.dataTable.getRowId(row);
-          const newOrder = row[orderProperty.dataIndex] - 1;
-          newRowOrderMap[rowId] = newOrder;
+          const rowId = targetDataView.dataTable.getRowId(row);
+          const newOrder = row[dataSourceField.index] - 1;
+          newRowOrderMap[rowId] = newOrder;          newRowOrderMap[rowId] = newOrder;
         });
-    }
-    return yield api.deleteObjectInOrderedList({
-      SessionFormIdentifier: getSessionId(this),
-      Entity: entity,
-      Id: rowId,
-      OrderProperty: orderProperty.name,
-      UpdatedOrderValues: newRowOrderMap,
-    });
+
+      return yield api.deleteObjectInOrderedList({
+        SessionFormIdentifier: getSessionId(this),
+        Entity: entity,
+        Id: rowId,
+        OrderProperty: orderMember,
+        UpdatedOrderValues: newRowOrderMap,
+      });    }
   }
 
   *saveSession() {
