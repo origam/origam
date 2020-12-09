@@ -42,7 +42,7 @@ import { FlowBusyMonitor } from "../../../utils/flow";
 import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
-import _ from "lodash";
+import _, { isArray } from "lodash";
 import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
@@ -362,7 +362,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
             () => {
               const orderings = orderingConfiguration.userOrderings.map((x) => x.direction);
               const filters = filterConfiguration.activeFilters
-                .map((x) => [x.propertyId, x.setting.type, x.setting.val1, x.setting.val2])
+                .map((x) => [
+                  x.propertyId,
+                   x.setting.type,
+                   isArray(x.setting.val1) ? [...x.setting.val1] : x.setting.val1, 
+                   x.setting.val2])
                 .filter((item) => {
                   if (
                     item[1] === "in" ||
@@ -388,7 +392,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                     return true;
                   }
                 });
-              console.log(filters);
               return {
                 orderings,
                 filters,

@@ -203,7 +203,20 @@ export class LookupFilterSetting implements IFilterSetting {
   @observable val1?: any; // used for "in" operator ... string[]
   @observable val2?: any; // used for "contains" operator ... string
   isComplete: boolean;
-  lookupId: string | undefined;
+
+  private _lookupId: string | undefined;
+
+  operatorsRequiringLookup = [ "contains", "ncontains", "starts", "nstarts", "ends", "nends"]
+
+  public get lookupId(): string | undefined {
+    if(this.operatorsRequiringLookup.includes(this.type)){
+      return  this._lookupId;
+    }
+    return undefined;
+  }
+  public set lookupId(value: string | undefined) {
+    this._lookupId = value;
+  }
 
   get filterValue1() {
     if (!this.val1) {
