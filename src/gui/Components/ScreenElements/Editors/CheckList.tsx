@@ -103,7 +103,7 @@ export const CheckList: React.FC<{
   return (
     <CheckListRaw
       value={props.value}
-      onChange={props.onChange}
+      onChange={!props.isReadonly ? props.onChange : undefined}
       api={getApi(property)}
       DataStructureEntityId={getDataStructureEntityId(property)}
       ColumnNames={property!.lookup.dropDownColumns.map((column: any) => column.id)}
@@ -190,7 +190,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
             focusRight={focusRight}
             focusUp={focusUp}
             focusDown={focusDown}
-            onKeyDown={props.isReadonly ? props.onKeyDown : undefined}
+            onKeyDown={!props.isReadonly ? props.onKeyDown : undefined}
             label={item.label}
           />
         ))}
