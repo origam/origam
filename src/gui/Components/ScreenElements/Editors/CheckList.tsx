@@ -1,4 +1,4 @@
-import React, {RefObject, useContext, useEffect, useMemo, useRef, useState} from "react";
+import React, { RefObject, useContext, useEffect, useMemo, useRef, useState } from "react";
 import S from "./CheckList.module.scss";
 import { MobXProviderContext, observer } from "mobx-react";
 import { action, computed, flow, observable } from "mobx";
@@ -9,9 +9,11 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { getSessionId } from "model/selectors/getSessionId";
-import {IFocusAble} from "../../../../model/entities/FocusManager";
+import { IFocusAble } from "../../../../model/entities/FocusManager";
 import CS from "gui/Components/ScreenElements/Editors/CommonStyle.module.css";
-import {Tooltip} from "react-tippy";
+import { Tooltip } from "react-tippy";
+import cx from "classnames";
+import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 
 export interface IRawCheckListProps {
   api: IApi;
@@ -28,6 +30,7 @@ export interface IRawCheckListProps {
   Parameters: any;
   menuItemId: string;
   isInvalid: boolean;
+  isReadonly?: boolean;
   invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
 
@@ -69,7 +72,7 @@ export class CheckListControler {
   }
 
   @action.bound handleClick(event: any, item: { value: string; label: string }) {
-    console.log("Clicked")
+    console.log("Clicked");
     event.preventDefault();
     const currentIndex = this.props.value.findIndex((id) => item.value === id);
     if (currentIndex > -1) {
@@ -90,6 +93,7 @@ export const CheckList: React.FC<{
   value: string[];
   onChange?(newValue: string[]): void;
   isInvalid: boolean;
+  isReadonly?: boolean;
   invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown(event: any): void;
@@ -112,6 +116,7 @@ export const CheckList: React.FC<{
       Entity={getEntity(property)}
       SessionFormIdentifier={getSessionId(property)}
       isInvalid={props.isInvalid}
+      isReadonly={props.isReadonly}
       invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
       onKeyDown={props.onKeyDown}
@@ -119,7 +124,7 @@ export const CheckList: React.FC<{
   );
 });
 
-export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
+export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
   const [controller] = useState(() => new CheckListControler());
   controller.props = props;
   useEffect(controller.loadLookupList, [props.RowId]);
@@ -127,7 +132,8 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
   const inputRefs: InputReference[] = [];
 
   function focusLeft(x: number, y: number) {
-    const inputsOnTheLeft = inputRefs.filter(input => input.hasYEqualTo(y) && input.isOnTheLeftOf(x))
+    const inputsOnTheLeft = inputRefs
+      .filter((input) => input.hasYEqualTo(y) && input.isOnTheLeftOf(x))
       .sort((i1, i2) => i2.x - i1.x);
 
     if (inputsOnTheLeft.length > 0) {
@@ -135,44 +141,47 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
     }
   }
 
-  function focusRight(x: number, y: number){
-    const inputsOnTheRight = inputRefs.filter(input => input.hasYEqualTo(y) && input.isOnTheRightOf(x))
+  function focusRight(x: number, y: number) {
+    const inputsOnTheRight = inputRefs
+      .filter((input) => input.hasYEqualTo(y) && input.isOnTheRightOf(x))
       .sort((i1, i2) => i1.x - i2.x);
 
-    if(inputsOnTheRight.length > 0){
+    if (inputsOnTheRight.length > 0) {
       inputsOnTheRight[0].focus();
     }
   }
 
-  function focusUp(x: number, y: number){
-    const inputsAbove = inputRefs.filter(input => input.hasXEqualTo(x) && input.isAbove(y))
+  function focusUp(x: number, y: number) {
+    const inputsAbove = inputRefs
+      .filter((input) => input.hasXEqualTo(x) && input.isAbove(y))
       .sort((i1, i2) => i2.y - i1.y);
 
-    if(inputsAbove.length > 0){
+    if (inputsAbove.length > 0) {
       inputsAbove[0].focus();
     }
   }
 
-
-  function focusDown(x: number, y: number){
-    const inputsBelow = inputRefs.filter(input => input.hasXEqualTo(x) && input.isBelow(y))
+  function focusDown(x: number, y: number) {
+    const inputsBelow = inputRefs
+      .filter((input) => input.hasXEqualTo(x) && input.isBelow(y))
       .sort((i1, i2) => i1.y - i2.y);
 
-    if(inputsBelow.length > 0){
+    if (inputsBelow.length > 0) {
       inputsBelow[0].focus();
     }
   }
 
-
   return (
     <div className={S.editorContainer}>
-      <div className={S.root}>
+      <div className={cx(S.root, { isReadonly: props.isReadonly })}>
         {controller.items.map((item, i) => (
           <CheckListItem
             key={item.value}
             checked={props.value && !!props.value.find((v) => v === item.value)}
             onClick={(event) => {
-              controller.handleClick(event, item);
+              if (!props.isReadonly) {
+                controller.handleClick(event, item);
+              }
             }}
             // tabIndex={i === 0 ? props.tabIndex : -1}
             subscribeToFocusManager={i === 0 ? props.subscribeToFocusManager : undefined}
@@ -181,8 +190,9 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer(props => {
             focusRight={focusRight}
             focusUp={focusUp}
             focusDown={focusDown}
-            onKeyDown={props.onKeyDown}
-            label={item.label}/>
+            onKeyDown={props.isReadonly ? props.onKeyDown : undefined}
+            label={item.label}
+          />
         ))}
       </div>
       {props.isInvalid && (
@@ -201,28 +211,27 @@ export const CheckListItem: React.FC<{
   onClick?(event: any): void;
   tabIndex?: number;
   inputSetter: (inputRef: InputReference) => void;
-  focusLeft: (x: number, y: number)=>void;
-  focusRight: (x: number, y: number)=>void;
-  focusUp: (x: number, y: number)=>void;
-  focusDown: (x: number, y: number)=>void;
+  focusLeft: (x: number, y: number) => void;
+  focusRight: (x: number, y: number) => void;
+  focusUp: (x: number, y: number) => void;
+  focusDown: (x: number, y: number) => void;
   label: string;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
-  onKeyDown(event: any): void;
+  onKeyDown?(event: any): void;
 }> = (props) => {
-
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   useEffect(() => {
-    if(props.subscribeToFocusManager && refInput.current){
+    if (props.subscribeToFocusManager && refInput.current) {
       props.subscribeToFocusManager(refInput.current);
     }
-  }, [])
+  }, []);
 
   function onKeyDown(event: any) {
     const boundingRect = refInput.current?.getBoundingClientRect()!;
     switch (event.key) {
       case "Tab":
-        props.onKeyDown(event);
+        props.onKeyDown?.(event);
         break;
       case "ArrowUp":
         event.preventDefault();
@@ -243,15 +252,15 @@ export const CheckListItem: React.FC<{
     }
   }
 
-  function onInputFocus(){
+  function onInputFocus() {
     setIsFocused(true);
   }
 
-  function onInputBlur(){
+  function onInputBlur() {
     setIsFocused(false);
   }
 
-  function onClick(event: any){
+  function onClick(event: any) {
     props.onClick && props.onClick(event);
     refInput?.current?.focus();
   }
@@ -271,7 +280,7 @@ export const CheckListItem: React.FC<{
         onFocus={onInputFocus}
         onBlur={onInputBlur}
       />
-      <div className={"content "+(isFocused ? S.focusedLabel : S.unFocusedLabel)}>
+      <div className={"content " + (isFocused ? S.focusedLabel : S.unFocusedLabel)}>
         {props.label}
       </div>
     </div>
@@ -279,8 +288,7 @@ export const CheckListItem: React.FC<{
 };
 
 class InputReference {
-  constructor(private inputRef: RefObject<HTMLInputElement>) {
-  }
+  constructor(private inputRef: RefObject<HTMLInputElement>) {}
 
   get x() {
     return this.inputRef.current?.getBoundingClientRect()!.x;

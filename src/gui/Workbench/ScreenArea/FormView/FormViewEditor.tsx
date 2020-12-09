@@ -216,6 +216,7 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             onChange={(newValue) => this.props.onChange && this.props.onChange({}, newValue)}
             isInvalid={isInvalid}
+            isReadonly={readOnly}
             invalidMessage={invalidMessage}
             subscribeToFocusManager={(firstCheckInput) =>
               this.focusManager.subscribe(firstCheckInput, this.props.property?.id, this.props.property?.tabIndex)
