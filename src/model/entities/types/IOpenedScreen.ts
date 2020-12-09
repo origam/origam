@@ -21,7 +21,6 @@ export interface IOpenedScreenData {
 }
 
 export interface IOpenedScreen extends IOpenedScreenData {
-  formTitle: string;
   parentContext: IOpenedScreen | undefined;
   $type_IOpenedScreen: 1;
 
