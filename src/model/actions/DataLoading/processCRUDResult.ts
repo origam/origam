@@ -32,7 +32,7 @@ export interface ICRUDResult {
 export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?: boolean | undefined): Generator {
   if (_.isArray(result)) {
     for (let resultItem of result) {
-      yield* processCRUDResult(ctx, resultItem);
+      yield* processCRUDResult(ctx, resultItem, resortTables);
     }
     return;
   }
@@ -50,7 +50,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
         dataView.dataTable.substituteRecord(resultItem.wrappedObject);
         if(resortTables){
-          dataView.dataTable.updateSortAndFilter();
+          dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
         }
       }
       getFormScreen(ctx).setDirty(true);
@@ -98,7 +98,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
       // TODO: Throw away all data and force further navigation / throw away all rowstates
       const dataViews = getDataViewList(ctx);
       for (let dataView of dataViews) {
-        if (getIsBindingRoot(dataView)) {
+        if (getIsBindingRoot(dataView) && dataView.requestDataAfterSelectionChange) {
           yield* dataView.lifecycle.changeMasterRow();
           yield* dataView.lifecycle.navigateChildren();
         }

@@ -43,20 +43,32 @@ export function processActionQueryInfo(ctx: any) {
                       resolve();
                     }}
                   >
-                    {T("Cancel", "button_cancel")}
+                    {T("Ok", "button_ok")}
                   </button>
                   {canContinue && (
-                    <button
-                      tabIndex={0}
-                      autoFocus={true}
-                      onClick={() => {
-                        canContinue = true;
-                        closeDialog();
-                        resolve();
-                      }}
-                    >
-                      {T("Continue", "button_continue")}
-                    </button>
+                    <>
+                      <button
+                        tabIndex={0}
+                        onClick={() => {
+                          canContinue = false;
+                          closeDialog();
+                          resolve();
+                        }}
+                      >
+                        {T("Cancel", "button_cancel")}
+                      </button>
+                      <button
+                        tabIndex={0}
+                        autoFocus={true}
+                        onClick={() => {
+                          canContinue = true;
+                          closeDialog();
+                          resolve();
+                        }}
+                      >
+                        {T("Continue", "button_continue")}
+                      </button>
+                    </>
                   )}
                 </>
               }
@@ -71,7 +83,12 @@ export function processActionQueryInfo(ctx: any) {
                   ))}
                 </ul>
                 {canContinue && (
-                  <>{T("Do you wish to continue anyway?", "do_you_wish_to_continue")}</>
+                  <>
+                    {T(
+                      "Do you wish to continue anyway?",
+                      "do_you_wish_to_continue"
+                    )}
+                  </>
                 )}
               </div>
             </ModalWindow>

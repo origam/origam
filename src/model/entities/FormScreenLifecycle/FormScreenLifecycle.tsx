@@ -1,6 +1,6 @@
 import { QuestionDeleteData } from "gui/Components/Dialogs/QuestionDeleteData";
 import { QuestionSaveData } from "gui/Components/Dialogs/QuestionSaveData";
-import { action, autorun, flow, observable, reaction, when } from "mobx";
+import { action, autorun, comparer, flow, observable, reaction, when } from "mobx";
 import { new_ProcessActionResult } from "model/actions/Actions/processActionResult";
 import { closeForm } from "model/actions/closeForm";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
@@ -42,7 +42,7 @@ import { FlowBusyMonitor } from "../../../utils/flow";
 import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
-import _ from "lodash";
+import _, { isArray } from "lodash";
 import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
 import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
@@ -365,16 +365,48 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         this.disposers.push(
           reaction(
             () => {
-              orderingConfiguration.userOrderings.map((x) => x.direction);
-              filterConfiguration.activeFilters.map((x) => [
-                x.propertyId,
-                x.setting.type,
-                x.setting.val1,
-                x.setting.val2,
-              ]);
-              return [] as any;
+              const orderings = orderingConfiguration.userOrderings.map((x) => x.direction);
+              const filters = filterConfiguration.activeFilters
+                .map((x) => [
+                  x.propertyId,
+                   x.setting.type,
+                   isArray(x.setting.val1) ? [...x.setting.val1] : x.setting.val1, 
+                   x.setting.val2])
+                .filter((item) => {
+                  if (
+                    item[1] === "in" ||
+                    item[1] === "eq" ||
+                    item[1] === "neq" ||
+                    item[1] === "nin" ||
+                    item[1] === "neq" ||
+                    item[1] === "contains" ||
+                    item[1] === "ncontains" ||
+                    item[1] === "lt" ||
+                    item[1] === "lte" ||
+                    item[1] === "gt" ||
+                    item[1] === "gte" ||
+                    item[1] === "between" ||
+                    item[1] === "nbetween" ||
+                    item[1] === "starts" ||
+                    item[1] === "nstarts" ||
+                    item[1] === "ends" ||
+                    item[1] === "nends"
+                  ) {
+                    return item[2] !== undefined || item[3] !== undefined;
+                  } else {
+                    return true;
+                  }
+                });
+              return {
+                orderings,
+                filters,
+              } as any;
             },
-            () => this.sortAndFilterReaction(rootDataView)
+            () => this.sortAndFilterReaction(rootDataView),
+            {
+              equals: comparer.structural,
+              delay: 100,
+            }
           )
         );
       }
@@ -718,8 +750,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   private getNewRowValues(targetDataView: IDataView) {
     if (!targetDataView.orderMember) {
       return;
-    }
-
+    } 
     const orderMember = targetDataView.orderMember;
     const dataSourceField = getDataSourceFieldByName(targetDataView, orderMember);
     const orderValues = targetDataView.tableRows
@@ -728,8 +759,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const nextOrderValue = orderValues.length > 0 ? Math.max(...orderValues) + 1 : 0;
     const values = {} as any;
     values[orderMember] = nextOrderValue;
-    return values;
-  }
+    return values;  }
 
   *createRow(entity: string, gridId: string) {
     try {
@@ -791,9 +821,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  /*private get userOrderedDataView() {
-    return getFormScreen(this).dataViews.find((dataView) => dataView.orderProperty);
-  }*/
 
   *deleteRow(entity: string, rowId: string, targetDataView: IDataView) {
     try {
@@ -806,8 +833,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
         if (targetDataView.orderMember) {
           deleteObjectResult = yield* this.deleteObjectInOrderedList(rowId, entity, targetDataView);
-        } else {
-          deleteObjectResult = yield api.deleteObject({
+        } else {          deleteObjectResult = yield api.deleteObject({
             SessionFormIdentifier: getSessionId(this),
             Entity: entity,
             Id: rowId,
@@ -834,7 +860,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         .forEach((row) => {
           const rowId = targetDataView.dataTable.getRowId(row);
           const newOrder = row[dataSourceField.index] - 1;
-          newRowOrderMap[rowId] = newOrder;
+          newRowOrderMap[rowId] = newOrder;          newRowOrderMap[rowId] = newOrder;
         });
 
       return yield api.deleteObjectInOrderedList({
@@ -843,8 +869,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Id: rowId,
         OrderProperty: orderMember,
         UpdatedOrderValues: newRowOrderMap,
-      });
-    }
+      });    }
   }
 
   *saveSession() {

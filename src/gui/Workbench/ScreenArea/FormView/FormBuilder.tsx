@@ -1,5 +1,5 @@
 import { inject, observer, Observer, Provider } from "mobx-react";
-import React from "react";
+import React, { useContext } from "react";
 import { IDataView } from "../../../../model/entities/types/IDataView";
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "../../../../model/selectors/DataView/getDataViewPropertyById";
@@ -23,6 +23,7 @@ import { isReadOnly } from "../../../../model/selectors/RowState/isReadOnly";
 import { DomEvent } from "leaflet";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
+import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -32,6 +33,8 @@ export class FormBuilder extends React.Component<{
   xmlFormRootObject?: any;
   dataView?: IDataView;
 }> {
+  static contextType = CtxPanelVisibility
+
   onKeyDown(event: any) {
     if (event.key === "Tab") {
       DomEvent.preventDefault(event);
@@ -194,9 +197,8 @@ export class FormBuilder extends React.Component<{
         return xfo.elements.map((child: any) => recursive(child));
       }
     }
-
     const form = recursive(this.props.xmlFormRootObject);
-    if (this.props.dataView?.isFirst) {
+    if (this.props.dataView?.isFirst && this.context.isVisible) {
       focusManager.autoFocus();
     }
     return form;
