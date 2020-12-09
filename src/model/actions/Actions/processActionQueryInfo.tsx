@@ -31,32 +31,24 @@ export function processActionQueryInfo(ctx: any) {
           const closeDialog = getDialogStack(ctx).pushDialog(
             "",
             <ModalWindow
-              title={T("Action Error", "question_title")}
+              title={T("Action Error", "action_error")}
               titleButtons={null}
               buttonsCenter={
                 <>
-                  <button
-                    tabIndex={0}
-                    onClick={() => {
-                      canContinue = false;
-                      closeDialog();
-                      resolve();
-                    }}
-                  >
-                    {T("Ok", "button_ok")}
-                  </button>
+                  {!canContinue && (
+                    <button
+                      tabIndex={0}
+                      onClick={() => {
+                        canContinue = false;
+                        closeDialog();
+                        resolve();
+                      }}
+                    >
+                      {T("Ok", "button_ok")}
+                    </button>
+                  )}
                   {canContinue && (
                     <>
-                      <button
-                        tabIndex={0}
-                        onClick={() => {
-                          canContinue = false;
-                          closeDialog();
-                          resolve();
-                        }}
-                      >
-                        {T("Cancel", "button_cancel")}
-                      </button>
                       <button
                         tabIndex={0}
                         autoFocus={true}
@@ -66,7 +58,17 @@ export function processActionQueryInfo(ctx: any) {
                           resolve();
                         }}
                       >
-                        {T("Continue", "button_continue")}
+                        {T("Yes", "button_yes")}
+                      </button>
+                      <button
+                        tabIndex={0}
+                        onClick={() => {
+                          canContinue = false;
+                          closeDialog();
+                          resolve();
+                        }}
+                      >
+                        {T("No", "button_no")}
                       </button>
                     </>
                   )}
