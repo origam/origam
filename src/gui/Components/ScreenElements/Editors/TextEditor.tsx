@@ -40,9 +40,6 @@ export class TextEditor extends React.Component<{
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
     this.makeFocusedIfNeeded();
-    if (this.elmInput && this.props.subscribeToFocusManager) {
-      this.props.subscribeToFocusManager(this.elmInput);
-    }
   }
 
   componentWillUnmount() {
@@ -71,9 +68,12 @@ export class TextEditor extends React.Component<{
     }
   }
 
-  elmInput: HTMLInputElement | null = null;
-  refInput = (elm: HTMLInputElement | any) => {
+  elmInput: any = null;
+  refInput = (elm:  any) => {
     this.elmInput = elm;
+    if (this.elmInput && this.props.subscribeToFocusManager) {
+      this.props.subscribeToFocusManager(this.elmInput);
+    }
   };
 
   getStyle() {
