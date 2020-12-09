@@ -280,8 +280,7 @@ namespace Origam.Workflow.WorkQueue
         private static void AddFileToTable(Stream stream, string mode, string fileName, string title, string encoding, DataTable dt)
         {
             DataRow row = dt.NewRow();
-
-            try
+            if (File.Exists(fileName))
             {
                 // Add file metadata (times)			
                 FileInfo fInfo = new FileInfo(fileName);
@@ -289,14 +288,10 @@ namespace Origam.Workflow.WorkQueue
                 row["LastWriteTime"] = fInfo.LastWriteTime;
                 row["LastAccessTime"] = fInfo.LastAccessTime;
             }
-            catch
-            {
-            }
-            if(!(row["CreationTime"] is DateTime))
+            if (!(row["CreationTime"] is DateTime))
             {
                 row["CreationTime"] = DateTime.Now;
             }
-
             row["Name"] = title;
             if (mode == MODE_TEXT)
             {
