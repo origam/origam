@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import S from "./DateTimeEditor.module.scss";
 // import CS from "./CommonStyle.module.css";
 import { action, computed, observable, runInAction } from "mobx";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import { Tooltip } from "react-tippy";
 import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import DateCompleter from "./DateCompleter";
@@ -224,10 +224,23 @@ export class DateTimeEditor extends React.Component<{
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
+  private get autoCompletedMoment(){
+    const dateCompleter = this.getDateCompleter();
+    return dateCompleter.autoComplete(this.dirtyTextualValue);
+  }
+
+  private get autocompletedText(){
+    const completedMoment = this.autoCompletedMoment;
+    if (completedMoment) {
+      return this.formatMomentValue(this.autoCompletedMoment);
+    }else{
+      return this.formatMomentValue(this.momentValue);
+    }
+  }
+
   @action.bound handleKeyDown(event: any) {
     if (event.key === "Enter" || event.key === "Tab") {
-      const dateCompleter = this.getDateCompleter();
-      const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
+      const completedMoment = this.autoCompletedMoment;
       if (completedMoment) {
         this.props.onChange?.(event, completedMoment.toISOString(true));
       } else if (this.momentValue?.isValid()) {
@@ -266,17 +279,21 @@ export class DateTimeEditor extends React.Component<{
     return !!this.props.value ? moment(this.props.value) : null;
   }
 
-  get formattedMomentValue() {
-    if (!this.momentValue) return "";
+  formatMomentValue(value: Moment | null | undefined) {
+    if (!value) return "";
     if (
-      this.momentValue.hour() === 0 &&
-      this.momentValue.minute() === 0 &&
-      this.momentValue.second() === 0
+      value.hour() === 0 &&
+      value.minute() === 0 &&
+      value.second() === 0
     ) {
       const expectedDateFormat = this.props.outputFormat.split(" ")[0];
-      return this.momentValue.format(expectedDateFormat);
+      return value.format(expectedDateFormat);
     }
-    return this.momentValue.format(this.props.outputFormat);
+    return value.format(this.props.outputFormat);
+  }
+
+  get formattedMomentValue() {
+    return this.formatMomentValue(this.momentValue);
   }
 
   @computed get textfieldValue() {
@@ -332,7 +349,7 @@ export class DateTimeEditor extends React.Component<{
             <Tooltip
               html={
                 <div>
-                  <div>{this.formattedMomentValue}</div>
+                  <div>{this.autocompletedText}</div>
                   <div>"{this.props.outputFormat}"</div>
                 </div>
               }
