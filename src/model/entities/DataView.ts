@@ -59,6 +59,8 @@ import { getUserOrdering } from "model/selectors/DataView/getUserOrdering";
 import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToLoad";
 import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
+import { getPropertyOrdering } from "model/selectors/DataView/getPropertyOrdering";
+import { IOrderByDirection } from "./types/IOrderingConfiguration";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -358,6 +360,30 @@ export class DataView implements IDataView {
     if (!this.selectedRowId) {
       return;
     }
+    const ordering = getPropertyOrdering(this, this.orderMember);
+    if(ordering.ordering ===  IOrderByDirection.ASC) {
+      this.moveSelectedRowDownIndexwise();
+    } else {
+      this.moveSelectedRowUpIndexwise();
+    }
+  }
+
+  @action.bound moveSelectedRowDown() {
+    if (!this.selectedRowId) {
+      return;
+    }
+    const ordering = getPropertyOrdering(this, this.orderMember);
+    if(ordering.ordering ===  IOrderByDirection.ASC) {
+      this.moveSelectedRowUpIndexwise();
+    } else {
+      this.moveSelectedRowDownIndexwise();
+    }
+  }
+
+  @action.bound moveSelectedRowUpIndexwise() {
+    if (!this.selectedRowId) {
+      return;
+    }
     const dataTable = getDataTable(this);
     const selectedRow = dataTable.getRowById(this.selectedRowId)!;
     const positionIndex = getDataSourceFieldByName(this, this.orderMember)!.index;
@@ -375,7 +401,7 @@ export class DataView implements IDataView {
     this.dataTable.setDirtyValue(nextRow, this.orderMember, nextRow[positionIndex]);
   }
 
-  @action.bound moveSelectedRowDown() {
+  @action.bound moveSelectedRowDownIndexwise() {
     if (!this.selectedRowId) {
       return;
     }
