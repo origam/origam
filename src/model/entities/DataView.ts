@@ -91,7 +91,7 @@ export class DataView implements IDataView {
       defaultRowHeight: this.tablePanelView.rowHeight,
     });
 
-    this.orderProperty = this.properties.find((prop) => prop.name === this.orderMember)!;
+    this.orderProperty = this.properties.find((prop) => prop.id === this.orderMember)!;
     this.dataTable.rowRemovedListeners.push(() => (this.selectAllCheckboxChecked = false));
   }
 

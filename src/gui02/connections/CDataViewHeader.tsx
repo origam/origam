@@ -35,7 +35,7 @@ import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVisible";
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
-import { getIsisMoveRowMenuVisible } from "model/selectors/DataView/getIsisMoveRowMenuVisible";
+import { getIsMoveRowMenuVisible } from "model/selectors/DataView/getIsMoveRowMenuVisible";
 import { getMaxRowCountSeen } from "model/selectors/DataView/getMaxRowCountSeen";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
@@ -148,7 +148,7 @@ export class CDataViewHeaderInner extends React.Component<{
     const onNextRowClickEvt = onNextRowClick(dataView);
     const onLastRowClickEvt = onLastRowClick(dataView);
 
-    const isMoveRowMenuVisible = getIsisMoveRowMenuVisible(dataView);
+    const isMoveRowMenuVisible = getIsMoveRowMenuVisible(dataView);
 
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
