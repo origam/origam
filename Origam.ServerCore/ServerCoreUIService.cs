@@ -1151,7 +1151,7 @@ namespace Origam.ServerCore
             {
                 ArrayList tooltips = logoNotificationBox.ChildItemsByType(
                     DataServiceDataTooltip.CategoryConst);
-                doc = GetTooltip(null, tooltips).Xml;
+                doc = GetTooltip(null, tooltips)?.Xml;
             }
             if (doc == null)
             {
