@@ -61,7 +61,6 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 		cp log4net.config ../../
 	   fi
 	   cd ..
-	   cd ..
 	fi
 fi
 
