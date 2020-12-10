@@ -59,6 +59,7 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
+import { getDontRequestData } from "model/selectors/getDontRequestData";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -1133,7 +1134,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   get isReadData() {
-    return !getOpenedScreen(this).dontRequestData;
+    return !getDontRequestData(this);
   }
 
   parent?: any;
