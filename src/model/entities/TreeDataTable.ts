@@ -237,7 +237,7 @@ export class TreeDataTable implements IDataTable {
 
   unlockAddedRowPosition(): void {}
 
-  updateSortAndFilter(data?: {retainPreviousSelection?: true}): void {
+  async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {
   }
 
   addedRowPositionLocked: boolean = false;

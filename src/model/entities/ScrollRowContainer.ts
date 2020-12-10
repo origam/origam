@@ -40,7 +40,7 @@ export class ScrollRowContainer implements IRowsContainer {
     return this._maxRowNumberSeen;
   }
 
-  updateSortAndFilter(data?: {retainPreviousSelection?: true}) {}
+  async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {}
 
   start() {}
 

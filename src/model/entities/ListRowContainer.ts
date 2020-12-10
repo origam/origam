@@ -83,7 +83,7 @@ export class ListRowContainer implements IRowsContainer {
   updateSortAndFilterDebounced = _.debounce(this.updateSortAndFilter, 10);
 
   @action
-  async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {
+  async updateSortAndFilter(data?: {retainPreviousSelection?: boolean}) {
     const self = this;
     await flow(
       function* () {

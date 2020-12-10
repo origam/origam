@@ -96,7 +96,6 @@ export interface IDataView extends IDataViewData {
   isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
   selectedRowIds: string[];
-  isAnyRowIdSelected: boolean;
   addSelectedRowId(id: string): void;
   removeSelectedRowId(id: string): void;
   setSelectedState(rowId: string, newState: boolean): void;
@@ -114,6 +113,9 @@ export interface IDataView extends IDataViewData {
   setSelectedRowId(id: string | undefined): void;
   setEditing(state: boolean): void;
   setRecords(rows: any[][]): void;
+  substituteRecord(row: any[]): void;
+  deleteRow(row: any[]): void;
+  clear(): void;
 
   saveViewState(): void;
   restoreViewState(): void;
