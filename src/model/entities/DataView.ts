@@ -207,6 +207,26 @@ export class DataView implements IDataView {
     this.selectedRowIds.remove(id);
   }
 
+  @action.bound
+  clear(){
+    this.selectedRowIds.length = 0;
+    this.dataTable.clear();
+  }
+
+  @action.bound
+  deleteRow(row: any[]){
+    const id = this.dataTable.getRowId(row);
+    this.selectedRowIds.remove(id);
+    this.dataTable.deleteRow(row);
+  }
+
+  @action.bound
+  substituteRecord(row: any[]){
+    const id = this.dataTable.getRowId(row);
+    this.selectedRowIds.remove(id);
+    this.dataTable.substituteRecord(row);
+  }
+
   @action.bound setSelectedState(rowId: string, newState: boolean) {
     if (newState) {
       this.addSelectedRowId(rowId);

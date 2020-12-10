@@ -48,7 +48,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
       const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
       for (let dataView of dataViews) {
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
-        dataView.dataTable.substituteRecord(resultItem.wrappedObject);
+        dataView.substituteRecord(resultItem.wrappedObject);
         if(resortTables){
           dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
         }
@@ -73,7 +73,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
       for (let dataView of dataViews) {
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
-          dataView.dataTable.deleteRow(row);
+          dataView.deleteRow(row);
         }
       }
       getFormScreen(ctx).setDirty(true);
@@ -112,7 +112,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
     case IResponseOperation.DeleteAllData: {
       const dataViews = getDataViewList(ctx);
       for (let dataView of dataViews) {
-        dataView.dataTable.clear();
+        dataView.clear();
       }
       break;
     }

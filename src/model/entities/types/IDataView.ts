@@ -114,6 +114,9 @@ export interface IDataView extends IDataViewData {
   setSelectedRowId(id: string | undefined): void;
   setEditing(state: boolean): void;
   setRecords(rows: any[][]): void;
+  substituteRecord(row: any[]): void;
+  deleteRow(row: any[]): void;
+  clear(): void;
 
   saveViewState(): void;
   restoreViewState(): void;
