@@ -10,7 +10,6 @@ import {
   IActionType,
 } from "./types/IAction";
 import { IActionParameter } from "./types/IActionParameter";
-import {getIsAnySelected} from "model/selectors-tree/selectionCheckboxes";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataView } from "model/selectors/DataView/getDataView";
 
