@@ -37,6 +37,10 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
     this.title = title;
   }
 
+  get formTitle(){
+    return this.content.formScreen?.title ?? this.title;
+  }
+
   setReloader(reloader: IReloader | null): void {
     this.reloader = reloader;
   }
