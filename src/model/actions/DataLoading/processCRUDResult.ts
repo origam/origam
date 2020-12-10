@@ -50,7 +50,10 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
         dataView.substituteRecord(resultItem.wrappedObject);
         if(resortTables){
-          dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
+          yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
+        }
+        if(!dataView.selectedRow){
+          dataView.reselectOrSelectFirst();
         }
       }
       getFormScreen(ctx).setDirty(true);
@@ -74,6 +77,9 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
           dataView.deleteRow(row);
+        }
+        if(!dataView.selectedRow){
+          dataView.reselectOrSelectFirst();
         }
       }
       getFormScreen(ctx).setDirty(true);
@@ -101,6 +107,9 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
         if (getIsBindingRoot(dataView) && dataView.requestDataAfterSelectionChange) {
           yield* dataView.lifecycle.changeMasterRow();
           yield* dataView.lifecycle.navigateChildren();
+        }
+        if(!dataView.selectedRow){
+          dataView.reselectOrSelectFirst();
         }
       }
       break;
