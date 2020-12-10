@@ -25,7 +25,7 @@ export function processActionQueryInfo(ctx: any) {
       for (let queryInfoItem of queryInfo) {
         if (queryInfoItem.severity === 0) canContinue = false;
       }
-
+      
       yield new Promise(
         action((resolve: () => void) => {
           const closeDialog = getDialogStack(ctx).pushDialog(
@@ -78,7 +78,6 @@ export function processActionQueryInfo(ctx: any) {
               buttonsRight={null}
             >
               <div className={S.dialogContent}>
-                {T("There has been a problem:", "there_has_been_a_problem")}
                 <ul>
                   {queryInfo.map((item, idx) => (
                     <li key={idx}>{item.message}</li>
