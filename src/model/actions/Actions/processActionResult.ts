@@ -15,6 +15,9 @@ import {IDataView} from "../../entities/types/IDataView";
 import {getDataViewByModelInstanceId} from "../../selectors/DataView/getDataViewByModelInstanceId";
 import {getDataView} from "../../selectors/DataView/getDataView";
 import {getOpenedScreen} from "../../selectors/getOpenedScreen";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
 
 export interface IOpenNewForm {
   (
@@ -79,6 +82,9 @@ export function processActionResult2(dep: {
   parentContext: any
 }) {
   return function* processActionResult2(actionResultList: any[]) {
+    const menuItemId = getMenuItemId(dep.parentContext);
+    const menuItem = getMainMenuItemById(dep.parentContext, menuItemId);
+
     for (let actionResultItem of actionResultList) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
@@ -86,7 +92,6 @@ export function processActionResult2(dep: {
           const {
             objectId,
             typeString,
-            dataRequested,
             parameters,
             isModalDialog,
             dialogWidth,
@@ -98,7 +103,7 @@ export function processActionResult2(dep: {
             objectId,
             typeString,
             caption || dep.getActionCaption(),
-            !dataRequested,
+            menuItem.attributes.dontRequestData === "true",
             dialogInfo,
             parameters,
             dep.parentContext,
