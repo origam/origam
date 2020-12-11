@@ -213,9 +213,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const actionQueryInfo = (yield api.workflowNextQuery({
         sessionFormIdentifier: sessionId,
       })) as IQueryInfo[];
-      const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo);
-      if (!processQueryInfoResult.canContinue) return;
       const formScreen = getFormScreen(this);
+      const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo, formScreen.title);
+      if (!processQueryInfoResult.canContinue) return;
       let uiResult;
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
@@ -573,7 +573,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.monitor.inFlow++;
       for (let dataView of formScreen.nonRootDataViews) {
-        dataView.clear();
+        dataView.dataTable.clear();
         dataView.setSelectedRowId(undefined);
         dataView.lifecycle.stopSelectedRowReaction();
       }
@@ -884,7 +884,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       try {
         yield* formScreen.dataUpdateCRS.enterGenerator();
         const queryResult = yield api.saveSessionQuery(getSessionId(this));
-        const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
+
+        const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult, formScreen.title);
         if (!processQueryInfoResult.canContinue) return;
         result = yield api.saveSession(getSessionId(this));
         getFormScreen(this).dataViews.forEach((dataView) =>
@@ -986,7 +987,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           SelectedItems: selectedItems,
           InputParameters: {},
         })) as IQueryInfo[];
-        const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult);
+        const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult, formScreen.title);
         if (!processQueryInfoResult.canContinue) return;
 
         const self = this;

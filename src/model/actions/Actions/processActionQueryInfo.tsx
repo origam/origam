@@ -18,7 +18,7 @@ export interface IProcessActionQueryInfoResult {
 
 export function processActionQueryInfo(ctx: any) {
   return function* processActionQueryInfo(
-    queryInfo: any[]
+    queryInfo: any[], title: string
   ): Generator<any, IProcessActionQueryInfoResult> {
     let canContinue = true;
     if (queryInfo.length > 0) {
@@ -31,7 +31,7 @@ export function processActionQueryInfo(ctx: any) {
           const closeDialog = getDialogStack(ctx).pushDialog(
             "",
             <ModalWindow
-              title={T("Action Error", "action_error")}
+              title={title}
               titleButtons={null}
               buttonsCenter={
                 <>
