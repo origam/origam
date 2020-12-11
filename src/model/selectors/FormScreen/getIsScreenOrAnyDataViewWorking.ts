@@ -1,10 +1,10 @@
 import {getDataViewList} from "./getDataViewList";
 import {getIsDataViewWorking} from "../DataView/getIsDataViewWorking";
-import {getIsFormScreenWorking} from "./getIsFormScreenWorking";
+import {getIsFormScreenWorkingDelayed} from "./getIsFormScreenWorking";
 
 export function getIsScreenOrAnyDataViewWorking(ctx: any) {
   return (
-    getIsFormScreenWorking(ctx) ||
+    getIsFormScreenWorkingDelayed(ctx) ||
     Array.from(getDataViewList(ctx)).some(dataView =>
       getIsDataViewWorking(dataView)
     )

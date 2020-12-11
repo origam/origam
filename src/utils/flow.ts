@@ -1,11 +1,11 @@
 import {observable} from "mobx";
 
-export const busyDelayMillis = 500;
+export const busyDelayMillis = 0;
 
 // Delays setting "isWorking" property by "busyDelayMillis" after "inFlow" counter is incremented from 0 to 1
 export class FlowBusyMonitor {
   @observable _inFlow = 0;
-  @observable isWorking = false;
+  @observable isWorkingDelayed = false;
   private flowLeft = false;
 
   set inFlow(value: number) {
@@ -13,12 +13,12 @@ export class FlowBusyMonitor {
       this.flowLeft = false;
       setTimeout(() => {
         if (!this.flowLeft) {
-          this.isWorking = true
+          this.isWorkingDelayed = true
         }
       }, busyDelayMillis);
     }
     else if (this._inFlow === 1 && value === 0) {
-      this.isWorking = false;
+      this.isWorkingDelayed = false;
       this.flowLeft = true;
     }
     this._inFlow = value;

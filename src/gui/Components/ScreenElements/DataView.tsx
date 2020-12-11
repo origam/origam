@@ -1,6 +1,6 @@
 import { CDataViewHeader } from "gui02/connections/CDataViewHeader";
 import { inject, Observer, observer, Provider } from "mobx-react";
-import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
+import { getIsDataViewOrFormScreenWorkingDelayed } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
 import React, { createContext, Fragment, ReactNode } from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
@@ -95,7 +95,7 @@ export class DataView extends React.Component<{
 
   render() {
     // TODO: Move styling to stylesheet
-    const isWorking = getIsDataViewOrFormScreenWorking(this.props.dataView);
+    const isWorking = getIsDataViewOrFormScreenWorkingDelayed(this.props.dataView);
 
     return (
       <CtxDataViewHeaderExtension.Provider value={this.dataViewHeaderExtension}>

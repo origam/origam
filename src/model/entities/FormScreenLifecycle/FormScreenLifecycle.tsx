@@ -85,8 +85,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
-  get isWorking() {
-    return this.monitor.isWorking;
+  get isWorkingDelayed() {
+    return this.monitor.isWorkingDelayed;
   }
 
   disposers: (() => void)[] = [];
@@ -334,7 +334,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     let _steadyDebounceTimeout: any;
     this.disposers.push(
       reaction(
-        () => getFormScreen(this).dataViews.every((dv) => !dv.isWorking) && !this.isWorking,
+        () => getFormScreen(this).dataViews.every((dv) => !dv.isWorking) && !this.isWorkingDelayed,
         (allDataViewsSteady) => {
           if (allDataViewsSteady) {
             _steadyDebounceTimeout = setTimeout(() => {
