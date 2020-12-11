@@ -85,6 +85,10 @@ export function processActionResult2(dep: {
     const menuItemId = getMenuItemId(dep.parentContext);
     const menuItem = getMainMenuItemById(dep.parentContext, menuItemId);
 
+    if(!menuItem){
+      throw new Error(`Menu item ${menuItemId} was not found`);
+    }
+
     for (let actionResultItem of actionResultList) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
