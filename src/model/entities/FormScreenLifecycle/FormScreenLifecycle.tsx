@@ -60,6 +60,8 @@ import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import { getDontRequestData } from "model/selectors/getDontRequestData";
+import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
+import { getEntity } from "model/selectors/DataView/getEntity";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -799,8 +801,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *copyRow(entity: string, gridId: string, rowId: string) {
     try {
       this.monitor.inFlow++;
-      const api = getApi(this);
       const targetDataView = getDataViewByGridId(this, gridId)!;
+      const childEntities = getBindingChildren(targetDataView).map(dataView => getEntity(dataView))
+      
+      const api = getApi(this);
       const formScreen = getFormScreen(this);
       let createObjectResult;
       try {
@@ -810,7 +814,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           Entity: entity,
           OriginalId: rowId,
           RequestingGridId: gridId,
-          Entities: [entity],
+          Entities: [entity, ...childEntities],
           ForcedValues: this.getNewRowValues(targetDataView),
         });
       } finally {
