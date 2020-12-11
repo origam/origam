@@ -177,10 +177,6 @@ export class DataView implements IDataView {
     return this.selectedRowIds.includes(id);
   }
 
-  @computed get isAnyRowIdSelected(): boolean {
-    return this.selectedRowIds.length > 0;
-  }
-
   setRecords(rows: any[][]): void {
     this.dataTable.setRecords(rows);
     this.selectedRowIds.length = 0;
@@ -205,6 +201,29 @@ export class DataView implements IDataView {
 
   @action.bound removeSelectedRowId(id: string) {
     this.selectedRowIds.remove(id);
+  }
+
+  @action.bound
+  clear(){
+    this.selectedRowIds.length = 0;
+    this.dataTable.clear();
+  }
+
+  @action.bound
+  deleteRow(row: any[]){
+    const id = this.dataTable.getRowId(row);
+    this.selectedRowIds.remove(id);
+    this.dataTable.deleteRow(row);
+  }
+
+  @action.bound
+  substituteRecord(row: any[]){
+    const id = this.dataTable.getRowId(row);
+    this.selectedRowIds.remove(id);
+    this.dataTable.substituteRecord(row);
+    // if( this.dataTable.rows.includes(row)){
+    //   this.sele
+    // }
   }
 
   @action.bound setSelectedState(rowId: string, newState: boolean) {

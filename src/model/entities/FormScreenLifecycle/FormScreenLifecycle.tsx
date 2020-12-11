@@ -573,7 +573,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.monitor.inFlow++;
       for (let dataView of formScreen.nonRootDataViews) {
-        dataView.dataTable.clear();
+        dataView.clear();
         dataView.setSelectedRowId(undefined);
         dataView.lifecycle.stopSelectedRowReaction();
       }
