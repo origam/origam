@@ -10,6 +10,10 @@ export class FlowBusyMonitor {
   private flowLeft = false;
 
   set inFlow(value: number) {
+    if(value < 0){
+      value = 0;
+      console.error("Trying to assign negative value to inFlow property!");
+    }
     if (this._inFlow === 0 && value === 1) {
       this.flowLeft = false;
 
