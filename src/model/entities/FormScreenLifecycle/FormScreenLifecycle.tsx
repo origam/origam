@@ -88,6 +88,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   get isWorkingDelayed() {
     return this.monitor.isWorkingDelayed;
   }
+  get isWorking() {
+    return this.monitor.isWorking;
+  }
 
   disposers: (() => void)[] = [];
 
@@ -617,12 +620,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   _flushDataShallRerun = false;
   *flushData() {
     try {
+      this.monitor.inFlow++;
       if (this._flushDataRunning) {
         this._flushDataShallRerun = true;
         return;
       }
       this._flushDataRunning = true;
-      this.monitor.inFlow++;
       const api = getApi(this);
       let updateObjectDidRun = false;
       do {

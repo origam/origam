@@ -34,6 +34,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   $type_IFormScreenLifecycle: 1;
 
   isWorkingDelayed: boolean;
+  isWorking: boolean;
 
   onFlushData(): Generator;
   throwChangesAway(dataView: IDataView): Generator;

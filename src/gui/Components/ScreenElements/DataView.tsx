@@ -10,6 +10,7 @@ import { scopeFor } from "dic/Container";
 import { IDataViewBodyUI } from "modules/DataView/DataViewUI";
 import { TreeView } from "./TreeView";
 import { observable } from "mobx";
+import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking.1";
 
 export interface IDataViewHeaderExtensionItem {
   $iid: number;
@@ -45,9 +46,9 @@ export class DataViewHeaderExtension {
   }
 }
 
-export const CtxDataViewHeaderExtension = createContext<DataViewHeaderExtension>(
-  new DataViewHeaderExtension()
-);
+export const CtxDataViewHeaderExtension = createContext<
+  DataViewHeaderExtension
+>(new DataViewHeaderExtension());
 
 @inject(({ formScreen }, { id }) => {
   const dataView = getDataViewById(formScreen, id);
@@ -85,17 +86,26 @@ export class DataView extends React.Component<{
   renderUiBodyWithHeader() {
     const $cont = scopeFor(this.props.dataView);
     const uiBody = $cont && $cont.resolve(IDataViewBodyUI);
+    const isWorking = getIsDataViewOrFormScreenWorking(this.props.dataView);
     return (
       <>
-        <CDataViewHeader isVisible={!this.props.isHeadless} />
-        <div className={S.dataViewContentContainer}>{uiBody && uiBody.render()}</div>
+        {/* <div style={{position:"relative"}}> */}
+        <div className={S.overlayContainer}>
+          <CDataViewHeader isVisible={!this.props.isHeadless} />
+          {isWorking && <DataViewLoading />}
+        </div>
+        <div className={S.dataViewContentContainer}>
+          {uiBody && uiBody.render()}
+        </div>
       </>
     );
   }
 
   render() {
     // TODO: Move styling to stylesheet
-    const isWorking = getIsDataViewOrFormScreenWorkingDelayed(this.props.dataView);
+    const isWorkingDelayed = getIsDataViewOrFormScreenWorkingDelayed(
+      this.props.dataView
+    );
 
     return (
       <CtxDataViewHeaderExtension.Provider value={this.dataViewHeaderExtension}>
@@ -107,7 +117,7 @@ export class DataView extends React.Component<{
               this.renderUiBodyWithHeader()
             )}
 
-            {isWorking && <DataViewLoading />}
+            {isWorkingDelayed && <DataViewLoading />}
           </div>
         </Provider>
       </CtxDataViewHeaderExtension.Provider>

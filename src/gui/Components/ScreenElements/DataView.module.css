@@ -24,6 +24,10 @@
   text-transform: uppercase;
 }
 
+.overlayContainer {
+  position: relative;
+}
+
 .dataViewContentContainer {
   position: relative;
   flex-grow: 1;
