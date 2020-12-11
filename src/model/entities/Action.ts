@@ -44,7 +44,7 @@ export class Action implements IAction {
       case IActionMode.ActiveRecord: {
         const selRowId = getSelectedRowId(this);
         return selRowId 
-          ? getRowStateIsDisableAction(this, selRowId, this.id) 
+          ? !getRowStateIsDisableAction(this, selRowId, this.id) 
           : false;
       }
       case IActionMode.MultipleCheckboxes: {
