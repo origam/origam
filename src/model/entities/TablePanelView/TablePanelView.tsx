@@ -142,7 +142,7 @@ export class TablePanelView implements ITablePanelView {
     yield* flushCurrentRowData(this)();
     const isDirty = getFormScreen(dataView).isDirty;
 
-    if (isDirty && dataView.selectedRowId !== rowId && isInfiniteScrollingActive(dataView)) {
+    if (isDirty && dataView.selectedRowId !== rowId) {
       const shouldProceedToSelectRow = yield getFormScreenLifecycle(
         dataView
       ).handleUserInputOnChangingRow(dataView);
