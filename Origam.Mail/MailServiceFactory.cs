@@ -31,6 +31,7 @@ namespace Origam.Mail
         private static readonly IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables()
             .Build();
 #endif
         private MailServiceFactory()

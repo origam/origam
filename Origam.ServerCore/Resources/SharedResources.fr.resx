@@ -166,10 +166,10 @@
     <value>Die Applikation wurde schon installiert.</value>
   </data>
   <data name="InvalidLogin" xml:space="preserve">
-    <value>Ungültiger Benutzername oder Passwort</value>
+    <value>nom d’utilisateur ou mot de passe non valide</value>
   </data>
   <data name="UserLockedOut" xml:space="preserve">
-    <value>Der Benutzer ist gesperrt.</value>
+    <value>utilisateur est bloqué</value>
   </data>
   <data name="ErrorUserNotFound" xml:space="preserve">
     <value>Der Benutzer wurde nicht gefunden.</value>
@@ -334,12 +334,15 @@
     <value>Ein unerwarteter Fehler ist aufgetreten. Bitte kontaktieren Sie den Support.</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Error</value>
+    <value>Erreur</value>
   </data>
   <data name="Required" xml:space="preserve">
-    <value>{0} is required</value>
+    <value>{0} nécessaire</value>
   </data>
   <data name="PasswordRequired" xml:space="preserve">
-    <value>Password is required</value>
+    <value>mot de passe nécessaire</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>nom d’utilisateur nécessaire</value>
   </data>
 </root>
