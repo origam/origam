@@ -195,6 +195,15 @@
     <None Update="assets\identity\css\login.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TemplateFiles\testMultiFactorFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TemplateFiles\testNewUserFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TemplateFiles\testResetPwFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties assets_4identity_4lib_4bootstrap_4css_4bootstrap_1css_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
