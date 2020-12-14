@@ -399,11 +399,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
-    const actualRowIndex = this.dataTable.addedRowPositionLocked
-      ? 0
-      : rowIndex
-
-    if(!this.rectangleMap.has(actualRowIndex)){
+    if(!this.rectangleMap.has(rowIndex)){
       return {
         columnLeft: 0,
         columnWidth: 0,
@@ -411,7 +407,7 @@ export class TablePanelView implements ITablePanelView {
         rowHeight: 0
       }
     }
-    return this.rectangleMap.get(actualRowIndex)!.get(columnIndex)!;
+    return this.rectangleMap.get(rowIndex)!.get(columnIndex)!;
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {
