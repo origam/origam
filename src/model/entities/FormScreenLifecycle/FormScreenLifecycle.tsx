@@ -64,7 +64,6 @@ import { getBindingChildren } from "model/selectors/DataView/getBindingChildren"
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
-import selectors from "model/selectors-tree";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -75,12 +74,6 @@ enum IQuestionSaveDataAnswer {
 enum IQuestionDeleteDataAnswer {
   No = 0,
   Yes = 1,
-}
-
-enum IQuestionChangeRecordAnswer {
-  Yes = 0,
-  No = 1,
-  Cancel = 2,
 }
 
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
@@ -1067,64 +1060,64 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  async handleUserInputOnChangingRow(dataView: IDataView) {
-    const api = getApi(dataView);
-    const openedScreen = getOpenedScreen(this);
-    const sessionId = getSessionId(openedScreen.content.formScreen);
+  // async handleUserInputOnChangingRow(dataView: IDataView) {
+  //   const api = getApi(dataView);
+  //   const openedScreen = getOpenedScreen(this);
+  //   const sessionId = getSessionId(openedScreen.content.formScreen);
 
-   if(isInfiniteScrollingActive(dataView)){
-      switch (await this.questionSaveDataAfterRecordChange()) {
-        case IQuestionChangeRecordAnswer.Cancel:
-          return false;
-        case IQuestionChangeRecordAnswer.Yes:
-          await api.saveSessionQuery(sessionId);
-          await api.saveSession(sessionId);
-          return true;
-        case IQuestionChangeRecordAnswer.No:
-          await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
-          return true;
-        default:
-          throw new Error("Option not implemented");
-      }
-    }
-    else
-    {
-      const errorMessages = dataView.childBindings
-        .map(binding => binding.childDataView)
-        .concat(dataView)
-        .flatMap(dataView => getSelectedRowErrorMessages(dataView))
-      if(errorMessages.length > 0){
-        await flow(function* bla() {yield* selectors.error.getDialogController(dataView).pushError(errorMessages.join("\n"));} )();
-        return false;
-      }
-    }
-    return true;
-  }
+  //  if(isInfiniteScrollingActive(dataView)){
+  //     switch (await this.questionSaveDataAfterRecordChange()) {
+  //       case IQuestionChangeRecordAnswer.Cancel:
+  //         return false;
+  //       case IQuestionChangeRecordAnswer.Yes:
+  //         await api.saveSessionQuery(sessionId);
+  //         await api.saveSession(sessionId);
+  //         return true;
+  //       case IQuestionChangeRecordAnswer.No:
+  //         await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
+  //         return true;
+  //       default:
+  //         throw new Error("Option not implemented");
+  //     }
+  //   }
+  //   else
+  //   {
+  //     const errorMessages = dataView.childBindings
+  //       .map(binding => binding.childDataView)
+  //       .concat(dataView)
+  //       .flatMap(dataView => getSelectedRowErrorMessages(dataView))
+  //     if(errorMessages.length > 0){
+  //       await flow(function* bla() {yield* selectors.error.getDialogController(dataView).pushError(errorMessages.join("\n"));} )();
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
 
-  questionSaveDataAfterRecordChange() {
-    return new Promise(
-      action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
-          "",
-          <ChangeMasterRecordDialog
-            screenTitle={getOpenedScreen(this).title}
-            onSaveClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.Yes);
-            }}
-            onDontSaveClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.No);
-            }}
-            onCancelClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.Cancel);
-            }}
-          />
-        );
-      })
-    );
-  }
+  // questionSaveDataAfterRecordChange() {
+  //   return new Promise(
+  //     action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
+  //       const closeDialog = getDialogStack(this).pushDialog(
+  //         "",
+  //         <ChangeMasterRecordDialog
+  //           screenTitle={getOpenedScreen(this).title}
+  //           onSaveClick={() => {
+  //             closeDialog();
+  //             resolve(IQuestionChangeRecordAnswer.Yes);
+  //           }}
+  //           onDontSaveClick={() => {
+  //             closeDialog();
+  //             resolve(IQuestionChangeRecordAnswer.No);
+  //           }}
+  //           onCancelClick={() => {
+  //             closeDialog();
+  //             resolve(IQuestionChangeRecordAnswer.Cancel);
+  //           }}
+  //         />
+  //       );
+  //     })
+  //   );
+  // }
 
   questionDeleteData() {
     return new Promise(
@@ -1164,3 +1157,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   parent?: any;
 }
+
+
+
+
+
+
+
+

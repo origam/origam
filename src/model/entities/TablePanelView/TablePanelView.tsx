@@ -30,6 +30,7 @@ import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelV
 import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurrentRowData";
 import { isReadOnly } from "../../selectors/RowState/isReadOnly";
 import {FilterGroupManager} from "model/entities/FilterGroupManager";
+import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -143,9 +144,7 @@ export class TablePanelView implements ITablePanelView {
     const isDirty = getFormScreen(dataView).isDirty;
 
     if (isDirty && dataView.selectedRowId !== rowId) {
-      const shouldProceedToSelectRow = yield getFormScreenLifecycle(
-        dataView
-      ).handleUserInputOnChangingRow(dataView);
+      const shouldProceedToSelectRow = yield handleUserInputOnChangingRow(dataView);
       if (!shouldProceedToSelectRow) {
         return;
       }
