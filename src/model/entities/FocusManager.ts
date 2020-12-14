@@ -1,4 +1,3 @@
-import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
 
 export class FocusManager {
   autoFocusDisabled = false;

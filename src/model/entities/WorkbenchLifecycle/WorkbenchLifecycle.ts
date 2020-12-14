@@ -32,10 +32,6 @@ import { IPortalSettings } from "../types/IPortalSettings";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import { getFocusManager } from "model/selectors/DataView/getFocusManager";
-import { IDataView } from "../types/IDataView";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
 

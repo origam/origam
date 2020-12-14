@@ -33,6 +33,7 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
 export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   $type_IFormScreenLifecycle: 1;
 
+  isWorkingDelayed: boolean;
   isWorking: boolean;
 
   onFlushData(): Generator;

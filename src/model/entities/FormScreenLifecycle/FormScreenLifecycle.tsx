@@ -85,6 +85,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
 
+  get isWorkingDelayed() {
+    return this.monitor.isWorkingDelayed;
+  }
   get isWorking() {
     return this.monitor.isWorking;
   }
@@ -334,7 +337,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     let _steadyDebounceTimeout: any;
     this.disposers.push(
       reaction(
-        () => getFormScreen(this).dataViews.every((dv) => !dv.isWorking) && !this.isWorking,
+        () => getFormScreen(this).dataViews.every((dv) => !dv.isWorking) && !this.isWorkingDelayed,
         (allDataViewsSteady) => {
           if (allDataViewsSteady) {
             _steadyDebounceTimeout = setTimeout(() => {
@@ -617,12 +620,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   _flushDataShallRerun = false;
   *flushData() {
     try {
+      this.monitor.inFlow++;
       if (this._flushDataRunning) {
         this._flushDataShallRerun = true;
         return;
       }
       this._flushDataRunning = true;
-      this.monitor.inFlow++;
       const api = getApi(this);
       let updateObjectDidRun = false;
       do {

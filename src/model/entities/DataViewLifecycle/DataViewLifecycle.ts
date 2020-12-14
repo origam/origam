@@ -30,7 +30,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   monitor: FlowBusyMonitor =  new FlowBusyMonitor();
 
   get isWorking(){
-    return this.monitor.isWorking;
+    return this.monitor.isWorkingDelayed;
   }
 
   disposers: any[] = [];

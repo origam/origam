@@ -23,7 +23,7 @@ export class RowState implements IRowState {
   monitor: FlowBusyMonitor =  new FlowBusyMonitor();
 
   get isWorking() {
-    return this.monitor.isWorking;
+    return this.monitor.isWorkingDelayed;
   }
 
   @observable firstLoadingPerformed = false;
