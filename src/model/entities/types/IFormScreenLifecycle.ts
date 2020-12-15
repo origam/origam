@@ -36,6 +36,8 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   isWorkingDelayed: boolean;
   isWorking: boolean;
 
+  rowSelectedReactionsDisabled(dataView: IDataView): boolean;
+
   onFlushData(): Generator;
   throwChangesAway(dataView: IDataView): Generator;
   onCreateRow(entity: string, gridId: string): Generator;

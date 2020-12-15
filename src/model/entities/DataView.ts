@@ -524,6 +524,9 @@ export class DataView implements IDataView {
     ) {
       return;
     }
+    if(this.selectedRowId === id){
+      return;
+    }
     this.selectedRowId = id;
     if (this.isBindingParent) {
       this.childBindings.forEach((binding) =>
@@ -572,8 +575,11 @@ export class DataView implements IDataView {
           rowsCount: getDataTable(this).allRows.length,
         }),
         (reData: { selectedRowId: string | undefined; rowsCount: number }) => {
+          if(getFormScreenLifecycle(this).rowSelectedReactionsDisabled(this)){
+            return
+          }
           if (reData.selectedRowId === undefined && reData.rowsCount > 0) {
-            this.reselectOrSelectFirst();
+           this.reselectOrSelectFirst();
           }
         },
         {
