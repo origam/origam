@@ -7,6 +7,7 @@ import { getDialogStack } from "model/selectors/getDialogStack";
 import React from "react";
 import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
+import { T } from "utils/translation";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -159,7 +160,7 @@ export class ErrorDialogComponent extends React.Component<{
   render() {
     return (
       <ModalWindow
-        title="Error"
+        title={T("Error", "error_window_title")}
         titleButtons={null}
         buttonsCenter={
           <>
