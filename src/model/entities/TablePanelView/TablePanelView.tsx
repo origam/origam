@@ -403,7 +403,7 @@ export class TablePanelView implements ITablePanelView {
     let cellOffset = { row: 0, column:0 };
     if(groupingConfig.isGrouping){
       const rowId = getDataView(this).selectedRowId;
-      cellOffset = getDataView(this).clientSideGrouper.getRowAndColumnOffsets(rowId)
+      cellOffset = getDataView(this).clientSideGrouper.getCellOffset(rowId)
     }
     if(!this.rectangleMap.has(rowIndex + cellOffset.row)){
       return {

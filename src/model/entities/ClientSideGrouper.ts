@@ -22,7 +22,7 @@ export class ClientSideGrouper implements IGrouper {
       return [];
     }
     const dataTable = getDataTable(this);
-    const groups = this.makeGroups(dataTable.rows, firstGroupingColumn);
+    const groups = this.makeGroups(undefined, dataTable.rows, firstGroupingColumn);
     this.loadRecursively(groups);
     console.log("topLevelGroups: "+groups.length);
     return groups;
@@ -32,16 +32,20 @@ export class ClientSideGrouper implements IGrouper {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
 
-  getRowAndColumnOffsets(rowId: string): ICellOffset {
+  getCellOffset(rowId: string): ICellOffset {
+    const containingGroup =  this.allGroups
+    .filter(group => group.getRowById(rowId) && group.isExpanded)
+    .sort((g1, g2) => g2.level - g1.level)[0]
+    
     let rowOffset = 0;
     for (const group of this.allGroups) {
       rowOffset++;
-      if(group.getRowById(rowId)){
+      if(group === containingGroup){
         return {
           row: rowOffset,
           column: group.level + 1}
       }
-      if(group.isExpanded){
+      if(group.isExpanded && !group.childGroups.some(child => child.isExpanded)){
         rowOffset += group.childRows.length;
       }
     }
@@ -87,7 +91,7 @@ export class ClientSideGrouper implements IGrouper {
     }
   }
 
-  makeGroups(rows: any[][], groupingColumn: string): IGroupTreeNode[] {
+  makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumn: string): IGroupTreeNode[] {
     const groupMap = this.makeGroupMap(groupingColumn, rows);
 
     const dataTable = getDataTable(this);
@@ -103,7 +107,7 @@ export class ClientSideGrouper implements IGrouper {
           columnId: groupingColumn,
           groupLabel: property!.name,
           rowCount: rows.length,
-          parent: undefined,
+          parent: parent,
           columnValue: groupName,
           columnDisplayValue: property ? dataTable.resolveCellText(property, groupName) : groupName,
           aggregations: this.calcAggregations(rows),
@@ -184,7 +188,7 @@ export class ClientSideGrouper implements IGrouper {
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
 
     if (nextColumnName) {
-      group.childGroups = this.makeGroups(group.childRows, nextColumnName);
+      group.childGroups = this.makeGroups(group, group.childRows, nextColumnName);
     }
   }
 
