@@ -1,7 +1,7 @@
 import { IGrouper } from "./types/IGrouper";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { ICellOffset, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { ClientSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView";
 import { IAggregationInfo } from "./types/IAggregationInfo";
@@ -32,19 +32,23 @@ export class ClientSideGrouper implements IGrouper {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
 
-  getRowAndColumnOffsets(rowId: string) {
+  getRowAndColumnOffsets(rowId: string): ICellOffset {
     let rowOffset = 0;
     for (const group of this.allGroups) {
       rowOffset++;
       if(group.getRowById(rowId)){
-        const columnOffset = group.level + 1;
-        return [rowOffset, columnOffset]
+        return {
+          row: rowOffset,
+          column: group.level + 1}
       }
       if(group.isExpanded){
         rowOffset += group.childRows.length;
       }
     }
-    return [0,0]
+    return {
+      row: 0,
+      column:0
+    }
   }
   
   getRowIndex(rowId: string): number | undefined {

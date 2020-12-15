@@ -400,12 +400,12 @@ export class TablePanelView implements ITablePanelView {
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
     const groupingConfig = getGroupingConfiguration(this);
-    let offsets = [0, 0];
+    let cellOffset = { row: 0, column:0 };
     if(groupingConfig.isGrouping){
       const rowId = getDataView(this).selectedRowId;
-      offsets = getDataView(this).clientSideGrouper.getRowAndColumnOffsets(rowId)
+      cellOffset = getDataView(this).clientSideGrouper.getRowAndColumnOffsets(rowId)
     }
-    if(!this.rectangleMap.has(rowIndex+offsets[0])){
+    if(!this.rectangleMap.has(rowIndex + cellOffset.row)){
       return {
         columnLeft: 0,
         columnWidth: 0,
@@ -413,7 +413,7 @@ export class TablePanelView implements ITablePanelView {
         rowHeight: 0
       }
     }
-    return this.rectangleMap.get(rowIndex+offsets[0])!.get(columnIndex+offsets[1])!;
+    return this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {

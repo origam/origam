@@ -38,3 +38,8 @@ export interface IClickSubsItem {
   w: number;
   h: number;
 }
+
+export interface ICellOffset{
+  row: number;
+  column: number;
+}
