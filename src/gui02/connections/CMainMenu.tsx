@@ -36,7 +36,6 @@ export class CMainMenu extends React.Component {
     if (isLoading || !mainMenu) {
       return null; // TODO: More intelligent menu loading indicator...
     }
-    console.log(mainMenu!.menuUI);
     return <>{listFromNode(mainMenu.menuUI, 1, true)}</>;
   }
 }

@@ -75,7 +75,6 @@ export function createIndividualLookupEngine(
     lookupResolver,
     lookupCleanerReloader,
     startup() {
-      console.log("Starting up lookup", lookupId);
       lookupCleanerReloaderById.set(lookupId, lookupCleanerReloader);
       disposers.push(
         multiLookupEngine.lookupLoaderMulti.resultListeners.subscribe(
@@ -84,8 +83,6 @@ export function createIndividualLookupEngine(
       );
     },
     teardown() {
-      debugger;
-      console.log("Stopping lookup", lookupId);
       lookupCleanerReloaderById.delete(lookupId);
       for (let d of disposers) d();
     },

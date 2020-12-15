@@ -2,12 +2,13 @@ import xmlJs from "xml-js";
 import axios, { AxiosInstance } from "axios";
 
 import _ from "lodash";
-import {IApi, IUpdateData, IUIGridFilterCoreConfiguration, IEntityExportField} from "./types/IApi";
+import {IApi, IUpdateData, IUIGridFilterCoreConfiguration, IEntityExportField, ILazyLoadedEntityInput} from "./types/IApi";
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { IOrdering } from "./types/IOrderingConfiguration";
 import { IColumnSettings } from "./types/IColumnSettings";
 import { compareByGroupingIndex } from "./ColumnSettings";
 import { TypeSymbol } from "dic/Container";
+import { IAboutInfo } from "./types/IAboutInfo";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -111,6 +112,7 @@ export class OrigamAPI implements IApi {
     Parameters: { [key: string]: any };
     AdditionalRequestParameters: object | undefined;
     IsSingleRecordEdit?: boolean;
+    RequestCurrentRecordId: boolean;
   }) {
     let requestData;
     if (data.AdditionalRequestParameters) {
@@ -464,7 +466,6 @@ export class OrigamAPI implements IApi {
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];
-    MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/GetRows`, data)).data;
@@ -750,6 +751,10 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     return (await this.axiosInstance.get(`/Search/${searchTerm}`)).data;
   }
 
+  async getAboutInfo() {
+    return (await this.axiosInstance.get("/About")).data as IAboutInfo;
+  }
+
   async getMenuId(data: { LookupId: string; ReferenceId: string }): Promise<string> {
     return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
   }
@@ -757,8 +762,10 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
   async getExcelFileUrl(data: {
     Entity: string;
     Fields: IEntityExportField[];
-    Filters: string;
-    SessionFormIdentifier: string;}): Promise<string>
+    SessionFormIdentifier: string;
+    RowIds: any[];
+    LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
+  }): Promise<string>
   {
      return (await this.axiosInstance.post(`/ExcelExport/GetFileUrl`, data)).data;
   }

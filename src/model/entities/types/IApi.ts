@@ -1,8 +1,11 @@
 import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { ISearchResult } from "model/entities/types/ISearchResult";
+import { IAboutInfo } from "./IAboutInfo";
 
 export interface IApi {
+  getAboutInfo(): Promise<IAboutInfo>;
+
   accessToken: string;
 
   setAccessToken(token: string | undefined): void;
@@ -150,6 +153,7 @@ export interface IApi {
     Parameters: { [key: string]: any } | undefined;
     AdditionalRequestParameters?: object | undefined;
     IsSingleRecordEdit?: boolean;
+    RequestCurrentRecordId: boolean;
   }): Promise<any>;
 
   destroyUI(data: { FormSessionId: string }): Promise<any>;
@@ -228,7 +232,6 @@ export interface IApi {
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];
-    MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };
   }): Promise<any>;
 
@@ -395,8 +398,22 @@ export interface IApi {
   getExcelFileUrl(data: {
     Entity: string;
     Fields: IEntityExportField[];
-    Filters: string;
-    SessionFormIdentifier: string;}): Promise<string>;
+    SessionFormIdentifier: string;
+    RowIds: any[];
+    LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
+  }): Promise<string>;
+}
+
+export interface ILazyLoadedEntityInput{
+  MenuId: string;
+  DataStructureEntityId: string;
+  Filter: string;
+  Ordering: IOrdering[];
+  RowLimit: number;
+  RowOffset: number;
+  ColumnNames: string[];
+  FilterLookups?: { [key: string]: string };
+  SessionFormIdentifier: string;
 }
 
 export interface IEntityExportField{

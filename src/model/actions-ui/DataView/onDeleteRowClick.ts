@@ -16,7 +16,8 @@ export function onDeleteRowClick(ctx: any) {
         const formScreenLifecycle = getFormScreenLifecycle(ctx);
         yield* formScreenLifecycle.onDeleteRow(
           entity,
-          dataTable.getRowId(selectedRow)
+          dataTable.getRowId(selectedRow),
+          dataView
         );
       }
     } catch (e) {

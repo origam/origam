@@ -2,10 +2,10 @@ import { Icon } from "gui02/components/Icon/Icon";
 import { ScreenToolbar } from "gui02/components/ScreenToolbar/ScreenToolbar";
 import { ScreenToolbarAction } from "gui02/components/ScreenToolbar/ScreenToolbarAction";
 import { ScreenToolbarPusher } from "gui02/components/ScreenToolbar/ScreenToolbarPusher";
-import { MobXProviderContext, observer } from "mobx-react";
+import { MobXProviderContext, Observer, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
-import { action } from "mobx";
+import { action, observable } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
 import { ScreenToolbarActionGroup } from "gui02/components/ScreenToolbar/ScreenToolbarActionGroup";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
@@ -29,6 +29,9 @@ import { T } from "../../utils/translation";
 import { getUserAvatarLink } from "model/selectors/User/getUserAvatarLink";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
+import { IAboutInfo } from "model/entities/types/IAboutInfo";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { getApi } from "model/selectors/getApi";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -40,6 +43,21 @@ export class CScreenToolbar extends React.Component<{}> {
 
   get application(): IApplication {
     return this.context.application;
+  }
+
+  @observable
+  aboutInfo: IAboutInfo = {
+    serverVersion: "",
+  };
+
+  componentDidMount() {
+    runInFlowWithHandler({
+      ctx: this.application,
+      action: async () => {
+        const api = getApi(this.application);
+        this.aboutInfo = await api.getAboutInfo();
+      },
+    });
   }
 
   @action.bound
@@ -106,14 +124,20 @@ export class CScreenToolbar extends React.Component<{}> {
         <Dropdowner
           style={{ width: "auto" }}
           trigger={({ refTrigger, setDropped }) => (
-            <ScreenToolbarAction
-              rootRef={refTrigger}
-              onMouseDown={() => setDropped(true)}
-              icon={
-                action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined
-              }
-              label={action.caption}
-            />
+            <Observer key={action.id}>
+              {() => (
+                <ScreenToolbarAction
+                  rootRef={refTrigger}
+                  onMouseDown={() => setDropped(true)}
+                  icon={
+                    action.iconUrl ? (
+                      <Icon src={customAssetsRoute + "/" + action.iconUrl} />
+                    ) : undefined
+                  }
+                  label={action.caption}
+                />
+              )}
+            </Observer>
           )}
           content={() => (
             <Dropdown>
@@ -127,11 +151,17 @@ export class CScreenToolbar extends React.Component<{}> {
       );
     }
     return (
-      <ScreenToolbarAction
-        icon={action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined}
-        label={action.caption}
-        onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
-      />
+      <Observer key={action.id}>
+        {() => (
+          <ScreenToolbarAction
+            icon={
+              action.iconUrl ? <Icon src={customAssetsRoute + "/" + action.iconUrl} /> : undefined
+            }
+            label={action.caption}
+            onClick={(event) => uiActions.actions.onActionClick(action)(event, action)}
+          />
+        )}
+      </Observer>
     );
   }
 
@@ -169,15 +199,19 @@ export class CScreenToolbar extends React.Component<{}> {
                 label={T("Refresh", "refresh_tool_tip")}
               />
             </ScreenToolbarActionGroup>
-            <ScreenToolbarActionGroup grovable={true}>
-              {toolbarActions
-                .filter((actionGroup) => actionGroup.actions.length > 0)
-                .map((actionGroup) => (
-                  <ScreenToolbarActionGroup key={actionGroup.section}>
-                    {this.renderActions(actionGroup.actions)}
-                  </ScreenToolbarActionGroup>
-                ))}
-            </ScreenToolbarActionGroup>
+            <Observer>
+              {() => (
+                <ScreenToolbarActionGroup grovable={true}>
+                  {toolbarActions
+                    .filter((actionGroup) => actionGroup.actions.length > 0)
+                    .map((actionGroup) => (
+                      <ScreenToolbarActionGroup key={actionGroup.section}>
+                        {this.renderActions(actionGroup.actions)}
+                      </ScreenToolbarActionGroup>
+                    ))}
+                </ScreenToolbarActionGroup>
+              )}
+            </Observer>
           </>
         ) : null}
         {this.state.hiddenActionIds.size > 0 && (
@@ -203,6 +237,8 @@ export class CScreenToolbar extends React.Component<{}> {
           avatarLink={avatarLink}
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
+          ctx={this.application}
+          aboutInfo={this.aboutInfo}
         />
       </ScreenToolbar>
     );
@@ -251,6 +287,8 @@ export class CScreenToolbar extends React.Component<{}> {
           avatarLink={avatarLink}
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
+          ctx={this.application}
+          aboutInfo={this.aboutInfo}
         />
       </ScreenToolbar>
     );
@@ -270,6 +308,8 @@ export class CScreenToolbar extends React.Component<{}> {
           avatarLink={avatarLink}
           userName={userName}
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
+          ctx={this.application}
+          aboutInfo={this.aboutInfo}
         />
       </ScreenToolbar>
     );

@@ -5,6 +5,7 @@ export function tryParseAggregationType(candidate: any | undefined){
   return parseAggregationType(candidate);
 }
 
+
 export function aggregationTypeToNumber(aggregationType: AggregationType | undefined){
   switch (aggregationType) {
     case undefined:           return 0;

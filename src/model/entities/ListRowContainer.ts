@@ -83,7 +83,7 @@ export class ListRowContainer implements IRowsContainer {
   updateSortAndFilterDebounced = _.debounce(this.updateSortAndFilter, 10);
 
   @action
-  async updateSortAndFilter() {
+  async updateSortAndFilter(data?: {retainPreviousSelection?: boolean}) {
     const self = this;
     await flow(
       function* () {
@@ -96,7 +96,9 @@ export class ListRowContainer implements IRowsContainer {
           rows = rows.sort((row1: any[], row2: any[]) => self.internalRowOrderingFunc(row1, row2));
         }
         self.sortedIds = rows.map(row => self.rowIdGetter(row));
-        getDataView(self).reselectOrSelectFirst();
+        if(!data?.retainPreviousSelection){
+          getDataView(self).reselectOrSelectFirst();
+        }
       }
     )();
   }
@@ -108,10 +110,6 @@ export class ListRowContainer implements IRowsContainer {
     return this.sortedIds
       .map(id => this.idToRow.get(id))
       .filter(row => row) as any[][];
-  }
-
-  @computed get loadedRowsCount() {
-    return this.rows.length;
   }
 
   internalRowOrderingFunc(row1: any[], row2: any[]) {

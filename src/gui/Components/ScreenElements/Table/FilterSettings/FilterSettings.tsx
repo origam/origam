@@ -18,8 +18,6 @@ import {FilterSettingsTagInput} from "gui/Components/ScreenElements/Table/Filter
 
 export const FilterSettings: React.FC = observer((props) => {
   const property = useContext(MobXProviderContext).property as IProperty;
-  const dataTable = getDataTable(property);
-  const dataView = getDataView(property);
 
   function getSettings(defaultValue: IFilterSetting) {
     let setting = getFilterSettingByProperty(property, property.id);
@@ -40,9 +38,11 @@ export const FilterSettings: React.FC = observer((props) => {
     case "Number":
       return <FilterSettingsNumber setting={getSettings(FilterSettingsNumber.defaultSettings)} />;
     case "ComboBox":
+      const setting = getSettings(FilterSettingsLookup.defaultSettings);
+      setting.lookupId = property.lookupId;
       return (
         <FilterSettingsLookup
-          setting={getSettings(FilterSettingsLookup.defaultSettings)}
+          setting={setting}
           property={property}
           lookup={property.lookup!}
           getOptions={flow(function* (searchTerm: string) {

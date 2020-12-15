@@ -10,8 +10,8 @@ import {
   IActionType,
 } from "./types/IAction";
 import { IActionParameter } from "./types/IActionParameter";
-import {getIsAnySelected} from "model/selectors-tree/selectionCheckboxes";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { getDataView } from "model/selectors/DataView/getDataView";
 
 export class Action implements IAction {
   $type_IAction: 1 = 1;
@@ -36,23 +36,22 @@ export class Action implements IAction {
       return true;
     }
     const dataTable = getDataTable(this);
-    if(dataTable.loadedRowsCount === 0) {
+    if(dataTable.maxRowCountSeen === 0) {
       return false
     }
-    const selRowId = getSelectedRowId(this);
-    const isDisabledOverride = selRowId
-      ? getRowStateIsDisableAction(this, selRowId, this.id)
-      : false;
-    if (isDisabledOverride) {
-      return false;
-    }
+   
     switch (this.mode) {
       case IActionMode.ActiveRecord: {
-        const selectedRow = getSelectedRow(this);
-        return !!selectedRow;
+        const selRowId = getSelectedRowId(this);
+        return selRowId 
+          ? !getRowStateIsDisableAction(this, selRowId, this.id) 
+          : false;
       }
       case IActionMode.MultipleCheckboxes: {
-        return getIsAnySelected(this);
+        const selectedIds = getDataView(this).selectedRowIds;
+        return selectedIds.length > 0
+          ? !selectedIds.some(rowId => getRowStateIsDisableAction(this, rowId, this.id))
+          : false;
       }
     }
   }

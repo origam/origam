@@ -15,10 +15,6 @@ export class TreeDataTable implements IDataTable {
 
   @observable.shallow rows: any[] = [];
 
-  get loadedRowsCount() {
-    return this.rows.length;
-  }
-
   get allRows(): any[][] {
     return this.rows;
   }
@@ -197,11 +193,14 @@ export class TreeDataTable implements IDataTable {
   }
 
   clearRecordDirtyValues(id: string): void {
-    throw new Error("Not implemented");
+
   }
 
   substituteRecord(row: any[]): void {
-    throw new Error("Not implemented");
+    const idx = this.allRows.findIndex((r) => this.getRowId(r) === this.getRowId(row));
+    if (idx > -1) {
+      this.allRows.splice(idx, 1, row);
+    }
   }
 
   insertRecord(index: number, row: any[]): Promise<any> {
@@ -238,7 +237,7 @@ export class TreeDataTable implements IDataTable {
 
   unlockAddedRowPosition(): void {}
 
-  updateSortAndFilter(): void {
+  async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {
   }
 
   addedRowPositionLocked: boolean = false;

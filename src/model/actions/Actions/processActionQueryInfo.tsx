@@ -18,45 +18,59 @@ export interface IProcessActionQueryInfoResult {
 
 export function processActionQueryInfo(ctx: any) {
   return function* processActionQueryInfo(
-    queryInfo: any[]
+    queryInfo: any[], title: string
   ): Generator<any, IProcessActionQueryInfoResult> {
     let canContinue = true;
     if (queryInfo.length > 0) {
       for (let queryInfoItem of queryInfo) {
         if (queryInfoItem.severity === 0) canContinue = false;
       }
-
+      
       yield new Promise(
         action((resolve: () => void) => {
           const closeDialog = getDialogStack(ctx).pushDialog(
             "",
             <ModalWindow
-              title={T("Action Error", "question_title")}
+              title={title}
               titleButtons={null}
               buttonsCenter={
                 <>
-                  <button
-                    tabIndex={0}
-                    onClick={() => {
-                      canContinue = false;
-                      closeDialog();
-                      resolve();
-                    }}
-                  >
-                    {T("Cancel", "button_cancel")}
-                  </button>
-                  {canContinue && (
+                  {!canContinue && (
                     <button
                       tabIndex={0}
-                      autoFocus={true}
                       onClick={() => {
-                        canContinue = true;
+                        canContinue = false;
                         closeDialog();
                         resolve();
                       }}
                     >
-                      {T("Continue", "button_continue")}
+                      {T("Ok", "button_ok")}
                     </button>
+                  )}
+                  {canContinue && (
+                    <>
+                      <button
+                        tabIndex={0}
+                        autoFocus={true}
+                        onClick={() => {
+                          canContinue = true;
+                          closeDialog();
+                          resolve();
+                        }}
+                      >
+                        {T("Yes", "button_yes")}
+                      </button>
+                      <button
+                        tabIndex={0}
+                        onClick={() => {
+                          canContinue = false;
+                          closeDialog();
+                          resolve();
+                        }}
+                      >
+                        {T("No", "button_no")}
+                      </button>
+                    </>
                   )}
                 </>
               }
@@ -64,14 +78,18 @@ export function processActionQueryInfo(ctx: any) {
               buttonsRight={null}
             >
               <div className={S.dialogContent}>
-                {T("There has been a problem:", "there_has_been_a_problem")}
                 <ul>
                   {queryInfo.map((item, idx) => (
                     <li key={idx}>{item.message}</li>
                   ))}
                 </ul>
                 {canContinue && (
-                  <>{T("Do you wish to continue anyway?", "do_you_wish_to_continue")}</>
+                  <>
+                    {T(
+                      "Do you wish to continue anyway?",
+                      "do_you_wish_to_continue"
+                    )}
+                  </>
                 )}
               </div>
             </ModalWindow>

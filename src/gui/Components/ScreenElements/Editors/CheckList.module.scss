@@ -19,14 +19,27 @@
   //justify-content: space-between;
   overflow-x: auto;
   overflow-y: hidden;
+
+  &:global(.isReadonly) {
+    background-color: #e9e8f0;
+    cursor: not-allowed;
+    border: 1px solid #e9e8f0;
+  }
 }
 
-.focusedLabel{
-  background-color:  #4c84ff;
+.focusedLabel {
+  background-color: #4c84ff;
   color: white;
 }
 
-.unFocusedLabel{
+:global(.isReadonly) {
+  .focusedLabel {
+    background-color: #d8d8d8;
+    color: rgb(17, 17, 17);
+  }
+}
+
+.unFocusedLabel {
   background-color: transparent;
 }
 
@@ -55,6 +68,24 @@
     flex-grow: 1;
     overflow: hidden;
     white-space: nowrap;
+  }
+}
+
+:global(.isReadonly) {
+  .item {
+    cursor: not-allowed; 
+    &:hover {
+      background-color: #e9e8f0;
+      color: black;
+    }
+  }
+  input {
+    background-color: #e9e8f0;
+    cursor: not-allowed !important; 
+    opacity: 0.5;
+  }
+  ::selection {
+    background-color: transparent;
   }
 }
 

@@ -17,13 +17,11 @@ export interface IRowsContainer {
 
   maxRowCountSeen: number;
 
-  loadedRowsCount: number;
-
   rows: any[];
 
   allRows: any[];
 
-  updateSortAndFilter(): void;
+  updateSortAndFilter(data?: {retainPreviousSelection?: true}): Promise<any>;
 
   start(): void;
 

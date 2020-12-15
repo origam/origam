@@ -33,12 +33,15 @@ export interface IFormScreenLifecycle extends IFormScreenLifecycleData {
 export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
   $type_IFormScreenLifecycle: 1;
 
+  isWorkingDelayed: boolean;
   isWorking: boolean;
+
+  rowSelectedReactionsDisabled(dataView: IDataView): boolean;
 
   onFlushData(): Generator;
   throwChangesAway(dataView: IDataView): Generator;
   onCreateRow(entity: string, gridId: string): Generator;
-  onDeleteRow(entity: string, rowId: string): Generator;
+  onDeleteRow(entity: string, rowId: string, dataView: IDataView): Generator;
   updateRadioButtonValue(dataView: IDataView, row: any, fieldName: string, newValue: string): Generator;
   handleUserInputOnChangingRow(dataView: IDataView): Promise<boolean>;
 

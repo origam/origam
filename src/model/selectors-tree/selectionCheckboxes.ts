@@ -8,7 +8,3 @@ export default {
     return getDataView(ctx).selectedRowIds;
   },
 };
-
-export function  getIsAnySelected(ctx: any): any {
-  return getDataView(ctx).isAnyRowIdSelected;
-}

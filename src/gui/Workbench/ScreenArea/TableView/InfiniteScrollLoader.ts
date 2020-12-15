@@ -173,7 +173,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
-      MasterRowId: undefined
     })
     const oldDistanceToStart = this.distanceToStart;
     this.rowsContainer.appendRecords(data)
@@ -210,7 +209,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: nextStartOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
-      MasterRowId: undefined
     })
     const oldDistanceToStart = this.distanceToStart;
     this.rowsContainer.prependRecords(data);

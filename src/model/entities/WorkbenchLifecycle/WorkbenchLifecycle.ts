@@ -32,10 +32,6 @@ import { IPortalSettings } from "../types/IPortalSettings";
 import { getNotifications } from "model/selectors/Chatrooms/getNotifications";
 import selectors from "model/selectors-tree";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getIsScreenOrAnyDataViewWorking } from "model/selectors/FormScreen/getIsScreenOrAnyDataViewWorking";
-import { getFocusManager } from "model/selectors/DataView/getFocusManager";
-import { IDataView } from "../types/IDataView";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
 
@@ -229,7 +225,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
   }
 
   *onChatroomsListItemClick(event: any, item: any) {
-    console.log(event, item);
 
     const openedScreens = getOpenedScreens(this);
     const url = `/chatrooms/index.html#/chatroom?chatroomId=${item.id}`;
@@ -439,12 +434,12 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       Parameters: screen.parameters,
       AdditionalRequestParameters: additionalRequestParameters,
       IsSingleRecordEdit: isSingleRecordEdit,
+      RequestCurrentRecordId: true
     });
     return initUIResult;
   }
 
   *openNewUrl(url: string, title: string) {
-    console.log("open new ", url);
     const openedScreens = getOpenedScreens(this);
     const newScreen = new WebScreen(title, url, url, 0);
     openedScreens.pushItem(newScreen);
@@ -455,8 +450,6 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 
-    console.log("portalInfo:");
-    console.log(portalInfo);
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,

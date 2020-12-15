@@ -29,10 +29,10 @@ export interface ICRUDResult {
   wrappedObject: any[];
 }
 
-export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
+export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?: boolean | undefined): Generator {
   if (_.isArray(result)) {
     for (let resultItem of result) {
-      yield* processCRUDResult(ctx, resultItem);
+      yield* processCRUDResult(ctx, resultItem, resortTables);
     }
     return;
   }
@@ -48,8 +48,13 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       const dataViews = getDataViewsByEntity(ctx, resultItem.entity);
       for (let dataView of dataViews) {
         dataView.dataTable.clearRecordDirtyValues(resultItem.objectId, resultItem.wrappedObject);
-        dataView.dataTable.substituteRecord(resultItem.wrappedObject);
-        dataView.dataTable.updateSortAndFilter();
+        dataView.substituteRecord(resultItem.wrappedObject);
+        if(resortTables){
+          yield dataView.dataTable.updateSortAndFilter({retainPreviousSelection: true});
+        }
+        if(!dataView.selectedRow){
+          dataView.reselectOrSelectFirst();
+        }
       }
       getFormScreen(ctx).setDirty(true);
       break;
@@ -71,7 +76,10 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       for (let dataView of dataViews) {
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
-          dataView.dataTable.deleteRow(row);
+          dataView.deleteRow(row);
+        }
+        if(!dataView.selectedRow){
+          dataView.reselectOrSelectFirst();
         }
       }
       getFormScreen(ctx).setDirty(true);
@@ -96,9 +104,12 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
       // TODO: Throw away all data and force further navigation / throw away all rowstates
       const dataViews = getDataViewList(ctx);
       for (let dataView of dataViews) {
-        if (getIsBindingRoot(dataView)) {
+        if (getIsBindingRoot(dataView) && dataView.requestDataAfterSelectionChange) {
           yield* dataView.lifecycle.changeMasterRow();
           yield* dataView.lifecycle.navigateChildren();
+        }
+        if(!dataView.selectedRow){
+          dataView.reselectOrSelectFirst();
         }
       }
       break;
@@ -110,7 +121,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult): Generator {
     case IResponseOperation.DeleteAllData: {
       const dataViews = getDataViewList(ctx);
       for (let dataView of dataViews) {
-        dataView.dataTable.clear();
+        dataView.clear();
       }
       break;
     }

@@ -12,13 +12,13 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.implicitFilters = implicitFilters;
     this.start();
   }
-  filteringOnOffHandlers: ((filteringOn: boolean)=> void)[] = [];
+  filteringOnOffHandlers: ((filteringOn: boolean) => void)[] = [];
   $type_IFilterConfigurationData: 1 = 1;
 
   implicitFilters: IImplicitFilter[];
   @observable activeFilters: IFilter[] = [];
 
-  registerFilteringOnOffHandler(handler: (filteringOn: boolean)=> void){
+  registerFilteringOnOffHandler(handler: (filteringOn: boolean) => void) {
     this.filteringOnOffHandlers.push(handler);
   }
 
@@ -35,18 +35,19 @@ export class FilterConfiguration implements IFilterConfiguration {
 
   @action.bound
   setFilter(term: IFilter): void {
-    const existingIndex = this.activeFilters
-      .findIndex(filter => filter.propertyId === term.propertyId);
-    if(existingIndex > -1){
+    const existingIndex = this.activeFilters.findIndex(
+      (filter) => filter.propertyId === term.propertyId
+    );
+    if (existingIndex > -1) {
       this.activeFilters.splice(existingIndex, 1);
     }
     this.activeFilters.push(term);
-    this.activeFilters = [... this.activeFilters];
+    this.activeFilters = [...this.activeFilters];
   }
 
   @action.bound
   clearFilters(): void {
-    if(this.activeFilters.length !== 0){
+    if (this.activeFilters.length !== 0) {
       this.activeFilters = [];
     }
   }
@@ -77,6 +78,9 @@ export class FilterConfiguration implements IFilterConfiguration {
         }
       }
       for (let term of this.activeFilters) {
+        let res = !this.userFilterPredicate(row, term);
+        if (res) {
+        }
         if (!this.userFilterPredicate(row, term)) {
           return false;
         }
@@ -322,6 +326,39 @@ export class FilterConfiguration implements IFilterConfiguration {
             return !txt1.toLocaleLowerCase().includes(val2.toLocaleLowerCase());
           }
         }
+        break;
+      }
+      case "TagInput": {
+        const values = dataTable.getOriginalCellValue(row, prop);
+        switch (term.setting.type) {
+          case "in":
+          case "eq": {
+            if (term.setting.val1 === undefined || term.setting.val1.length === 0) return true;
+            if (!values || values.length === 0) return false; 
+            return values.some( (val: any) =>
+              term.setting.val1.some(
+                (filterVal: any) => filterVal === val)
+              );
+          }
+          case "nin":
+          case "neq": {
+            if (term.setting.val1 === undefined || term.setting.val1.length === 0) return true;
+            if (!values || values.length === 0) return true; 
+            return values.every( (val: any) =>
+              term.setting.val1.every(
+                (filterVal: any) => filterVal !== val)
+              );
+          }
+          case "null": {
+            return !values || values.length === 0;
+          }
+          case "nnull": {
+            return values && values.length > 0;
+          }
+
+        }
+        return true;
+        break;
       }
       case "CheckBox": {
         switch (term.setting.type) {
@@ -402,13 +439,12 @@ export class FilterConfiguration implements IFilterConfiguration {
     this.disposers.push(
       reaction(
         () => {
-          return this.activeFilters
-            .map(filter => [
-              filter.propertyId,
-              filter.setting.val1,
-              filter.setting.val2,
-              filter.setting.type
-            ])
+          return this.activeFilters.map((filter) => [
+            filter.propertyId,
+            filter.setting.val1,
+            filter.setting.val2,
+            filter.setting.type,
+          ]);
         },
         () => {
           this.applyNewFiltering();
@@ -425,7 +461,7 @@ export class FilterConfiguration implements IFilterConfiguration {
     if (dataView.isReorderedOnClient) {
       if (this.activeFilters.length > 0) {
         const comboProps = this.activeFilters
-          .filter(filter => filter.setting.isComplete)
+          .filter((filter) => filter.setting.isComplete)
           .map((term) => getDataViewPropertyById(this, term.propertyId)!)
           .filter((prop) => prop.column === "ComboBox");
 

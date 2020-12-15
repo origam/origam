@@ -17,8 +17,6 @@ const sockPort = process.env.WDS_SOCKET_PORT;
 function makeProxyTarget() {
   if (process.env.WDS_PROXY_TARGET) return process.env.WDS_PROXY_TARGET;
   else return "https://localhost:5001";
-  //"http://admintesth5.wy.by";
-  //"http://admindevh5.wy.by";
 }
 
 //To use auth token from another origin https://localhost:3000/#origamAuthTokenOverride=er8OOdOzIyqINyX_vHm-z46T-gOfE-Q3msmCaH8-c9k

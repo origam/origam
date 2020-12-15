@@ -24,13 +24,14 @@ import {getColumnNamesToLoad} from "../../selectors/DataView/getColumnNamesToLoa
 import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
 import {FlowBusyMonitor} from "../../../utils/flow";
 import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
   monitor: FlowBusyMonitor =  new FlowBusyMonitor();
 
   get isWorking(){
-    return this.monitor.isWorking;
+    return this.monitor.isWorkingDelayed;
   }
 
   disposers: any[] = [];
@@ -44,12 +45,15 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   onSelectedRowIdChangeImm = flow(
     function*(this: DataViewLifecycle) {
+      const dataView = getDataView(this);
       try {
         this.monitor.inFlow++;
         console.log(getDataViewLabel(this), "detected control id change", getSelectedRowId(this));
         if (getSelectedRowId(this)) {
           if (getIsBindingRoot(this)) {
-            yield* this.changeMasterRow();
+            if(!getFormScreenLifecycle(this).rowSelectedReactionsDisabled(dataView)){
+              yield* this.changeMasterRow();
+            }
             yield* this.navigateChildren();
           } else if (getIsBindingParent(this)) {
             yield* this.navigateChildren();
@@ -206,7 +210,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
             RowLimit: SCROLL_ROW_CHUNK,
             RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(dataView),
-            MasterRowId: undefined,
           });
         }
       }else{

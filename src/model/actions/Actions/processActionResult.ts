@@ -15,6 +15,9 @@ import {IDataView} from "../../entities/types/IDataView";
 import {getDataViewByModelInstanceId} from "../../selectors/DataView/getDataViewByModelInstanceId";
 import {getDataView} from "../../selectors/DataView/getDataView";
 import {getOpenedScreen} from "../../selectors/getOpenedScreen";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
 
 export interface IOpenNewForm {
   (
@@ -50,7 +53,7 @@ export interface IRefreshForm {
 }
 
 export interface IProcessCRUDResult {
-  (result: ICRUDResult): Generator;
+  (data:{crudResult: ICRUDResult, resortTables?: boolean}): Generator;
 }
 
 export function new_ProcessActionResult(ctx: any) {
@@ -63,7 +66,7 @@ export function new_ProcessActionResult(ctx: any) {
     closeForm: closeForm(ctx),
     refreshForm: actions.formScreen.refresh(ctx),
     getActionCaption: () => getActionCaption(ctx),
-    processCRUDResult: (crudResult: ICRUDResult) => processCRUDResult(ctx, crudResult),
+    processCRUDResult: (data:{crudResult: ICRUDResult, resortTables?: boolean}) => processCRUDResult(ctx, data.crudResult, data.resortTables),
     parentContext: ctx
   });
 }
@@ -79,6 +82,13 @@ export function processActionResult2(dep: {
   parentContext: any
 }) {
   return function* processActionResult2(actionResultList: any[]) {
+    const menuItemId = getMenuItemId(dep.parentContext);
+    const menuItem = getMainMenuItemById(dep.parentContext, menuItemId);
+
+    if(!menuItem){
+      throw new Error(`Menu item ${menuItemId} was not found`);
+    }
+
     for (let actionResultItem of actionResultList) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
@@ -86,7 +96,6 @@ export function processActionResult2(dep: {
           const {
             objectId,
             typeString,
-            dataRequested,
             parameters,
             isModalDialog,
             dialogWidth,
@@ -98,7 +107,7 @@ export function processActionResult2(dep: {
             objectId,
             typeString,
             caption || dep.getActionCaption(),
-            !dataRequested,
+            menuItem.attributes.dontRequestData === "true",
             dialogInfo,
             parameters,
             dep.parentContext,
@@ -119,7 +128,9 @@ export function processActionResult2(dep: {
           break;
         }
         case IActionResultType.UpdateData: {
-          yield* dep.processCRUDResult(actionResultItem.changes);
+          yield* dep.processCRUDResult(
+            {crudResult: actionResultItem.changes,  resortTables: true}
+          );
           break;
         }
         case IActionResultType.OpenUrl: {

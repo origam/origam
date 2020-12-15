@@ -100,10 +100,10 @@ scRenderCell.push(() => currentCellText.clear());
 export const currentCellValue = Memoized(() => {
   const property = propertyById().get(currentColumnId() as any)!
   if(property.column === "Polymorph"){
-    const polymorpichProperty = currentProperty();
-    return currentDataRow()[polymorpichProperty.dataIndex];
+    const polymorphicProperty = currentProperty();
+    return dataTable().getCellValue(currentDataRow(), polymorphicProperty);
   }else{
-    return currentDataRow()[property.dataIndex];
+    return dataTable().getCellValue(currentDataRow(), property);
   }
 });
 scRenderCell.push(() => currentCellValue.clear());

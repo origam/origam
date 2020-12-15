@@ -20,7 +20,6 @@ export interface IDataTable {
   $type_IDataTable: 1;
   properties: IProperty[];
   rows: any[][];
-  loadedRowsCount: number;
   allRows: any[][];
   additionalRowData: Map<string, IAdditionalRowData>;
   maxRowCountSeen: number;
@@ -32,7 +31,7 @@ export interface IDataTable {
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
   getOriginalCellValue(row: any[], property: IProperty): any;
-  updateSortAndFilter(): void;
+  updateSortAndFilter(data?: {retainPreviousSelection?: boolean}): Promise<any>;
   getCellValueByDataSourceField(row: any[], dsField: IDataSourceField): any;
   getCellText(row: any[], property: IProperty): any;
   getOriginalCellText(row: any[], property: IProperty): any;
