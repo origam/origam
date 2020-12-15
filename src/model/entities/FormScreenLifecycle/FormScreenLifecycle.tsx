@@ -59,7 +59,7 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
 import { getEntity } from "model/selectors/DataView/getEntity";
 
@@ -1164,7 +1164,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   get isReadData() {
-    return !getDontRequestData(this);
+    return !isLazyLoading(this);
   }
 
   parent?: any;

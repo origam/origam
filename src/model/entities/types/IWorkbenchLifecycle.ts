@@ -24,7 +24,7 @@ export interface IWorkbenchLifecycle {
     id: string,
     type: IMainMenuItemType,
     label: string,
-    dontRequestData: boolean,
+    isLazyLoading: boolean,
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext: any,

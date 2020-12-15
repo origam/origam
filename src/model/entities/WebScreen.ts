@@ -53,7 +53,7 @@ export class WebScreen implements IWebScreen, IOpenedScreen {
 
   menuItemType: IMainMenuItemType = null as any;
 
-  dontRequestData = false;
+  lazyLoading = false;
   dialogInfo = undefined;
   content: IFormScreenEnvelope = null as any;
   parameters: { [key: string]: any } = {};
