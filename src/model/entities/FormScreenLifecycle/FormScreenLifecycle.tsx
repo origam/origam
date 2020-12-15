@@ -476,19 +476,23 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }, 100);
   }
 
-  async loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined) {
+  async loadChildRows(dataView: IDataView, filter: string, ordering: IOrdering | undefined) {
     try {
       this.monitor.inFlow++;
+      const masterRowId = !this.isReadData && !dataView.isRootGrid && dataView.bindingParent
+        ? dataView.bindingParent.selectedRowId
+        : undefined
       const api = getApi(this);
       return await api.getRows({
-        MenuId: getMenuItemId(rootDataView),
+        MenuId: getMenuItemId(dataView),
         SessionFormIdentifier: getSessionId(this),
-        DataStructureEntityId: getDataStructureEntityId(rootDataView),
+        DataStructureEntityId: getDataStructureEntityId(dataView),
         Filter: filter,
         Ordering: ordering ? [ordering] : [],
         RowLimit: SCROLL_ROW_CHUNK,
+        MasterRowId: masterRowId,
         RowOffset: 0,
-        ColumnNames: getColumnNamesToLoad(rootDataView),
+        ColumnNames: getColumnNamesToLoad(dataView),
       });
     } finally {
       this.monitor.inFlow--;
@@ -528,7 +532,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   async loadGroups(
-    rootDataView: IDataView,
+    dataView: IDataView,
     groupBy: string,
     groupByLookupId: string | undefined,
     aggregations: IAggregationInfo[] | undefined
@@ -539,18 +543,23 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       direction: IOrderByDirection.ASC,
       lookupId: groupByLookupId,
     };
+
+    const masterRowId = !this.isReadData && !dataView.isRootGrid && dataView.bindingParent
+      ? dataView.bindingParent.selectedRowId
+      : undefined
+
     try {
       this.monitor.inFlow++;
       return await api.getGroups({
-        MenuId: getMenuItemId(rootDataView),
+        MenuId: getMenuItemId(dataView),
         SessionFormIdentifier: getSessionId(this),
-        DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: getUserFilters(rootDataView),
+        DataStructureEntityId: getDataStructureEntityId(dataView),
+        Filter: getUserFilters(dataView),
         Ordering: [ordering],
         RowLimit: 999999,
         GroupBy: groupBy,
         GroupByLookupId: groupByLookupId,
-        MasterRowId: undefined,
+        MasterRowId: masterRowId,
         AggregatedColumns: aggregations,
       });
     } finally {
