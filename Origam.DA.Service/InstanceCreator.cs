@@ -228,11 +228,13 @@ namespace Origam.DA.Service
             {
                 XmlAttributeAttribute attribute = mi.Attribute as XmlAttributeAttribute;
                 var currentPropertyNamespace = GetPropertyNamespace(namespaceMapping, mi);
-
-                string value = reader.GetAttribute(
-                    attribute.AttributeName,
-                    currentPropertyNamespace);
-                SetValue(instance, mi, value, provider);
+                if (currentPropertyNamespace != null)
+                {
+                    string value = reader.GetAttribute(
+                        attribute.AttributeName,
+                        currentPropertyNamespace);
+                    SetValue(instance, mi, value, provider);
+                }
             }
         }
 
@@ -244,10 +246,13 @@ namespace Origam.DA.Service
             var matchingXmlFileNamespace = CurrentXmlFileNamespaces
                    .FirstOrDefault(xmlNamespace =>
                        xmlNamespace.FullTypeName ==
-                       currentPropertyNamespace.FullTypeName)
-               ?? throw new Exception(
-                   string.Format(Strings.CannotFindNamespace,
-                       currentPropertyNamespace.StringValue));
+                       currentPropertyNamespace.FullTypeName);
+            if (matchingXmlFileNamespace == null)
+            {
+                // namespace was not found in the file => all properties
+                // of this class should be skipped
+                return null;
+            }
             if (matchingXmlFileNamespace.Version != currentPropertyNamespace.Version)
             {
                 throw new Exception(
