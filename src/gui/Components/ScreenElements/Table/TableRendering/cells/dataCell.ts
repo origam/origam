@@ -58,8 +58,8 @@ export function dataColumnsWidths() {
 export function dataColumnsDraws() {
   return tableColumnIds().map((id) => () => {
     applyScrollTranslation();
-    clipCell();
-    drawDataCellBackground();
+    //clipCell();
+    //drawDataCellBackground();
     drawCellValue();
     registerClickHandler(id);
   });
@@ -339,6 +339,7 @@ function drawCellValue() {
         const img = pictureCache.getImage(value);
         //console.log("DRAW:", value, img);
         if (!img || !img.complete) break;
+        console.log(img, CPR() * currentColumnLeft(), CPR() * currentRowTop())
         ctx2d.drawImage(img, CPR() * currentColumnLeft(), CPR() * currentRowTop());
         break;
       }

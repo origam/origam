@@ -1,9 +1,10 @@
-import { createAtom, observable } from "mobx";
+import { createAtom, observable, action } from "mobx";
 
 export class ScreenPictureCache {
   @observable items = new Map<string, any>();
   atoms = new Map<string, any>();
 
+  @action.bound
   atomBecameObserved(url: string, atom: any) {
     if (!this.items.has(url)) {
       const img = new Image();
