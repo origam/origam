@@ -9,7 +9,7 @@ import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getCellOffset, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -33,26 +33,7 @@ export class ClientSideGrouper implements IGrouper {
   }
 
   getCellOffset(rowId: string): ICellOffset {
-    const containingGroup =  this.allGroups
-    .filter(group => group.getRowById(rowId) && group.isExpanded)
-    .sort((g1, g2) => g2.level - g1.level)[0]
-    
-    let rowOffset = 0;
-    for (const group of this.allGroups) {
-      rowOffset++;
-      if(group === containingGroup){
-        return {
-          row: rowOffset,
-          column: group.level + 1}
-      }
-      if(group.isExpanded && !group.childGroups.some(child => child.isExpanded)){
-        rowOffset += group.childRows.length;
-      }
-    }
-    return {
-      row: 0,
-      column:0
-    }
+   return getCellOffset(this, rowId);
   }
   
   getRowIndex(rowId: string): number | undefined {

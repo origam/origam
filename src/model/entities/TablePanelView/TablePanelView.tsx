@@ -32,6 +32,7 @@ import { isReadOnly } from "../../selectors/RowState/isReadOnly";
 import {FilterGroupManager} from "model/entities/FilterGroupManager";
 import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -403,7 +404,7 @@ export class TablePanelView implements ITablePanelView {
     let cellOffset = { row: 0, column:0 };
     if(groupingConfig.isGrouping){
       const rowId = getDataView(this).selectedRowId;
-      cellOffset = getDataView(this).clientSideGrouper.getCellOffset(rowId)
+      cellOffset = getGrouper(this).getCellOffset(rowId!)
     }
     if(!this.rectangleMap.has(rowIndex + cellOffset.row)){
       return {
