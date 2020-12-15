@@ -26,7 +26,11 @@ class CalendarWidget extends React.Component<{
       i < 7;
       day.add({ days: 1 }), i++
     ) {
-      result.push(<div className={S.calendarWidgetDayHeaderCell}>{day.format("dd")[0]}</div>);
+      result.push(
+        <div className={S.calendarWidgetDayHeaderCell} title={day.format("dddd")}>
+          {day.format("dd")[0]}
+        </div>
+      );
     }
     return result;
   }
