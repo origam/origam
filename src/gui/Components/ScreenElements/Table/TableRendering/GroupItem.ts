@@ -23,7 +23,7 @@ export interface IGroupItemData{
   grouper: IGrouper;
 }
 
-export interface IClientSideGroupItemData extends IGroupItemData{
+export interface IClientSideGroupItemData extends IGroupItemData, IGroupTreeNode{
   expansionListener: (item: ClientSideGroupItem) => void;
 }
 
@@ -43,6 +43,10 @@ export class ClientSideGroupItem implements IClientSideGroupItemData {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
+
+  get level(){
+    return this.allParents.length;
+  }
 
   @observable
   private _isExpanded = false;
@@ -116,6 +120,10 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
+
+  get level(){
+    return this.allParents.length;
+  }
   
   scrollLoader: InfiniteScrollLoader;
   

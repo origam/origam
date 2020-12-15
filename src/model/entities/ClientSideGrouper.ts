@@ -31,6 +31,21 @@ export class ClientSideGrouper implements IGrouper {
   get allGroups(){
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
+
+  getRowAndColumnOffsets(rowId: string) {
+    let rowOffset = 0;
+    for (const group of this.allGroups) {
+      rowOffset++;
+      if(group.getRowById(rowId)){
+        const columnOffset = group.level + 1;
+        return [rowOffset, columnOffset]
+      }
+      if(group.isExpanded){
+        rowOffset += group.childRows.length;
+      }
+    }
+    return [0,0]
+  }
   
   getRowIndex(rowId: string): number | undefined {
     return getRowIndex(this, rowId);

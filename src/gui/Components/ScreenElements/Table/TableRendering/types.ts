@@ -10,6 +10,7 @@ export interface IGroupRow {
 }
 
 export interface IGroupTreeNode {
+  level: number;
   getRowIndex(rowId: string): number | undefined;
   parent: IGroupTreeNode | undefined;
   childGroups: IGroupTreeNode[];
