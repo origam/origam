@@ -488,7 +488,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   async loadChildRows(dataView: IDataView, filter: string, ordering: IOrdering | undefined) {
     try {
       this.monitor.inFlow++;
-      const masterRowId = !this.isReadData && !dataView.isRootGrid && dataView.bindingParent
+      const masterRowId = !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
         ? dataView.bindingParent.selectedRowId
         : undefined
       const api = getApi(this);
@@ -553,7 +553,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       lookupId: groupByLookupId,
     };
 
-    const masterRowId = !this.isReadData && !dataView.isRootGrid && dataView.bindingParent
+    const masterRowId = !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
       ? dataView.bindingParent.selectedRowId
       : undefined
 
@@ -740,6 +740,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         FilterLookups: getUserFilterLookups(rootDataView),
         Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_ROW_CHUNK,
+        MasterRowId: undefined,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });
