@@ -78,7 +78,7 @@ namespace Origam.DA.Service
         }
         
         public AbstractSqlCommandGenerator(string trueValue, string falseValue, 
-            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter,AbstractFilterRenderer abstractFilterRenderer)
+            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer abstractFilterRenderer)
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
@@ -353,7 +353,7 @@ namespace Origam.DA.Service
             DataStructureEntity entity = selectParameters.Entity;
             
             CustomCommandParser commandParser =
-                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, entity.Columns,abstractFilterRenderer)
+                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, entity.Columns, abstractFilterRenderer)
                     .Where(selectParameters.CustomFilters.Filters)
                     .OrderBy(selectParameters.CustomOrderings.Orderings);
 

@@ -89,7 +89,7 @@ namespace Origam.DA.Service_net2Tests
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
             var sut = new CustomCommandParser("[", "]", 
-                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")),new MsSqlFilterRenderer())
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")), new MsSqlFilterRenderer())
                 .Where(filter);
             sut.AddDataType("name", OrigamDataType.String);
             sut.AddDataType("Timestamp", OrigamDataType.Date);

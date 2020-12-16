@@ -140,7 +140,7 @@ namespace Origam.DA.Service.Generators
         {
             Node newNode = new Node(
                 nameLeftBracket, nameRightBracket,  
-                filterColumnExpressions, sqlValueFormatter, columnNameToType,abstractFilterRenderer);
+                filterColumnExpressions, sqlValueFormatter, columnNameToType, abstractFilterRenderer);
             newNode.Parent = currentNode;
             currentNode?.Children.Add(newNode);
             currentNode = newNode;
