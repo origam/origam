@@ -60,7 +60,7 @@ import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
-import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
+import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChildren";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
@@ -834,8 +834,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
-      const childEntities = getBindingChildren(targetDataView).map(dataView => getEntity(dataView))
-      
+      const childEntities = getAllBindingChildren(targetDataView).map(dataView => getEntity(dataView))
+     
       const api = getApi(this);
       const formScreen = getFormScreen(this);
       let createObjectResult;

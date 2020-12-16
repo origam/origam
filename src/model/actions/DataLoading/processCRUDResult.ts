@@ -8,6 +8,7 @@ import { getIsBindingRoot } from "model/selectors/DataView/getIsBindingRoot";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import {runInAction} from "mobx";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -65,9 +66,17 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
       for (let dataView of dataViews) {
         const tablePanelView = dataView.tablePanelView;
         const dataSourceRow = result.wrappedObject;
-        console.log("New row:", dataSourceRow);
         yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow);
-        dataView.selectRow(dataSourceRow);
+
+        if(isLazyLoading(dataView) && dataView.isRootGrid){
+          try{
+            dataView.lifecycle.stopSelectedRowReaction();
+            dataView.selectRow(dataSourceRow);
+            yield* dataView.lifecycle.changeMasterRow();
+          }finally{
+            dataView.lifecycle.startSelectedRowReaction();
+          }
+        }
       }
       getFormScreen(ctx).setDirty(true);
       break;
