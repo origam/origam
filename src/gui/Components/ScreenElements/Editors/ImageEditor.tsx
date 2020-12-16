@@ -1,12 +1,12 @@
 import React from "react";
-import {inject, observer} from "mobx-react";
-import {IProperty} from "model/entities/types/IProperty";
-import {getSessionId} from "model/selectors/getSessionId";
-import {getEntity} from "model/selectors/DataView/getEntity";
-import {getMenuItemId} from "model/selectors/getMenuItemId";
-import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
-import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
-import {getApi} from "model/selectors/getApi";
+import { inject, observer } from "mobx-react";
+import { IProperty } from "model/entities/types/IProperty";
+import { getSessionId } from "model/selectors/getSessionId";
+import { getEntity } from "model/selectors/DataView/getEntity";
+import { getMenuItemId } from "model/selectors/getMenuItemId";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
+import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
+import { getApi } from "model/selectors/getApi";
 import S from "./ImageEditor.module.scss";
 
 const IMAGE_TYPE: { [key: string]: string } = {
@@ -32,12 +32,22 @@ const IMAGE_TYPE: { [key: string]: string } = {
 export class ImageEditor extends React.Component<{
   value: string;
 }> {
+  testBase64(str: string) {
+    return str.search(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/) > -1;
+  }
+
+  get preparedUrl() {
+    const { value } = this.props;
+    if (!value) return;
+    if (this.testBase64(value)) {
+      return `data:image/${IMAGE_TYPE[value.charAt(0)]};base64,${value}`;
+    } else {
+      return value;
+    }
+  }
+
   render() {
-    return this.props.value ? (
-      <img
-        className={S.image}
-        src={`data:image/${IMAGE_TYPE[this.props.value.charAt(0)]};base64,${this.props.value}`}
-      />
-    ) : null;
+    const { preparedUrl } = this;
+    return preparedUrl ? <img className={S.image} src={preparedUrl} /> : null;
   }
 }

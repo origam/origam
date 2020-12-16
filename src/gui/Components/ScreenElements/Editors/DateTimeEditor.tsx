@@ -26,7 +26,11 @@ class CalendarWidget extends React.Component<{
       i < 7;
       day.add({ days: 1 }), i++
     ) {
-      result.push(<div className={S.calendarWidgetDayHeaderCell}>{day.format("dd")[0]}</div>);
+      result.push(
+        <div className={S.calendarWidgetDayHeaderCell} title={day.format("dddd")}>
+          {day.format("dd")[0]}
+        </div>
+      );
     }
     return result;
   }
@@ -105,7 +109,12 @@ class CalendarWidget extends React.Component<{
                   <i className="fas fa-caret-right" />
                 </button>
               </div>
-              <div className={S.calendarWidgetTitle}>{this.displayedMonth.format("MMMM YYYY")}</div>
+              <div
+                className={S.calendarWidgetTitle}
+                title={this.displayedMonth.format("YYYY MMMM")}
+              >
+                {this.displayedMonth.format("YYYY MMMM")}
+              </div>
               <div className={S.calendarWidgetYearControls}>
                 <button className={S.calendarWidgetControlBtn} onClick={this.handleYearDecClick}>
                   <i className="fas fa-caret-down" />
@@ -224,16 +233,16 @@ export class DateTimeEditor extends React.Component<{
     this.props.onEditorBlur && this.props.onEditorBlur(event);
   }
 
-  private get autoCompletedMoment(){
+  private get autoCompletedMoment() {
     const dateCompleter = this.getDateCompleter();
     return dateCompleter.autoComplete(this.dirtyTextualValue);
   }
 
-  private get autocompletedText(){
+  private get autocompletedText() {
     const completedMoment = this.autoCompletedMoment;
     if (completedMoment) {
       return this.formatMomentValue(this.autoCompletedMoment);
-    }else{
+    } else {
       return this.formatMomentValue(this.momentValue);
     }
   }
@@ -281,11 +290,7 @@ export class DateTimeEditor extends React.Component<{
 
   formatMomentValue(value: Moment | null | undefined) {
     if (!value) return "";
-    if (
-      value.hour() === 0 &&
-      value.minute() === 0 &&
-      value.second() === 0
-    ) {
+    if (value.hour() === 0 && value.minute() === 0 && value.second() === 0) {
       const expectedDateFormat = this.props.outputFormat.split(" ")[0];
       return value.format(expectedDateFormat);
     }
