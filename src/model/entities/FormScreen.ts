@@ -4,7 +4,7 @@ import { IComponentBinding } from "./types/IComponentBinding";
 import { IFormScreenLifecycle02 } from "./types/IFormScreenLifecycle";
 import { action, computed, observable } from "mobx";
 import { IAction } from "./types/IAction";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {
   IFormScreen,
   IFormScreenData,
@@ -89,8 +89,8 @@ export class FormScreen implements IFormScreen {
       : undefined;
   }
 
-  @computed get dontRequestData() {
-    return getDontRequestData(this);
+  @computed get isLazyLoading() {
+    return isLazyLoading(this);
   }
 
   @computed get rootDataViews(): IDataView[] {

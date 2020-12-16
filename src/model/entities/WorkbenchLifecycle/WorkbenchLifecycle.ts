@@ -66,7 +66,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       label,
       dialogWidth,
       dialogHeight,
-      dontRequestData,
+      isLazyLoading,
       urlOpenMethod,
     } = args.item.attributes;
     const { event } = args;
@@ -123,7 +123,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             id,
             type,
             label,
-            dontRequestData === "true",
+            isLazyLoading === "true",
             dialogInfo,
             args.idParameter ? { id: args.idParameter } : {},
             undefined,
@@ -141,7 +141,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         id,
         type,
         label,
-        dontRequestData === "true",
+        isLazyLoading === "true",
         dialogInfo,
         args.idParameter ? { id: args.idParameter } : {},
         undefined,
@@ -168,7 +168,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       // when we have just one record, hence it is ok to execute the screen in without
       // pagination
       menuItem = produce(menuItem, (draft: any) => {
-        draft.attributes.dontRequestData = "false";
+        draft.attributes.isLazyLoading = "false";
       });
     }
     if (menuItem) {
@@ -359,7 +359,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     id: string,
     type: IMainMenuItemType,
     label: string,
-    dontRequestData: boolean,
+    isLazyLoading: boolean,
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext?: any,
@@ -380,7 +380,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       existingItem ? existingItem.order + 1 : 0,
       label,
       newFormScreen,
-      dontRequestData,
+      isLazyLoading,
       dialogInfo,
       parameters,
       isSessionRebirth,
@@ -430,7 +430,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       FormSessionId: screen.content!.preloadedSessionId,
       IsNewSession: isNewSession,
       RegisterSession: true, //!!registerSession,
-      DataRequested: !screen.dontRequestData,
+      DataRequested: !screen.lazyLoading,
       Parameters: screen.parameters,
       AdditionalRequestParameters: additionalRequestParameters,
       IsSingleRecordEdit: isSingleRecordEdit,
@@ -469,23 +469,22 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if (!DEBUG_CLOSE_ALL_FORMS()) {
       for (let session of portalInfo.sessions) {
         const menuItem = getMainMenuItemById(this, session.objectId);
-        if (menuItem) {
-          yield* this.openNewForm(
-            session.objectId,
-            session.type,
-            menuItem.attributes.label, // TODO: Find in menu
-            menuItem.attributes.dontRequestData === "true", // TODO: Find in menu
-            undefined, // TODO: Find in... menu?
-            {},
-            undefined,
-            undefined,
-            session.formSessionId,
-            true,
-            session.isDirty
-          );
-        } else {
-          console.log("No menu item for menuId", session.objectId);
-        }
+        const lazyLoading = menuItem 
+          ? menuItem?.attributes?.lazyLoading === "true" 
+          : false;
+        yield* this.openNewForm(
+          session.objectId,
+          session.type,
+          session.caption, // TODO: Find in menu
+          lazyLoading,
+          undefined, // TODO: Find in... menu?
+          {},
+          undefined,
+          undefined,
+          session.formSessionId,
+          true,
+          session.isDirty
+        );
       }
     } else {
       for (let session of portalInfo.sessions) {
