@@ -24,7 +24,7 @@ export interface IOpenNewForm {
     id: string,
     type: IMainMenuItemType,
     label: string,
-    dontRequestData: boolean,
+    isLazyLoading: boolean,
     dialogInfo: IDialogInfo | undefined,
     parameters: { [key: string]: any },
     parentContext: any,
@@ -82,16 +82,14 @@ export function processActionResult2(dep: {
   parentContext: any
 }) {
   return function* processActionResult2(actionResultList: any[]) {
-    const menuItemId = getMenuItemId(dep.parentContext);
-    const menuItem = getMainMenuItemById(dep.parentContext, menuItemId);
-
-    if(!menuItem){
-      throw new Error(`Menu item ${menuItemId} was not found`);
-    }
-
+    
     for (let actionResultItem of actionResultList) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
+          const menuItem = getMainMenuItemById(dep.parentContext, actionResultItem.request.objectId);
+          const lazyLoading = menuItem 
+            ? menuItem?.attributes?.lazyLoading === "true" 
+            : false;
           const { request, refreshOnReturnType } = actionResultItem;
           const {
             objectId,
@@ -107,7 +105,7 @@ export function processActionResult2(dep: {
             objectId,
             typeString,
             caption || dep.getActionCaption(),
-            menuItem.attributes.dontRequestData === "true",
+            lazyLoading,
             dialogInfo,
             parameters,
             dep.parentContext,

@@ -12,7 +12,7 @@ export function *createOpenedScreen(
   order: number,
   title: string,
   content: IFormScreenEnvelope,
-  dontRequestData: boolean,
+  lazyLoading: boolean,
   dialogInfo: IDialogInfo | undefined,
   parameters: { [key: string]: any },
   isSleeping?: boolean,
@@ -25,7 +25,7 @@ export function *createOpenedScreen(
     title,
     content,
     dialogInfo,
-    dontRequestData,
+    lazyLoading,
     parameters,
     isSleeping,
     isSleepingDirty

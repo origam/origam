@@ -59,7 +59,7 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
 import { getEntity } from "model/selectors/DataView/getEntity";
 
@@ -201,7 +201,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.refreshSession();
         return;
       case IQuestionSaveDataAnswer.NoSave:
-        if (!this.isReadData) {
+        if (!this.eagerLoading) {
           yield* this.revertChanges();
         }
         yield* this.refreshSession();
@@ -366,7 +366,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try{
       this.initialSelectedRowId = initUIResult.currentRecordId
       yield* this.applyInitUIResult({ initUIResult });
-      if (!this.isReadData) {
+      if (!this.eagerLoading) {
         yield* this.loadData();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -715,7 +715,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   rowSelectedReactionsDisabled(dataView: IDataView){
     if( this.initialSelectedRowId &&
         dataView.isBindingRoot &&
-        !this.isReadData
+        !this.eagerLoading
       ){
       return true;
     }
@@ -953,7 +953,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // TODO: Refresh lookups and rowstates !!!
     try {
       this.monitor.inFlow++;
-      if (this.isReadData) {
+      if (this.eagerLoading) {
         const formScreen = getFormScreen(this);
         formScreen.dataViews.forEach((dv) => dv.saveViewState());
         const api = getApi(this);
@@ -983,7 +983,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   loadInitialData() {
-    if (!this.isReadData) {
+    if (!this.eagerLoading) {
       const self = this;
       flow(function* () {
         yield* self.loadData();
@@ -1163,8 +1163,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  get isReadData() {
-    return !getDontRequestData(this);
+  get eagerLoading() {
+    return !isLazyLoading(this);
   }
 
   parent?: any;

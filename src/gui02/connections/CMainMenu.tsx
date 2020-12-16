@@ -144,7 +144,7 @@ class CMainMenuCommandItem extends React.Component<{
             }
             label={
               props.node.attributes
-                .label /*+ (props.node.attributes.dontRequestData === "true" ? "(DRD)" : "")*/
+                .label 
             }
             isHidden={!props.isOpen}
             // TODO: Implements selector for this idset
