@@ -1,4 +1,4 @@
-import {IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
+import {ICellOffset, IGroupTreeNode} from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { IProperty } from "./IProperty";
 
 export interface IGrouper {
@@ -10,6 +10,7 @@ export interface IGrouper {
   getRowById(id: string): any[] | undefined;
   loadChildren(groupHeader: IGroupTreeNode): Generator;
   notifyGroupClosed(group: IGroupTreeNode): void;
+  getCellOffset(rowId: string): ICellOffset;
   parent?: any;
   start(): void;
 }

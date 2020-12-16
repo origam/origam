@@ -31,6 +31,8 @@ import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurre
 import { isReadOnly } from "../../selectors/RowState/isReadOnly";
 import {FilterGroupManager} from "model/entities/FilterGroupManager";
 import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -398,7 +400,13 @@ export class TablePanelView implements ITablePanelView {
   }
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
-    if(!this.rectangleMap.has(rowIndex)){
+    const groupingConfig = getGroupingConfiguration(this);
+    let cellOffset = { row: 0, column:0 };
+    if(groupingConfig.isGrouping){
+      const rowId = getDataView(this).selectedRowId;
+      cellOffset = getGrouper(this).getCellOffset(rowId!)
+    }
+    if(!this.rectangleMap.has(rowIndex + cellOffset.row)){
       return {
         columnLeft: 0,
         columnWidth: 0,
@@ -406,7 +414,7 @@ export class TablePanelView implements ITablePanelView {
         rowHeight: 0
       }
     }
-    return this.rectangleMap.get(rowIndex)!.get(columnIndex)!;
+    return this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {

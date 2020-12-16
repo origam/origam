@@ -10,6 +10,7 @@ export interface IGroupRow {
 }
 
 export interface IGroupTreeNode {
+  level: number;
   getRowIndex(rowId: string): number | undefined;
   parent: IGroupTreeNode | undefined;
   childGroups: IGroupTreeNode[];
@@ -36,4 +37,9 @@ export interface IClickSubsItem {
   y: number;
   w: number;
   h: number;
+}
+
+export interface ICellOffset{
+  row: number;
+  column: number;
 }
