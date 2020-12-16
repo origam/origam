@@ -55,6 +55,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
         if(!dataView.selectedRow){
           dataView.reselectOrSelectFirst();
         }
+        dataView.focusManager.stopAutoFocus();
       }
       getFormScreen(ctx).setDirty(true);
       break;
