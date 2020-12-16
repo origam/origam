@@ -10,7 +10,7 @@ export interface IDialogInfo {
 export interface IOpenedScreenData {
   menuItemId: string;
   menuItemType: IMainMenuItemType;
-  dontRequestData: boolean;
+  lazyLoading: boolean;
   dialogInfo?: IDialogInfo;
   order: number;
   title: string;

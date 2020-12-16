@@ -39,7 +39,7 @@ import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../modules/DataView/TableCursor";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {
   IInfiniteScrollLoader,
   InfiniteScrollLoader,
@@ -553,7 +553,7 @@ export class DataView implements IDataView {
   @action.bound
   async start() {
     this.lifecycle.start();
-    const serverSideGrouping = getDontRequestData(this);
+    const serverSideGrouping = isLazyLoading(this);
     if (serverSideGrouping) {
       this.serverSideGrouper.start();
     }

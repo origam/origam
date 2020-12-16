@@ -21,7 +21,7 @@ export class OpenedScreen implements IOpenedScreen {
 
   @observable stackPosition: number = 0;
   @observable isActive = false;
-  dontRequestData: boolean = false;
+  lazyLoading: boolean = false;
   menuItemId: string = "";
   menuItemType: IMainMenuItemType = null as any;
   order: number = 0;

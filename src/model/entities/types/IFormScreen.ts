@@ -120,7 +120,7 @@ export interface IFormScreen extends IFormScreenData {
   isLoading: false;
   rootDataViews: IDataView[];
   nonRootDataViews: IDataView[];
-  dontRequestData: boolean;
+  isLazyLoading: boolean;
   toolbarActions: Array<{ section: string; actions: IAction[] }>;
   dialogActions: IAction[];
   dynamicTitle: string | undefined;
