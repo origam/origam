@@ -515,15 +515,6 @@ export class DataView implements IDataView {
 
   @action.bound
   setSelectedRowId(id: string | undefined): void {
-    const firstRow = this.dataTable.getFirstRow();
-    if (
-      isLazyLoading(this) &&
-      this.dataTable.addedRowPositionLocked &&
-      firstRow &&
-      id != this.dataTable.getRowId(firstRow)
-    ) {
-      return;
-    }
     if(this.selectedRowId === id){
       return;
     }
