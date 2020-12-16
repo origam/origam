@@ -367,7 +367,8 @@ class HeaderRenderer implements IHeaderRendererData {
           x.setting.type,
           x.setting.val1,
           x.setting.val2,
-        ])
+        ]),
+        [...this.dataView.dataTable.rows]
       ],
       ()=> this.reloadAggregationsDebounced(),
       { fireImmediately: true }
