@@ -66,7 +66,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       label,
       dialogWidth,
       dialogHeight,
-      isLazyLoading,
+      lazyLoading,
       urlOpenMethod,
     } = args.item.attributes;
     const { event } = args;
@@ -123,7 +123,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
             id,
             type,
             label,
-            isLazyLoading === "true",
+            lazyLoading === "true",
             dialogInfo,
             args.idParameter ? { id: args.idParameter } : {},
             undefined,
@@ -141,7 +141,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         id,
         type,
         label,
-        isLazyLoading === "true",
+        lazyLoading === "true",
         dialogInfo,
         args.idParameter ? { id: args.idParameter } : {},
         undefined,

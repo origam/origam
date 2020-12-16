@@ -40,6 +40,7 @@ import { getMaxRowCountSeen } from "model/selectors/DataView/getMaxRowCountSeen"
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
+import { getTotalGroupRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
@@ -149,6 +150,7 @@ export class CDataViewHeaderInner extends React.Component<{
     const onLastRowClickEvt = onLastRowClick(dataView);
 
     const isMoveRowMenuVisible = getIsMoveRowMenuVisible(dataView);
+    const totalGroupRowCount = getTotalGroupRowCount(dataView);
 
     const isAddButton = getIsAddButtonVisible(dataView);
     const isDelButton = getIsDelButtonVisible(dataView);
@@ -266,7 +268,8 @@ export class CDataViewHeaderInner extends React.Component<{
                         <DataViewHeaderGroup noShrink={true}>
                           {selectedRowIndex !== undefined ? selectedRowIndex + 1 : " - "}
                           &nbsp;/&nbsp;
-                          {maxRowCountSeen}
+                          {maxRowCountSeen} 
+                          {totalGroupRowCount ? " ("+totalGroupRowCount+")" : ""}
                         </DataViewHeaderGroup>
                       </>
                     )}
