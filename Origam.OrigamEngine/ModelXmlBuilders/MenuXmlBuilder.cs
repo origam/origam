@@ -144,7 +144,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 }
                 if (formRef.ListDataStructure != null)
                 {
-                    el.SetAttribute("dontRequestData", "true");
+                    el.SetAttribute("lazyLoading", "true");
                 }
                 parentNode.AppendChild(el);
             }
