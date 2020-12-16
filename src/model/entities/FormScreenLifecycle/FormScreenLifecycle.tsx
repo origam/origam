@@ -86,6 +86,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   get isWorkingDelayed() {
     return this.monitor.isWorkingDelayed;
   }
+  initialSelectedRowId: string | undefined;
+
   get isWorking() {
     return this.monitor.isWorking;
   }
@@ -357,61 +359,68 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
     );
     // yield* this.initUI();
-    yield* this.applyInitUIResult({ initUIResult });
-    if (!this.isReadData) {
-      yield* this.loadData();
-      const formScreen = getFormScreen(this);
-      for (let rootDataView of formScreen.rootDataViews) {
-        const orderingConfiguration = getOrderingConfiguration(rootDataView);
-        const filterConfiguration = getFilterConfiguration(rootDataView);
-        this.disposers.push(
-          reaction(
-            () => {
-              const orderings = orderingConfiguration.userOrderings.map((x) => x.direction);
-              const filters = filterConfiguration.activeFilters
-                .map((x) => [
-                  x.propertyId,
-                   x.setting.type,
-                   isArray(x.setting.val1) ? [...x.setting.val1] : x.setting.val1, 
-                   x.setting.val2])
-                .filter((item) => {
-                  if (
-                    item[1] === "in" ||
-                    item[1] === "eq" ||
-                    item[1] === "neq" ||
-                    item[1] === "nin" ||
-                    item[1] === "neq" ||
-                    item[1] === "contains" ||
-                    item[1] === "ncontains" ||
-                    item[1] === "lt" ||
-                    item[1] === "lte" ||
-                    item[1] === "gt" ||
-                    item[1] === "gte" ||
-                    item[1] === "between" ||
-                    item[1] === "nbetween" ||
-                    item[1] === "starts" ||
-                    item[1] === "nstarts" ||
-                    item[1] === "ends" ||
-                    item[1] === "nends"
-                  ) {
-                    return item[2] !== undefined || item[3] !== undefined;
-                  } else {
-                    return true;
-                  }
-                });
-              return {
-                orderings,
-                filters,
-              } as any;
-            },
-            () => this.sortAndFilterReaction(rootDataView),
-            {
-              equals: comparer.structural,
-              delay: 100,
-            }
-          )
-        );
+    try{
+      this.initialSelectedRowId = initUIResult.currentRecordId
+      yield* this.applyInitUIResult({ initUIResult });
+      if (!this.isReadData) {
+        yield* this.loadData();
+        const formScreen = getFormScreen(this);
+        for (let rootDataView of formScreen.rootDataViews) {
+          const orderingConfiguration = getOrderingConfiguration(rootDataView);
+          const filterConfiguration = getFilterConfiguration(rootDataView);
+          this.disposers.push(
+            reaction(
+              () => {
+                const orderings = orderingConfiguration.userOrderings.map((x) => x.direction);
+                const filters = filterConfiguration.activeFilters
+                  .map((x) => [
+                    x.propertyId,
+                    x.setting.type,
+                    isArray(x.setting.val1) ? [...x.setting.val1] : x.setting.val1,
+                    x.setting.val2])
+                  .filter((item) => {
+                    if (
+                      item[1] === "in" ||
+                      item[1] === "eq" ||
+                      item[1] === "neq" ||
+                      item[1] === "nin" ||
+                      item[1] === "neq" ||
+                      item[1] === "contains" ||
+                      item[1] === "ncontains" ||
+                      item[1] === "lt" ||
+                      item[1] === "lte" ||
+                      item[1] === "gt" ||
+                      item[1] === "gte" ||
+                      item[1] === "between" ||
+                      item[1] === "nbetween" ||
+                      item[1] === "starts" ||
+                      item[1] === "nstarts" ||
+                      item[1] === "ends" ||
+                      item[1] === "nends"
+                    ) {
+                      return item[2] !== undefined || item[3] !== undefined;
+                    } else {
+                      return true;
+                    }
+                  });
+                return {
+                  orderings,
+                  filters,
+                } as any;
+              },
+              () => this.sortAndFilterReaction(rootDataView),
+              {
+                equals: comparer.structural,
+                delay: 100,
+              }
+            )
+          );
+        }
       }
+    }
+    finally
+    {
+      this.initialSelectedRowId = undefined;
     }
     yield* this.startAutorefreshIfNeeded();
 
@@ -699,6 +708,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  rowSelectedReactionsDisabled(dataView: IDataView){
+    if( this.initialSelectedRowId &&
+        dataView.isBindingRoot &&
+        !this.isReadData
+      ){
+      return true;
+    }
+    return false;
+  }
+
   *readFirstChunkOfRows(rootDataView: IDataView) {
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
@@ -716,7 +735,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });
       rootDataView.setRecords(loadedData);
-      rootDataView.reselectOrSelectFirst();
+      if(this.initialSelectedRowId){
+        rootDataView.selectRowById(this.initialSelectedRowId);
+      }else{
+        rootDataView.reselectOrSelectFirst();
+      }
 
       //debugger
       rootDataView.restoreViewState();
@@ -1146,7 +1169,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       for (let dataView of dataViews) {
         dataView.setRecords((entityValue as any).data);
         yield dataView.start();
-        dataView.reselectOrSelectFirst();
       }
     }
   }

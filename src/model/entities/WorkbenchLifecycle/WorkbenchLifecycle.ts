@@ -434,6 +434,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       Parameters: screen.parameters,
       AdditionalRequestParameters: additionalRequestParameters,
       IsSingleRecordEdit: isSingleRecordEdit,
+      RequestCurrentRecordId: true
     });
     return initUIResult;
   }
