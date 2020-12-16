@@ -86,7 +86,7 @@ namespace Origam.ServerCore.Controller
             }
             catch(ArgumentOutOfRangeException ex)
             {
-                return NotFound(ex.ActualValue??ex);
+                return NotFound(ex.ActualValue ?? ex);
             }
             catch (SessionExpiredException ex)
             {
