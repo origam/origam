@@ -46,6 +46,7 @@ namespace Origam.DA.Service.Generators
         private List<Ordering> orderingsInput;
         private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
         private readonly Dictionary<string, OrigamDataType> columnNameToType = new Dictionary<string, OrigamDataType>();
+        internal readonly AbstractFilterRenderer abstractFilterRenderer;
         public string WhereClause {
             get
             {
@@ -60,18 +61,19 @@ namespace Origam.DA.Service.Generators
                 ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
                 : null;
 
-        public CustomCommandParser(string nameLeftBracket, string nameRightBracket, SQLValueFormatter sqlValueFormatter)
+        public CustomCommandParser(string nameLeftBracket, string nameRightBracket, SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer abstractFilterRenderer)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
                 = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
+            this.abstractFilterRenderer = abstractFilterRenderer;
         }
 
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket,
-            SQLValueFormatter sqlValueFormatter, List<DataStructureColumn> dataStructureColumns)
-        :this(nameLeftBracket, nameRightBracket, sqlValueFormatter)
+            SQLValueFormatter sqlValueFormatter, List<DataStructureColumn> dataStructureColumns, AbstractFilterRenderer abstractFilterRenderer)
+        :this(nameLeftBracket, nameRightBracket, sqlValueFormatter, abstractFilterRenderer)
         {
             foreach (var column in dataStructureColumns)
             {
@@ -138,7 +140,7 @@ namespace Origam.DA.Service.Generators
         {
             Node newNode = new Node(
                 nameLeftBracket, nameRightBracket,  
-                filterColumnExpressions, sqlValueFormatter, columnNameToType);
+                filterColumnExpressions, sqlValueFormatter, columnNameToType,abstractFilterRenderer);
             newNode.Parent = currentNode;
             currentNode?.Children.Add(newNode);
             currentNode = newNode;
@@ -299,16 +301,17 @@ namespace Origam.DA.Service.Generators
                 throw new Exception($"Data type of column \"{ColumnName}\" is unknown");
             }
         }
-        private readonly FilterRenderer renderer = new FilterRenderer();
+        private readonly AbstractFilterRenderer renderer;
 
         public Node(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
-            SQLValueFormatter sqlValueFormatter, Dictionary<string, OrigamDataType> columnNameToType)
+            SQLValueFormatter sqlValueFormatter, Dictionary<string, OrigamDataType> columnNameToType, AbstractFilterRenderer abstractFilterRenderer)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.lookupExpressions = lookupExpressions;
             this.sqlValueFormatter = sqlValueFormatter;
             this.columnNameToType = columnNameToType;
+            this.renderer = abstractFilterRenderer;
         }
 
         private string ValueToOperand(string value)

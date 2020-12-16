@@ -43,7 +43,7 @@ namespace Origam.DA.Service
         private readonly IDetachedFieldPacker detachedFieldPacker;
         internal readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         internal readonly ParameterReference PageSizeParameterReference = new ParameterReference();
-        internal readonly FilterRenderer filterRenderer = new FilterRenderer();
+        internal readonly AbstractFilterRenderer abstractFilterRenderer;
         internal string _pageNumberParameterName;
         internal string _pageSizeParameterName;
         internal int _indentLevel = 0;
@@ -78,7 +78,7 @@ namespace Origam.DA.Service
         }
         
         public AbstractSqlCommandGenerator(string trueValue, string falseValue, 
-            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter)
+            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter,AbstractFilterRenderer abstractFilterRenderer)
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
@@ -86,6 +86,7 @@ namespace Origam.DA.Service
             False = falseValue;
             this.detachedFieldPacker = detachedFieldPacker;
             this.sqlValueFormatter = sqlValueFormatter;
+            this.abstractFilterRenderer = abstractFilterRenderer;
         }
 
         public abstract IDbDataParameter GetParameter();
@@ -352,7 +353,7 @@ namespace Origam.DA.Service
             DataStructureEntity entity = selectParameters.Entity;
             
             CustomCommandParser commandParser =
-                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, entity.Columns)
+                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, entity.Columns,abstractFilterRenderer)
                     .Where(selectParameters.CustomFilters.Filters)
                     .OrderBy(selectParameters.CustomOrderings.Orderings);
 
@@ -2669,7 +2670,7 @@ namespace Origam.DA.Service
                     parentEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
             string relatedField = RenderExpression(key.RelatedEntityField as AbstractSchemaItem,
                     relatedEntity, replaceParameterTexts, dynamicParameters, paremeterReferences);
-            sqlExpression.Append(filterRenderer.Equal(parentField, relatedField));
+            sqlExpression.Append(abstractFilterRenderer.Equal(parentField, relatedField));
         }
 
         internal void RenderUpdateDeleteWherePart(StringBuilder sqlExpression, DataStructureEntity entity)
@@ -3507,13 +3508,13 @@ namespace Origam.DA.Service
                         replaceParameterTexts, dynamicParameters, parameterReferences);
                     string rightValue = GetItemByFunctionParameter(item, "Right", entity,
                         replaceParameterTexts, dynamicParameters, parameterReferences);
-                    result = filterRenderer.BinaryOperator(leftValue, rightValue, item.Function.Name);
+                    result = abstractFilterRenderer.BinaryOperator(leftValue, rightValue, item.Function.Name);
                     break;
 
                 case "Not":
                     string argument = GetItemByFunctionParameter(item, "Argument", entity,
                         replaceParameterTexts, dynamicParameters, parameterReferences);
-                    result = filterRenderer.Not(argument);
+                    result = abstractFilterRenderer.Not(argument);
                     break;
 
                 case "Concat":
@@ -3529,7 +3530,7 @@ namespace Origam.DA.Service
                     var arguments = GetItemListByFunctionParameter(item, "Arguments",
                          entity, replaceParameterTexts, dynamicParameters,
                          parameterReferences);
-                    result = filterRenderer.LogicalAndOr(item.Function.Name, arguments);
+                    result = abstractFilterRenderer.LogicalAndOr(item.Function.Name, arguments);
                     break;
 
                 case "Space":
@@ -3598,7 +3599,7 @@ namespace Origam.DA.Service
                             .Select(listExpression =>
                                 RenderExpression(listExpression, entity, replaceParameterTexts,
                                     dynamicParameters, parameterReferences));
-                        result = filterRenderer.In(leftOperand, options);
+                        result = abstractFilterRenderer.In(leftOperand, options);
                     }
                     break;
 
