@@ -208,6 +208,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
             Filter: this.buildDetailFilter(dataView),
             Ordering: [],
             RowLimit: SCROLL_ROW_CHUNK,
+            MasterRowId: undefined,
             RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(dataView),
           });

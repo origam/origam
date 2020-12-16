@@ -23,11 +23,11 @@ export interface IGroupItemData{
   grouper: IGrouper;
 }
 
-export interface IClientSideGroupItemData extends IGroupItemData, IGroupTreeNode{
+export interface IClientSideGroupItemData extends IGroupItemData {
   expansionListener: (item: ClientSideGroupItem) => void;
 }
 
-export class ClientSideGroupItem implements IClientSideGroupItemData {
+export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTreeNode {
   constructor(data: IClientSideGroupItemData) {
     Object.assign(this, data);
   }
