@@ -69,21 +69,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     }.bind(this)
   );
 
-  _selectedRowIdChangeDebounceTimeout: any;
-  @action.bound
-  onSelectedRowIdChangeDebounced() {
-    if (this._selectedRowIdChangeDebounceTimeout) {
-      clearTimeout(this._selectedRowIdChangeDebounceTimeout);
-    } else {
-      this.monitor.inFlow++;
-    }
-    this._selectedRowIdChangeDebounceTimeout = setTimeout(() => {
-      this.onSelectedRowIdChangeImm();
-      this._selectedRowIdChangeDebounceTimeout = undefined;
-      this.monitor.inFlow--;
-    }, 100);
-  }
-
   _selectedRowReactionDisposer: any;
   @action.bound
   async startSelectedRowReaction(fireImmediately?: boolean) {
