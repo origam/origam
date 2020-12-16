@@ -86,12 +86,10 @@ export function processActionResult2(dep: {
     for (let actionResultItem of actionResultList) {
       switch (actionResultItem.type) {
         case IActionResultType.OpenForm: {
-          const menuItemId = actionResultItem.request.objectId;
           const menuItem = getMainMenuItemById(dep.parentContext, actionResultItem.request.objectId);
-      
-          if(!menuItem){
-            throw new Error(`Menu item ${menuItemId} was not found`);
-          }
+          const lazyLoading = menuItem 
+            ? menuItem?.attributes?.lazyLoading === "true" 
+            : false;
           const { request, refreshOnReturnType } = actionResultItem;
           const {
             objectId,
@@ -107,7 +105,7 @@ export function processActionResult2(dep: {
             objectId,
             typeString,
             caption || dep.getActionCaption(),
-            menuItem.attributes.lazyLoading === "true",
+            lazyLoading,
             dialogInfo,
             parameters,
             dep.parentContext,

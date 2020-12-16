@@ -469,23 +469,22 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if (!DEBUG_CLOSE_ALL_FORMS()) {
       for (let session of portalInfo.sessions) {
         const menuItem = getMainMenuItemById(this, session.objectId);
-        if (menuItem) {
-          yield* this.openNewForm(
-            session.objectId,
-            session.type,
-            menuItem.attributes.label, // TODO: Find in menu
-            menuItem.attributes.lazyLoading === "true", // TODO: Find in menu
-            undefined, // TODO: Find in... menu?
-            {},
-            undefined,
-            undefined,
-            session.formSessionId,
-            true,
-            session.isDirty
-          );
-        } else {
-          console.log("No menu item for menuId", session.objectId);
-        }
+        const lazyLoading = menuItem 
+          ? menuItem?.attributes?.lazyLoading === "true" 
+          : false;
+        yield* this.openNewForm(
+          session.objectId,
+          session.type,
+          session.caption, // TODO: Find in menu
+          lazyLoading,
+          undefined, // TODO: Find in... menu?
+          {},
+          undefined,
+          undefined,
+          session.formSessionId,
+          true,
+          session.isDirty
+        );
       }
     } else {
       for (let session of portalInfo.sessions) {
