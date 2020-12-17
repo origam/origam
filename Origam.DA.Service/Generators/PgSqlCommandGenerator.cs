@@ -44,7 +44,7 @@ namespace Origam.DA.Service
 				falseValue: "false",
 				detachedFieldPacker: detachedFieldPacker, 
 				sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")),
-                abstractFilterRenderer: new PgSqlFilterRenderer())
+                filterRenderer: new PgSqlFilterRenderer())
 		{
 
 		}

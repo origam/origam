@@ -43,7 +43,7 @@ namespace Origam.DA.Service
                 falseValue: "0",
                 detachedFieldPacker: detachedFieldPacker, 
                 sqlValueFormatter: new SQLValueFormatter("1", "0", (text) => text.Replace("%", "[%]").Replace("_", "[_]"))
-                , abstractFilterRenderer: new MsSqlFilterRenderer())
+                , filterRenderer: new MsSqlFilterRenderer())
         {
 
         }
