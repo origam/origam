@@ -4,12 +4,13 @@ import "leaflet-draw/dist/leaflet.draw-src.js";
 import "leaflet-draw/dist/leaflet.draw-src.css";
 import "leaflet/dist/leaflet.css";
 import _ from "lodash";
-import { action, computed, reaction, runInAction } from "mobx";
+import { action, computed, reaction, runInAction, observable, autorun } from "mobx";
 import qs from "querystring";
 import React from "react";
 import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
 import { MapLayer } from "./stores/MapSetupStore";
+import Measure, { ContentRect } from "react-measure";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -545,7 +546,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
           }
           if (!this.props.mapCenter && allLayerBounds.isValid() && !this.mapFittedToLayers) {
             allLayerBounds = allLayerBounds.pad(0.1);
-            const mapCenter = allLayerBounds.getCenter()
+            const mapCenter = allLayerBounds.getCenter();
             lmap.panTo(mapCenter);
             this.mapFittedToLayers = true;
           }
@@ -591,18 +592,45 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   }
 
   componentDidMount() {
-    if (this.props.isActive) {
-      this.mountLeaflet();
-    }
+    autorun(
+      () => {
+        if (
+          (this.contentRect?.bounds?.width || 0) > 40 &&
+          (this.contentRect?.bounds?.height || 0) > 40 &&
+          this.props.isActive
+        ) {
+          this.mountLeaflet();
+        }
+      },
+      { delay: 500 }
+    );
   }
 
   componentWillUnmount() {
     this._disposers.forEach((d) => d());
   }
 
+  @observable.ref contentRect?: ContentRect;
+
+  @action.bound
+  handleResize(rect: ContentRect) {
+    this.contentRect = rect;
+  }
+
   render() {
     return (
-      <div className={cx(S.mapDiv, { isHidden: !this.props.isActive })} ref={this.refMapDiv}></div>
+      <Measure bounds={true} onResize={this.handleResize}>
+        {({ measureRef }) => (
+          <div ref={measureRef} style={{ width: "100%", height: "100%" }}>
+            <div
+              className={cx(S.mapDiv, { isHidden: !this.props.isActive })}
+              ref={(elm) => {
+                this.refMapDiv(elm);
+              }}
+            ></div>
+          </div>
+        )}
+      </Measure>
     );
   }
 }
