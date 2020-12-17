@@ -17,7 +17,11 @@ export function getLocaleFromCookie(): string {
     const cookieValue = unescape(getCookie("origamCurrentLocale"));
     const pattern = /c=([a-zA-Z-]+)\|/i;
     const results = cookieValue.match(pattern);
-    _locale = results ? results[1] : "cs-CZ";
+    if(results){
+      _locale =  results[1];
+    }else{
+      throw new Error("Locale cookie was not found. Was the function \"initLocaleCookie\" called?")
+    }
   }
   return _locale;
 }
