@@ -177,6 +177,14 @@ export class DataView implements IDataView {
     return this.selectedRowIds.includes(id);
   }
 
+  appendRecords(rows: any[][]): void{
+    this.dataTable.appendRecords(rows);
+    this.selectedRowIds.length = 0;
+    this.selectAllCheckboxChecked =
+      this.dataTable.rows.length !== 0 &&
+      this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
+  }
+
   setRecords(rows: any[][]): void {
     this.dataTable.setRecords(rows);
     this.selectedRowIds.length = 0;

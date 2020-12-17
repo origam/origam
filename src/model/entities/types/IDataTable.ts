@@ -56,6 +56,7 @@ export interface IDataTable {
   | undefined): void;*/
 
   setRecords(rows: any[][]): void;
+  appendRecords(rows: any[][]): void;
   setFormDirtyValue(row: any[], propertyId: string, value: any): void;
   setDirtyValue(row: any[], columnId: string, value: any): void;
   flushFormToTable(row: any[]): void;

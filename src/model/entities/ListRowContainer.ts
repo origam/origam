@@ -159,6 +159,10 @@ export class ListRowContainer implements IRowsContainer {
     this.updateSortAndFilter();
   }
 
+  appendRecords(rowsIn: any[][]){
+    throw new Error("Not implemented");
+  }
+
   substitute(row: any[]): void {
     const dataTable = getDataTable(this);
     row = fixRowIdentifier(row, dataTable.identifierDataIndex);

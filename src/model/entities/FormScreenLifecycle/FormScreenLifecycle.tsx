@@ -744,7 +744,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });
-      rootDataView.setRecords(loadedData);
+      rootDataView.appendRecords(loadedData);
       if(this.initialSelectedRowId){
         rootDataView.selectRowById(this.initialSelectedRowId);
       }else{
