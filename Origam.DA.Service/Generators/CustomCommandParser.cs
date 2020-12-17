@@ -62,20 +62,20 @@ namespace Origam.DA.Service.Generators
                 : null;
 
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket, 
-            SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer abstractFilterRenderer)
+            SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer filterRenderer)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
                 = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
-            this.filterRenderer = abstractFilterRenderer;
+            this.filterRenderer = filterRenderer;
         }
 
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket,
             SQLValueFormatter sqlValueFormatter, List<DataStructureColumn> dataStructureColumns,
-            AbstractFilterRenderer abstractFilterRenderer)
-        :this(nameLeftBracket, nameRightBracket, sqlValueFormatter, abstractFilterRenderer)
+            AbstractFilterRenderer filterRenderer)
+        :this(nameLeftBracket, nameRightBracket, sqlValueFormatter, filterRenderer)
         {
             foreach (var column in dataStructureColumns)
             {
@@ -310,14 +310,14 @@ namespace Origam.DA.Service.Generators
 
         public Node(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
             SQLValueFormatter sqlValueFormatter, Dictionary<string, OrigamDataType> columnNameToType,
-            AbstractFilterRenderer abstractFilterRenderer)
+            AbstractFilterRenderer filterRenderer)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.lookupExpressions = lookupExpressions;
             this.sqlValueFormatter = sqlValueFormatter;
             this.columnNameToType = columnNameToType;
-            this.renderer = abstractFilterRenderer;
+            this.renderer = filterRenderer;
         }
 
         private string ValueToOperand(string value)
