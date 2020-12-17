@@ -156,7 +156,7 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isReadOnly={readOnly}
             onChange={this.props.onChange}
-            onClick={undefined}
+            onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
@@ -222,6 +222,7 @@ export class FormViewEditor extends React.Component<{
               this.focusManager.subscribe(firstCheckInput, this.props.property?.id, this.props.property?.tabIndex)
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
+            onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
           />
         );
       case "Image":
@@ -252,6 +253,7 @@ export class FormViewEditor extends React.Component<{
     const dataView = getDataView(this.props.property);
 
     return (event: any) => {
+      dataView.focusManager.stopAutoFocus();
       if (event.key === "Tab") {
         DomEvent.preventDefault(event);
         if(event.shiftKey){
