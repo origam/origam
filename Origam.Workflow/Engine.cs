@@ -37,6 +37,7 @@ using Origam.Rule;
 using Origam.Schema.RuleModel;
 using log4net;
 using System.Globalization;
+using System.Security.Principal;
 using System.Threading;
 
 namespace Origam.Workflow
@@ -401,10 +402,11 @@ namespace Origam.Workflow
 
 		#region Public Methods
 		public void RunWorkflowFromHost(CultureInfo uiCulture,
-			CultureInfo culture)
+			CultureInfo culture, IPrincipal principal)
 		{
 			Thread.CurrentThread.CurrentCulture = culture;
 			Thread.CurrentThread.CurrentUICulture = uiCulture;
+			Thread.CurrentPrincipal = principal;
 			if (ProfilingTools.IsDebugEnabled)
 			{
 				localOperationTimer.Start(GetHashCode());

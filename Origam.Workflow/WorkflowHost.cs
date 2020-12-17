@@ -96,7 +96,8 @@ namespace Origam.Workflow
 			return System.Threading.Tasks.Task.Run(() => 
 				engine.RunWorkflowFromHost(
 					new CultureInfo(currentUICulture),
-					new CultureInfo(currentCulture)));
+					new CultureInfo(currentCulture), 
+					SecurityManager.CurrentPrincipal));
 		}
 
 		internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
