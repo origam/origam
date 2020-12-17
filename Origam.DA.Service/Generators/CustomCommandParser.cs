@@ -46,7 +46,7 @@ namespace Origam.DA.Service.Generators
         private List<Ordering> orderingsInput;
         private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
         private readonly Dictionary<string, OrigamDataType> columnNameToType = new Dictionary<string, OrigamDataType>();
-        internal readonly AbstractFilterRenderer abstractFilterRenderer;
+        internal readonly AbstractFilterRenderer filterRenderer;
         public string WhereClause {
             get
             {
@@ -61,18 +61,20 @@ namespace Origam.DA.Service.Generators
                 ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
                 : null;
 
-        public CustomCommandParser(string nameLeftBracket, string nameRightBracket, SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer abstractFilterRenderer)
+        public CustomCommandParser(string nameLeftBracket, string nameRightBracket, 
+            SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer abstractFilterRenderer)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.sqlValueFormatter = sqlValueFormatter;
             columnOrderingRenderer 
                 = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
-            this.abstractFilterRenderer = abstractFilterRenderer;
+            this.filterRenderer = abstractFilterRenderer;
         }
 
         public CustomCommandParser(string nameLeftBracket, string nameRightBracket,
-            SQLValueFormatter sqlValueFormatter, List<DataStructureColumn> dataStructureColumns, AbstractFilterRenderer abstractFilterRenderer)
+            SQLValueFormatter sqlValueFormatter, List<DataStructureColumn> dataStructureColumns,
+            AbstractFilterRenderer abstractFilterRenderer)
         :this(nameLeftBracket, nameRightBracket, sqlValueFormatter, abstractFilterRenderer)
         {
             foreach (var column in dataStructureColumns)
@@ -139,9 +141,12 @@ namespace Origam.DA.Service.Generators
         private void AddNode()
         {
             Node newNode = new Node(
-                nameLeftBracket, nameRightBracket,  
-                filterColumnExpressions, sqlValueFormatter, columnNameToType, abstractFilterRenderer);
-            newNode.Parent = currentNode;
+                nameLeftBracket, nameRightBracket,
+                filterColumnExpressions, sqlValueFormatter, columnNameToType,
+                filterRenderer)
+            {
+                Parent = currentNode
+            };
             currentNode?.Children.Add(newNode);
             currentNode = newNode;
             if (root == null)
@@ -304,7 +309,8 @@ namespace Origam.DA.Service.Generators
         private readonly AbstractFilterRenderer renderer;
 
         public Node(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
-            SQLValueFormatter sqlValueFormatter, Dictionary<string, OrigamDataType> columnNameToType, AbstractFilterRenderer abstractFilterRenderer)
+            SQLValueFormatter sqlValueFormatter, Dictionary<string, OrigamDataType> columnNameToType,
+            AbstractFilterRenderer abstractFilterRenderer)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;

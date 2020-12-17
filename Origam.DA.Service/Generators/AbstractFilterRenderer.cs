@@ -155,9 +155,9 @@ namespace Origam.DA.Service
                 case "Equal":
                     return "=";
                 case "Like":
-                    return GetSqlInCaseSensitiveLike();
+                    return "LIKE";
                 case "NotLike":
-                    return "NOT " + GetSqlInCaseSensitiveLike();
+                    return "NOT LIKE";
                 case "Add":
                     return "+";
                 case "Deduct":
@@ -184,9 +184,6 @@ namespace Origam.DA.Service
                     throw new ArgumentOutOfRangeException("functionName", functionName, ResourceUtils.GetString("UnsupportedOperator"));
             }
         }
-
-        public abstract string GetSqlInCaseSensitiveLike();
-
         private static void CheckArgumentEmpty(string name, string argument)
         {
             if (argument == null)
