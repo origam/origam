@@ -134,6 +134,7 @@ function MapContentUI(props: {
             ref={mapNavigationStore.refMapComponent}
             lastDetailedObject={mapSearchStore.selectedSearchResult}
             mapCenter={mapSetupStore.mapCenter || undefined}
+            initialZoom={mapSetupStore.mapResolution}
             getMapObjects={() => (mapRoutefinderStore.isActive ? [] : mapObjectsStore.mapObjects)}
             getRoutefinderRoute={() => mapRoutefinderStore.mapObjectsRoute}
             getRoutefinderEditables={() => mapRoutefinderStore.mapObjectsEditable}

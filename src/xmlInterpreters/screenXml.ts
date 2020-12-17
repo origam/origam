@@ -669,6 +669,7 @@ function populateMapViewSetup(mss: MapSetupStore, xmlNode: any) {
   mss.textColorMember = attr.TextColorMember;
   mss.textLocationMember = attr.TextLocationMember;
   mss.textRotationMember = attr.TextRotationMember;
+  mss.mapResolutionRaw = attr.MapResolution;
 
   const layerXmlNodes = findStopping(
     xmlNode,

@@ -22,6 +22,7 @@ L.Icon.Default.mergeOptions({
 
 interface IMapPerspectiveComProps {
   mapCenter: { type: "Point"; coordinates: [number, number] } | undefined;
+  initialZoom: number | undefined;
   getMapObjects: () => IMapObject[];
   getRoutefinderRoute: () => any[];
   getRoutefinderEditables: () => any[];
@@ -519,7 +520,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
         .map(([rawLayer, leaLayer]) => leaLayer),
     });
     this.leafletMap = lmap;
-    lmap.setZoom(15);
+    lmap.setZoom(this.props.initialZoom || 0);
     this.panToCenter();
     L.control
       .layers({}, this.leafletlayersDescriptor, { position: "topleft", collapsed: true })

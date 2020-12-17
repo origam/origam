@@ -38,6 +38,7 @@ export class MapSetupStore {
   mapColorMember: string = "";
   mapIconMember: string = "";
   mapTextMember: string = "";
+  mapResolutionRaw: string = "";
   textColorMember: string = "";
   textLocationMember: string = "";
   textRotationMember: string = "";
@@ -45,6 +46,10 @@ export class MapSetupStore {
   isReadOnlyView: boolean = false;
 
   layers: MapLayer[] = [];
+
+  get mapResolution() {
+    return this.mapResolutionRaw ? parseInt(this.mapResolutionRaw) : undefined;
+  }
 
   @computed
   get mapCenter() {
