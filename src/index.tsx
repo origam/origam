@@ -14,7 +14,7 @@ import "./rootContainer";
 import * as serviceWorker from "./serviceWorker";
 import Cookie from "js-cookie";
 import { translationsInit } from "./utils/translation";
-import { getLocaleFromCookie } from "utils/cookies";
+import { getLocaleFromCookie, initLocaleCookie } from "utils/cookies";
 import moment from "moment";
 import "moment/min/locales"
 
@@ -31,10 +31,6 @@ if (process.env.NODE_ENV === "development") {
 (window as any).ORIGAM_CLIENT_REVISION_DATE = process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
 
 async function main() {
-  const locale = getLocaleFromCookie();
-  if (locale) {
-    moment.locale(locale);
-  }
 
   const locationHash = window.location.hash;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";
@@ -83,6 +79,10 @@ async function main() {
     });
     flow(application.run.bind(application))();
 
+    await initLocaleCookie(application);
+    const locale = await getLocaleFromCookie();
+    moment.locale(locale);
+ 
     await translationsInit(application);
 
     ReactDOM.render(<Root application={application} />, document.getElementById("root"));
