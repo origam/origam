@@ -198,8 +198,10 @@ export class TagInputFilterSetting implements IFilterSetting {
     }
   }
 
-  get filterValue2() {
-    return this.val2;
+  get filterValue2() {    
+    return this.type === "between" || this.type === "nbetween" 
+      ? this.val2 
+      : undefined;
   }
 
 
