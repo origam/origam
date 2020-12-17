@@ -52,7 +52,7 @@ export class FilterGroupManager {
     return this.filterConfiguration.activeFilters;
   }
 
-  get nofilterActive(){
+  get noFilterActive(){
     return this.activeFilters.length === 0 ||
       this.activeFilters.every(filter => !filter.setting.isComplete)
   }
@@ -75,7 +75,7 @@ export class FilterGroupManager {
     };
   }
 
-  getFilterGroupServerVerion(name: string, isGlobal: boolean){
+  getFilterGroupServerVersion(name: string, isGlobal: boolean){
     return {
       details: this.activeFilters
         .filter(filter=> filter.setting.isComplete)
@@ -94,15 +94,15 @@ export class FilterGroupManager {
   @action.bound
   async saveActiveFiltersAsNewFilterGroup(name: string, isGlobal: boolean) {
     const api = getApi(this.ctx);
-    const filterGrouId = await api.saveFilter({
+    const filterGroupId = await api.saveFilter({
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       PanelId: getDataView(this.ctx).modelId,
-      Filter: this.getFilterGroupServerVerion(name, isGlobal),
+      Filter: this.getFilterGroupServerVersion(name, isGlobal),
       IsDefault: false,
     });
     const filterGroup = {
       filters: this.activeFilters,
-      id: filterGrouId,
+      id: filterGroupId,
       isGlobal: isGlobal,
       name: name
     }
@@ -152,7 +152,7 @@ export class FilterGroupManager {
       PanelInstanceId: getDataView(this.ctx).modelInstanceId,
       DataStructureEntityId:  getDataStructureEntityId(this.ctx),
       PanelId: getDataView(this.ctx).modelId,
-      Filter: this.getFilterGroupServerVerion("DEFAULT", false),
+      Filter: this.getFilterGroupServerVersion("DEFAULT", false),
       IsDefault: true
     });
   }

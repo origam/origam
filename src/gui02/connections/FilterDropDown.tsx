@@ -86,7 +86,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Cancel and Hide Filter", "filter_menu_filter_off")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={this.filterManager.nofilterActive}
+              isDisabled={this.filterManager.noFilterActive}
               onClick={(event: any) => {
                 setDropped(false);
                 runInFlowWithHandler({
@@ -108,7 +108,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
               {T("Cancel Default Filter", "filter_menu_cancel_default_filter")}
             </DropdownItem>
             <DropdownItem
-              isDisabled={this.filterManager.nofilterActive}
+              isDisabled={this.filterManager.noFilterActive}
               onClick={(event: any) => {
                 setDropped(false);
                 this.onSaveFilterClick();
