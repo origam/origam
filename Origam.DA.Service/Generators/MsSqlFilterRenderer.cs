@@ -6,5 +6,9 @@ namespace Origam.DA.Service.Generators
 {
     public class MsSqlFilterRenderer : AbstractFilterRenderer
     {
+        protected override string LikeOperator()
+        {
+            return "LIKE";
+        }
     }
 }

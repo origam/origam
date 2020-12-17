@@ -155,9 +155,9 @@ namespace Origam.DA.Service
                 case "Equal":
                     return "=";
                 case "Like":
-                    return "LIKE";
+                    return LikeOperator();
                 case "NotLike":
-                    return "NOT LIKE";
+                    return "NOT "+ LikeOperator();
                 case "Add":
                     return "+";
                 case "Deduct":
@@ -184,6 +184,9 @@ namespace Origam.DA.Service
                     throw new ArgumentOutOfRangeException("functionName", functionName, ResourceUtils.GetString("UnsupportedOperator"));
             }
         }
+
+        protected abstract string LikeOperator();
+
         private static void CheckArgumentEmpty(string name, string argument)
         {
             if (argument == null)
