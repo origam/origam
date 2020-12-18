@@ -14,7 +14,9 @@ export class FilterSetting implements IFilterSetting {
   }
 
   get filterValue2() {
-    return this.val2;
+    return this.type === "between" || this.type === "nbetween" 
+      ? this.val2 
+      : undefined;
   }
 
   get val1ServerForm(){

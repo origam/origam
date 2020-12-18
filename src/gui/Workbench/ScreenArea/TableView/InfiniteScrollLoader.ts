@@ -164,6 +164,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
+
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
@@ -171,6 +172,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Filter: this.getFilters(),
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
+      MasterRowId: undefined,
       RowOffset: this.rowsContainer.nextEndOffset,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
@@ -208,6 +210,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: nextStartOffset,
+      MasterRowId: undefined,
       ColumnNames: getColumnNamesToLoad(this.ctx),
     })
     const oldDistanceToStart = this.distanceToStart;

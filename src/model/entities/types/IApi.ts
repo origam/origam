@@ -232,6 +232,7 @@ export interface IApi {
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];
+    MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };
   }): Promise<any>;
 

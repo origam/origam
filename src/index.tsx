@@ -1,19 +1,22 @@
 import "mobx-react-lite/batchingForReactDom";
 
 import axios from "axios";
-import {flow} from "mobx";
-import {getApi} from "model/selectors/getApi";
-import {ensureLogin, userManager} from "oauth";
+import { flow } from "mobx";
+import { getApi } from "model/selectors/getApi";
+import { ensureLogin, userManager } from "oauth";
 import React from "react";
 import ReactDOM from "react-dom";
 import "react-tippy/dist/tippy.css";
-import {Root} from "Root";
+import { Root } from "Root";
 import "./index.scss";
-import {createApplication} from "./model/factories/createApplication";
+import { createApplication } from "./model/factories/createApplication";
 import "./rootContainer";
 import * as serviceWorker from "./serviceWorker";
 import Cookie from "js-cookie";
-import {translationsInit} from "./utils/translation";
+import { translationsInit } from "./utils/translation";
+import { getLocaleFromCookie, initLocaleCookie } from "utils/cookies";
+import moment from "moment";
+import "moment/min/locales"
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -28,6 +31,7 @@ if (process.env.NODE_ENV === "development") {
 (window as any).ORIGAM_CLIENT_REVISION_DATE = process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
 
 async function main() {
+
   const locationHash = window.location.hash;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";
   if (locationHash.startsWith(TOKEN_OVR_HASH)) {
@@ -40,7 +44,7 @@ async function main() {
     const backendUrl = locationHash.replace(BACKEND_OVR_HASH, "");
     const newUrl = backendUrl + `#origamBackendOverrideReturn=${window.location.origin}`;
     // debugger;
-    Cookie.set('backendUrl', backendUrl);
+    Cookie.set("backendUrl", backendUrl);
     window.location.assign(newUrl);
     return;
   }
@@ -75,6 +79,10 @@ async function main() {
     });
     flow(application.run.bind(application))();
 
+    await initLocaleCookie(application);
+    const locale = await getLocaleFromCookie();
+    moment.locale(locale);
+ 
     await translationsInit(application);
 
     ReactDOM.render(<Root application={application} />, document.getElementById("root"));

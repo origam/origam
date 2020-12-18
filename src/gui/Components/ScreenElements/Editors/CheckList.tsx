@@ -18,7 +18,7 @@ import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 export interface IRawCheckListProps {
   api: IApi;
   value: string[];
-
+  onClick: (()=> void);
   Entity: string;
   SessionFormIdentifier: string;
   DataStructureEntityId: string;
@@ -97,6 +97,7 @@ export const CheckList: React.FC<{
   invalidMessage?: string;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown(event: any): void;
+  onClick: (()=>void);
 }> = observer((props) => {
   const { property } = useContext(MobXProviderContext);
 
@@ -120,6 +121,7 @@ export const CheckList: React.FC<{
       invalidMessage={props.invalidMessage}
       subscribeToFocusManager={props.subscribeToFocusManager}
       onKeyDown={props.onKeyDown}
+      onClick={props.onClick}
     />
   );
 });
@@ -179,6 +181,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
             key={item.value}
             checked={props.value && !!props.value.find((v) => v === item.value)}
             onClick={(event) => {
+              props.onClick();
               if (!props.isReadonly) {
                 controller.handleClick(event, item);
               }

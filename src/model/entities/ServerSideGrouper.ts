@@ -3,7 +3,7 @@ import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreen
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { IGrouper } from "./types/IGrouper";
 import { IReactionDisposer, observable, reaction, comparer, flow} from "mobx";
-import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { ICellOffset, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
@@ -13,7 +13,7 @@ import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getCellOffset, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -84,6 +84,10 @@ export class ServerSideGrouper implements IGrouper {
   getMaxRowCountSeen(rowId: string): number {
     return getMaxRowCountSeen(this, rowId);
   }
+
+  getCellOffset(rowId: string): ICellOffset {
+    return getCellOffset(this, rowId);
+   }
 
   notifyGroupClosed(group: IGroupTreeNode){
     if(this.groupDisposers.has(group)){

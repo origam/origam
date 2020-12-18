@@ -133,7 +133,8 @@ function MapContentUI(props: {
           <MapPerspectiveCom
             ref={mapNavigationStore.refMapComponent}
             lastDetailedObject={mapSearchStore.selectedSearchResult}
-            mapCenter={mapSetupStore.mapCenter || { type: "Point", coordinates: [0, 0] }}
+            mapCenter={mapSetupStore.mapCenter || undefined}
+            initialZoom={mapSetupStore.mapResolution}
             getMapObjects={() => (mapRoutefinderStore.isActive ? [] : mapObjectsStore.mapObjects)}
             getRoutefinderRoute={() => mapRoutefinderStore.mapObjectsRoute}
             getRoutefinderEditables={() => mapRoutefinderStore.mapObjectsEditable}

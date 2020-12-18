@@ -39,7 +39,7 @@ import { getLookupLoader } from "model/selectors/DataView/getLookupLoader";
 import { DataViewData } from "../../modules/DataView/DataViewData";
 import { DataViewAPI } from "../../modules/DataView/DataViewAPI";
 import { RowCursor } from "../../modules/DataView/TableCursor";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {
   IInfiniteScrollLoader,
   InfiniteScrollLoader,
@@ -175,6 +175,14 @@ export class DataView implements IDataView {
 
   @bind hasSelectedRowId(id: string) {
     return this.selectedRowIds.includes(id);
+  }
+
+  appendRecords(rows: any[][]): void{
+    this.dataTable.appendRecords(rows);
+    this.selectedRowIds.length = 0;
+    this.selectAllCheckboxChecked =
+      this.dataTable.rows.length !== 0 &&
+      this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
   }
 
   setRecords(rows: any[][]): void {
@@ -515,15 +523,6 @@ export class DataView implements IDataView {
 
   @action.bound
   setSelectedRowId(id: string | undefined): void {
-    const firstRow = this.dataTable.getFirstRow();
-    if (
-      getDontRequestData(this) &&
-      this.dataTable.addedRowPositionLocked &&
-      firstRow &&
-      id != this.dataTable.getRowId(firstRow)
-    ) {
-      return;
-    }
     if(this.selectedRowId === id){
       return;
     }
@@ -562,7 +561,7 @@ export class DataView implements IDataView {
   @action.bound
   async start() {
     this.lifecycle.start();
-    const serverSideGrouping = getDontRequestData(this);
+    const serverSideGrouping = isLazyLoading(this);
     if (serverSideGrouping) {
       this.serverSideGrouper.start();
     }

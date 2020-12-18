@@ -129,9 +129,13 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   delete(row: any[]): void {
-    const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === this.rowIdGetter(row));
+    const rowId = this.rowIdGetter(row);
+    const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === rowId);
     if (idx > -1) {
       this.allRows.splice(idx, 1);
+      if(rowId === this.forcedFirstRowId){
+        this.forcedFirstRowId = undefined;
+      }
       this.updateSortAndFilter();
     }
   }
@@ -153,6 +157,10 @@ export class ListRowContainer implements IRowsContainer {
     this.clear();
     for(let row of rows) this.allRows.push(row);
     this.updateSortAndFilter();
+  }
+
+  appendRecords(rowsIn: any[][]){
+    throw new Error("Not implemented");
   }
 
   substitute(row: any[]): void {

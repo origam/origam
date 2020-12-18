@@ -10,7 +10,7 @@ import {getIsBindingParent} from "model/selectors/DataView/getIsBindingParent";
 import {getIsBindingRoot} from "model/selectors/DataView/getIsBindingRoot";
 import {getMasterRowId} from "model/selectors/DataView/getMasterRowId";
 import {getParentRowId} from "model/selectors/DataView/getParentRowId";
-import {getDontRequestData} from "model/selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {getSessionId} from "model/selectors/getSessionId";
 import {getApi} from "../../selectors/getApi";
 import {getSelectedRowId} from "../../selectors/TablePanelView/getSelectedRowId";
@@ -38,7 +38,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
 
   @action.bound
   start(): void {
-    if (getDontRequestData(this)) {
+    if (isLazyLoading(this)) {
       this.disposers.push(this.startSelectedRowReaction());
     }
   }
@@ -68,21 +68,6 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       }
     }.bind(this)
   );
-
-  _selectedRowIdChangeDebounceTimeout: any;
-  @action.bound
-  onSelectedRowIdChangeDebounced() {
-    if (this._selectedRowIdChangeDebounceTimeout) {
-      clearTimeout(this._selectedRowIdChangeDebounceTimeout);
-    } else {
-      this.monitor.inFlow++;
-    }
-    this._selectedRowIdChangeDebounceTimeout = setTimeout(() => {
-      this.onSelectedRowIdChangeImm();
-      this._selectedRowIdChangeDebounceTimeout = undefined;
-      this.monitor.inFlow--;
-    }, 100);
-  }
 
   _selectedRowReactionDisposer: any;
   @action.bound
@@ -197,7 +182,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
       const dataView = getDataView(this);
       const api = getApi(this);
       let data;
-      if(dataView.isRootEntity && !dataView.isRootGrid && getDontRequestData(this)){
+      if(dataView.isRootEntity && !dataView.isRootGrid && isLazyLoading(this)){
         if(dataView.parentBindings.length === 1){
           data = [dataView.parentBindings[0].parentDataView.selectedRow];
         }else{
@@ -208,6 +193,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
             Filter: this.buildDetailFilter(dataView),
             Ordering: [],
             RowLimit: SCROLL_ROW_CHUNK,
+            MasterRowId: undefined,
             RowOffset: 0,
             ColumnNames: getColumnNamesToLoad(dataView),
           });

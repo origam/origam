@@ -2,9 +2,11 @@ import {
   context,
   context2d,
   currentRow,
+  drawingColumnIndex,
   gridLeadCellDimensions,
   groupingColumnCount,
   groupingColumnIds,
+  rowIndex,
   worldWidth,
 } from "../renderingValues";
 import {currentColumnLeft, currentColumnWidth, currentRowHeight, currentRowTop,} from "../currentCell";
@@ -20,6 +22,7 @@ import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInf
 import {SCROLL_ROW_CHUNK} from "../../../../../Workbench/ScreenArea/TableView/InfiniteScrollLoader";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 const groupCellWidth = 20;
 const expandSymbolFontSize = 15;
@@ -148,6 +151,14 @@ function formatColumnValue(value: string){
 }
 
 export function drawGroupCellBackground() {
+  // const ctx = context();
+  // const thisCellRectangle = {
+  //   columnLeft: currentColumnLeft(),
+  //   columnWidth: currentColumnWidth(),
+  //   rowTop: currentRowTop(),
+  //   rowHeight: currentRowHeight(),
+  // }
+  // getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
   const ctx2d = context2d();
   ctx2d.fillStyle = "#cccccc";
   ctx2d.fillRect(
@@ -159,6 +170,14 @@ export function drawGroupCellBackground() {
 }
 
 export function drawEmptyGroupCellBackground() {
+  // const ctx = context();
+  // const thisCellRectangle = {
+  //   columnLeft: currentColumnLeft(),
+  //   columnWidth: currentColumnWidth(),
+  //   rowTop: currentRowTop(),
+  //   rowHeight: currentRowHeight(),
+  // }
+  // getTablePanelView(ctx).setCellRectangle(rowIndex(), drawingColumnIndex(), thisCellRectangle);
   const ctx2d = context2d();
   ctx2d.fillStyle = "#ffffff";
   ctx2d.fillRect(

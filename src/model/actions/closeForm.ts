@@ -3,7 +3,7 @@ import {getOpenedScreen} from "model/selectors/getOpenedScreen";
 import {IRefreshOnReturnType} from "../entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import {getApi} from "../selectors/getApi";
 import {ICRUDResult, processCRUDResult} from "./DataLoading/processCRUDResult";
-import {getDontRequestData} from "model/selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {getDataViewLifecycle} from "model/selectors/DataView/getDataViewLifecycle";
 import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
 import {onRefreshSessionClick} from "model/actions-ui/ScreenToolbar/onRefreshSessionClick";
@@ -20,7 +20,7 @@ export function closeForm(ctx: any) {
       const parentFormScreen = getFormScreen(openedScreen.parentContext);
       switch(refreshOnReturnType){
         case IRefreshOnReturnType.ReloadActualRecord:
-          if (getDontRequestData(ctx)) {
+          if (isLazyLoading(ctx)) {
             break;
           }
           for (let dataView of parentFormScreen.dataViews) {

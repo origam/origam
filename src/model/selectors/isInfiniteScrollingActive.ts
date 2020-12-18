@@ -1,4 +1,4 @@
-import {getDontRequestData} from "./getDontRequestData";
+import {isLazyLoading} from "./isLazyLoading";
 import {getDataView} from "./DataView/getDataView";
 
 export function isInfiniteScrollingActive(ctx: any, dataViewAttributes?: any) {
@@ -7,5 +7,5 @@ export function isInfiniteScrollingActive(ctx: any, dataViewAttributes?: any) {
     ? dataViewAttributes.IsRootGrid === "true"
     : getDataView(ctx).isRootGrid
 
-    return getDontRequestData(ctx) && isRootGrid;
+    return isLazyLoading(ctx) && isRootGrid;
 }

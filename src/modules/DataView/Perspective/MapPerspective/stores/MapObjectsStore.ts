@@ -31,19 +31,27 @@ export class MapObjectsStore {
   }
 
   @computed get fldLocationIndex() {
-    return getDataSourceFieldIndexByName(this.dataView, this.setup.mapLocationMember);
+    return this.setup.mapLocationMember
+      ? getDataSourceFieldIndexByName(this.dataView, this.setup.mapLocationMember)
+      : undefined;
   }
 
   @computed get fldNameIndex() {
-    return getDataSourceFieldIndexByName(this.dataView, this.setup.mapTextMember);
+    return this.setup.mapTextMember
+      ? getDataSourceFieldIndexByName(this.dataView, this.setup.mapTextMember)
+      : undefined;
   }
 
   @computed get fldIconIndex() {
-    return getDataSourceFieldIndexByName(this.dataView, this.setup.mapIconMember);
+    return this.setup.mapIconMember
+      ? getDataSourceFieldIndexByName(this.dataView, this.setup.mapIconMember)
+      : undefined;
   }
 
   @computed get fldIconAzimuth() {
-    return getDataSourceFieldIndexByName(this.dataView, this.setup.mapAzimuthMember);
+    return this.setup.mapAzimuthMember
+      ? getDataSourceFieldIndexByName(this.dataView, this.setup.mapAzimuthMember)
+      : undefined;
   }
 
   @computed get fldIdentifier() {
@@ -57,15 +65,15 @@ export class MapObjectsStore {
       const tableRows = this.dataView.tableRows;
 
       for (let row of tableRows) {
-        if (_.isArray(row)) {
+        if (_.isArray(row) && this.fldLocationIndex !== undefined) {
           const objectGeoJson = wktParse(row[this.fldLocationIndex]);
           if (objectGeoJson)
             result.push({
               ...objectGeoJson,
               id: row[this.fldIdentifier],
-              name: row[this.fldNameIndex],
-              icon: row[this.fldIconIndex],
-              azimuth: row[this.fldIconAzimuth],
+              name: this.fldNameIndex !== undefined ? row[this.fldNameIndex] : "",
+              icon: this.fldIconIndex && row[this.fldIconIndex],
+              azimuth: this.fldIconAzimuth && row[this.fldIconAzimuth],
             });
         }
       }
@@ -73,7 +81,7 @@ export class MapObjectsStore {
       const selectedRow = getSelectedRow(this.dataView);
       if (selectedRow) {
         const row = selectedRow;
-        if (_.isArray(row) && row[this.fldLocationIndex]) {
+        if (_.isArray(row) && this.fldLocationIndex && row[this.fldLocationIndex]) {
           let objectGeoJson: any;
           try {
             objectGeoJson = wktParse(row[this.fldLocationIndex]);
@@ -85,9 +93,9 @@ export class MapObjectsStore {
             result.push({
               ...objectGeoJson,
               id: row[this.fldIdentifier],
-              name: row[this.fldNameIndex],
-              icon: row[this.fldIconIndex],
-              azimuth: row[this.fldIconAzimuth],
+              name: this.fldNameIndex !== undefined ? row[this.fldNameIndex] : "",
+              icon: this.fldIconIndex && row[this.fldIconIndex],
+              azimuth: this.fldIconAzimuth && row[this.fldIconAzimuth],
             });
           }
         }

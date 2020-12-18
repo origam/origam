@@ -71,8 +71,8 @@
 }
 
 .calendarWidgetNeighbourMonthCell {
-  background-color: #e5e5e5;
-  color: $grey2;
+  //background-color: #e5e5e5;
+  color: $grey3;
 }
 
 .calendarWidgetHeader {
@@ -120,12 +120,13 @@
 
 .calendarWidgetTitle {
   flex-grow: 1;
-  display: flex;
-  flex-direction: row;
+  //display: flex;
+  //flex-direction: row;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 1.1em;
   font-weight: 700;
 }

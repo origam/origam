@@ -466,6 +466,7 @@ export class OrigamAPI implements IApi {
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];
+    MasterRowId: string | undefined;
     FilterLookups?: { [key: string]: string };
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/GetRows`, data)).data;

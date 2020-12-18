@@ -7,7 +7,6 @@ const debugShowTranslations = window.localStorage.getItem("debugShowTranslations
 let translations = {} as { [k: string]: string };
 
 export async function translationsInit(ctx: any) {
-  await initLocaleCookie(ctx);
   const locale = getLocaleFromCookie();
   translations = (await axios.get(`locale/localization_${locale}.json`, {})).data;
 }

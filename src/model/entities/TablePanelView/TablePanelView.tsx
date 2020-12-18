@@ -30,6 +30,9 @@ import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelV
 import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurrentRowData";
 import { isReadOnly } from "../../selectors/RowState/isReadOnly";
 import {FilterGroupManager} from "model/entities/FilterGroupManager";
+import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { getGrouper } from "model/selectors/DataView/getGrouper";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -142,10 +145,8 @@ export class TablePanelView implements ITablePanelView {
     yield* flushCurrentRowData(this)();
     const isDirty = getFormScreen(dataView).isDirty;
 
-    if (isDirty && dataView.selectedRowId !== rowId && isInfiniteScrollingActive(dataView)) {
-      const shouldProceedToSelectRow = yield getFormScreenLifecycle(
-        dataView
-      ).handleUserInputOnChangingRow(dataView);
+    if (isDirty && dataView.selectedRowId !== rowId) {
+      const shouldProceedToSelectRow = yield handleUserInputOnChangingRow(dataView);
       if (!shouldProceedToSelectRow) {
         return;
       }
@@ -399,11 +400,13 @@ export class TablePanelView implements ITablePanelView {
   }
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
-    const actualRowIndex = this.dataTable.addedRowPositionLocked
-      ? 0
-      : rowIndex
-
-    if(!this.rectangleMap.has(actualRowIndex)){
+    const groupingConfig = getGroupingConfiguration(this);
+    let cellOffset = { row: 0, column:0 };
+    if(groupingConfig.isGrouping){
+      const rowId = getDataView(this).selectedRowId;
+      cellOffset = getGrouper(this).getCellOffset(rowId!)
+    }
+    if(!this.rectangleMap.has(rowIndex + cellOffset.row)){
       return {
         columnLeft: 0,
         columnWidth: 0,
@@ -411,7 +414,7 @@ export class TablePanelView implements ITablePanelView {
         rowHeight: 0
       }
     }
-    return this.rectangleMap.get(actualRowIndex)!.get(columnIndex)!;
+    return this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
   }
 
   setCellRectangle(rowId: number, columnId: number, rectangle: ICellRectangle) {

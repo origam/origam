@@ -7,7 +7,7 @@ import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
 import { ColumnsDialog, ITableColumnsConf } from "gui/Components/Dialogs/ColumnsDialog";
 import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { getDontRequestData } from "../../selectors/getDontRequestData";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
@@ -17,7 +17,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       columnConf: [],
     };
     const groupingConf = getGroupingConfiguration(this);
-    const groupingOnClient = !getDontRequestData(this);
+    const groupingOnClient = !isLazyLoading(this);
     for (let prop of this.tablePanelView.allTableProperties) {
       conf.columnConf.push({
         id: prop.id,

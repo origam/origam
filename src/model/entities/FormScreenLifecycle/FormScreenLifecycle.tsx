@@ -59,9 +59,11 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { wait } from "@testing-library/react";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import { getDontRequestData } from "model/selectors/getDontRequestData";
-import { getBindingChildren } from "model/selectors/DataView/getBindingChildren";
+import {isLazyLoading} from "model/selectors/isLazyLoading";
+import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChildren";
 import { getEntity } from "model/selectors/DataView/getEntity";
+import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
+import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -72,12 +74,6 @@ enum IQuestionSaveDataAnswer {
 enum IQuestionDeleteDataAnswer {
   No = 0,
   Yes = 1,
-}
-
-enum IQuestionChangeRecordAnswer {
-  Yes = 0,
-  No = 1,
-  Cancel = 2,
 }
 
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
@@ -201,7 +197,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.refreshSession();
         return;
       case IQuestionSaveDataAnswer.NoSave:
-        if (!this.isReadData) {
+        if (!this.eagerLoading) {
           yield* this.revertChanges();
         }
         yield* this.refreshSession();
@@ -366,7 +362,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try{
       this.initialSelectedRowId = initUIResult.currentRecordId
       yield* this.applyInitUIResult({ initUIResult });
-      if (!this.isReadData) {
+      if (!this.eagerLoading) {
         yield* this.loadData();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -489,19 +485,23 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }, 100);
   }
 
-  async loadChildRows(rootDataView: IDataView, filter: string, ordering: IOrdering | undefined) {
+  async loadChildRows(dataView: IDataView, filter: string, ordering: IOrdering | undefined) {
     try {
       this.monitor.inFlow++;
+      const masterRowId = !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
+        ? dataView.bindingParent.selectedRowId
+        : undefined
       const api = getApi(this);
       return await api.getRows({
-        MenuId: getMenuItemId(rootDataView),
+        MenuId: getMenuItemId(dataView),
         SessionFormIdentifier: getSessionId(this),
-        DataStructureEntityId: getDataStructureEntityId(rootDataView),
+        DataStructureEntityId: getDataStructureEntityId(dataView),
         Filter: filter,
         Ordering: ordering ? [ordering] : [],
         RowLimit: SCROLL_ROW_CHUNK,
+        MasterRowId: masterRowId,
         RowOffset: 0,
-        ColumnNames: getColumnNamesToLoad(rootDataView),
+        ColumnNames: getColumnNamesToLoad(dataView),
       });
     } finally {
       this.monitor.inFlow--;
@@ -541,7 +541,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   async loadGroups(
-    rootDataView: IDataView,
+    dataView: IDataView,
     groupBy: string,
     groupByLookupId: string | undefined,
     aggregations: IAggregationInfo[] | undefined
@@ -552,18 +552,23 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       direction: IOrderByDirection.ASC,
       lookupId: groupByLookupId,
     };
+
+    const masterRowId = !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
+      ? dataView.bindingParent.selectedRowId
+      : undefined
+
     try {
       this.monitor.inFlow++;
       return await api.getGroups({
-        MenuId: getMenuItemId(rootDataView),
+        MenuId: getMenuItemId(dataView),
         SessionFormIdentifier: getSessionId(this),
-        DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: getUserFilters(rootDataView),
+        DataStructureEntityId: getDataStructureEntityId(dataView),
+        Filter: getUserFilters(dataView),
         Ordering: [ordering],
         RowLimit: 999999,
         GroupBy: groupBy,
         GroupByLookupId: groupByLookupId,
-        MasterRowId: undefined,
+        MasterRowId: masterRowId,
         AggregatedColumns: aggregations,
       });
     } finally {
@@ -715,7 +720,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   rowSelectedReactionsDisabled(dataView: IDataView){
     if( this.initialSelectedRowId &&
         dataView.isBindingRoot &&
-        !this.isReadData
+        !this.eagerLoading
       ){
       return true;
     }
@@ -735,10 +740,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         FilterLookups: getUserFilterLookups(rootDataView),
         Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_ROW_CHUNK,
+        MasterRowId: undefined,
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });
-      rootDataView.setRecords(loadedData);
+      rootDataView.appendRecords(loadedData);
       if(this.initialSelectedRowId){
         rootDataView.selectRowById(this.initialSelectedRowId);
       }else{
@@ -828,8 +834,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
-      const childEntities = getBindingChildren(targetDataView).map(dataView => getEntity(dataView))
-      
+      const childEntities = getAllBindingChildren(targetDataView).map(dataView => getEntity(dataView))
+     
       const api = getApi(this);
       const formScreen = getFormScreen(this);
       let createObjectResult;
@@ -953,7 +959,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     // TODO: Refresh lookups and rowstates !!!
     try {
       this.monitor.inFlow++;
-      if (this.isReadData) {
+      if (this.eagerLoading) {
         const formScreen = getFormScreen(this);
         formScreen.dataViews.forEach((dv) => dv.saveViewState());
         const api = getApi(this);
@@ -983,7 +989,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   loadInitialData() {
-    if (!this.isReadData) {
+    if (!this.eagerLoading) {
       const self = this;
       flow(function* () {
         yield* self.loadData();
@@ -1087,50 +1093,64 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  async handleUserInputOnChangingRow(dataView: IDataView) {
-    const api = getApi(dataView);
-    const openedScreen = getOpenedScreen(this);
-    const sessionId = getSessionId(openedScreen.content.formScreen);
+  // async handleUserInputOnChangingRow(dataView: IDataView) {
+  //   const api = getApi(dataView);
+  //   const openedScreen = getOpenedScreen(this);
+  //   const sessionId = getSessionId(openedScreen.content.formScreen);
 
-    switch (await this.questionSaveDataAfterRecordChange()) {
-      case IQuestionChangeRecordAnswer.Cancel:
-        return false;
-      case IQuestionChangeRecordAnswer.Yes:
-        await api.saveSessionQuery(sessionId);
-        await api.saveSession(sessionId);
-        return true;
-      case IQuestionChangeRecordAnswer.No:
-        await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
-        return true;
-      default:
-        throw new Error("Option not implemented");
-    }
-  }
+  //  if(isInfiniteScrollingActive(dataView)){
+  //     switch (await this.questionSaveDataAfterRecordChange()) {
+  //       case IQuestionChangeRecordAnswer.Cancel:
+  //         return false;
+  //       case IQuestionChangeRecordAnswer.Yes:
+  //         await api.saveSessionQuery(sessionId);
+  //         await api.saveSession(sessionId);
+  //         return true;
+  //       case IQuestionChangeRecordAnswer.No:
+  //         await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
+  //         return true;
+  //       default:
+  //         throw new Error("Option not implemented");
+  //     }
+  //   }
+  //   else
+  //   {
+  //     const errorMessages = dataView.childBindings
+  //       .map(binding => binding.childDataView)
+  //       .concat(dataView)
+  //       .flatMap(dataView => getSelectedRowErrorMessages(dataView))
+  //     if(errorMessages.length > 0){
+  //       await flow(function* bla() {yield* selectors.error.getDialogController(dataView).pushError(errorMessages.join("\n"));} )();
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
 
-  questionSaveDataAfterRecordChange() {
-    return new Promise(
-      action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
-        const closeDialog = getDialogStack(this).pushDialog(
-          "",
-          <ChangeMasterRecordDialog
-            screenTitle={getOpenedScreen(this).title}
-            onSaveClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.Yes);
-            }}
-            onDontSaveClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.No);
-            }}
-            onCancelClick={() => {
-              closeDialog();
-              resolve(IQuestionChangeRecordAnswer.Cancel);
-            }}
-          />
-        );
-      })
-    );
-  }
+  // questionSaveDataAfterRecordChange() {
+  //   return new Promise(
+  //     action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
+  //       const closeDialog = getDialogStack(this).pushDialog(
+  //         "",
+  //         <ChangeMasterRecordDialog
+  //           screenTitle={getOpenedScreen(this).title}
+  //           onSaveClick={() => {
+  //             closeDialog();
+  //             resolve(IQuestionChangeRecordAnswer.Yes);
+  //           }}
+  //           onDontSaveClick={() => {
+  //             closeDialog();
+  //             resolve(IQuestionChangeRecordAnswer.No);
+  //           }}
+  //           onCancelClick={() => {
+  //             closeDialog();
+  //             resolve(IQuestionChangeRecordAnswer.Cancel);
+  //           }}
+  //         />
+  //       );
+  //     })
+  //   );
+  // }
 
   questionDeleteData() {
     return new Promise(
@@ -1163,9 +1183,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  get isReadData() {
-    return !getDontRequestData(this);
+  get eagerLoading() {
+    return !isLazyLoading(this);
   }
 
   parent?: any;
 }
+
+
+
+
+
+
+
+

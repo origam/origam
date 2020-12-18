@@ -1,7 +1,7 @@
 import { IGrouper } from "./types/IGrouper";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { ICellOffset, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 import { ClientSideGroupItem } from "gui/Components/ScreenElements/Table/TableRendering/GroupItem";
 import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView";
 import { IAggregationInfo } from "./types/IAggregationInfo";
@@ -9,7 +9,7 @@ import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getCellOffset, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -22,7 +22,7 @@ export class ClientSideGrouper implements IGrouper {
       return [];
     }
     const dataTable = getDataTable(this);
-    const groups = this.makeGroups(dataTable.rows, firstGroupingColumn);
+    const groups = this.makeGroups(undefined, dataTable.rows, firstGroupingColumn);
     this.loadRecursively(groups);
     console.log("topLevelGroups: "+groups.length);
     return groups;
@@ -30,6 +30,10 @@ export class ClientSideGrouper implements IGrouper {
   
   get allGroups(){
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
+  }
+
+  getCellOffset(rowId: string): ICellOffset {
+   return getCellOffset(this, rowId);
   }
   
   getRowIndex(rowId: string): number | undefined {
@@ -68,7 +72,7 @@ export class ClientSideGrouper implements IGrouper {
     }
   }
 
-  makeGroups(rows: any[][], groupingColumn: string): IGroupTreeNode[] {
+  makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumn: string): IGroupTreeNode[] {
     const groupMap = this.makeGroupMap(groupingColumn, rows);
 
     const dataTable = getDataTable(this);
@@ -84,7 +88,7 @@ export class ClientSideGrouper implements IGrouper {
           columnId: groupingColumn,
           groupLabel: property!.name,
           rowCount: rows.length,
-          parent: undefined,
+          parent: parent,
           columnValue: groupName,
           columnDisplayValue: property ? dataTable.resolveCellText(property, groupName) : groupName,
           aggregations: this.calcAggregations(rows),
@@ -165,7 +169,7 @@ export class ClientSideGrouper implements IGrouper {
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
 
     if (nextColumnName) {
-      group.childGroups = this.makeGroups(group.childRows, nextColumnName);
+      group.childGroups = this.makeGroups(group, group.childRows, nextColumnName);
     }
   }
 
