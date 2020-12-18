@@ -36,12 +36,13 @@ namespace Origam.Mail
         private readonly bool useSsl;
         private readonly string defaultServer;
         private readonly int defaultPort;
+        private readonly string pickupDirectoryLocation;
 
         protected NetStandardMailService()
         {
         }
 
-        public NetStandardMailService(string server, int port, 
+        public NetStandardMailService(string server, int port, string pickupDirectoryLocation,
            string userName = null, string password = null, bool useSsl = true)
         {
             if (string.IsNullOrWhiteSpace(password) &&
@@ -56,6 +57,7 @@ namespace Origam.Mail
             this.useSsl = useSsl;
             defaultServer = server;
             defaultPort = port;
+            this.pickupDirectoryLocation = pickupDirectoryLocation;
         }
 
         public override int SendMail1(IXmlContainer mailDocument, string server, int port)
@@ -234,6 +236,13 @@ namespace Origam.Mail
             else
             {
                 SetConfigValues(smtpClient);
+            }
+            
+            if (!string.IsNullOrWhiteSpace(pickupDirectoryLocation))
+            {
+                smtpClient.PickupDirectoryLocation = pickupDirectoryLocation;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
+                smtpClient.EnableSsl = false;
             }
 
             return smtpClient;
