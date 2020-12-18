@@ -346,13 +346,13 @@ function drawCellValue() {
         const WR = cw / iw;
         const HR = ch / ih;
         let ratio = 0;
-        if(Math.abs(1-WR) < Math.abs(1-HR)) {
+        if (Math.abs(1 - WR) < Math.abs(1 - HR)) {
           ratio = WR;
         } else {
           ratio = HR;
         }
-        const finIW = ratio*iw;
-        const finIH = ratio*ih;
+        const finIW = ratio * iw;
+        const finIH = ratio * ih;
         ctx2d.drawImage(
           img,
           CPR() * (xCenter() - finIW * 0.5),
