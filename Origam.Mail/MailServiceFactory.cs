@@ -48,9 +48,16 @@ namespace Origam.Mail
             string password = mailConfig["Password"];
             string server = mailConfig["Server"];
             int port = mailConfig.GetIntOrThrow("Port");
+            string pickupDirectoryLocation = mailConfig["PickupDirectoryLocation"];
 
             return new NetStandardMailService(
-                server:server, port:port, userName: userName, password:password, useSsl:useSsl);            
+                server: server, 
+                port: port, 
+                userName: userName, 
+                pickupDirectoryLocation: pickupDirectoryLocation,
+                password: password, 
+                useSsl: useSsl
+            );            
 #else
             return new NetFxMailService();            
 #endif
