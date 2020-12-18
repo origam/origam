@@ -58,8 +58,8 @@ export function dataColumnsWidths() {
 export function dataColumnsDraws() {
   return tableColumnIds().map((id) => () => {
     applyScrollTranslation();
-    //clipCell();
-    //drawDataCellBackground();
+    clipCell();
+    drawDataCellBackground();
     drawCellValue();
     registerClickHandler(id);
   });
@@ -339,8 +339,27 @@ function drawCellValue() {
         const img = pictureCache.getImage(value);
         //console.log("DRAW:", value, img);
         if (!img || !img.complete) break;
-        console.log(img, CPR() * currentColumnLeft(), CPR() * currentRowTop())
-        ctx2d.drawImage(img, CPR() * currentColumnLeft(), CPR() * currentRowTop());
+        const iw = img.width;
+        const ih = img.height;
+        const cw = property.width;
+        const ch = property.height;
+        const WR = cw / iw;
+        const HR = ch / ih;
+        let ratio = 0;
+        if(Math.abs(1-WR) < Math.abs(1-HR)) {
+          ratio = WR;
+        } else {
+          ratio = HR;
+        }
+        const finIW = ratio*iw;
+        const finIH = ratio*ih;
+        ctx2d.drawImage(
+          img,
+          CPR() * (xCenter() - finIW * 0.5),
+          CPR() * (yCenter() - finIH * 0.5),
+          CPR() * finIW,
+          CPR() * finIH
+        );
         break;
       }
       default:

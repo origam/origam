@@ -29,6 +29,23 @@ export class GridDimensions implements IGridDimensions {
   ctx: any;
   defaultRowHeight: number = null as any;
 
+  @computed get imageProperty() {
+    for (let prop of this.tableViewProperties) {
+      console.log(prop)
+      if (prop.column === "Image") {
+        console.log('*****', prop)
+        return prop;
+      }
+    }
+  }
+
+  @computed get rowHeight(): number {
+    console.log('+++++', this.imageProperty)
+    if (this.imageProperty) return this.imageProperty.height;
+    return this.defaultRowHeight;
+  }
+
+
   @computed get isSelectionCheckboxes() {
     return this.getIsSelectionCheckboxes();
   }
@@ -77,7 +94,7 @@ export class GridDimensions implements IGridDimensions {
   }
 
   getRowHeight(rowIndex: number): number {
-    return this.defaultRowHeight;
+    return this.rowHeight;
   }
 
   getRowBottom(rowIndex: number): number {
