@@ -7,6 +7,8 @@ export interface IRowsContainer {
 
   set(rows: any[][]): void;
 
+  appendRecords(rowsIn: any[][]): void;
+
   substitute(row: any[]): void;
 
   registerResetListener(listener: () => void): void;

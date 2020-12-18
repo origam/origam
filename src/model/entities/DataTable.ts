@@ -290,6 +290,11 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
+  appendRecords(rows: any[][]): void{
+    this.rowsContainer.appendRecords(rows);
+  }
+
+  @action.bound
   setRecords(rows: any[][]) {
     this.clear();
     this.rowsContainer.set(rows);

@@ -143,6 +143,10 @@ export class TreeDataTable implements IDataTable {
     this.rows = [...this.sortTreeRows(rows, null)];
   }
 
+  appendRecords(rows: any[][]): void{
+    this.rows = [...this.rows, ...this.sortTreeRows(rows, null)];
+  }
+
   private *sortTreeRows(rows: any[], parent: any[] | null): Generator {
     const children = this.getChildren(rows, parent);
     if (parent) {

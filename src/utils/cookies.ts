@@ -18,9 +18,9 @@ export function getLocaleFromCookie(): string {
     const pattern = /c=([a-zA-Z-]+)\|/i;
     const results = cookieValue.match(pattern);
     if(results){
-      _locale =  results[1];
+      _locale = results[1];
     }else{
-      throw new Error("Locale cookie was not found. Was the function \"initLocaleCookie\" called?")
+      throw new Error("Locale cookie was not found. Was the function \"initLocaleCookie\" called?");
     }
   }
   return _locale;
