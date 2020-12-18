@@ -19,7 +19,12 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
   @computed
   get nodes() {
     const nodes = this.props.dataView.dataTable.rows.map(
-      (row) => new Node(this.getRowId(row), this.getLabel(row), row)
+      (row) => new Node({
+        id: this.getRowId(row), 
+        label: this.getLabel(row), 
+        row: row, 
+        expansionGetter: (id: string) => this.expanded.includes(id)
+      })
     );
 
     for (let node of nodes) {
@@ -43,8 +48,16 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
     return (this.props.dataView.dataTable as TreeDataTable).getLabel(row);
   }
 
+  @observable
+  expanded: string[]=[]
+
   onRowClick(node: Node) {
     this.props.dataView.selectRowById(node.id);
+    if(this.expanded.includes(node.id)){
+      this.expanded.remove(node.id);
+    }else{
+      this.expanded.push(node.id);
+    }
   }
 
   render() {
@@ -71,13 +84,16 @@ class Node {
   _parent: Node | undefined;
   row: any[];
   isFolder: boolean = false;
-  @observable
-  isExpanded: boolean = false;
+  expansionGetter: (nodeId: string)=> boolean;
+  get isExpanded(){
+    return this.expansionGetter(this.id);
+  }
 
-  constructor(id: string, label: string, row: any[]) {
-    this.id = id;
-    this.label = label;
-    this.row = row;
+  constructor(args: {id: string, label: string, row: any[], expansionGetter: (nodeId: string)=> boolean}) {
+    this.id = args.id;
+    this.label = args.label;
+    this.row = args.row;
+    this.expansionGetter = args.expansionGetter;
   }
 
   get level() {
@@ -122,22 +138,13 @@ class Row extends React.Component<{
   }
 
   @action.bound
-  toggleExpanded() {
-    this.props.node.isExpanded = !this.props.node.isExpanded;
-  }
-
-  @action.bound
   handleRowClick(event: any) {
-    if (!this.props.node?.isExpanded) {
-      this.toggleExpanded();
-    }
     this.props.onRowClick?.();
   }
 
   @action.bound
   handleCaretClick(event: any) {
     if (this.props.node?.isExpanded) {
-      this.toggleExpanded();
       event.stopPropagation();
       this.props.onRowClick?.();
     }
