@@ -58,7 +58,9 @@ namespace Origam.DA.Service
             return logicalBuilder.ToString();
         }
         
-        public string BinaryOperator(string leftValue,
+        public string BinaryOperator(
+            string columnName,
+            string leftValue,
             string[] rightValues, string operatorName,
             bool isColumnArray)
         {
@@ -73,7 +75,7 @@ namespace Origam.DA.Service
                 case "In":
                     if (isColumnArray)
                     {
-                        return "\0" + leftValue + " IN (" + string.Join(", ", rightValues) + ")\0";                
+                        return "\0" + columnName + " IN (" + string.Join(", ", rightValues) + ")\0";                
                     }
                     else
                     {
@@ -82,7 +84,7 @@ namespace Origam.DA.Service
                 case "NotIn":
                     if(isColumnArray)
                     {
-                        return "\0" + leftValue + " NOT IN (" + string.Join(", ", rightValues) + ")\0";
+                        return "\0" + columnName + " NOT IN (" + string.Join(", ", rightValues) + ")\0";
                     }
                     else
                     {
