@@ -423,12 +423,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initialSelectedRowId = undefined;
     }
     yield* this.startAutorefreshIfNeeded();
-
-    console.log("----- DataViews debug -----");
-    for (let dv of getFormScreen(this).dataViews) {
-      console.log(dv.id, "-", dv.name, "-", dv.orderProperty, "-", dv.orderMember);
-    }
-    console.log("----- =============== -----");
   }
 
   sortAndFilterReaction(dataView: IDataView) {
