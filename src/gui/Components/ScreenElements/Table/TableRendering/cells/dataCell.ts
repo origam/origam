@@ -286,7 +286,7 @@ function drawCellValue() {
         ctx2d.fillText(
           !!currentCellText() ? "\uf14a" : "\uf0c8",
           CPR() * xCenter(),
-          CPR() * yCenter()
+          (currentRowTop() + topTextOffset - 4)
         );
         break;
       case "Date":
