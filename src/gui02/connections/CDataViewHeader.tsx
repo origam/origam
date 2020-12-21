@@ -166,8 +166,8 @@ export class CDataViewHeaderInner extends React.Component<{
           const containerWidth = contentRect.bounds?.width || 0;
           const isBreak640 = containerWidth < 640;
           return (
-            <DataViewHeader domRef={measureRef} isVisible={true || this.props.isVisible}>
-              {(this.props.isVisible || true) && (
+            <DataViewHeader domRef={measureRef} isVisible={this.props.isVisible}>
+              {this.props.isVisible && (
                 <>
                   <span>
                     <h2 title={label}>{label}</h2>
