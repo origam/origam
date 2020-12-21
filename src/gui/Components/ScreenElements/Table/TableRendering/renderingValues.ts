@@ -6,6 +6,7 @@ import {getDataTable} from "model/selectors/DataView/getDataTable";
 import {IProperty} from "model/entities/types/IProperty";
 import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import {getDataView} from "model/selectors/DataView/getDataView";
+import { getFormScreen } from "model/selectors/FormScreen/getFormScreen";
 
 
 export const scRenderTable: Array<() => void> = [];
@@ -108,3 +109,5 @@ export const tablePanelView = () => getTablePanelView(context());
 export const dataTable = () => getDataTable(tablePanelView());
 export const dataView = () => getDataView(context());
 export const recordId = () =>  dataTable().getRowId(currentDataRow()); 
+
+export const formScreen = () => getFormScreen(context());

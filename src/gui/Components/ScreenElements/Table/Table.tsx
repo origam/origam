@@ -58,7 +58,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       gridDimensions.columnWidths,
       fixedColumnCount,
       clickSubscriptions,
-      gridDimensions.defaultRowHeight
+      gridDimensions.rowHeight
     );
   }
 
