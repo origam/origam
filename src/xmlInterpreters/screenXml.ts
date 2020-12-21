@@ -290,6 +290,7 @@ export function* interpretScreenXml(
     autoWorkflowNext: screenDoc.elements[0].attributes.AutoWorkflowNext === "true",
     openingOrder: 0,
     suppressSave: windowXml.attributes.SuppressSave === "true",
+    suppressRefresh: windowXml.attributes.SuppressRefresh === "true",
     showInfoPanel: windowXml.attributes.ShowInfoPanel === "true",
     showWorkflowNextButton: windowXml.attributes.ShowWorkflowNextButton === "true",
     showWorkflowCancelButton: windowXml.attributes.ShowWorkflowCancelButton === "true",

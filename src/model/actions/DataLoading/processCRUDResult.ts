@@ -125,7 +125,9 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
       break;
     }
     case IResponseOperation.FormNeedsRefresh: {
-      yield* reloadScreen(ctx)(); // TODO: It is not possible to reload data... Has to be done by different API endpoint
+      if(!getFormScreen(ctx).suppressRefresh){
+        yield* reloadScreen(ctx)(); // TODO: It is not possible to reload data... Has to be done by different API endpoint
+      }
       break;
     }
     case IResponseOperation.DeleteAllData: {
