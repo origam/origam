@@ -101,6 +101,7 @@ export interface IFormScreenData {
   refreshOnFocus: boolean;
   cacheOnClient: boolean;
   suppressSave: boolean;
+  suppressRefresh: boolean;
   autoSaveOnListRecordChange: boolean;
   requestSaveAfterUpdate: boolean;
   dataViews: IDataView[];

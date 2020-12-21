@@ -32,6 +32,7 @@ import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getApi } from "model/selectors/getApi";
+import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -193,11 +194,13 @@ export class CScreenToolbar extends React.Component<{}> {
                   label={T("Save", "save_tool_tip")}
                 />
               )}
-              <ScreenToolbarAction
-                onClick={onRefreshSessionClick(formScreen)}
-                icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
-                label={T("Refresh", "refresh_tool_tip")}
-              />
+              {!getIsSuppressRefresh(formScreen) && (
+                <ScreenToolbarAction
+                  onClick={onRefreshSessionClick(formScreen)}
+                  icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
+                  label={T("Refresh", "refresh_tool_tip")}
+                />
+              )}
             </ScreenToolbarActionGroup>
             <Observer>
               {() => (
