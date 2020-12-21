@@ -302,7 +302,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @computed get textfieldValue() {
-    return this.dirtyTextualValue !== undefined
+    return this.dirtyTextualValue !== undefined && this.dirtyTextualValue !== ""
       ? this.dirtyTextualValue
       : this.formattedMomentValue;
   }
@@ -339,6 +339,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   render() {
+    const mVal = moment(this.props.value);
     return (
       <Dropdowner
         ref={this.refDropdowner}

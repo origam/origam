@@ -31,16 +31,13 @@ export class GridDimensions implements IGridDimensions {
 
   @computed get imageProperty() {
     for (let prop of this.tableViewProperties) {
-      console.log(prop)
       if (prop.column === "Image") {
-        console.log('*****', prop)
         return prop;
       }
     }
   }
 
   @computed get rowHeight(): number {
-    console.log('+++++', this.imageProperty)
     if (this.imageProperty) return this.imageProperty.height;
     return this.defaultRowHeight;
   }
