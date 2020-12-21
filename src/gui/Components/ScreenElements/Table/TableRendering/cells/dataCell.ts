@@ -171,7 +171,7 @@ function getCheckboxClickableArea() {
   const fontSize = checkBoxCharacterFontSize;
   return {
     x: xCenter() - fontSize / 2,
-    y: yCenter() - fontSize / 2,
+    y: currentRowTop() + topTextOffset - 4 - fontSize / 2,
     width: fontSize,
     height: fontSize,
   };
@@ -286,7 +286,7 @@ function drawCellValue() {
         ctx2d.fillText(
           !!currentCellText() ? "\uf14a" : "\uf0c8",
           CPR() * xCenter(),
-          (currentRowTop() + topTextOffset - 4)
+          CPR() * (currentRowTop() + topTextOffset - 4)
         );
         break;
       case "Date":

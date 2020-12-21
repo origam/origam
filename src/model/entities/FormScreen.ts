@@ -20,6 +20,7 @@ import {getRowStates} from "model/selectors/RowState/getRowStates";
 import { ScreenPictureCache } from "./ScreenPictureCache";
 
 export class FormScreen implements IFormScreen {
+  
   $type_IFormScreen: 1 = 1;
 
   constructor(data: IFormScreenData) {
@@ -41,6 +42,7 @@ export class FormScreen implements IFormScreen {
   sessionId: string = "";
   @observable title: string = "";
   suppressSave: boolean = false;
+  suppressRefresh: boolean = false;
   menuId: string = "";
   openingOrder: number = 0;
   showInfoPanel: boolean = false;
