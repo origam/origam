@@ -53,6 +53,9 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
 
   onRowClick(node: Node) {
     this.props.dataView.selectRowById(node.id);
+  }
+
+  onCaretClick(node: Node) {
     if(this.expanded.includes(node.id)){
       this.expanded.remove(node.id);
     }else{
@@ -71,6 +74,7 @@ export class TreeView extends React.Component<{ dataView: IDataView }> {
               node={node}
               isSelected={node.id === this.props.dataView.selectedRowId}
               onRowClick={() => this.onRowClick(node)}
+              onCaretClick={() => this.onCaretClick(node)}
             />
           ))}
       </div>
@@ -132,6 +136,7 @@ class Row extends React.Component<{
   node: Node;
   isSelected: boolean;
   onRowClick: () => void;
+  onCaretClick: () => void;
 }> {
   getIndent() {
     return this.props.node.level * 20 + "px";
@@ -140,14 +145,16 @@ class Row extends React.Component<{
   @action.bound
   handleRowClick(event: any) {
     this.props.onRowClick?.();
+    if (!this.props.node?.isExpanded) {
+      event.stopPropagation();
+      this.props.onCaretClick?.();
+    }
   }
 
   @action.bound
   handleCaretClick(event: any) {
-    if (this.props.node?.isExpanded) {
-      event.stopPropagation();
-      this.props.onRowClick?.();
-    }
+    this.props.onCaretClick?.();
+    event.stopPropagation();
   }
 
   render() {
