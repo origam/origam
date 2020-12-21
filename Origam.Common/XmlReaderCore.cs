@@ -100,7 +100,13 @@ namespace Origam
 
         public override bool Read()
         {
-            return this.XmlReader.Read();
+            bool readSuccess = XmlReader.Read();
+            if (readSuccess && string.IsNullOrEmpty(Value))
+            { 
+                readSuccess = Read();
+            }
+
+            return readSuccess;
         }
 
         public override bool ReadAttributeValue()
