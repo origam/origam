@@ -97,10 +97,15 @@ class CalendarWidget extends React.Component<{
 
   render() {
     return (
-      /* Prevent mousedown default action causong onblur being fired on the editors input
-        which triggered data update
-      */
-      <div className={S.calendarWidgetContainer} onMouseDown={(e) => e.preventDefault()}>
+      <div
+        className={S.calendarWidgetContainer}
+        onMouseDown={(e) => {
+          /* Prevent mousedown default action causong onblur being fired on the editors input
+              which triggered data update
+          */
+          e.preventDefault();
+        }}
+      >
         <div className={S.calendarWidgetDayTable}>
           <div className={S.calendarWidgetRow}>
             <div className={S.calendarWidgetHeader}>
