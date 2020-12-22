@@ -6,7 +6,12 @@ import { IPortalSettings } from "model/entities/types/IPortalSettings";
 export interface IWorkbenchLifecycle {
   $type_IWorkbenchLifecycle: 1;
 
-  onMainMenuItemClick(args: { event: any; item: any; idParameter: string | undefined }): Generator;
+  onMainMenuItemClick(args: {
+    event: any;
+    item: any;
+    idParameter: string | undefined;
+    isSingleRecordEdit?: boolean;
+  }): Generator;
   onMainMenuItemIdClick(args: {
     event: any;
     itemId: any;

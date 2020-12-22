@@ -29,10 +29,12 @@ import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurrentRowData";
 import { isReadOnly } from "../../selectors/RowState/isReadOnly";
-import {FilterGroupManager} from "model/entities/FilterGroupManager";
+import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
+import produce from "immer";
+import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -129,10 +131,10 @@ export class TablePanelView implements ITablePanelView {
     return this.dataTable.getCellText(row, property);
   }
 
-  clearCurrentCellEditData(){
+  clearCurrentCellEditData() {
     const row = getDataView(this).selectedRow;
     const propertyId = this.selectedProperty?.id;
-    if(row && propertyId){
+    if (row && propertyId) {
       getDataView(this).dataTable.deleteAdditionalCellData(row, propertyId);
     }
   }
@@ -159,12 +161,21 @@ export class TablePanelView implements ITablePanelView {
     if (property.column !== "CheckBox" || !isControlInteraction) {
       if (property.isLink && event.ctrlKey) {
         const menuId = selectors.column.getLinkMenuId(property);
-        const menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
+        let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
         if (menuItem) {
+          menuItem = produce(menuItem, (draft: any) => {
+            if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
+              draft.attributes.type = "FormReferenceMenuItem";
+            }
+            draft.attributes.lazyLoading = "false";
+          });
+
+          const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
           yield onMainMenuItemClick(this)({
             event: undefined,
             item: menuItem,
-            idParameter: undefined
+            idParameter: row[fieldIndex],
+            isSingleRecordEdit: true,
           });
         }
       } else {
@@ -401,18 +412,18 @@ export class TablePanelView implements ITablePanelView {
 
   getCellRectangle(rowIndex: number, columnIndex: number) {
     const groupingConfig = getGroupingConfiguration(this);
-    let cellOffset = { row: 0, column:0 };
-    if(groupingConfig.isGrouping){
+    let cellOffset = { row: 0, column: 0 };
+    if (groupingConfig.isGrouping) {
       const rowId = getDataView(this).selectedRowId;
-      cellOffset = getGrouper(this).getCellOffset(rowId!)
+      cellOffset = getGrouper(this).getCellOffset(rowId!);
     }
-    if(!this.rectangleMap.has(rowIndex + cellOffset.row)){
+    if (!this.rectangleMap.has(rowIndex + cellOffset.row)) {
       return {
         columnLeft: 0,
         columnWidth: 0,
         rowTop: 0,
-        rowHeight: 0
-      }
+        rowHeight: 0,
+      };
     }
     return this.rectangleMap.get(rowIndex + cellOffset.row)!.get(columnIndex + cellOffset.column)!;
   }
