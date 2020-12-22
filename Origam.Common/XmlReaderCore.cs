@@ -7,6 +7,7 @@ namespace Origam
     {
         private Dictionary<int, int> attributeMappingDictionary;
         private readonly XmlReader innerReader;
+        private CachedElement cachedElement;
         public XmlReaderCore(XmlReader reader)
         {
             innerReader = reader;
@@ -108,8 +109,6 @@ namespace Origam
         {
             return innerReader.MoveToNextAttribute();
         }
-        
-        private CachedElement cachedElement;
         
         public override bool Read()
         {
