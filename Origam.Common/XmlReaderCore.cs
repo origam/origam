@@ -5,7 +5,7 @@ namespace Origam
 {
     public class XmlReaderCore : XmlReader
     {
-        private Dictionary<int, int> dictionary;
+        private Dictionary<int, int> attributeMappingDictionary;
         private readonly XmlReader innerReader;
         public XmlReaderCore(XmlReader reader)
         {
@@ -15,25 +15,31 @@ namespace Origam
         {
             get
             {
-                dictionary = new Dictionary<int, int>();
+                if (cachedElement != null)
+                {
+                    return 0;
+                }
+
+                attributeMappingDictionary = new Dictionary<int, int>();
                 int realPosition = 0;
                 int fakePosition = 0;
                 while (MoveToNextAttribute())
                 {
                     if (!string.IsNullOrEmpty(Value))
                     {
-                        dictionary.Add(fakePosition, realPosition);
+                        attributeMappingDictionary.Add(fakePosition, realPosition);
                         fakePosition++;
                     }
                     realPosition++;
                 }
-                return dictionary.Count;
+                return attributeMappingDictionary.Count;
             }
         }
 
         public override string BaseURI => innerReader.BaseURI;
 
-        public override int Depth => innerReader.Depth;
+        public override int Depth => 
+            cachedElement?.Depth ?? innerReader.Depth;
 
         public override bool EOF => innerReader.EOF;
 
@@ -60,7 +66,7 @@ namespace Origam
 
         public override string GetAttribute(int i)
         {
-            return innerReader.GetAttribute(dictionary[i]);
+            return innerReader.GetAttribute(attributeMappingDictionary[i]);
         }
 
         public override string GetAttribute(string name)
@@ -124,7 +130,8 @@ namespace Origam
                     LocalName = innerReader.LocalName,
                     NamespaceURI = innerReader.NamespaceURI,
                     NodeType = XmlNodeType.Element,
-                    Value = innerReader.Value
+                    Value = innerReader.Value,
+                    Depth = innerReader.Depth
                 };
                 readSuccess = innerReader.Read();
                 
@@ -150,7 +157,7 @@ namespace Origam
 
         public override void MoveToAttribute(int i)
         {
-            innerReader.MoveToAttribute(dictionary[i]);
+            innerReader.MoveToAttribute(attributeMappingDictionary[i]);
         }
     }
     
@@ -161,6 +168,7 @@ namespace Origam
         public string LocalName { get; set; }
         public XmlNodeType NodeType { get; set; }
         public string Value { get; set; }
+        public int  Depth { get; set; }
     }
 }
 
