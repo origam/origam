@@ -10,9 +10,18 @@ namespace Origam.Common_net2Tests
     public class XmlReaderCoreTests
     {
         [Test]
-        public void TestChangeCountAttributes()
+        public void ShouldRemoveEmptyAttributes()
         {
-            var tr = new StringReader("<root><tabulka cislo2=\"12222\" text=\"\" cislo=\"\" ><cislo3>1</cislo3></tabulka><tabulka cislo2=\"\" text=\"eee\" cislo=\"\" cislo3=\"nic2\" /><cislo3></cislo3></root>");
+            string xml = 
+                "<root>" +
+                 "    <tabulka cislo2=\"12222\" text=\"\" cislo=\"\" >" +
+                 "        <cislo3>1</cislo3>" +
+                 "    </tabulka>" +
+                 "    <tabulka cislo2=\"\" text=\"eee\" cislo=\"\" cislo3=\"nic2\" />" +
+                 "    <cislo3></cislo3>" +
+                 "</root>";
+            
+            var tr = new StringReader(xml);
             XmlReaderCore xr = new XmlReaderCore(new XmlTextReader(tr));
             DataSet ds = new DataSet("root");
             var dt = ds.Tables.Add("tabulka");
