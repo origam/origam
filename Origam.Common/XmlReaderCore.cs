@@ -9,7 +9,7 @@ namespace Origam
         private readonly XmlReader XmlReader;
         public XmlReaderCore(XmlReader reader)
         {
-            this.XmlReader = reader;
+            XmlReader = reader;
         }
         public override int AttributeCount
         {
@@ -18,7 +18,7 @@ namespace Origam
                 dictionary = new Dictionary<int, int>();
                 int realposition = 0;
                 int fakeposition = 0;
-                while (this.MoveToNextAttribute())
+                while (MoveToNextAttribute())
                 {
                     if (!string.IsNullOrEmpty(Value))
                     {
@@ -31,76 +31,76 @@ namespace Origam
             }
         }
 
-        public override string BaseURI => this.XmlReader.BaseURI;
+        public override string BaseURI => XmlReader.BaseURI;
 
-        public override int Depth => this.XmlReader.Depth;
+        public override int Depth => XmlReader.Depth;
 
-        public override bool EOF => this.XmlReader.EOF;
+        public override bool EOF => XmlReader.EOF;
 
-        public override bool IsEmptyElement => this.XmlReader.IsEmptyElement;
+        public override bool IsEmptyElement => XmlReader.IsEmptyElement;
 
         public override string LocalName => 
-            cachedElement?.LocalName ?? this.XmlReader.LocalName;
+            cachedElement?.LocalName ?? XmlReader.LocalName;
 
         public override string NamespaceURI => 
-            cachedElement?.NamespaceURI ?? this.XmlReader.NamespaceURI;
+            cachedElement?.NamespaceURI ?? XmlReader.NamespaceURI;
 
-        public override XmlNameTable NameTable => this.XmlReader.NameTable;
+        public override XmlNameTable NameTable => XmlReader.NameTable;
 
         public override XmlNodeType NodeType => 
-            cachedElement?.NodeType ?? this.XmlReader.NodeType;
+            cachedElement?.NodeType ?? XmlReader.NodeType;
 
         public override string Prefix => 
-            cachedElement?.Prefix ?? this.XmlReader.Prefix;
+            cachedElement?.Prefix ?? XmlReader.Prefix;
 
-        public override ReadState ReadState => this.XmlReader.ReadState;
+        public override ReadState ReadState => XmlReader.ReadState;
 
         public override string Value => 
-            cachedElement?.Value ?? this.XmlReader.Value;
+            cachedElement?.Value ?? XmlReader.Value;
 
         public override string GetAttribute(int i)
         {
-            return this.XmlReader.GetAttribute(dictionary[i]);
+            return XmlReader.GetAttribute(dictionary[i]);
         }
 
         public override string GetAttribute(string name)
         {
-            return this.XmlReader.GetAttribute(name);
+            return XmlReader.GetAttribute(name);
         }
 
         public override string GetAttribute(string name, string namespaceURI)
         {
-            return this.XmlReader.GetAttribute(name,namespaceURI);
+            return XmlReader.GetAttribute(name,namespaceURI);
         }
 
         public override string LookupNamespace(string prefix)
         {
-            return this.XmlReader.LookupNamespace(prefix);
+            return XmlReader.LookupNamespace(prefix);
         }
 
         public override bool MoveToAttribute(string name)
         {
-            return this.XmlReader.MoveToAttribute(name);
+            return XmlReader.MoveToAttribute(name);
         }
 
         public override bool MoveToAttribute(string name, string ns)
         {
-            return this.XmlReader.MoveToAttribute(name,ns);
+            return XmlReader.MoveToAttribute(name,ns);
         }
 
         public override bool MoveToElement()
         {
-            return this.XmlReader.MoveToElement();
+            return XmlReader.MoveToElement();
         }
 
         public override bool MoveToFirstAttribute()
         {
-            return this.XmlReader.MoveToFirstAttribute();
+            return XmlReader.MoveToFirstAttribute();
         }
 
         public override bool MoveToNextAttribute()
         {
-            return this.XmlReader.MoveToNextAttribute();
+            return XmlReader.MoveToNextAttribute();
         }
         
         private CachedElement cachedElement;
@@ -140,17 +140,17 @@ namespace Origam
 
         public override bool ReadAttributeValue()
         {
-            return this.XmlReader.ReadAttributeValue();
+            return XmlReader.ReadAttributeValue();
         }
 
         public override void ResolveEntity()
         {
-            this.XmlReader.ResolveEntity();
+            XmlReader.ResolveEntity();
         }
 
         public override void MoveToAttribute(int i)
         {
-            this.XmlReader.MoveToAttribute(dictionary[i]);
+            XmlReader.MoveToAttribute(dictionary[i]);
         }
     }
     
