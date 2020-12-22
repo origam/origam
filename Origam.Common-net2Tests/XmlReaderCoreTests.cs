@@ -47,14 +47,14 @@ namespace Origam.Common_net2Tests
         }
         
         [Test]
-        public void ShouldRemoveChildElement()
+        public void ShouldRemoveEmptyChildElement()
         {
             string xml = 
-                "<ROOT>\n" +
-                "    <NewTable1 Id=\"4a183ee2-edf4-4481-9f2c-561ff73a0944\">\n" +
-                "        <Id2></Id2>\n" +
-                "        <Name>Some Name</Name>\n" +
-                "    </NewTable1>\n" +
+                "<ROOT>" +
+                "    <NewTable1 Id=\"4a183ee2-edf4-4481-9f2c-561ff73a0944\">" +
+                "        <Id2></Id2>" +
+                "        <Name>Some Name</Name>" +
+                "    </NewTable1>" +
                 "</ROOT>";
 
             XmlReaderCore sut = new XmlReaderCore(new XmlTextReader(new StringReader(xml)));
@@ -68,6 +68,102 @@ namespace Origam.Common_net2Tests
             Assert.That(root.FirstChild.ChildNodes, Has.Count.EqualTo(1));
             Assert.That(root.FirstChild.ChildNodes[0].Name, Is.EqualTo("Name"));
             Assert.That(root.FirstChild.ChildNodes[0].InnerText, Is.EqualTo("Some Name"));
+        }
+        
+        [Test]
+        public void ShouldKeepEmptyChildElementWithEnter()
+        {
+            string xml = 
+                "<ROOT>" +
+                "    <NewTable1 Id=\"4a183ee2-edf4-4481-9f2c-561ff73a0944\">" +
+                "        <Id2>" +
+                "        </Id2>" +
+                "        <Name>Some Name</Name>" +
+                "    </NewTable1>" +
+                "</ROOT>";
+
+            XmlReaderCore sut = new XmlReaderCore(new XmlTextReader(new StringReader(xml)));
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sut);
+            
+            XmlNode root = xmlDocument.FirstChild;
+            Assert.That(root.Name, Is.EqualTo("ROOT"));
+            Assert.That(root.FirstChild.Name, Is.EqualTo("NewTable1"));
+            Assert.That(root.FirstChild.ChildNodes, Has.Count.EqualTo(2));
+            Assert.That(root.FirstChild.ChildNodes[0].Name, Is.EqualTo("Id2"));
+            Assert.That(root.FirstChild.ChildNodes[0].InnerText, Is.EqualTo(""));            
+            Assert.That(root.FirstChild.ChildNodes[1].Name, Is.EqualTo("Name"));
+            Assert.That(root.FirstChild.ChildNodes[1].InnerText, Is.EqualTo("Some Name"));
+        }
+        
+        [Test]
+        public void ShouldKeepEmptyElementAttribute()
+        {
+            string xml = 
+                "<ROOT>" +
+                "    <NewTable1 Id=\"4a183ee2-edf4-4481-9f2c-561ff73a0944\"></NewTable1>" +
+                "</ROOT>";
+
+            XmlReaderCore sut = new XmlReaderCore(new XmlTextReader(new StringReader(xml)));
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sut);
+            
+            XmlNode root = xmlDocument.FirstChild;
+            Assert.That(root.Name, Is.EqualTo("ROOT"));
+            Assert.That(root.ChildNodes, Has.Count.EqualTo(1));
+            Assert.That(root.FirstChild.Name, Is.EqualTo("NewTable1"));
+            Assert.That(root.FirstChild.ChildNodes, Has.Count.EqualTo(0));
+        } 
+        
+        [Test]
+        public void ShouldRemoveEmptyElementsAndKeepEmptyParent()
+        {
+            string xml = 
+                "<ROOT>" +
+                "    <NewTable1>" +
+                "        <Id2></Id2>" +
+                "        <Name></Name>" +
+                "    </NewTable1>" +
+                "</ROOT>";
+
+            XmlReaderCore sut = new XmlReaderCore(new XmlTextReader(new StringReader(xml)));
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sut);
+            
+            XmlNode root = xmlDocument.FirstChild;
+            Assert.That(root.Name, Is.EqualTo("ROOT"));
+            Assert.That(root.ChildNodes, Has.Count.EqualTo(1));
+            Assert.That(root.FirstChild.Name, Is.EqualTo("NewTable1"));
+            Assert.That(root.FirstChild.ChildNodes, Has.Count.EqualTo(0));
+        }
+        
+        [Test]
+        public void ShouldNotRemoveAnything()
+        {
+            string xml = 
+                "<ROOT>" +
+                "    <NewTable1 Id=\"4a183ee2-edf4-4481-9f2c-561ff73a0944\">" +
+                "        <Id2>4a183ee2-edf4-4481-9f2c-561ff73a0944</Id2>" +
+                "        <Name>Some Name</Name>" +
+                "    </NewTable1>" +
+                "</ROOT>";
+
+            XmlReaderCore sut = new XmlReaderCore(new XmlTextReader(new StringReader(xml)));
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sut);
+            
+            XmlNode root = xmlDocument.FirstChild;
+            Assert.That(root.Name, Is.EqualTo("ROOT"));
+            Assert.That(root.FirstChild.Name, Is.EqualTo("NewTable1"));
+            Assert.That(root.FirstChild.ChildNodes, Has.Count.EqualTo(2));
+            Assert.That(root.FirstChild.ChildNodes[0].Name, Is.EqualTo("Id2"));
+            Assert.That(root.FirstChild.ChildNodes[0].InnerText, Is.EqualTo("4a183ee2-edf4-4481-9f2c-561ff73a0944"));            
+            Assert.That(root.FirstChild.ChildNodes[1].Name, Is.EqualTo("Name"));
+            Assert.That(root.FirstChild.ChildNodes[1].InnerText, Is.EqualTo("Some Name"));
         }
     }
 }
