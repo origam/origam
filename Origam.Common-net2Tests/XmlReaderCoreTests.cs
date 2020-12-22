@@ -71,6 +71,30 @@ namespace Origam.Common_net2Tests
         }
         
         [Test]
+        public void ShouldRemoveEmptyChildElement2()
+        {
+            string xml = 
+                "<ROOT>" +
+                "    <NewTable1 Id=\"4a183ee2-edf4-4481-9f2c-561ff73a0944\">" +
+                "        <Id2/>" +
+                "        <Name>Some Name</Name>" +
+                "    </NewTable1>" +
+                "</ROOT>";
+
+            XmlReaderCore sut = new XmlReaderCore(new XmlTextReader(new StringReader(xml)));
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sut);
+            
+            XmlNode root = xmlDocument.FirstChild;
+            Assert.That(root.Name, Is.EqualTo("ROOT"));
+            Assert.That(root.FirstChild.Name, Is.EqualTo("NewTable1"));
+            Assert.That(root.FirstChild.ChildNodes, Has.Count.EqualTo(1));
+            Assert.That(root.FirstChild.ChildNodes[0].Name, Is.EqualTo("Name"));
+            Assert.That(root.FirstChild.ChildNodes[0].InnerText, Is.EqualTo("Some Name"));
+        }
+        
+        [Test]
         public void ShouldKeepEmptyChildElementWithEnter()
         {
             string xml = 

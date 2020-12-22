@@ -123,6 +123,11 @@ namespace Origam
                 !innerReader.HasAttributes &&
                 innerReader.Depth > 0)
             {
+                if (innerReader.IsEmptyElement)
+                {
+                    return innerReader.Read(); 
+                }
+
                 cachedElement = new CachedElement
                 {
                     Prefix = innerReader.Prefix,
