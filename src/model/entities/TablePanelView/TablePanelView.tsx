@@ -163,16 +163,19 @@ export class TablePanelView implements ITablePanelView {
         const menuId = selectors.column.getLinkMenuId(property);
         let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
         if (menuItem) {
-          if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
-            menuItem = produce(menuItem, (draft: any) => {
+          menuItem = produce(menuItem, (draft: any) => {
+            if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
               draft.attributes.type = "FormReferenceMenuItem";
-            });
-          }
+            }
+            draft.attributes.lazyLoading = "false";
+          });
+
           const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
           yield onMainMenuItemClick(this)({
             event: undefined,
             item: menuItem,
             idParameter: row[fieldIndex],
+            isSingleRecordEdit: true,
           });
         }
       } else {
