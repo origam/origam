@@ -36,5 +36,29 @@ namespace Origam.Common_net2Tests
             Assert.IsTrue(ds.Tables[0].Rows[1]["cislo3"] == DBNull.Value);
             Assert.That(ds.Tables[0].Rows[1]["text"], Is.EqualTo("eee"));
         }
+        
+        [Test]
+        public void ShouldRemoveChildElement()
+        {
+            string xml = 
+                "<ROOT>\n" +
+                "    <NewTable1 Id=\"4a183ee2-edf4-4481-9f2c-561ff73a0944\">\n" +
+                "        <Id2></Id2>\n" +
+                "        <Name>Some Name</Name>\n" +
+                "    </NewTable1>\n" +
+                "</ROOT>";
+
+            XmlReaderCore sut = new XmlReaderCore(new XmlTextReader(new StringReader(xml)));
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.Load(sut);
+            
+            XmlNode root = xmlDocument.FirstChild;
+            Assert.That(root.Name, Is.EqualTo("ROOT"));
+            Assert.That(root.FirstChild.Name, Is.EqualTo("NewTable1"));
+            Assert.That(root.FirstChild.ChildNodes, Has.Count.EqualTo(1));
+            Assert.That(root.FirstChild.ChildNodes[0].Name, Is.EqualTo("Name"));
+            Assert.That(root.FirstChild.ChildNodes[0].InnerText, Is.EqualTo("Some Name"));
+        }
     }
 }

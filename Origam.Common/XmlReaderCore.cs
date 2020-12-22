@@ -39,19 +39,24 @@ namespace Origam
 
         public override bool IsEmptyElement => this.XmlReader.IsEmptyElement;
 
-        public override string LocalName => this.XmlReader.LocalName;
+        public override string LocalName => 
+            cachedElement?.LocalName ?? this.XmlReader.LocalName;
 
-        public override string NamespaceURI => this.XmlReader.NamespaceURI;
+        public override string NamespaceURI => 
+            cachedElement?.NamespaceURI ?? this.XmlReader.NamespaceURI;
 
         public override XmlNameTable NameTable => this.XmlReader.NameTable;
 
-        public override XmlNodeType NodeType => this.XmlReader.NodeType;
+        public override XmlNodeType NodeType => 
+            cachedElement?.NodeType ?? this.XmlReader.NodeType;
 
-        public override string Prefix => this.XmlReader.Prefix;
+        public override string Prefix => 
+            cachedElement?.Prefix ?? this.XmlReader.Prefix;
 
         public override ReadState ReadState => this.XmlReader.ReadState;
 
-        public override string Value => this.XmlReader.Value;
+        public override string Value => 
+            cachedElement?.Value ?? this.XmlReader.Value;
 
         public override string GetAttribute(int i)
         {
@@ -97,15 +102,39 @@ namespace Origam
         {
             return this.XmlReader.MoveToNextAttribute();
         }
-
+        
+        private CachedElement cachedElement;
+        
         public override bool Read()
         {
-            bool readSuccess = XmlReader.Read();
-            if (readSuccess && string.IsNullOrWhiteSpace(Value) && Name != "ROOT")
-            { 
-                readSuccess = Read();
+            if (cachedElement != null)
+            {
+                cachedElement = null;
+                return true;
             }
 
+            bool readSuccess = XmlReader.Read();
+            if (XmlReader.NodeType == XmlNodeType.Element && 
+                !XmlReader.HasAttributes &&
+                XmlReader.Depth > 0)
+            {
+                cachedElement = new CachedElement
+                {
+                    Prefix = XmlReader.Prefix,
+                    LocalName = XmlReader.LocalName,
+                    NamespaceURI = XmlReader.NamespaceURI,
+                    NodeType = XmlNodeType.Element,
+                    Value = XmlReader.Value
+                };
+                readSuccess = XmlReader.Read();
+                
+                if (XmlReader.NodeType == XmlNodeType.EndElement)
+                {
+                    cachedElement = null;
+                    return XmlReader.Read();
+                }
+            }
+            
             return readSuccess;
         }
 
@@ -123,6 +152,15 @@ namespace Origam
         {
             this.XmlReader.MoveToAttribute(dictionary[i]);
         }
+    }
+    
+    class CachedElement
+    {
+        public string Prefix { get; set; }
+        public string NamespaceURI { get; set; }
+        public string LocalName { get; set; }
+        public XmlNodeType NodeType { get; set; }
+        public string Value { get; set; }
     }
 }
 
