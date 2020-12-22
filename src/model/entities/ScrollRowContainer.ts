@@ -28,11 +28,9 @@ export class ScrollRowContainer implements IRowsContainer {
 
   @computed
   get maxRowCountSeen() {
-    const maxRowsNow =
-      this.rowChunks.length === 0
-        ? 0
-        : this.rowChunks[this.rowChunks.length - 1].rowOffset +
-          this.rowChunks[this.rowChunks.length - 1].length;
+    const maxRowsNow = this.rowChunks
+      .map(chunk => chunk.length)
+      .reduce((a, b) => a + b, 0) ;
     if (maxRowsNow > this._maxRowNumberSeen) {
       this._maxRowNumberSeen = maxRowsNow;
     }
