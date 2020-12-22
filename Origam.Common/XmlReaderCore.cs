@@ -6,101 +6,101 @@ namespace Origam
     public class XmlReaderCore : XmlReader
     {
         private Dictionary<int, int> dictionary;
-        private readonly XmlReader XmlReader;
+        private readonly XmlReader innerReader;
         public XmlReaderCore(XmlReader reader)
         {
-            XmlReader = reader;
+            innerReader = reader;
         }
         public override int AttributeCount
         {
             get
             {
                 dictionary = new Dictionary<int, int>();
-                int realposition = 0;
-                int fakeposition = 0;
+                int realPosition = 0;
+                int fakePosition = 0;
                 while (MoveToNextAttribute())
                 {
                     if (!string.IsNullOrEmpty(Value))
                     {
-                        dictionary.Add(fakeposition, realposition);
-                        fakeposition++;
+                        dictionary.Add(fakePosition, realPosition);
+                        fakePosition++;
                     }
-                    realposition++;
+                    realPosition++;
                 }
                 return dictionary.Count;
             }
         }
 
-        public override string BaseURI => XmlReader.BaseURI;
+        public override string BaseURI => innerReader.BaseURI;
 
-        public override int Depth => XmlReader.Depth;
+        public override int Depth => innerReader.Depth;
 
-        public override bool EOF => XmlReader.EOF;
+        public override bool EOF => innerReader.EOF;
 
-        public override bool IsEmptyElement => XmlReader.IsEmptyElement;
+        public override bool IsEmptyElement => innerReader.IsEmptyElement;
 
         public override string LocalName => 
-            cachedElement?.LocalName ?? XmlReader.LocalName;
+            cachedElement?.LocalName ?? innerReader.LocalName;
 
         public override string NamespaceURI => 
-            cachedElement?.NamespaceURI ?? XmlReader.NamespaceURI;
+            cachedElement?.NamespaceURI ?? innerReader.NamespaceURI;
 
-        public override XmlNameTable NameTable => XmlReader.NameTable;
+        public override XmlNameTable NameTable => innerReader.NameTable;
 
         public override XmlNodeType NodeType => 
-            cachedElement?.NodeType ?? XmlReader.NodeType;
+            cachedElement?.NodeType ?? innerReader.NodeType;
 
         public override string Prefix => 
-            cachedElement?.Prefix ?? XmlReader.Prefix;
+            cachedElement?.Prefix ?? innerReader.Prefix;
 
-        public override ReadState ReadState => XmlReader.ReadState;
+        public override ReadState ReadState => innerReader.ReadState;
 
         public override string Value => 
-            cachedElement?.Value ?? XmlReader.Value;
+            cachedElement?.Value ?? innerReader.Value;
 
         public override string GetAttribute(int i)
         {
-            return XmlReader.GetAttribute(dictionary[i]);
+            return innerReader.GetAttribute(dictionary[i]);
         }
 
         public override string GetAttribute(string name)
         {
-            return XmlReader.GetAttribute(name);
+            return innerReader.GetAttribute(name);
         }
 
         public override string GetAttribute(string name, string namespaceURI)
         {
-            return XmlReader.GetAttribute(name,namespaceURI);
+            return innerReader.GetAttribute(name,namespaceURI);
         }
 
         public override string LookupNamespace(string prefix)
         {
-            return XmlReader.LookupNamespace(prefix);
+            return innerReader.LookupNamespace(prefix);
         }
 
         public override bool MoveToAttribute(string name)
         {
-            return XmlReader.MoveToAttribute(name);
+            return innerReader.MoveToAttribute(name);
         }
 
         public override bool MoveToAttribute(string name, string ns)
         {
-            return XmlReader.MoveToAttribute(name,ns);
+            return innerReader.MoveToAttribute(name,ns);
         }
 
         public override bool MoveToElement()
         {
-            return XmlReader.MoveToElement();
+            return innerReader.MoveToElement();
         }
 
         public override bool MoveToFirstAttribute()
         {
-            return XmlReader.MoveToFirstAttribute();
+            return innerReader.MoveToFirstAttribute();
         }
 
         public override bool MoveToNextAttribute()
         {
-            return XmlReader.MoveToNextAttribute();
+            return innerReader.MoveToNextAttribute();
         }
         
         private CachedElement cachedElement;
@@ -113,44 +113,44 @@ namespace Origam
                 return true;
             }
 
-            bool readSuccess = XmlReader.Read();
-            if (XmlReader.NodeType == XmlNodeType.Element && 
-                !XmlReader.HasAttributes &&
-                XmlReader.Depth > 0)
+            bool readSuccess = innerReader.Read();
+            if (innerReader.NodeType == XmlNodeType.Element && 
+                !innerReader.HasAttributes &&
+                innerReader.Depth > 0)
             {
                 cachedElement = new CachedElement
                 {
-                    Prefix = XmlReader.Prefix,
-                    LocalName = XmlReader.LocalName,
-                    NamespaceURI = XmlReader.NamespaceURI,
+                    Prefix = innerReader.Prefix,
+                    LocalName = innerReader.LocalName,
+                    NamespaceURI = innerReader.NamespaceURI,
                     NodeType = XmlNodeType.Element,
-                    Value = XmlReader.Value
+                    Value = innerReader.Value
                 };
-                readSuccess = XmlReader.Read();
+                readSuccess = innerReader.Read();
                 
-                if (XmlReader.NodeType == XmlNodeType.EndElement)
+                if (innerReader.NodeType == XmlNodeType.EndElement)
                 {
                     cachedElement = null;
-                    return XmlReader.Read();
+                    return innerReader.Read();
                 }
             }
-            
+
             return readSuccess;
         }
 
         public override bool ReadAttributeValue()
         {
-            return XmlReader.ReadAttributeValue();
+            return innerReader.ReadAttributeValue();
         }
 
         public override void ResolveEntity()
         {
-            XmlReader.ResolveEntity();
+            innerReader.ResolveEntity();
         }
 
         public override void MoveToAttribute(int i)
         {
-            XmlReader.MoveToAttribute(dictionary[i]);
+            innerReader.MoveToAttribute(dictionary[i]);
         }
     }
     
