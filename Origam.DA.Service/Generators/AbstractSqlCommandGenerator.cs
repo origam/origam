@@ -43,7 +43,7 @@ namespace Origam.DA.Service
         private readonly IDetachedFieldPacker detachedFieldPacker;
         internal readonly ParameterReference PageNumberParameterReference = new ParameterReference();
         internal readonly ParameterReference PageSizeParameterReference = new ParameterReference();
-        internal readonly FilterRenderer filterRenderer = new FilterRenderer();
+        internal readonly AbstractFilterRenderer filterRenderer;
         internal string _pageNumberParameterName;
         internal string _pageSizeParameterName;
         internal int _indentLevel = 0;
@@ -78,7 +78,8 @@ namespace Origam.DA.Service
         }
         
         public AbstractSqlCommandGenerator(string trueValue, string falseValue, 
-            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter)
+            IDetachedFieldPacker detachedFieldPacker, SQLValueFormatter sqlValueFormatter,
+            AbstractFilterRenderer filterRenderer)
         {
             PageNumberParameterReference.ParameterId = new Guid("3e5e12e4-a0dd-4d35-a00a-2fdb267536d1");
             PageSizeParameterReference.ParameterId = new Guid("c310d577-d4d9-42da-af92-a5202ba26e79");
@@ -86,6 +87,7 @@ namespace Origam.DA.Service
             False = falseValue;
             this.detachedFieldPacker = detachedFieldPacker;
             this.sqlValueFormatter = sqlValueFormatter;
+            this.filterRenderer = filterRenderer;
         }
 
         public abstract IDbDataParameter GetParameter();
@@ -352,7 +354,8 @@ namespace Origam.DA.Service
             DataStructureEntity entity = selectParameters.Entity;
             
             CustomCommandParser commandParser =
-                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, entity.Columns)
+                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, 
+                entity.Columns, filterRenderer)
                     .Where(selectParameters.CustomFilters.Filters)
                     .OrderBy(selectParameters.CustomOrderings.Orderings);
 

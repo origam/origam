@@ -26,6 +26,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
+using Origam.DA.Service.Generators;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
@@ -41,7 +42,8 @@ namespace Origam.DA.Service
                 trueValue: "1",
                 falseValue: "0",
                 detachedFieldPacker: detachedFieldPacker, 
-                sqlValueFormatter: new SQLValueFormatter("1", "0", (text) => text.Replace("%", "[%]").Replace("_", "[_]")))
+                sqlValueFormatter: new SQLValueFormatter("1", "0", (text) => text.Replace("%", "[%]").Replace("_", "[_]"))
+                , filterRenderer: new MsSqlFilterRenderer())
         {
 
         }

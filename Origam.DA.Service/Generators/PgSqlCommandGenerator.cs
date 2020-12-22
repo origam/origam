@@ -26,6 +26,7 @@ using System.Data.Common;
 using System.Text;
 using Npgsql;
 using NpgsqlTypes;
+using Origam.DA.Service.Generators;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 
@@ -42,7 +43,8 @@ namespace Origam.DA.Service
 				trueValue: "true",
 				falseValue: "false",
 				detachedFieldPacker: detachedFieldPacker, 
-				sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")))
+				sqlValueFormatter: new SQLValueFormatter("true", "false", (text) => text.Replace("%", "\\%").Replace("_", "\\_")),
+                filterRenderer: new PgSqlFilterRenderer())
 		{
 
 		}
