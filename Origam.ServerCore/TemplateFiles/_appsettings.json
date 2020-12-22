@@ -66,7 +66,8 @@
     "Password": "",
     "Server": "",
     "Port": 587,
-    "UseSsl": "true"
+    "UseSsl": "true",
+    "PickupDirectoryLocation": "C:\\directoryToSaveTheEmailsTo"
   },
   "urls": "https://localhost:44356;http://localhost:5000",
   "UserApiOptions": {

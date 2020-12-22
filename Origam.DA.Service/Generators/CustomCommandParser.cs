@@ -396,6 +396,7 @@ namespace Origam.DA.Service.Generators
                     .Select(ValueToOperand)
                     .ToArray();
                 return renderer.BinaryOperator(
+                    columnName: ColumnName,
                     leftValue: RenderedColumnName, 
                     rightValues: rightHandValues, 
                     operatorName: operatorName,
