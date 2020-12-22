@@ -89,7 +89,8 @@ namespace Origam.DA.Service_net2Tests
         public void ShouldParseFilter(string filter, string expectedSqlWhere )
         {
             var sut = new CustomCommandParser("[", "]", 
-                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")),
+                    new MsSqlFilterRenderer())
                 .Where(filter);
             sut.AddDataType("name", OrigamDataType.String);
             sut.AddDataType("Timestamp", OrigamDataType.Date);
@@ -110,7 +111,8 @@ namespace Origam.DA.Service_net2Tests
             Assert.Throws<ArgumentException>(() =>
             {
                 string sql = new CustomCommandParser("[", "]", 
-                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")),
+                    new MsSqlFilterRenderer())
                     .Where(filter)
                     .WhereClause;
             });
@@ -125,7 +127,8 @@ namespace Origam.DA.Service_net2Tests
                 new Ordering("col2", "asc",101)
             };
             string orderBy = new CustomCommandParser("[","]", 
-                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")),
+                    new MsSqlFilterRenderer())
                 .OrderBy(ordering)
                 .OrderByClause;
             Assert.That(orderBy, Is.EqualTo("[col1] DESC, [col2] ASC"));
@@ -141,7 +144,8 @@ namespace Origam.DA.Service_net2Tests
             Assert.Throws<ArgumentException>(() =>
             {
                 new CustomCommandParser("[","]", 
-                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")))
+                    new SQLValueFormatter("1", "0",(text) => text.Replace("%", "[%]").Replace("_", "[_]")),
+                    new MsSqlFilterRenderer())
                     .OrderBy(ToListOfOrderings(orderingStr));
             });
         }
