@@ -102,6 +102,11 @@ export default class Scroller extends React.Component<IScrollerProps> {
   }
 
   @action.bound
+  handleMouseOver(event: any){
+    this.props.onMouseOver(event);
+  }
+
+  @action.bound
   private handleWindowClick(event: any) {
     if (this.elmScrollerDiv && !this.elmScrollerDiv.contains(event.target)) {
       this.props.onOutsideClick && this.props.onOutsideClick(event);
@@ -129,6 +134,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         style={{ width: this.props.width, height: this.props.height }}
         onScroll={this.handleScroll}
         onClick={(e) => this.clickHandler.handleClick(e)}
+        onMouseOver={event => this.handleMouseOver(event)}
         onKeyDown={(event) => this.props.onKeyDown?.(event)}
         ref={this.refScrollerDiv}
       >

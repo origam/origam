@@ -11,14 +11,16 @@ import Scroller from "./Scroller";
 import S from "./Table.module.scss";
 import { IGridDimensions, ITableProps } from "./types";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
-import { IClickSubsItem, ITableRow } from "./TableRendering/types";
+import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./TableRendering/types";
 import { renderTable } from "./TableRendering/renderTable";
-import { handleTableClick } from "./TableRendering/onClick";
+import { getTooltip, handleTableClick } from "./TableRendering/onClick";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { IProperty } from "model/entities/types/IProperty";
+import { Tooltip } from "react-tippy";
+import { getDataTable } from "model/selectors/DataView/getDataTable";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds);
@@ -35,6 +37,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const viewportHeightObs = observable.box<number>(300);
 
   const clickSubscriptions: IClickSubsItem[] = [];
+  const mouseOverSubscriptions: IMouseOverSubsItem[] = [];
 
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
   function drawTable(
@@ -58,6 +61,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       gridDimensions.columnWidths,
       fixedColumnCount,
       clickSubscriptions,
+      mouseOverSubscriptions,
       gridDimensions.defaultRowHeight
     );
   }
@@ -89,7 +93,17 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  return { drawTable, setScroll, handleClick, setViewportSize };
+  function getToolTipContent(event: any){
+    const domRect = event.target.getBoundingClientRect();
+    return getTooltip(
+      event,
+      event.clientX - domRect.x,
+      event.clientY - domRect.y,
+      mouseOverSubscriptions
+    );
+  }
+
+  return { drawTable, setScroll, handleClick, setViewportSize, getToolTipContent };
 }
 
 export const Table: React.FC<
@@ -283,6 +297,15 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     return this.fixedHeaderContainers.map((container) => container.header);
   }
 
+
+  @observable
+  toolTipData: IToolTipData = {content: "", rowIndex: 0, columnIndex: 0, cellHeight: 0, cellWidth: 0}
+
+  @action.bound onMouseOver(event: any) {
+    // this.tooltipHtml = this.tableRenderer.getToolTipContent(event);
+    this.toolTipData = this.tableRenderer.getToolTipContent(event);
+  }
+
   @action.bound handleScrollerClick(event: any) {
     const { handled } = this.tableRenderer.handleClick(event);
     if(!handled) this.props.onOutsideTableClick?.(event);
@@ -365,6 +388,15 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               {this.props.renderEditor && this.props.renderEditor()}
                             </PositionedField>
                           )}
+                       
+                        { 
+                          <div className={S.toolTip}>
+                            <Tooltip html={this.toolTipData.content} arrow={true}>
+                              {/* <div style={{backgroundColor: "red", width: this.toolTipData.cellWidth+20+"px", height: this.toolTipData.cellHeight+20+"px"}} ></div> */}
+                              <i className="fas fa-exclamation-circle red" />
+                            </Tooltip>
+                          </div>
+                        }
                         <Scroller
                           ref={this.refScroller}
                           width={contentRect.bounds!.width}
@@ -376,6 +408,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           contentHeight={this.props.gridDimensions.contentHeight + 30}
                           onScroll={this.handleScroll}
                           onClick={this.handleScrollerClick}
+                          onMouseOver={this.onMouseOver}
                           onKeyDown={this.props.onKeyDown}
                         />
                       </>

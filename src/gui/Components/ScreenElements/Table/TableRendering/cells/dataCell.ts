@@ -16,6 +16,7 @@ import { getDataView } from "../../../../../../model/selectors/DataView/getDataV
 import {
   currentCellErrorMessage,
   currentCellText,
+  currentColumnId,
   currentColumnLeft,
   currentColumnLeftVisible,
   currentColumnWidth,
@@ -25,12 +26,13 @@ import {
   currentRowTop,
   isCurrentCellLoading,
 } from "../currentCell";
-import { onClick } from "../onClick";
+import { onClick, onMouseOver } from "../onClick";
 import {
   columnWidths,
   context,
   context2d,
   currentDataRow,
+  currentRow,
   drawingColumnIndex,
   recordId,
   rowHeight,
@@ -60,7 +62,38 @@ export function dataColumnsDraws() {
     drawDataCellBackground();
     drawCellValue();
     registerClickHandler(id);
+    registerToolTipGetter(id);
   });
+}
+
+function registerToolTipGetter(columnId: string) {
+
+  const property = currentProperty();
+  const cellValue = currentCellText();
+  const cellClickableArea = getCellClickableArea();
+  const currentRowIndex = rowIndex();
+  const currentColumnIndex = drawingColumnIndex();
+  const cellWidth = currentColumnWidth();
+  const cellHeight = currentRowHeight();
+  if (property.column === "CheckBox") {}
+  
+  else{
+    onMouseOver({
+      x: cellClickableArea.x,
+      y: cellClickableArea.y,
+      w: cellClickableArea.width,
+      h: cellClickableArea.height,
+      toolTipGetter(event: any) {
+        return {
+          columnIndex: currentColumnIndex,
+          rowIndex: currentRowIndex,
+          content: cellValue,
+          cellWidth: cellWidth,
+          cellHeight: cellHeight
+        };
+      },
+    });
+  }
 }
 
 function registerClickHandler(columnId: string) {

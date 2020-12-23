@@ -39,6 +39,7 @@ export class FormScreen implements IFormScreen {
   sessionId: string = "";
   @observable title: string = "";
   suppressSave: boolean = false;
+  suppressRefresh: boolean = false;
   menuId: string = "";
   openingOrder: number = 0;
   showInfoPanel: boolean = false;

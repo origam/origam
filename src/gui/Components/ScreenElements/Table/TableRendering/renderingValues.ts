@@ -1,5 +1,5 @@
 import {ValueBox} from "./common/ValueBox";
-import {IClickSubsItem, ITableRow} from "./types";
+import {IClickSubsItem, IMouseOverSubsItem, ITableRow} from "./types";
 import {Memoized} from "./common/Memoized";
 import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 import {getDataTable} from "model/selectors/DataView/getDataTable";
@@ -100,6 +100,9 @@ export const tableRowsCount = () => tableRows().length
 
 export const clickSubscriptions = ValueBox<IClickSubsItem[]>();
 scRenderTable.push(clickSubscriptions.clear)
+
+export const mouseOverSubscriptions = ValueBox<IMouseOverSubsItem[]>();
+scRenderTable.push(mouseOverSubscriptions.clear)
 
 export const tablePanelView = () => getTablePanelView(context());
 // export const property = () => getTableViewPropertyById(tablePanelView(),  dataRowColumnIds()[drawingColumnIndex()]!);// currentColumnId()!);

@@ -138,6 +138,7 @@ export interface IScrollerProps {
   // scrollOffsetTarget: IScrollOffsetTarget;
   onScroll: (event: any, scrollLeft: number, scrollTop: number) => void;
   onClick?: (event: any, contentLeft: number, contentTop: number) => void;
+  onMouseOver: (event: any) => void;
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
 }
