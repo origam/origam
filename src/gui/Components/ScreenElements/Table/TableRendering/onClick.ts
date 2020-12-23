@@ -39,5 +39,5 @@ export function getTooltip(
       return h.toolTipGetter(event, canvasX, canvasY, canvasX, canvasY);
     }
   }
-  return {content: "", rowIndex: 0, columnIndex: 0, cellHeight: 0, cellWidth: 0} ;
+  return undefined ;
 }

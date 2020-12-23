@@ -101,9 +101,33 @@ export default class Scroller extends React.Component<IScrollerProps> {
       );
   }
 
+  lastMouseX = 0;
+  lastMouseY = 0;
+  timeout: NodeJS.Timeout | undefined;
+
+  @action.bound
+  handleMouseMove(event: React.MouseEvent<HTMLDivElement, MouseEvent>){
+    event.persist();
+    const distanceSinceLastMove = Math.sqrt((event.clientX - this.lastMouseX) ** 2 + (event.clientY - this.lastMouseY) ** 2);
+    this.lastMouseX = event.clientX;
+    this.lastMouseY = event.clientY;
+
+    if(distanceSinceLastMove > 1){
+      if(this.timeout){
+        clearTimeout(this.timeout);
+      }
+
+      const boundingRectangle = this.elmScrollerDiv!.getBoundingClientRect();
+      this.timeout = setTimeout(()=>{
+          this.props.onMouseOver(event, boundingRectangle);
+      }, 500)
+    } 
+  }
+
   @action.bound
   handleMouseOver(event: any){
-    this.props.onMouseOver(event);
+    // console.log("handleMouseOver")
+    // this.props.onMouseOver(event);
   }
 
   @action.bound
@@ -135,6 +159,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         onScroll={this.handleScroll}
         onClick={(e) => this.clickHandler.handleClick(e)}
         onMouseOver={event => this.handleMouseOver(event)}
+        onMouseMove={event => this.handleMouseMove(event)}
         onKeyDown={(event) => this.props.onKeyDown?.(event)}
         ref={this.refScrollerDiv}
       >

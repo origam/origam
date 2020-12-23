@@ -3,6 +3,7 @@ import {IHeaderContainer} from "gui/Workbench/ScreenArea/TableView/TableView";
 import {ITableRow} from "./TableRendering/types";
 import {BoundingRect} from "react-measure";
 import {ITablePanelView} from "../../../../model/entities/TablePanelView/types/ITablePanelView";
+import { ICellRectangle } from "model/entities/TablePanelView/types/ICellRectangle";
 
 export type ICellType =
   | "Text"
@@ -124,8 +125,7 @@ export interface IPositionedFieldProps {
     bottom: number;
     right: number;
   };
-
-  tablePanelView: ITablePanelView;
+  cellRectangle: ICellRectangle;
 }
 
 export interface IScrollerProps {
@@ -138,7 +138,7 @@ export interface IScrollerProps {
   // scrollOffsetTarget: IScrollOffsetTarget;
   onScroll: (event: any, scrollLeft: number, scrollTop: number) => void;
   onClick?: (event: any, contentLeft: number, contentTop: number) => void;
-  onMouseOver: (event: any) => void;
+  onMouseOver: (event: any, boundingRectangle: DOMRect) => void;
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;
 }

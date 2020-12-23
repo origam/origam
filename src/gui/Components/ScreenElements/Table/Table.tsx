@@ -21,6 +21,7 @@ import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSel
 import { IProperty } from "model/entities/types/IProperty";
 import { Tooltip } from "react-tippy";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
+import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds);
@@ -93,12 +94,11 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
     });
   }
 
-  function getToolTipContent(event: any){
-    const domRect = event.target.getBoundingClientRect();
+  function getToolTipContent(event: any, boundingRectangle: DOMRect){
     return getTooltip(
       event,
-      event.clientX - domRect.x,
-      event.clientY - domRect.y,
+      event.clientX - boundingRectangle.x,
+      event.clientY - boundingRectangle.y,
       mouseOverSubscriptions
     );
   }
@@ -297,13 +297,18 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     return this.fixedHeaderContainers.map((container) => container.header);
   }
 
+  get tablePanelView(){
+    return this.context.tablePanelView as ITablePanelView;
+  }
 
   @observable
-  toolTipData: IToolTipData = {content: "", rowIndex: 0, columnIndex: 0, cellHeight: 0, cellWidth: 0}
+  toolTipData: IToolTipData | undefined = undefined;
 
-  @action.bound onMouseOver(event: any) {
-    // this.tooltipHtml = this.tableRenderer.getToolTipContent(event);
-    this.toolTipData = this.tableRenderer.getToolTipContent(event);
+  @action.bound onMouseOver(event: any, boundingRectangle: DOMRect) {
+    this.toolTipData = undefined;
+    setTimeout(()=> {
+      this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
+    })
   }
 
   @action.bound handleScrollerClick(event: any) {
@@ -324,6 +329,10 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   render() {
+    const editorCellRectangle = this.props.editingRowIndex && this.props.editingColumnIndex 
+      ? this.tablePanelView.getCellRectangle( this.props.editingRowIndex, this.props.editingColumnIndex)
+      : undefined;
+    console.log(editorCellRectangle)
     return (
       <div className={S.table}>
         {this.props.isLoading && (
@@ -383,20 +392,27 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               columnIndex={this.props.editingColumnIndex}
                               scrollOffsetSource={this.props.scrollState}
                               worldBounds={contentRect.bounds!}
-                              tablePanelView={this.context.tablePanelView}
+                              cellRectangle={editorCellRectangle!}
                             >
                               {this.props.renderEditor && this.props.renderEditor()}
                             </PositionedField>
                           )}
-                       
-                        { 
-                          <div className={S.toolTip}>
-                            <Tooltip html={this.toolTipData.content} arrow={true}>
-                              {/* <div style={{backgroundColor: "red", width: this.toolTipData.cellWidth+20+"px", height: this.toolTipData.cellHeight+20+"px"}} ></div> */}
-                              <i className="fas fa-exclamation-circle red" />
-                            </Tooltip>
-                          </div>
-                        }
+                        {this.toolTipData && (
+                            <PositionedField
+                              fixedColumnsCount={this.fixedColumnCount}
+                              rowIndex={this.toolTipData.rowIndex}
+                              columnIndex={this.toolTipData.columnIndex}
+                              scrollOffsetSource={this.props.scrollState}
+                              worldBounds={contentRect.bounds!}
+                              cellRectangle={this.toolTipData.positionRectangle}
+                            >
+                               <div className={S.toolTip}> 
+                                <Tooltip html={<div>{this.toolTipData.content}</div>} arrow={true} open={this.toolTipData.content} offset={100} transitionFlip={false}>
+                                  <div style={{maxHeight: "1px", maxWidth: "1px", paddingLeft: "20px"}}></div>
+                                </Tooltip> 
+                              </div>
+                            </PositionedField>
+                          )}
                         <Scroller
                           ref={this.refScroller}
                           width={contentRect.bounds!.width}

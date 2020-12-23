@@ -75,6 +75,14 @@ function registerToolTipGetter(columnId: string) {
   const currentColumnIndex = drawingColumnIndex();
   const cellWidth = currentColumnWidth();
   const cellHeight = currentRowHeight();
+
+  const toolTipPositionRectangle = {
+    columnLeft: currentColumnLeft(),
+    columnWidth: 0,
+    rowTop: currentRowTop(),
+    rowHeight: 0,
+  };
+
   if (property.column === "CheckBox") {}
   
   else{
@@ -89,7 +97,8 @@ function registerToolTipGetter(columnId: string) {
           rowIndex: currentRowIndex,
           content: cellValue,
           cellWidth: cellWidth,
-          cellHeight: cellHeight
+          cellHeight: cellHeight,
+          positionRectangle: toolTipPositionRectangle
         };
       },
     });

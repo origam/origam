@@ -1,3 +1,4 @@
+import { ICellRectangle } from "model/entities/TablePanelView/types/ICellRectangle";
 import {IAggregation} from "../../../../../model/entities/types/IAggregation";
 
 export interface IGroupRow {
@@ -45,6 +46,7 @@ export interface IToolTipData{
   rowIndex: number;
   cellWidth: number;
   cellHeight: number;
+  positionRectangle: ICellRectangle;
 }
 
 export interface IClickSubsItem {
