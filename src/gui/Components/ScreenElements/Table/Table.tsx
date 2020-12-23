@@ -96,7 +96,6 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 
   function getToolTipContent(event: any, boundingRectangle: DOMRect){
     return getTooltip(
-      event,
       event.clientX - boundingRectangle.x,
       event.clientY - boundingRectangle.y,
       mouseOverSubscriptions

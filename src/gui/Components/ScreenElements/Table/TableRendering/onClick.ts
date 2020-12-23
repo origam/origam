@@ -29,14 +29,13 @@ export function onMouseOver(item: IMouseOverSubsItem) {
 }
 
 export function getTooltip(
-  event: any,
   canvasX: number,
   canvasY: number,
   mouseOverSubscriptions: IMouseOverSubsItem[]
 ) {
   for (let h of mouseOverSubscriptions) {
     if (h.x <= canvasX && h.x + h.w >= canvasX && h.y <= canvasY && h.y + h.h >= canvasY) {
-      return h.toolTipGetter(event, canvasX, canvasY, canvasX, canvasY);
+      return h.toolTipGetter(canvasX, canvasY, canvasX, canvasY);
     }
   }
   return undefined ;

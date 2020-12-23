@@ -91,7 +91,7 @@ function registerToolTipGetter(columnId: string) {
       y: cellClickableArea.y,
       w: cellClickableArea.width,
       h: cellClickableArea.height,
-      toolTipGetter(event: any) {
+      toolTipGetter() {
         return {
           columnIndex: currentColumnIndex,
           rowIndex: currentRowIndex,

@@ -33,7 +33,7 @@ export interface IGroupTreeNode {
 export type ITableRow = any[] | IGroupRow;
 
 export interface IMouseOverSubsItem {
-  toolTipGetter(event: any, worldX: number, worldY: number, canvasX: number, canvasY: number): IToolTipData;
+  toolTipGetter(worldX: number, worldY: number, canvasX: number, canvasY: number): IToolTipData;
   x: number;
   y: number;
   w: number;
