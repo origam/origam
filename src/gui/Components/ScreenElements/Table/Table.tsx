@@ -96,8 +96,8 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
 
   function getToolTipContent(event: any, boundingRectangle: DOMRect){
     return getTooltip(
-      event.clientX - boundingRectangle.x,
-      event.clientY - boundingRectangle.y,
+      event.clientX - boundingRectangle.x + scrollLeftObs.get(),
+      event.clientY - boundingRectangle.y + scrollTopObs.get(),
       mouseOverSubscriptions
     );
   }
@@ -306,7 +306,9 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   @action.bound onMouseOver(event: any, boundingRectangle: DOMRect) {
     this.toolTipData = undefined;
     setTimeout(()=> {
-      this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
+      runInAction(() =>{
+        this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
+      });
     })
   }
 
@@ -427,7 +429,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                   distance={0}
                                   className={S.toolTipContainer}
                                 >
-                                  <div style= {{maxHeight: "1px", maxWidth: "1px"}}>
+                                  <div style= {{minHeight: "5px", minWidth: "5px", backgroundColor: "red"}}>
                                   </div>
                                 </Tooltip> 
                               </div>
