@@ -423,13 +423,12 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                 <Tooltip 
                                   html={<div>{this.toolTipData.content}</div>} 
                                   open={this.toolTipData?.content && !this.mouseIsInEditor}
-                                  arrow={true}
                                   position={"right"} 
                                   theme={"light"}
                                   distance={0}
                                   className={S.toolTipContainer}
                                 >
-                                  <div style= {{minHeight: "5px", minWidth: "5px", backgroundColor: "red"}}>
+                                  <div style= {{maxHeight: "5px", maxWidth: "5px"}}>
                                   </div>
                                 </Tooltip> 
                               </div>
