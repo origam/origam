@@ -312,11 +312,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   mouseIsInEditor = false;
 
-  onMouseLeaveEditor(event: any){
+  onMouseEnterToolTipEnabledArea(event: any){
     this.mouseIsInEditor = false;
   }
   
-  onMouseEnterEditor(event: any){
+  onMouseLeaveToolTipEnabledArea(event: any){
     this.mouseIsInEditor = true;
   }
 
@@ -402,8 +402,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               scrollOffsetSource={this.props.scrollState}
                               worldBounds={contentRect.bounds!}
                               cellRectangle={editorCellRectangle!}
-                              onMouseEnter={event => this.onMouseEnterEditor(event)}
-                              onMouseLeave={event => this.onMouseLeaveEditor(event)}
+                              onMouseEnter={event => this.onMouseLeaveToolTipEnabledArea(event)}
+                              onMouseLeave={event => this.onMouseEnterToolTipEnabledArea(event)}
                             >
                               {this.props.renderEditor && this.props.renderEditor()}
                             </PositionedField>
@@ -440,6 +440,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           onScroll={this.handleScroll}
                           onClick={this.handleScrollerClick}
                           onMouseOver={this.onMouseOver}
+                          onMouseEnter={event => this.onMouseEnterToolTipEnabledArea(event)}
+                          onMouseLeave={event => this.onMouseLeaveToolTipEnabledArea(event)}
                           onKeyDown={this.props.onKeyDown}
                         />
                       </>
