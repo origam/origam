@@ -408,7 +408,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               {this.props.renderEditor && this.props.renderEditor()}
                             </PositionedField>
                           )}
-                        {this.toolTipData && !this.mouseIsInEditor &&(
+                        {this.toolTipData?.content && !this.mouseIsInEditor &&(
                             <PositionedField
                               fixedColumnsCount={this.fixedColumnCount}
                               rowIndex={this.toolTipData.rowIndex}
@@ -421,9 +421,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                 <Tooltip 
                                   html={<div>{this.toolTipData.content}</div>} 
                                   arrow={true} 
-                                  open={this.toolTipData && !this.mouseIsInEditor} 
+                                  open={this.toolTipData?.content && !this.mouseIsInEditor}
+                                  position={"bottom"} 
                                 >
-                                  <div style={{maxHeight: "1px", maxWidth: "1px", paddingLeft: "20px"}}></div>
+                                  <div style= {{maxHeight: "1px", maxWidth: "1px"}}>
+                                  </div>
                                 </Tooltip> 
                               </div>
                             </PositionedField>
