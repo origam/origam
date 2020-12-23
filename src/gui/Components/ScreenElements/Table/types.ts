@@ -126,6 +126,8 @@ export interface IPositionedFieldProps {
     right: number;
   };
   cellRectangle: ICellRectangle;
+  onMouseEnter?: (event: any) => void;
+  onMouseLeave?: (event: any) => void;
 }
 
 export interface IScrollerProps {

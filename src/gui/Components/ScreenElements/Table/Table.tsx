@@ -310,6 +310,16 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     })
   }
 
+  mouseIsInEditor = false;
+
+  onMouseLeaveEditor(event: any){
+    this.mouseIsInEditor = false;
+  }
+  
+  onMouseEnterEditor(event: any){
+    this.mouseIsInEditor = true;
+  }
+
   @action.bound handleScrollerClick(event: any) {
     const { handled } = this.tableRenderer.handleClick(event);
     if(!handled) this.props.onOutsideTableClick?.(event);
@@ -331,7 +341,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     const editorCellRectangle = this.props.editingRowIndex && this.props.editingColumnIndex 
       ? this.tablePanelView.getCellRectangle( this.props.editingRowIndex, this.props.editingColumnIndex)
       : undefined;
-    console.log(editorCellRectangle)
+
     return (
       <div className={S.table}>
         {this.props.isLoading && (
@@ -392,11 +402,13 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               scrollOffsetSource={this.props.scrollState}
                               worldBounds={contentRect.bounds!}
                               cellRectangle={editorCellRectangle!}
+                              onMouseEnter={event => this.onMouseEnterEditor(event)}
+                              onMouseLeave={event => this.onMouseLeaveEditor(event)}
                             >
                               {this.props.renderEditor && this.props.renderEditor()}
                             </PositionedField>
                           )}
-                        {this.toolTipData && (
+                        {this.toolTipData && !this.mouseIsInEditor &&(
                             <PositionedField
                               fixedColumnsCount={this.fixedColumnCount}
                               rowIndex={this.toolTipData.rowIndex}
@@ -406,7 +418,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               cellRectangle={this.toolTipData.positionRectangle}
                             >
                                <div className={S.toolTip}> 
-                                <Tooltip html={<div>{this.toolTipData.content}</div>} arrow={true} open={this.toolTipData.content} offset={100} transitionFlip={false}>
+                                <Tooltip 
+                                  html={<div>{this.toolTipData.content}</div>} 
+                                  arrow={true} 
+                                  open={this.toolTipData && !this.mouseIsInEditor} 
+                                >
                                   <div style={{maxHeight: "1px", maxWidth: "1px", paddingLeft: "20px"}}></div>
                                 </Tooltip> 
                               </div>
