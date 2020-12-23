@@ -127,7 +127,6 @@ export interface IPositionedFieldProps {
   };
   cellRectangle: ICellRectangle;
   onMouseEnter?: (event: any) => void;
-  onMouseLeave?: (event: any) => void;
 }
 
 export interface IScrollerProps {
@@ -141,7 +140,6 @@ export interface IScrollerProps {
   onScroll: (event: any, scrollLeft: number, scrollTop: number) => void;
   onClick?: (event: any, contentLeft: number, contentTop: number) => void;
   onMouseOver: (event: any, boundingRectangle: DOMRect) => void;
-  onMouseEnter: (event: any) => void;
   onMouseLeave: (event: any) => void;
   onOutsideClick?: (event: any) => void;
   onKeyDown?: (event: any) => void;

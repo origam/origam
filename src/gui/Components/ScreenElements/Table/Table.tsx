@@ -307,19 +307,17 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     this.toolTipData = undefined;
     setTimeout(()=> {
       runInAction(() =>{
+        this.mouseInToolTipEnabledArea = true;
         this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
+        console.log("this.toolTipData: "+this.toolTipData?.content);
       });
     })
   }
 
-  mouseIsInEditor = false;
-
-  onMouseEnterToolTipEnabledArea(event: any){
-    this.mouseIsInEditor = false;
-  }
+  mouseInToolTipEnabledArea = true;
   
   onMouseLeaveToolTipEnabledArea(event: any){
-    this.mouseIsInEditor = true;
+    this.mouseInToolTipEnabledArea = false;
   }
 
   @action.bound handleScrollerClick(event: any) {
@@ -405,12 +403,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               worldBounds={contentRect.bounds!}
                               cellRectangle={editorCellRectangle!}
                               onMouseEnter={event => this.onMouseLeaveToolTipEnabledArea(event)}
-                              onMouseLeave={event => this.onMouseEnterToolTipEnabledArea(event)}
                             >
                               {this.props.renderEditor && this.props.renderEditor()}
                             </PositionedField>
                           )}
-                        {this.toolTipData?.content && !this.mouseIsInEditor &&(
+                        {this.toolTipData?.content && this.mouseInToolTipEnabledArea &&(
                             <PositionedField
                               fixedColumnsCount={this.fixedColumnCount}
                               rowIndex={this.toolTipData.rowIndex}
@@ -422,7 +419,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                <div className={S.toolTip}> 
                                 <Tooltip 
                                   html={<div>{this.toolTipData.content}</div>} 
-                                  open={this.toolTipData?.content && !this.mouseIsInEditor}
+                                  open={this.toolTipData?.content && this.mouseInToolTipEnabledArea}
                                   position={"right"} 
                                   theme={"light"}
                                   distance={0}
@@ -446,7 +443,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           onScroll={this.handleScroll}
                           onClick={this.handleScrollerClick}
                           onMouseOver={this.onMouseOver}
-                          onMouseEnter={event => this.onMouseEnterToolTipEnabledArea(event)}
                           onMouseLeave={event => this.onMouseLeaveToolTipEnabledArea(event)}
                           onKeyDown={this.props.onKeyDown}
                         />

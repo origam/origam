@@ -153,7 +153,6 @@ export default class Scroller extends React.Component<IScrollerProps> {
         onScroll={this.handleScroll}
         onClick={(e) => this.clickHandler.handleClick(e)}
         onMouseMove={event => this.handleMouseMove(event)}
-        onMouseEnter={this.props.onMouseEnter}
         onMouseLeave={this.props.onMouseLeave}
         onKeyDown={(event) => this.props.onKeyDown?.(event)}
         ref={this.refScrollerDiv}

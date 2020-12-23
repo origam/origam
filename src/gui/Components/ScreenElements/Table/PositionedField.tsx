@@ -19,7 +19,6 @@ export class PositionedField extends React.Component<IPositionedFieldProps> {
         className={cx(S.positionedField, { isFirstColumn: columnIndex === 0 })}
         onClick={(event: any) => event.stopPropagation()}
         onMouseEnter={this.props.onMouseEnter}
-        onMouseLeave={this.props.onMouseLeave}
         style={{
           top: worldBounds.top + rowTop - scrollTop,
           left:
