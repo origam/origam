@@ -201,7 +201,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
-    debugger;
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
