@@ -112,6 +112,8 @@ export class ServerSideGroupItem implements IGroupTreeNode {
       groupFilter: this.composeGroupingFilter(),
       visibleRowsMonitor: new OpenGroupVisibleRowsMonitor(this.grouper, dataView.gridDimensions, dataView.scrollState)
     })
+    this.scrollLoader.registerAppendListener(data => dataTable.appendRecords(data))
+    this.scrollLoader.registerPrependListener(data => dataTable.appendRecords(data))
   }
   @observable childGroups: IGroupTreeNode[] = null as any;
   columnId: string = null as any;
@@ -160,6 +162,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   set childRows(rows: any[][]){
     if(rows.length > 0){
       this.scrollLoader.start();
+      getDataTable(this.grouper).appendRecords(rows);
     }
     this._childRows.set(rows);
   }
