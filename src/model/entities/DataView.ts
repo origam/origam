@@ -469,9 +469,13 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound onFieldChange(event: any, row: any[], property: IProperty, value: any) {
+  @action.bound onFieldChange(event: any, row: any[], property: IProperty, newValue: any) {
     if (!property.readOnly) {
-      getDataTable(this).setFormDirtyValue(row, property.id, value);
+      const currentValue = getDataTable(this).getCellValue(row, property);
+      if(newValue === currentValue){
+        return;
+      }
+      getDataTable(this).setFormDirtyValue(row, property.id, newValue);
     }
   }
 
