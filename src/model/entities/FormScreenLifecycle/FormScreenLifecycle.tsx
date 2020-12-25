@@ -588,7 +588,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.monitor.inFlow++;
       for (let dataView of formScreen.nonRootDataViews) {
         dataView.dataTable.clear();
-        dataView.setSelectedRowId(undefined);
         dataView.lifecycle.stopSelectedRowReaction();
       }
       for (let rootDataView of formScreen.rootDataViews) {
@@ -995,7 +994,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (!this.eagerLoading) {
       const self = this;
       flow(function* () {
-        yield* self.loadData({keepCurrentData: true});
+        yield* self.loadData({keepCurrentData: false});
       })();
     }
   }
