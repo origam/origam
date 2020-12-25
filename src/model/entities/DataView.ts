@@ -229,9 +229,9 @@ export class DataView implements IDataView {
     const id = this.dataTable.getRowId(row);
     this.selectedRowIds.remove(id);
     this.dataTable.substituteRecord(row);
-    // if( this.dataTable.rows.includes(row)){
-    //   this.sele
-    // }
+    if (getGroupingConfiguration(this).isGrouping) {
+      getGrouper(this).substituteRecord(row);
+    }
   }
 
   @action.bound setSelectedState(rowId: string, newState: boolean) {

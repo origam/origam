@@ -66,6 +66,8 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
   }
+
+  substituteRecord(row: any[]): void{}
   
   getRowIndex(rowId: string): number | undefined {
     return this._childRows.findIndex(row => getDataTable(this.grouper).getRowId(row) === rowId);
@@ -120,14 +122,13 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
+  scrollLoader: InfiniteScrollLoader;
+  _childRows: ScrollRowContainer;
+  
 
   get level(){
     return this.allParents.length;
   }
-  
-  scrollLoader: InfiniteScrollLoader;
-  
-  _childRows: ScrollRowContainer;
   
   get isInfinitelyScrolled(){
     return this.rowCount >= SCROLL_ROW_CHUNK && this.isExpanded && this.childRows.length > 0
@@ -139,6 +140,10 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
+  }
+
+  substituteRecord(row: any[]): any{
+    this._childRows.substitute(row);
   }
 
   getRowIndex(rowId: string): number | undefined {
