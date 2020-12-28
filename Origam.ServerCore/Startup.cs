@@ -80,6 +80,8 @@ namespace Origam.ServerCore
             services.Configure<IISServerOptions>(options =>
             {
                 options.AllowSynchronousIO = true;
+                options.AuthenticationDisplayName = "Windows";
+                options.AutomaticAuthentication = true;
             });
 
             services.AddSingleton<IPersistedGrantStore, PersistedGrantStore>();
