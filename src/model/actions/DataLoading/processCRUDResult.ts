@@ -76,6 +76,8 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
           }finally{
             dataView.lifecycle.startSelectedRowReaction();
           }
+        } else {
+          dataView.selectRow(dataSourceRow);
         }
       }
       getFormScreen(ctx).setDirty(true);
