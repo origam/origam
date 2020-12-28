@@ -218,7 +218,17 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             var providerUserId = userIdClaim.Value;
             
             Claim email = externalUser.FindFirst(claim => claim.Type == ClaimTypes.Email);
-            var user = _userManager.FindByEmailAsync(email.Value).Result;
+            IOrigamUser user;
+            if (email == null)
+            {
+                // try to find by user name
+                var userNameClaim = externalUser.FindFirst("name");
+                user = _userManager.FindByNameAsync(userNameClaim.Value).Result; 
+            }
+            else
+            {
+                user = _userManager.FindByEmailAsync(email.Value).Result;
+            }
             return (user, provider, providerUserId, claims);
         }
 
