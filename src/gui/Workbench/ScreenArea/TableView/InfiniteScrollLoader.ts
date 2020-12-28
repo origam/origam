@@ -133,6 +133,18 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     return this.reactionDisposer;
   }
 
+  prependListeners: ((data: any[][]) => void)[] = [];
+
+  registerPrependListener(listener: (data: any[][])=> void): void{
+    this.prependListeners.push(listener);
+  }
+
+  appendListeners: ((data: any[][]) => void)[] = [];
+
+  registerAppendListener(listener: (data: any[][])=> void): void{
+    this.appendListeners.push(listener);
+  }
+
   handleRowContainerReset() {
     this.lastRequestedStartOffset = 0;
     this.lastRequestedEndOffset = 0;
@@ -183,6 +195,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
       this.scrollState.scrollTo({scrollTop: newTop});
     }
+    this.appendListeners.forEach(listener => listener(data));
   });
 
 
@@ -201,7 +214,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
 
     const api = getApi(this.ctx);
     const formScreenLifecycle = getFormScreenLifecycle(this.ctx);
-    debugger;
     const data = yield api.getRows({
       MenuId: getMenuItemId(this.ctx),
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
@@ -220,6 +232,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       const newTop = this.gridDimensions.getRowTop(newDistanceToStart);
       this.scrollState.scrollTo({scrollTop: newTop});
     }
+    this.prependListeners.forEach(listener => listener(data));
   });
 
   dispose(): void {
@@ -248,6 +261,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   }
 }
 
+// A better implementation:
+// https://medium.com/@karenmarkosyan/how-to-manage-promises-into-dynamic-queue-with-vanilla-javascript-9d0d1f8d4df5
 class FlowQueueProcessor {
 
   private flowQueue: (() => CancellablePromise<void>)[] = [];

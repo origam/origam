@@ -32,6 +32,8 @@ export class ClientSideGrouper implements IGrouper {
     return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
   }
 
+  substituteRecord(row: any[]): void{}
+
   getCellOffset(rowId: string): ICellOffset {
    return getCellOffset(this, rowId);
   }

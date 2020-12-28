@@ -229,9 +229,9 @@ export class DataView implements IDataView {
     const id = this.dataTable.getRowId(row);
     this.selectedRowIds.remove(id);
     this.dataTable.substituteRecord(row);
-    // if( this.dataTable.rows.includes(row)){
-    //   this.sele
-    // }
+    if (getGroupingConfiguration(this).isGrouping) {
+      getGrouper(this).substituteRecord(row);
+    }
   }
 
   @action.bound setSelectedState(rowId: string, newState: boolean) {
@@ -469,9 +469,13 @@ export class DataView implements IDataView {
     }
   }
 
-  @action.bound onFieldChange(event: any, row: any[], property: IProperty, value: any) {
+  @action.bound onFieldChange(event: any, row: any[], property: IProperty, newValue: any) {
     if (!property.readOnly) {
-      getDataTable(this).setFormDirtyValue(row, property.id, value);
+      const currentValue = getDataTable(this).getCellValue(row, property);
+      if(newValue === currentValue){
+        return;
+      }
+      getDataTable(this).setFormDirtyValue(row, property.id, newValue);
     }
   }
 

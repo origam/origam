@@ -66,6 +66,8 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
   }
+
+  substituteRecord(row: any[]): void{}
   
   getRowIndex(rowId: string): number | undefined {
     return this._childRows.findIndex(row => getDataTable(this.grouper).getRowId(row) === rowId);
@@ -110,6 +112,8 @@ export class ServerSideGroupItem implements IGroupTreeNode {
       groupFilter: this.composeGroupingFilter(),
       visibleRowsMonitor: new OpenGroupVisibleRowsMonitor(this.grouper, dataView.gridDimensions, dataView.scrollState)
     })
+    this.scrollLoader.registerAppendListener(data => dataTable.appendRecords(data))
+    this.scrollLoader.registerPrependListener(data => dataTable.appendRecords(data))
   }
   @observable childGroups: IGroupTreeNode[] = null as any;
   columnId: string = null as any;
@@ -120,14 +124,13 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
+  scrollLoader: InfiniteScrollLoader;
+  _childRows: ScrollRowContainer;
+  
 
   get level(){
     return this.allParents.length;
   }
-  
-  scrollLoader: InfiniteScrollLoader;
-  
-  _childRows: ScrollRowContainer;
   
   get isInfinitelyScrolled(){
     return this.rowCount >= SCROLL_ROW_CHUNK && this.isExpanded && this.childRows.length > 0
@@ -139,6 +142,10 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   
   get allParents(): IGroupTreeNode[] {
     return getAllParents(this);
+  }
+
+  substituteRecord(row: any[]): any{
+    this._childRows.substitute(row);
   }
 
   getRowIndex(rowId: string): number | undefined {
@@ -155,6 +162,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   set childRows(rows: any[][]){
     if(rows.length > 0){
       this.scrollLoader.start();
+      getDataTable(this.grouper).appendRecords(rows);
     }
     this._childRows.set(rows);
   }
