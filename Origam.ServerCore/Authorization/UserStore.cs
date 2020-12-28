@@ -432,11 +432,10 @@ namespace Origam.ServerCore
             return Task.FromResult(true);
         }
 
-        // Sets a flag indicating whether the specified user is locked out, as an asynchronous operation.
+        // Set the flag indicating if the specified user can be locked out.
         // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.setlockoutenabledasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_SetLockoutEnabledAsync__0_System_Boolean_
         public Task SetLockoutEnabledAsync(IOrigamUser user, bool enabled, CancellationToken cancellationToken)
         {
-            user.IsLockedOut = enabled;
             return Task.CompletedTask;
         }
 
