@@ -261,6 +261,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
   }
 }
 
+// A better implementation:
+// https://medium.com/@karenmarkosyan/how-to-manage-promises-into-dynamic-queue-with-vanilla-javascript-9d0d1f8d4df5
 class FlowQueueProcessor {
 
   private flowQueue: (() => CancellablePromise<void>)[] = [];
