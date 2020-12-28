@@ -205,5 +205,6 @@ export class ServerSideGrouper implements IGrouper {
     for (let disposer of this.disposers) {
       disposer();
     }
+    this.allGroups.forEach(group => group.dispose())
   }
 }

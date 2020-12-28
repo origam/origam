@@ -243,6 +243,8 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       this.debugDisposer();
     }
     this.requestProcessor.dispose();
+    this.prependListeners.length = 0;
+    this.appendListeners.length = 0;
   }
 
   async getAllValuesOfProp(property: IProperty): Promise<Set<any>> {

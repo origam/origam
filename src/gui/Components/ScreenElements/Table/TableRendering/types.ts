@@ -10,6 +10,7 @@ export interface IGroupRow {
 }
 
 export interface IGroupTreeNode {
+  dispose(): void;
   substituteRecord(row: any[]): any;
   level: number;
   getRowIndex(rowId: string): number | undefined;

@@ -93,6 +93,9 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
   composeGroupingFilter(): string {
     throw new Error("Method not implemented.");
   }
+
+  dispose(): void {
+  }
 }
 
 export class ServerSideGroupItem implements IGroupTreeNode {
@@ -190,6 +193,10 @@ export class ServerSideGroupItem implements IGroupTreeNode {
       this.grouper.notifyGroupClosed(this);
     }
     this._isExpanded = value;
+  }
+
+  dispose(): void {
+    this.scrollLoader.dispose();
   }
 }
 
