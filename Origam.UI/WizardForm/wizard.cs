@@ -179,30 +179,31 @@ namespace Origam.UI.WizardForm
         {
             SetPageTitle(sender);
             GetNextPage(PagesList.Finish, sender);
+            AbstractSchemaItem[] results = new AbstractSchemaItem[0] ;
             try
             {
                 iwizard.Command.Execute();
-                AbstractSchemaItem[] results = ((AbstractMenuCommand)iwizard.Command).GeneratedModelElements.ToArray();
-                ListViewItem[] resultListItems = new ListViewItem[results.LongLength];
-                for (int i = 0; i < results.LongLength; i++)
-                {
-                    AbstractSchemaItem item = results[i];
-                        ListViewItem newItem = new ListViewItem(new string[] { item.Path, item.ModelDescription() })
-                        {
-                            ImageIndex = iwizard.Command.GetImageIndex(item.RootItem.Icon)
-                        };
-                        progresslistview.Items.Add(newItem);
-                 }
+                results = ((AbstractMenuCommand)iwizard.Command).GeneratedModelElements.ToArray();
             }
             catch (Exception ex)
             {
-                tbProgres.Text = ex.Message;
+                ListViewItem newItem = new ListViewItem(new string[] { "error", ex.Message });
+                progresslistview.Items.Add(newItem);
                 e.Cancel = true;
+            }
+            for (int i = 0; i < results.LongLength; i++)
+            {
+                AbstractSchemaItem item = results[i];
+                ListViewItem newItem = new ListViewItem(new string[] { item.Path, item.ModelDescription() })
+                {
+                    ImageIndex = iwizard.Command.GetImageIndex(item.RootItem.Icon)
+                };
+                progresslistview.Items.Add(newItem);
             }
             this.aerowizard1.FinishButtonText = "Show Result";
             this.aerowizard1.CancelButtonText = "Close";
         }
-
+     
         private void FinishPage_Commit(object sender, WizardPageConfirmEventArgs e)
         {
             IsFinish(sender, e);
