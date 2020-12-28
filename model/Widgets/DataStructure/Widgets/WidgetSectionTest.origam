@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ads="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataStructure/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsm="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureMethod/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="2c3b7bab-0f4d-4719-8846-a83cb2770ce9"
+    ds:localized="false"
+    asi:name="WidgetSectionTest">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Widgets/DataEntity/Widgets/WidgetSectionTestMaster.origam#WidgetSectionTestMaster/4d5590aa-a5d2-44f2-9481-13ee53f827d1"
+      x:id="8e9e5a46-a9c0-4b09-8445-3a6c2e118638"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="WidgetSectionTestMaster"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Widgets/DataEntity/Widgets/WidgetSectionTestMaster.origam#WidgetSectionTestMaster/WidgetSectionTestDetail/ada73ee1-7ce1-4cac-acf0-5953682a81c3"
+        x:id="39059f4c-2fbc-4f4f-b22b-fb2f80747172"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="WidgetSectionTestDetail"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="4d97f901-9872-4201-9fc2-1afff8c3fb04"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Widgets/DataStructure/Widgets/WidgetSectionTest.origam#WidgetSectionTest/WidgetSectionTestMaster/8e9e5a46-a9c0-4b09-8445-3a6c2e118638"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="df6a8f51-d06c-4958-a26b-1ce7603460f2"
+        asi:name="WidgetSectionTestMaster_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="3c970576-154c-4309-b989-1107f7444f58"
+      asi:name="Sort">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Widgets/DataStructure/Widgets/WidgetSectionTest.origam#WidgetSectionTest/WidgetSectionTestMaster/8e9e5a46-a9c0-4b09-8445-3a6c2e118638"
+        dsssi:fieldName="Text1"
+        x:id="2b14eb95-fe92-4ce3-934a-1e62f6f9808c"
+        asi:name="WidgetSectionTestMaster_0_Text1"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
+  </ds:DataStructure>
+</x:file>

@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "WidgetSectionTestDetail" ADD CONSTRAINT "FK_WidgetSectionTestDetail_refWidgetSectionTestMasterId_WidgetSectionTestMaster"
+	FOREIGN KEY (
+		"refWidgetSectionTestMasterId"
+	)
+
+	REFERENCES "WidgetSectionTestMaster" (
+		"Id"
+	);
