@@ -22,6 +22,7 @@ import { IProperty } from "model/entities/types/IProperty";
 import { Tooltip } from "react-tippy";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
+import { isArray } from "util";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds);
@@ -418,7 +419,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                             >
                                <div className={S.toolTip}> 
                                 <Tooltip 
-                                  html={<div>{this.toolTipData.content}</div>} 
+                                  html={formatTooltipText(this.toolTipData.content)}
                                   open={this.toolTipData?.content && this.mouseInToolTipEnabledArea}
                                   position={"right"} 
                                   theme={"light"}
@@ -456,5 +457,13 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
         </Measure>
       </div>
     );
+  }
+}
+
+function formatTooltipText(content: string | string[]){
+  if(Array.isArray(content)){
+    return (<div className={S.tooltipContent}>{content.map(line => <div>{line}</div>)}</div>)
+  }else{
+    return <div>{content}</div>;
   }
 }

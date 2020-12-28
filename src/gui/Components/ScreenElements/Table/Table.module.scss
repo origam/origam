@@ -105,6 +105,13 @@
   border: 1px;
 }
 
+.tooltipContent{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: left;
+}
+
 /*.positionedFieldContainer {
   position: absolute;
   top: 0;

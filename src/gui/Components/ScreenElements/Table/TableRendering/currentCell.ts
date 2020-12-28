@@ -97,6 +97,16 @@ export const currentCellText = Memoized(() => {
 });
 scRenderCell.push(() => currentCellText.clear());
 
+export const currentCellTextMultiline = Memoized(() => {
+  const value = currentCellValue();
+  let text = dataTable().resolveCellText(currentProperty(), value);
+  if(text && currentProperty().multiline) {
+    text = text.split("\n");
+  }
+  return text;
+});
+scRenderCell.push(() => currentCellTextMultiline.clear());
+
 export const currentCellValue = Memoized(() => {
   const property = propertyById().get(currentColumnId() as any)!
   if(property.column === "Polymorph"){

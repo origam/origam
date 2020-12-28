@@ -16,6 +16,8 @@ import { getDataView } from "../../../../../../model/selectors/DataView/getDataV
 import {
   currentCellErrorMessage,
   currentCellText,
+  currentCellTextMultiline,
+  currentCellValue,
   currentColumnId,
   currentColumnLeft,
   currentColumnLeftVisible,
@@ -33,6 +35,7 @@ import {
   context2d,
   currentDataRow,
   currentRow,
+  dataTable,
   drawingColumnIndex,
   recordId,
   rowHeight,
@@ -69,7 +72,7 @@ export function dataColumnsDraws() {
 function registerToolTipGetter(columnId: string) {
 
   const property = currentProperty();
-  const cellValue = currentCellText();
+  const cellText = currentCellTextMultiline();
   const cellClickableArea = getCellClickableArea();
   const currentRowIndex = rowIndex();
   const currentColumnIndex = drawingColumnIndex();
@@ -83,9 +86,7 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-  if (property.column === "CheckBox") {}
-  
-  else{
+  if (property.column !== "CheckBox") {
     onMouseOver({
       x: cellClickableArea.x,
       y: cellClickableArea.y,
@@ -95,7 +96,7 @@ function registerToolTipGetter(columnId: string) {
         return {
           columnIndex: currentColumnIndex,
           rowIndex: currentRowIndex,
-          content: cellValue,
+          content: cellText,
           cellWidth: cellWidth,
           cellHeight: cellHeight,
           positionRectangle: toolTipPositionRectangle
