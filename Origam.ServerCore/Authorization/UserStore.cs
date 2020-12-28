@@ -366,8 +366,8 @@ namespace Origam.ServerCore
         }
 
        
-        // Gets the last DateTimeOffset a user's last lockout expired, if any. A time value in the past indicates a user is not currently locked out.
-        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.getlockoutenddateasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_GetLockoutEndDateAsync__0_
+        // Gets the last DateTimeOffset a user's last lockout expired, if any. Any time in the past should be indicates a user is not locked out.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.iuserlockoutstore-1.getlockoutenddateasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_IUserLockoutStore_1_GetLockoutEndDateAsync__0_System_Threading_CancellationToken_
         public Task<DateTimeOffset?> GetLockoutEndDateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
             if (lockoutConfig.AutoUnlockAfterSpecifiedTime)
@@ -425,15 +425,11 @@ namespace Origam.ServerCore
             return Task.FromResult(user.FailedPasswordAttemptCount);
         }
 
-        // Retrieves a flag indicating whether user lockout can be enabled for the specified user.
-        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.getlockoutenabledasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_GetLockoutEnabledAsync__0_
         public Task<bool> GetLockoutEnabledAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
 
-        // Set the flag indicating if the specified user can be locked out.
-        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1.setlockoutenabledasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_UserManager_1_SetLockoutEnabledAsync__0_System_Boolean_
         public Task SetLockoutEnabledAsync(IOrigamUser user, bool enabled, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
