@@ -65,6 +65,7 @@ namespace Origam.ServerCore
         
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly UserLockoutConfig lockoutConfig;
+        private readonly DateTime nullLockedOutDate = new DateTime(1900,1,1);
 
         public UserStore(IOptions<UserLockoutConfig> userLockoutConfig,
             IStringLocalizer<SharedResources> localizer)
@@ -379,7 +380,7 @@ namespace Origam.ServerCore
 
                 if (user.LastLockoutDate.Value == DateTime.MinValue)
                 {
-                    return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(new DateTime(1900,1,1)));
+                    return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(nullLockedOutDate));
                 }
 
                 return
@@ -387,10 +388,16 @@ namespace Origam.ServerCore
                         new DateTimeOffset(user.LastLockoutDate.Value)
                             .AddMinutes(lockoutConfig.LockoutTimeMinutes));
             }
-            return 
-                Task.FromResult<DateTimeOffset?>(user.IsLockedOut
+            return
+                Task.FromResult<DateTimeOffset?>(IsLockedOut(user.LastLockoutDate)
                     ? new DateTimeOffset(new DateTime(9999, 1, 1))
                     : new DateTimeOffset(new DateTime(10, 1, 1)));
+        }
+        
+        private bool IsLockedOut(DateTime? dateTime)
+        {
+            if (!dateTime.HasValue) return false;
+            return dateTime.Value >= DateTime.Now;
         }
 
         public Task SetLockoutEndDateAsync(IOrigamUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
