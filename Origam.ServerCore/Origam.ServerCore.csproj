@@ -195,6 +195,9 @@
     <None Update="assets\identity\css\login.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TemplateFiles\custom.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TemplateFiles\testMultiFactorFile.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
