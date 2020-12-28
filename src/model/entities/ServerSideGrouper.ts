@@ -110,7 +110,7 @@ export class ServerSideGrouper implements IGrouper {
         ()=> [
           getGroupingConfiguration(this).nextColumnToGroupBy(groupHeader.columnId),
           this.composeFinalFilter(groupHeader),
-          [ ...getFilterConfiguration(groupHeader).activeFilters],
+          [ ...getFilterConfiguration(this).activeFilters],
           [ ...getTablePanelView(this).aggregations.aggregationList],
           getOrderingConfiguration(this).groupChildrenOrdering
         ], 
