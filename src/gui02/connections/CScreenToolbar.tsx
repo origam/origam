@@ -90,11 +90,7 @@ export class CScreenToolbar extends React.Component<{}> {
       .filter((actionGroup) => actionGroup.actions.length > 0)
       .map((actionGroup) => (
         <Fragment key={actionGroup.section}>
-          {/*{this.renderActions(actionGroup.actions)}*/}
           {actionGroup.actions
-            .filter(
-              (action) => (actionFilter ? actionFilter(action) : true) && getIsEnabledAction(action)
-            )
             .map((action, idx) => (
               <DropdownItem>
                 <ScreenToolbarAction
@@ -109,10 +105,9 @@ export class CScreenToolbar extends React.Component<{}> {
   }
 
   renderActions(actions: IAction[]) {
-    const actionsToRender = actions.filter((action) => getIsEnabledAction(action));
-    return actionsToRender
+    return actions
       .filter((action) => !action.groupId)
-      .map((action, idx) => this.renderAction(action, actionsToRender, idx));
+      .map((action, idx) => this.renderAction(action, actions, idx));
   }
 
   renderAction(action: IAction, actionsToRender: IAction[], order: number) {
