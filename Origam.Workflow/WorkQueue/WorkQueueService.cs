@@ -37,7 +37,7 @@ using Origam.Workbench.Services;
 using core = Origam.Workbench.Services.CoreServices;
 using System.ComponentModel;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using Origam.Services;

@@ -24,7 +24,7 @@ using System.IO;
 using System.Data;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using System.Linq;
 using CSharpFunctionalExtensions;
 using ICSharpCode.SharpZipLib.Zip;
