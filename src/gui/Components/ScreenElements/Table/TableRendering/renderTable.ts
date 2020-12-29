@@ -9,6 +9,7 @@ import {
   gridLeadCellDimensions,
   groupingColumnIds,
   isCheckBoxedTable,
+  mouseOverSubscriptions,
   propertyById,
   realFixedColumnCount,
   rowHeight,
@@ -26,7 +27,7 @@ import {
 import {firstDrawableRowIndex, lastDrawableRowIndex} from "./drawableRowIndex";
 import {drawCurrentCell} from "./currentCell";
 import {firstDrawableColumnIndex, lastDrawableColumnIndex} from "./drawableColumnIndex";
-import {IClickSubsItem, ITableRow} from "./types";
+import {IClickSubsItem, IMouseOverSubsItem, ITableRow} from "./types";
 import {CPR} from "utils/canvas";
 import {IProperty} from "model/entities/types/IProperty";
 import {currentRowCellsDimensions, currentRowCellsDraws,} from "./currentRowCells";
@@ -48,6 +49,7 @@ export function renderTable(
   aColumnWidths: Map<string, number>,
   aFixedColumnCount: number,
   aClickSubscriptions: IClickSubsItem[],
+  aMouseOverSubscriptions: IMouseOverSubsItem[],
   aRowHeight: number
 ) {
   context.set(aCtx);
@@ -66,8 +68,10 @@ export function renderTable(
   columnWidths.set(aColumnWidths);
   fixedColumnCount.set(aFixedColumnCount);
   clickSubscriptions.set(aClickSubscriptions);
+  mouseOverSubscriptions.set(aMouseOverSubscriptions);
   try {
     clickSubscriptions().length = 0;
+    mouseOverSubscriptions().length = 0;
     const ctx2d = context2d();
     ctx2d.fillStyle = "white";
     ctx2d.fillRect(0, 0, CPR()*viewportWidth(), CPR()*viewportHeight());
