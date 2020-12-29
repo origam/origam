@@ -340,7 +340,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 
   render() {
-    const editorCellRectangle = this.props.editingRowIndex && this.props.editingColumnIndex 
+    const editorCellRectangle = this.props.editingRowIndex !== undefined && this.props.editingColumnIndex !== undefined
       ? this.tablePanelView.getCellRectangle( this.props.editingRowIndex, this.props.editingColumnIndex)
       : undefined;
 
@@ -395,12 +395,11 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           />
                         </div>
                         {this.props.isEditorMounted &&
-                          this.props.editingRowIndex !== undefined &&
-                          this.props.editingColumnIndex !== undefined && (
+                          editorCellRectangle && (
                             <PositionedField
                               fixedColumnsCount={this.fixedColumnCount}
-                              rowIndex={this.props.editingRowIndex}
-                              columnIndex={this.props.editingColumnIndex}
+                              rowIndex={this.props.editingRowIndex!}
+                              columnIndex={this.props.editingColumnIndex!}
                               scrollOffsetSource={this.props.scrollState}
                               worldBounds={contentRect.bounds!}
                               cellRectangle={editorCellRectangle!}
@@ -426,7 +425,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                   theme={"light"}
                                   distance={0}
                                   className={S.toolTipContainer}
-                                  // animation={"none"}
                                 >
                                   <div style= {{maxHeight: "5px", maxWidth: "5px"}}>
                                   </div>
