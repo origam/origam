@@ -92,5 +92,11 @@
         "Caption": "Deutsch"
       }
     ]
+  },
+  "Logging": {
+	"LogLevel": {
+	  "Default":     "Warning",
+	  "Microsoft.*": "Warning" 
+	}
   }
 }
