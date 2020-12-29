@@ -64,7 +64,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       fixedColumnCount,
       clickSubscriptions,
       mouseOverSubscriptions,
-      gridDimensions.defaultRowHeight
+      gridDimensions.rowHeight
     );
   }
 
@@ -317,7 +317,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
   @observable
   mouseInToolTipEnabledArea = true;
-  
+
   @action.bound onMouseLeaveToolTipEnabledArea(event: any){
     this.mouseInToolTipEnabledArea = false;
   }
@@ -417,18 +417,18 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                               worldBounds={contentRect.bounds!}
                               cellRectangle={this.toolTipData.positionRectangle}
                             >
-                               <div className={S.toolTip}> 
-                                <Tooltip 
+                               <div className={S.toolTip}>
+                                <Tooltip
                                   html={formatTooltipText(this.toolTipData.content)}
                                   open={this.toolTipData?.content && this.mouseInToolTipEnabledArea}
-                                  position={"right"} 
+                                  position={"right"}
                                   theme={"light"}
                                   distance={0}
                                   className={S.toolTipContainer}
                                 >
                                   <div style= {{maxHeight: "5px", maxWidth: "5px"}}>
                                   </div>
-                                </Tooltip> 
+                                </Tooltip>
                               </div>
                             </PositionedField>
                           )}

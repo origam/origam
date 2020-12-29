@@ -423,12 +423,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initialSelectedRowId = undefined;
     }
     yield* this.startAutorefreshIfNeeded();
-
-    console.log("----- DataViews debug -----");
-    for (let dv of getFormScreen(this).dataViews) {
-      console.log(dv.id, "-", dv.name, "-", dv.orderProperty, "-", dv.orderMember);
-    }
-    console.log("----- =============== -----");
   }
 
   sortAndFilterReaction(dataView: IDataView) {
@@ -594,7 +588,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.monitor.inFlow++;
       for (let dataView of formScreen.nonRootDataViews) {
         dataView.dataTable.clear();
-        dataView.setSelectedRowId(undefined);
         dataView.lifecycle.stopSelectedRowReaction();
       }
       for (let rootDataView of formScreen.rootDataViews) {
@@ -634,31 +627,31 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  _flushDataRunning = false;
-  _flushDataShallRerun = false;
+  previousFlushPending: Promise<void> | undefined;
+  previousFlushFinished: ((value: void | PromiseLike<void>)=> void) | undefined;
+
   *flushData() {
     try {
       this.monitor.inFlow++;
-      if (this._flushDataRunning) {
-        this._flushDataShallRerun = true;
+      if(this.previousFlushPending){
+        yield this.previousFlushPending;
         return;
       }
-      this._flushDataRunning = true;
-      const api = getApi(this);
+      this.previousFlushPending = new Promise((resolve, reject) => 
+            this.previousFlushFinished = resolve
+        );
       let updateObjectDidRun = false;
-      do {
-        this._flushDataShallRerun = false;
-        const formScreen = getFormScreen(this);
-        const dataViews = formScreen.dataViews;
-        for (let dataView of dataViews) {
-          updateObjectDidRun = updateObjectDidRun || (yield* this.runUpdateObject(dataView));
-        }
-        if (formScreen.requestSaveAfterUpdate && updateObjectDidRun) {
-          yield* this.saveSession();
-        }
-      } while (this._flushDataShallRerun);
+      const formScreen = getFormScreen(this);
+      const dataViews = formScreen.dataViews;
+      for (let dataView of dataViews) {
+        updateObjectDidRun = updateObjectDidRun || (yield* this.runUpdateObject(dataView));
+      }
+      if (formScreen.requestSaveAfterUpdate && updateObjectDidRun) {
+        yield* this.saveSession();
+      }
     } finally {
-      this._flushDataRunning = false;
+      this.previousFlushFinished?.();
+      this.previousFlushPending = undefined;
       this.monitor.inFlow--;
     }
   }
@@ -1001,7 +994,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (!this.eagerLoading) {
       const self = this;
       flow(function* () {
-        yield* self.loadData({keepCurrentData: true});
+        yield* self.loadData({keepCurrentData: false});
       })();
     }
   }

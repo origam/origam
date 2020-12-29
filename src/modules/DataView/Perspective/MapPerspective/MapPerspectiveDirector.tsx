@@ -109,7 +109,7 @@ class ToolbarActionsExtension implements IDataViewHeaderExtensionItem {
       <CtxMapRootStore.Provider value={this.rootStore} key={this.$iid}>
         <MapPerspectiveNavigation />
         <MapPerspectiveSearch />
-        <MapPerspectiveRoutefind />
+        {/*<MapPerspectiveRoutefind />*/}
       </CtxMapRootStore.Provider>
     ) : null;
   }
@@ -142,7 +142,6 @@ function MapContentUI(props: {
             isReadOnly={mapSetupStore.isReadOnlyView}
             isActive={props.mapPerspective.isActive}
             onChange={(geoJson) => {
-              console.log("Change: ", geoJson);
               mapObjectsStore.handleGeometryChange(geoJson);
             }}
             onRoutefinderGeometryChange={mapRoutefinderStore.handleGeometryChange}

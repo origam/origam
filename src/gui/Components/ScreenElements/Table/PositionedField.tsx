@@ -12,7 +12,7 @@ export class PositionedField extends React.Component<IPositionedFieldProps> {
     const columnLeft = cellRectangle.columnLeft;
     const columnWidth = cellRectangle.columnWidth;
     const rowTop = cellRectangle.rowTop;
-    const rowHeight = cellRectangle.rowHeight;
+    const rowHeight = 25; //cellRectangle.rowHeight;
     const { scrollTop, scrollLeft } = this.props.scrollOffsetSource;
     return ReactDOM.createPortal(
       <div

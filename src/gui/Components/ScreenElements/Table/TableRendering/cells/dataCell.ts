@@ -37,6 +37,7 @@ import {
   currentRow,
   dataTable,
   drawingColumnIndex,
+  formScreen,
   recordId,
   rowHeight,
   rowIndex,
@@ -212,7 +213,7 @@ function getCheckboxClickableArea() {
   const fontSize = checkBoxCharacterFontSize;
   return {
     x: xCenter() - fontSize / 2,
-    y: yCenter() - fontSize / 2,
+    y: currentRowTop() + topTextOffset - 4 - fontSize / 2,
     width: fontSize,
     height: fontSize,
   };
@@ -327,7 +328,7 @@ function drawCellValue() {
         ctx2d.fillText(
           !!currentCellText() ? "\uf14a" : "\uf0c8",
           CPR() * xCenter(),
-          CPR() * yCenter()
+          CPR() * (currentRowTop() + topTextOffset - 4)
         );
         break;
       case "Date":
@@ -373,6 +374,36 @@ function drawCellValue() {
           ctx2d.restore();
         }
         break;
+      case "Image": {
+        const value = currentCellValue();
+        if (!value) break;
+        const { pictureCache } = formScreen();
+        const img = pictureCache.getImage(value);
+        //console.log("DRAW:", value, img);
+        if (!img || !img.complete) break;
+        const iw = img.width;
+        const ih = img.height;
+        const cw = property.width;
+        const ch = property.height;
+        const WR = cw / iw;
+        const HR = ch / ih;
+        let ratio = 0;
+        if (Math.abs(1 - WR) < Math.abs(1 - HR)) {
+          ratio = WR;
+        } else {
+          ratio = HR;
+        }
+        const finIW = ratio * iw;
+        const finIH = ratio * ih;
+        ctx2d.drawImage(
+          img,
+          CPR() * (xCenter() - finIW * 0.5),
+          CPR() * (yCenter() - finIH * 0.5),
+          CPR() * finIW,
+          CPR() * finIH
+        );
+        break;
+      }
       default:
         if (currentCellText() !== null) {
           if (!currentProperty().isPassword) {

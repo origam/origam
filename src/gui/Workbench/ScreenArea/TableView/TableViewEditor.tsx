@@ -188,7 +188,7 @@ export class TableViewEditor extends React.Component<{
         console.warn(`Type of polymorphic column was not determined, no editor was rendered`)
         return "";
       default:
-        console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered`)
+        //console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered`)
         return "";
     }
   }

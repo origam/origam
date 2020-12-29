@@ -68,6 +68,10 @@ export class ServerSideGrouper implements IGrouper {
       }
     }
   }
+
+  substituteRecord(row: any[]): void{
+    this.allGroups.map(group => group.substituteRecord(row))
+  }
   
   refresh() {
     this.refreshTrigger++;
@@ -106,7 +110,7 @@ export class ServerSideGrouper implements IGrouper {
         ()=> [
           getGroupingConfiguration(this).nextColumnToGroupBy(groupHeader.columnId),
           this.composeFinalFilter(groupHeader),
-          [ ...getFilterConfiguration(groupHeader).activeFilters],
+          [ ...getFilterConfiguration(this).activeFilters],
           [ ...getTablePanelView(this).aggregations.aggregationList],
           getOrderingConfiguration(this).groupChildrenOrdering
         ], 
@@ -201,5 +205,6 @@ export class ServerSideGrouper implements IGrouper {
     for (let disposer of this.disposers) {
       disposer();
     }
+    this.allGroups.forEach(group => group.dispose())
   }
 }

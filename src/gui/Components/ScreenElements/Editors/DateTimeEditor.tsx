@@ -10,6 +10,7 @@ import DateCompleter from "./DateCompleter";
 import { getLocaleFromCookie } from "../../../../utils/cookies";
 import cx from "classnames";
 import { IFocusAble } from "../../../../model/entities/FocusManager";
+import { toOrigamServerString } from "utils/moment";
 
 @observer
 class CalendarWidget extends React.Component<{
@@ -97,7 +98,15 @@ class CalendarWidget extends React.Component<{
 
   render() {
     return (
-      <div className={S.calendarWidgetContainer}>
+      <div
+        className={S.calendarWidgetContainer}
+        onMouseDown={(e) => {
+          /* Prevent mousedown default action causong onblur being fired on the editors input
+              which triggered data update
+          */
+          e.preventDefault();
+        }}
+      >
         <div className={S.calendarWidgetDayTable}>
           <div className={S.calendarWidgetRow}>
             <div className={S.calendarWidgetHeader}>
@@ -224,9 +233,9 @@ export class DateTimeEditor extends React.Component<{
     const dateCompleter = this.getDateCompleter();
     const completedMoment = dateCompleter.autoComplete(this.dirtyTextualValue);
     if (completedMoment) {
-      this.props.onChange?.(event, completedMoment.toISOString(true));
+      this.props.onChange?.(event, toOrigamServerString(completedMoment));
     } else if (this.momentValue?.isValid()) {
-      this.props.onChange?.(event, this.momentValue?.toISOString(true));
+      this.props.onChange?.(event, toOrigamServerString(this.momentValue));
     }
 
     this.dirtyTextualValue = undefined;
@@ -251,9 +260,9 @@ export class DateTimeEditor extends React.Component<{
     if (event.key === "Enter" || event.key === "Tab") {
       const completedMoment = this.autoCompletedMoment;
       if (completedMoment) {
-        this.props.onChange?.(event, completedMoment.toISOString(true));
+        this.props.onChange?.(event, toOrigamServerString(completedMoment));
       } else if (this.momentValue?.isValid()) {
-        this.props.onChange?.(event, this.momentValue?.toISOString(true));
+        this.props.onChange?.(event, toOrigamServerString(this.momentValue));
       }
       this.dirtyTextualValue = undefined;
     }
@@ -302,7 +311,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   @computed get textfieldValue() {
-    return this.dirtyTextualValue !== undefined
+    return this.dirtyTextualValue !== undefined && this.dirtyTextualValue !== ""
       ? this.dirtyTextualValue
       : this.formattedMomentValue;
   }
@@ -327,7 +336,7 @@ export class DateTimeEditor extends React.Component<{
     this.elmDropdowner && this.elmDropdowner.setDropped(false);
     this.dirtyTextualValue = undefined;
     this.props.onChangeByCalendar && this.props.onChangeByCalendar(event, day.toISOString(true));
-    this.props.onChange && this.props.onChange(event, day.toISOString(true));
+    this.props.onChange && this.props.onChange(event, toOrigamServerString(day));
   }
 
   @action.bound
@@ -339,6 +348,7 @@ export class DateTimeEditor extends React.Component<{
   }
 
   render() {
+    const mVal = moment(this.props.value);
     return (
       <Dropdowner
         ref={this.refDropdowner}
