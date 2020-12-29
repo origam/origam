@@ -124,6 +124,13 @@ export default class Scroller extends React.Component<IScrollerProps> {
     } 
   }
 
+  handleMouseLeave(event: any){
+    if(this.timeout){
+      clearTimeout(this.timeout);
+    }
+    this.props.onMouseLeave(event);
+  }
+
   @action.bound
   private handleWindowClick(event: any) {
     if (this.elmScrollerDiv && !this.elmScrollerDiv.contains(event.target)) {
@@ -153,7 +160,7 @@ export default class Scroller extends React.Component<IScrollerProps> {
         onScroll={this.handleScroll}
         onClick={(e) => this.clickHandler.handleClick(e)}
         onMouseMove={event => this.handleMouseMove(event)}
-        onMouseLeave={this.props.onMouseLeave}
+        onMouseLeave={event => this.handleMouseLeave(event)}
         onKeyDown={(event) => this.props.onKeyDown?.(event)}
         ref={this.refScrollerDiv}
       >

@@ -315,9 +315,10 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
     })
   }
 
+  @observable
   mouseInToolTipEnabledArea = true;
   
-  onMouseLeaveToolTipEnabledArea(event: any){
+  @action.bound onMouseLeaveToolTipEnabledArea(event: any){
     this.mouseInToolTipEnabledArea = false;
   }
 
@@ -425,6 +426,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                                   theme={"light"}
                                   distance={0}
                                   className={S.toolTipContainer}
+                                  // animation={"none"}
                                 >
                                   <div style= {{maxHeight: "5px", maxWidth: "5px"}}>
                                   </div>
