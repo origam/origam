@@ -173,6 +173,7 @@ export class FormBuilder extends React.Component<{
                     <FormField
                       isHidden={isHidden}
                       caption={property.name}
+                      hideCaption={property.column === "Image"}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
                       dock={property.dock}

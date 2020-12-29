@@ -37,6 +37,7 @@ export class FormField extends React.Component<{
   height: number;
   isCheckbox?: boolean;
   isHidden?: boolean;
+  hideCaption?: boolean;
 }> {
   @computed
   get captionStyle() {
@@ -95,7 +96,8 @@ export class FormField extends React.Component<{
     const { props } = this;
     return (
       <>
-        {this.props.captionPosition !== ICaptionPosition.None && (
+        {this.props.captionPosition !== ICaptionPosition.None && 
+        !this.props.hideCaption && (
           <label className={S.caption} style={this.captionStyle}>
             {props.caption}
           </label>
