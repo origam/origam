@@ -12,6 +12,9 @@ export default {
   onActionClick(ctx: any) {
     return flow(function* onActionClick(event: any, action: IAction) {
       try {
+        if (!action.isEnabled) {
+          return;
+        }
         const lifecycle = getFormScreenLifecycle(ctx);
         const gridId = getGridId(ctx);
         const entity = getEntity(ctx);
