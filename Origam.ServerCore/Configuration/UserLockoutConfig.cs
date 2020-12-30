@@ -27,8 +27,8 @@ namespace Origam.ServerCore.Configuration
 {
     public class UserLockoutConfig
     {
-        public bool AutoUnlockAfterSpecifiedTime { get; set; }
-        public int LockoutTimeMinutes { get; set; } = 5;
+        private static readonly int oneThousandYearsInMinutes = 60 * 24 * 365 * 1000;
+        public int LockoutTimeMinutes { get; set; } = oneThousandYearsInMinutes;
         public int MaxFailedAccessAttempts { get; set; } = 5;
 
 
@@ -38,8 +38,7 @@ namespace Origam.ServerCore.Configuration
         public UserLockoutConfig(IConfiguration configuration)
         {
             var section = configuration.GetSection("UserLockoutConfig");
-            AutoUnlockAfterSpecifiedTime = section.GetValue<bool>("AutoUnlockAfterSpecifiedTime");
-            LockoutTimeMinutes = section.GetValue<int>("LockoutTimeMinutes");
+            LockoutTimeMinutes = section.GetValue("LockoutTimeMinutes", oneThousandYearsInMinutes);
             MaxFailedAccessAttempts = section.GetValue<int>("MaxFailedAccessAttempts");
         }
     }

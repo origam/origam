@@ -90,14 +90,11 @@ namespace Origam.ServerCore
 #if DEBUG
             builder.AddRazorRuntimeCompilation();
 #endif
-            if (lockoutConfig.AutoUnlockAfterSpecifiedTime)
+            services.Configure<IdentityOptions>(options =>
             {
-                services.Configure<IdentityOptions>(options =>
-                {
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutConfig.LockoutTimeMinutes);
-                    options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
-                });
-            }
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutConfig.LockoutTimeMinutes);
+                options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
+            });
             services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
             services.AddSpaStaticFiles(configuration =>
             {
