@@ -71,5 +71,8 @@
     <sia:ancestor
       sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
       x:id="5ca651cf-853a-4f58-8364-250ae3aeaf33" />
+    <sia:ancestor
+      sia:ancestor="Attachments/DataEntity/Attachments/IOrigamAttachment.origam#IOrigamAttachment/b5ed521a-4f64-4323-baed-6e01ceb2dada"
+      x:id="6b6adc7c-e775-4b2e-900c-516d558c7838" />
   </tmi:DataEntity>
 </x:file>
