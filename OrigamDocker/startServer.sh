@@ -6,6 +6,7 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   rm -rf $DIR
 	   mkdir $DIR
 	   cd $DIR
+	   # Directory data
 	   gitcredentials=""
 	   if [[ -n ${gitUsername} && -n ${gitPassword} ]]; then
 			gitcredentials="${gitUsername}:${gitPassword}@"
@@ -20,12 +21,18 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   fi
 	   if [[ -n ${gitBranch} ]]; then
 	    cd `ls`
+		# Directory data/gitRootDirectory
 	    git checkout ${gitBranch}
 		cd ..
 	   fi
-	   cd ..
+	   #test custom scripts
+	   cd `ls`
+	   if [ -f custom.js ]; then
+		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+	   fi
 	fi
 fi
+cd /home/origam/HTML5
 
 DIRCONFIG="configuredata"
 if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
@@ -33,6 +40,7 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   rm -rf $DIRCONFIG
 	   mkdir $DIRCONFIG
 	   cd $DIRCONFIG
+	   # Directory configuredata
 	   gitconfcredentials=""
 	   if [[ -n ${gitConfUsername} && -n ${gitConfPassword} ]]; then
 			gitconfcredentials="${gitConfUsername}:${gitConfPassword}@"
@@ -45,7 +53,9 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 		fullconfgiturl="http://$gitconfcredentials${gitConfUrl//http:\/\//}"
 		git clone $fullconfgiturl
 	   fi
+	   #need to move to gitRootDirectory everytime
 	   cd `ls`
+	   # Directory configuredata/gitRootDirectory
 	   if [[ -n ${gitConfBranch} ]]; then
 	    git checkout ${gitConfBranch}
 	   fi
@@ -61,10 +71,12 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   if [ -f log4net.config ]; then
 		cp log4net.config ../../
 	   fi
-	   cd ..
-	   cd ..
+	   if [ -f custom.js ]; then
+		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+	   fi
 	fi
 fi
+cd /home/origam/HTML5
 
 if [ ! "$(ls -A $DIR)" ]; then 
 	echo “Server has no model!!!! Please set up with GIT.”;
