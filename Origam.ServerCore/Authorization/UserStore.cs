@@ -64,14 +64,10 @@ namespace Origam.ServerCore
             = new Guid("46fd2484-4506-45a2-8a96-7855ea116210");
         
         private readonly IStringLocalizer<SharedResources> localizer;
-        private readonly UserLockoutConfig lockoutConfig;
-        private readonly DateTime nullLockedOutDate = new DateTime(1900,1,1);
 
-        public UserStore(IOptions<UserLockoutConfig> userLockoutConfig,
-            IStringLocalizer<SharedResources> localizer)
+        public UserStore(IStringLocalizer<SharedResources> localizer)
         {
             this.localizer = localizer;
-            lockoutConfig = userLockoutConfig.Value;
         }
 
         public Task<IdentityResult> CreateAsync(IOrigamUser user, CancellationToken cancellationToken)
