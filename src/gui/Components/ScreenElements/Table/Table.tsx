@@ -310,7 +310,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
       runInAction(() =>{
         this.mouseInToolTipEnabledArea = true;
         this.toolTipData = this.tableRenderer.getToolTipContent(event, boundingRectangle);
-        console.log("this.toolTipData: "+this.toolTipData?.content);
       });
     })
   }
