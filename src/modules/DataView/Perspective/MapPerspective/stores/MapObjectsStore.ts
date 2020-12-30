@@ -54,6 +54,12 @@ export class MapObjectsStore {
       : undefined;
   }
 
+  @computed get fldColorIndex() {
+    return this.setup.mapColorMember
+      ? getDataSourceFieldIndexByName(this.dataView, this.setup.mapColorMember)
+      : undefined;
+  }
+
   @computed get fldIdentifier() {
     return getDataSourceFieldIndexByName(this.dataView, "Id");
   }
@@ -72,8 +78,9 @@ export class MapObjectsStore {
               ...objectGeoJson,
               id: row[this.fldIdentifier],
               name: this.fldNameIndex !== undefined ? row[this.fldNameIndex] : "",
-              icon: this.fldIconIndex && row[this.fldIconIndex],
-              azimuth: this.fldIconAzimuth && row[this.fldIconAzimuth],
+              icon: this.fldIconIndex !== undefined ? row[this.fldIconIndex] : undefined,
+              color: this.fldColorIndex !== undefined ? row[this.fldColorIndex] : undefined,
+              azimuth: this.fldIconAzimuth !== undefined ? row[this.fldIconAzimuth] : undefined,
             });
         }
       }
@@ -95,6 +102,7 @@ export class MapObjectsStore {
               id: row[this.fldIdentifier],
               name: this.fldNameIndex !== undefined ? row[this.fldNameIndex] : "",
               icon: this.fldIconIndex && row[this.fldIconIndex],
+              color: this.fldColorIndex !== undefined ? row[this.fldColorIndex] : undefined,
               azimuth: this.fldIconAzimuth && row[this.fldIconAzimuth],
             });
           }
@@ -159,6 +167,7 @@ export interface IMapObjectBase {
   id: string;
   name: string;
   icon: string;
+  color: number | undefined;
   azimuth: number;
 }
 

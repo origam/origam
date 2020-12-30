@@ -1,5 +1,5 @@
 export function flashColor2htmlColor(flashColor: number) {
-  if (flashColor === 0) {
+  if (flashColor === 0 || flashColor === null || flashColor === undefined) {
     return undefined;
   }
   return (

@@ -11,6 +11,7 @@ import S from "./MapPerspectiveUI.module.scss";
 import { IMapObject, IMapObjectType } from "./stores/MapObjectsStore";
 import { MapLayer } from "./stores/MapSetupStore";
 import Measure, { ContentRect } from "react-measure";
+import { flashColor2htmlColor } from "utils/flashColorFormat";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -146,7 +147,7 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     });
   }
 
-  highlightLayer(lLayer: L.Layer) {
+  highlightLayer(obj: IMapObject, lLayer: L.Layer) {
     if ((lLayer as any).setStyle) {
       (lLayer as any).setStyle({ color: "yellow" });
     }
@@ -160,9 +161,14 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
     }
   }
 
-  unHighlightLayer(lLayer: L.Layer) {
+  unHighlightLayer(obj: IMapObject, lLayer: L.Layer) {
     if ((lLayer as any).setStyle) {
-      (lLayer as any).setStyle({ color: "blue" });
+      (lLayer as any).setStyle({
+        color:
+          obj.color !== undefined && obj.color !== 0 && obj.color !== null
+            ? flashColor2htmlColor(obj.color)
+            : "blue",
+      });
     }
     if ((lLayer as any).setIcon) {
       (lLayer as any).setIcon(
@@ -177,9 +183,9 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
   highlightSelectedLayer() {
     for (let [obj, lLayer] of this.mapDrawnObjectLayers) {
       if (obj.id === this.props.lastDetailedObject?.id) {
-        this.highlightLayer(lLayer);
+        this.highlightLayer(obj, lLayer);
       } else {
-        this.unHighlightLayer(lLayer);
+        this.unHighlightLayer(obj, lLayer);
       }
     }
   }
@@ -250,7 +256,12 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
                 obj,
                 L.polygon(
                   obj.coordinates[0].map((coords) => [coords[1], coords[0]]),
-                  { color: "blue" }
+                  {
+                    color:
+                      obj.color !== undefined && obj.color !== 0 && obj.color !== null
+                        ? flashColor2htmlColor(obj.color)
+                        : "blue",
+                  }
                 ).bindTooltip(obj.name),
               ];
             }
@@ -261,7 +272,12 @@ export class MapPerspectiveCom extends React.Component<IMapPerspectiveComProps> 
                 obj,
                 L.polyline(
                   obj.coordinates.map((coords) => [coords[1], coords[0]]),
-                  { color: "blue" }
+                  {
+                    color:
+                      obj.color !== undefined && obj.color !== 0 && obj.color !== null
+                        ? flashColor2htmlColor(obj.color)
+                        : "blue",
+                  }
                 ).bindTooltip(obj.name),
               ];
             }
