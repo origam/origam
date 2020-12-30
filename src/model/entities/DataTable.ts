@@ -50,7 +50,7 @@ export class DataTable implements IDataTable {
   }
 
   get allRows() {
-    return this.rowsContainer.rows;
+    return this.rowsContainer.allRows;
   }
 
   @computed get rows(): any[][] {
@@ -412,8 +412,8 @@ export class DataTable implements IDataTable {
   }
 
   @action.bound
-  async insertRecord(index: number, row: any[]): Promise<any> {
-    await this.rowsContainer.insert(index, row);
+  async insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
+    await this.rowsContainer.insert(index, row, shouldLockNewRowAtTop);
   }
 
   @action.bound

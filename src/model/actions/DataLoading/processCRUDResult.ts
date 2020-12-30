@@ -9,6 +9,7 @@ import { getWorkbench } from "model/selectors/getWorkbench";
 import { getDataSources } from "model/selectors/DataSources/getDataSources";
 import {runInAction} from "mobx";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { IDataView } from "model/entities/types/IDataView";
 
 export enum IResponseOperation {
   DeleteAllData = -2,
@@ -30,7 +31,9 @@ export interface ICRUDResult {
   wrappedObject: any[];
 }
 
-export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?: boolean | undefined): Generator {
+export function* processCRUDResult(ctx: any, result: ICRUDResult,
+   resortTables?: boolean | undefined,
+   sourceDataView?: IDataView): Generator {
   if (_.isArray(result)) {
     for (let resultItem of result) {
       yield* processCRUDResult(ctx, resultItem, resortTables);
@@ -66,7 +69,8 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult, resortTables?:
       for (let dataView of dataViews) {
         const tablePanelView = dataView.tablePanelView;
         const dataSourceRow = result.wrappedObject;
-        yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow);
+        const shouldLockNewRowAtTop = sourceDataView?.modelInstanceId === dataView.modelInstanceId;
+        yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
 
         if(isLazyLoading(dataView) && dataView.isRootGrid){
           try{

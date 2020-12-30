@@ -140,11 +140,18 @@ export class ListRowContainer implements IRowsContainer {
     }
   }
 
-  async insert(index: number, row: any[]): Promise<any> {
+  async insert(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
     const dataTable = getDataTable(this);
     row = fixRowIdentifier(row, dataTable.identifierDataIndex);
+    const newRowId = dataTable.getRowId(row);
+    const rowExistsAlready = this.allRows.some(row => dataTable.getRowId(row) === newRowId)
+    if(rowExistsAlready){
+      return;
+    }
     this.allRows.splice(index, 0, row);
-    this.forcedFirstRowId = this.rowIdGetter(row);
+    if(shouldLockNewRowAtTop){
+      this.forcedFirstRowId = this.rowIdGetter(row);
+    }
     await this.updateSortAndFilter();
   }
 
@@ -188,8 +195,13 @@ export class ListRowContainer implements IRowsContainer {
     if (this.rows.length === 0) {
       return undefined;
     }
-    return this.addedRowPositionLocked
-      ? this.rows.find(row => this.rowIdGetter(row) === this.forcedFirstRowId)
-      : this.rows[0];
+    if (this.addedRowPositionLocked){
+      const firstRow = this.rows.find(row => this.rowIdGetter(row) === this.forcedFirstRowId);
+      if(!firstRow){
+        throw new Error("forcedFirstRowId is not among filtered rows")
+      }
+      return firstRow 
+    }
+    return this.rows[0];
   }
 }

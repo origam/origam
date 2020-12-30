@@ -3,7 +3,7 @@ export interface IRowsContainer {
 
   delete(row: any[]): void;
 
-  insert(index: number, row: any[]): Promise<any>;
+  insert(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any>;
 
   set(rows: any[][]): void;
 
