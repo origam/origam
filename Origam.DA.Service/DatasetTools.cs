@@ -1516,7 +1516,13 @@ namespace Origam.DA
                         continue;
                     }
                     DataRow row = rows[0];
-                    if (columnName == ".")
+					if (columnName != null && columnName.StartsWith("{"))
+                    {
+                        string propertyName = GetExtendedPropertyName(columnName, row);
+                        result.Add(parameterName, row.Table.ExtendedProperties[propertyName]);
+						columnName = null;
+                    }
+                    else if (columnName == ".")
                     {
                         DataSet slice = fullData.Clone();
                         GetDataSlice(slice, rows);
@@ -1581,7 +1587,22 @@ namespace Origam.DA
 			return result;
 		}
 
-		public static bool IsAliasedColumn(DataColumn[] columns, Guid fieldId)
+        private static string GetExtendedPropertyName(string name, DataRow row)
+        {
+            string trimmed = name.Trim();
+            if (trimmed.Substring(trimmed.Length - 1) != "}")
+            {
+                throw new Exception("Expression must be enclosed in curly brackets. Invalid expression: " + trimmed);
+            }
+            string propertyName = trimmed.Substring(1, trimmed.Length - 2);
+            if (!row.Table.ExtendedProperties.Contains(propertyName))
+            {
+                throw new Exception("Property does not exist: " + trimmed);
+            }
+            return propertyName;
+        }
+
+        public static bool IsAliasedColumn(DataColumn[] columns, Guid fieldId)
 		{
 			foreach(DataColumn col in columns)
 			{
