@@ -33,7 +33,10 @@ namespace Origam.Security.Common
         bool IsLockedOut { get; set; }
         bool IsOnline { get; set; }
         DateTime LastActivityDate { get;  }
-        DateTime? LastLockoutDate { get; set; }
+        // UserServerCore stores lockoutEndDate into LastLockoutEndDate.
+        // The LastLockoutDate should be renamed to LockoutEndDate when
+        // .net4 (netFx) specific classes are removed!
+        DateTime? LastLockoutDate { get; set; } 
         DateTime LastLoginDate { get;  }
         DateTime LastPasswordChangedDate { get;}
         string PasswordQuestion { get; }

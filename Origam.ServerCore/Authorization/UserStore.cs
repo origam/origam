@@ -371,47 +371,26 @@ namespace Origam.ServerCore
         // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.iuserlockoutstore-1.getlockoutenddateasync?view=aspnetcore-3.1#Microsoft_AspNetCore_Identity_IUserLockoutStore_1_GetLockoutEndDateAsync__0_System_Threading_CancellationToken_
         public Task<DateTimeOffset?> GetLockoutEndDateAsync(IOrigamUser user, CancellationToken cancellationToken)
         {
-            if (lockoutConfig.AutoUnlockAfterSpecifiedTime)
+            if (!user.LastLockoutDate.HasValue || 
+                user.LastLockoutDate.Value == DateTime.MinValue)
             {
-                if (!user.LastLockoutDate.HasValue)
-                {
-                    return Task.FromResult<DateTimeOffset?>(null);
-                }
-
-                if (user.LastLockoutDate.Value == DateTime.MinValue)
-                {
-                    return Task.FromResult<DateTimeOffset?>(new DateTimeOffset(nullLockedOutDate));
-                }
-
-                return
-                    Task.FromResult<DateTimeOffset?>(
-                        new DateTimeOffset(user.LastLockoutDate.Value)
-                            .AddMinutes(lockoutConfig.LockoutTimeMinutes));
+                return Task.FromResult<DateTimeOffset?>(null);
             }
-            return
-                Task.FromResult<DateTimeOffset?>(IsLockedOut(user.LastLockoutDate)
-                    ? new DateTimeOffset(new DateTime(9999, 1, 1))
-                    : new DateTimeOffset(new DateTime(10, 1, 1)));
-        }
-        
-        private bool IsLockedOut(DateTime? dateTime)
-        {
-            if (!dateTime.HasValue) return false;
-            return dateTime.Value >= DateTime.Now;
+            return Task.FromResult<DateTimeOffset?>(
+                new DateTimeOffset(user.LastLockoutDate.Value));
         }
 
         public Task SetLockoutEndDateAsync(IOrigamUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
-            user.LastLockoutDate = null;
-            // if the lockout end is set to default 1. 1. 1900,
-            // the subtraction ends up in out-of-range date 
-            if (lockoutEnd.HasValue 
-            && (lockoutEnd.Value.CompareTo(new DateTimeOffset()) != 0))
+            if (lockoutEnd.HasValue)
             {
-                user.LastLockoutDate = lockoutEnd.Value
-                    .AddMinutes(-lockoutConfig.LockoutTimeMinutes)
-                    .LocalDateTime;
+                user.LastLockoutDate =  lockoutEnd.Value.LocalDateTime;
             }
+            else
+            {
+                user.LastLockoutDate = null;
+            }
+
             return Task.CompletedTask;
         }
 
