@@ -111,8 +111,14 @@ export class DataViewLifecycle implements IDataViewLifecycle {
     return false;
   }
 
-  *navigateAsChild() {
-    yield* this.loadGetData();
+  *navigateAsChild(rows?: any[]) {
+    if(rows !== undefined && rows !== null){
+      const dataView = getDataView(this);
+      dataView.setRecords(rows);
+      dataView.selectFirstRow();
+    }else{
+      yield* this.loadGetData();
+    }
   }
 
   changeMasterRowCanceller: any;
@@ -215,13 +221,20 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   *navigateChildren(): Generator<any, any> {
     try {
       this.monitor.inFlow++;
+      const entity = getEntity(this);
+      const dataView = getDataView(this);
       yield Promise.all(
-        getBindingChildren(this).map(bch =>
+        getBindingChildren(this).map(childDataView =>
           flow(function*() {
             try {
-              yield* navigateAsChild(bch)();
+              const childEntity = getEntity(childDataView);
+              if(childEntity === entity && childDataView.isPreloaded){
+                yield* navigateAsChild(childDataView, dataView.dataTable.allRows)();
+              }else{
+                yield* navigateAsChild(childDataView)();
+              }
             } catch (e) {
-              yield* handleError(bch)(e);
+              yield* handleError(childDataView)(e);
             }
           })()
         )
