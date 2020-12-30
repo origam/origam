@@ -617,7 +617,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         SessionFormIdentifier: getSessionId(this),
         ObjectId: dataView.selectedRowId!,
       });
-      yield* processCRUDResult(dataView, updateObjectResult);
+      yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
       const formScreen = getFormScreen(this);
       if (formScreen.requestSaveAfterUpdate) {
         yield* this.saveSession();
@@ -677,7 +677,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       });
     });
     dataView.focusManager.stopAutoFocus();
-    yield* processCRUDResult(dataView, updateObjectResult);
+    yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
     return true;
   }
 
@@ -702,7 +702,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         });
       });
 
-      yield* processCRUDResult(dataView, updateObjectResult);
+      yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
 
       if (formScreen.requestSaveAfterUpdate) {
         yield* this.saveSession();
@@ -817,7 +817,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* processCRUDResult(targetDataView, createObjectResult);
+      yield* processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
       if (targetDataView.newRecordView === "0" && targetDataView.activateFormView) {
         yield* targetDataView.activateFormView();
       } else {
@@ -854,7 +854,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
-      yield* processCRUDResult(targetDataView, createObjectResult);
+      yield* processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
     } finally {
       this.monitor.inFlow--;
     }

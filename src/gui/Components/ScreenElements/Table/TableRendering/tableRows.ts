@@ -34,6 +34,5 @@ export function flattenToTableRows(rootGroups: IGroupTreeNode[]) {
     for (let group of rootGroups) {
       recursive(group);
     }
-    console.log(result)
     return result;
 }

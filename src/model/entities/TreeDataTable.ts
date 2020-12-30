@@ -207,7 +207,7 @@ export class TreeDataTable implements IDataTable {
     }
   }
 
-  insertRecord(index: number, row: any[]): Promise<any> {
+  insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
     throw new Error("Not implemented");
   }
 

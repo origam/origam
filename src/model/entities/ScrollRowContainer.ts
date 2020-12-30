@@ -90,7 +90,7 @@ export class ScrollRowContainer implements IRowsContainer {
     };
   }
 
-  insert(index: number, row: any[]): Promise<any> {
+  insert(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
     const dataTable = getDataTable(this);
     row = fixRowIdentifier(row, dataTable.identifierDataIndex);
     const { chunk, indexInChunk } = this.findChunkByRowIndex(index);
