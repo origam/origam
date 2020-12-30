@@ -51,7 +51,7 @@ export class Action implements IAction {
         const selectedIds = getDataView(this).selectedRowIds;
         return selectedIds.length > 0
           ? !selectedIds.some(rowId => getRowStateIsDisableAction(this, rowId, this.id))
-          : false;
+          : true;
       }
     }
   }
