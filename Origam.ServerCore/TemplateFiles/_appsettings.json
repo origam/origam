@@ -50,7 +50,6 @@
     }
   },
   "UserLockoutConfig": {
-    "AutoUnlockAfterSpecifiedTime": "true",
     "LockoutTimeMinutes": 5,
     "MaxFailedAccessAttempts": 5
   },
