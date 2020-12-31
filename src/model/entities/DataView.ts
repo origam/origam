@@ -197,6 +197,9 @@ export class DataView implements IDataView {
     const selectionMember = getSelectionMember(this);
     if (!!selectionMember) {
       const dataSourceField = getDataSourceFieldByName(this, selectionMember)!;
+      if(!dataSourceField){
+        throw new Error(`SelectionMember "${selectionMember}" was not found in data source. Make sure the SelectionMember value in ${this.modelInstanceId} is correct`);
+      }
       const updatedRow = this.dataTable.getRowById(rowId)!;
       return this.dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
     }
