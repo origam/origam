@@ -139,5 +139,6 @@ namespace Origam.Server
         public string CustomAssetsRoute { get; set; }
 
         public int ChatRefreshInterval { get; set; }
+        public string Title { get; set; }
     }
 }

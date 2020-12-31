@@ -204,6 +204,7 @@ namespace Origam.ServerCore
             result.UserName = profile.FullName;
             result.UserId = profile.Id;
             result.Tooltip = ToolTipTools.NextTooltip();
+            result.Title = ConfigurationManager.GetActiveConfiguration().TitleText;
             CreateUpdateOrigamOnlineUser();
             return result;
         }
