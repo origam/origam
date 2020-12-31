@@ -211,7 +211,7 @@
     <value>Bitte klicken Sie den Link in Ihrer E-Mail um Ihr Konto zu aktivieren.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
-    <value>Connecter Origam</value>
+    <value>Connecter {0}</value>
   </data>
   <data name="InvalidLoginRequest" xml:space="preserve">
     <value>Ungültige Anmeldeanforderung</value>
