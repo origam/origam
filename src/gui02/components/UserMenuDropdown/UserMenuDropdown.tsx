@@ -30,7 +30,7 @@ export const UserMenuDropdown: React.FC<{
     );
   }
 
-
+  
   return (
     <Dropdowner
       style={{width: "auto"}} // TODO: Move to stylesheet
@@ -48,7 +48,7 @@ export const UserMenuDropdown: React.FC<{
           </div>
         </div>
       )}
-      content={() => (
+      content={({ setDropped }) => (
         <Dropdown>
           <UserMenuBlock
             userName={props.userName || "Logged user"}
@@ -58,7 +58,11 @@ export const UserMenuDropdown: React.FC<{
                 <DropdownItem isDisabled={true}>
                   {T("My profile", "my_profile")}
                 </DropdownItem>
-                <DropdownItem onClick={onAboutClick}>
+                <DropdownItem
+                  onClick={() => {
+                    setDropped(false);
+                    onAboutClick();
+                    }}>
                   {T("About", "about_application")}
                 </DropdownItem>
                 <DropdownItem onClick={props.handleLogoutClick}>
