@@ -14,10 +14,11 @@ export class TabbedViewHandle extends React.Component<{
   render() {
     return (
       <div
+        onClick={this.props.onClick}
         className={cx(S.root, { isActive: this.props.isActive, isDirty: this.props.isDirty })}
         title={this.props.title}
       >
-        <div className={S.label} onClick={this.props.onClick}>
+        <div className={S.label}>
           {this.props.children}
         </div>
         {this.props.hasCloseBtn && (
