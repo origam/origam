@@ -450,6 +450,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const api = getApi(this);
     const portalInfo = yield api.initPortal();
 
+    document.title = portalInfo.title;
     this.userInfo = {
       userName: portalInfo.userName,
       avatarLink: portalInfo.avatarLink,
