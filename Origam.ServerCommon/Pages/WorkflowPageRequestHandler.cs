@@ -129,7 +129,7 @@ namespace Origam.ServerCommon.Pages
 
             if (!handled)
             {
-                if (request.UrlReferrerAbsoluteUri != null)
+                if (!string.IsNullOrEmpty(request.UrlReferrerAbsoluteUri))
                 {
                     response.Redirect(request.UrlReferrerAbsoluteUri);
                 }
