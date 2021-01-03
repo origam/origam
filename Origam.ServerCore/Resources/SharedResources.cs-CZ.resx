@@ -205,7 +205,7 @@
     <value>Pro aktivaci účtu prosím klikněte na potvrzovací link, který jsme Vám právě odeslali na e-mail.</value>
   </data>
   <data name="IdentityServerTitle" xml:space="preserve">
-    <value>Origam přihlášení</value>
+    <value>{0} přihlášení</value>
   </data>
   <data name="InvalidLoginRequest" xml:space="preserve">
     <value>Nesprávný přihlašovací požadavek</value>
