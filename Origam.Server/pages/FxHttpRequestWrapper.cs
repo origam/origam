@@ -63,7 +63,7 @@ namespace Origam.Server.Pages
         public Encoding ContentEncoding => request.ContentEncoding;
         public long ContentLength => request.ContentLength;
         public IDictionary BrowserCapabilities => request.Browser.Capabilities;
-        public string UrlReferrerAbsoluteUri => request.UrlReferrer.AbsoluteUri;
+        public string UrlReferrerAbsoluteUri => request.UrlReferrer?.AbsoluteUri;
         public PostedFile FilesGet(string name)
         {
             HttpPostedFile httpPostedFile = request.Files[name];
