@@ -81,7 +81,7 @@ function registerToolTipGetter(columnId: string) {
   const cellHeight = currentRowHeight();
 
   const toolTipPositionRectangle = {
-    columnLeft: currentColumnLeft() + currentColumnWidth(),
+    columnLeft: currentColumnLeft() + currentColumnWidth() * 0.2,
     columnWidth: 0,
     rowTop: currentRowTop() + currentRowHeight() * 1.6,
     rowHeight: 0,
