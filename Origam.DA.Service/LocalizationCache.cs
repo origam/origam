@@ -133,7 +133,14 @@ namespace Origam.DA.ObjectPersistence
 				string id = it.Current.GetAttribute("Id", "");
 
 				Hashtable element = new Hashtable();
-				language.Add(new Guid(id), element);
+				Guid guidId = new Guid(id);
+				if (language.Contains(guidId))
+				{
+					throw new System.ArgumentException(string.Format(
+						"Cannot add localization key {0} from file {1}. The key is already loaded.",
+						id, path));
+				}
+				language.Add(guidId, element);
 
 				if(it.Current.MoveToFirstChild())
 				{
