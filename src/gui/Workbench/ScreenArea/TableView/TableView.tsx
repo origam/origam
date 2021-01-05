@@ -368,7 +368,9 @@ class HeaderRenderer implements IHeaderRendererData {
           x.setting.val1,
           x.setting.val2,
         ]),
-        [...this.dataView.dataTable.rows]
+        isInfiniteScrollingActive(this.dataView)
+          ? true 
+          : this.dataView.dataTable.rows.length === 0
       ],
       ()=> this.reloadAggregationsDebounced(),
       { fireImmediately: true }
