@@ -159,7 +159,7 @@ export class TablePanelView implements ITablePanelView {
   *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox" || !isControlInteraction) {
-      if (property.isLink && event.ctrlKey) {
+      if (property.isLink && (event.ctrlKey || event.metaKey)) {
         const menuId = selectors.column.getLinkMenuId(property);
         let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
         if (menuItem) {

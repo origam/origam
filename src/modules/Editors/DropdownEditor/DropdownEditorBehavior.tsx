@@ -177,7 +177,7 @@ export class DropdownEditorBehavior {
             }
           }
           this.scrollToCursoredRowIfNeeded();
-        } else if (event.ctrlKey) {
+        } else if (event.ctrlKey || event.metaKey) {
           this.dropDown();
           this.trySelectFirstRow();
         }

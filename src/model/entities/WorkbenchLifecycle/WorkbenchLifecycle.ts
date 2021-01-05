@@ -84,7 +84,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     if (type === IMainMenuItemType.FormRefWithSelection) {
       dialogInfo = new DialogInfo(parseInt(dialogWidth, 10), parseInt(dialogHeight, 10));
     }
-    if (event && !event.ctrlKey) {
+    if (event && !(event.ctrlKey || event.metaKey)) {
       const existingItem = openedScreens.findLastExistingItem(id);
       if (
         existingItem &&
@@ -197,7 +197,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const label = item.name;
 
     let dialogInfo: IDialogInfo | undefined;
-    if (!event.ctrlKey) {
+    if (!(event.ctrlKey || event.metaKey)) {
       const existingItem = openedScreens.findLastExistingItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);

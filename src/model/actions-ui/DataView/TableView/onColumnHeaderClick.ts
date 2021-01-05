@@ -10,7 +10,7 @@ export function onColumnHeaderClick(ctx: any) {
       if(property?.column === "Blob" || property?.column === "TagInput"){
         return;
       }
-      if (event.ctrlKey) {
+      if (event.ctrlKey || event.metaKey) {
         getOrderingConfiguration(ctx).addOrdering(column);
       } else {
         getOrderingConfiguration(ctx).setOrdering(column);
