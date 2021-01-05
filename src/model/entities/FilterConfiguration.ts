@@ -167,8 +167,8 @@ export class FilterConfiguration implements IFilterConfiguration {
         )
           return true;
 
-        const t1 = term.setting.val1.endsWith("T00:00:00.000")
-          ? txt1.substr(0, 10).concat("T00:00:00.000")
+        const t1 = term.setting.val1.split(".")[0].endsWith("T00:00:00")
+          ? txt1.substr(0, 10).concat("T00:00:00")
           : txt1;
 
         switch (term.setting.type) {
@@ -182,7 +182,7 @@ export class FilterConfiguration implements IFilterConfiguration {
             if (txt1 === null) return false;
             const t0 = term.setting.val1;
             const t2 = term.setting.val2;
-            return t0 < t1 && t1 < t2;
+            return t0 <= t1 && t1 <= t2;
           }
           case "eq":
             if (txt1 === null) return false;
