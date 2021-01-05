@@ -27,32 +27,27 @@
     <Version>3.1.2</Version>
   </PropertyGroup>
 
-
-  <PropertyGroup>
-    <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <Configurations>Debug Client;Debug Architect;Debug Server;Release Client;Release Architect;Release Server</Configurations>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Client|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
+    <DefineConstants>ORIGAM_CLIENT</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT</DefineConstants>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
-    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
+    <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER</DefineConstants>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
@@ -65,7 +60,7 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
