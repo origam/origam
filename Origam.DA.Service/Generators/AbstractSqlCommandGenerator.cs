@@ -1834,7 +1834,7 @@ namespace Origam.DA.Service
                             .First(x => x.Name == columnName);
                         bool groupByNeeded1 = false;
                         string groupExpression = "";
-                        string columnExpression = GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
+                        string columnExpression = GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
                             dynamicParameters, selectParameterReferences, isInRecursion,
                             ref groupByNeeded1, columnsInfo, dataStructureColumn, ref groupExpression);
                         customCommandParser.SetFilterColumnExpression(columnName ,columnExpression);
@@ -1960,7 +1960,7 @@ namespace Origam.DA.Service
                 var aggregation = aggregatedColumns[i];
                 var column = entity.Columns
                     .First(col => col.Name == aggregation.ColumnName);
-                string renderedColumn = GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
+                string renderedColumn = GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
                     dynamicParameters, selectParameterReferences, isInRecursion,
                     ref groupByNeeded, columnsInfo, column, ref groupExpression);
                 if (i == 0 && noColumnsRenderedYet)
@@ -2098,7 +2098,7 @@ namespace Origam.DA.Service
             if (processColumn || column.IsColumnSorted(sortSet))
             {
                 resultExpression = 
-                    GetDataStructureColumnSqlName(ds, entity, replaceParameterTexts,
+                    GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
                         dynamicParameters, selectParameterReferences, isInRecursion,
                         ref groupByNeeded, columnsInfo, column, ref groupExpression);
                 if (customCommandParser != null)
@@ -2158,7 +2158,7 @@ namespace Origam.DA.Service
             return result;
         }
 
-        private string GetDataStructureColumnSqlName(DataStructure ds,
+        private string GetDataStructureColumnSqlExpression(DataStructure ds,
             DataStructureEntity entity, Hashtable replaceParameterTexts,
             Hashtable dynamicParameters, Hashtable selectParameterReferences,
             bool isInRecursion, ref bool groupByNeeded, ColumnsInfo columnsInfo,
