@@ -24,12 +24,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Origam.DA;
 using Origam.Security.Common;
 using Origam.Security.Identity;
 using Origam.ServerCore.Authorization;
 using Origam.ServerCore.Configuration;
+using Origam.ServerCore.IdentityServerGui.Home;
 using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
 using Origam.Workbench.Services.CoreServices;
@@ -52,6 +54,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         private readonly IStringLocalizer<SharedResources> _localizer;
         private readonly IPersistedGrantStore _persistedGrantStore;
         private readonly SessionObjects _sessionObjects;
+        private readonly ILogger<UserManager<IOrigamUser>> _logger;
         private readonly IdentityGuiConfig _configOptions;
         private readonly RequestLocalizationOptions _requestLocalizationOptions;
         private readonly ResourceManager resourceManager = new ResourceManager("Origam.ServerCore.Resources.SharedResources", Assembly.GetExecutingAssembly());
@@ -67,7 +70,8 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             IOptions<UserConfig> userConfig, IStringLocalizer<SharedResources> localizer,
             IPersistedGrantStore persistedGrantStore, SessionObjects sessionObjects,
             IOptions<RequestLocalizationOptions> requestLocalizationOptions,
-            IOptions<IdentityGuiConfig> configOptions)
+            IOptions<IdentityGuiConfig> configOptions,
+            ILogger<UserManager<IOrigamUser>> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -79,6 +83,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             _localizer = localizer;
             _persistedGrantStore = persistedGrantStore;
             _sessionObjects = sessionObjects;
+            _logger = logger;
             _configOptions = configOptions.Value;
             _userConfig = userConfig.Value;
             _requestLocalizationOptions = requestLocalizationOptions.Value;
@@ -152,7 +157,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return View("Error", new Error(_localizer["RegistrationNotAllowed"]));
+                return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -168,7 +173,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return View("Error", new Error(_localizer["RegistrationNotAllowed"]));
+                return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
             }
             if (ModelState.IsValid)
             {
@@ -201,7 +206,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!UserTools.IsInitialSetupNeeded())
             {
-                return View("Error", new Error(_localizer["AlreadySetUp"]));
+                return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
             }
             return View();
         }
@@ -215,7 +220,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!UserTools.IsInitialSetupNeeded())
             {
-                return View("Error", new Error(_localizer["AlreadySetUp"]));
+                return View("Error", new ErrorViewModel(_localizer["AlreadySetUp"]));
             }
             
             if (ModelState.IsValid)
@@ -251,21 +256,31 @@ namespace Origam.ServerCore.IdentityServerGui.Account
         {
             if (!_userConfig.UserRegistrationAllowed)
             {
-                return View("Error", new Error(_localizer["RegistrationNotAllowed"]));
+                return View("Error", new ErrorViewModel(_localizer["RegistrationNotAllowed"]));
             }
             if (userId == null || code == null)
             {
+                _logger.LogWarning($"Invalid confirm email data: userId:\"{userId}\", code:\"{code}\"");
                 return View("Error");
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
+                _logger.LogWarning($"User not found: userId:\"{userId}\"");
                 return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            return result.Succeeded 
-                ? View("EmailConfirmation") 
-                : View("Error");
+            if (result.Succeeded)
+            {
+                return View("EmailConfirmation");
+            }
+            else
+            {
+                string errors = string.Join("\n",
+                    result.Errors.Select(error => error.Description));
+                _logger.LogWarning($"ConfirmEmailAsync failed, errors:\"{errors}\"");
+                return View("Error");
+            }
         }
 
                 
@@ -286,7 +301,16 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             {
                 return RedirectToAction(nameof(Login), "Account");
             }
-            return code == null ? View("Error") : View();
+
+            if (code == null)
+            {
+                _logger.LogWarning($"Code supplied to {nameof(ResetPassword)} was null");
+                return View("Error");
+            }
+            else
+            {
+                return  View();
+            }
         }
         
         // POST: /Account/ResetPassword
@@ -431,7 +455,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return View(nameof(Error), new Error(resourceManager.GetString("ErrorUserNotFound")));
+                return View("Error", new ErrorViewModel(resourceManager.GetString("ErrorUserNotFound")));
             }
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
@@ -441,7 +465,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
             if (!providers.Contains("Email"))
             {
-                return View(nameof(Error), new Error("Email provider not found."));
+                return View("Error", new ErrorViewModel("Email provider not found."));
             }
 
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
@@ -465,7 +489,7 @@ namespace Origam.ServerCore.IdentityServerGui.Account
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if(user == null)
             {
-                return View("Error", new Error(_localizer["LoginFailedUnknown"]));
+                return View("Error", new ErrorViewModel(_localizer["LoginFailedUnknown"]));
             }
 
             var result = await _signInManager.TwoFactorSignInAsync("Email", twoStepModel.TwoFactorCode, twoStepModel.RememberLogin, rememberClient: false);
