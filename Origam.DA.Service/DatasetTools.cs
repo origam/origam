@@ -642,13 +642,14 @@ namespace Origam.DA
 					{
 						if(row.RowState != DataRowState.Deleted)
 						{
+							object primaryKey = PrimaryKey(row)[0];
 							row.Delete();
 							changed = true;
 
 							if(changeList != null)
 							{
 								changeList.Add(new KeyValuePair<object,DataMergeChange>(
-                                aRowKey[0], new DataMergeChange(null, DataRowState.Deleted)));
+									primaryKey, new DataMergeChange(null, DataRowState.Deleted)));
 							}
 						}
 					}
