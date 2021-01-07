@@ -88,6 +88,16 @@ export class ServerSideGrouper implements IGrouper {
   getMaxRowCountSeen(rowId: string): number {
     return getMaxRowCountSeen(this, rowId);
   }
+  
+  getTotalRowCount(rowId: string): number | undefined{
+    const group = this.allGroups
+      .find(group => group.getRowById(rowId));
+    if(group?.isInfinitelyScrolled){
+      return group.rowCount;
+    }else{
+      return undefined;
+    }
+  }
 
   getCellOffset(rowId: string): ICellOffset {
     return getCellOffset(this, rowId);
@@ -136,6 +146,7 @@ export class ServerSideGrouper implements IGrouper {
     } else {
       const rows = yield lifeCycle.loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
       group.childRows = rows;
+      // dataView.totalRowCount = group.rowCount;
     }
   }
 

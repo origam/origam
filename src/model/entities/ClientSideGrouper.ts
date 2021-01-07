@@ -49,6 +49,10 @@ export class ClientSideGrouper implements IGrouper {
   getMaxRowCountSeen(rowId: string): number {
     return getMaxRowCountSeen(this, rowId);
   }
+
+  getTotalRowCount(rowId: string): number | undefined {
+    return undefined;
+  }
   
   getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
     return Promise.resolve(getAllLoadedValuesOfProp(property, this));
