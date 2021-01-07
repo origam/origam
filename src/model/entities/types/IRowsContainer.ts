@@ -5,7 +5,7 @@ export interface IRowsContainer {
 
   insert(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any>;
 
-  set(rows: any[][]): void;
+  set(rows: any[][]): Promise<any>;
 
   appendRecords(rowsIn: any[][]): void;
 

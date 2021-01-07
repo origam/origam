@@ -99,7 +99,7 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   @action.bound
-  set(rowsIn: any[][]) {
+  async set(rowsIn: any[][]): Promise<any> {
     const dataTable = getDataTable(this);
     const rows: any[][] = [];
     for (let row of rowsIn) {

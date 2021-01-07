@@ -114,7 +114,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
   *navigateAsChild(rows?: any[]) {
     if(rows !== undefined && rows !== null){
       const dataView = getDataView(this);
-      dataView.setRecords(rows);
+      yield dataView.setRecords(rows);
       dataView.selectFirstRow();
     }else{
       yield* this.loadGetData();
@@ -211,7 +211,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
           ? []
           : yield getFormScreen(this).getData(getEntity(this), parentRowId, masterRowId);
       }
-      dataView.setRecords(data);
+      yield dataView.setRecords(data);
       dataView.selectFirstRow();
     } finally {
       this.monitor.inFlow--;

@@ -743,7 +743,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       if(args.keepCurrentData){
         rootDataView.appendRecords(loadedData);
       }else{
-        rootDataView.setRecords(loadedData);
+        yield rootDataView.setRecords(loadedData);
       }
       if(this.initialSelectedRowId){
         rootDataView.selectRowById(this.initialSelectedRowId);
@@ -1179,7 +1179,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     for (let [entityKey, entityValue] of Object.entries(data || {})) {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
-        dataView.setRecords((entityValue as any).data);
+        yield dataView.setRecords((entityValue as any).data);
         yield dataView.start();
       }
     }

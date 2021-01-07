@@ -139,7 +139,7 @@ export class TreeDataTable implements IDataTable {
     throw new Error("Not implemented");
   }
 
-  setRecords(rows: any[][]): void {
+  async setRecords(rows: any[][]): Promise<any> {
     this.rows = [...this.sortTreeRows(rows, null)];
   }
 
