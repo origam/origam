@@ -106,7 +106,9 @@ export class DataView implements IDataView {
   get isFormViewActive() {
     return this._isFormViewActive;
   }
-
+  
+  @observable
+  totalRowCount: number | undefined;
   orderProperty: IProperty;
   activateFormView: (() => Generator) | undefined;
 

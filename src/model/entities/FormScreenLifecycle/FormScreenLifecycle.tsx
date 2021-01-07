@@ -64,6 +64,8 @@ import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChi
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
+import { AggregationType } from "../types/AggregationType";
+import { parseAggregations } from "../Aggregatioins";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -363,7 +365,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initialSelectedRowId = initUIResult.currentRecordId
       yield* this.applyInitUIResult({ initUIResult });
       if (!this.eagerLoading) {
+        yield* this.clearMaxRowCounts();
         yield* this.loadData({keepCurrentData: true});
+        yield* this.updateRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
           const orderingConfiguration = getOrderingConfiguration(rootDataView);
@@ -994,8 +998,48 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (!this.eagerLoading) {
       const self = this;
       flow(function* () {
+        yield* self.clearMaxRowCounts();
         yield* self.loadData({keepCurrentData: false});
+        yield* self.updateRowCounts();
       })();
+    }
+  }
+
+  *clearMaxRowCounts(){
+    const formScreen = getFormScreen(this);
+    for (const dataView of formScreen.rootDataViews) {
+      if(isInfiniteScrollingActive(dataView) && 
+         !getGroupingConfiguration(dataView).isGrouping){
+        dataView.totalRowCount = undefined;
+      }
+    }
+  }
+
+  *updateRowCounts() {
+    const api = getApi(this);
+    const formScreen = getFormScreen(this);
+    for (const dataView of formScreen.rootDataViews) {
+      if(isInfiniteScrollingActive(dataView) && 
+         !getGroupingConfiguration(dataView).isGrouping){
+        const aggregationResult = yield api.getAggregations({
+          MenuId: getMenuItemId(dataView),
+          SessionFormIdentifier: getSessionId(this),
+          DataStructureEntityId: getDataStructureEntityId(dataView),
+          Filter: getUserFilters(dataView),
+          MasterRowId: undefined,
+          AggregatedColumns: [
+            {
+              ColumnName: "Id",
+              AggregationType: AggregationType.COUNT
+            }
+          ],
+        });
+
+        const aggregationData = parseAggregations(aggregationResult);
+        if(aggregationData && aggregationData.length > 0) {
+          dataView.totalRowCount = aggregationData[0].value;
+        }
+      }
     }
   }
 

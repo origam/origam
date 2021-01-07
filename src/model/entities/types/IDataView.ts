@@ -66,7 +66,7 @@ export interface IDataViewData {
 
 export interface IDataView extends IDataViewData {
   $type_IDataView: 1;
-
+  
   orderProperty: IProperty | undefined;
   isBindingRoot: boolean;
   isBindingParent: boolean;
@@ -80,6 +80,7 @@ export interface IDataView extends IDataViewData {
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
+  totalRowCount: number | undefined;
   maxRowCountSeen: number;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
