@@ -155,7 +155,7 @@ export class ListRowContainer implements IRowsContainer {
     await this.updateSortAndFilter();
   }
 
-  set(rowsIn: any[][]) {
+  async set(rowsIn: any[][]): Promise<any>{
     const dataTable = getDataTable(this);
     const rows: any[][] = [];
     for (let row of rowsIn) {
@@ -163,7 +163,7 @@ export class ListRowContainer implements IRowsContainer {
     }
     this.clear();
     for(let row of rows) this.allRows.push(row);
-    this.updateSortAndFilter();
+    await this.updateSortAndFilter();
   }
 
   appendRecords(rowsIn: any[][]){

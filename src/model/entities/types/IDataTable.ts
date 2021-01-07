@@ -55,7 +55,7 @@ export interface IDataTable {
   /*setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
   | undefined): void;*/
 
-  setRecords(rows: any[][]): void;
+  setRecords(rows: any[][]): Promise<any>;
   appendRecords(rows: any[][]): void;
   setFormDirtyValue(row: any[], propertyId: string, value: any): void;
   setDirtyValue(row: any[], columnId: string, value: any): void;

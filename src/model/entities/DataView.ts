@@ -185,9 +185,11 @@ export class DataView implements IDataView {
       this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
   }
 
-  setRecords(rows: any[][]): void {
-    this.dataTable.setRecords(rows);
-    this.selectedRowIds.length = 0;
+  async setRecords(rows: any[][]): Promise<any> {
+    await this.dataTable.setRecords(rows);
+    const filteredRows = this.dataTable.rows;
+    const filteredRowIds = filteredRows.map(row =>  this.dataTable.getRowId(row));
+    this.selectedRowIds = this.selectedRowIds.filter(id => filteredRowIds.includes(id));
     this.selectAllCheckboxChecked =
       this.dataTable.rows.length !== 0 &&
       this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
