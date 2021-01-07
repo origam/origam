@@ -365,9 +365,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initialSelectedRowId = initUIResult.currentRecordId
       yield* this.applyInitUIResult({ initUIResult });
       if (!this.eagerLoading) {
-        yield* this.clearMaxRowCounts();
+        yield* this.clearMaxTotalCounts();
         yield* this.loadData({keepCurrentData: true});
-        yield* this.updateRowCounts();
+        yield* this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
           const orderingConfiguration = getOrderingConfiguration(rootDataView);
@@ -375,7 +375,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           this.disposers.push(
             reaction(
               () => {
-                const orderings = orderingConfiguration.userOrderings.map((x) => x.direction);
                 const filters = filterConfiguration.activeFilters
                   .map((x) => [
                     x.propertyId,
@@ -408,11 +407,20 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                     }
                   });
                 return {
-                  orderings,
                   filters,
                 } as any;
               },
-              () => this.sortAndFilterReaction(rootDataView),
+              () => this.sortAndFilterReaction({dataView: rootDataView, updateTotalRowCount: true}),
+              {
+                equals: comparer.structural,
+                delay: 100,
+              }
+            )
+          );
+          this.disposers.push(
+            reaction(
+              () => { orderingConfiguration.userOrderings.map((x) => x.direction) },
+              () => this.sortAndFilterReaction({dataView: rootDataView, updateTotalRowCount: false}),
               {
                 equals: comparer.structural,
                 delay: 100,
@@ -429,18 +437,20 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     yield* this.startAutorefreshIfNeeded();
   }
 
-  sortAndFilterReaction(dataView: IDataView) {
+  sortAndFilterReaction(args: {dataView: IDataView, updateTotalRowCount: boolean}) {
     const self = this;
     flow(function* () {
-      if (!(yield shouldProceedToChangeRow(dataView))) {
+      if (!(yield shouldProceedToChangeRow(args.dataView))) {
         return;
       }
-      yield dataView.lifecycle.runRecordChangedReaction(function* () {
-        const groupingConfig = getGroupingConfiguration(dataView);
+      yield args.dataView.lifecycle.runRecordChangedReaction(function* () {
+        const groupingConfig = getGroupingConfiguration(args.dataView);
         if (groupingConfig.isGrouping) {
-          dataView.serverSideGrouper.refresh();
+          args.dataView.serverSideGrouper.refresh();
         } else {
-          yield self.readFirstChunkOfRowsWithGateDebounced(dataView);
+          args.dataView.totalRowCount = undefined;
+          yield self.readFirstChunkOfRowsWithGateDebounced(args.dataView);
+          yield self.updateTotalRowCount(args.dataView);
         }
       });
     })();
@@ -998,14 +1008,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (!this.eagerLoading) {
       const self = this;
       flow(function* () {
-        yield* self.clearMaxRowCounts();
+        yield* self.clearMaxTotalCounts();
         yield* self.loadData({keepCurrentData: false});
-        yield* self.updateRowCounts();
+        yield* self.updateTotalRowCounts();
       })();
     }
   }
 
-  *clearMaxRowCounts(){
+  *clearMaxTotalCounts(){
     const formScreen = getFormScreen(this);
     for (const dataView of formScreen.rootDataViews) {
       if(isInfiniteScrollingActive(dataView) && 
@@ -1015,31 +1025,35 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *updateRowCounts() {
-    const api = getApi(this);
+  *updateTotalRowCounts() {
     const formScreen = getFormScreen(this);
     for (const dataView of formScreen.rootDataViews) {
       if(isInfiniteScrollingActive(dataView) && 
          !getGroupingConfiguration(dataView).isGrouping){
-        const aggregationResult = yield api.getAggregations({
-          MenuId: getMenuItemId(dataView),
-          SessionFormIdentifier: getSessionId(this),
-          DataStructureEntityId: getDataStructureEntityId(dataView),
-          Filter: getUserFilters(dataView),
-          MasterRowId: undefined,
-          AggregatedColumns: [
-            {
-              ColumnName: "Id",
-              AggregationType: AggregationType.COUNT
-            }
-          ],
-        });
-
-        const aggregationData = parseAggregations(aggregationResult);
-        if(aggregationData && aggregationData.length > 0) {
-          dataView.totalRowCount = aggregationData[0].value;
-        }
+          yield this.updateTotalRowCount(dataView);
       }
+    }
+  }
+
+  async updateTotalRowCount(dataView: IDataView){
+    const api = getApi(this);
+    const aggregationResult = await api.getAggregations({
+      MenuId: getMenuItemId(dataView),
+      SessionFormIdentifier: getSessionId(this),
+      DataStructureEntityId: getDataStructureEntityId(dataView),
+      Filter: getUserFilters(dataView),
+      MasterRowId: undefined,
+      AggregatedColumns: [
+        {
+          ColumnName: "Id",
+          AggregationType: AggregationType.COUNT
+        }
+      ],
+    });
+
+    const aggregationData = parseAggregations(aggregationResult);
+    if(aggregationData && aggregationData.length > 0) {
+      dataView.totalRowCount = aggregationData[0].value;
     }
   }
 
