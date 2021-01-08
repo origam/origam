@@ -365,7 +365,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       this.initialSelectedRowId = initUIResult.currentRecordId
       yield* this.applyInitUIResult({ initUIResult });
       if (!this.eagerLoading) {
-        yield* this.clearMaxTotalCounts();
+        yield* this.clearTotalCounts();
         yield* this.loadData({keepCurrentData: true});
         yield* this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
@@ -1008,14 +1008,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (!this.eagerLoading) {
       const self = this;
       flow(function* () {
-        yield* self.clearMaxTotalCounts();
+        yield* self.clearTotalCounts();
         yield* self.loadData({keepCurrentData: false});
         yield* self.updateTotalRowCounts();
       })();
     }
   }
 
-  *clearMaxTotalCounts(){
+  *clearTotalCounts(){
     const formScreen = getFormScreen(this);
     for (const dataView of formScreen.rootDataViews) {
       if(isInfiniteScrollingActive(dataView) && 
@@ -1238,6 +1238,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         yield dataView.setRecords((entityValue as any).data);
+        dataView.totalRowCount = dataView.dataTable.rows.length;
         yield dataView.start();
       }
     }

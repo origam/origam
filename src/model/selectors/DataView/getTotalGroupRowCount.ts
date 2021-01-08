@@ -1,18 +1,20 @@
+import { isInfiniteScrollingActive } from "../isInfiniteScrollingActive";
 import { getGroupingConfiguration } from "../TablePanelView/getGroupingConfiguration";
 import { getDataView } from "./getDataView";
 import { getGrouper } from "./getGrouper";
 
 
-export function getTotalGroupRowCount(ctx: any) {
+export function getTotalRowCount(ctx: any) {
   if (!getGroupingConfiguration(ctx).isGrouping) {
-    return getDataView(ctx).totalRowCount;
+    if(isInfiniteScrollingActive(ctx)){
+      return getDataView(ctx).totalRowCount;
+    }else{
+      return getDataView(ctx).dataTable.rows.length;
+    }
   }
-
-  if(getGrouper(ctx).allGroups.some((group) => group.isExpanded)){
-    const dataView = getDataView(ctx);
-    return getGrouper(ctx).getTotalRowCount(dataView.selectedRowId!);
-  }else{
-      return getGrouper(ctx).topLevelGroups
-        .reduce((count, group) => count + group.rowCount, 0);
+  else
+  {
+    return getGrouper(ctx).topLevelGroups
+      .reduce((count, group) => count + group.rowCount, 0);
   }
 }

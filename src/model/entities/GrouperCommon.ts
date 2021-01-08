@@ -33,6 +33,12 @@ export function getMaxRowCountSeen(grouper: IGrouper, rowId: string): number {
   .find(group => group.getRowById(rowId))?.childRows?.length ?? 0;
 }
 
+export function getRowCount(grouper: IGrouper, rowId: string){
+  return grouper.allGroups
+    .find(group => group.getRowById(rowId))
+    ?.rowCount
+}
+
 export function getCellOffset(grouper: IGrouper, rowId: string): ICellOffset {
   const containingGroup =  grouper.allGroups
   .filter(group => group.getRowById(rowId) && group.isExpanded)
