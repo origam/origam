@@ -1989,6 +1989,10 @@ namespace Origam.DA.Service
                     case CustomAggregationType.Min:
                         sqlExpression.Append(
                             $"MIN({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                        break;                    
+                    case CustomAggregationType.Count:
+                        sqlExpression.Append(
+                            $"COUNT({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

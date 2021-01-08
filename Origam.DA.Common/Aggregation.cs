@@ -15,6 +15,6 @@ namespace Origam.DA
     
     public enum CustomAggregationType
     {
-        Sum, Avg, Min, Max
+        Sum, Avg, Min, Max, Count
     }
 }
