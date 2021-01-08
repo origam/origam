@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 
 namespace Origam.DA.Service_net2Tests

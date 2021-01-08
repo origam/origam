@@ -25,6 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Origam.DA.Service;
+using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 using Origam.Schema;
 
