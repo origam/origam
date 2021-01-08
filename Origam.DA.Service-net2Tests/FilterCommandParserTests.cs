@@ -1,4 +1,5 @@
 #region license
+
 /*
 Copyright 2005 - 2020 Advantage Solutions, s. r. o.
 
@@ -17,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using System;
@@ -103,6 +105,29 @@ namespace Origam.DA.Service_net2Tests
             sut.AddDataType("id", OrigamDataType.String);
 
             Assert.That(sut.Sql, Is.EqualTo(expectedSqlWhere));
+        }
+
+        [TestCase(
+            "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
+            new string[] {"city_name", "name", "age", "id"})]
+        public void ShouldParseColumnNames(string filter,
+            string[] expectedColumnNames)
+        {
+            var sut = new FilterCommandParser(
+                nameLeftBracket: "[",
+                nameRightBracket: "]",
+                sqlValueFormatter: new SQLValueFormatter("1", "0",
+                    (text) => text.Replace("%", "[%]").Replace("_", "[_]")),
+                filterRenderer: new MsSqlFilterRenderer(),
+                whereFilterInput: filter);
+            sut.AddDataType("name", OrigamDataType.String);
+            sut.AddDataType("Timestamp", OrigamDataType.Date);
+            sut.AddDataType("age", OrigamDataType.Integer);
+            sut.AddDataType("city_name", OrigamDataType.String);
+            sut.AddDataType("Name", OrigamDataType.String);
+            sut.AddDataType("id", OrigamDataType.String);
+
+            Assert.That(sut.Columns, Is.EquivalentTo(expectedColumnNames));
         }
 
         [TestCase("bla")]

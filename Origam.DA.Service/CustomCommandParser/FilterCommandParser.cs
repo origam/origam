@@ -71,6 +71,7 @@ namespace Origam.DA.Service.CustomCommandParser
                     var inpValue = GetCheckedInput(whereFilterInput);
                     ParseToNodeTree(inpValue);
                     columns = root.AllChildren
+                        .Where(node => !node.IsBinaryOperator && !node.IsValueNode)
                         .Select(node => node.ColumnName)
                         .ToArray();
                 }
@@ -249,7 +250,9 @@ namespace Origam.DA.Service.CustomCommandParser
                 : nameLeftBracket + ColumnName + nameRightBracket;
 
 
-        private string Operator => SplitValue[1].Replace("\"","");
+        private string Operator => SplitValue?.Length > 1 
+            ? SplitValue[1].Replace("\"","") 
+            : null;
         private string ColumnValue => ValueToOperand(SplitValue[2]);
 
         private OrigamDataType DataType
@@ -263,6 +266,13 @@ namespace Origam.DA.Service.CustomCommandParser
                 throw new Exception($"Data type of column \"{ColumnName}\" is unknown");
             }
         }
+
+        public bool IsValueNode => Parent != null && 
+                                   (Parent.Operator == "in" ||
+                                   Parent.Operator == "nin" ||
+                                   Parent.Operator == "between" ||
+                                   Parent.Operator == "nbetween");
+
         private readonly AbstractFilterRenderer renderer;
 
         public Node(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
