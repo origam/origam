@@ -85,19 +85,13 @@ export class ServerSideGrouper implements IGrouper {
   getRowById(id: string): any[] | undefined {
     return getRowById(this, id);
   }
-  
+
   getMaxRowCountSeen(rowId: string): number {
     return getMaxRowCountSeen(this, rowId);
-  }
-  
-  getTotalRowCount(rowId: string): number | undefined{
-    const group = this.allGroups
-      .find(group => group.getRowById(rowId));
-    if(group?.isInfinitelyScrolled){
-      return group.rowCount;
-    }else{
-      return undefined;
-    }
+  } 
+   getTotalRowCount(rowId: string): number | undefined{
+   return this.allGroups
+      .find(group => group.getRowById(rowId))?.rowCount;
   }
 
   getCellOffset(rowId: string): ICellOffset {
@@ -125,7 +119,6 @@ export class ServerSideGrouper implements IGrouper {
           [ ...getTablePanelView(this).aggregations.aggregationList],
           getOrderingConfiguration(this).groupChildrenOrdering
         ], 
-        // ()=> flow(() => this.reload(groupHeader))(),
         ()=> this.loadChildrenReactionDebounced(groupHeader),
       )
     );
