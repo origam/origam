@@ -1,4 +1,5 @@
 import { createAtom, observable, action } from "mobx";
+import { processedImageURL } from "utils/image";
 
 export class ScreenPictureCache {
   @observable items = new Map<string, any>();
@@ -7,6 +8,7 @@ export class ScreenPictureCache {
   @action.bound
   atomBecameObserved(url: string, atom: any) {
     if (!this.items.has(url)) {
+      const procUrl = processedImageURL(url);
       const img = new Image();
       this.items.set(url, img);
       atom.reportChanged();
@@ -16,7 +18,7 @@ export class ScreenPictureCache {
       img.onerror = () => {
         this.items.set(url, null);
       };
-      img.src = url;
+      img.src = procUrl.value!;
     }
   }
 

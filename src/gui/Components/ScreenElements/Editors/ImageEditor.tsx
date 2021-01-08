@@ -8,13 +8,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getApi } from "model/selectors/getApi";
 import S from "./ImageEditor.module.scss";
-
-const IMAGE_TYPE: { [key: string]: string } = {
-  "/": "jpg",
-  i: "png",
-  R: "gif",
-  U: "webp",
-};
+import { processedImageURL } from "utils/image";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -32,22 +26,8 @@ const IMAGE_TYPE: { [key: string]: string } = {
 export class ImageEditor extends React.Component<{
   value: string;
 }> {
-  testBase64(str: string) {
-    return str.search(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/) > -1;
-  }
-
-  get preparedUrl() {
-    const { value } = this.props;
-    if (!value) return;
-    if (this.testBase64(value)) {
-      return `data:image/${IMAGE_TYPE[value.charAt(0)]};base64,${value}`;
-    } else {
-      return value;
-    }
-  }
-
   render() {
-    const { preparedUrl } = this;
+    const preparedUrl = processedImageURL(this.props.value).value;
     return preparedUrl ? <img className={S.image} src={preparedUrl} /> : null;
   }
 }
