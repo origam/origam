@@ -118,6 +118,8 @@ export interface IDataView extends IDataViewData {
   deleteRow(row: any[]): void;
   clear(): void;
 
+  navigateLookupLink(property: IProperty, row: any[]): Generator<any>;
+
   saveViewState(): void;
   restoreViewState(): void;
 

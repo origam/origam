@@ -18,6 +18,7 @@ export class DropdownEditorBehavior {
     private cache: DropdownEditorLookupListCache,
     public isReadOnly: boolean,
     public onDoubleClick?: (event: any) => void,
+    public onClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusAble) => void,
     private onKeyDown?: (event: any) => void
   ) {}
