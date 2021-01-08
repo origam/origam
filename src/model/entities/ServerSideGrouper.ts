@@ -14,6 +14,7 @@ import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
+import _ from "lodash";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -124,12 +125,19 @@ export class ServerSideGrouper implements IGrouper {
           [ ...getTablePanelView(this).aggregations.aggregationList],
           getOrderingConfiguration(this).groupChildrenOrdering
         ], 
-        ()=> flow(() => this.reload(groupHeader))(),
+        // ()=> flow(() => this.reload(groupHeader))(),
+        ()=> this.loadChildrenReactionDebounced(groupHeader),
       )
     );
     yield* this.reload(groupHeader);
   }
+  
+  loadChildrenReactionDebounced = _.debounce(this.loadChildrenReaction, 10);
 
+  private loadChildrenReaction(group: IGroupTreeNode){
+    flow(() => this.reload(group))();
+  }
+  
   private *reload(group: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
@@ -146,7 +154,6 @@ export class ServerSideGrouper implements IGrouper {
     } else {
       const rows = yield lifeCycle.loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
       group.childRows = rows;
-      // dataView.totalRowCount = group.rowCount;
     }
   }
 
