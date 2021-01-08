@@ -3,7 +3,6 @@ import { IProperty } from "./IProperty";
 
 export interface IGrouper {
   getTotalRowCount(rowId: string): number | undefined;
-  getMaxRowCountSeen(rowId: string): number;
   getRowIndex(rowId: string): number | undefined;
   getAllValuesOfProp(property: IProperty): Promise<Set<any>>
   topLevelGroups: IGroupTreeNode[];

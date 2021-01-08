@@ -37,7 +37,6 @@ import { getIsAddButtonVisible } from "model/selectors/DataView/getIsAddButtonVi
 import { getIsCopyButtonVisible } from "model/selectors/DataView/getIsCopyButtonVisible";
 import { getIsDelButtonVisible } from "model/selectors/DataView/getIsDelButtonVisible";
 import { getIsMoveRowMenuVisible } from "model/selectors/DataView/getIsMoveRowMenuVisible";
-import { getMaxRowCountSeen } from "model/selectors/DataView/getMaxRowCountSeen";
 import { getPanelViewActions } from "model/selectors/DataView/getPanelViewActions";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";

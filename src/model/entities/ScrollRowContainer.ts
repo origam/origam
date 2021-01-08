@@ -26,18 +26,6 @@ export class ScrollRowContainer implements IRowsContainer {
   private readonly rowIdGetter: (row: any[]) => string;
   _maxRowNumberSeen = 0;
 
-  @computed
-  get maxRowCountSeen() {
-    const maxRowsNow = this.rowChunks
-      .map(chunk => chunk.length)
-      .reduce((a, b) => a + b, 0) ;
-    if (maxRowsNow > this._maxRowNumberSeen) {
-      this._maxRowNumberSeen = maxRowsNow;
-    }
-
-    return this._maxRowNumberSeen;
-  }
-
   async updateSortAndFilter(data?: {retainPreviousSelection?: true}) {}
 
   start() {}

@@ -28,11 +28,6 @@ export function getRowIndex(grouper: IGrouper, rowId: string): number | undefine
   .find(index => index !== -1);
 }
 
-export function getMaxRowCountSeen(grouper: IGrouper, rowId: string): number {
-  return grouper.allGroups
-  .find(group => group.getRowById(rowId))?.childRows?.length ?? 0;
-}
-
 export function getRowCount(grouper: IGrouper, rowId: string){
   return grouper.allGroups
     .find(group => group.getRowById(rowId))

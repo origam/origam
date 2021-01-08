@@ -261,16 +261,6 @@ export class DataView implements IDataView {
     }
   }
 
-  @computed get maxRowCountSeen() {
-    if (getGroupingConfiguration(this).isGrouping) {
-      return getGrouper(this).allGroups.some((group) => group.isExpanded)
-        ? getGrouper(this).getMaxRowCountSeen(this.selectedRowId!)
-        : 0;
-    } else {
-      return this.dataTable.maxRowCountSeen;
-    }
-  }
-
   @computed get selectedRow(): any[] | undefined {
     if (!this.selectedRowId) {
       return undefined;

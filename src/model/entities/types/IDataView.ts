@@ -81,7 +81,6 @@ export interface IDataView extends IDataViewData {
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
   totalRowCount: number | undefined;
-  maxRowCountSeen: number;
   selectedRow: any[] | undefined;
   dataSource: IDataSource;
   bindingParametersFromParent: { [key: string]: string };

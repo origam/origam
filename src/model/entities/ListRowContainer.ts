@@ -180,10 +180,6 @@ export class ListRowContainer implements IRowsContainer {
     }
   }
 
-  get maxRowCountSeen() {
-    return this.rows.length;
-  }
-
   registerResetListener(listener: () => void): void {}
 
   parent: any;

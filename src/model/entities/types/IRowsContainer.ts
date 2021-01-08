@@ -17,8 +17,6 @@ export interface IRowsContainer {
 
   addedRowPositionLocked: boolean;
 
-  maxRowCountSeen: number;
-
   rows: any[];
 
   allRows: any[];

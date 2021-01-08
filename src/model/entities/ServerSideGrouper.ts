@@ -13,7 +13,7 @@ import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getCellOffset, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getCellOffset, getRowById, getRowIndex } from "./GrouperCommon";
 import _ from "lodash";
 
 export class ServerSideGrouper implements IGrouper {
@@ -86,9 +86,6 @@ export class ServerSideGrouper implements IGrouper {
     return getRowById(this, id);
   }
 
-  getMaxRowCountSeen(rowId: string): number {
-    return getMaxRowCountSeen(this, rowId);
-  } 
    getTotalRowCount(rowId: string): number | undefined{
    return this.allGroups
       .find(group => group.getRowById(rowId))?.rowCount;
