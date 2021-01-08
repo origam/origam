@@ -20,10 +20,10 @@ import { isReadOnly } from "model/selectors/RowState/isReadOnly";
 import { XmlBuildDropdownEditor } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
-import {FocusManager} from "model/entities/FocusManager";
+import { FocusManager } from "model/entities/FocusManager";
 import { DomEvent } from "leaflet";
 import { observable } from "mobx";
-
+import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -43,10 +43,9 @@ export class FormViewEditor extends React.Component<{
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => void;
 }> {
-
   focusManager: FocusManager;
 
-  constructor(props: any){
+  constructor(props: any) {
     super(props);
     this.focusManager = getDataView(this.props.property).focusManager;
   }
@@ -100,7 +99,11 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                textEditor,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
           />
         );
@@ -125,7 +128,11 @@ export class FormViewEditor extends React.Component<{
             onEditorBlur={this.props.onEditorBlur}
             isRichText={this.props.isRichText}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                textEditor,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
           />
         );
@@ -145,7 +152,11 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                textEditor,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
           />
@@ -161,7 +172,11 @@ export class FormViewEditor extends React.Component<{
             invalidMessage={invalidMessage}
             onKeyDown={undefined}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                textEditor,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
           />
         );
@@ -172,13 +187,21 @@ export class FormViewEditor extends React.Component<{
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(textEditor) =>
-              this.focusManager.subscribe(textEditor, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                textEditor,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customStyle={this.props.property?.style}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
+            isLink={this.props.property?.isLink}
+            onClick={(event) => {
+              onDropdownEditorClick(this.props.property)(event, this.props.property, row);
+            }}
             onKeyDown={this.MakeOnKeyDownCallBack()}
           />
         );
@@ -189,7 +212,11 @@ export class FormViewEditor extends React.Component<{
             xmlNode={this.props.xmlNode}
             isReadOnly={readOnly}
             subscribeToFocusManager={(firstCheckInput) =>
-              this.focusManager.subscribe(firstCheckInput, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                firstCheckInput,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
             tagEditor={
               <TagInputEditor
@@ -219,7 +246,11 @@ export class FormViewEditor extends React.Component<{
             isReadonly={readOnly}
             invalidMessage={invalidMessage}
             subscribeToFocusManager={(firstCheckInput) =>
-              this.focusManager.subscribe(firstCheckInput, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                firstCheckInput,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
             onKeyDown={this.MakeOnKeyDownCallBack()}
             onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
@@ -236,15 +267,21 @@ export class FormViewEditor extends React.Component<{
             invalidMessage={invalidMessage}
             onKeyDown={this.MakeOnKeyDownCallBack()}
             subscribeToFocusManager={(inputEditor) =>
-              this.focusManager.subscribe(inputEditor, this.props.property?.id, this.props.property?.tabIndex)
+              this.focusManager.subscribe(
+                inputEditor,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
             }
           />
         );
       case "Polymorph":
-        console.warn(`Type of polymorphic column was not determined, no editor was rendered`)
+        console.warn(`Type of polymorphic column was not determined, no editor was rendered`);
         return "";
       default:
-        console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered`)
+        console.warn(
+          `Unknown column type "${this.props.property!.column}", no editor was rendered`
+        );
         return "";
     }
   }
@@ -256,10 +293,9 @@ export class FormViewEditor extends React.Component<{
       dataView.focusManager.stopAutoFocus();
       if (event.key === "Tab") {
         DomEvent.preventDefault(event);
-        if(event.shiftKey){
+        if (event.shiftKey) {
           this.focusManager.focusPrevious(document.activeElement);
-        }
-        else{
+        } else {
           this.focusManager.focusNext(document.activeElement);
         }
         return;
@@ -272,9 +308,12 @@ export class FormViewEditor extends React.Component<{
         return;
       }
       if (event.key === "Enter") {
-        if(dataView.firstEnabledDefaultAction){
+        if (dataView.firstEnabledDefaultAction) {
           this.props.onEditorBlur?.(null);
-          uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(event, dataView.firstEnabledDefaultAction);
+          uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
+            event,
+            dataView.firstEnabledDefaultAction
+          );
         }
       }
     };

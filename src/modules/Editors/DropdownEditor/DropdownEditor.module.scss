@@ -30,8 +30,6 @@
     }
   }
 
-
-
   :global(.resizeHandle) {
     position: absolute;
     top: 0;
@@ -39,5 +37,12 @@
     height: 100%;
     width: 2px;
     background-color: #bbbbbb;
+  }
+}
+
+.input {
+  &:global(.isLink) {
+    color: #4c84ff !important;
+    cursor: pointer !important;
   }
 }

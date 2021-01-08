@@ -19,13 +19,14 @@ import { IDataView } from "../../../model/entities/types/IDataView";
 import { TagInputEditorData } from "./TagInputEditorData";
 import { IFocusAble } from "../../../model/entities/FocusManager";
 import { DateCellDriver } from "./Cells/DateCellDriver";
-import {flf2mof} from "utils/flashDateFormat";
+import { flf2mof } from "utils/flashDateFormat";
 
 export interface IDropdownEditorContext {
   behavior: DropdownEditorBehavior;
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
   columnDrivers: DropdownColumnDrivers;
+  setup: DropdownEditorSetup;
 }
 
 export const CtxDropdownEditor = createContext<IDropdownEditorContext>(null as any);
@@ -43,7 +44,8 @@ export class DropdownEditorSetup {
     public parameters: { [key: string]: any },
     public dropdownType: string,
     public cached: boolean,
-    public searchByFirstColumnOnly: boolean
+    public searchByFirstColumnOnly: boolean,
+    public isLink?: boolean
   ) {}
 }
 export const IGetDropdownEditorSetup = TypeSymbol<() => DropdownEditorSetup>(
@@ -94,7 +96,9 @@ export function XmlBuildDropdownEditor(props: {
   foregroundColor?: string;
   customStyle?: any;
   tagEditor?: JSX.Element;
+  isLink?: boolean;
   onDoubleClick?: (event: any) => void;
+  onClick?: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   onKeyDown?(event: any): void;
 }) {
@@ -130,6 +134,7 @@ export function XmlBuildDropdownEditor(props: {
       dropdownEditorLookupListCache,
       props.isReadOnly,
       props.onDoubleClick,
+      props.onClick,
       props.subscribeToFocusManager,
       props.onKeyDown
     );
@@ -156,9 +161,9 @@ export function XmlBuildDropdownEditor(props: {
       columnNames.push(id);
       columnNameToIndex.set(id, index);
 
-      const formatterPattern =  attributes.FormatterPattern
+      const formatterPattern = attributes.FormatterPattern
         ? flf2mof(attributes.FormatterPattern)
-        : ""
+        : "";
       visibleColumnNames.push(id);
       const name = attributes.Name;
       const column = attributes.Column;
@@ -223,7 +228,7 @@ export function XmlBuildDropdownEditor(props: {
       parameters,
       dropdownType,
       cached,
-      searchByFirstColumnOnly
+      searchByFirstColumnOnly,
     );
 
     return {
@@ -231,12 +236,17 @@ export function XmlBuildDropdownEditor(props: {
       editorData: dropdownEditorData,
       columnDrivers: drivers,
       editorDataTable: dropdownEditorDataTable,
+      setup: dropdownEditorSetup
     };
   });
 
   useEffect(() => {
     dropdownEditorInfrastructure.behavior.isReadOnly = props.isReadOnly;
   }, [props.isReadOnly]);
+
+  dropdownEditorInfrastructure.behavior.onClick = props.onClick;
+  dropdownEditorInfrastructure.behavior.onDoubleClick = props.onDoubleClick;
+  dropdownEditorInfrastructure.setup.isLink = props.isLink;
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>

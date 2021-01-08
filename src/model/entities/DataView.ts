@@ -62,6 +62,11 @@ import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingAc
 import { getPropertyOrdering } from "model/selectors/DataView/getPropertyOrdering";
 import { IOrderByDirection } from "./types/IOrderingConfiguration";
 
+import selectors from "model/selectors-tree";
+import produce from "immer";
+import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
 }
@@ -471,6 +476,28 @@ export class DataView implements IDataView {
       : undefined;
     if (newId) {
       this.selectRowById(newId);
+    }
+  }
+
+  *navigateLookupLink(property: IProperty, row: any[]) {
+    const columnId = property.id;
+    const menuId = selectors.column.getLinkMenuId(property);
+    let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
+    if (menuItem) {
+      menuItem = produce(menuItem, (draft: any) => {
+        if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
+          draft.attributes.type = "FormReferenceMenuItem";
+        }
+        draft.attributes.lazyLoading = "false";
+      });
+
+      const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
+      yield onMainMenuItemClick(this)({
+        event: undefined,
+        item: menuItem,
+        idParameter: row[fieldIndex],
+        isSingleRecordEdit: true,
+      });
     }
   }
 

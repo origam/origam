@@ -160,24 +160,7 @@ export class TablePanelView implements ITablePanelView {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox" || !isControlInteraction) {
       if (property.isLink && event.ctrlKey) {
-        const menuId = selectors.column.getLinkMenuId(property);
-        let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
-        if (menuItem) {
-          menuItem = produce(menuItem, (draft: any) => {
-            if (menuItem.attributes.type.startsWith("FormReferenceMenuItem")) {
-              draft.attributes.type = "FormReferenceMenuItem";
-            }
-            draft.attributes.lazyLoading = "false";
-          });
-
-          const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
-          yield onMainMenuItemClick(this)({
-            event: undefined,
-            item: menuItem,
-            idParameter: row[fieldIndex],
-            isSingleRecordEdit: true,
-          });
-        }
+        yield* getDataView(this).navigateLookupLink(property, row);
       } else {
         if (
           this.dataTable.getRowId(row) ===
