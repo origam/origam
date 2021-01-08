@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="38ed99bd-139e-4c73-adbf-40ddf99272fc"
+    x:isFolder="true"
+    g:name="Attachments"
+    g:rootItemType="DeploymentVersion" />
+</x:file>
