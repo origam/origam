@@ -334,6 +334,7 @@ export function FilterBuildDropdownEditor(props: {
       editorData: dropdownEditorData,
       columnDrivers: drivers,
       editorDataTable: dropdownEditorDataTable,
+      setup: dropdownEditorSetup
     };
   });
 

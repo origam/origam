@@ -11,6 +11,7 @@ export function DropdownEditorInput(props:{
 }) {
   const beh = useContext(CtxDropdownEditor).behavior;
   const data = useContext(CtxDropdownEditor).editorData;
+  const setup = useContext(CtxDropdownEditor).setup;
   const refInput = useMemo(() => {
     return (elm: any) => {
       beh.refInputElement(elm);
@@ -39,7 +40,7 @@ export function DropdownEditorInput(props:{
     <Observer>
       {() => (
         <input
-          className={cx("input", S.input)}
+          className={cx("input", S.input, {isLink: setup.isLink})}
           readOnly={beh.isReadOnly}
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}

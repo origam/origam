@@ -53,9 +53,6 @@ export class FormViewEditor extends React.Component<{
   getEditor() {
     const rowId = getSelectedRowId(this.props.property);
     const row = getSelectedRow(this.props.property);
-    if (this.props.property?.id === "refBEBusinessPartnerId") {
-      console.log("/*/*/*/*", rowId, row);
-    }
     const foregroundColor = getRowStateForegroundColor(
       this.props.property,
       rowId || "",
@@ -203,7 +200,6 @@ export class FormViewEditor extends React.Component<{
             invalidMessage={invalidMessage}
             isLink={this.props.property?.isLink}
             onClick={(event) => {
-              console.log("CLICK", row);
               onDropdownEditorClick(this.props.property)(event, this.props.property, row);
             }}
             onKeyDown={this.MakeOnKeyDownCallBack()}

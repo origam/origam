@@ -26,6 +26,7 @@ export interface IDropdownEditorContext {
   editorData: IDropdownEditorData;
   editorDataTable: DropdownDataTable;
   columnDrivers: DropdownColumnDrivers;
+  setup: DropdownEditorSetup;
 }
 
 export const CtxDropdownEditor = createContext<IDropdownEditorContext>(null as any);
@@ -227,7 +228,7 @@ export function XmlBuildDropdownEditor(props: {
       parameters,
       dropdownType,
       cached,
-      searchByFirstColumnOnly
+      searchByFirstColumnOnly,
     );
 
     return {
@@ -235,6 +236,7 @@ export function XmlBuildDropdownEditor(props: {
       editorData: dropdownEditorData,
       columnDrivers: drivers,
       editorDataTable: dropdownEditorDataTable,
+      setup: dropdownEditorSetup
     };
   });
 
@@ -244,6 +246,7 @@ export function XmlBuildDropdownEditor(props: {
 
   dropdownEditorInfrastructure.behavior.onClick = props.onClick;
   dropdownEditorInfrastructure.behavior.onDoubleClick = props.onDoubleClick;
+  dropdownEditorInfrastructure.setup.isLink = props.isLink;
 
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
