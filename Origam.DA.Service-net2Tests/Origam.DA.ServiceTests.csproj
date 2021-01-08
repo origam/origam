@@ -80,13 +80,14 @@
     <Compile Include="MetaModelUpgraderTests\TestClasses\TestRenamedClass.cs" />
     <Compile Include="MetaModelUpgraderTests\TestPersistedClassScriptContainer.cs" />
     <Compile Include="MetaModelUpgraderTests\Version6UpGraderTests.cs" />
+    <Compile Include="OrderByCommandParserTests.cs" />
     <Compile Include="OrigamDocumentSorter\OrigamDocumentSorterTests.cs" />
     <Compile Include="EqualityExtensions.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTests.cs" />
     <Compile Include="FilePersistenceProviderTests\PersitHelper.cs" />
     <Compile Include="FilePersistenceProviderTests\FilePersistenceProviderTestWithOrigamRuntime.cs" />
     <Compile Include="FilePersistenceProviderTests\XmlLoaderTest.cs" />
-    <Compile Include="CustomCommandParserTests.cs" />
+    <Compile Include="FilterCommandParserTests.cs" />
     <Compile Include="FlatFileSearchTests\FlatFileSearcherTests.cs" />
     <Compile Include="SchemaItemComparator.cs" />
     <Compile Include="SchemaItemsToCompare.cs" />

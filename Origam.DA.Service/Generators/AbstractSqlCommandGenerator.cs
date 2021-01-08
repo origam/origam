@@ -353,11 +353,19 @@ namespace Origam.DA.Service
             DataStructure dataStructure = selectParameters.DataStructure;
             DataStructureEntity entity = selectParameters.Entity;
             
-            CustomCommandParser commandParser =
-                new CustomCommandParser(NameLeftBracket, NameRightBracket, sqlValueFormatter, 
-                entity.Columns, filterRenderer)
-                    .Where(selectParameters.CustomFilters.Filters)
-                    .OrderBy(selectParameters.CustomOrderings.Orderings);
+            FilterCommandParser filterCommandParser =
+                new FilterCommandParser(
+                    nameLeftBracket: NameLeftBracket,
+                    nameRightBracket: NameRightBracket, 
+                    sqlValueFormatter: sqlValueFormatter, 
+                    dataStructureColumns: entity.Columns, 
+                    filterRenderer: filterRenderer, 
+                    whereFilterInput: selectParameters.CustomFilters.Filters);            
+            OrderByCommandParser orderByCommandParser =
+                new OrderByCommandParser(
+                    orderingsInput: selectParameters.CustomOrderings.Orderings, 
+                    nameLeftBracket: NameLeftBracket,
+                    nameRightBracket: NameRightBracket);
 
             adapter.SelectCommand =
                 GetCommand(SelectSql(
@@ -367,7 +375,8 @@ namespace Origam.DA.Service
                     restrictScalarToTop1: false,
                     isInRecursion: false,
                     forceDatabaseCalculation: forceDatabaseCalculation,
-                    customCommandParser: commandParser));
+                    filterCommandParser: filterCommandParser,
+                    orderByCommandParser: orderByCommandParser));
 
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
@@ -983,7 +992,8 @@ namespace Origam.DA.Service
             Hashtable replaceParameterTexts, Hashtable selectParameterReferences,
             bool restrictScalarToTop1,
             bool isInRecursion, bool forceDatabaseCalculation,
-            CustomCommandParser customCommandParser = null)
+            FilterCommandParser filterCommandParser = null,
+            OrderByCommandParser orderByCommandParser = null)
         {
             var entity = selectParameters.Entity;
             var paging = selectParameters.Paging;
@@ -1034,8 +1044,9 @@ namespace Origam.DA.Service
                 isInRecursion: isInRecursion, 
                 concatScalarColumns: restrictScalarToTop1,
                 forceDatabaseCalculation: forceDatabaseCalculation,
-                customCommandParser);
-            bool orderBySpecified = (!string.IsNullOrWhiteSpace(customCommandParser?.OrderByClause) || orderByBuilder.Length > 0);
+                filterCommandParser: filterCommandParser,
+                orderByCommandParser: orderByCommandParser);
+            bool orderBySpecified = (!string.IsNullOrWhiteSpace(orderByCommandParser?.Sql) || orderByBuilder.Length > 0);
             // paging column
             if (paging)
             {
@@ -1165,7 +1176,7 @@ namespace Origam.DA.Service
                 sqlExpression.Append(whereBuilder.ToString());
             }
 
-            if (!string.IsNullOrEmpty(customCommandParser?.WhereClause))
+            if (!string.IsNullOrEmpty(filterCommandParser?.Sql))
             {
                 if (whereExists)
                 {
@@ -1179,7 +1190,7 @@ namespace Origam.DA.Service
                 }
                 sqlExpression.Append(
                     PostProcessCustomCommandParserWhereClause(
-                        customCommandParser.WhereClause, entity,
+                        filterCommandParser.Sql, entity,
                         replaceParameterTexts, dynamicParameters, 
                         selectParameterReferences));
             }
@@ -1192,10 +1203,10 @@ namespace Origam.DA.Service
             }
 
             // ORDER BY
-            if (!string.IsNullOrWhiteSpace(customCommandParser?.OrderByClause))
+            if (!string.IsNullOrWhiteSpace(orderByCommandParser?.Sql))
             {
                 PrettyLine(sqlExpression);
-                sqlExpression.AppendFormat("ORDER BY {0}", customCommandParser.OrderByClause);
+                sqlExpression.AppendFormat("ORDER BY {0}", orderByCommandParser.Sql);
             }
             else
             {
@@ -1749,7 +1760,9 @@ namespace Origam.DA.Service
             StringBuilder orderByBuilder, StringBuilder groupByBuilder, 
             Hashtable replaceParameterTexts, Hashtable selectParameterReferences,
             bool isInRecursion,
-            bool concatScalarColumns, bool forceDatabaseCalculation, CustomCommandParser customCommandParser=null)
+            bool concatScalarColumns, bool forceDatabaseCalculation, 
+            FilterCommandParser filterCommandParser = null,
+            OrderByCommandParser orderByCommandParser = null)
         {
             var ds = selectParameters.DataStructure;
             var entity = selectParameters.Entity;
@@ -1802,7 +1815,8 @@ namespace Origam.DA.Service
                         sortSet, selectParameterReferences, isInRecursion,
                         forceDatabaseCalculation, group, order, ref groupByNeeded,
                         columnsInfo ?? ColumnsInfo.Empty, column,
-                        customOrderingInfo, customCommandParser, selectParameters.RowOffset);
+                        customOrderingInfo, filterCommandParser, orderByCommandParser, 
+                        selectParameters.RowOffset);
                 if (expression != null)
                 {
                     if (i > 0) sqlExpression.Append(",");
@@ -1874,9 +1888,9 @@ namespace Origam.DA.Service
             //         }
             //     }
             // }
-            if( customCommandParser != null)
+            if( filterCommandParser != null)
             {
-                foreach (string columnName in customCommandParser.WhereClauseColumns)
+                foreach (string columnName in filterCommandParser.Columns)
                 {
                     if (customFilters.FilterLookups!= null && 
                         customFilters.FilterLookups.ContainsKey(columnName))
@@ -1892,7 +1906,7 @@ namespace Origam.DA.Service
                         var resultExpression = 
                             RenderLookupColumnExpression(ds, entity, dataStructureColumn,
                                 replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
-                        customCommandParser.SetFilterColumnExpression(columnName ,resultExpression);
+                        filterCommandParser.SetColumnExpression(columnName ,resultExpression);
                     }
                     else
                     {
@@ -1903,11 +1917,11 @@ namespace Origam.DA.Service
                         string columnExpression = GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
                             dynamicParameters, selectParameterReferences, isInRecursion,
                             ref groupByNeeded1, columnsInfo, dataStructureColumn, ref groupExpression);
-                        customCommandParser.SetFilterColumnExpression(columnName ,columnExpression); 
+                        filterCommandParser.SetColumnExpression(columnName ,columnExpression); 
                     }
                 }
 
-                foreach (string columnName in customCommandParser.OrderByClauseColumns)
+                foreach (string columnName in orderByCommandParser.Columns)
                 {
                     if (customOrderings.FilterLookups != null &&
                         customOrderings.FilterLookups.ContainsKey(columnName))
@@ -1923,7 +1937,7 @@ namespace Origam.DA.Service
                         var resultExpression = 
                             RenderLookupColumnExpression(ds, entity, dataStructureColumn,
                                 replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
-                        customCommandParser.SetOrderingColumnExpression(columnName ,resultExpression);
+                        orderByCommandParser.SetColumnExpression(columnName ,resultExpression);
                     }
                     else
                     {
@@ -1934,7 +1948,7 @@ namespace Origam.DA.Service
                         string columnExpression = GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
                             dynamicParameters, selectParameterReferences, isInRecursion,
                             ref groupByNeeded1, columnsInfo, dataStructureColumn, ref groupExpression);
-                        customCommandParser.SetOrderingColumnExpression(columnName ,columnExpression); 
+                        orderByCommandParser.SetColumnExpression(columnName ,columnExpression); 
                     }
                 }
             }
@@ -2104,7 +2118,9 @@ namespace Origam.DA.Service
             bool forceDatabaseCalculation, List<string> group, SortedList order,
             ref bool groupByNeeded, ColumnsInfo columnsInfo,
             DataStructureColumn column, LookupOrderingInfo orderingInfo,
-            CustomCommandParser customCommandParser, int? rowOffset = null)
+            FilterCommandParser filterCommandParser,
+            OrderByCommandParser orderByCommandParser, 
+            int? rowOffset = null)
         {
             string result = null;
             bool processColumn = false;
@@ -2169,11 +2185,9 @@ namespace Origam.DA.Service
                     GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
                         dynamicParameters, selectParameterReferences, isInRecursion,
                         ref groupByNeeded, columnsInfo, column, ref groupExpression);
-                if (customCommandParser != null)
-                {
-                    customCommandParser.SetOrderingColumnExpression(column.Name ,resultExpression);
-                    customCommandParser.SetFilterColumnExpression(column.Name ,resultExpression);
-                }
+
+                filterCommandParser?.SetColumnExpression(column.Name ,resultExpression);
+                orderByCommandParser?.SetColumnExpression(column.Name ,resultExpression);
 
                 if (processColumn && !string.IsNullOrWhiteSpace(resultExpression))
                 {

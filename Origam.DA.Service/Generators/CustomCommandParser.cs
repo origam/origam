@@ -23,120 +23,120 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.Extensions.Primitives;
-using MoreLinq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using ArgumentException = System.ArgumentException;
 
 namespace Origam.DA.Service.Generators
 {
-    public class CustomCommandParser
+    
+    interface ICustomCommandParser
+    {
+        string[] Columns { get; }
+        void SetColumnExpression(string columnName, string expression);
+        string Sql { get; }
+    }
+
+    public class OrderByCommandParser : ICustomCommandParser
+    {
+        private readonly ColumnOrderingRenderer columnOrderingRenderer;
+        private readonly List<Ordering> orderingsInput;
+
+        public OrderByCommandParser(List<Ordering> orderingsInput,
+            string nameLeftBracket, string nameRightBracket)
+        {
+            this.orderingsInput = orderingsInput ?? new List<Ordering>();
+            columnOrderingRenderer 
+                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
+        }
+
+        public string[] Columns => orderingsInput 
+                .Select(ordering => ordering.ColumnName)
+                .ToArray();
+        
+        public void SetColumnExpression(string columnName, string expression)
+        {
+            columnOrderingRenderer.SetColumnExpression(columnName, expression);
+        }
+
+        public string Sql =>columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
+    }
+    
+
+    public class FilterCommandParser: ICustomCommandParser
     {
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
         private readonly SQLValueFormatter sqlValueFormatter;
         private Node root = null;
         private Node currentNode = null;
-        private readonly ColumnOrderingRenderer columnOrderingRenderer;
-        private string whereFilterInput;
-        private List<Ordering> orderingsInput;
+
+        private readonly string whereFilterInput;
+
         private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
         private readonly Dictionary<string, OrigamDataType> columnNameToType = new Dictionary<string, OrigamDataType>();
-        internal readonly AbstractFilterRenderer filterRenderer;
-        public string WhereClause {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(whereFilterInput)) return null;
-                var inpValue = GetCheckedInput(whereFilterInput);
-                ParseToNodeTree(inpValue);
-                return root.SqlRepresentation();
-            }
-        }
-
-        public string[] WhereClauseColumns
+        private readonly AbstractFilterRenderer filterRenderer;
+        private string sql;
+        private string[] columns;
+        public string Sql
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(whereFilterInput))
+                if (sql == null && !string.IsNullOrWhiteSpace(whereFilterInput))
                 {
-                    return new string[0];
+                    var inpValue = GetCheckedInput(whereFilterInput);
+                    ParseToNodeTree(inpValue);
+                    sql = root.SqlRepresentation();
                 }
-                var inpValue = GetCheckedInput(whereFilterInput);
-                ParseToNodeTree(inpValue);
-                return root.AllChildren
-                    .Select(node => node.ColumnName)
-                    .ToArray();
-            }
-        } 
-        public string[] OrderByClauseColumns
-        {
-            get
-            {
-                return (orderingsInput ?? new List<Ordering>())
-                    .Select(ordering => ordering.ColumnName)
-                    .ToArray();
+                return sql;
             }
         }
 
-        public string OrderByClause =>
-            orderingsInput != null 
-                ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
-                : null;
+        public string[] Columns
+        {
+            get {
+                if (columns == null)
+                {
+                    if (string.IsNullOrWhiteSpace(whereFilterInput))
+                    {
+                        columns = new string[0];
+                        return columns;
+                    }
+                    var inpValue = GetCheckedInput(whereFilterInput);
+                    ParseToNodeTree(inpValue);
+                    columns = root.AllChildren
+                        .Select(node => node.ColumnName)
+                        .ToArray();
+                }
+                return columns;
+            }
+        }
 
-        public CustomCommandParser(string nameLeftBracket, string nameRightBracket, 
-            SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer filterRenderer)
+
+        public FilterCommandParser(string nameLeftBracket, string nameRightBracket, 
+            SQLValueFormatter sqlValueFormatter, AbstractFilterRenderer filterRenderer, string whereFilterInput)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.sqlValueFormatter = sqlValueFormatter;
-            columnOrderingRenderer 
-                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
             this.filterRenderer = filterRenderer;
+            this.whereFilterInput = whereFilterInput;
         }
 
-        public CustomCommandParser(string nameLeftBracket, string nameRightBracket,
+        public FilterCommandParser(string nameLeftBracket, string nameRightBracket,
             SQLValueFormatter sqlValueFormatter, List<DataStructureColumn> dataStructureColumns,
-            AbstractFilterRenderer filterRenderer)
-        :this(nameLeftBracket, nameRightBracket, sqlValueFormatter, filterRenderer)
+            AbstractFilterRenderer filterRenderer, string whereFilterInput)
+        :this(nameLeftBracket, nameRightBracket, sqlValueFormatter, filterRenderer, whereFilterInput)
         {
             foreach (var column in dataStructureColumns)
             {
                 AddDataType(column.Name, column.DataType); 
             }
         }
-
-        /// <summary>
-        /// returns ORDER BY clause without the "ORDER BY" keyword
-        /// </summary>
-        /// <returns></returns>
-        public CustomCommandParser OrderBy(List<Ordering> orderings)
-        {
-            orderingsInput = orderings;
-            return this;
-        }
-
-        /// <summary>
-        /// returns WHERE clause without the "WHERE" keyword
-        /// </summary>
-        /// <param name="strFilter">input example: "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"%Wash%\"],[\"name\",\"like\",\"%Smith%\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]";
-        /// </param>
-        public CustomCommandParser Where(string strFilter)
-        {
-            whereFilterInput = strFilter;
-            return this;
-        }
-
-        public void SetFilterColumnExpression(string columnName, string expression)
+        
+        public void SetColumnExpression(string columnName, string expression)
         {
             filterColumnExpressions[columnName] = expression;
-        }
-        public void SetOrderingColumnExpression(string columnName, string expression)
-        {
-            columnOrderingRenderer.SetColumnExpression(columnName, expression);
         }
 
         private void ParseToNodeTree(string filter)
