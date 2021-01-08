@@ -56,6 +56,32 @@ namespace Origam.DA.Service.Generators
                 return root.SqlRepresentation();
             }
         }
+
+        public string[] WhereClauseColumns
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(whereFilterInput))
+                {
+                    return new string[0];
+                }
+                var inpValue = GetCheckedInput(whereFilterInput);
+                ParseToNodeTree(inpValue);
+                return root.AllChildren
+                    .Select(node => node.ColumnName)
+                    .ToArray();
+            }
+        } 
+        public string[] OrderByClauseColumns
+        {
+            get
+            {
+                return (orderingsInput ?? new List<Ordering>())
+                    .Select(ordering => ordering.ColumnName)
+                    .ToArray();
+            }
+        }
+
         public string OrderByClause =>
             orderingsInput != null 
                 ? columnOrderingRenderer.ToSqlOrderBy(orderingsInput) 
@@ -258,6 +284,21 @@ namespace Origam.DA.Service.Generators
         public string Value { get; set; } = "";
         public bool IsBinaryOperator => Value.Contains("$");
 
+        public IEnumerable<Node> AllChildren
+        {
+            get
+            {
+                yield return this;
+                foreach (var child in Children)
+                {
+                    foreach (var child1 in child.AllChildren)
+                    {
+                        yield return child1;
+                    }
+                }
+            }
+        }
+
         private string[] SplitValue
         {
             get
@@ -284,7 +325,7 @@ namespace Origam.DA.Service.Generators
             }
         }
 
-        private string ColumnName => SplitValue[0].Replace("\"", "");
+        internal string ColumnName => SplitValue[0].Replace("\"", "");
 
         private string RenderedColumnName =>
             lookupExpressions.ContainsKey(ColumnName)

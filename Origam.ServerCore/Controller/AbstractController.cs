@@ -346,7 +346,7 @@ namespace Origam.ServerCore.Controller
                 CustomFilters = new CustomFilters
                 {
                     Filters = input.Filter,
-                    FilterLookups = input.FilterLookups
+                    FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
                 },
                 CustomOrderings = customOrderings,
                 RowLimit = input.RowLimit,

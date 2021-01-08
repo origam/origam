@@ -1825,11 +1825,77 @@ namespace Origam.DA.Service
                     selectParameterReferences: selectParameterReferences, 
                     isInRecursion: isInRecursion,
                     noColumnsRenderedYet: i == 0);
-                if (customCommandParser != null)
+                // if (customCommandParser != null)
+                // {
+                //     foreach (Aggregation aggregation in aggregatedColumns)
+                //     {
+                //         string columnName = aggregation.ColumnName;
+                //         var dataStructureColumn = entity.Columns
+                //             .First(x => x.Name == columnName);
+                //         bool groupByNeeded1 = false;
+                //         string groupExpression = "";
+                //         string columnExpression = GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
+                //             dynamicParameters, selectParameterReferences, isInRecursion,
+                //             ref groupByNeeded1, columnsInfo, dataStructureColumn, ref groupExpression);
+                //         customCommandParser.SetFilterColumnExpression(columnName ,columnExpression);
+                //     }  
+                // }
+            }
+            
+            // if (!customFilters.IsEmpty && customFilters.HasLookups && customCommandParser != null ||
+            //     customOrderings.HasLookups)
+            // {
+            //     var lookupDict = new Dictionary<string, Guid>();
+            //     lookupDict.AddRange(customOrderings.FilterLookups);
+            //     lookupDict.AddRange(customFilters.FilterLookups);
+            //     foreach (var columnNameAndLookupId in lookupDict)
+            //     {
+            //         string columnName = columnNameAndLookupId.Key;
+            //         Guid lookupId =  columnNameAndLookupId.Value;
+            //         var lookup = ServiceManager.Services
+            //             .GetService<IPersistenceService>()
+            //             .SchemaProvider
+            //             .RetrieveInstance(typeof(DataServiceDataLookup),
+            //                 new Key(lookupId)) as DataServiceDataLookup;
+            //         var dataStructureColumn = dataStructureColumns
+            //             .First(x => x.Name == columnName);
+            //         var resultExpression = 
+            //             RenderLookupColumnExpression(ds, entity, dataStructureColumn,
+            //                 replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
+            //         if (customOrderings.FilterLookups != null && 
+            //             customOrderings.FilterLookups.ContainsKey(columnName))
+            //         {
+            //             customCommandParser.SetOrderingColumnExpression(columnName ,resultExpression);
+            //         }                    
+            //         if (customFilters.FilterLookups != null && 
+            //             customFilters.FilterLookups.ContainsKey(columnName))
+            //         {
+            //             customCommandParser.SetFilterColumnExpression(columnName ,resultExpression);
+            //         }
+            //     }
+            // }
+            if( customCommandParser != null)
+            {
+                foreach (string columnName in customCommandParser.WhereClauseColumns)
                 {
-                    foreach (Aggregation aggregation in aggregatedColumns)
+                    if (customFilters.FilterLookups!= null && 
+                        customFilters.FilterLookups.ContainsKey(columnName))
                     {
-                        string columnName = aggregation.ColumnName;
+                        Guid lookupId =  customFilters.FilterLookups[columnName];
+                        var lookup = ServiceManager.Services
+                            .GetService<IPersistenceService>()
+                            .SchemaProvider
+                            .RetrieveInstance(typeof(DataServiceDataLookup),
+                                new Key(lookupId)) as DataServiceDataLookup;
+                        var dataStructureColumn = dataStructureColumns
+                            .First(x => x.Name == columnName);
+                        var resultExpression = 
+                            RenderLookupColumnExpression(ds, entity, dataStructureColumn,
+                                replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
+                        customCommandParser.SetFilterColumnExpression(columnName ,resultExpression);
+                    }
+                    else
+                    {
                         var dataStructureColumn = entity.Columns
                             .First(x => x.Name == columnName);
                         bool groupByNeeded1 = false;
@@ -1837,40 +1903,38 @@ namespace Origam.DA.Service
                         string columnExpression = GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
                             dynamicParameters, selectParameterReferences, isInRecursion,
                             ref groupByNeeded1, columnsInfo, dataStructureColumn, ref groupExpression);
-                        customCommandParser.SetFilterColumnExpression(columnName ,columnExpression);
-                    }  
+                        customCommandParser.SetFilterColumnExpression(columnName ,columnExpression); 
+                    }
                 }
-            }
-            
-            if (!customFilters.IsEmpty && customFilters.HasLookups && customCommandParser != null ||
-                customOrderings.HasLookups)
-            {
-                var lookupDict = new Dictionary<string, Guid>();
-                lookupDict.AddRange(customOrderings.FilterLookups);
-                lookupDict.AddRange(customFilters.FilterLookups);
-                foreach (var columnNameAndLookupId in lookupDict)
+
+                foreach (string columnName in customCommandParser.OrderByClauseColumns)
                 {
-                    string columnName = columnNameAndLookupId.Key;
-                    Guid lookupId =  columnNameAndLookupId.Value;
-                    var lookup = ServiceManager.Services
-                        .GetService<IPersistenceService>()
-                        .SchemaProvider
-                        .RetrieveInstance(typeof(DataServiceDataLookup),
-                            new Key(lookupId)) as DataServiceDataLookup;
-                    var dataStructureColumn = dataStructureColumns
-                        .First(x => x.Name == columnName);
-                    var resultExpression = 
-                        RenderLookupColumnExpression(ds, entity, dataStructureColumn,
-                            replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
-                    if (customOrderings.FilterLookups != null && 
+                    if (customOrderings.FilterLookups != null &&
                         customOrderings.FilterLookups.ContainsKey(columnName))
                     {
+                        Guid lookupId =  customOrderings.FilterLookups[columnName];
+                        var lookup = ServiceManager.Services
+                            .GetService<IPersistenceService>()
+                            .SchemaProvider
+                            .RetrieveInstance(typeof(DataServiceDataLookup),
+                                new Key(lookupId)) as DataServiceDataLookup;
+                        var dataStructureColumn = dataStructureColumns
+                            .First(x => x.Name == columnName);
+                        var resultExpression = 
+                            RenderLookupColumnExpression(ds, entity, dataStructureColumn,
+                                replaceParameterTexts, dynamicParameters, selectParameterReferences, lookup);
                         customCommandParser.SetOrderingColumnExpression(columnName ,resultExpression);
-                    }                    
-                    if (customFilters.FilterLookups != null && 
-                        customFilters.FilterLookups.ContainsKey(columnName))
+                    }
+                    else
                     {
-                        customCommandParser.SetFilterColumnExpression(columnName ,resultExpression);
+                        var dataStructureColumn = entity.Columns
+                            .First(x => x.Name == columnName);
+                        bool groupByNeeded1 = false;
+                        string groupExpression = "";
+                        string columnExpression = GetDataStructureColumnSqlExpression(ds, entity, replaceParameterTexts,
+                            dynamicParameters, selectParameterReferences, isInRecursion,
+                            ref groupByNeeded1, columnsInfo, dataStructureColumn, ref groupExpression);
+                        customCommandParser.SetOrderingColumnExpression(columnName ,columnExpression); 
                     }
                 }
             }
