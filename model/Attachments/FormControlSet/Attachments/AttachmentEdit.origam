@@ -384,7 +384,7 @@
             x:id="3f5380df-053b-4ede-a079-64ce414de2c7"
             asi:name="HideCopyButton"
             apvi:propertyId="4cbf6280-e2ca-4fdf-b621-66df94961094"
-            pvi:value="false" />
+            pvi:value="true" />
         </csi:ControlSetItem>
         <csi:ControlSetItem
           asi:abstract="false"
@@ -685,7 +685,7 @@
               x:id="754c2d89-d1c2-4349-b470-159591849ec1"
               asi:name="DataMember"
               apvi:propertyId="8c12e0ab-e4bd-4675-8f12-c5930a07be14"
-              pvi:value="Attachment" />
+              pvi:value="AttachmentParent.Attachment" />
             <pvi:PropertyValueItem
               asi:abstract="false"
               x:id="ecd9a58a-59c9-4017-9764-66aaa83a81ea"
@@ -757,7 +757,7 @@
               x:id="d52e19a4-397a-45c1-8aad-5331c416c154"
               asi:name="HideCopyButton"
               apvi:propertyId="4cbf6280-e2ca-4fdf-b621-66df94961094"
-              pvi:value="false" />
+              pvi:value="true" />
           </csi:ControlSetItem>
           <csi:ControlSetItem
             asi:abstract="false"
