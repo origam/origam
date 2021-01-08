@@ -96,8 +96,9 @@ export class ListRowContainer implements IRowsContainer {
           rows = rows.sort((row1: any[], row2: any[]) => self.internalRowOrderingFunc(row1, row2));
         }
         self.sortedIds = rows.map(row => self.rowIdGetter(row));
+        const dataView = getDataView(self);
         if(!data?.retainPreviousSelection){
-          getDataView(self).reselectOrSelectFirst();
+          dataView.reselectOrSelectFirst();
         }
       }
     )();
@@ -177,10 +178,6 @@ export class ListRowContainer implements IRowsContainer {
     if (idx > -1) {
       this.allRows.splice(idx, 1, row);
     }
-  }
-
-  get maxRowCountSeen() {
-    return this.rows.length;
   }
 
   registerResetListener(listener: () => void): void {}

@@ -28,9 +28,10 @@ export function getRowIndex(grouper: IGrouper, rowId: string): number | undefine
   .find(index => index !== -1);
 }
 
-export function getMaxRowCountSeen(grouper: IGrouper, rowId: string): number {
+export function getRowCount(grouper: IGrouper, rowId: string){
   return grouper.allGroups
-  .find(group => group.getRowById(rowId))?.childRows?.length ?? 0;
+    .find(group => group.getRowById(rowId))
+    ?.rowCount
 }
 
 export function getCellOffset(grouper: IGrouper, rowId: string): ICellOffset {

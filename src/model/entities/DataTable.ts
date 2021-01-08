@@ -76,17 +76,6 @@ export class DataTable implements IDataTable {
     return this.identifierProperty!.dataIndex;
   }
 
-  @computed get maxRowCountSeen() {
-    const groups = getGrouper(this).topLevelGroups;
-    if (groups.length > 0) {
-      return groups.map((group) => group.rowCount).reduce((x, y) => x + y);
-    } else {
-      return this.rowsContainer.maxRowCountSeen;
-    }
-  }
-
-
-
   getRowId(row: any[]): string {
     return row[this.identifierDataIndex];
   }

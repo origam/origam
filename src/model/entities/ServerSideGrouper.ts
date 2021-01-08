@@ -13,7 +13,8 @@ import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getCellOffset, getMaxRowCountSeen, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getCellOffset, getRowById, getRowIndex } from "./GrouperCommon";
+import _ from "lodash";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -84,9 +85,10 @@ export class ServerSideGrouper implements IGrouper {
   getRowById(id: string): any[] | undefined {
     return getRowById(this, id);
   }
-  
-  getMaxRowCountSeen(rowId: string): number {
-    return getMaxRowCountSeen(this, rowId);
+
+   getTotalRowCount(rowId: string): number | undefined{
+   return this.allGroups
+      .find(group => group.getRowById(rowId))?.rowCount;
   }
 
   getCellOffset(rowId: string): ICellOffset {
@@ -114,12 +116,18 @@ export class ServerSideGrouper implements IGrouper {
           [ ...getTablePanelView(this).aggregations.aggregationList],
           getOrderingConfiguration(this).groupChildrenOrdering
         ], 
-        ()=> flow(() => this.reload(groupHeader))(),
+        ()=> this.loadChildrenReactionDebounced(groupHeader),
       )
     );
     yield* this.reload(groupHeader);
   }
+  
+  loadChildrenReactionDebounced = _.debounce(this.loadChildrenReaction, 10);
 
+  private loadChildrenReaction(group: IGroupTreeNode){
+    flow(() => this.reload(group))();
+  }
+  
   private *reload(group: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
     const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);

@@ -1,4 +1,4 @@
-export enum AggregationType { SUM = "SUM", AVG = "AVG", MIN = "MIN", MAX = "MAX"}
+export enum AggregationType { SUM = "SUM", AVG = "AVG", MIN = "MIN", MAX = "MAX", COUNT = "COUNT"}
 
 export function tryParseAggregationType(candidate: any | undefined){
   if(!candidate) return undefined;
@@ -13,6 +13,7 @@ export function aggregationTypeToNumber(aggregationType: AggregationType | undef
     case AggregationType.AVG: return 2;
     case AggregationType.MIN: return 3;
     case AggregationType.MAX: return 4;
+    case AggregationType.COUNT: return 5;
     default: throw new Error("Cannot map \""+aggregationType+"\" to number")
   }
 }
@@ -31,6 +32,8 @@ export function parseAggregationType(candidate: any | undefined){
     case "MIN": return AggregationType.MIN;
     case "4":
     case "MAX": return AggregationType.MAX;
+    case "5":
+    case "COUNT": return AggregationType.COUNT;
     default: throw new Error("Cannot map \""+candidate+"\" to AggregationType")
   }
 }

@@ -26,7 +26,7 @@ export function aggregationToString(aggregation: IAggregation){
   return aggregation.type + ": " + round(aggregation.value)
 }
 
-export function calcAggregations(dataView: IDataView, aggregationInfos: IAggregationInfo[]) {
+export function calcAggregations(dataView: IDataView, aggregationInfos: IAggregationInfo[]): IAggregation[] {
   return aggregationInfos.map(aggregationInfo => {
     return {
       columnId: aggregationInfo.ColumnName,
@@ -54,5 +54,7 @@ function calculateAggregationValue(dataView: IDataView, aggregationInfo: IAggreg
       return Math.max(...values);
     case AggregationType.MIN:
       return Math.min(...values);
+    case AggregationType.COUNT:
+      return values.length;
   }
 }

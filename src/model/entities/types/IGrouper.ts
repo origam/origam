@@ -2,7 +2,7 @@ import {ICellOffset, IGroupTreeNode} from "gui/Components/ScreenElements/Table/T
 import { IProperty } from "./IProperty";
 
 export interface IGrouper {
-  getMaxRowCountSeen(rowId: string): number;
+  getTotalRowCount(rowId: string): number | undefined;
   getRowIndex(rowId: string): number | undefined;
   getAllValuesOfProp(property: IProperty): Promise<Set<any>>
   topLevelGroups: IGroupTreeNode[];

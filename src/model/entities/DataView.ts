@@ -111,7 +111,9 @@ export class DataView implements IDataView {
   get isFormViewActive() {
     return this._isFormViewActive;
   }
-
+  
+  @observable
+  totalRowCount: number | undefined;
   orderProperty: IProperty;
   activateFormView: (() => Generator) | undefined;
 
@@ -261,16 +263,6 @@ export class DataView implements IDataView {
       return this.selectedRowId
         ? this.dataTable.getExistingRowIdxById(this.selectedRowId)
         : undefined;
-    }
-  }
-
-  @computed get maxRowCountSeen() {
-    if (getGroupingConfiguration(this).isGrouping) {
-      return getGrouper(this).allGroups.some((group) => group.isExpanded)
-        ? getGrouper(this).getMaxRowCountSeen(this.selectedRowId!)
-        : 0;
-    } else {
-      return this.dataTable.maxRowCountSeen;
     }
   }
 

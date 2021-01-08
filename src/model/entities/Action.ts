@@ -35,11 +35,7 @@ export class Action implements IAction {
     if (this.mode === IActionMode.Always) {
       return true;
     }
-    const dataTable = getDataTable(this);
-    if(dataTable.maxRowCountSeen === 0) {
-      return false
-    }
-   
+  
     switch (this.mode) {
       case IActionMode.ActiveRecord: {
         const selRowId = getSelectedRowId(this);
