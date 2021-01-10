@@ -75,12 +75,23 @@ export class DropdownEditorBehavior {
       }
     }
     this.isDropped = true;
+    this.scrollToChoosenRowIfPossible();
     this.makeFocused();
   }
 
   makeFocused() {
     if (this.elmInputElement) {
       this.elmInputElement.focus();
+    }
+  }
+
+  @action.bound
+  scrollToChoosenRowIfPossible() {
+    if (this.choosenRowId && !_.isArray(this.choosenRowId)) {
+      const index = this.dataTable.getRowIndexById(this.choosenRowId);
+      if (index > -1) {
+        this.scrollToRowIndex = index + 1;
+      }
     }
   }
 
@@ -265,7 +276,6 @@ export class DropdownEditorBehavior {
     scrollTop: number;
     scrollWidth: number;
   }) {
-    console.log(args);
     const setup = this.setup();
     if (setup.dropdownType === LazilyLoadedGrid) {
       if (
@@ -320,8 +330,10 @@ export class DropdownEditorBehavior {
           self.scrollToRowIndex = undefined;
           self.dataTable.appendData(items);
         }
-        if (!self.dataTable.getRowById(self.cursorRowId) && self.userEnteredValue)
+        if (!self.dataTable.getRowById(self.cursorRowId) && self.userEnteredValue) {
           self.trySelectFirstRow();
+        }
+        self.scrollToChoosenRowIfPossible();
       } finally {
         self.isWorking = false;
         self.runningPromise = undefined;
