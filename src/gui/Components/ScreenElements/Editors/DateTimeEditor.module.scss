@@ -5,10 +5,6 @@
 
 .droppedPanelContainer {
   z-index: 1000;
-  position: absolute;
-  left: 0px;
-  /*width: 300px;
-  height: 200px;*/
   background-color: white;
   overflow: hidden;
   @include popoverShadow;
