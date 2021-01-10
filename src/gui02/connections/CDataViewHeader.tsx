@@ -348,9 +348,6 @@ export class CDataViewHeaderInner extends React.Component<{
                             >
                               {T("Show audit", "audit_title")}
                             </DropdownItem>
-                            <DropdownItem isDisabled={true}>
-                              {T("Show attachments", "attachment_button_tool_tip")}
-                            </DropdownItem>
                             <DropdownItem
                               isDisabled={false}
                               onClick={(event: any) => {
