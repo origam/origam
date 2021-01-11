@@ -41,6 +41,7 @@ import { getPanelViewActions } from "model/selectors/DataView/getPanelViewAction
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
@@ -181,6 +182,7 @@ export class CDataViewHeaderInner extends React.Component<{
     const $cont = scopeFor(dataView);
     const uiToolbar = $cont && $cont.resolve(IDataViewToolbarUI);
     const selectedRow = getSelectedRow(dataView);
+    const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
     return (
       <Measure bounds={true}>
@@ -346,24 +348,28 @@ export class CDataViewHeaderInner extends React.Component<{
                               >
                                 {T("Column configuration", "column_config_tool_tip")}
                               </DropdownItem>
-                              <DropdownItem
-                                isDisabled={false}
-                                onClick={(event: any) => {
-                                  setDropped(false);
-                                  onRecordAuditClick(dataView)(event);
-                                }}
-                              >
-                                {T("Show audit", "audit_title")}
-                              </DropdownItem>
-                              <DropdownItem
-                                isDisabled={false}
-                                onClick={(event: any) => {
-                                  setDropped(false);
-                                  onRecordInfoClick(dataView)(event);
-                                }}
-                              >
-                                {T("Show record information", "info_button_tool_tip")}
-                              </DropdownItem>
+                              {!isDialog &&
+                                <DropdownItem
+                                  isDisabled={false}
+                                  onClick={(event: any) => {
+                                    setDropped(false);
+                                    onRecordAuditClick(dataView)(event);
+                                  }}
+                                >
+                                  {T("Show audit", "audit_title")}
+                                </DropdownItem>
+                              }
+                              {!isDialog &&
+                                <DropdownItem
+                                  isDisabled={false}
+                                  onClick={(event: any) => {
+                                    setDropped(false);
+                                    onRecordInfoClick(dataView)(event);
+                                  }}
+                                >
+                                  {T("Show record information", "info_button_tool_tip")}
+                                </DropdownItem>
+                              }
                             </Dropdown>
                           )}
                         />
