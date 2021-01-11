@@ -115,14 +115,26 @@ namespace Origam.ServerCore.Authorization
 
         private static void SetDate(DataRow row,string columnName, DateTime dateTime)
         {
-            if (dateTime == DateTime.MinValue) return;
-            row[columnName] = dateTime;
+            if (dateTime == DateTime.MinValue)
+            {
+                row[columnName] = DBNull.Value;
+            }
+            else
+            {
+                row[columnName] = dateTime;
+            }
         } 
         
         private static void SetDate(DataRow row,string columnName, DateTime? dateTime)
         {
-            if (!dateTime.HasValue) return;
-            row[columnName] = dateTime;
+            if (!dateTime.HasValue)
+            {
+                row[columnName] = DBNull.Value;
+            }
+            else
+            {
+                row[columnName] = dateTime;
+            }
         }
 
         private static DateTime GetDate(DataRow row, string propertyName)
