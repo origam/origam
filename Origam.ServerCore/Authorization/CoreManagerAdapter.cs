@@ -105,7 +105,7 @@ namespace Origam.ServerCore.Authorization
         {
             var user = await FindByNameAsync(userName);
             if (user == null) { return false; }
-            return (await coreUserManager.SetLockoutEndDateAsync( user,null))
+            return (await coreUserManager.SetLockoutEndDateAsync( user, null))
                 .Succeeded;
         }
 
