@@ -121,8 +121,7 @@ namespace Origam.ServerCommon.Pages
             {
                 parameters.Add(keyValuePair.Key, keyValuePair.Value);
             }
-            if ((request.ContentType != null) 
-            && !request.ContentType.Contains("application/json"))
+            if (request.HasFormContentType)
             {
                 foreach (var keyValuePair in request.Form)
                 {
