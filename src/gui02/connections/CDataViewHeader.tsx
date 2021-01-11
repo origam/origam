@@ -41,6 +41,7 @@ import { getPanelViewActions } from "model/selectors/DataView/getPanelViewAction
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowIndex";
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
+import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
@@ -281,7 +282,9 @@ export class CDataViewHeaderInner extends React.Component<{
                                   tooltip={T("Next", "move_next_tool_tip")}
                                 />
                               </DataViewHeaderAction>
-                              <DataViewHeaderAction onMouseDown={onLastRowClickEvt}>
+                              <DataViewHeaderAction 
+                                onMouseDown={onLastRowClickEvt}
+                                isDisabled={isInfiniteScrollingActive(dataView)}>
                                 <Icon
                                   src="./icons/list-arrow-last.svg"
                                   tooltip={T("Last", "move_last_tool_tip")}
