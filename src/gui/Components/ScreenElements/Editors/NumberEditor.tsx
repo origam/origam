@@ -129,7 +129,7 @@ export class NumberEditor extends React.Component<{
 
   @action.bound handleChange(event: any) {
     this.wasChanged = true;
-    const invalidChars = new RegExp("[^\\d" + getCurrentDecimalSeparator() + "]", "g");
+    const invalidChars = new RegExp("[^\\d\\-" + getCurrentDecimalSeparator() + "]", "g");
     this.editingValue = (event.target.value || "").replace(invalidChars, "");
     this.props.onChange && this.props.onChange(null, this.numericValue);
   }
