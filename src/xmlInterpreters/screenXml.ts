@@ -132,6 +132,7 @@ function parseProperty(property: any, idx: number): IProperty {
     multiline: property.attributes.Multiline === "true",
     isPassword: property.attributes.IsPassword === "true",
     isRichText: property.attributes.IsRichText === "true",
+    autoSort: property.attributes.AutoSort === "true",
     maxLength: parseInt(property.attributes.MaxLength, 10),
     formatterPattern: property.attributes.FormatterPattern
       ? flf2mof(property.attributes.FormatterPattern)

@@ -153,6 +153,7 @@ export class TableViewEditor extends React.Component<{
             xmlNode={this.props.property!.xmlNode}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             isReadOnly={readOnly}
+            autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(input) => input.focus()} // will cause the editor to take focus after opening
           />
@@ -166,6 +167,7 @@ export class TableViewEditor extends React.Component<{
               key={this.props.property!.xmlNode.$iid}
               xmlNode={this.props.property!.xmlNode}
               isReadOnly={readOnly}
+              autoSort={this.props.property!.autoSort}
               tagEditor={
                 <TagInputEditor
                   value={this.props.getCellValue!()}
