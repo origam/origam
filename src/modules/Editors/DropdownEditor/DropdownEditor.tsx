@@ -97,6 +97,7 @@ export function XmlBuildDropdownEditor(props: {
   customStyle?: any;
   tagEditor?: JSX.Element;
   isLink?: boolean;
+  autoSort?: boolean;
   onDoubleClick?: (event: any) => void;
   onClick?: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
@@ -136,7 +137,8 @@ export function XmlBuildDropdownEditor(props: {
       props.onDoubleClick,
       props.onClick,
       props.subscribeToFocusManager,
-      props.onKeyDown
+      props.onKeyDown,
+      props.autoSort
     );
 
     const rat = props.xmlNode.attributes;

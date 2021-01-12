@@ -33,6 +33,7 @@ export interface IPropertyData {
   customNumericFormat?: string;
   isAggregatedColumn: boolean;
   isLookupColumn: boolean;
+  autoSort: boolean;
 
   controlPropertyValue?: string;
   controlPropertyId?: string;

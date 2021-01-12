@@ -20,7 +20,8 @@ export class DropdownEditorBehavior {
     public onDoubleClick?: (event: any) => void,
     public onClick?: (event: any) => void,
     public subscribeToFocusManager?: (obj: IFocusAble) => void,
-    private onKeyDown?: (event: any) => void
+    private onKeyDown?: (event: any) => void,
+    private autoSort?: boolean
   ) {}
 
   @observable isDropped = false;
@@ -317,7 +318,9 @@ export class DropdownEditorBehavior {
         self.isWorking = true;
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
-        items.sort(compareLookupItems);
+        if(self.autoSort){
+          items.sort(compareLookupItems);
+        }
         if (setup.dropdownType === EagerlyLoadedGrid) {
           self.dataTable.setData(items);
           if (setup.cached) {

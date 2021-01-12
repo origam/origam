@@ -21,6 +21,7 @@ export class Property implements IProperty {
     }
   }
 
+  autoSort: boolean = false;
   id: string = "";
   tabIndex: string | undefined;
   modelInstanceId: string = "";

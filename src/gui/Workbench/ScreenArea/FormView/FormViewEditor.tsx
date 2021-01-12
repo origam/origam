@@ -201,6 +201,7 @@ export class FormViewEditor extends React.Component<{
                 this.props.property?.tabIndex
               )
             }
+            autoSort={this.props.property?.autoSort}
             backgroundColor={backgroundColor}
             foregroundColor={foregroundColor}
             customStyle={this.props.property?.style}
@@ -226,6 +227,7 @@ export class FormViewEditor extends React.Component<{
                 this.props.property?.tabIndex
               )
             }
+            autoSort={this.props.property?.autoSort}
             tagEditor={
               <TagInputEditor
                 value={this.props.value}
