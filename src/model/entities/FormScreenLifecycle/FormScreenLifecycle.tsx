@@ -100,8 +100,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     this.disposers.push(disposer);
   }
 
-  *onFlushData(): Generator<unknown, any, unknown> {
-    yield* this.flushData();
+  *onFlushData(args?:{forceFlush?: boolean}): Generator<unknown, any, unknown> {
+    yield* this.flushData({forceFlush: args?.forceFlush});
   }
 
   *onCreateRow(entity: string, gridId: string): Generator<unknown, any, unknown> {
@@ -644,10 +644,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   previousFlushPending: Promise<void> | undefined;
   previousFlushFinished: ((value: void | PromiseLike<void>)=> void) | undefined;
 
-  *flushData() {
+  *flushData(args?:{forceFlush?: boolean}) {
     try {
       this.monitor.inFlow++;
-      if(this.previousFlushPending){
+      if(this.previousFlushPending && !args?.forceFlush){
         yield this.previousFlushPending;
         return;
       }

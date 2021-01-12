@@ -22,7 +22,7 @@ export const CheckBox: React.FC<{
   return {
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
-    onChange: (event: any, value: any) => onFieldChange(formPanelView)(event, row, property, value),
+    onChange: (event: any, value: any) => onFieldChange(formPanelView)(event, row, property, value, true),
   };
 })((props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
