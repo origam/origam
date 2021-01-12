@@ -30,7 +30,15 @@ import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEd
   return {
     property,
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
-    onChange: (event: any, value: any) => onFieldChange(formPanelView)(event, row, property, value),
+    onChange: (event: any, value: any) => {
+      onFieldChange(formPanelView)({
+        event: event, 
+        row: row, 
+        property: property, 
+        value: value, 
+        forceFlush: property.column === "CheckBox" || property.column === "Checklist" 
+      });
+    },
   };
 })
 @observer

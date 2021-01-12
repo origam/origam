@@ -11,7 +11,9 @@ export function onFieldChange(ctx: any) {
 }
 
 export function onFieldChangeG(ctx: any) {
-  return function* onFieldChange(event: any, row: any[], property: IProperty, value: any) {
+  return function* onFieldChange(args:{event: any, row: any[], property: IProperty, value: any, forceFlush?: boolean}) {
+    const {property, row, forceFlush, event} = args;
+    let value = args.value;
     try {
       if (property.column === "ComboBox" && value !== null) {
         value = `${value}`;
@@ -26,7 +28,7 @@ export function onFieldChangeG(ctx: any) {
       ) {
         // Flush data to session when combo value changed.
         getDataTable(ctx).flushFormToTable(row);
-        yield* getFormScreenLifecycle(ctx).onFlushData();
+        yield* getFormScreenLifecycle(ctx).onFlushData({forceFlush: forceFlush});
       }
     } catch (e) {
       yield* handleError(ctx)(e);

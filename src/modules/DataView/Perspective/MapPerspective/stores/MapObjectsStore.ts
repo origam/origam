@@ -121,12 +121,13 @@ export class MapObjectsStore {
       const selectedRow = getSelectedRow(self.dataView);
       console.log(property, selectedRow);
       if (property && selectedRow) {
-        yield* onFieldChangeG(self.dataView)(
-          undefined,
-          selectedRow,
-          property,
-          geoJson ? wtkStringify(geoJson) : null
-        );
+        yield* onFieldChangeG(self.dataView)({
+            event: undefined, 
+            row: selectedRow, 
+            property: property, 
+            value: geoJson ? wtkStringify(geoJson) : null, 
+            forceFlush: false 
+          });
         getDataTable(self.dataView).flushFormToTable(selectedRow);
         yield* getFormScreenLifecycle(self.dataView).onFlushData();
       }

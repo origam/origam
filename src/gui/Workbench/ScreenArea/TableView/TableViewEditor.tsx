@@ -35,7 +35,13 @@ import {
     property: actualProperty,
     getCellValue: () => getCellValue(tablePanelView, row, actualProperty),
     onChange: (event: any, value: any) =>
-      onFieldChange(tablePanelView)(event, row, actualProperty, value),
+      onFieldChange(tablePanelView)({
+        event: event, 
+        row: row, 
+        property: actualProperty, 
+        value: value, 
+        forceFlush: false 
+      }),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
     onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event),
   };
