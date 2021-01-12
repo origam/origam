@@ -105,8 +105,17 @@ export class RowState implements IRowState {
         )
       });
     }
-    this.observedIds.get(key)!.atom.reportObserved();
+    this.observedIds.get(key)?.atom.reportObserved();
     return this.resolvedValues.get(key);
+  }
+
+  async loadValues(keys: string[]) {
+    for (const key of keys) {
+      if (!this.observedIds.has(key)) {
+        this.observedIds.set(key, null); 
+      }
+    }
+    await this.triggerLoadImm();
   }
 
   hasValue(key: string): boolean {
