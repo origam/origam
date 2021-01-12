@@ -185,7 +185,13 @@ export class TablePanelView implements ITablePanelView {
       yield* this.selectCellAsync(columnId, rowId);
 
       if (!isReadOnly(property!, rowId)) {
-        yield* onFieldChangeG(this)(undefined, row, property, !getCellValue(this, row, property));
+        yield* onFieldChangeG(this)({
+          event: undefined, 
+          row: row, 
+          property: property, 
+          value: !getCellValue(this, row, property), 
+          forceFlush: false 
+        });
       }
     }
     this.scrollToCurrentCell();

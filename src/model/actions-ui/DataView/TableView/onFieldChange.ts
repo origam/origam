@@ -11,7 +11,9 @@ export function onFieldChange(ctx: any) {
 }
 
 export function onFieldChangeG(ctx: any) {
-  return function* onFieldChange(event: any, row: any[], property: IProperty, value: any, forceFlush?: boolean) {
+  return function* onFieldChange(args:{event: any, row: any[], property: IProperty, value: any, forceFlush?: boolean}) {
+    const {property, row, forceFlush, event} = args;
+    let value = args.value;
     try {
       if (property.column === "ComboBox" && value !== null) {
         value = `${value}`;

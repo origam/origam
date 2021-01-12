@@ -37,7 +37,13 @@ export class DataViewData {
     const row = dataTable.getRowById(rowId);
     const property = this.propertyById(propertyId);
     if (property && row) {
-      onFieldChange(property)(undefined, row, property, value);
+      onFieldChange(property)({
+        event: undefined, 
+        row: row, 
+        property: property, 
+        value: value, 
+        forceFlush: false 
+      });
     }
   }
 }
