@@ -8,6 +8,7 @@ export interface IRowState extends IRowStateData {
   isWorking: boolean;
 
   getValue(key: string): IRowStateItem | undefined;
+  loadValues(keys: string[]): Promise<any>;
   putValue(state: any): void;
   hasValue(key: string): boolean;
   clearAll(): void;
