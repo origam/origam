@@ -419,7 +419,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           );
           this.disposers.push(
             reaction(
-              () => { orderingConfiguration.userOrderings.map((x) => x.direction) },
+              () => orderingConfiguration.userOrderings.map((x) => [x.columnId, x.direction]),
               () => this.sortAndFilterReaction({dataView: rootDataView, updateTotalRowCount: false}),
               {
                 equals: comparer.structural,
