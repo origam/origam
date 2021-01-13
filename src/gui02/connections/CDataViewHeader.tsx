@@ -43,6 +43,7 @@ import { getSelectedRowIndex } from "model/selectors/DataView/getSelectedRowInde
 import { getTotalRowCount } from "model/selectors/DataView/getTotalGroupRowCount";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getIsFilterControlsDisplayed } from "model/selectors/TablePanelView/getIsFilterControlsDisplayed";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
@@ -184,6 +185,11 @@ export class CDataViewHeaderInner extends React.Component<{
     const selectedRow = getSelectedRow(dataView);
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
+    const goToFirstRowDisabled = getGroupingConfiguration(dataView).isGrouping ||
+      isInfiniteScrollingActive(dataView);
+    const goToLastRowDisabled = getGroupingConfiguration(dataView).isGrouping ||
+      isInfiniteScrollingActive(dataView);
+
     return (
       <Measure bounds={true}>
         {({ measureRef, contentRect }) => {
@@ -266,7 +272,9 @@ export class CDataViewHeaderInner extends React.Component<{
                         {!isBreak640 && (
                           <>
                             <DataViewHeaderGroup noShrink={true}>
-                              <DataViewHeaderAction onMouseDown={onFirstRowClickEvt}>
+                              <DataViewHeaderAction 
+                                onMouseDown={onFirstRowClickEvt}
+                                isDisabled={goToFirstRowDisabled}>
                                 <Icon
                                   src="./icons/list-arrow-first.svg"
                                   tooltip={T("First", "move_first_tool_tip")}
@@ -286,7 +294,7 @@ export class CDataViewHeaderInner extends React.Component<{
                               </DataViewHeaderAction>
                               <DataViewHeaderAction 
                                 onMouseDown={onLastRowClickEvt}
-                                isDisabled={isInfiniteScrollingActive(dataView)}>
+                                isDisabled={goToLastRowDisabled}>
                                 <Icon
                                   src="./icons/list-arrow-last.svg"
                                   tooltip={T("Last", "move_last_tool_tip")}
