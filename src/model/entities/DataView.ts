@@ -119,8 +119,6 @@ export class DataView implements IDataView {
 
   gridDimensions: IGridDimensions;
 
-  isReorderedOnClient: boolean = true;
-
   id = "";
   modelInstanceId = "";
   name = "";

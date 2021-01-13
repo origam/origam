@@ -6,6 +6,7 @@ import { getDataTable } from "../selectors/DataView/getDataTable";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { getDataSource } from "../selectors/DataSources/getDataSource";
 import { IFilter } from "./types/IFilter";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 export class FilterConfiguration implements IFilterConfiguration {
   constructor(implicitFilters: IImplicitFilter[]) {
@@ -458,7 +459,7 @@ export class FilterConfiguration implements IFilterConfiguration {
   @action.bound applyNewFilteringImm = flow(function* (this: FilterConfiguration) {
     const dataView = getDataView(this);
     const dataTable = getDataTable(dataView);
-    if (dataView.isReorderedOnClient) {
+    if (!isLazyLoading(dataView)) {
       if (this.activeFilters.length > 0) {
         const comboProps = this.activeFilters
           .filter((filter) => filter.setting.isComplete)
