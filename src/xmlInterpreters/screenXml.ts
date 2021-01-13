@@ -109,6 +109,15 @@ function getPropertyParameters(node: any) {
 
 const instance2XmlNode = new WeakMap<any, any>();
 
+function fixColumnWidth(width: number) {
+  // Sometimes they send us negative width, which destroys table rendering.
+  if (!width || width < 0) {
+    return 100;
+  } else {
+    return width;
+  }
+}
+
 function parseProperty(property: any, idx: number): IProperty {
   const propertyObject = new Property({
     xmlNode: property,
@@ -139,12 +148,12 @@ function parseProperty(property: any, idx: number): IProperty {
       : "",
     customNumericFormat: property.attributes.CustomNumericFormat,
     identifier: property.attributes.Identifier,
-    gridColumnWidth: property.attributes.GridColumnWidth
-      ? parseInt(property.attributes.GridColumnWidth)
-      : 100,
-    columnWidth: property.attributes.GridColumnWidth
-      ? parseInt(property.attributes.GridColumnWidth)
-      : 100,
+    gridColumnWidth: fixColumnWidth(
+      property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100
+    ),
+    columnWidth: fixColumnWidth(
+      property.attributes.GridColumnWidth ? parseInt(property.attributes.GridColumnWidth) : 100
+    ),
     lookupId: property.attributes.LookupId,
     lookup: !property.attributes.LookupId
       ? undefined
@@ -456,7 +465,8 @@ export function* interpretScreenXml(
             if (column.attributes.property) {
               // COLUMN WIDTH
               const prop = properties.find((prop) => prop.id === column.attributes.property);
-              prop && prop.setColumnWidth(+column.attributes.width);
+              const width = parseInt(column.attributes.width);
+              prop && prop.setColumnWidth(fixColumnWidth(width));
 
               // COLUMN HIDING
               if (column.attributes.isHidden === "true") {
