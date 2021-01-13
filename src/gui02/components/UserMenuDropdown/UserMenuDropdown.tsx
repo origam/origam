@@ -55,9 +55,9 @@ export const UserMenuDropdown: React.FC<{
             avatarLink={props.avatarLink}
             actionItems={
               <>
-                <DropdownItem isDisabled={true}>
+                {/* <DropdownItem isDisabled={true}>
                   {T("My profile", "my_profile")}
-                </DropdownItem>
+                </DropdownItem> */}
                 <DropdownItem
                   onClick={() => {
                     setDropped(false);
