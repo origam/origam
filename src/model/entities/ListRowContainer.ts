@@ -1,4 +1,4 @@
-import {computed, observable, action, reaction, IReactionDisposer, flow} from "mobx";
+import {computed, observable, action, reaction, IReactionDisposer, flow, comparer} from "mobx";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
 import { IOrderingConfiguration } from "./types/IOrderingConfiguration";
 import { IRowsContainer } from "./types/IRowsContainer";
@@ -48,8 +48,11 @@ export class ListRowContainer implements IRowsContainer {
           filter.setting.val2,
           filter.setting.type,
         ]),
-        this.orderingConfiguration.orderings],
+        this.orderingConfiguration.orderings.map((x) => [x.columnId, x.direction])],
       () => this.updateSortAndFilterDebounced(),
+      {
+        equals: comparer.structural,
+      }
     );
     await this.updateSortAndFilter();
   }
