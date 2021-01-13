@@ -1,7 +1,7 @@
 import { IGrouper } from "./types/IGrouper";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { IProperty } from "./types/IProperty";
-import { ICellOffset } from "gui/Components/ScreenElements/Table/TableRendering/types";
+import { ICellOffset, IGroupTreeNode } from "gui/Components/ScreenElements/Table/TableRendering/types";
 
 
 export function getAllLoadedValuesOfProp(property: IProperty, grouper: IGrouper): Set<any> {
@@ -55,4 +55,56 @@ export function getCellOffset(grouper: IGrouper, rowId: string): ICellOffset {
     row: 0,
     column:0
   }
+}
+
+export function getPreviousRowId(grouper: IGrouper,rowId: string): string {
+  const group = grouper.allGroups
+    .find(group => group.getRowById(rowId))!;
+  const indexInGroup = group.getRowIndex(rowId);
+  if(indexInGroup !== undefined && indexInGroup !== 0){
+    const previousRow =  group.childRows[indexInGroup - 1]
+    return getDataTable(grouper).getRowId(previousRow);
+  }else{
+    const previousGroup = getPreviousNonEmptyGroup(grouper, group);
+    if(previousGroup === undefined){
+      return rowId;
+    }
+    const previousRow = previousGroup.childRows[previousGroup.childRows.length - 1];
+    return getDataTable(grouper).getRowId(previousRow);
+  }
+}
+
+export function getNextRowId(grouper: IGrouper,rowId: string): string {
+  const group = grouper.allGroups
+    .find(group => group.getRowById(rowId))!;
+  const indexInGroup = group.getRowIndex(rowId);
+  if(indexInGroup !== undefined && indexInGroup !== (group.rowCount - 1)){
+    const nextRow =  group.childRows[indexInGroup + 1]
+    return getDataTable(grouper).getRowId(nextRow);
+  }else{
+    const nextGroup = getNextNonEmptyGroup(grouper, group);
+    if(nextGroup === undefined){
+      return rowId;
+    }
+    const nextRow = nextGroup.childRows[0];
+    return getDataTable(grouper).getRowId(nextRow);
+  }
+}
+
+function getPreviousNonEmptyGroup(grouper: IGrouper, currentGroup: IGroupTreeNode){
+  const sameLevelGroups = grouper.allGroups
+    .filter(group => currentGroup.level === group.level && group.rowCount > 0 && group.isExpanded)
+  const currentGroupIndex = sameLevelGroups.indexOf(currentGroup);
+  return currentGroupIndex === 0
+    ? undefined
+    : sameLevelGroups[currentGroupIndex - 1];
+}
+
+function getNextNonEmptyGroup(grouper: IGrouper, currentGroup: IGroupTreeNode){
+  const sameLevelGroups = grouper.allGroups
+    .filter(group => currentGroup.level === group.level && group.rowCount > 0 && group.isExpanded)
+  const currentGroupIndex = sameLevelGroups.indexOf(currentGroup);
+  return currentGroupIndex === sameLevelGroups.length - 1
+    ? undefined
+    : sameLevelGroups[currentGroupIndex + 1];
 }

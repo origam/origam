@@ -453,9 +453,13 @@ export class DataView implements IDataView {
 
   @action.bound selectNextRow() {
     const selectedRowId = getSelectedRowId(this);
-    const newId = selectedRowId
-      ? getDataTable(this).getNextExistingRowId(selectedRowId)
-      : undefined;
+    
+    let newId = undefined;
+    if(selectedRowId){
+      newId = getGroupingConfiguration(this).isGrouping
+        ? getGrouper(this).getNextRowId(selectedRowId)
+        : getDataTable(this).getNextExistingRowId(selectedRowId);
+    }
     if (newId) {
       this.selectRowById(newId);
     }
@@ -463,9 +467,13 @@ export class DataView implements IDataView {
 
   @action.bound selectPrevRow() {
     const selectedRowId = getSelectedRowId(this);
-    const newId = selectedRowId
-      ? getDataTable(this).getPrevExistingRowId(selectedRowId)
-      : undefined;
+
+    let newId = undefined;
+    if(selectedRowId){
+      newId = getGroupingConfiguration(this).isGrouping
+        ? getGrouper(this).getPreviousRowId(selectedRowId)
+        : getDataTable(this).getPrevExistingRowId(selectedRowId);
+    }
     if (newId) {
       this.selectRowById(newId);
     }
