@@ -460,13 +460,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const openedScreen = getOpenedScreen(this);
 
     assignIIds(args.initUIResult.formDefinition);
-
+    
     const { formScreen: screen, foundLookupIds } = yield* interpretScreenXml(
       args.initUIResult.formDefinition,
       this,
       args.initUIResult.panelConfigurations,
       args.initUIResult.lookupMenuMappings,
-      args.initUIResult.sessionId
+      args.initUIResult.sessionId,
+      openedScreen.lazyLoading
     );
     const api = getApi(openedScreen);
     const cacheDependencies = getWorkbench(openedScreen).lookupMultiEngine.cacheDependencies;
