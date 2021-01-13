@@ -12,6 +12,8 @@ export interface IGrouper {
   notifyGroupClosed(group: IGroupTreeNode): void;
   getCellOffset(rowId: string): ICellOffset;
   substituteRecord(row: any[]): void;
+  getNextRowId(rowId: string): string;
+  getPreviousRowId(selectedRowId: string): string;
   parent?: any;
   start(): void;
 }

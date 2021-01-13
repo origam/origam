@@ -9,7 +9,7 @@ import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getCellOffset, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -52,6 +52,14 @@ export class ClientSideGrouper implements IGrouper {
   
   getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
     return Promise.resolve(getAllLoadedValuesOfProp(property, this));
+  }
+
+  getNextRowId(rowId: string): string {
+    return getNextRowId(this, rowId);
+  }
+
+  getPreviousRowId(rowId: string): string {
+    return getPreviousRowId(this, rowId);
   }
 
   loadRecursively(groups: IGroupTreeNode[]) {

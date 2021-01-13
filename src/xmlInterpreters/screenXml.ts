@@ -70,6 +70,8 @@ import { MapRootStore } from "modules/DataView/Perspective/MapPerspective/stores
 import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
 import { addFilterGroups } from "./filterXml";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -212,7 +214,8 @@ export function* interpretScreenXml(
   formScreenLifecycle: IFormScreenLifecycle02,
   panelConfigurationsRaw: any,
   lookupMenuMappings: any,
-  sessionId: string
+  sessionId: string,
+  isLazyLoading: boolean
 ) {
   const workbench = getWorkbench(formScreenLifecycle);
   const $workbench = scopeFor(workbench);
@@ -580,7 +583,15 @@ export function* interpretScreenXml(
               dataView.activePanelView = perspectiveTag as any;
               yield* saveColumnConfigurations(dataView)();
             },
-            () => dataView.activePanelView
+            () => {
+              if(dataView.activePanelView === IPanelViewType.Form &&
+                 getGroupingConfiguration(dataView).isGrouping && 
+                 isLazyLoading)
+              {
+                return IPanelViewType.Table;
+              }
+              return dataView.activePanelView;
+            }
           )
       )
       .scopedInstance(SCOPE_DataView);

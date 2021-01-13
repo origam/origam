@@ -13,7 +13,7 @@ import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
-import { getAllLoadedValuesOfProp, getCellOffset, getRowById, getRowIndex } from "./GrouperCommon";
+import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowIndex } from "./GrouperCommon";
 import _ from "lodash";
 
 export class ServerSideGrouper implements IGrouper {
@@ -30,20 +30,24 @@ export class ServerSideGrouper implements IGrouper {
           Array.from(getGroupingConfiguration(this).groupingIndices.values()),
           Array.from(getGroupingConfiguration(this).groupingIndices.keys()),
           this.refreshTrigger],
-          () => {
-            const self = this;
-            flow(function* () {yield* self.loadGroups()})();
-          },
+          () => this.loadGroupsDebounced(),
           {fireImmediately: true, equals: comparer.structural,delay: 50})
           );
         }
         
-        get allGroups(){
-          return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
-        } 
+  get allGroups(){
+    return this.topLevelGroups.flatMap(group => [group, ...group.allChildGroups]);
+  } 
+
+  loadGroupsDebounced =  _.debounce(this.loadGroupsImm, 10);
+
+  loadGroupsImm(){
+    const self = this;
+    flow(function* () {yield* self.loadGroups()})();
+  }
         
-        private *loadGroups() {
-          const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
+  private *loadGroups() {
+    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (!firstGroupingColumn) {
       this.topLevelGroups.length = 0;
       return;
@@ -86,14 +90,22 @@ export class ServerSideGrouper implements IGrouper {
     return getRowById(this, id);
   }
 
-   getTotalRowCount(rowId: string): number | undefined{
-   return this.allGroups
+  getTotalRowCount(rowId: string): number | undefined{
+    return this.allGroups
       .find(group => group.getRowById(rowId))?.rowCount;
   }
 
   getCellOffset(rowId: string): ICellOffset {
     return getCellOffset(this, rowId);
    }
+
+  getNextRowId(rowId: string): string {
+    return getNextRowId(this, rowId);
+  }
+
+  getPreviousRowId(rowId: string): string {
+    return getPreviousRowId(this, rowId);
+  }
 
   notifyGroupClosed(group: IGroupTreeNode){
     if(this.groupDisposers.has(group)){
