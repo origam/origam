@@ -2034,7 +2034,7 @@ namespace Origam.DA.Service
                         break;                    
                     case CustomAggregationType.Count:
                         sqlExpression.Append(
-                            $"COUNT({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                            $"{CountAggregateSql()}({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
