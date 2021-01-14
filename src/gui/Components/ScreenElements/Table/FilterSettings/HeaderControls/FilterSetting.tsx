@@ -2,6 +2,8 @@ import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSe
 
 import { observable } from "mobx";
 
+export const EDITOR_DALEY_MS = 500;
+
 export class FilterSetting implements IFilterSetting {
   @observable type: string;
   @observable val1?: any;

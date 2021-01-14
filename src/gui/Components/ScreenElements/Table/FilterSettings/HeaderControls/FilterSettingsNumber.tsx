@@ -7,12 +7,10 @@ import {
 import CS from "./FilterSettingsCommon.module.scss";
 import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
-import { FilterSetting } from "./FilterSetting";
+import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
 import { LookupFilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 import { Operator } from "./Operator";
-
-const EDITOR_DALEY_MS = 500;
 
 const OPERATORS =
   [
