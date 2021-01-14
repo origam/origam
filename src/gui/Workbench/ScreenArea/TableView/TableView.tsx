@@ -333,13 +333,13 @@ class HeaderRenderer implements IHeaderRendererData {
           onStopColumnOrderChanging={this.handleStopColumnOrderChanging}
           onPossibleColumnOrderChange={this.handlePossibleColumnOrderChange}
           onClick={onColumnHeaderClick(this.tablePanelView)}
-          additionalHeaderContent={this.makeAdditionalHeaderContent(header.id)}
+          additionalHeaderContent={this.makeAdditionalHeaderContent(header.id, property)}
         />
       </Provider>
     );
   }
 
-  makeAdditionalHeaderContent(columnId: string) {
+  makeAdditionalHeaderContent(columnId: string, property: IProperty) {
     const filterControlsDisplayed = this.tablePanelView.filterConfiguration
       .isFilterControlsDisplayed;
     if (!filterControlsDisplayed && this.aggregationData.length === 0) {
@@ -352,7 +352,7 @@ class HeaderRenderer implements IHeaderRendererData {
     if (this.aggregationData.length !== 0) {
       const aggregation = this.aggregationData.find((agg) => agg.columnId === columnId);
       if (aggregation) {
-        headerContent.push(<div>{aggregationToString(aggregation)}</div>);
+        headerContent.push(<div>{aggregationToString(aggregation, property)}</div>);
       }
     }
     return () => <>{headerContent}</>;

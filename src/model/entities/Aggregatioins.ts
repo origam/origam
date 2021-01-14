@@ -3,6 +3,8 @@ import {IDataView} from "model/entities/types/IDataView";
 import {IAggregationInfo} from "model/entities/types/IAggregationInfo";
 import {getProperties} from "model/selectors/DataView/getProperties";
 import {IAggregation} from "model/entities/types/IAggregation";
+import { IProperty } from "./types/IProperty";
+import { formatNumber } from "./NumberFormating";
 
 export function parseAggregations(objectArray: any[] | undefined): IAggregation[] | undefined{
   if(!objectArray) return undefined;
@@ -16,14 +18,19 @@ export function parseAggregations(objectArray: any[] | undefined): IAggregation[
   });
 }
 
-export function aggregationToString(aggregation: IAggregation){
+export function aggregationToString(aggregation: IAggregation, property: IProperty){
   function round(value: number){
     return Math.round(value * 100)/100
   }
+  const formattedValue = formatNumber(
+    property.customNumericFormat,
+    property.entity ?? '',
+    round(aggregation.value));
+  
   if(aggregation.type === AggregationType.SUM){
-    return "Σ " + round(aggregation.value)
+    return "Σ " + formattedValue
   }
-  return aggregation.type + ": " + round(aggregation.value)
+  return aggregation.type + ": " + formattedValue
 }
 
 export function calcAggregations(dataView: IDataView, aggregationInfos: IAggregationInfo[]): IAggregation[] {
