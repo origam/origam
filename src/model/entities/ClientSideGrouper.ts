@@ -13,7 +13,7 @@ import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
-  expandedGroupDisplayValues: string[] = [];
+  expandedGroupDisplayValues: Set<string> = new Set();
 
   @computed
   get topLevelGroups(){
@@ -64,7 +64,7 @@ export class ClientSideGrouper implements IGrouper {
 
   loadRecursively(groups: IGroupTreeNode[]) {
     for (let group of groups) {
-      if(this.expandedGroupDisplayValues.includes(group.columnDisplayValue)){
+      if(this.expandedGroupDisplayValues.has(group.columnDisplayValue)){
         group.isExpanded = true;
         this.loadChildrenInternal(group);
         this.loadRecursively(group.childGroups);
@@ -74,11 +74,11 @@ export class ClientSideGrouper implements IGrouper {
 
   expansionListener(item: ClientSideGroupItem){
     if(item.isExpanded){
-      this.expandedGroupDisplayValues.push(item.columnDisplayValue);
+      this.expandedGroupDisplayValues.add(item.columnDisplayValue);
     }
     else
     {
-      this.expandedGroupDisplayValues.remove(item.columnDisplayValue);
+      this.expandedGroupDisplayValues.delete(item.columnDisplayValue);
     }
   }
 
