@@ -22,7 +22,6 @@ import { BoolEditor } from "gui/Components/ScreenElements/Editors/BoolEditor";
 import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEditor";
 import { FocusManager } from "model/entities/FocusManager";
 import { DomEvent } from "leaflet";
-import { observable } from "mobx";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 
 @inject(({ property, formPanelView }) => {

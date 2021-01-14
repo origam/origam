@@ -17,7 +17,6 @@ import { RadioButton } from "gui02/components/Form/RadioButton";
 import { getDataSourceFieldByName } from "../../../../model/selectors/DataSources/getDataSourceFieldByName";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
 import { flow } from "mobx";
-import { getRowStateAllowUpdate } from "../../../../model/selectors/RowState/getRowStateAllowUpdate";
 import { CheckBox } from "../../../../gui02/components/Form/CheckBox";
 import { isReadOnly } from "../../../../model/selectors/RowState/isReadOnly";
 import { DomEvent } from "leaflet";
@@ -93,9 +92,9 @@ export class FormBuilder extends React.Component<{
         const sourceField = getDataSourceFieldByName(self.props.dataView, xfo.attributes.Id);
 
         const checked = row
-          ? dataTable.getCellValueByDataSourceField(row, sourceField!) === xfo.attributes.Value
+          ? String(dataTable.getCellValueByDataSourceField(row, sourceField!)) === xfo.attributes.Value
           : false;
-
+          
         return (
           <RadioButton
             key={xfo.$iid}
