@@ -8,6 +8,7 @@ import React from "react";
 import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
 import { T } from "utils/translation";
+import { IErrorDialogController } from "./types/IErrorDialog";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -24,7 +25,7 @@ function NewExternalPromise<T>() {
   };
 }
 
-export class ErrorDialogController {
+export class ErrorDialogController implements IErrorDialogController {
   @observable errorStack: Array<{
     id: number;
     error: any;
@@ -67,11 +68,15 @@ export class ErrorDialogController {
           ..._.get(errItem.error, "response.data.Password", []),
         ].join(" ");
 
-      const errorMessage =
+      let errorMessage =
         handlePlainText() ||
         handleMessageField() ||
         handleLoginValidation() ||
         handleRuntimeException();
+      
+      if(errItem.error.isAxiosError){
+        errorMessage = "Server error occurred. Please check server log for more details:\n"+ errorMessage;
+      }
 
       return {
         message: errorMessage,
