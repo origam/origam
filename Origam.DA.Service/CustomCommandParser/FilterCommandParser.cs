@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using ArgumentException = System.ArgumentException;
@@ -216,23 +217,20 @@ namespace Origam.DA.Service.CustomCommandParser
             }
         }
 
+        private bool ContainsNumbersOnly(string value)
+        {
+            return Regex.Match(value, "^[\\d,\\s]+$").Success;
+        }
+
         private string[] SplitValue
         {
             get
             {
                 if (splitValue == null)
                 {
-                    splitValue = Value
-                        .Split(',');
-                    if (splitValue.Length > 3 && Value.Contains(",") && IsString(Value) && !ContainsIsoDates(Value))
-                    {
-                        splitValue = new []
-                        {
-                            splitValue[0],
-                            splitValue[1],
-                            string.Join(",", splitValue.Skip(2))
-                        };
-                    }
+                    splitValue = ContainsNumbersOnly(Value) 
+                        ? Value.Split(',') 
+                        : Regex.Split(Value, "[\\]\"]\\s*,\\s*[\\[\"]?");
                     splitValue = splitValue
                         .Select(x => x.Trim())
                         .ToArray();
