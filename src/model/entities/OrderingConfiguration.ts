@@ -10,6 +10,7 @@ import { getDataView } from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
 import { getProperties } from "../selectors/DataView/getProperties";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 
 function cycleOrdering(direction: IOrderByDirection) {
   switch (direction) {
@@ -108,7 +109,7 @@ export class OrderingConfiguration implements IOrderingConfiguration {
     function* (this: OrderingConfiguration) {
       const dataView = getDataView(this);
       const dataTable = getDataTable(dataView);
-      if (dataView.isReorderedOnClient) {
+      if (!isLazyLoading(dataView)) {
         const comboProps = this.userOrderings
           .map((term) => getDataViewPropertyById(this, term.columnId)!)
           .filter((prop) => prop.column === "ComboBox");
