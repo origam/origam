@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
@@ -7,7 +7,7 @@ import {
 import CS from "./FilterSettingsCommon.module.scss";
 import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
-import { FilterSetting } from "./FilterSetting";
+import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
@@ -54,6 +54,21 @@ const OpEditors: React.FC<{
 }> = observer((props) => {
 
   const { setting } = props;
+
+  const [currentValue, setCurrentValue] = useState(setting.val1);
+  
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        setting.val1 = currentValue === "" ? undefined : currentValue;
+        props.onChange();
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }, [currentValue]);
+  
   switch (setting.type) {
     case "eq":
     case "neq":
@@ -66,13 +81,8 @@ const OpEditors: React.FC<{
       return (
         <input
           className={CS.input}
-          value={setting.val1 ?? ""}
-          onChange={(event: any) =>{
-            runInAction(()=> {
-                setting.val1 = event.target.value === "" ? undefined : event.target.value;
-                props.onChange()
-              })
-            }}
+          value={currentValue ?? ""}
+          onChange={(event: any) => setCurrentValue(event.target.value)}
           onBlur={props.onChange}
         />
       );

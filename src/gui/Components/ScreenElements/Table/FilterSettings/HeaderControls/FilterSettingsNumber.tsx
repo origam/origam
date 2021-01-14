@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
@@ -7,7 +7,7 @@ import {
 import CS from "./FilterSettingsCommon.module.scss";
 import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
-import { FilterSetting } from "./FilterSetting";
+import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
 import { LookupFilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 import { Operator } from "./Operator";
@@ -54,7 +54,35 @@ const OpEditors: React.FC<{
   onChange: (newSetting: any) => void;
   onBlur?: (event: any) => void;
 }> = observer((props) => {
+
   const { setting } = props;
+  const [currentValue1, setCurrentValue1] = useState(setting.val1);
+  const [currentValue2, setCurrentValue2] = useState(setting.val2);
+  
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        setting.val1 = currentValue1 === "" ? undefined : currentValue1;
+        props.onChange(setting);
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }, [currentValue1]);
+  
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        setting.val2 = currentValue2 === "" ? undefined : currentValue2;
+        props.onChange(setting);
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }, [currentValue2]);
+  
   switch (setting.type) {
     case "eq":
     case "neq":
@@ -66,13 +94,8 @@ const OpEditors: React.FC<{
         <input
           type="number"
           className={CS.input}
-          value={setting.val1 ?? ""}
-          onChange={(event: any) => {
-            runInAction(() => {
-              setting.val1 = event.target.value === "" ? undefined : event.target.value;
-              props.onChange(setting);
-            })
-          }}
+          value={currentValue1 ?? ""}
+          onChange={(event: any) => setCurrentValue1(event.target.value)}
           onBlur={props.onBlur}
         />
       );
@@ -84,25 +107,15 @@ const OpEditors: React.FC<{
           <input
             type="number"
             className={CS.input}
-            value={setting.val1}
-            onChange={(event: any) => {
-              runInAction(() => {
-                setting.val1 = event.target.value === "" ? undefined : event.target.value;
-                props.onChange(setting);
-              });
-            }}
+            value={currentValue1 ?? ""}
+            onChange={(event: any) => setCurrentValue1(event.target.value)}
             onBlur={props.onBlur}
           />
           <input
             type="number"
             className={CS.input}
-            value={setting.val2}
-            onChange={(event: any) => {
-              runInAction(()=>{
-                setting.val2 = event.target.value === "" ? undefined : event.target.value;
-                props.onChange(setting);
-              });
-            }}
+            value={currentValue2 ?? ""}
+            onChange={(event: any) => setCurrentValue2(event.target.value)}
             onBlur={props.onBlur}
           />
         </>
