@@ -52,8 +52,6 @@ export class FormField extends React.Component<{
         return {
           top: this.props.top,
           left: this.props.left - this.props.captionLength,
-          width: this.props.captionLength,
-          //  height: this.props.height
         };
       case ICaptionPosition.Right:
         // 20 is expected checkbox width, might be needed to be set dynamically
