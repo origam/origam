@@ -168,7 +168,7 @@ export class DropdownEditorBehavior {
         if (this.isDropped) {
           event.preventDefault();
           if (!this.cursorRowId) {
-            this.trySelectFirstRow();
+            this.selectChosenRow();
           } else {
             const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
             if (prevRowId) {
@@ -182,7 +182,7 @@ export class DropdownEditorBehavior {
         if (this.isDropped) {
           event.preventDefault();
           if (!this.cursorRowId) {
-            this.trySelectFirstRow();
+            this.selectChosenRow();
           } else {
             const nextRowId = this.dataTable.getRowIdAfterId(this.cursorRowId);
             if (nextRowId) {
@@ -311,6 +311,15 @@ export class DropdownEditorBehavior {
     }
   }
 
+  @action.bound selectChosenRow() {
+    if (this.dataTable.rows.length > 0 && 
+        this.chosenRowId && 
+        !_.isArray(this.chosenRowId)) 
+    {
+      this.cursorRowId = this.chosenRowId;
+    }
+  }
+
   @action.bound runGetLookupList(searchTerm: string) {
     const self = this;
     this.runningPromise = flow(function* () {
@@ -337,6 +346,7 @@ export class DropdownEditorBehavior {
           self.trySelectFirstRow();
         }
         self.scrollToChosenRowIfPossible();
+        self.selectChosenRow();
       } finally {
         self.isWorking = false;
         self.runningPromise = undefined;
