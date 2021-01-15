@@ -92,10 +92,8 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
       for (let dataView of dataViews) {
         const row = dataView.dataTable.getRowById(resultItem.objectId);
         if (row) {
-          dataView.deleteRow(row);
-        }
-        if(!dataView.selectedRow){
-          dataView.reselectOrSelectFirst();
+          const deletedRowIndex = dataView.selectedRowIndex;
+          dataView.deleteRowAndSelectNext(row);
         }
       }
       getFormScreen(ctx).setDirty(true);

@@ -114,7 +114,7 @@ export interface IDataView extends IDataViewData {
   setRecords(rows: any[][]): Promise<any>;
   appendRecords(rows: any[][]): void;
   substituteRecord(row: any[]): void;
-  deleteRow(row: any[]): void;
+  deleteRowAndSelectNext(row: any[]): void;
   clear(): void;
 
   navigateLookupLink(property: IProperty, row: any[]): Generator<any>;
