@@ -228,10 +228,19 @@ export class DataView implements IDataView {
   }
 
   @action.bound
-  deleteRow(row: any[]){
+  deleteRowAndSelectNext(row: any[]){
     const id = this.dataTable.getRowId(row);
+    let idToSelectNext = this.dataTable.getNextExistingRowId(id);
+    if (!idToSelectNext){
+      idToSelectNext = this.dataTable.getPrevExistingRowId(id);
+    }
+
     this.selectedRowIds.remove(id);
     this.dataTable.deleteRow(row);
+
+    if(idToSelectNext){
+      this.setSelectedRowId(idToSelectNext);
+    }
   }
 
   @action.bound
@@ -545,8 +554,6 @@ export class DataView implements IDataView {
 
   @action.bound selectRowById(id: string | undefined) {
     if (id !== this.selectedRowId) {
-      //cannotChangeRowDialog(this);
-      //return
       this.setSelectedRowId(id);
     }
   }

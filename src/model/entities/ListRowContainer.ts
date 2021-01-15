@@ -140,7 +140,7 @@ export class ListRowContainer implements IRowsContainer {
       if(rowId === this.forcedFirstRowId){
         this.forcedFirstRowId = undefined;
       }
-      this.updateSortAndFilter();
+      this.updateSortAndFilter( {retainPreviousSelection: true});
     }
   }
 
