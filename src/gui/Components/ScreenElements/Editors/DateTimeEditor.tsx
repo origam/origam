@@ -347,7 +347,13 @@ export class DateTimeEditor extends React.Component<{
     }
   }
 
-  render() {
+  customFormatContainsDate(){
+    return this.props.outputFormat.includes("D") ||
+      this.props.outputFormat.includes("M") ||
+      this.props.outputFormat.includes("Y") 
+  }
+
+  renderWithCalendarWidget() {
     const mVal = moment(this.props.value);
     return (
       <Dropdowner
@@ -423,5 +429,63 @@ export class DateTimeEditor extends React.Component<{
         )}
       />
     );
+  }
+
+  renderInputFieldOnly() {
+    return (
+        <div
+          className={S.editorContainer}
+          ref={this.refContainer}
+          style={{
+            zIndex: this.isDroppedDown ? 1000 : undefined,
+          }}
+        >
+          <Tooltip
+            html={
+              <div>
+                <div>{this.autocompletedText}</div>
+                <div>"{this.props.outputFormat}"</div>
+              </div>
+            }
+            position="top"
+            arrow={true}
+            trigger="manual"
+            open={this.isTooltipShown}
+          >
+            <input
+              style={{
+                color: this.props.foregroundColor,
+                backgroundColor: this.props.backgroundColor,
+              }}
+              className={S.input}
+              type="text"
+              onBlur={this.handleInputBlur}
+              onFocus={this.handleFocus}
+              ref={this.refInput}
+              value={this.textfieldValue}
+              readOnly={this.props.isReadOnly}
+              onChange={this.handleTextfieldChange}
+              onClick={this.props.onClick}
+              onDoubleClick={this.props.onDoubleClick}
+              onKeyDown={this.handleKeyDown}
+            />
+          </Tooltip>
+          {this.props.isInvalid && (
+            <div className={S.notification}>
+              <Tooltip html={this.props.invalidMessage} arrow={true}>
+                <i className="fas fa-exclamation-circle red" />
+              </Tooltip>
+            </div>
+          )}
+        </div>
+    );
+  }
+
+  render() {
+    if(!this.props.outputFormat || this.customFormatContainsDate()){
+      return this.renderWithCalendarWidget();
+    }else{
+      return this.renderInputFieldOnly();
+    }
   }
 }
