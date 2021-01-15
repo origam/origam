@@ -57,8 +57,8 @@ export class OpenedScreens implements IOpenedScreens {
     return Math.max(...this.items.map(item => item.stackPosition), 0);
   }
 
-  findLastExistingItem(menuItemId: string): IOpenedScreen | undefined {
-    const items = this.items.filter(item => item.menuItemId === menuItemId);
+  findLastExistingTabItem(menuItemId: string): IOpenedScreen | undefined {
+    const items = this.items.filter(item => item.menuItemId === menuItemId && !item.isDialog);
     items.sort((a, b) => a.order - b.order);
     return items.slice(-1)[0];
   }

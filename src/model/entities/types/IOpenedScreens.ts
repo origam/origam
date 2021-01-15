@@ -18,7 +18,7 @@ export interface IOpenedScreens extends IOpenedScreensData {
   pushItem(item: IOpenedScreen): void;
   deleteItem(menuItemId: string, order: number): void;
   activateItem(menuItemId: string, order: number): void;
-  findLastExistingItem(menuItemId: string): IOpenedScreen | undefined;
+  findLastExistingTabItem(menuItemId: string): IOpenedScreen | undefined;
   findClosestItem(menuItemId: string, order: number): IOpenedScreen | undefined;
 
   parent?: any;
