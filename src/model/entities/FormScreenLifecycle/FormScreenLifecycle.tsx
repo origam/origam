@@ -887,7 +887,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
         if (targetDataView.orderMember) {
           deleteObjectResult = yield* this.deleteObjectInOrderedList(rowId, entity, targetDataView);
-        } else {          deleteObjectResult = yield api.deleteObject({
+        } else {          
+          deleteObjectResult = yield api.deleteObject({
             SessionFormIdentifier: getSessionId(this),
             Entity: entity,
             Id: rowId,
