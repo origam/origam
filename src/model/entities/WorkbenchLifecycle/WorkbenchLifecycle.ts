@@ -85,7 +85,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       dialogInfo = new DialogInfo(parseInt(dialogWidth, 10), parseInt(dialogHeight, 10));
     }
     if (event && !(event.ctrlKey || event.metaKey)) {
-      const existingItem = openedScreens.findLastExistingItem(id);
+      const existingItem = openedScreens.findLastExistingTabItem(id);
       if (
         existingItem &&
         type !== IMainMenuItemType.FormRefWithSelection &&
@@ -198,7 +198,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     let dialogInfo: IDialogInfo | undefined;
     if (!(event.ctrlKey || event.metaKey)) {
-      const existingItem = openedScreens.findLastExistingItem(id);
+      const existingItem = openedScreens.findLastExistingTabItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
         const openedScreen = existingItem;
@@ -232,7 +232,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
 
     let dialogInfo: IDialogInfo | undefined;
 
-    const existingItem = openedScreens.findLastExistingItem(id);
+    const existingItem = openedScreens.findLastExistingTabItem(id);
     if (existingItem) {
       openedScreens.activateItem(id, existingItem.order);
       const openedScreen = existingItem;
@@ -371,7 +371,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     isSingleRecordEdit?: boolean
   ) {
     const openedScreens = getOpenedScreens(this);
-    const existingItem = openedScreens.findLastExistingItem(id);
+    const existingItem = openedScreens.findLastExistingTabItem(id);
     const newFormScreen = createFormScreenEnvelope(formSessionId, refreshOnReturnType);
     const newScreen = yield* createOpenedScreen(
       this,
