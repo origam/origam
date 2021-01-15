@@ -19,7 +19,7 @@ export class BooleanCellDriver implements IBodyCellDriver {
     return (
       <div
         className={cx(
-          bodyCellClass(rowIndex, this.behavior.choosenRowId === rowId, this.behavior.cursorRowId === rowId),
+          bodyCellClass(rowIndex, this.behavior.chosenRowId === rowId, this.behavior.cursorRowId === rowId),
           S.cell
         )}
         onClick={(e) => this.behavior.handleTableCellClicked(e, rowIndex)}

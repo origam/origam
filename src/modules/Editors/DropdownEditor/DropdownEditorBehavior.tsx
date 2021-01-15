@@ -39,7 +39,7 @@ export class DropdownEditorBehavior {
     return this.isDropped && this.dataTable.rowCount > 0;
   }
 
-  @computed get choosenRowId() {
+  @computed get chosenRowId() {
     return this.data.value;
   }
 
@@ -76,7 +76,7 @@ export class DropdownEditorBehavior {
       }
     }
     this.isDropped = true;
-    this.scrollToChoosenRowIfPossible();
+    this.scrollToChosenRowIfPossible();
     this.makeFocused();
   }
 
@@ -87,9 +87,9 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound
-  scrollToChoosenRowIfPossible() {
-    if (this.choosenRowId && !_.isArray(this.choosenRowId)) {
-      const index = this.dataTable.getRowIndexById(this.choosenRowId);
+  scrollToChosenRowIfPossible() {
+    if (this.chosenRowId && !_.isArray(this.chosenRowId)) {
+      const index = this.dataTable.getRowIndexById(this.chosenRowId);
       if (index > -1) {
         this.scrollToRowIndex = index + 1;
       }
@@ -336,7 +336,7 @@ export class DropdownEditorBehavior {
         if (!self.dataTable.getRowById(self.cursorRowId) && self.userEnteredValue) {
           self.trySelectFirstRow();
         }
-        self.scrollToChoosenRowIfPossible();
+        self.scrollToChosenRowIfPossible();
       } finally {
         self.isWorking = false;
         self.runningPromise = undefined;
