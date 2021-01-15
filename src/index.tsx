@@ -81,6 +81,7 @@ async function main() {
 
     await initLocaleCookie(application);
     const locale = await getLocaleFromCookie();
+    document.documentElement.lang = locale;
     moment.locale(locale);
  
     await translationsInit(application);
