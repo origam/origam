@@ -18,7 +18,7 @@ export class TextCellDriver implements IBodyCellDriver {
       <div
         className={bodyCellClass(
           rowIndex,
-          this.behavior.choosenRowId === rowId,
+          this.behavior.chosenRowId === rowId,
           this.behavior.cursorRowId === rowId
         )}
         onClick={(e) => {

@@ -21,7 +21,7 @@ export class NumberCellDriver implements IBodyCellDriver {
         className={cx(
           bodyCellClass(
             rowIndex,
-            this.behavior.choosenRowId === rowId,
+            this.behavior.chosenRowId === rowId,
             this.behavior.cursorRowId === rowId
           ),
           S.cell

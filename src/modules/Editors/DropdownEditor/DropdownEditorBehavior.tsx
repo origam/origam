@@ -39,7 +39,7 @@ export class DropdownEditorBehavior {
     return this.isDropped && this.dataTable.rowCount > 0;
   }
 
-  @computed get choosenRowId() {
+  @computed get chosenRowId() {
     return this.data.value;
   }
 
@@ -76,7 +76,7 @@ export class DropdownEditorBehavior {
       }
     }
     this.isDropped = true;
-    this.scrollToChoosenRowIfPossible();
+    this.scrollToChosenRowIfPossible();
     this.makeFocused();
   }
 
@@ -87,9 +87,9 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound
-  scrollToChoosenRowIfPossible() {
-    if (this.choosenRowId && !_.isArray(this.choosenRowId)) {
-      const index = this.dataTable.getRowIndexById(this.choosenRowId);
+  scrollToChosenRowIfPossible() {
+    if (this.chosenRowId && !_.isArray(this.chosenRowId)) {
+      const index = this.dataTable.getRowIndexById(this.chosenRowId);
       if (index > -1) {
         this.scrollToRowIndex = index + 1;
       }
@@ -168,7 +168,7 @@ export class DropdownEditorBehavior {
         if (this.isDropped) {
           event.preventDefault();
           if (!this.cursorRowId) {
-            this.trySelectFirstRow();
+            this.selectChosenRow();
           } else {
             const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
             if (prevRowId) {
@@ -182,7 +182,7 @@ export class DropdownEditorBehavior {
         if (this.isDropped) {
           event.preventDefault();
           if (!this.cursorRowId) {
-            this.trySelectFirstRow();
+            this.selectChosenRow();
           } else {
             const nextRowId = this.dataTable.getRowIdAfterId(this.cursorRowId);
             if (nextRowId) {
@@ -311,6 +311,15 @@ export class DropdownEditorBehavior {
     }
   }
 
+  @action.bound selectChosenRow() {
+    if (this.dataTable.rows.length > 0 && 
+        this.chosenRowId && 
+        !_.isArray(this.chosenRowId)) 
+    {
+      this.cursorRowId = this.chosenRowId;
+    }
+  }
+
   @action.bound runGetLookupList(searchTerm: string) {
     const self = this;
     this.runningPromise = flow(function* () {
@@ -336,7 +345,8 @@ export class DropdownEditorBehavior {
         if (!self.dataTable.getRowById(self.cursorRowId) && self.userEnteredValue) {
           self.trySelectFirstRow();
         }
-        self.scrollToChoosenRowIfPossible();
+        self.scrollToChosenRowIfPossible();
+        self.selectChosenRow();
       } finally {
         self.isWorking = false;
         self.runningPromise = undefined;
