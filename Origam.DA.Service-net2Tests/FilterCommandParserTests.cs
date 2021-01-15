@@ -76,6 +76,9 @@ namespace Origam.DA.Service_net2Tests
             "[\"age\",\"nbetween\",[18, 80]]",
             "[age] NOT BETWEEN 18 AND 80")]
         [TestCase(
+            "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\", \"Ben\"]]",
+            "[Name] IN ('Tom', 'Jane', 'David', 'Ben')")] 
+        [TestCase(
             "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\"]]",
             "[Name] IN ('Tom', 'Jane', 'David')")]
         [TestCase(
