@@ -15,7 +15,7 @@ export function processedImageURL(value?: string) {
     };
   }
 
-  if (isBase64(value)) {
+  if (value.length > 512 || isBase64(value)) {
     return { isEmbedded: true, value: `data:image/${IMAGE_TYPE[value.charAt(0)]};base64,${value}` };
   } else {
     return { isEmbedded: false, value };
