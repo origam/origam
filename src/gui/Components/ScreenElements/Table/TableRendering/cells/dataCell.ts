@@ -73,7 +73,9 @@ export function dataColumnsDraws() {
 function registerToolTipGetter(columnId: string) {
 
   const property = currentProperty();
-  const cellText = currentCellTextMultiline();
+  const cellText = currentProperty().column === "Date"
+    ? getDateTimeText()
+    : currentCellTextMultiline(); 
   const cellClickableArea = getCellClickableArea();
   const currentRowIndex = rowIndex();
   const currentColumnIndex = drawingColumnIndex();
@@ -263,6 +265,18 @@ export function drawDataCellBackground() {
   }
 }
 
+function getDateTimeText(){
+  if (currentCellText() !== null && currentCellText() !== "") {
+    let momentValue = moment(currentCellText());
+    if (!momentValue.isValid()) {
+      return undefined;
+    }
+    return  momentValue.format(currentProperty().formatterPattern);
+  }else{
+    return undefined;
+  }
+}
+
 function drawCellValue() {
   const ctx2d = context2d();
   const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), currentProperty().id);
@@ -332,13 +346,10 @@ function drawCellValue() {
         );
         break;
       case "Date":
-        if (currentCellText() !== null && currentCellText() !== "") {
-          let momentValue = moment(currentCellText());
-          if (!momentValue.isValid()) {
-            break;
-          }
+        const dateTimeText = getDateTimeText();
+        if(dateTimeText){
           ctx2d.fillText(
-            momentValue.format(currentProperty().formatterPattern),
+            dateTimeText,
             CPR() * (currentColumnLeft() + getPaddingLeft()),
             CPR() * (currentRowTop() + topTextOffset)
           );
