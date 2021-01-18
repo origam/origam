@@ -64,7 +64,7 @@ export class OpenedScreens implements IOpenedScreens {
   }
 
   findClosestItem(menuItemId: string, order: number): IOpenedScreen | undefined {
-    let idx = this.items.findIndex(item => item.menuItemId === menuItemId && item.order === order);
+    let idx = this.items.findIndex(item => item.menuItemId === menuItemId && item.order === order && !item.dialogInfo);
     if (idx === -1 || this.items.length === 1) {
       return undefined;
     }
