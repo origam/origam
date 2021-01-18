@@ -126,12 +126,17 @@ export class Splitter extends React.Component<{
 
   @action.bound
   anounceContainerSize(width: number, height: number) {
-    if (width > 0 && height > 0) {
+    if (width > 0 && height > 0 && this.differentSizeRequested(width, height)) {
       this.containerWidth = width;
       this.containerHeight = height;
       this.initSizes();
       this.isInitialized = true;
     }
+  }
+
+  differentSizeRequested(newWidth: number, newHeight: number){
+    return Math.abs(newHeight - this.containerHeight) > 0.001 &&
+           Math.abs(newWidth - this.containerWidth) > 0.001
   }
 
   @action.bound initSizesImm() {
