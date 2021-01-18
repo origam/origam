@@ -120,12 +120,12 @@ export class Splitter extends React.Component<{
   handleResize(contentRect: ContentRect) {
     const { bounds } = contentRect;
     if (bounds) {
-      this.anounceContainerSize(bounds.width, bounds.height);
+      this.announceContainerSize(bounds.width, bounds.height);
     }
   }
 
   @action.bound
-  anounceContainerSize(width: number, height: number) {
+  announceContainerSize(width: number, height: number) {
     if (width > 0 && height > 0 && this.differentSizeRequested(width, height)) {
       this.containerWidth = width;
       this.containerHeight = height;
@@ -140,7 +140,7 @@ export class Splitter extends React.Component<{
   }
 
   @action.bound initSizesImm() {
-    // TODO: Fix nested splitter initSize (first panel overriden by initial size by resising its container)
+    // TODO: Fix nested splitter initSize (first panel overridden by initial size by resizing its container)
 
     //console.log(Array.from(this.dividerSizeMap.entries()));
     const containerSize =
