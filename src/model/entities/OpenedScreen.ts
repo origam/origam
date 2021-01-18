@@ -3,6 +3,7 @@ import {action, computed, observable} from "mobx";
 import {IFormScreenEnvelope} from "./types/IFormScreen";
 import {IMainMenuItemType} from "./types/IMainMenu";
 import {IActionResultRequest} from "./types/IActionResultRequest";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 export class DialogInfo implements IDialogInfo {
   constructor(public width: number, public height: number) {}
@@ -55,6 +56,15 @@ export class OpenedScreen implements IOpenedScreen {
   @action.bound
   setActive(state: boolean): void {
     this.isActive = state;
+    if(state && this.content.formScreen){
+      const dataView = this.content.formScreen.dataViews.length > 0 
+        ? this.content.formScreen.dataViews[0]
+        : undefined;
+      if(dataView && !dataView.isFormViewActive()){
+        const tablePanelView = getTablePanelView(dataView);
+        tablePanelView.triggerOnFocusTable();
+      }
+    }
   }
 
   @action.bound
