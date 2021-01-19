@@ -118,7 +118,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
             </DropdownItem>
             <DropdownItem
               isDisabled={
-                !this.filterManager.selectedFilterGroupId ||
+                !this.filterManager.selectedFilterGroup ||
                 this.filterManager.isSelectedFilterGroupDefault}
               onClick={(event: any) => {
                 setDropped(false);
@@ -131,7 +131,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
             </DropdownItem>
             <DropdownItem
               isDisabled={
-                !this.filterManager.selectedFilterGroupId ||
+                !this.filterManager.selectedFilterGroup ||
                 this.filterManager.isSelectedFilterGroupDefault}
               onClick={(event: any) => {
                 setDropped(false);
@@ -145,7 +145,7 @@ export class FilterDropDown extends React.Component<{ ctx: any }> {
             {filterGroups.map((filterGroup) => (
               <DropdownItem
                 isDisabled={false}
-                isSelected={this.filterManager.selectedFilterGroupId === filterGroup.id}
+                isSelected={this.filterManager.selectedFilterGroup?.id === filterGroup.id}
                 onClick={(event: any) => {
                   setDropped(false);
                   runInFlowWithHandler({
