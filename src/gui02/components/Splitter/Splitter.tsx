@@ -135,7 +135,7 @@ export class Splitter extends React.Component<{
   }
 
   differentSizeRequested(newWidth: number, newHeight: number){
-    return Math.abs(newHeight - this.containerHeight) > 0.001 &&
+    return Math.abs(newHeight - this.containerHeight) > 0.001 ||
            Math.abs(newWidth - this.containerWidth) > 0.001
   }
 
@@ -243,13 +243,13 @@ export class Splitter extends React.Component<{
   @action.bound handleDividerResize(contentRect: ContentRect, dividerId: any) {
     //console.log("Divider resize", contentRect.bounds, dividerId);
     if (contentRect.bounds) {
-      this.dividerSizeMap.set(
-        dividerId,
-        this.props.type === "isVert"
-          ? contentRect.bounds.height
-          : contentRect.bounds.width
-      );
-      this.initSizes();
+      const value = this.props.type === "isVert"
+            ? contentRect.bounds.height
+            : contentRect.bounds.width
+      if(this.dividerSizeMap.get(dividerId) !== value){
+        this.dividerSizeMap.set(dividerId,value);
+        this.initSizes();
+      }
     }
   }
 
