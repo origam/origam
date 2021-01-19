@@ -9,7 +9,6 @@ import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 
 const OPERATORS = [
     Operator.startsWith,
@@ -48,50 +47,62 @@ const OpCombo: React.FC<{
   );
 });
 
-const OpEditors: React.FC<{
-  setting: FilterSetting;
+
+@observer
+class OpEditors extends React.Component<{
+  setting?: any;
   onChange: () => void;
-}> = observer((props) => {
+}> {
 
-  const { setting } = props;
+  @observable
+  currentValue = this.props.setting.val1;
 
-  const [currentValue, setCurrentValue] = useState(setting.val1);
-  
-  useEffect(() => {
+  componentDidUpdate(prevProps: any){
+    if(prevProps.setting?.val1 !== this.props.setting?.val1){
+      this.currentValue = this.props.setting?.val1;
+    }
+  }
+
+  onCurrentValueChanged(newValue: string){
+    this.currentValue = newValue;
+
     const timeOutId = setTimeout(() => {
       runInAction(() => {
-        setting.val1 = currentValue === "" ? undefined : currentValue;
-        props.onChange();
+        this.props.setting.val1 = this.currentValue === "" ? undefined : this.currentValue;
+        this.props.onChange();
       })
     }, EDITOR_DALEY_MS);
     return () => {
       clearTimeout(timeOutId);
     }
-  }, [currentValue]);
-  
-  switch (setting.type) {
-    case "eq":
-    case "neq":
-    case "starts":
-    case "nstarts":
-    case "ends":
-    case "nends":
-    case "contains":
-    case "ncontains":
-      return (
-        <input
-          className={CS.input}
-          value={currentValue ?? ""}
-          onChange={(event: any) => setCurrentValue(event.target.value)}
-          onBlur={props.onChange}
-        />
-      );
-    case "null":
-    case "nnull":
-    default:
-      return null;
   }
-});
+
+  render(){
+    switch (this.props.setting.type) {
+      case "eq":
+      case "neq":
+      case "starts":
+      case "nstarts":
+      case "ends":
+      case "nends":
+      case "contains":
+      case "ncontains":
+        return (
+          <input
+            className={CS.input}
+            value={this.currentValue ?? ""}
+            onChange={(event: any) => this.onCurrentValueChanged(event.target.value)}
+            onBlur={this.props.onChange}
+          />
+        );
+      case "null":
+      case "nnull":
+      default:
+        return null;
+    }
+
+  }
+}
 
 @observer
 export class FilterSettingsString extends React.Component<{
