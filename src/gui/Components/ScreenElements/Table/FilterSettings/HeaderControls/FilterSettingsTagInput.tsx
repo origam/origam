@@ -299,6 +299,8 @@ export function FilterBuildDropdownEditor(props: {
     };
   });
 
+  (dropdownEditorInfrastructure.editorData as FilterEditorData).setting = props.setting;
+
   const value = props.values;
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
@@ -320,7 +322,7 @@ export function FilterBuildDropdownEditor(props: {
 }
 
 export class FilterEditorData implements IDropdownEditorData {
-  constructor( private setting: IFilterSetting) {
+  constructor( public setting: IFilterSetting) {
     }
 
   @computed get value(): string | string[] | null {
