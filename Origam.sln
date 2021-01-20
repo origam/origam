@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.Security", "Origam.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Origam.Schema.MenuModel", "Origam.Schema.MenuModel\Origam.Schema.MenuModel.csproj", "{01C6A542-4D42-4AFA-9744-5E92E71A8251}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.CrystalReports", "Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj", "{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI.CrystalReports.NetFx", "Origam.BI.CrystalReports.NetFx\Origam.BI.CrystalReports.NetFx.csproj", "{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Origam.BI", "Origam.BI\Origam.BI.csproj", "{54BFF654-2A00-4A8A-86B0-06F124D769A1}"
 EndProject
