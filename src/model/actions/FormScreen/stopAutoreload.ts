@@ -2,6 +2,6 @@ import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLi
 
 export function stopAutoreload(ctx: any) {
   return function*() {
-    getFormScreenLifecycle(ctx).clearAutorefreshInterval();
+    getFormScreenLifecycle(ctx).clearAutoRefreshInterval();
   }
 }

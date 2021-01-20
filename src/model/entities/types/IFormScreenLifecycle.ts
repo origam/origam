@@ -58,7 +58,7 @@ export interface IFormScreenLifecycle02 extends IFormScreenLifecycleData {
 
   onRequestScreenClose(isDueToError?: boolean): Generator;
 
-  clearAutorefreshInterval(): void;
+  clearAutoRefreshInterval(): void;
 
   onWorkflowNextClick(event: any): Generator;
   onWorkflowAbortClick(event: any): Generator;
