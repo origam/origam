@@ -7,6 +7,7 @@ import { IApplication } from "model/entities/types/IApplication";
 import React, { Fragment } from "react";
 import { action, observable } from "mobx";
 import { onScreenToolbarLogoutClick } from "model/actions-ui/ScreenToolbar/onScreenToolbarLogoutClick";
+import { openSearchWindow } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 import { ScreenToolbarActionGroup } from "gui02/components/ScreenToolbar/ScreenToolbarActionGroup";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { onSaveSessionClick } from "model/actions-ui/ScreenToolbar/onSaveSessionClick";
@@ -236,6 +237,10 @@ export class CScreenToolbar extends React.Component<{}> {
             )}
           />
         )}
+        <ScreenToolbarAction
+          onClick={openSearchWindow}
+          icon={<Icon src="./icons/search.svg"/>}
+        />
         <UserMenuDropdown
           avatarLink={avatarLink}
           userName={userName}
@@ -282,10 +287,10 @@ export class CScreenToolbar extends React.Component<{}> {
             </ScreenToolbarActionGroup>*/}
         </>
         <ScreenToolbarPusher />
-        {/*<ScreenToolbarAction
-          icon={<Icon src="./icons/search.svg" />}
-          label="Search"
-        />*/}
+        <ScreenToolbarAction
+          onClick={openSearchWindow}
+          icon={<Icon src="./icons/search.svg"/>}
+        />
         <UserMenuDropdown
           avatarLink={avatarLink}
           userName={userName}
@@ -307,6 +312,10 @@ export class CScreenToolbar extends React.Component<{}> {
           icon={<Icon src="./icons/search.svg" />}
           label="Search"
         />*/}
+        <ScreenToolbarAction
+          onClick={openSearchWindow}
+          icon={<Icon src="./icons/search.svg"/>}
+        />
         <UserMenuDropdown
           avatarLink={avatarLink}
           userName={userName}
