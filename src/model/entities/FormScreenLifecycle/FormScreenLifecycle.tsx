@@ -66,6 +66,7 @@ import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingAc
 import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
 import { AggregationType } from "../types/AggregationType";
 import { parseAggregations } from "../Aggregatioins";
+import { UpdateRequestAggregator } from "./UpdateRequestAggregator";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -81,6 +82,15 @@ enum IQuestionDeleteDataAnswer {
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
+  _updateRequestAggregator: UpdateRequestAggregator | undefined;
+
+  get updateRequestAggregator(){
+    if(!this._updateRequestAggregator){
+      this._updateRequestAggregator = new UpdateRequestAggregator(this);
+    }
+    return this._updateRequestAggregator;
+  }
+  
   @observable allDataViewsSteady = true;
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
@@ -642,19 +652,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  previousFlushPending: Promise<void> | undefined;
-  previousFlushFinished: ((value: void | PromiseLike<void>)=> void) | undefined;
-
   *flushData(args?:{forceFlush?: boolean}) {
     try {
       this.monitor.inFlow++;
-      if(this.previousFlushPending && !args?.forceFlush){
-        yield this.previousFlushPending;
-        return;
-      }
-      this.previousFlushPending = new Promise((resolve, reject) => 
-            this.previousFlushFinished = resolve
-        );
       let updateObjectDidRun = false;
       const formScreen = getFormScreen(this);
       const dataViews = formScreen.dataViews;
@@ -665,8 +665,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.saveSession();
       }
     } finally {
-      this.previousFlushFinished?.();
-      this.previousFlushPending = undefined;
       this.monitor.inFlow--;
     }
   }
@@ -682,15 +680,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       return false;
     }
     const api = getApi(this);
-    const formScreen = getFormScreen(this);
-    const self = this;
-    const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
-      return yield api.updateObject({
-        SessionFormIdentifier: getSessionId(self),
-        Entity: dataView.entity,
-        UpdateData: updateData,
-      });
+    const updateObjectResult = yield this.updateRequestAggregator.enqueue({
+      SessionFormIdentifier: getSessionId(this),
+      Entity: dataView.entity,
+      UpdateData: updateData,
     });
+
     dataView.focusManager.stopAutoFocus();
     yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
     return true;
@@ -704,18 +699,18 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       changes[fieldName] = newValue;
       const formScreen = getFormScreen(this);
       const self = this;
-      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
-        return yield api.updateObject({
-          SessionFormIdentifier: getSessionId(self),
-          Entity: dataView.entity,
-          UpdateData: [
-            {
-              RowId: dataView.dataTable.getRowId(row),
-              Values: changes,
-            },
-          ],
-        });
+      // const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
+      const updateObjectResult = yield self.updateRequestAggregator.enqueue({
+        SessionFormIdentifier: getSessionId(self),
+        Entity: dataView.entity,
+        UpdateData: [
+          {
+            RowId: dataView.dataTable.getRowId(row),
+            Values: changes,
+          },
+        ],
       });
+      // });
 
       yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
 
@@ -1252,11 +1247,3 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   parent?: any;
 }
-
-
-
-
-
-
-
-
