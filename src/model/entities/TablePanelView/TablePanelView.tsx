@@ -194,7 +194,9 @@ export class TablePanelView implements ITablePanelView {
         });
       }
     }
-    this.scrollToCurrentCell();
+    if(!getGroupingConfiguration(this).isGrouping){
+      this.scrollToCurrentCell();
+    }
   }
 
   private *selectCellAsync(columnId: string, rowId: string) {
