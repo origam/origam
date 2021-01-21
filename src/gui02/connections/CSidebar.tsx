@@ -30,9 +30,7 @@ import {getChatrooms} from "model/selectors/Chatrooms/getChatrooms";
 import {getShowChat} from "model/selectors/PortalSettings/getShowChat";
 import {getShowWorkQues} from "model/selectors/PortalSettings/getShowWorkQues";
 import {getNotifications} from "model/selectors/Chatrooms/getNotifications";
-import {SearchBox} from "gui02/components/Search/SearchBox";
 import {SearchResults} from "gui02/components/Search/SearchResults";
-import {ISearchResult} from "model/entities/types/ISearchResult";
 import {CFavorites} from "./CFavorites";
 import {getFavorites} from "model/selectors/MainMenu/getFavorites";
 
@@ -155,11 +153,6 @@ export class CSidebar extends React.Component {
             )}
           </div>
         </LogoSection>
-
-        <SearchBox
-          ctx={this.workbench}
-          onSearchResultsChange={(results) => this.sidebarState.onSearchResultsChange(results)}
-        />
 
         {favorites.favoriteFolders
           .filter((folder) => folder.isPinned)
