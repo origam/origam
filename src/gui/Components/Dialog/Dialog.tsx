@@ -98,7 +98,7 @@ export class ModalWindow extends React.Component<{
                   minHeight: this.props.height
                 }}
               >
-                <div
+                {this.props.title && <div
                   className={S.title}
                   onMouseDown={this.handleTitleMouseDown}
                 >
@@ -112,7 +112,7 @@ export class ModalWindow extends React.Component<{
                   </div>
 
                   <div className={S.buttons}>{this.props.titleButtons}</div>
-                </div>
+                </div>}
                 <div className={S.body}>{this.props.children}</div>
                 <div className={S.footer}>
                   {this.props.buttonsLeft}

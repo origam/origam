@@ -238,7 +238,7 @@ export class CScreenToolbar extends React.Component<{}> {
           />
         )}
         <ScreenToolbarAction
-          onClick={openSearchWindow}
+          onClick={()=> openSearchWindow(this.application)}
           icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
@@ -288,7 +288,7 @@ export class CScreenToolbar extends React.Component<{}> {
         </>
         <ScreenToolbarPusher />
         <ScreenToolbarAction
-          onClick={openSearchWindow}
+          onClick={()=> openSearchWindow(this.application)}
           icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
@@ -313,7 +313,7 @@ export class CScreenToolbar extends React.Component<{}> {
           label="Search"
         />*/}
         <ScreenToolbarAction
-          onClick={openSearchWindow}
+          onClick={()=> openSearchWindow(this.application)}
           icon={<Icon src="./icons/search.svg"/>}
         />
         <UserMenuDropdown
