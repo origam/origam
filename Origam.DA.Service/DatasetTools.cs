@@ -769,7 +769,7 @@ namespace Origam.DA
 			return row;
 		}
 
-		public static XmlContainer GetRowXml(DataRow[] rows, DataRowVersion version)
+		public static XmlContainer GetRowXml(IEnumerable<DataRow> rows, DataRowVersion version)
 		{
 			XmlDocument doc = new XmlDocument();
 			XmlElement rowsElement = doc.CreateElement("rows");

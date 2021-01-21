@@ -451,12 +451,7 @@ namespace Origam.ServerCore
             }
             var sessionStore = sessionManager.GetSession(
                 input.SessionFormIdentifier);
-            var rows = new DataRow[input.SelectedItems.Count];
-            for(var i = 0; i < input.SelectedItems.Count; i++)
-            {
-                rows[i] = sessionStore.GetSessionRow(
-                    input.Entity, input.SelectedItems[i]);
-            }
+            List<DataRow> rows = sessionStore.GetRows(input.Entity, input.SelectedItems);
             IXmlContainer xml 
                 = DatasetTools.GetRowXml(rows, DataRowVersion.Default);
             var result = sessionStore.RuleEngine.EvaluateEndRule(

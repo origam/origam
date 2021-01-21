@@ -39,6 +39,7 @@ using System.Globalization;
 using System.Linq;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
+using Origam.Extensions;
 
 namespace Origam.Server
 {
@@ -1312,20 +1313,53 @@ namespace Origam.Server
         private ArrayList RowStatesForDataLessSessions(string entity, object[] ids, object profileId)
         {
             ArrayList result = new ArrayList();
+            RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
+            foreach (var row in rowSearchResult.Rows)
+            {
+                result.Add(RuleEngine.RowLevelSecurityState(row, profileId));
+            }
+
+            // try to get the rest from the database
+            if (rowSearchResult.IdsNotFoundInStore.Count > 0)
+            {
+                var loadedRows = LoadMissingRows(entity, rowSearchResult.IdsNotFoundInStore);
+                foreach (DataRow row in loadedRows)
+                {
+                    RowSecurityState rowSecurity = this.RuleEngine.RowLevelSecurityState(row, profileId);
+                    if (rowSecurity != null)
+                    {
+                        result.Add(rowSecurity);
+                        rowSearchResult.IdsNotFoundInStore.Remove(row["Id"].ToString());
+                    }
+                }
+                // mark records not found as not found and put them into output as well
+                rowSearchResult.IdsNotFoundInStore.Values.ForEach(id => result.Add(new RowSecurityState
+                { Id = id, NotFound = true }));
+            }
+            return result;
+        }
+
+        class RowSearchResult
+        {
+            public List<DataRow> Rows { get; set; }
+            public Dictionary<string, Object> IdsNotFoundInStore { get; set; }
+        }
+
+        private RowSearchResult GetRowsFromStore(string entity, IEnumerable ids)
+        {
+            List<DataRow> result = new List<DataRow>();
             Dictionary<string, Object> notFoundIds = new Dictionary<string, Object>();
             // try to get from session first anyway (e.g. for the newly created records)                
             foreach (object id in ids)
             {
                 if (id != null)
                 {
-                    DataRow row;
                     try
                     {
-                        row = GetSessionRow(entity, id);
+                        DataRow row = GetSessionRow(entity, id);
                         if (row != null)
                         {
-                            result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
-                            continue;
+                            result.Add(row);
                         }
                         else
                         {
@@ -1340,32 +1374,40 @@ namespace Origam.Server
                 }
             }
 
-            // try to get the rest from the database
-            if (notFoundIds.Count > 0)
+            return new RowSearchResult
             {
-                var dataService = core.DataService.GetDataService();
-                var dataStructureEntityId = (Guid)Data.Tables[entity].ExtendedProperties["Id"];
-                var dataStructureEntity = Workbench.Services.ServiceManager.Services
+                Rows = result,
+                IdsNotFoundInStore = notFoundIds
+            };
+        }
+
+        public List<DataRow> GetRows(string entity, IEnumerable ids)
+        {
+            RowSearchResult rowSearchResult = GetRowsFromStore(entity, ids);
+
+            // try to get the rest from the database
+            if (rowSearchResult.IdsNotFoundInStore.Count > 0)
+            {
+                var loadedRows = LoadMissingRows(entity, rowSearchResult.IdsNotFoundInStore);
+                rowSearchResult.Rows.AddRange(loadedRows.ToList<DataRow>());
+            }
+            return rowSearchResult.Rows;
+        }
+
+        private DataRowCollection LoadMissingRows(string entity, Dictionary<string, object> idsNotFoundInStore)
+        {
+            var dataService = core.DataService.GetDataService();
+            var dataStructureEntityId =
+                (Guid) Data.Tables[entity].ExtendedProperties["Id"];
+            var dataStructureEntity = Workbench.Services.ServiceManager.Services
                     .GetService<Workbench.Services.IPersistenceService>()
                     .SchemaProvider
-                    .RetrieveInstance(typeof(DataStructureEntity), new Key(dataStructureEntityId))
-                    as DataStructureEntity;
-                var loadedRows = LoadRows(dataService, dataStructureEntity,
-                    dataStructureEntityId, DataListFilterSetId, notFoundIds.Values.ToArray());
-                foreach (DataRow row in loadedRows)
-                {
-                    RowSecurityState rowSecurity = this.RuleEngine.RowLevelSecurityState(row, profileId);
-                    if (rowSecurity != null)
-                    {
-                        result.Add(rowSecurity);
-                        notFoundIds.Remove(row["Id"].ToString());
-                    }
-                }
-                // mark records not found as not found and put them into output as well
-                notFoundIds.Values.ForEach(id => result.Add(new RowSecurityState
-                { Id = id, NotFound = true }));
-            }
-            return result;
+                    .RetrieveInstance(typeof(DataStructureEntity),
+                        new Key(dataStructureEntityId))
+                as DataStructureEntity;
+            return LoadRows(dataService, dataStructureEntity,
+                dataStructureEntityId, DataListFilterSetId,
+                idsNotFoundInStore.Values.ToArray());
         }
 
         public bool IsLazyLoadedRow(DataRow row)
