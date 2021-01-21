@@ -327,9 +327,9 @@ namespace Origam.ServerCore.Controller
         }
         private static byte[] FixedSizeBytes(byte[] byteArrayImage, int width, int height)
         {
-            MagickImageInfo myImageInfo =new MagickImageInfo(byteArrayImage);
-            var sourceWidth = myImageInfo.Width;
-            var sourceHeight = myImageInfo.Height;
+            MagickImageInfo imageInfo = new MagickImageInfo(byteArrayImage);
+            var sourceWidth = imageInfo.Width;
+            var sourceHeight = imageInfo.Height;
             var destX = 0;
             var destY = 0;
             float percent;
@@ -353,7 +353,7 @@ namespace Origam.ServerCore.Controller
             var pictureBitmap = new MagickImage(byteArrayImage);
             pictureBitmap.Resize(destWidth,destHeight);
             backgroudImage.Composite(pictureBitmap, destX,destY);
-            return backgroudImage.ToByteArray(myImageInfo.Format);
+            return backgroudImage.ToByteArray(imageInfo.Format);
         }
     }
 }
