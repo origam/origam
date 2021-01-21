@@ -18,6 +18,13 @@ export class SearchDialog extends React.Component<{
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
+  
+  @observable
+  value = "";
+
+  @observable
+  groups: Map<string, ISearchResult[]> = new Map();
+
   componentDidMount(){
     this.input?.focus();
   }
@@ -28,15 +35,16 @@ export class SearchDialog extends React.Component<{
     }
   }
 
-  @observable
-  value = "";
-
+  onItemClick(searchResult: ISearchResult){
+    this.props.onCloseClick();
+  }
+  
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key == "Enter" && this.value.trim()) {
       const api = getApi(this.props.ctx);
       const searchResults = await api.search(this.value);
       this.props.onSearchResultsChange(searchResults);
-    }
+      this.groups = searchResults.groupBy((item:ISearchResult) => item.group);    }
   }
 
   onChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -65,8 +73,18 @@ export class SearchDialog extends React.Component<{
             />
           </div>
           <div>
-            <ResultGroup name={"Menu"} items={["bla", "ble", "blu"]} />
-            <ResultGroup name={"Contact"} items={["bla", "ble", "blu"]} />
+            {Array.from(this.groups.keys())
+              .sort()
+              .map(groupName => 
+                <ResultGroup 
+                  key={groupName} 
+                  name={groupName} 
+                  results={this.groups.get(groupName)!} 
+                  onItemClick={(result: ISearchResult) => this.onItemClick(result)}
+                />) 
+            }
+            {/* <ResultGroup name={"Menu"} items={["bla", "ble", "blu"]} />
+            <ResultGroup name={"Contact"} items={["bla", "ble", "blu"]} /> */}
           </div>
         </div>
       </ModalWindow>
@@ -77,7 +95,8 @@ export class SearchDialog extends React.Component<{
 @observer
 export class ResultGroup extends React.Component<{
   name: string;
-  items: string[];
+  results: ISearchResult[];
+  onItemClick: (result: ISearchResult) => void;
 }> {
   @observable
   isExpanded = false;
@@ -100,7 +119,12 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-          {this.isExpanded && this.props.items.map(item => <ResultItem name={item} key={item}/> )}
+          {this.isExpanded && this.props.results.map(result => 
+            <ResultItem 
+              result={result} 
+              onClick={(result: ISearchResult) => this.props.onItemClick(result)}
+              key={result.name+result.group+result.referenceId}
+            /> )}
         </div>
       </div>
     );
@@ -109,24 +133,25 @@ export class ResultGroup extends React.Component<{
 
 @observer
 export class ResultItem extends React.Component<{
-  name: string;
+  result: ISearchResult;
+  onClick: (result: ISearchResult) => void;
 }> {
 
   render() {
     return (
-      <div className={S.resultIemRow} >
+      <div className={S.resultIemRow} onClick={() => this.props.onClick(this.props.result)} >
         <div className={S.itemIcon}>
           <Icon src="./icons/document.svg" />
         </div>
         <div className={S.itemContents}>
           <div className={S.itemTitle}>
-            {this.props.name}
+            {this.props.result.name}
           </div>
           <div className={S.itemTextSeparator}>
             {" "}
           </div>
           <div className={S.itemText}>
-            {"text"}
+            {this.props.result.description}
           </div>
         </div>
       </div>
