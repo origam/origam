@@ -106,18 +106,20 @@ export class SearchDialog extends React.Component<{
               onChange={(event) => this.onChange(event)}
             />
           </div>
-          <div className={S.resultArea}>
-            {Array.from(this.groups.keys())
-              .sort()
-              .map(groupName => 
-                <ResultGroup 
-                  key={groupName} 
-                  name={groupName} 
-                  results={this.groups.get(groupName)!} 
-                  onItemClick={(result: ISearchResult) => this.onItemClick(result)}
-                />) 
-            }
-          </div>
+          {this.groups.size > 0 &&
+            <div className={S.resultArea}>
+              {Array.from(this.groups.keys())
+                .sort()
+                .map(groupName => 
+                  <ResultGroup 
+                    key={groupName} 
+                    name={groupName} 
+                    results={this.groups.get(groupName)!} 
+                    onItemClick={(result: ISearchResult) => this.onItemClick(result)}
+                  />) 
+              }
+            </div>
+          }
         </div>
       </ModalWindow>
     );

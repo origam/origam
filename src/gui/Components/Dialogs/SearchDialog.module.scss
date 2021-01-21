@@ -10,7 +10,6 @@
 .inputRow {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #B0AFB7;
 }
 
 .input {
@@ -43,9 +42,10 @@
 }
 
 .resultArea{
+  border-top: 1px solid #B0AFB7;
   overflow-x: auto;
   overflow-y: auto;
-  height: 35vh;
+  max-height: 35vh;
 }
 
 .groupName{
