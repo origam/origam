@@ -5,11 +5,9 @@ import React from "react";
 export function openSearchWindow(ctx: any) {
   const closeDialog = getDialogStack(ctx).pushDialog(
     "",
-    <SearchDialog
-      onCloseClick={() => {
-        closeDialog();
-      }}
-    />
+    <SearchDialog onCloseClick={() => closeDialog()}/>,
+    undefined,
+    true
   );
 }
 

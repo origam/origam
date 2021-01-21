@@ -1,28 +1,29 @@
 import {action, computed, observable} from "mobx";
 import {IDialogStack} from "./types/IDialogStack";
+import { IDialogInfo } from "./types/IDialogInfo";
 import {IDialogDimensions} from "../../gui/Components/Dialog/types";
 
 let nextId = 0;
 
 export class DialogStack implements IDialogStack {
   parent?: any;
-  @observable.shallow stackedDialogs: Array<{
-    key: string;
-    component: React.ReactElement;
-    dimensions?: IDialogDimensions;
-  }> = [];
+  @observable.shallow stackedDialogs: Array<IDialogInfo> = [];
 
   @computed get isAnyDialogShown() {
     return this.stackedDialogs.length > 0;
   }
 
-  @action.bound pushDialog(
+  @action.bound pushDialog(    
     key: string,
     component: React.ReactElement,
-    dimensions?: IDialogDimensions
-  ) {
+    dialogDimensions?: IDialogDimensions,
+    closeOnClickOutside?: boolean) {
     const useKey = key ? key : `DEFAULT_DIALOG_KEY_${nextId++}`;
-    this.stackedDialogs.push({ key: useKey, component, dimensions });
+    this.stackedDialogs.push({
+      key: useKey,
+      closeOnClickOutside: closeOnClickOutside,
+      component: component,
+      dimensions: dialogDimensions });
     return () => {
       this.closeDialog(useKey);
     };
