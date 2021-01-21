@@ -73,7 +73,7 @@ export class SearchDialog extends React.Component<{
               onChange={(event) => this.onChange(event)}
             />
           </div>
-          <div>
+          <div className={S.resultArea}>
             {Array.from(this.groups.keys())
               .sort()
               .map(groupName => 
@@ -84,8 +84,84 @@ export class SearchDialog extends React.Component<{
                   onItemClick={(result: ISearchResult) => this.onItemClick(result)}
                 />) 
             }
-            {/* <ResultGroup name={"Menu"} items={["bla", "ble", "blu"]} />
-            <ResultGroup name={"Contact"} items={["bla", "ble", "blu"]} /> */}
+            {/* <ResultGroup name={"Menu"} results={[
+                {
+                  group: "Menu",
+                  dataSourceId: "string",
+                  name: "bla",
+                  description: "aaaaaaaaaaa",
+                  dataSourceLookupId: "string",
+                  referenceId: "string"
+                },
+                {
+                  group: "Menu",
+                  dataSourceId: "string",
+                  name: "ble",
+                  description: "aaaaaaaaaaa",
+                  dataSourceLookupId: "string",
+                  referenceId: "string"
+                },
+                {
+                  group: "Menu",
+                  dataSourceId: "string",
+                  name: "blu",
+                  description: "aaaaaaaaaaa",
+                  dataSourceLookupId: "string",
+                  referenceId: "string"
+                },
+                {
+                  group: "Menu",
+                  dataSourceId: "string",
+                  name: "bli",
+                  description: "aaaaaaaaaaa",
+                  dataSourceLookupId: "string",
+                  referenceId: "string"
+                },
+                {
+                  group: "Menu",
+                  dataSourceId: "string",
+                  name: "blo",
+                  description: "aaaaaaaaaaa",
+                  dataSourceLookupId: "string",
+                  referenceId: "string"
+                },
+                {
+                  group: "Menu",
+                  dataSourceId: "string",
+                  name: "blc",
+                  description: "aaaaaaaaaaa",
+                  dataSourceLookupId: "string",
+                  referenceId: "string"
+                }
+              ]} 
+              onItemClick={(result: ISearchResult) => this.onItemClick(result)}/>
+            <ResultGroup name={"Menu"} results={[
+              {
+                group: "Menu",
+                dataSourceId: "string",
+                name: "bla",
+                description: "aaaaaaaaaaa",
+                dataSourceLookupId: "string",
+                referenceId: "string"
+              },
+              {
+                group: "Menu",
+                dataSourceId: "string",
+                name: "ble",
+                description: "aaaaaaaaaaa",
+                dataSourceLookupId: "string",
+                referenceId: "string"
+              },
+              {
+                group: "Menu",
+                dataSourceId: "string",
+                name: "blu",
+                description: "aaaaaaaaaaa",
+                dataSourceLookupId: "string",
+                referenceId: "string"
+              }
+            ]} 
+            onItemClick={(result: ISearchResult) => this.onItemClick(result)}/> */}
           </div>
         </div>
       </ModalWindow>
@@ -100,7 +176,7 @@ export class ResultGroup extends React.Component<{
   onItemClick: (result: ISearchResult) => void;
 }> {
   @observable
-  isExpanded = false;
+  isExpanded = true;
 
   onGroupClick() {
     this.isExpanded = !this.isExpanded;

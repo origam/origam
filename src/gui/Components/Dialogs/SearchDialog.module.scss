@@ -42,6 +42,12 @@
   color: black;
 }
 
+.resultArea{
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 35vh;
+}
+
 .groupName{
   margin-left: 10px;
 }
