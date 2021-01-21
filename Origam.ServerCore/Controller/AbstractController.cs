@@ -95,12 +95,12 @@ namespace Origam.ServerCore.Controller
             }             
             catch (DBConcurrencyException ex)
             {
-                log.LogError(new EventId(), ex, ex.Message);
+                log.LogError(ex, ex.Message);
                 return StatusCode(409, ex);
             }            
             catch (Exception ex)
             {
-                log.LogError(new EventId(), ex, ex.Message);
+                log.LogError(ex, ex.Message);
                 return StatusCode(500, ex);
             }
         }
