@@ -22,8 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Principal;
@@ -41,7 +39,7 @@ using Origam.ServerCore.Model.Blob;
 using Origam.ServerCore.Model.UIService;
 using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
-using Origam.Workbench.Services.CoreServices;
+using ImageMagick;
 
 namespace Origam.ServerCore.Controller
 {
@@ -265,7 +263,7 @@ namespace Origam.ServerCore.Controller
                             var thumbnailMember 
                                 = blobUploadRequest.ThumbnailMember;
                             row[thumbnailMember] 
-                                = FixedSizeBytes(image, width, height);
+                                = FixedSizeBytes(input, width, height);
                         }
                         finally
                         {
@@ -327,28 +325,11 @@ namespace Origam.ServerCore.Controller
             }
             return false;
         }
-        private static byte[] FixedSizeBytes(Image image, int width, int height)
+        private static byte[] FixedSizeBytes(byte[] byteArrayImage, int width, int height)
         {
-            using (var thumbnail = FixedSize(image, width, height))
-            {
-                var memoryStream = new MemoryStream();
-                try
-                {
-                    thumbnail.Save(memoryStream, ImageFormat.Png);
-                    return memoryStream.GetBuffer();
-                }
-                finally
-                {
-                    memoryStream.Close();
-                }
-            }
-        }
-        private static Image FixedSize(Image image, int width, int height)
-        {
-            var sourceWidth = image.Width;
-            var sourceHeight = image.Height;
-            const int sourceX = 0;
-            const int  sourceY = 0;
+            MagickImageInfo myImageInfo =new MagickImageInfo(byteArrayImage);
+            var sourceWidth = myImageInfo.Width;
+            var sourceHeight = myImageInfo.Height;
             var destX = 0;
             var destY = 0;
             float percent;
@@ -367,19 +348,12 @@ namespace Origam.ServerCore.Controller
             }
             var destWidth = (int)(sourceWidth * percent);
             var destHeight = (int)(sourceHeight * percent);
-            var bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
-            bitmap.SetResolution(image.HorizontalResolution,
-                image.VerticalResolution);
-            bitmap.MakeTransparent(Color.Transparent);
-            var graphics = Graphics.FromImage(bitmap);
-            graphics.Clear(Color.Transparent);
-            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphics.DrawImage(image,
-                new Rectangle(destX, destY, destWidth, destHeight),
-                new Rectangle(sourceX, sourceY, sourceWidth, sourceHeight),
-                GraphicsUnit.Pixel);
-            graphics.Dispose();
-            return bitmap;
+            var backgroudImage = new MagickImage(MagickColors.Black, width, height);
+            backgroudImage.Resize(width, height);
+            var pictureBitmap = new MagickImage(byteArrayImage);
+            pictureBitmap.Resize(destWidth,destHeight);
+            backgroudImage.Composite(pictureBitmap, destX,destY);
+            return backgroudImage.ToByteArray(myImageInfo.Format);
         }
     }
 }
