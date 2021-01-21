@@ -10,6 +10,13 @@ import { observable } from "mobx";
 export class SearchDialog extends React.Component<{
   onCloseClick: () => void;
 }> {
+
+  onKeyDown(event: any){
+    if(event.key === "Escape"){
+      this.props.onCloseClick();
+    }
+  }
+
   render() {
     return (
       <ModalWindow
@@ -22,6 +29,7 @@ export class SearchDialog extends React.Component<{
             </button>
           </>
         }
+        onKeyDown={(event:any) => this.onKeyDown(event)}
         buttonsLeft={null}
         buttonsRight={null}
       >

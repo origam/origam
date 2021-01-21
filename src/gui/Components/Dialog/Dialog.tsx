@@ -35,6 +35,7 @@ export class ModalWindow extends React.Component<{
   buttonsCenter: React.ReactNode;
   width?: number;
   height?: number;
+  onKeyDown?: (event: any) => void;
 }> {
   @observable top: number = window.screen.height + 50;
   @observable left: number = window.screen.width + 50;
@@ -46,6 +47,10 @@ export class ModalWindow extends React.Component<{
   dragStartPosY = 0;
 
   isInitialized = false;
+
+  componentDidMount(){
+    document.getElementById("modalWindow")?.focus();
+  }
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
     if (
@@ -82,6 +87,10 @@ export class ModalWindow extends React.Component<{
     this.isDragging = false;
   }
 
+  onKeyDown(event: any){
+    this.props.onKeyDown?.(event);
+  }
+
   render() {
     return (
       <Measure bounds={true} onResize={this.handleResize}>
@@ -90,6 +99,7 @@ export class ModalWindow extends React.Component<{
             {() => (
               <div
                 ref={measureRef}
+                id={"modalWindow"}
                 className={S.modalWindow}
                 style={{
                   top: this.top,
@@ -97,6 +107,8 @@ export class ModalWindow extends React.Component<{
                   minWidth: this.props.width,
                   minHeight: this.props.height
                 }}
+                tabIndex={0}
+                onKeyDown={(event:any)=> this.onKeyDown(event)}
               >
                 {this.props.title && <div
                   className={S.title}
