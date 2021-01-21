@@ -18,7 +18,6 @@ export class SearchDialog extends React.Component<{
 
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
-
   
   @observable
   value = "";
@@ -69,7 +68,7 @@ export class SearchDialog extends React.Component<{
             <input
               ref={this.refInput}
               className={S.input}
-              placeholder="Search for anything here"
+              placeholder={T("Search for anything here", "type_search_here")}
               onKeyDown={(event) => this.onInputKeyDown(event)}
               onChange={(event) => this.onChange(event)}
             />
