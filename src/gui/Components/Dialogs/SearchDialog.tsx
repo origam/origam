@@ -32,7 +32,7 @@ export class SearchDialog extends React.Component<{
             <Icon className={S.icon} src="./icons/search.svg" />
             <input
               className={S.input}
-              placeholder="Search for anything here!"
+              placeholder="Search for anything here"
             />
           </div>
           <div>
@@ -71,14 +71,12 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-          {this.isExpanded && this.props.items.map(item => <ResultItem name={item}/> )}
+          {this.isExpanded && this.props.items.map(item => <ResultItem name={item} key={item}/> )}
         </div>
       </div>
     );
   }
 }
-
-
 
 @observer
 export class ResultItem extends React.Component<{
