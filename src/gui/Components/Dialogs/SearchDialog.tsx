@@ -7,6 +7,7 @@ import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { observable } from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { ISearchResult } from "model/entities/types/ISearchResult";
+import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 
 @observer
 export class SearchDialog extends React.Component<{
@@ -36,6 +37,7 @@ export class SearchDialog extends React.Component<{
   }
 
   onItemClick(searchResult: ISearchResult){
+    onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
     this.props.onCloseClick();
   }
   
