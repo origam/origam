@@ -25,6 +25,8 @@ export class SearchDialog extends React.Component<{
   @observable
   groups: Map<string, ISearchResult[]> = new Map();
 
+  searchResults: ISearchResult[]=[];
+
   componentDidMount(){
     this.input?.focus();
   }
@@ -36,6 +38,7 @@ export class SearchDialog extends React.Component<{
   }
 
   onItemClick(searchResult: ISearchResult){
+    this.props.onSearchResultsChange(this.searchResults);
     onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
     this.props.onCloseClick();
   }
@@ -43,9 +46,8 @@ export class SearchDialog extends React.Component<{
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key == "Enter" && this.value.trim()) {
       const api = getApi(this.props.ctx);
-      const searchResults = await api.search(this.value);
-      this.props.onSearchResultsChange(searchResults);
-      this.groups = searchResults.groupBy((item:ISearchResult) => item.group);    }
+      this.searchResults = await api.search(this.value);
+      this.groups = this.searchResults.groupBy((item:ISearchResult) => item.group);    }
   }
 
   onChange(event: React.ChangeEvent<HTMLInputElement>): void {
