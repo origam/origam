@@ -22,13 +22,7 @@ export class SearchDialog extends React.Component<{
       <ModalWindow
         title={null}
         titleButtons={null}
-        buttonsCenter={
-          <>
-            <button tabIndex={0} onClick={() => this.props.onCloseClick()}>
-              {T("Close", "button_close")}
-            </button>
-          </>
-        }
+        buttonsCenter={null}
         onKeyDown={(event:any) => this.onKeyDown(event)}
         buttonsLeft={null}
         buttonsRight={null}

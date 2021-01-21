@@ -91,6 +91,25 @@ export class ModalWindow extends React.Component<{
     this.props.onKeyDown?.(event);
   }
 
+  renderFooter(){
+    if(this.props.buttonsLeft || this.props.buttonsCenter || this.props.buttonsRight){
+      return(
+        <div className={S.footer}>
+          {this.props.buttonsLeft}
+          {this.props.buttonsCenter ? (
+            this.props.buttonsCenter
+          ) : (
+            <div className={S.pusher} />
+          )}
+          {this.props.buttonsRight}
+        </div>
+      );
+    }
+    else{
+      return null;
+    }
+  }
+
   render() {
     return (
       <Measure bounds={true} onResize={this.handleResize}>
@@ -126,15 +145,7 @@ export class ModalWindow extends React.Component<{
                   <div className={S.buttons}>{this.props.titleButtons}</div>
                 </div>}
                 <div className={S.body}>{this.props.children}</div>
-                <div className={S.footer}>
-                  {this.props.buttonsLeft}
-                  {this.props.buttonsCenter ? (
-                    this.props.buttonsCenter
-                  ) : (
-                    <div className={S.pusher} />
-                  )}
-                  {this.props.buttonsRight}
-                </div>
+                {this.renderFooter()}
               </div>
             )}
           </Observer>
