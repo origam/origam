@@ -10,6 +10,8 @@ import { ISearchResult } from "model/entities/types/ISearchResult";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
+const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
+
 @observer
 export class SearchDialog extends React.Component<{
   ctx: any;
@@ -22,6 +24,8 @@ export class SearchDialog extends React.Component<{
   
   @observable
   value = "";
+
+  timeout: NodeJS.Timeout | undefined;
 
   @observable
   groups: Map<string, ISearchResult[]> = new Map();
@@ -43,19 +47,38 @@ export class SearchDialog extends React.Component<{
     onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
     this.props.onCloseClick();
   }
-  
+
+
+  searchOnServer(){
+    if(!this.value.trim()){
+      this.searchResults = [];
+      this.groups = new Map();
+      return;
+    }
+    runInFlowWithHandler({
+      ctx: this.props.ctx, 
+      action : async ()=> 
+      {
+        const api = getApi(this.props.ctx);
+        this.searchResults = await api.search(this.value);
+        this.groups = this.searchResults.groupBy((item:ISearchResult) => item.group);  
+      } 
+    });
+  }
+
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key == "Enter" && this.value.trim()) {
-      runInFlowWithHandler({
-        ctx: this.props.ctx, 
-        action : async ()=> 
-        {
-          const api = getApi(this.props.ctx);
-          this.searchResults = await api.search(this.value);
-          this.groups = this.searchResults.groupBy((item:ISearchResult) => item.group);  
-        } 
-      });
-    }  
+    if (event.key === "Enter") {
+      this. searchOnServer();
+      return;
+    }
+    if(this.timeout)
+    {
+      clearTimeout(this.timeout);
+    }
+    this.timeout = setTimeout(()=>{
+      this.timeout = undefined;
+      this.searchOnServer();
+    }, DELAY_BEFORE_SERVER_SEARCH_MS)
   }
 
   onChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -94,84 +117,6 @@ export class SearchDialog extends React.Component<{
                   onItemClick={(result: ISearchResult) => this.onItemClick(result)}
                 />) 
             }
-            {/* <ResultGroup name={"Menu"} results={[
-                {
-                  group: "Menu",
-                  dataSourceId: "string",
-                  name: "bla",
-                  description: "aaaaaaaaaaa",
-                  dataSourceLookupId: "string",
-                  referenceId: "string"
-                },
-                {
-                  group: "Menu",
-                  dataSourceId: "string",
-                  name: "ble",
-                  description: "aaaaaaaaaaa",
-                  dataSourceLookupId: "string",
-                  referenceId: "string"
-                },
-                {
-                  group: "Menu",
-                  dataSourceId: "string",
-                  name: "blu",
-                  description: "aaaaaaaaaaa",
-                  dataSourceLookupId: "string",
-                  referenceId: "string"
-                },
-                {
-                  group: "Menu",
-                  dataSourceId: "string",
-                  name: "bli",
-                  description: "aaaaaaaaaaa",
-                  dataSourceLookupId: "string",
-                  referenceId: "string"
-                },
-                {
-                  group: "Menu",
-                  dataSourceId: "string",
-                  name: "blo",
-                  description: "aaaaaaaaaaa",
-                  dataSourceLookupId: "string",
-                  referenceId: "string"
-                },
-                {
-                  group: "Menu",
-                  dataSourceId: "string",
-                  name: "blc",
-                  description: "aaaaaaaaaaa",
-                  dataSourceLookupId: "string",
-                  referenceId: "string"
-                }
-              ]} 
-              onItemClick={(result: ISearchResult) => this.onItemClick(result)}/>
-            <ResultGroup name={"Menu"} results={[
-              {
-                group: "Menu",
-                dataSourceId: "string",
-                name: "bla",
-                description: "aaaaaaaaaaa",
-                dataSourceLookupId: "string",
-                referenceId: "string"
-              },
-              {
-                group: "Menu",
-                dataSourceId: "string",
-                name: "ble",
-                description: "aaaaaaaaaaa",
-                dataSourceLookupId: "string",
-                referenceId: "string"
-              },
-              {
-                group: "Menu",
-                dataSourceId: "string",
-                name: "blu",
-                description: "aaaaaaaaaaa",
-                dataSourceLookupId: "string",
-                referenceId: "string"
-              }
-            ]} 
-            onItemClick={(result: ISearchResult) => this.onItemClick(result)}/> */}
           </div>
         </div>
       </ModalWindow>
