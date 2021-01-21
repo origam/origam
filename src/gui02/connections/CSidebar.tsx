@@ -46,37 +46,18 @@ export class CSidebar extends React.Component {
     return this.context.workbench;
   }
 
-  @observable searchResults: ISearchResult[] = [];
-  @observable _activeSection = "Menu";
-  @observable activeInfoSubsection = IInfoSubsection.Info;
-
-  get activeSection() {
-    return this._activeSection;
-  }
-
-  set activeSection(value) {
-    if (this._activeSection === "Info" && value !== this._activeSection) {
-      onSidebarInfoSectionCollapsed(this.workbench)();
-    }
-    if (this._activeSection !== "Info" && value === "Info") {
-      if (this.activeInfoSubsection === IInfoSubsection.Info) {
-        onSidebarInfoSectionExpanded(this.workbench)();
-      }
-      if (this.activeInfoSubsection === IInfoSubsection.Audit) {
-        onSidebarAuditSectionExpanded(this.workbench)();
-      }
-    }
-    this._activeSection = value;
+  get sidebarState(){
+    return this.workbench.sidebarState;
   }
 
   @action.bound handleExpandRecordAuditLog() {
-    this.activeInfoSubsection = IInfoSubsection.Audit;
-    this.activeSection = "Info";
+    this.sidebarState.activeInfoSubsection = IInfoSubsection.Audit;
+    this.sidebarState.activeSection = "Info";
   }
 
   @action.bound handleExpandRecordInfo() {
-    this.activeInfoSubsection = IInfoSubsection.Info;
-    this.activeSection = "Info";
+    this.sidebarState.activeInfoSubsection = IInfoSubsection.Info;
+    this.sidebarState.activeSection = "Info";
   }
 
   disposers: any[] = [];
@@ -94,7 +75,7 @@ export class CSidebar extends React.Component {
         favoriteFolders => {
           const firstNonEmpty = favoriteFolders.find(folder => folder.items.length > 0 && !folder.isPinned)
           if(firstNonEmpty){
-            this.activeSection = firstNonEmpty.id;
+            this.sidebarState.activeSection = firstNonEmpty.id;
           } 
       },
       {fireImmediately: true})
@@ -105,19 +86,13 @@ export class CSidebar extends React.Component {
     this.disposers.forEach((disposer) => disposer());
   }
 
-  @action
-  onSearchResultsChange(results: ISearchResult[]) {
-    this.searchResults = results;
-    this.activeSection = "Search";
-  }
-
   renderWorkQuesSection() {
     const workQueuesItemsCount = getWorkQueuesTotalItemsCount(this.workbench);
     return (
-      <SidebarSection isActive={this.activeSection === "WorkQueues"}>
+      <SidebarSection isActive={this.sidebarState.activeSection === "WorkQueues"}>
         <SidebarSectionDivider/>
         <SidebarSectionHeader
-          isActive={this.activeSection === "WorkQueues"}
+          isActive={this.sidebarState.activeSection === "WorkQueues"}
           icon={
             <>
               <Icon src="./icons/work-queue.svg" tooltip={T("Work Queues", "work_queue_measure")}/>
@@ -127,9 +102,9 @@ export class CSidebar extends React.Component {
             </>
           }
           label={<>{T("Work Queues", "work_queue_measure")}</>}
-          onClick={() => (this.activeSection = "WorkQueues")}
+          onClick={() => (this.sidebarState.activeSection = "WorkQueues")}
         />
-        <SidebarSectionBody isActive={this.activeSection === "WorkQueues"}>
+        <SidebarSectionBody isActive={this.sidebarState.activeSection === "WorkQueues"}>
           <CWorkQueues/>
         </SidebarSectionBody>
       </SidebarSection>
@@ -139,10 +114,10 @@ export class CSidebar extends React.Component {
   renderChatSection(): React.ReactNode {
     const totalUnreadMessages = getChatrooms(this.workbench).totalItemCount;
     return (
-      <SidebarSection isActive={this.activeSection === "Chat"}>
+      <SidebarSection isActive={this.sidebarState.activeSection === "Chat"}>
         <SidebarSectionDivider/>
         <SidebarSectionHeader
-          isActive={this.activeSection === "Chat"}
+          isActive={this.sidebarState.activeSection === "Chat"}
           icon={
             <>
               <Icon src="./icons/chat.svg" tooltip={T("Chat", "chat")}/>
@@ -152,9 +127,9 @@ export class CSidebar extends React.Component {
             </>
           }
           label={<>{T("Chat", "chat")}</>}
-          onClick={() => (this.activeSection = "Chat")}
+          onClick={() => (this.sidebarState.activeSection = "Chat")}
         />
-        <SidebarSectionBody isActive={this.activeSection === "Chat"}>
+        <SidebarSectionBody isActive={this.sidebarState.activeSection === "Chat"}>
           <CChatSection/>
         </SidebarSectionBody>
       </SidebarSection>
@@ -183,7 +158,7 @@ export class CSidebar extends React.Component {
 
         <SearchBox
           ctx={this.workbench}
-          onSearchResultsChange={(results) => this.onSearchResultsChange(results)}
+          onSearchResultsChange={(results) => this.sidebarState.onSearchResultsChange(results)}
         />
 
         {favorites.favoriteFolders
@@ -207,49 +182,49 @@ export class CSidebar extends React.Component {
             <CFavorites
               ctx={this.workbench}
               folder={folder}
-              isActive={this.activeSection === folder.id}
-              onHeaderClick={() => (this.activeSection = folder.id)}
+              isActive={this.sidebarState.activeSection === folder.id}
+              onHeaderClick={() => (this.sidebarState.activeSection = folder.id)}
             />
           ))}
-        <SidebarSection isActive={this.activeSection === "Menu"}>
+        <SidebarSection isActive={this.sidebarState.activeSection === "Menu"}>
           <SidebarSectionDivider/>
           <SidebarSectionHeader
-            isActive={this.activeSection === "Menu"}
+            isActive={this.sidebarState.activeSection === "Menu"}
             icon={<Icon src="./icons/menu.svg" tooltip={T("Menu", "menu")}/>}
             label={T("Menu", "menu")}
-            onClick={() => (this.activeSection = "Menu")}
+            onClick={() => (this.sidebarState.activeSection = "Menu")}
           />
-          <SidebarSectionBody isActive={this.activeSection === "Menu"}>
+          <SidebarSectionBody isActive={this.sidebarState.activeSection === "Menu"}>
             <CMainMenu/>
           </SidebarSectionBody>
         </SidebarSection>
-        <SidebarSection isActive={this.activeSection === "Info"}>
+        <SidebarSection isActive={this.sidebarState.activeSection === "Info"}>
           <SidebarSectionDivider/>
           <SidebarSectionHeader
-            isActive={this.activeSection === "Info"}
+            isActive={this.sidebarState.activeSection === "Info"}
             icon={<Icon src="./icons/info.svg" tooltip={T("Info", "infopanel_title")}/>}
             label={T("Info", "infopanel_title")}
-            onClick={() => (this.activeSection = "Info")}
+            onClick={() => (this.sidebarState.activeSection = "Info")}
           />
-          <SidebarSectionBody isActive={this.activeSection === "Info"}>
-            <CSidebarInfoSection activeSubsection={this.activeInfoSubsection}/>
+          <SidebarSectionBody isActive={this.sidebarState.activeSection === "Info"}>
+            <CSidebarInfoSection activeSubsection={this.sidebarState.activeInfoSubsection}/>
           </SidebarSectionBody>
         </SidebarSection>
-        <SidebarSection isActive={this.activeSection === "Search"}>
+        <SidebarSection isActive={this.sidebarState.activeSection === "Search"}>
           <SidebarSectionDivider/>
           <SidebarSectionHeader
-            isActive={this.activeSection === "Search"}
+            isActive={this.sidebarState.activeSection === "Search"}
             icon={
               <Icon
                 src="./icons/search.svg"
-                tooltip={T("Search", "search_result", this.searchResults.length)}
+                tooltip={T("Search", "search_result", this.sidebarState.searchResults.length)}
               />
             }
-            label={T("Search", "search_result", this.searchResults.length)}
-            onClick={() => (this.activeSection = "Search")}
+            label={T("Search", "search_result", this.sidebarState.searchResults.length)}
+            onClick={() => (this.sidebarState.activeSection = "Search")}
           />
-          <SidebarSectionBody isActive={this.activeSection === "Search"}>
-            <SearchResults results={this.searchResults}/>
+          <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
+            <SearchResults results={this.sidebarState.searchResults}/>
           </SidebarSectionBody>
           <SidebarSectionDivider/>
         </SidebarSection>

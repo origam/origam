@@ -9,6 +9,7 @@ import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { Chatrooms } from "../Chatrooms";
 import { Notifications } from "../Notifications";
 import {Favorites} from "model/entities/Favorites";
+import { SidebarState } from "../SidebarState";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
@@ -21,6 +22,7 @@ export interface IWorkbenchData {
   notifications: Notifications;
   recordInfo: IRecordInfo;
   favorites: Favorites;
+  sidebarState: SidebarState;
 
   lookupListCache: LookupListCacheMulti;
   lookupMultiEngine: IMultiLookupEngine;

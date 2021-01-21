@@ -48,10 +48,6 @@ export class ModalWindow extends React.Component<{
 
   isInitialized = false;
 
-  componentDidMount(){
-    document.getElementById("modalWindow")?.focus();
-  }
-
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
     if (
       !this.isInitialized &&
@@ -118,7 +114,6 @@ export class ModalWindow extends React.Component<{
             {() => (
               <div
                 ref={measureRef}
-                id={"modalWindow"}
                 className={S.modalWindow}
                 style={{
                   top: this.top,
