@@ -8,6 +8,7 @@ import { observable } from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @observer
 export class SearchDialog extends React.Component<{
@@ -45,9 +46,16 @@ export class SearchDialog extends React.Component<{
   
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key == "Enter" && this.value.trim()) {
-      const api = getApi(this.props.ctx);
-      this.searchResults = await api.search(this.value);
-      this.groups = this.searchResults.groupBy((item:ISearchResult) => item.group);    }
+      runInFlowWithHandler({
+        ctx: this.props.ctx, 
+        action : async ()=> 
+        {
+          const api = getApi(this.props.ctx);
+          this.searchResults = await api.search(this.value);
+          this.groups = this.searchResults.groupBy((item:ISearchResult) => item.group);  
+        } 
+      });
+    }  
   }
 
   onChange(event: React.ChangeEvent<HTMLInputElement>): void {
