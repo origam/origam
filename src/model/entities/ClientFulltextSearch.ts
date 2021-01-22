@@ -1,18 +1,11 @@
 import {action, observable} from "mobx";
 import FlexSearch from "flexsearch";
 import _ from "lodash";
-import {IClientFulltextSearch as IClientFullTextSearch, ISearchResultItem, ISearchResultSection} from "./types/IClientFulltextSearch";
+import {IClientFullTextSearch} from "./types/IClientFulltextSearch";
 import {IMenuItemIcon} from "../../gui/Workbench/MainMenu/MainMenu";
+import { IMenuSearchResult } from "./types/ISearchResult";
 
-class SearchResultSection implements ISearchResultSection {
-  constructor(public label: string, public items: ISearchResultItem[]) {}
-
-  get itemCount() {
-    return this.items.length;
-  }
-}
-
-class SearchResultItem implements ISearchResultItem {
+class SearchResultItem implements IMenuSearchResult {
   constructor(
     public id: string,
     public type: string,
@@ -36,11 +29,12 @@ function makeMenuPath(node: any) {
 
 export class ClientFullTextSearch implements IClientFullTextSearch {
   parent?: any;
-  @observable foundItems: ISearchResultSection[] = [];
+  // @observable foundItems: ISearchResultSection[] = [];
+  @observable  searchResults: IMenuSearchResult[] = [];
   index: any;
 
-  @action.bound onSearchFieldChange(event: any) {
-    this.doSearchTerm(event.target.value);
+  @action.bound onSearchFieldChange(searchTerm: string) {
+    this.doSearchTerm(searchTerm);
   }
 
   doSearchTerm = _.throttle(this.doSearchTermImm, 100);
@@ -48,11 +42,8 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
   @action.bound doSearchTermImm(term: string) {
     if (!this.index) return;
     this.triggerOpenSearchSection();
-    this.foundItems = [
-      new SearchResultSection(
-        "Menu",
+    this.searchResults = 
         this.index.search(term).map((res: any) => {
-          console.log(res);
           switch (res.name) {
             case "Submenu":
               return new SearchResultItem(
@@ -78,13 +69,12 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
               );
           }
         })
-      )
-    ].filter(section => section.itemCount > 0);
+      // );
   }
 
   @action.bound
   clearResults(): void {
-    this.foundItems.length = 0;
+    this.searchResults.length = 0;
   }
 
   @action.bound

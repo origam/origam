@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import S from "gui02/components/Search/SearchResults.module.scss";
-import { ISearchResult } from "model/entities/types/ISearchResult";
+import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { MobXProviderContext, observer } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
@@ -28,7 +28,7 @@ export class SearchResults extends React.Component<{
 @observer
 export class ResultGroup extends React.Component<{
   name: string;
-  results: ISearchResult[];
+  results: IServerSearchResult[];
 }> {
   @observable
   isExpanded = true;
@@ -52,7 +52,7 @@ export class ResultGroup extends React.Component<{
         </div>
         <div>
           {this.isExpanded && this.props.results.map(result => 
-            <SearchResultItem result={result} key={result.name+result.group+result.referenceId}/>
+            <SearchResultItem result={result} key={result.label+result.group+result.referenceId}/>
             )}
         </div>
       </div>
@@ -60,13 +60,13 @@ export class ResultGroup extends React.Component<{
   }
 }
 
-function SearchResultItem(props: { result: ISearchResult }) {
+function SearchResultItem(props: { result: IServerSearchResult }) {
   const application = useContext(MobXProviderContext).application as IApplication;
 
   return (
     <div className={S.resultItem} 
         onClick={()=> onSearchResultClick(application)(props.result.dataSourceLookupId, props.result.referenceId)}>
-      <div className={S.resultItemName}>{props.result.name}</div>
+      <div className={S.resultItemName}>{props.result.label}</div>
       <div className={S.resultItemDescription}>{props.result.description}</div>
     </div>
   );

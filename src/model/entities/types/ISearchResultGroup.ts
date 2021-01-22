@@ -1,7 +1,7 @@
-import { ISearchResult } from "./ISearchResult";
+import { IServerSearchResult } from "./ISearchResult";
 
 
 export interface ISearchResultGroup {
   name: string;
-  results: ISearchResult[];
+  results: IServerSearchResult[];
 }

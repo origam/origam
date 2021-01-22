@@ -1,8 +1,10 @@
 import {IMenuItemIcon} from '../../../gui/Workbench/MainMenu/MainMenu';
+import { IMenuSearchResult } from './ISearchResult';
 
-export interface IClientFulltextSearch {
-  foundItems: ISearchResultSection[];
-  onSearchFieldChange(event: any): void;
+export interface IClientFullTextSearch {
+  // foundItems: ISearchResultSection[];
+  searchResults: IMenuSearchResult[];
+  onSearchFieldChange(searchTerm: string): void;
   clearResults(): void;
   indexMainMenu(mainMenu: any): void;
 
@@ -12,17 +14,8 @@ export interface IClientFulltextSearch {
 }
 
 
-export interface ISearchResultSection {
-  label: string;
-  itemCount: number;
-  items: ISearchResultItem[];
-}
-
-export interface ISearchResultItem {
-  id: string;
-  type: string;
-  icon: IMenuItemIcon;
-  label: string;
-  description: string;
-  node: any;
-}
+// export interface ISearchResultSection {
+//   label: string;
+//   itemCount: number;
+//   items: ISearchResultItem[];
+// }

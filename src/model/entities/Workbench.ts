@@ -2,7 +2,7 @@ import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
 import { IMainMenuEnvelope } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
 import { action, computed, observable } from "mobx";
-import { IClientFulltextSearch } from "./types/IClientFulltextSearch";
+import { IClientFullTextSearch } from "./types/IClientFulltextSearch";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IWorkQueues } from "./types/IWorkQueues";
 import { IRecordInfo } from "./types/IRecordInfo";
@@ -31,7 +31,7 @@ export class Workbench implements IWorkbench {
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
-  clientFullTextSearch: IClientFulltextSearch = null as any;
+  clientFullTextSearch: IClientFullTextSearch = null as any;
   mainMenuEnvelope: IMainMenuEnvelope = null as any;
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;

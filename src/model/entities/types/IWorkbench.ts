@@ -1,6 +1,6 @@
 import { IMainMenuEnvelope } from "./IMainMenu";
 import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
-import { IClientFulltextSearch as IClientFullTextSearch } from "./IClientFulltextSearch";
+import { IClientFullTextSearch as IClientFullTextSearch } from "./IClientFulltextSearch";
 import { IOpenedScreens } from "./IOpenedScreens";
 import { IWorkQueues } from "./IWorkQueues";
 import { IRecordInfo } from "./IRecordInfo";
