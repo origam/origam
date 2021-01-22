@@ -19,7 +19,7 @@ export class Workbench implements IWorkbench {
   constructor(data: IWorkbenchData) {
     Object.assign(this, data);
     this.workbenchLifecycle.parent = this;
-    this.clientFulltextSearch.parent = this;
+    this.clientFullTextSearch.parent = this;
     this.openedScreens.parent = this;
     this.openedDialogScreens.parent = this;
     this.workQueues.parent = this;
@@ -31,7 +31,7 @@ export class Workbench implements IWorkbench {
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
-  clientFulltextSearch: IClientFulltextSearch = null as any;
+  clientFullTextSearch: IClientFulltextSearch = null as any;
   mainMenuEnvelope: IMainMenuEnvelope = null as any;
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;

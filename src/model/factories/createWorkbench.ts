@@ -1,6 +1,6 @@
 import { Workbench } from "../entities/Workbench";
 
-import { ClientFulltextSearch } from "../entities/ClientFulltextSearch";
+import { ClientFullTextSearch } from "../entities/ClientFulltextSearch";
 import { WorkbenchLifecycle } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import { MainMenuEnvelope } from "../entities/MainMenu";
 import { OpenedScreens } from "model/entities/OpenedScreens";
@@ -27,7 +27,7 @@ export function createWorkbench() {
     mainMenuEnvelope: new MainMenuEnvelope(),
     favorites: new Favorites(),
     workbenchLifecycle: new WorkbenchLifecycle(),
-    clientFulltextSearch: new ClientFulltextSearch(),
+    clientFullTextSearch: new ClientFullTextSearch(),
     openedScreens: new OpenedScreens(),
     openedDialogScreens: new OpenedScreens(),
     workQueues: new WorkQueues(),

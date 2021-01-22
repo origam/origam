@@ -3,7 +3,7 @@ import {observer} from "mobx-react-lite";
 import {IApplication} from "model/entities/types/IApplication";
 import React, {useContext} from "react";
 import {ISearchResultItem} from "../../model/entities/types/IClientFulltextSearch";
-import {getClientFulltextSearch} from "../../model/selectors/getClientFulltextSearch";
+import {getClientFullTextSearch} from "../../model/selectors/getClientFulltextSearch";
 import {IMenuItemIcon} from "./MainMenu/MainMenu";
 import S from "./SearchResults.module.css";
 import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
@@ -41,8 +41,8 @@ function itemIcon(item: ISearchResultItem) {
 export const SearchResultsPanel: React.FC<{}> = observer(props => {
   const application = useContext(MobXProviderContext)
     .application as IApplication;
-  const clientFulltextSearch = getClientFulltextSearch(application);
-  const foundItems = clientFulltextSearch.foundItems;
+  const clientFullTextSearch = getClientFullTextSearch(application);
+  const foundItems = clientFullTextSearch.foundItems;
   const handleMainMenuItemClick = (event: any, item: any) =>
     getWorkbenchLifecycle(application).onMainMenuItemClick({
       event: event, item: item, idParameter: undefined });

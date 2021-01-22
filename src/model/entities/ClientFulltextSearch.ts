@@ -1,7 +1,7 @@
 import {action, observable} from "mobx";
 import FlexSearch from "flexsearch";
 import _ from "lodash";
-import {IClientFulltextSearch, ISearchResultItem, ISearchResultSection} from "./types/IClientFulltextSearch";
+import {IClientFulltextSearch as IClientFullTextSearch, ISearchResultItem, ISearchResultSection} from "./types/IClientFulltextSearch";
 import {IMenuItemIcon} from "../../gui/Workbench/MainMenu/MainMenu";
 
 class SearchResultSection implements ISearchResultSection {
@@ -34,7 +34,7 @@ function makeMenuPath(node: any) {
   return path.slice(2); // Strip out root and Menu node
 }
 
-export class ClientFulltextSearch implements IClientFulltextSearch {
+export class ClientFullTextSearch implements IClientFullTextSearch {
   parent?: any;
   @observable foundItems: ISearchResultSection[] = [];
   index: any;
