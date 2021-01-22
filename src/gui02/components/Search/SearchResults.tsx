@@ -31,14 +31,6 @@ export class ResultGroup extends React.Component<{
 }> {
   @observable
   isExpanded = true;
-
-  items: any =[];
-
-  componentWillMount() {
-    this.items = this.props.results.map(item => { 
-      return {id: uuidv4(), result: item};
-    });
-  }
   
   onGroupClick() {
     this.isExpanded = !this.isExpanded;
@@ -58,8 +50,8 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-          {this.isExpanded && this.items.map((item: any) => 
-            <SearchResultItem result={item.result} key={item.id}/>
+          {this.isExpanded && this.props.results.map(result => 
+            <SearchResultItem result={result} />
             )}
         </div>
       </div>
