@@ -2,7 +2,7 @@ import { TypeSymbol } from "dic/Container";
 import _ from "lodash";
 import { action, computed, decorate, flow, observable, reaction } from "mobx";
 import { DropdownEditorSetup } from "./DropdownEditor";
-import { DropdownEditorApi, IDropdownEditorApi } from "./DropdownEditorApi";
+import { IDropdownEditorApi } from "./DropdownEditorApi";
 import { CancellablePromise, EagerlyLoadedGrid, LazilyLoadedGrid } from "./DropdownEditorCommon";
 import { IDropdownEditorData } from "./DropdownEditorData";
 import { DropdownEditorLookupListCache } from "./DropdownEditorLookupListCache";
