@@ -68,7 +68,7 @@ namespace OrigamArchitect
             this.infoLabel.Name = "infoLabel";
             this.infoLabel.Size = new System.Drawing.Size(499, 20);
             this.infoLabel.TabIndex = 3;
-            this.infoLabel.Text = "Please wait, meta model upgrade in progress...";
+            this.infoLabel.Text = "Please wait, meta model validation in progress...";
             // 
             // ModelUpgradeForm
             // 
@@ -84,7 +84,7 @@ namespace OrigamArchitect
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ModelUpgradeForm";
-            this.Text = "Meta Model Upgrade";
+            this.Text = "Meta Model Validation";
             this.ResumeLayout(false);
 
         }
