@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import S from "gui02/components/Search/SearchResults.module.scss";
-import { IServerSearchResult } from "model/entities/types/ISearchResult";
-import { MobXProviderContext, observer } from "mobx-react";
-import { IApplication } from "model/entities/types/IApplication";
-import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
+import { ISearchResult } from "model/entities/types/ISearchResult";
+import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
+import { uuidv4 } from "utils/uuid";
 
 export class SearchResults extends React.Component<{
   groups: ISearchResultGroup[];
@@ -28,11 +27,19 @@ export class SearchResults extends React.Component<{
 @observer
 export class ResultGroup extends React.Component<{
   name: string;
-  results: IServerSearchResult[];
+  results: ISearchResult[];
 }> {
   @observable
   isExpanded = true;
 
+  items: any =[];
+
+  componentWillMount() {
+    this.items = this.props.results.map(item => { 
+      return {id: uuidv4(), result: item};
+    });
+  }
+  
   onGroupClick() {
     this.isExpanded = !this.isExpanded;
   }
@@ -51,8 +58,8 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-          {this.isExpanded && this.props.results.map(result => 
-            <SearchResultItem result={result} key={result.label+result.group+result.referenceId}/>
+          {this.isExpanded && this.items.map((item: any) => 
+            <SearchResultItem result={item.result} key={item.id}/>
             )}
         </div>
       </div>
@@ -60,12 +67,10 @@ export class ResultGroup extends React.Component<{
   }
 }
 
-function SearchResultItem(props: { result: IServerSearchResult }) {
-  const application = useContext(MobXProviderContext).application as IApplication;
-
+function SearchResultItem(props: { result: ISearchResult }) {
   return (
     <div className={S.resultItem} 
-        onClick={()=> onSearchResultClick(application)(props.result.dataSourceLookupId, props.result.referenceId)}>
+        onClick={()=> props.result.onClick()}>
       <div className={S.resultItemName}>{props.result.label}</div>
       <div className={S.resultItemDescription}>{props.result.description}</div>
     </div>

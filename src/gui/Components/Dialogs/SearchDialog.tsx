@@ -166,7 +166,6 @@ export class ResultGroup extends React.Component<{
   @observable
   isExpanded = true;
 
-
   items: any =[];
 
   componentWillMount() {
