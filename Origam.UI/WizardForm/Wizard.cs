@@ -367,25 +367,39 @@ namespace Origam.UI.WizardForm
             }
         }
 
-         private void CboDisplayField_SelectedIndexChanged(object sender, EventArgs e)
+        private void CboDisplayField_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LookupForm form = (LookupForm)iwizard;
             if (cboDisplayField.SelectedItem != null)
             {
-                var selectName = (cboDisplayField.SelectedItem as IDataEntityColumn).Name;
-                string txt = form.Entity.Name + "_" + selectName;
-                this.txtName.Text = txt;
+                UpdateLookupName();
             }
         }
 
         private void cboIdFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LookupForm form = (LookupForm)iwizard;
             if (cboIdFilter.SelectedItem != null)
             {
-                var selectName = (cboIdFilter.SelectedItem as AbstractSchemaItem).Name;
-                this.txtName.Text = this.txtName.Text + "_" + selectName;
+                UpdateLookupName();
             }
+        }
+
+        private void UpdateLookupName()
+        {
+            var form = (LookupForm)iwizard;
+            var fieldSegment 
+                = (cboDisplayField.SelectedItem as IDataEntityColumn)?.Name ?? "";
+            var filterSegment 
+                = (cboIdFilter.SelectedItem as AbstractSchemaItem)?.Name ?? "";
+            var lookupName = form.Entity.Name;
+            if (fieldSegment != "")
+            {
+                lookupName += "_" + fieldSegment;
+            }
+            if (filterSegment != "")
+            {
+                lookupName += "_" + filterSegment;
+            }
+            txtName.Text = lookupName;
         }
 
         private void IsFinish(object sender, WizardPageConfirmEventArgs e)
