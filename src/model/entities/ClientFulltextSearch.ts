@@ -32,7 +32,6 @@ export class Searcher implements ISearcher {
                 icon: node.attributes.icon,
                 label: node.attributes.label,
                 description: "",
-                node: node,
                 onClick: ()=>{
                   onMainMenuItemClick(this)({
                     event: null,
@@ -48,7 +47,6 @@ export class Searcher implements ISearcher {
                 icon: node.attributes.icon,
                 label: node.attributes.label,
                 description: "",
-                node: node,
                 onClick: ()=>{
                   onMainMenuItemClick(this)({
                     event: null,

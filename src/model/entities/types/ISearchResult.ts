@@ -19,5 +19,4 @@ export interface IServerSearchResult extends ISearchResult
 export interface IMenuSearchResult  extends ISearchResult {
   id: string;
   type: string;
-  node: any;
 }
