@@ -1,5 +1,5 @@
 import {getWorkbench} from "./getWorkbench";
 
-export function getClientFulltextSearch(ctx: any) {
-  return getWorkbench(ctx).clientFulltextSearch;
+export function getClientFullTextSearch(ctx: any) {
+  return getWorkbench(ctx).clientFullTextSearch;
 }

@@ -1,3 +1,4 @@
+import { isGlobalAutoFocusDisabled } from "model/actions-ui/ScreenToolbar/openSearchWindow";
 
 export class FocusManager {
   autoFocusDisabled = false;
@@ -42,7 +43,7 @@ export class FocusManager {
   }
 
   autoFocus() {
-    if (this.focusAbleContainers.length === 0 || this.autoFocusDisabled) {
+    if (this.focusAbleContainers.length === 0 || this.autoFocusDisabled || isGlobalAutoFocusDisabled(this.parent)) {
       return;
     }
     this.forceAutoFocus();
