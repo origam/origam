@@ -1,40 +1,16 @@
-import {action, observable} from "mobx";
+import {action } from "mobx";
 import FlexSearch from "flexsearch";
 import _ from "lodash";
 import {IClientFullTextSearch} from "./types/IClientFulltextSearch";
-import {IMenuItemIcon} from "../../gui/Workbench/MainMenu/MainMenu";
 import { IMenuSearchResult } from "./types/ISearchResult";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
-class SearchResultItem implements IMenuSearchResult {
-  constructor(
-    public id: string,
-    public type: string,
-    public icon: IMenuItemIcon,
-    public label: string,
-    public description: string,
-    public node: any,
-    public onClick: ()=> void
-  ) {}
-}
-
-function makeMenuPath(node: any) {
-  const path: string[] = [];
-  let cn = node;
-  while (cn !== undefined) {
-    path.push(cn);
-    cn = cn.parent;
-  }
-  path.reverse();
-  return path.slice(2); // Strip out root and Menu node
-}
 
 export class ClientFullTextSearch implements IClientFullTextSearch {
   parent?: any;
   index: any;
 
   @action.bound onSearchFieldChange(searchTerm: string) {
-    console.log("searchTerm: "+ searchTerm)
     if(searchTerm.trim() === ""){
       this.subscriber?.([]);
       return;
@@ -47,44 +23,40 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
   @action.bound doSearchTermImm(term: string) {
     if (!this.index) return;
     const searchResults = 
-        this.index.search(term).map((res: any) => {
-          switch (res.name) {
+        this.index.search(term).map((node: any) => {
+          switch (node.name) {
             case "Submenu":
-              return new SearchResultItem(
-                res.attributes.id,
-                "Submenu",
-                res.attributes.icon,
-                res.attributes.label,
-                makeMenuPath(res)
-                  .map((n: any) => n.attributes.label)
-                  .join(" > "),
-                res,
-                ()=>{
+              return {
+                id: node.attributes.id,
+                type: "Submenu",
+                icon: node.attributes.icon,
+                label: node.attributes.label,
+                description: "",
+                node: node,
+                onClick: ()=>{
                   onMainMenuItemClick(this)({
                     event: null,
-                    item: res,
+                    item: node,
                     idParameter: undefined,
                   })
                 }
-              );
+              };
             case "Command":
-              return new SearchResultItem(
-                res.attributes.id,
-                "Command",
-                res.attributes.icon,
-                res.attributes.label,
-                makeMenuPath(res)
-                  .map((n: any) => n.attributes.label)
-                  .join(" > "),
-                res,
-                ()=>{
+              return {
+                id: node.attributes.id,
+                type: "Command",
+                icon: node.attributes.icon,
+                label: node.attributes.label,
+                description: "",
+                node: node,
+                onClick: ()=>{
                   onMainMenuItemClick(this)({
                     event: null,
-                    item: res,
+                    item: node,
                     idParameter: undefined,
                   })
                 }
-              );
+              };
           }
         })
       this.subscriber?.(searchResults);
