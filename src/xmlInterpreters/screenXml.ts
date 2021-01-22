@@ -382,9 +382,6 @@ export function* interpretScreenXml(
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
         .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
 
-      if (dataView.attributes.Id === "AsPanel7_30") {
-        // debugger;
-      }
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
