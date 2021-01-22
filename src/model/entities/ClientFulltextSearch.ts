@@ -4,6 +4,7 @@ import _ from "lodash";
 import {IClientFullTextSearch} from "./types/IClientFulltextSearch";
 import {IMenuItemIcon} from "../../gui/Workbench/MainMenu/MainMenu";
 import { IMenuSearchResult } from "./types/ISearchResult";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 class SearchResultItem implements IMenuSearchResult {
   constructor(
@@ -12,7 +13,8 @@ class SearchResultItem implements IMenuSearchResult {
     public icon: IMenuItemIcon,
     public label: string,
     public description: string,
-    public node: any
+    public node: any,
+    public onClick: ()=> void
   ) {}
 }
 
@@ -29,7 +31,6 @@ function makeMenuPath(node: any) {
 
 export class ClientFullTextSearch implements IClientFullTextSearch {
   parent?: any;
-  // @observable foundItems: ISearchResultSection[] = [];
   @observable  searchResults: IMenuSearchResult[] = [];
   index: any;
 
@@ -54,7 +55,14 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
                 makeMenuPath(res)
                   .map((n: any) => n.attributes.label)
                   .join(" > "),
-                res
+                res,
+                ()=>{
+                  onMainMenuItemClick(this)({
+                    event: null,
+                    item: res,
+                    idParameter: undefined,
+                  })
+                }
               );
             case "Command":
               return new SearchResultItem(
@@ -65,11 +73,17 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
                 makeMenuPath(res)
                   .map((n: any) => n.attributes.label)
                   .join(" > "),
-                res
+                res,
+                ()=>{
+                  onMainMenuItemClick(this)({
+                    event: null,
+                    item: res,
+                    idParameter: undefined,
+                  })
+                }
               );
           }
         })
-      // );
   }
 
   @action.bound

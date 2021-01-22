@@ -6,12 +6,13 @@ import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { observable } from "mobx";
 import { getApi } from "model/selectors/getApi";
-import { ISearchResult, IServerSearchResult } from "model/entities/types/ISearchResult";
+import { IMenuSearchResult, ISearchResult, IServerSearchResult } from "model/entities/types/ISearchResult";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getClientFullTextSearch } from "model/selectors/getClientFulltextSearch";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
+import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -46,12 +47,14 @@ export class SearchDialog extends React.Component<{
     }
   }
 
-  onItemClick(searchResult: IServerSearchResult){
+  onItemServerClick(searchResult: IServerSearchResult){
     this.props.onSearchResultsChange(this.groups);
     onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
-    this.props.onCloseClick();
   }
 
+  onResultItemClick(){
+    this.props.onCloseClick();
+  }
 
   searchOnServer(){
     if(!this.value.trim()){
@@ -66,7 +69,7 @@ export class SearchDialog extends React.Component<{
         const searchResults = await api.search(this.value);
         for (const searchResult of searchResults) {
           searchResult.icon = IMenuItemIcon.Form;
-          searchResult.onClick = ()=> this.onItemClick(searchResult);
+          searchResult.onClick = ()=> this.onItemServerClick(searchResult);
         }
         const groupMap =  searchResults.groupBy((item:IServerSearchResult) => item.group);  
         this.groups = Array.from(groupMap.keys())
@@ -125,6 +128,7 @@ export class SearchDialog extends React.Component<{
                     key={"Menu"} 
                     name={"Menu"} 
                     results={this.menuSearch.searchResults}
+                    onResultItemClick={()=> this.onResultItemClick()}
                 />
               }
               {this.groups.length > 0 && 
@@ -134,7 +138,8 @@ export class SearchDialog extends React.Component<{
                       key={group.name} 
                       name={group.name} 
                       results={group.results}
-                    />) 
+                      onResultItemClick={()=> this.onResultItemClick()}
+                      />) 
               }
             </div>
           }
@@ -148,6 +153,7 @@ export class SearchDialog extends React.Component<{
 export class ResultGroup extends React.Component<{
   name: string;
   results: ISearchResult[];
+  onResultItemClick: ()=> void;
 }> {
   @observable
   isExpanded = true;
@@ -174,6 +180,7 @@ export class ResultGroup extends React.Component<{
             <ResultItem 
               result={result} 
               key={result.label + result.description}
+              onResultItemClick={()=> this.props.onResultItemClick()}
             /> )}
         </div>
       </div>
@@ -184,11 +191,17 @@ export class ResultGroup extends React.Component<{
 @observer
 export class ResultItem extends React.Component<{
   result: ISearchResult;
+  onResultItemClick: ()=> void;
 }> {
+
+  onClick(){
+    this.props.result.onClick();
+    this.props.onResultItemClick();
+  }
 
   render() {
     return (
-      <div className={S.resultIemRow} onClick={() => this.props.result.onClick()} >
+      <div className={S.resultIemRow} onClick={() => this.onClick()} >
         <div className={S.itemIcon}>
           <Icon src="./icons/document.svg" />
         </div>
