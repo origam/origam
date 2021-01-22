@@ -7,7 +7,7 @@ import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
-import { getSearcher } from "model/selectors/getClientFulltextSearch";
+import { getSearcher } from "model/selectors/getSearcher";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";

@@ -1,6 +1,6 @@
 import { Workbench } from "../entities/Workbench";
 
-import { Searcher } from "../entities/ClientFulltextSearch";
+import { Searcher } from "../entities/Searcher";
 import { WorkbenchLifecycle } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import { MainMenuEnvelope } from "../entities/MainMenu";
 import { OpenedScreens } from "model/entities/OpenedScreens";

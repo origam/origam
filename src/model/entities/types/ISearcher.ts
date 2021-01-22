@@ -1,3 +1,4 @@
+import { IMenuSearchResult, ISearchResult } from './ISearchResult';
 import { ISearchResultGroup } from './ISearchResultGroup';
 
 export interface ISearcher {

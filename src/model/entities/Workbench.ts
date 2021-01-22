@@ -2,7 +2,7 @@ import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
 import { IMainMenuEnvelope } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
 import { action, computed, observable } from "mobx";
-import { ISearcher } from "./types/IClientFulltextSearch";
+import { ISearcher } from "./types/ISearcher";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IWorkQueues } from "./types/IWorkQueues";
 import { IRecordInfo } from "./types/IRecordInfo";
@@ -59,13 +59,4 @@ export class Workbench implements IWorkbench {
   }
 
   parent?: any;
-
-  /*@action.bound setMainMenu(mainMenu: ILoadingMainMenu | IMainMenu) {
-    this.mainMenu = mainMenu;
-    if (!mainMenu.isLoading) {
-      this.clientFulltextSearch.indexMainMenu((mainMenu as IMainMenu).menuUI);
-    }
-
-    mainMenu.parent = this;
-  }*/
 }

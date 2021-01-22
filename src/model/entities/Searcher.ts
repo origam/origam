@@ -1,7 +1,7 @@
 import {action, computed, observable } from "mobx";
 import FlexSearch from "flexsearch";
 import _ from "lodash";
-import {ISearcher} from "./types/IClientFulltextSearch";
+import {ISearcher} from "./types/ISearcher";
 import { IServerSearchResult } from "./types/ISearchResult";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";

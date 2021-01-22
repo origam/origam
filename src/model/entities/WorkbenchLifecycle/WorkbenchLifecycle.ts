@@ -5,7 +5,7 @@ import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelo
 import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getApi } from "model/selectors/getApi";
-import { getSearcher } from "model/selectors/getClientFulltextSearch";
+import { getSearcher } from "model/selectors/getSearcher";
 import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 import { getMainMenuEnvelope } from "model/selectors/MainMenu/getMainMenuEnvelope";
 import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";

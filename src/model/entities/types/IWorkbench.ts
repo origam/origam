@@ -1,6 +1,6 @@
 import { IMainMenuEnvelope } from "./IMainMenu";
 import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
-import { ISearcher as ISearcher } from "./IClientFulltextSearch";
+import { ISearcher as ISearcher } from "./ISearcher";
 import { IOpenedScreens } from "./IOpenedScreens";
 import { IWorkQueues } from "./IWorkQueues";
 import { IRecordInfo } from "./IRecordInfo";
