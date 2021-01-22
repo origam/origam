@@ -4,14 +4,10 @@ import React from "react";
 import { T } from "utils/translation";
 import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
-import { computed, observable } from "mobx";
-import { getApi } from "model/selectors/getApi";
-import { ISearchResult, IServerSearchResult } from "model/entities/types/ISearchResult";
-import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { observable } from "mobx";
+import { ISearchResult } from "model/entities/types/ISearchResult";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getSearcher } from "model/selectors/getClientFulltextSearch";
-import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -26,31 +22,12 @@ export class SearchDialog extends React.Component<{
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
-  menuSearch = getSearcher(this.props.ctx);
-  dispose: ()=> void;
-
-  constructor(props: any){
-    super(props);
-    this.dispose = this.menuSearch.subscribeToResultsChange((results) => this.menuResultGroup = {name: "Menu", results: results});
-  }
-  @observable
-  serverResultGroups: ISearchResultGroup[] = [];
-  
-  @observable
-  menuResultGroup: ISearchResultGroup | undefined = undefined;
-
-  @computed
-  get resultGroups(){
-    return this.menuResultGroup && this.menuResultGroup.results.length > 0 
-      ? [this.menuResultGroup, ...this.serverResultGroups]
-      : this.serverResultGroups;
-  }
+  searcher = getSearcher(this.props.ctx);
 
   @observable
   value = "";
 
   timeout: NodeJS.Timeout | undefined;
-
 
   componentDidMount(){
     this.input?.focus();
@@ -62,42 +39,14 @@ export class SearchDialog extends React.Component<{
     }
   }
 
-  onItemServerClick(searchResult: IServerSearchResult){
-    onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
-  }
-
   onResultItemClick(){
-    this.props.onSearchResultsChange(this.resultGroups);
-    this.dispose();
+    this.props.onSearchResultsChange(this.searcher.resultGroups);
     this.props.onCloseClick();
-  }
-
-  searchOnServer(){
-    if(!this.value.trim()){
-      this.serverResultGroups = [];
-      return;
-    }
-    runInFlowWithHandler({
-      ctx: this.props.ctx, 
-      action : async ()=> 
-      {
-        const api = getApi(this.props.ctx);
-        const searchResults = await api.search(this.value);
-        for (const searchResult of searchResults) {
-          searchResult.icon = IMenuItemIcon.Form;
-          searchResult.onClick = ()=> this.onItemServerClick(searchResult);
-        }
-        const groupMap =  searchResults.groupBy((item:IServerSearchResult) => item.group);  
-        this.serverResultGroups = Array.from(groupMap.keys())
-                .sort()
-                .map(name => { return {name: name, results: groupMap.get(name)!}})
-      } 
-    });
   }
 
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      this. searchOnServer();
+      this.searcher.searchOnServer();
       return;
     }
     if(this.timeout)
@@ -106,13 +55,13 @@ export class SearchDialog extends React.Component<{
     }
     this.timeout = setTimeout(()=>{
       this.timeout = undefined;
-      this.searchOnServer();
+      this.searcher.searchOnServer();
     }, DELAY_BEFORE_SERVER_SEARCH_MS)
   }
 
   onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     this.value = event.target.value;
-    this.menuSearch.onSearchFieldChange(this.value);
+    this.searcher.onSearchFieldChange(this.value);
   }
 
   render() {
@@ -136,9 +85,9 @@ export class SearchDialog extends React.Component<{
               onChange={(event) => this.onInputChange(event)}
             />
           </div>
-          {(this.resultGroups.length > 0 ) &&
+          {(this.searcher.resultGroups.length > 0 ) &&
             <div className={S.resultArea}>
-              {this.resultGroups
+              {this.searcher.resultGroups
                 .map(group=> 
                   <ResultGroup 
                     name={group.name} 
