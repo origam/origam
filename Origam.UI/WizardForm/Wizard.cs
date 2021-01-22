@@ -25,7 +25,7 @@ namespace Origam.UI.WizardForm
         }
         private void InitData()
         {
-            lbTitle.Text = "The Wizard will create this elements necesary for the function of a menu:";
+            lbTitle.Text = "The Wizard will create following elements necessary for the function of the menu:";
             listView1.View = View.List;
             listView1.SmallImageList = iwizard.ImageList;
             listView1.StateImageList = iwizard.ImageList;
