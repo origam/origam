@@ -31,7 +31,7 @@ function makeMenuPath(node: any) {
 
 export class ClientFullTextSearch implements IClientFullTextSearch {
   parent?: any;
-  @observable  searchResults: IMenuSearchResult[] = [];
+  searchResults: IMenuSearchResult[] = [];
   index: any;
 
   @action.bound onSearchFieldChange(searchTerm: string) {
@@ -42,7 +42,6 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
 
   @action.bound doSearchTermImm(term: string) {
     if (!this.index) return;
-    this.triggerOpenSearchSection();
     this.searchResults = 
         this.index.search(term).map((res: any) => {
           switch (res.name) {
@@ -84,6 +83,7 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
               );
           }
         })
+      this.subscriber?.(this.searchResults);
   }
 
   @action.bound
@@ -118,19 +118,29 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
     this.index.add(documents);
   }
 
-  openSearchSectionHandlers: Map<number, () => void> = new Map();
-  openSearchSectionHandlersId = 0;
+  subscriber: ((searchResults: IMenuSearchResult[]) => void) | undefined;
 
-  @action.bound
-  subscribeOpenSearchSection(open: () => void): () => void {
-    const myId = this.openSearchSectionHandlersId++;
-    this.openSearchSectionHandlers.set(myId, open);
-    return () => this.openSearchSectionHandlers.delete(myId);
+  subscribeToResultsChange(subscriber: (searchResults: IMenuSearchResult[])=> void){
+    this.subscriber = subscriber;
+    return ()=> this.subscriber = undefined;
   }
 
-  @action.bound triggerOpenSearchSection() {
-    for (let handler of this.openSearchSectionHandlers.values()) {
-      handler();
-    }
-  }
+
+
+
+  // openSearchSectionHandlers: Map<number, () => void> = new Map();
+  // openSearchSectionHandlersId = 0;
+
+  // @action.bound
+  // subscribeOpenSearchSection(open: () => void): () => void {
+  //   const myId = this.openSearchSectionHandlersId++;
+  //   this.openSearchSectionHandlers.set(myId, open);
+  //   return () => this.openSearchSectionHandlers.delete(myId);
+  // }
+
+  // @action.bound triggerOpenSearchSection() {
+  //   for (let handler of this.openSearchSectionHandlers.values()) {
+  //     handler();
+  //   }
+  // }
 }

@@ -5,8 +5,7 @@ export interface IClientFullTextSearch {
   onSearchFieldChange(searchTerm: string): void;
   clearResults(): void;
   indexMainMenu(mainMenu: any): void;
-
-  subscribeOpenSearchSection(open: () => void): () => void;
+  subscribeToResultsChange(subscriber: (searchResults: IMenuSearchResult[])=> void): ()=> void;
 
   parent?: any;
 }

@@ -4,7 +4,7 @@ import React from "react";
 import { T } from "utils/translation";
 import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import { getApi } from "model/selectors/getApi";
 import { IMenuSearchResult, ISearchResult, IServerSearchResult } from "model/entities/types/ISearchResult";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
@@ -28,14 +28,30 @@ export class SearchDialog extends React.Component<{
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
   menuSearch = getClientFullTextSearch(this.props.ctx);
+  dispose: ()=> void;
+
+  constructor(props: any){
+    super(props);
+    this.dispose = this.menuSearch.subscribeToResultsChange((results) => this.menuResultGroup = {name: "Menu", results: results});
+  }
+  @observable
+  serverResultGroups: ISearchResultGroup[] = [];
   
+  @observable
+  menuResultGroup: ISearchResultGroup | undefined = undefined;
+
+  @computed
+  get resultGroups(){
+    return this.menuResultGroup 
+      ? [this.menuResultGroup, ...this.serverResultGroups]
+      : this.serverResultGroups;
+  }
+
   @observable
   value = "";
 
   timeout: NodeJS.Timeout | undefined;
 
-  @observable
-  groups: ISearchResultGroup[] = [];
 
   componentDidMount(){
     this.input?.focus();
@@ -48,17 +64,18 @@ export class SearchDialog extends React.Component<{
   }
 
   onItemServerClick(searchResult: IServerSearchResult){
-    this.props.onSearchResultsChange(this.groups);
     onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
   }
 
   onResultItemClick(){
+    this.props.onSearchResultsChange(this.resultGroups);
+    this.dispose();
     this.props.onCloseClick();
   }
 
   searchOnServer(){
     if(!this.value.trim()){
-      this.groups = [];
+      this.serverResultGroups = [];
       return;
     }
     runInFlowWithHandler({
@@ -72,7 +89,7 @@ export class SearchDialog extends React.Component<{
           searchResult.onClick = ()=> this.onItemServerClick(searchResult);
         }
         const groupMap =  searchResults.groupBy((item:IServerSearchResult) => item.group);  
-        this.groups = Array.from(groupMap.keys())
+        this.serverResultGroups = Array.from(groupMap.keys())
                 .sort()
                 .map(name => { return {name: name, results: groupMap.get(name)!}})
       } 
@@ -121,18 +138,18 @@ export class SearchDialog extends React.Component<{
               onChange={(event) => this.onChange(event)}
             />
           </div>
-          {(this.groups.length > 0 || this.menuSearch.searchResults.length > 0) &&
+          {(this.resultGroups.length > 0 ) &&
             <div className={S.resultArea}>
-              {this.menuSearch.searchResults.length > 0 &&
+              {/* {this.menuSearch.searchResults.length > 0 &&
                 <ResultGroup 
                     key={"Menu"} 
                     name={"Menu"} 
                     results={this.menuSearch.searchResults}
                     onResultItemClick={()=> this.onResultItemClick()}
                 />
-              }
-              {this.groups.length > 0 && 
-                this.groups
+              } */}
+              {this.resultGroups.length > 0 && 
+                this.resultGroups
                   .map(group=> 
                     <ResultGroup 
                       key={group.name} 
@@ -195,8 +212,8 @@ export class ResultItem extends React.Component<{
 }> {
 
   onClick(){
-    this.props.result.onClick();
     this.props.onResultItemClick();
+    this.props.result.onClick();
   }
 
   render() {
