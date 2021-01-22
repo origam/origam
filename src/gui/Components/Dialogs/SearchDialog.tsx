@@ -6,14 +6,12 @@ import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { computed, observable } from "mobx";
 import { getApi } from "model/selectors/getApi";
-import { IMenuSearchResult, ISearchResult, IServerSearchResult } from "model/entities/types/ISearchResult";
+import { ISearchResult, IServerSearchResult } from "model/entities/types/ISearchResult";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getSearcher } from "model/selectors/getClientFulltextSearch";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
-import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-import { uuidv4 } from "utils/uuid";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -143,7 +141,6 @@ export class SearchDialog extends React.Component<{
               {this.resultGroups
                 .map(group=> 
                   <ResultGroup 
-                    key={group.name} 
                     name={group.name} 
                     results={group.results}
                     onResultItemClick={()=> this.onResultItemClick()}
@@ -165,14 +162,6 @@ export class ResultGroup extends React.Component<{
 }> {
   @observable
   isExpanded = true;
-
-  items: any =[];
-
-  componentWillMount() {
-    this.items = this.props.results.map(item => { 
-      return {id: uuidv4(), result: item};
-    });
-  }
   
   onGroupClick() {
     this.isExpanded = !this.isExpanded;
@@ -192,12 +181,12 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-          {this.isExpanded && this.items.map((item: any) => 
+        {this.isExpanded && this.props.results.map(result => 
             <ResultItem 
-              result={item.result} 
-              key={item.id}
+              result={result} 
               onResultItemClick={()=> this.props.onResultItemClick()}
-            /> )}
+              />)
+        }
         </div>
       </div>
     );
