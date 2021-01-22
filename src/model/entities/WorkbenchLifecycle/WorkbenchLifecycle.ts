@@ -5,7 +5,7 @@ import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelo
 import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getApi } from "model/selectors/getApi";
-import { getClientFullTextSearch } from "model/selectors/getClientFulltextSearch";
+import { getSearcher } from "model/selectors/getClientFulltextSearch";
 import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 import { getMainMenuEnvelope } from "model/selectors/MainMenu/getMainMenuEnvelope";
 import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
@@ -467,7 +467,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     assignIIds(menuUI);
     getFavorites(this).setXml(portalInfo.favorites);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
-    getClientFullTextSearch(this).indexMainMenu(menuUI);
+    getSearcher(this).indexMainMenu(menuUI);
 
     if (!DEBUG_CLOSE_ALL_FORMS()) {
       for (let session of portalInfo.sessions) {

@@ -1,6 +1,6 @@
 import { IMainMenuEnvelope } from "./IMainMenu";
 import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
-import { IClientFullTextSearch as IClientFullTextSearch } from "./IClientFulltextSearch";
+import { ISearcher as ISearcher } from "./IClientFulltextSearch";
 import { IOpenedScreens } from "./IOpenedScreens";
 import { IWorkQueues } from "./IWorkQueues";
 import { IRecordInfo } from "./IRecordInfo";
@@ -14,7 +14,7 @@ import { SidebarState } from "../SidebarState";
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
   workbenchLifecycle: IWorkbenchLifecycle;
-  clientFullTextSearch: IClientFullTextSearch;
+  searcher: ISearcher;
   openedScreens: IOpenedScreens;
   openedDialogScreens: IOpenedScreens;
   workQueues: IWorkQueues;

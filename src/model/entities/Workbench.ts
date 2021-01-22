@@ -2,7 +2,7 @@ import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
 import { IMainMenuEnvelope } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
 import { action, computed, observable } from "mobx";
-import { IClientFullTextSearch } from "./types/IClientFulltextSearch";
+import { ISearcher } from "./types/IClientFulltextSearch";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IWorkQueues } from "./types/IWorkQueues";
 import { IRecordInfo } from "./types/IRecordInfo";
@@ -19,7 +19,7 @@ export class Workbench implements IWorkbench {
   constructor(data: IWorkbenchData) {
     Object.assign(this, data);
     this.workbenchLifecycle.parent = this;
-    this.clientFullTextSearch.parent = this;
+    this.searcher.parent = this;
     this.openedScreens.parent = this;
     this.openedDialogScreens.parent = this;
     this.workQueues.parent = this;
@@ -31,7 +31,7 @@ export class Workbench implements IWorkbench {
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
-  clientFullTextSearch: IClientFullTextSearch = null as any;
+  searcher: ISearcher = null as any;
   mainMenuEnvelope: IMainMenuEnvelope = null as any;
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;

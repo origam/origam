@@ -1,12 +1,12 @@
 import {action } from "mobx";
 import FlexSearch from "flexsearch";
 import _ from "lodash";
-import {IClientFullTextSearch} from "./types/IClientFulltextSearch";
+import {ISearcher} from "./types/IClientFulltextSearch";
 import { IMenuSearchResult } from "./types/ISearchResult";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 
 
-export class ClientFullTextSearch implements IClientFullTextSearch {
+export class Searcher implements ISearcher {
   parent?: any;
   index: any;
 

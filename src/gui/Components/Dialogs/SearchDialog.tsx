@@ -10,7 +10,7 @@ import { IMenuSearchResult, ISearchResult, IServerSearchResult } from "model/ent
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
-import { getClientFullTextSearch } from "model/selectors/getClientFulltextSearch";
+import { getSearcher } from "model/selectors/getClientFulltextSearch";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { uuidv4 } from "utils/uuid";
@@ -28,7 +28,7 @@ export class SearchDialog extends React.Component<{
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
-  menuSearch = getClientFullTextSearch(this.props.ctx);
+  menuSearch = getSearcher(this.props.ctx);
   dispose: ()=> void;
 
   constructor(props: any){
