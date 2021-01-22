@@ -35,4 +35,8 @@ export class DialogStack implements IDialogStack {
       this.stackedDialogs.splice(index, 1);
     }
   }
+
+  isOpen(key: string) {
+    return this.stackedDialogs.findIndex(info => info.key === key) !== -1;
+  }
 }

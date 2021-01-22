@@ -10,6 +10,7 @@ export interface IDialogStack {
     closeOnClickOutside?: boolean
   ): () => void;
   closeDialog(key: string): void;
+  isOpen(key: string): boolean;
   isAnyDialogShown: boolean;
   parent?: any;
 }

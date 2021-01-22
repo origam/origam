@@ -12,6 +12,7 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
+export const SEARCH_DIALOG_KEY = "Search Dialog";
 
 @observer
 export class SearchDialog extends React.Component<{
