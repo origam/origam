@@ -13,6 +13,7 @@ import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getClientFullTextSearch } from "model/selectors/getClientFulltextSearch";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import { uuidv4 } from "utils/uuid";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -42,7 +43,7 @@ export class SearchDialog extends React.Component<{
 
   @computed
   get resultGroups(){
-    return this.menuResultGroup 
+    return this.menuResultGroup && this.menuResultGroup.results.length > 0 
       ? [this.menuResultGroup, ...this.serverResultGroups]
       : this.serverResultGroups;
   }
@@ -109,12 +110,11 @@ export class SearchDialog extends React.Component<{
       this.timeout = undefined;
       this.searchOnServer();
     }, DELAY_BEFORE_SERVER_SEARCH_MS)
-
-    this.menuSearch.onSearchFieldChange((event.target as any).value);
   }
 
-  onChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     this.value = event.target.value;
+    this.menuSearch.onSearchFieldChange(this.value);
   }
 
   render() {
@@ -135,28 +135,19 @@ export class SearchDialog extends React.Component<{
               className={S.input}
               placeholder={T("Search for anything here", "type_search_here")}
               onKeyDown={(event) => this.onInputKeyDown(event)}
-              onChange={(event) => this.onChange(event)}
+              onChange={(event) => this.onInputChange(event)}
             />
           </div>
           {(this.resultGroups.length > 0 ) &&
             <div className={S.resultArea}>
-              {/* {this.menuSearch.searchResults.length > 0 &&
-                <ResultGroup 
-                    key={"Menu"} 
-                    name={"Menu"} 
-                    results={this.menuSearch.searchResults}
+              {this.resultGroups
+                .map(group=> 
+                  <ResultGroup 
+                    key={group.name} 
+                    name={group.name} 
+                    results={group.results}
                     onResultItemClick={()=> this.onResultItemClick()}
-                />
-              } */}
-              {this.resultGroups.length > 0 && 
-                this.resultGroups
-                  .map(group=> 
-                    <ResultGroup 
-                      key={group.name} 
-                      name={group.name} 
-                      results={group.results}
-                      onResultItemClick={()=> this.onResultItemClick()}
-                      />) 
+                    />) 
               }
             </div>
           }

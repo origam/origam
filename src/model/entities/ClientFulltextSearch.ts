@@ -31,10 +31,14 @@ function makeMenuPath(node: any) {
 
 export class ClientFullTextSearch implements IClientFullTextSearch {
   parent?: any;
-  searchResults: IMenuSearchResult[] = [];
   index: any;
 
   @action.bound onSearchFieldChange(searchTerm: string) {
+    console.log("searchTerm: "+ searchTerm)
+    if(searchTerm.trim() === ""){
+      this.subscriber?.([]);
+      return;
+    }
     this.doSearchTerm(searchTerm);
   }
 
@@ -42,7 +46,7 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
 
   @action.bound doSearchTermImm(term: string) {
     if (!this.index) return;
-    this.searchResults = 
+    const searchResults = 
         this.index.search(term).map((res: any) => {
           switch (res.name) {
             case "Submenu":
@@ -83,13 +87,9 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
               );
           }
         })
-      this.subscriber?.(this.searchResults);
+      this.subscriber?.(searchResults);
   }
 
-  @action.bound
-  clearResults(): void {
-    this.searchResults.length = 0;
-  }
 
   @action.bound
   indexMainMenu(mainMenu: any) {
@@ -124,23 +124,4 @@ export class ClientFullTextSearch implements IClientFullTextSearch {
     this.subscriber = subscriber;
     return ()=> this.subscriber = undefined;
   }
-
-
-
-
-  // openSearchSectionHandlers: Map<number, () => void> = new Map();
-  // openSearchSectionHandlersId = 0;
-
-  // @action.bound
-  // subscribeOpenSearchSection(open: () => void): () => void {
-  //   const myId = this.openSearchSectionHandlersId++;
-  //   this.openSearchSectionHandlers.set(myId, open);
-  //   return () => this.openSearchSectionHandlers.delete(myId);
-  // }
-
-  // @action.bound triggerOpenSearchSection() {
-  //   for (let handler of this.openSearchSectionHandlers.values()) {
-  //     handler();
-  //   }
-  // }
 }
