@@ -4,20 +4,26 @@ import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSid
 import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
 import { onSidebarInfoSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
 import { getWorkbench } from "model/selectors/getWorkbench";
-import { ISearchResult } from "./types/ISearchResult";
+import { ISearchResultGroup } from "./types/ISearchResultGroup";
 
 export class SidebarState {
   
   @observable 
-  searchResults: ISearchResult[] = [];
+  searchResultGroups: ISearchResultGroup[]= [];
   
   @observable
-   _activeSection = "Menu";
+  _activeSection = "Menu";
 
-   @observable
-   activeInfoSubsection = IInfoSubsection.Info;
+  @observable
+  activeInfoSubsection = IInfoSubsection.Info;
 
-   parent: any;
+  parent: any;
+
+  get resultCount(){ 
+    return this.searchResultGroups.length === 0 
+      ? 0 
+      : this.searchResultGroups.map(group => group.results.length).reduce((x,y) => x + y);
+  }
 
   get activeSection() {
     return this._activeSection;
@@ -40,8 +46,8 @@ export class SidebarState {
   }
 
   @action
-  onSearchResultsChange(results: ISearchResult[]) {
-    this.searchResults = results;
+  onSearchResultsChange(results: ISearchResultGroup[]) {
+    this.searchResultGroups = results;
     this.activeSection = "Search";
   }
 }

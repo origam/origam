@@ -9,6 +9,7 @@ import { getApi } from "model/selectors/getApi";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 
@@ -16,7 +17,7 @@ const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export class SearchDialog extends React.Component<{
   ctx: any;
   onCloseClick: () => void;
-  onSearchResultsChange: (results: ISearchResult[]) => void;
+  onSearchResultsChange: (groups: ISearchResultGroup[]) => void;
 }> {
 
   input: HTMLInputElement | undefined;
@@ -28,9 +29,7 @@ export class SearchDialog extends React.Component<{
   timeout: NodeJS.Timeout | undefined;
 
   @observable
-  groups: Map<string, ISearchResult[]> = new Map();
-
-  searchResults: ISearchResult[]=[];
+  groups: ISearchResultGroup[] = [];
 
   componentDidMount(){
     this.input?.focus();
@@ -43,7 +42,7 @@ export class SearchDialog extends React.Component<{
   }
 
   onItemClick(searchResult: ISearchResult){
-    this.props.onSearchResultsChange(this.searchResults);
+    this.props.onSearchResultsChange(this.groups);
     onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
     this.props.onCloseClick();
   }
@@ -51,8 +50,7 @@ export class SearchDialog extends React.Component<{
 
   searchOnServer(){
     if(!this.value.trim()){
-      this.searchResults = [];
-      this.groups = new Map();
+      this.groups = [];
       return;
     }
     runInFlowWithHandler({
@@ -60,8 +58,11 @@ export class SearchDialog extends React.Component<{
       action : async ()=> 
       {
         const api = getApi(this.props.ctx);
-        this.searchResults = await api.search(this.value);
-        this.groups = this.searchResults.groupBy((item:ISearchResult) => item.group);  
+        const searchResults = await api.search(this.value);
+        const groupMap =  searchResults.groupBy((item:ISearchResult) => item.group);  
+        this.groups = Array.from(groupMap.keys())
+                .sort()
+                .map(name => { return {name: name, results: groupMap.get(name)!}})
       } 
     });
   }
@@ -106,15 +107,14 @@ export class SearchDialog extends React.Component<{
               onChange={(event) => this.onChange(event)}
             />
           </div>
-          {this.groups.size > 0 &&
+          {this.groups.length > 0 &&
             <div className={S.resultArea}>
-              {Array.from(this.groups.keys())
-                .sort()
-                .map(groupName => 
+              {this.groups
+                .map(group=> 
                   <ResultGroup 
-                    key={groupName} 
-                    name={groupName} 
-                    results={this.groups.get(groupName)!} 
+                    key={group.name} 
+                    name={group.name} 
+                    results={group.results} 
                     onItemClick={(result: ISearchResult) => this.onItemClick(result)}
                   />) 
               }

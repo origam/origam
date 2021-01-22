@@ -13,7 +13,7 @@ export function openSearchWindow(ctx: any) {
     <SearchDialog 
       ctx={ctx} 
       onCloseClick={() => closeDialog()}
-      onSearchResultsChange={(results: ISearchResult[]) => sidebarState.onSearchResultsChange(results)}
+      onSearchResultsChange={(groups) => sidebarState.onSearchResultsChange(groups)}
     />,
     undefined,
     true

@@ -210,14 +210,14 @@ export class CSidebar extends React.Component {
             icon={
               <Icon
                 src="./icons/search.svg"
-                tooltip={T("Search", "search_result", this.sidebarState.searchResults.length)}
+                tooltip={T("Search", "search_result", this.sidebarState.resultCount)}
               />
             }
-            label={T("Search", "search_result", this.sidebarState.searchResults.length)}
+            label={T("Search", "search_result", this.sidebarState.resultCount)}
             onClick={() => (this.sidebarState.activeSection = "Search")}
           />
           <SidebarSectionBody isActive={this.sidebarState.activeSection === "Search"}>
-            <SearchResults results={this.sidebarState.searchResults}/>
+            <SearchResults groups={this.sidebarState.searchResultGroups} ctx={this.workbench}/>
           </SidebarSectionBody>
           <SidebarSectionDivider/>
         </SidebarSection>
