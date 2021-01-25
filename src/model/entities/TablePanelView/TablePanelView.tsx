@@ -150,7 +150,7 @@ export class TablePanelView implements ITablePanelView {
   *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox" || !isControlInteraction) {
-      if (property.isLink && (event.ctrlKey || event.metaKey)) {
+      if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
         yield* getDataView(this).navigateLookupLink(property, row);
       } else {
         if (
