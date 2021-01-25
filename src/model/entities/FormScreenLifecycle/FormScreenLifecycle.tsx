@@ -122,6 +122,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onSaveSession(): Generator<unknown, any, unknown> {
+    yield* this.flushData();
     yield* this.saveSession();
   }
 
@@ -669,7 +670,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (!updateData || updateData.length === 0) {
       return false;
     }
-    const api = getApi(this);
     const updateObjectResult = yield this.updateRequestAggregator.enqueue({
       SessionFormIdentifier: getSessionId(this),
       Entity: dataView.entity,
