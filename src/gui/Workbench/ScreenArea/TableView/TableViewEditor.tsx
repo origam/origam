@@ -40,7 +40,6 @@ import {
         row: row, 
         property: actualProperty, 
         value: value, 
-        forceFlush: false 
       }),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
     onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event),

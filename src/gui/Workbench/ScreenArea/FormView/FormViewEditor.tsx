@@ -35,7 +35,6 @@ import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEd
         row: row, 
         property: property, 
         value: value, 
-        forceFlush: property.column === "CheckBox" || property.column === "Checklist" 
       });
     },
   };

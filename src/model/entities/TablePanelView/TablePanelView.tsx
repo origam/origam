@@ -180,7 +180,6 @@ export class TablePanelView implements ITablePanelView {
           row: row, 
           property: property, 
           value: !getCellValue(this, row, property), 
-          forceFlush: false 
         });
       }
     }
