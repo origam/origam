@@ -19,6 +19,12 @@
   flex-grow: 1;
 }
 
+.resultsContainer{
+  float: left;
+  min-width: 500px;
+}
+
+
 .resultGroupRow {
   padding-left: 15px;
   font-weight: bold;
@@ -65,7 +71,8 @@
 }
 
 .itemIcon{
-  width: 20px;
+  min-width: 20px;
+  max-width: 20px;
   height: 20px;
 }
 
@@ -83,6 +90,7 @@
 }
 
 .itemContents{
+  white-space: nowrap;
   display: flex;
   align-items: center;
 }

@@ -1,6 +1,6 @@
 import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
-import { ISearchResult } from "model/entities/types/ISearchResult";
+import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
 
 export interface IApi {
@@ -19,8 +19,6 @@ export interface IApi {
   login(credentials: { UserName: string; Password: string }): Promise<string>;
 
   logout(): Promise<any>;
-
-  // getMenu(): Promise<any>;
 
   getScreen(id: string): Promise<any>;
 
@@ -367,7 +365,7 @@ export interface IApi {
 
   changes(data: { SessionFormIdentifier: string; Entity: string; RowId: string }): Promise<any[]>;
 
-  search(searchTerm: string): Promise<ISearchResult[]>;
+  search(searchTerm: string): Promise<IServerSearchResult[]>;
 
   setDefaultFilter(data: {
     SessionFormIdentifier: string;

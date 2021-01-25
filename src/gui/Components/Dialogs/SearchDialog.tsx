@@ -5,11 +5,10 @@ import { T } from "utils/translation";
 import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { observable } from "mobx";
-import { getApi } from "model/selectors/getApi";
 import { ISearchResult } from "model/entities/types/ISearchResult";
-import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
+import { getSearcher } from "model/selectors/getSearcher";
+import { getIconUrl } from "gui/getIconUrl";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -23,14 +22,13 @@ export class SearchDialog extends React.Component<{
 
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
-  
+
+  searcher = getSearcher(this.props.ctx);
+
   @observable
   value = "";
 
   timeout: NodeJS.Timeout | undefined;
-
-  @observable
-  groups: ISearchResultGroup[] = [];
 
   componentDidMount(){
     this.input?.focus();
@@ -42,35 +40,14 @@ export class SearchDialog extends React.Component<{
     }
   }
 
-  onItemClick(searchResult: ISearchResult){
-    this.props.onSearchResultsChange(this.groups);
-    onSearchResultClick(this.props.ctx)(searchResult.dataSourceLookupId, searchResult.referenceId)
+  onResultItemClick(){
+    this.props.onSearchResultsChange(this.searcher.resultGroups);
     this.props.onCloseClick();
-  }
-
-
-  searchOnServer(){
-    if(!this.value.trim()){
-      this.groups = [];
-      return;
-    }
-    runInFlowWithHandler({
-      ctx: this.props.ctx, 
-      action : async ()=> 
-      {
-        const api = getApi(this.props.ctx);
-        const searchResults = await api.search(this.value);
-        const groupMap =  searchResults.groupBy((item:ISearchResult) => item.group);  
-        this.groups = Array.from(groupMap.keys())
-                .sort()
-                .map(name => { return {name: name, results: groupMap.get(name)!}})
-      } 
-    });
   }
 
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      this. searchOnServer();
+      this.searcher.searchOnServer();
       return;
     }
     if(this.timeout)
@@ -79,12 +56,13 @@ export class SearchDialog extends React.Component<{
     }
     this.timeout = setTimeout(()=>{
       this.timeout = undefined;
-      this.searchOnServer();
+      this.searcher.searchOnServer();
     }, DELAY_BEFORE_SERVER_SEARCH_MS)
   }
 
-  onChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  onInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     this.value = event.target.value;
+    this.searcher.onSearchFieldChange(this.value);
   }
 
   render() {
@@ -105,20 +83,21 @@ export class SearchDialog extends React.Component<{
               className={S.input}
               placeholder={T("Search for anything here", "type_search_here")}
               onKeyDown={(event) => this.onInputKeyDown(event)}
-              onChange={(event) => this.onChange(event)}
+              onChange={(event) => this.onInputChange(event)}
             />
           </div>
-          {this.groups.length > 0 &&
+          {(this.searcher.resultGroups.length > 0 ) &&
             <div className={S.resultArea}>
-              {this.groups
-                .map(group=> 
-                  <ResultGroup 
-                    key={group.name} 
-                    name={group.name} 
-                    results={group.results} 
-                    onItemClick={(result: ISearchResult) => this.onItemClick(result)}
-                  />) 
-              }
+              <div className={S.resultsContainer}>
+                {this.searcher.resultGroups
+                  .map(group=> 
+                    <ResultGroup 
+                      name={group.name} 
+                      results={group.results}
+                      onResultItemClick={()=> this.onResultItemClick()}
+                      />) 
+                }
+              </div>
             </div>
           }
         </div>
@@ -131,14 +110,14 @@ export class SearchDialog extends React.Component<{
 export class ResultGroup extends React.Component<{
   name: string;
   results: ISearchResult[];
-  onItemClick: (result: ISearchResult) => void;
+  onResultItemClick: ()=> void;
 }> {
   @observable
   isExpanded = true;
-
+  
   onGroupClick() {
     this.isExpanded = !this.isExpanded;
-  }
+  } 
 
   render() {
     return (
@@ -154,12 +133,12 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-          {this.isExpanded && this.props.results.map(result => 
+        {this.isExpanded && this.props.results.map(result => 
             <ResultItem 
               result={result} 
-              onClick={(result: ISearchResult) => this.props.onItemClick(result)}
-              key={result.name+result.group+result.referenceId}
-            /> )}
+              onResultItemClick={()=> this.props.onResultItemClick()}
+              />)
+        }
         </div>
       </div>
     );
@@ -169,18 +148,23 @@ export class ResultGroup extends React.Component<{
 @observer
 export class ResultItem extends React.Component<{
   result: ISearchResult;
-  onClick: (result: ISearchResult) => void;
+  onResultItemClick: ()=> void;
 }> {
+
+  onClick(){
+    this.props.onResultItemClick();
+    this.props.result.onClick();
+  }
 
   render() {
     return (
-      <div className={S.resultIemRow} onClick={() => this.props.onClick(this.props.result)} >
+      <div className={S.resultIemRow} onClick={() => this.onClick()} >
         <div className={S.itemIcon}>
-          <Icon src="./icons/document.svg" />
+          <Icon src= {getIconUrl(this.props.result.icon)} />
         </div>
         <div className={S.itemContents}>
           <div className={S.itemTitle}>
-            {this.props.result.name}
+            {this.props.result.label}
           </div>
           <div className={S.itemTextSeparator}>
             {" "}

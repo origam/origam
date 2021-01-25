@@ -7,7 +7,7 @@ import {SidebarSectionDivider} from "gui02/components/Sidebar/SidebarSectionDivi
 import {SidebarSectionHeader} from "gui02/components/Sidebar/SidebarSectionHeader";
 import React from "react";
 import {CMainMenu} from "./CMainMenu";
-import {action, observable, reaction} from "mobx";
+import {action, reaction} from "mobx";
 import {SidebarSectionBody} from "gui02/components/Sidebar/SidebarSectionBody";
 import {MobXProviderContext, observer} from "mobx-react";
 import {getWorkQueuesTotalItemsCount} from "model/selectors/WorkQueues/getWorkQueuesTotalItemCount";
@@ -17,12 +17,7 @@ import {IInfoSubsection} from "./types";
 import {CSidebarInfoSection} from "./CSidebarInfoSection";
 import {addRecordInfoExpandRequestHandler} from "model/actions-ui/RecordInfo/addRecordInfoExpandRequestHandler";
 import {addRecordAuditExpandRequestHandler} from "model/actions-ui/RecordInfo/addRecordAuditExpandRequestHandler";
-import {onSidebarInfoSectionCollapsed} from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
-import {onSidebarAuditSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
-import {onSidebarInfoSectionExpanded} from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
 import {T} from "../../utils/translation";
-import {getWorkbenchLifecycle} from "model/selectors/getWorkbenchLifecycle";
-import {IWorkbenchLifecycle} from "model/entities/types/IWorkbenchLifecycle";
 import S from "gui02/connections/CSidebar.module.scss";
 import {getLogoUrl} from "model/selectors/getLogoUrl";
 import {CChatSection} from "./CChatSection";
@@ -37,8 +32,6 @@ import {getFavorites} from "model/selectors/MainMenu/getFavorites";
 @observer
 export class CSidebar extends React.Component {
   static contextType = MobXProviderContext;
-
-  private workbenchLifecycle: IWorkbenchLifecycle | undefined;
 
   get workbench(): IWorkbench {
     return this.context.workbench;
@@ -64,9 +57,7 @@ export class CSidebar extends React.Component {
     this.disposers.push(
       addRecordInfoExpandRequestHandler(this.workbench)(this.handleExpandRecordInfo),
       addRecordAuditExpandRequestHandler(this.workbench)(this.handleExpandRecordAuditLog)
-    );
-    this.workbenchLifecycle = getWorkbenchLifecycle(this.workbench);
-    
+    );    
     this.disposers.push(
       reaction(
         () => getFavorites(this.workbench).favoriteFolders,
@@ -140,7 +131,6 @@ export class CSidebar extends React.Component {
     const notificationBox = getNotifications(this.workbench)?.notificationBox;
     const logoUrl = getLogoUrl(this.workbench);
     const favorites = getFavorites(this.workbench);
-    const defaultFavoritesFolder = favorites.getFolder(favorites.defaultFavoritesFolderId);
 
     return (
       <Sidebar>

@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import S from "gui02/components/Search/SearchResults.module.scss";
 import { ISearchResult } from "model/entities/types/ISearchResult";
-import { MobXProviderContext, observer } from "mobx-react";
-import { IApplication } from "model/entities/types/IApplication";
-import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
+import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
+import { uuidv4 } from "utils/uuid";
 
 export class SearchResults extends React.Component<{
   groups: ISearchResultGroup[];
@@ -32,7 +31,7 @@ export class ResultGroup extends React.Component<{
 }> {
   @observable
   isExpanded = true;
-
+  
   onGroupClick() {
     this.isExpanded = !this.isExpanded;
   }
@@ -52,7 +51,7 @@ export class ResultGroup extends React.Component<{
         </div>
         <div>
           {this.isExpanded && this.props.results.map(result => 
-            <SearchResultItem result={result} key={result.name+result.group+result.referenceId}/>
+            <SearchResultItem result={result} />
             )}
         </div>
       </div>
@@ -61,12 +60,10 @@ export class ResultGroup extends React.Component<{
 }
 
 function SearchResultItem(props: { result: ISearchResult }) {
-  const application = useContext(MobXProviderContext).application as IApplication;
-
   return (
     <div className={S.resultItem} 
-        onClick={()=> onSearchResultClick(application)(props.result.dataSourceLookupId, props.result.referenceId)}>
-      <div className={S.resultItemName}>{props.result.name}</div>
+        onClick={()=> props.result.onClick()}>
+      <div className={S.resultItemName}>{props.result.label}</div>
       <div className={S.resultItemDescription}>{props.result.description}</div>
     </div>
   );
