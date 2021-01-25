@@ -4,7 +4,6 @@ import { ISearchResult } from "model/entities/types/ISearchResult";
 import { observer } from "mobx-react";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { observable } from "mobx";
-import { uuidv4 } from "utils/uuid";
 
 export class SearchResults extends React.Component<{
   groups: ISearchResultGroup[];
