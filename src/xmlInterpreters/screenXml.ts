@@ -458,6 +458,14 @@ export function* interpretScreenXml(
 
       let groupingColumnCounter = 1;
       configuration.forEach((conf) => {
+        const defaultFixedColumns = findStopping(conf, (n) => n.name === "lockedColumns");
+        
+        const fixedColumnsStr = defaultFixedColumns?.[0]?.attributes?.["count"];
+        const fixedColumnsInt = parseInt(fixedColumnsStr,10);
+        if (!isNaN(fixedColumnsStr)){
+          dataViewInstance.tablePanelView.fixedColumnCount = fixedColumnsInt;
+        }
+        
         const defaultColumnConfigurations = findStopping(conf, (n) => n.name === "columnWidths");
         defaultColumnConfigurations.forEach((defaultColumnConfiguration) => {
           const columns = findStopping(defaultColumnConfiguration, (n) => n.name === "column");
