@@ -19,6 +19,7 @@ import {getFavorites} from "model/selectors/MainMenu/getFavorites";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import {getDialogStack} from "model/selectors/getDialogStack";
 import {ChooseFavoriteFolderDialog} from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
+import { getIconUrl as getIconUrl } from "gui/getIconUrl";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -67,17 +68,6 @@ function listFromNode(node: any, level: number, isOpen: boolean) {
         .map((node: any) => itemForNode(node, level, isOpen))}
     </MainMenuUL>
   );
-}
-
-function iconUrl(iconName: string) {
-  switch (iconName) {
-    case "menu_form.png":
-      return "./icons/document.svg";
-    case "menu_workflow.png":
-      return "./icons/settings.svg";
-    default:
-      return "./icons/document.svg";
-  }
 }
 
 @observer
@@ -138,7 +128,7 @@ class CMainMenuCommandItem extends React.Component<{
             isActive={false}
             icon={
               <Icon
-                src={iconUrl(props.node.attributes.icon)}
+                src={getIconUrl(props.node.attributes.icon)}
                 tooltip={props.node.attributes.label}
               />
             }

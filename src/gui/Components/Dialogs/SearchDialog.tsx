@@ -8,6 +8,7 @@ import { observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getSearcher } from "model/selectors/getSearcher";
+import { getIconUrl } from "gui/getIconUrl";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -157,7 +158,7 @@ export class ResultItem extends React.Component<{
     return (
       <div className={S.resultIemRow} onClick={() => this.onClick()} >
         <div className={S.itemIcon}>
-          <Icon src="./icons/document.svg" />
+          <Icon src= {getIconUrl(this.props.result.icon)} />
         </div>
         <div className={S.itemContents}>
           <div className={S.itemTitle}>
