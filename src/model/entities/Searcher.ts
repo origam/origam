@@ -136,4 +136,10 @@ export class Searcher implements ISearcher {
     });
     this.index.add(documents);
   }
+
+  @action.bound
+  clear(){
+    this.serverResultGroups = [];
+    this.menuResultGroup = undefined;
+  }
 }

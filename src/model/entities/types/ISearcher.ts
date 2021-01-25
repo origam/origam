@@ -1,4 +1,3 @@
-import { IMenuSearchResult, ISearchResult } from './ISearchResult';
 import { ISearchResultGroup } from './ISearchResultGroup';
 
 export interface ISearcher {
@@ -6,6 +5,7 @@ export interface ISearcher {
   searchOnServer(): void;
   onSearchFieldChange(searchTerm: string): void;
   indexMainMenu(mainMenu: any): void;
+  clear(): void;
 
   parent?: any;
 }
