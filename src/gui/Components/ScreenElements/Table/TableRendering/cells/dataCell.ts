@@ -355,8 +355,16 @@ function drawCellValue() {
           );
         }
         break;
-      case "ComboBox":
       case "TagInput":
+        if (currentCellText() !== null) {
+          ctx2d.fillText(
+            "" + currentCellText()!,
+            CPR() * (currentColumnLeft() + getPaddingLeft()),
+            CPR() * (currentRowTop() + topTextOffset)
+          );
+        }
+        break;
+      case "ComboBox":
       case "Checklist":
         if (isLink) {
           ctx2d.save();
