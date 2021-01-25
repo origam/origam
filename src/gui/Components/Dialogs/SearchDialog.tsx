@@ -88,14 +88,16 @@ export class SearchDialog extends React.Component<{
           </div>
           {(this.searcher.resultGroups.length > 0 ) &&
             <div className={S.resultArea}>
-              {this.searcher.resultGroups
-                .map(group=> 
-                  <ResultGroup 
-                    name={group.name} 
-                    results={group.results}
-                    onResultItemClick={()=> this.onResultItemClick()}
-                    />) 
-              }
+              <div className={S.resultsContainer}>
+                {this.searcher.resultGroups
+                  .map(group=> 
+                    <ResultGroup 
+                      name={group.name} 
+                      results={group.results}
+                      onResultItemClick={()=> this.onResultItemClick()}
+                      />) 
+                }
+              </div>
             </div>
           }
         </div>
