@@ -8,7 +8,6 @@ import { ITablePanelView } from "../../../../model/entities/TablePanelView/types
 import { IDataView } from "../../../../model/entities/types/IDataView";
 import { IProperty } from "../../../../model/entities/types/IProperty";
 import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/getColumnHeaders";
-import { getIsEditing } from "../../../../model/selectors/TablePanelView/getIsEditing";
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
@@ -50,6 +49,7 @@ import {
 } from "model/entities/Aggregatioins";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import _ from "lodash";
+import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
 
 @inject(({ dataView }) => {
   return {

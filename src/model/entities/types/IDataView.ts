@@ -76,7 +76,6 @@ export interface IDataView extends IDataViewData {
   childBindings: IComponentBinding[];
   bindingRoot: IDataView;
   bindingParent: IDataView | undefined;
-  isEditing: boolean;
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
@@ -110,7 +109,6 @@ export interface IDataView extends IDataViewData {
   selectRowById(id: string | undefined): void;
   selectRow(row: any[]): void;
   setSelectedRowId(id: string | undefined): void;
-  setEditing(state: boolean): void;
   setRecords(rows: any[][]): Promise<any>;
   appendRecords(rows: any[][]): void;
   substituteRecord(row: any[]): void;

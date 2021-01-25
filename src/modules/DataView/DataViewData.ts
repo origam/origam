@@ -42,7 +42,6 @@ export class DataViewData {
         row: row, 
         property: property, 
         value: value, 
-        forceFlush: false 
       });
     }
   }

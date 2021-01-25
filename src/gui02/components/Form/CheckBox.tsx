@@ -27,7 +27,6 @@ export const CheckBox: React.FC<{
       row: row, 
       property: property, 
       value: value, 
-      forceFlush: true 
     }),
   };
 })((props) => {

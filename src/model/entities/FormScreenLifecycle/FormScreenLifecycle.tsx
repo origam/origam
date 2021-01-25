@@ -101,8 +101,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     this.disposers.push(disposer);
   }
 
-  *onFlushData(args?:{forceFlush?: boolean}): Generator<unknown, any, unknown> {
-    yield* this.flushData({forceFlush: args?.forceFlush});
+  *onFlushData(): Generator<unknown, any, unknown> {
+    yield* this.flushData();
   }
 
   *onCreateRow(entity: string, gridId: string): Generator<unknown, any, unknown> {
@@ -643,7 +643,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  *flushData(args?:{forceFlush?: boolean}) {
+  *flushData() {
     try {
       this.monitor.inFlow++;
       let updateObjectDidRun = false;
