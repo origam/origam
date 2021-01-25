@@ -166,7 +166,6 @@ export class DataView implements IDataView {
   @observable selectedRowIds: string[] = [];
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
-  @observable isEditing: boolean = false;
 
   @observable selectedRowId: string | undefined;
 
@@ -573,11 +572,6 @@ export class DataView implements IDataView {
         binding.childDataView.dataTable.updateSortAndFilter()
       );
     }
-  }
-
-  @action.bound
-  setEditing(state: boolean): void {
-    this.isEditing = state;
   }
 
   viewStateStack: SavedViewState[] = [];
