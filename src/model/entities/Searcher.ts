@@ -9,12 +9,12 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getApi } from "model/selectors/getApi";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
+import { T } from "utils/translation";
 
 
 export class Searcher implements ISearcher {
   parent?: any;
   index: any;
-
 
   @observable
   serverResultGroups: ISearchResultGroup[] = [];
@@ -106,7 +106,7 @@ export class Searcher implements ISearcher {
               };
           }
         })
-    this.menuResultGroup = {name: "Menu", results: searchResults};
+    this.menuResultGroup = {name: T("Menu", "menu"), results: searchResults};
   }
 
 
