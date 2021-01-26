@@ -83,9 +83,6 @@ function registerClickHandler() {
           newSelectionState = !hasSelectedRowId(ctx,  rowId);
           yield* setSelectedStateRowId(ctx)(rowId, newSelectionState);
         }
-        if(!newSelectionState){
-          getDataView(ctx).selectAllCheckboxChecked = false;
-        }
       })();
     },
   });
