@@ -20,14 +20,14 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Origam.ServerCore.Model.UIService
 {
     public class SaveObjectConfigInput
     {
         public Guid ObjectInstanceId { get; set; }
-        public string Section { get; set; }
-        public string SettingsData { get; set; }
         public Guid SessionFormIdentifier { get; set; }
+        public Dictionary<string, string> SectionNameAndData { get; set; }
     }
 }
