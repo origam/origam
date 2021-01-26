@@ -4,6 +4,7 @@ import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelVie
 import {getActivePanelView} from "model/selectors/DataView/getActivePanelView";
 import {getGroupingConfiguration} from "../../../selectors/TablePanelView/getGroupingConfiguration";
 import {aggregationTypeToNumber} from "../../../entities/types/AggregationType";
+import { getSessionId } from "model/selectors/getSessionId";
 
 export function saveColumnConfigurations(ctx: any) {
   return function* saveColumnConfigurations() {
@@ -12,6 +13,7 @@ export function saveColumnConfigurations(ctx: any) {
     const groupingConfiguration = getGroupingConfiguration(ctx);
 
     yield getApi(ctx).saveObjectConfiguration({
+      sessionFormIdentifier: getSessionId(ctx),
       instanceId: dataView.modelInstanceId,
       columnSettings: tablePanelView.allTableProperties.map(property => ({
         propertyId: property.id,

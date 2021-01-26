@@ -287,6 +287,7 @@ export interface IApi {
   getChatroomList(): Promise<any>;
 
   saveObjectConfiguration(data: {
+    sessionFormIdentifier: string;
     instanceId: string;
     columnSettings: Array<{
       propertyId: string;
