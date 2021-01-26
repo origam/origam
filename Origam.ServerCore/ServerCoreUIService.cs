@@ -762,31 +762,34 @@ namespace Origam.ServerCore
             }
             var currentSettings = new XmlDocument();
             var newSettings = currentSettings.CreateDocumentFragment();
-            var newSettingsNode = currentSettings.CreateElement(
-                input.Section);
-            newSettingsNode.InnerXml = input.SettingsData;
-            newSettings.AppendChild(newSettingsNode);
-            XmlNode configNode;
-            var settingsRow 
-                = userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
-            if(settingsRow.IsNull("SettingsData"))
+            foreach (var sectionNameAndData in input.SectionNameAndData)
             {
-                configNode = currentSettings.CreateElement("Configuration");
-                currentSettings.AppendChild(configNode);
+                var newSettingsNode = currentSettings.CreateElement(
+                    sectionNameAndData.Key);
+                newSettingsNode.InnerXml = sectionNameAndData.Value;
+                newSettings.AppendChild(newSettingsNode);
+                XmlNode configNode;
+                var settingsRow 
+                    = userConfig.Tables["OrigamFormPanelConfig"].Rows[0];
+                if(settingsRow.IsNull("SettingsData"))
+                {
+                    configNode = currentSettings.CreateElement("Configuration");
+                    currentSettings.AppendChild(configNode);
+                }
+                else
+                {
+                    currentSettings.LoadXml((string)settingsRow["SettingsData"]);
+                    configNode = currentSettings.FirstChild;
+                }
+                foreach(XmlNode node in configNode.SelectNodes(sectionNameAndData.Key))
+                {
+                    node.ParentNode.RemoveChild(node);
+                }
+                configNode.AppendChild(newSettings);
+                settingsRow["SettingsData"] = currentSettings.OuterXml;
+                OrigamPanelConfigDA.SaveUserConfig(
+                    userConfig, input.ObjectInstanceId, workflowId, profileId);
             }
-            else
-            {
-                currentSettings.LoadXml((string)settingsRow["SettingsData"]);
-                configNode = currentSettings.FirstChild;
-            }
-            foreach(XmlNode node in configNode.SelectNodes(input.Section))
-            {
-                node.ParentNode.RemoveChild(node);
-            }
-            configNode.AppendChild(newSettings);
-            settingsRow["SettingsData"] = currentSettings.OuterXml;
-            OrigamPanelConfigDA.SaveUserConfig(
-                userConfig, input.ObjectInstanceId, workflowId, profileId);
         }
         public static void SaveSplitPanelConfig(SaveSplitPanelConfigInput input)
         {
