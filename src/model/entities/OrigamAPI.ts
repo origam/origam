@@ -514,6 +514,7 @@ export class OrigamAPI implements IApi {
     instanceId: string;
     columnSettings: IColumnSettings[];
     defaultView: string;
+    lockedColumns: number;
   }): Promise<any> {
     const columnFields = data.columnSettings
       .filter((settings) => settings.groupingIndex !== undefined)
@@ -535,14 +536,19 @@ export class OrigamAPI implements IApi {
     );
 
     await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
-      ObjectinstanceId: data.instanceId,
+      ObjectInstanceId: data.instanceId,
       Section: "columnWidths",
       SettingsData: columnsProps.concat(columnFields).join(""),
     });
     await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
-      ObjectinstanceId: data.instanceId,
+      ObjectInstanceId: data.instanceId,
       Section: "defaultView",
       SettingsData: `<view id="${data.defaultView}" />`,
+    });
+    await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
+      ObjectInstanceId: data.instanceId,
+      Section: "lockedColumns",
+      SettingsData: `<lockedColumns count="${data.lockedColumns}" />`,
     });
   }
 

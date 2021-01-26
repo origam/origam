@@ -20,7 +20,8 @@ export function saveColumnConfigurations(ctx: any) {
         aggregationTypeNumber: aggregationTypeToNumber(tablePanelView.aggregations.getType(property.id)),
         groupingIndex: groupingConfiguration.groupingIndices.get(property.id)
       })),
-      defaultView: getActivePanelView(ctx)
+      defaultView: getActivePanelView(ctx),
+      lockedColumns: tablePanelView.fixedColumnCount
     });
   };
 }
