@@ -537,18 +537,11 @@ export class OrigamAPI implements IApi {
 
     await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
       ObjectInstanceId: data.instanceId,
-      Section: "columnWidths",
-      SettingsData: columnsProps.concat(columnFields).join(""),
-    });
-    await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
-      ObjectInstanceId: data.instanceId,
-      Section: "defaultView",
-      SettingsData: `<view id="${data.defaultView}" />`,
-    });
-    await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
-      ObjectInstanceId: data.instanceId,
-      Section: "lockedColumns",
-      SettingsData: `<lockedColumns count="${data.lockedColumns}" />`,
+      SectionNameAndData: {
+        columnWidths: columnsProps.concat(columnFields).join(""), 
+        defaultView: `<view id="${data.defaultView}" />`,
+        lockedColumns: `<lockedColumns count="${data.lockedColumns}" />`
+      }
     });
   }
 
