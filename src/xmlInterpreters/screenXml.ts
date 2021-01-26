@@ -72,6 +72,7 @@ import { addFilterGroups } from "./filterXml";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { splitterPositionFromRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -223,7 +224,7 @@ export function* interpretScreenXml(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
       {
-        position: pcr.position,
+        position: splitterPositionFromRatio(pcr.position),
         defaultOrdering: parseToOrdering(pcr.defaultSort),
       },
     ])
