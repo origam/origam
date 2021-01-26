@@ -2537,12 +2537,13 @@ namespace OrigamArchitect
 			string url = null;
 			string newVersion = null;
 			
-			// don't update if run from architect (0.0.0.0)
-			if (version.Build == 0 && version.Major == 0 && version.MajorRevision == 0
-				&& version.Minor == 0 && version.MinorRevision == 0 && version.Revision == 0)
+			// don't update if run from dev build (0.0.0.0) or from master build (0.0.0.x) 
+			if ((version.Major == 0) 
+            && (version.Minor == 0) 
+            && (version.Build == 0))
 			{
 				return;
-    }
+            }
 
 			if (version.Major == 0)
 			{
