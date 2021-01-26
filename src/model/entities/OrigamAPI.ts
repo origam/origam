@@ -511,6 +511,7 @@ export class OrigamAPI implements IApi {
   }
 
   async saveObjectConfiguration(data: {
+    sessionFormIdentifier: string;
     instanceId: string;
     columnSettings: IColumnSettings[];
     defaultView: string;
