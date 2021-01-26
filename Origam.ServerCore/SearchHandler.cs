@@ -40,7 +40,7 @@ namespace Origam.ServerCore
                 {
                     Group = dataSource.GroupLabel,
                     DataSourceId = dataSource.Id,
-                    Name = result["Name"].ToString(),
+                    Label = result["Name"].ToString(),
                     Description = containsDescription 
                         ? (string)result["Description"] 
                         : "",
