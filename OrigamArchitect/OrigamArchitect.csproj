@@ -36,6 +36,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Client|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;$(DefineConstants)</DefineConstants>
@@ -43,12 +44,14 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Server|AnyCPU' ">
     <DefineConstants>ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Server|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;ORIGAM_CLIENT;ORIGAM_SERVER;$(DefineConstants)</DefineConstants>
@@ -56,12 +59,14 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Architect|AnyCPU' ">
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <OutputPath>bin\Release\</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Architect|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE;$(DefineConstants)</DefineConstants>
@@ -69,11 +74,16 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\MIMEParser\MIMEParser.csproj">
       <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
       <Name>MIMEParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Origam.BI.CrystalReports.NetFx\Origam.BI.CrystalReports.NetFx.csproj">
+      <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
+      <Name>Origam.BI.CrystalReports.NetFx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.BI.FastReport\Origam.BI.FastReport.csproj">
       <Project>{183e889e-77ab-46b0-8d4f-30bb68671907}</Project>
@@ -106,11 +116,6 @@
     <ProjectReference Include="..\Origam.OrigamEngine\Origam.OrigamEngine.csproj">
       <Name>Origam.OrigamEngine</Name>
       <Project>{233D40C6-AE59-4651-B7BD-DD09D5835E21}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj">
-      <Name>Origam.BI.CrystalReports</Name>
-      <Project>{D8090B11-35D3-43D7-AC66-5D7AE2D476DA}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Origam.BI\Origam.BI.csproj">

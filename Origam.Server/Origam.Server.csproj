@@ -189,9 +189,9 @@
       <Project>{cc4c4334-335d-4369-b0ed-f3c17cd57364}</Project>
       <Name>MIMEParser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Origam.BI.CrystalReports\Origam.BI.CrystalReports.csproj">
+    <ProjectReference Include="..\Origam.BI.CrystalReports.NetFx\Origam.BI.CrystalReports.NetFx.csproj">
       <Project>{d8090b11-35d3-43d7-ac66-5d7ae2d476da}</Project>
-      <Name>Origam.BI.CrystalReports</Name>
+      <Name>Origam.BI.CrystalReports.NetFx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Origam.BI.Excel\Origam.BI.Excel.csproj">
       <Project>{2380e7b2-c993-4167-abca-22ff07a91b2a}</Project>
