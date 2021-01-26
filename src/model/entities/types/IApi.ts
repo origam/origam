@@ -294,6 +294,7 @@ export interface IApi {
       isHidden: boolean;
     }>;
     defaultView: string;
+    lockedColumns: number;
   }): Promise<any>;
 
   saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any>;
