@@ -163,7 +163,7 @@ export class DataView implements IDataView {
   dataViewData: DataViewData = null as any;
 
   @observable selectAllCheckboxChecked = false;
-  @observable selectedRowIds: string[] = [];
+  @observable selectedRowIds: Set<string> = new Set();
 
   @observable activePanelView: IPanelViewType = IPanelViewType.Table;
 
@@ -178,12 +178,12 @@ export class DataView implements IDataView {
   }
 
   @bind hasSelectedRowId(id: string) {
-    return this.selectedRowIds.includes(id);
+    return this.selectedRowIds.has(id);
   }
 
   appendRecords(rows: any[][]): void{
     this.dataTable.appendRecords(rows);
-    this.selectedRowIds.length = 0;
+    this.selectedRowIds.clear();
     this.selectAllCheckboxChecked =
       this.dataTable.rows.length !== 0 &&
       this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
@@ -193,7 +193,7 @@ export class DataView implements IDataView {
     await this.dataTable.setRecords(rows);
     const filteredRows = this.dataTable.rows;
     const filteredRowIds = filteredRows.map(row =>  this.dataTable.getRowId(row));
-    this.selectedRowIds = this.selectedRowIds.filter(id => filteredRowIds.includes(id));
+    this.selectedRowIds = new Set(Array.from(this.selectedRowIds).filter(id => filteredRowIds.includes(id)));
     this.selectAllCheckboxChecked =
       this.dataTable.rows.length !== 0 &&
       this.dataTable.rows.every((row) => this.isSelected(this.dataTable.getRowId(row)));
@@ -209,20 +209,21 @@ export class DataView implements IDataView {
       const updatedRow = this.dataTable.getRowById(rowId)!;
       return this.dataTable.getCellValueByDataSourceField(updatedRow, dataSourceField);
     }
-    return this.selectedRowIds.includes(rowId);
+    return this.selectedRowIds.has(rowId);
   }
 
   @action.bound addSelectedRowId(id: string) {
-    this.selectedRowIds.push(id);
+    this.selectedRowIds.add(id);
   }
 
   @action.bound removeSelectedRowId(id: string) {
-    this.selectedRowIds.remove(id);
+    this.selectedRowIds.delete(id);
+    this.selectAllCheckboxChecked = false;
   }
 
   @action.bound
   clear(){
-    this.selectedRowIds.length = 0;
+    this.selectedRowIds.clear();
     this.dataTable.clear();
   }
 
@@ -234,7 +235,7 @@ export class DataView implements IDataView {
       idToSelectNext = this.dataTable.getPrevExistingRowId(id);
     }
 
-    this.selectedRowIds.remove(id);
+    this.selectedRowIds.delete(id);
     this.dataTable.deleteRow(row);
 
     if(idToSelectNext){
@@ -244,8 +245,8 @@ export class DataView implements IDataView {
 
   @action.bound
   substituteRecord(row: any[]){
-    const id = this.dataTable.getRowId(row);
-    this.selectedRowIds.remove(id);
+    const rowId = this.dataTable.getRowId(row);
+    this.removeSelectedRowId(rowId);
     this.dataTable.substituteRecord(row);
     if (getGroupingConfiguration(this).isGrouping) {
       getGrouper(this).substituteRecord(row);

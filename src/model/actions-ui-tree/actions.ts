@@ -32,7 +32,7 @@ export default {
             const selectedRowIds = selectors.selectionCheckboxes.getSelectedRowIds(
               ctx
             );
-            yield* lifecycle.onExecuteAction(gridId, entity, action, selectedRowIds);
+            yield* lifecycle.onExecuteAction(gridId, entity, action, Array.from(selectedRowIds));
             break;
         }
       } catch (e) {

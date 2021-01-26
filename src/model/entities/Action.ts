@@ -45,8 +45,8 @@ export class Action implements IAction {
       }
       case IActionMode.MultipleCheckboxes: {
         const selectedIds = getDataView(this).selectedRowIds;
-          return selectedIds.length > 0
-            ? !selectedIds.some(rowId => getRowStateIsDisableAction(this, rowId, this.id))
+          return selectedIds.size > 0
+            ? !Array.from(selectedIds).some(rowId => getRowStateIsDisableAction(this, rowId, this.id))
             : this.placement === IActionPlacement.Toolbar;
       }
     }
