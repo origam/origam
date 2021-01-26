@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Origam.DA;
 using Origam.DA.Service;
+using Origam.Rule;
 using Origam.Schema.EntityModel;
 using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
@@ -84,16 +85,22 @@ namespace Origam.ServerCore.Controller
             {
                 return func();
             }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                return NotFound(ex.ActualValue ?? ex);
-            }
             catch (SessionExpiredException ex)
             {
                 return NotFound(ex);
             }
+            catch (RuleException ex)
+            {
+                return StatusCode(420, ex);
+            }             
+            catch (DBConcurrencyException ex)
+            {
+                log.LogError(ex, ex.Message);
+                return StatusCode(409, ex);
+            }            
             catch (Exception ex)
             {
+                log.LogError(ex, ex.Message);
                 return StatusCode(500, ex);
             }
         }

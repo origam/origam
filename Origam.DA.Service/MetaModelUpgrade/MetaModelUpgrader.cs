@@ -65,7 +65,7 @@ namespace Origam.DA.Service.MetaModelUpgrade
             bool isVersion5 = IsVersion5(xFileData);
             if (isVersion5)
             {
-                new Version6UpGrader(scriptLocator, xFileData.Document).Run();
+                new Version6Upgrader(scriptLocator, xFileData.Document).Run();
             }
 
             var documentContainer = new DocumentContainer(xFileData);
@@ -203,14 +203,14 @@ namespace Origam.DA.Service.MetaModelUpgrade
         }
     }
     
-    public class Version6UpGrader
+    public class Version6Upgrader
     {
         private readonly ScriptContainerLocator scriptLocator;
         private readonly OrigamXDocument document;
         private static XNamespace oldPersistenceNamespace = "http://schemas.origam.com/1.0.0/model-persistence";
         private static XNamespace newPersistenceNamespace = OrigamFile.ModelPersistenceUri;
 
-        public Version6UpGrader(ScriptContainerLocator scriptLocator,
+        public Version6Upgrader(ScriptContainerLocator scriptLocator,
             OrigamXDocument document)
         {
             this.scriptLocator = scriptLocator;

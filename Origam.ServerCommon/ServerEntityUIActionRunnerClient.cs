@@ -72,12 +72,7 @@ namespace Origam.Server
                 = sessionManager.GetSession(new Guid(sessionFormIdentifier));
             processData.DataTable = sessionStore.GetTable(
                 entity, sessionStore.Data);
-            IList<DataRow> rows = new List<DataRow>();
-            foreach (object selectedItem in selectedItems)
-            {
-                DataRow row = sessionStore.GetSessionRow(entity, selectedItem);
-                rows.Add(row);
-            }
+            List<DataRow> rows = sessionStore.GetRows(entity, selectedItems);
             processData.Rows = rows;
             processData.ParameterService = ServiceManager.Services.GetService(
                 typeof(IParameterService)) as IParameterService;

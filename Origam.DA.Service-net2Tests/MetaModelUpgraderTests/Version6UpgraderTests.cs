@@ -32,7 +32,7 @@ using Origam.DA.Service.MetaModelUpgrade;
 namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
 {
     [TestFixture]
-    public class Version6UpGraderTests: ClassUpgradeTestBase
+    public class Version6UpgraderTests: ClassUpgradeTestBase
     {
         protected override string DirName { get; } = "MetaModelUpgraderTests";
         
@@ -40,7 +40,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeToVersion6()
         {
             XFileData xFileData = LoadFile("TestPersistedClassV5.0.0.origam");
-            var sut = new Version6UpGrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
+            var sut = new Version6Upgrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
             sut.Run();
 
             XElement fileElement = xFileData.Document.FileElement;
@@ -60,7 +60,7 @@ namespace Origam.DA.ServiceTests.MetaModelUpgraderTests
         public void ShouldUpgradeGroupReferenceFileToVersion6()
         {
             XFileData xFileData = LoadFile("TestOrigamGroupReferenceV5.0.0.origam");
-            var sut = new Version6UpGrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
+            var sut = new Version6Upgrader(new ScriptContainerLocator(GetType().Assembly), xFileData.Document);
             sut.Run();
             
             XNamespace persistenceNamespace = "http://schemas.origam.com/model-persistence/1.0.0";

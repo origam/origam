@@ -30,6 +30,10 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   if [ -f custom.js ]; then
 		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
 	   fi
+	   if [ -f reverse-proxy.conf ]; then
+		sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
+		sudo /etc/init.d/nginx restart
+	   fi
 	fi
 fi
 cd /home/origam/HTML5
@@ -73,6 +77,10 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   fi
 	   if [ -f custom.js ]; then
 		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+	   fi
+	   if [ -f reverse-proxy.conf ]; then
+		sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
+		sudo /etc/init.d/nginx restart
 	   fi
 	fi
 fi
