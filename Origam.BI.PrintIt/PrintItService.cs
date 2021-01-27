@@ -41,7 +41,7 @@ namespace Origam.BI.PrintIt
 				throw new ArgumentOutOfRangeException("format", format, ResourceUtils.GetString("FormatNotSupported"));
 			}
 
-			AbstractDataReport report = ReportHelper.GetReportElement(reportId);
+			var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
             ReportHelper.PopulateDefaultValues(report, parameters);
             ReportHelper.ComputeXsltValueParameters(report, parameters);
 

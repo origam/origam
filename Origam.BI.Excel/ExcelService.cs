@@ -60,7 +60,7 @@ namespace Origam.BI.Excel
                 throw new ArgumentOutOfRangeException("format", format,
                     Properties.Resources.FormatNotSupported);
             }
-            AbstractDataReport report = ReportHelper.GetReportElement(reportId);
+            var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
             using (LanguageSwitcher langSwitcher =
                 new LanguageSwitcher(ReportHelper.ResolveLanguage(data, report)))
             {

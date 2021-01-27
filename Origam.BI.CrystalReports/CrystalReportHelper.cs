@@ -21,13 +21,12 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Data;
-
 using Origam.Schema.GuiModel;
-using Origam.DA;
-using Origam.Workbench.Services;
-
-using CrystalDecisions.CrystalReports.Engine;
 using log4net.Core;
+using Origam.CrystalReportsService.Models;
+using System.Runtime.Serialization;
+using System.Xml;
+using System.Text;
 
 namespace Origam.BI.CrystalReports
 {
@@ -36,36 +35,15 @@ namespace Origam.BI.CrystalReports
 	/// </summary>
 	public class CrystalReportHelper
 	{
-		private IServiceAgent _dataServiceAgent;
         private static readonly log4net.ILog log
             = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public CrystalReportHelper()
 		{
-			IBusinessServicesService services = ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService;
-			_dataServiceAgent = services.GetAgent("DataService", null, null);
 		}
 		
 		#region Public Functions
-		public ReportDocument CreateReport(Guid reportId, Hashtable parameters, string transactionId)
-		{
-			if(parameters == null) parameters = new Hashtable();
-			// get report model element
-			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
-			ReportHelper.PopulateDefaultValues(report, parameters);
-            ReportHelper.ComputeXsltValueParameters(report, parameters);
-            // load data
-            DataSet data = null;
-			if(report.DataStructure != null)
-			{
-				data = LoadData(report.DataStructureId, report.DataStructureMethodId, report.DataStructureSortSetId, parameters, transactionId);
-			}
-			TraceReportData(data, report.Name);
-			// get report
-			return CreateReport(report.ReportFileName, data, parameters, report);
-		}
-
 		private void TraceReportData(DataSet data, string reportName)
 		{
 			try
@@ -86,96 +64,96 @@ namespace Origam.BI.CrystalReports
 			}
 		}
 
-		public ReportDocument CreateReport(Guid reportId, DataSet data, Hashtable parameters)
-		{
-			if(parameters == null) parameters = new Hashtable();
-			// get report model element
-			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
-			TraceReportData(data, report.Name);
-			ReportHelper.PopulateDefaultValues(report, parameters);
-            ReportHelper.ComputeXsltValueParameters(report, parameters);
+		public byte[] CreateReport(Guid reportId, DataSet data, 
+            Hashtable parameters, string format)
+        {
+            // get report model element
+            var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+            parameters = PrepareParameters(data, parameters, report);
             // get report
-            return CreateReport(report.ReportFileName, data, parameters, report);
-		}
+            string paramString = $"&format={format}";
+            object result = SendReportRequest("Report", report.ReportFileName, 
+                data, parameters, report, paramString);
+            if (result is byte[] bytes)
+            {
+                return bytes;
+            }
+            throw new Exception("Invalid data returned. Expected byte array.");
+        }
 
-		public ReportDocument CreateReport(string fileName, DataSet data)
-		{
-			return this.CreateReport(fileName, data, new Hashtable(), null);
-		}
-		#endregion
-		
-		private ReportDocument CreateReport(string fileName, DataSet data, Hashtable parameters, CrystalReport reportElement)
-		{
+        public void PrintReport(Guid reportId, DataSet data, 
+            Hashtable parameters, string printerName, int copies)
+        {
+            // get report model element
+            var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+            parameters = PrepareParameters(data, parameters, report);
+            // get report
+            string paramString = $"&printerName={printerName}&copies={copies}";
+            SendReportRequest("Print", report.ReportFileName, 
+                data, parameters, report, paramString);
+        }
+
+        private Hashtable PrepareParameters(DataSet data, Hashtable parameters, 
+            CrystalReport report)
+        {
+            if (parameters == null) parameters = new Hashtable();
+            TraceReportData(data, report.Name);
+            ReportHelper.PopulateDefaultValues(report, parameters);
+            ReportHelper.ComputeXsltValueParameters(report, parameters);
+            return parameters;
+        }
+        #endregion
+
+        public object SendReportRequest(string method, string fileName, 
+            DataSet data, Hashtable parameters, CrystalReport reportElement, 
+            string paramString)
+        {
             if (log.IsInfoEnabled)
             {
                 WriteInfoLog(reportElement, "Generating report started");
             }
-            if (parameters == null) throw new NullReferenceException(ResourceUtils.GetString("CreateReport: Parameters cannot be null."));
-			ReportDocument result = null;
-            string path = fileName;
-            try
-			{
-				result = new AsReportDocument();
-			}
-			catch (Exception ex)
+            if (parameters == null) throw new NullReferenceException(
+                ResourceUtils.GetString("CreateReport: Parameters cannot be null."));
+            var settings = ConfigurationManager.GetActiveConfiguration();
+            string baseUrl = settings.ReportConnectionString;
+            var request = new ReportRequest
             {
-                log.Error("Error occured while initializing Crystal Report " + path, ex);
+                Dataset = data
+            };
+            foreach (DictionaryEntry item in parameters)
+            {
+                request.Parameters.Add(new Parameter
+                {
+                    Key = item.Key.ToString(),
+                    Value = item.Value?.ToString()
+                });
             }
-			try
-			{
-				OrigamSettings settings = ConfigurationManager.GetActiveConfiguration();
-				path = System.IO.Path.Combine(settings.ReportsFolder(), fileName);
-				result.Load(path, CrystalDecisions.Shared.OpenReportMethod.OpenReportByTempCopy);
-			}
-			catch (Exception ex)
-			{
-                log.Fatal("Failed loading Crystal Report " + path, ex);
-				throw new Exception(ResourceUtils.GetString("FailedToLoadReport", path + Environment.NewLine + ex.Message + Environment.NewLine), ex);
-			}
-			
-			try
-			{
-				if(data == null)
-				{
-					OrigamSettings settings = ConfigurationManager.GetActiveConfiguration() ;
-					Hashtable cn = OrigamSettings.ParseConnectionString(settings.ReportConnectionString);
-					SetLogonInfo(result, cn);
-					foreach(ReportDocument subreport in result.Subreports)
-					{
-						SetLogonInfo(subreport, cn);
-					}
-				}
-				else
-				{
-					// we set the data source to the main report
-					result.SetDataSource(data);
-					// we set the same data source to all subreports
-					foreach(ReportDocument subreport in result.Subreports)
-					{
-						if(subreport.DataSourceConnections.Count > 0)
-						{
-							subreport.SetDataSource(data);
-						}
-						//subreport.Refresh();
-					}
-				}
-
-				// set report's parameters
-				SetReportParameters(parameters, result, reportElement);
-				result.Refresh();
-				// once again
-				SetReportParameters(parameters, result, reportElement);
-			}
-			catch(Exception ex)
-			{
-				throw new Exception(ResourceUtils.GetString("CouldNotActivate", Environment.NewLine, ex.Message), ex);
-			}
+            var stringBuilder = new StringBuilder();
+            using (var stringWriter = new EncodingStringWriter(stringBuilder, Encoding.UTF8))
+            {
+                using (var xmlWriter = XmlWriter.Create(stringWriter,
+                    new XmlWriterSettings { Encoding = Encoding.UTF8 }))
+                {
+                    DataContractSerializer ser =
+                        new DataContractSerializer(typeof(ReportRequest));
+                    ser.WriteObject(xmlWriter, request);
+                }
+            }
+            var result = HttpTools.SendRequest(baseUrl +
+                $"api/{method}?report={fileName}{paramString}",
+                "POST",
+                stringBuilder.ToString().Replace(
+                    " xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                    ""),
+                "application/xml",
+                new Hashtable(),
+                null);
             if (log.IsInfoEnabled)
             {
                 WriteInfoLog(reportElement, "Generating report finished");
             }
             return result;
-		}
+        }
 
         private void WriteInfoLog(CrystalReport reportElement, string message)
         {
@@ -189,67 +167,5 @@ namespace Origam.BI.CrystalReports
             loggingEvent.Properties["Caption"] = reportElement.Caption;
             log.Logger.Log(loggingEvent);
         }
-
-        private void SetLogonInfo(ReportDocument report, Hashtable connection)
-		{
-			foreach(CrystalDecisions.CrystalReports.Engine.Table table in report.Database.Tables)
-			{
-				CrystalDecisions.Shared.TableLogOnInfo logon = table.LogOnInfo;
-				if(connection["DatabaseName"] != null) logon.ConnectionInfo.DatabaseName = Convert.ToString(connection["DatabaseName"]);
-				if(connection["IntegratedSecurity"] != null) logon.ConnectionInfo.IntegratedSecurity = Convert.ToBoolean(connection["IntegratedSecurity"]);
-				if(connection["ServerName"] != null) logon.ConnectionInfo.ServerName = Convert.ToString(connection["ServerName"]);
-				if(connection["UserID"] != null) logon.ConnectionInfo.UserID = Convert.ToString(connection["UserID"]);
-				if(connection["Password"] != null) logon.ConnectionInfo.Password = Convert.ToString(connection["Password"]);
-				table.ApplyLogOnInfo(logon);
-			}
-		}
-
-		private void SetReportParameters(Hashtable parameters, ReportDocument report, CrystalReport reportElement)
-		{
-			if(parameters != null)
-			{
-				foreach(CrystalDecisions.Shared.ParameterField paramDef in report.ParameterFields)
-				{
-					foreach(DictionaryEntry entry in parameters)
-					{
-						if(paramDef.Name == (string)entry.Key)
-						{
-							object val = entry.Value;
-							if(val is Guid) val = entry.Value.ToString();
-							report.SetParameterValue(paramDef.Name, val);
-						}
-					}
-				}
-			}
-		}
-
-		private DataSet LoadData(Guid dataStructureId, Guid methodId, Guid sortSetId, Hashtable parameters, string transactionId)
-		{
-			DataStructureQuery query = new DataStructureQuery(dataStructureId, methodId, Guid.Empty, sortSetId);
-			foreach(DictionaryEntry entry in parameters)
-			{
-				query.Parameters.Add(new QueryParameter((string)entry.Key, entry.Value));
-			}
-			return LoadData(query, transactionId);
-		}
-
-		private DataSet LoadData(DataStructureQuery query, string transactionId)
-		{
-			_dataServiceAgent.MethodName = "LoadDataByQuery";
-			_dataServiceAgent.Parameters.Clear();
-			_dataServiceAgent.Parameters.Add("Query", query);
-			_dataServiceAgent.TransactionId = transactionId;
-			_dataServiceAgent.Run();
-			DataSet reportData = _dataServiceAgent.Result as DataSet;
-			return reportData;
-		}
-	}
-
-	public class AsReportDocument : ReportDocument
-	{
-		protected override bool CheckLicenseStatus()
-		{
-			return true;
-		}
 	}
 }
