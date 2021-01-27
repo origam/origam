@@ -7,6 +7,7 @@ export const FormLabel: React.FC<{
   left: number;
   width: number;
   height: number;
+  foregroundColor: string | undefined;
 }> = props => (
   <div
     className={S.root}
@@ -14,7 +15,8 @@ export const FormLabel: React.FC<{
       top: props.top,
       left: props.left,
       width: props.width,
-      height: props.height
+      height: props.height,
+      color: props.foregroundColor
     }}
   >
     {props.title}

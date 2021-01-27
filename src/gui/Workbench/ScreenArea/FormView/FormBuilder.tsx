@@ -23,6 +23,7 @@ import { DomEvent } from "leaflet";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -52,8 +53,13 @@ export class FormBuilder extends React.Component<{
     const rowId = getSelectedRowId(this.props.dataView);
     const dataTable = getDataTable(this.props.dataView);
     let backgroundColor: string | undefined;
+    let foreGroundColor: string | undefined;
     if (row && rowId) {
       backgroundColor = getRowStateRowBgColor(self.props.dataView, rowId);
+      foreGroundColor = getRowStateForegroundColor(
+        self.props.dataView,
+        rowId || ""
+      );
     }
     const focusManager = self.props.dataView!.focusManager;
 
@@ -87,6 +93,7 @@ export class FormBuilder extends React.Component<{
             top={+xfo.attributes.Y}
             width={+xfo.attributes.Width}
             height={+xfo.attributes.Height}
+            foregroundColor={foreGroundColor}
           />
         );
       } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
@@ -176,6 +183,7 @@ export class FormBuilder extends React.Component<{
                       hideCaption={property.column === "Image"}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
+                      captionColor={foreGroundColor}
                       dock={property.dock}
                       height={property.height}
                       width={property.width}
