@@ -11,6 +11,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import moment from "moment";
 import { CPR } from "utils/canvas";
+import { shadeHexColor } from "utils/colorUtils";
 import actionsUi from "../../../../../../model/actions-ui-tree";
 import { getDataView } from "../../../../../../model/selectors/DataView/getDataView";
 import {
@@ -34,8 +35,6 @@ import {
   context,
   context2d,
   currentDataRow,
-  currentRow,
-  dataTable,
   drawingColumnIndex,
   formScreen,
   recordId,
@@ -50,6 +49,7 @@ import {
   cellPaddingLeftFirstCell,
   checkBoxCharacterFontSize,
   clipCell,
+  drawSelectedRowBorder,
   fontSize,
   numberCellPaddingRight,
   topTextOffset,
@@ -248,20 +248,7 @@ export function drawDataCellBackground() {
     CPR() * currentRowHeight()
   );
   if (isRowCursor) {
-    ctx2d.beginPath();
-    ctx2d.strokeStyle = "#4C84FF";
-    ctx2d.lineWidth = 1 * CPR();
-    ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
-    ctx2d.lineTo(
-      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
-      CPR() * (currentRowTop() + 1.5)
-    );
-    ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
-    ctx2d.lineTo(
-      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
-      CPR() * (currentRowTop() + currentRowHeight() - 1.5)
-    );
-    ctx2d.stroke();
+    drawSelectedRowBorder(8);
   }
 }
 
@@ -465,9 +452,13 @@ function getBackGroundColor() {
     //} else if(cell.isColumnOrderChangeTarget){
   } else if (isCellCursor) {
     return "#EDF2FF";
-  } else if (isRowCursor) {
-    return "#EDF2FF";
-  } else {
+  } 
+  else if (isRowCursor) {
+    return backgroundColor 
+      ? shadeHexColor(backgroundColor,-0.1) 
+      : "#EDF2FF";
+  } 
+  else {
     if (backgroundColor) {
       return backgroundColor;
     } else {
