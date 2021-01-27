@@ -3,7 +3,6 @@ import { TextEditor } from "gui/Components/ScreenElements/Editors/TextEditor";
 import { inject, observer, Provider } from "mobx-react";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { onFieldKeyDown } from "model/actions-ui/DataView/TableView/onFieldKeyDown";
-import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
