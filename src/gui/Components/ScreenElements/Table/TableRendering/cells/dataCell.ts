@@ -50,6 +50,7 @@ import {
   cellPaddingLeftFirstCell,
   checkBoxCharacterFontSize,
   clipCell,
+  drawSelectedRowBorder,
   fontSize,
   numberCellPaddingRight,
   topTextOffset,
@@ -248,20 +249,7 @@ export function drawDataCellBackground() {
     CPR() * currentRowHeight()
   );
   if (isRowCursor) {
-    ctx2d.beginPath();
-    ctx2d.strokeStyle = "#4C84FF";
-    ctx2d.lineWidth = 1 * CPR();
-    ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
-    ctx2d.lineTo(
-      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
-      CPR() * (currentRowTop() + 1.5)
-    );
-    ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
-    ctx2d.lineTo(
-      CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
-      CPR() * (currentRowTop() + currentRowHeight() - 1.5)
-    );
-    ctx2d.stroke();
+    drawSelectedRowBorder(8);
   }
 }
 

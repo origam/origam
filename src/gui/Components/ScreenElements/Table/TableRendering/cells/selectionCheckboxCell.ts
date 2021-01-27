@@ -1,4 +1,4 @@
-import {context, context2d, currentDataRow, dataView, isCheckBoxedTable, rowId} from "../renderingValues";
+import {context, context2d, currentDataRow, dataView, drawingColumnIndex, isCheckBoxedTable, recordId, rowId, tablePanelView} from "../renderingValues";
 import {
   currentColumnLeft,
   currentColumnLeftVisible,
@@ -11,7 +11,8 @@ import {
   applyScrollTranslation,
   checkSymbolFontSize,
   checkBoxCellPaddingLeft,
-  topTextOffset
+  topTextOffset,
+  drawSelectedRowBorder
 } from "./cellsCommon";
 import {CPR} from "utils/canvas";
 import {onClick} from "../onClick";
@@ -19,13 +20,12 @@ import {getDataTable} from "model/selectors/DataView/getDataTable";
 import {getSelectionMember} from "model/selectors/DataView/getSelectionMember";
 import {getDataSourceFieldByName} from "model/selectors/DataSources/getDataSourceFieldByName";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import actions from "model/actions-tree";
 import {flow} from "mobx";
 import {
   hasSelectedRowId,
   setSelectedStateRowId,
 } from "model/actions-tree/selectionCheckboxes";
-import {getDataView} from "model/selectors/DataView/getDataView";
+import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 
 export const selectionCheckBoxColumnWidth = 20;
 
@@ -105,6 +105,8 @@ export function selectionCheckboxEmptyCellsDraws() {
 
 export function drawSelectionCheckboxBackground() {
   const ctx2d = context2d();
+  const selectedRowId = getSelectedRowId(tablePanelView());
+  const isRowCursor = recordId() === selectedRowId;
   ctx2d.fillStyle = "#ffffff";
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
@@ -112,4 +114,7 @@ export function drawSelectionCheckboxBackground() {
     CPR() * currentColumnWidth(),
     CPR() * currentRowHeight()
   );
+  if (isRowCursor) {
+    drawSelectedRowBorder(4);
+  }
 }
