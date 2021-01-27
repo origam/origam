@@ -11,9 +11,9 @@ import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 
 const OPERATORS = [
+    Operator.contains,
     Operator.startsWith,
     Operator.notStartsWith,
-    Operator.contains,
     Operator.notContains,
     Operator.endsWith,
     Operator.notEndsWith,
