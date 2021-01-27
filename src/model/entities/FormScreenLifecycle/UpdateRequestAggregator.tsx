@@ -44,7 +44,7 @@ export class UpdateRequestAggregator {
             );
           },
         });
-      }, 100);
+      }, 130);
     }
 
     return aggregatedRequest.promise!;
