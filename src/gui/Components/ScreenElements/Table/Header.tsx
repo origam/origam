@@ -5,6 +5,8 @@ import { action, observable } from "mobx";
 import { IOrderByDirection } from "model/entities/types/IOrderingConfiguration";
 import cx from "classnames";
 
+const MIN_COLUMN_WIDTH = 30;
+
 @observer
 export class Header extends React.Component<{
   id: string;
@@ -41,7 +43,9 @@ export class Header extends React.Component<{
   @action.bound handleWindowMouseMoveForColumnWidthChange(event: any) {
     const shVecX = event.screenX - this.mouseX0;
     this.width1 = this.width0 + shVecX;
-    this.props.onColumnWidthChange && this.props.onColumnWidthChange(this.props.id, this.width1);
+    if(this.width1 >= MIN_COLUMN_WIDTH){
+      this.props.onColumnWidthChange && this.props.onColumnWidthChange(this.props.id, this.width1);
+    }
   }
 
   @action.bound handleWindowMouseUpForColumnWidthChange(event: any) {

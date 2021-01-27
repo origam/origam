@@ -53,7 +53,7 @@ export function drawSelectedRowBorder(frontStripeWidth: number){
 }
 
 
-export const numberCellPaddingRight = Memoized(() =>  drawingColumnIndex() === 0 ? cellPaddingRightFirstCell : 15)
+export const numberCellPaddingRight = Memoized(() => 15)
 scRenderCell.push(() => numberCellPaddingRight.clear());
 
 export const cellPaddingLeft = 5

@@ -19,7 +19,6 @@ import {
   currentCellText,
   currentCellTextMultiline,
   currentCellValue,
-  currentColumnId,
   currentColumnLeft,
   currentColumnLeftVisible,
   currentColumnWidth,
@@ -449,7 +448,6 @@ function getBackGroundColor() {
 
   if (isColumnOrderChangeSource) {
     return "#eeeeff";
-    //} else if(cell.isColumnOrderChangeTarget){
   } else if (isCellCursor) {
     return "#EDF2FF";
   } 
