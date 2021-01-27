@@ -296,13 +296,33 @@ namespace Origam.Gui.Win
 
 				if(userConfig.PanelColumnConfig.Rows.Count > 0)
 				{
-					_splitter.SplitPosition = (userConfig.PanelColumnConfig.Rows[0] as OrigamPanelColumnConfig.PanelColumnConfigRow).ColumnWidth;
+					int storedSplitterPosition = (userConfig.PanelColumnConfig.Rows[0] as OrigamPanelColumnConfig.PanelColumnConfigRow).ColumnWidth;
+					int? position = StoredPositionToPixels(storedSplitterPosition);
+					if (position != null)
+					{
+						_splitter.SplitPosition = storedSplitterPosition;
+					}
 				}
 			}
 			catch {}
 
 			_settingSplitter = false;
 		}
+
+		private int? StoredPositionToPixels(int storedValue)
+		{
+			bool isScreenSizePositionRatio = storedValue > 1000; // this will work up to 8k 
+			if(isScreenSizePositionRatio)
+			{
+				var height = storedValue * Screen.FromControl(this).Bounds.Height / 1000_000;
+				return Convert.ToInt32(height);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		#endregion
 
 		#region Component Designer generated code
