@@ -11,6 +11,7 @@ import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowI
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import moment from "moment";
 import { CPR } from "utils/canvas";
+import { shadeHexColor } from "utils/colorUtils";
 import actionsUi from "../../../../../../model/actions-ui-tree";
 import { getDataView } from "../../../../../../model/selectors/DataView/getDataView";
 import {
@@ -34,8 +35,6 @@ import {
   context,
   context2d,
   currentDataRow,
-  currentRow,
-  dataTable,
   drawingColumnIndex,
   formScreen,
   recordId,
@@ -455,7 +454,9 @@ function getBackGroundColor() {
     return "#EDF2FF";
   } 
   else if (isRowCursor) {
-    return backgroundColor ?? "#EDF2FF";
+    return backgroundColor 
+      ? shadeHexColor(backgroundColor,-0.1) 
+      : "#EDF2FF";
   } 
   else {
     if (backgroundColor) {
