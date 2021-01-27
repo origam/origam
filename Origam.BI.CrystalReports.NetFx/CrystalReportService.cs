@@ -46,7 +46,7 @@ namespace Origam.BI.CrystalReports
 
 		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
 		{
-			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
+			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 
              if(! (data is IDataDocument | data == null))
              {
@@ -91,7 +91,7 @@ namespace Origam.BI.CrystalReports
 
 		public object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction)
 		{
-			AbstractDataReport report = ReportHelper.GetReportElement(reportId);
+			var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
 
 			IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
 			DataSet dataset = xmlDataDoc.DataSet;

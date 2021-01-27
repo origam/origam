@@ -52,7 +52,7 @@ namespace Origam.BI.CrystalReports
 		{
 			if(parameters == null) parameters = new Hashtable();
 			// get report model element
-			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
+			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 			ReportHelper.PopulateDefaultValues(report, parameters);
             ReportHelper.ComputeXsltValueParameters(report, parameters);
             // load data
@@ -90,7 +90,7 @@ namespace Origam.BI.CrystalReports
 		{
 			if(parameters == null) parameters = new Hashtable();
 			// get report model element
-			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
+			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
 			TraceReportData(data, report.Name);
 			ReportHelper.PopulateDefaultValues(report, parameters);
             ReportHelper.ComputeXsltValueParameters(report, parameters);

@@ -22,7 +22,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 using Origam.BI.CrystalReports;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;

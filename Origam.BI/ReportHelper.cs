@@ -48,72 +48,67 @@ namespace Origam.BI
 			}
 		}
 
-        public static void ComputeXsltValueParameters(AbstractReport report, Hashtable parameters, TraceTaskInfo traceTaskInfo = null)
+        public static void ComputeXsltValueParameters(AbstractReport report, 
+            Hashtable parameters, TraceTaskInfo traceTaskInfo = null)
         {
             if (parameters == null) return;
-            IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
+            IPersistenceService persistence = ServiceManager.Services
+                .GetService(typeof(IPersistenceService)) as IPersistenceService;
             RuleEngine ruleEngine = new RuleEngine(null, null);
 
-            Hashtable transformParams = new Hashtable();
-
-
-
-            foreach (object o in report.Parameters)
+            var transformParams = new Hashtable();
+            foreach (SchemaItemParameter parameter in report.Parameters)
             {
                 // send all ordinary parameters as an input to the Xslt
-                if (!(o is XsltInitialValueParameter))
+                if (parameter != null && !(parameter is XsltInitialValueParameter))
                 {
-                    SchemaItemParameter sp = o as SchemaItemParameter;
-                    if (sp != null)
-                    {
-                        transformParams.Add(sp.Name, parameters[sp.Name]);
-                    }
+                    transformParams.Add(parameter.Name, parameters[parameter.Name]);
                 }
             }
-
             string oldStepName = null;
             if (traceTaskInfo != null)
             {
                 oldStepName = traceTaskInfo.TraceStepName;
             }
-
-            foreach (object o in report.Parameters)
+            foreach (SchemaItemParameter parameter in report.Parameters)
             {
-                XsltInitialValueParameter xslValueParam = o as XsltInitialValueParameter;
-                if (xslValueParam == null) continue;
-
+                XsltInitialValueParameter xsltParameter = parameter as XsltInitialValueParameter;
+                if (xsltParameter == null)
+                {
+                    continue;
+                }
                 // do not recompute parameters if they were sent and they have some value
-                if (parameters.ContainsKey(xslValueParam.Name) && parameters[xslValueParam.Name] != null) continue;
-
-                IXsltEngine transformer = AsTransform.GetXsltEngine(persistence.SchemaProvider, xslValueParam.transformationId);
-
+                if (parameters.ContainsKey(xsltParameter.Name) 
+                    && parameters[xsltParameter.Name] != null)
+                {
+                    continue;
+                }
+                IXsltEngine transformer = AsTransform.GetXsltEngine(
+                    persistence.SchemaProvider,
+                    xsltParameter.transformationId);
                 IXmlContainer xmlData = new XmlContainer("<ROOT/>");
-
                 if (traceTaskInfo != null)
                 {
-                    traceTaskInfo.TraceStepName = String.Format(
+                    traceTaskInfo.TraceStepName = string.Format(
                         "{0}/ComputeParam_{1}", oldStepName,
-                        xslValueParam.Name);
+                        xsltParameter.Name);
                     transformer.SetTraceTaskInfo(traceTaskInfo);
                 }
-
                 IXmlContainer result = transformer.Transform(xmlData,
-                    xslValueParam.transformationId,
+                    xsltParameter.transformationId,
                     Guid.Empty, transformParams, null, ruleEngine, null, false);
-
-                // xslValueParam.DataType
-
                 XmlNode resultNode = result.Xml.SelectSingleNode("/ROOT/value");
                 // add a newlu created computed parameter
                 if (resultNode == null)
                 {
-                    parameters.Add(xslValueParam.Name, null);
+                    parameters.Add(xsltParameter.Name, null);
                 }
                 else
                 {
                     object valueToContext = resultNode.InnerText;
-                    RuleEngine.ConvertStringValueToContextValue(xslValueParam.DataType, resultNode.InnerText, ref valueToContext);
-                    parameters.Add(xslValueParam.Name, valueToContext);
+                    RuleEngine.ConvertStringValueToContextValue(
+                        xsltParameter.DataType, resultNode.InnerText, ref valueToContext);
+                    parameters.Add(xsltParameter.Name, valueToContext);
                 }
             }
             if (traceTaskInfo != null)
@@ -122,7 +117,8 @@ namespace Origam.BI
             }
         }
 
-        public static string BuildFileSystemReportFilePath(string filePath, Hashtable parameters)
+        public static string BuildFileSystemReportFilePath(
+            string filePath, Hashtable parameters)
         {
             foreach (DictionaryEntry entry in parameters)
             {
@@ -146,7 +142,8 @@ namespace Origam.BI
             return filePath;
         }
 
-        public static string ExpandCurlyBracketPlaceholdersWithParameters(string input, Hashtable parameters)
+        public static string ExpandCurlyBracketPlaceholdersWithParameters(
+            string input, Hashtable parameters)
         {
             string output = input;
 
@@ -177,42 +174,46 @@ namespace Origam.BI
 			}
 		}
 
-		public static void PopulateDefaultValues(AbstractReport report, Hashtable parameters)
+		public static void PopulateDefaultValues(AbstractReport report, 
+            Hashtable parameters)
 		{
-			IParameterService pms = ServiceManager.Services.GetService(typeof(IParameterService)) as IParameterService;
+			IParameterService pms = ServiceManager.Services
+                .GetService(typeof(IParameterService)) as IParameterService;
 
-			foreach(object o in report.Parameters)
+			foreach(object parameter in report.Parameters)
 			{
-				DefaultValueParameter defaultParam = o as DefaultValueParameter;
-
-				if(defaultParam != null)
-				{
-					if(parameters.Contains(defaultParam.Name))
-					{
-						object paramValue = parameters[defaultParam.Name];
-
-						if(paramValue == null || paramValue == DBNull.Value)
-						{
-							parameters[defaultParam.Name] = pms.GetParameterValue(defaultParam.DefaultValue.Id);
-						}
-					}
-					else
-					{
-						parameters[defaultParam.Name] = pms.GetParameterValue(defaultParam.DefaultValue.Id);
-					}
-				}
-			}
+                if (parameter is DefaultValueParameter defaultParam)
+                {
+                    if (parameters.Contains(defaultParam.Name))
+                    {
+                        object paramValue = parameters[defaultParam.Name];
+                        if (paramValue == null || paramValue == DBNull.Value)
+                        {
+                            parameters[defaultParam.Name] = 
+                                pms.GetParameterValue(defaultParam.DefaultValue.Id);
+                        }
+                    }
+                    else
+                    {
+                        parameters[defaultParam.Name] =
+                            pms.GetParameterValue(defaultParam.DefaultValue.Id);
+                    }
+                }
+            }
 		}
-		public static AbstractDataReport GetReportElement(Guid reportId)
+		public static T GetReportElement<T>(Guid reportId)
 		{
-			IPersistenceService persistence = ServiceManager.Services.GetService(typeof(IPersistenceService)) as IPersistenceService;
-			AbstractDataReport report = persistence.SchemaProvider.RetrieveInstance(typeof(AbstractReport), new ModelElementKey(reportId)) as AbstractDataReport;
-
+			var persistence = ServiceManager.Services
+                .GetService<IPersistenceService>();
+			var report = persistence.SchemaProvider
+                .RetrieveInstance<T>(reportId);
 			if (report == null)
 			{
-				throw new ArgumentOutOfRangeException("reportId", reportId, ResourceUtils.GetString("DefinitionNotInModel"));
+				throw new ArgumentOutOfRangeException(
+                    "reportId",
+                    reportId, 
+                    ResourceUtils.GetString("DefinitionNotInModel"));
 			}
-
 			return report;
 		}
 

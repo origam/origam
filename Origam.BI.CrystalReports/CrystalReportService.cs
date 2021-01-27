@@ -19,11 +19,8 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 */
 #endregion
 using System;
-using System.Xml;
 using System.Collections;
-using System.Data;
 using Origam.Schema.GuiModel;
-using System.Drawing.Printing;
 
 namespace Origam.BI.CrystalReports
 {
@@ -40,35 +37,37 @@ namespace Origam.BI.CrystalReports
 
 		#region IReportService Members
 
-		public void PrintReport(Guid reportId, IXmlContainer data, string printerName, int copies, Hashtable parameters)
+		public void PrintReport(Guid reportId, IXmlContainer data, 
+			string printerName, int copies, Hashtable parameters)
 		{
-			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
-
-             if(! (data is IDataDocument | data == null))
-             {
-                 throw new ArgumentOutOfRangeException("data", data, ResourceUtils.GetString("OnlyXmlDocSupported"));
-             }
-             DataSet dataset = null;
-             if(data is IDataDocument)
-             {
-                 dataset = (data as IDataDocument).DataSet;
-             }
-            using (LanguageSwitcher langSwitcher = new LanguageSwitcher(
-				ReportHelper.ResolveLanguage(data as IDataDocument, report)))
+			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+			var xmlDataDoc = ReportHelper
+				.LoadOrUseReportData(report, data, parameters, null);
+			using (var langSwitcher =
+				new LanguageSwitcher(ReportHelper.ResolveLanguage(xmlDataDoc, report)))
 			{
-				
+				ReportHelper.LogInfo(System.Reflection.MethodBase
+					.GetCurrentMethod().DeclaringType,
+					"Printing report '" + report.Name + "' to " + printerName);
+				_helper.PrintReport(report.Id, xmlDataDoc.DataSet,
+					parameters, printerName, copies);
 			}
 		}
 
-		public object GetReport(Guid reportId, IXmlContainer data, string format, Hashtable parameters, string dbTransaction)
+		public object GetReport(Guid reportId, IXmlContainer data, 
+			string format, Hashtable parameters, string dbTransaction)
 		{
-			AbstractDataReport report = ReportHelper.GetReportElement(reportId);
-			IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(report, data, parameters, dbTransaction);
-			DataSet dataset = xmlDataDoc.DataSet;
-			using (LanguageSwitcher langSwitcher = new LanguageSwitcher(ReportHelper.ResolveLanguage(xmlDataDoc, report)))
+			var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+			var xmlDataDoc = ReportHelper
+				.LoadOrUseReportData(report, data, parameters, dbTransaction);
+			using (var langSwitcher = 
+				new LanguageSwitcher(ReportHelper.ResolveLanguage(xmlDataDoc, report)))
 			{
-				ReportHelper.LogInfo(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, "Exporting report '" + report.Name + "' to " + format);
-				return _helper.CreateReport(report.Id, dataset, parameters, format);
+				ReportHelper.LogInfo(System.Reflection.MethodBase
+					.GetCurrentMethod().DeclaringType, 
+					"Exporting report '" + report.Name + "' to " + format);
+				return _helper.CreateReport(report.Id, xmlDataDoc.DataSet,
+					parameters, format);
 			}
 		}
         public void SetTraceTaskInfo(TraceTaskInfo traceTaskInfo)

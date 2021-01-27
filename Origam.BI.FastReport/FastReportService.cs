@@ -25,6 +25,7 @@ using System.Data;
 using System.IO;
 using FastReport;
 using FastReport.Export.PdfSimple;
+using Origam.Schema.GuiModel;
 
 namespace Origam.BI.FastReport
 {
@@ -33,7 +34,7 @@ namespace Origam.BI.FastReport
         public object GetReport(Guid reportId, IXmlContainer data, 
             string format, Hashtable parameters, string dbTransaction)
         {
-            var report = ReportHelper.GetReportElement(reportId);
+            var report = ReportHelper.GetReportElement<AbstractDataReport>(reportId);
             IDataDocument xmlDataDoc = ReportHelper.LoadOrUseReportData(
                 report, data, parameters, dbTransaction);
             DataSet dataset = xmlDataDoc.DataSet;

@@ -64,71 +64,96 @@ namespace Origam.BI.CrystalReports
 			}
 		}
 
-		public byte[] CreateReport(Guid reportId, DataSet data, Hashtable parameters, string format)
-		{
-			if(parameters == null) parameters = new Hashtable();
-			// get report model element
-			CrystalReport report = ReportHelper.GetReportElement(reportId) as CrystalReport;
-			TraceReportData(data, report.Name);
-			ReportHelper.PopulateDefaultValues(report, parameters);
-            ReportHelper.ComputeXsltValueParameters(report, parameters);
+		public byte[] CreateReport(Guid reportId, DataSet data, 
+            Hashtable parameters, string format)
+        {
+            // get report model element
+            var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+            parameters = PrepareParameters(data, parameters, report);
             // get report
-            return CreateReport(report.ReportFileName, data, parameters, report, format);
-		}
-		#endregion
-
-		private byte[] CreateReport(string fileName, DataSet data,
-			Hashtable parameters, CrystalReport reportElement, string format)
-		{
-			if (log.IsInfoEnabled)
-			{
-				WriteInfoLog(reportElement, "Generating report started");
-			}
-			if (parameters == null) throw new NullReferenceException(
-				ResourceUtils.GetString("CreateReport: Parameters cannot be null."));
-			if (log.IsInfoEnabled)
-			{
-				WriteInfoLog(reportElement, "Generating report finished");
-			}
-			string baseUrl = "http://localhost:61822/";
-			var request = new ReportRequest
-			{
-				Dataset = data
-			};
-			foreach (DictionaryEntry item in parameters)
-			{
-				request.Parameters.Add(new Parameter 
-				{
-					Key = item.Key.ToString(), 
-					Value = item.Value?.ToString() 
-				});
+            string paramString = $"&format={format}";
+            object result = SendReportRequest("Report", report.ReportFileName, 
+                data, parameters, report, paramString);
+            if (result is byte[] bytes)
+            {
+                return bytes;
             }
-			var stringBuilder = new StringBuilder();
+            throw new Exception("Invalid data returned. Expected byte array.");
+        }
+
+        public void PrintReport(Guid reportId, DataSet data, 
+            Hashtable parameters, string printerName, int copies)
+        {
+            // get report model element
+            var report = ReportHelper.GetReportElement<CrystalReport>(reportId);
+            parameters = PrepareParameters(data, parameters, report);
+            // get report
+            string paramString = $"&printerName={printerName}&copies={copies}";
+            SendReportRequest("Print", report.ReportFileName, 
+                data, parameters, report, paramString);
+        }
+
+        private Hashtable PrepareParameters(DataSet data, Hashtable parameters, 
+            CrystalReport report)
+        {
+            if (parameters == null) parameters = new Hashtable();
+            TraceReportData(data, report.Name);
+            ReportHelper.PopulateDefaultValues(report, parameters);
+            ReportHelper.ComputeXsltValueParameters(report, parameters);
+            return parameters;
+        }
+        #endregion
+
+        public object SendReportRequest(string method, string fileName, 
+            DataSet data, Hashtable parameters, CrystalReport reportElement, 
+            string paramString)
+        {
+            if (log.IsInfoEnabled)
+            {
+                WriteInfoLog(reportElement, "Generating report started");
+            }
+            if (parameters == null) throw new NullReferenceException(
+                ResourceUtils.GetString("CreateReport: Parameters cannot be null."));
+            var settings = ConfigurationManager.GetActiveConfiguration();
+            string baseUrl = settings.ReportConnectionString;
+            var request = new ReportRequest
+            {
+                Dataset = data
+            };
+            foreach (DictionaryEntry item in parameters)
+            {
+                request.Parameters.Add(new Parameter
+                {
+                    Key = item.Key.ToString(),
+                    Value = item.Value?.ToString()
+                });
+            }
+            var stringBuilder = new StringBuilder();
             using (var stringWriter = new EncodingStringWriter(stringBuilder, Encoding.UTF8))
             {
-				using (var xmlWriter = XmlWriter.Create(stringWriter,
-					new XmlWriterSettings { Encoding = Encoding.UTF8 }))
-				{
-					DataContractSerializer ser =
-						new DataContractSerializer(typeof(ReportRequest));
-					ser.WriteObject(xmlWriter, request);
-				}
-			}
-			var result = HttpTools.SendRequest(baseUrl +
-				$"api/Report?report={fileName}&format={format}", 
-				"POST", 
-				stringBuilder.ToString().Replace(
-					" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"",
-					""), 
-				"application/xml", 
-				new Hashtable(), 
-				null);
-			if(result is byte[] bytes)
-            {
-				return bytes; 
+                using (var xmlWriter = XmlWriter.Create(stringWriter,
+                    new XmlWriterSettings { Encoding = Encoding.UTF8 }))
+                {
+                    DataContractSerializer ser =
+                        new DataContractSerializer(typeof(ReportRequest));
+                    ser.WriteObject(xmlWriter, request);
+                }
             }
-			throw new Exception("Invalid data returned. Expected byte array.");
-		}
+            var result = HttpTools.SendRequest(baseUrl +
+                $"api/{method}?report={fileName}{paramString}",
+                "POST",
+                stringBuilder.ToString().Replace(
+                    " xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"",
+                    ""),
+                "application/xml",
+                new Hashtable(),
+                null);
+            if (log.IsInfoEnabled)
+            {
+                WriteInfoLog(reportElement, "Generating report finished");
+            }
+            return result;
+        }
 
         private void WriteInfoLog(CrystalReport reportElement, string message)
         {
