@@ -64,7 +64,8 @@ export class FormScreen implements IFormScreen {
   componentBindings: IComponentBinding[] = [];
 
   getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
-    this.dataSources.forEach(dataSource => getRowStates(dataSource).clearAll());
+    this.dataSources.filter(dataSource => dataSource.entity === childEntity)
+    .forEach(dataSource => getRowStates(dataSource).clearAll());
     return this.getDataCache.getData(childEntity, parentRecordId, rootRecordId);
   }
 
