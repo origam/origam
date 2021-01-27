@@ -118,6 +118,7 @@ export class FormBuilder extends React.Component<{
             subscribeToFocusManager={(radioInput) =>
               focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }
+            labelColor={foreGroundColor}
             onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
@@ -170,6 +171,7 @@ export class FormBuilder extends React.Component<{
                           focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
                         }
                         onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
+                        labelColor={foreGroundColor}
                       />
                     </Provider>
                   );
