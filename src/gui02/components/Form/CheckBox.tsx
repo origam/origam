@@ -17,6 +17,7 @@ export const CheckBox: React.FC<{
   onKeyDown: (event: any) => void;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   onClick: ()=>void;
+  labelColor?: string;
 }> = inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
   return {
@@ -49,6 +50,7 @@ export const CheckBox: React.FC<{
     return {
       top: top,
       left: left + 20,
+      color: props.labelColor
     };
   }
 

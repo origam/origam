@@ -23,6 +23,7 @@ import { DomEvent } from "leaflet";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 
 @inject(({ dataView }) => {
   return { dataView, xmlFormRootObject: dataView.formViewUI };
@@ -52,8 +53,13 @@ export class FormBuilder extends React.Component<{
     const rowId = getSelectedRowId(this.props.dataView);
     const dataTable = getDataTable(this.props.dataView);
     let backgroundColor: string | undefined;
+    let foreGroundColor: string | undefined;
     if (row && rowId) {
       backgroundColor = getRowStateRowBgColor(self.props.dataView, rowId);
+      foreGroundColor = getRowStateForegroundColor(
+        self.props.dataView,
+        rowId || ""
+      );
     }
     const focusManager = self.props.dataView!.focusManager;
 
@@ -74,6 +80,7 @@ export class FormBuilder extends React.Component<{
             top={parseInt(xfo.attributes.Y, 10)}
             title={xfo.attributes.Title}
             backgroundColor={backgroundColor}
+            foreGroundColor={foreGroundColor}
           >
             {xfo.elements.map((child: any) => recursive(child))}
           </FormSection>
@@ -87,6 +94,7 @@ export class FormBuilder extends React.Component<{
             top={+xfo.attributes.Y}
             width={+xfo.attributes.Width}
             height={+xfo.attributes.Height}
+            foregroundColor={foreGroundColor}
           />
         );
       } else if (xfo.name === "Control" && xfo.attributes.Column === "RadioButton") {
@@ -111,6 +119,7 @@ export class FormBuilder extends React.Component<{
             subscribeToFocusManager={(radioInput) =>
               focusManager.subscribe(radioInput, xfo.attributes.Id, xfo.attributes.TabIndex)
             }
+            labelColor={foreGroundColor}
             onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
             onSelected={(value) => {
               const formScreenLifecycle = getFormScreenLifecycle(self.props.dataView);
@@ -163,6 +172,7 @@ export class FormBuilder extends React.Component<{
                           focusManager.subscribe(radioInput, property!.id, property!.tabIndex)
                         }
                         onClick={() => self?.props?.dataView?.focusManager.stopAutoFocus()}
+                        labelColor={foreGroundColor}
                       />
                     </Provider>
                   );
@@ -176,6 +186,7 @@ export class FormBuilder extends React.Component<{
                       hideCaption={property.column === "Image"}
                       captionLength={property.captionLength}
                       captionPosition={property.captionPosition}
+                      captionColor={foreGroundColor}
                       dock={property.dock}
                       height={property.height}
                       width={property.width}
@@ -187,6 +198,7 @@ export class FormBuilder extends React.Component<{
                           isRichText={property.isRichText}
                           textualValue={textualValue}
                           xmlNode={property.xmlNode}
+                          backgroundColor={backgroundColor}
                         />
                       }
                     />
