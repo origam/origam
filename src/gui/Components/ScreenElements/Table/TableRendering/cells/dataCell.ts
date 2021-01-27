@@ -4,7 +4,6 @@ import selectors from "model/selectors-tree";
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
 import { getRowStateAllowRead } from "model/selectors/RowState/getRowStateAllowRead";
-import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
@@ -442,9 +441,7 @@ function getBackGroundColor() {
   const isCellCursor = currentProperty().id === selectedColumnId && recordId() === selectedRowId;
   const isRowCursor = recordId() === selectedRowId;
 
-  const backgroundColor =
-    getRowStateColumnBgColor(tablePanelView(), recordId(), "") ||
-    getRowStateRowBgColor(tablePanelView(), recordId());
+  const backgroundColor = getRowStateRowBgColor(tablePanelView(), recordId());
 
   if (isColumnOrderChangeSource) {
     return "#eeeeff";
