@@ -20,6 +20,7 @@
     flex-wrap: nowrap;
     flex: 1 0 0;
     overflow: scroll;
+    padding-left: 24px;
 }
 
 .nodeLabel{
