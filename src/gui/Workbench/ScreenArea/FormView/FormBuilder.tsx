@@ -73,6 +73,7 @@ export class FormBuilder extends React.Component<{
             left={parseInt(xfo.attributes.X, 10)}
             top={parseInt(xfo.attributes.Y, 10)}
             title={xfo.attributes.Title}
+            backgroundColor={backgroundColor}
           >
             {xfo.elements.map((child: any) => recursive(child))}
           </FormSection>
