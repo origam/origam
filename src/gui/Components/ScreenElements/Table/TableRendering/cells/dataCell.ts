@@ -465,9 +465,11 @@ function getBackGroundColor() {
     //} else if(cell.isColumnOrderChangeTarget){
   } else if (isCellCursor) {
     return "#EDF2FF";
-  } else if (isRowCursor) {
-    return "#EDF2FF";
-  } else {
+  } 
+  else if (isRowCursor) {
+    return backgroundColor ?? "#EDF2FF";
+  } 
+  else {
     if (backgroundColor) {
       return backgroundColor;
     } else {
