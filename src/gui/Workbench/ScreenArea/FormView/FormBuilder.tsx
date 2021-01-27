@@ -197,6 +197,7 @@ export class FormBuilder extends React.Component<{
                           isRichText={property.isRichText}
                           textualValue={textualValue}
                           xmlNode={property.xmlNode}
+                          backgroundColor={backgroundColor}
                         />
                       }
                     />

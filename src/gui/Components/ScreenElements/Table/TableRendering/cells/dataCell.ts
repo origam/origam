@@ -453,7 +453,7 @@ function getBackGroundColor() {
   } 
   else if (isRowCursor) {
     return backgroundColor 
-      ? shadeHexColor(backgroundColor,-0.1) 
+      ? shadeHexColor(backgroundColor,-0.1)!
       : "#EDF2FF";
   } 
   else {

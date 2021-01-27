@@ -25,6 +25,8 @@ import {
   cellPaddingRightFirstCell,
   rowHeight,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import { shadeHexColor } from "utils/colorUtils";
+import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -59,17 +61,17 @@ export class TableViewEditor extends React.Component<{
       this.props.property,
       rowId || ""
     );
-    const backgroundColor = getRowStateColumnBgColor(
-      this.props.property,
-      rowId || "",
-      this.props.property!.id
-    );
     const dataView = getDataView(this.props.property);
     const readOnly =
-      isReadOnly(this.props.property!, rowId) ||
-      (dataView.orderProperty != undefined &&
-        this.props.property?.name === dataView.orderProperty.name);
-
+    isReadOnly(this.props.property!, rowId) ||
+    (dataView.orderProperty != undefined &&
+      this.props.property?.name === dataView.orderProperty.name);
+      
+    const customBackgroundColor = getRowStateRowBgColor(dataView, rowId);
+    const backgroundColor = readOnly 
+      ? shadeHexColor(customBackgroundColor, -0.1)
+      : customBackgroundColor;
+        
     const isFirsColumn = getTablePanelView(dataView).firstColumn === this.props.property;
 
     switch (this.props.property!.column) {
@@ -151,6 +153,8 @@ export class TableViewEditor extends React.Component<{
             xmlNode={this.props.property!.xmlNode}
             onDoubleClick={(event) => this.onDoubleClick(event)}
             isReadOnly={readOnly}
+            foregroundColor={foregroundColor}
+            backgroundColor={backgroundColor}
             autoSort={this.props.property!.autoSort}
             onKeyDown={this.props.onEditorKeyDown}
             subscribeToFocusManager={(input) => input.focus()} // will cause the editor to take focus after opening
