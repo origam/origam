@@ -61,8 +61,7 @@ export class FormViewEditor extends React.Component<{
     const row = getSelectedRow(this.props.property);
     const foregroundColor = getRowStateForegroundColor(
       this.props.property,
-      rowId || "",
-      this.props.property!.id
+      rowId || ""
     );
     const backgroundColor = getRowStateColumnBgColor(
       this.props.property,

@@ -57,8 +57,7 @@ export class TableViewEditor extends React.Component<{
     const rowId = getSelectedRowId(this.props.property);
     const foregroundColor = getRowStateForegroundColor(
       this.props.property,
-      rowId || "",
-      this.props.property!.id
+      rowId || ""
     );
     const backgroundColor = getRowStateColumnBgColor(
       this.props.property,
