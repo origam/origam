@@ -63,7 +63,10 @@ export class TextEditor extends React.Component<{
   @action.bound
   handleFocus(event: any) {
     if (this.elmInput) {
-      this.elmInput.select();
+      const isNotMemoField = this.props.maxLength && this.props.maxLength > 0;
+      if(isNotMemoField){
+        this.elmInput.select();
+      }
       this.elmInput.scrollLeft = 0;
     }
   }
