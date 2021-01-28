@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ar="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractReport/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:wr="http://schemas.origam.com/Origam.Schema.GuiModel.WebReport/6.0.1" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0">
+  <wr:Report
+    asi:abstract="false"
+    wr:forceExternalUrl="false"
+    x:id="fe175d0d-49b8-4f7a-8e0b-b50c843f78cd"
+    wr:isUrlEscaped="false"
+    asi:name="WebReport_parametrized"
+    wr:openMethod="OrigamTab"
+    wr:url="https://www.origam.com/{pageName}">
+    <sip:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataType="String"
+      x:id="19dfa73e-ee20-4a39-8e47-9532ccdd76ae"
+      asi:name="pageName" />
+  </wr:Report>
+</x:file>
