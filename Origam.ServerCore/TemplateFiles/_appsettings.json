@@ -36,7 +36,8 @@
     "WebClient": {
       "RedirectUris": [
         "https://localhost:3000/#origamClientCallback/",
-        "http://localhost:3000/#origamClientCallback/"
+        "http://localhost:3000/#origamClientCallback/",
+        "https://localhost:3000/#origamClientCallbackRenew/"
       ],
       "PostLogoutRedirectUris": [ "/", "https://192.168.0.80:45455" ]
     },
