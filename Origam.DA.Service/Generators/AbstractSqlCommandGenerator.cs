@@ -3776,8 +3776,11 @@ namespace Origam.DA.Service
                         concatBuilder.Append(" " + StringConcatenationChar + " ");
                     }
                 }
-                concatBuilder.Append(TextSql(
-                    RenderExpression(columnRenderItem, replaceParameterTexts, dynamicParameters, parameterReferences)));
+                string sqlText = TextSql(
+                    RenderExpression(columnRenderItem, replaceParameterTexts,
+                        dynamicParameters, parameterReferences));
+                string nonNullExpression = $"ISNULL ({sqlText}, '')";
+                concatBuilder.Append(nonNullExpression);
                 i++;
             }
 
