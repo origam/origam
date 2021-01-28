@@ -8,6 +8,7 @@ import { observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getSearcher } from "model/selectors/getSearcher";
 import { getIconUrl } from "gui/getIconUrl";
+import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -22,7 +23,7 @@ export class SearchDialog extends React.Component<{
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
   searcher = getSearcher(this.props.ctx);
-
+  
   @observable
   value = "";
 
@@ -43,8 +44,23 @@ export class SearchDialog extends React.Component<{
   }
 
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "ArrowDown") {
+      this.searcher.selectNextResult();
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      this.searcher.selectPreviousResult();
+      return;
+    }
     if (event.key === "Enter") {
-      this.searcher.searchOnServer();
+      if(this.searcher.selectedResult){
+        this.searcher.selectedResult.onClick();
+        this.onResultItemClick();
+      }
+      else
+      {
+        this.searcher.searchOnServer();
+      }
       return;
     }
     if(this.timeout)
@@ -90,8 +106,9 @@ export class SearchDialog extends React.Component<{
                   .map(group=> 
                     <ResultGroup 
                       name={group.name} 
-                      results={group.results}
+                      group={group}
                       onResultItemClick={()=> this.onResultItemClick()}
+                      selectedResult={this.searcher.selectedResult}
                       />) 
                 }
               </div>
@@ -106,21 +123,20 @@ export class SearchDialog extends React.Component<{
 @observer
 export class ResultGroup extends React.Component<{
   name: string;
-  results: ISearchResult[];
+  group: ISearchResultGroup;
   onResultItemClick: ()=> void;
+  selectedResult: ISearchResult | undefined;
 }> {
-  @observable
-  isExpanded = true;
-  
+
   onGroupClick() {
-    this.isExpanded = !this.isExpanded;
+    this.props.group.isExpanded = !this.props.group.isExpanded;
   } 
 
   render() {
     return (
       <div>
         <div className={S.resultGroupRow} onClick={() => this.onGroupClick()}>
-          {this.isExpanded ? (
+          {this.props.group.isExpanded ? (
             <i className={"fas fa-angle-up " + S.arrow} />
           ) : (
             <i className={"fas fa-angle-down " + S.arrow} />
@@ -130,10 +146,11 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-        {this.isExpanded && this.props.results.map(result => 
+        {this.props.group.isExpanded && this.props.group.results.map(result => 
             <ResultItem 
               result={result} 
               onResultItemClick={()=> this.props.onResultItemClick()}
+              selected={this.props.selectedResult?.id === result.id}
               />)
         }
         </div>
@@ -146,6 +163,7 @@ export class ResultGroup extends React.Component<{
 export class ResultItem extends React.Component<{
   result: ISearchResult;
   onResultItemClick: ()=> void;
+  selected: boolean;
 }> {
 
   onClick(){
@@ -155,7 +173,9 @@ export class ResultItem extends React.Component<{
 
   render() {
     return (
-      <div className={S.resultIemRow} onClick={() => this.onClick()} >
+      <div 
+        className={S.resultIemRow + " " + (this.props.selected ? S.resultIemRowSelected : "")} 
+        onClick={() => this.onClick()} >
         <div className={S.itemIcon}>
           <Icon src= {getIconUrl(this.props.result.icon)} />
         </div>

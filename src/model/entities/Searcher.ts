@@ -2,7 +2,7 @@ import {action, computed, observable } from "mobx";
 import FlexSearch from "flexsearch";
 import _ from "lodash";
 import {ISearcher} from "./types/ISearcher";
-import { IServerSearchResult } from "./types/ISearchResult";
+import { ISearchResult, IServerSearchResult } from "./types/ISearchResult";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
@@ -21,20 +21,72 @@ export class Searcher implements ISearcher {
   index: any;
 
   @observable
+  selectedResult: ISearchResult | undefined; 
+  
+  @observable
   serverResultGroups: ISearchResultGroup[] = [];
   
   @observable
   menuResultGroup: ISearchResultGroup | undefined = undefined;
-
+  
   @computed
   get resultGroups(){
     return this.menuResultGroup && this.menuResultGroup.results.length > 0 
-      ? [this.menuResultGroup, ...this.serverResultGroups]
-      : this.serverResultGroups;
+    ? [this.menuResultGroup, ...this.serverResultGroups]
+    : this.serverResultGroups;
   }
 
   onItemServerClick(searchResult: IServerSearchResult){
     onSearchResultClick(this)(searchResult.dataSourceLookupId, searchResult.referenceId)
+  }
+
+  selectFirst(){
+    if(this.resultGroups.length === 0 ||
+       this.resultGroups[0].results.length === 0)
+    {
+      return
+    }
+    this.selectedResult = this.resultGroups[0].results[0];
+  }
+  
+  selectNextResult() {
+    if(!this.selectedResult){
+      this.selectFirst();
+      return;
+    }
+    const currentGroup = this.resultGroups
+      .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
+    const currentResultIndex = currentGroup.results.findIndex(result => result.id === this.selectedResult!.id);
+    if(currentResultIndex < currentGroup.results.length -1){
+      this.selectedResult = currentGroup.results[currentResultIndex + 1];
+    }else{
+      const currentGroupIndex = this.resultGroups.indexOf(currentGroup);
+      if(currentGroupIndex < this.resultGroups.length -1){
+        const newGroup = this.resultGroups[currentGroupIndex + 1];
+        newGroup.isExpanded = true;
+        this.selectedResult = newGroup.results[0];
+      }
+    }
+  }
+
+  selectPreviousResult(): void {
+    if(!this.selectedResult){
+      this.selectFirst();
+      return;
+    }
+    const currentGroup = this.resultGroups
+      .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
+    const currentResultIndex = currentGroup.results.findIndex(result => result.id === this.selectedResult!.id);
+    if(currentResultIndex > 0){
+      this.selectedResult = currentGroup.results[currentResultIndex - 1];
+    }else{
+      const currentGroupIndex = this.resultGroups.indexOf(currentGroup);
+      if(currentGroupIndex > 0){
+        const newGroup = this.resultGroups[currentGroupIndex - 1];
+        newGroup.isExpanded = true;
+        this.selectedResult = newGroup.results[newGroup.results.length - 1];
+      }
+    }
   }
 
   searchOnServer(){
@@ -50,12 +102,13 @@ export class Searcher implements ISearcher {
         const searchResults = await api.search(this.searchTerm);
         for (const searchResult of searchResults) {
           searchResult.icon = IMenuItemIcon.Form;
+          searchResult.id =  searchResult.referenceId;
           searchResult.onClick = ()=> this.onItemServerClick(searchResult);
         }
         const groupMap =  searchResults.groupBy((item: IServerSearchResult) => item.group);  
         this.serverResultGroups = Array.from(groupMap.keys())
-                .sort()
-                .map(name => { return {name: name, results: groupMap.get(name)!}})
+          .sort()
+          .map(name => new SearchResultGroup(name, groupMap.get(name)!));
       } 
     });
   }
@@ -115,7 +168,7 @@ export class Searcher implements ISearcher {
               };
           }
         })
-    this.menuResultGroup = {name: T("Menu", "menu"), results: searchResults};
+    this.menuResultGroup =new SearchResultGroup(T("Menu", "menu"), searchResults);
   }
 
 
@@ -151,4 +204,15 @@ export class Searcher implements ISearcher {
     this.serverResultGroups = [];
     this.menuResultGroup = undefined;
   }
+}
+
+class SearchResultGroup implements ISearchResultGroup{
+  @observable
+  isExpanded: boolean = true;
+
+  constructor(
+    public name: string,
+    public results: ISearchResult[],
+  )
+  {}
 }
