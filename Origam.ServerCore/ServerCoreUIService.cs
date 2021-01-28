@@ -77,7 +77,8 @@ namespace Origam.ServerCore
             Hashtable parameters, 
             DataReportExportFormatType dataReportExportFormatType)
         {
-            throw new NotImplementedException();
+            return reportManager.GetReportStandalone(
+                reportId, parameters, dataReportExportFormatType);
         }
 
         public UIResult InitUI(UIRequest request)
