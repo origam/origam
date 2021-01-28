@@ -114,10 +114,10 @@ const instance2XmlNode = new WeakMap<any, any>();
 
 function fixColumnWidth(width: number) {
   // Sometimes they send us negative width, which destroys table rendering.
-  if (!width || width < 0) {
+  if (isNaN(width)) {
     return 100;
   } else {
-    return width;
+    return Math.abs(width);
   }
 }
 
@@ -480,7 +480,7 @@ export function* interpretScreenXml(
               prop && prop.setColumnWidth(fixColumnWidth(width));
 
               // COLUMN HIDING
-              if (column.attributes.isHidden === "true") {
+              if (column.attributes.isHidden === "true" || width < 0) {
                 dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
               }
               if (column.attributes.aggregationType !== "0") {
@@ -523,6 +523,12 @@ export function* interpretScreenXml(
           }
         });
       });
+
+      properties.filter(prop => prop.width < 0)
+        .forEach(prop => {
+          prop.width = Math.abs(prop.width);
+          dataViewInstance.tablePanelView.setPropertyHidden(prop.id, true);
+        });
 
       lookupMenuMappings.forEach((mapping: any) => {
         if (mapping.lookupId && mapping.menuId) {
