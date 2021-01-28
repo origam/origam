@@ -57,6 +57,10 @@ export class MainMenuState implements IMainMenuState {
   @observable
   folderStateMap: Map<string, boolean> = new Map();
 
+  closeAll(){
+    this.folderStateMap.clear();
+  }
+
   isOpen(menuId: string): boolean {
     return this.folderStateMap.get(menuId) ?? false;
   }

@@ -6,7 +6,6 @@ import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
 import { observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
-import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getSearcher } from "model/selectors/getSearcher";
 import { getIconUrl } from "gui/getIconUrl";
 
@@ -17,7 +16,6 @@ export const SEARCH_DIALOG_KEY = "Search Dialog";
 export class SearchDialog extends React.Component<{
   ctx: any;
   onCloseClick: () => void;
-  onSearchResultsChange: (groups: ISearchResultGroup[]) => void;
 }> {
 
   input: HTMLInputElement | undefined;
@@ -41,7 +39,6 @@ export class SearchDialog extends React.Component<{
   }
 
   onResultItemClick(){
-    this.props.onSearchResultsChange(this.searcher.resultGroups);
     this.props.onCloseClick();
   }
 

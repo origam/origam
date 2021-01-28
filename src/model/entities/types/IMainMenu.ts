@@ -33,6 +33,7 @@ export interface IMainMenuEnvelope {
 
 
 export interface IMainMenuState {
+  closeAll(): void;
   isOpen(menuId: string): boolean;
   setIsOpen(menuId: string, state: boolean): void;
   flipIsOpen(menuId: string): void;

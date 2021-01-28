@@ -5,7 +5,6 @@ import { getWorkbench } from "model/selectors/getWorkbench";
 import React from "react";
 
 export function openSearchWindow(ctx: any) {
-  const sidebarState = getWorkbench(ctx).sidebarState;
   getSearcher(ctx).clear();
 
   const closeDialog = getDialogStack(ctx).pushDialog(
@@ -13,7 +12,6 @@ export function openSearchWindow(ctx: any) {
     <SearchDialog 
       ctx={ctx} 
       onCloseClick={() => closeDialog()}
-      onSearchResultsChange={(groups) => sidebarState.onSearchResultsChange(groups)}
     />,
     undefined,
     true
