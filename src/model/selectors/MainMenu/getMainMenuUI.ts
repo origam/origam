@@ -2,6 +2,7 @@ import {getMainMenu} from "./getMainMenu";
 import {IMainMenuContent} from "../../entities/types/IMainMenu";
 import { getMainMenuState } from "./getMainMenuState";
 import { runInAction } from "mobx";
+import { getAllParents } from "model/selectors/MainMenu/menuNode";
 
 export function getMainMenuUI(ctx: any) {
   return (getMainMenu(ctx) as IMainMenuContent)!.menuUI;
@@ -20,15 +21,4 @@ export function openSingleMenuFolder(folderNode: any, ctx: any){
       mainMenuState.setIsOpen(node.attributes.id, true);
     }
   });
-}
-
-function getAllParents(node: any) {
-  const parents: any[] = [];
-  let cn = node;
-  while (cn !== undefined) {
-    parents.push(cn);
-    cn = cn.parent;
-  }
-  parents.reverse();
-  return parents.slice(2); // Strip out root and Menu node
 }

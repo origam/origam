@@ -12,6 +12,7 @@ import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick
 import { T } from "utils/translation";
 import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
 import { getWorkbench } from "model/selectors/getWorkbench";
+import { getAllParents, getPath } from "model/selectors/MainMenu/menuNode";
 
 
 export class Searcher implements ISearcher {
@@ -98,7 +99,7 @@ export class Searcher implements ISearcher {
                 type: "Submenu",
                 icon: node.attributes.icon,
                 label: node.attributes.label,
-                description: "",
+                description: getPath(node),
                 onClick: ()=>this.onSubMenuClicked(node)
               };
             case "Command":
@@ -107,7 +108,7 @@ export class Searcher implements ISearcher {
                 type: "Command",
                 icon: node.attributes.icon,
                 label: node.attributes.label,
-                description: "",
+                description: getPath(node),
                 onClick: ()=>this.onCommandClicked(node)
               };
           }
