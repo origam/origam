@@ -81,7 +81,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
 
     let dialogInfo: IDialogInfo | undefined;
-    if (type === IMainMenuItemType.FormRefWithSelection) {
+    if (type === IMainMenuItemType.FormRefWithSelection || type === IMainMenuItemType.ReportRefWithSelection) {
       dialogInfo = new DialogInfo(parseInt(dialogWidth, 10), parseInt(dialogHeight, 10));
     }
     if (event && !(event.ctrlKey || event.metaKey)) {
@@ -90,6 +90,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         existingItem &&
         type !== IMainMenuItemType.FormRefWithSelection &&
         type !== IMainMenuItemType.ReportReferenceMenuItem &&
+        type !== IMainMenuItemType.ReportRefWithSelection &&
         !alwaysOpenNew
       ) {
         openedScreens.activateItem(id, existingItem.order);
