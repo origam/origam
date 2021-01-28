@@ -14,19 +14,19 @@ export function onTableKeyDown(ctx: any) {
       const dataView = getDataView(ctx);
       switch (event.key) {
         case "ArrowUp":
+          event.preventDefault();
           if (!(yield shouldProceedToChangeRow(dataView))) {
             break;
           }
           yield* selectPrevRow(ctx)();
-          event.preventDefault();
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowDown":
+          event.preventDefault();
           if (!(yield shouldProceedToChangeRow(dataView))) {
             break;
           }
           yield* selectNextRow(ctx)();
-          event.preventDefault();
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowLeft":
