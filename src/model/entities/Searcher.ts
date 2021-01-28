@@ -13,6 +13,7 @@ import { T } from "utils/translation";
 import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
+import { getPath } from "model/selectors/MainMenu/menuNode";
 
 
 export class Searcher implements ISearcher {
