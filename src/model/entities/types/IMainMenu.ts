@@ -26,7 +26,16 @@ export interface IMainMenuEnvelope {
   setMainMenu(mainMenu: IMainMenuContent | undefined): void;
   setLoading(state: boolean): void;
 
+  mainMenuState: IMainMenuState;
+
   parent?: any;
+}
+
+
+export interface IMainMenuState {
+  isOpen(menuId: string): boolean;
+  setIsOpen(menuId: string, state: boolean): void;
+  flipIsOpen(menuId: string): void;
 }
 
 export type IMainMenu = IMainMenuEnvelope & IMainMenuContent;

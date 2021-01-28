@@ -1,4 +1,4 @@
-import {IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope} from "./types/IMainMenu";
+import {IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope, IMainMenuState} from "./types/IMainMenu";
 import {action, observable} from "mobx";
 import {proxyEnrich} from "utils/esproxy";
 
@@ -31,6 +31,7 @@ export class MainMenuEnvelope implements IMainMenuEnvelope {
 
   @observable mainMenu?: IMainMenu | undefined;
   @observable isLoading: boolean = false;
+  mainMenuState: IMainMenuState = new MainMenuState();
 
   @action.bound
   setMainMenu(mainMenu: IMainMenuContent | undefined): void {
@@ -49,4 +50,23 @@ export class MainMenuEnvelope implements IMainMenuEnvelope {
   }
 
   parent?: any;
+}
+
+export class MainMenuState implements IMainMenuState {
+
+  @observable
+  folderStateMap: Map<string, boolean> = new Map();
+
+  isOpen(menuId: string): boolean {
+    return this.folderStateMap.get(menuId) ?? false;
+  }
+
+  setIsOpen(menuId: string, state: boolean){
+    this.folderStateMap.set(menuId, state);
+  }
+
+  flipIsOpen(menuId: string){
+    const newState = !this.isOpen(menuId);
+    this.setIsOpen(menuId, newState);
+  }
 }
