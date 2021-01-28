@@ -1,6 +1,6 @@
-import { getMainMenuEnvelope } from "./getMainMenuEnvelope";
+import { getWorkbench } from "../getWorkbench";
 
 
 export function getMainMenuState(ctx: any) {
-  return getMainMenuEnvelope(ctx).mainMenuState;
+  return getWorkbench(ctx).sidebarState.mainMenuState;
 }

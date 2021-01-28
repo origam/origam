@@ -31,7 +31,6 @@ export class MainMenuEnvelope implements IMainMenuEnvelope {
 
   @observable mainMenu?: IMainMenu | undefined;
   @observable isLoading: boolean = false;
-  mainMenuState: IMainMenuState = new MainMenuState();
 
   @action.bound
   setMainMenu(mainMenu: IMainMenuContent | undefined): void {
@@ -50,27 +49,4 @@ export class MainMenuEnvelope implements IMainMenuEnvelope {
   }
 
   parent?: any;
-}
-
-export class MainMenuState implements IMainMenuState {
-
-  @observable
-  folderStateMap: Map<string, boolean> = new Map();
-
-  closeAll(){
-    this.folderStateMap.clear();
-  }
-
-  isOpen(menuId: string): boolean {
-    return this.folderStateMap.get(menuId) ?? false;
-  }
-
-  setIsOpen(menuId: string, state: boolean){
-    this.folderStateMap.set(menuId, state);
-  }
-
-  flipIsOpen(menuId: string){
-    const newState = !this.isOpen(menuId);
-    this.setIsOpen(menuId, newState);
-  }
 }
