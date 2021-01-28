@@ -10,6 +10,10 @@ import { getApi } from "model/selectors/getApi";
 import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 import { T } from "utils/translation";
+import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
+import { getWorkbench } from "model/selectors/getWorkbench";
+import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
+import { getPath } from "model/selectors/MainMenu/menuNode";
 
 
 export class Searcher implements ISearcher {
@@ -69,6 +73,23 @@ export class Searcher implements ISearcher {
 
   doSearchTerm = _.throttle(this.doSearchTermImm, 100);
 
+  onCommandClicked(node: any){
+    onMainMenuItemClick(this)({
+      event: null,
+      item: node,
+      idParameter: undefined,
+    });
+    const sidebarState = getWorkbench(this).sidebarState;
+    sidebarState.onSearchResultsChange(this.resultGroups);
+  }
+
+  onSubMenuClicked(node: any){
+    openSingleMenuFolder(node, this);
+    const sidebarState = getWorkbench(this).sidebarState;
+    sidebarState.activeSection = "Menu";
+    getMainMenuState(this).scrollToItem(node.attributes.id);
+  }
+
   @action.bound doSearchTermImm(term: string) {
     if (!this.index) return;
     const searchResults = 
@@ -80,14 +101,8 @@ export class Searcher implements ISearcher {
                 type: "Submenu",
                 icon: node.attributes.icon,
                 label: node.attributes.label,
-                description: "",
-                onClick: ()=>{
-                  onMainMenuItemClick(this)({
-                    event: null,
-                    item: node,
-                    idParameter: undefined,
-                  })
-                }
+                description: getPath(node),
+                onClick: ()=>this.onSubMenuClicked(node)
               };
             case "Command":
               return {
@@ -95,14 +110,8 @@ export class Searcher implements ISearcher {
                 type: "Command",
                 icon: node.attributes.icon,
                 label: node.attributes.label,
-                description: "",
-                onClick: ()=>{
-                  onMainMenuItemClick(this)({
-                    event: null,
-                    item: node,
-                    idParameter: undefined,
-                  })
-                }
+                description: getPath(node),
+                onClick: ()=>this.onCommandClicked(node)
               };
           }
         })

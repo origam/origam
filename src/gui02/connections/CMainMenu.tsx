@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { MainMenuUL } from "gui02/components/MainMenu/MainMenuUL";
 import { MainMenuLI } from "gui02/components/MainMenu/MainMenuLI";
 import { MainMenuItem } from "gui02/components/MainMenu/MainMenuItem";
@@ -20,6 +20,7 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import {getDialogStack} from "model/selectors/getDialogStack";
 import {ChooseFavoriteFolderDialog} from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
 import { getIconUrl as getIconUrl } from "gui/getIconUrl";
+import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -189,14 +190,28 @@ class CMainMenuFolderItem extends React.Component<{
   level: number;
   isOpen: boolean;
 }> {
-  @observable isOpen = false;
+
+  static contextType = MobXProviderContext;
+  itemRef: RefObject<HTMLDivElement> = React.createRef();
+
+  componentDidMount(){
+    this.mainMenuState.setReference(this.id, this.itemRef);
+  }
+
+  get id(){
+    return this.props.node.attributes.id;
+  }
+
+  get mainMenuState() {
+    return getMainMenuState(this.context.application);
+  }
 
   @action.bound handleClick(event: any) {
-    this.isOpen = !this.isOpen;
+    this.mainMenuState.flipIsOpen(this.id);
   }
 
   get icon() {
-    if (this.isOpen) {
+    if (this.mainMenuState.isOpen(this.id)) {
       return <Icon src="./icons/folder-open.svg" tooltip={this.props.node.attributes.label} />;
     } else {
       return <Icon src="./icons/folder-closed.svg" tooltip={this.props.node.attributes.label} />;
@@ -206,7 +221,7 @@ class CMainMenuFolderItem extends React.Component<{
   render() {
     const { props } = this;
     return (
-      <>
+      <div ref={this.itemRef}>
         <MainMenuItem
           level={props.level}
           isActive={false}
@@ -215,8 +230,8 @@ class CMainMenuFolderItem extends React.Component<{
           isHidden={!props.isOpen}
           onClick={this.handleClick}
         />
-        {listFromNode(props.node, props.level + 1, props.isOpen && this.isOpen)}
-      </>
+        {listFromNode(props.node, props.level + 1, this.props.isOpen && this.mainMenuState.isOpen(this.id))}
+      </div>
     );
   }
 }

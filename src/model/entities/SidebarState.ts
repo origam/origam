@@ -4,6 +4,8 @@ import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSid
 import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
 import { onSidebarInfoSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
 import { getWorkbench } from "model/selectors/getWorkbench";
+import { RefObject } from "react";
+import { IMainMenuState } from "./types/IMainMenu";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
 
 export class SidebarState {
@@ -16,6 +18,8 @@ export class SidebarState {
 
   @observable
   activeInfoSubsection = IInfoSubsection.Info;
+
+  mainMenuState: IMainMenuState = new MainMenuState();
 
   parent: any;
 
@@ -49,5 +53,39 @@ export class SidebarState {
   onSearchResultsChange(results: ISearchResultGroup[]) {
     this.searchResultGroups = results;
     this.activeSection = "Search";
+  }
+}
+
+
+export class MainMenuState implements IMainMenuState {
+
+  @observable
+  folderStateMap: Map<string, boolean> = new Map();
+
+  refMap: Map<string, RefObject<HTMLDivElement>> = new Map();
+
+  closeAll(){
+    this.folderStateMap.clear();
+  }
+
+  isOpen(menuId: string): boolean {
+    return this.folderStateMap.get(menuId) ?? false;
+  }
+
+  setIsOpen(menuId: string, state: boolean){
+    this.folderStateMap.set(menuId, state);
+  }
+
+  flipIsOpen(menuId: string){
+    const newState = !this.isOpen(menuId);
+    this.setIsOpen(menuId, newState);
+  }
+
+  setReference(id: string, ref: RefObject<HTMLDivElement>): void{
+    this.refMap.set(id, ref);
+  }
+
+  scrollToItem(id: string){
+    this.refMap.get(id)?.current?.scrollIntoView();
   }
 }
