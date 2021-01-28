@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { MainMenuUL } from "gui02/components/MainMenu/MainMenuUL";
 import { MainMenuLI } from "gui02/components/MainMenu/MainMenuLI";
 import { MainMenuItem } from "gui02/components/MainMenu/MainMenuItem";
@@ -192,8 +192,13 @@ class CMainMenuFolderItem extends React.Component<{
 }> {
 
   static contextType = MobXProviderContext;
+  itemRef: RefObject<HTMLDivElement> = React.createRef();
 
-  get id (){
+  componentDidMount(){
+    this.mainMenuState.setReference(this.id, this.itemRef);
+  }
+
+  get id(){
     return this.props.node.attributes.id;
   }
 
@@ -216,7 +221,7 @@ class CMainMenuFolderItem extends React.Component<{
   render() {
     const { props } = this;
     return (
-      <>
+      <div ref={this.itemRef}>
         <MainMenuItem
           level={props.level}
           isActive={false}
@@ -226,7 +231,7 @@ class CMainMenuFolderItem extends React.Component<{
           onClick={this.handleClick}
         />
         {listFromNode(props.node, props.level + 1, this.props.isOpen && this.mainMenuState.isOpen(this.id))}
-      </>
+      </div>
     );
   }
 }

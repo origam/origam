@@ -12,7 +12,7 @@ import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick
 import { T } from "utils/translation";
 import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
 import { getWorkbench } from "model/selectors/getWorkbench";
-import { getAllParents, getPath } from "model/selectors/MainMenu/menuNode";
+import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 
 
 export class Searcher implements ISearcher {
@@ -86,6 +86,7 @@ export class Searcher implements ISearcher {
     openSingleMenuFolder(node, this);
     const sidebarState = getWorkbench(this).sidebarState;
     sidebarState.activeSection = "Menu";
+    getMainMenuState(this).scrollToItem(node.attributes.id);
   }
 
   @action.bound doSearchTermImm(term: string) {

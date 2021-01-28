@@ -1,3 +1,5 @@
+import { RefObject } from "react";
+
 export enum IMainMenuItemType {
   FormRef = "FormReferenceMenuItem",
   FormRefWithSelection = "FormReferenceMenuItem_WithSelection",
@@ -35,6 +37,8 @@ export interface IMainMenuState {
   isOpen(menuId: string): boolean;
   setIsOpen(menuId: string, state: boolean): void;
   flipIsOpen(menuId: string): void;
+  setReference(id: string, ref: RefObject<HTMLDivElement>): void;
+  scrollToItem(id: string): void
 }
 
 export type IMainMenu = IMainMenuEnvelope & IMainMenuContent;

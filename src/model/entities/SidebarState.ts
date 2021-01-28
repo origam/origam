@@ -4,6 +4,7 @@ import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSid
 import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";
 import { onSidebarInfoSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarInfoSectionExpanded";
 import { getWorkbench } from "model/selectors/getWorkbench";
+import { RefObject } from "react";
 import { IMainMenuState } from "./types/IMainMenu";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
 
@@ -61,6 +62,8 @@ export class MainMenuState implements IMainMenuState {
   @observable
   folderStateMap: Map<string, boolean> = new Map();
 
+  refMap: Map<string, RefObject<HTMLDivElement>> = new Map();
+
   closeAll(){
     this.folderStateMap.clear();
   }
@@ -76,5 +79,13 @@ export class MainMenuState implements IMainMenuState {
   flipIsOpen(menuId: string){
     const newState = !this.isOpen(menuId);
     this.setIsOpen(menuId, newState);
+  }
+
+  setReference(id: string, ref: RefObject<HTMLDivElement>): void{
+    this.refMap.set(id, ref);
+  }
+
+  scrollToItem(id: string){
+    this.refMap.get(id)?.current?.scrollIntoView();
   }
 }
