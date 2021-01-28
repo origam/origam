@@ -56,7 +56,12 @@ export class Searcher implements ISearcher {
     }
     const currentGroup = this.resultGroups
       .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
-    const currentResultIndex = currentGroup.results.findIndex(result => result.id === this.selectedResult!.id);
+    if(!currentGroup){
+      this.selectFirst();
+      return;
+    }
+    const currentResultIndex = currentGroup.results
+      .findIndex(result => result.id === this.selectedResult!.id);
     if(currentResultIndex < currentGroup.results.length -1){
       this.selectedResult = currentGroup.results[currentResultIndex + 1];
     }else{
@@ -76,7 +81,12 @@ export class Searcher implements ISearcher {
     }
     const currentGroup = this.resultGroups
       .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
-    const currentResultIndex = currentGroup.results.findIndex(result => result.id === this.selectedResult!.id);
+    if(!currentGroup){
+      this.selectFirst();
+      return;
+    }
+    const currentResultIndex = currentGroup.results
+      .findIndex(result => result.id === this.selectedResult!.id);
     if(currentResultIndex > 0){
       this.selectedResult = currentGroup.results[currentResultIndex - 1];
     }else{

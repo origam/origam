@@ -36,14 +36,8 @@ export class SearchDialog extends React.Component<{
   onKeyDown(event: any){
     if(event.key === "Escape"){
       this.props.onCloseClick();
+      return;
     }
-  }
-
-  onResultItemClick(){
-    this.props.onCloseClick();
-  }
-
-  async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "ArrowDown") {
       this.searcher.selectNextResult();
       return;
@@ -63,6 +57,13 @@ export class SearchDialog extends React.Component<{
       }
       return;
     }
+  }
+
+  onResultItemClick(){
+    this.props.onCloseClick();
+  }
+
+  async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if(this.timeout)
     {
       clearTimeout(this.timeout);
