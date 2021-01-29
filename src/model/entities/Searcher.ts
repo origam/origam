@@ -74,16 +74,14 @@ export class Searcher implements ISearcher {
       this.selectFirst();
       return;
     }
-    const currentGroup = this.resultGroups
-      .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
-    if(!currentGroup){
+    const resultIndices = this.getSelectedResultIndices();
+    if(resultIndices.groupIndex === -1){
       this.selectFirst();
       return;
     }
-    const currentResultIndex = currentGroup.results
-      .findIndex(result => result.id === this.selectedResult!.id);
-    if(currentResultIndex < currentGroup.results.length -1){
-      this.selectedResult = currentGroup.results[currentResultIndex + 1];
+    const currentGroup = this.resultGroups[resultIndices.groupIndex];
+    if(resultIndices.indexInGroup < currentGroup.results.length -1){
+      this.selectedResult = currentGroup.results[resultIndices.indexInGroup + 1];
     }else{
       const currentGroupIndex = this.resultGroups.indexOf(currentGroup);
       if(currentGroupIndex < this.resultGroups.length -1){
@@ -99,16 +97,14 @@ export class Searcher implements ISearcher {
       this.selectFirst();
       return;
     }
-    const currentGroup = this.resultGroups
-      .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
-    if(!currentGroup){
+    const resultIndices = this.getSelectedResultIndices();
+    if(resultIndices.groupIndex === -1){
       this.selectFirst();
       return;
     }
-    const currentResultIndex = currentGroup.results
-      .findIndex(result => result.id === this.selectedResult!.id);
-    if(currentResultIndex > 0){
-      this.selectedResult = currentGroup.results[currentResultIndex - 1];
+    const currentGroup = this.resultGroups[resultIndices.groupIndex];
+    if(resultIndices.indexInGroup > 0){
+      this.selectedResult = currentGroup.results[resultIndices.indexInGroup - 1];
     }else{
       const currentGroupIndex = this.resultGroups.indexOf(currentGroup);
       if(currentGroupIndex > 0){
@@ -118,6 +114,24 @@ export class Searcher implements ISearcher {
       }
     }
   }
+
+  getSelectedResultIndices() :IResultIndices {
+    const currentGroupIndex = this.resultGroups
+      .findIndex(group => group.results.some(result => result.id === this.selectedResult!.id))!;
+    if(currentGroupIndex === -1){
+      return {
+        groupIndex: -1,
+        indexInGroup: -1
+      }
+    }
+    const currentResultIndex = this.resultGroups[currentGroupIndex].results
+      .findIndex(result => result.id === this.selectedResult!.id);
+    return {
+      groupIndex: currentGroupIndex,
+      indexInGroup: currentResultIndex
+    }
+  }
+
 
   searchOnServer(){
     if(!this.searchTerm.trim()){
@@ -313,4 +327,9 @@ class NodeContainer {
     public latinizedLowerLabel: string,
     public node: any
   ){}
+}
+
+interface IResultIndices {
+  groupIndex: number,
+  indexInGroup: number
 }
