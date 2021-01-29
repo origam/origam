@@ -42,11 +42,13 @@ export class SearchDialog extends React.Component<{
       return;
     }
     if (event.key === "ArrowDown") {
+      event.preventDefault();
       this.searcher.selectNextResult();
       this.scrollToCell();
       return;
     }
     if (event.key === "ArrowUp") {
+      event.preventDefault();
       this.searcher.selectPreviousResult();
       this.scrollToCell();
       return;
@@ -83,7 +85,7 @@ export class SearchDialog extends React.Component<{
 
     const scrollBarHeight = scrollRectangle.height - scrollElement.clientHeight;
     const distanceUnderBottom = selectedElementRectangle.bottom - scrollRectangle.bottom + scrollBarHeight;
-    
+
     if(distanceOverTop > 0){
       scrollElement.scrollTop -= distanceOverTop;
     }
