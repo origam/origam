@@ -1,6 +1,6 @@
 import {action, computed, observable } from "mobx";
 import _ from "lodash";
-import {ISearcher} from "./types/ISearcher";
+import {IResultIndices, ISearcher} from "./types/ISearcher";
 import { ISearchResult, IServerSearchResult } from "./types/ISearchResult";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
@@ -327,9 +327,4 @@ class NodeContainer {
     public latinizedLowerLabel: string,
     public node: any
   ){}
-}
-
-interface IResultIndices {
-  groupIndex: number,
-  indexInGroup: number
 }

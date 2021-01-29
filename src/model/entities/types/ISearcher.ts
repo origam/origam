@@ -12,6 +12,12 @@ export interface ISearcher {
   clear(): void;
   selectNextResult(): void;
   selectPreviousResult(): void;
+  getSelectedResultIndices() :IResultIndices;
 
   parent?: any;
+}
+
+export interface IResultIndices {
+  groupIndex: number,
+  indexInGroup: number
 }
