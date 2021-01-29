@@ -122,6 +122,9 @@ export class Searcher implements ISearcher {
   searchOnServer(){
     if(!this.searchTerm.trim()){
       this.serverResultGroups = [];
+      this.menuResultGroup = undefined;
+      this.workQueueResultGroup = undefined;
+      this.chatResultGroup = undefined;
       return;
     }
     runInFlowWithHandler({
