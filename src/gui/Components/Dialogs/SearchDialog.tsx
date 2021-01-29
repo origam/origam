@@ -1,6 +1,6 @@
 import { Icon } from "gui02/components/Icon/Icon";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { RefObject } from "react";
 import { T } from "utils/translation";
 import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
@@ -22,6 +22,9 @@ export class SearchDialog extends React.Component<{
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
+  scrollDivRef: RefObject<HTMLDivElement> = React.createRef();
+  resultElementMap: Map<string, RefObject<HTMLDivElement>> = new Map();
+
   searcher = getSearcher(this.props.ctx);
   
   @observable
@@ -40,10 +43,12 @@ export class SearchDialog extends React.Component<{
     }
     if (event.key === "ArrowDown") {
       this.searcher.selectNextResult();
+      this.scrollToCell();
       return;
     }
     if (event.key === "ArrowUp") {
       this.searcher.selectPreviousResult();
+      this.scrollToCell();
       return;
     }
     if (event.key === "Enter") {
@@ -61,6 +66,30 @@ export class SearchDialog extends React.Component<{
 
   onResultItemClick(){
     this.props.onCloseClick();
+  }
+
+  scrollToCell(){
+    if(!this.searcher.selectedResult){
+      return;
+    }
+    const scrollElement =this.scrollDivRef.current;
+    const selectedElement = this.resultElementMap.get(this.searcher.selectedResult.id)?.current;
+    if(!selectedElement || !scrollElement){
+      return;
+    }
+    const selectedElementRectangle = selectedElement.getBoundingClientRect();
+    const scrollRectangle = scrollElement.getBoundingClientRect();
+    const distanceOverTop = scrollRectangle.top - selectedElementRectangle.top;
+
+    const scrollBarHeight = scrollRectangle.height - scrollElement.clientHeight;
+    const distanceUnderBottom = selectedElementRectangle.bottom - scrollRectangle.bottom + scrollBarHeight;
+    
+    if(distanceOverTop > 0){
+      scrollElement.scrollTop -= distanceOverTop;
+    }
+    else if(distanceUnderBottom > 0){
+      scrollElement.scrollTop += distanceUnderBottom;
+    }
   }
 
   async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -101,7 +130,7 @@ export class SearchDialog extends React.Component<{
             />
           </div>
           {(this.searcher.resultGroups.length > 0 ) &&
-            <div className={S.resultArea}>
+            <div className={S.resultArea} ref={this.scrollDivRef}>
               <div className={S.resultsContainer}>
                 {this.searcher.resultGroups
                   .map(group=> 
@@ -110,6 +139,7 @@ export class SearchDialog extends React.Component<{
                       group={group}
                       onResultItemClick={()=> this.onResultItemClick()}
                       selectedResult={this.searcher.selectedResult}
+                      registerElementRef={(id, ref)=> this.resultElementMap.set(id, ref)}
                       />) 
                 }
               </div>
@@ -127,6 +157,7 @@ export class ResultGroup extends React.Component<{
   group: ISearchResultGroup;
   onResultItemClick: ()=> void;
   selectedResult: ISearchResult | undefined;
+  registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }> {
 
   onGroupClick() {
@@ -152,6 +183,7 @@ export class ResultGroup extends React.Component<{
               result={result} 
               onResultItemClick={()=> this.props.onResultItemClick()}
               selected={this.props.selectedResult?.id === result.id}
+              registerElementRef={this.props.registerElementRef}
               />)
         }
         </div>
@@ -165,7 +197,18 @@ export class ResultItem extends React.Component<{
   result: ISearchResult;
   onResultItemClick: ()=> void;
   selected: boolean;
+  registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }> {
+
+  divRef: RefObject<HTMLDivElement> = React.createRef();
+
+  componentDidMount(){
+    this.props.registerElementRef(this.props.result.id, this.divRef);
+  }
+
+  componentDidUpdate(){
+    this.props.registerElementRef(this.props.result.id, this.divRef);
+  }
 
   onClick(){
     this.props.onResultItemClick();
@@ -176,6 +219,7 @@ export class ResultItem extends React.Component<{
     return (
       <div 
         className={S.resultIemRow + " " + (this.props.selected ? S.resultIemRowSelected : "")} 
+        ref={this.divRef}
         onClick={() => this.onClick()} >
         <div className={S.itemIcon}>
           <Icon src= {getIconUrl(this.props.result.icon)} />
