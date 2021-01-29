@@ -37,7 +37,7 @@ export interface IMainMenuState {
   isOpen(menuId: string): boolean;
   setIsOpen(menuId: string, state: boolean): void;
   flipIsOpen(menuId: string): void;
-  setReference(id: string, ref: RefObject<HTMLDivElement>): void;
+  setReference(id: string, ref: RefObject<HTMLElement>): void;
   scrollToItem(id: string): void
 }
 

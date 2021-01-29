@@ -40,6 +40,7 @@ export class CWorkQueues extends React.Component {
                   {item.countTotal > 0 && <> ({item.countTotal})</>}
                 </>
               }
+              id={item.id}
               onClick={event => onWorkQueuesListItemClick(this.workbench)(event, item)}
             />
           );

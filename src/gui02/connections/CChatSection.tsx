@@ -61,6 +61,7 @@ export class CChatSection extends React.Component {
                 </>
               }
               onClick={(event) => onChatroomsListItemClick(this.workbench)(event, item)}
+              id={item.id}
             />
           );
         })}

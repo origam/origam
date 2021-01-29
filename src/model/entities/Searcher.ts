@@ -170,7 +170,7 @@ export class Searcher implements ISearcher {
     const sidebarState = getWorkbench(this).sidebarState;
     onWorkQueuesListItemClick(this)(null, item);
     sidebarState.activeSection = "WorkQueues";
-    // getMainMenuState(this).scrollToItem(item.attributes.id);
+    getMainMenuState(this).scrollToItem(item.id);
   }
 
   @action.bound doSearchTermImm(term: string) {

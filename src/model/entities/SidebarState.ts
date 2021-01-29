@@ -62,7 +62,7 @@ export class MainMenuState implements IMainMenuState {
   @observable
   folderStateMap: Map<string, boolean> = new Map();
 
-  refMap: Map<string, RefObject<HTMLDivElement>> = new Map();
+  refMap: Map<string, RefObject<HTMLElement>> = new Map();
 
   closeAll(){
     this.folderStateMap.clear();
@@ -81,7 +81,7 @@ export class MainMenuState implements IMainMenuState {
     this.setIsOpen(menuId, newState);
   }
 
-  setReference(id: string, ref: RefObject<HTMLDivElement>): void{
+  setReference(id: string, ref: RefObject<HTMLElement>): void{
     this.refMap.set(id, ref);
   }
 
