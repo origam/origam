@@ -1,6 +1,6 @@
 import { Icon } from "gui02/components/Icon/Icon";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { RefObject } from "react";
 import { T } from "utils/translation";
 import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
@@ -8,6 +8,7 @@ import { observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getSearcher } from "model/selectors/getSearcher";
 import { getIconUrl } from "gui/getIconUrl";
+import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -21,8 +22,11 @@ export class SearchDialog extends React.Component<{
   input: HTMLInputElement | undefined;
   refInput = (elm: HTMLInputElement) => (this.input = elm);
 
-  searcher = getSearcher(this.props.ctx);
+  scrollDivRef: RefObject<HTMLDivElement> = React.createRef();
+  resultElementMap: Map<string, RefObject<HTMLDivElement>> = new Map();
 
+  searcher = getSearcher(this.props.ctx);
+  
   @observable
   value = "";
 
@@ -35,6 +39,28 @@ export class SearchDialog extends React.Component<{
   onKeyDown(event: any){
     if(event.key === "Escape"){
       this.props.onCloseClick();
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      this.searcher.selectNextResult();
+      this.scrollToCell();
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      this.searcher.selectPreviousResult();
+      this.scrollToCell();
+      return;
+    }
+    if (event.key === "Enter") {
+      if(this.searcher.selectedResult){
+        this.searcher.selectedResult.onClick();
+        this.onResultItemClick();
+      }
+      else
+      {
+        this.searcher.searchOnServer();
+      }
+      return;
     }
   }
 
@@ -42,11 +68,31 @@ export class SearchDialog extends React.Component<{
     this.props.onCloseClick();
   }
 
-  async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Enter") {
-      this.searcher.searchOnServer();
+  scrollToCell(){
+    if(!this.searcher.selectedResult){
       return;
     }
+    const scrollElement =this.scrollDivRef.current;
+    const selectedElement = this.resultElementMap.get(this.searcher.selectedResult.id)?.current;
+    if(!selectedElement || !scrollElement){
+      return;
+    }
+    const selectedElementRectangle = selectedElement.getBoundingClientRect();
+    const scrollRectangle = scrollElement.getBoundingClientRect();
+    const distanceOverTop = scrollRectangle.top - selectedElementRectangle.top;
+
+    const scrollBarHeight = scrollRectangle.height - scrollElement.clientHeight;
+    const distanceUnderBottom = selectedElementRectangle.bottom - scrollRectangle.bottom + scrollBarHeight;
+    
+    if(distanceOverTop > 0){
+      scrollElement.scrollTop -= distanceOverTop;
+    }
+    else if(distanceUnderBottom > 0){
+      scrollElement.scrollTop += distanceUnderBottom;
+    }
+  }
+
+  async onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if(this.timeout)
     {
       clearTimeout(this.timeout);
@@ -84,14 +130,16 @@ export class SearchDialog extends React.Component<{
             />
           </div>
           {(this.searcher.resultGroups.length > 0 ) &&
-            <div className={S.resultArea}>
+            <div className={S.resultArea} ref={this.scrollDivRef}>
               <div className={S.resultsContainer}>
                 {this.searcher.resultGroups
                   .map(group=> 
                     <ResultGroup 
                       name={group.name} 
-                      results={group.results}
+                      group={group}
                       onResultItemClick={()=> this.onResultItemClick()}
+                      selectedResult={this.searcher.selectedResult}
+                      registerElementRef={(id, ref)=> this.resultElementMap.set(id, ref)}
                       />) 
                 }
               </div>
@@ -106,21 +154,21 @@ export class SearchDialog extends React.Component<{
 @observer
 export class ResultGroup extends React.Component<{
   name: string;
-  results: ISearchResult[];
+  group: ISearchResultGroup;
   onResultItemClick: ()=> void;
+  selectedResult: ISearchResult | undefined;
+  registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }> {
-  @observable
-  isExpanded = true;
-  
+
   onGroupClick() {
-    this.isExpanded = !this.isExpanded;
+    this.props.group.isExpanded = !this.props.group.isExpanded;
   } 
 
   render() {
     return (
       <div>
         <div className={S.resultGroupRow} onClick={() => this.onGroupClick()}>
-          {this.isExpanded ? (
+          {this.props.group.isExpanded ? (
             <i className={"fas fa-angle-up " + S.arrow} />
           ) : (
             <i className={"fas fa-angle-down " + S.arrow} />
@@ -130,10 +178,12 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-        {this.isExpanded && this.props.results.map(result => 
+        {this.props.group.isExpanded && this.props.group.results.map(result => 
             <ResultItem 
               result={result} 
               onResultItemClick={()=> this.props.onResultItemClick()}
+              selected={this.props.selectedResult?.id === result.id}
+              registerElementRef={this.props.registerElementRef}
               />)
         }
         </div>
@@ -146,7 +196,19 @@ export class ResultGroup extends React.Component<{
 export class ResultItem extends React.Component<{
   result: ISearchResult;
   onResultItemClick: ()=> void;
+  selected: boolean;
+  registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }> {
+
+  divRef: RefObject<HTMLDivElement> = React.createRef();
+
+  componentDidMount(){
+    this.props.registerElementRef(this.props.result.id, this.divRef);
+  }
+
+  componentDidUpdate(){
+    this.props.registerElementRef(this.props.result.id, this.divRef);
+  }
 
   onClick(){
     this.props.onResultItemClick();
@@ -155,7 +217,10 @@ export class ResultItem extends React.Component<{
 
   render() {
     return (
-      <div className={S.resultIemRow} onClick={() => this.onClick()} >
+      <div 
+        className={S.resultIemRow + " " + (this.props.selected ? S.resultIemRowSelected : "")} 
+        ref={this.divRef}
+        onClick={() => this.onClick()} >
         <div className={S.itemIcon}>
           <Icon src= {getIconUrl(this.props.result.icon)} />
         </div>

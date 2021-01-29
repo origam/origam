@@ -65,8 +65,11 @@
   height: 28px;
 }
 
-.resultIemRow:hover {
+.resultIemRowSelected{
   background-color: #CFDFFF;
+}
+
+.resultIemRow:hover {
   cursor: pointer;
 }
 

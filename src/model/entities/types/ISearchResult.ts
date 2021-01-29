@@ -2,6 +2,7 @@ import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 
 export interface ISearchResult
 {
+  id: string;
   label: string,
   description: string,
   icon: IMenuItemIcon;
@@ -17,6 +18,5 @@ export interface IServerSearchResult extends ISearchResult
 }
 
 export interface IMenuSearchResult  extends ISearchResult {
-  id: string;
   type: string;
 }
