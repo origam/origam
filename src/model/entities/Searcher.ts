@@ -1,5 +1,4 @@
 import {action, computed, observable } from "mobx";
-import FlexSearch from "flexsearch";
 import _ from "lodash";
 import {ISearcher} from "./types/ISearcher";
 import { ISearchResult, IServerSearchResult } from "./types/ISearchResult";
@@ -14,11 +13,12 @@ import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getPath } from "model/selectors/MainMenu/menuNode";
+import { latinize } from "utils/string";
 
 
 export class Searcher implements ISearcher {
   parent?: any;
-  index: any;
+  nodeIndex: NodeContainer[] = [];
 
   @observable
   selectedResult: ISearchResult | undefined; 
@@ -154,44 +154,40 @@ export class Searcher implements ISearcher {
   }
 
   @action.bound doSearchTermImm(term: string) {
-    if (!this.index) return;
-    const searchResults = 
-        this.index.search(term).map((node: any) => {
-          switch (node.name) {
-            case "Submenu":
-              return {
-                id: node.attributes.id,
-                type: "Submenu",
-                icon: node.attributes.icon,
-                label: node.attributes.label,
-                description: getPath(node),
-                onClick: ()=>this.onSubMenuClicked(node)
-              };
-            case "Command":
-              return {
-                id: node.attributes.id,
-                type: "Command",
-                icon: node.attributes.icon,
-                label: node.attributes.label,
-                description: getPath(node),
-                onClick: ()=>this.onCommandClicked(node)
-              };
-          }
-        })
+    const latinizedTerm = latinize(term.trim()).toLowerCase();
+    const searchResults = this.nodeIndex
+          .filter(container => {
+            return container.latinizedLowerLabel.includes(latinizedTerm);
+          })
+          .map((container: any) => {
+            const node = container.node;
+            switch (node.name) {
+              case "Submenu":
+                return {
+                  id: node.attributes.id,
+                  type: "Submenu",
+                  icon: node.attributes.icon,
+                  label: node.attributes.label,
+                  description: getPath(node),
+                  onClick: ()=>this.onSubMenuClicked(node)
+                };
+              case "Command":
+                return {
+                  id: node.attributes.id,
+                  type: "Command",
+                  icon: node.attributes.icon,
+                  label: node.attributes.label,
+                  description: getPath(node),
+                  onClick: ()=>this.onCommandClicked(node)
+                };
+              }
+            }) as ISearchResult[];
     this.menuResultGroup =new SearchResultGroup(T("Menu", "menu"), searchResults);
   }
 
 
   @action.bound
   indexMainMenu(mainMenu: any) {
-    this.index = FlexSearch.create({
-      encode: "extra",
-      doc: {
-        id: "attributes:id",
-        field: "attributes:label"
-      }
-    } as any);
-    const documents: any[] = [];
     const recursive = (node: any) => {
       if (node.attributes.isHidden === "true") {
         return;
@@ -199,14 +195,13 @@ export class Searcher implements ISearcher {
       switch (node.name) {
         case "Submenu":
         case "Command":
-          documents.push(node);
+          this.nodeIndex.push(new NodeContainer(latinize(node.attributes.label).toLowerCase(),node));
       }
       node.elements.forEach((element: any) => recursive(element));
     };
     mainMenu.elements.forEach((element: any) => {
       recursive(element);
     });
-    this.index.add(documents);
   }
 
   @action.bound
@@ -225,4 +220,11 @@ class SearchResultGroup implements ISearchResultGroup{
     public results: ISearchResult[],
   )
   {}
+}
+
+class NodeContainer {
+  constructor(
+    public latinizedLowerLabel: string,
+    public node: any
+  ){}
 }
