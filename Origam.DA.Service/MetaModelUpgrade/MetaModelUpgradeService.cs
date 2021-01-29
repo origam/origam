@@ -83,7 +83,6 @@ namespace Origam.DA.Service.MetaModelUpgrade
             filesProcessed = 0;
             UpgradeStarted?.Invoke(null, EventArgs.Empty);
             List<XmlFileData> upgradedData = xmlFileData
-                .AsParallel()
                 .Where(x => !canceled)
                 .Select(fileData => Upgrade(fileData, xmlFileData.Count))
                 .Where(fileData => fileData.XmlDocument.FileElement.HasChildNodes)
