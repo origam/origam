@@ -226,9 +226,8 @@ export class Searcher implements ISearcher {
 
   @action.bound
   indexWorkQueues(items: any[]){
-    items
-      .map(item => new NodeContainer(latinize(item.name).toLowerCase(), item))
-      .forEach(container => this.workQueueIndex.push(container));
+    this.workQueueIndex = items
+      .map(item => new NodeContainer(latinize(item.name).toLowerCase(), item));
   }
 
   @action.bound
