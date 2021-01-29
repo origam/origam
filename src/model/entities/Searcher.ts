@@ -24,6 +24,8 @@ export class Searcher implements ISearcher {
   workQueueIndex: NodeContainer[] = [];
   chatsIndex: NodeContainer[] = [];
 
+  searchTerm = "";
+
   @observable
   selectedResult: ISearchResult | undefined; 
   
@@ -54,10 +56,6 @@ export class Searcher implements ISearcher {
       groups.unshift(this.chatResultGroup);
     }
     return groups;
-  }
-
-  onItemServerClick(searchResult: IServerSearchResult){
-    onSearchResultClick(this)(searchResult.dataSourceLookupId, searchResult.referenceId)
   }
 
   selectFirst(){
@@ -160,7 +158,9 @@ export class Searcher implements ISearcher {
     });
   }
 
-  searchTerm = "";
+  onItemServerClick(searchResult: IServerSearchResult){
+    onSearchResultClick(this)(searchResult.dataSourceLookupId, searchResult.referenceId)
+  }
 
   @action.bound onSearchFieldChange(searchTerm: string) {
     this.searchTerm = searchTerm;
@@ -172,6 +172,100 @@ export class Searcher implements ISearcher {
   }
 
   doSearchTerm = _.throttle(this.doSearchTermImm, 100);
+
+  @action.bound doSearchTermImm(term: string) {
+    const latinizedTerm = latinize(term.trim()).toLowerCase();
+    this.searchInMenu(latinizedTerm);
+    this.searchInWorkQueues(latinizedTerm);
+    this.searchInChat(latinizedTerm);
+  }
+
+  private searchInChat(latinizedTerm: string) {
+    const chatSearchResults = this.chatsIndex
+      .filter(container => {
+        return container.latinizedLowerLabel.includes(latinizedTerm);
+      })
+      .map((container: any) => {
+        const item = container.node;
+        return {
+          id: item.id,
+          type: "",
+          icon: IMenuItemIcon.Chat,
+          label: item.topic,
+          description: "",
+          onClick: () => this.onChatItemClicked(item)
+        };
+      }) as ISearchResult[];
+
+    this.chatResultGroup = new SearchResultGroup(T("Chat", "chat"), chatSearchResults);
+  }
+
+  onChatItemClicked(item: any){
+    openSingleMenuFolder(item, this);
+    const sidebarState = getWorkbench(this).sidebarState;
+    onChatroomsListItemClick(this)(null, item);
+    sidebarState.activeSection = "Chat";
+    getMainMenuState(this).scrollToItem(item.id);
+  }
+
+  private searchInWorkQueues(latinizedTerm: string) {
+    const workQueueSearchResults = this.workQueueIndex
+      .filter(container => {
+        return container.latinizedLowerLabel.includes(latinizedTerm);
+      })
+      .map((container: any) => {
+        const item = container.node;
+        return {
+          id: item.id,
+          type: "",
+          icon: IMenuItemIcon.WorkQueue,
+          label: item.name,
+          description: "",
+          onClick: () => this.onWorkQueueItemClicked(item)
+        };
+      }) as ISearchResult[];
+
+    this.workQueueResultGroup = new SearchResultGroup(T("Work Queue", "queue_results"), workQueueSearchResults);
+  }
+
+  onWorkQueueItemClicked(item: any){
+    openSingleMenuFolder(item, this);
+    const sidebarState = getWorkbench(this).sidebarState;
+    onWorkQueuesListItemClick(this)(null, item);
+    sidebarState.activeSection = "WorkQueues";
+    getMainMenuState(this).scrollToItem(item.id);
+  }
+
+  private searchInMenu(latinizedTerm: string) {
+    const searchResults = this.nodeIndex
+      .filter(container => {
+        return container.latinizedLowerLabel.includes(latinizedTerm);
+      })
+      .map((container: any) => {
+        const node = container.node;
+        switch (node.name) {
+          case "Submenu":
+            return {
+              id: node.attributes.id,
+              type: "Submenu",
+              icon: node.attributes.icon,
+              label: node.attributes.label,
+              description: getPath(node),
+              onClick: () => this.onSubMenuClicked(node)
+            };
+          case "Command":
+            return {
+              id: node.attributes.id,
+              type: "Command",
+              icon: node.attributes.icon,
+              label: node.attributes.label,
+              description: getPath(node),
+              onClick: () => this.onCommandClicked(node)
+            };
+        }
+      }) as ISearchResult[];
+    this.menuResultGroup = new SearchResultGroup(T("Menu", "menu"), searchResults);
+  }
 
   onCommandClicked(node: any){
     onMainMenuItemClick(this)({
@@ -190,89 +284,6 @@ export class Searcher implements ISearcher {
     getMainMenuState(this).scrollToItem(node.attributes.id);
   }
 
-  onWorkQueueItemClicked(item: any){
-    openSingleMenuFolder(item, this);
-    const sidebarState = getWorkbench(this).sidebarState;
-    onWorkQueuesListItemClick(this)(null, item);
-    sidebarState.activeSection = "WorkQueues";
-    getMainMenuState(this).scrollToItem(item.id);
-  }
-
-  onChatItemClicked(item: any){
-    openSingleMenuFolder(item, this);
-    const sidebarState = getWorkbench(this).sidebarState;
-    onChatroomsListItemClick(this)(null, item);
-    sidebarState.activeSection = "Chat";
-    getMainMenuState(this).scrollToItem(item.id);
-  }
-
-  @action.bound doSearchTermImm(term: string) {
-    const latinizedTerm = latinize(term.trim()).toLowerCase();
-    const searchResults = this.nodeIndex
-          .filter(container => {
-            return container.latinizedLowerLabel.includes(latinizedTerm);
-          })
-          .map((container: any) => {
-            const node = container.node;
-            switch (node.name) {
-              case "Submenu":
-                return {
-                  id: node.attributes.id,
-                  type: "Submenu",
-                  icon: node.attributes.icon,
-                  label: node.attributes.label,
-                  description: getPath(node),
-                  onClick: ()=>this.onSubMenuClicked(node)
-                };
-              case "Command":
-                return {
-                  id: node.attributes.id,
-                  type: "Command",
-                  icon: node.attributes.icon,
-                  label: node.attributes.label,
-                  description: getPath(node),
-                  onClick: ()=>this.onCommandClicked(node)
-                };
-              }
-            }) as ISearchResult[];
-    this.menuResultGroup = new SearchResultGroup(T("Menu", "menu"), searchResults);
-    
-    const workQueueSearchResults = this.workQueueIndex
-    .filter(container => {
-      return container.latinizedLowerLabel.includes(latinizedTerm);
-    })
-    .map((container: any) => {
-      const item = container.node;
-      return {
-        id: item.id,
-        type: "",
-        icon: IMenuItemIcon.WorkQueue,
-        label: item.name,
-        description: "",
-        onClick: ()=>this.onWorkQueueItemClicked(item)
-      };
-    }) as ISearchResult[];
-
-    this.workQueueResultGroup = new SearchResultGroup(T("Work Queue", "queue_results"), workQueueSearchResults);
-
-    const chatSearchResults = this.chatsIndex
-    .filter(container => {
-      return container.latinizedLowerLabel.includes(latinizedTerm);
-    })
-    .map((container: any) => {
-      const item = container.node;
-      return {
-        id: item.id,
-        type: "",
-        icon: IMenuItemIcon.Chat,
-        label: item.topic,
-        description: "",
-        onClick: ()=>this.onChatItemClicked(item)
-      };
-    }) as ISearchResult[];
-
-    this.chatResultGroup = new SearchResultGroup(T("Chat", "chat"), chatSearchResults);
-  }
 
   @action.bound
   indexWorkQueues(items: any[]){
