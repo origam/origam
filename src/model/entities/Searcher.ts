@@ -15,12 +15,14 @@ import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getPath } from "model/selectors/MainMenu/menuNode";
 import { latinize } from "utils/string";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
+import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
 
 
 export class Searcher implements ISearcher {
   parent?: any;
   nodeIndex: NodeContainer[] = [];
   workQueueIndex: NodeContainer[] = [];
+  chatsIndex: NodeContainer[] = [];
 
   @observable
   selectedResult: ISearchResult | undefined; 
@@ -34,16 +36,22 @@ export class Searcher implements ISearcher {
   @observable
   workQueueResultGroup: ISearchResultGroup | undefined = undefined;
   
+  @observable
+  chatResultGroup: ISearchResultGroup | undefined = undefined;
+  
   @computed
   get resultGroups(){
     const groups = this.serverResultGroups.length > 0 
       ? [...this.serverResultGroups] 
       : [];
-    if(this.workQueueResultGroup){
+    if(this.workQueueResultGroup && this.workQueueResultGroup.results.length > 0){
       groups.unshift(this.workQueueResultGroup);
     }
-    if(this.menuResultGroup){
+    if(this.menuResultGroup && this.menuResultGroup.results.length > 0){
       groups.unshift(this.menuResultGroup);
+    }
+    if(this.chatResultGroup && this.chatResultGroup.results.length > 0){
+      groups.unshift(this.chatResultGroup);
     }
     return groups;
   }
@@ -173,6 +181,14 @@ export class Searcher implements ISearcher {
     getMainMenuState(this).scrollToItem(item.id);
   }
 
+  onChatItemClicked(item: any){
+    openSingleMenuFolder(item, this);
+    const sidebarState = getWorkbench(this).sidebarState;
+    onChatroomsListItemClick(this)(null, item);
+    sidebarState.activeSection = "Chat";
+    getMainMenuState(this).scrollToItem(item.id);
+  }
+
   @action.bound doSearchTermImm(term: string) {
     const latinizedTerm = latinize(term.trim()).toLowerCase();
     const searchResults = this.nodeIndex
@@ -221,13 +237,36 @@ export class Searcher implements ISearcher {
     }) as ISearchResult[];
 
     this.workQueueResultGroup = new SearchResultGroup(T("Work Queue", "queue_results"), workQueueSearchResults);
-  }
 
+    const chatSearchResults = this.chatsIndex
+    .filter(container => {
+      return container.latinizedLowerLabel.includes(latinizedTerm);
+    })
+    .map((container: any) => {
+      const item = container.node;
+      return {
+        id: item.id,
+        type: "",
+        icon: IMenuItemIcon.Chat,
+        label: item.topic,
+        description: "",
+        onClick: ()=>this.onChatItemClicked(item)
+      };
+    }) as ISearchResult[];
+
+    this.chatResultGroup = new SearchResultGroup(T("Chat", "chat"), chatSearchResults);
+  }
 
   @action.bound
   indexWorkQueues(items: any[]){
     this.workQueueIndex = items
       .map(item => new NodeContainer(latinize(item.name).toLowerCase(), item));
+  }
+
+  @action.bound
+  indexChats(items: any[]){
+    this.chatsIndex = items
+      .map(item => new NodeContainer(latinize(item.topic).toLowerCase(), item));
   }
 
   @action.bound

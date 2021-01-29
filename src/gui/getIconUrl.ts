@@ -6,6 +6,8 @@ export function getIconUrl(iconName: string) {
       return "./icons/settings.svg";
     case "./icons/work-queue.svg": 
       return "./icons/work-queue.svg";
+    case "./icons/chat.svg": 
+      return "./icons/chat.svg";
     default:
       return "./icons/document.svg";
   }
