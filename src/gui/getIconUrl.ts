@@ -1,12 +1,14 @@
-export function getIconUrl(iconName: string) {
+import { IMenuItemIcon } from "./Workbench/MainMenu/MainMenu";
+
+export function getIconUrl(iconName: string | IMenuItemIcon) {
   switch (iconName) {
-    case "menu_form.png":
+    case IMenuItemIcon.Form:
       return "./icons/document.svg";
-    case "menu_workflow.png":
+    case IMenuItemIcon.Workflow:
       return "./icons/settings.svg";
-    case "./icons/work-queue.svg": 
+    case IMenuItemIcon.WorkQueue: 
       return "./icons/work-queue.svg";
-    case "./icons/chat.svg": 
+    case IMenuItemIcon.Chat: 
       return "./icons/chat.svg";
     default:
       return "./icons/document.svg";
