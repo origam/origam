@@ -1,7 +1,6 @@
 import {action, computed, observable } from "mobx";
-import FlexSearch from "flexsearch";
 import _ from "lodash";
-import {ISearcher} from "./types/ISearcher";
+import {IResultIndices, ISearcher} from "./types/ISearcher";
 import { ISearchResult, IServerSearchResult } from "./types/ISearchResult";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
@@ -14,11 +13,18 @@ import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getPath } from "model/selectors/MainMenu/menuNode";
+import { latinize } from "utils/string";
+import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
+import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
 
 
 export class Searcher implements ISearcher {
   parent?: any;
-  index: any;
+  nodeIndex: NodeContainer[] = [];
+  workQueueIndex: NodeContainer[] = [];
+  chatsIndex: NodeContainer[] = [];
+
+  searchTerm = "";
 
   @observable
   selectedResult: ISearchResult | undefined; 
@@ -29,15 +35,27 @@ export class Searcher implements ISearcher {
   @observable
   menuResultGroup: ISearchResultGroup | undefined = undefined;
   
+  @observable
+  workQueueResultGroup: ISearchResultGroup | undefined = undefined;
+  
+  @observable
+  chatResultGroup: ISearchResultGroup | undefined = undefined;
+  
   @computed
   get resultGroups(){
-    return this.menuResultGroup && this.menuResultGroup.results.length > 0 
-    ? [this.menuResultGroup, ...this.serverResultGroups]
-    : this.serverResultGroups;
-  }
-
-  onItemServerClick(searchResult: IServerSearchResult){
-    onSearchResultClick(this)(searchResult.dataSourceLookupId, searchResult.referenceId)
+    const groups = this.serverResultGroups.length > 0 
+      ? [...this.serverResultGroups] 
+      : [];
+    if(this.workQueueResultGroup && this.workQueueResultGroup.results.length > 0){
+      groups.unshift(this.workQueueResultGroup);
+    }
+    if(this.menuResultGroup && this.menuResultGroup.results.length > 0){
+      groups.unshift(this.menuResultGroup);
+    }
+    if(this.chatResultGroup && this.chatResultGroup.results.length > 0){
+      groups.unshift(this.chatResultGroup);
+    }
+    return groups;
   }
 
   selectFirst(){
@@ -54,16 +72,14 @@ export class Searcher implements ISearcher {
       this.selectFirst();
       return;
     }
-    const currentGroup = this.resultGroups
-      .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
-    if(!currentGroup){
+    const resultIndices = this.getSelectedResultIndices();
+    if(resultIndices.groupIndex === -1){
       this.selectFirst();
       return;
     }
-    const currentResultIndex = currentGroup.results
-      .findIndex(result => result.id === this.selectedResult!.id);
-    if(currentResultIndex < currentGroup.results.length -1){
-      this.selectedResult = currentGroup.results[currentResultIndex + 1];
+    const currentGroup = this.resultGroups[resultIndices.groupIndex];
+    if(resultIndices.indexInGroup < currentGroup.results.length -1){
+      this.selectedResult = currentGroup.results[resultIndices.indexInGroup + 1];
     }else{
       const currentGroupIndex = this.resultGroups.indexOf(currentGroup);
       if(currentGroupIndex < this.resultGroups.length -1){
@@ -79,16 +95,14 @@ export class Searcher implements ISearcher {
       this.selectFirst();
       return;
     }
-    const currentGroup = this.resultGroups
-      .find(group => group.results.some(result => result.id === this.selectedResult!.id))!;
-    if(!currentGroup){
+    const resultIndices = this.getSelectedResultIndices();
+    if(resultIndices.groupIndex === -1){
       this.selectFirst();
       return;
     }
-    const currentResultIndex = currentGroup.results
-      .findIndex(result => result.id === this.selectedResult!.id);
-    if(currentResultIndex > 0){
-      this.selectedResult = currentGroup.results[currentResultIndex - 1];
+    const currentGroup = this.resultGroups[resultIndices.groupIndex];
+    if(resultIndices.indexInGroup > 0){
+      this.selectedResult = currentGroup.results[resultIndices.indexInGroup - 1];
     }else{
       const currentGroupIndex = this.resultGroups.indexOf(currentGroup);
       if(currentGroupIndex > 0){
@@ -99,9 +113,30 @@ export class Searcher implements ISearcher {
     }
   }
 
+  getSelectedResultIndices() :IResultIndices {
+    const currentGroupIndex = this.resultGroups
+      .findIndex(group => group.results.some(result => result.id === this.selectedResult!.id))!;
+    if(currentGroupIndex === -1){
+      return {
+        groupIndex: -1,
+        indexInGroup: -1
+      }
+    }
+    const currentResultIndex = this.resultGroups[currentGroupIndex].results
+      .findIndex(result => result.id === this.selectedResult!.id);
+    return {
+      groupIndex: currentGroupIndex,
+      indexInGroup: currentResultIndex
+    }
+  }
+
+
   searchOnServer(){
     if(!this.searchTerm.trim()){
       this.serverResultGroups = [];
+      this.menuResultGroup = undefined;
+      this.workQueueResultGroup = undefined;
+      this.chatResultGroup = undefined;
       return;
     }
     runInFlowWithHandler({
@@ -123,7 +158,9 @@ export class Searcher implements ISearcher {
     });
   }
 
-  searchTerm = "";
+  onItemServerClick(searchResult: IServerSearchResult){
+    onSearchResultClick(this)(searchResult.dataSourceLookupId, searchResult.referenceId)
+  }
 
   @action.bound onSearchFieldChange(searchTerm: string) {
     this.searchTerm = searchTerm;
@@ -135,6 +172,100 @@ export class Searcher implements ISearcher {
   }
 
   doSearchTerm = _.throttle(this.doSearchTermImm, 100);
+
+  @action.bound doSearchTermImm(term: string) {
+    const latinizedTerm = latinize(term.trim()).toLowerCase();
+    this.searchInMenu(latinizedTerm);
+    this.searchInWorkQueues(latinizedTerm);
+    this.searchInChat(latinizedTerm);
+  }
+
+  private searchInChat(latinizedTerm: string) {
+    const chatSearchResults = this.chatsIndex
+      .filter(container => {
+        return container.latinizedLowerLabel.includes(latinizedTerm);
+      })
+      .map((container: any) => {
+        const item = container.node;
+        return {
+          id: item.id,
+          type: "",
+          icon: IMenuItemIcon.Chat,
+          label: item.topic,
+          description: "",
+          onClick: () => this.onChatItemClicked(item)
+        };
+      }) as ISearchResult[];
+
+    this.chatResultGroup = new SearchResultGroup(T("Chat", "chat"), chatSearchResults);
+  }
+
+  onChatItemClicked(item: any){
+    openSingleMenuFolder(item, this);
+    const sidebarState = getWorkbench(this).sidebarState;
+    onChatroomsListItemClick(this)(null, item);
+    sidebarState.activeSection = "Chat";
+    getMainMenuState(this).scrollToItem(item.id);
+  }
+
+  private searchInWorkQueues(latinizedTerm: string) {
+    const workQueueSearchResults = this.workQueueIndex
+      .filter(container => {
+        return container.latinizedLowerLabel.includes(latinizedTerm);
+      })
+      .map((container: any) => {
+        const item = container.node;
+        return {
+          id: item.id,
+          type: "",
+          icon: IMenuItemIcon.WorkQueue,
+          label: item.name,
+          description: "",
+          onClick: () => this.onWorkQueueItemClicked(item)
+        };
+      }) as ISearchResult[];
+
+    this.workQueueResultGroup = new SearchResultGroup(T("Work Queue", "queue_results"), workQueueSearchResults);
+  }
+
+  onWorkQueueItemClicked(item: any){
+    openSingleMenuFolder(item, this);
+    const sidebarState = getWorkbench(this).sidebarState;
+    onWorkQueuesListItemClick(this)(null, item);
+    sidebarState.activeSection = "WorkQueues";
+    getMainMenuState(this).scrollToItem(item.id);
+  }
+
+  private searchInMenu(latinizedTerm: string) {
+    const searchResults = this.nodeIndex
+      .filter(container => {
+        return container.latinizedLowerLabel.includes(latinizedTerm);
+      })
+      .map((container: any) => {
+        const node = container.node;
+        switch (node.name) {
+          case "Submenu":
+            return {
+              id: node.attributes.id,
+              type: "Submenu",
+              icon: node.attributes.icon,
+              label: node.attributes.label,
+              description: getPath(node),
+              onClick: () => this.onSubMenuClicked(node)
+            };
+          case "Command":
+            return {
+              id: node.attributes.id,
+              type: "Command",
+              icon: node.attributes.icon,
+              label: node.attributes.label,
+              description: getPath(node),
+              onClick: () => this.onCommandClicked(node)
+            };
+        }
+      }) as ISearchResult[];
+    this.menuResultGroup = new SearchResultGroup(T("Menu", "menu"), searchResults);
+  }
 
   onCommandClicked(node: any){
     onMainMenuItemClick(this)({
@@ -153,45 +284,21 @@ export class Searcher implements ISearcher {
     getMainMenuState(this).scrollToItem(node.attributes.id);
   }
 
-  @action.bound doSearchTermImm(term: string) {
-    if (!this.index) return;
-    const searchResults = 
-        this.index.search(term).map((node: any) => {
-          switch (node.name) {
-            case "Submenu":
-              return {
-                id: node.attributes.id,
-                type: "Submenu",
-                icon: node.attributes.icon,
-                label: node.attributes.label,
-                description: getPath(node),
-                onClick: ()=>this.onSubMenuClicked(node)
-              };
-            case "Command":
-              return {
-                id: node.attributes.id,
-                type: "Command",
-                icon: node.attributes.icon,
-                label: node.attributes.label,
-                description: getPath(node),
-                onClick: ()=>this.onCommandClicked(node)
-              };
-          }
-        })
-    this.menuResultGroup =new SearchResultGroup(T("Menu", "menu"), searchResults);
+
+  @action.bound
+  indexWorkQueues(items: any[]){
+    this.workQueueIndex = items
+      .map(item => new NodeContainer(latinize(item.name).toLowerCase(), item));
   }
 
+  @action.bound
+  indexChats(items: any[]){
+    this.chatsIndex = items
+      .map(item => new NodeContainer(latinize(item.topic).toLowerCase(), item));
+  }
 
   @action.bound
   indexMainMenu(mainMenu: any) {
-    this.index = FlexSearch.create({
-      encode: "extra",
-      doc: {
-        id: "attributes:id",
-        field: "attributes:label"
-      }
-    } as any);
-    const documents: any[] = [];
     const recursive = (node: any) => {
       if (node.attributes.isHidden === "true") {
         return;
@@ -199,14 +306,13 @@ export class Searcher implements ISearcher {
       switch (node.name) {
         case "Submenu":
         case "Command":
-          documents.push(node);
+          this.nodeIndex.push(new NodeContainer(latinize(node.attributes.label).toLowerCase(),node));
       }
       node.elements.forEach((element: any) => recursive(element));
     };
     mainMenu.elements.forEach((element: any) => {
       recursive(element);
     });
-    this.index.add(documents);
   }
 
   @action.bound
@@ -225,4 +331,11 @@ class SearchResultGroup implements ISearchResultGroup{
     public results: ISearchResult[],
   )
   {}
+}
+
+class NodeContainer {
+  constructor(
+    public latinizedLowerLabel: string,
+    public node: any
+  ){}
 }

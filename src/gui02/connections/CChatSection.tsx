@@ -3,9 +3,8 @@ import { IWorkbench } from "model/entities/types/IWorkbench";
 import { MobXProviderContext, observer } from "mobx-react";
 import { getWorkQueuesItems } from "model/selectors/WorkQueues/getWorkQueuesItems";
 import { WorkQueuesItem } from "gui02/components/WorkQueues/WorkQueuesItem";
-import { computed, flow } from "mobx";
+import { flow } from "mobx";
 import { Icon } from "gui02/components/Icon/Icon";
-import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { getActiveScreen } from "model/selectors/getActiveScreen";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
@@ -61,6 +60,7 @@ export class CChatSection extends React.Component {
                 </>
               }
               onClick={(event) => onChatroomsListItemClick(this.workbench)(event, item)}
+              id={item.id}
             />
           );
         })}
