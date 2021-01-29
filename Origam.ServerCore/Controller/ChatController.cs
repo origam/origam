@@ -422,7 +422,8 @@ namespace Origam.ServerCore.Controller
                 {
                    new QueryParameter(
                        "OrigamChatMessage_parCreatedDateTime", 
-                       dataRow.Field<DateTime?>("LastSeen")??DateTime.MinValue),
+                       dataRow.Field<DateTime?>("LastSeen") 
+                       ?? new DateTime(1900,1,1)),
                    new QueryParameter(
                        "OrigamChatMessage_parOrigamChatRoomId", 
                        dataRow.Field<Guid>("refOrigamChatRoomId")),
