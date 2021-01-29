@@ -198,7 +198,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const label = item.name;
 
     let dialogInfo: IDialogInfo | undefined;
-    if (!(event.ctrlKey || event.metaKey)) {
+    if (!event || !(event.ctrlKey || event.metaKey)) {
       const existingItem = openedScreens.findLastExistingTabItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);

@@ -14,11 +14,13 @@ import { getWorkbench } from "model/selectors/getWorkbench";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getPath } from "model/selectors/MainMenu/menuNode";
 import { latinize } from "utils/string";
+import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 
 
 export class Searcher implements ISearcher {
   parent?: any;
   nodeIndex: NodeContainer[] = [];
+  workQueueIndex: NodeContainer[] = [];
 
   @observable
   selectedResult: ISearchResult | undefined; 
@@ -29,11 +31,21 @@ export class Searcher implements ISearcher {
   @observable
   menuResultGroup: ISearchResultGroup | undefined = undefined;
   
+  @observable
+  workQueueResultGroup: ISearchResultGroup | undefined = undefined;
+  
   @computed
   get resultGroups(){
-    return this.menuResultGroup && this.menuResultGroup.results.length > 0 
-    ? [this.menuResultGroup, ...this.serverResultGroups]
-    : this.serverResultGroups;
+    const groups = this.serverResultGroups.length > 0 
+      ? [...this.serverResultGroups] 
+      : [];
+    if(this.workQueueResultGroup){
+      groups.unshift(this.workQueueResultGroup);
+    }
+    if(this.menuResultGroup){
+      groups.unshift(this.menuResultGroup);
+    }
+    return groups;
   }
 
   onItemServerClick(searchResult: IServerSearchResult){
@@ -153,6 +165,14 @@ export class Searcher implements ISearcher {
     getMainMenuState(this).scrollToItem(node.attributes.id);
   }
 
+  onWorkQueueItemClicked(item: any){
+    openSingleMenuFolder(item, this);
+    const sidebarState = getWorkbench(this).sidebarState;
+    onWorkQueuesListItemClick(this)(null, item);
+    sidebarState.activeSection = "WorkQueues";
+    // getMainMenuState(this).scrollToItem(item.attributes.id);
+  }
+
   @action.bound doSearchTermImm(term: string) {
     const latinizedTerm = latinize(term.trim()).toLowerCase();
     const searchResults = this.nodeIndex
@@ -182,9 +202,34 @@ export class Searcher implements ISearcher {
                 };
               }
             }) as ISearchResult[];
-    this.menuResultGroup =new SearchResultGroup(T("Menu", "menu"), searchResults);
+    this.menuResultGroup = new SearchResultGroup(T("Menu", "menu"), searchResults);
+    
+    const workQueueSearchResults = this.workQueueIndex
+    .filter(container => {
+      return container.latinizedLowerLabel.includes(latinizedTerm);
+    })
+    .map((container: any) => {
+      const item = container.node;
+      return {
+        id: item.id,
+        type: "",
+        icon: IMenuItemIcon.WorkQueue,
+        label: item.name,
+        description: "",
+        onClick: ()=>this.onWorkQueueItemClicked(item)
+      };
+    }) as ISearchResult[];
+
+    this.workQueueResultGroup = new SearchResultGroup(T("Work Queue", "queue_results"), workQueueSearchResults);
   }
 
+
+  @action.bound
+  indexWorkQueues(items: any[]){
+    items
+      .map(item => new NodeContainer(latinize(item.name).toLowerCase(), item))
+      .forEach(container => this.workQueueIndex.push(container));
+  }
 
   @action.bound
   indexMainMenu(mainMenu: any) {

@@ -7,6 +7,7 @@ export interface ISearcher {
   searchOnServer(): void;
   onSearchFieldChange(searchTerm: string): void;
   indexMainMenu(mainMenu: any): void;
+  indexWorkQueues(items: any[]): void;
   clear(): void;
   selectNextResult(): void;
   selectPreviousResult(): void;
