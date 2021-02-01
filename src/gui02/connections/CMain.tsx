@@ -46,13 +46,8 @@ export class CMain extends React.Component {
   }
 
   render() {
-    const dialogStack = getDialogStack(this.application);
     return (
-      <div
-        className={cx("toplevelContainer", {
-          isBlurred: dialogStack.isAnyDialogShown,
-        })}
-      >
+      <div className={"toplevelContainer"} >
         {this.getPage()}
       </div>
     );
