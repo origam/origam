@@ -32,9 +32,10 @@ import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/Dr
 import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
-import { ILookup } from "model/entities/types/ILookup";
+import { IDropDownType, ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 
 const OPERATORS = [
     Operator.in,
@@ -267,8 +268,8 @@ export function FilterBuildDropdownEditor(props: {
   values: Array<any>;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-  const dataView = mobxContext.dataView as IDataView;
-  const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
+
+
   const workbench = mobxContext.workbench;
   const { lookupListCache } = workbench;
 
@@ -292,7 +293,7 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorLookupListCache,
       false
     );
-    const lookupColumn = props.lookup.dropDownColumns[0];
+
 
     const drivers = new DropdownColumnDrivers();
 
@@ -403,7 +404,7 @@ export class FilterEditorData implements IDropdownEditorData {
 class DropDownApi implements IDropdownEditorApi {
   constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
 
-  *getLookupList(searchTerm: string): any {
+  *getLookupList(searchTerm: string): Generator {
     return yield this.getOptions("");
   }
 }

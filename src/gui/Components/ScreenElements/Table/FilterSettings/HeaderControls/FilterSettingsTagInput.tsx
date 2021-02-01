@@ -374,7 +374,7 @@ export class FilterEditorData implements IDropdownEditorData {
 class DropDownApi implements IDropdownEditorApi {
   constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
 
-  *getLookupList(searchTerm: string): any {
+  *getLookupList(searchTerm: string): Generator {
     return yield this.getOptions("");
   }
 }
