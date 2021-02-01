@@ -3779,7 +3779,7 @@ namespace Origam.DA.Service
                 string sqlText = TextSql(
                     RenderExpression(columnRenderItem, replaceParameterTexts,
                         dynamicParameters, parameterReferences));
-                string nonNullExpression = $"ISNULL ({sqlText}, '')";
+                string nonNullExpression = $"{IsNullSql()} ({sqlText}, '')";
                 concatBuilder.Append(nonNullExpression);
                 i++;
             }
