@@ -83,7 +83,7 @@ function registerToolTipGetter(columnId: string) {
   const toolTipPositionRectangle = {
     columnLeft: currentColumnLeft() + currentColumnWidth() * 0.2,
     columnWidth: 0,
-    rowTop: currentRowTop() + currentRowHeight() * 1.6,
+    rowTop: currentRowTop() + currentRowHeight() + 10,
     rowHeight: 0,
   };
 
