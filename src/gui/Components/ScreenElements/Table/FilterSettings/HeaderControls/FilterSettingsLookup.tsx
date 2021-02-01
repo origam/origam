@@ -353,7 +353,7 @@ export function FilterBuildDropdownEditor(props: {
       <DropdownEditor
         editor={
           <TagInputEditor
-            customInputCalss={S.tagInput}
+            customInputClass={S.tagInput}
             value={value}
             isReadOnly={false}
             isInvalid={false}
