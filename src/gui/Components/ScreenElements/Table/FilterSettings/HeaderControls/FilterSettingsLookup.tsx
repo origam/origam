@@ -315,6 +315,10 @@ export function FilterBuildDropdownEditor(props: {
 
     const showUniqueValues = true;
 
+    const cached =  getGroupingConfiguration(props.property).isGrouping 
+      ? false 
+      : props.property.lookup?.cached!
+
     const dropdownEditorSetup = new DropdownEditorSetup(
       props.property.id,
       props.lookup.lookupId,
@@ -326,7 +330,7 @@ export function FilterBuildDropdownEditor(props: {
       identifierIndex,
       props.property.parameters,
       props.property.lookup?.dropDownType!,
-      props.property.lookup?.cached!,
+      cached,
       !props.property.lookup?.searchByFirstColumnOnly
     );
 
