@@ -7,7 +7,7 @@ import { DropdownEditorBehavior } from "./DropdownEditorBehavior";
 import { EagerlyLoadedGrid } from "./DropdownEditorCommon";
 
 export interface IDropdownEditorApi{
-  getLookupList(searchTerm: string): any;
+  getLookupList(searchTerm: string): Generator;
 }
 
 @bind
@@ -19,7 +19,7 @@ export class DropdownEditorApi implements IDropdownEditorApi{
     private behavior:() => DropdownEditorBehavior,
   ) {}
 
-  *getLookupList(searchTerm: string): any {
+  *getLookupList(searchTerm: string): Generator {
     const setup = this.setup();
     if (setup.dropdownType === EagerlyLoadedGrid) {
       return yield* this.api.getLookupList({

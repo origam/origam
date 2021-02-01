@@ -32,9 +32,10 @@ import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/Dr
 import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
-import { ILookup } from "model/entities/types/ILookup";
+import { IDropDownType, ILookup } from "model/entities/types/ILookup";
 import { IProperty } from "model/entities/types/IProperty";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
+import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 
 const OPERATORS = [
     Operator.in,
@@ -267,8 +268,8 @@ export function FilterBuildDropdownEditor(props: {
   values: Array<any>;
 }) {
   const mobxContext = useContext(MobXProviderContext);
-  const dataView = mobxContext.dataView as IDataView;
-  const { dataViewRowCursor, dataViewApi, dataViewData } = dataView;
+
+
   const workbench = mobxContext.workbench;
   const { lookupListCache } = workbench;
 
@@ -292,7 +293,7 @@ export function FilterBuildDropdownEditor(props: {
       dropdownEditorLookupListCache,
       false
     );
-    const lookupColumn = props.lookup.dropDownColumns[0];
+
 
     const drivers = new DropdownColumnDrivers();
 
@@ -314,6 +315,10 @@ export function FilterBuildDropdownEditor(props: {
 
     const showUniqueValues = true;
 
+    const cached =  getGroupingConfiguration(props.property).isGrouping 
+      ? false 
+      : props.property.lookup?.cached!
+
     const dropdownEditorSetup = new DropdownEditorSetup(
       props.property.id,
       props.lookup.lookupId,
@@ -325,7 +330,7 @@ export function FilterBuildDropdownEditor(props: {
       identifierIndex,
       props.property.parameters,
       props.property.lookup?.dropDownType!,
-      props.property.lookup?.cached!,
+      cached,
       !props.property.lookup?.searchByFirstColumnOnly
     );
 
@@ -348,7 +353,7 @@ export function FilterBuildDropdownEditor(props: {
       <DropdownEditor
         editor={
           <TagInputEditor
-            customInputCalss={S.tagInput}
+            customInputClass={S.tagInput}
             value={value}
             isReadOnly={false}
             isInvalid={false}
@@ -403,7 +408,7 @@ export class FilterEditorData implements IDropdownEditorData {
 class DropDownApi implements IDropdownEditorApi {
   constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
 
-  *getLookupList(searchTerm: string): any {
+  *getLookupList(searchTerm: string): Generator {
     return yield this.getOptions("");
   }
 }

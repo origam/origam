@@ -307,7 +307,7 @@ export function FilterBuildDropdownEditor(props: {
       <DropdownEditor
         editor={
           <TagInputEditor
-            customInputCalss={S.tagInput}
+            customInputClass={S.tagInput}
             value={value}
             isReadOnly={false}
             isInvalid={false}
@@ -374,7 +374,7 @@ export class FilterEditorData implements IDropdownEditorData {
 class DropDownApi implements IDropdownEditorApi {
   constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
 
-  *getLookupList(searchTerm: string): any {
+  *getLookupList(searchTerm: string): Generator {
     return yield this.getOptions("");
   }
 }
