@@ -112,6 +112,13 @@
   justify-content: left;
 }
 
+:global(.tippy-popper) {
+  background-color: white;
+  max-height: 400px;
+  overflow-y: auto;
+  pointer-events: all;
+};
+
 /*.positionedFieldContainer {
   position: absolute;
   top: 0;
