@@ -93,7 +93,6 @@
 .toolTip {
   height: 100%;
   position: absolute;
-  // right: -15px;
   top: 0;
   display: flex;
   align-items: center;
@@ -118,11 +117,5 @@
   overflow-y: auto;
   pointer-events: all;
 };
-
-/*.positionedFieldContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-}*/
 
 
