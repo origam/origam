@@ -151,6 +151,7 @@ export class RowState implements IRowState {
         new Set(state.disabledActions)
       )
     );
+    this.firstLoadingPerformed = true;
   }
 
   @action.bound clearAll() {
