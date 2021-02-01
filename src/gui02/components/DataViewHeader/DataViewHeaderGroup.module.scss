@@ -9,13 +9,7 @@
   border-right: 1px solid $grey2;
   padding: 0 0.5em;
   overflow: hidden;
-
-  /*&:global(.isHidden) {
-    position: absolute;
-    top: 110%;;
-    left: 0;
-  }*/
-
+  user-select: none;
 
   flex: 0 1 auto;
   min-width: 0;
