@@ -9,7 +9,6 @@ import { IDataSourceField } from "./types/IDataSourceField";
 import { LookupResolver } from "modules/Lookup/LookupResolver";
 import { LookupLabelsCleanerReloader } from "modules/Lookup/LookupCleanerLoader";
 import {getDataTable} from "model/selectors/DataView/getDataTable";
-import {currentRow} from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
 
 export class Property implements IProperty {
   $type_IProperty: 1 = 1;
@@ -56,6 +55,7 @@ export class Property implements IProperty {
   isLookupColumn: boolean = false;
   style: any;
   controlPropertyId?: string;
+  toolTip: string = null as any;
 
   linkToMenuId?: string = undefined;
 

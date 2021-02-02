@@ -9,8 +9,6 @@ import {
   getCurrentDecimalSeparator,
 } from "../../../../model/entities/NumberFormating";
 import { IFocusAble } from "../../../../model/entities/FocusManager";
-import { getLocaleFromCookie } from "../../../../utils/cookies";
-import numeral from "numeral";
 import { IProperty } from "model/entities/types/IProperty";
 @observer
 export class NumberEditor extends React.Component<{
@@ -27,6 +25,7 @@ export class NumberEditor extends React.Component<{
   customNumberFormat?: string | undefined;
   maxLength?: number;
   customStyle?: any;
+  toolTip?: string;
   reFocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string | null): void;
   onKeyDown?(event: any): void;
@@ -157,7 +156,7 @@ export class NumberEditor extends React.Component<{
     }
   }
 
-  render() {
+  renderField() {
     const maxLength = this.props.maxLength === 0
       ? undefined
       : this.props.maxLength;
@@ -206,6 +205,17 @@ export class NumberEditor extends React.Component<{
           </div>
         )}
       </div>
+    );
+  }
+
+  render() {
+    return (<>
+      {this.props.toolTip 
+        ? <Tooltip html={this.props.toolTip} position={"right"} theme={"light"}>
+            {this.renderField()}
+          </Tooltip>
+        : this.renderField()}
+    </>
     );
   }
 }
