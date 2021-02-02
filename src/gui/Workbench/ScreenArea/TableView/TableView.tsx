@@ -33,13 +33,6 @@ import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/g
 import {
   IAggregation,
 } from "model/entities/types/IAggregation";
-import {
-  IInfiniteScrollLoader,
-  InfiniteScrollLoader,
-  NullIScrollLoader,
-} from "./InfiniteScrollLoader";
-import { VisibleRowsMonitor } from "./VisibleRowsMonitor";
-import { ScrollRowContainer } from "../../../../model/entities/ScrollRowContainer";
 import {SelectionCheckBoxHeader} from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
 import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
 import {
@@ -49,6 +42,7 @@ import {
 } from "model/entities/Aggregatioins";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import _ from "lodash";
+import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
 
 @inject(({ dataView }) => {
@@ -77,6 +71,19 @@ export class TableView extends React.Component<{
     getGroupingConfiguration(this.props.dataView).registerGroupingOnOffHandler(() => {
       this.props.dataView?.initializeNewScrollLoader();
     });
+  }
+
+  componentDidMount(){
+    const openScreen = getOpenedScreen(this.props.dataView)
+    const dataViews = openScreen.content.formScreen?.dataViews;
+    const isMainDatView = dataViews && (dataViews.length > 0 && this.props.dataView?.isBindingRoot) || dataViews?.length === 1
+
+    if(openScreen.isActive && isMainDatView){
+      if(!this.props.dataView?.isFormViewActive()){
+        const tablePanelView = getTablePanelView(this.props.dataView);
+        tablePanelView.triggerOnFocusTable();
+      }
+    }
   }
 
   refTableDisposer: any;

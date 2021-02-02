@@ -17,6 +17,8 @@ import {WorkflowFinishedPanel} from "gui02/components/WorkflowFinishedPanel/Work
 
 import actions from "model/actions-ui-tree";
 import {HBox} from "gui/Components/ScreenElements/HBox";
+import { IDataView } from "model/entities/types/IDataView";
+import { getDataViewById } from "model/selectors/DataView/getDataViewById";
 
 @observer
 class TabbedPanelHelper extends React.Component<{
@@ -68,6 +70,7 @@ export class FormScreenBuilder extends React.Component<{
 
   buildScreen() {
     const self = this;
+    const dataViewMap = new Map<string, IDataView>();
     function recursive(xso: any) {
       switch (xso.attributes.Type) {
         case "WorkflowFinishedPanel": {
@@ -181,6 +184,10 @@ export class FormScreenBuilder extends React.Component<{
         case "TreePanel":
         case "Grid":
           if (xso.attributes.ModelInstanceId !== "957390e8-fa5e-46ad-92d0-118a5d5f4b3d-FALSE") {
+            const dataView = getDataViewById(self.formScreen, xso.attributes.Id);
+            if(dataView){
+              dataViewMap.set(xso.attributes.Id, dataView);
+            }
             return (
               <DataView
                 key={xso.$iid}
@@ -201,7 +208,7 @@ export class FormScreenBuilder extends React.Component<{
           }
         case "Tab":
           return (
-            <CScreenSectionTabbedView key={xso.$iid} boxes={findBoxes(xso)} nextNode={recursive} />
+            <CScreenSectionTabbedView key={xso.$iid} boxes={findBoxes(xso)} nextNode={recursive} dataViewMap={dataViewMap}/>
           );
         case "Box":
           return <Box key={xso.$iid}>{findUIChildren(xso).map((child) => recursive(child))}</Box>;

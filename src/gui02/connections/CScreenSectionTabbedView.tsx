@@ -7,17 +7,34 @@ import { action, observable } from "mobx";
 import { TabbedView } from "gui02/components/TabbedView/TabbedView";
 import { findUIChildren } from "xmlInterpreters/screenXml";
 import { TabbedViewPanelsContainer } from "gui02/components/TabbedView/TabbedViewPanelsContainer";
+import { IDataView } from "model/entities/types/IDataView";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { findStopping } from "xmlInterpreters/xmlUtils";
 
 @observer
 export class CScreenSectionTabbedView extends React.Component<{
   boxes: any[];
   nextNode: (node: any) => React.ReactNode;
+  dataViewMap: Map<string, IDataView>
 }> {
   @observable activePanelId: string =
     this.props.boxes.length > 0 ? this.props.boxes[0].attributes.Id : "";
 
   @action.bound activateTab(tabId: string) {
     this.activePanelId = tabId;
+    const activeBox = this.props.boxes.find(box => box.attributes["Id"] === tabId);
+    const firstGridId = this.getFirstGridId(activeBox)
+    if(firstGridId) {
+      const dataView = this.props.dataViewMap.get(firstGridId);
+      const tablePanelView = getTablePanelView(dataView);
+      tablePanelView.triggerOnFocusTable();
+    }
+  }
+
+  getFirstGridId(box: any){
+    return findStopping(box, (node) => node?.attributes?.Type === "Grid")
+      .map(element => element.attributes["Id"])
+      .find(element => element)
   }
 
   render() {
