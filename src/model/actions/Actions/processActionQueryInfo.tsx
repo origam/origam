@@ -4,6 +4,7 @@ import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { T } from "utils/translation";
 import S from "./processActionQueryResult.module.scss";
+import { Icon } from "gui02/components/Icon/Icon";
 
 export interface IQueryInfo {
   entityName: string;
@@ -18,16 +19,17 @@ export interface IProcessActionQueryInfoResult {
 
 export function processActionQueryInfo(ctx: any) {
   return function* processActionQueryInfo(
-    queryInfo: any[], title: string
+    queryInfo: any[],
+    title: string
   ): Generator<any, IProcessActionQueryInfoResult> {
     let canContinue = true;
     if (queryInfo.length > 0) {
       for (let queryInfoItem of queryInfo) {
         if (queryInfoItem.severity === 0) canContinue = false;
       }
-      
+
       yield new Promise(
-        action((resolve: () => void) => {
+        action((resolve: (p?: any) => void) => {
           const closeDialog = getDialogStack(ctx).pushDialog(
             "",
             <ModalWindow
@@ -78,18 +80,32 @@ export function processActionQueryInfo(ctx: any) {
               buttonsRight={null}
             >
               <div className={S.dialogContent}>
-                <ul>
+                <div className="list">
                   {queryInfo.map((item, idx) => (
-                    <li key={idx}>{item.message}</li>
+                    <div className="listItem" key={idx}>
+                      {item.severity === 1 && (
+                        <div className="itemIcon warning">
+                          <Icon
+                            src="./icons/warning-fill.svg"
+                            tooltip={T("Refresh", "refresh_tool_tip")}
+                          />
+                        </div>
+                      )}
+                      {item.severity === 0 && (
+                        <div className="itemIcon error">
+                          <Icon
+                            src="./icons/error-fill.svg"
+                            tooltip={T("Refresh", "refresh_tool_tip")}
+                          />
+                        </div>
+                      )}
+
+                      <div className="itemMessage">{item.message}</div>
+                    </div>
                   ))}
-                </ul>
+                </div>
                 {canContinue && (
-                  <>
-                    {T(
-                      "Do you wish to continue anyway?",
-                      "do_you_wish_to_continue"
-                    )}
-                  </>
+                  <>{T("Do you wish to continue anyway?", "do_you_wish_to_continue")}</>
                 )}
               </div>
             </ModalWindow>
