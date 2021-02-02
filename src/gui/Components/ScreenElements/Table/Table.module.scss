@@ -111,11 +111,7 @@
   justify-content: left;
 }
 
-:global(.tippy-popper) {
-  background-color: white;
-  max-height: 400px;
-  overflow-y: auto;
-  pointer-events: all;
-};
-
-
+.toolTipLine {
+  white-space: pre-wrap;
+  text-align: left;
+}
