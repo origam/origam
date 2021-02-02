@@ -1,5 +1,4 @@
 import { computed } from "mobx";
-import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
 import { getRowStateIsDisableAction } from "model/selectors/RowState/getRowStateIsDisabledAction";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import {
@@ -10,7 +9,6 @@ import {
   IActionType,
 } from "./types/IAction";
 import { IActionParameter } from "./types/IActionParameter";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getDataView } from "model/selectors/DataView/getDataView";
 
 export class Action implements IAction {
