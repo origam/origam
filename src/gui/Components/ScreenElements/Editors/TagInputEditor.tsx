@@ -40,7 +40,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
       onClick?(event: any): void;
       onDoubleClick?(event: any): void;
       onEditorBlur?(event: any): void;
-      customInputCalss?: string;
+      customInputClass?: string;
     }) => {
 
       const beh = useContext(CtxDropdownEditor).behavior;
@@ -128,7 +128,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               : <TagInputAdd onClick={(event) => beh.elmInputElement.focus()} />}
             <input
               disabled={props.isReadOnly}
-              className={S.filterInput + " " + props.customInputCalss}
+              className={S.filterInput + " " + props.customInputClass}
               ref={refInput}
               placeholder={data.isResolving ? "Loading..." : ""}
               onChange={beh.handleInputChange}

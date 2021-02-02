@@ -26,7 +26,34 @@ export function clipCell() {
   ctx2d.clip();
 }
 
-export const numberCellPaddingRight = Memoized(() =>  drawingColumnIndex() === 0 ? cellPaddingRightFirstCell : 15)
+
+export function drawSelectedRowBorder(frontStripeWidth: number){
+  const ctx2d = context2d();
+  ctx2d.beginPath();
+  ctx2d.strokeStyle = "#4C84FF";
+  ctx2d.lineWidth = 1 * CPR();
+  ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
+  ctx2d.lineTo(
+    CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+    CPR() * (currentRowTop() + 1.5)
+  );
+  ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
+  ctx2d.lineTo(
+    CPR() * currentColumnLeft() + CPR() * currentColumnWidth(),
+    CPR() * (currentRowTop() + currentRowHeight() - 1.5)
+  );
+  ctx2d.stroke();
+  if (drawingColumnIndex() === 0) {
+    ctx2d.beginPath();
+    ctx2d.lineWidth = frontStripeWidth * CPR();
+    ctx2d.moveTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + 1.5));
+    ctx2d.lineTo(CPR() * currentColumnLeft(), CPR() * (currentRowTop() + currentRowHeight() - 1.5));
+    ctx2d.stroke();
+  }
+}
+
+
+export const numberCellPaddingRight = Memoized(() => 15)
 scRenderCell.push(() => numberCellPaddingRight.clear());
 
 export const cellPaddingLeft = 5

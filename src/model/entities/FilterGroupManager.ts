@@ -3,7 +3,6 @@ import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
 import {action, observable} from "mobx";
 import {IFilter} from "model/entities/types/IFilter";
 import {
-  IUIGridFilterCoreConfiguration,
   IUIGridFilterFieldConfiguration,
 } from "model/entities/types/IApi";
 import {filterTypeToNumber} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
@@ -11,26 +10,27 @@ import {getApi} from "model/selectors/getApi";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {getDataView} from "model/selectors/DataView/getDataView";
 import {getSessionId} from "model/selectors/getSessionId";
+import { cloneFilterGroup } from "xmlInterpreters/filterXml";
 
 export class FilterGroupManager {
   ctx: any;
   filterGroups: IFilterGroup[] = [];
   private _defaultFilter: IFilterGroup | undefined;
   @observable
-  selectedFilterGroupId: string | undefined;
+  selectedFilterGroup: IFilterGroup | undefined;
 
   get isSelectedFilterGroupDefault() {
-    if (!this.selectedFilterGroupId) {
+    if (!this.selectedFilterGroup) {
       return false;
     }
-    return this.defaultFilter?.id === this.selectedFilterGroupId;
+    return this.defaultFilter?.id === this.selectedFilterGroup?.id;
   }
 
   constructor(private filterConfiguration: IFilterConfiguration) {
     this.ctx = filterConfiguration;
     filterConfiguration.registerFilteringOnOffHandler(filteringOn => {
       if(!filteringOn){
-        this.selectedFilterGroupId = undefined;
+        this.selectedFilterGroup = undefined;
       }
     });
   }
@@ -59,11 +59,11 @@ export class FilterGroupManager {
 
   @action.bound
   setFilterGroup(filterGroup: IFilterGroup | undefined) {
+    this.selectedFilterGroup = cloneFilterGroup(filterGroup);
     this.filterConfiguration.clearFilters();
-    if (filterGroup?.filters) {
-      this.filterConfiguration.setFilters(filterGroup.filters);
+    if (this.selectedFilterGroup?.filters) {
+      this.filterConfiguration.setFilters(this.selectedFilterGroup.filters);
     }
-    this.selectedFilterGroupId = filterGroup?.id;
   }
 
   filterToServerVersion(filter: IFilter): IUIGridFilterFieldConfiguration {
@@ -111,18 +111,18 @@ export class FilterGroupManager {
 
   @action.bound
   async deleteFilterGroup() {
-    if (!this.selectedFilterGroupId) {
+    if (!this.selectedFilterGroup) {
       return;
     }
     const api = getApi(this.ctx);
-    await api.deleteFilter({filterId: this.selectedFilterGroupId});
+    await api.deleteFilter({filterId: this.selectedFilterGroup.id});
 
-    const index = this.filterGroups.findIndex((group) => group.id === this.selectedFilterGroupId);
+    const index = this.filterGroups.findIndex((group) => group.id === this.selectedFilterGroup?.id);
     if (index > -1) {
       this.filterGroups.splice(index, 1);
     }
     this.filterConfiguration.clearFilters();
-    this.selectedFilterGroupId = undefined;
+    this.selectedFilterGroup = undefined;
   }
 
   @action.bound
@@ -141,7 +141,7 @@ export class FilterGroupManager {
   @action.bound
   cancelSelectedFilter() {
     this.filterConfiguration.clearFilters();
-    this.selectedFilterGroupId = undefined;
+    this.selectedFilterGroup = undefined;
   }
 
   @action.bound

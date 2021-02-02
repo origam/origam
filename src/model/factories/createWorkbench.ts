@@ -1,6 +1,6 @@
 import { Workbench } from "../entities/Workbench";
 
-import { ClientFulltextSearch } from "../entities/ClientFulltextSearch";
+import { Searcher } from "../entities/Searcher";
 import { WorkbenchLifecycle } from "model/entities/WorkbenchLifecycle/WorkbenchLifecycle";
 import { MainMenuEnvelope } from "../entities/MainMenu";
 import { OpenedScreens } from "model/entities/OpenedScreens";
@@ -16,6 +16,7 @@ import { getApi } from "model/selectors/getApi";
 import { Chatrooms } from "model/entities/Chatrooms";
 import { Notifications } from "model/entities/Notifications";
 import { Favorites } from "model/entities/Favorites";
+import { SidebarState } from "model/entities/SidebarState";
 
 export function createWorkbench() {
   const clock = new Clock();
@@ -26,14 +27,14 @@ export function createWorkbench() {
     mainMenuEnvelope: new MainMenuEnvelope(),
     favorites: new Favorites(),
     workbenchLifecycle: new WorkbenchLifecycle(),
-    clientFulltextSearch: new ClientFulltextSearch(),
+    searcher: new Searcher(),
     openedScreens: new OpenedScreens(),
     openedDialogScreens: new OpenedScreens(),
     workQueues: new WorkQueues(),
     chatrooms: new Chatrooms(),
     recordInfo: new RecordInfo(),
     notifications: new Notifications(),
-
+    sidebarState: new SidebarState(),
     lookupListCache: workbenchLookupListCache,
     lookupMultiEngine,
   });

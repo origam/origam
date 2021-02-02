@@ -5,7 +5,7 @@ import { createFormScreenEnvelope } from "model/factories/createFormScreenEnvelo
 import { createOpenedScreen } from "model/factories/createOpenedScreen";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getApi } from "model/selectors/getApi";
-import { getClientFulltextSearch } from "model/selectors/getClientFulltextSearch";
+import { getSearcher } from "model/selectors/getSearcher";
 import { getOpenedScreens } from "model/selectors/getOpenedScreens";
 import { getMainMenuEnvelope } from "model/selectors/MainMenu/getMainMenuEnvelope";
 import { getMainMenuItemById } from "model/selectors/MainMenu/getMainMenuItemById";
@@ -81,7 +81,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const openedScreens = getOpenedScreens(this);
 
     let dialogInfo: IDialogInfo | undefined;
-    if (type === IMainMenuItemType.FormRefWithSelection) {
+    if (type === IMainMenuItemType.FormRefWithSelection || type === IMainMenuItemType.ReportRefWithSelection) {
       dialogInfo = new DialogInfo(parseInt(dialogWidth, 10), parseInt(dialogHeight, 10));
     }
     if (event && !(event.ctrlKey || event.metaKey)) {
@@ -90,6 +90,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         existingItem &&
         type !== IMainMenuItemType.FormRefWithSelection &&
         type !== IMainMenuItemType.ReportReferenceMenuItem &&
+        type !== IMainMenuItemType.ReportRefWithSelection &&
         !alwaysOpenNew
       ) {
         openedScreens.activateItem(id, existingItem.order);
@@ -197,7 +198,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     const label = item.name;
 
     let dialogInfo: IDialogInfo | undefined;
-    if (!(event.ctrlKey || event.metaKey)) {
+    if (!event || !(event.ctrlKey || event.metaKey)) {
       const existingItem = openedScreens.findLastExistingTabItem(id);
       if (existingItem) {
         openedScreens.activateItem(id, existingItem.order);
@@ -467,7 +468,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     assignIIds(menuUI);
     getFavorites(this).setXml(portalInfo.favorites);
     getMainMenuEnvelope(this).setMainMenu(new MainMenuContent({ menuUI }));
-    getClientFulltextSearch(this).indexMainMenu(menuUI);
+    getSearcher(this).indexMainMenu(menuUI);
 
     if (!DEBUG_CLOSE_ALL_FORMS()) {
       for (let session of portalInfo.sessions) {

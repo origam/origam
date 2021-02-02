@@ -1,4 +1,4 @@
-import {IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope} from "./types/IMainMenu";
+import {IMainMenu, IMainMenuContent, IMainMenuData, IMainMenuEnvelope, IMainMenuState} from "./types/IMainMenu";
 import {action, observable} from "mobx";
 import {proxyEnrich} from "utils/esproxy";
 

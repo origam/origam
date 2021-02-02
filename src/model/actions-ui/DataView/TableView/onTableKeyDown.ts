@@ -5,19 +5,28 @@ import {selectNextColumn} from "../../../actions/DataView/TableView/selectNextCo
 import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 import {flow} from "mobx";
 import {handleError} from "model/actions/handleError";
+import { getDataView } from "model/selectors/DataView/getDataView";
+import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
 
 export function onTableKeyDown(ctx: any) {
   return flow(function* onTableKeyDown(event: any) {
     try {
+      const dataView = getDataView(ctx);
       switch (event.key) {
         case "ArrowUp":
-          yield* selectPrevRow(ctx)();
           event.preventDefault();
+          if (!(yield shouldProceedToChangeRow(dataView))) {
+            break;
+          }
+          yield* selectPrevRow(ctx)();
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowDown":
-          yield* selectNextRow(ctx)();
           event.preventDefault();
+          if (!(yield shouldProceedToChangeRow(dataView))) {
+            break;
+          }
+          yield* selectNextRow(ctx)();
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
         case "ArrowLeft":

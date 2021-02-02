@@ -9,7 +9,6 @@ import { onFieldBlur } from "model/actions-ui/DataView/TableView/onFieldBlur";
 import { onFieldChange } from "model/actions-ui/DataView/TableView/onFieldChange";
 import { getFieldErrorMessage } from "model/selectors/DataView/getFieldErrorMessage";
 import { getSelectedRow } from "model/selectors/DataView/getSelectedRow";
-import { getRowStateColumnBgColor } from "model/selectors/RowState/getRowStateColumnBgColor";
 import { getRowStateForegroundColor } from "model/selectors/RowState/getRowStateForegroundColor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import React from "react";
@@ -23,6 +22,7 @@ import { DateTimeEditor } from "gui/Components/ScreenElements/Editors/DateTimeEd
 import { FocusManager } from "model/entities/FocusManager";
 import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
+import { shadeHexColor } from "utils/colorUtils";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -35,7 +35,6 @@ import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEd
         row: row, 
         property: property, 
         value: value, 
-        forceFlush: property.column === "CheckBox" || property.column === "Checklist" 
       });
     },
   };
@@ -49,6 +48,7 @@ export class FormViewEditor extends React.Component<{
   isRichText: boolean;
   onChange?: (event: any, value: any) => void;
   onEditorBlur?: (event: any) => void;
+  backgroundColor?: string;
 }> {
   focusManager: FocusManager;
 
@@ -62,15 +62,12 @@ export class FormViewEditor extends React.Component<{
     const row = getSelectedRow(this.props.property);
     const foregroundColor = getRowStateForegroundColor(
       this.props.property,
-      rowId || "",
-      this.props.property!.id
-    );
-    const backgroundColor = getRowStateColumnBgColor(
-      this.props.property,
-      rowId || "",
-      this.props.property!.id
+      rowId || ""
     );
     const readOnly = !row || isReadOnly(this.props.property!, rowId);
+    const backgroundColor = readOnly 
+      ? shadeHexColor(this.props.backgroundColor, -0.1)
+      : this.props.backgroundColor;
     let isInvalid = false;
     let invalidMessage: string | undefined = undefined;
 

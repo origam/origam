@@ -76,7 +76,6 @@ export interface IDataView extends IDataViewData {
   childBindings: IComponentBinding[];
   bindingRoot: IDataView;
   bindingParent: IDataView | undefined;
-  isEditing: boolean;
   isValidRowSelection: boolean;
   selectedRowId: string | undefined;
   selectedRowIndex: number | undefined;
@@ -94,11 +93,10 @@ export interface IDataView extends IDataViewData {
 
   isSelected(id: string): boolean;
   hasSelectedRowId(id: string): boolean;
-  selectedRowIds: string[];
+  selectedRowIds: Set<string>;
   addSelectedRowId(id: string): void;
   removeSelectedRowId(id: string): void;
   setSelectedState(rowId: string, newState: boolean): void;
-  selectAllCheckboxChecked: boolean;
 
   selectNextRow(): void;
   selectPrevRow(): void;
@@ -110,7 +108,6 @@ export interface IDataView extends IDataViewData {
   selectRowById(id: string | undefined): void;
   selectRow(row: any[]): void;
   setSelectedRowId(id: string | undefined): void;
-  setEditing(state: boolean): void;
   setRecords(rows: any[][]): Promise<any>;
   appendRecords(rows: any[][]): void;
   substituteRecord(row: any[]): void;

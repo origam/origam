@@ -13,7 +13,7 @@ import { getColumnNamesToLoad } from "model/selectors/DataView/getColumnNamesToL
 import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
 import { getDataViewByGridId } from "model/selectors/DataView/getDataViewByGridId";
 import { getDataViewsByEntity } from "model/selectors/DataView/getDataViewsByEntity";
-import { getAutorefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
+import { getAutorefreshPeriod as getAutoRefreshPeriod } from "model/selectors/FormScreen/getAutorefreshPeriod";
 import { getDataViewList } from "model/selectors/FormScreen/getDataViewList";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { getIsSuppressSave } from "model/selectors/FormScreen/getIsSuppressSave";
@@ -43,29 +43,21 @@ import { IScreenEvents } from "../../../modules/Screen/FormScreen/ScreenEvents";
 import { scopeFor } from "../../../dic/Container";
 import { getUserFilterLookups } from "../../selectors/DataView/getUserFilterLookups";
 import _, { isArray } from "lodash";
-import { ChangeMasterRecordDialog } from "../../../gui/Components/Dialogs/ChangeMasterRecordDialog";
-import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
-import { selectFirstRow } from "../../actions/DataView/selectFirstRow";
 import { YesNoQuestion } from "gui/Components/Dialogs/YesNoQuestion";
 import { getProperties } from "model/selectors/DataView/getProperties";
 import { getWorkbench } from "model/selectors/getWorkbench";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { IDataViewToolbarUI } from "modules/DataView/DataViewUI";
-import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
-import { selectLastRow } from "model/actions/DataView/selectLastRow";
 import { startEditingFirstCell } from "model/actions/DataView/startEditingFirstCell";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
-import { wait } from "@testing-library/react";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
 import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChildren";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
-import { getSelectedRowErrorMessages } from "model/selectors/DataView/getSelectedRowErrorMessages";
 import { AggregationType } from "../types/AggregationType";
 import { parseAggregations } from "../Aggregatioins";
+import { UpdateRequestAggregator } from "./UpdateRequestAggregator";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -81,6 +73,15 @@ enum IQuestionDeleteDataAnswer {
 export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   $type_IFormScreenLifecycle: 1 = 1;
 
+  _updateRequestAggregator: UpdateRequestAggregator | undefined;
+
+  get updateRequestAggregator(){
+    if(!this._updateRequestAggregator){
+      this._updateRequestAggregator = new UpdateRequestAggregator(this);
+    }
+    return this._updateRequestAggregator;
+  }
+  
   @observable allDataViewsSteady = true;
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
@@ -100,8 +101,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     this.disposers.push(disposer);
   }
 
-  *onFlushData(args?:{forceFlush?: boolean}): Generator<unknown, any, unknown> {
-    yield* this.flushData({forceFlush: args?.forceFlush});
+  *onFlushData(): Generator<unknown, any, unknown> {
+    yield* this.flushData();
   }
 
   *onCreateRow(entity: string, gridId: string): Generator<unknown, any, unknown> {
@@ -121,6 +122,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *onSaveSession(): Generator<unknown, any, unknown> {
+    yield* this.flushData();
     yield* this.saveSession();
   }
 
@@ -293,22 +295,22 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  _autorefreshTimerHandle: any;
+  _autoRefreshTimerHandle: any;
 
-  *startAutorefreshIfNeeded() {
-    const autorefreshPeriod = getAutorefreshPeriod(this);
-    if (autorefreshPeriod) {
+  *startAutoRefreshIfNeeded() {
+    const autoRefreshPeriod = getAutoRefreshPeriod(this);
+    if (autoRefreshPeriod) {
       this.disposers.push(
         autorun(() => {
           if (
             !getIsSuppressSave(this) &&
             (getIsFormScreenDirty(this) || !getIsActiveScreen(this))
           ) {
-            this.clearAutorefreshInterval();
+            this.clearAutoRefreshInterval();
           } else {
-            this._autorefreshTimerHandle = setInterval(
-              () => this.performAutoreload(),
-              autorefreshPeriod * 1000
+            this._autoRefreshTimerHandle = setInterval(
+              () => this.performAutoReload(),
+              autoRefreshPeriod * 1000
             );
           }
         })
@@ -316,14 +318,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  clearAutorefreshInterval() {
-    if (this._autorefreshTimerHandle) {
-      clearInterval(this._autorefreshTimerHandle);
-      this._autorefreshTimerHandle = undefined;
+  clearAutoRefreshInterval() {
+    if (this._autoRefreshTimerHandle) {
+      clearInterval(this._autoRefreshTimerHandle);
+      this._autoRefreshTimerHandle = undefined;
     }
   }
 
-  performAutoreload() {
+  performAutoReload() {
     const self = this;
     flow(function* () {
       try {
@@ -360,7 +362,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         _steadyDebounceTimeout = undefined;
       }
     );
-    // yield* this.initUI();
     try{
       this.initialSelectedRowId = initUIResult.currentRecordId
       yield* this.applyInitUIResult({ initUIResult });
@@ -434,7 +435,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     {
       this.initialSelectedRowId = undefined;
     }
-    yield* this.startAutorefreshIfNeeded();
+    yield* this.startAutoRefreshIfNeeded();
   }
 
   sortAndFilterReaction(args: {dataView: IDataView, updateTotalRowCount: boolean}) {
@@ -642,19 +643,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  previousFlushPending: Promise<void> | undefined;
-  previousFlushFinished: ((value: void | PromiseLike<void>)=> void) | undefined;
-
-  *flushData(args?:{forceFlush?: boolean}) {
+  *flushData() {
     try {
       this.monitor.inFlow++;
-      if(this.previousFlushPending && !args?.forceFlush){
-        yield this.previousFlushPending;
-        return;
-      }
-      this.previousFlushPending = new Promise((resolve, reject) => 
-            this.previousFlushFinished = resolve
-        );
       let updateObjectDidRun = false;
       const formScreen = getFormScreen(this);
       const dataViews = formScreen.dataViews;
@@ -665,8 +656,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* this.saveSession();
       }
     } finally {
-      this.previousFlushFinished?.();
-      this.previousFlushPending = undefined;
       this.monitor.inFlow--;
     }
   }
@@ -681,16 +670,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     if (!updateData || updateData.length === 0) {
       return false;
     }
-    const api = getApi(this);
-    const formScreen = getFormScreen(this);
-    const self = this;
-    const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
-      return yield api.updateObject({
-        SessionFormIdentifier: getSessionId(self),
-        Entity: dataView.entity,
-        UpdateData: updateData,
-      });
+    const updateObjectResult = yield this.updateRequestAggregator.enqueue({
+      SessionFormIdentifier: getSessionId(this),
+      Entity: dataView.entity,
+      UpdateData: updateData,
     });
+
     dataView.focusManager.stopAutoFocus();
     yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
     return true;
@@ -704,17 +689,15 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       changes[fieldName] = newValue;
       const formScreen = getFormScreen(this);
       const self = this;
-      const updateObjectResult = yield* formScreen.dataUpdateCRS.runGenerator<any>(function* () {
-        return yield api.updateObject({
-          SessionFormIdentifier: getSessionId(self),
-          Entity: dataView.entity,
-          UpdateData: [
-            {
-              RowId: dataView.dataTable.getRowId(row),
-              Values: changes,
-            },
-          ],
-        });
+      const updateObjectResult = yield self.updateRequestAggregator.enqueue({
+        SessionFormIdentifier: getSessionId(self),
+        Entity: dataView.entity,
+        UpdateData: [
+          {
+            RowId: dataView.dataTable.getRowId(row),
+            Values: changes,
+          },
+        ],
       });
 
       yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
@@ -974,7 +957,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   }
 
   *refreshSession() {
-    // TODO: Refresh lookups and rowstates !!!
+    // TODO: Refresh lookups and rowStates !!!
     try {
       this.monitor.inFlow++;
       if (this.eagerLoading) {
@@ -1113,7 +1096,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   @action.bound
   killForm() {
-    this.clearAutorefreshInterval();
+    this.clearAutoRefreshInterval();
     this.disposers.forEach((disposer) => disposer());
     getDataViewList(this).forEach((dv) => dv.stop());
     const openedScreen = getOpenedScreen(this);
@@ -1155,65 +1138,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     );
   }
 
-  // async handleUserInputOnChangingRow(dataView: IDataView) {
-  //   const api = getApi(dataView);
-  //   const openedScreen = getOpenedScreen(this);
-  //   const sessionId = getSessionId(openedScreen.content.formScreen);
-
-  //  if(isInfiniteScrollingActive(dataView)){
-  //     switch (await this.questionSaveDataAfterRecordChange()) {
-  //       case IQuestionChangeRecordAnswer.Cancel:
-  //         return false;
-  //       case IQuestionChangeRecordAnswer.Yes:
-  //         await api.saveSessionQuery(sessionId);
-  //         await api.saveSession(sessionId);
-  //         return true;
-  //       case IQuestionChangeRecordAnswer.No:
-  //         await flow(() => getFormScreenLifecycle(dataView).throwChangesAway(dataView))();
-  //         return true;
-  //       default:
-  //         throw new Error("Option not implemented");
-  //     }
-  //   }
-  //   else
-  //   {
-  //     const errorMessages = dataView.childBindings
-  //       .map(binding => binding.childDataView)
-  //       .concat(dataView)
-  //       .flatMap(dataView => getSelectedRowErrorMessages(dataView))
-  //     if(errorMessages.length > 0){
-  //       await flow(function* bla() {yield* selectors.error.getDialogController(dataView).pushError(errorMessages.join("\n"));} )();
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
-  // questionSaveDataAfterRecordChange() {
-  //   return new Promise(
-  //     action((resolve: (value: IQuestionChangeRecordAnswer) => void) => {
-  //       const closeDialog = getDialogStack(this).pushDialog(
-  //         "",
-  //         <ChangeMasterRecordDialog
-  //           screenTitle={getOpenedScreen(this).title}
-  //           onSaveClick={() => {
-  //             closeDialog();
-  //             resolve(IQuestionChangeRecordAnswer.Yes);
-  //           }}
-  //           onDontSaveClick={() => {
-  //             closeDialog();
-  //             resolve(IQuestionChangeRecordAnswer.No);
-  //           }}
-  //           onCancelClick={() => {
-  //             closeDialog();
-  //             resolve(IQuestionChangeRecordAnswer.Cancel);
-  //           }}
-  //         />
-  //       );
-  //     })
-  //   );
-  // }
-
   questionDeleteData() {
     return new Promise(
       action((resolve: (value: IQuestionDeleteDataAnswer) => void) => {
@@ -1252,11 +1176,3 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   parent?: any;
 }
-
-
-
-
-
-
-
-

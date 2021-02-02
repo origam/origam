@@ -38,6 +38,7 @@ export class FormField extends React.Component<{
   isCheckbox?: boolean;
   isHidden?: boolean;
   hideCaption?: boolean;
+  captionColor?: string;
 }> {
   @computed
   get captionStyle() {
@@ -52,6 +53,7 @@ export class FormField extends React.Component<{
         return {
           top: this.props.top,
           left: this.props.left - this.props.captionLength,
+          color: this.props.captionColor
         };
       case ICaptionPosition.Right:
         // 20 is expected checkbox width, might be needed to be set dynamically
@@ -59,11 +61,13 @@ export class FormField extends React.Component<{
         return {
           top: this.props.top,
           left: this.props.isCheckbox ? this.props.left + 20 : this.props.left + this.props.width,
+          color: this.props.captionColor
         };
       case ICaptionPosition.Top:
         return {
           top: this.props.top - 20, // TODO: Move this constant somewhere else...
           left: this.props.left,
+          color: this.props.captionColor
         };
     }
   }

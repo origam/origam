@@ -2,7 +2,7 @@ import { IWorkbench, IWorkbenchData } from "./types/IWorkbench";
 import { IMainMenuEnvelope } from "./types/IMainMenu";
 import { IWorkbenchLifecycle } from "./types/IWorkbenchLifecycle";
 import { action, computed, observable } from "mobx";
-import { IClientFulltextSearch } from "./types/IClientFulltextSearch";
+import { ISearcher } from "./types/ISearcher";
 import { IOpenedScreens } from "./types/IOpenedScreens";
 import { IWorkQueues } from "./types/IWorkQueues";
 import { IRecordInfo } from "./types/IRecordInfo";
@@ -11,6 +11,7 @@ import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { Chatrooms } from "./Chatrooms";
 import { Notifications } from "./Notifications";
 import {Favorites} from "model/entities/Favorites";
+import { SidebarState } from "./SidebarState";
 
 export class Workbench implements IWorkbench {
   $type_IWorkbench: 1 = 1;
@@ -18,7 +19,7 @@ export class Workbench implements IWorkbench {
   constructor(data: IWorkbenchData) {
     Object.assign(this, data);
     this.workbenchLifecycle.parent = this;
-    this.clientFulltextSearch.parent = this;
+    this.searcher.parent = this;
     this.openedScreens.parent = this;
     this.openedDialogScreens.parent = this;
     this.workQueues.parent = this;
@@ -26,10 +27,11 @@ export class Workbench implements IWorkbench {
     this.notifications.parent = this;
     this.recordInfo.parent = this;
     this.favorites.parent = this;
+    this.sidebarState.parent = this;
   }
 
   workbenchLifecycle: IWorkbenchLifecycle = null as any;
-  clientFulltextSearch: IClientFulltextSearch = null as any;
+  searcher: ISearcher = null as any;
   mainMenuEnvelope: IMainMenuEnvelope = null as any;
   openedScreens: IOpenedScreens = null as any;
   openedDialogScreens: IOpenedScreens = null as any;
@@ -40,6 +42,7 @@ export class Workbench implements IWorkbench {
   lookupListCache: LookupListCacheMulti = null as any;
   lookupMultiEngine: IMultiLookupEngine = null as any;
   favorites: Favorites = null as any;
+  sidebarState: SidebarState = null as any;
 
   @observable isFullScreen: boolean = false;
 
@@ -56,13 +59,4 @@ export class Workbench implements IWorkbench {
   }
 
   parent?: any;
-
-  /*@action.bound setMainMenu(mainMenu: ILoadingMainMenu | IMainMenu) {
-    this.mainMenu = mainMenu;
-    if (!mainMenu.isLoading) {
-      this.clientFulltextSearch.indexMainMenu((mainMenu as IMainMenu).menuUI);
-    }
-
-    mainMenu.parent = this;
-  }*/
 }

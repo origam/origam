@@ -2,6 +2,7 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "cSpell.words": [
     "Dropdowner",
+    "Horiz",
     "Millis",
     "Origam",
     "Unmount",
@@ -12,6 +13,7 @@
     "ncontain",
     "nends",
     "nnull",
-    "nstarts"
+    "nstarts",
+    "uuidv"
   ]
 }

@@ -1,6 +1,6 @@
 import { IMainMenuEnvelope } from "./IMainMenu";
 import { IWorkbenchLifecycle } from "./IWorkbenchLifecycle";
-import { IClientFulltextSearch } from "./IClientFulltextSearch";
+import { ISearcher as ISearcher } from "./ISearcher";
 import { IOpenedScreens } from "./IOpenedScreens";
 import { IWorkQueues } from "./IWorkQueues";
 import { IRecordInfo } from "./IRecordInfo";
@@ -9,11 +9,12 @@ import { IMultiLookupEngine } from "modules/Lookup/LookupModule";
 import { Chatrooms } from "../Chatrooms";
 import { Notifications } from "../Notifications";
 import {Favorites} from "model/entities/Favorites";
+import { SidebarState } from "../SidebarState";
 
 export interface IWorkbenchData {
   mainMenuEnvelope: IMainMenuEnvelope;
   workbenchLifecycle: IWorkbenchLifecycle;
-  clientFulltextSearch: IClientFulltextSearch;
+  searcher: ISearcher;
   openedScreens: IOpenedScreens;
   openedDialogScreens: IOpenedScreens;
   workQueues: IWorkQueues;
@@ -21,6 +22,7 @@ export interface IWorkbenchData {
   notifications: Notifications;
   recordInfo: IRecordInfo;
   favorites: Favorites;
+  sidebarState: SidebarState;
 
   lookupListCache: LookupListCacheMulti;
   lookupMultiEngine: IMultiLookupEngine;

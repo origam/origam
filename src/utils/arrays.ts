@@ -62,10 +62,30 @@ declare global {
   }
 }
 
+declare global {
+  interface Array<T> {
+    groupBy<T, K>(keyGetter: (key: T) => K):  Map<K, T[]>;
+  }
+}
+
 Array.prototype.remove = function(item){
   const index = this.indexOf(item);
   if (index > -1) {
     this.splice(index, 1);
   }
   return this;
+}
+
+Array.prototype.groupBy = function<T, K>(keyGetter: (key: T) => K) {
+  const map = new Map<K, T[]>();
+  this.forEach((item) => {
+       const key = keyGetter(item);
+       const collection = map.get(key);
+       if (!collection) {
+           map.set(key, [item]);
+       } else {
+           collection.push(item);
+       }
+  });
+  return map;
 }

@@ -511,9 +511,11 @@ export class OrigamAPI implements IApi {
   }
 
   async saveObjectConfiguration(data: {
+    sessionFormIdentifier: string;
     instanceId: string;
     columnSettings: IColumnSettings[];
     defaultView: string;
+    lockedColumns: number;
   }): Promise<any> {
     const columnFields = data.columnSettings
       .filter((settings) => settings.groupingIndex !== undefined)
@@ -535,14 +537,12 @@ export class OrigamAPI implements IApi {
     );
 
     await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
-      ObjectinstanceId: data.instanceId,
-      Section: "columnWidths",
-      SettingsData: columnsProps.concat(columnFields).join(""),
-    });
-    await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
-      ObjectinstanceId: data.instanceId,
-      Section: "defaultView",
-      SettingsData: `<view id="${data.defaultView}" />`,
+      ObjectInstanceId: data.instanceId,
+      SectionNameAndData: {
+        columnWidths: columnsProps.concat(columnFields).join(""), 
+        defaultView: `<view id="${data.defaultView}" />`,
+        lockedColumns: `<lockedColumns count="${data.lockedColumns}" />`
+      }
     });
   }
 

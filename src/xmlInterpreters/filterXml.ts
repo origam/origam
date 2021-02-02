@@ -1,12 +1,10 @@
 import { IFilter } from "model/entities/types/IFilter";
 import { FilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSetting";
 import { filterTypeFromNumber } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
-import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
 import { IProperty } from "model/entities/types/IProperty";
-import {IFilterConfiguration} from "model/entities/types/IFilterConfiguration";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
-
 import { LookupFilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
+import { IFilterGroup } from "model/entities/types/IFilterGroup";
 
 function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
   const filters: IFilter[] = filterJson.details.map((detail: any) => {
@@ -34,6 +32,37 @@ function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
     id: filterJson.id,
     isGlobal: filterJson.isGlobal,
     name: filterJson.name,
+  };
+}
+
+export function cloneFilterGroup(group: IFilterGroup | undefined){
+  if(!group){
+    return undefined;
+  }
+  const filters = group.filters.map(filter => 
+    {
+      return {
+        propertyId: filter.propertyId,
+        dataType: filter.dataType,
+        setting: filter.dataType === "ComboBox"
+          ? new LookupFilterSetting(
+            filter.setting.type,
+            filter.setting.isComplete,
+            filter.setting.val1,
+            filter.setting.val2)
+          :new FilterSetting(
+            filter.setting.type,
+            filter.setting.isComplete,
+            filter.setting.val1,
+            filter.setting.val2)
+      }
+    }
+  );
+  return {
+    filters: filters,
+    id: group.id,
+    isGlobal: group.isGlobal,
+    name: group.name,
   };
 }
 

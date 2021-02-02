@@ -299,13 +299,15 @@ export function FilterBuildDropdownEditor(props: {
     };
   });
 
+  (dropdownEditorInfrastructure.editorData as FilterEditorData).setting = props.setting;
+
   const value = props.values;
   return (
     <CtxDropdownEditor.Provider value={dropdownEditorInfrastructure}>
       <DropdownEditor
         editor={
           <TagInputEditor
-            customInputCalss={S.tagInput}
+            customInputClass={S.tagInput}
             value={value}
             isReadOnly={false}
             isInvalid={false}
@@ -320,7 +322,7 @@ export function FilterBuildDropdownEditor(props: {
 }
 
 export class FilterEditorData implements IDropdownEditorData {
-  constructor( private setting: IFilterSetting) {
+  constructor( public setting: IFilterSetting) {
     }
 
   @computed get value(): string | string[] | null {
@@ -372,7 +374,7 @@ export class FilterEditorData implements IDropdownEditorData {
 class DropDownApi implements IDropdownEditorApi {
   constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
 
-  *getLookupList(searchTerm: string): any {
+  *getLookupList(searchTerm: string): Generator {
     return yield this.getOptions("");
   }
 }

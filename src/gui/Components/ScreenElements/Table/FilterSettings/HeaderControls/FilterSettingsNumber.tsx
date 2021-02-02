@@ -49,83 +49,101 @@ const OpCombo: React.FC<{
   );
 });
 
-const OpEditors: React.FC<{
-  setting: any;
+@observer
+class OpEditors extends React.Component<{
+  setting?: any;
   onChange: (newSetting: any) => void;
   onBlur?: (event: any) => void;
-}> = observer((props) => {
+}> {
 
-  const { setting } = props;
-  const [currentValue1, setCurrentValue1] = useState(setting.val1);
-  const [currentValue2, setCurrentValue2] = useState(setting.val2);
-  
-  useEffect(() => {
-    const timeOutId = setTimeout(() => {
-      runInAction(() => {
-        setting.val1 = currentValue1 === "" ? undefined : currentValue1;
-        props.onChange(setting);
-      })
-    }, EDITOR_DALEY_MS);
-    return () => {
-      clearTimeout(timeOutId);
-    }
-  }, [currentValue1]);
-  
-  useEffect(() => {
-    const timeOutId = setTimeout(() => {
-      runInAction(() => {
-        setting.val2 = currentValue2 === "" ? undefined : currentValue2;
-        props.onChange(setting);
-      })
-    }, EDITOR_DALEY_MS);
-    return () => {
-      clearTimeout(timeOutId);
-    }
-  }, [currentValue2]);
-  
-  switch (setting.type) {
-    case "eq":
-    case "neq":
-    case "lt":
-    case "gt":
-    case "lte":
-    case "gte":
-      return (
-        <input
-          type="number"
-          className={CS.input}
-          value={currentValue1 ?? ""}
-          onChange={(event: any) => setCurrentValue1(event.target.value)}
-          onBlur={props.onBlur}
-        />
-      );
+  @observable
+  currentValue1 = this.props.setting.val1;
 
-    case "between":
-    case "nbetween":
-      return (
-        <>
-          <input
-            type="number"
-            className={CS.input}
-            value={currentValue1 ?? ""}
-            onChange={(event: any) => setCurrentValue1(event.target.value)}
-            onBlur={props.onBlur}
-          />
-          <input
-            type="number"
-            className={CS.input}
-            value={currentValue2 ?? ""}
-            onChange={(event: any) => setCurrentValue2(event.target.value)}
-            onBlur={props.onBlur}
-          />
-        </>
-      );
-    case "null":
-    case "nnull":
-    default:
-      return null;
+  @observable
+  currentValue2 = this.props.setting.val2;
+
+  componentDidUpdate(prevProps: any){
+    if(prevProps.setting?.val1 !== this.props.setting?.val1){
+      this.currentValue1 = this.props.setting?.val1;
+    }
+    if(prevProps.setting?.val2 !== this.props.setting?.val2){
+      this.currentValue2 = this.props.setting?.val2;
+    }
   }
-});
+
+  onCurrentValue1Changed(newValue: string){
+    this.currentValue1 = newValue;
+
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        this.props.setting.val1 = this.currentValue1 === "" ? undefined : this.currentValue1;
+        this.props.onChange(this.props.setting);
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }
+
+  onCurrentValue2Changed(newValue: string){
+    this.currentValue2 = newValue;
+
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        this.props.setting.val2 = this.currentValue2 === "" ? undefined : this.currentValue2;
+        this.props.onChange(this.props.setting);
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }
+
+  render(){
+    switch (this.props.setting.type) {
+      case "eq":
+      case "neq":
+      case "lt":
+      case "gt":
+      case "lte":
+      case "gte":
+        return (
+          <input
+            type="number"
+            className={CS.input}
+            value={this.currentValue1 ?? ""}
+            onChange={(event: any) => this.onCurrentValue1Changed(event.target.value)}
+            onBlur={this.props.onBlur}
+          />
+        );
+  
+      case "between":
+      case "nbetween":
+        return (
+          <>
+            <input
+              type="number"
+              className={CS.input}
+              value={this.currentValue1 ?? ""}
+              onChange={(event: any) => this.onCurrentValue1Changed(event.target.value)}
+              onBlur={this.props.onBlur}
+            />
+            <input
+              type="number"
+              className={CS.input}
+              value={this.currentValue2 ?? ""}
+              onChange={(event: any) => this.onCurrentValue2Changed(event.target.value)}
+              onBlur={this.props.onBlur}
+            />
+          </>
+        );
+      case "null":
+      case "nnull":
+      default:
+        return null;
+    }
+  }
+}
 
 @observer
 export class FilterSettingsNumber extends React.Component<{

@@ -9,6 +9,8 @@ export const FormSection: React.FC<{
   width: number;
   height: number;
   title?: React.ReactNode;
+  backgroundColor: string | undefined;
+  foreGroundColor: string | undefined;
 }> = props => {
   const hasTitle = !!props.title;
   return (
@@ -18,10 +20,14 @@ export const FormSection: React.FC<{
         top: props.top,
         left: props.left,
         width: props.width,
-        height: props.height
+        height: props.height,
+        backgroundColor: props.backgroundColor,
       }}
     >
-      {hasTitle && <FormSectionHeader>{props.title}</FormSectionHeader>}
+      {hasTitle && 
+        <FormSectionHeader foreGroundColor={props.foreGroundColor}>
+            {props.title}
+        </FormSectionHeader>}
       {props.children}
     </div>
   );

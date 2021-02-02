@@ -14,17 +14,10 @@ import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { IProperty } from "../types/IProperty";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
 import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
-import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
-
-import selectors from "model/selectors-tree";
 import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
 import { IAggregationInfo } from "../types/IAggregationInfo";
 import { AggregationType } from "../types/AggregationType";
 import { ICellRectangle } from "./types/ICellRectangle";
-import { getRowStateAllowUpdate } from "../../selectors/RowState/getRowStateAllowUpdate";
-import React from "react";
-import { isInfiniteScrollingActive } from "../../selectors/isInfiniteScrollingActive";
-import { getFormScreenLifecycle } from "../../selectors/FormScreen/getFormScreenLifecycle";
 import { getFormScreen } from "../../selectors/FormScreen/getFormScreen";
 import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
 import { flushCurrentRowData } from "../../actions/DataView/TableView/flushCurrentRowData";
@@ -33,8 +26,6 @@ import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
-import produce from "immer";
-import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -159,13 +150,12 @@ export class TablePanelView implements ITablePanelView {
   *onCellClickInternal(event: any, row: any[], columnId: string, isControlInteraction: boolean) {
     const property = this.propertyMap.get(columnId)!;
     if (property.column !== "CheckBox" || !isControlInteraction) {
-      if (property.isLink && (event.ctrlKey || event.metaKey)) {
+      if (property.isLink && property.column !== "TagInput" && (event.ctrlKey || event.metaKey)) {
         yield* getDataView(this).navigateLookupLink(property, row);
       } else {
         if (
           this.dataTable.getRowId(row) ===
-          this.selectedRowId /*&&
-        property.id === this.selectedColumnId*/
+          this.selectedRowId
         ) {
           this.selectCell(this.dataTable.getRowId(row) as string, property.id);
           this.setEditing(true);
@@ -190,11 +180,12 @@ export class TablePanelView implements ITablePanelView {
           row: row, 
           property: property, 
           value: !getCellValue(this, row, property), 
-          forceFlush: false 
         });
       }
     }
-    this.scrollToCurrentCell();
+    if(!getGroupingConfiguration(this).isGrouping){
+      this.scrollToCurrentCell();
+    }
   }
 
   private *selectCellAsync(columnId: string, rowId: string) {

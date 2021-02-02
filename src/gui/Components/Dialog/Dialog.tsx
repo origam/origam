@@ -35,6 +35,7 @@ export class ModalWindow extends React.Component<{
   buttonsCenter: React.ReactNode;
   width?: number;
   height?: number;
+  onKeyDown?: (event: any) => void;
 }> {
   @observable top: number = window.screen.height + 50;
   @observable left: number = window.screen.width + 50;
@@ -82,6 +83,29 @@ export class ModalWindow extends React.Component<{
     this.isDragging = false;
   }
 
+  onKeyDown(event: any){
+    this.props.onKeyDown?.(event);
+  }
+
+  renderFooter(){
+    if(this.props.buttonsLeft || this.props.buttonsCenter || this.props.buttonsRight){
+      return(
+        <div className={S.footer}>
+          {this.props.buttonsLeft}
+          {this.props.buttonsCenter ? (
+            this.props.buttonsCenter
+          ) : (
+            <div className={S.pusher} />
+          )}
+          {this.props.buttonsRight}
+        </div>
+      );
+    }
+    else{
+      return null;
+    }
+  }
+
   render() {
     return (
       <Measure bounds={true} onResize={this.handleResize}>
@@ -97,8 +121,10 @@ export class ModalWindow extends React.Component<{
                   minWidth: this.props.width,
                   minHeight: this.props.height
                 }}
+                tabIndex={0}
+                onKeyDown={(event:any)=> this.onKeyDown(event)}
               >
-                <div
+                {this.props.title && <div
                   className={S.title}
                   onMouseDown={this.handleTitleMouseDown}
                 >
@@ -112,17 +138,9 @@ export class ModalWindow extends React.Component<{
                   </div>
 
                   <div className={S.buttons}>{this.props.titleButtons}</div>
-                </div>
+                </div>}
                 <div className={S.body}>{this.props.children}</div>
-                <div className={S.footer}>
-                  {this.props.buttonsLeft}
-                  {this.props.buttonsCenter ? (
-                    this.props.buttonsCenter
-                  ) : (
-                    <div className={S.pusher} />
-                  )}
-                  {this.props.buttonsRight}
-                </div>
+                {this.renderFooter()}
               </div>
             )}
           </Observer>

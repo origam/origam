@@ -72,6 +72,7 @@ import { addFilterGroups } from "./filterXml";
 import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
+import { splitterPositionFromRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -113,10 +114,10 @@ const instance2XmlNode = new WeakMap<any, any>();
 
 function fixColumnWidth(width: number) {
   // Sometimes they send us negative width, which destroys table rendering.
-  if (!width || width < 0) {
+  if (isNaN(width)) {
     return 100;
   } else {
-    return width;
+    return Math.abs(width);
   }
 }
 
@@ -223,7 +224,7 @@ export function* interpretScreenXml(
     panelConfigurationsRaw.map((pcr: any) => [
       pcr.panel.instanceId,
       {
-        position: pcr.position,
+        position: splitterPositionFromRatio(pcr.position),
         defaultOrdering: parseToOrdering(pcr.defaultSort),
       },
     ])
@@ -382,9 +383,6 @@ export function* interpretScreenXml(
         .filter((conf: any) => conf.panel.instanceId === dataView.attributes.ModelInstanceId)
         .forEach((conf: any) => addFilterGroups(filterGroupManager, properties, conf));
 
-      if (dataView.attributes.Id === "AsPanel7_30") {
-        // debugger;
-      }
       const dataViewInstance: DataView = new DataView({
         isFirst: i === 0,
         id: dataView.attributes.Id,
@@ -461,6 +459,16 @@ export function* interpretScreenXml(
 
       let groupingColumnCounter = 1;
       configuration.forEach((conf) => {
+        const defaultFixedColumns = findStopping(conf, (n) => n.name === "lockedColumns");
+        if(defaultFixedColumns && defaultFixedColumns.length > 0){
+          const fixedColumnsNode = findStopping(defaultFixedColumns?.[0], (n) => n.name === "lockedColumns");
+          const fixedColumnsStr = fixedColumnsNode?.[0]?.attributes?.["count"];
+          const fixedColumnsInt = parseInt(fixedColumnsStr,10);
+          if (!isNaN(fixedColumnsStr)){
+            dataViewInstance.tablePanelView.fixedColumnCount = fixedColumnsInt;
+          }
+        }
+        
         const defaultColumnConfigurations = findStopping(conf, (n) => n.name === "columnWidths");
         defaultColumnConfigurations.forEach((defaultColumnConfiguration) => {
           const columns = findStopping(defaultColumnConfiguration, (n) => n.name === "column");
@@ -472,7 +480,7 @@ export function* interpretScreenXml(
               prop && prop.setColumnWidth(fixColumnWidth(width));
 
               // COLUMN HIDING
-              if (column.attributes.isHidden === "true") {
+              if (column.attributes.isHidden === "true" || width < 0) {
                 dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
               }
               if (column.attributes.aggregationType !== "0") {
@@ -515,6 +523,12 @@ export function* interpretScreenXml(
           }
         });
       });
+
+      properties.filter(prop => prop.width < 0)
+        .forEach(prop => {
+          prop.width = Math.abs(prop.width);
+          dataViewInstance.tablePanelView.setPropertyHidden(prop.id, true);
+        });
 
       lookupMenuMappings.forEach((mapping: any) => {
         if (mapping.lookupId && mapping.menuId) {

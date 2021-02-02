@@ -1,28 +1,10 @@
-import {IMenuItemIcon} from '../../../gui/Workbench/MainMenu/MainMenu';
+import { ISearchResultGroup } from './ISearchResultGroup';
 
-export interface IClientFulltextSearch {
-  foundItems: ISearchResultSection[];
-  onSearchFieldChange(event: any): void;
-  clearResults(): void;
+export interface ISearcher {
+  resultGroups: ISearchResultGroup[];
+  searchOnServer(): void;
+  onSearchFieldChange(searchTerm: string): void;
   indexMainMenu(mainMenu: any): void;
 
-  subscribeOpenSearchSection(open: () => void): () => void;
-
   parent?: any;
-}
-
-
-export interface ISearchResultSection {
-  label: string;
-  itemCount: number;
-  items: ISearchResultItem[];
-}
-
-export interface ISearchResultItem {
-  id: string;
-  type: string;
-  icon: IMenuItemIcon;
-  label: string;
-  description: string;
-  node: any;
 }

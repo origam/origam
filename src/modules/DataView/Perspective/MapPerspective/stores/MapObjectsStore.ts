@@ -126,7 +126,6 @@ export class MapObjectsStore {
             row: selectedRow, 
             property: property, 
             value: geoJson ? wtkStringify(geoJson) : null, 
-            forceFlush: false 
           });
         getDataTable(self.dataView).flushFormToTable(selectedRow);
         yield* getFormScreenLifecycle(self.dataView).onFlushData();
