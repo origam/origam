@@ -460,7 +460,13 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
 
 function formatTooltipText(content: string | string[]){
   if(Array.isArray(content)){
-    return (<div className={S.tooltipContent}>{content.map(line => <div>{line}</div>)}</div>)
+    const lines = content.length <= 10 
+      ? content 
+      : content.slice(0, 10).concat(["..."]);
+    return (
+      <div className={S.tooltipContent}>
+        {lines.map(line => <div className={S.toolTipLine}>{line}</div>)}
+      </div>)
   }else{
     return <div>{content}</div>;
   }
