@@ -79,7 +79,7 @@ namespace Origam.Gui.Win.Commands
                         columnsInfo: DA.ColumnsInfo.Empty,
                         parameters: new Hashtable(),
                         selectParameterReferences: null,
-                        forceDatabaseCalculation: false
+                        paging: false
                     )
                 );
                 builder.AppendLine();
