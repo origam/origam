@@ -230,29 +230,29 @@ namespace Origam.Server
             object value = paramSvc.GetParameterValue(parameterId);
 
             r["Id"] = Guid.NewGuid();
-            if (value is int)
+            if (value is int intValue)
             {
-                r["i1"] = (int)value;
+                r["i1"] = intValue;
             }
-            else if (value is bool)
+            else if (value is bool boolValue)
             {
-                r["b1"] = (bool)value;
+                r["b1"] = boolValue;
             }
-            else if (value is decimal)
+            else if (value is decimal decimalValue)
             {
-                r["c1"] = (decimal)value;
+                r["c1"] = decimalValue;
             }
-            else if (value is Guid)
+            else if (value is Guid guidValue && (guidValue != Guid.Empty))
             {
-                r["g1"] = (Guid)value;
+                r["g1"] = guidValue;
             }
-            else if (value is string)
+            else if (value is string stringValue)
             {
-                r["s1"] = (string)value;
+                r["s1"] = stringValue;
             }
-            else if (value is DateTime)
+            else if (value is DateTime dateTimeValue)
             {
-                r["d1"] = (DateTime)value;
+                r["d1"] = dateTimeValue;
             }
         }
 
