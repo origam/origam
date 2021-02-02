@@ -79,15 +79,6 @@ namespace Origam.DA.Service
 			return new NpgsqlCommand(cmdText, connection as NpgsqlConnection, transaction as NpgsqlTransaction);
 		}
 
-		public override bool PagingCanIncludeOrderBy
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-
 		public override IDbDataParameter BuildParameter(string paramName, 
             string sourceColumn, OrigamDataType dataType, DatabaseDataType dbDataType,
             int dataLength, bool allowNulls)

@@ -376,14 +376,6 @@ namespace Origam.DA.Service
             }
         }
 
-        public override bool PagingCanIncludeOrderBy
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         public override string ConvertGeoFromTextClause(string argument)
         {
             return "geography::STGeomFromText(" + argument + ", 4326)";

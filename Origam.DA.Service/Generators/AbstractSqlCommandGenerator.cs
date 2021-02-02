@@ -138,8 +138,6 @@ namespace Origam.DA.Service
         public abstract string ParameterDeclarationChar { get; }
         public abstract string ParameterReferenceChar { get; }
         public abstract string StringConcatenationChar { get; }
-        public abstract bool PagingCanIncludeOrderBy { get; }
-
         public abstract string GetIndexName(IDataEntity entity, DataEntityIndex index);
         public abstract string SelectClause(string finalQuery, int top);
 
@@ -921,10 +919,9 @@ namespace Origam.DA.Service
         public string SelectSql(DataStructure ds, DataStructureEntity entity,
             DataStructureFilterSet filter, DataStructureSortSet sortSet, ColumnsInfo columnsInfo,
             Hashtable parameters, Hashtable selectParameterReferences,
-            bool forceDatabaseCalculation)
+            bool paging)
         {
-            StringBuilder builder = new StringBuilder();
-            builder.Append(SelectSql( new SelectParameters
+            return SelectSql(new SelectParameters
                 {
                     Entity = entity,
                     DataStructure = ds,
@@ -932,14 +929,13 @@ namespace Origam.DA.Service
                     ColumnsInfo = columnsInfo,
                     SortSet = sortSet,
                     Parameters = parameters,
-                    Paging = false
+                    Paging = paging
                 }, 
                 replaceParameterTexts: null, 
                 selectParameterReferences: selectParameterReferences, 
                 restrictScalarToTop1: true,  
                 isInRecursion: false, 
-                forceDatabaseCalculation: forceDatabaseCalculation));
-            return builder.ToString();
+                forceDatabaseCalculation: false);
         }
 
         public abstract string CreateDataStructureFooterSql(List<string>tmpTables);
@@ -1211,7 +1207,7 @@ namespace Origam.DA.Service
             }
             else
             {
-                if ((!paging || paging && PagingCanIncludeOrderBy) && orderByBuilder.Length > 0)
+                if (!paging && orderByBuilder.Length > 0)
                 {
                     PrettyLine(sqlExpression);
                     sqlExpression.AppendFormat("ORDER BY {0}", orderByBuilder.ToString());
@@ -1240,9 +1236,12 @@ namespace Origam.DA.Service
                 {
                     throw new ArgumentException("Cannot render SQL with \"WHERE\" pagination and \"OFFSET-FETCH\" pagination together");
                 }
-                finalString = string.Format(
-                    "SELECT * FROM ({0}) _page WHERE _page.{1} BETWEEN (({2} - 1) * {3}) + 1 AND {3} * {2}",
-                    finalString, RowNumColumnName, _pageNumberParameterName, _pageSizeParameterName);
+                finalString = $"SELECT * FROM ({finalString}) _page WHERE " +
+                    $"_page.{RowNumColumnName} BETWEEN " +
+                    $"(({_pageNumberParameterName} - 1) " +
+                    $"* {_pageSizeParameterName}) + 1 " +
+                    $"AND {_pageSizeParameterName} * {_pageNumberParameterName}" +
+                    $" ORDER BY _page.{RowNumColumnName} ASC";
             }
             else if (rowOffsetSpecified && orderBySpecified)
             {
