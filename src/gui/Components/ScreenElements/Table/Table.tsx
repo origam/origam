@@ -384,15 +384,15 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                     ) : null)}
 
                   <div ref={measureRef} className={S.cellAreaContainer}>
-                    {contentRect.bounds!.height ? (
                       <>
+                        {contentRect.bounds!.height ? (
                         <div className={S.canvasRow}>
                           <Canvas
                             refCanvasElement={this.refCanvasElement}
                             width={contentRect.bounds!.width - 20}
                             height={contentRect.bounds!.height - 20}
-                          />
-                        </div>
+                          /> 
+                        </div>) : null}
                         {this.props.isEditorMounted &&
                           editorCellRectangle && (
                             <PositionedField
@@ -447,7 +447,6 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           onKeyDown={this.props.onKeyDown}
                         />
                       </>
-                    ) : null}
                   </div>
                 </>
               )}

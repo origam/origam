@@ -76,13 +76,12 @@ export class TableView extends React.Component<{
   componentDidMount(){
     const openScreen = getOpenedScreen(this.props.dataView)
     const dataViews = openScreen.content.formScreen?.dataViews;
-    const isMainDatView = dataViews && (dataViews.length > 0 && this.props.dataView?.isBindingParent) || dataViews?.length === 1
+    const isMainDatView = dataViews && (dataViews.length > 0 && this.props.dataView?.isBindingRoot) || dataViews?.length === 1
+
     if(openScreen.isActive && isMainDatView){
       if(!this.props.dataView?.isFormViewActive()){
-        setTimeout(()=>{
-          const tablePanelView = getTablePanelView(this.props.dataView);
-          tablePanelView.triggerOnFocusTable();
-        }, 1000)
+        const tablePanelView = getTablePanelView(this.props.dataView);
+        tablePanelView.triggerOnFocusTable();
       }
     }
   }
