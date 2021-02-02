@@ -29,7 +29,7 @@ import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
 import { onRecordAuditClick } from "model/actions-ui/RecordInfo/onRecordAuditClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
-import { IAction, IActionType } from "model/entities/types/IAction";
+import {IAction, IActionMode, IActionType} from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getExpandedGroupRowCount } from "model/selectors/DataView/getExpandedGroupRowCount";
@@ -68,9 +68,14 @@ export class CDataViewHeaderInner extends React.Component<{
     hiddenActionIds: new Set<string>(),
   };
 
+  shouldBeShown(action: IAction){
+    return getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord;
+  }
+
   renderActions(actions: IAction[]) {
     return actions
       .filter((action) => !action.groupId)
+      .filter(action => this.shouldBeShown(action))
       .map((action, idx) => this.renderAction(action, actions));
   }
 
