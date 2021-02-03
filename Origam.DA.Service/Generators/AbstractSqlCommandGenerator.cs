@@ -1840,6 +1840,21 @@ namespace Origam.DA.Service
                     isInRecursion: isInRecursion,
                     noColumnsRenderedYet: i == 0);
             }
+            
+            List<DataStructureColumn> expressionColumns = dataStructureColumns;
+            if ((aggregatedColumns?.Count ?? 0) > 0 && customFilters.HasLookups)
+            {
+                // these should not be rendered, that is why they were not added to dataStructureColumns.
+                var filterColumns =
+                    GetSortedColumns(
+                            entity, 
+                            customFilters.FilterLookups.Keys.ToList(), 
+                            aggregatedColumns)
+                        .Where(column =>
+                            customFilters.FilterLookups.Keys.Contains(column.Name))
+                        .ToList();
+                expressionColumns.AddRange(filterColumns);
+            }
 
             SetColumnExpressions(
                 commandParser: filterCommandParser, 
@@ -1850,7 +1865,7 @@ namespace Origam.DA.Service
                 replaceParameterTexts: replaceParameterTexts, 
                 selectParameterReferences: selectParameterReferences, 
                 dynamicParameters: dynamicParameters,
-                dataStructureColumns: dataStructureColumns, 
+                dataStructureColumns: expressionColumns, 
                 columnsInfo: columnsInfo);
             
             SetColumnExpressions(

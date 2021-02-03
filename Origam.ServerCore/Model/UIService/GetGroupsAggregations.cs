@@ -37,6 +37,7 @@ namespace Origam.ServerCore.Model.UIService
         [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
         public string Filter { get; set; }
+        public Dictionary<string, Guid> FilterLookups { get; set; }
         public List<Aggregation> AggregatedColumns { get; set; }
         public Guid SessionFormIdentifier { get; set; }
         public Guid MasterRowId { get; set; }
