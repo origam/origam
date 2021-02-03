@@ -13,14 +13,14 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     return this.groupingSettings.size;
   }
 
-  @computed get orderedGroupingColumnIds() {
+  @computed get orderedGroupingColumnSettings() {
     const entries = Array.from(this.groupingSettings.entries());
     entries.sort((a, b) => a[1].groupIndex - b[1].groupIndex);
-    return entries.map((item) => item[0]);
+    return entries.map((item) => item[1]);
   }
 
   @computed get firstGroupingColumn() {
-    return this.orderedGroupingColumnIds[0];
+    return this.orderedGroupingColumnSettings[0];
   }
 
   nextColumnToGroupBy(columnId: string){
@@ -31,7 +31,7 @@ export class GroupingConfiguration implements IGroupingConfiguration {
     const nextIndex = currentIndex + 1;
     const nextEntry = Array.from(this.groupingSettings.entries())
       .find(entry => entry[1].groupIndex === nextIndex);
-    return nextEntry ? nextEntry[0] : undefined 
+    return nextEntry ? nextEntry[1] : undefined 
   }  
 
   @action.bound

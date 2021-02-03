@@ -47,7 +47,7 @@ export class ServerSideGrouper implements IGrouper {
   }
         
   private *loadGroups() {
-    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
+    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn?.columnId;
     if (!firstGroupingColumn) {
       this.topLevelGroups.length = 0;
       return;
@@ -142,7 +142,7 @@ export class ServerSideGrouper implements IGrouper {
   
   private *reload(group: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
+    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId)?.columnId;
     const dataView = getDataView(this);
     const filter = this.composeFinalFilter(group);
     const lifeCycle = getFormScreenLifecycle(this);

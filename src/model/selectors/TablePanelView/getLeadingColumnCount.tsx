@@ -3,6 +3,6 @@ import {getIsSelectionCheckboxesShown} from "../DataView/getIsSelectionCheckboxe
 
 export function getLeadingColumnCount(ctx: any){
   const isCheckBoxedTable = getIsSelectionCheckboxesShown(ctx);
-  const groupedColumnIds = getGroupingConfiguration(ctx).orderedGroupingColumnIds;
+  const groupedColumnIds = getGroupingConfiguration(ctx).orderedGroupingColumnSettings;
   return groupedColumnIds.length + (isCheckBoxedTable ? 1 : 0);
 }

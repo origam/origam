@@ -10,6 +10,7 @@ import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
+import { IGroupingSettings } from "./types/IGroupingConfiguration";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -82,11 +83,11 @@ export class ClientSideGrouper implements IGrouper {
     }
   }
 
-  makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumn: string): IGroupTreeNode[] {
-    const groupMap = this.makeGroupMap(groupingColumn, rows);
+  makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumnSettings: IGroupingSettings): IGroupTreeNode[] {
+    const groupMap = this.makeGroupMap(groupingColumnSettings, rows);
 
     const dataTable = getDataTable(this);
-    const property = dataTable.getPropertyById(groupingColumn);
+    const property = dataTable.getPropertyById(groupingColumnSettings.columnId);
 
     return Array.from(groupMap.entries())
       .map((entry) => {
@@ -95,7 +96,7 @@ export class ClientSideGrouper implements IGrouper {
         return new ClientSideGroupItem({
           childGroups: [] as IGroupTreeNode[],
           childRows: rows,
-          columnId: groupingColumn,
+          columnId: groupingColumnSettings.columnId,
           groupLabel: property!.name,
           rowCount: rows.length,
           parent: parent,
@@ -117,11 +118,11 @@ export class ClientSideGrouper implements IGrouper {
       });
   }
 
-  private makeGroupMap(groupingColumn: string | undefined, rows: any[][]) {
+  private makeGroupMap(groupingColumn: IGroupingSettings | undefined, rows: any[][]) {
     if (!groupingColumn) {
       return new Map<string, any[][]>();
     }
-    const index = this.findDataIndex(groupingColumn);
+    const index = this.findDataIndex(groupingColumn.columnId);
     const groupMap = new Map<string, any[][]>();
     for (let row of rows) {
       const groupName = row[index];

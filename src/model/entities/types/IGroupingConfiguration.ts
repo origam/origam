@@ -4,12 +4,12 @@ export interface IGroupingConfigurationData {
 }
 
 export interface IGroupingConfiguration extends IGroupingConfigurationData {
-  nextColumnToGroupBy(groupColumnName: string): string | undefined;
+  nextColumnToGroupBy(groupColumnName: string): IGroupingSettings | undefined;
   groupingSettings: Map<string, IGroupingSettings>;
   isGrouping: boolean;
   groupingColumnCount: number;
-  orderedGroupingColumnIds: string[];
-  firstGroupingColumn: string;
+  orderedGroupingColumnSettings: IGroupingSettings[];
+  firstGroupingColumn: IGroupingSettings;
 
   registerGroupingOnOffHandler(handler: ()=>void): void;
 

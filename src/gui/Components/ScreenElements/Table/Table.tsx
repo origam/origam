@@ -20,12 +20,10 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
 import { IProperty } from "model/entities/types/IProperty";
 import { Tooltip } from "react-tippy";
-import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
-import { isArray } from "util";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
-  const groupedColumnIds = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnIds);
+  const groupedColumnSettings = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnSettings);
   const properties = observable<IProperty>(getProperties(ctx));
   const propertyById = computed(
     () => new Map(properties.map((property) => [property.id, property]))
@@ -51,7 +49,7 @@ function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
       ctx,
       ctx2d,
       tableRows,
-      groupedColumnIds.get(),
+      groupedColumnSettings.get().map(settings => settings.columnId),
       tableColumnIds.get(),
       propertyById.get(),
       scrollLeftObs.get(),
