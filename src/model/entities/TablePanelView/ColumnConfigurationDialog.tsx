@@ -67,7 +67,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     for (let column of configuration.columnConf) {
       this.tablePanelView.hiddenPropertyIds.set(column.id, !column.isVisible);
       if (column.groupingIndex) {
-        groupingConf.setGrouping(column.id, GroupingUnit.Day, column.groupingIndex);
+        groupingConf.setGrouping(column.id, GroupingUnit.Month, column.groupingIndex);
       }
       this.tablePanelView.aggregations.setType(column.id, column.aggregationType);
     }

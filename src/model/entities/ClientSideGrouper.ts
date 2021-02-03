@@ -87,8 +87,9 @@ export class ClientSideGrouper implements IGrouper {
   makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumnSettings: IGroupingSettings): IGroupTreeNode[] {
     const dataTable = getDataTable(this);
     const property = dataTable.getPropertyById(groupingColumnSettings.columnId);
-    const groupDataList = this.groupToGroupDataList(groupingColumnSettings, property!, rows);
-    return groupDataList
+
+    return this.groupToGroupDataList(groupingColumnSettings, property!, rows)
+      .sort((a, b) => a.compare(b))
       .map((groupData) => {
         return new ClientSideGroupItem({
           childGroups: [] as IGroupTreeNode[],
@@ -112,104 +113,19 @@ export class ClientSideGrouper implements IGrouper {
     }
 
     const index = this.findDataIndex(groupingSettings.columnId);
-    const groupMap = new Map<string, GroupData>();
+    const groupMap = new Map<string, GenericGroupData>();
     for (let row of rows) {    
-      const groupData = this.makeGroupData(
-          row[index], 
-          groupingSettings, 
-          property.formatterPattern);
+      const groupData = groupingSettings.groupingUnit === undefined 
+        ? new GenericGroupData(row[index])
+        : DateGroupData.create( row[index], groupingSettings, property.formatterPattern)
 
       if (!groupMap.has(groupData.label)) {
         groupMap.set(groupData.label, groupData);
       }
       groupMap.get(groupData.label)!.rows!.push(row);
     }
-    if(groupingSettings.groupingUnit === undefined){
-      return Array.from(groupMap.values())      
-        .sort((a, b) => {
-          if (a.label && b.label) {
-            return a.label.localeCompare(b.label, getLocaleFromCookie());
-          } else if (!a.label) {
-            return -1;
-          } else {
-            return 1;
-          }
-        });
-    }else{
-      return Array.from(groupMap.values())      
-        .sort((a, b) => {
-          if (a.value.isValid() && b.value.isValid()) {
-            if (a.value > b.value){
-              return 1;
-            } 
-            else if (a.value < b.value){
-              return -1;
-            }
-            else{
-              return 0;
-            }
-          } else if (!a.value) {
-            return -1;
-          } else {
-            return 1;
-          }
-        }); 
-    }
-  }
 
-  makeGroupData(value: string, groupingSettings: IGroupingSettings, formatterPattern: string): GroupData{
-
-    if(groupingSettings.groupingUnit === undefined){
-      new GroupData(value, value);
-    }
-
-    const momentValue = moment(value);
-    if(!momentValue.isValid()){
-      new GroupData("", "");
-    } 
-    
-    momentValue.format(formatterPattern);
-
-    let format = formatterPattern;
-    switch(groupingSettings.groupingUnit){
-      case GroupingUnit.Year:
-        momentValue.set({'month': 1, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        format = format
-          .replace("MM","")
-          .replace("DD","")
-          .replace("h","")
-          .replace("m","")
-          .replace("s","")
-          .replace(".","")
-          .replace(":","")
-        break;
-      case GroupingUnit.Month:
-        momentValue.set({'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        format = format
-          .replace("DD.","")
-          .replace("h","")
-          .replace("m","")
-          .replace("s","")
-        break;
-      case GroupingUnit.Day:
-        momentValue.set({'hour': 0, 'minute': 0, 'second': 0});
-        format = format
-          .replace("h:","")
-          .replace("m","")
-          .replace("s","")
-        break;
-      case GroupingUnit.Hour:
-        momentValue.set({'minute': 0, 'second': 0});
-        format = format
-          .replace("s","")
-          .replace(":","")
-        break;
-      case GroupingUnit.Minute:
-        momentValue.set({'second': 0});
-        break;
-    }
-    const groupLabel = momentValue.format(format);
-    return new GroupData(momentValue, groupLabel);
+    return Array.from(groupMap.values());
   }
 
   calcAggregations(rows: any[][]) {
@@ -269,7 +185,36 @@ export class ClientSideGrouper implements IGrouper {
   start(): void {}
 }
 
-class GroupData {
+
+interface IGroupData{
+  value: any;
+  label: string;
+  rows: any[][];
+  compare(other: IGroupData): number;
+}
+
+class GenericGroupData implements IGroupData{
+  constructor(
+    public value: string
+    ){
+      this.label = value;
+    }
+    
+  public label: any;
+  public rows: any[][] = [];
+
+  compare(other: IGroupData): number{
+    if (this.label && other.label) {
+      return this.label.localeCompare(other.label, getLocaleFromCookie());
+    } else if (!this.label) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
+}
+
+class DateGroupData implements IGroupData{
   constructor(
     public value: any,
     public label: string,
@@ -277,4 +222,72 @@ class GroupData {
     }
 
   public rows: any[][] = [];
+
+  public static create(value: string, groupingSettings: IGroupingSettings, formatterPattern: string): GenericGroupData{
+    const momentValue = moment(value);
+    if(!momentValue.isValid()){
+      new DateGroupData(moment({ y:1900, M:1, d:1, h:0, m:0, s:0, ms:0 }), "");
+    } 
+    
+    momentValue.format(formatterPattern);
+
+    let format = formatterPattern;
+    switch(groupingSettings.groupingUnit){
+      case GroupingUnit.Year:
+        momentValue.set({'month': 1, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
+        format = format
+          .replace("MM","")
+          .replace("DD","")
+          .replace("h","")
+          .replace("m","")
+          .replace("s","")
+          .replace(".","")
+          .replace(":","")
+        break;
+      case GroupingUnit.Month:
+        momentValue.set({'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
+        format = format
+          .replace("DD.","")
+          .replace("h","")
+          .replace("m","")
+          .replace("s","")
+        break;
+      case GroupingUnit.Day:
+        momentValue.set({'hour': 0, 'minute': 0, 'second': 0});
+        format = format
+          .replace("h:","")
+          .replace("m","")
+          .replace("s","")
+        break;
+      case GroupingUnit.Hour:
+        momentValue.set({'minute': 0, 'second': 0});
+        format = format
+          .replace("s","")
+          .replace(":","")
+        break;
+      case GroupingUnit.Minute:
+        momentValue.set({'second': 0});
+        break;
+    }
+    const groupLabel = momentValue.format(format);
+    return new DateGroupData(momentValue, groupLabel);
+  }
+
+  compare(other: IGroupData): number{
+    if (this.value.isValid() && other.value.isValid()) {
+      if (this.value > other.value){
+        return 1;
+      } 
+      else if (this.value < other.value){
+        return -1;
+      }
+      else{
+        return 0;
+      }
+    } else if (!this.value) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
 }
