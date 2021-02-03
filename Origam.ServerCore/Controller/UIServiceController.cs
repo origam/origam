@@ -828,9 +828,10 @@ namespace Origam.ServerCore.Controller
             {
                 Entity = entityData.Entity.Name,
                 CustomFilters = new CustomFilters
-                    {
-                        Filters = input.Filter
-                    },
+                {
+                    Filters = input.Filter,
+                    FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
+                },
                 ColumnsInfo = new ColumnsInfo(
                     columns: new List<ColumnData>(), 
                     renderSqlForDetachedFields: true),
