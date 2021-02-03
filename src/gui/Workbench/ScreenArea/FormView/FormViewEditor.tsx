@@ -23,6 +23,7 @@ import { FocusManager } from "model/entities/FocusManager";
 import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 import { shadeHexColor } from "utils/colorUtils";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -264,7 +265,8 @@ export class FormViewEditor extends React.Component<{
         );
       case "Image":
         return <ImageEditor value={this.props.value} />;
-      case "Blob":
+        case "Blob":
+        const isDirty = getIsFormScreenDirty(this.props.property);
         return (
           <BlobEditor
             isReadOnly={readOnly}
@@ -272,6 +274,7 @@ export class FormViewEditor extends React.Component<{
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
             onKeyDown={this.MakeOnKeyDownCallBack()}
+            canUpload={!isDirty}
             subscribeToFocusManager={(inputEditor) =>
               this.focusManager.subscribe(
                 inputEditor,
