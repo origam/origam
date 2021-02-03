@@ -118,11 +118,32 @@ export class ClientSideGrouper implements IGrouper {
       });
   }
 
-  private makeGroupMap(groupingColumn: IGroupingSettings | undefined, rows: any[][]) {
-    if (!groupingColumn) {
+  private makeGroupMap(groupingSettings: IGroupingSettings | undefined, rows: any[][]) {
+    if (!groupingSettings) {
       return new Map<string, any[][]>();
     }
-    const index = this.findDataIndex(groupingColumn.columnId);
+    if(groupingSettings.groupingUnit){
+      const index = this.findDataIndex(groupingSettings.columnId);
+      const groupMap = new Map<string, any[][]>();
+      for (let row of rows) {
+        const groupName = row[index];
+        if (!groupMap.has(groupName)) {
+          groupMap.set(groupName, []);
+        }
+        groupMap.get(groupName)!.push(row);
+      }
+      return groupMap;
+    }
+    else
+    {
+      return this.makeGroupMapForNonDate(groupingSettings, rows);
+    }
+  }
+
+  
+
+  private makeGroupMapForNonDate(groupingSettings: IGroupingSettings, rows: any[][]) {
+    const index = this.findDataIndex(groupingSettings.columnId);
     const groupMap = new Map<string, any[][]>();
     for (let row of rows) {
       const groupName = row[index];
