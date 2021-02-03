@@ -27,8 +27,8 @@ export class ServerSideGrouper implements IGrouper {
     this.disposers.push(
       reaction(
         () => [
-          Array.from(getGroupingConfiguration(this).groupingIndices.values()),
-          Array.from(getGroupingConfiguration(this).groupingIndices.keys()),
+          Array.from(getGroupingConfiguration(this).groupingSettings.values()),
+          Array.from(getGroupingConfiguration(this).groupingSettings.keys()),
           this.refreshTrigger],
           () => this.loadGroupsDebounced(),
           {fireImmediately: true, equals: comparer.structural,delay: 50})
@@ -172,7 +172,7 @@ export class ServerSideGrouper implements IGrouper {
 
   group(groupData: any[], columnId: string, parent: IGroupTreeNode | undefined): IGroupTreeNode[] {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const level = groupingConfiguration.groupingIndices.get(columnId);
+    const level = groupingConfiguration.groupingSettings.get(columnId)?.groupIndex;
 
     if (!level) {
       throw new Error("Cannot find grouping index for column: " + columnId);

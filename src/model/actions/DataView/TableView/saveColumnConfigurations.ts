@@ -20,7 +20,7 @@ export function saveColumnConfigurations(ctx: any) {
         width: property.columnWidth,
         isHidden: !!tablePanelView.hiddenPropertyIds.get(property.id),
         aggregationTypeNumber: aggregationTypeToNumber(tablePanelView.aggregations.getType(property.id)),
-        groupingIndex: groupingConfiguration.groupingIndices.get(property.id)
+        groupingIndex: groupingConfiguration.groupingSettings.get(property.id)?.groupIndex
       })),
       defaultView: getActivePanelView(ctx),
       lockedColumns: tablePanelView.fixedColumnCount

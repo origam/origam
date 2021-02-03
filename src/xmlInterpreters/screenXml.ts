@@ -497,6 +497,7 @@ export function* interpretScreenXml(
               if (!property?.isLookupColumn) {
                 dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
                   column.attributes.groupingField,
+                  column.attributes.groupingUnit,
                   groupingColumnCounter
                 );
                 groupingColumnCounter++;
