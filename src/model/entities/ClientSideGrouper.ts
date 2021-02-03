@@ -10,7 +10,8 @@ import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
-import { IGroupingSettings } from "./types/IGroupingConfiguration";
+import { GroupingUnit, IGroupingSettings } from "./types/IGroupingConfiguration";
+import moment from "moment";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -84,75 +85,131 @@ export class ClientSideGrouper implements IGrouper {
   }
 
   makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumnSettings: IGroupingSettings): IGroupTreeNode[] {
-    const groupMap = this.makeGroupMap(groupingColumnSettings, rows);
-
     const dataTable = getDataTable(this);
     const property = dataTable.getPropertyById(groupingColumnSettings.columnId);
-
-    return Array.from(groupMap.entries())
-      .map((entry) => {
-        const groupName = entry[0];
-        const rows = entry[1];
+    const groupDataList = this.groupToGroupDataList(groupingColumnSettings, property!, rows);
+    return groupDataList
+      .map((groupData) => {
         return new ClientSideGroupItem({
           childGroups: [] as IGroupTreeNode[],
-          childRows: rows,
+          childRows: groupData.rows,
           columnId: groupingColumnSettings.columnId,
           groupLabel: property!.name,
-          rowCount: rows.length,
+          rowCount: groupData.rows.length,
           parent: parent,
-          columnValue: groupName,
-          columnDisplayValue: property ? dataTable.resolveCellText(property, groupName) : groupName,
-          aggregations: this.calcAggregations(rows),
+          columnValue: groupData.label,
+          columnDisplayValue: property ? dataTable.resolveCellText(property, groupData.label) : groupData.label,
+          aggregations: this.calcAggregations(groupData.rows),
           grouper: this,
           expansionListener: this.expansionListener.bind(this)
         });
-      })
-      .sort((a, b) => {
-        if (a.columnDisplayValue && b.columnDisplayValue) {
-          return a.columnDisplayValue.localeCompare(b.columnDisplayValue, getLocaleFromCookie());
-        } else if (!a.columnDisplayValue) {
-          return -1;
-        } else {
-          return 1;
-        }
       });
   }
 
-  private makeGroupMap(groupingSettings: IGroupingSettings | undefined, rows: any[][]) {
+  private groupToGroupDataList(groupingSettings: IGroupingSettings | undefined, property: IProperty, rows: any[][]) {
     if (!groupingSettings) {
-      return new Map<string, any[][]>();
+      return [];
     }
-    if(groupingSettings.groupingUnit){
-      const index = this.findDataIndex(groupingSettings.columnId);
-      const groupMap = new Map<string, any[][]>();
-      for (let row of rows) {
-        const groupName = row[index];
-        if (!groupMap.has(groupName)) {
-          groupMap.set(groupName, []);
-        }
-        groupMap.get(groupName)!.push(row);
+
+    const index = this.findDataIndex(groupingSettings.columnId);
+    const groupMap = new Map<string, GroupData>();
+    for (let row of rows) {    
+      const groupData = this.makeGroupData(
+          row[index], 
+          groupingSettings, 
+          property.formatterPattern);
+
+      if (!groupMap.has(groupData.label)) {
+        groupMap.set(groupData.label, groupData);
       }
-      return groupMap;
+      groupMap.get(groupData.label)!.rows!.push(row);
     }
-    else
-    {
-      return this.makeGroupMapForNonDate(groupingSettings, rows);
+    if(groupingSettings.groupingUnit === undefined){
+      return Array.from(groupMap.values())      
+        .sort((a, b) => {
+          if (a.label && b.label) {
+            return a.label.localeCompare(b.label, getLocaleFromCookie());
+          } else if (!a.label) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+    }else{
+      return Array.from(groupMap.values())      
+        .sort((a, b) => {
+          if (a.value.isValid() && b.value.isValid()) {
+            if (a.value > b.value){
+              return 1;
+            } 
+            else if (a.value < b.value){
+              return -1;
+            }
+            else{
+              return 0;
+            }
+          } else if (!a.value) {
+            return -1;
+          } else {
+            return 1;
+          }
+        }); 
     }
   }
 
-  
+  makeGroupData(value: string, groupingSettings: IGroupingSettings, formatterPattern: string): GroupData{
 
-  private makeGroupMapForNonDate(groupingSettings: IGroupingSettings, rows: any[][]) {
-    const index = this.findDataIndex(groupingSettings.columnId);
-    const groupMap = new Map<string, any[][]>();
-    for (let row of rows) {
-      const groupName = row[index];
-      if (!groupMap.has(groupName)) {
-        groupMap.set(groupName, []);
-      }
-      groupMap.get(groupName)!.push(row);
+    if(groupingSettings.groupingUnit === undefined){
+      new GroupData(value, value);
     }
-    return groupMap;
+
+    const momentValue = moment(value);
+    if(!momentValue.isValid()){
+      new GroupData("", "");
+    } 
+    
+    momentValue.format(formatterPattern);
+
+    let format = formatterPattern;
+    switch(groupingSettings.groupingUnit){
+      case GroupingUnit.Year:
+        momentValue.set({'month': 1, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
+        format = format
+          .replace("MM","")
+          .replace("DD","")
+          .replace("h","")
+          .replace("m","")
+          .replace("s","")
+          .replace(".","")
+          .replace(":","")
+        break;
+      case GroupingUnit.Month:
+        momentValue.set({'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
+        format = format
+          .replace("DD.","")
+          .replace("h","")
+          .replace("m","")
+          .replace("s","")
+        break;
+      case GroupingUnit.Day:
+        momentValue.set({'hour': 0, 'minute': 0, 'second': 0});
+        format = format
+          .replace("h:","")
+          .replace("m","")
+          .replace("s","")
+        break;
+      case GroupingUnit.Hour:
+        momentValue.set({'minute': 0, 'second': 0});
+        format = format
+          .replace("s","")
+          .replace(":","")
+        break;
+      case GroupingUnit.Minute:
+        momentValue.set({'second': 0});
+        break;
+    }
+    const groupLabel = momentValue.format(format);
+    return new GroupData(momentValue, groupLabel);
   }
 
   calcAggregations(rows: any[][]) {
@@ -210,4 +267,14 @@ export class ClientSideGrouper implements IGrouper {
   }
 
   start(): void {}
+}
+
+class GroupData {
+  constructor(
+    public value: any,
+    public label: string,
+    ){
+    }
+
+  public rows: any[][] = [];
 }
