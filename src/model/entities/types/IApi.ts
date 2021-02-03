@@ -258,6 +258,7 @@ export interface IApi {
     MenuId: string;
     DataStructureEntityId: string;
     Filter: string | undefined;
+    FilterLookups?: { [key: string]: string };
     AggregatedColumns: IAggregationInfo[];
     SessionFormIdentifier: string | undefined;
     MasterRowId: string | undefined;
