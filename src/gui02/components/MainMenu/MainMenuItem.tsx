@@ -13,8 +13,8 @@ export class MainMenuItem extends React.Component<{
   level: number;
   /** Indicates that the item is currently active. */
   isActive: boolean;
-
   isHidden: boolean;
+  isHighLighted?: boolean;
 
   isOpenedScreen?: boolean;
   isActiveScreen?: boolean;
@@ -35,6 +35,7 @@ export class MainMenuItem extends React.Component<{
             isHidden: this.props.isHidden,
             isOpenedScreen: this.props.isOpenedScreen,
             isActiveScreen: this.props.isActiveScreen,
+            isHighLighted: this.props.isHighLighted
           })}
           style={{ paddingLeft: `${this.props.level * 1.6667}em` }}
           onClick={this.props.onClick}

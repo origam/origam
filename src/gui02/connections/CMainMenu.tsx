@@ -229,6 +229,7 @@ class CMainMenuFolderItem extends React.Component<{
           label={props.node.attributes.label}
           isHidden={!props.isOpen}
           onClick={this.handleClick}
+          isHighLighted={this.id === this.mainMenuState.hightLightedItemId}
         />
         {listFromNode(props.node, props.level + 1, this.props.isOpen && this.mainMenuState.isOpen(this.id))}
       </div>
