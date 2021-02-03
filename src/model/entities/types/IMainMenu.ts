@@ -33,6 +33,8 @@ export interface IMainMenuEnvelope {
 
 
 export interface IMainMenuState {
+  hightLightedItemId: string | undefined;
+  highlightItem(itemId: string): void;
   closeAll(): void;
   isOpen(menuId: string): boolean;
   setIsOpen(menuId: string, state: boolean): void;
