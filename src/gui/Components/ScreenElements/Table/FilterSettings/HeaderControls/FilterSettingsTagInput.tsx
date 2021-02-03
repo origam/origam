@@ -1,4 +1,4 @@
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable } from "mobx";
 import { MobXProviderContext, observer } from "mobx-react";
 import { CancellablePromise } from "mobx/lib/api/flow";
 import React, { useContext, useState } from "react";
@@ -18,7 +18,6 @@ import {
   IDropdownEditorContext,
 } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import { IDataView } from "model/entities/types/IDataView";
 import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 import {

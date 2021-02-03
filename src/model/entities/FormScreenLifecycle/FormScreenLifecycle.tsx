@@ -593,6 +593,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: getUserFilters(rootDataView),
+      FilterLookups: getUserFilterLookups(rootDataView),
       MasterRowId: undefined,
       AggregatedColumns: aggregations,
     });
@@ -1027,6 +1028,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(dataView),
       Filter: getUserFilters(dataView),
+      FilterLookups: getUserFilterLookups(dataView),
       MasterRowId: undefined,
       AggregatedColumns: [
         {
