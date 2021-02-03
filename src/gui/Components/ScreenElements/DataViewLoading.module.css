@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.233);
-  z-index: 9999;
+  z-index: 999;
 }
 
 .label {
