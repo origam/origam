@@ -319,6 +319,9 @@ export class Searcher implements ISearcher {
   clear(){
     this.serverResultGroups = [];
     this.menuResultGroup = undefined;
+    this.workQueueResultGroup = undefined;
+    this.chatResultGroup = undefined;
+    this.searchTerm = "";
   }
 }
 
