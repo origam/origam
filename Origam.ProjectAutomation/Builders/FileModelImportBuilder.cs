@@ -20,11 +20,13 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using Origam.DA.Service;
+using Origam.Extensions;
 using Origam.Git;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using static Origam.NewProjectEnums;
@@ -49,17 +51,79 @@ namespace Origam.ProjectAutomation
                 case TypeTemplate.Default:
                     CreateModelFolder();
                     UnzipDefaultModel(project);
-                    CreateCustomAssetsFolder(project.SourcesFolder);
+                    if (project.Deployment == DeploymentType.Docker)
+                    {
+                        CreateCustomAssetsFolder(project.SourcesFolder);
+                        CheckNewProjectDirectory();
+                    }
                     break;
                 case TypeTemplate.Open:
                 case TypeTemplate.Template:
                     CloneGitRepository(project);
                     CheckModelDirectory(project);
-                    project.NewPackageId = GetPackageId();
+                    CheckNewProjectDirectory();
+                    project.NewPackageId = GetFromDockerEnvFile(project)??GetPackageId();
                     break;
                 default:
                     throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
             }
+        }
+
+        private void CheckNewProjectDirectory()
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
+            if (dir.Exists)
+            {
+                string newdir = Path.Combine(sourcesFolder, "NewProject");
+                if (!Directory.Exists(newdir))
+                {
+                    Directory.CreateDirectory(newdir);
+                }
+                string envdocker = Path.Combine(newdir, "docker.env.template");
+                if(!File.Exists(envdocker))
+                {
+                    using (StreamWriter writer = new StreamWriter(envdocker, false)) 
+                    {
+                        writer.WriteLine(CreateEnviromentTemplate());
+                    }
+                }
+                string cmddocker = Path.Combine(newdir, "docker.cmd.template");
+                if (!File.Exists(cmddocker))
+                {
+                    using (StreamWriter writer = new StreamWriter(cmddocker, false))
+                    {
+                        writer.WriteLine(CreateCmdTemplate());
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception(sourcesFolder + " not exists!");
+            }
+        }
+
+        private StringBuilder CreateCmdTemplate()
+        {
+            StringBuilder template = new StringBuilder();
+            template.AppendLine("docker run --env-file {envfilepath} -it -v {parentpathproject}:/home/origam/HTML5/data -p {dockerport}:8080 origam/server:master-latest");
+            return template;
+        }
+
+        private StringBuilder CreateEnviromentTemplate()
+        {
+            StringBuilder template = new StringBuilder();
+            template.AppendLine("gitPullOnStart=false");
+            template.AppendLine("OrigamSettings_SetOnStart=true");
+            template.AppendLine("OrigamSettings_SchemaExtensionGuid=");
+            template.AppendLine("OrigamSettings_DbHost=");
+            template.AppendLine("OrigamSettings_DbPort=");
+            template.AppendLine("OrigamSettings_DbUsername=");
+            template.AppendLine("OrigamSettings_DbPassword=");
+            template.AppendLine("DatabaseName=");
+            template.AppendLine("OrigamSettings_ModelName=");
+            template.AppendLine("DatabaseType=");
+            template.AppendLine("ExternalDomain_SetOnStart="); 
+            return template;
         }
 
         private void CloneGitRepository(Project project)
@@ -79,16 +143,16 @@ namespace Origam.ProjectAutomation
         }
         private string GetPackageId()
         {
+            string modelId = "";
             DirectoryInfo dir = new DirectoryInfo(modelSourcesFolder);
-            String modelId = "";
-            if (dir.Exists && dir.EnumerateFileSystemInfos().Any())
+            if (string.IsNullOrEmpty(modelId) && dir.Exists && dir.EnumerateFileSystemInfos().Any())
             {
                 string[] exclude_dirs = new [] {"Root","Root Menu","Security","l10n", ".git" };
                 List<string> list_exclude_dirs = exclude_dirs.ToList();
                 string xmlPath = "";
                 do
                 {
-                    DirectoryInfo model = dir.EnumerateDirectories().Where(directoryInfo => !list_exclude_dirs.Contains(directoryInfo.Name)).First();
+                    DirectoryInfo model = dir.EnumerateDirectories().Where(directoryInfo => directoryInfo.Name.Contains("Root Menu")).First();
                     if(model==null)
                     {
                         throw new Exception("Can't find package for guidId. It looks like that it is not origam project.");
@@ -117,6 +181,24 @@ namespace Origam.ProjectAutomation
                 throw new Exception("Can't find package ID. It looks like that it is problem with parse origamPackage. Please Contact Origam Team.");
             }
             return modelId;
+        }
+
+        private string GetFromDockerEnvFile(Project project)
+        {
+            string path = Path.Combine(project.SourcesFolder, "NewProject");
+            if(!Directory.Exists(path))
+            {
+                return null;
+            }
+            var files = Directory.GetFiles(path, "*.env");
+            if(files.Length == 0)
+            {
+                return null;
+            }
+            string[] lines = File.ReadAllLines(files[0]);
+            string guidId = lines.Where(line=> line.Contains("OrigamSettings_SchemaExtensionGuid"))
+                .Select(line=> { return line.Split("=")[1] ; }).FirstOrDefault();
+            return string.IsNullOrEmpty(guidId)?null:guidId;
         }
 
         private void UnzipDefaultModel(Project project)

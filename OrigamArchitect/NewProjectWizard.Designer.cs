@@ -317,8 +317,8 @@ namespace OrigamArchitect
             this.cboDeploymentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboDeploymentType.FormattingEnabled = true;
             this.cboDeploymentType.Items.AddRange(new object[] {
-            "Local (IIS Server)",
-            "Docker"});
+            "Docker",
+            "Local (IIS Server)"});
             this.cboDeploymentType.Location = new System.Drawing.Point(164, 97);
             this.cboDeploymentType.Name = "cboDeploymentType";
             this.cboDeploymentType.Size = new System.Drawing.Size(241, 23);
@@ -603,7 +603,7 @@ namespace OrigamArchitect
             this.label28.AutoSize = true;
             this.label28.Location = new System.Drawing.Point(21, 233);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(60, 15);
+            this.label28.Size = new System.Drawing.Size(54, 15);
             this.label28.TabIndex = 23;
             this.label28.Text = "Surname";
             // 
