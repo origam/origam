@@ -229,31 +229,32 @@ class DateGroupData implements IGroupData{
       new DateGroupData(moment({ y:1900, M:1, d:1, h:0, m:0, s:0, ms:0 }), "");
     } 
     
-
-    let format;
+    let endInterval;
+    let groupLabel = "";
     switch(groupingSettings.groupingUnit){
       case GroupingUnit.Year:
         momentValue.set({'month': 1, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        format = "YYYY"
+        groupLabel = momentValue.format("YYYY");
         break;
       case GroupingUnit.Month:
         momentValue.set({'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        format = "YYYY-MM"
+        groupLabel = momentValue.format("YYYY-MM");
         break;
       case GroupingUnit.Day:
         momentValue.set({'hour': 0, 'minute': 0, 'second': 0});
-        format = "YYYY-MM-DD"
+        groupLabel = momentValue.format("YYYY-MM-DD");
         break;
       case GroupingUnit.Hour:
         momentValue.set({'minute': 0, 'second': 0});
-        format = "YYYY-MM-DD h"
+        endInterval = moment({ h:momentValue.hours() + 1});
+        groupLabel = momentValue.format("YYYY-MM-DD <h:00, ") + endInterval.format("h:00)")
         break;
       case GroupingUnit.Minute:
         momentValue.set({'second': 0});
-        format = "YYYY-MM-DD h:mm"
+        endInterval = moment({ h:momentValue.hours(), m:momentValue.minute() + 1});
+        groupLabel = momentValue.format("YYYY-MM-DD <h:mm:00, ") + endInterval.format("h:mm:00)")
         break;
     }
-    const groupLabel = momentValue.format(format);
     return new DateGroupData(momentValue, groupLabel);
   }
 
