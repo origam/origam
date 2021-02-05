@@ -100,7 +100,7 @@ namespace Origam.ServerCore.Controller
             }
             catch(UIException ex)
             {
-                return StatusCode(400, ex);
+                return StatusCode(422, ex);
             }
             catch(Exception ex)
             {
