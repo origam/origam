@@ -71,7 +71,7 @@ export class MapObjectsStore {
       const tableRows = this.dataView.tableRows;
 
       for (let row of tableRows) {
-        if (_.isArray(row) && this.fldLocationIndex !== undefined) {
+        if (_.isArray(row) && this.fldLocationIndex !== undefined && row[this.fldLocationIndex]) {
           const objectGeoJson = wktParse(row[this.fldLocationIndex]);
           if (objectGeoJson)
             result.push({
@@ -122,11 +122,11 @@ export class MapObjectsStore {
       console.log(property, selectedRow);
       if (property && selectedRow) {
         yield* onFieldChangeG(self.dataView)({
-            event: undefined, 
-            row: selectedRow, 
-            property: property, 
-            value: geoJson ? wtkStringify(geoJson) : null, 
-          });
+          event: undefined,
+          row: selectedRow,
+          property: property,
+          value: geoJson ? wtkStringify(geoJson) : null,
+        });
         getDataTable(self.dataView).flushFormToTable(selectedRow);
         yield* getFormScreenLifecycle(self.dataView).onFlushData();
       }
