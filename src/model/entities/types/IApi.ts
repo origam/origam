@@ -2,6 +2,8 @@ import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
+import { GroupingUnit } from "./IGroupingConfiguration";
+import { IColumnSettings } from "./IColumnSettings";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -290,11 +292,7 @@ export interface IApi {
   saveObjectConfiguration(data: {
     sessionFormIdentifier: string;
     instanceId: string;
-    columnSettings: Array<{
-      propertyId: string;
-      width: number;
-      isHidden: boolean;
-    }>;
+    columnSettings: IColumnSettings[];
     defaultView: string;
     lockedColumns: number;
   }): Promise<any>;

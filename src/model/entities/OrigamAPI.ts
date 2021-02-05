@@ -525,6 +525,7 @@ export class OrigamAPI implements IApi {
         (setting) =>
           `<column 
           groupingField="${setting.propertyId}" 
+          groupingUnit="${setting.timeGroupingUnit}" 
         />`
       );
     const columnsProps = data.columnSettings.map(
