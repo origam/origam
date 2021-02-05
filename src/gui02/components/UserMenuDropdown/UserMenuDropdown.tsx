@@ -65,7 +65,7 @@ export const UserMenuDropdown: React.FC<{
                     }}>
                   {T("About", "about_application")}
                 </DropdownItem>
-                <DropdownItem onClick={props.handleLogoutClick}>
+                <DropdownItem onClick={props.handleLogoutClick} className="redItem">
                   {T("Log out", "sign_out_tool_tip")}
                 </DropdownItem>
               </>
