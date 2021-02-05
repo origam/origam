@@ -27,8 +27,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 using static Origam.NewProjectEnums;
 
 namespace Origam.ProjectAutomation
@@ -38,9 +36,7 @@ namespace Origam.ProjectAutomation
         private const string ModelZipName = "DefaultModel.zip";
         private string modelSourcesFolder;
         private string sourcesFolder;
-
         public override string Name => "Import Model";
-
         public override void Execute(Project project)
         {
             modelSourcesFolder = project.ModelSourceFolder;
@@ -54,22 +50,21 @@ namespace Origam.ProjectAutomation
                     if (project.Deployment == DeploymentType.Docker)
                     {
                         CreateCustomAssetsFolder(project.SourcesFolder);
-                        CheckNewProjectDirectory();
+                        CheckNewProjectDirectory(project);
                     }
                     break;
                 case TypeTemplate.Open:
                 case TypeTemplate.Template:
                     CloneGitRepository(project);
                     CheckModelDirectory(project);
-                    CheckNewProjectDirectory();
+                    CheckNewProjectDirectory(project);
                     project.NewPackageId = GetFromDockerEnvFile(project)??GetPackageId();
                     break;
                 default:
                     throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
             }
         }
-
-        private void CheckNewProjectDirectory()
+        private void CheckNewProjectDirectory(Project project)
         {
             DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
             if (dir.Exists)
@@ -79,21 +74,13 @@ namespace Origam.ProjectAutomation
                 {
                     Directory.CreateDirectory(newdir);
                 }
-                string envdocker = Path.Combine(newdir, "docker.env.template");
-                if(!File.Exists(envdocker))
-                {
-                    using (StreamWriter writer = new StreamWriter(envdocker, false)) 
-                    {
-                        writer.WriteLine(CreateEnviromentTemplate());
-                    }
-                }
-                string cmddocker = Path.Combine(newdir, "docker.cmd.template");
+                string cmddocker = Path.Combine(newdir, project.Name + ".cmd");
                 if (!File.Exists(cmddocker))
                 {
-                    using (StreamWriter writer = new StreamWriter(cmddocker, false))
-                    {
-                        writer.WriteLine(CreateCmdTemplate());
-                    }
+                  using (StreamWriter writer = new StreamWriter(cmddocker, false))
+                  {
+                     writer.WriteLine(CreateCmdTemplate());
+                  }
                 }
             }
             else
@@ -105,24 +92,7 @@ namespace Origam.ProjectAutomation
         private StringBuilder CreateCmdTemplate()
         {
             StringBuilder template = new StringBuilder();
-            template.AppendLine("docker run --env-file {envfilepath} -it -v {parentpathproject}:/home/origam/HTML5/data -p {dockerport}:8080 origam/server:master-latest");
-            return template;
-        }
-
-        private StringBuilder CreateEnviromentTemplate()
-        {
-            StringBuilder template = new StringBuilder();
-            template.AppendLine("gitPullOnStart=false");
-            template.AppendLine("OrigamSettings_SetOnStart=true");
-            template.AppendLine("OrigamSettings_SchemaExtensionGuid=");
-            template.AppendLine("OrigamSettings_DbHost=");
-            template.AppendLine("OrigamSettings_DbPort=");
-            template.AppendLine("OrigamSettings_DbUsername=");
-            template.AppendLine("OrigamSettings_DbPassword=");
-            template.AppendLine("DatabaseName=");
-            template.AppendLine("OrigamSettings_ModelName=");
-            template.AppendLine("DatabaseType=");
-            template.AppendLine("ExternalDomain_SetOnStart="); 
+            template.AppendLine("docker run --env-file {envfilepath} -it -v {parentpathproject}:/home/origam/HTML5/data/origam -p {dockerport}:8080 origam/server:master-latest");
             return template;
         }
 
@@ -182,7 +152,6 @@ namespace Origam.ProjectAutomation
             }
             return modelId;
         }
-
         private string GetFromDockerEnvFile(Project project)
         {
             string path = Path.Combine(project.SourcesFolder, "NewProject");
@@ -200,14 +169,12 @@ namespace Origam.ProjectAutomation
                 .Select(line=> { return line.Split("=")[1] ; }).FirstOrDefault();
             return string.IsNullOrEmpty(guidId)?null:guidId;
         }
-
         private void UnzipDefaultModel(Project project)
         {
             string zipPath =
                 Path.Combine(project.ServerTemplateFolder,"Model", ModelZipName);
             System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, modelSourcesFolder);
         }
-
         private void CreateSourceFolder()
         {
             DirectoryInfo dir = new DirectoryInfo(sourcesFolder);
@@ -241,7 +208,5 @@ namespace Origam.ProjectAutomation
                 GitManager.DeleteDirectory(modelSourcesFolder);
             }
         }
-        
-
     }
 }

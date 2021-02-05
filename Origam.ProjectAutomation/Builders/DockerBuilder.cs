@@ -18,7 +18,7 @@ namespace Origam.ProjectAutomation.Builders
                 string envfile = Path.Combine(newProjectFolder, project.Name + ".env");
                 if (Directory.GetFiles(newProjectFolder, "*.env").Length == 0)
                 {
-                    File.Copy(Path.Combine(newProjectFolder, "docker.env.template"), Path.Combine(newProjectFolder, envfile));
+                    File.Create(envfile).Dispose();
                 }
                 envfile = Directory.GetFiles(newProjectFolder, "*.env")[0];
                 ProcessEnviromentFile(envfile,project);
@@ -28,15 +28,14 @@ namespace Origam.ProjectAutomation.Builders
         private void ProcessCmdFile(Project project, string envfile)
         {
             string cmdfile = Path.Combine(newProjectFolder, project.Name + ".cmd");
-            if (!File.Exists(cmdfile))
+            if (File.Exists(cmdfile))
             {
-                File.Copy(Path.Combine(newProjectFolder, "docker.cmd.template"), Path.Combine(newProjectFolder, cmdfile));
+                string text = File.ReadAllText(cmdfile);
+                text = text.Replace("{envfilepath}", Path.Combine(project.SourcesFolder, "NewProject", envfile));
+                text = text.Replace("{parentpathproject}", project.SourcesFolder);
+                text = text.Replace("{dockerport}", project.DockerPort.ToString());
+                File.WriteAllText(cmdfile, text);
             }
-            string text = File.ReadAllText(cmdfile);
-            text = text.Replace("{envfilepath}", Path.Combine(project.SourcesFolder, "NewProject", envfile));
-            text = text.Replace("{parentpathproject}", project.RootSourceFolder);
-            text = text.Replace("{dockerport}", project.DockerPort.ToString());
-            File.WriteAllText(cmdfile, text);
         }
         private void ProcessEnviromentFile(string envfile, Project project)
         {
@@ -54,7 +53,8 @@ namespace Origam.ProjectAutomation.Builders
             {
                     dictionary.Add(missing, CheckValue(new string[] { missing, "" }, dockerparameters, project));
             }
-         if (Directory.Exists(customassetsDirectory))
+         if (Directory.Exists(customassetsDirectory) &&
+                Directory.GetFiles(customassetsDirectory).Length > 0)
             {
                 List<string>  missingCustomAssetsEnviroments = dockerCustomAssetsparameters.
                 Where(missing => !dictionary.TryGetValue(missing, out string val)).
@@ -88,6 +88,10 @@ namespace Origam.ProjectAutomation.Builders
                 {
                     switch (dockerparameter)
                     {
+                        case "gitPullOnStart":
+                            return "false";
+                        case "OrigamSettings_SetOnStart":
+                            return "true";
                         case "OrigamSettings_SchemaExtensionGuid":
                             return project.NewPackageId;
                         case "OrigamSettings_DbHost":
@@ -103,7 +107,7 @@ namespace Origam.ProjectAutomation.Builders
                         case "DatabaseName":
                             return project.DataDatabaseName.ToLower();
                         case "OrigamSettings_ModelName":
-                            return project.Url;
+                            return "origam";
                         case "DatabaseType":
                             return project.DatabaseType == DatabaseType.PgSql ? "postgresql" :
                                                                 project.DatabaseType.ToString().ToLower();
@@ -128,6 +132,8 @@ namespace Origam.ProjectAutomation.Builders
         {
             List<string> parameters = new List<string>
             {
+                "gitPullOnStart",
+                "OrigamSettings_SetOnStart",
                 "OrigamSettings_SchemaExtensionGuid",
                 "OrigamSettings_DbHost",
                 "OrigamSettings_DbPort",
