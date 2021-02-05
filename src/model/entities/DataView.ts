@@ -66,6 +66,7 @@ import selectors from "model/selectors-tree";
 import produce from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
+import Axios from "axios";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}
@@ -707,9 +708,8 @@ export class DataView implements IDataView {
     });
     const excelMaxRowCount = 1048576;
     const api = getApi(this);
-    let url;
     if (isInfiniteScrollingActive(this)) {
-      url = await api.getExcelFileUrl({
+      await api.getExcelFile({
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
@@ -727,7 +727,7 @@ export class DataView implements IDataView {
         },
       });
     } else {
-      url = await api.getExcelFileUrl({
+      await api.getExcelFile({
         Entity: this.entity,
         Fields: fields,
         SessionFormIdentifier: getSessionId(this),
@@ -735,7 +735,6 @@ export class DataView implements IDataView {
         LazyLoadedEntityInput: undefined,
       });
     }
-    window.open(url);
   }
 
   private getPolymorphicRules(property: IProperty) {

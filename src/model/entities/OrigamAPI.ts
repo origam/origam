@@ -9,6 +9,7 @@ import { IColumnSettings } from "./types/IColumnSettings";
 import { compareByGroupingIndex } from "./ColumnSettings";
 import { TypeSymbol } from "dic/Container";
 import { IAboutInfo } from "./types/IAboutInfo";
+import fileDownload from "js-file-download";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -36,7 +37,10 @@ export class OrigamAPI implements IApi {
 
     axiosInstance.interceptors.response.use(
       (response) => response,
-      (error) => {
+      async (error) => {
+        if(error.response?.data?.constructor?.name === 'Blob'){
+          error.response.data = await error.response.data.text();
+        }
         if (!axios.isCancel(error)) {
           this.errorHandler(error);
         }
@@ -761,17 +765,33 @@ await axios.get(`${this.urlPrefix}/Blob/${data.downloadToken}`, {
     return (await this.axiosInstance.post(`/UIService/GetMenuId`, data)).data;
   }
 
-  async getExcelFileUrl(data: {
+  async getExcelFile(data: {
     Entity: string;
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
-  }): Promise<string>
+  }): Promise<any>
   {
-     return (await this.axiosInstance.post(`/ExcelExport/GetFileUrl`, data)).data;
-  }
+    const response = await this.axiosInstance({
+      url: `/ExcelExport/GetFile`,
+      method: 'POST',
+      data: data,
+      responseType: 'blob', 
+    })
 
+    const fieNameRegex = /filename=([^\s;]*)/g
+
+    let fileName = "export.xls";
+    if(response.headers["content-disposition"]){
+      const headerFileName = fieNameRegex.exec(response.headers["content-disposition"])?.[1]
+      if(headerFileName){
+        fileName = headerFileName;
+      }
+    }
+      
+    fileDownload(response.data, fileName);
+  }
   async getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string> {
     return (await this.axiosInstance.post(`/HashTag/GetMenuId`, data)).data;
   }

@@ -255,7 +255,10 @@ export class LookupFilterSetting implements IFilterSetting {
   constructor(type: string, isComplete=false, val1?:string, val2?: any) {
     this.type = type;
     this.isComplete = isComplete;
-    if(val1 !== undefined && val1 !== null){
+    if(Array.isArray(val1)){
+      this.val1 = [... new Set(val1)];
+    }
+    else if(val1 !== undefined && val1 !== null){
       this.val1 = [... new Set(val1.split(","))];
     }
     this.val2 = val2 ?? undefined;

@@ -397,13 +397,13 @@ export interface IApi {
 
   getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string>;
 
-  getExcelFileUrl(data: {
+  getExcelFile(data: {
     Entity: string;
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
-  }): Promise<string>;
+  }): Promise<any>;
 }
 
 export interface ILazyLoadedEntityInput{
