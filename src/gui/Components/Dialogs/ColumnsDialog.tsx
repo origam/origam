@@ -399,7 +399,7 @@ export class TableHeader extends React.Component<{
       case 2:
         return T("GroupBy", "column_config_group_by");
       case 3:
-        return T("Huhla", "column_time_grouping_unit");
+        return T("Grouping unit", "column_config_time_grouping_unit");
       case 4:
         return T("Aggregation", "column_config_aggregation");
       default:
