@@ -63,42 +63,49 @@ export function DropdownEditorTable() {
     });
   }
 
-  function renderTableCell({ columnIndex, key, parent, rowIndex, style }: GridCellProps) {
-    return (
-      <CtxCell.Provider
-        key={key}
-        value={{ visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex }}
-      >
-        <CellMeasurer
-          cache={cache}
-          columnIndex={columnIndex}
-          key={key}
-          parent={parent}
-          rowIndex={rowIndex}
-        >
-          {rowIndex ? (
-            <div style={style}>
-              <Observer>
-                {() => <>{drivers.getDriver(columnIndex).bodyCellDriver.render(rowIndex - 1)}</>}
-              </Observer>
-            </div>
-          ) : (
-            <div style={style}>
-              <Observer>
-                {() => <>{drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
-              </Observer>
-            </div>
-          )}
-        </CellMeasurer>
-      </CtxCell.Provider>
-    );
-  }
-
   return (
     <Observer>
       {() => {
+        function renderTableCell({ columnIndex, key, parent, rowIndex, style }: GridCellProps) {
+          return (
+            <CtxCell.Provider
+              key={key}
+              value={{ visibleColumnIndex: columnIndex, visibleRowIndex: rowIndex }}
+            >
+              <CellMeasurer
+                cache={cache}
+                columnIndex={columnIndex}
+                key={key}
+                parent={parent}
+                rowIndex={rowIndex}
+              >
+                {(hasHeader && rowIndex > 0) || !hasHeader ? (
+                  <div style={style}>
+                    <Observer>
+                      {() => (
+                        <>
+                          {drivers
+                            .getDriver(columnIndex)
+                            .bodyCellDriver.render(rowIndex - (hasHeader ? 1 : 0))}
+                        </>
+                      )}
+                    </Observer>
+                  </div>
+                ) : (
+                  <div style={style}>
+                    <Observer>
+                      {() => <>{drivers.getDriver(columnIndex).headerCellDriver.render()}</>}
+                    </Observer>
+                  </div>
+                )}
+              </CellMeasurer>
+            </CtxCell.Provider>
+          );
+        }
+
         const columnCount = drivers.driverCount;
-        const rowCount = dataTable.rowCount + 1;
+        const hasHeader = columnCount > 1;
+        const rowCount = dataTable.rowCount + (hasHeader ? 1 : 0);
 
         let width = 0;
         let columnWidthSum = 0;
@@ -143,7 +150,7 @@ export function DropdownEditorTable() {
             }}
             rowHeight={rowHeight}
             deferredMeasurementCache={cache}
-            fixedRowCount={1}
+            fixedRowCount={hasHeader ? 1 : 0}
             height={height}
             width={width}
             cellRenderer={renderTableCell}
