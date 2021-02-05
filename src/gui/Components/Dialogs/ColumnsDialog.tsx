@@ -16,6 +16,7 @@ import {
 } from "../../../model/entities/types/AggregationType";
 import { T } from "../../../utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import { GroupingUnit } from "model/entities/types/IGroupingConfiguration";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -28,6 +29,7 @@ export interface ITableColumnConf {
   isVisible: boolean;
   groupingIndex: number;
   aggregationType: AggregationType | undefined;
+  timeGroupingUnit: GroupingUnit | undefined;
   entity: string;
   canGroup: boolean;
   canAggregate: boolean;
@@ -48,7 +50,7 @@ export class ColumnsDialog extends React.Component<{
 
   @observable.ref configuration: ITableColumnsConf;
 
-  @observable columnWidths = [70, 160, 70, 90];
+  @observable columnWidths = [70, 160, 70, 70, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
@@ -58,7 +60,16 @@ export class ColumnsDialog extends React.Component<{
     });
   }
 
-  @action.bound setGrouping(rowIndex: number, state: boolean) {
+  @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
+
+    if(entity === "Date"){
+      if(state){
+        this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
+      }else{
+        this.setTimeGroupingUnit(rowIndex, undefined);
+      }
+    }
+
     this.configuration = produce(this.configuration, (draft) => {
       const columnConfCopy = [...draft.columnConf];
       columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
@@ -74,6 +85,12 @@ export class ColumnsDialog extends React.Component<{
           }
         }
       }
+    });
+  }
+
+  @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
+    this.configuration = produce(this.configuration, (draft) => {
+      draft.columnConf[rowIndex].timeGroupingUnit = groupingUnit;
     });
   }
 
@@ -125,7 +142,7 @@ export class ColumnsDialog extends React.Component<{
                     ref={this.refGrid}
                     fixedRowCount={1}
                     cellRenderer={this.renderCell}
-                    columnCount={4}
+                    columnCount={5}
                     rowCount={1 + this.configuration.columnConf.length}
                     columnWidth={({ index }: { index: number }) => {
                       return this.columnWidths[index];
@@ -162,6 +179,7 @@ export class ColumnsDialog extends React.Component<{
       entity,
       canGroup,
       canAggregate,
+      timeGroupingUnit
     } = this.configuration.columnConf[rowIndex];
     switch (columnIndex) {
       case 0:
@@ -182,13 +200,76 @@ export class ColumnsDialog extends React.Component<{
               type="checkbox"
               key={`${rowIndex}@${columnIndex}`}
               checked={groupingIndex > 0}
-              onClick={(event: any) => this.setGrouping(rowIndex, event.target.checked)}
+              onClick={(event: any) => this.setGrouping(rowIndex, event.target.checked, entity)}
               disabled={!canGroup}
             />{" "}
             {groupingIndex > 0 ? groupingIndex : ""}
           </span>
         );
       case 3:
+        if(groupingIndex > 0 && entity === "Date"){
+          return (
+            <Dropdowner
+              trigger={({ refTrigger, setDropped }) => (
+                <DataViewHeaderAction
+                  refDom={refTrigger}
+                  onMouseDown={() => setDropped(true)}
+                  isActive={false}
+                >
+                  {GroupingUnitToLabel(timeGroupingUnit)}
+                </DataViewHeaderAction>
+              )}
+              content={({ setDropped }) => (
+                <Dropdown>
+                  <DropdownItem
+                    onClick={(event: any) => {
+                      setDropped(false);
+                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Year);
+                    }}
+                    >
+                    {GroupingUnitToLabel(GroupingUnit.Year)}
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={(event: any) => {
+                      setDropped(false);
+                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Month);
+                    }}
+                    >
+                    {GroupingUnitToLabel(GroupingUnit.Month)}
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={(event: any) => {
+                      setDropped(false);
+                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
+                    }}
+                    >
+                    {GroupingUnitToLabel(GroupingUnit.Day)}
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={(event: any) => {
+                      setDropped(false);
+                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Hour);
+                    }}
+                  >
+                    {GroupingUnitToLabel(GroupingUnit.Hour)}
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={(event: any) => {
+                      setDropped(false);
+                      this.setTimeGroupingUnit(rowIndex, GroupingUnit.Minute);
+                    }}
+                  >
+                    {GroupingUnitToLabel(GroupingUnit.Minute)}
+                  </DropdownItem>
+                </Dropdown>
+              )}
+            />
+          );
+        }
+        else{
+          return "";
+        }
+      case 4:
         if (
           (entity === "Currency" ||
             entity === "Integer" ||
@@ -318,6 +399,8 @@ export class TableHeader extends React.Component<{
       case 2:
         return T("GroupBy", "column_config_group_by");
       case 3:
+        return T("Huhla", "column_time_grouping_unit");
+      case 4:
         return T("Aggregation", "column_config_aggregation");
       default:
         return "?";
@@ -355,5 +438,23 @@ export class TableHeader extends React.Component<{
         <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown} />
       </div>
     );
+  }
+}
+
+
+function GroupingUnitToLabel(groupingUnit: GroupingUnit | undefined){
+  switch(groupingUnit){
+    case GroupingUnit.Year:
+      return T("Year", "group_by_year");
+    case GroupingUnit.Month:
+      return T("Month", "group_by_month");
+    case GroupingUnit.Day:
+      return T("Day", "group_by_day");
+    case GroupingUnit.Hour:
+      return T("Hour", "group_by_hour");
+    case GroupingUnit.Minute:
+      return T("Minute", "group_by_minute");
+    default:
+      return "";
   }
 }
