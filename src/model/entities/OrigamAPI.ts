@@ -38,7 +38,7 @@ export class OrigamAPI implements IApi {
     axiosInstance.interceptors.response.use(
       (response) => response,
       async (error) => {
-        if(error.response.data.constructor.name === 'Blob'){
+        if(error.response?.data?.constructor?.name === 'Blob'){
           error.response.data = await error.response.data.text();
         }
         if (!axios.isCancel(error)) {
