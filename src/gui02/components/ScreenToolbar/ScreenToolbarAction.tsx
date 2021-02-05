@@ -7,6 +7,7 @@ export class ScreenToolbarAction extends React.Component<{
   label?: string;
   isHidden?: boolean;
   rootRef?: any;
+  className?: string;
   onMouseDown?(event: any): void;
   onClick?(event: any): void;
 }> {
@@ -14,7 +15,11 @@ export class ScreenToolbarAction extends React.Component<{
     return (
       <div
         ref={this.props.rootRef}
-        className={cx(S.root, { isLabelless: !this.props.label, isHidden: this.props.isHidden })}
+        className={cx(
+          S.root,
+          { isLabelless: !this.props.label, isHidden: this.props.isHidden },
+          this.props.className
+        )}
         onMouseDown={this.props.onMouseDown}
         onClick={this.props.onClick}
         title={this.props.label}
