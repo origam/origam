@@ -13,8 +13,8 @@
   padding: 0 1em;
 
   &:not(:global(.isDisabled)):hover {
-    background-color: #e0e0e0;
-    font-weight: 400;
+    background-color: $blue;
+    //font-weight: 400;
   }
 
   &:global(.isDisabled) {
@@ -22,7 +22,14 @@
     cursor: not-allowed;
   }
 
-
+  &:global(.redItem) {
+    color: $red;
+    background-color: white;
+    &:hover {
+      color: white;
+      background-color: $red;
+    }
+  }
   /*&:last-of-type {
     color: $red;
     &:hover {

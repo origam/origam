@@ -3,6 +3,7 @@ import S from "./DropdownItem.module.scss";
 import cx from "classnames";
 
 export const DropdownItem: React.FC<{
+  className?: string;
   onClick?(event: any): void;
   isDisabled?: boolean;
   isSelected?: boolean;
@@ -16,7 +17,7 @@ export const DropdownItem: React.FC<{
 
   return <div
     onClick={props.onClick}
-    className={cx(S.root, getStyle())}
+    className={cx(S.root, getStyle(), props.className)}
   >
     {props.children}
   </div>
