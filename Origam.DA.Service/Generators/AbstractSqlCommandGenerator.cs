@@ -1825,7 +1825,7 @@ namespace Origam.DA.Service
                     sqlExpression.Append(expression);
                     if (customGrouping != null && customGrouping.GroupBy == column.Name)
                     {
-                        orderByExpression = expression.Split("AS")[0].Trim();
+                        orderByExpression = expression.Split(" AS ")[0].Trim();
                     }
                 }
             }
@@ -1882,7 +1882,7 @@ namespace Origam.DA.Service
             
             if (customGrouping != null)
             {
-                sqlExpression.Append($", COUNT(*) as {ColumnData.GroupByCountColumn} ");
+                sqlExpression.Append($", {CountAggregateSql()}(*) AS {ColumnData.GroupByCountColumn} ");
                
                 if (customGrouping.LookupId != Guid.Empty)
                 {
