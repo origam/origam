@@ -88,7 +88,7 @@ export class ClientSideGrouper implements IGrouper {
     const dataTable = getDataTable(this);
     const property = dataTable.getPropertyById(groupingColumnSettings.columnId);
 
-    return this.groupToGroupDataList(groupingColumnSettings, property!, rows)
+    return this.groupToGroupDataList(groupingColumnSettings, rows)
       .sort((a, b) => a.compare(b))
       .map((groupData) => {
         return new ClientSideGroupItem({
@@ -107,7 +107,7 @@ export class ClientSideGrouper implements IGrouper {
       });
   }
 
-  private groupToGroupDataList(groupingSettings: IGroupingSettings | undefined, property: IProperty, rows: any[][]) {
+  private groupToGroupDataList(groupingSettings: IGroupingSettings | undefined, rows: any[][]) {
     if (!groupingSettings) {
       return [];
     }
@@ -117,7 +117,7 @@ export class ClientSideGrouper implements IGrouper {
     for (let row of rows) {    
       const groupData = groupingSettings.groupingUnit === undefined 
         ? new GenericGroupData(row[index])
-        : DateGroupData.create( row[index], groupingSettings, property.formatterPattern)
+        : DateGroupData.create( row[index], groupingSettings)
 
       if (!groupMap.has(groupData.label)) {
         groupMap.set(groupData.label, groupData);
@@ -223,50 +223,34 @@ class DateGroupData implements IGroupData{
 
   public rows: any[][] = [];
 
-  public static create(value: string, groupingSettings: IGroupingSettings, formatterPattern: string): GenericGroupData{
+  public static create(value: string, groupingSettings: IGroupingSettings): GenericGroupData{
     const momentValue = moment(value);
     if(!momentValue.isValid()){
       new DateGroupData(moment({ y:1900, M:1, d:1, h:0, m:0, s:0, ms:0 }), "");
     } 
     
-    momentValue.format(formatterPattern);
 
-    let format = formatterPattern;
+    let format;
     switch(groupingSettings.groupingUnit){
       case GroupingUnit.Year:
         momentValue.set({'month': 1, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        format = format
-          .replace("MM","")
-          .replace("DD","")
-          .replace("h","")
-          .replace("m","")
-          .replace("s","")
-          .replace(".","")
-          .replace(":","")
+        format = "YYYY"
         break;
       case GroupingUnit.Month:
         momentValue.set({'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        format = format
-          .replace("DD.","")
-          .replace("h","")
-          .replace("m","")
-          .replace("s","")
+        format = "YYYY-MM"
         break;
       case GroupingUnit.Day:
         momentValue.set({'hour': 0, 'minute': 0, 'second': 0});
-        format = format
-          .replace("h:","")
-          .replace("m","")
-          .replace("s","")
+        format = "YYYY-MM-DD"
         break;
       case GroupingUnit.Hour:
         momentValue.set({'minute': 0, 'second': 0});
-        format = format
-          .replace("s","")
-          .replace(":","")
+        format = "YYYY-MM-DD h"
         break;
       case GroupingUnit.Minute:
         momentValue.set({'second': 0});
+        format = "YYYY-MM-DD h:mm"
         break;
     }
     const groupLabel = momentValue.format(format);
