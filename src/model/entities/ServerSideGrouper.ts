@@ -47,7 +47,7 @@ export class ServerSideGrouper implements IGrouper {
   }
         
   private *loadGroups() {
-    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn?.columnId;
+    const firstGroupingColumn = getGroupingConfiguration(this).firstGroupingColumn;
     if (!firstGroupingColumn) {
       this.topLevelGroups.length = 0;
       return;
@@ -56,11 +56,11 @@ export class ServerSideGrouper implements IGrouper {
     .filter(group => group.isExpanded)
     .map(group => group.columnDisplayValue)
     const dataView = getDataView(this);
-    const property = getDataTable(this).getPropertyById(firstGroupingColumn);
+    const property = getDataTable(this).getPropertyById(firstGroupingColumn.columnId);
     const lookupId = property && property.lookup && property.lookup.lookupId;
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
-    const  groupData = yield getFormScreenLifecycle(this).loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
-    this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined);
+    const groupData = yield getFormScreenLifecycle(this).loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
+    this.topLevelGroups = this.group(groupData, firstGroupingColumn.columnId, undefined);
     yield* this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
   }
       
@@ -142,17 +142,17 @@ export class ServerSideGrouper implements IGrouper {
   
   private *reload(group: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId)?.columnId;
+    const nextColumnSettings = groupingConfiguration.nextColumnToGroupBy(group.columnId);
     const dataView = getDataView(this);
     const filter = this.composeFinalFilter(group);
     const lifeCycle = getFormScreenLifecycle(this);
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
     const orderingConfiguration = getOrderingConfiguration(this);
-    if (nextColumnName) {
-      const property = getDataTable(this).getPropertyById(nextColumnName);
+    if (nextColumnSettings) {
+      const property = getDataTable(this).getPropertyById(nextColumnSettings.columnId);
       const lookupId = property && property.lookup && property.lookup.lookupId;
-      const groupData = yield lifeCycle.loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
-      group.childGroups = this.group(groupData, nextColumnName, group);
+      const groupData = yield lifeCycle.loadChildGroups(dataView, filter, nextColumnSettings, aggregations, lookupId)
+      group.childGroups = this.group(groupData, nextColumnSettings.columnId, group);
     } else {
       const rows = yield lifeCycle.loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
       group.childRows = rows;
@@ -217,7 +217,12 @@ export class ServerSideGrouper implements IGrouper {
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
 
     const lookupId = property && property.lookup && property.lookup.lookupId;
-    const groupList = await lifeCycle.loadChildGroups(dataView, filter, property.id, aggregations, lookupId)
+    const groupingSettings ={
+      columnId: property.id,
+      groupIndex: 0,
+      groupingUnit: undefined,
+    };
+    const groupList = await lifeCycle.loadChildGroups(dataView, filter, groupingSettings, aggregations, lookupId)
     return groupList.map(group => group[property.id]).filter(group => group);
   }
 
