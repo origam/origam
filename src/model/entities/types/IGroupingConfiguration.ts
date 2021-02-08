@@ -1,3 +1,4 @@
+import { GroupingUnit } from "./GroupingUnit";
 
 export interface IGroupingConfigurationData {
 
@@ -25,6 +26,3 @@ export interface IGroupingSettings{
   groupingUnit: GroupingUnit | undefined;
 }
 
-export enum GroupingUnit {
-  Year, Month, Day, Hour, Minute
-}

@@ -2,7 +2,7 @@ import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
-import { GroupingUnit } from "./IGroupingConfiguration";
+import { GroupingUnit } from "./GroupingUnit";
 import { IColumnSettings } from "./IColumnSettings";
 
 export interface IApi {
@@ -250,6 +250,7 @@ export interface IApi {
     Ordering: IOrdering[];
     RowLimit: number;
     GroupBy: string;
+    GroupingUnit: string | undefined;
     MasterRowId: string | undefined;
     GroupByLookupId: string | undefined;
     SessionFormIdentifier: string | undefined;

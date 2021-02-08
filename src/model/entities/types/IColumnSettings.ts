@@ -1,4 +1,4 @@
-import { GroupingUnit } from "./IGroupingConfiguration";
+import { GroupingUnit } from "./GroupingUnit";
 
 export interface IColumnSettings {
   propertyId: string;

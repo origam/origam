@@ -16,7 +16,7 @@ import {
 } from "../../../model/entities/types/AggregationType";
 import { T } from "../../../utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import { GroupingUnit } from "model/entities/types/IGroupingConfiguration";
+import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel } from "model/entities/types/GroupingUnit";
 
 export interface ITableColumnsConf {
   fixedColumnCount: number;
@@ -216,7 +216,7 @@ export class ColumnsDialog extends React.Component<{
                   onMouseDown={() => setDropped(true)}
                   isActive={false}
                 >
-                  {GroupingUnitToLabel(timeGroupingUnit)}
+                  {groupingUnitToLabel(timeGroupingUnit)}
                 </DataViewHeaderAction>
               )}
               content={({ setDropped }) => (
@@ -227,7 +227,7 @@ export class ColumnsDialog extends React.Component<{
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Year);
                     }}
                     >
-                    {GroupingUnitToLabel(GroupingUnit.Year)}
+                    {groupingUnitToLabel(GroupingUnit.Year)}
                   </DropdownItem>
                   <DropdownItem
                     onClick={(event: any) => {
@@ -235,7 +235,7 @@ export class ColumnsDialog extends React.Component<{
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Month);
                     }}
                     >
-                    {GroupingUnitToLabel(GroupingUnit.Month)}
+                    {groupingUnitToLabel(GroupingUnit.Month)}
                   </DropdownItem>
                   <DropdownItem
                     onClick={(event: any) => {
@@ -243,7 +243,7 @@ export class ColumnsDialog extends React.Component<{
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Day);
                     }}
                     >
-                    {GroupingUnitToLabel(GroupingUnit.Day)}
+                    {groupingUnitToLabel(GroupingUnit.Day)}
                   </DropdownItem>
                   <DropdownItem
                     onClick={(event: any) => {
@@ -251,7 +251,7 @@ export class ColumnsDialog extends React.Component<{
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Hour);
                     }}
                   >
-                    {GroupingUnitToLabel(GroupingUnit.Hour)}
+                    {groupingUnitToLabel(GroupingUnit.Hour)}
                   </DropdownItem>
                   <DropdownItem
                     onClick={(event: any) => {
@@ -259,7 +259,7 @@ export class ColumnsDialog extends React.Component<{
                       this.setTimeGroupingUnit(rowIndex, GroupingUnit.Minute);
                     }}
                   >
-                    {GroupingUnitToLabel(GroupingUnit.Minute)}
+                    {groupingUnitToLabel(GroupingUnit.Minute)}
                   </DropdownItem>
                 </Dropdown>
               )}
@@ -438,23 +438,5 @@ export class TableHeader extends React.Component<{
         <div className={S.columnWidthHandle} onMouseDown={this.handleColumnWidthHandleMouseDown} />
       </div>
     );
-  }
-}
-
-
-function GroupingUnitToLabel(groupingUnit: GroupingUnit | undefined){
-  switch(groupingUnit){
-    case GroupingUnit.Year:
-      return T("Year", "group_by_year");
-    case GroupingUnit.Month:
-      return T("Month", "group_by_month");
-    case GroupingUnit.Day:
-      return T("Day", "group_by_day");
-    case GroupingUnit.Hour:
-      return T("Hour", "group_by_hour");
-    case GroupingUnit.Minute:
-      return T("Minute", "group_by_minute");
-    default:
-      return "";
   }
 }

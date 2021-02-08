@@ -438,6 +438,7 @@ export class OrigamAPI implements IApi {
     Ordering: IOrdering[];
     RowLimit: number;
     GroupBy: string;
+    GroupingUnit: string | undefined;
     MasterRowId: string | undefined;
     GroupByLookupId: string | undefined;
     SessionFormIdentifier: string | undefined;

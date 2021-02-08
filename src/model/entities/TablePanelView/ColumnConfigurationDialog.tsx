@@ -9,7 +9,7 @@ import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfiguratio
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { GroupingUnit } from "../types/IGroupingConfiguration";
+import { GroupingUnit } from "../types/GroupingUnit";
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {

@@ -1,5 +1,6 @@
 import {action, computed, observable} from "mobx";
-import {GroupingUnit, IGroupingConfiguration, IGroupingSettings} from "./types/IGroupingConfiguration";
+import {IGroupingConfiguration, IGroupingSettings} from "./types/IGroupingConfiguration";
+import { GroupingUnit } from "./types/GroupingUnit";
 
 export class GroupingConfiguration implements IGroupingConfiguration {
   @observable groupingSettings: Map<string, IGroupingSettings> = new Map();
