@@ -12,15 +12,15 @@ export class WorkQueuesItem extends React.Component<{
   level?: number;
   icon?: React.ReactNode;
   label?: React.ReactNode;
+  tooltip?: string;
   id?: string;
   onClick?(event: any): void;
-}>{
-
+}> {
   static contextType = MobXProviderContext;
   itemRef: RefObject<HTMLAnchorElement> = React.createRef();
 
-  componentDidMount(){
-    if(this.props.id){
+  componentDidMount() {
+    if (this.props.id) {
       this.mainMenuState.setReference(this.props.id, this.itemRef);
     }
   }
@@ -29,26 +29,26 @@ export class WorkQueuesItem extends React.Component<{
     return getMainMenuState(this.context.application);
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <a
-       ref={this.itemRef}
+        ref={this.itemRef}
         className={cx(
           S.root,
           {
             isActiveScreen: this.props.isActiveScreen,
-            isOpenedScreen: this.props.isOpenedScreen
+            isOpenedScreen: this.props.isOpenedScreen,
           },
           { isHidden: this.props.isHidden },
           { isEmphasized: this.props.isEmphasized }
         )}
         style={{ paddingLeft: `${(this.props.level || 1) * 1.6667}em` }}
         onClick={this.props.onClick}
+        title={this.props.tooltip}
       >
         <div className={S.icon}>{this.props.icon}</div>
         <div className={S.label}>{this.props.label}</div>
       </a>
-  
     );
   }
 }
