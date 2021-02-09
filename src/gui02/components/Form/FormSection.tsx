@@ -1,17 +1,17 @@
 import React from "react";
 import S from "./FormSection.module.scss";
 import cx from "classnames";
-import {FormSectionHeader} from "./FormSectionHeader";
+import { FormSectionHeader } from "./FormSectionHeader";
 
 export const FormSection: React.FC<{
   top: number;
   left: number;
   width: number;
   height: number;
-  title?: React.ReactNode;
+  title?: string;
   backgroundColor: string | undefined;
   foreGroundColor: string | undefined;
-}> = props => {
+}> = (props) => {
   const hasTitle = !!props.title;
   return (
     <div
@@ -24,10 +24,11 @@ export const FormSection: React.FC<{
         backgroundColor: props.backgroundColor,
       }}
     >
-      {hasTitle && 
-        <FormSectionHeader foreGroundColor={props.foreGroundColor}>
-            {props.title}
-        </FormSectionHeader>}
+      {hasTitle && (
+        <FormSectionHeader foreGroundColor={props.foreGroundColor} tooltip={props.title}>
+          {props.title}
+        </FormSectionHeader>
+      )}
       {props.children}
     </div>
   );
