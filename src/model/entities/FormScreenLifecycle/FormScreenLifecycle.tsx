@@ -559,10 +559,17 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     groupByLookupId: string | undefined,
     aggregations: IAggregationInfo[] | undefined
   ) {
+
+    const orderingConfig = getOrderingConfiguration(dataView);
+    const orderingDirection = orderingConfig.orderings
+      .find(ordering => ordering.columnId === columnSettings.columnId)
+      ?.direction 
+      ?? IOrderByDirection.ASC
+
     const api = getApi(this);
     const ordering = {
       columnId: columnSettings.columnId,
-      direction: IOrderByDirection.ASC,
+      direction: orderingDirection,
       lookupId: groupByLookupId,
     };
 

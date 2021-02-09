@@ -12,6 +12,8 @@ import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
 import { DateGroupData, GenericGroupData } from "./DateGroupData";
 import moment from "moment";
+import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
+import { IOrderByDirection } from "./types/IOrderingConfiguration";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -87,9 +89,17 @@ export class ClientSideGrouper implements IGrouper {
   makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumnSettings: IGroupingSettings): IGroupTreeNode[] {
     const dataTable = getDataTable(this);
     const property = dataTable.getPropertyById(groupingColumnSettings.columnId);
+    const orderingConfig = getOrderingConfiguration(this);
+    const orderingDirection = orderingConfig.orderings
+      .find(ordering => ordering.columnId === groupingColumnSettings.columnId)
+      ?.direction 
+      ?? IOrderByDirection.ASC;
 
     return this.groupToGroupDataList(groupingColumnSettings, rows)
-      .sort((a, b) => a.compare(b))
+      .sort((a, b) =>
+        orderingDirection === IOrderByDirection.ASC 
+          ? a.compare(b) 
+          : -a.compare(b))
       .map((groupData) => {
         return new ClientSideGroupItem({
           childGroups: [] as IGroupTreeNode[],
