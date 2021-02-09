@@ -49,6 +49,7 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
   columnDisplayValue: string = null as any;
   aggregations: IAggregation[] | undefined = undefined;
   grouper: IGrouper = null as any;
+  groupFilters: string[] = [];
 
   get level(){
     return this.allParents.length;
@@ -177,8 +178,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
     this._childRows.set(rows);
   }
 
-  composeGroupingFilter(): string {
-    const parents = getAllParents(this);
+  get groupFilters(){
     if(this.groupingUnit !== undefined){
       const momentValueStart = moment(this.columnValue);
       const momentValueEnd = moment(this.columnValue);
@@ -201,23 +201,20 @@ export class ServerSideGroupItem implements IGroupTreeNode {
         default:
           throw new Error("Filter generation for groupingUnit:" + this.groupingUnit+" not implemented");
       }
-
-      const filters = [
+      return [
         toFilterItem(this.columnId, null, "gte", momentValueStart),
         toFilterItem(this.columnId, null, "lt", momentValueEnd)
       ];
-      return joinWithAND(filters);
-
     }else{
-      if(parents.length === 0){
-        return toFilterItem(this.columnId, null, "eq", this.columnValue)
-      }else{
-        const andOperands = parents
-          .concat([this])
-          .map(row => toFilterItem(row.columnId, null, "eq", row.columnValue))
-        return joinWithAND(andOperands);
-      }
+        return [toFilterItem(this.columnId, null, "eq", this.columnValue)]
     }
+  }
+
+  composeGroupingFilter(): string {
+    const filters = getAllParents(this)
+      .concat([this])
+      .flatMap(groupNode => groupNode.groupFilters)
+    return joinWithAND(filters);
   }
   
   @observable private _isExpanded = false;
