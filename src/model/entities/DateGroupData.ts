@@ -47,7 +47,7 @@ export class DateGroupData implements IGroupData {
     let groupLabel = "";
     switch (groupingUnit) {
       case GroupingUnit.Year:
-        value.set({ 'month': 1, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0 });
+        value.set({ 'month': 0, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0 });
         groupLabel = value.format("YYYY");
         break;
       case GroupingUnit.Month:
