@@ -44,7 +44,7 @@ export function DropdownEditorTable() {
   const [cache] = useState(
     () =>
       new CellMeasurerCache({
-        defaultHeight: 20,
+        defaultHeight: 25,
         defaultWidth: 100,
         fixedHeight: true,
         minWidth: 100,
