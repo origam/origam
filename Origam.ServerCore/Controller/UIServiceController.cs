@@ -891,7 +891,7 @@ namespace Origam.ServerCore.Controller
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
                 CustomGrouping = new Grouping(
-                    columnData.Name, Guid.Empty),
+                    columnData.Name, Guid.Empty, null),
                 AggregatedColumns = new List<Aggregation>()
             };
             return AddMethodAndSource(
@@ -935,7 +935,8 @@ namespace Origam.ServerCore.Controller
                     columns: columns, 
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
-                CustomGrouping= new Grouping(input.GroupBy, input.GroupByLookupId),
+                CustomGrouping= new Grouping(
+                    input.GroupBy, input.GroupByLookupId, input.GroupingUnit),
                 AggregatedColumns = input.AggregatedColumns 
             };
             return AddMethodAndSource(
