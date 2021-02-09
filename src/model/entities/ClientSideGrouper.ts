@@ -7,12 +7,11 @@ import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
-import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
+import { DateGroupData, GenericGroupData } from "./DateGroupData";
 import moment from "moment";
-import { GroupingUnit } from "./types/GroupingUnit";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -118,8 +117,7 @@ export class ClientSideGrouper implements IGrouper {
     for (let row of rows) {    
       const groupData = groupingSettings.groupingUnit === undefined 
         ? new GenericGroupData(row[index])
-        : DateGroupData.create( row[index], groupingSettings)
-
+        : DateGroupData.create(moment(row[index]), groupingSettings.groupingUnit)
       if (!groupMap.has(groupData.label)) {
         groupMap.set(groupData.label, groupData);
       }
@@ -187,90 +185,4 @@ export class ClientSideGrouper implements IGrouper {
 }
 
 
-interface IGroupData{
-  value: any;
-  label: string;
-  rows: any[][];
-  compare(other: IGroupData): number;
-}
 
-class GenericGroupData implements IGroupData{
-  constructor(
-    public value: string
-    ){
-      this.label = value;
-    }
-    
-  public label: any;
-  public rows: any[][] = [];
-
-  compare(other: IGroupData): number{
-    if (this.label && other.label) {
-      return this.label.localeCompare(other.label, getLocaleFromCookie());
-    } else if (!this.label) {
-      return -1;
-    } else {
-      return 1;
-    }
-  }
-}
-
-class DateGroupData implements IGroupData{
-  constructor(
-    public value: any,
-    public label: string,
-    ){
-    }
-
-  public rows: any[][] = [];
-
-  public static create(value: string, groupingSettings: IGroupingSettings): GenericGroupData{
-    const momentValue = moment(value);
-    if(!momentValue.isValid()){
-      new DateGroupData(moment({ y:1900, M:1, d:1, h:0, m:0, s:0, ms:0 }), "");
-    } 
-    
-    let groupLabel = "";
-    switch(groupingSettings.groupingUnit){
-      case GroupingUnit.Year:
-        momentValue.set({'month': 1, 'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        groupLabel = momentValue.format("YYYY");
-        break;
-      case GroupingUnit.Month:
-        momentValue.set({'date': 1, 'hour': 0, 'minute': 0, 'second': 0});
-        groupLabel = momentValue.format("YYYY-MM");
-        break;
-      case GroupingUnit.Day:
-        momentValue.set({'hour': 0, 'minute': 0, 'second': 0});
-        groupLabel = momentValue.format("YYYY-MM-DD");
-        break;
-      case GroupingUnit.Hour:
-        momentValue.set({'minute': 0, 'second': 0});
-        groupLabel = momentValue.format("YYYY-MM-DD h:00") 
-        break;
-      case GroupingUnit.Minute:
-        momentValue.set({'second': 0});
-        groupLabel = momentValue.format("YYYY-MM-DD h:mm") 
-        break;
-    }
-    return new DateGroupData(momentValue, groupLabel);
-  }
-
-  compare(other: IGroupData): number{
-    if (this.value.isValid() && other.value.isValid()) {
-      if (this.value > other.value){
-        return 1;
-      } 
-      else if (this.value < other.value){
-        return -1;
-      }
-      else{
-        return 0;
-      }
-    } else if (!this.value) {
-      return -1;
-    } else {
-      return 1;
-    }
-  }
-}

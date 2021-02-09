@@ -8,7 +8,7 @@ import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRe
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
-import { joinWithAND, joinWithOR, toFilterItem } from "./OrigamApiHelpers";
+import { joinWithAND, joinWithOR } from "./OrigamApiHelpers";
 import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
@@ -16,7 +16,9 @@ import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowIndex } from "./GrouperCommon";
 import _ from "lodash";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
-import { GroupingUnit } from "./types/GroupingUnit";
+import { DateGroupData, GenericGroupData, IGroupData } from "./DateGroupData";
+import moment from "moment";
+
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -185,7 +187,7 @@ export class ServerSideGrouper implements IGrouper {
     const property = dataTable.getPropertyById(columnId);
 
     return groupData.map((groupDataItem) => {
-      const columnValue = this.getColumnValue(groupDataItem, groupingSettings);
+      const groupData = this.getGroupData(groupDataItem, groupingSettings);
       return new ServerSideGroupItem({
         childGroups: [] as IGroupTreeNode[],
         childRows: [] as any[][],
@@ -193,8 +195,8 @@ export class ServerSideGrouper implements IGrouper {
         groupLabel: property!.name,
         rowCount: groupDataItem["groupCount"] as number,
         parent: parent,
-        columnValue: columnValue,
-        columnDisplayValue: columnValue,
+        columnValue: groupData.value,
+        columnDisplayValue: groupData.label,
         aggregations: parseAggregations(groupDataItem["aggregations"]),
         groupingUnit: groupingSettings.groupingUnit,
         grouper: this,
@@ -202,32 +204,25 @@ export class ServerSideGrouper implements IGrouper {
     });
   }
 
-  getColumnValue(groupDataItem: any, groupingSettings: IGroupingSettings){
+  getGroupData(groupDataItem: any, groupingSettings: IGroupingSettings): IGroupData {
     if(!groupDataItem){
-      return "";
+      new DateGroupData(undefined, "");
     }
     if(groupingSettings.groupingUnit !== undefined){
-      const yearValue = groupDataItem[groupingSettings.columnId + "_year"];
-      const monthValue = groupDataItem[groupingSettings.columnId + "_month"];
-      const dayValue = groupDataItem[groupingSettings.columnId + "_day"];
-      const hourValue = groupDataItem[groupingSettings.columnId + "_hour"];
-      const minuteValue = groupDataItem[groupingSettings.columnId + "_minute"];
 
-      switch(groupingSettings.groupingUnit){
-        case GroupingUnit.Year:
-          return yearValue + "";
-        case GroupingUnit.Month:
-          return yearValue + "-" + monthValue;
-        case GroupingUnit.Day:
-          return yearValue + "-" + monthValue + "-" + dayValue;
-        case GroupingUnit.Hour:
-          return yearValue + "-" + monthValue + "-" + dayValue + " " + hourValue + ":00";
-        case GroupingUnit.Minute:
-          return yearValue + "-" + monthValue + "-" + dayValue + " " + hourValue + ":" + minuteValue; 
-      }
+      const yearValue = groupDataItem[groupingSettings.columnId + "_year"];
+      const monthValue = groupDataItem[groupingSettings.columnId + "_month"] 
+        ? groupDataItem[groupingSettings.columnId + "_month"] -1 
+        : 0;
+      const dayValue = groupDataItem[groupingSettings.columnId + "_day"]  ?? 1
+      const hourValue = groupDataItem[groupingSettings.columnId + "_hour"] ?? 0;
+      const minuteValue = groupDataItem[groupingSettings.columnId + "_minute"] ?? 0;
+
+      const value = moment({ y: yearValue, M: monthValue, d: dayValue, h: hourValue , m: minuteValue, s: 0})
+      return DateGroupData.create(value, groupingSettings.groupingUnit)
     }
     else{
-      return groupDataItem[groupingSettings.columnId]
+      return new GenericGroupData(groupDataItem[groupingSettings.columnId]); 
     }
   }
 
