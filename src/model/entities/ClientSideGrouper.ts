@@ -7,9 +7,13 @@ import { getTablePanelView } from "../selectors/TablePanelView/getTablePanelView
 import { IAggregationInfo } from "./types/IAggregationInfo";
 import { computed } from "mobx";
 import { AggregationType } from "./types/AggregationType";
-import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
+import { IGroupingSettings } from "./types/IGroupingConfiguration";
+import { DateGroupData, GenericGroupData } from "./DateGroupData";
+import moment from "moment";
+import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
+import { IOrderByDirection } from "./types/IOrderingConfiguration";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -82,55 +86,55 @@ export class ClientSideGrouper implements IGrouper {
     }
   }
 
-  makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumn: string): IGroupTreeNode[] {
-    const groupMap = this.makeGroupMap(groupingColumn, rows);
-
+  makeGroups(parent: IGroupTreeNode | undefined, rows: any[][], groupingColumnSettings: IGroupingSettings): IGroupTreeNode[] {
     const dataTable = getDataTable(this);
-    const property = dataTable.getPropertyById(groupingColumn);
+    const property = dataTable.getPropertyById(groupingColumnSettings.columnId);
+    const orderingConfig = getOrderingConfiguration(this);
+    const orderingDirection = orderingConfig.orderings
+      .find(ordering => ordering.columnId === groupingColumnSettings.columnId)
+      ?.direction 
+      ?? IOrderByDirection.ASC;
 
-    return Array.from(groupMap.entries())
-      .map((entry) => {
-        const groupName = entry[0];
-        const rows = entry[1];
+    return this.groupToGroupDataList(groupingColumnSettings, rows)
+      .sort((a, b) =>
+        orderingDirection === IOrderByDirection.ASC 
+          ? a.compare(b) 
+          : -a.compare(b))
+      .map((groupData) => {
         return new ClientSideGroupItem({
           childGroups: [] as IGroupTreeNode[],
-          childRows: rows,
-          columnId: groupingColumn,
+          childRows: groupData.rows,
+          columnId: groupingColumnSettings.columnId,
           groupLabel: property!.name,
-          rowCount: rows.length,
+          rowCount: groupData.rows.length,
           parent: parent,
-          columnValue: groupName,
-          columnDisplayValue: property ? dataTable.resolveCellText(property, groupName) : groupName,
-          aggregations: this.calcAggregations(rows),
+          columnValue: groupData.label,
+          columnDisplayValue: property ? dataTable.resolveCellText(property, groupData.label) : groupData.label,
+          aggregations: this.calcAggregations(groupData.rows),
           grouper: this,
           expansionListener: this.expansionListener.bind(this)
         });
-      })
-      .sort((a, b) => {
-        if (a.columnDisplayValue && b.columnDisplayValue) {
-          return a.columnDisplayValue.localeCompare(b.columnDisplayValue, getLocaleFromCookie());
-        } else if (!a.columnDisplayValue) {
-          return -1;
-        } else {
-          return 1;
-        }
       });
   }
 
-  private makeGroupMap(groupingColumn: string | undefined, rows: any[][]) {
-    if (!groupingColumn) {
-      return new Map<string, any[][]>();
+  private groupToGroupDataList(groupingSettings: IGroupingSettings | undefined, rows: any[][]) {
+    if (!groupingSettings) {
+      return [];
     }
-    const index = this.findDataIndex(groupingColumn);
-    const groupMap = new Map<string, any[][]>();
-    for (let row of rows) {
-      const groupName = row[index];
-      if (!groupMap.has(groupName)) {
-        groupMap.set(groupName, []);
+
+    const index = this.findDataIndex(groupingSettings.columnId);
+    const groupMap = new Map<string, GenericGroupData>();
+    for (let row of rows) {    
+      const groupData = groupingSettings.groupingUnit === undefined 
+        ? new GenericGroupData(row[index], row[index])
+        : DateGroupData.create(moment(row[index]), groupingSettings.groupingUnit)
+      if (!groupMap.has(groupData.label)) {
+        groupMap.set(groupData.label, groupData);
       }
-      groupMap.get(groupName)!.push(row);
+      groupMap.get(groupData.label)!.rows!.push(row);
     }
-    return groupMap;
+
+    return Array.from(groupMap.values());
   }
 
   calcAggregations(rows: any[][]) {
@@ -189,3 +193,6 @@ export class ClientSideGrouper implements IGrouper {
 
   start(): void {}
 }
+
+
+

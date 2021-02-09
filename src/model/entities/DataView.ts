@@ -632,7 +632,7 @@ export class DataView implements IDataView {
   }
 
   @computed get tableRows() {
-    const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnIds;
+    const groupedColumnIds = getGroupingConfiguration(this).orderedGroupingColumnSettings;
     return groupedColumnIds.length === 0
       ? getDataTable(this).rows
       : flattenToTableRows(getGrouper(this).topLevelGroups);
@@ -654,7 +654,7 @@ export class DataView implements IDataView {
   }
 
   getScrollLoader() {
-    const isGroupingOff = getGroupingConfiguration(this).orderedGroupingColumnIds.length === 0;
+    const isGroupingOff = getGroupingConfiguration(this).orderedGroupingColumnSettings.length === 0;
     const rowsContainer = getDataTable(this).rowsContainer;
     if (rowsContainer instanceof ScrollRowContainer && isGroupingOff) {
       return new InfiniteScrollLoader({

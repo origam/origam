@@ -500,6 +500,9 @@ export function* interpretScreenXml(
               if (!property?.isLookupColumn) {
                 dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
                   column.attributes.groupingField,
+                  isNaN(parseInt(column.attributes.groupingUnit)) 
+                    ? undefined
+                    : parseInt(column.attributes.groupingUnit),
                   groupingColumnCounter
                 );
                 groupingColumnCounter++;

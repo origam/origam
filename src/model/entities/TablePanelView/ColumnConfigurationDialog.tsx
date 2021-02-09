@@ -23,7 +23,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         id: prop.id,
         name: prop.name,
         isVisible: !this.tablePanelView.hiddenPropertyIds.get(prop.id),
-        groupingIndex: groupingConf.groupingIndices.get(prop.id) || 0,
+        groupingIndex: groupingConf.groupingSettings.get(prop.id)?.groupIndex || 0,
         aggregationType: this.tablePanelView.aggregations.getType(prop.id)!,
         entity: prop.entity,
         canGroup:
@@ -32,6 +32,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         canAggregate:
           groupingOnClient ||
           (!prop.isAggregatedColumn && !prop.isLookupColumn && prop.column !== "TagInput"),
+        timeGroupingUnit: groupingConf.groupingSettings.get(prop.id)?.groupingUnit
       });
     }
     return conf;
@@ -66,7 +67,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     for (let column of configuration.columnConf) {
       this.tablePanelView.hiddenPropertyIds.set(column.id, !column.isVisible);
       if (column.groupingIndex) {
-        groupingConf.setGrouping(column.id, column.groupingIndex);
+        groupingConf.setGrouping(column.id, column.timeGroupingUnit, column.groupingIndex);
       }
       this.tablePanelView.aggregations.setType(column.id, column.aggregationType);
     }

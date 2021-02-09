@@ -8,13 +8,18 @@ import { ServerSideGroupItem } from "gui/Components/ScreenElements/Table/TableRe
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { getOrderingConfiguration } from "model/selectors/DataView/getOrderingConfiguration";
-import { joinWithAND, joinWithOR, toFilterItem } from "./OrigamApiHelpers";
+import { joinWithAND, joinWithOR } from "./OrigamApiHelpers";
 import { parseAggregations } from "./Aggregatioins";
 import { getUserFilters } from "model/selectors/DataView/getUserFilters";
 import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfiguration";
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowIndex } from "./GrouperCommon";
 import _ from "lodash";
+import { IGroupingSettings } from "./types/IGroupingConfiguration";
+import { DateGroupData, GenericGroupData, IGroupData } from "./DateGroupData";
+import moment from "moment";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
+
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -27,8 +32,8 @@ export class ServerSideGrouper implements IGrouper {
     this.disposers.push(
       reaction(
         () => [
-          Array.from(getGroupingConfiguration(this).groupingIndices.values()),
-          Array.from(getGroupingConfiguration(this).groupingIndices.keys()),
+          Array.from(getGroupingConfiguration(this).groupingSettings.values()),
+          Array.from(getGroupingConfiguration(this).groupingSettings.keys()),
           this.refreshTrigger],
           () => this.loadGroupsDebounced(),
           {fireImmediately: true, equals: comparer.structural,delay: 50})
@@ -43,7 +48,7 @@ export class ServerSideGrouper implements IGrouper {
 
   loadGroupsImm(){
     const self = this;
-    flow(function* () {yield* self.loadGroups()})();
+    runGeneratorInFlowWithHandler({ctx: this, generator: self.loadGroups()});
   }
         
   private *loadGroups() {
@@ -56,11 +61,11 @@ export class ServerSideGrouper implements IGrouper {
     .filter(group => group.isExpanded)
     .map(group => group.columnDisplayValue)
     const dataView = getDataView(this);
-    const property = getDataTable(this).getPropertyById(firstGroupingColumn);
+    const property = getDataTable(this).getPropertyById(firstGroupingColumn.columnId);
     const lookupId = property && property.lookup && property.lookup.lookupId;
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
-    const  groupData = yield getFormScreenLifecycle(this).loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
-    this.topLevelGroups = this.group(groupData, firstGroupingColumn, undefined);
+    const groupData = yield getFormScreenLifecycle(this).loadGroups(dataView, firstGroupingColumn, lookupId, aggregations)
+    this.topLevelGroups = this.group(groupData, firstGroupingColumn.columnId, undefined);
     yield* this.loadAndExpandChildren(this.topLevelGroups, expandedGroupDisplayValues);
   }
       
@@ -142,17 +147,17 @@ export class ServerSideGrouper implements IGrouper {
   
   private *reload(group: IGroupTreeNode) {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const nextColumnName = groupingConfiguration.nextColumnToGroupBy(group.columnId);
+    const nextColumnSettings = groupingConfiguration.nextColumnToGroupBy(group.columnId);
     const dataView = getDataView(this);
     const filter = this.composeFinalFilter(group);
     const lifeCycle = getFormScreenLifecycle(this);
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
     const orderingConfiguration = getOrderingConfiguration(this);
-    if (nextColumnName) {
-      const property = getDataTable(this).getPropertyById(nextColumnName);
+    if (nextColumnSettings) {
+      const property = getDataTable(this).getPropertyById(nextColumnSettings.columnId);
       const lookupId = property && property.lookup && property.lookup.lookupId;
-      const groupData = yield lifeCycle.loadChildGroups(dataView, filter, nextColumnName, aggregations, lookupId)
-      group.childGroups = this.group(groupData, nextColumnName, group);
+      const groupData = yield lifeCycle.loadChildGroups(dataView, filter, nextColumnSettings, aggregations, lookupId)
+      group.childGroups = this.group(groupData, nextColumnSettings.columnId, group);
     } else {
       const rows = yield lifeCycle.loadChildRows(dataView, filter, orderingConfiguration.groupChildrenOrdering)
       group.childRows = rows;
@@ -172,9 +177,10 @@ export class ServerSideGrouper implements IGrouper {
 
   group(groupData: any[], columnId: string, parent: IGroupTreeNode | undefined): IGroupTreeNode[] {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const level = groupingConfiguration.groupingIndices.get(columnId);
+    const groupingSettings = groupingConfiguration.groupingSettings.get(columnId);
+    const level = groupingSettings?.groupIndex;
 
-    if (!level) {
+    if (!level || !groupingSettings) {
       throw new Error("Cannot find grouping index for column: " + columnId);
     }
 
@@ -182,6 +188,7 @@ export class ServerSideGrouper implements IGrouper {
     const property = dataTable.getPropertyById(columnId);
 
     return groupData.map((groupDataItem) => {
+      const groupData = this.getGroupData(groupDataItem, groupingSettings);
       return new ServerSideGroupItem({
         childGroups: [] as IGroupTreeNode[],
         childRows: [] as any[][],
@@ -189,12 +196,38 @@ export class ServerSideGrouper implements IGrouper {
         groupLabel: property!.name,
         rowCount: groupDataItem["groupCount"] as number,
         parent: parent,
-        columnValue: groupDataItem[columnId],
-        columnDisplayValue: groupDataItem["groupCaption"] || groupDataItem[columnId],
+        columnValue: groupData.value,
+        columnDisplayValue: groupData.label,
         aggregations: parseAggregations(groupDataItem["aggregations"]),
+        groupingUnit: groupingSettings.groupingUnit,
         grouper: this,
       });
     });
+  }
+
+  getGroupData(groupDataItem: any, groupingSettings: IGroupingSettings): IGroupData {
+    if(!groupDataItem){
+      new DateGroupData(undefined, "");
+    }
+    if(groupingSettings.groupingUnit !== undefined){
+
+      const yearValue = groupDataItem[groupingSettings.columnId + "_year"];
+      const monthValue = groupDataItem[groupingSettings.columnId + "_month"] 
+        ? groupDataItem[groupingSettings.columnId + "_month"] -1 
+        : 0;
+      const dayValue = groupDataItem[groupingSettings.columnId + "_day"]  ?? 1
+      const hourValue = groupDataItem[groupingSettings.columnId + "_hour"] ?? 0;
+      const minuteValue = groupDataItem[groupingSettings.columnId + "_minute"] ?? 0;
+
+      const value = moment({ y: yearValue, M: monthValue, d: dayValue, h: hourValue , m: minuteValue, s: 0})
+      return DateGroupData.create(value, groupingSettings.groupingUnit)
+    }
+    else{
+      return new GenericGroupData(
+        groupDataItem[groupingSettings.columnId],
+        groupDataItem["groupCaption"] ?? groupDataItem[groupingSettings.columnId]
+      ); 
+    }
   }
 
   async getAllValuesOfProp(property: IProperty): Promise<Set<any>>{
@@ -217,7 +250,12 @@ export class ServerSideGrouper implements IGrouper {
     const aggregations = getTablePanelView(this).aggregations.aggregationList;
 
     const lookupId = property && property.lookup && property.lookup.lookupId;
-    const groupList = await lifeCycle.loadChildGroups(dataView, filter, property.id, aggregations, lookupId)
+    const groupingSettings ={
+      columnId: property.id,
+      groupIndex: 0,
+      groupingUnit: undefined,
+    };
+    const groupList = await lifeCycle.loadChildGroups(dataView, filter, groupingSettings, aggregations, lookupId)
     return groupList.map(group => group[property.id]).filter(group => group);
   }
 

@@ -30,6 +30,7 @@ export interface IGroupTreeNode {
   composeGroupingFilter(): string;
   isInfinitelyScrolled: boolean;
   getRowById(id: string): any[] | undefined;
+  groupFilters: string[];
 }
 
 export type ITableRow = any[] | IGroupRow;

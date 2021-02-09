@@ -1,3 +1,5 @@
+import moment, { Moment } from "moment";
+import { toOrigamServerString } from "utils/moment";
 import { IFilter } from "./types/IFilter";
 
 export function joinWithAND(filterItems: string[]) {
@@ -75,7 +77,10 @@ export function toFilterItem(
       upperLimitString
     )}]`;
   }
-  return `["${columnId}", "${operator}", ${valuesToRightHandSide(val1, val2)}]`;
+  const val1Formatted = moment.isMoment(val1) 
+    ? toOrigamServerString(val1 as Moment)
+    : val1;
+  return `["${columnId}", "${operator}", ${valuesToRightHandSide(val1Formatted, val2)}]`;
 }
 
 function toFilterValueForm(value: any) {

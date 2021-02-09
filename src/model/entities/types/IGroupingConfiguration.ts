@@ -1,20 +1,28 @@
+import { GroupingUnit } from "./GroupingUnit";
 
 export interface IGroupingConfigurationData {
 
 }
 
 export interface IGroupingConfiguration extends IGroupingConfigurationData {
-  nextColumnToGroupBy(groupColumnName: string): string | undefined;
-  groupingIndices: Map<string, number>;
+  nextColumnToGroupBy(groupColumnName: string): IGroupingSettings | undefined;
+  groupingSettings: Map<string, IGroupingSettings>;
   isGrouping: boolean;
   groupingColumnCount: number;
-  orderedGroupingColumnIds: string[];
-  firstGroupingColumn: string;
+  orderedGroupingColumnSettings: IGroupingSettings[];
+  firstGroupingColumn: IGroupingSettings;
 
   registerGroupingOnOffHandler(handler: ()=>void): void;
 
-  setGrouping(columnId: string, groupingIndex: number): void;
+  setGrouping(columnId: string, groupingUnit: GroupingUnit | undefined, groupingIndex: number): void;
   clearGrouping(): void;
 
   parent?: any;
 }
+
+export interface IGroupingSettings{
+  columnId: string;
+  groupIndex: number;
+  groupingUnit: GroupingUnit | undefined;
+}
+
