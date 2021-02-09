@@ -135,7 +135,7 @@ export function processActionResult2(dep: {
           yield* dep.openNewUrl(
             actionResultItem.url,
             actionResultItem.urlOpenMethod,
-            dep.getActionCaption()
+            actionResultItem.request.caption
           );
           if(getOpenedScreen(dep.parentContext).isDialog){
             yield* dep.closeForm();

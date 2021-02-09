@@ -3,7 +3,6 @@ import {IOpenedScreen} from "./types/IOpenedScreen";
 import {action, observable} from "mobx";
 import {IFormScreenEnvelope} from "./types/IFormScreen";
 import {IMainMenuItemType} from "./types/IMainMenu";
-import {IActionResultRequest} from "./types/IActionResultRequest";
 
 export class WebScreen implements IWebScreen, IOpenedScreen {
   $type_IOpenedScreen: 1 = 1;
