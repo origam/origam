@@ -42,9 +42,9 @@ namespace Origam.DA.Service.CustomCommandParser
             .Select(ordering => ordering.ColumnName)
             .ToArray();
         
-        public void SetColumnExpressionIfMissing(string columnName, string expression)
+        public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
         {
-            columnOrderingRenderer.SetColumnExpressionIfMissing(columnName, expression);
+            columnOrderingRenderer.SetColumnExpressionIfMissing(columnName, expressions);
         }
 
         public string Sql => columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
@@ -54,7 +54,7 @@ namespace Origam.DA.Service.CustomCommandParser
     {
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
-        private Dictionary<string, string> columnExpressions = new Dictionary<string, string>();
+        private readonly Dictionary<string, string[]> columnExpressions = new Dictionary<string, string[]>();
 
         public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket)
         {
@@ -62,11 +62,11 @@ namespace Origam.DA.Service.CustomCommandParser
             this.nameRightBracket = nameRightBracket;
         }
         
-        public void SetColumnExpressionIfMissing(string columnName, string expression)
+        public void SetColumnExpressionIfMissing(string columnName, string[] expressions)
         {
             if (!columnExpressions.ContainsKey(columnName))
             {
-                columnExpressions[columnName] = expression;
+                columnExpressions[columnName] = expressions;
             }
         }
 
@@ -79,11 +79,13 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private string ToSql(Ordering ordering)
         {
-            string orderingSql = OrderingToSQLName(ordering.Direction);
-            return $"{columnExpressions[ordering.ColumnName]} {orderingSql}";
+            string directionSql = DirectionToSQLName(ordering.Direction);
+            var orderByExpressions = columnExpressions[ordering.ColumnName]
+                .Select(expression => $"{expression} {directionSql} ");
+            return string.Join(", ", orderByExpressions);
         }
 
-        private string OrderingToSQLName(string orderingName)
+        private string DirectionToSQLName(string orderingName)
         {
             switch (orderingName.ToLower())
             {

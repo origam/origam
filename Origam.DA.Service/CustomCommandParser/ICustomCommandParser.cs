@@ -24,7 +24,7 @@ namespace Origam.DA.Service.CustomCommandParser
     interface ICustomCommandParser
     {
         string[] Columns { get; }
-        void SetColumnExpressionIfMissing(string columnName, string expression);
+        void SetColumnExpressionsIfMissing(string columnName, string[] expressions);
         string Sql { get; }
     }
 }

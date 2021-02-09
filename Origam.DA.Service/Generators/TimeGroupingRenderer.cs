@@ -23,10 +23,10 @@ namespace Origam.DA.Service.Generators
                 new SelectExpressionRenderer(columnDataToSql), columnRenderData, groupingUnit));
         }
 
-        public string RenderWithoutAliases()
+        public string[] RenderWithoutAliases()
         {
-            return string.Join(", ", RenderExpression(
-                new DatePartRenderer(), columnRenderData, groupingUnit));
+            return RenderExpression(
+                new DatePartRenderer(), columnRenderData, groupingUnit);
         }
 
         public static string[] GetColumnNames(string columnName, string groupingUnit)

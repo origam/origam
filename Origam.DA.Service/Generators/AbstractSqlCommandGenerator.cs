@@ -1828,9 +1828,10 @@ namespace Origam.DA.Service
                     {
                         var timeGroupingRenderer =
                             new TimeGroupingRenderer(columnRenderData, ColumnDataToSql, customGrouping.GroupingUnit);
-                        string columnsWithoutAliases = timeGroupingRenderer.RenderWithoutAliases();
-                        orderByCommandParser.SetColumnExpressionIfMissing(column.Name, columnsWithoutAliases);
-                        group.Add(columnsWithoutAliases);
+                        string[] columnsWithoutAliases = timeGroupingRenderer.RenderWithoutAliases();
+                        orderByCommandParser.SetColumnExpressionsIfMissing(column.Name, columnsWithoutAliases);
+                        string allColumnsExpression = string.Join(", ", columnsWithoutAliases);
+                        group.Add(allColumnsExpression);
                         expression = timeGroupingRenderer.RenderWithAliases();
                     }
                     else
@@ -1998,8 +1999,8 @@ namespace Origam.DA.Service
                             dataStructureColumn,
                             replaceParameterTexts, dynamicParameters,
                             selectParameterReferences, lookup);
-                    commandParser.SetColumnExpressionIfMissing(columnName,
-                        resultExpression);
+                    commandParser.SetColumnExpressionsIfMissing(
+                        columnName, new[]{resultExpression});
                 }
                 else
                 {
@@ -2014,7 +2015,8 @@ namespace Origam.DA.Service
                             isInRecursion,
                             ref groupByNeeded1, columnsInfo,
                             dataStructureColumn, ref groupExpression);
-                    commandParser.SetColumnExpressionIfMissing(columnName, columnExpression);
+                    commandParser.SetColumnExpressionsIfMissing(
+                        columnName, new[]{ columnExpression });
                 }
             }
         }
