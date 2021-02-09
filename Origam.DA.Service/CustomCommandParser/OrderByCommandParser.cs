@@ -71,8 +71,13 @@ namespace Origam.DA.Service.CustomCommandParser
         private string ToSql(Ordering ordering)
         {
             string directionSql = DirectionToSQLName(ordering.Direction);
+            if (!columnExpressions.ContainsKey(ordering.ColumnName))
+            {
+                throw new Exception($"No expression was set for {ordering.ColumnName}");
+            }
+
             var orderByExpressions = columnExpressions[ordering.ColumnName]
-                .Select(expression => $"{expression} {directionSql} ");
+                .Select(expression => $"{expression} {directionSql}");
             return string.Join(", ", orderByExpressions);
         }
 
