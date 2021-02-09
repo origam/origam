@@ -34,6 +34,7 @@ export class CWorkQueues extends React.Component {
               isOpenedScreen={this.workbench.openedScreenIdSet.has(item.id)}
               isActiveScreen={activeMenuItemId === item.id}
               icon={<Icon src="./icons/work-queue.svg" tooltip={item.name}/>}
+              tooltip={item.name}
               label={
                 <>
                   {item.name}
