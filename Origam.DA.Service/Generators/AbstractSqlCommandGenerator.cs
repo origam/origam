@@ -362,9 +362,7 @@ namespace Origam.DA.Service
                     whereFilterInput: selectParameters.CustomFilters.Filters);            
             OrderByCommandParser orderByCommandParser =
                 new OrderByCommandParser(
-                    orderingsInput: selectParameters.CustomOrderings.Orderings, 
-                    nameLeftBracket: NameLeftBracket,
-                    nameRightBracket: NameRightBracket);
+                    orderingsInput: selectParameters.CustomOrderings.Orderings);
 
             adapter.SelectCommand =
                 GetCommand(SelectSql(

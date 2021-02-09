@@ -30,12 +30,11 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
         private readonly List<Ordering> orderingsInput;
 
-        public OrderByCommandParser(List<Ordering> orderingsInput,
-            string nameLeftBracket, string nameRightBracket)
+        public OrderByCommandParser(List<Ordering> orderingsInput)
         {
             this.orderingsInput = orderingsInput ?? new List<Ordering>();
             columnOrderingRenderer 
-                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
+                = new ColumnOrderingRenderer();
         }
 
         public string[] Columns => orderingsInput 
@@ -52,15 +51,7 @@ namespace Origam.DA.Service.CustomCommandParser
     
     class ColumnOrderingRenderer
     {
-        private readonly string nameLeftBracket;
-        private readonly string nameRightBracket;
         private readonly Dictionary<string, string[]> columnExpressions = new Dictionary<string, string[]>();
-
-        public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket)
-        {
-            this.nameLeftBracket = nameLeftBracket;
-            this.nameRightBracket = nameRightBracket;
-        }
         
         public void SetColumnExpressionIfMissing(string columnName, string[] expressions)
         {
