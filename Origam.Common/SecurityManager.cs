@@ -23,6 +23,8 @@ using System.Threading;
 using System.Security.Principal;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Origam
 {
@@ -101,7 +103,14 @@ namespace Origam
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("origam_server"), null);
         }
 
-        public static IPrincipal CurrentPrincipal
+		public static void SetCustomIdentity(string userName, HttpContext context)
+		{
+			var principal = new GenericPrincipal(new GenericIdentity(userName), null);
+			Thread.CurrentPrincipal = principal;
+			context.User = new ClaimsPrincipal(principal);
+		}
+
+		public static IPrincipal CurrentPrincipal
         {
             get
             {
