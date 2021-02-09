@@ -116,7 +116,7 @@ export class ClientSideGrouper implements IGrouper {
     const groupMap = new Map<string, GenericGroupData>();
     for (let row of rows) {    
       const groupData = groupingSettings.groupingUnit === undefined 
-        ? new GenericGroupData(row[index])
+        ? new GenericGroupData(row[index], row[index])
         : DateGroupData.create(moment(row[index]), groupingSettings.groupingUnit)
       if (!groupMap.has(groupData.label)) {
         groupMap.set(groupData.label, groupData);

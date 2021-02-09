@@ -12,12 +12,11 @@ export interface IGroupData{
 
 export class GenericGroupData implements IGroupData{
   constructor(
-    public value: string
+    public value: string,
+    public label: any
     ){
-      this.label = value;
     }
     
-  public label: any;
   public rows: any[][] = [];
 
   compare(other: IGroupData): number{

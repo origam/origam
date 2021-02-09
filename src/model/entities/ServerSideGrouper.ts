@@ -222,7 +222,10 @@ export class ServerSideGrouper implements IGrouper {
       return DateGroupData.create(value, groupingSettings.groupingUnit)
     }
     else{
-      return new GenericGroupData(groupDataItem[groupingSettings.columnId]); 
+      return new GenericGroupData(
+        groupDataItem[groupingSettings.columnId],
+        groupDataItem["groupCaption"] ?? groupDataItem[groupingSettings.columnId]
+      ); 
     }
   }
 
