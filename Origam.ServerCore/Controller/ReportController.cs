@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,8 @@ using Microsoft.Net.Http.Headers;
 using Origam.BI;
 using Origam.Schema;
 using Origam.Schema.GuiModel;
+using Origam.Security.Common;
+using Origam.Security.Identity;
 using Origam.Server;
 using Origam.ServerCore.Resources;
 using Origam.Workbench.Services;
@@ -47,6 +50,7 @@ namespace Origam.ServerCore.Controller
     {
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly CoreHttpTools httpTools = new CoreHttpTools();
+
         public ReportController(
             SessionObjects sessionObjects, 
             IStringLocalizer<SharedResources> localizer,
@@ -66,6 +70,10 @@ namespace Origam.ServerCore.Controller
                     return NotFound(localizer["ErrorReportNotAvailable"]
                         .ToString());
                 }
+                // sign in as the user originally requesting the report
+                // so row level security can be applied 
+                SecurityManager.SetCustomIdentity(
+                    reportRequest.UserName, HttpContext);
                 reportRequest.TimesRequested++;
                 // get report model data
                 var persistenceService = ServiceManager

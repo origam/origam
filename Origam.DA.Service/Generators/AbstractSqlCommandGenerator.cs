@@ -1902,7 +1902,7 @@ namespace Origam.DA.Service
             
             if (customGrouping != null)
             {
-                sqlExpression.Append($", COUNT(*) as {ColumnData.GroupByCountColumn} ");
+                sqlExpression.Append($", {CountAggregateSql()}(*) AS {ColumnData.GroupByCountColumn} ");
                
                 if (customGrouping.LookupId != Guid.Empty)
                 {
