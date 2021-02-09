@@ -15,6 +15,8 @@ import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfig
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowIndex } from "./GrouperCommon";
 import _ from "lodash";
+import { IGroupingSettings } from "./types/IGroupingConfiguration";
+import { GroupingUnit } from "./types/GroupingUnit";
 
 export class ServerSideGrouper implements IGrouper {
   @observable.shallow topLevelGroups: IGroupTreeNode[] = [];
@@ -172,9 +174,10 @@ export class ServerSideGrouper implements IGrouper {
 
   group(groupData: any[], columnId: string, parent: IGroupTreeNode | undefined): IGroupTreeNode[] {
     const groupingConfiguration = getGroupingConfiguration(this);
-    const level = groupingConfiguration.groupingSettings.get(columnId)?.groupIndex;
+    const groupingSettings = groupingConfiguration.groupingSettings.get(columnId);
+    const level = groupingSettings?.groupIndex;
 
-    if (!level) {
+    if (!level || !groupingSettings) {
       throw new Error("Cannot find grouping index for column: " + columnId);
     }
 
@@ -182,6 +185,7 @@ export class ServerSideGrouper implements IGrouper {
     const property = dataTable.getPropertyById(columnId);
 
     return groupData.map((groupDataItem) => {
+      const columnValue = this.getColumnValue(groupDataItem, groupingSettings);
       return new ServerSideGroupItem({
         childGroups: [] as IGroupTreeNode[],
         childRows: [] as any[][],
@@ -189,12 +193,42 @@ export class ServerSideGrouper implements IGrouper {
         groupLabel: property!.name,
         rowCount: groupDataItem["groupCount"] as number,
         parent: parent,
-        columnValue: groupDataItem[columnId],
-        columnDisplayValue: groupDataItem["groupCaption"] || groupDataItem[columnId],
+        columnValue: columnValue,
+        columnDisplayValue: columnValue,
         aggregations: parseAggregations(groupDataItem["aggregations"]),
+        groupingUnit: groupingSettings.groupingUnit,
         grouper: this,
       });
     });
+  }
+
+  getColumnValue(groupDataItem: any, groupingSettings: IGroupingSettings){
+    if(!groupDataItem){
+      return "";
+    }
+    if(groupingSettings.groupingUnit !== undefined){
+      const yearValue = groupDataItem[groupingSettings.columnId + "_year"];
+      const monthValue = groupDataItem[groupingSettings.columnId + "_month"];
+      const dayValue = groupDataItem[groupingSettings.columnId + "_day"];
+      const hourValue = groupDataItem[groupingSettings.columnId + "_hour"];
+      const minuteValue = groupDataItem[groupingSettings.columnId + "_minute"];
+
+      switch(groupingSettings.groupingUnit){
+        case GroupingUnit.Year:
+          return yearValue + "";
+        case GroupingUnit.Month:
+          return yearValue + "-" + monthValue;
+        case GroupingUnit.Day:
+          return yearValue + "-" + monthValue + "-" + dayValue;
+        case GroupingUnit.Hour:
+          return yearValue + "-" + monthValue + "-" + dayValue + " " + hourValue + ":00";
+        case GroupingUnit.Minute:
+          return yearValue + "-" + monthValue + "-" + dayValue + " " + hourValue + ":" + minuteValue; 
+      }
+    }
+    else{
+      return groupDataItem[groupingSettings.columnId]
+    }
   }
 
   async getAllValuesOfProp(property: IProperty): Promise<Set<any>>{

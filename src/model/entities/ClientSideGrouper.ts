@@ -10,8 +10,9 @@ import { AggregationType } from "./types/AggregationType";
 import { getLocaleFromCookie } from "utils/cookies";
 import { IProperty } from "./types/IProperty";
 import { getAllLoadedValuesOfProp, getCellOffset, getNextRowId, getPreviousRowId, getRowById, getRowCount, getRowIndex } from "./GrouperCommon";
-import { GroupingUnit, IGroupingSettings } from "./types/IGroupingConfiguration";
+import { IGroupingSettings } from "./types/IGroupingConfiguration";
 import moment from "moment";
+import { GroupingUnit } from "./types/GroupingUnit";
 
 export class ClientSideGrouper implements IGrouper {
   parent?: any = null;
@@ -229,7 +230,6 @@ class DateGroupData implements IGroupData{
       new DateGroupData(moment({ y:1900, M:1, d:1, h:0, m:0, s:0, ms:0 }), "");
     } 
     
-    let endInterval;
     let groupLabel = "";
     switch(groupingSettings.groupingUnit){
       case GroupingUnit.Year:
@@ -246,13 +246,11 @@ class DateGroupData implements IGroupData{
         break;
       case GroupingUnit.Hour:
         momentValue.set({'minute': 0, 'second': 0});
-        endInterval = moment({ h:momentValue.hours() + 1});
-        groupLabel = momentValue.format("YYYY-MM-DD <h:00, ") + endInterval.format("h:00)")
+        groupLabel = momentValue.format("YYYY-MM-DD h:00") 
         break;
       case GroupingUnit.Minute:
         momentValue.set({'second': 0});
-        endInterval = moment({ h:momentValue.hours(), m:momentValue.minute() + 1});
-        groupLabel = momentValue.format("YYYY-MM-DD <h:mm:00, ") + endInterval.format("h:mm:00)")
+        groupLabel = momentValue.format("YYYY-MM-DD h:mm") 
         break;
     }
     return new DateGroupData(momentValue, groupLabel);

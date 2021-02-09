@@ -9,6 +9,8 @@ import {joinWithAND, toFilterItem} from "../../../../../model/entities/OrigamApi
 import {OpenGroupVisibleRowsMonitor} from "../../../../Workbench/ScreenArea/TableView/VisibleRowsMonitor";
 import {getDataTable} from "../../../../../model/selectors/DataView/getDataTable";
 import {ScrollRowContainer} from "../../../../../model/entities/ScrollRowContainer";
+import { GroupingUnit } from "model/entities/types/GroupingUnit";
+import moment from "moment";
 
 export interface IGroupItemData{
   childGroups: IGroupTreeNode[];
@@ -21,6 +23,10 @@ export interface IGroupItemData{
   rowCount: number;
   aggregations: IAggregation[] | undefined;
   grouper: IGrouper;
+}
+
+export interface IServerSideGroupItemData extends IGroupItemData {
+  groupingUnit: GroupingUnit | undefined;
 }
 
 export interface IClientSideGroupItemData extends IGroupItemData {
@@ -99,7 +105,7 @@ export class ClientSideGroupItem implements IClientSideGroupItemData, IGroupTree
 }
 
 export class ServerSideGroupItem implements IGroupTreeNode {
-  constructor(data: IGroupItemData) {
+  constructor(data: IServerSideGroupItemData) {
     const dataTable = getDataTable(data.grouper);
     this._childRows = new ScrollRowContainer(
       (row: any[]) => dataTable.getRowId(row),
@@ -129,6 +135,7 @@ export class ServerSideGroupItem implements IGroupTreeNode {
   grouper: IGrouper = null as any;
   scrollLoader: InfiniteScrollLoader;
   _childRows: ScrollRowContainer;
+  groupingUnit: GroupingUnit = null as any;
   
 
   get level(){
@@ -172,13 +179,44 @@ export class ServerSideGroupItem implements IGroupTreeNode {
 
   composeGroupingFilter(): string {
     const parents = getAllParents(this);
-    if(parents.length === 0){
-      return toFilterItem(this.columnId, null, "eq" ,this.columnValue)
+    if(this.groupingUnit !== undefined){
+      const momentValueStart = moment(this.columnValue);
+      const momentValueEnd = moment(this.columnValue);
+      switch(this.groupingUnit){
+        case GroupingUnit.Year:
+          momentValueEnd.set({'year': momentValueStart.year() + 1});
+          break;
+        case GroupingUnit.Month:
+          momentValueEnd.set({'month': momentValueStart.month() + 1});
+          break;
+        case GroupingUnit.Day:
+          momentValueEnd.set({'day': momentValueStart.day() + 1});
+          break;
+        case GroupingUnit.Hour:
+          momentValueEnd.set({'hour': momentValueStart.hour() + 1});
+          break;
+        case GroupingUnit.Minute:
+          momentValueEnd.set({'minute': momentValueStart.minute() + 1});
+          break;
+        default:
+          throw new Error("Filter generation for groupingUnit:" + this.groupingUnit+" not implemented");
+      }
+
+      const filters = [
+        toFilterItem(this.columnId, null, "gte", momentValueStart),
+        toFilterItem(this.columnId, null, "lt", momentValueEnd)
+      ];
+      return joinWithAND(filters);
+
     }else{
-      const andOperands = parents
-        .concat([this])
-        .map(row => toFilterItem(row.columnId, null, "eq", row.columnValue))
-      return joinWithAND(andOperands);
+      if(parents.length === 0){
+        return toFilterItem(this.columnId, null, "eq", this.columnValue)
+      }else{
+        const andOperands = parents
+          .concat([this])
+          .map(row => toFilterItem(row.columnId, null, "eq", row.columnValue))
+        return joinWithAND(andOperands);
+      }
     }
   }
   
