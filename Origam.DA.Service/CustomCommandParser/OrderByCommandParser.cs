@@ -42,12 +42,12 @@ namespace Origam.DA.Service.CustomCommandParser
             .Select(ordering => ordering.ColumnName)
             .ToArray();
         
-        public void SetColumnExpression(string columnName, string expression)
+        public void SetColumnExpressionIfMissing(string columnName, string expression)
         {
-            columnOrderingRenderer.SetColumnExpression(columnName, expression);
+            columnOrderingRenderer.SetColumnExpressionIfMissing(columnName, expression);
         }
 
-        public string Sql =>columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
+        public string Sql => columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
     }
     
     class ColumnOrderingRenderer
@@ -62,9 +62,12 @@ namespace Origam.DA.Service.CustomCommandParser
             this.nameRightBracket = nameRightBracket;
         }
         
-        public void SetColumnExpression(string columnName, string expression)
+        public void SetColumnExpressionIfMissing(string columnName, string expression)
         {
-            columnExpressions[columnName] = expression;
+            if (!columnExpressions.ContainsKey(columnName))
+            {
+                columnExpressions[columnName] = expression;
+            }
         }
 
         internal string ToSqlOrderBy(List<Ordering> orderings)
@@ -77,15 +80,6 @@ namespace Origam.DA.Service.CustomCommandParser
         private string ToSql(Ordering ordering)
         {
             string orderingSql = OrderingToSQLName(ordering.Direction);
-            if (ordering.LookupId == Guid.Empty)
-            {
-                return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
-            }
-
-            if (!columnExpressions.ContainsKey(ordering.ColumnName))
-            {
-                throw new InvalidOperationException($"Lookup expression for {ordering.ColumnName} was not set");
-            }
             return $"{columnExpressions[ordering.ColumnName]} {orderingSql}";
         }
 

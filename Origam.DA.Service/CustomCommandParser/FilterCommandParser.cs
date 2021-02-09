@@ -102,7 +102,7 @@ namespace Origam.DA.Service.CustomCommandParser
             }
         }
         
-        public void SetColumnExpression(string columnName, string expression)
+        public void SetColumnExpressionIfMissing(string columnName, string expression)
         {
             filterColumnExpressions[columnName] = expression;
         }
