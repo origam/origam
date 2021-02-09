@@ -184,6 +184,7 @@ export class CScreenToolbar extends React.Component<{}> {
             <ScreenToolbarActionGroup>
               {!getIsSuppressSave(formScreen) && (
                 <ScreenToolbarAction
+                  className={isDirty ? "isRed isHoverGreen" : ""}
                   onClick={onSaveSessionClick(formScreen)}
                   icon={
                     <Icon
@@ -198,7 +199,9 @@ export class CScreenToolbar extends React.Component<{}> {
               {!getIsSuppressRefresh(formScreen) && (
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(formScreen)}
-                  icon={<Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />}
+                  icon={
+                    <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />
+                  }
                   label={T("Refresh", "refresh_tool_tip")}
                 />
               )}
@@ -238,8 +241,8 @@ export class CScreenToolbar extends React.Component<{}> {
           />
         )}
         <ScreenToolbarAction
-          onClick={()=> openSearchWindow(this.application)}
-          icon={<Icon src="./icons/search.svg"/>}
+          onClick={() => openSearchWindow(this.application)}
+          icon={<Icon src="./icons/search.svg" />}
         />
         <UserMenuDropdown
           avatarLink={avatarLink}
@@ -288,8 +291,8 @@ export class CScreenToolbar extends React.Component<{}> {
         </>
         <ScreenToolbarPusher />
         <ScreenToolbarAction
-          onClick={()=> openSearchWindow(this.application)}
-          icon={<Icon src="./icons/search.svg"/>}
+          onClick={() => openSearchWindow(this.application)}
+          icon={<Icon src="./icons/search.svg" />}
         />
         <UserMenuDropdown
           avatarLink={avatarLink}
@@ -313,8 +316,8 @@ export class CScreenToolbar extends React.Component<{}> {
           label="Search"
         />*/}
         <ScreenToolbarAction
-          onClick={()=> openSearchWindow(this.application)}
-          icon={<Icon src="./icons/search.svg"/>}
+          onClick={() => openSearchWindow(this.application)}
+          icon={<Icon src="./icons/search.svg" />}
         />
         <UserMenuDropdown
           avatarLink={avatarLink}

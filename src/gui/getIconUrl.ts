@@ -1,16 +1,20 @@
 import { IMenuItemIcon } from "./Workbench/MainMenu/MainMenu";
 
-export function getIconUrl(iconName: string | IMenuItemIcon) {
+export function getIconUrl(iconName: string | IMenuItemIcon, iconPath?: string) {
   switch (iconName) {
     case IMenuItemIcon.Form:
       return "./icons/document.svg";
     case IMenuItemIcon.Workflow:
       return "./icons/settings.svg";
-    case IMenuItemIcon.WorkQueue: 
+    case IMenuItemIcon.WorkQueue:
       return "./icons/work-queue.svg";
-    case IMenuItemIcon.Chat: 
+    case IMenuItemIcon.Chat:
       return "./icons/chat.svg";
     default:
-      return "./icons/document.svg";
+      if (iconPath) {
+        return iconPath;
+      } else {
+        return "./icons/document.svg";
+      }
   }
 }

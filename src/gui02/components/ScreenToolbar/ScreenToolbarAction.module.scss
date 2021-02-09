@@ -23,12 +23,13 @@
         stroke: #0d0d0d;
         stroke-width: 1.5;
         &:global(.isHoverGreen) {
-          stroke: #69D07F;
+          stroke: #69d07f;
         }
       }
     }
     .label {
-      color: #0d0d0d;
+      font-weight: bold;
+      color: black;
     }
   }
 
@@ -63,4 +64,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+:global(.isRed) .label {
+  color: #fe5461;
+  &:hover {
+    //color: #fe5461 !important;
+  }
+}
+
+:global(.isHoverGreen):hover .label {
+  color: #69d07f;
 }

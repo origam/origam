@@ -23,6 +23,15 @@
     background-color: #ffffff;
   }
 
+  &:global(.isHighLighted) {
+    color: #ffffff;
+    background-color: #4c84ff;
+    font-weight: bold;
+    svg:global(.icon) {
+      stroke: #ffffff;
+      stroke-width: 1;
+    }
+  }
 
   &:global(.isActiveScreen) {
     background-color: #ffffff;
@@ -59,6 +68,14 @@
   flex-shrink: 0;
 }
 
-.linkContainer{
+.label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.linkContainer {
   width: 100%;
 }
+
+

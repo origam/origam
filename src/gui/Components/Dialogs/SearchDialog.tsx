@@ -4,11 +4,12 @@ import React, { RefObject } from "react";
 import { T } from "utils/translation";
 import { ModalWindow } from "../Dialog/Dialog";
 import S from "gui/Components/Dialogs/SearchDialog.module.scss";
-import { observable } from "mobx";
+import { action, observable } from "mobx";
 import { ISearchResult } from "model/entities/types/ISearchResult";
 import { getSearcher } from "model/selectors/getSearcher";
 import { getIconUrl } from "gui/getIconUrl";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
+import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -36,6 +37,7 @@ export class SearchDialog extends React.Component<{
     this.input?.focus();
   }
 
+  @action.bound
   onKeyDown(event: any){
     if(event.key === "Escape"){
       this.props.onCloseClick();
@@ -56,7 +58,7 @@ export class SearchDialog extends React.Component<{
     if (event.key === "Enter") {
       if(this.searcher.selectedResult){
         this.searcher.selectedResult.onClick();
-        this.onResultItemClick();
+        this.onResultItemClick(this.searcher.selectedResult);
       }
       else
       {
@@ -66,8 +68,9 @@ export class SearchDialog extends React.Component<{
     }
   }
 
-  onResultItemClick(){
+  onResultItemClick(result: ISearchResult){
     this.props.onCloseClick();
+    getMainMenuState(this.props.ctx).highlightItem(result.id);
   }
 
   scrollToCell(){
@@ -146,7 +149,7 @@ export class SearchDialog extends React.Component<{
                     <ResultGroup 
                       name={group.name} 
                       group={group}
-                      onResultItemClick={()=> this.onResultItemClick()}
+                      onResultItemClick={result => this.onResultItemClick(result)}
                       selectedResult={this.searcher.selectedResult}
                       registerElementRef={(id, ref)=> this.resultElementMap.set(id, ref)}
                       />) 
@@ -164,7 +167,7 @@ export class SearchDialog extends React.Component<{
 export class ResultGroup extends React.Component<{
   name: string;
   group: ISearchResultGroup;
-  onResultItemClick: ()=> void;
+  onResultItemClick: (result: ISearchResult) => void;
   selectedResult: ISearchResult | undefined;
   registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }> {
@@ -190,7 +193,7 @@ export class ResultGroup extends React.Component<{
         {this.props.group.isExpanded && this.props.group.results.map(result => 
             <ResultItem 
               result={result} 
-              onResultItemClick={()=> this.props.onResultItemClick()}
+              onResultItemClick={()=> this.props.onResultItemClick(result)}
               selected={this.props.selectedResult?.id === result.id}
               registerElementRef={this.props.registerElementRef}
               />)
@@ -219,6 +222,7 @@ export class ResultItem extends React.Component<{
     this.props.registerElementRef(this.props.result.id, this.divRef);
   }
 
+  @action.bound
   onClick(){
     this.props.onResultItemClick();
     this.props.result.onClick();

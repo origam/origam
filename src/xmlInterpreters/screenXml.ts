@@ -460,15 +460,18 @@ export function* interpretScreenXml(
       let groupingColumnCounter = 1;
       configuration.forEach((conf) => {
         const defaultFixedColumns = findStopping(conf, (n) => n.name === "lockedColumns");
-        if(defaultFixedColumns && defaultFixedColumns.length > 0){
-          const fixedColumnsNode = findStopping(defaultFixedColumns?.[0], (n) => n.name === "lockedColumns");
+        if (defaultFixedColumns && defaultFixedColumns.length > 0) {
+          const fixedColumnsNode = findStopping(
+            defaultFixedColumns?.[0],
+            (n) => n.name === "lockedColumns"
+          );
           const fixedColumnsStr = fixedColumnsNode?.[0]?.attributes?.["count"];
-          const fixedColumnsInt = parseInt(fixedColumnsStr,10);
-          if (!isNaN(fixedColumnsStr)){
+          const fixedColumnsInt = parseInt(fixedColumnsStr, 10);
+          if (!isNaN(fixedColumnsStr)) {
             dataViewInstance.tablePanelView.fixedColumnCount = fixedColumnsInt;
           }
         }
-        
+
         const defaultColumnConfigurations = findStopping(conf, (n) => n.name === "columnWidths");
         defaultColumnConfigurations.forEach((defaultColumnConfiguration) => {
           const columns = findStopping(defaultColumnConfiguration, (n) => n.name === "column");
@@ -527,8 +530,9 @@ export function* interpretScreenXml(
         });
       });
 
-      properties.filter(prop => prop.width < 0)
-        .forEach(prop => {
+      properties
+        .filter((prop) => prop.width < 0)
+        .forEach((prop) => {
           prop.width = Math.abs(prop.width);
           dataViewInstance.tablePanelView.setPropertyHidden(prop.id, true);
         });
@@ -601,10 +605,11 @@ export function* interpretScreenXml(
               yield* saveColumnConfigurations(dataView)();
             },
             () => {
-              if(dataView.activePanelView === IPanelViewType.Form &&
-                 getGroupingConfiguration(dataView).isGrouping && 
-                 isLazyLoading)
-              {
+              if (
+                dataView.activePanelView === IPanelViewType.Form &&
+                getGroupingConfiguration(dataView).isGrouping &&
+                isLazyLoading
+              ) {
                 return IPanelViewType.Table;
               }
               return dataView.activePanelView;
@@ -627,7 +632,10 @@ export function* interpretScreenXml(
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
       const rootStore = new MapRootStore(dataView);
       populateMapViewSetup(rootStore.mapSetupStore, dataViewXmlNode);
-      const isReadonly = dataView.properties.some((prop) => prop.readOnly);
+      //const isReadonly = dataView.properties.some((prop) => prop.readOnly);
+      const isReadonly = !!dataView.properties.find(
+        (prop) => prop.id === rootStore.mapSetupStore.mapLocationMember
+      )?.readOnly;
       rootStore.mapSetupStore.isReadOnlyView = isReadonly;
       const $mapPerspective = $dataView.beginLifetimeScope(SCOPE_MapPerspective);
       const mapPerspectiveDirector = $mapPerspective.resolve(IMapPerspectiveDirector);
