@@ -15,12 +15,13 @@ import { Dropdowner } from "gui/Components/Dropdowner/Dropdowner";
 import { Dropdown } from "gui02/components/Dropdown/Dropdown";
 import { DropdownItem } from "gui02/components/Dropdown/DropdownItem";
 import { T } from "utils/translation";
-import {getFavorites} from "model/selectors/MainMenu/getFavorites";
+import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import {getDialogStack} from "model/selectors/getDialogStack";
-import {ChooseFavoriteFolderDialog} from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
+import { getDialogStack } from "model/selectors/getDialogStack";
+import { ChooseFavoriteFolderDialog } from "gui/Components/Dialogs/ChooseFavoriteFolderDialog";
 import { getIconUrl as getIconUrl } from "gui/getIconUrl";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
+import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -83,23 +84,22 @@ class CMainMenuCommandItem extends React.Component<{
     return this.context.workbench;
   }
 
-  get menuId(){
+  get menuId() {
     return this.props.node.attributes["id"];
   }
 
-  get favorites(){
+  get favorites() {
     return getFavorites(this.workbench);
   }
 
-  onAddToFavoritesClicked(){
-
+  onAddToFavoritesClicked() {
     const closeDialog = getDialogStack(this.workbench).pushDialog(
       "",
       <ChooseFavoriteFolderDialog
         onOkClick={(folderId: string) => {
           runInFlowWithHandler({
             ctx: this.workbench,
-            action: () =>  this.favorites.add(folderId, this.menuId)
+            action: () => this.favorites.add(folderId, this.menuId),
           });
           closeDialog();
         }}
@@ -109,15 +109,16 @@ class CMainMenuCommandItem extends React.Component<{
     );
   }
 
-  onRemoveFromFavoritesClicked(){
+  onRemoveFromFavoritesClicked() {
     runInFlowWithHandler({
       ctx: this.workbench,
-      action: () => this.favorites.remove(this.menuId)
+      action: () => this.favorites.remove(this.menuId),
     });
   }
 
   render() {
     const { props } = this;
+    const customAssetsRoute = getCustomAssetsRoute(this.workbench);
     const activeScreen = getActiveScreen(this.workbench);
     const activeMenuItemId = activeScreen ? activeScreen.menuItemId : undefined;
     return (
@@ -129,14 +130,14 @@ class CMainMenuCommandItem extends React.Component<{
             isActive={false}
             icon={
               <Icon
-                src={getIconUrl(props.node.attributes.icon)}
+                src={getIconUrl(
+                  props.node.attributes.icon,
+                  customAssetsRoute + "/" + props.node.attributes.icon
+                )}
                 tooltip={props.node.attributes.label}
               />
             }
-            label={
-              props.node.attributes
-                .label 
-            }
+            label={props.node.attributes.label}
             isHidden={!props.isOpen}
             // TODO: Implements selector for this idset
             isOpenedScreen={this.workbench.openedScreenIdSet.has(props.node.attributes.id)}
@@ -157,7 +158,7 @@ class CMainMenuCommandItem extends React.Component<{
         )}
         content={({ setDropped }) => (
           <Dropdown>
-            {!this.favorites.isInAnyFavoriteFolder(this.menuId) &&
+            {!this.favorites.isInAnyFavoriteFolder(this.menuId) && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
@@ -166,8 +167,8 @@ class CMainMenuCommandItem extends React.Component<{
               >
                 {T("Put to favourites", "put_to_favourites")}
               </DropdownItem>
-            }
-            {this.favorites.isInAnyFavoriteFolder(this.menuId) &&
+            )}
+            {this.favorites.isInAnyFavoriteFolder(this.menuId) && (
               <DropdownItem
                 onClick={(event: any) => {
                   setDropped(false);
@@ -176,7 +177,7 @@ class CMainMenuCommandItem extends React.Component<{
               >
                 {T("Remove from Favourites", "remove_from_favourites")}
               </DropdownItem>
-            }
+            )}
           </Dropdown>
         )}
       />
@@ -190,15 +191,14 @@ class CMainMenuFolderItem extends React.Component<{
   level: number;
   isOpen: boolean;
 }> {
-
   static contextType = MobXProviderContext;
   itemRef: RefObject<HTMLDivElement> = React.createRef();
 
-  componentDidMount(){
+  componentDidMount() {
     this.mainMenuState.setReference(this.id, this.itemRef);
   }
 
-  get id(){
+  get id() {
     return this.props.node.attributes.id;
   }
 
@@ -231,7 +231,11 @@ class CMainMenuFolderItem extends React.Component<{
           onClick={this.handleClick}
           isHighLighted={this.id === this.mainMenuState.hightLightedItemId}
         />
-        {listFromNode(props.node, props.level + 1, this.props.isOpen && this.mainMenuState.isOpen(this.id))}
+        {listFromNode(
+          props.node,
+          props.level + 1,
+          this.props.isOpen && this.mainMenuState.isOpen(this.id)
+        )}
       </div>
     );
   }
