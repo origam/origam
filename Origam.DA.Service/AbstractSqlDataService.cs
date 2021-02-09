@@ -31,6 +31,7 @@ using System.Security.Principal;
 using System.Text;
 using log4net;
 using Origam.DA.ObjectPersistence;
+using Origam.DA.Service.Generators;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
 using Origam.Services;
@@ -895,7 +896,7 @@ namespace Origam.DA.Service
 			DataStructure ds = this.GetDataStructure(query);
 
 			string cacheId = query.DataSourceId.ToString() + query.MethodId.ToString() + query.SortSetId.ToString() + columnsInfo;
-			Hashtable cache = GetScalarCommandCache();
+			Hashtable cache = new Hashtable();// GetScalarCommandCache();
 
 			if(cache.Contains(cacheId))
 			{
@@ -1658,12 +1659,41 @@ namespace Origam.DA.Service
 	        return processedItems;
         }
 
+        private IEnumerable<T> ToEnumerable<T>(T item)
+        {
+	        yield return item;
+        }
+
+        private List<ColumnData> GetAllQueryColumns(DataStructureQuery query)
+        {
+	        return query.GetAllQueryColumns()
+		        .SelectMany(column =>
+		        {
+			        if (!string.IsNullOrWhiteSpace(query.CustomGrouping?.GroupingUnit) &&
+			            query.CustomGrouping?.GroupBy == column.Name)
+			        {
+				        return TimeGroupingRenderer
+					        .GetColumnNames(column.Name, query.CustomGrouping.GroupingUnit)
+					        .Select(columnName =>
+						        new ColumnData(columnName, column.IsVirtual,
+							        column.DefaultValue, column.HasRelation)
+					        );
+			        }
+			        else
+			        {
+				        return ToEnumerable(column);
+			        }
+
+		        })
+		        .ToList();
+        }
+
         private IEnumerable<IEnumerable<KeyValuePair<string, object>>> ExecuteDataReaderInternal(DataStructureQuery query)
         {
 	        using(IDataReader reader = ExecuteDataReader(
 		        query, SecurityManager.CurrentPrincipal, null))
 	        {
-		        var queryColumns = query.GetAllQueryColumns();
+		        var queryColumns = GetAllQueryColumns(query);
 		        while(reader.Read())
 		        {
 			        var values = new KeyValuePair<string, object>[queryColumns.Count];
