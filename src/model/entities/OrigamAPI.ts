@@ -9,6 +9,7 @@ import { IColumnSettings } from "./types/IColumnSettings";
 import { compareByGroupingIndex } from "./ColumnSettings";
 import { TypeSymbol } from "dic/Container";
 import { IAboutInfo } from "./types/IAboutInfo";
+import { T } from "utils/translation";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -444,7 +445,11 @@ export class OrigamAPI implements IApi {
     SessionFormIdentifier: string | undefined;
     AggregatedColumns: IAggregationInfo[] | undefined;
   }): Promise<any[]> {
-    return (await this.axiosInstance.post(`/UIService/GetGroups`, data)).data;
+    const resultData = (await this.axiosInstance.post(`/UIService/GetGroups`, data)).data;
+    if(resultData.length > 50_000){
+      throw new Error(T("There are too many groups, choose different grouping options please.", "too_many_groups"));
+    }
+    return resultData;
   }
 
   async getAggregations(data: {

@@ -155,6 +155,7 @@
   "group_by_day": "den", 
   "group_by_hour": "hodina",
   "group_by_minute": "minuta",
+  "too_many_groups": "Příliš mnoho skupin, žměňte prosím nastavení seskupení.",
   "column_config_aggregation": "Agregace",
   "column_config_locked_columns_count": "Počet zamčených sloupců:",
   "column_config_save_as": "Uložit jako...",

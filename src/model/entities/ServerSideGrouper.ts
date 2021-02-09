@@ -18,6 +18,7 @@ import _ from "lodash";
 import { IGroupingSettings } from "./types/IGroupingConfiguration";
 import { DateGroupData, GenericGroupData, IGroupData } from "./DateGroupData";
 import moment from "moment";
+import { runGeneratorInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 
 export class ServerSideGrouper implements IGrouper {
@@ -47,7 +48,7 @@ export class ServerSideGrouper implements IGrouper {
 
   loadGroupsImm(){
     const self = this;
-    flow(function* () {yield* self.loadGroups()})();
+    runGeneratorInFlowWithHandler({ctx: this, generator: self.loadGroups()});
   }
         
   private *loadGroups() {

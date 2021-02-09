@@ -156,6 +156,7 @@
   "group_by_day": "Tag", 
   "group_by_hour": "Stunde",
   "group_by_minute": "Minute",
+  "too_many_groups": "Es gibt zu viele Gruppen, wählen Sie bitte verschiedene Gruppierungsoptionen.",
   "column_config_aggregation": "Aggregation",
   "column_config_locked_columns_count": "Anzahl fixierte Spalten",
   "column_config_save_as": "Speichern als...",
