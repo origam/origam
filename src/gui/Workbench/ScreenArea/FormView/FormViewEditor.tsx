@@ -102,7 +102,6 @@ export class FormViewEditor extends React.Component<{
             onKeyDown={this.MakeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
-            toolTip={this.props.property?.toolTip}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,
@@ -132,7 +131,6 @@ export class FormViewEditor extends React.Component<{
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={this.props.isRichText}
-            toolTip={this.props.property?.toolTip}
             subscribeToFocusManager={(textEditor) =>
               this.focusManager.subscribe(
                 textEditor,

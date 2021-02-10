@@ -27,7 +27,6 @@ export class TextEditor extends React.Component<{
   maxLength?: number;
   isRichText: boolean;
   customStyle?: any;
-  toolTip?: string;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   refocuser?: (cb: () => void) => () => void;
   onChange?(event: any, value: string): void;
@@ -94,11 +93,7 @@ export class TextEditor extends React.Component<{
   render() {
     return (
       <div className={S.editorContainer}>
-        {this.props.toolTip 
-        ? <Tooltip html={this.props.toolTip} position={"right"} theme={"light"}>
-            {this.renderValueTag()}
-          </Tooltip>
-        : this.renderValueTag()}
+        {this.renderValueTag()}
         {this.props.isInvalid && (
           <div className={S.notification}>
             <Tooltip html={this.props.invalidMessage} arrow={true}>
