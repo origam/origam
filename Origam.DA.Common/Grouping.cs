@@ -6,11 +6,13 @@ namespace Origam.DA
     {
         public string GroupBy { get; }
         public Guid LookupId { get; }
+        public string GroupingUnit { get; }
 
-        public Grouping(string groupBy, Guid lookupId)
+        public Grouping(string groupBy, Guid lookupId, string groupingUnit)
         {
             GroupBy = groupBy;
             LookupId = lookupId;
+            GroupingUnit = groupingUnit;
         }
     }
 }

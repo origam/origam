@@ -362,9 +362,7 @@ namespace Origam.DA.Service
                     whereFilterInput: selectParameters.CustomFilters.Filters);            
             OrderByCommandParser orderByCommandParser =
                 new OrderByCommandParser(
-                    orderingsInput: selectParameters.CustomOrderings.Orderings, 
-                    nameLeftBracket: NameLeftBracket,
-                    nameRightBracket: NameRightBracket);
+                    orderingsInput: selectParameters.CustomOrderings.Orderings);
 
             adapter.SelectCommand =
                 GetCommand(SelectSql(
@@ -1777,7 +1775,7 @@ namespace Origam.DA.Service
             DataStructureColumn groupByColumn = null;
             int i = 0;
             List<string> group = new List<string>();
-            SortedList order = new SortedList();
+            SortedList<int, SortOrder> order = new SortedList<int, SortOrder>();
             bool groupByNeeded = false;
             string orderByExpression="";
             if (concatScalarColumns && columnsInfo != null && columnsInfo.Count > 1)
@@ -1810,23 +1808,45 @@ namespace Origam.DA.Service
                 }
                 LookupOrderingInfo customOrderingInfo =
                     LookupOrderingInfo.TryCreate(customOrderings.Orderings, column.Name );
-                var expression = RenderDataStructureColumn(ds, entity,
+                string groupByExpression = "";
+                ColumnRenderData columnRenderData = RenderDataStructureColumn(ds, entity,
                         replaceParameterTexts, dynamicParameters,
                         sortSet, selectParameterReferences, isInRecursion,
-                        forceDatabaseCalculation, group, order, ref groupByNeeded,
+                        forceDatabaseCalculation, ref groupByExpression, order, ref groupByNeeded,
                         columnsInfo ?? ColumnsInfo.Empty, column,
                         customOrderingInfo, filterCommandParser, orderByCommandParser, 
                         selectParameters.RowOffset);
-                if (expression != null)
+                string expression;
+                if (columnRenderData != null)
                 {
                     if (i > 0) sqlExpression.Append(",");
                     PrettyIndent(sqlExpression);
                     i++;
-                    sqlExpression.Append(expression);
-                    if (customGrouping != null && customGrouping.GroupBy == column.Name)
+                    if (!string.IsNullOrWhiteSpace(customGrouping?.GroupingUnit))
                     {
-                        orderByExpression = expression.Split(" AS ")[0].Trim();
+                        var timeGroupingRenderer =
+                            new TimeGroupingRenderer(columnRenderData, ColumnDataToSql, customGrouping.GroupingUnit);
+                        string[] columnsWithoutAliases = timeGroupingRenderer.RenderWithoutAliases();
+                        orderByCommandParser.SetColumnExpressionsIfMissing(column.Name, columnsWithoutAliases);
+                        string allColumnsExpression = string.Join(", ", columnsWithoutAliases);
+                        group.Add(allColumnsExpression);
+                        expression = timeGroupingRenderer.RenderWithAliases();
                     }
+                    else
+                    {
+                        if (customGrouping != null && customGrouping.GroupBy == column.Name)
+                        {
+                            orderByExpression = columnRenderData.Expression;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(groupByExpression))
+                        {
+                            group.Add(groupByExpression);
+                        }
+
+                        expression = ColumnDataToSql(columnRenderData);
+                    }
+                    sqlExpression.Append(expression);
                 }
             }
 
@@ -1911,9 +1931,9 @@ namespace Origam.DA.Service
             if (order.Count > 0)
             {
                 i = 0;
-                foreach (DictionaryEntry entry in order)
+                foreach (KeyValuePair<int, SortOrder> entry in order)
                 {
-                    if (customGrouping != null &&  customGrouping.GroupBy != ((SortOrder) entry.Value).ColumnName)
+                    if (customGrouping != null &&  customGrouping.GroupBy != entry.Value.ColumnName)
                     {
                         continue;
                     }
@@ -1924,8 +1944,8 @@ namespace Origam.DA.Service
                     }
                     PrettyIndent(orderByBuilder);
                     orderByBuilder.AppendFormat("{0} {1}",
-                        ((SortOrder)entry.Value).Expression,
-                        RenderSortDirection(((SortOrder)entry.Value).SortDirection)
+                        entry.Value.Expression,
+                        RenderSortDirection(entry.Value.SortDirection)
                         );
 
                     i++;
@@ -1977,8 +1997,8 @@ namespace Origam.DA.Service
                             dataStructureColumn,
                             replaceParameterTexts, dynamicParameters,
                             selectParameterReferences, lookup);
-                    commandParser.SetColumnExpression(columnName,
-                        resultExpression);
+                    commandParser.SetColumnExpressionsIfMissing(
+                        columnName, new[]{resultExpression});
                 }
                 else
                 {
@@ -1993,7 +2013,8 @@ namespace Origam.DA.Service
                             isInRecursion,
                             ref groupByNeeded1, columnsInfo,
                             dataStructureColumn, ref groupExpression);
-                    commandParser.SetColumnExpression(columnName, columnExpression);
+                    commandParser.SetColumnExpressionsIfMissing(
+                        columnName, new[]{ columnExpression });
                 }
             }
         }
@@ -2089,19 +2110,19 @@ namespace Origam.DA.Service
                 .ToList();
         }
 
-        private string RenderDataStructureColumn(DataStructure ds,
+        private ColumnRenderData RenderDataStructureColumn(DataStructure ds,
             DataStructureEntity entity,
             Hashtable replaceParameterTexts,
             Hashtable dynamicParameters, DataStructureSortSet sortSet,
             Hashtable selectParameterReferences, bool isInRecursion,
-            bool forceDatabaseCalculation, List<string> group, SortedList order,
+            bool forceDatabaseCalculation, ref string group, SortedList<int, SortOrder> order,
             ref bool groupByNeeded, ColumnsInfo columnsInfo,
             DataStructureColumn column, LookupOrderingInfo orderingInfo,
             FilterCommandParser filterCommandParser,
             OrderByCommandParser orderByCommandParser, 
             int? rowOffset = null)
         {
-            string result = null;
+            ColumnRenderData result = null;
             bool processColumn = false;
             FunctionCall functionCall = column.Field as FunctionCall;
             AggregatedColumn aggregatedColumn = column.Field as AggregatedColumn;
@@ -2165,19 +2186,14 @@ namespace Origam.DA.Service
                         dynamicParameters, selectParameterReferences, isInRecursion,
                         ref groupByNeeded, columnsInfo, column, ref groupExpression);
 
-                filterCommandParser?.SetColumnExpression(column.Name ,resultExpression);
-                orderByCommandParser?.SetColumnExpression(column.Name ,resultExpression);
-
                 if (processColumn && !string.IsNullOrWhiteSpace(resultExpression))
                 {
-                    result = string.Format("{0} AS {1}",
-                        resultExpression,
-                        NameLeftBracket + column.Name + NameRightBracket
-                        );
+                    result = new ColumnRenderData { Expression = resultExpression, Alias = column.Name};
+                    
                     // anything not having aggregation will eventually go to GROUP BY
                     if (column.Aggregation == AggregationType.None)
                     {
-                        group.Add(groupExpression);
+                        group = groupExpression;
                     }
                 }
             }
@@ -2187,7 +2203,7 @@ namespace Origam.DA.Service
             if (column.IsColumnSorted(sortSet) || orderingInfo != null)
             {
                 System.Diagnostics.Debug.Assert(resultExpression != String.Empty, "No expression generated for sorting.", "Column: " + column.Path);
-                SortOrder sortOrder;
+                SortOrder sortOrder = new SortOrder();
                 string sortExpression = resultExpression;
                 // if the column is a lookup column, we will sort by the looked-up
                 // value, not by the source value, this will bring the same logic
@@ -2204,7 +2220,7 @@ namespace Origam.DA.Service
                 if (orderingInfo == null)
                 {
                     sortOrder.SortDirection = column.SortDirection(sortSet);
-                    if (order.Contains(column.SortOrder(sortSet)))
+                    if (order.ContainsKey(column.SortOrder(sortSet)))
                     {
                         throw new InvalidOperationException(ResourceUtils.GetString("ErrorSortOrder", column.SortOrder(sortSet).ToString(), column.Path));
                     }
@@ -2217,6 +2233,14 @@ namespace Origam.DA.Service
                 }
             }
             return result;
+        }
+       
+        private string ColumnDataToSql(ColumnRenderData columnRenderData)
+        {
+            return string.Format("{0} AS {1}",
+                columnRenderData.Expression,
+                NameLeftBracket + columnRenderData.Alias + NameRightBracket
+            );
         }
 
         private string GetDataStructureColumnSqlExpression(DataStructure ds,
@@ -4001,5 +4025,11 @@ namespace Origam.DA.Service
             Direction = direction;
             SortOrder = sortOrder;
         }
+    }
+
+    public class ColumnRenderData
+    {
+        public string Expression { get; set; }
+        public string Alias { get; set; }
     }
 }
