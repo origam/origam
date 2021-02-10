@@ -343,11 +343,11 @@ export class DataView implements IDataView {
   }
 
   @computed get bindingParent() {
-    return this.parentBindings[0].parentDataView;
+    return this.parentBindings?.[0]?.parentDataView;
   }
 
   @computed get bindingRoot(): IDataView {
-    // TODO: If there ever is multiparent case, remove duplicates in the result
+    // TODO: If there ever is multi parent case, remove duplicates in the result
     let root: IDataView = this;
     while (!root.isBindingRoot) {
       root = root.bindingParent!;

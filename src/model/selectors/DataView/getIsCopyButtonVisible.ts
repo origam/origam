@@ -1,5 +1,5 @@
-import {getDataView} from "./getDataView";
+import { getIsAddButtonVisible } from "./getIsAddButtonVisible";
 
 export function getIsCopyButtonVisible(ctx: any) {
-  return getDataView(ctx).showAddButton;
+  return getIsAddButtonVisible(ctx);
 }
