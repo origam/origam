@@ -2,6 +2,8 @@ import { IAggregationInfo } from "./IAggregationInfo";
 import { IOrdering } from "./IOrderingConfiguration";
 import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
+import { GroupingUnit } from "./GroupingUnit";
+import { IColumnSettings } from "./IColumnSettings";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -245,9 +247,11 @@ export interface IApi {
     MenuId: string;
     DataStructureEntityId: string;
     Filter: string | undefined;
+    FilterLookups?: { [key: string]: string };
     Ordering: IOrdering[];
     RowLimit: number;
     GroupBy: string;
+    GroupingUnit: string | undefined;
     MasterRowId: string | undefined;
     GroupByLookupId: string | undefined;
     SessionFormIdentifier: string | undefined;
@@ -258,6 +262,7 @@ export interface IApi {
     MenuId: string;
     DataStructureEntityId: string;
     Filter: string | undefined;
+    FilterLookups?: { [key: string]: string };
     AggregatedColumns: IAggregationInfo[];
     SessionFormIdentifier: string | undefined;
     MasterRowId: string | undefined;
@@ -289,11 +294,7 @@ export interface IApi {
   saveObjectConfiguration(data: {
     sessionFormIdentifier: string;
     instanceId: string;
-    columnSettings: Array<{
-      propertyId: string;
-      width: number;
-      isHidden: boolean;
-    }>;
+    columnSettings: IColumnSettings[];
     defaultView: string;
     lockedColumns: number;
   }): Promise<any>;
@@ -396,13 +397,13 @@ export interface IApi {
 
   getMenuIdByReference(data: { Category: string; ReferenceId: any }): Promise<string>;
 
-  getExcelFileUrl(data: {
+  getExcelFile(data: {
     Entity: string;
     Fields: IEntityExportField[];
     SessionFormIdentifier: string;
     RowIds: any[];
     LazyLoadedEntityInput: ILazyLoadedEntityInput | undefined;
-  }): Promise<string>;
+  }): Promise<any>;
 }
 
 export interface ILazyLoadedEntityInput{

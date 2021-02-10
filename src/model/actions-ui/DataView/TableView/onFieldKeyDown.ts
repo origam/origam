@@ -1,12 +1,12 @@
-import { selectNextColumn } from "../../../actions/DataView/TableView/selectNextColumn";
-import { selectPrevColumn } from "../../../actions/DataView/TableView/selectPrevColumn";
-import { selectPrevRow } from "../../../actions/DataView/selectPrevRow";
-import { selectNextRow } from "../../../actions/DataView/selectNextRow";
-import { flushCurrentRowData } from "../../../actions/DataView/TableView/flushCurrentRowData";
+import { selectNextColumn } from "model/actions/DataView/TableView/selectNextColumn";
+import { selectPrevColumn } from "model/actions/DataView/TableView/selectPrevColumn";
+import { selectPrevRow } from "model/actions/DataView/selectPrevRow";
+import { selectNextRow } from "model/actions/DataView/selectNextRow";
+import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
-import { getDataView } from "../../../selectors/DataView/getDataView";
+import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
 
 
@@ -20,7 +20,7 @@ export function onFieldKeyDown(ctx: any) {
   return flow(function* onFieldKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
-
+      console.log(event.key);
       switch (event.key) {
         case "Tab": {
           if (isGoingToChangeRow(event)){

@@ -137,6 +137,7 @@ export const TagInputEditor = inject(({ property }: { property: IProperty }, { v
               onBlur={beh.handleInputBlur}
               onDoubleClick={props.onDoubleClick}
               style={getStyle()}
+              size={1}
             />
           </TagInput>
           {props.isInvalid && (

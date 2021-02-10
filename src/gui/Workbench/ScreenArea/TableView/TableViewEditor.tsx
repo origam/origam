@@ -192,7 +192,8 @@ export class TableViewEditor extends React.Component<{
         return <BlobEditor
           isReadOnly={readOnly}
           value={this.props.getCellValue!()}
-          isInvalid={false}/>;
+          isInvalid={false}
+          canUpload={true}/>;
       case "Polymorph":
         console.warn(`Type of polymorphic column was not determined, no editor was rendered`)
         return "";

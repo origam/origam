@@ -104,7 +104,7 @@ export class GridDimensions implements IGridDimensions {
 
   @computed get displayedColumnDimensionsCom(): { left: number; width: number; right: number }[] {
     const isCheckBoxedTable = getIsSelectionCheckboxesShown(this.ctx);
-    const groupedColumnIds = getGroupingConfiguration(this.ctx).orderedGroupingColumnIds;
+    const groupedColumnIds = getGroupingConfiguration(this.ctx).orderedGroupingColumnSettings;
     const tableColumnIds = getTableViewProperties(this.ctx).map((prop) => prop.id);
     const columnWidths = this.columnWidths;
 

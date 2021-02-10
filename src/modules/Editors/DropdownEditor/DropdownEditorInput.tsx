@@ -1,5 +1,5 @@
 import { Observer } from "mobx-react";
-import React, {useContext, useEffect, useMemo, useState} from "react";
+import React, {useContext, useEffect, useMemo} from "react";
 import { CtxDropdownEditor } from "./DropdownEditor";
 import cx from 'classnames';
 import S from './DropdownEditor.module.scss';
@@ -45,7 +45,7 @@ export function DropdownEditorInput(props:{
           ref={refInput}
           placeholder={data.isResolving ? "Loading..." : ""}
           onChange={beh.handleInputChange}
-          onKeyDown={!beh.isReadOnly ? beh.handleInputKeyDown : undefined}
+          onKeyDown={beh.handleInputKeyDown}
           onFocus={!beh.isReadOnly ? beh.handleInputFocus : undefined}
           onBlur={!beh.isReadOnly ? beh.handleInputBlur : undefined}
           onDoubleClick={beh.onDoubleClick}

@@ -23,6 +23,7 @@ export function onSelectionDialogActionButtonClick(ctx: any) {
         const entity = getEntity(ctx);
         const rowId = getSelectedRowId(ctx);
         if (rowId) {
+          yield* lifecycle.onFlushData();
           const selectedItems: string[] = [rowId];
           yield* lifecycle.onExecuteAction(
             gridId,

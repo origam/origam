@@ -1,3 +1,5 @@
+@import "src/styles/definitions.scss";
+
 .table {
   :global(.cell) {
     position: relative;
@@ -8,7 +10,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-top: 1px solid #ebeaee;
+    //border-top: 1px solid #ebeaee;
     overflow: hidden;
     white-space: nowrap;
     &:global(.ord1) {
@@ -19,14 +21,16 @@
     }
     &:global(.header) {
       background-color: #f7f6fa;
-      justify-content: center;
+      //justify-content: center;
       font-weight: bold;
     }
     &:global(.withCursor) {
-      background-color: #dddddd;
+      background-color: $blue;
+      color: white !important;
     }
     &:global(.selected) {
       font-weight: bold;
+      color: $blue;
     }
   }
 

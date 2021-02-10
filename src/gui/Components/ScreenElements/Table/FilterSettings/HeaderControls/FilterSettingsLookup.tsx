@@ -9,11 +9,9 @@ import {
   FilterSettingsComboBoxItem,
 } from "gui/Components/ScreenElements/Table/FilterSettings/FilterSettingsComboBox";
 import S from "./FilterSettingsLookup.module.scss";
-import produce from "immer";
+import CS from "./FilterSettingsCommon.module.scss";
 import { IFilterSetting } from "model/entities/types/IFilterSetting";
-import { FilterSetting } from "./FilterSetting";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import { T } from "utils/translation";
 import {
   CtxDropdownEditor,
   DropdownEditor,
@@ -21,7 +19,6 @@ import {
   IDropdownEditorContext,
 } from "modules/Editors/DropdownEditor/DropdownEditor";
 import { TagInputEditor } from "gui/Components/ScreenElements/Editors/TagInputEditor";
-import { IDataView } from "model/entities/types/IDataView";
 import { IDropdownEditorApi } from "modules/Editors/DropdownEditor/DropdownEditorApi";
 import { IDropdownEditorData } from "modules/Editors/DropdownEditor/DropdownEditorData";
 import {
@@ -32,10 +29,10 @@ import { DropdownEditorLookupListCache } from "modules/Editors/DropdownEditor/Dr
 import { DropdownEditorBehavior } from "modules/Editors/DropdownEditor/DropdownEditorBehavior";
 import { TextCellDriver } from "modules/Editors/DropdownEditor/Cells/TextCellDriver";
 import { DefaultHeaderCellDriver } from "modules/Editors/DropdownEditor/Cells/HeaderCell";
-import { IDropDownType, ILookup } from "model/entities/types/ILookup";
-import { IProperty } from "model/entities/types/IProperty";
+import { ILookup } from "model/entities/types/ILookup";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { IProperty } from "model/entities/types/IProperty";
 
 const OPERATORS = [
     Operator.in,
@@ -161,9 +158,15 @@ class OpEditors extends React.Component<{
             values={this.props.setting.val1 ?? []}
           />
         );
-      case "contains":
+      case "contains": 
       case "ncontains":
-        return <input onChange={this.handleTermChange} />;
+         return (
+          <input
+            value={this.props.setting.val2 ?? ""}
+            className={CS.input}
+            onChange={this.handleTermChange} 
+          />
+        );
       case "null":
       case "nnull":
       default:
@@ -253,7 +256,10 @@ export class LookupFilterSetting implements IFilterSetting {
   constructor(type: string, isComplete=false, val1?:string, val2?: any) {
     this.type = type;
     this.isComplete = isComplete;
-    if(val1 !== undefined && val1 !== null){
+    if(Array.isArray(val1)){
+      this.val1 = [... new Set(val1)];
+    }
+    else if(val1 !== undefined && val1 !== null){
       this.val1 = [... new Set(val1.split(","))];
     }
     this.val2 = val2 ?? undefined;

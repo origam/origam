@@ -58,6 +58,8 @@ import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingAc
 import { AggregationType } from "../types/AggregationType";
 import { parseAggregations } from "../Aggregatioins";
 import { UpdateRequestAggregator } from "./UpdateRequestAggregator";
+import { IGroupingSettings } from "../types/IGroupingConfiguration";
+import { groupingUnitToString } from "../types/GroupingUnit";
 
 enum IQuestionSaveDataAnswer {
   Cancel = 0,
@@ -507,6 +509,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(dataView),
         Filter: filter,
+        FilterLookups: getUserFilterLookups(dataView),
         Ordering: ordering ? [ordering] : [],
         RowLimit: SCROLL_ROW_CHUNK,
         MasterRowId: masterRowId,
@@ -521,12 +524,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   async loadChildGroups(
     rootDataView: IDataView,
     filter: string,
-    groupByColumn: string,
+    groupingSettings: IGroupingSettings,
     aggregations: IAggregationInfo[] | undefined,
     lookupId: string | undefined
   ) {
     const ordering = {
-      columnId: groupByColumn,
+      columnId: groupingSettings.columnId,
       direction: IOrderByDirection.ASC,
       lookupId: lookupId,
     };
@@ -538,9 +541,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
         Filter: filter,
+        FilterLookups: getUserFilterLookups(rootDataView),
         Ordering: [ordering],
         RowLimit: 999999,
-        GroupBy: groupByColumn,
+        GroupBy: groupingSettings.columnId,
+        GroupingUnit: groupingUnitToString(groupingSettings.groupingUnit),
         GroupByLookupId: lookupId,
         MasterRowId: undefined,
         AggregatedColumns: aggregations,
@@ -552,14 +557,21 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   async loadGroups(
     dataView: IDataView,
-    groupBy: string,
+    columnSettings: IGroupingSettings,
     groupByLookupId: string | undefined,
     aggregations: IAggregationInfo[] | undefined
   ) {
+
+    const orderingConfig = getOrderingConfiguration(dataView);
+    const orderingDirection = orderingConfig.orderings
+      .find(ordering => ordering.columnId === columnSettings.columnId)
+      ?.direction 
+      ?? IOrderByDirection.ASC
+
     const api = getApi(this);
     const ordering = {
-      columnId: groupBy,
-      direction: IOrderByDirection.ASC,
+      columnId: columnSettings.columnId,
+      direction: orderingDirection,
       lookupId: groupByLookupId,
     };
 
@@ -574,9 +586,11 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(dataView),
         Filter: getUserFilters(dataView),
+        FilterLookups: getUserFilterLookups(dataView),
         Ordering: [ordering],
         RowLimit: 999999,
-        GroupBy: groupBy,
+        GroupBy: columnSettings.columnId,
+        GroupingUnit: groupingUnitToString(columnSettings.groupingUnit),
         GroupByLookupId: groupByLookupId,
         MasterRowId: masterRowId,
         AggregatedColumns: aggregations,
@@ -593,6 +607,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
       Filter: getUserFilters(rootDataView),
+      FilterLookups: getUserFilterLookups(rootDataView),
       MasterRowId: undefined,
       AggregatedColumns: aggregations,
     });
@@ -1027,6 +1042,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(dataView),
       Filter: getUserFilters(dataView),
+      FilterLookups: getUserFilterLookups(dataView),
       MasterRowId: undefined,
       AggregatedColumns: [
         {

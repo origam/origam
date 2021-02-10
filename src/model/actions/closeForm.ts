@@ -12,7 +12,6 @@ export function closeForm(ctx: any) {
   return function* closeForm(): Generator {
     const lifecycle = getWorkbenchLifecycle(ctx);
     const openedScreen = getOpenedScreen(ctx);
-
     yield* lifecycle.closeForm(openedScreen);
     if(openedScreen.content?.refreshOnReturnType){
       const refreshOnReturnType = openedScreen.content.refreshOnReturnType;
@@ -29,7 +28,7 @@ export function closeForm(ctx: any) {
           }
           break;
         case IRefreshOnReturnType.RefreshCompleteForm:
-          onRefreshSessionClick(parentFormScreen)
+          yield onRefreshSessionClick(parentFormScreen)();
           break;
         case IRefreshOnReturnType.MergeModalDialogChanges:
           const api = getApi(ctx);
@@ -41,9 +40,8 @@ export function closeForm(ctx: any) {
           const dataViews = parentScreen?.content?.formScreen?.dataViews ?? [];
           for (const dataView of dataViews) {
             dataView.dataTable.unlockAddedRowPosition();
-            dataView.dataTable.updateSortAndFilter();
+            yield dataView.dataTable.updateSortAndFilter();
           }
-          
           break;
       }
     }

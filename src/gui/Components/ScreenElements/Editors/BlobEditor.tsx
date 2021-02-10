@@ -59,6 +59,7 @@ export class BlobEditor extends React.Component<{
   parameters?: any;
   subscribeToFocusManager?: (obj: IFocusAble) => void;
   isInvalid: boolean;
+  canUpload: boolean;
   invalidMessage?: string;
   onKeyDown?(event: any): void;
 }> {
@@ -284,6 +285,7 @@ export class BlobEditor extends React.Component<{
                 className={
                   "btnDownload " + (this.props.isReadOnly ? "btnDownloadOnly" : "btnDownloadFirst")
                 }
+                disabled={!this.props.canUpload}
                 onClick={flow(this.download.bind(this))}
                 title={`Download: ${this.props.value}`}
               >

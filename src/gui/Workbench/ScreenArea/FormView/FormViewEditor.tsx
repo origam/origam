@@ -23,6 +23,7 @@ import { FocusManager } from "model/entities/FocusManager";
 import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 import { shadeHexColor } from "utils/colorUtils";
+import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -99,7 +100,7 @@ export class FormViewEditor extends React.Component<{
             customStyle={this.props.property?.style}
             reFocuser={undefined}
             onChange={this.props.onChange}
-            onKeyDown={this.MakeOnKeyDownCallBack()}
+            onKeyDown={this.makeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             subscribeToFocusManager={(textEditor) =>
@@ -127,7 +128,7 @@ export class FormViewEditor extends React.Component<{
             foregroundColor={foregroundColor}
             refocuser={undefined}
             onChange={this.props.onChange}
-            onKeyDown={this.MakeOnKeyDownCallBack()}
+            onKeyDown={this.makeOnKeyDownCallBack()}
             onClick={undefined}
             onEditorBlur={this.props.onEditorBlur}
             isRichText={this.props.isRichText}
@@ -162,7 +163,7 @@ export class FormViewEditor extends React.Component<{
                 this.props.property?.tabIndex
               )
             }
-            onKeyDown={this.MakeOnKeyDownCallBack()}
+            onKeyDown={this.makeOnKeyDownCallBack()}
           />
         );
       case "CheckBox":
@@ -207,7 +208,7 @@ export class FormViewEditor extends React.Component<{
             onClick={(event) => {
               onDropdownEditorClick(this.props.property)(event, this.props.property, row);
             }}
-            onKeyDown={this.MakeOnKeyDownCallBack()}
+            onKeyDown={this.makeOnKeyDownCallBack()}
           />
         );
       case "TagInput":
@@ -236,7 +237,7 @@ export class FormViewEditor extends React.Component<{
                 customStyle={this.props.property?.style}
                 refocuser={undefined}
                 onChange={this.props.onChange}
-                onKeyDown={this.MakeOnKeyDownCallBack()}
+                onKeyDown={this.makeOnKeyDownCallBack()}
                 onClick={undefined}
                 onEditorBlur={this.props.onEditorBlur}
               />
@@ -258,20 +259,22 @@ export class FormViewEditor extends React.Component<{
                 this.props.property?.tabIndex
               )
             }
-            onKeyDown={this.MakeOnKeyDownCallBack()}
+            onKeyDown={this.makeOnKeyDownCallBack()}
             onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
           />
         );
       case "Image":
         return <ImageEditor value={this.props.value} />;
-      case "Blob":
+        case "Blob":
+        const isDirty = getIsFormScreenDirty(this.props.property);
         return (
           <BlobEditor
             isReadOnly={readOnly}
             value={this.props.value}
             isInvalid={isInvalid}
             invalidMessage={invalidMessage}
-            onKeyDown={this.MakeOnKeyDownCallBack()}
+            onKeyDown={this.makeOnKeyDownCallBack()}
+            canUpload={!isDirty}
             subscribeToFocusManager={(inputEditor) =>
               this.focusManager.subscribe(
                 inputEditor,
@@ -292,10 +295,10 @@ export class FormViewEditor extends React.Component<{
     }
   }
 
-  private MakeOnKeyDownCallBack() {
+  private makeOnKeyDownCallBack() {
     const dataView = getDataView(this.props.property);
 
-    return (event: any) => {
+    return async (event: any) => {
       dataView.focusManager.stopAutoFocus();
       if (event.key === "Tab") {
         DomEvent.preventDefault(event);
@@ -306,11 +309,7 @@ export class FormViewEditor extends React.Component<{
         }
         return;
       }
-
       if (this.props.property!.multiline) {
-        return;
-      }
-      if (!dataView.firstEnabledDefaultAction) {
         return;
       }
       if (event.key === "Enter") {
@@ -320,6 +319,8 @@ export class FormViewEditor extends React.Component<{
             event,
             dataView.firstEnabledDefaultAction
           );
+        }else{
+          this.props.onEditorBlur?.(null);
         }
       }
     };

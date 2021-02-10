@@ -1,7 +1,7 @@
-import {selectPrevRow} from "../../../actions/DataView/selectPrevRow";
-import {selectNextRow} from "../../../actions/DataView/selectNextRow";
-import {selectPrevColumn} from "../../../actions/DataView/TableView/selectPrevColumn";
-import {selectNextColumn} from "../../../actions/DataView/TableView/selectNextColumn";
+import {selectPrevRow} from "model/actions/DataView/selectPrevRow";
+import {selectNextRow} from "model/actions/DataView/selectNextRow";
+import {selectPrevColumn} from "model/actions/DataView/TableView/selectPrevColumn";
+import {selectNextColumn} from "model/actions/DataView/TableView/selectNextColumn";
 import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 import {flow} from "mobx";
 import {handleError} from "model/actions/handleError";
@@ -61,6 +61,12 @@ export function onTableKeyDown(ctx: any) {
           }
           getTablePanelView(ctx).scrollToCurrentCell();
           break;
+        case "Escape": {
+          getTablePanelView(ctx).setEditing(false);
+          getTablePanelView(ctx).clearCurrentCellEditData();
+          getTablePanelView(ctx).triggerOnFocusTable();
+          break;
+        }
       }
     } catch (e) {
       yield* handleError(ctx)(e);

@@ -58,12 +58,15 @@ export class SidebarState {
 
 
 export class MainMenuState implements IMainMenuState {
-
+  
   @observable
   folderStateMap: Map<string, boolean> = new Map();
 
   refMap: Map<string, RefObject<HTMLElement>> = new Map();
 
+  @observable
+  private _hightLightedItemId: string | undefined;
+  
   closeAll(){
     this.folderStateMap.clear();
   }
@@ -87,5 +90,14 @@ export class MainMenuState implements IMainMenuState {
 
   scrollToItem(id: string){
     this.refMap.get(id)?.current?.scrollIntoView();
+  }
+
+  public get hightLightedItemId() {
+    return this._hightLightedItemId;
+  }
+
+  highlightItem(itemId: string){
+    this._hightLightedItemId = itemId;
+    setTimeout(() => this._hightLightedItemId = undefined, 3000)
   }
 }

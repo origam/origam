@@ -7,10 +7,19 @@
 }
 
 .tagInputAdd {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  min-width: 20px;
 }
 
 .tagInputAdd:hover {
   cursor: pointer;
+  font-weight: bold;
+  background-color: #8998c5;
+  color: white;
 }
 
 .tagInputItem {

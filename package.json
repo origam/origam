@@ -65,6 +65,7 @@
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
     "js-cookie": "^2.2.1",
+    "js-file-download": "^0.4.12",
     "jsonwebtoken": "^8.5.1",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",

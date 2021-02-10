@@ -137,27 +137,6 @@ export class ErrorDialogController implements IErrorDialogController {
   }
 }
 
-/*
-export const errDialogPromise = (ctx: any) => (error: any) =>
-  new Promise(resolve => {
-    const responseMessage =
-      _.get(error, "response.data.message") ||
-      _.get(error, "response.data.Message");
-
-    const errorMessage = responseMessage || "" + error;
-    const closeDialog = getDialogStack(ctx).pushDialog(
-      "",
-      <ErrorDialogComponent
-        errorMessages={errorMessages}
-        onOkClick={action(() => {
-          console.log("close dialog...");
-          closeDialog();
-          resolve();
-        })}
-      />
-    );
-  });*/
-
 @observer
 export class ErrorDialogComponent extends React.Component<{
   errorMessages: Array<{ id: number; message: string; timestamp: string }>;
@@ -171,7 +150,7 @@ export class ErrorDialogComponent extends React.Component<{
         buttonsCenter={
           <>
             <button tabIndex={0} autoFocus={true} onClick={this.props.onOkClick}>
-              OK
+              {T("Ok", "button_ok")}
             </button>
           </>
         }
