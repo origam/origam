@@ -24,6 +24,7 @@ export interface IRowStateItem {
   backgroundColor: string | undefined;
   columns: Map<string, IRowStateColumnItem>;
   disabledActions: Set<string>;
+  relations: any[];
 }
 
 export interface IRowStateColumnItem {

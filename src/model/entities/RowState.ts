@@ -134,9 +134,6 @@ export class RowState implements IRowState {
         flashColor2htmlColor(state.backgroundColor),
         new Map(
           state.columns.map((column: any) => {
-            /*if(!column.allowRead) {
-              debugger
-            }*/
             const rs = new RowStateColumnItem(
               column.name,
               column.dynamicLabel,
@@ -148,7 +145,8 @@ export class RowState implements IRowState {
             return [column.name, rs];
           })
         ),
-        new Set(state.disabledActions)
+        new Set(state.disabledActions),
+        state.relations
       )
     );
     this.firstLoadingPerformed = true;
@@ -177,7 +175,8 @@ export class RowStateItem implements IRowStateItem {
     public foregroundColor: string | undefined,
     public backgroundColor: string | undefined,
     public columns: Map<string, IRowStateColumnItem>,
-    public disabledActions: Set<string>
+    public disabledActions: Set<string>,
+    public relations: any[]
   ) {}
 }
 
