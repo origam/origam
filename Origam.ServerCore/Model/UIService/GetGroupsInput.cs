@@ -49,6 +49,8 @@ namespace Origam.ServerCore.Model.UIService
         public List<Aggregation> AggregatedColumns { get; set; }
 
         public List<IRowOrdering> OrderingList =>
-            Ordering.ToList<IRowOrdering>();
+            Ordering.ToList<IRowOrdering>();    
+
+        public Dictionary<string, Guid> FilterLookups { get; set; }
     }
 }
