@@ -25,6 +25,7 @@ import {joinWithAND, toFilterItem} from "../OrigamApiHelpers";
 import {FlowBusyMonitor} from "../../../utils/flow";
 import {getFormScreen} from "model/selectors/FormScreen/getFormScreen";
 import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 
 export class DataViewLifecycle implements IDataViewLifecycle {
   $type_IDataViewLifecycle: 1 = 1;
@@ -197,6 +198,7 @@ export class DataViewLifecycle implements IDataViewLifecycle {
             SessionFormIdentifier: getSessionId(this),
             DataStructureEntityId: getDataStructureEntityId(dataView),
             Filter: this.buildDetailFilter(dataView),
+            FilterLookups: getUserFilterLookups(dataView),
             Ordering: [],
             RowLimit: SCROLL_ROW_CHUNK,
             MasterRowId: undefined,

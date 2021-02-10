@@ -11,5 +11,6 @@
       "url": "https://localhost:3000",
       "webRoot": "${workspaceFolder}"
     }
-  ]
+  ],
+  "outFiles": ["${workspaceFolder}/build/static/js/*.js"]
 }
