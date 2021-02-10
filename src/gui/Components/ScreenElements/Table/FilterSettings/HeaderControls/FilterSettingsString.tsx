@@ -51,31 +51,33 @@ const OpCombo: React.FC<{
 @observer
 class OpEditors extends React.Component<{
   setting?: any;
+  onCurrentValueChanged: (currentValue: string) => void;
+  currentValue: string;
   onChange: () => void;
 }> {
 
-  @observable
-  currentValue = this.props.setting.val1;
+  // @observable
+  // currentValue = this.props.setting.val1;
 
-  componentDidUpdate(prevProps: any){
-    if(prevProps.setting?.val1 !== this.props.setting?.val1){
-      this.currentValue = this.props.setting?.val1;
-    }
-  }
+  // // componentDidUpdate(prevProps: any){
+  // //   if(prevProps.setting?.val1 !== this.props.setting?.val1){
+  // //     this.currentValue = this.props.setting?.val1;
+  // //   }
+  // // }
 
-  onCurrentValueChanged(newValue: string){
-    this.currentValue = newValue;
+  // onCurrentValueChanged(newValue: string){
+  //   this.currentValue = newValue;
 
-    const timeOutId = setTimeout(() => {
-      runInAction(() => {
-        this.props.setting.val1 = this.currentValue === "" ? undefined : this.currentValue;
-        this.props.onChange();
-      })
-    }, EDITOR_DALEY_MS);
-    return () => {
-      clearTimeout(timeOutId);
-    }
-  }
+  //   const timeOutId = setTimeout(() => {
+  //     runInAction(() => {
+  //       this.props.setting.val1 = this.currentValue === "" ? undefined : this.currentValue;
+  //       this.props.onChange();
+  //     })
+  //   }, EDITOR_DALEY_MS);
+  //   return () => {
+  //     clearTimeout(timeOutId);
+  //   }
+  // }
 
   render(){
     switch (this.props.setting.type) {
@@ -90,8 +92,8 @@ class OpEditors extends React.Component<{
         return (
           <input
             className={CS.input}
-            value={this.currentValue ?? ""}
-            onChange={(event: any) => this.onCurrentValueChanged(event.target.value)}
+            value={this.props.currentValue ?? ""}
+            onChange={(event: any) => this.props.onCurrentValueChanged(event.target.value)}
             onBlur={this.props.onChange}
           />
         );
@@ -121,11 +123,40 @@ export class FilterSettingsString extends React.Component<{
     setting.val2 = undefined;
   }
 
+  @action.bound
+  handleFilterTypeChange() {
+    this.handleChange();
+    this.currentValue = "";
+  }
+
+  @observable
+  currentValue = this.props.setting.val1;
+
+  onCurrentValueChanged(newValue: string){
+    this.currentValue = newValue;
+
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        this.props.setting.val1 = this.currentValue === "" ? undefined : this.currentValue;
+        this.handleChange();
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }
+
   render() {
     return (
       <>
-        <OpCombo setting={this.props.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.props.setting} onChange={this.handleChange}/>
+        <OpCombo 
+          setting={this.props.setting} 
+          onChange={this.handleFilterTypeChange} />
+        <OpEditors 
+          setting={this.props.setting} 
+          onChange={this.handleChange}
+          currentValue={this.currentValue}
+          onCurrentValueChanged={value => this.onCurrentValueChanged(value)}/>
       </>
     );
   }
