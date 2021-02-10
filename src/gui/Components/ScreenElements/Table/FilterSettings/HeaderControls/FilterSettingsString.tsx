@@ -56,29 +56,6 @@ class OpEditors extends React.Component<{
   onChange: () => void;
 }> {
 
-  // @observable
-  // currentValue = this.props.setting.val1;
-
-  // // componentDidUpdate(prevProps: any){
-  // //   if(prevProps.setting?.val1 !== this.props.setting?.val1){
-  // //     this.currentValue = this.props.setting?.val1;
-  // //   }
-  // // }
-
-  // onCurrentValueChanged(newValue: string){
-  //   this.currentValue = newValue;
-
-  //   const timeOutId = setTimeout(() => {
-  //     runInAction(() => {
-  //       this.props.setting.val1 = this.currentValue === "" ? undefined : this.currentValue;
-  //       this.props.onChange();
-  //     })
-  //   }, EDITOR_DALEY_MS);
-  //   return () => {
-  //     clearTimeout(timeOutId);
-  //   }
-  // }
-
   render(){
     switch (this.props.setting.type) {
       case "eq":

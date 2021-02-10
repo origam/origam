@@ -57,49 +57,6 @@ class OpEditors extends React.Component<{
   onCurrentValue2Changed: ((value2: any) => void);
 }> {
 
-  // @observable
-  // currentValue1 = this.props.setting.val1;
-
-  // @observable
-  // currentValue2 = this.props.setting.val2;
-
-  // componentDidUpdate(prevProps: any){
-  //   if(prevProps.setting?.val1 !== this.props.setting?.val1){
-  //     this.currentValue1 = this.props.setting?.val1;
-  //   }
-  //   if(prevProps.setting?.val2 !== this.props.setting?.val2){
-  //     this.currentValue2 = this.props.setting?.val2;
-  //   }
-  // }
-
-  // onCurrentValue1Changed(newValue: string){
-  //   this.currentValue1 = newValue;
-
-  //   const timeOutId = setTimeout(() => {
-  //     runInAction(() => {
-  //       this.props.setting.val1 = this.currentValue1 === "" ? undefined : this.currentValue1;
-  //       this.props.onChange(this.props.setting);
-  //     })
-  //   }, EDITOR_DALEY_MS);
-  //   return () => {
-  //     clearTimeout(timeOutId);
-  //   }
-  // }
-
-  // onCurrentValue2Changed(newValue: string){
-  //   this.currentValue2 = newValue;
-
-  //   const timeOutId = setTimeout(() => {
-  //     runInAction(() => {
-  //       this.props.setting.val2 = this.currentValue2 === "" ? undefined : this.currentValue2;
-  //       this.props.onChange(this.props.setting);
-  //     })
-  //   }, EDITOR_DALEY_MS);
-  //   return () => {
-  //     clearTimeout(timeOutId);
-  //   }
-  // }
-
   render(){
     switch (this.props.setting.type) {
       case "eq":
@@ -198,15 +155,6 @@ export class FilterSettingsNumber extends React.Component<{
 
   @observable
   currentValue2 = this.props.setting.val2;
-
-  // componentDidUpdate(prevProps: any){
-  //   if(prevProps.setting?.val1 !== this.props.setting?.val1){
-  //     this.currentValue1 = this.props.setting?.val1;
-  //   }
-  //   if(prevProps.setting?.val2 !== this.props.setting?.val2){
-  //     this.currentValue2 = this.props.setting?.val2;
-  //   }
-  // }
 
   onCurrentValue1Changed(newValue: string){
     this.currentValue1 = newValue;
