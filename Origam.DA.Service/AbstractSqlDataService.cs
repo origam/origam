@@ -896,7 +896,7 @@ namespace Origam.DA.Service
 			DataStructure ds = this.GetDataStructure(query);
 
 			string cacheId = query.DataSourceId.ToString() + query.MethodId.ToString() + query.SortSetId.ToString() + columnsInfo;
-			Hashtable cache = new Hashtable();// GetScalarCommandCache();
+			Hashtable cache = GetScalarCommandCache();
 
 			if(cache.Contains(cacheId))
 			{

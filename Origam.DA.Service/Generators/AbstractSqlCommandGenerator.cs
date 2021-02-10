@@ -2186,9 +2186,6 @@ namespace Origam.DA.Service
                         dynamicParameters, selectParameterReferences, isInRecursion,
                         ref groupByNeeded, columnsInfo, column, ref groupExpression);
 
-                // filterCommandParser?.SetColumnExpressionIfMissing(column.Name ,resultExpression);
-                // orderByCommandParser?.SetColumnExpressionIfMissing(column.Name ,resultExpression);
-
                 if (processColumn && !string.IsNullOrWhiteSpace(resultExpression))
                 {
                     result = new ColumnRenderData { Expression = resultExpression, Alias = column.Name};
