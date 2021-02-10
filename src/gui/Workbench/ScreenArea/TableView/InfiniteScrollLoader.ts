@@ -14,6 +14,7 @@ import {IVisibleRowsMonitor, OpenGroupVisibleRowsMonitor} from "./VisibleRowsMon
 import {ScrollRowContainer} from "model/entities/ScrollRowContainer";
 import {CancellablePromise} from "mobx/lib/api/flow";
 import { IProperty } from "model/entities/types/IProperty";
+import { getUserFilterLookups } from "model/selectors/DataView/getUserFilterLookups";
 
 
 export interface IInfiniteScrollLoaderData {
@@ -182,6 +183,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       Filter: this.getFilters(),
+      FilterLookups: getUserFilterLookups(this.ctx),
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
       MasterRowId: undefined,
@@ -219,6 +221,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
       SessionFormIdentifier: getSessionId(formScreenLifecycle),
       DataStructureEntityId: getDataStructureEntityId(this.ctx),
       Filter: this.getFilters(),
+      FilterLookups: getUserFilterLookups(this.ctx),
       Ordering: getUserOrdering(this.ctx),
       RowLimit: SCROLL_ROW_CHUNK,
       RowOffset: nextStartOffset,

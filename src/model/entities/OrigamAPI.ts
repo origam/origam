@@ -440,6 +440,7 @@ export class OrigamAPI implements IApi {
     MenuId: string;
     DataStructureEntityId: string;
     Filter: string | undefined;
+    FilterLookups?: { [key: string]: string };
     Ordering: IOrdering[];
     RowLimit: number;
     GroupBy: string;
