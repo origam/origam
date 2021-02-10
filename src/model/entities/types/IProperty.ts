@@ -34,6 +34,7 @@ export interface IPropertyData {
   isAggregatedColumn: boolean;
   isLookupColumn: boolean;
   autoSort: boolean;
+  toolTip: string;
 
   controlPropertyValue?: string;
   controlPropertyId?: string;

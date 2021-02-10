@@ -195,6 +195,7 @@ function parseProperty(property: any, idx: number): IProperty {
     isAggregatedColumn: property.attributes.Aggregated || false,
     isLookupColumn: property.attributes.IsLookupColumn || false,
     style: cssString2Object(property.attributes.Style),
+    toolTip: property.elements.find((child: any) => child.name === "ToolTip")?.elements?.[0]?.text
   });
   if (property.elements && property.elements.length > 0) {
     property.elements

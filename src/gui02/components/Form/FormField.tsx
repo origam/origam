@@ -7,6 +7,7 @@ import React from "react";
 import S from "./FormField.module.scss";
 import { getRowStateMayCauseFlicker } from "model/selectors/RowState/getRowStateMayCauseFlicker";
 import { getRowStateDynamicLabel } from "model/selectors/RowState/getRowStateNameOverride";
+import { Tooltip } from "react-tippy";
 
 export enum ICaptionPosition {
   Left = "Left",
@@ -39,6 +40,7 @@ export class FormField extends React.Component<{
   isHidden?: boolean;
   hideCaption?: boolean;
   captionColor?: string;
+  toolTip?: string;
 }> {
   @computed
   get captionStyle() {
@@ -94,6 +96,22 @@ export class FormField extends React.Component<{
     };
   }
 
+
+  renderEditorWithToolTip(){
+    const toolTipStyle = this.formFieldStyle as any;
+    toolTipStyle["position"] = "absolute";
+
+    const editorStyle = this.formFieldStyle as any;
+    editorStyle["position"] = "static";
+    return(
+      <Tooltip html={this.props.toolTip} position={"right"} theme={"light"} distance={10} style={toolTipStyle}>
+        <div className={S.editor} style={editorStyle}>
+          {this.props.editor}
+        </div>
+      </Tooltip>
+    );
+  }
+
   render() {
     const { props } = this;
     return (
@@ -104,9 +122,12 @@ export class FormField extends React.Component<{
             {props.caption}
           </label>
         )}
-        <div className={S.editor} style={this.formFieldStyle}>
-          {props.editor}
-        </div>
+          {props.toolTip
+            ? this.renderEditorWithToolTip()
+            : <div className={S.editor} style={this.formFieldStyle}>
+               {props.editor}
+              </div>
+          }                   
       </>
     );
   }

@@ -9,8 +9,6 @@ import {
   getCurrentDecimalSeparator,
 } from "../../../../model/entities/NumberFormating";
 import { IFocusAble } from "../../../../model/entities/FocusManager";
-import { getLocaleFromCookie } from "../../../../utils/cookies";
-import numeral from "numeral";
 import { IProperty } from "model/entities/types/IProperty";
 @observer
 export class NumberEditor extends React.Component<{
