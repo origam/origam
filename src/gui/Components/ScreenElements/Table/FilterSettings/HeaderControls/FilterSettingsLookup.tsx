@@ -158,12 +158,13 @@ class OpEditors extends React.Component<{
             values={this.props.setting.val1 ?? []}
           />
         );
-      case "contains":
+      case "contains": 
       case "ncontains":
          return (
           <input
-          className={CS.input}
-          onChange={this.handleTermChange} 
+            value={this.props.setting.val2 ?? ""}
+            className={CS.input}
+            onChange={this.handleTermChange} 
           />
         );
       case "null":
