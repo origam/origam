@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   FilterSettingsComboBox,
   FilterSettingsComboBoxItem,
@@ -8,8 +8,6 @@ import CS from "./FilterSettingsCommon.module.scss";
 import {action, observable, runInAction} from "mobx";
 import { observer } from "mobx-react";
 import { EDITOR_DALEY_MS, FilterSetting } from "./FilterSetting";
-import { T } from "utils/translation";
-import { LookupFilterSetting } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
 import { Operator } from "./Operator";
 
 const OPERATORS =
@@ -28,7 +26,7 @@ const OPERATORS =
 
 const OpCombo: React.FC<{
   setting: any;
-  onChange: (newSetting: any) => void;
+  onChange: () => void;
 }> = observer((props) => {
   return (
     <FilterSettingsComboBox
@@ -39,7 +37,7 @@ const OpCombo: React.FC<{
           key={op.type}
           onClick={() => {
             props.setting.type = op.type;
-            props.onChange(props.setting);}
+            props.onChange();}
           }
         >
           {op.caption}
@@ -52,52 +50,55 @@ const OpCombo: React.FC<{
 @observer
 class OpEditors extends React.Component<{
   setting?: any;
-  onChange: (newSetting: any) => void;
   onBlur?: (event: any) => void;
+  currentValue1: any;
+  currentValue2: any;
+  onCurrentValue1Changed: ((value1: any) => void);
+  onCurrentValue2Changed: ((value2: any) => void);
 }> {
 
-  @observable
-  currentValue1 = this.props.setting.val1;
+  // @observable
+  // currentValue1 = this.props.setting.val1;
 
-  @observable
-  currentValue2 = this.props.setting.val2;
+  // @observable
+  // currentValue2 = this.props.setting.val2;
 
-  componentDidUpdate(prevProps: any){
-    if(prevProps.setting?.val1 !== this.props.setting?.val1){
-      this.currentValue1 = this.props.setting?.val1;
-    }
-    if(prevProps.setting?.val2 !== this.props.setting?.val2){
-      this.currentValue2 = this.props.setting?.val2;
-    }
-  }
+  // componentDidUpdate(prevProps: any){
+  //   if(prevProps.setting?.val1 !== this.props.setting?.val1){
+  //     this.currentValue1 = this.props.setting?.val1;
+  //   }
+  //   if(prevProps.setting?.val2 !== this.props.setting?.val2){
+  //     this.currentValue2 = this.props.setting?.val2;
+  //   }
+  // }
 
-  onCurrentValue1Changed(newValue: string){
-    this.currentValue1 = newValue;
+  // onCurrentValue1Changed(newValue: string){
+  //   this.currentValue1 = newValue;
 
-    const timeOutId = setTimeout(() => {
-      runInAction(() => {
-        this.props.setting.val1 = this.currentValue1 === "" ? undefined : this.currentValue1;
-        this.props.onChange(this.props.setting);
-      })
-    }, EDITOR_DALEY_MS);
-    return () => {
-      clearTimeout(timeOutId);
-    }
-  }
+  //   const timeOutId = setTimeout(() => {
+  //     runInAction(() => {
+  //       this.props.setting.val1 = this.currentValue1 === "" ? undefined : this.currentValue1;
+  //       this.props.onChange(this.props.setting);
+  //     })
+  //   }, EDITOR_DALEY_MS);
+  //   return () => {
+  //     clearTimeout(timeOutId);
+  //   }
+  // }
 
-  onCurrentValue2Changed(newValue: string){
-    this.currentValue2 = newValue;
+  // onCurrentValue2Changed(newValue: string){
+  //   this.currentValue2 = newValue;
 
-    const timeOutId = setTimeout(() => {
-      runInAction(() => {
-        this.props.setting.val2 = this.currentValue2 === "" ? undefined : this.currentValue2;
-        this.props.onChange(this.props.setting);
-      })
-    }, EDITOR_DALEY_MS);
-    return () => {
-      clearTimeout(timeOutId);
-    }
-  }
+  //   const timeOutId = setTimeout(() => {
+  //     runInAction(() => {
+  //       this.props.setting.val2 = this.currentValue2 === "" ? undefined : this.currentValue2;
+  //       this.props.onChange(this.props.setting);
+  //     })
+  //   }, EDITOR_DALEY_MS);
+  //   return () => {
+  //     clearTimeout(timeOutId);
+  //   }
+  // }
 
   render(){
     switch (this.props.setting.type) {
@@ -111,8 +112,8 @@ class OpEditors extends React.Component<{
           <input
             type="number"
             className={CS.input}
-            value={this.currentValue1 ?? ""}
-            onChange={(event: any) => this.onCurrentValue1Changed(event.target.value)}
+            value={this.props.currentValue1 ?? ""}
+            onChange={(event: any) => this.props.onCurrentValue1Changed(event.target.value)}
             onBlur={this.props.onBlur}
           />
         );
@@ -124,15 +125,15 @@ class OpEditors extends React.Component<{
             <input
               type="number"
               className={CS.input}
-              value={this.currentValue1 ?? ""}
-              onChange={(event: any) => this.onCurrentValue1Changed(event.target.value)}
+              value={this.props.currentValue1 ?? ""}
+              onChange={(event: any) => this.props.onCurrentValue1Changed(event.target.value)}
               onBlur={this.props.onBlur}
             />
             <input
               type="number"
               className={CS.input}
-              value={this.currentValue2 ?? ""}
-              onChange={(event: any) => this.onCurrentValue2Changed(event.target.value)}
+              value={this.props.currentValue2 ?? ""}
+              onChange={(event: any) => this.props.onCurrentValue2Changed(event.target.value)}
               onBlur={this.props.onBlur}
             />
           </>
@@ -160,10 +161,15 @@ export class FilterSettingsNumber extends React.Component<{
   }
 
   @action.bound
-  handleChange(newSetting: any) {
+  handleFilterTypeChange() {
+    this.currentValue1 = "";
+    this.currentValue2 = "";
+    this.props.setting.val1 = undefined;
+    this.props.setting.val2 = undefined;
     this.handleSettingChange();
   }
 
+  @action.bound
   private handleSettingChange() {
     switch (this.props.setting.type) {
       case "eq":
@@ -187,11 +193,61 @@ export class FilterSettingsNumber extends React.Component<{
     }
   }
 
+  @observable
+  currentValue1 = this.props.setting.val1;
+
+  @observable
+  currentValue2 = this.props.setting.val2;
+
+  // componentDidUpdate(prevProps: any){
+  //   if(prevProps.setting?.val1 !== this.props.setting?.val1){
+  //     this.currentValue1 = this.props.setting?.val1;
+  //   }
+  //   if(prevProps.setting?.val2 !== this.props.setting?.val2){
+  //     this.currentValue2 = this.props.setting?.val2;
+  //   }
+  // }
+
+  onCurrentValue1Changed(newValue: string){
+    this.currentValue1 = newValue;
+
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        this.props.setting.val1 = this.currentValue1 === "" ? undefined : this.currentValue1;
+        this.handleSettingChange();
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }
+
+  onCurrentValue2Changed(newValue: string){
+    this.currentValue2 = newValue;
+
+    const timeOutId = setTimeout(() => {
+      runInAction(() => {
+        this.props.setting.val2 = this.currentValue2 === "" ? undefined : this.currentValue2;
+        this.handleSettingChange();
+      })
+    }, EDITOR_DALEY_MS);
+    return () => {
+      clearTimeout(timeOutId);
+    }
+  }
+
   render() {
     return (
       <>
-        <OpCombo setting={this.props.setting} onChange={this.handleChange} />
-        <OpEditors setting={this.props.setting} onChange={this.handleChange} onBlur={this.handleBlur} />
+        <OpCombo setting={this.props.setting} onChange={this.handleFilterTypeChange} />
+        <OpEditors 
+          setting={this.props.setting} 
+          onBlur={this.handleBlur}
+          currentValue1={this.currentValue1}
+          currentValue2={this.currentValue2}
+          onCurrentValue1Changed={val1 => this.onCurrentValue1Changed(val1)} 
+          onCurrentValue2Changed={val2 => this.onCurrentValue2Changed(val2)} 
+          />
       </>
     );
   }
