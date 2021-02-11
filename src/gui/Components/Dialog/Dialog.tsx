@@ -2,10 +2,10 @@ import S from "./Dialog.module.scss";
 import React from "react";
 
 import * as ReactDOM from "react-dom";
-import {observer, Observer} from "mobx-react";
-import {action, observable} from "mobx";
-import Measure, {BoundingRect} from "react-measure";
-import {Icon} from "gui02/components/Icon/Icon";
+import { observer, Observer } from "mobx-react";
+import { action, observable } from "mobx";
+import Measure, { BoundingRect } from "react-measure";
+import { Icon } from "gui02/components/Icon/Icon";
 
 export class ModalWindowOverlay extends React.Component {
   render() {
@@ -49,11 +49,7 @@ export class ModalWindow extends React.Component<{
   isInitialized = false;
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
-    if (
-      !this.isInitialized &&
-      contentRect.bounds!.height &&
-      contentRect.bounds!.width
-    ) {
+    if (!this.isInitialized && contentRect.bounds!.height && contentRect.bounds!.width) {
       this.isInitialized = true;
       this.top = window.innerHeight / 2 - contentRect.bounds!.height / 2;
       this.left = window.innerWidth / 2 - contentRect.bounds!.width / 2;
@@ -83,25 +79,65 @@ export class ModalWindow extends React.Component<{
     this.isDragging = false;
   }
 
-  onKeyDown(event: any){
+  onKeyDown(event: any) {
     this.props.onKeyDown?.(event);
   }
 
-  renderFooter(){
-    if(this.props.buttonsLeft || this.props.buttonsCenter || this.props.buttonsRight){
-      return(
-        <div className={S.footer}>
+  _focusHookIsOn = false;
+
+  footerFocusHookEnsureOn() {
+    if (this.elmFooter && !this._focusHookIsOn) {
+      this.elmFooter.addEventListener(
+        "keydown",
+        (evt: any) => {
+          if (evt.key === "Tab") {
+            evt.preventDefault();
+            if (evt.shiftKey) {
+              if (evt.target.previousSibling) {
+                evt.target.previousSibling.focus();
+              } else {
+                this.elmFooter?.lastChild?.focus();
+              }
+            } else {
+              if (evt.target.nextSibling) {
+                evt.target.nextSibling.focus();
+              } else {
+                this.elmFooter?.firstChild?.focus();
+              }
+            }
+          }
+        },
+        true
+      );
+      console.log("handler added");
+      this._focusHookIsOn = true;
+    }
+  }
+
+  componentDidMount() {
+    this.footerFocusHookEnsureOn();
+  }
+
+  componentWillUnmount() {}
+
+  refFooter = (elm: any) => {
+    this.elmFooter = elm;
+    if (elm) {
+      this.footerFocusHookEnsureOn();
+    }
+  };
+  elmFooter: any;
+
+  renderFooter() {
+    if (this.props.buttonsLeft || this.props.buttonsCenter || this.props.buttonsRight) {
+      return (
+        <div ref={this.refFooter} className={S.footer}>
           {this.props.buttonsLeft}
-          {this.props.buttonsCenter ? (
-            this.props.buttonsCenter
-          ) : (
-            <div className={S.pusher} />
-          )}
+          {this.props.buttonsCenter ? this.props.buttonsCenter : <div className={S.pusher} />}
           {this.props.buttonsRight}
         </div>
       );
-    }
-    else{
+    } else {
       return null;
     }
   }
@@ -119,26 +155,25 @@ export class ModalWindow extends React.Component<{
                   top: this.top,
                   left: this.left,
                   minWidth: this.props.width,
-                  minHeight: this.props.height
+                  minHeight: this.props.height,
                 }}
                 tabIndex={0}
-                onKeyDown={(event:any)=> this.onKeyDown(event)}
+                onKeyDown={(event: any) => this.onKeyDown(event)}
               >
-                {this.props.title && <div
-                  className={S.title}
-                  onMouseDown={this.handleTitleMouseDown}
-                >
-                  <div className={S.label}>
-                    <div className={S.labelText}>{this.props.title}</div>
-                    {this.props.titleIsWorking && (
-                      <div className={S.progressIndicator}>
-                        <div className={S.indefinite} />
-                      </div>
-                    )}
-                  </div>
+                {this.props.title && (
+                  <div className={S.title} onMouseDown={this.handleTitleMouseDown}>
+                    <div className={S.label}>
+                      <div className={S.labelText}>{this.props.title}</div>
+                      {this.props.titleIsWorking && (
+                        <div className={S.progressIndicator}>
+                          <div className={S.indefinite} />
+                        </div>
+                      )}
+                    </div>
 
-                  <div className={S.buttons}>{this.props.titleButtons}</div>
-                </div>}
+                    <div className={S.buttons}>{this.props.titleButtons}</div>
+                  </div>
+                )}
                 <div className={S.body}>{this.props.children}</div>
                 {this.renderFooter()}
               </div>
