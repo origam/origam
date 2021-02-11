@@ -9,7 +9,7 @@ interface IUpdateObjectData {
 }
 
 interface IAggregatedRequest {
-  id: string,
+  id: string;
   data: IUpdateData[];
   sessionFormIdentifier: string;
   entity: string;
@@ -31,17 +31,13 @@ export class UpdateRequestAggregator {
 
   enqueue(data: IUpdateObjectData): Promise<any> {
     const aggregatedRequest = this.getAggregateRequest(data);
-
     if (!aggregatedRequest.timeout) {
       aggregatedRequest.timeout = setTimeout(async () => {
         runInFlowWithHandler({
           ctx: this.ctx,
           action: async () => {
             await this.waitForRunningRequest(aggregatedRequest);
-            await this.resolveAggregateRequest(
-              aggregatedRequest,
-              data
-            );
+            await this.resolveAggregateRequest(aggregatedRequest, data);
           },
         });
       }, 130);
@@ -58,7 +54,6 @@ export class UpdateRequestAggregator {
     const resolver = aggregatedRequest.promiseResolver;
     const updateData = aggregatedRequest.data!;
     this.dataMap.delete(aggregatedRequest.id);
-
     const resultData = await this.origamAPI.updateObject({
       SessionFormIdentifier: data.SessionFormIdentifier,
       Entity: data.Entity,
@@ -81,32 +76,32 @@ export class UpdateRequestAggregator {
   private getAggregateRequest(data: IUpdateObjectData) {
     const requestId = data.Entity + data.SessionFormIdentifier;
     if (!this.dataMap.has(requestId)) {
-      let promiseResolver:
-        | ((value: any | PromiseLike<void>) => void)
-        | undefined;
-      const promise = new Promise<any>(
-        (resolve, reject) => (promiseResolver = resolve)
-      );
-      this.dataMap.set(
-        requestId,
-        {
-          id: requestId,
-          sessionFormIdentifier: data.SessionFormIdentifier,
-          entity: data.Entity,
-          data: [
-            ...(this.dataMap.get(requestId)?.data ?? []),
-            ...data.UpdateData,
-          ],
-          promise: promise,
-          promiseResolver: promiseResolver,
-          timeout: undefined,
-        }
-      );
+      let promiseResolver: ((value: any | PromiseLike<void>) => void) | undefined;
+      const promise = new Promise<any>((resolve, reject) => (promiseResolver = resolve));
+      this.dataMap.set(requestId, {
+        id: requestId,
+        sessionFormIdentifier: data.SessionFormIdentifier,
+        entity: data.Entity,
+        data: [...(this.dataMap.get(requestId)?.data ?? []), ...data.UpdateData],
+        promise: promise,
+        promiseResolver: promiseResolver,
+        timeout: undefined,
+      });
     } else {
-      this.dataMap.get(requestId)!.data = [
-        ...this.dataMap.get(requestId)!.data,
-        ...data.UpdateData,
-      ];
+      const dataByRowId = new Map<any, IUpdateData>();
+      const existingUpdates = this.dataMap.get(requestId)!.data;
+      for (let existingUpdate of existingUpdates) {
+        dataByRowId.set(existingUpdate.RowId, existingUpdate);
+      }
+      for (let newUpdate of data.UpdateData) {
+        if (dataByRowId.has(newUpdate.RowId)) {
+          const dataItem = dataByRowId.get(newUpdate.RowId)!;
+          dataItem.Values = { ...dataItem.Values, ...newUpdate.Values };
+        } else {
+          dataByRowId.set(newUpdate.RowId, newUpdate);
+        }
+      }
+      this.dataMap.get(requestId)!.data = Array.from(dataByRowId.values());
     }
     return this.dataMap.get(requestId)!;
   }
