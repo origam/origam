@@ -9,6 +9,7 @@ import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
 import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
+import { Icon } from "gui02/components/Icon/Icon";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;
@@ -73,10 +74,10 @@ export class ErrorDialogController implements IErrorDialogController {
         handleMessageField() ||
         handleLoginValidation() ||
         handleRuntimeException();
-      
-      if(errItem.error?.request?.status === 500 || 
-         errItem.error?.request?.status === 409){
-        errorMessage = "Server error occurred. Please check server log for more details:\n"+ errorMessage;
+
+      if (errItem.error?.request?.status === 500 || errItem.error?.request?.status === 409) {
+        errorMessage =
+          "Server error occurred. Please check server log for more details:\n" + errorMessage;
       }
 
       return {
@@ -158,18 +159,27 @@ export class ErrorDialogComponent extends React.Component<{
         buttonsRight={null}
       >
         <div className={CS.dialogContent}>
-          {this.props.errorMessages.length === 1 ? (
-            this.props.errorMessages[0].message
-          ) : (
-            <div className={CS.errorMessageList}>
-              {this.props.errorMessages.map((errMessage) => (
-                <div key={errMessage.id} className={CS.errorMessageListItem}>
-                  <span className={CS.errorMessageDatetime}>{errMessage.timestamp}</span>
-                  {errMessage.message}
-                </div>
-              ))}
-            </div>
-          )}
+          <div className={CS.dialogBigIconColumn}>
+            {/* SVG as data url here because we might not be able to determine customAssets path. 
+            This has fill color embedded :-( */}
+            <Icon
+              src={`data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIzLjEuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkViZW5lXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeD0iMHB4IiB5PSIwcHgiCiAgICAgdmlld0JveD0iMCAwIDIwIDIwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyMCAyMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8dGl0bGU+WmVpY2hlbmZsw6RjaGUgMTwvdGl0bGU+CjxnPgoJPHBhdGggZmlsbD0iI2ZmNDM1NCIgZD0iTTkuMywwLjlsLTkuMiwxN2MtMC4zLDAuNSwwLjEsMS4yLDAuNywxLjJoMTguNGMwLjYsMCwxLTAuNywwLjctMS4ybC05LjItMTdDMTAuNCwwLjQsOS42LDAuNCw5LjMsMC45eiBNMTAsMTUuOUwxMCwxNS45CgkJYy0wLjQsMC0wLjgtMC40LTAuOC0wLjh2MGMwLTAuNCwwLjQtMC44LDAuOC0wLjhoMGMwLjQsMCwwLjgsMC40LDAuOCwwLjh2MEMxMC44LDE1LjUsMTAuNCwxNS45LDEwLDE1Ljl6IE05LjIsMTEuOFY2LjkKCQljMC0wLjQsMC40LTAuOCwwLjgtMC44aDBjMC40LDAsMC44LDAuNCwwLjgsMC44djQuOWMwLDAuNC0wLjQsMC44LTAuOCwwLjhoMEM5LjYsMTIuNiw5LjIsMTIuMiw5LjIsMTEuOHoiLz4KPC9nPgo8L3N2Zz4K`}
+            />
+          </div>
+          <div className={CS.dialogMessageColumn}>
+            {this.props.errorMessages.length === 1 ? (
+              this.props.errorMessages[0].message
+            ) : (
+              <div className={CS.errorMessageList}>
+                {this.props.errorMessages.map((errMessage) => (
+                  <div key={errMessage.id} className={CS.errorMessageListItem}>
+                    <span className={CS.errorMessageDatetime}>{errMessage.timestamp}</span>
+                    {errMessage.message}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </ModalWindow>
     );
