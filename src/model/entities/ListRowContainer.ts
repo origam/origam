@@ -1,12 +1,10 @@
 import {computed, observable, action, reaction, IReactionDisposer, flow, comparer} from "mobx";
 import { IFilterConfiguration } from "./types/IFilterConfiguration";
-import { IOrderingConfiguration } from "./types/IOrderingConfiguration";
+import { IOrderByDirection, IOrderingConfiguration } from "./types/IOrderingConfiguration";
 import { IRowsContainer } from "./types/IRowsContainer";
-import { trace } from "mobx"
 import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
 import {getDataView} from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
-import { IProperty } from "./types/IProperty";
 import _ from "lodash";
 import { fixRowIdentifier } from "utils/dataRow";
 
@@ -15,7 +13,7 @@ export class ListRowContainer implements IRowsContainer {
   private filterConfiguration: IFilterConfiguration;
   private reactionDisposer: IReactionDisposer | undefined;
   @observable
-  private forcedFirstRowId: string | undefined;
+  private forcedLastRowId: string | undefined;
   constructor(
     orderingConfiguration: IOrderingConfiguration,
     filterConfiguration: IFilterConfiguration,
@@ -72,10 +70,10 @@ export class ListRowContainer implements IRowsContainer {
     const filterComboProps = this.filterConfiguration.activeFilters
       .map((term) => getDataViewPropertyById(this.filterConfiguration, term.propertyId)!)
       .filter((prop) => prop.column === "ComboBox");
-    const allcomboProps = Array.from(new Set(filterComboProps.concat(orderingComboProps)));
+    const allComboProps = Array.from(new Set(filterComboProps.concat(orderingComboProps)));
 
     yield Promise.all(
-      allcomboProps.map(async (prop) => {
+      allComboProps.map(async (prop) => {
         return prop.lookupEngine?.lookupResolver.resolveList(
           dataTable.getAllValuesOfProp(prop)
         );
@@ -117,15 +115,19 @@ export class ListRowContainer implements IRowsContainer {
   }
 
   internalRowOrderingFunc(row1: any[], row2: any[]) {
-    if(this.forcedFirstRowId !== undefined){
-      if (this.forcedFirstRowId === this.rowIdGetter(row1)) return -1;
-      if (this.forcedFirstRowId === this.rowIdGetter(row2)) return 1;
+    if(this.forcedLastRowId !== undefined){
+      const orderings=this.orderingConfiguration.orderings;
+      const directionMultiplier = orderings.length === 1 && orderings[0].direction === IOrderByDirection.DESC
+        ? -1 
+        : 1;
+      if (this.forcedLastRowId === this.rowIdGetter(row1)) return 1 * directionMultiplier;
+      if (this.forcedLastRowId === this.rowIdGetter(row2)) return -1 * directionMultiplier;
     }
     return this.orderingConfiguration.orderingFunction()(row1, row2);
   }
 
   unlockAddedRowPosition(): void {
-    this.forcedFirstRowId = undefined;
+    this.forcedLastRowId = undefined;
   }
 
   clear(): void {
@@ -137,14 +139,14 @@ export class ListRowContainer implements IRowsContainer {
     const idx = this.allRows.findIndex((r) => this.rowIdGetter(r) === rowId);
     if (idx > -1) {
       this.allRows.splice(idx, 1);
-      if(rowId === this.forcedFirstRowId){
-        this.forcedFirstRowId = undefined;
+      if(rowId === this.forcedLastRowId){
+        this.forcedLastRowId = undefined;
       }
       this.updateSortAndFilter( {retainPreviousSelection: true});
     }
   }
 
-  async insert(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
+  async insert(index: number, row: any[], shouldLockNewRowPosition?: boolean): Promise<any> {
     const dataTable = getDataTable(this);
     row = fixRowIdentifier(row, dataTable.identifierDataIndex);
     const newRowId = dataTable.getRowId(row);
@@ -153,8 +155,8 @@ export class ListRowContainer implements IRowsContainer {
       return;
     }
     this.allRows.splice(index, 0, row);
-    if(shouldLockNewRowAtTop){
-      this.forcedFirstRowId = this.rowIdGetter(row);
+    if(shouldLockNewRowPosition){
+      this.forcedLastRowId = this.rowIdGetter(row);
     }
     await this.updateSortAndFilter();
   }
@@ -188,19 +190,12 @@ export class ListRowContainer implements IRowsContainer {
   parent: any;
 
   get addedRowPositionLocked(): boolean {
-    return this.forcedFirstRowId !== undefined;
+    return this.forcedLastRowId !== undefined;
   }
 
   getFirstRow(): any[] | undefined {
     if (this.rows.length === 0) {
       return undefined;
-    }
-    if (this.addedRowPositionLocked){
-      const firstRow = this.rows.find(row => this.rowIdGetter(row) === this.forcedFirstRowId);
-      if(!firstRow){
-        throw new Error("forcedFirstRowId is not among filtered rows")
-      }
-      return firstRow 
     }
     return this.rows[0];
   }

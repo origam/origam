@@ -36,7 +36,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
    sourceDataView?: IDataView): Generator {
   if (_.isArray(result)) {
     for (let resultItem of result) {
-      yield* processCRUDResult(ctx, resultItem, resortTables);
+      yield* processCRUDResult(ctx, resultItem, resortTables, sourceDataView);
     }
     return;
   }
@@ -70,9 +70,9 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
         const tablePanelView = dataView.tablePanelView;
         const dataSourceRow = result.wrappedObject;
         const shouldLockNewRowAtTop = sourceDataView?.modelInstanceId === dataView.modelInstanceId;
-        yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
-
+        
         if(isLazyLoading(dataView) && dataView.isRootGrid){
+          yield dataView.dataTable.insertRecord(tablePanelView.firstVisibleRowIndex, dataSourceRow, shouldLockNewRowAtTop);
           try{
             dataView.lifecycle.stopSelectedRowReaction();
             dataView.selectRow(dataSourceRow);
@@ -81,6 +81,7 @@ export function* processCRUDResult(ctx: any, result: ICRUDResult,
             dataView.lifecycle.startSelectedRowReaction();
           }
         } else {
+          yield dataView.dataTable.insertRecord(dataView.tableRows.length, dataSourceRow, shouldLockNewRowAtTop);
           dataView.selectRow(dataSourceRow);
         }
       }
