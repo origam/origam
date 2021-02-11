@@ -1045,13 +1045,17 @@ namespace Origam.DA.Service
             // paging column
             if (paging)
             {
-                if (sortSet == null || customOrdering != null)
+                if (sortSet != null && (customOrdering?.IsEmpty ?? true))
                 {
-                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS {0}", RowNumColumnName);
+                    sqlExpression.AppendFormat(
+                        ", ROW_NUMBER() OVER (ORDER BY {0}) AS {1}",
+                        orderByBuilder, RowNumColumnName);
                 }
                 else
                 {
-                    sqlExpression.AppendFormat(", ROW_NUMBER() OVER (ORDER BY {0}) AS {1}", orderByBuilder.ToString(), RowNumColumnName);
+                    sqlExpression.AppendFormat(
+                        ", ROW_NUMBER() OVER (ORDER BY (SELECT 1)) AS {0}",
+                        RowNumColumnName);
                 }
             }
 
