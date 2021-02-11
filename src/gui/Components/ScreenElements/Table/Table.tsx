@@ -387,8 +387,8 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                         <div className={S.canvasRow}>
                           <Canvas
                             refCanvasElement={this.refCanvasElement}
-                            width={contentRect.bounds!.width - 20}
-                            height={contentRect.bounds!.height - 20}
+                            width={contentRect.bounds!.width}
+                            height={contentRect.bounds!.height}
                           /> 
                         </div>) : null}
                         {this.props.isEditorMounted &&
@@ -435,7 +435,7 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
                           height={contentRect.bounds!.height}
                           isVisible={true}
                           scrollingDisabled={false /*this.props.isEditorMounted*/}
-                          contentWidth={this.props.gridDimensions.contentWidth}
+                          contentWidth={this.props.gridDimensions.contentWidth + 20}
                           // +30px to make the last row visible on some dirty browsers
                           contentHeight={this.props.gridDimensions.contentHeight + 30}
                           onScroll={this.handleScroll}
