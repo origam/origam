@@ -442,85 +442,84 @@ namespace Origam.DA
 
 				if (null == drTarget)
 				{
-					try 
+					try
 					{
-						if(drSource.RowState != DataRowState.Deleted) // if the source is deleted and target does not exist, we don't do anything
+						drTarget = inout_dtTarget.NewRow();
+
+						if (mergeParams.PreserveNewRowState && drSource.RowState == DataRowState.Deleted)
+                        {
+                            // We insert the row and delete it in the target so it
+                            // can be deleted from the database later if needed
+                            CopyOriginalRecordVersion(inout_dtTarget, drSource, drTarget);
+                            drTarget.Delete();
+                        }
+                        else if (mergeParams.PreserveNewRowState && drSource.RowState == DataRowState.Modified)
 						{
-							drTarget = inout_dtTarget.NewRow();
+							// We need to keep the original values, if the source row has been modified
+							CopyOriginalRecordVersion(inout_dtTarget, drSource, drTarget);
+							// And we overwrite them with the current values, thus making the row exactly
+							// same state as the source row (original values, current values and state = modified)
+							drTarget.BeginEdit();
+							CopyRecordValues(drSource, DataRowVersion.Current, drTarget);
+						}
+						else
+						{
+							// For any other states, we import the values
+							drTarget.BeginEdit();
+							CopyRecordValues(drSource, DataRowVersion.Current, drTarget);
 
-							if(mergeParams.PreserveNewRowState & drSource.RowState == DataRowState.Modified)
+							// And we add the row to the table
+							try
 							{
-								// We need to keep the original values, if the source row has been modified
-								CopyRecordValues(drSource, DataRowVersion.Original, drTarget);
 								inout_dtTarget.Rows.Add(drTarget);
-
-								// Then we accept the original values
-								drTarget.AcceptChanges();
-
-								// And we overwrite them with the current values, thus making the row exactly
-								// same state as the source row (original values, current values and state = modified)
-								drTarget.BeginEdit();
-								CopyRecordValues(drSource, DataRowVersion.Current, drTarget);
 							}
-							else
+							catch (System.Data.NoNullAllowedException e)
 							{
-								// For any other states, we import the values
-								drTarget.BeginEdit();
-								CopyRecordValues(drSource, DataRowVersion.Current, drTarget);
-
-								// And we add the row to the table
-								try 
-								{
-									inout_dtTarget.Rows.Add(drTarget);
-								} 
-								catch (System.Data.NoNullAllowedException e)
-								{
-									throw new System.Data.NoNullAllowedException(
-										String.Format("Adding a new row failed for table `{0}' ({1})",
-										inout_dtTarget, e.Message));
-								}
-							}
-
-							if(mergeParams.PreserveNewRowState & drSource.RowState == DataRowState.Unchanged)
-							{
-								// Set rowstate to Unchanged in target, if the source row was Unchanged,
-								// because if we load the row from a database, we want to keep the status.
-								drTarget.AcceptChanges();
-								System.Diagnostics.Debug.Assert(drTarget.RowState == DataRowState.Unchanged);
-							}
-							else
-							{
-								// for any other than Unchanged, we fill the Created and CreatedBy
-								UpdateOrigamSystemColumns(drTarget, true, mergeParams.ProfileId);
-							}
-
-							drTarget.EndEdit();
-							changed = true;
-
-							if(changeList != null)
-							{
-								changeList.Add(new KeyValuePair<object,DataMergeChange>(
-                                    aRowKey[0], new DataMergeChange(null, DataRowState.Added)));
+								throw new System.Data.NoNullAllowedException(
+									String.Format("Adding a new row failed for table `{0}' ({1})",
+									inout_dtTarget, e.Message));
 							}
 						}
-					} 
-					catch (Exception) 
+
+						if (mergeParams.PreserveNewRowState && drSource.RowState == DataRowState.Unchanged)
+						{
+							// Set rowstate to Unchanged in target, if the source row was Unchanged,
+							// because if we load the row from a database, we want to keep the status.
+							drTarget.AcceptChanges();
+							System.Diagnostics.Debug.Assert(drTarget.RowState == DataRowState.Unchanged);
+						}
+						else if(drSource.RowState != DataRowState.Deleted)
+						{
+							// for any other than Unchanged, we fill the Created and CreatedBy
+							UpdateOrigamSystemColumns(drTarget, true, mergeParams.ProfileId);
+						}
+
+						drTarget.EndEdit();
+						changed = true;
+
+						if (changeList != null)
+						{
+							changeList.Add(new KeyValuePair<object, DataMergeChange>(
+								aRowKey[0], new DataMergeChange(null, DataRowState.Added)));
+						}
+					}
+					catch (Exception)
 					{
 						throw;
 					}
 				} // eof insert case
 				else
 				{ // row exists in target
-					// and is deleted in the source
-					if(drSource.RowState == DataRowState.Deleted)
+				  // and is deleted in the source
+					if (drSource.RowState == DataRowState.Deleted)
 					{
 						drTarget.Delete();
 						changed = true;
 
-						if(changeList != null)
+						if (changeList != null)
 						{
-							changeList.Add(new KeyValuePair<object,DataMergeChange>(
-                                aRowKey[0], new DataMergeChange(null, DataRowState.Deleted)));
+							changeList.Add(new KeyValuePair<object, DataMergeChange>(
+								aRowKey[0], new DataMergeChange(null, DataRowState.Deleted)));
 						}
 					}
 					else
@@ -529,16 +528,16 @@ namespace Origam.DA
 
 						// Compare & update fields (UPDATE ?)
 						bRowModified = false;
-						for (iCol = 0 ; inout_dtTarget.Columns.Count > iCol ; ++iCol)
+						for (iCol = 0; inout_dtTarget.Columns.Count > iCol; ++iCol)
 						{
 							string colName = inout_dtTarget.Columns[iCol].ColumnName;
-						
-							if(in_dtSource.Columns.Contains(colName))
+
+							if (in_dtSource.Columns.Contains(colName))
 							{
 								// Column with same name exists in the source, so we can copy it to the target
 
 								// we only update, if values change
-								if (! drTarget[colName].Equals(drSource[colName]))
+								if (!drTarget[colName].Equals(drSource[colName]))
 								{
 									// "Default version" value in target is different from source.
 
@@ -553,7 +552,7 @@ namespace Origam.DA
 										//System.Diagnostics.Debug.Assert(drTarget.HasVersion(DataRowVersion.Original));
 
 										if (drTarget.HasVersion(DataRowVersion.Original)
-											&& ! drTarget[colName].Equals(drTarget[colName, DataRowVersion.Original]))
+											&& !drTarget[colName].Equals(drTarget[colName, DataRowVersion.Original]))
 										{
 											// this field was changed (not the same value) ==> preserve the change
 											bDoIt = false;
@@ -561,33 +560,33 @@ namespace Origam.DA
 										}
 
 									}
-									if (bDoIt) 
+									if (bDoIt)
 									{
 										DataColumn col = inout_dtTarget.Columns[colName];
 
-										if((expressions == null) || !expressions.ContainsKey(col))
+										if ((expressions == null) || !expressions.ContainsKey(col))
 										{
-												drTarget[colName] = DatasetTools.ConvertValue(drSource[colName], col.DataType);
+											drTarget[colName] = DatasetTools.ConvertValue(drSource[colName], col.DataType);
 
-												bRowModified = true;
-												if (!changedColumns.Contains(col.ExtendedProperties["Id"])) changedColumns.Add(col.ExtendedProperties["Id"], col);
+											bRowModified = true;
+											if (!changedColumns.Contains(col.ExtendedProperties["Id"])) changedColumns.Add(col.ExtendedProperties["Id"], col);
 										}
 									}
 								}
 							} // eof exists source column name
 						}
 
-						if(bRowModified)
+						if (bRowModified)
 						{
 							// only put RecordUpdated and RecordUpdatedBy if the data has actually changed
 							UpdateOrigamSystemColumns(drTarget, false, mergeParams.ProfileId, changedColumns);
 							drTarget.EndEdit();
 							changed = true;
 
-							if(changeList != null)
+							if (changeList != null)
 							{
 								changeList.Add(new KeyValuePair<object, DataMergeChange>
-                                    (aRowKey[0], new DataMergeChange(changedColumns, DataRowState.Modified)));
+									(aRowKey[0], new DataMergeChange(changedColumns, DataRowState.Modified)));
 							}
 						}
 						else
@@ -596,7 +595,7 @@ namespace Origam.DA
 						}
 
 						// sync the row state (e.g. after saving data to db the state changes from Added to Unchanged)
-						if(drSource.RowState == DataRowState.Unchanged && drTarget.RowState == DataRowState.Added)
+						if (drSource.RowState == DataRowState.Unchanged && drTarget.RowState == DataRowState.Added)
 						{
 							drTarget.AcceptChanges();
 						}
@@ -659,7 +658,16 @@ namespace Origam.DA
 			return changed;
 		} // eof method
 
-		public static bool CopyRecordValues(DataRow sourceRow, DataRowVersion sourceVersion, DataRow destinationRow)
+        private static void CopyOriginalRecordVersion(DataTable inout_dtTarget, DataRow drSource, DataRow drTarget)
+        {
+            drTarget.BeginEdit();
+            CopyRecordValues(drSource, DataRowVersion.Original, drTarget);
+            drTarget.EndEdit();
+            inout_dtTarget.Rows.Add(drTarget);
+            drTarget.AcceptChanges();
+        }
+
+        public static bool CopyRecordValues(DataRow sourceRow, DataRowVersion sourceVersion, DataRow destinationRow)
 		{
 			bool changed = false;
 			Hashtable changes = new Hashtable();
