@@ -293,23 +293,11 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       if (openedScreen.isActive) {
         if (screenToActivate) {
           openedScreens.activateItem(screenToActivate.menuItemId, screenToActivate.order);
-
           if (screenToActivate.isSleeping) {
             screenToActivate.isSleeping = false;
             const initUIResult = yield* this.initUIForScreen(screenToActivate, false);
             yield* screenToActivate.content!.start(initUIResult, screenToActivate.isSleepingDirty);
-          } else if (
-            screenToActivate.content &&
-            screenToActivate.content.formScreen &&
-            (screenToActivate.content.formScreen.refreshOnFocus ||
-              openedScreen.content.refreshOnReturnType ===
-                IRefreshOnReturnType.RefreshCompleteForm) &&
-            !screenToActivate.content.isLoading
-          ) {
-            if (!getIsFormScreenDirty(screenToActivate.content.formScreen)) {
-              yield* reloadScreen(screenToActivate.content.formScreen)();
-            }
-          }
+          } 
         }
       }
     } else {
