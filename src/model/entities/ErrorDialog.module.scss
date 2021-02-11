@@ -2,6 +2,8 @@
   width: 50vh;
   padding: 1.5em 1em;
   white-space: pre-wrap;
+  display: flex;
+  flex-direction: row;
 }
 
 .errorMessageList {
@@ -23,4 +25,19 @@
 .errorMessageDatetime {
   color: grey;
   margin-right: 15px;
+}
+
+.dialogBigIconColumn {
+  width: 30px;
+  flex: 0 0 auto;
+  margin-right: 20px;
+  margin-left: 5px;
+  svg {
+    stroke: transparent;
+    fill: #ff4354;
+  }
+}
+
+.dialogMessageColumn {
+  flex: 1 0 auto;
 }
