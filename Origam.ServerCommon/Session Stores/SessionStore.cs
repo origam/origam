@@ -1293,7 +1293,20 @@ namespace Origam.Server
                                 this.UnregisterEvents();
                                 try
                                 {
-                                    result.Add(this.RuleEngine.RowLevelSecurityState(row, profileId));
+                                    if (row == null)
+                                    {
+                                        result.Add(
+                                                new RowSecurityState
+                                                {
+                                                    Id = id, 
+                                                    NotFound = true
+                                                }
+                                            );
+                                    }
+                                    else
+                                    {
+                                        result.Add(RuleEngine.RowLevelSecurityState(row, profileId));
+                                    }
                                 }
                                 finally
                                 {
