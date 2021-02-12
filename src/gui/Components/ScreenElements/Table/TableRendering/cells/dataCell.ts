@@ -87,7 +87,10 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-  if (property.column !== "CheckBox") {
+  if (property.column !== "CheckBox" &&
+      property.column !== "Image" &&
+      property.column !== "Blob")
+  {
     onMouseOver({
       x: cellClickableArea.x,
       y: cellClickableArea.y,

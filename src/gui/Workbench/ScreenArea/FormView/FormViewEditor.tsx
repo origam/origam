@@ -265,7 +265,7 @@ export class FormViewEditor extends React.Component<{
         );
       case "Image":
         return <ImageEditor value={this.props.value} />;
-        case "Blob":
+      case "Blob":
         const isDirty = getIsFormScreenDirty(this.props.property);
         return (
           <BlobEditor
