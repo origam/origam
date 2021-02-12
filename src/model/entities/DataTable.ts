@@ -22,6 +22,8 @@ export class DataTable implements IDataTable {
   rowsContainer: IRowsContainer = null as any;
   @observable
   isEmpty: boolean = false;
+  @observable
+  rowsAddedSinceSave = 0;
 
   constructor(data: IDataTableData) {
     Object.assign(this, data);
@@ -339,6 +341,7 @@ export class DataTable implements IDataTable {
     this.deleteAdditionalRowData(row);
     this.rowsContainer.delete(row);
     this.notifyRowRemovedListeners();
+    this.rowsAddedSinceSave--;
   }
 
   @action.bound
@@ -371,6 +374,7 @@ export class DataTable implements IDataTable {
   @action.bound
   async insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
     await this.rowsContainer.insert(index, row, shouldLockNewRowAtTop);
+    this.rowsAddedSinceSave++;
   }
 
   @action.bound

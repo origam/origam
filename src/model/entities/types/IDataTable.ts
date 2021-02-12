@@ -26,6 +26,7 @@ export interface IDataTable {
   isEmpty: boolean;
   rowRemovedListeners: (() => void)[];
   identifierDataIndex: number;
+  rowsAddedSinceSave: number;
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;

@@ -12,7 +12,7 @@ export class TreeDataTable implements IDataTable {
   $type_TreeDataTable: 1 = 1;
   properties: IProperty[] = [];
   rowsContainer: IRowsContainer = null as any;
-
+  rowsAddedSinceSave = 0;
   @observable.shallow rows: any[] = [];
 
   get allRows(): any[][] {
