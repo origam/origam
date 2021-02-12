@@ -37,6 +37,8 @@ import { IProperty } from "model/entities/types/IProperty";
 const OPERATORS = [
     Operator.in,
     Operator.notIn,
+    Operator.startsWith,
+    Operator.notStartsWith,
     Operator.contains,
     Operator.notContains,
     Operator.isNull,
@@ -73,58 +75,6 @@ export interface ITagEditorItem {
 }
 
 @observer
-export class OptionGrid extends React.Component<{
-  items: Array<{ content: string; value: string }>;
-  searchPhrase?: string;
-  onCellClick?(event: any, rowIndex: number, columnIndex: number): void;
-}> {
-  render() {
-    const rowCount = this.props.items.length;
-    const columnWidths = [100];
-
-    const totalHeight = rowHeight * rowCount;
-    const totalWidth = columnWidths.reduce((a, b) => a + b, 0);
-    const maxHeight = 400;
-    const maxWidth = 300;
-    const overflowX = totalWidth < maxWidth ? "hidden" : "scroll";
-    const overflowY = totalHeight < maxHeight ? "hidden" : "scroll";
-
-    return (
-      <Grid
-        style={{ overflowX, overflowY }}
-        width={Math.min(totalWidth, maxWidth)}
-        height={Math.min(totalHeight, maxHeight)}
-        cellRenderer={this.renderCell}
-        rowCount={rowCount}
-        columnCount={columnWidths.length}
-        rowHeight={rowHeight}
-        columnWidth={({ index }) => columnWidths[index]}
-      />
-    );
-  }
-
-  renderCell = ({ style, key, rowIndex, columnIndex }: GridCellProps) => {
-    return (
-      <div
-        style={style}
-        key={key}
-        className={S.optionGridCell + (rowIndex % 2 === 0 ? " a" : " b")}
-        onClick={(event: any) =>
-          this.props.onCellClick && this.props.onCellClick(event, rowIndex, columnIndex)
-        }
-      >
-        <Highlighter
-          textToHighlight={this.props.items[rowIndex].content}
-          searchWords={[this.props.searchPhrase].filter((item) => item) as string[]}
-          autoEscape={true}
-        />
-        {}
-      </div>
-    );
-  };
-}
-
-@observer
 class OpEditors extends React.Component<{
   setting: IFilterSetting;
   getOptions: (searchTerm: string) => CancellablePromise<Array<any>>;
@@ -158,7 +108,9 @@ class OpEditors extends React.Component<{
             values={this.props.setting.val1 ?? []}
           />
         );
-      case "contains": 
+      case "starts":
+      case "nstarts":
+      case "contains":
       case "ncontains":
          return (
           <input
