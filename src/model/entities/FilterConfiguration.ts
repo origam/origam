@@ -79,9 +79,6 @@ export class FilterConfiguration implements IFilterConfiguration {
         }
       }
       for (let term of this.activeFilters) {
-        let res = !this.userFilterPredicate(row, term);
-        if (res) {
-        }
         if (!this.userFilterPredicate(row, term)) {
           return false;
         }
