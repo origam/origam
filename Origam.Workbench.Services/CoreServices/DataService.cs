@@ -214,19 +214,24 @@ namespace Origam.Workbench.Services.CoreServices
 
 		public static DataSet StoreData(Guid dataStructureId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
 		{
-			return StoreData(dataStructureId, Guid.Empty, data, loadActualValuesAfterUpdate, transactionId);
+			var dataStructureQuery = new DataStructureQuery
+			{
+				DataSourceId = dataStructureId,
+				MethodId = Guid.Empty,
+				LoadActualValuesAfterUpdate = loadActualValuesAfterUpdate
+			};
+			return StoreData(dataStructureQuery, data,transactionId);
 		}
 
-		public static DataSet StoreData(Guid dataStructureId, Guid methodId, DataSet data, bool loadActualValuesAfterUpdate, string transactionId)
+		public static DataSet StoreData(DataStructureQuery dataStructureQuery, DataSet data, string transactionId)
 		{
-			IServiceAgent dataServiceAgent = (ServiceManager.Services.GetService(typeof(IBusinessServicesService)) as IBusinessServicesService).GetAgent("DataService", null, null);
-
-			DataStructureQuery q = new DataStructureQuery(dataStructureId, methodId);
-			q.LoadActualValuesAfterUpdate = loadActualValuesAfterUpdate;
+			IServiceAgent dataServiceAgent = ServiceManager.Services
+				.GetService<IBusinessServicesService>()
+				.GetAgent("DataService", null, null);
 
 			dataServiceAgent.MethodName = "StoreDataByQuery";
 			dataServiceAgent.Parameters.Clear();
-			dataServiceAgent.Parameters.Add("Query", q);
+			dataServiceAgent.Parameters.Add("Query", dataStructureQuery);
 			dataServiceAgent.Parameters.Add("Data", data);
 			dataServiceAgent.TransactionId = transactionId;
 
