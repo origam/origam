@@ -3,7 +3,6 @@
   padding: 1.5em 1em;
   white-space: pre-wrap;
   display: flex;
-  flex-direction: row;
 }
 
 .errorMessageList {
@@ -39,5 +38,4 @@
 }
 
 .dialogMessageColumn {
-  flex: 1 0 auto;
 }
