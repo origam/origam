@@ -174,6 +174,9 @@ export class OrigamAPI implements IApi {
       LabelIds: string[];
     }[]
   ) {
+    if(query.length === 1 && query[0].LabelIds.length === 0){
+      return {LookupId:{}}
+    }
     return (await this.axiosInstance.post("/UIService/GetLookupLabelsEx", query)).data;
   }
 

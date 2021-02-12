@@ -230,35 +230,6 @@ export class ServerSideGrouper implements IGrouper {
     }
   }
 
-  async getAllValuesOfProp(property: IProperty): Promise<Set<any>>{
-    const openGroups = this.allGroups
-      .filter(group => group.isExpanded && group.childRows.length );
-    const infinitelyScrolledGroups = openGroups.filter(group => group.isInfinitelyScrolled);
-
-    let values = await this.getPropValuesFromInfinitelyScrolledGroups(infinitelyScrolledGroups, property);
-    return new Set([...getAllLoadedValuesOfProp(property, this), ...values]);
-  }
-
-  private async getPropValuesFromInfinitelyScrolledGroups(groups: IGroupTreeNode[], property: IProperty){
-    if(groups.length === 0){
-      return [];
-    }
-    const filter = joinWithOR(groups.map(group => this.composeFinalFilter(group)))
-
-    const dataView = getDataView(this);
-    const lifeCycle = getFormScreenLifecycle(this);
-    const aggregations = getTablePanelView(this).aggregations.aggregationList;
-
-    const lookupId = property && property.lookup && property.lookup.lookupId;
-    const groupingSettings ={
-      columnId: property.id,
-      groupIndex: 0,
-      groupingUnit: undefined,
-    };
-    const groupList = await lifeCycle.loadChildGroups(dataView, filter, groupingSettings, aggregations, lookupId)
-    return groupList.map(group => group[property.id]).filter(group => group);
-  }
-
   dispose() {
     for (let disposer of this.disposers) {
       disposer();
