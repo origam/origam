@@ -80,7 +80,7 @@ namespace Origam.ServerCore.Authorization
             newRow.SetField("Data", grant.Data);
             
             dataSet.Tables[GrantTableName].Rows.Add(newRow);
-            DataService.StoreData(dataStructureQuery, dataSet,  null);
+            DataService.StoreData(dataStructureQuery, dataSet, null);
             
             return Task.CompletedTask;
         }
@@ -127,7 +127,7 @@ namespace Origam.ServerCore.Authorization
                 throw new ArgumentException($"Grant {key} not found.");
             }
             dataSet.Tables[GrantTableName].Rows[0].Delete();
-            DataService.StoreData(dataStructureQuery, dataSet,  null);
+            DataService.StoreData(dataStructureQuery, dataSet, null);
             return Task.CompletedTask;
         }
 
@@ -149,7 +149,7 @@ namespace Origam.ServerCore.Authorization
                 row.Delete();
             }
             
-            DataService.StoreData(dataStructureQuery, dataSet,  null);
+            DataService.StoreData(dataStructureQuery, dataSet, null);
             
             return Task.CompletedTask;
         }
@@ -174,7 +174,7 @@ namespace Origam.ServerCore.Authorization
                 row.Delete();
             }
             
-            DataService.StoreData(dataStructureQuery, dataSet,  null);
+            DataService.StoreData(dataStructureQuery, dataSet, null);
             
             return Task.CompletedTask;
         }
