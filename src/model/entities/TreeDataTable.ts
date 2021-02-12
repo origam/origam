@@ -126,14 +126,6 @@ export class TreeDataTable implements IDataTable {
     return [];
   }
 
-  getDirtyDeletedRows(): any[][] {
-    return [];
-  }
-
-  getDirtyNewRows(): any[][] {
-    return [];
-  }
-
   getAllValuesOfProp(property: IProperty): Set<any> {
     throw new Error("Not implemented");
   }
@@ -172,14 +164,6 @@ export class TreeDataTable implements IDataTable {
   }
 
   flushFormToTable(row: any[]): void {
-    throw new Error("Not implemented");
-  }
-
-  setDirtyDeleted(row: any[]): void {
-    throw new Error("Not implemented");
-  }
-
-  setDirtyNew(row: any[]): void {
     throw new Error("Not implemented");
   }
 
