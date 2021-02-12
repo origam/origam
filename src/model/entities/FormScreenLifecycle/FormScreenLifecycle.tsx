@@ -952,6 +952,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       getFormScreen(this).dataViews.forEach((dataView) =>
         dataView.dataTable.updateSortAndFilter({ retainPreviousSelection: true })
       );
+      yield* this.updateTotalRowCounts();
     } finally {
       this.monitor.inFlow--;
     }
