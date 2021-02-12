@@ -282,6 +282,20 @@ export class FilterConfiguration implements IFilterConfiguration {
       }
       case "ComboBox": {
         switch (term.setting.type) {
+          case "starts": {
+            const txt1 = dataTable.getOriginalCellText(row, prop);
+            const val2 = term.setting.val2 || "";
+            if (val2 === "") return true;
+            if (txt1 === null) return false;
+            return txt1.toLocaleLowerCase().startsWith(val2.toLocaleLowerCase());
+          }
+          case "nstarts": {
+            const txt1 = dataTable.getOriginalCellText(row, prop);
+            const val2 = term.setting.val2 || "";
+            if (val2 === "") return true;
+            if (txt1 === null) return false;
+            return !txt1.toLocaleLowerCase().startsWith(val2.toLocaleLowerCase());
+          }
           case "in":
           case "eq": {
             const txt1 = dataTable.getOriginalCellValue(row, prop);

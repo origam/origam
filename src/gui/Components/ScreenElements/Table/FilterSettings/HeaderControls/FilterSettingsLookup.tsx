@@ -37,6 +37,8 @@ import { IProperty } from "model/entities/types/IProperty";
 const OPERATORS = [
     Operator.in,
     Operator.notIn,
+    Operator.startsWith,
+    Operator.notStartsWith,
     Operator.contains,
     Operator.notContains,
     Operator.isNull,
@@ -158,7 +160,9 @@ class OpEditors extends React.Component<{
             values={this.props.setting.val1 ?? []}
           />
         );
-      case "contains": 
+      case "starts":
+      case "nstarts":
+      case "contains":
       case "ncontains":
          return (
           <input
