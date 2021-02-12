@@ -27,9 +27,7 @@ export interface IInfiniteScrollLoaderData {
 }
 
 export interface IInfiniteScrollLoader extends IInfiniteScrollLoaderData {
-  getAllValuesOfProp(property: IProperty): Promise<Set<any>>;
   start(): () => void;
-
   dispose(): void;
 }
 
@@ -52,10 +50,6 @@ export class NullIScrollLoader implements IInfiniteScrollLoader {
 
   groupFilter: string | undefined;
   visibleRowsMonitor: IVisibleRowsMonitor = null as any;
-
-  getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
-    return Promise.resolve(new Set());
-  }
 }
 
 export class InfiniteScrollLoader implements IInfiniteScrollLoader {
@@ -248,21 +242,6 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     this.requestProcessor.dispose();
     this.prependListeners.length = 0;
     this.appendListeners.length = 0;
-  }
-
-  async getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
-    const api = getApi(this.ctx);
-    const listValues = await api.getFilterListValues({
-      MenuId: getMenuItemId(this.ctx),
-      SessionFormIdentifier: getSessionId(this.ctx),
-      DataStructureEntityId: getDataStructureEntityId(this.ctx),
-      Property: property.id
-    });
-    return new Set(
-      listValues
-        .map(listValue => listValue)
-        .filter(listValue => listValue)
-      );
   }
 }
 
