@@ -37,10 +37,10 @@ import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBg
     getCellValue: () => getCellValue(tablePanelView, row, actualProperty),
     onChange: (event: any, value: any) =>
       onFieldChange(tablePanelView)({
-        event: event, 
-        row: row, 
-        property: actualProperty, 
-        value: value, 
+        event: event,
+        row: row,
+        property: actualProperty,
+        value: value,
       }),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
     onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event),
@@ -56,21 +56,18 @@ export class TableViewEditor extends React.Component<{
 }> {
   getEditor() {
     const rowId = getSelectedRowId(this.props.property);
-    const foregroundColor = getRowStateForegroundColor(
-      this.props.property,
-      rowId || ""
-    );
+    const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
     const dataView = getDataView(this.props.property);
     const readOnly =
-    isReadOnly(this.props.property!, rowId) ||
-    (dataView.orderProperty != undefined &&
-      this.props.property?.name === dataView.orderProperty.name);
-      
+      isReadOnly(this.props.property!, rowId) ||
+      (dataView.orderProperty != undefined &&
+        this.props.property?.name === dataView.orderProperty.name);
+
     const customBackgroundColor = getRowStateRowBgColor(dataView, rowId);
-    const backgroundColor = readOnly 
+    const backgroundColor = readOnly
       ? shadeHexColor(customBackgroundColor, -0.1)
       : customBackgroundColor;
-        
+
     const isFirsColumn = getTablePanelView(dataView).firstColumn === this.props.property;
 
     switch (this.props.property!.column) {
@@ -143,6 +140,7 @@ export class TableViewEditor extends React.Component<{
             onChange={this.props.onChange}
             onClick={undefined}
             onKeyDown={this.props.onEditorKeyDown}
+            forceTakeFocus={true}
           />
         );
       case "ComboBox":
@@ -189,13 +187,16 @@ export class TableViewEditor extends React.Component<{
           </div>
         );
       case "Blob":
-        return <BlobEditor
-          isReadOnly={readOnly}
-          value={this.props.getCellValue!()}
-          isInvalid={false}
-          canUpload={true}/>;
+        return (
+          <BlobEditor
+            isReadOnly={readOnly}
+            value={this.props.getCellValue!()}
+            isInvalid={false}
+            canUpload={true}
+          />
+        );
       case "Polymorph":
-        console.warn(`Type of polymorphic column was not determined, no editor was rendered`)
+        console.warn(`Type of polymorphic column was not determined, no editor was rendered`);
         return "";
       default:
         //console.warn(`Unknown column type "${this.props.property!.column}", no editor was rendered`)
