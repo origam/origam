@@ -7,6 +7,7 @@ import { CtxDropdownCtrlRect, CtxDropdownRefBody } from "./Dropdown/DropdownComm
 import { CtxDropdownEditor } from "./DropdownEditor";
 import SE from "./DropdownEditor.module.scss";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
+import cx from "classnames";
 
 export function DropdownEditorBody() {
   const refCtxBody = useContext(CtxDropdownRefBody);
@@ -63,6 +64,8 @@ export function DropdownEditorTable() {
     });
   }
 
+  const [hoveredRowIndex, setHoveredRowIndex] = useState(-1);
+
   return (
     <Observer>
       {() => {
@@ -80,7 +83,16 @@ export function DropdownEditorTable() {
                 rowIndex={rowIndex}
               >
                 {(hasHeader && rowIndex > 0) || !hasHeader ? (
-                  <div style={style}>
+                  <div
+                    style={style}
+                    className={cx({ isHoveredRow: rowIndex === hoveredRowIndex })}
+                    onMouseOver={(evt) => {
+                      setHoveredRowIndex(rowIndex);
+                    }}
+                    onMouseOut={(evt) => {
+                      setHoveredRowIndex(-1);
+                    }}
+                  >
                     <Observer>
                       {() => (
                         <>
@@ -119,7 +131,6 @@ export function DropdownEditorTable() {
             break;
           }
         }
-        console.log(widths, width, columnWidthSum);
 
         width = Math.max(width + scrollbarSize.vert, rectCtrl.width!);
         let columnGrowFactor = 1;
