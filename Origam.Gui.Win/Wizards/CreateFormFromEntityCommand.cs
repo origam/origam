@@ -378,8 +378,10 @@ namespace Origam.Gui.Win.Wizards
 
         public override void Execute()
         {
-            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(menuFrom.Entity.Name == null || menuFrom.Entity.Name == ""
-                    ? menuFrom.NameOfEntity : menuFrom.Entity.Name, menuFrom.Role, (FormControlSet)menuFrom.Entity);
+            FormReferenceMenuItem menu = 
+                     MenuHelper.CreateMenuItem(!string.IsNullOrEmpty(menuFrom.Caption)
+                    ? menuFrom.Caption : menuFrom.Entity.Name, 
+                    menuFrom.Role, (FormControlSet)menuFrom.Entity);
             GeneratedModelElements.Add(menu);
             bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
             if (createRole)
