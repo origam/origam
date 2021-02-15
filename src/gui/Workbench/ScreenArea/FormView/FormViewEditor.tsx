@@ -24,6 +24,7 @@ import { DomEvent } from "leaflet";
 import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEditorClick";
 import { shadeHexColor } from "utils/colorUtils";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
+import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -48,7 +49,7 @@ export class FormViewEditor extends React.Component<{
   property?: IProperty;
   isRichText: boolean;
   onChange?: (event: any, value: any) => void;
-  onEditorBlur?: (event: any) => void;
+  onEditorBlur?: (event: any) => Promise<any>;
   backgroundColor?: string;
 }> {
   focusManager: FocusManager;
@@ -298,31 +299,35 @@ export class FormViewEditor extends React.Component<{
   private makeOnKeyDownCallBack() {
     const dataView = getDataView(this.props.property);
 
-    return async (event: any) => {
-      dataView.focusManager.stopAutoFocus();
-      if (event.key === "Tab") {
-        DomEvent.preventDefault(event);
-        if (event.shiftKey) {
-          this.focusManager.focusPrevious(document.activeElement);
-        } else {
-          this.focusManager.focusNext(document.activeElement);
-        }
-        return;
-      }
-      if (this.props.property!.multiline) {
-        return;
-      }
-      if (event.key === "Enter") {
-        if (dataView.firstEnabledDefaultAction) {
-          this.props.onEditorBlur?.(null);
-          uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
-            event,
-            dataView.firstEnabledDefaultAction
-          );
-        }else{
-          this.props.onEditorBlur?.(null);
-        }
-      }
+    return (event: any) => {
+      runInFlowWithHandler(
+        {
+          ctx: this.props.property,
+          action: async ()=> {
+            dataView.focusManager.stopAutoFocus();
+            if (event.key === "Tab") {
+              DomEvent.preventDefault(event);
+              if (event.shiftKey) {
+                this.focusManager.focusPrevious(document.activeElement);
+              } else {
+                this.focusManager.focusNext(document.activeElement);
+              }
+              return;
+            }
+            if (this.props.property!.multiline) {
+              return;
+            }
+            if (event.key === "Enter") {
+              await this.props.onEditorBlur?.(null);
+              if (dataView.firstEnabledDefaultAction) {
+                uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
+                  event,
+                  dataView.firstEnabledDefaultAction
+                );
+              }
+            }
+          }
+        });
     };
   }
 
