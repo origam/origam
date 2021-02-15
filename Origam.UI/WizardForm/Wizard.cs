@@ -73,7 +73,7 @@ namespace Origam.UI.WizardForm
             GetNextPage(PagesList.ScreenForm, sender);
             ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
             screenWizard.SetUpForm(lstFields);
-            lstFields.CheckOnClick = screenWizard.checkOnClick;
+            lstFields.CheckOnClick = screenWizard.CheckOnClick;
             lblRole.Visible = screenWizard.IsRoleVisible;
             txtRole.Visible = screenWizard.IsRoleVisible;
             txtRole.Text = screenWizard.Role;
@@ -84,6 +84,7 @@ namespace Origam.UI.WizardForm
             ScreenWizardForm screenWizard = (ScreenWizardForm)iwizard;
             screenWizard.SelectedFields = lstFields.CheckedItems;
             screenWizard.Role = txtRole.Text;
+            screenWizard.Caption = txtScreenCaption.Text;
             IsFinish(sender, e);
         }
 
