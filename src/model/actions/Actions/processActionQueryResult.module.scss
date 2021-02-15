@@ -1,6 +1,8 @@
 .dialogContent {
   padding: 10px;
   min-width: 300px;
+  max-height: 40vh;
+  overflow-y: auto;
 
   :global(.list) {
     display: flex;
