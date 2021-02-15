@@ -34,6 +34,11 @@
     }
   }
 
+  :global(.isHoveredRow) :global(.cell) {
+    background-color: #acc6ff;
+    color: black !important;
+  }
+
   :global(.resizeHandle) {
     position: absolute;
     top: 0;
