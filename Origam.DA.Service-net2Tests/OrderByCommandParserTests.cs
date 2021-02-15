@@ -17,11 +17,10 @@ namespace Origam.DA.Service_net2Tests
                 new Ordering("col1", "desc",100),
                 new Ordering("col2", "asc",101)
             };
-            string orderBy = new OrderByCommandParser(
-                    orderingsInput: ordering,
-                    nameLeftBracket: "[",
-                    nameRightBracket: "]")
-                .Sql;
+            var sut = new OrderByCommandParser(orderingsInput: ordering);
+            sut.SetColumnExpressionsIfMissing("col1", new []{"[col1]"});
+            sut.SetColumnExpressionsIfMissing("col2", new []{"[col2]"});
+            string orderBy = sut.Sql;
             Assert.That(orderBy, Is.EqualTo("[col1] DESC, [col2] ASC"));
         }
         
@@ -35,9 +34,7 @@ namespace Origam.DA.Service_net2Tests
             Assert.Throws<ArgumentException>(() =>
             {
                 new OrderByCommandParser(
-                    orderingsInput: ToListOfOrderings(orderingStr),
-                    nameLeftBracket: "[",
-                    nameRightBracket: "]");
+                    orderingsInput: ToListOfOrderings(orderingStr));
             });
         }
 

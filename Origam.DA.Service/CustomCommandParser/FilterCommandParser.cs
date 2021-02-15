@@ -102,9 +102,13 @@ namespace Origam.DA.Service.CustomCommandParser
             }
         }
         
-        public void SetColumnExpression(string columnName, string expression)
+        public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
         {
-            filterColumnExpressions[columnName] = expression;
+            if (expressions == null || expressions.Length != 1)
+            {
+                throw new NotImplementedException("Can only handle single expression for a single column.");
+            }
+            filterColumnExpressions[columnName] = expressions[0];
         }
 
         private void ParseToNodeTree(string filter)

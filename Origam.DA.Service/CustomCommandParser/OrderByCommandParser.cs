@@ -30,41 +30,35 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly ColumnOrderingRenderer columnOrderingRenderer;
         private readonly List<Ordering> orderingsInput;
 
-        public OrderByCommandParser(List<Ordering> orderingsInput,
-            string nameLeftBracket, string nameRightBracket)
+        public OrderByCommandParser(List<Ordering> orderingsInput)
         {
             this.orderingsInput = orderingsInput ?? new List<Ordering>();
             columnOrderingRenderer 
-                = new ColumnOrderingRenderer(nameLeftBracket, nameRightBracket);
+                = new ColumnOrderingRenderer();
         }
 
         public string[] Columns => orderingsInput 
             .Select(ordering => ordering.ColumnName)
             .ToArray();
         
-        public void SetColumnExpression(string columnName, string expression)
+        public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
         {
-            columnOrderingRenderer.SetColumnExpression(columnName, expression);
+            columnOrderingRenderer.SetColumnExpressionIfMissing(columnName, expressions);
         }
 
-        public string Sql =>columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
+        public string Sql => columnOrderingRenderer.ToSqlOrderBy(orderingsInput);
     }
     
     class ColumnOrderingRenderer
     {
-        private readonly string nameLeftBracket;
-        private readonly string nameRightBracket;
-        private Dictionary<string, string> columnExpressions = new Dictionary<string, string>();
-
-        public ColumnOrderingRenderer(string nameLeftBracket, string nameRightBracket)
-        {
-            this.nameLeftBracket = nameLeftBracket;
-            this.nameRightBracket = nameRightBracket;
-        }
+        private readonly Dictionary<string, string[]> columnExpressions = new Dictionary<string, string[]>();
         
-        public void SetColumnExpression(string columnName, string expression)
+        public void SetColumnExpressionIfMissing(string columnName, string[] expressions)
         {
-            columnExpressions[columnName] = expression;
+            if (!columnExpressions.ContainsKey(columnName))
+            {
+                columnExpressions[columnName] = expressions;
+            }
         }
 
         internal string ToSqlOrderBy(List<Ordering> orderings)
@@ -76,20 +70,18 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private string ToSql(Ordering ordering)
         {
-            string orderingSql = OrderingToSQLName(ordering.Direction);
-            if (ordering.LookupId == Guid.Empty)
-            {
-                return $"{nameLeftBracket}{ordering.ColumnName}{nameRightBracket} {orderingSql}";
-            }
-
+            string directionSql = DirectionToSQLName(ordering.Direction);
             if (!columnExpressions.ContainsKey(ordering.ColumnName))
             {
-                throw new InvalidOperationException($"Lookup expression for {ordering.ColumnName} was not set");
+                throw new Exception($"No expression was set for {ordering.ColumnName}");
             }
-            return $"{columnExpressions[ordering.ColumnName]} {orderingSql}";
+
+            var orderByExpressions = columnExpressions[ordering.ColumnName]
+                .Select(expression => $"{expression} {directionSql}");
+            return string.Join(", ", orderByExpressions);
         }
 
-        private string OrderingToSQLName(string orderingName)
+        private string DirectionToSQLName(string orderingName)
         {
             switch (orderingName.ToLower())
             {

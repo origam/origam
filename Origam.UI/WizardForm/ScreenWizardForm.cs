@@ -10,8 +10,8 @@ namespace Origam.UI.WizardForm
         public bool IsRoleVisible { get; set; }
         public bool textColumnsOnly { get; set; }
         private CheckedListBox _lstFields;
-        public bool checkOnClick { get; set; } = false;
-
+        public bool CheckOnClick { get; set; } = false;
+        public string Caption { get; set; }
         public void SetUpForm(CheckedListBox lstField)
         {
             if (_lstFields == null)

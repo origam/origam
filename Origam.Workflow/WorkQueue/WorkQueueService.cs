@@ -1686,10 +1686,12 @@ namespace Origam.Workflow.WorkQueue
                 StoreQueueItems(wqc, queueRow.Table, null);
             } catch (DBConcurrencyException)
             {
-                core.DataService.StoreData(
-                   new Guid("7a18149a-2faa-471b-a43e-9533d7321b44"),
-                   new Guid("ea139b9a-3048-4cd5-bf9a-04a91590624a"),
-                   queueRow.Table.DataSet, false, null);
+                var dataStructureQuery = new DataStructureQuery {
+                    DataSourceId = new Guid("7a18149a-2faa-471b-a43e-9533d7321b44"),
+                    MethodId = new Guid("ea139b9a-3048-4cd5-bf9a-04a91590624a"),
+                    LoadActualValuesAfterUpdate = false };
+                core.DataService.StoreData(dataStructureQuery,
+                   queueRow.Table.DataSet, null);
             }
         }
         private void ProcessExternalQueue(WorkQueueData.WorkQueueRow q)

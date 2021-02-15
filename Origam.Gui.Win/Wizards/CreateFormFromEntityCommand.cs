@@ -202,10 +202,11 @@ namespace Origam.Gui.Win.Wizards
             if (wizardForm.Entity.Group != null) groupName = wizardForm.Entity.Group.Name;
 
             DataStructure dataStructure = EntityHelper.CreateDataStructure(wizardForm.Entity, wizardForm.NameOfEntity, true);
-            PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames,wizardForm.NameOfEntity);
+            PanelControlSet panel = GuiHelper.CreatePanel(groupName, wizardForm.Entity, wizardForm.SelectedFieldNames, 
+                                        wizardForm.NameOfEntity);
             FormControlSet form = GuiHelper.CreateForm(dataStructure, groupName, panel);
-            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(wizardForm.Entity.Caption == null || wizardForm.Entity.Caption == ""
-                ? wizardForm.NameOfEntity : wizardForm.Entity.Caption, wizardForm.Role, form);
+            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(!string.IsNullOrEmpty(wizardForm.Caption)
+                ? wizardForm.Caption : wizardForm.Entity.Name, wizardForm.Role, form);
             GeneratedModelElements.Add(dataStructure);
             GeneratedModelElements.Add(panel);
             GeneratedModelElements.Add(form);
@@ -378,8 +379,10 @@ namespace Origam.Gui.Win.Wizards
 
         public override void Execute()
         {
-            FormReferenceMenuItem menu = MenuHelper.CreateMenuItem(menuFrom.Entity.Name == null || menuFrom.Entity.Name == ""
-                    ? menuFrom.NameOfEntity : menuFrom.Entity.Name, menuFrom.Role, (FormControlSet)menuFrom.Entity);
+            FormReferenceMenuItem menu = 
+                     MenuHelper.CreateMenuItem(!string.IsNullOrEmpty(menuFrom.Caption)
+                    ? menuFrom.Caption : menuFrom.Entity.Name, 
+                    menuFrom.Role, (FormControlSet)menuFrom.Entity);
             GeneratedModelElements.Add(menu);
             bool createRole = menuFrom.Role != "*" && menuFrom.Role != "";
             if (createRole)

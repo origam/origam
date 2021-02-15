@@ -24,11 +24,14 @@ namespace OrigamArchitect
             {
                 void ProgressAction()
                 {
-                    progressBar.Minimum = 0;
-                    progressBar.Maximum = info.TotalFiles;
-                    progressBar.Step = 1;
-                    progressBar.Value = info.FilesDone;
-                    currentFileLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
+                    if (this.Visible)
+                    {
+                        progressBar.Minimum = 0;
+                        progressBar.Maximum = info.TotalFiles;
+                        progressBar.Step = 1;
+                        progressBar.Value = info.FilesDone;
+                        currentFileLabel.Text = $"Files processed: {info.FilesDone} / {info.TotalFiles}";
+                    }
                 }
 
                 this.RunWithInvoke(ProgressAction);

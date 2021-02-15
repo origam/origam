@@ -50,7 +50,7 @@ namespace Origam.ServerCore.Controller
         }
         
         [HttpPost("[action]")]
-        public IActionResult GetFileUrl(
+        public IActionResult GetFile(
             [FromBody][Required]ExcelExportInput input)
         {
             return RunWithErrorHandler(() =>
@@ -82,35 +82,11 @@ namespace Origam.ServerCore.Controller
                     Store = sessionStore,
                     LazyLoadedEntityInput = input.LazyLoadedEntityInput
                 };
-                
-                Guid itemId = Guid.NewGuid();
-                sessionObjects.SessionManager
-                    .AddExcelFileRequest( itemId, entityExportInfo);
-                return Ok("/internalApi/ExcelExport/"+itemId);
+
+                return GetExcelFile(entityExportInfo);
             });
         }
-
-        [AllowAnonymous]
-        [HttpGet("{itemId:guid}")]
-        public IActionResult Get(Guid itemId)
-        {
-            return RunWithErrorHandler(() =>
-            {
-                try
-                {
-                    EntityExportInfo entityExportInfo =
-                        sessionObjects.SessionManager.GetExcelFileRequest(itemId);
-                    return entityExportInfo == null 
-                        ? BadRequest($"No data for id: {itemId}") 
-                        : GetExcelFile(entityExportInfo);
-                }
-                finally
-                {
-                    sessionObjects.SessionManager.RemoveExcelFileRequest(itemId); 
-                }
-            });
-        }
-
+        
         private IActionResult GetExcelFile(EntityExportInfo entityExportInfo)
         {
             return RunWithErrorHandler(() =>

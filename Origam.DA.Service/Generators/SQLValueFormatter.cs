@@ -71,6 +71,7 @@ namespace Origam.DA.Service
                         : falseValue;
 
                 case OrigamDataType.UniqueIdentifier:
+                    return value.ToString() == "null" ? "NULL" : "'" + value + "'";
                 case OrigamDataType.Array:
                     return "'" + value + "'";
 

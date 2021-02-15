@@ -891,7 +891,7 @@ namespace Origam.ServerCore.Controller
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
                 CustomGrouping = new Grouping(
-                    columnData.Name, Guid.Empty),
+                    columnData.Name, Guid.Empty, null),
                 AggregatedColumns = new List<Aggregation>()
             };
             return AddMethodAndSource(
@@ -928,14 +928,19 @@ namespace Origam.ServerCore.Controller
             var query = new DataStructureQuery
             {
                 Entity = entityData.Entity.Name,
-                CustomFilters = new CustomFilters{Filters = input.Filter},
+                CustomFilters = new CustomFilters
+                {
+                    Filters = input.Filter,
+                    FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
+                },
                 CustomOrderings = customOrdering,
                 RowLimit = input.RowLimit,
                 ColumnsInfo = new ColumnsInfo(
                     columns: columns, 
                     renderSqlForDetachedFields: true),
                 ForceDatabaseCalculation = true,
-                CustomGrouping= new Grouping(input.GroupBy, input.GroupByLookupId),
+                CustomGrouping= new Grouping(
+                    input.GroupBy, input.GroupByLookupId, input.GroupingUnit),
                 AggregatedColumns = input.AggregatedColumns 
             };
             return AddMethodAndSource(

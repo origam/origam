@@ -124,6 +124,8 @@ namespace Origam.UI.WizardForm
             this.label5 = new System.Windows.Forms.Label();
             this.tbProgres = new System.Windows.Forms.TextBox();
             this.colCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtScreenCaption = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.aerowizard1)).BeginInit();
             this.StartPage.SuspendLayout();
             this.StructureNamePage.SuspendLayout();
@@ -246,6 +248,8 @@ namespace Origam.UI.WizardForm
             // 
             // ScreenFormPage
             // 
+            this.ScreenFormPage.Controls.Add(this.label18);
+            this.ScreenFormPage.Controls.Add(this.txtScreenCaption);
             this.ScreenFormPage.Controls.Add(this.label2);
             this.ScreenFormPage.Controls.Add(this.lstFields);
             this.ScreenFormPage.Controls.Add(this.lblRole);
@@ -1025,6 +1029,22 @@ namespace Origam.UI.WizardForm
             this.colCode.DataPropertyName = "Code";
             this.colCode.Name = "colCode";
             // 
+            // txtScreenCaption
+            // 
+            this.txtScreenCaption.Location = new System.Drawing.Point(305, 81);
+            this.txtScreenCaption.Name = "txtScreenCaption";
+            this.txtScreenCaption.Size = new System.Drawing.Size(188, 23);
+            this.txtScreenCaption.TabIndex = 14;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(246, 84);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(52, 15);
+            this.label18.TabIndex = 15;
+            this.label18.Text = "Caption:";
+            // 
             // Wizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1157,6 +1177,8 @@ namespace Origam.UI.WizardForm
         private ListView progresslistview;
         private WizardPage SummaryPage;
         private RichTextBox richTextBoxSummary;
+        private Label label18;
+        private TextBox txtScreenCaption;
     }
 }
 

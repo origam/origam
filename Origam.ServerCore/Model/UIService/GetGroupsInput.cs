@@ -43,12 +43,15 @@ namespace Origam.ServerCore.Model.UIService
         public int RowLimit { get; set; }
         [Required]
         public string GroupBy { get; set; }
+        public string GroupingUnit { get; set; }
         public Guid MasterRowId { get; set; }
         public Guid GroupByLookupId { get; set; }
         public Guid SessionFormIdentifier { get; set; }
         public List<Aggregation> AggregatedColumns { get; set; }
 
         public List<IRowOrdering> OrderingList =>
-            Ordering.ToList<IRowOrdering>();
+            Ordering.ToList<IRowOrdering>();    
+
+        public Dictionary<string, Guid> FilterLookups { get; set; }
     }
 }

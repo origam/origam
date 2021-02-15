@@ -74,7 +74,7 @@ namespace Origam.Gui.Win.Wizards
                 NameOfEntity = (Owner as IDataEntity).Name,
                 IsRoleVisible = false,
                 textColumnsOnly = false,
-                checkOnClick = true,
+                CheckOnClick = true,
                 ImageList = _schemaBrowser.EbrSchemaBrowser.imgList,
                 Command = this
             };
