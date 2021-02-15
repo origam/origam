@@ -48,7 +48,7 @@ export class FormViewEditor extends React.Component<{
   property?: IProperty;
   isRichText: boolean;
   onChange?: (event: any, value: any) => void;
-  onEditorBlur?: (event: any) => void;
+  onEditorBlur?: (event: any) => Promise<any>;
   backgroundColor?: string;
 }> {
   focusManager: FocusManager;
@@ -313,14 +313,12 @@ export class FormViewEditor extends React.Component<{
         return;
       }
       if (event.key === "Enter") {
+        await this.props.onEditorBlur?.(null);
         if (dataView.firstEnabledDefaultAction) {
-          this.props.onEditorBlur?.(null);
           uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
             event,
             dataView.firstEnabledDefaultAction
           );
-        }else{
-          this.props.onEditorBlur?.(null);
         }
       }
     };
