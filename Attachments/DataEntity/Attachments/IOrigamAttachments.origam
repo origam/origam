@@ -15,7 +15,7 @@
       euia:default="false"
       x:id="374a0ce5-9fe2-4fcb-b200-b126dfd72340"
       euia:label="Attachments"
-      ewa:mergeType="AppendMergeExisting"
+      ewa:mergeType="Ignore"
       euia:modal="true"
       euia:modalDialogHeight="600"
       euia:modalDialogWidth="800"
