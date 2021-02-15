@@ -93,6 +93,9 @@ export const currentCellText = Memoized(() => {
   if(text && currentProperty().multiline) {
     text = stripHtml(text).result;
   }
+  if(Array.isArray(text)){
+    text = text.join(", ");
+  }
   return text;
 });
 scRenderCell.push(() => currentCellText.clear());
