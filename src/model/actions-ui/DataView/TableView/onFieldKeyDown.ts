@@ -52,6 +52,7 @@ export function onFieldKeyDown(ctx: any) {
             }
             event.preventDefault();
 
+            getTablePanelView(ctx).dontHandleNextScroll();
             getTablePanelView(ctx).scrollToCurrentCell();
             yield* flushCurrentRowData(ctx)();
           }

@@ -46,6 +46,7 @@ export class TablePanelView implements ITablePanelView {
   groupingConfiguration: IGroupingConfiguration = null as any;
   rowHeight: number = null as any;
   firstColumn: IProperty | undefined;
+  handleScrolling = true;
 
   @observable rectangleMap: Map<number, Map<number, ICellRectangle>> = new Map<
     number,
@@ -208,14 +209,22 @@ export class TablePanelView implements ITablePanelView {
 
   @action.bound
   handleTableScroll(event: any, scrollTop: number, scrollLeft: number) {
-    const _this = this;
+    if(!this.handleScrolling){
+      this.handleScrolling = true;
+      return;
+    }
 
+    const _this = this;
     flow(function* () {
       if (_this.isEditing) {
         _this.setEditing(false);
         yield* flushCurrentRowData(_this)();
       }
     })();
+  }
+
+  dontHandleNextScroll(){
+    this.handleScrolling = false;
   }
 
   *onOutsideTableClick() {
