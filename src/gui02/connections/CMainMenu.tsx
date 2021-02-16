@@ -22,7 +22,7 @@ import { ChooseFavoriteFolderDialog } from "gui/Components/Dialogs/ChooseFavorit
 import { getIconUrl as getIconUrl } from "gui/getIconUrl";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
-import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
+import { IMenuItemIcon } from "gui/Workbench/MainMenu/IMenuItemIcon";
 
 @observer
 export class CMainMenu extends React.Component {
