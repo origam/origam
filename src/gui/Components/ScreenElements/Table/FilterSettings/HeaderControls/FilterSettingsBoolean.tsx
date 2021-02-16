@@ -1,7 +1,7 @@
 import React from "react";
 import { FilterSettingsComboBox, FilterSettingsComboBoxItem } from "../FilterSettingsComboBox";
 
-import { Checkbox } from "../../../../Checkbox";
+import { Checkbox } from "gui/Components/CheckBox/Checkbox";
 import { observer } from "mobx-react";
 import { action, observable } from "mobx";
 import { IFilterSetting } from "../../../../../../model/entities/types/IFilterSetting";
