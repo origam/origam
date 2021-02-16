@@ -22,6 +22,7 @@ import { ChooseFavoriteFolderDialog } from "gui/Components/Dialogs/ChooseFavorit
 import { getIconUrl as getIconUrl } from "gui/getIconUrl";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
 import { getCustomAssetsRoute } from "model/selectors/User/getCustomAssetsRoute";
+import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 
 @observer
 export class CMainMenu extends React.Component {
@@ -211,6 +212,10 @@ class CMainMenuFolderItem extends React.Component<{
   }
 
   get icon() {
+    if(this.props.node.attributes.icon !== IMenuItemIcon.Folder){
+      const customAssetsRoute = getCustomAssetsRoute(this.context.application);
+      return <Icon src={customAssetsRoute + "/" + this.props.node.attributes.icon} tooltip={this.props.node.attributes.label} />;
+    }
     if (this.mainMenuState.isOpen(this.id)) {
       return <Icon src="./icons/folder-open.svg" tooltip={this.props.node.attributes.label} />;
     } else {
