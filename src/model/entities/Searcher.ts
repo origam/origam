@@ -6,7 +6,6 @@ import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemCli
 import { ISearchResultGroup } from "./types/ISearchResultGroup";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getApi } from "model/selectors/getApi";
-import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
 import { onSearchResultClick } from "model/actions/Workbench/onSearchResultClick";
 import { T } from "utils/translation";
 import { openSingleMenuFolder } from "model/selectors/MainMenu/getMainMenuUI";
@@ -16,6 +15,7 @@ import { getPath } from "model/selectors/MainMenu/menuNode";
 import { latinize } from "utils/string";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
+import {IMenuItemIcon} from "gui/Workbench/MainMenu/IMenuItemIcon";
 
 
 export class Searcher implements ISearcher {
