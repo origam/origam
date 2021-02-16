@@ -16,30 +16,6 @@ import { T } from "../../../utils/translation";
 import { IActionPlacement } from "model/entities/types/IAction";
 import cx from "classnames";
 
-@observer
-class MainViewHandle extends React.Component<{
-  order: number;
-  label: string;
-  isActive: boolean;
-  onClick?: (event: any) => void;
-  onCloseClick?: (event: any) => void;
-}> {
-  render() {
-    return (
-      <div
-        className={S.TabHandle + (this.props.isActive ? ` ${S.active}` : "")}
-        onClick={this.props.onClick}
-      >
-        {this.props.label}
-        {this.props.order > 0 ? ` [${this.props.order}] ` : ""}
-        <button className={S.TabHandleCloseBtn} onClick={this.props.onCloseClick}>
-          <i className="fas fa-times" />
-        </button>
-      </div>
-    );
-  }
-}
-
 export const DialogScreen: React.FC<{
   openedScreen: IOpenedScreen;
 }> = observer((props) => {
@@ -155,10 +131,3 @@ export const DialogScreen: React.FC<{
   return null;
 });
 
-export const DialogLoadingContent: React.FC = (props) => {
-  return (
-    <div className={S.dialogLoadingContent}>
-      <i className="fas fa-cog fa-spin fa-2x" />
-    </div>
-  );
-};

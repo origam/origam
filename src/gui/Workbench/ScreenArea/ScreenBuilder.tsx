@@ -5,12 +5,6 @@ import {IOpenedScreen} from "../../../model/entities/types/IOpenedScreen";
 import {FormScreenBuilder} from "./FormScreenBuilder";
 
 
-export class DialogActionButton extends React.Component<{ action: IAction }> {
-  render() {
-    return <button>{this.props.action.caption}</button>;
-  }
-}
-
 @observer
 export class DialogScreenBuilder extends React.Component<{
   openedScreen: IOpenedScreen;
