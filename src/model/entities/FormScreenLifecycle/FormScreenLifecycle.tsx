@@ -451,7 +451,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         if (groupingConfig.isGrouping) {
           args.dataView.serverSideGrouper.refresh();
         } else {
-          args.dataView.totalRowCount = undefined;
+          args.dataView.setRowCount(undefined);
           yield self.readFirstChunkOfRowsWithGateDebounced(args.dataView);
           yield self.updateTotalRowCount(args.dataView);
         }
@@ -627,6 +627,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         if (groupingConfiguration.isGrouping) {
           rootDataView.serverSideGrouper.refresh();
         } else {
+          yield this.updateTotalRowCount(rootDataView);
           yield* this.readFirstChunkOfRows({
             rootDataView: rootDataView,
             keepCurrentData: args.keepCurrentData});
@@ -952,6 +953,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       getFormScreen(this).dataViews.forEach((dataView) =>
         dataView.dataTable.updateSortAndFilter({ retainPreviousSelection: true })
       );
+      yield* this.updateTotalRowCounts();
     } finally {
       this.monitor.inFlow--;
     }
@@ -1020,7 +1022,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     for (const dataView of formScreen.rootDataViews) {
       if(isInfiniteScrollingActive(dataView) && 
          !getGroupingConfiguration(dataView).isGrouping){
-        dataView.totalRowCount = undefined;
+        dataView.setRowCount(undefined);
       }
     }
   }
@@ -1054,7 +1056,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
     const aggregationData = parseAggregations(aggregationResult);
     if(aggregationData && aggregationData.length > 0) {
-      dataView.totalRowCount = aggregationData[0].value;
+      dataView.setRowCount(aggregationData[0].value);
     }
   }
 
@@ -1180,7 +1182,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const dataViews = getDataViewsByEntity(this, entityKey);
       for (let dataView of dataViews) {
         yield dataView.setRecords((entityValue as any).data);
-        dataView.totalRowCount = dataView.dataTable.rows.length;
+        dataView.setRowCount(dataView.dataTable.rows.length);
         yield dataView.start();
       }
     }

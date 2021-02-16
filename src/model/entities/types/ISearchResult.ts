@@ -5,7 +5,7 @@ export interface ISearchResult
   id: string;
   label: string,
   description: string,
-  icon: IMenuItemIcon;
+  iconUrl: string;
   onClick: ()=> void;
 }
 

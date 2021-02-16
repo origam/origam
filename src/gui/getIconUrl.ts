@@ -10,6 +10,8 @@ export function getIconUrl(iconName: string | IMenuItemIcon, iconPath?: string) 
       return "./icons/work-queue.svg";
     case IMenuItemIcon.Chat:
       return "./icons/chat.svg";
+    case IMenuItemIcon.Folder:
+      return "./icons/folder-closed.svg";
     default:
       if (iconPath) {
         return iconPath;
