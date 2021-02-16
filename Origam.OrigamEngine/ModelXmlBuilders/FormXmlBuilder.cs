@@ -1528,7 +1528,7 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 						bindingMember = bindItem.Value;
 					}
 					
-					if (itemTabIndex != "0" && int.Parse(tabIndex) >= 0)
+					if (int.Parse(tabIndex) >= 0)
 					{
 						tabIndex = itemTabIndex + "." + tabIndex;
 					}
