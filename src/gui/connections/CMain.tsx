@@ -1,9 +1,6 @@
 import { MobXProviderContext, observer, Provider } from "mobx-react";
 import { IApplication } from "model/entities/types/IApplication";
-import { IApplicationPage } from "model/entities/types/IApplicationLifecycle";
-import { getShownPage } from "model/selectors/Application/getShownPage";
 import React from "react";
-import { CLoginPage } from "gui/connections/pages/CLoginPage";
 import { CWorkbenchPage } from "gui/connections/pages/CWorkbenchPage";
 import { ApplicationDialogStack } from "gui/Components/Dialog/DialogStack";
 import { getDialogStack } from "model/selectors/getDialogStack";
@@ -22,33 +19,13 @@ export class CMain extends React.Component {
     return this.application.workbench!;
   }
 
-  getPage() {
-    const page = getShownPage(this.application);
-
-    switch (page) {
-      case IApplicationPage.Login:
-        return (
-          <>
-            <ApplicationDialogStack />
-            <CLoginPage />
-          </>
-        );
-      case IApplicationPage.Workbench:
-        return (
-          <>
-            <Provider workbench={this.workbench}>
-              <ApplicationDialogStack />
-              <CWorkbenchPage />
-            </Provider>
-          </>
-        );
-    }
-  }
-
   render() {
     return (
       <div className={"toplevelContainer"} >
-        {this.getPage()}
+        <Provider workbench={this.workbench}>
+          <ApplicationDialogStack />
+          <CWorkbenchPage />
+        </Provider>
       </div>
     );
   }

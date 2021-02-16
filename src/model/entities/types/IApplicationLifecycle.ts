@@ -1,7 +1,3 @@
-export enum IApplicationPage {
-  Login = "Login",
-  Workbench = "Workbench"
-}
 
 export interface IApplicationLifecycleData {}
 
@@ -9,7 +5,6 @@ export interface IApplicationLifecycle extends IApplicationLifecycleData {
   $type_IApplicationLifecycle: 1;
 
   parent?: any;
-  shownPage: IApplicationPage;
   isWorking: boolean;
 
   loginPageMessage?: string;
