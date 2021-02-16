@@ -7,9 +7,9 @@ import { action, observable } from "mobx";
 import { observer, Observer } from "mobx-react";
 import produce from "immer";
 import { Dropdowner } from "../Dropdowner/Dropdowner";
-import { DataViewHeaderAction } from "../../../gui02/components/DataViewHeader/DataViewHeaderAction";
-import { Dropdown } from "../../../gui02/components/Dropdown/Dropdown";
-import { DropdownItem } from "../../../gui02/components/Dropdown/DropdownItem";
+import { DataViewHeaderAction } from "../DataViewHeader/DataViewHeaderAction";
+import { Dropdown } from "../Dropdown/Dropdown";
+import { DropdownItem } from "../Dropdown/DropdownItem";
 import {
   AggregationType,
   tryParseAggregationType,

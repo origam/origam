@@ -10,7 +10,7 @@ import Scrollee from "./Scrollee";
 import Scroller from "./Scroller";
 import S from "./Table.module.scss";
 import { IGridDimensions, ITableProps } from "./types";
-import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./TableRendering/types";
 import { renderTable } from "./TableRendering/renderTable";
 import { getTooltip, handleTableClick } from "./TableRendering/onClick";

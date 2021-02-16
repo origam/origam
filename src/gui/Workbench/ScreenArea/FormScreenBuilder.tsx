@@ -1,6 +1,6 @@
-import {EmbeddedWebpage} from "gui02/components/EmbeddedWebpage/EmbeddedWebpage";
-import {Splitter} from "gui02/components/Splitter/Splitter";
-import {CScreenSectionTabbedView} from "gui02/connections/CScreenSectionTabbedView";
+import {EmbeddedWebpage} from "gui/Components/EmbeddedWebpage/EmbeddedWebpage";
+import {Splitter} from "gui/Components/Splitter/Splitter";
+import {CScreenSectionTabbedView} from "gui/connections/CScreenSectionTabbedView";
 import {action, computed, observable} from "mobx";
 import {MobXProviderContext, observer, Observer} from "mobx-react";
 import {onSplitterPositionChangeFinished} from "model/actions-ui/Splitter/onSplitterPositionChangeFinished";
@@ -13,7 +13,7 @@ import {DataView} from "../../Components/ScreenElements/DataView";
 import {Label} from "../../Components/ScreenElements/Label";
 import {TabbedPanel, TabBody, TabHandle} from "../../Components/ScreenElements/TabbedPanel";
 import {VBox} from "../../Components/ScreenElements/VBox";
-import {WorkflowFinishedPanel} from "gui02/components/WorkflowFinishedPanel/WorkflowFinishedPanel";
+import {WorkflowFinishedPanel} from "gui/Components/WorkflowFinishedPanel/WorkflowFinishedPanel";
 
 import actions from "model/actions-ui-tree";
 import {HBox} from "gui/Components/ScreenElements/HBox";

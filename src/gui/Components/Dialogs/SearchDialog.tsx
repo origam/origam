@@ -1,4 +1,4 @@
-import { Icon } from "gui02/components/Icon/Icon";
+import { Icon } from "gui/Components/Icon/Icon";
 import { observer } from "mobx-react";
 import React, { RefObject } from "react";
 import { T } from "utils/translation";

@@ -1,4 +1,4 @@
-import {IMenuItemIcon} from "./Workbench/MainMenu/MainMenu";
+import {IMenuItemIcon} from "gui/Workbench/MainMenu/IMenuItemIcon";
 
 export function getIconUrl(iconName: string | IMenuItemIcon, iconPath?: string) {
   switch (iconName) {

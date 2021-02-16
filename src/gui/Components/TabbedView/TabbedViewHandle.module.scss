@@ -1,0 +1,75 @@
+@import "../../../styles/common_styles";
+
+.root {
+  color: #3e3d45;
+  height: 25px;
+  //margin: 0 0.2em 0 0.2em;
+  padding: 0 10px 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+  border-radius: 0px 0px 0 0;
+
+  cursor: pointer;
+  @include hoverItemAnimation;
+
+  &:global(.isActive) {
+    .label {
+      color: #4c84ff;
+      //  border-bottom: 2px solid #4c84ff;
+      // font-weight: 700;
+    }
+    background-color: white;
+  }
+
+  &:hover {
+    //background-color: white;
+    color: #0d0d0d;
+  }
+
+  &:global(.isDirty) {
+    .label {
+      color: #fe5461;
+    }
+  }
+
+  &:not(:global(.isActive)):hover {
+    color: #0d0d0d;
+    cursor: pointer;
+    .closeBtn {
+      svg {
+        stroke: #0d0d0d;
+      }
+    }
+  }
+}
+
+.label {
+  border-bottom: 2px solid transparent;
+  //margin: 0 5px 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.closeBtn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  svg {
+    margin: 0 0 0 0.5em;
+    width: 1.1em;
+    height: 1.1em;
+    stroke: #77767e;
+    stroke-width: 1;
+    overflow: inherit;
+    @include hoverItemAnimation;
+  }
+  &:hover {
+    svg {
+      stroke: #fe5461 !important;
+      stroke-width: 2.5;
+    }
+  }
+}

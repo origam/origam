@@ -1,4 +1,4 @@
-import { CDataViewHeader } from "gui02/connections/CDataViewHeader";
+import { CDataViewHeader } from "gui/connections/CDataViewHeader";
 import { inject, Observer, observer, Provider } from "mobx-react";
 import { getIsDataViewOrFormScreenWorkingDelayed } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
 import React, { createContext, Fragment, ReactNode } from "react";

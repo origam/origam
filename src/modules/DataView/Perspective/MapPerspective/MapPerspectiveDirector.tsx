@@ -5,8 +5,8 @@ import { IDataViewBodyUI, IDataViewToolbarUI } from "modules/DataView/DataViewUI
 import { TypeSymbol } from "dic/Container";
 import { SectionViewSwitchers } from "modules/DataView/DataViewTypes";
 import { getIdent, IIId } from "utils/common";
-import { DataViewHeaderAction } from "gui02/components/DataViewHeader/DataViewHeaderAction";
-import { Icon } from "gui02/components/Icon/Icon";
+import { DataViewHeaderAction } from "gui/Components/DataViewHeader/DataViewHeaderAction";
+import { Icon } from "gui/Components/Icon/Icon";
 import { IMapPerspective, MapPerspective } from "./MapPerspective";
 import { Observer } from "mobx-react";
 import { IPerspective } from "../Perspective";

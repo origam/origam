@@ -5,7 +5,7 @@ import * as ReactDOM from "react-dom";
 import { observer, Observer } from "mobx-react";
 import { action, observable } from "mobx";
 import Measure, { BoundingRect } from "react-measure";
-import { Icon } from "gui02/components/Icon/Icon";
+import { Icon } from "gui/Components/Icon/Icon";
 
 export class ModalWindowOverlay extends React.Component {
   render() {

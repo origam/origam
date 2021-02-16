@@ -1,4 +1,4 @@
-import { IInfoSubsection } from "gui02/connections/types";
+import { IInfoSubsection } from "gui/connections/types";
 import { action, observable } from "mobx";
 import { onSidebarAuditSectionExpanded } from "model/actions-ui/RecordInfo/onSidebarAuditSectionExpanded";
 import { onSidebarInfoSectionCollapsed } from "model/actions-ui/RecordInfo/onSidebarInfoSectionCollapsed";

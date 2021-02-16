@@ -1,221 +1,38 @@
-import * as React from "react";
+import React from "react";
+import S from "gui/Components/Splitter/Splitter.module.scss";
+import {action, computed, observable, runInAction} from "mobx";
+import {observer, Observer} from "mobx-react";
 
-import Measure from "react-measure";
-import {Observer, observer} from "mobx-react";
-import {action, observable} from "mobx";
-import * as _ from "lodash";
-import S from "./Splitter.module.css";
-
-export class SplitterModel {
-  constructor(initSizes?: Array<[string, number]>) {
-    if (initSizes) {
-      this.sizes = new Map(initSizes);
-    }
-  }
-
-  @observable
-  public contentRect: any = {};
-
-  @observable
-  public sizes: Map<any, number> = new Map();
-
-  @observable
-  public isMoving = false;
-
-  @action.bound
-  public adjustSize(index: number, size: number) {
-    const keyLeft = Array.from(this.sizes.keys())[index];
-    const keyRight = Array.from(this.sizes.keys())[index + 1];
-    const newLeftSize = this.sizes.get(keyLeft)! + size;
-    const newRightSize = this.sizes.get(keyRight)! - size;
-    if (newLeftSize > 40 && newRightSize > 40) {
-      this.sizes.set(keyLeft, newLeftSize);
-      this.sizes.set(keyRight, newRightSize);
-    }
-  }
-}
-
-export interface ISplitterModel {
-  contentRect: any;
-  sizes: Map<any, number>;
-  isMoving: boolean;
-  adjustSize(index: number, size: number): void;
-}
-
-export interface ISplitterProps {
-  className?: string;
-  handleClassName?: string;
-  horizontal?: boolean;
-  name: string;
-  handleSize: number;
-  model?: ISplitterModel;
-}
-
-export class Splitter extends React.Component<ISplitterProps> {
-  constructor(props: ISplitterProps) {
-    super(props);
-    if (props.model) {
-      this.model = props.model;
-    }
-  }
-
-  private model = new SplitterModel();
-
-  private handleResize = _.debounce(this.handleResizeImm, 100);
-
-  @action.bound
-  private handleResizeImm(contentRect: any) {
-    if (
-      !contentRect.client ||
-      (this.props.horizontal && contentRect.client.width === 0) ||
-      (!this.props.horizontal && contentRect.client.height === 0)
-    ) {
-      return;
-    }
-    this.model.contentRect = contentRect;
-    // console.log("Handle resize:", this.containerSize);
-
-    this.adjustByContainerSize();
-  }
-
-  @action.bound
-  public registerPanel(id: string, order: number) {
-    if (!this.model.sizes.get(id)) {
-      this.model.sizes.set(id, 1);
-    }
-  }
-
-  private reAdjustSize: any;
-
-  get containerSize() {
-    return this.model.contentRect.client
-      ? this.props.horizontal
-        ? this.model.contentRect.client.width
-        : this.model.contentRect.client.height
-      : 0;
-  }
-
-  adjustByContainerSize = this.adjustByContainerSizeImm;
-
-  lastAdjustedSize: number | undefined = undefined;
-  @action.bound adjustByContainerSizeImm() {
-    const size = this.containerSize;
-    if (this.lastAdjustedSize !== undefined) {
-      if (Math.abs(size - this.lastAdjustedSize) < 10) {
-        return;
-      }
-    }
-    this.lastAdjustedSize = size;
-    const sum = Array.from(this.model.sizes.values()).reduce(
-      (acc, b) => acc + b,
-      0
-    );
-    for (let key of this.model.sizes.keys()) {
-      this.model.sizes.set(
-        key,
-        (this.model.sizes.get(key)! * size) / sum - this.props.handleSize
-      );
-    }
-    const sum2 = Array.from(this.model.sizes.values()).reduce(
-      (acc, b) => acc + b,
-      0
-    );
-    // console.log("After adjust: size=", size, "sum1=", sum, "sum2=", sum2);
-  }
-
-  public componentWillUnmount() {
-    this.reAdjustSize && this.reAdjustSize();
-  }
-
-  public render() {
-    const { horizontal } = this.props;
-    const newChildren: any = [];
-    const children = React.Children.toArray(this.props.children);
-    React.Children.forEach(
-      children,
-      (child: React.ReactNode, index: number) => {
-        newChildren.push(
-          React.cloneElement(child as any, {
-            horizontal,
-            order: index,
-            parent: this,
-            model: this.model
-          })
-        );
-        if (index < children.length - 1) {
-          newChildren.push(
-            <SplitterHandle
-              key={`Handle_${index}`}
-              horizontal={horizontal}
-              model={this.model}
-              index={index}
-              className={
-                (this.props.handleClassName ? this.props.handleClassName : "") +
-                (this.props.name ? ` splitter-handle-${this.props.name}` : "")
-              }
-            />
-          );
-        }
-      }
-    );
-    return (
-      <Measure
-        onResize={this.handleResize}
-        bounds={true}
-        client={true}
-        margin={true}
-        offset={true}
-      >
-        {({ measureRef, contentRect }) => {
-          // console.log("MEASURE RENDER", contentRect.client);
-          return (
-            <Observer>
-              {() => (
-                <div
-                  className={
-                    (this.props.className || "") +
-                    (horizontal
-                      ? ` ${S.splitterContainerHorizontal}`
-                      : ` ${S.splitterContainerVertical}`) +
-                    (this.model.isMoving ? " moving" : "")
-                  }
-                  ref={measureRef}
-                >
-                  {newChildren}
-                </div>
-              )}
-            </Observer>
-          );
-        }}
-      </Measure>
-    );
-  }
-}
+import Measure, {ContentRect} from "react-measure";
+import _ from "lodash";
+import cx from "classnames";
 
 @observer
-export class SplitterPanel extends React.Component<{
-  horizontal?: boolean;
-  id: string;
-  order?: number;
-  parent?: Splitter;
-  model?: SplitterModel;
+class SplitterPanel extends React.Component<{
+  type: "isHoriz" | "isVert";
+  size: number;
+  className?: string;
 }> {
-  public componentDidMount() {
-    this.props.parent!.registerPanel(this.props.id, this.props.order!);
+  refPanel = (elm: any) => (this.elmPanel = elm);
+  elmPanel: HTMLDivElement | null = null;
+
+  componentDidMount() {}
+
+  @computed get style() {
+    switch (this.props.type) {
+      case "isHoriz":
+        return { width: this.props.size };
+      case "isVert":
+        return { height: this.props.size };
+    }
   }
 
-  public render() {
-    const { horizontal, model } = this.props;
+  render() {
     return (
       <div
-        className={
-          horizontal ? S.splitterPanelHorizontal : S.splitterPanelVertical
-        }
-        style={{
-          width: horizontal ? model!.sizes.get(this.props.id) : undefined,
-          height: !horizontal ? model!.sizes.get(this.props.id) : undefined
-          // height: 200
-        }}
+        ref={this.refPanel}
+        className={cx(this.props.className || S.splitterPanel, this.props.type)}
+        style={this.style}
       >
         {this.props.children}
       </div>
@@ -224,71 +41,278 @@ export class SplitterPanel extends React.Component<{
 }
 
 @observer
-class SplitterHandle extends React.Component<{
+class SplitterDivider extends React.Component<{
+  type: "isHoriz" | "isVert";
   className?: string;
-  horizontal?: boolean;
-  model: SplitterModel;
-  index: number;
-  onMouseDown?: (event: any) => void;
-  onWindowMouseMove?: (event: any) => void;
-  onWindowMouseUp?: (event: any) => void;
+  domRef: any;
+  isDragging: boolean;
+  relativeLoc: number;
+  onMouseDown?(event: any): void;
 }> {
-  private startMousePosition = 0;
-  @observable private currentMousePosition = 0;
+  @computed get style() {
+    if (!this.props.isDragging) return {};
+    switch (this.props.type) {
+      case "isVert":
+        return { top: this.props.relativeLoc };
+      case "isHoriz":
+        return { left: this.props.relativeLoc };
+    }
+  }
 
-  @observable private isMoving = false;
+  render() {
+    return (
+      <div
+        ref={this.props.domRef}
+        onMouseDown={this.props.onMouseDown}
+        className={cx(
+          this.props.className || S.splitterDivider,
+          this.props.type,
+          {
+            isDragging: this.props.isDragging
+          }
+        )}
+        style={this.style}
+      >
+        <div className="dividerLine" />
+      </div>
+    );
+  }
+}
+
+@observer
+export class Splitter extends React.Component<{
+  type: "isHoriz" | "isVert";
+  sizeOverrideFirstPanel?: number;
+  id?: string;
+  panels: Array<[any, number, React.ReactNode]>;
+  onSizeChangeFinished?(
+    panelId1: any,
+    panelId2: any,
+    panelSize1: number,
+    panelSize2: number
+  ): void;
+  STYLE?: any;
+}> {
+  @observable containerWidth = 0;
+  @observable containerHeight = 0;
+  @observable isInitialized = false;
+  @observable sizeMap: Map<any, number> = new Map();
+  @observable dividerSizeMap: Map<any, number> = new Map();
+  @observable isResizing = false;
+  @observable mouseLocStart = 0;
+  @observable dividerRelativeLoc = 0;
+  draggingDividerId: any;
+
+  constructor(props: any) {
+    super(props);
+    runInAction(() => {
+      for (let i = 0; i < this.props.panels.length; i++) {
+        const panel = this.props.panels[i];
+        this.sizeMap.set(panel[0], panel[1]);
+        if (i < this.props.panels.length - 1) {
+          this.dividerSizeMap.set(panel[0], 0);
+        }
+      }
+    });
+  }
 
   @action.bound
-  private handleMouseDown(event: any) {
-    this.props.onMouseDown && this.props.onMouseDown(event);
-    this.props.model.isMoving = true;
-    this.isMoving = true;
-    this.startMousePosition = this.props.horizontal
-      ? event.screenX
-      : event.screenY;
-    this.currentMousePosition = this.startMousePosition;
+  handleResize(contentRect: ContentRect) {
+    const { bounds } = contentRect;
+    if (bounds) {
+      this.announceContainerSize(bounds.width, bounds.height);
+    }
+  }
+
+  @action.bound
+  announceContainerSize(width: number, height: number) {
+    if (width > 0 && height > 0 && this.differentSizeRequested(width, height)) {
+      this.containerWidth = width;
+      this.containerHeight = height;
+      this.initSizes();
+      this.isInitialized = true;
+    }
+  }
+
+  differentSizeRequested(newWidth: number, newHeight: number){
+    return Math.abs(newHeight - this.containerHeight) > 0.001 ||
+           Math.abs(newWidth - this.containerWidth) > 0.001
+  }
+
+  @action.bound initSizesImm() {
+    // TODO: Fix nested splitter initSize (first panel overridden by initial size by resizing its container)
+
+    //console.log(Array.from(this.dividerSizeMap.entries()));
+    const containerSize =
+      this.props.type === "isVert" ? this.containerHeight : this.containerWidth;
+    const dividerSizeSum = Array.from(this.dividerSizeMap.values()).reduce(
+      (a, b) => a + b,
+      0
+    );
+    if (this.props.sizeOverrideFirstPanel === undefined) {
+      //console.log("Divider size sum", dividerSizeSum);
+      const sizeToDivide = containerSize - dividerSizeSum; // TODO: Include handle sizes?
+
+      const initSizeSum = Array.from(this.sizeMap.values()).reduce(
+        (a, b) => a + b,
+        0
+      );
+      const sizeRatio = sizeToDivide / initSizeSum;
+      for (let [key, value] of this.sizeMap.entries()) {
+        this.sizeMap.set(key, value * sizeRatio);
+        //console.log("Set", key, value * sizeRatio);
+      }
+    } else if (this.props.panels.length > 0) {
+      const firstPanelSize = Math.max(this.props.sizeOverrideFirstPanel, 20);
+      const sizeToDivide = containerSize - dividerSizeSum - firstPanelSize;
+      const initSizeSum = this.props.panels
+        .slice(1)
+        .reduce((acc, panel) => acc + (this.sizeMap.get(panel[0]) || 0), 0);
+      const sizeRatio = sizeToDivide / initSizeSum;
+
+      for (let [key, value] of this.sizeMap.entries()) {
+        if (key === this.props.panels[0][0]) continue;
+        this.sizeMap.set(key, value * sizeRatio);
+        console.log("Set", key, value * sizeRatio);
+      }
+      this.sizeMap.set(this.props.panels[0][0], firstPanelSize);
+      for (let [key, value] of this.sizeMap.entries()) {
+        console.log("Size", key, "=", value);
+      }
+    }
+  }
+
+  initSizes = _.debounce(this.initSizesImm, 10);
+
+  @action.bound handleDividerMouseDown(event: any, handleId: any) {
+    this.draggingDividerId = handleId;
+    this.isResizing = true;
+    this.dividerRelativeLoc = 0;
+    this.mouseLocStart =
+      this.props.type === "isVert" ? event.screenY : event.screenX;
     window.addEventListener("mouseup", this.handleWindowMouseUp);
     window.addEventListener("mousemove", this.handleWindowMouseMove);
   }
 
-  @action.bound
-  private handleWindowMouseMove(event: any) {
-    this.props.onWindowMouseMove && this.props.onWindowMouseMove(event);
-    this.currentMousePosition = this.props.horizontal
-      ? event.screenX
-      : event.screenY;
+  @action.bound handleWindowMouseMove(event: any) {
+    event.preventDefault();
+    const dividerRelativeLoc =
+      (this.props.type === "isVert" ? event.screenY : event.screenX) -
+      this.mouseLocStart;
+    const [size1, size2] = this.computeNewSizes(dividerRelativeLoc);
+    if (size1 >= 20 && size2 >= 20) {
+      this.dividerRelativeLoc = dividerRelativeLoc;
+    }
   }
 
-  @action.bound
-  private handleWindowMouseUp(event: any) {
-    this.props.onWindowMouseUp && this.props.onWindowMouseUp(event);
-    this.props.model.isMoving = false;
-    this.isMoving = false;
-    this.props.model.adjustSize(
-      this.props.index,
-      this.currentMousePosition - this.startMousePosition
-    );
+  get draggingIds() {
+    const id1 = this.draggingDividerId;
+    const id2 = this.props.panels[
+      this.props.panels.findIndex(
+        panel => panel[0] === this.draggingDividerId
+      )! + 1
+    ][0];
+    return [id1, id2];
+  }
+
+  computeNewSizes(dividerRelativeLoc: number) {
+    const [id1, id2] = this.draggingIds;
+    return [
+      this.sizeMap.get(id1)! + dividerRelativeLoc,
+      this.sizeMap.get(id2)! - dividerRelativeLoc
+    ];
+  }
+
+  get newSizes() {
+    return this.computeNewSizes(this.dividerRelativeLoc);
+  }
+
+  @action.bound handleWindowMouseUp(event: any) {
+    this.isResizing = false;
     window.removeEventListener("mouseup", this.handleWindowMouseUp);
     window.removeEventListener("mousemove", this.handleWindowMouseMove);
+    const [id1, id2] = this.draggingIds;
+    const [size1, size2] = this.newSizes;
+    this.sizeMap.set(id1, size1);
+    this.sizeMap.set(id2, size2);
+    if (this.props.onSizeChangeFinished) {
+      this.props.onSizeChangeFinished(id1, id2, size1, size2);
+    }
   }
 
-  public render() {
-    const { horizontal } = this.props;
+  @action.bound handleDividerResize(contentRect: ContentRect, dividerId: any) {
+    //console.log("Divider resize", contentRect.bounds, dividerId);
+    if (contentRect.bounds) {
+      const value = this.props.type === "isVert"
+            ? contentRect.bounds.height
+            : contentRect.bounds.width
+      if(this.dividerSizeMap.get(dividerId) !== value){
+        this.dividerSizeMap.set(dividerId,value);
+        this.initSizes();
+      }
+    }
+  }
+
+  render() {
+    const content: React.ReactNode[] = [];
+    for (let i = 0; i < this.props.panels.length; i++) {
+      const panel = this.props.panels[i];
+      content.push(
+        <SplitterPanel
+          className={(this.props.STYLE || S).panel}
+          type={this.props.type}
+          size={this.sizeMap.get(panel[0])!}
+          key={`S${panel[0]}`}
+        >
+          {panel[2]}
+        </SplitterPanel>
+      );
+      if (i < this.props.panels.length - 1) {
+        content.push(
+          <Measure
+            bounds={true}
+            onResize={contentRect =>
+              this.handleDividerResize(contentRect, panel[0])
+            }
+          >
+            {({ measureRef }) => (
+              <Observer>
+                {() => (
+                  <SplitterDivider
+                    className={(this.props.STYLE || S).divider}
+                    domRef={measureRef}
+                    key={`D${panel[0]}`}
+                    isDragging={
+                      this.isResizing && this.draggingDividerId === panel[0]
+                    }
+                    relativeLoc={this.dividerRelativeLoc}
+                    type={this.props.type}
+                    onMouseDown={event =>
+                      this.handleDividerMouseDown(event, panel[0])
+                    }
+                  />
+                )}
+              </Observer>
+            )}
+          </Measure>
+        );
+      }
+    }
     return (
-      <div
-        onMouseDown={this.handleMouseDown}
-        className={
-          (this.props.className || "") +
-          (horizontal
-            ? ` ${S.splitterHandleHorizontal}`
-            : ` ${S.splitterHandleVertical}`) +
-          (this.isMoving ? " moving" : "")
-        }
-        style={{
-          [horizontal ? "left" : "top"]:
-            this.currentMousePosition - this.startMousePosition
-        }}
-      />
+      <Measure bounds={true} onResize={this.handleResize}>
+        {({ measureRef }) => (
+          <Observer>
+            {() => (
+              <div
+                ref={measureRef}
+                className={cx((this.props.STYLE || S).root, this.props.type)}
+              >
+                {this.isInitialized && content}
+              </div>
+            )}
+          </Observer>
+        )}
+      </Measure>
     );
   }
 }

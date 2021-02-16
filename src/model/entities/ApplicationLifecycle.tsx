@@ -2,7 +2,7 @@ import { action, computed, observable } from "mobx";
 import { createWorkbench } from "../factories/createWorkbench";
 import { getApi } from "../selectors/getApi";
 import { getApplication } from "../selectors/getApplication";
-import { IApplicationLifecycle, IApplicationPage } from "./types/IApplicationLifecycle";
+import { IApplicationLifecycle } from "./types/IApplicationLifecycle";
 import { stopWorkQueues } from "model/actions/WorkQueues/stopWorkQueues";
 import { stopAllFormsAutorefresh } from "model/actions/Workbench/stopAllFormsAutorefresh";
 import { userManager } from "oauth";
@@ -19,15 +19,9 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
 
   @observable loginPageMessage?: string | undefined;
 
-  @observable displayedPage = IApplicationPage.Login;
-
   @observable inFlow = 0;
   @computed get isWorking() {
     return this.inFlow > 0;
-  }
-
-  get shownPage(): IApplicationPage {
-    return this.displayedPage;
   }
 
   *onLoginFormSubmit(args: { event: any; userName: string; password: string }) {
@@ -106,19 +100,15 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
         return;
       }
     }
+    yield* stopAllFormsAutorefresh(application.workbench!)();
+    yield* stopWorkQueues(application.workbench!)();
+    application.resetWorkbench();
     try {
-      yield* stopAllFormsAutorefresh(application.workbench!)();
-      yield* stopWorkQueues(application.workbench!)();
-      application.resetWorkbench();
-      try {
-        yield api.logout();
-      } finally {
-        api.resetAccessToken();
-      }
-      return null;
+      yield api.logout();
     } finally {
-      this.displayedPage = IApplicationPage.Login;
+      api.resetAccessToken();
     }
+    return null;
   }
 
   *reuseAuthToken() {
@@ -135,7 +125,6 @@ export class ApplicationLifecycle implements IApplicationLifecycle {
     api.setAccessToken(token);
     const workbench = createWorkbench();
     application.setWorkbench(workbench);
-    this.displayedPage = IApplicationPage.Workbench;
     yield* workbench.run();
   }
 

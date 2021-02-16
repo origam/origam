@@ -1,4 +1,4 @@
-import { IMenuItemIcon } from "gui/Workbench/MainMenu/MainMenu";
+import {IMenuItemIcon} from "gui/Workbench/MainMenu/IMenuItemIcon";
 
 export interface ISearchResult
 {
