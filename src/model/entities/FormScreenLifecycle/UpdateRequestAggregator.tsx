@@ -16,6 +16,7 @@ interface IAggregatedRequest {
   promise: Promise<any> | undefined;
   timeout: NodeJS.Timeout | undefined;
   promiseResolver: ((value: any | PromiseLike<void>) => void) | undefined;
+  promiseRejector: ((value: any) => void) | undefined;
 }
 
 export class UpdateRequestAggregator {
@@ -33,13 +34,17 @@ export class UpdateRequestAggregator {
     const aggregatedRequest = this.getAggregateRequest(data);
     if (!aggregatedRequest.timeout) {
       aggregatedRequest.timeout = setTimeout(async () => {
-        runInFlowWithHandler({
-          ctx: this.ctx,
-          action: async () => {
-            await this.waitForRunningRequest(aggregatedRequest);
-            await this.resolveAggregateRequest(aggregatedRequest, data);
-          },
-        });
+        try {
+          await runInFlowWithHandler({
+            ctx: this.ctx,
+            action: async () => {
+              await this.waitForRunningRequest(aggregatedRequest);
+              await this.resolveAggregateRequest(aggregatedRequest, data);
+            },
+          });
+        } catch (e) {
+          aggregatedRequest.promiseRejector?.(e);
+        }
       }, 130);
     }
 
@@ -77,14 +82,19 @@ export class UpdateRequestAggregator {
     const requestId = data.Entity + data.SessionFormIdentifier;
     if (!this.dataMap.has(requestId)) {
       let promiseResolver: ((value: any | PromiseLike<void>) => void) | undefined;
-      const promise = new Promise<any>((resolve, reject) => (promiseResolver = resolve));
+      let promiseRejector: ((value: any) => void) | undefined;
+      const promise = new Promise<any>((resolve, reject) => {
+        promiseResolver = resolve;
+        promiseRejector = reject;
+      });
       this.dataMap.set(requestId, {
         id: requestId,
         sessionFormIdentifier: data.SessionFormIdentifier,
         entity: data.Entity,
         data: [...(this.dataMap.get(requestId)?.data ?? []), ...data.UpdateData],
         promise: promise,
-        promiseResolver: promiseResolver,
+        promiseResolver,
+        promiseRejector,
         timeout: undefined,
       });
     } else {
