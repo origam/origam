@@ -26,6 +26,7 @@ export interface IDataTable {
   isEmpty: boolean;
   rowRemovedListeners: (() => void)[];
   identifierDataIndex: number;
+  rowsAddedSinceSave: number;
 
   getRowId(row: any[]): string;
   getCellValue(row: any[], property: IProperty): any;
@@ -47,8 +48,6 @@ export interface IDataTable {
 
   getDirtyValues(row: any[]): Map<string, any>;
   getDirtyValueRows(): any[][];
-  getDirtyDeletedRows(): any[][];
-  getDirtyNewRows(): any[][];
   getAllValuesOfProp(property: IProperty): Set<any>;
 
   /*setFilteringFn(fn: ((dataTable: IDataTable) => (row: any[]) => boolean)
@@ -59,8 +58,6 @@ export interface IDataTable {
   setFormDirtyValue(row: any[], propertyId: string, value: any): void;
   setDirtyValue(row: any[], columnId: string, value: any): void;
   flushFormToTable(row: any[]): void;
-  setDirtyDeleted(row: any[]): void;
-  setDirtyNew(row: any[]): void;
   deleteAdditionalCellData(row: any[], propertyId: string): void;
   deleteAdditionalRowData(row: any[]): void;
   deleteRow(row: any[]): void;

@@ -112,9 +112,24 @@ export class DataView implements IDataView {
   get isFormViewActive() {
     return this._isFormViewActive;
   }
-  
+
+  @action.bound
+  setRowCount(rowCount: number){
+    this.rowCount = rowCount;
+    this.dataTable.rowsAddedSinceSave = 0;
+  }
+
   @observable
-  totalRowCount: number | undefined;
+  rowCount: number | undefined;
+
+  @computed
+  get totalRowCount(){
+    if(!this.rowCount){
+      return undefined;
+    }
+    return this.rowCount + this.dataTable.rowsAddedSinceSave;
+  }
+
   orderProperty: IProperty;
   activateFormView: (() => Generator) | undefined;
 

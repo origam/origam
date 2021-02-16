@@ -22,6 +22,8 @@ export class DataTable implements IDataTable {
   rowsContainer: IRowsContainer = null as any;
   @observable
   isEmpty: boolean = false;
+  @observable
+  rowsAddedSinceSave = 0;
 
   constructor(data: IDataTableData) {
     Object.assign(this, data);
@@ -54,7 +56,7 @@ export class DataTable implements IDataTable {
   }
 
   @computed get rows(): any[][] {
-    return this.rowsContainer.rows.filter((row) => !this.isRowDirtyDeleted(row));
+    return this.rowsContainer.rows;
   }
 
   @observable additionalRowData: Map<string, IAdditionalRowData> = new Map();
@@ -160,7 +162,6 @@ export class DataTable implements IDataTable {
   }
 
   getRowByExistingIdx(idx: number): any[] {
-    // TODO: Change to respect dirty deleted rows.
     return this.rows[idx];
   }
 
@@ -247,16 +248,6 @@ export class DataTable implements IDataTable {
     return ard.dirtyValues.size > 0;
   }
 
-  isRowDirtyNew(row: any[]) {
-    const ard = this.getAdditionalRowData(row);
-    return ard && ard.dirtyNew;
-  }
-
-  isRowDirtyDeleted(row: any[]) {
-    const ard = this.getAdditionalRowData(row);
-    return ard && ard.dirtyDeleted;
-  }
-
   getDirtyValues(row: any[]): Map<string, any> {
     const ard = this.getAdditionalRowData(row);
     if (ard) {
@@ -268,14 +259,6 @@ export class DataTable implements IDataTable {
 
   getDirtyValueRows(): any[][] {
     return this.rows.filter((row) => this.hasRowDirtyValues(row));
-  }
-
-  getDirtyDeletedRows(): any[][] {
-    return this.rowsContainer.rows.filter((row) => this.isRowDirtyDeleted(row));
-  }
-
-  getDirtyNewRows(): any[][] {
-    return this.rows.filter((row) => this.isRowDirtyNew(row));
   }
 
   @action.bound
@@ -316,17 +299,6 @@ export class DataTable implements IDataTable {
     }
   }
 
-  @action.bound
-  setDirtyDeleted(row: any[]): void {
-    this.createAdditionalData(row);
-    this.getAdditionalRowData(row)!.dirtyDeleted = true;
-  }
-
-  @action.bound
-  setDirtyNew(row: any[]): void {
-    this.createAdditionalData(row);
-    this.getAdditionalRowData(row)!.dirtyNew = true;
-  }
 
   @action.bound
   createAdditionalData(row: any[]) {
@@ -341,8 +313,6 @@ export class DataTable implements IDataTable {
   clearUnneededAdditionalRowData() {
     for (let [k, v] of Array.from(this.additionalRowData.entries())) {
       if (
-        !v.dirtyDeleted &&
-        !v.dirtyNew &&
         v.dirtyFormValues.size === 0 &&
         v.dirtyValues.size === 0
       ) {
@@ -371,6 +341,7 @@ export class DataTable implements IDataTable {
     this.deleteAdditionalRowData(row);
     this.rowsContainer.delete(row);
     this.notifyRowRemovedListeners();
+    this.rowsAddedSinceSave--;
   }
 
   @action.bound
@@ -403,6 +374,7 @@ export class DataTable implements IDataTable {
   @action.bound
   async insertRecord(index: number, row: any[], shouldLockNewRowAtTop?: boolean): Promise<any> {
     await this.rowsContainer.insert(index, row, shouldLockNewRowAtTop);
+    this.rowsAddedSinceSave++;
   }
 
   @action.bound

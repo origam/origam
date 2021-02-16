@@ -134,6 +134,7 @@ export interface IDataView extends IDataViewData {
 
   moveSelectedRowUp(): void;
   moveSelectedRowDown(): void;
+  setRowCount(rowCount: number | undefined): void;
 
   isFormViewActive: () => boolean;
   activateFormView: (()=> Generator) | undefined;

@@ -12,7 +12,7 @@ export class TreeDataTable implements IDataTable {
   $type_TreeDataTable: 1 = 1;
   properties: IProperty[] = [];
   rowsContainer: IRowsContainer = null as any;
-
+  rowsAddedSinceSave = 0;
   @observable.shallow rows: any[] = [];
 
   get allRows(): any[][] {
@@ -126,14 +126,6 @@ export class TreeDataTable implements IDataTable {
     return [];
   }
 
-  getDirtyDeletedRows(): any[][] {
-    return [];
-  }
-
-  getDirtyNewRows(): any[][] {
-    return [];
-  }
-
   getAllValuesOfProp(property: IProperty): Set<any> {
     throw new Error("Not implemented");
   }
@@ -172,14 +164,6 @@ export class TreeDataTable implements IDataTable {
   }
 
   flushFormToTable(row: any[]): void {
-    throw new Error("Not implemented");
-  }
-
-  setDirtyDeleted(row: any[]): void {
-    throw new Error("Not implemented");
-  }
-
-  setDirtyNew(row: any[]): void {
     throw new Error("Not implemented");
   }
 
