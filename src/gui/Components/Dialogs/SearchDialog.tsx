@@ -10,6 +10,7 @@ import { getSearcher } from "model/selectors/getSearcher";
 import { getIconUrl } from "gui/getIconUrl";
 import { ISearchResultGroup } from "model/entities/types/ISearchResultGroup";
 import { getMainMenuState } from "model/selectors/MainMenu/getMainMenuState";
+import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
 
 const DELAY_BEFORE_SERVER_SEARCH_MS = 1000;
 export const SEARCH_DIALOG_KEY = "Search Dialog";
@@ -235,7 +236,7 @@ export class ResultItem extends React.Component<{
         ref={this.divRef}
         onClick={() => this.onClick()} >
         <div className={S.itemIcon}>
-          <Icon src= {getIconUrl(this.props.result.icon)} />
+          <Icon src= {this.props.result.iconUrl} />
         </div>
         <div className={S.itemContents}>
           <div className={S.itemTitle}>

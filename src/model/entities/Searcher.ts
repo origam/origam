@@ -16,6 +16,8 @@ import { getPath } from "model/selectors/MainMenu/menuNode";
 import { latinize } from "utils/string";
 import { onWorkQueuesListItemClick } from "model/actions-ui/WorkQueues/onWorkQueuesListItemClick";
 import { onChatroomsListItemClick } from "model/actions/Chatrooms/onChatroomsListItemClick";
+import {getCustomAssetsRoute} from "model/selectors/User/getCustomAssetsRoute";
+import { getIconUrl } from "gui/getIconUrl";
 
 
 export class Searcher implements ISearcher {
@@ -130,7 +132,6 @@ export class Searcher implements ISearcher {
     }
   }
 
-
   searchOnServer(){
     if(!this.searchTerm.trim()){
       this.serverResultGroups = [];
@@ -146,7 +147,7 @@ export class Searcher implements ISearcher {
         const api = getApi(this);
         const searchResults = await api.search(this.searchTerm);
         for (const searchResult of searchResults) {
-          searchResult.icon = IMenuItemIcon.Form;
+          searchResult.iconUrl = IMenuItemIcon.Form;
           searchResult.id =  searchResult.referenceId;
           searchResult.onClick = ()=> this.onItemServerClick(searchResult);
         }
@@ -180,6 +181,11 @@ export class Searcher implements ISearcher {
     this.searchInChat(latinizedTerm);
   }
 
+  getIconUrl(icon: string | IMenuItemIcon){
+    const customAssetsRoute = getCustomAssetsRoute(this);
+    return getIconUrl(icon,customAssetsRoute + "/" + icon)
+  }
+
   private searchInChat(latinizedTerm: string) {
     const chatSearchResults = this.chatsIndex
       .filter(container => {
@@ -190,7 +196,7 @@ export class Searcher implements ISearcher {
         return {
           id: item.id,
           type: "",
-          icon: IMenuItemIcon.Chat,
+          iconUrl: this.getIconUrl(IMenuItemIcon.Chat),
           label: item.topic,
           description: "",
           onClick: () => this.onChatItemClicked(item)
@@ -218,7 +224,7 @@ export class Searcher implements ISearcher {
         return {
           id: item.id,
           type: "",
-          icon: IMenuItemIcon.WorkQueue,
+          iconUrl: this.getIconUrl(IMenuItemIcon.WorkQueue),
           label: item.name,
           description: "",
           onClick: () => this.onWorkQueueItemClicked(item)
@@ -248,7 +254,7 @@ export class Searcher implements ISearcher {
             return {
               id: node.attributes.id,
               type: "Submenu",
-              icon: node.attributes.icon,
+              iconUrl: this.getIconUrl(node.attributes.icon),
               label: node.attributes.label,
               description: getPath(node),
               onClick: () => this.onSubMenuClicked(node)
@@ -257,7 +263,7 @@ export class Searcher implements ISearcher {
             return {
               id: node.attributes.id,
               type: "Command",
-              icon: node.attributes.icon,
+              iconUrl: this.getIconUrl(node.attributes.icon),
               label: node.attributes.label,
               description: getPath(node),
               onClick: () => this.onCommandClicked(node)
