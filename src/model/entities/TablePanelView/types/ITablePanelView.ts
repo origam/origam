@@ -51,6 +51,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   onCellClick(event: any, row: any[], columnId: string, isControlInteraction: boolean): Generator;
   onNoCellClick(): Generator;
   onOutsideTableClick(): Generator;
+  dontHandleNextScroll(): void;
 
   setEditing(state: boolean): void;
   selectNextColumn(nextRowWhenEnd?: boolean): void;

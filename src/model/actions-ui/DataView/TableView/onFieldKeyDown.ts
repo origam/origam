@@ -20,11 +20,12 @@ export function onFieldKeyDown(ctx: any) {
   return flow(function* onFieldKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
+      const tablePanelView = getTablePanelView(ctx);
       console.log(event.key);
       switch (event.key) {
         case "Tab": {
           if (isGoingToChangeRow(event)){
-            getTablePanelView(ctx).setEditing(false);
+            tablePanelView.setEditing(false);
             yield* flushCurrentRowData(ctx)();
 
             if (!(yield shouldProceedToChangeRow(dataView))) {
@@ -40,8 +41,8 @@ export function onFieldKeyDown(ctx: any) {
             });
 
             event.preventDefault();
-            getTablePanelView(ctx).scrollToCurrentCell();
-            getTablePanelView(ctx).setEditing(true);
+            tablePanelView.scrollToCurrentCell();
+            tablePanelView.setEditing(true);
           }
           else
           {
@@ -52,13 +53,14 @@ export function onFieldKeyDown(ctx: any) {
             }
             event.preventDefault();
 
-            getTablePanelView(ctx).scrollToCurrentCell();
+            tablePanelView.dontHandleNextScroll();
+            tablePanelView.scrollToCurrentCell();
             yield* flushCurrentRowData(ctx)();
           }
           break;
         }
         case "Enter": {
-          getTablePanelView(ctx).setEditing(false);
+          tablePanelView.setEditing(false);
           event.persist?.();
           event.preventDefault();
 
@@ -76,20 +78,20 @@ export function onFieldKeyDown(ctx: any) {
             }
           });
 
-          getTablePanelView(ctx).setEditing(true);
-          getTablePanelView(ctx).triggerOnFocusTable();
-          getTablePanelView(ctx).scrollToCurrentCell();
+          tablePanelView.setEditing(true);
+          tablePanelView.triggerOnFocusTable();
+          tablePanelView.scrollToCurrentCell();
           break;
         }
         case "F2": {
-          getTablePanelView(ctx).setEditing(false);
-          getTablePanelView(ctx).triggerOnFocusTable();
+          tablePanelView.setEditing(false);
+          tablePanelView.triggerOnFocusTable();
           break;
         }
         case "Escape": {
-          getTablePanelView(ctx).setEditing(false);
-          getTablePanelView(ctx).clearCurrentCellEditData();
-          getTablePanelView(ctx).triggerOnFocusTable();
+          tablePanelView.setEditing(false);
+          tablePanelView.clearCurrentCellEditData();
+          tablePanelView.triggerOnFocusTable();
           break;
         }
       }
