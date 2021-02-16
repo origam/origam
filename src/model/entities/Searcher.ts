@@ -288,6 +288,7 @@ export class Searcher implements ISearcher {
     const sidebarState = getWorkbench(this).sidebarState;
     sidebarState.activeSection = "Menu";
     getMainMenuState(this).scrollToItem(node.attributes.id);
+    sidebarState.onSearchResultsChange(this.resultGroups);
   }
 
 
