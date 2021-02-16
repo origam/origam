@@ -9,7 +9,7 @@ import CS from "./ErrorDialog.module.scss";
 import moment, { Moment } from "moment";
 import { T } from "utils/translation";
 import { IErrorDialogController } from "./types/IErrorDialog";
-import { Icon } from "gui02/components/Icon/Icon";
+import { Icon } from "gui/Components/Icon/Icon";
 
 function NewExternalPromise<T>() {
   let resolveFn: any;

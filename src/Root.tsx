@@ -1,6 +1,6 @@
 import React from 'react';
 import {Provider} from 'mobx-react';
-import {CMain} from 'gui02/connections/CMain';
+import {CMain} from 'gui/connections/CMain';
 import {IApplication} from 'model/entities/types/IApplication';
 
 

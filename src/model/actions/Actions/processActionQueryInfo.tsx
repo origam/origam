@@ -4,7 +4,7 @@ import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
 import { ModalWindow } from "gui/Components/Dialog/Dialog";
 import { T } from "utils/translation";
 import S from "./processActionQueryResult.module.scss";
-import { Icon } from "gui02/components/Icon/Icon";
+import { Icon } from "gui/Components/Icon/Icon";
 
 export interface IQueryInfo {
   entityName: string;

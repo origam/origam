@@ -1,0 +1,53 @@
+@import "../../../styles/common_styles";
+@import "../../../styles/definitions";
+
+.root {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  @include hoverItemAnimation;
+  color: $blue;
+  height: 30px;
+  padding: 0 1em;
+
+  &:not(:global(.isDisabled)):hover {
+    background-color: $blue;
+    //font-weight: 400;
+  }
+
+  &:global(.isDisabled) {
+    color: grey;
+    cursor: not-allowed;
+  }
+
+  &:global(.redItem) {
+    color: $red;
+    background-color: white;
+    &:hover {
+      color: white;
+      background-color: $red;
+    }
+  }
+  /*&:last-of-type {
+    color: $red;
+    &:hover {
+      background: $red;
+    }
+  }*/
+  &:hover {
+    background: $blue;
+    color: $white;
+  }
+  &:global(.isDisabled) {
+    color: $grey3;
+    &:hover {
+      background: $grey1;
+    }
+  }
+}
+
+.isSelected{
+  font-weight: bold;
+}

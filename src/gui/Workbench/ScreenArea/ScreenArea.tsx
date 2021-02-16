@@ -9,7 +9,7 @@ import { IOpenedScreen } from "../../../model/entities/types/IOpenedScreen";
 import { getWorkbenchLifecycle } from "../../../model/selectors/getWorkbenchLifecycle";
 import S from "./ScreenArea.module.scss";
 import { DialogScreenBuilder } from "./ScreenBuilder";
-import { CtxPanelVisibility } from "gui02/contexts/GUIContexts";
+import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
 import { onWorkflowAbortClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowAbortClick";
 import { onWorkflowNextClick } from "../../../model/actions-ui/ScreenHeader/onWorkflowNextClick";
 import { T } from "../../../utils/translation";

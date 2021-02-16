@@ -1,0 +1,14 @@
+@import "../../../styles/common_styles";
+@import "../../../styles/definitions";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  z-index: 2000;
+  @include popoverShadow;
+
+  box-shadow: 0 0.5em 1.5em 0 rgba($black, 0.25);
+  border: 1px solid $grey3;
+  @include border-radius(4px);
+}
