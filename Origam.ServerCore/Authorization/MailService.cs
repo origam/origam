@@ -20,7 +20,9 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -32,9 +34,10 @@ namespace Origam.ServerCore.Authorization
     class MailService : IMailService
     {
         private AccountMailSender mailSender;
-
-        public MailService(IOptions<UserConfig> userConfig, IConfiguration configuration)
+        private LanguageConfig languageConfig;
+        public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig, IConfiguration configuration)
         {
+            this.languageConfig = languageConfig;
             string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
                 ?.Replace(";",",")
                 ?.Split(",")
@@ -43,21 +46,36 @@ namespace Origam.ServerCore.Authorization
             mailSender = new AccountMailSender(
                 portalBaseUrl: baseUrl,
                 registerNewUserFilename: userConfig.Value.UserRegistrationMailBodyFileName,
-                fromAddress: userConfig.Value.FromAddress, 
+                fromAddress: userConfig.Value.FromAddress,
                 registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
                 userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
-                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject, 
-                resetPwdBodyFilename: userConfig.Value.ResetPasswordMailBodyFileName,
-                resetPwdSubject: userConfig.Value.ResetPasswordMailSubject, 
+                userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
+                resetPwdBodyFilename: GetDefaultPwdFileName(),
+                resetPwdSubject: GetDefaultPwnSubject(),
                 mfaTemplateFileName: userConfig.Value.MultiFactorMailBodyFileName,
                 mfaSubject: userConfig.Value.MultiFactorMailSubject,
-                applicationBasePath: AppContext.BaseDirectory, 
-                mailQueueName: userConfig.Value.MailQueueName);
+                applicationBasePath: AppContext.BaseDirectory,
+                mailQueueName: userConfig.Value.MailQueueName); 
         }
-        
+        private string GetDefaultPwnSubject()
+        {
+                return languageConfig.CultureItems.Where(cultname => 
+                        cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
+                        .Select(cultname => { return cultname.ResetPasswordMailSubject; }).
+                        FirstOrDefault();
+        }
+        private string GetDefaultPwdFileName()
+        {
+            return languageConfig.CultureItems.Where(cultname => 
+                    cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
+                    .Select(cultname => { return cultname.ResetPasswordMailBodyFileName; }).
+                    FirstOrDefault();
+
+        }
         public void SendPasswordResetToken(IOrigamUser user, string token,
             int tokenValidityHours)
-        {           
+        {
+            SetResetPasswordItems();
             mailSender.SendPasswordResetToken(
                 username: user.UserName,
                 name: user.Name,
@@ -69,8 +87,14 @@ namespace Origam.ServerCore.Authorization
                 resultMessage: out string _);
         }
 
+        private void SetResetPasswordItems()
+        {
+            mailSender.resetPwdSubject = GetDefaultPwnSubject();
+            mailSender.resetPwdBodyFilename = GetDefaultPwdFileName();
+        }
         public void SendNewUserToken(IOrigamUser user, string token)
         {
+            SetResetPasswordItems();
             mailSender.SendNewUserToken(
                 userId: user.BusinessPartnerId,
                 email: user.Email,
@@ -79,7 +103,6 @@ namespace Origam.ServerCore.Authorization
                 firstName: user.FirstName,
                 token: token);
         }
-
         public void SendMultiFactorAuthCode(IOrigamUser user, string token)
         {
             mailSender.SendMultiFactorAuthCode(

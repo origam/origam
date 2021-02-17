@@ -74,14 +74,21 @@
         "Allowed":[
             {
                 "Culture": "en-US",
-                "Caption": "English"
+                "Caption": "English",
+				"ResetPasswordMailSubject": "Reset Password",
+				"ResetPasswordMailBodyFileName": "testResetPwFile.txt"
             },
             {
                 "Culture": "cs-CZ",
-                "Caption": "Cesky"
-            },      {
+                "Caption": "Cesky",
+				"ResetPasswordMailSubject": "Obnova Hesla",
+				"ResetPasswordMailBodyFileName": "testResetPwFile.txt"
+            },      
+			{
                 "Culture": "de-DE",
-                "Caption": "Deutsch"
+                "Caption": "Deutsch",
+				"ResetPasswordMailSubject": "Passwort Zurücksetzen",
+				"ResetPasswordMailBodyFileName": "testResetPwFile.txt"
             }
         ]
     },

@@ -7,8 +7,6 @@
   "UserConfig": {
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",
-    "ResetPasswordMailSubject": "Reset Password",
-    "ResetPasswordMailBodyFileName": "testResetPwFile.txt",
     "UserUnlockNotificationSubject": "",
     "UserUnlockNotificationBodyFileName": "",
     "UserRegistrationMailSubject": "Register",
@@ -81,15 +79,21 @@
     "Allowed": [
       {
         "Culture": "en-US",
-        "Caption": "English"
+        "Caption": "English",
+        "ResetPasswordMailSubject": "Reset Password",
+        "ResetPasswordMailBodyFileName": "testResetPwFile.txt"
       },
       {
         "Culture": "cs-CZ",
-        "Caption": "Česky"
-      },      
-	  {
+        "Caption": "Česky",
+        "ResetPasswordMailSubject": "Obnova Hesla",
+        "ResetPasswordMailBodyFileName": "testResetPwFile.txt"
+      },
+      {
         "Culture": "de-DE",
-        "Caption": "Deutsch"
+        "Caption": "Deutsch",
+        "ResetPasswordMailSubject": "Passwort Zurücksetzen",
+        "ResetPasswordMailBodyFileName": "testResetPwFile.txt"
       }
     ]
   },

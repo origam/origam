@@ -47,12 +47,12 @@ namespace Origam.Security.Common
         private readonly string registerNewUserSubject;
         private readonly string userUnlockNotificationBodyFilename;
         private readonly string userUnlockNotificationSubject;
-        private readonly string resetPwdBodyFilename;
-        private readonly string resetPwdSubject;
         private readonly string mfaTemplateFileName;
         private readonly string mfaSubject;
         private readonly string mailQueueName;
         private readonly string applicationBasePath;
+        public string resetPwdBodyFilename { get; set; }
+        public string resetPwdSubject { get; set; }
 
         public AccountMailSender(string portalBaseUrl,
             string registerNewUserFilename,
