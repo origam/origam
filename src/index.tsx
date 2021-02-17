@@ -16,7 +16,8 @@ import Cookie from "js-cookie";
 import { translationsInit } from "./utils/translation";
 import { getLocaleFromCookie, initLocaleCookie } from "utils/cookies";
 import moment from "moment";
-import "moment/min/locales"
+import "moment/min/locales";
+import { preventDoubleclickSelect } from "utils/mouse";
 
 if (process.env.REACT_APP_SELENIUM_KICK) {
   axios.post("http://127.0.0.1:3500/app-reload");
@@ -31,7 +32,7 @@ if (process.env.NODE_ENV === "development") {
 (window as any).ORIGAM_CLIENT_REVISION_DATE = process.env.REACT_APP_GIT_REVISION_DATE || "UNKNOWN";
 
 async function main() {
-
+  preventDoubleclickSelect();
   const locationHash = window.location.hash;
   const TOKEN_OVR_HASH = "#origamAuthTokenOverride=";
   if (locationHash.startsWith(TOKEN_OVR_HASH)) {
@@ -83,7 +84,7 @@ async function main() {
     const locale = await getLocaleFromCookie();
     document.documentElement.lang = locale;
     moment.locale(locale);
- 
+
     await translationsInit(application);
 
     ReactDOM.render(<Root application={application} />, document.getElementById("root"));
