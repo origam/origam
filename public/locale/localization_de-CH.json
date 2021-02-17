@@ -149,7 +149,7 @@
   "column_config_error_message": "Mindestens eine Tabellenspalte muss sichtbar sein",
   "column_config_visible": "Sichtbar",
   "column_config_name": "Name",
-  "column_config_group_by": "Guppiert nach",
+  "column_config_group_by": "Gruppiert nach",
   "column_config_time_grouping_unit": "Gruppierungseinheit",
   "group_by_year": "Jahr",
   "group_by_month": "Monat",
