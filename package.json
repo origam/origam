@@ -110,7 +110,8 @@
     "webpack-manifest-plugin": "2.2.0",
     "wkt": "^0.1.1",
     "workbox-webpack-plugin": "4.3.1",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "xstate": "^4.16.2"
   },
   "homepage": "./",
   "scripts": {
