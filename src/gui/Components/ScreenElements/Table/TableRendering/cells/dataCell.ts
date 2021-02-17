@@ -52,6 +52,7 @@ import {
   numberCellPaddingRight,
   topTextOffset,
 } from "./cellsCommon";
+import { currentDataCellRenderer, getPaddingLeft, xCenter } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -69,11 +70,10 @@ export function dataColumnsDraws() {
 }
 
 function registerToolTipGetter(columnId: string) {
-
+  const ctx2d = context2d();
   const property = currentProperty();
-  const cellText = currentProperty().column === "Date"
-    ? getDateTimeText()
-    : currentCellTextMultiline(); 
+  const cellRenderer = currentDataCellRenderer(ctx2d);
+  const cellText = cellRenderer.cellTextMulitiline;
   const cellClickableArea = getCellClickableArea();
   const currentRowIndex = rowIndex();
   const currentColumnIndex = drawingColumnIndex();
@@ -87,27 +87,33 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-  if (property.column !== "CheckBox" &&
-      property.column !== "Image" &&
-      property.column !== "Blob")
-  {
-    onMouseOver({
-      x: cellClickableArea.x,
-      y: cellClickableArea.y,
-      w: cellClickableArea.width,
-      h: cellClickableArea.height,
-      toolTipGetter() {
-        return {
-          columnIndex: currentColumnIndex,
-          rowIndex: currentRowIndex,
-          content: cellText,
-          cellWidth: cellWidth,
-          cellHeight: cellHeight,
-          positionRectangle: toolTipPositionRectangle
-        };
-      },
-    });
+  if (property.column === "CheckBox" ||
+    property.column === "Image" ||
+    property.column === "Blob") {
+    return;
   }
+
+  const widthToMakeTextVisible = ctx2d.measureText(currentCellText()).width + cellRenderer.paddingLeft;
+  if (cellWidth > widthToMakeTextVisible) {
+    return;
+  }
+
+  onMouseOver({
+    x: cellClickableArea.x,
+    y: cellClickableArea.y,
+    w: cellClickableArea.width,
+    h: cellClickableArea.height,
+    toolTipGetter() {
+      return {
+        columnIndex: currentColumnIndex,
+        rowIndex: currentRowIndex,
+        content: cellText,
+        cellWidth: cellWidth,
+        cellHeight: cellHeight,
+        positionRectangle: toolTipPositionRectangle
+      };
+    },
+  });
 }
 
 function registerClickHandler(columnId: string) {
@@ -195,14 +201,6 @@ function registerClickHandler(columnId: string) {
   }
 }
 
-function xCenter() {
-  return currentColumnLeft() + currentColumnWidth() / 2;
-}
-
-function yCenter() {
-  return currentRowTop() + rowHeight() / 2;
-}
-
 function getCellClickableArea() {
   return {
     x: currentColumnLeftVisible(),
@@ -250,18 +248,6 @@ export function drawDataCellBackground() {
   );
   if (isRowCursor) {
     drawSelectedRowBorder(8);
-  }
-}
-
-function getDateTimeText(){
-  if (currentCellText() !== null && currentCellText() !== "") {
-    let momentValue = moment(currentCellText());
-    if (!momentValue.isValid()) {
-      return undefined;
-    }
-    return  momentValue.format(currentProperty().formatterPattern);
-  }else{
-    return undefined;
   }
 }
 
@@ -321,114 +307,8 @@ function drawCellValue() {
     }
 
     ctx2d.fillStyle = foregroundColor || "black";
-    switch (type) {
-      case "CheckBox":
-        ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
-        ctx2d.textAlign = "center";
-        ctx2d.textBaseline = "middle";
-
-        ctx2d.fillText(
-          !!currentCellText() ? "\uf14a" : "\uf0c8",
-          CPR() * xCenter(),
-          CPR() * (currentRowTop() + topTextOffset - 4)
-        );
-        break;
-      case "Date":
-        const dateTimeText = getDateTimeText();
-        if(dateTimeText){
-          ctx2d.fillText(
-            dateTimeText,
-            CPR() * (currentColumnLeft() + getPaddingLeft()),
-            CPR() * (currentRowTop() + topTextOffset)
-          );
-        }
-        break;
-      case "TagInput":
-        if (currentCellText() !== null) {
-          ctx2d.fillText(
-            "" + currentCellText()!,
-            CPR() * (currentColumnLeft() + getPaddingLeft()),
-            CPR() * (currentRowTop() + topTextOffset)
-          );
-        }
-        break;
-      case "ComboBox":
-      case "Checklist":
-        if (isLink) {
-          ctx2d.save();
-          ctx2d.fillStyle = "#4c84ff";
-        }
-        if (currentCellText() !== null) {
-          ctx2d.fillText(
-            "" + currentCellText()!,
-            CPR() * (currentColumnLeft() + getPaddingLeft()),
-            CPR() * (currentRowTop() + topTextOffset)
-          );
-        }
-        if (isLink) {
-          ctx2d.restore();
-        }
-        break;
-      case "Number":
-        if (currentCellText() !== null) {
-          ctx2d.save();
-          ctx2d.textAlign = "right";
-          ctx2d.fillText(
-            "" + currentCellText()!,
-            CPR() * (currentColumnLeft() + currentColumnWidth() - numberCellPaddingRight()),
-            CPR() * (currentRowTop() + topTextOffset)
-          );
-          ctx2d.restore();
-        }
-        break;
-      case "Image": {
-        const value = currentCellValue();
-        if (!value) break;
-        const { pictureCache } = formScreen();
-        const img = pictureCache.getImage(value);
-        //console.log("DRAW:", value, img);
-        if (!img || !img.complete) break;
-        const iw = img.width;
-        const ih = img.height;
-        const cw = property.width;
-        const ch = property.height;
-        const WR = cw / iw;
-        const HR = ch / ih;
-        let ratio = 0;
-        if (Math.abs(1 - WR) < Math.abs(1 - HR)) {
-          ratio = WR;
-        } else {
-          ratio = HR;
-        }
-        const finIW = ratio * iw;
-        const finIH = ratio * ih;
-        ctx2d.drawImage(
-          img,
-          CPR() * (xCenter() - finIW * 0.5),
-          CPR() * (yCenter() - finIH * 0.5),
-          CPR() * finIW,
-          CPR() * finIH
-        );
-        break;
-      }
-      default:
-        if (currentCellText() !== null) {
-          if (!currentProperty().isPassword) {
-            ctx2d.fillText(
-              "" + currentCellText()!,
-              CPR() * (currentColumnLeft() + getPaddingLeft()),
-              CPR() * (currentRowTop() + topTextOffset)
-            );
-          } else {
-            ctx2d.fillText("*******", numberCellPaddingRight() * CPR(), 15 * CPR());
-          }
-        }
-    }
+    currentDataCellRenderer(ctx2d).drawCellText();
   }
-}
-
-function getPaddingLeft() {
-  return drawingColumnIndex() === 0 ? cellPaddingLeftFirstCell : cellPaddingLeft;
 }
 
 function getUnderLineColor() {
