@@ -476,12 +476,15 @@ export function* interpretScreenXml(
         const defaultColumnConfigurations = findStopping(conf, (n) => n.name === "columnWidths");
         defaultColumnConfigurations.forEach((defaultColumnConfiguration) => {
           const columns = findStopping(defaultColumnConfiguration, (n) => n.name === "column");
-          columns.forEach((column, columnIndex) => {
+          for (const column of columns) {
             if (column.attributes.property) {
-              // COLUMN WIDTH
               const prop = properties.find((prop) => prop.id === column.attributes.property);
+              if(!prop){
+                continue;
+              }
+              // COLUMN WIDTH
               const width = parseInt(column.attributes.width);
-              prop && prop.setColumnWidth(fixColumnWidth(width));
+              prop.setColumnWidth(fixColumnWidth(width));
 
               // COLUMN HIDING
               if (column.attributes.isHidden === "true" || width < 0) {
@@ -498,6 +501,9 @@ export function* interpretScreenXml(
               const property = properties.find(
                 (prop) => prop.id === column.attributes.groupingField
               );
+              if(!property){
+                continue;
+              }
               if (!property?.isLookupColumn) {
                 dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
                   column.attributes.groupingField,
@@ -509,7 +515,7 @@ export function* interpretScreenXml(
                 groupingColumnCounter++;
               }
             }
-          });
+          };
           dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds
             .slice()
             .sort((a, b) => {
