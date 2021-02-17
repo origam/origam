@@ -147,7 +147,7 @@ export class Searcher implements ISearcher {
         const api = getApi(this);
         const searchResults = await api.search(this.searchTerm);
         for (const searchResult of searchResults) {
-          searchResult.iconUrl = IMenuItemIcon.Form;
+          searchResult.iconUrl = this.getIconUrl(IMenuItemIcon.Form);
           searchResult.id =  searchResult.referenceId;
           searchResult.onClick = ()=> this.onItemServerClick(searchResult);
         }
