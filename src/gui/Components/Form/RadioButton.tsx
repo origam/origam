@@ -57,7 +57,10 @@ export class RadioButton extends React.Component<{
           checked={this.props.checked}
           onKeyDown={event => this.props.onKeyDown(event)}
           onChange={event => this.onChange(event)}/>
-        <label htmlFor={this.props.value} style={{color: this.props.labelColor}}>
+        <label
+          className={S.label}
+          htmlFor={this.props.value}
+          style={{color: this.props.labelColor}}>
           {this.props.caption}
         </label>
       </div>
