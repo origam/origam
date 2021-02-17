@@ -147,7 +147,7 @@ export class Searcher implements ISearcher {
         const api = getApi(this);
         const searchResults = await api.search(this.searchTerm);
         for (const searchResult of searchResults) {
-          searchResult.iconUrl = IMenuItemIcon.Form;
+          searchResult.iconUrl = this.getIconUrl(IMenuItemIcon.Form);
           searchResult.id =  searchResult.referenceId;
           searchResult.onClick = ()=> this.onItemServerClick(searchResult);
         }
@@ -161,6 +161,8 @@ export class Searcher implements ISearcher {
 
   onItemServerClick(searchResult: IServerSearchResult){
     onSearchResultClick(this)(searchResult.dataSourceLookupId, searchResult.referenceId)
+    const sidebarState = getWorkbench(this).sidebarState;
+    sidebarState.onSearchResultsChange(this.resultGroups);
   }
 
   @action.bound onSearchFieldChange(searchTerm: string) {
@@ -212,6 +214,7 @@ export class Searcher implements ISearcher {
     onChatroomsListItemClick(this)(null, item);
     sidebarState.activeSection = "Chat";
     getMainMenuState(this).scrollToItem(item.id);
+    sidebarState.onSearchResultsChange(this.resultGroups);
   }
 
   private searchInWorkQueues(latinizedTerm: string) {
@@ -240,6 +243,7 @@ export class Searcher implements ISearcher {
     onWorkQueuesListItemClick(this)(null, item);
     sidebarState.activeSection = "WorkQueues";
     getMainMenuState(this).scrollToItem(item.id);
+    sidebarState.onSearchResultsChange(this.resultGroups);
   }
 
   private searchInMenu(latinizedTerm: string) {
