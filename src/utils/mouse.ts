@@ -7,7 +7,14 @@ export function preventDoubleclickSelect() {
         id: "selectionPreventer",
         initial: "IDLE",
         states: {
-          IDLE: { on: { MOUSE_DOWN: "DEAD_PERIOD" } },
+          IDLE: {
+            on: {
+              MOUSE_DOWN: {
+                target: "DEAD_PERIOD",
+                cond: "isNotEditable",
+              },
+            },
+          },
           DEAD_PERIOD: {
             on: {
               MOUSE_DOWN: {
@@ -25,6 +32,12 @@ export function preventDoubleclickSelect() {
         actions: {
           preventDefault: (ctx, { payload: { domEvent } }) => {
             domEvent.preventDefault();
+          },
+        },
+        guards: {
+          isNotEditable: (ctx, { payload: { domEvent } }) => {
+            const targetTag = domEvent.target.tagName.toLowerCase();
+            return targetTag !== "textarea" && targetTag !== "input";
           },
         },
       }
