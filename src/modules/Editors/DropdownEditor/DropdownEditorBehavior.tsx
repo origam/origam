@@ -167,7 +167,8 @@ export class DropdownEditorBehavior {
       case "ArrowUp":
         if (this.isDropped) {
           event.preventDefault();
-          if (!this.cursorRowId) {
+          if (!this.dataTable.getRowById(this.cursorRowId)) {
+            this.trySelectFirstRow();
             this.selectChosenRow();
           } else {
             const prevRowId = this.dataTable.getRowIdBeforeId(this.cursorRowId);
@@ -181,7 +182,8 @@ export class DropdownEditorBehavior {
       case "ArrowDown":
         if (this.isDropped) {
           event.preventDefault();
-          if (!this.cursorRowId) {
+          if (!this.dataTable.getRowById(this.cursorRowId)) {
+            this.trySelectFirstRow();
             this.selectChosenRow();
           } else {
             const nextRowId = this.dataTable.getRowIdAfterId(this.cursorRowId);
@@ -312,10 +314,12 @@ export class DropdownEditorBehavior {
   }
 
   @action.bound selectChosenRow() {
-    if (this.dataTable.rows.length > 0 && 
-        this.chosenRowId && 
-        !_.isArray(this.chosenRowId)) 
-    {
+    if (
+      this.dataTable.rows.length > 0 &&
+      this.chosenRowId &&
+      !_.isArray(this.chosenRowId) &&
+      this.dataTable.getRowById(this.chosenRowId)
+    ) {
       this.cursorRowId = this.chosenRowId;
     }
   }
@@ -327,7 +331,7 @@ export class DropdownEditorBehavior {
         self.isWorking = true;
         const setup = self.setup();
         const items = yield* self.api.getLookupList(searchTerm);
-        if(self.autoSort){
+        if (self.autoSort) {
           items.sort(compareLookupItems);
         }
         if (setup.dropdownType === EagerlyLoadedGrid) {
