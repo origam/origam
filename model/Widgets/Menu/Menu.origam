@@ -179,7 +179,7 @@
         frmi:listEntity="Widgets/DataStructure/Widgets/WidgetSectionTest_List.origam#WidgetSectionTest_List/WidgetSectionTestMaster/2e2a0268-765d-4e31-98b1-67c97397bf7e"
         frmi:listSortSet="Widgets/DataStructure/Widgets/WidgetSectionTest_List.origam#WidgetSectionTest_List/Sort/b06b6634-69f7-483c-8289-bfc0b29a9a38"
         frmi:method="Widgets/DataStructure/Widgets/WidgetSectionTest.origam#WidgetSectionTest/GetId/4d97f901-9872-4201-9fc2-1afff8c3fb04"
-        asi:name="WidgetSectionTest"
+        asi:name="WidgetSectionTest-LazyLoaded"
         ami:openExclusively="false"
         frmi:readOnlyAccess="false"
         frmi:refreshAfterSaveType="RefreshChangedRecords"
@@ -190,5 +190,48 @@
         frmi:screen="Widgets/FormControlSet/Widgets/WidgetSectionTest.origam#WidgetSectionTest/87ac3988-10a4-47e0-a37a-6ef0826d1bcf"
         frmi:sortSet="Widgets/DataStructure/Widgets/WidgetSectionTest.origam#WidgetSectionTest/Sort/3c970576-154c-4309-b989-1107f7444f58" />
     </s:MenuItem>
+  </s:MenuItem>
+  <s:MenuItem
+    asi:abstract="false"
+    ami:alwaysOpenNew="false"
+    ami:displayName="_hidden"
+    x:id="3b4b2244-6fba-4d7e-a36a-fdd40ee711f9"
+    s:isHidden="true"
+    asi:name="_hidden"
+    x:parentId="147775f5-451d-4efd-8634-7f27a2cf50a6">
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Edit 1"
+      x:id="213e6abf-4123-42ce-bba0-ae63e5b4896c"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      asi:name="AllDataTypes_Edit1"
+      ami:openExclusively="false"
+      frmi:readOnlyAccess="false"
+      frmi:recordEditMethod="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="AllDataTypes"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
+    <frmi:MenuItem
+      asi:abstract="false"
+      ami:alwaysOpenNew="false"
+      frmi:autoSaveOnListRecordChange="false"
+      ami:displayName="All Data Types Edit 2"
+      x:id="c8c2158d-ff28-4c6c-8a02-dd6f98ae1a64"
+      frmi:method="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      asi:name="AllDataTypes_Edit2"
+      ami:openExclusively="false"
+      frmi:readOnlyAccess="false"
+      frmi:recordEditMethod="Widgets/DataStructure/Widgets/AllDataTypes.origam#AllDataTypes/GetId/cb1bc588-b727-4615-ab7f-0829780e19b5"
+      frmi:refreshAfterSaveType="RefreshChangedRecords"
+      frmi:refreshOnFocus="false"
+      frmi:refreshPortalAfterSave="false"
+      frmi:requestSaveAfterUpdate="false"
+      ami:roles="AllDataTypes"
+      frmi:screen="Widgets/FormControlSet/Widgets/AllDataTypes.origam#AllDataTypes/acf532d5-5a54-49d7-ac50-30a59ff6b32d" />
   </s:MenuItem>
 </x:file>
