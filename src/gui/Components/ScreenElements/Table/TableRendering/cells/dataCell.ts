@@ -52,7 +52,7 @@ import {
   numberCellPaddingRight,
   topTextOffset,
 } from "./cellsCommon";
-import { currenrDataCellRenderer, getPaddingLeft, xCenter } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
+import { currentDataCellRenderer, getPaddingLeft, xCenter } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -70,10 +70,9 @@ export function dataColumnsDraws() {
 }
 
 function registerToolTipGetter(columnId: string) {
-
-  const property = currentProperty();
   const ctx2d = context2d();
-  const cellRenderer = currenrDataCellRenderer(ctx2d);
+  const property = currentProperty();
+  const cellRenderer = currentDataCellRenderer(ctx2d);
   const cellText = cellRenderer.cellTextMulitiline;
   const cellClickableArea = getCellClickableArea();
   const currentRowIndex = rowIndex();
@@ -88,27 +87,33 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-  if (property.column !== "CheckBox" &&
-      property.column !== "Image" &&
-      property.column !== "Blob")
-  {
-    onMouseOver({
-      x: cellClickableArea.x,
-      y: cellClickableArea.y,
-      w: cellClickableArea.width,
-      h: cellClickableArea.height,
-      toolTipGetter() {
-        return {
-          columnIndex: currentColumnIndex,
-          rowIndex: currentRowIndex,
-          content: cellText,
-          cellWidth: cellWidth,
-          cellHeight: cellHeight,
-          positionRectangle: toolTipPositionRectangle
-        };
-      },
-    });
+  if (property.column === "CheckBox" ||
+    property.column === "Image" ||
+    property.column === "Blob") {
+    return;
   }
+
+  const widthToMakeTextVisible = ctx2d.measureText(currentCellText()).width + cellRenderer.paddingLeft;
+  if (cellWidth > widthToMakeTextVisible) {
+    return;
+  }
+
+  onMouseOver({
+    x: cellClickableArea.x,
+    y: cellClickableArea.y,
+    w: cellClickableArea.width,
+    h: cellClickableArea.height,
+    toolTipGetter() {
+      return {
+        columnIndex: currentColumnIndex,
+        rowIndex: currentRowIndex,
+        content: cellText,
+        cellWidth: cellWidth,
+        cellHeight: cellHeight,
+        positionRectangle: toolTipPositionRectangle
+      };
+    },
+  });
 }
 
 function registerClickHandler(columnId: string) {
@@ -302,7 +307,7 @@ function drawCellValue() {
     }
 
     ctx2d.fillStyle = foregroundColor || "black";
-    currenrDataCellRenderer(ctx2d).drawCellText();
+    currentDataCellRenderer(ctx2d).drawCellText();
   }
 }
 

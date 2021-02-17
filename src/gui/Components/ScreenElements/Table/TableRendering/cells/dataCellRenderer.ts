@@ -28,7 +28,7 @@ interface IDataCellRenderer{
   paddingLeft: number;
 }
 
-export function currenrDataCellRenderer(ctx2d: CanvasRenderingContext2D){
+export function currentDataCellRenderer(ctx2d: CanvasRenderingContext2D){
   const type = currentProperty().column;
   switch (type) {
     case "CheckBox":
@@ -51,9 +51,11 @@ export function currenrDataCellRenderer(ctx2d: CanvasRenderingContext2D){
 
 class CheckBoxCellRenderer implements IDataCellRenderer{
 
-  paddingLeft = 0;
-
   constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
+
+  get paddingLeft(){
+    return getPaddingLeft();
   }
 
   get cellText(){
@@ -79,9 +81,11 @@ class CheckBoxCellRenderer implements IDataCellRenderer{
 
 class DateCellRenderer implements IDataCellRenderer{
 
-  paddingLeft = 0;
-
   constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
+
+  get paddingLeft(){
+    return getPaddingLeft();
   }
 
   get cellText(){
@@ -105,7 +109,7 @@ class DateCellRenderer implements IDataCellRenderer{
     if(dateTimeText){
       this.ctx2d.fillText(
         dateTimeText,
-        CPR() * (currentColumnLeft() + getPaddingLeft()),
+        CPR() * (currentColumnLeft() + this.paddingLeft),
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
@@ -113,9 +117,11 @@ class DateCellRenderer implements IDataCellRenderer{
 }
 class TagInputCellRenderer implements IDataCellRenderer{
 
-  paddingLeft = 0;
-
   constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
+
+  get paddingLeft(){
+    return getPaddingLeft();
   }
 
   get cellText(){
@@ -130,7 +136,7 @@ class TagInputCellRenderer implements IDataCellRenderer{
     if (this.cellText !== null) {
       this.ctx2d.fillText(
         "" + this.cellText!,
-        CPR() * (currentColumnLeft() + getPaddingLeft()),
+        CPR() * (currentColumnLeft() + this.paddingLeft),
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
@@ -139,9 +145,11 @@ class TagInputCellRenderer implements IDataCellRenderer{
 
 class CheckListCellRenderer implements IDataCellRenderer{
 
-  paddingLeft = 0;
-
   constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
+
+  get paddingLeft(){
+    return getPaddingLeft();
   }
 
   get cellText(){
@@ -166,7 +174,7 @@ class CheckListCellRenderer implements IDataCellRenderer{
     if (currentCellText() !== null) {
       this.ctx2d.fillText(
         "" + currentCellText()!,
-        CPR() * (currentColumnLeft() + getPaddingLeft()),
+        CPR() * (currentColumnLeft() + this.paddingLeft),
         CPR() * (currentRowTop() + topTextOffset)
       );
     }
@@ -178,9 +186,11 @@ class CheckListCellRenderer implements IDataCellRenderer{
 
 class NumberInputCellRenderer implements IDataCellRenderer{
 
-  paddingLeft = 0;
-
   constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
+
+  get paddingLeft(){
+    return currentColumnWidth() - this.paddingRight;
   }
 
   get cellText(){
@@ -201,7 +211,7 @@ class NumberInputCellRenderer implements IDataCellRenderer{
       this.ctx2d.textAlign = "right";
       this.ctx2d.fillText(
         "" + currentCellText()!,
-        CPR() * (currentColumnLeft() + currentColumnWidth() - this.paddingRight),
+        CPR() * (currentColumnLeft() + this.paddingLeft),
         CPR() * (currentRowTop() + topTextOffset)
       );
       this.ctx2d.restore();
@@ -211,9 +221,11 @@ class NumberInputCellRenderer implements IDataCellRenderer{
 
 class ImageCellRenderer implements IDataCellRenderer{
 
-  paddingLeft = 0;
-
   constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
+
+  get paddingLeft(){
+    return getPaddingLeft();
   }
 
   get cellText(){
@@ -262,9 +274,11 @@ class ImageCellRenderer implements IDataCellRenderer{
 
 class GenericCellRenderer implements IDataCellRenderer{
 
-  paddingLeft = 0;
-
   constructor(private ctx2d: CanvasRenderingContext2D) {
+  }
+
+  get paddingLeft(){
+    return getPaddingLeft();
   }
 
   get cellText(){
@@ -280,7 +294,7 @@ class GenericCellRenderer implements IDataCellRenderer{
       if (!currentProperty().isPassword) {
         this.ctx2d.fillText(
           "" + currentCellText()!,
-          CPR() * (currentColumnLeft() + getPaddingLeft()),
+          CPR() * (currentColumnLeft() + this.paddingLeft),
           CPR() * (currentRowTop() + topTextOffset)
         );
       } else {
