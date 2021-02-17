@@ -93,7 +93,7 @@ function registerToolTipGetter(columnId: string) {
     return;
   }
 
-  const widthToMakeTextVisible = ctx2d.measureText(currentCellText()).width + cellRenderer.paddingLeft;
+  const widthToMakeTextVisible = CPR() * ctx2d.measureText(currentCellText()).width + cellRenderer.paddingLeft;
   if (cellWidth > widthToMakeTextVisible) {
     return;
   }
