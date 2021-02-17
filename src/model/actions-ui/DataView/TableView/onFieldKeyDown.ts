@@ -41,8 +41,10 @@ export function onFieldKeyDown(ctx: any) {
             });
 
             event.preventDefault();
+            tablePanelView.dontHandleNextScroll();
             tablePanelView.scrollToCurrentCell();
             tablePanelView.setEditing(true);
+            tablePanelView.triggerOnFocusTable();
           }
           else
           {

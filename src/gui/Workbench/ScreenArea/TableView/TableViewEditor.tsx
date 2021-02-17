@@ -43,7 +43,10 @@ import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBg
         value: value,
       }),
     onEditorBlur: (event: any) => onFieldBlur(tablePanelView)(event),
-    onEditorKeyDown: (event: any) => onFieldKeyDown(tablePanelView)(event),
+    onEditorKeyDown: (event: any) => {
+      event.persist();
+      onFieldKeyDown(tablePanelView)(event);
+    },
   };
 })
 @observer
