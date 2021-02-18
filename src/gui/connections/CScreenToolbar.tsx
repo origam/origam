@@ -34,6 +34,7 @@ import { IAboutInfo } from "model/entities/types/IAboutInfo";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import { getApi } from "model/selectors/getApi";
 import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
+import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 
 @observer
 export class CScreenToolbar extends React.Component<{}> {
@@ -250,6 +251,7 @@ export class CScreenToolbar extends React.Component<{}> {
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
           aboutInfo={this.aboutInfo}
+          helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
     );
@@ -300,6 +302,7 @@ export class CScreenToolbar extends React.Component<{}> {
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
           aboutInfo={this.aboutInfo}
+          helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
     );
@@ -325,6 +328,7 @@ export class CScreenToolbar extends React.Component<{}> {
           handleLogoutClick={(event) => this.handleLogoutClick(event)}
           ctx={this.application}
           aboutInfo={this.aboutInfo}
+          helpUrl={getHelpUrl(this.application)}
         />
       </ScreenToolbar>
     );

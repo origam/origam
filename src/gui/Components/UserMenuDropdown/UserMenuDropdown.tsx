@@ -15,7 +15,8 @@ export const UserMenuDropdown: React.FC<{
   avatarLink: string | undefined,
   userName: string | undefined,
   ctx: any,
-  aboutInfo: IAboutInfo
+  aboutInfo: IAboutInfo,
+  helpUrl: string | undefined
 }> = (props) => {
 
   function onAboutClick() {
@@ -29,8 +30,10 @@ export const UserMenuDropdown: React.FC<{
       />
     );
   }
+  function onHelpClick() {
+    window.open(props.helpUrl);
+  }
 
-  
   return (
     <Dropdowner
       style={{width: "auto"}} // TODO: Move to stylesheet
@@ -58,6 +61,14 @@ export const UserMenuDropdown: React.FC<{
                 {/* <DropdownItem isDisabled={true}>
                   {T("My profile", "my_profile")}
                 </DropdownItem> */}
+                {props.helpUrl && props.helpUrl.trim() !== "" &&
+                  <DropdownItem
+                  onClick={() => {
+                    setDropped(false);
+                    onHelpClick();
+                    }}>
+                  {T("Help", "help_button")}
+                </DropdownItem>}
                 <DropdownItem
                   onClick={() => {
                     setDropped(false);
