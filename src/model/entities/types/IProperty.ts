@@ -58,6 +58,7 @@ export interface IProperty extends IPropertyData {
 
   childProperties: IProperty[];
   linkToMenuId?: string;
+  linkDependsOnValue: boolean;
   isLink: boolean;
   nameOverride: string | null | undefined;
   isFormField: boolean;

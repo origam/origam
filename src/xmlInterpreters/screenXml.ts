@@ -545,10 +545,11 @@ export function* interpretScreenXml(
         });
 
       lookupMenuMappings.forEach((mapping: any) => {
-        if (mapping.lookupId && mapping.menuId) {
+        if (mapping.lookupId && (mapping.menuId || mapping.dependsOnValue)) {
           properties.forEach((property) => {
             if (property.lookup && property.lookup.lookupId === mapping.lookupId) {
               property.linkToMenuId = mapping.menuId;
+              property.linkDependsOnValue = mapping.dependsOnValue;
             }
           });
         }
