@@ -131,7 +131,7 @@ export class DataView implements IDataView {
   }
 
   orderProperty: IProperty;
-  activateFormView: (() => Generator) | undefined;
+  activateFormView: ((args: {saveNewState: boolean}) => Promise<any>) | undefined;
 
   gridDimensions: IGridDimensions;
 

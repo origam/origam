@@ -23,7 +23,7 @@ import { assignIIds } from "xmlInterpreters/xmlUtils";
 import { DEBUG_CLOSE_ALL_FORMS } from "utils/debugHelpers";
 import { getOpenedScreen } from "../../selectors/getOpenedScreen";
 import { onWorkflowNextClick } from "model/actions-ui/ScreenHeader/onWorkflowNextClick";
-import { observable, when } from "mobx";
+import {flow, observable, when} from "mobx";
 import { IUserInfo } from "model/entities/types/IUserInfo";
 import { getChatrooms } from "model/selectors/Chatrooms/getChatrooms";
 import { openNewUrl } from "model/actions/Workbench/openNewUrl";
@@ -34,6 +34,9 @@ import selectors from "model/selectors-tree";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import { getFavorites } from "model/selectors/MainMenu/getFavorites";
 import produce from "immer";
+import {IPerspective} from "modules/DataView/Perspective/Perspective";
+import { IDataView } from "../types/IDataView";
+import {FormScreenEnvelope} from "model/entities/FormScreen";
 
 export enum IRefreshOnReturnType {
   None = "None",
@@ -392,8 +395,9 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
         additionalRequestParameters,
         isSingleRecordEdit
       );
-
       yield* newFormScreen.start(initUIResult);
+      const rowIdToSelect = parameters["id"];
+      yield* this.selectAndOpenRowById(rowIdToSelect, newFormScreen);
       const formScreen = newScreen.content.formScreen;
       if (formScreen?.autoWorkflowNext) {
         yield onWorkflowNextClick(formScreen!)(undefined);
@@ -402,6 +406,20 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       yield* handleError(this)(e);
       yield* this.closeForm(newScreen);
       throw e;
+    }
+  }
+
+  private* selectAndOpenRowById(rowIdToSelect: string, newFormScreen: FormScreenEnvelope) {
+    if (rowIdToSelect && newFormScreen.formScreen) {
+      for (const dataView of newFormScreen.formScreen.dataViews) {
+        const hasTheRow = (dataView as IDataView).dataTable.rows
+          .find(row => dataView.dataTable.getRowId(row) === rowIdToSelect) !== undefined;
+        if (hasTheRow && dataView.activateFormView && !dataView.isHeadless) {
+          dataView.selectRowById(rowIdToSelect);
+          yield dataView.activateFormView({saveNewState: false});
+          break;
+        }
+      }
     }
   }
 

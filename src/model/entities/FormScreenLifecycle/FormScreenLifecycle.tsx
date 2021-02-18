@@ -833,7 +833,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
       if (targetDataView.newRecordView === "0" && targetDataView.activateFormView) {
-        yield* targetDataView.activateFormView();
+        yield targetDataView.activateFormView({saveNewState: true});
       } else {
         if (!targetDataView.isFormViewActive()) {
           yield* startEditingFirstCell(targetDataView)();

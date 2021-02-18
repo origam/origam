@@ -634,7 +634,7 @@ export function* interpretScreenXml(
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
     const formPerspective = $formPerspective.resolve(IFormPerspective);
-    dataView.activateFormView = formPerspective.handleToolbarBtnClick.bind(formPerspective);
+    dataView.activateFormView = formPerspective.handleClick.bind(formPerspective);
     dataView.isFormViewActive = () => formPerspective.isActive;
     if (dataView.isMapSupported) {
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
