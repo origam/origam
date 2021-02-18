@@ -58,6 +58,7 @@ export class Property implements IProperty {
   toolTip: string = null as any;
 
   linkToMenuId?: string = undefined;
+  linkDependsOnValue: boolean = false;
 
   isFormField: boolean = false;
 
@@ -66,7 +67,7 @@ export class Property implements IProperty {
   }
 
   get isLink() {
-    return !!this.linkToMenuId;
+    return !!this.linkToMenuId || this.linkDependsOnValue;
   }
 
   @action.bound setColumnWidth(width: number) {

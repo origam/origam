@@ -504,7 +504,9 @@ export class DataView implements IDataView {
 
   *navigateLookupLink(property: IProperty, row: any[]) {
     const columnId = property.id;
-    const menuId = selectors.column.getLinkMenuId(property);
+    const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
+    const value = row[fieldIndex];
+    const menuId = yield selectors.column.getLinkMenuId(property, value);
     let menuItem = menuId && selectors.mainMenu.getItemById(this, menuId);
     if (menuItem) {
       menuItem = produce(menuItem, (draft: any) => {
@@ -514,11 +516,10 @@ export class DataView implements IDataView {
         draft.attributes.lazyLoading = "false";
       });
 
-      const fieldIndex = getDataSourceFieldIndexByName(this, columnId);
       yield onMainMenuItemClick(this)({
         event: undefined,
         item: menuItem,
-        idParameter: row[fieldIndex],
+        idParameter: value,
         isSingleRecordEdit: true,
       });
     }
