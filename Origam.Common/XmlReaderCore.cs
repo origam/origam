@@ -119,6 +119,12 @@ namespace Origam
             }
 
             bool readSuccess = innerReader.Read();
+            if (innerReader.NodeType == XmlNodeType.Element &&
+                innerReader.HasAttributes &&
+                innerReader.Depth == 0)
+            {
+                throw new System.Exception("ROOT element has attributes !");
+            }
             if (innerReader.NodeType == XmlNodeType.Element && 
                 !innerReader.HasAttributes &&
                 innerReader.Depth > 0)
