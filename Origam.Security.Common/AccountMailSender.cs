@@ -51,8 +51,8 @@ namespace Origam.Security.Common
         private readonly string mfaSubject;
         private readonly string mailQueueName;
         private readonly string applicationBasePath;
-        public string resetPwdBodyFilename { get; set; }
-        public string resetPwdSubject { get; set; }
+        private string resetPasswordBodyFilename;
+        private string resetPasswordSubject;
 
         public AccountMailSender(string portalBaseUrl,
             string registerNewUserFilename,
@@ -68,15 +68,22 @@ namespace Origam.Security.Common
             this.registerNewUserSubject = registerNewUserSubject;
             this.userUnlockNotificationBodyFilename = userUnlockNotificationBodyFilename;
             this.userUnlockNotificationSubject = userUnlockNotificationSubject;
-            this.resetPwdBodyFilename = resetPwdBodyFilename;
-            this.resetPwdSubject = resetPwdSubject;
+            this.resetPasswordBodyFilename = resetPwdBodyFilename;
+            this.resetPasswordSubject = resetPwdSubject;
             this.mailQueueName = mailQueueName;
             this.applicationBasePath = applicationBasePath;
             this.mfaTemplateFileName = mfaTemplateFileName;
             this.mfaSubject = mfaSubject;
         }
 
-
+        public void SetPasswordSubject(string subject)
+        {
+            resetPasswordSubject = subject;
+        }
+        public void SetPasswordBodyFilename(string filename)
+        {
+            resetPasswordBodyFilename = filename;
+        }
         public void SendNewUserToken(string userId, string email,
             string username, string name, string firstName, string token)
         {
@@ -332,7 +339,7 @@ namespace Origam.Security.Common
 
             // PORTAL_BASE_URL is mandatory if using default template
             if (string.IsNullOrWhiteSpace(portalBaseUrl) &&
-                string.IsNullOrEmpty(resetPwdBodyFilename))
+                string.IsNullOrEmpty(resetPasswordBodyFilename))
             {
                 log.Error("'PortalBaseUrl' not configured while default template"
                           + "is used. Can't send a password reset email.");
@@ -347,9 +354,9 @@ namespace Origam.Security.Common
                 try
                 {
                     mail = GenerateMail(email, fromAddress,
-                        resetPwdBodyFilename,
+                        resetPasswordBodyFilename,
                         Resources.ResetPasswordMailTemplate,
-                        resetPwdSubject, userLangIETF, replacements);
+                        resetPasswordSubject, userLangIETF, replacements);
                 }
                 catch (Exception ex)
                 {

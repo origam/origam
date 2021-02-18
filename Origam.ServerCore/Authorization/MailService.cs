@@ -50,21 +50,21 @@ namespace Origam.ServerCore.Authorization
                 registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
                 userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
                 userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
-                resetPwdBodyFilename: GetDefaultPwdFileName(),
-                resetPwdSubject: GetDefaultPwnSubject(),
+                resetPwdBodyFilename: GetDefaultPasswordFileName(),
+                resetPwdSubject: GetDefaultPasswordSubject(),
                 mfaTemplateFileName: userConfig.Value.MultiFactorMailBodyFileName,
                 mfaSubject: userConfig.Value.MultiFactorMailSubject,
                 applicationBasePath: AppContext.BaseDirectory,
                 mailQueueName: userConfig.Value.MailQueueName); 
         }
-        private string GetDefaultPwnSubject()
+        private string GetDefaultPasswordSubject()
         {
                 return languageConfig.CultureItems.Where(cultname => 
                         cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
                         .Select(cultname => { return cultname.ResetPasswordMailSubject; }).
                         FirstOrDefault();
         }
-        private string GetDefaultPwdFileName()
+        private string GetDefaultPasswordFileName()
         {
             return languageConfig.CultureItems.Where(cultname => 
                     cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
@@ -89,8 +89,8 @@ namespace Origam.ServerCore.Authorization
 
         private void SetResetPasswordItems()
         {
-            mailSender.resetPwdSubject = GetDefaultPwnSubject();
-            mailSender.resetPwdBodyFilename = GetDefaultPwdFileName();
+            mailSender.SetPasswordSubject(GetDefaultPasswordSubject());
+            mailSender.SetPasswordBodyFilename(GetDefaultPasswordFileName());
         }
         public void SendNewUserToken(IOrigamUser user, string token)
         {
