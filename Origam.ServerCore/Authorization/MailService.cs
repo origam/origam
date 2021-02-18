@@ -35,7 +35,8 @@ namespace Origam.ServerCore.Authorization
     {
         private AccountMailSender mailSender;
         private LanguageConfig languageConfig;
-        public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig, IConfiguration configuration)
+        public MailService(IOptions<UserConfig> userConfig, LanguageConfig languageConfig, 
+            IConfiguration configuration)
         {
             this.languageConfig = languageConfig;
             string baseUrl = configuration[WebHostDefaults.ServerUrlsKey]
@@ -50,21 +51,21 @@ namespace Origam.ServerCore.Authorization
                 registerNewUserSubject: userConfig.Value.UserRegistrationMailSubject,
                 userUnlockNotificationBodyFilename: userConfig.Value.UserUnlockNotificationBodyFileName,
                 userUnlockNotificationSubject: userConfig.Value.UserUnlockNotificationSubject,
-                resetPwdBodyFilename: GetDefaultPasswordFileName(),
-                resetPwdSubject: GetDefaultPasswordSubject(),
+                resetPwdBodyFilename: GetDefaultResetPasswordFileName(),
+                resetPwdSubject: GetDefaultResetPasswordSubject(),
                 mfaTemplateFileName: userConfig.Value.MultiFactorMailBodyFileName,
                 mfaSubject: userConfig.Value.MultiFactorMailSubject,
                 applicationBasePath: AppContext.BaseDirectory,
                 mailQueueName: userConfig.Value.MailQueueName); 
         }
-        private string GetDefaultPasswordSubject()
+        private string GetDefaultResetPasswordSubject()
         {
                 return languageConfig.CultureItems.Where(cultname => 
                         cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
                         .Select(cultname => { return cultname.ResetPasswordMailSubject; }).
                         FirstOrDefault();
         }
-        private string GetDefaultPasswordFileName()
+        private string GetDefaultResetPasswordFileName()
         {
             return languageConfig.CultureItems.Where(cultname => 
                     cultname.CultureName.Equals(Thread.CurrentThread.CurrentUICulture.Name))
@@ -89,8 +90,8 @@ namespace Origam.ServerCore.Authorization
 
         private void SetResetPasswordItems()
         {
-            mailSender.SetPasswordSubject(GetDefaultPasswordSubject());
-            mailSender.SetPasswordBodyFilename(GetDefaultPasswordFileName());
+            mailSender.ResetPasswordSubject = GetDefaultResetPasswordSubject();
+            mailSender.ResetPasswordBodyFilename = GetDefaultResetPasswordFileName();
         }
         public void SendNewUserToken(IOrigamUser user, string token)
         {
