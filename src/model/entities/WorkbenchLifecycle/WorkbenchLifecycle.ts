@@ -469,6 +469,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     this.portalSettings = {
       showChat: portalInfo.chatRefreshInterval > 0,
       showWorkQueues: portalInfo.workQueueListRefreshInterval > 0,
+      helpUrl: portalInfo.helpUrl
     };
     const menuUI = findMenu(portalInfo.menu);
     assignIIds(menuUI);
