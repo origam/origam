@@ -68,16 +68,16 @@ export const FilterSettings: React.FC = observer((props) => {
           lookup={property.lookup!}
           getOptions={flow(function* (searchTerm: string) {
             let allLookupIds = yield* getAllLookupIds(property);
-            const lookupMap = yield property.lookupEngine?.lookupResolver.resolveList(allLookupIds);
-
-            return Array.from(allLookupIds.values())
-              .map((id) => [id, lookupMap.get(id)])
+            const lookupMap: Map<any, any> =
+              yield property.lookupEngine?.lookupResolver.resolveList(allLookupIds);
+            return Array.from(lookupMap.entries())
               .filter
               (
                 (array) =>
                   array[1] &&
                   array[1].toLocaleLowerCase().includes((searchTerm || "").toLocaleLowerCase())
-              );
+              )
+              .sort((x,y) => x[1] > y[1] ? 1 : -1);
           })}
         />
       );
