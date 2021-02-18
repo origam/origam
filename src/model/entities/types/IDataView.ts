@@ -137,7 +137,7 @@ export interface IDataView extends IDataViewData {
   setRowCount(rowCount: number | undefined): void;
 
   isFormViewActive: () => boolean;
-  activateFormView: (()=> Generator) | undefined;
+  activateFormView: ((args: {saveNewState: boolean})=> Promise<any>) | undefined;
 
   initializeNewScrollLoader(): void;
   exportToExcel(): void;

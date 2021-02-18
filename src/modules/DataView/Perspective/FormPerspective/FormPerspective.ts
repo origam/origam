@@ -1,10 +1,11 @@
 import {TypeSymbol} from "dic/Container";
-import {observable} from "mobx";
+import {observable, flow} from "mobx";
 import {getIdent, IIId} from "utils/common";
 import {IPerspective, IPerspectiveContrib} from "../Perspective";
 import bind from "bind-decorator";
 import {IViewConfiguration} from "modules/DataView/ViewConfiguration";
 import {IPanelViewType} from "model/entities/types/IPanelViewType";
+import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 export class FormPerspective implements IIId, IPerspectiveContrib {
   $iid = getIdent();
@@ -17,11 +18,16 @@ export class FormPerspective implements IIId, IPerspectiveContrib {
   @observable isActive = false;
 
   @bind
-  *handleToolbarBtnClick() {
-    if (this.isActive) return;
-    yield* this.perspective.deactivate();
-    this.isActive = true;
-    yield* this.viewConfiguration.anounceActivePerspective(IPanelViewType.Form);
+  handleClick(args: {saveNewState: boolean}) {
+    const self = this;
+    return flow(function* (){
+      if (self.isActive) return;
+      yield* self.perspective.deactivate();
+      self.isActive = true;
+      if(args.saveNewState){
+        yield* self.viewConfiguration.anounceActivePerspective(IPanelViewType.Form);
+      }
+    })();
   }
 
   @bind
