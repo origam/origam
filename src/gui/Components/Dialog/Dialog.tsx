@@ -35,6 +35,7 @@ export class ModalWindow extends React.Component<{
   buttonsCenter: React.ReactNode;
   width?: number;
   height?: number;
+  topPosiotionProc?: number;
   onKeyDown?: (event: any) => void;
 }> {
   @observable top: number = window.screen.height + 50;
@@ -49,11 +50,16 @@ export class ModalWindow extends React.Component<{
   isInitialized = false;
 
   @action.bound handleResize(contentRect: { bounds: BoundingRect }) {
-    if (!this.isInitialized && contentRect.bounds!.height && contentRect.bounds!.width) {
-      this.isInitialized = true;
-      this.top = window.innerHeight / 2 - contentRect.bounds!.height / 2;
-      this.left = window.innerWidth / 2 - contentRect.bounds!.width / 2;
+    if (!(!this.isInitialized && contentRect.bounds!.height && contentRect.bounds!.width)) {
+      return;
     }
+    if(this.props.topPosiotionProc){
+      this.top = window.innerHeight * this.props.topPosiotionProc / 100;
+    }else{
+      this.top = window.innerHeight / 2 - contentRect.bounds!.height / 2;
+    }
+    this.left = window.innerWidth / 2 - contentRect.bounds!.width / 2;
+    this.isInitialized = true;
   }
 
   @action.bound handleTitleMouseDown(event: any) {

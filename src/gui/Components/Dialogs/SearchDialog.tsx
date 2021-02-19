@@ -130,6 +130,7 @@ export class SearchDialog extends React.Component<{
         onKeyDown={(event:any) => this.onKeyDown(event)}
         buttonsLeft={null}
         buttonsRight={null}
+        topPosiotionProc={30}
       >
         <div className={S.root}>
           <div className={S.inputRow}>
