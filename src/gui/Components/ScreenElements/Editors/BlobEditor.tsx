@@ -10,8 +10,6 @@ import { IApi } from "model/entities/types/IApi";
 import { IProperty } from "model/entities/types/IProperty";
 import { action, flow, observable } from "mobx";
 import S from "./BlobEditor.module.scss";
-/*import ImageEditor from "tui-image-editor";
-import "tui-image-editor/dist/tui-image-editor.css";*/
 import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
 import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
 import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
@@ -22,6 +20,14 @@ import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurre
 import { handleError } from "model/actions/handleError";
 import { IFocusAble } from "model/entities/FocusManager";
 import { Tooltip } from "react-tippy";
+import cx from "classnames";
+import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
+import {itemForNode} from "gui/connections/CMainMenu";
+import {Dropdown} from "gui/Components/Dropdown/Dropdown";
+import {DropdownItem} from "gui/Components/Dropdown/DropdownItem";
+import {T} from "utils/translation";
+import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
+import {runInFlowWithHandler, runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 @inject(({ property }: { property: IProperty }, { value }) => {
   return {
@@ -270,98 +276,91 @@ export class BlobEditor extends React.Component<{
   }
 
   private renderInput() {
+    if(this.props.isReadOnly){
+      return (
+        <div className={S.blobEditor}>
+          <input
+              readOnly={true}
+              className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
+              value={this.props.value || ""}
+          />
+          </div>);
+    }
+    if(!this.props.value){
+      return(
+        <div className={S.blobEditor}>
+          <label className="customBtnChoose" title={"Upload new file."}>
+            <input
+              className="btnChooseFile"
+              name="file"
+              type="file"
+              multiple={false}
+              onChange={(event) => this.handleFileChange(event)}
+              ref={this.refInput}
+              onFocus={() => this.onFocus()}
+              onBlur={() => this.onBlur()}
+              onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
+            />
+            <i className="fas fa-upload"></i>
+          </label>
+        </div>
+      );
+    }
+
     return (
-      <div className={S.blobEditor}>
-        {/*this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />*/}
+      <div className={S.blobEditor + " " + CS.control}>
         <input
-          readOnly={true}
-          className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
+          className={"input " + (this.focused ? S.focusedBorder : S.standardBorder)}
           value={this.props.value || ""}
         />
-        <div className="controls">
-          <>
-            {this.props.value && (
-              <button
-                className={
-                  "btnDownload " + (this.props.isReadOnly ? "btnDownloadOnly" : "btnDownloadFirst")
-                }
-                disabled={!this.props.canUpload}
-                onClick={flow(this.download.bind(this))}
-                title={`Download: ${this.props.value}`}
-              >
-                <i className="fas fa-download"></i>
-              </button>
+        <div>
+          <Dropdowner
+            trigger={({ refTrigger, setDropped, isDropped }) => (
+              <div className={CS.control} ref={refTrigger}>
+                <div
+                  className={cx("inputBtn", "lastOne", this.props.isReadOnly && "readOnly")}
+
+                  onClick={event=> setDropped(true, event)}
+                >
+                 {!isDropped
+                   ? <i className="fas fa-caret-down"></i>
+                   : <i className="fas fa-caret-up"></i>
+                 }
+                </div>
+              </div>
             )}
-            {this.props.value && !this.props.isReadOnly && (
-              <button
-                onClick={flow(this.delete.bind(this))}
-                className="btnDelete"
-                title={`Delete: ${this.props.value}`}
-              >
-                <i className="far fa-trash-alt"></i>
-              </button>
+            content={({ setDropped }) => (
+              <Dropdown>
+                <DropdownItem
+                  onClick={(event: any) => {
+                    setDropped(false);
+                    runGeneratorInFlowWithHandler(
+                      {
+                        ctx: this.props.Property!,
+                        generator: this.download.bind(this)()
+                      })
+                  }}
+                >
+                  {T("Download", "blob_download")}
+                </DropdownItem>
+                <DropdownItem
+                  onClick={(event: any) => {
+                    setDropped(false);
+                    runGeneratorInFlowWithHandler(
+                      {
+                        ctx: this.props.Property!,
+                        generator: this.delete.bind(this)()
+                      })
+                  }}
+                >
+                  {T("Delete", "blob_delete")}
+                </DropdownItem>
+              </Dropdown>
             )}
-          </>
-          {!this.props.isReadOnly && (
-            <label className="customBtnChoose" title={"Upload new file."}>
-              <input
-                className="btnChooseFile"
-                name="file"
-                type="file"
-                multiple={false}
-                onChange={(event) => this.handleFileChange(event)}
-                ref={this.refInput}
-                onFocus={() => this.onFocus()}
-                onBlur={() => this.onBlur()}
-                onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
-              />
-              <i className="fas fa-upload"></i>
-            </label>
-          )}
+          />
         </div>
-        {this.isUploading && (
-          <div className="progress">
-            <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
-              {(this.progressValue * 100).toFixed(0)}%
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 }
-/*
-class ImageEditorCom extends React.Component<{ imageUrl: any }> {
-  refImageEditor = (elm: any) => (this.elmImageEditor = elm);
-  elmImageEditor: HTMLDivElement | null = null;
 
-  componentDidMount() {
-    const instance = new ImageEditor(this.elmImageEditor as any, {
-      usageStatistics: false,
-      //cssMaxWidth: 700,
-      //cssMaxHeight: 500,
-      selectionStyle: {
-        cornerSize: 20,
-        rotatingPointOffset: 70,
-      },
-      includeUI: {
-        loadImage: { path: this.props.imageUrl, name: "Loaded image" },
-        //loadImage: {
-        //    path: 'img/sampleImage2.png',
-        //    name: 'SampleImage'
-        //},
-        // theme: blackTheme, // or whiteTheme
-        initMenu: "filter",
-        menuBarPosition: "bottom",
-      },
-    });
-  }
-
-  render() {
-    return (
-      <div className={S.imageEditor}>
-        <div ref={this.refImageEditor} className="imageEditorMountpoint" />
-      </div>
-    );
-  }
-}*/

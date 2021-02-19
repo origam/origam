@@ -15,6 +15,7 @@ export function wrapInFlowWithHandler(args: { ctx: any; action: (() => Promise<a
 export function runInFlowWithHandler(args:{ctx: any, action: (()=> Promise<any>) | (()=> void) }) {
   return wrapInFlowWithHandler(args)();
 }
+
 export function runGeneratorInFlowWithHandler(args:{ctx: any, generator: Generator}) {
   return flow(function* runWithHandler() {
     try {

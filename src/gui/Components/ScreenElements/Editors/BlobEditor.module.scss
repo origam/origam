@@ -57,14 +57,17 @@
   :global(.customBtnChoose) {
     height: 100%;
     border: 1px solid #b0afb7;
-    background: #f9f9fc;
+    background-color: $blue;
+    color: white;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     @include hoverItemAnimation;
     &:hover {
-      background-color: #e9e8f0;
+      cursor: pointer;
+      background-color: #acc6ff;
+      color: black;
     }
   }
   :global(.btnDownload) {

@@ -88,6 +88,7 @@ export class Dropdowner extends React.Component<{
     refTrigger: any;
     measure: () => void;
     setDropped: (state: boolean, event?: any) => void;
+    isDropped: boolean
   }) => React.ReactNode;
   content: (args: { setDropped: (state: boolean) => void }) => React.ReactNode;
   onDroppedDown?: () => void;
@@ -164,6 +165,7 @@ export class Dropdowner extends React.Component<{
                       refTrigger: mRefTrigger,
                       measure: this.reMeasure,
                       setDropped: this.setDropped,
+                      isDropped: this.isDropped
                     })}
                     {this.isDropped && (
                       <DroppedBox
