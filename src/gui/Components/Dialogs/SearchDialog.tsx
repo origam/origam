@@ -148,6 +148,7 @@ export class SearchDialog extends React.Component<{
                 {this.searcher.resultGroups
                   .map(group=>
                     <ResultGroup
+                      key={group.name}
                       name={group.name}
                       group={group}
                       onResultItemClick={result => this.onResultItemClick(result)}
@@ -193,6 +194,7 @@ export class ResultGroup extends React.Component<{
         <div>
         {this.props.group.isExpanded && this.props.group.results.map(result =>
             <ResultItem
+              key={result.label + result.description + result.iconUrl}
               result={result}
               onResultItemClick={()=> this.props.onResultItemClick(result)}
               selected={this.props.selectedResult?.id === result.id}
