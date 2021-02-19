@@ -73,6 +73,8 @@ import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { splitterPositionFromRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
+import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspective";
+import {runInFlowWithHandler, runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -630,11 +632,16 @@ export function* interpretScreenXml(
 
     const $tablePerspective = $dataView.beginLifetimeScope(SCOPE_TablePerspective);
     $tablePerspective.resolve(ITablePerspectiveDirector).setup();
+    const tablePerspective = $tablePerspective.resolve(ITablePerspective);
 
     const $formPerspective = $dataView.beginLifetimeScope(SCOPE_FormPerspective);
     $formPerspective.resolve(IFormPerspectiveDirector).setup();
     const formPerspective = $formPerspective.resolve(IFormPerspective);
     dataView.activateFormView = formPerspective.handleClick.bind(formPerspective);
+    dataView.activateTableView =() => runGeneratorInFlowWithHandler({
+      ctx: dataView,
+      generator: tablePerspective.handleToolbarBtnClick.bind(formPerspective)()
+    });
     dataView.isFormViewActive = () => formPerspective.isActive;
     if (dataView.isMapSupported) {
       const dataViewXmlNode = instance2XmlNode.get(dataView)!;
