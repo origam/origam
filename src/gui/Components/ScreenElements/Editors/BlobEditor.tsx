@@ -68,6 +68,8 @@ export class BlobEditor extends React.Component<{
   canUpload: boolean;
   invalidMessage?: string;
   onKeyDown?(event: any): void;
+  onChange?(event: any, value: string): void;
+  onEditorBlur?(event: any): void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
@@ -312,6 +314,10 @@ export class BlobEditor extends React.Component<{
         <input
           className={"input " + (this.focused ? S.focusedBorder : S.standardBorder)}
           value={this.props.value || ""}
+          onChange={(event: any) =>
+            this.props.onChange && this.props.onChange(event, event.target.value)
+          }
+          onBlur={this.props.onEditorBlur}
         />
         <div>
           <Dropdowner
