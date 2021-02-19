@@ -328,7 +328,7 @@ export class BlobEditor extends React.Component<{
                 <div
                   className={cx("inputBtn", "lastOne", this.props.isReadOnly && "readOnly")}
 
-                  onClick={event => setDropped(true, event)}
+                  onClick={event => setDropped(true)}
                 >
                   {!isDropped
                     ? <i className="fas fa-caret-down"></i>
