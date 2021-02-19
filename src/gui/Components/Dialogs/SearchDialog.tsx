@@ -28,7 +28,7 @@ export class SearchDialog extends React.Component<{
   resultElementMap: Map<string, RefObject<HTMLDivElement>> = new Map();
 
   searcher = getSearcher(this.props.ctx);
-  
+
   @observable
   value = "";
 
@@ -88,7 +88,7 @@ export class SearchDialog extends React.Component<{
     const distanceOverTop = scrollRectangle.top - selectedElementRectangle.top;
 
     const scrollBarHeight = scrollRectangle.height - scrollElement.clientHeight;
-    const distanceUnderBottom = selectedElementRectangle.bottom - scrollRectangle.bottom + scrollBarHeight; 
+    const distanceUnderBottom = selectedElementRectangle.bottom - scrollRectangle.bottom + scrollBarHeight;
 
     if(distanceOverTop > 0){
       scrollElement.scrollTop -= distanceOverTop;
@@ -146,14 +146,14 @@ export class SearchDialog extends React.Component<{
             <div className={S.resultArea} ref={this.scrollDivRef}>
               <div className={S.resultsContainer}>
                 {this.searcher.resultGroups
-                  .map(group=> 
-                    <ResultGroup 
-                      name={group.name} 
+                  .map(group=>
+                    <ResultGroup
+                      name={group.name}
                       group={group}
                       onResultItemClick={result => this.onResultItemClick(result)}
                       selectedResult={this.searcher.selectedResult}
                       registerElementRef={(id, ref)=> this.resultElementMap.set(id, ref)}
-                      />) 
+                      />)
                 }
               </div>
             </div>
@@ -175,7 +175,7 @@ export class ResultGroup extends React.Component<{
 
   onGroupClick() {
     this.props.group.isExpanded = !this.props.group.isExpanded;
-  } 
+  }
 
   render() {
     return (
@@ -191,9 +191,9 @@ export class ResultGroup extends React.Component<{
           </div>
         </div>
         <div>
-        {this.props.group.isExpanded && this.props.group.results.map(result => 
-            <ResultItem 
-              result={result} 
+        {this.props.group.isExpanded && this.props.group.results.map(result =>
+            <ResultItem
+              result={result}
               onResultItemClick={()=> this.props.onResultItemClick(result)}
               selected={this.props.selectedResult?.id === result.id}
               registerElementRef={this.props.registerElementRef}
@@ -213,6 +213,9 @@ export class ResultItem extends React.Component<{
   registerElementRef: (id: string, ref: RefObject<HTMLDivElement>) => void;
 }> {
 
+  @observable
+  mouseOver = false;
+
   divRef: RefObject<HTMLDivElement> = React.createRef();
 
   componentDidMount(){
@@ -231,10 +234,13 @@ export class ResultItem extends React.Component<{
 
   render() {
     return (
-      <div 
-        className={S.resultIemRow + " " + (this.props.selected ? S.resultIemRowSelected : "")} 
+      <div
+        className={ S.resultIemRow + " "+(this.mouseOver ? S.resultIemRowHovered : "") + " " +
+                   (this.props.selected ? S.resultIemRowSelected : "")}
         ref={this.divRef}
-        onClick={() => this.onClick()} >
+        onClick={() => this.onClick()}
+        onMouseOver={evt => this.mouseOver = true}
+        onMouseOut={evt=> this.mouseOver = false}>
         <div className={S.itemIcon}>
           <Icon src= {this.props.result.iconUrl} />
         </div>

@@ -1,3 +1,5 @@
+@import "src/styles/definitions.scss";
+
 .root {
   width: 500px;
 }
@@ -66,11 +68,14 @@
 }
 
 .resultIemRowSelected{
-  background-color: #CFDFFF;
+  background-color: $blue;
+  color: white !important;
 }
 
-.resultIemRow:hover {
+.resultIemRowHovered {
   cursor: pointer;
+  background-color: #acc6ff;
+  color: black !important;
 }
 
 .itemIcon{
