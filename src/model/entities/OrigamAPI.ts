@@ -651,6 +651,7 @@ export class OrigamAPI implements IApi {
     FileName: string;
     Entity: string;
     parameters: any;
+    isPreview: boolean;
   }): Promise<any> {
     return (
       await this.axiosInstance.post(`/Blob/DownloadToken`, {
@@ -660,7 +661,7 @@ export class OrigamAPI implements IApi {
         Entity: data.Entity,
         RowId: data.RowId,
         Property: data.Property,
-        IsPreview: false,
+        IsPreview: data.isPreview,
         Parameters: data.parameters,
       })
     ).data;

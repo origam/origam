@@ -342,6 +342,7 @@ export interface IApi {
     Property: string;
     FileName: string;
     parameters: any;
+    isPreview: boolean;
   }): Promise<any>;
 
   getBlob(data: { downloadToken: string }): Promise<any>;

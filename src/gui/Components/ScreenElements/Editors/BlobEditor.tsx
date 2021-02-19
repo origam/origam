@@ -95,22 +95,19 @@ export class BlobEditor extends React.Component<{
   @observable speedValue = 0;
   @observable isUploading = false;
 
-  *download() {
-    try {
-      const token = yield this.props.api!.getDownloadToken({
-        SessionFormIdentifier: this.props.SessionFormIdentifier!,
-        MenuId: this.props.menuItemId!,
-        DataStructureEntityId: this.props.DataStructureEntityId!,
-        Entity: this.props.Entity!,
-        RowId: this.props.RowId!,
-        Property: this.props.Property!,
-        FileName: this.props.value,
-        parameters: this.props.parameters,
-      });
-      this.props.api!.getBlob({ downloadToken: token });
-    } catch (e) {
-      yield* this.props.handleError!(e);
-    }
+  async download(args: {isPreview: boolean}) {
+    const token = await this.props.api!.getDownloadToken({
+      SessionFormIdentifier: this.props.SessionFormIdentifier!,
+      MenuId: this.props.menuItemId!,
+      DataStructureEntityId: this.props.DataStructureEntityId!,
+      Entity: this.props.Entity!,
+      RowId: this.props.RowId!,
+      Property: this.props.Property!,
+      FileName: this.props.value,
+      parameters: this.props.parameters,
+      isPreview: args.isPreview,
+    });
+    await this.props.api!.getBlob({ downloadToken: token });
   }
 
   *upload() {
@@ -171,83 +168,79 @@ export class BlobEditor extends React.Component<{
   }
 
   *delete() {
-    try {
-      if (
-        yield new Promise(
-          action((resolve: (value: boolean) => void) => {
-            const closeDialog = this.props.dialogStack!.pushDialog(
-              "",
-              <ModalWindow
-                title="Question"
-                titleButtons={null}
-                buttonsCenter={
-                  <>
-                    <button
-                      tabIndex={0}
-                      autoFocus={true}
-                      onClick={() => {
-                        closeDialog();
-                        resolve(true);
-                      }}
-                    >
-                      OK
-                    </button>
-                    <button
-                      tabIndex={0}
-                      onClick={() => {
-                        closeDialog();
-                        resolve(false);
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                }
-                buttonsLeft={null}
-                buttonsRight={null}
-              >
-                <div className={S.dialogContent}>Do you wish to delete {this.props.value} ?</div>
-              </ModalWindow>
-            );
-          })
-        )
-      ) {
-        const { parameters } = this.props;
-        console.log(parameters);
-        const changeSet: Array<{ fieldId: string; value: any }> = [];
-        changeSet.push({ fieldId: this.props.Property!, value: null });
-        if (parameters["AuthorMember"]) {
-          changeSet.push({ fieldId: parameters["AuthorMember"], value: null });
-        }
-        if (parameters["BlobMember"]) {
-          changeSet.push({ fieldId: parameters["BlobMember"], value: null });
-        }
-        if (parameters["CompressionStateMember"]) {
-          changeSet.push({ fieldId: parameters["CompressionStateMember"], value: null });
-        }
-        if (parameters["DateCreatedMember"]) {
-          changeSet.push({ fieldId: parameters["DateCreatedMember"], value: null });
-        }
-        if (parameters["DateLastModifiedMember"]) {
-          changeSet.push({ fieldId: parameters["DateLastModifiedMember"], value: null });
-        }
-        if (parameters["FileSizeMember"]) {
-          changeSet.push({ fieldId: parameters["FileSizeMember"], value: null });
-        }
-        if (parameters["OriginalPathMember"]) {
-          changeSet.push({ fieldId: parameters["OriginalPathMember"], value: null });
-        }
-        if (parameters["RemarkMember"]) {
-          changeSet.push({ fieldId: parameters["RemarkMember"], value: null });
-        }
-        if (parameters["ThumbnailMember"]) {
-          changeSet.push({ fieldId: parameters["ThumbnailMember"], value: null });
-        }
-        yield* this.props.changeManyFields!(changeSet);
-        yield* this.props.flushCurrentRowData!();
+    if (
+      yield new Promise(
+        action((resolve: (value: boolean) => void) => {
+          const closeDialog = this.props.dialogStack!.pushDialog(
+            "",
+            <ModalWindow
+              title="Question"
+              titleButtons={null}
+              buttonsCenter={
+                <>
+                  <button
+                    tabIndex={0}
+                    autoFocus={true}
+                    onClick={() => {
+                      closeDialog();
+                      resolve(true);
+                    }}
+                  >
+                    OK
+                  </button>
+                  <button
+                    tabIndex={0}
+                    onClick={() => {
+                      closeDialog();
+                      resolve(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </>
+              }
+              buttonsLeft={null}
+              buttonsRight={null}
+            >
+              <div className={S.dialogContent}>Do you wish to delete {this.props.value} ?</div>
+            </ModalWindow>
+          );
+        })
+      )
+    ) {
+      const { parameters } = this.props;
+      console.log(parameters);
+      const changeSet: Array<{ fieldId: string; value: any }> = [];
+      changeSet.push({ fieldId: this.props.Property!, value: null });
+      if (parameters["AuthorMember"]) {
+        changeSet.push({ fieldId: parameters["AuthorMember"], value: null });
       }
-    } catch (e) {
-      yield* this.props.handleError!(e);
+      if (parameters["BlobMember"]) {
+        changeSet.push({ fieldId: parameters["BlobMember"], value: null });
+      }
+      if (parameters["CompressionStateMember"]) {
+        changeSet.push({ fieldId: parameters["CompressionStateMember"], value: null });
+      }
+      if (parameters["DateCreatedMember"]) {
+        changeSet.push({ fieldId: parameters["DateCreatedMember"], value: null });
+      }
+      if (parameters["DateLastModifiedMember"]) {
+        changeSet.push({ fieldId: parameters["DateLastModifiedMember"], value: null });
+      }
+      if (parameters["FileSizeMember"]) {
+        changeSet.push({ fieldId: parameters["FileSizeMember"], value: null });
+      }
+      if (parameters["OriginalPathMember"]) {
+        changeSet.push({ fieldId: parameters["OriginalPathMember"], value: null });
+      }
+      if (parameters["RemarkMember"]) {
+        changeSet.push({ fieldId: parameters["RemarkMember"], value: null });
+      }
+      if (parameters["ThumbnailMember"]) {
+        changeSet.push({ fieldId: parameters["ThumbnailMember"], value: null });
+      }
+      yield* this.props.changeManyFields!(changeSet);
+      yield* this.props.flushCurrentRowData!();
     }
   }
 
@@ -340,10 +333,10 @@ export class BlobEditor extends React.Component<{
                 <DropdownItem
                   onClick={(event: any) => {
                     setDropped(false);
-                    runGeneratorInFlowWithHandler(
+                    runInFlowWithHandler(
                       {
                         ctx: this.props.Property!,
-                        generator: this.download.bind(this)()
+                        action: async () => await this.download({isPreview: false})
                       })
                   }}
                 >
@@ -360,6 +353,18 @@ export class BlobEditor extends React.Component<{
                   }}
                 >
                   {T("Delete", "blob_delete")}
+                </DropdownItem>
+                <DropdownItem
+                  onClick={(event: any) => {
+                    setDropped(false);
+                    runInFlowWithHandler(
+                      {
+                        ctx: this.props.Property!,
+                        action: async () => await this.download({isPreview: true})
+                      })
+                  }}
+                >
+                  {T("Preview", "blob_preview")}
                 </DropdownItem>
               </Dropdown>
             )}
