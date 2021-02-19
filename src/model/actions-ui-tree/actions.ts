@@ -7,6 +7,7 @@ import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId"
 import {handleError} from "model/actions/handleError";
 
 import selectors from "model/selectors-tree";
+import {getDataView} from "model/selectors/DataView/getDataView";
 
 export default {
   onActionClick(ctx: any) {
@@ -15,6 +16,7 @@ export default {
         if (!action.isEnabled) {
           return;
         }
+        getDataView(ctx).focusManager.stopAutoFocus();
         const lifecycle = getFormScreenLifecycle(ctx);
         const gridId = getGridId(ctx);
         const entity = getEntity(ctx);
