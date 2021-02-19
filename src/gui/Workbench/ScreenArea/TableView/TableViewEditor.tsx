@@ -196,6 +196,8 @@ export class TableViewEditor extends React.Component<{
             value={this.props.getCellValue!()}
             isInvalid={false}
             canUpload={true}
+            onChange={this.props.onChange}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "Polymorph":

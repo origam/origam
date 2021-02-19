@@ -1,29 +1,35 @@
 import React from "react";
-import { inject, observer } from "mobx-react";
-import { getApi } from "model/selectors/getApi";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { getSessionId } from "model/selectors/getSessionId";
-import { IApi } from "model/entities/types/IApi";
-import { IProperty } from "model/entities/types/IProperty";
-import { action, flow, observable } from "mobx";
+import {inject, observer} from "mobx-react";
+import {getApi} from "model/selectors/getApi";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {getMenuItemId} from "model/selectors/getMenuItemId";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {getSessionId} from "model/selectors/getSessionId";
+import {IApi} from "model/entities/types/IApi";
+import {IProperty} from "model/entities/types/IProperty";
+import {action, flow, observable} from "mobx";
 import S from "./BlobEditor.module.scss";
-/*import ImageEditor from "tui-image-editor";
-import "tui-image-editor/dist/tui-image-editor.css";*/
-import { IProcessCRUDResult } from "model/actions/Actions/processActionResult";
-import { processCRUDResult } from "model/actions/DataLoading/processCRUDResult";
-import { getDialogStack } from "model/selectors/DialogStack/getDialogStack";
-import { IDialogStack } from "model/entities/types/IDialogStack";
-import { ModalWindow } from "gui/Components/Dialog/Dialog";
-import { changeManyFields } from "model/actions-ui/DataView/TableView/onFieldChange";
-import { flushCurrentRowData } from "model/actions/DataView/TableView/flushCurrentRowData";
-import { handleError } from "model/actions/handleError";
-import { IFocusAble } from "model/entities/FocusManager";
-import { Tooltip } from "react-tippy";
+import {IProcessCRUDResult} from "model/actions/Actions/processActionResult";
+import {processCRUDResult} from "model/actions/DataLoading/processCRUDResult";
+import {getDialogStack} from "model/selectors/DialogStack/getDialogStack";
+import {IDialogStack} from "model/entities/types/IDialogStack";
+import {ModalWindow} from "gui/Components/Dialog/Dialog";
+import {changeManyFields} from "model/actions-ui/DataView/TableView/onFieldChange";
+import {flushCurrentRowData} from "model/actions/DataView/TableView/flushCurrentRowData";
+import {handleError} from "model/actions/handleError";
+import {IFocusAble} from "model/entities/FocusManager";
+import {Tooltip} from "react-tippy";
+import cx from "classnames";
+import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
+import {itemForNode} from "gui/connections/CMainMenu";
+import {Dropdown} from "gui/Components/Dropdown/Dropdown";
+import {DropdownItem} from "gui/Components/Dropdown/DropdownItem";
+import {T} from "utils/translation";
+import CS from "modules/Editors/DropdownEditor/Dropdown/Dropdown.module.scss";
+import {runInFlowWithHandler, runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 
-@inject(({ property }: { property: IProperty }, { value }) => {
+@inject(({property}: { property: IProperty }, {value}) => {
   return {
     api: getApi(property),
     processCRUDResult: (result: any) => processCRUDResult(property, result),
@@ -62,6 +68,8 @@ export class BlobEditor extends React.Component<{
   canUpload: boolean;
   invalidMessage?: string;
   onKeyDown?(event: any): void;
+  onChange?(event: any, value: string): void;
+  onEditorBlur?(event: any): void;
 }> {
   elmInput: HTMLInputElement | null = null;
   refInput = (elm: HTMLInputElement | any) => {
@@ -87,25 +95,22 @@ export class BlobEditor extends React.Component<{
   @observable speedValue = 0;
   @observable isUploading = false;
 
-  *download() {
-    try {
-      const token = yield this.props.api!.getDownloadToken({
-        SessionFormIdentifier: this.props.SessionFormIdentifier!,
-        MenuId: this.props.menuItemId!,
-        DataStructureEntityId: this.props.DataStructureEntityId!,
-        Entity: this.props.Entity!,
-        RowId: this.props.RowId!,
-        Property: this.props.Property!,
-        FileName: this.props.value,
-        parameters: this.props.parameters,
-      });
-      this.props.api!.getBlob({ downloadToken: token });
-    } catch (e) {
-      yield* this.props.handleError!(e);
-    }
+  async download(args: { isPreview: boolean }) {
+    const token = await this.props.api!.getDownloadToken({
+      SessionFormIdentifier: this.props.SessionFormIdentifier!,
+      MenuId: this.props.menuItemId!,
+      DataStructureEntityId: this.props.DataStructureEntityId!,
+      Entity: this.props.Entity!,
+      RowId: this.props.RowId!,
+      Property: this.props.Property!,
+      FileName: this.props.value,
+      parameters: this.props.parameters,
+      isPreview: args.isPreview,
+    });
+    await this.props.api!.getBlob({downloadToken: token});
   }
 
-  *upload() {
+  * upload() {
     this.progressValue = 0;
     this.speedValue = 0;
     this.isUploading = true;
@@ -151,7 +156,7 @@ export class BlobEditor extends React.Component<{
             RowId: this.props.RowId!,
           });
           console.log(crudResult);
-          yield* this.props.processCRUDResult!(crudResult);
+          yield * this.props.processCRUDResult!(crudResult);
         }
       }
     } catch (e) {
@@ -162,84 +167,80 @@ export class BlobEditor extends React.Component<{
     }
   }
 
-  *delete() {
-    try {
-      if (
-        yield new Promise(
-          action((resolve: (value: boolean) => void) => {
-            const closeDialog = this.props.dialogStack!.pushDialog(
-              "",
-              <ModalWindow
-                title="Question"
-                titleButtons={null}
-                buttonsCenter={
-                  <>
-                    <button
-                      tabIndex={0}
-                      autoFocus={true}
-                      onClick={() => {
-                        closeDialog();
-                        resolve(true);
-                      }}
-                    >
-                      OK
-                    </button>
-                    <button
-                      tabIndex={0}
-                      onClick={() => {
-                        closeDialog();
-                        resolve(false);
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                }
-                buttonsLeft={null}
-                buttonsRight={null}
-              >
-                <div className={S.dialogContent}>Do you wish to delete {this.props.value} ?</div>
-              </ModalWindow>
-            );
-          })
-        )
-      ) {
-        const { parameters } = this.props;
-        console.log(parameters);
-        const changeSet: Array<{ fieldId: string; value: any }> = [];
-        changeSet.push({ fieldId: this.props.Property!, value: null });
-        if (parameters["AuthorMember"]) {
-          changeSet.push({ fieldId: parameters["AuthorMember"], value: null });
-        }
-        if (parameters["BlobMember"]) {
-          changeSet.push({ fieldId: parameters["BlobMember"], value: null });
-        }
-        if (parameters["CompressionStateMember"]) {
-          changeSet.push({ fieldId: parameters["CompressionStateMember"], value: null });
-        }
-        if (parameters["DateCreatedMember"]) {
-          changeSet.push({ fieldId: parameters["DateCreatedMember"], value: null });
-        }
-        if (parameters["DateLastModifiedMember"]) {
-          changeSet.push({ fieldId: parameters["DateLastModifiedMember"], value: null });
-        }
-        if (parameters["FileSizeMember"]) {
-          changeSet.push({ fieldId: parameters["FileSizeMember"], value: null });
-        }
-        if (parameters["OriginalPathMember"]) {
-          changeSet.push({ fieldId: parameters["OriginalPathMember"], value: null });
-        }
-        if (parameters["RemarkMember"]) {
-          changeSet.push({ fieldId: parameters["RemarkMember"], value: null });
-        }
-        if (parameters["ThumbnailMember"]) {
-          changeSet.push({ fieldId: parameters["ThumbnailMember"], value: null });
-        }
-        yield* this.props.changeManyFields!(changeSet);
-        yield* this.props.flushCurrentRowData!();
+  * delete() {
+    if (
+      yield new Promise(
+        action((resolve: (value: boolean) => void) => {
+          const closeDialog = this.props.dialogStack!.pushDialog(
+            "",
+            <ModalWindow
+              title="Question"
+              titleButtons={null}
+              buttonsCenter={
+                <>
+                  <button
+                    tabIndex={0}
+                    autoFocus={true}
+                    onClick={() => {
+                      closeDialog();
+                      resolve(true);
+                    }}
+                  >
+                    OK
+                  </button>
+                  <button
+                    tabIndex={0}
+                    onClick={() => {
+                      closeDialog();
+                      resolve(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </>
+              }
+              buttonsLeft={null}
+              buttonsRight={null}
+            >
+              <div className={S.dialogContent}>Do you wish to delete {this.props.value} ?</div>
+            </ModalWindow>
+          );
+        })
+      )
+    ) {
+      const {parameters} = this.props;
+      console.log(parameters);
+      const changeSet: Array<{ fieldId: string; value: any }> = [];
+      changeSet.push({fieldId: this.props.Property!, value: null});
+      if (parameters["AuthorMember"]) {
+        changeSet.push({fieldId: parameters["AuthorMember"], value: null});
       }
-    } catch (e) {
-      yield* this.props.handleError!(e);
+      if (parameters["BlobMember"]) {
+        changeSet.push({fieldId: parameters["BlobMember"], value: null});
+      }
+      if (parameters["CompressionStateMember"]) {
+        changeSet.push({fieldId: parameters["CompressionStateMember"], value: null});
+      }
+      if (parameters["DateCreatedMember"]) {
+        changeSet.push({fieldId: parameters["DateCreatedMember"], value: null});
+      }
+      if (parameters["DateLastModifiedMember"]) {
+        changeSet.push({fieldId: parameters["DateLastModifiedMember"], value: null});
+      }
+      if (parameters["FileSizeMember"]) {
+        changeSet.push({fieldId: parameters["FileSizeMember"], value: null});
+      }
+      if (parameters["OriginalPathMember"]) {
+        changeSet.push({fieldId: parameters["OriginalPathMember"], value: null});
+      }
+      if (parameters["RemarkMember"]) {
+        changeSet.push({fieldId: parameters["RemarkMember"], value: null});
+      }
+      if (parameters["ThumbnailMember"]) {
+        changeSet.push({fieldId: parameters["ThumbnailMember"], value: null});
+      }
+      yield * this.props.changeManyFields!(changeSet);
+      yield * this.props.flushCurrentRowData!();
     }
   }
 
@@ -253,7 +254,7 @@ export class BlobEditor extends React.Component<{
         {this.props.isInvalid && (
           <div className={S.notification}>
             <Tooltip html={this.props.invalidMessage} arrow={true}>
-              <i className="fas fa-exclamation-circle red" />
+              <i className="fas fa-exclamation-circle red"/>
             </Tooltip>
           </div>
         )}
@@ -270,98 +271,116 @@ export class BlobEditor extends React.Component<{
   }
 
   private renderInput() {
-    return (
-      <div className={S.blobEditor}>
-        {/*this.displayImageEditor && <ImageEditorCom imageUrl={this.imageObjectUrl} />*/}
-        <input
-          readOnly={true}
-          className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
-          value={this.props.value || ""}
-        />
-        <div className="controls">
-          <>
-            {this.props.value && (
-              <button
-                className={
-                  "btnDownload " + (this.props.isReadOnly ? "btnDownloadOnly" : "btnDownloadFirst")
-                }
-                disabled={!this.props.canUpload}
-                onClick={flow(this.download.bind(this))}
-                title={`Download: ${this.props.value}`}
-              >
-                <i className="fas fa-download"></i>
-              </button>
-            )}
-            {this.props.value && !this.props.isReadOnly && (
-              <button
-                onClick={flow(this.delete.bind(this))}
-                className="btnDelete"
-                title={`Delete: ${this.props.value}`}
-              >
-                <i className="far fa-trash-alt"></i>
-              </button>
-            )}
-          </>
-          {!this.props.isReadOnly && (
-            <label className="customBtnChoose" title={"Upload new file."}>
-              <input
-                className="btnChooseFile"
-                name="file"
-                type="file"
-                multiple={false}
-                onChange={(event) => this.handleFileChange(event)}
-                ref={this.refInput}
-                onFocus={() => this.onFocus()}
-                onBlur={() => this.onBlur()}
-                onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
-              />
-              <i className="fas fa-upload"></i>
-            </label>
+    if (this.props.isReadOnly) {
+      return (
+        <div className={S.blobEditor}>
+          <input
+            readOnly={true}
+            className={"fileName " + (this.focused ? S.focusedBorder : S.standardBorder)}
+            value={this.props.value || ""}
+          />
+        </div>);
+    }
+    if (!this.props.value) {
+      return (
+        <div className={S.blobEditor}>
+          <label className="customBtnChoose" title={"Upload new file."}>
+            <input
+              className="btnChooseFile"
+              name="file"
+              type="file"
+              multiple={false}
+              onChange={(event) => this.handleFileChange(event)}
+              ref={this.refInput}
+              onFocus={() => this.onFocus()}
+              onBlur={() => this.onBlur()}
+              onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
+            />
+            <i className="fas fa-upload"></i>
+          </label>
+          {this.isUploading && (
+            <div className="progress">
+              <div className="progressBar" style={{width: `${this.progressValue * 100}%`}}>
+                <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
+                  {(this.progressValue * 100).toFixed(0)}%
+                </div>
+              </div>
+            </div>
           )}
         </div>
-        {this.isUploading && (
-          <div className="progress">
-            <div className="progressBar" style={{ width: `${this.progressValue * 100}%` }}>
-              {(this.progressValue * 100).toFixed(0)}%
-            </div>
-          </div>
-        )}
+      );
+    }
+
+    return (
+      <div className={S.blobEditor + " " + CS.control}>
+        <input
+          className={"input " + (this.focused ? S.focusedBorder : S.standardBorder)}
+          value={this.props.value || ""}
+          onChange={(event: any) =>
+            this.props.onChange && this.props.onChange(event, event.target.value)
+          }
+          onBlur={this.props.onEditorBlur}
+        />
+        <div>
+          <Dropdowner
+            trigger={({refTrigger, setDropped, isDropped}) => (
+              <div className={CS.control} ref={refTrigger}>
+                <div
+                  className={cx("inputBtn", "lastOne", this.props.isReadOnly && "readOnly")}
+
+                  onClick={event => setDropped(true)}
+                >
+                  {!isDropped
+                    ? <i className="fas fa-caret-down"></i>
+                    : <i className="fas fa-caret-up"></i>
+                  }
+                </div>
+              </div>
+            )}
+            content={({setDropped}) => (
+              <Dropdown>
+                <DropdownItem
+                  onClick={(event: any) => {
+                    setDropped(false);
+                    runInFlowWithHandler(
+                      {
+                        ctx: this.props.Property!,
+                        action: async () => await this.download({isPreview: false})
+                      })
+                  }}
+                >
+                  {T("Download", "blob_download")}
+                </DropdownItem>
+                <DropdownItem
+                  onClick={(event: any) => {
+                    setDropped(false);
+                    runGeneratorInFlowWithHandler(
+                      {
+                        ctx: this.props.Property!,
+                        generator: this.delete.bind(this)()
+                      })
+                  }}
+                >
+                  {T("Delete", "blob_delete")}
+                </DropdownItem>
+                <DropdownItem
+                  onClick={(event: any) => {
+                    setDropped(false);
+                    runInFlowWithHandler(
+                      {
+                        ctx: this.props.Property!,
+                        action: async () => await this.download({isPreview: true})
+                      })
+                  }}
+                >
+                  {T("Preview", "blob_preview")}
+                </DropdownItem>
+              </Dropdown>
+            )}
+          />
+        </div>
       </div>
     );
   }
 }
-/*
-class ImageEditorCom extends React.Component<{ imageUrl: any }> {
-  refImageEditor = (elm: any) => (this.elmImageEditor = elm);
-  elmImageEditor: HTMLDivElement | null = null;
 
-  componentDidMount() {
-    const instance = new ImageEditor(this.elmImageEditor as any, {
-      usageStatistics: false,
-      //cssMaxWidth: 700,
-      //cssMaxHeight: 500,
-      selectionStyle: {
-        cornerSize: 20,
-        rotatingPointOffset: 70,
-      },
-      includeUI: {
-        loadImage: { path: this.props.imageUrl, name: "Loaded image" },
-        //loadImage: {
-        //    path: 'img/sampleImage2.png',
-        //    name: 'SampleImage'
-        //},
-        // theme: blackTheme, // or whiteTheme
-        initMenu: "filter",
-        menuBarPosition: "bottom",
-      },
-    });
-  }
-
-  render() {
-    return (
-      <div className={S.imageEditor}>
-        <div ref={this.refImageEditor} className="imageEditorMountpoint" />
-      </div>
-    );
-  }
-}*/

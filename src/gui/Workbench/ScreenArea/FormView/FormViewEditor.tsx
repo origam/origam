@@ -283,6 +283,8 @@ export class FormViewEditor extends React.Component<{
                 this.props.property?.tabIndex
               )
             }
+            onChange={this.props.onChange}
+            onEditorBlur={this.props.onEditorBlur}
           />
         );
       case "Polymorph":
