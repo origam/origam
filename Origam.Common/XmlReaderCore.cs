@@ -123,7 +123,7 @@ namespace Origam
                 innerReader.HasAttributes &&
                 innerReader.Depth == 0)
             {
-                throw new System.Exception("ROOT element has attributes !");
+                throw new System.Exception(ResourceUtils.GetString("XmlNoRoot"));
             }
             if (innerReader.NodeType == XmlNodeType.Element && 
                 !innerReader.HasAttributes &&

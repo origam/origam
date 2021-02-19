@@ -171,4 +171,7 @@ under certain conditions.</value>
   <data name="XPathIsNull" xml:space="preserve">
     <value>Property XPath of object: {0} is null, references could not be indexed.</value>
   </data>
+  <data name="XmlNoRoot" xml:space="preserve">
+    <value>Attempting to merge an XML document that has a root element with attributes. Root element should have no attributes. This is probably a result of an XSLT transformation that does not produce a proper root element.</value>
+  </data>
 </root>
