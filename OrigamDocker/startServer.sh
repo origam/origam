@@ -8,25 +8,24 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   cd $DIR
 	   # Directory data
 	   gitcredentials=""
+	   gitcloneBranch="-b master"
+	   if [[ -n ${gitBranch} ]]; then
+	    gitcloneBranch="-b $gitBranch"
+	   fi
 	   if [[ -n ${gitUsername} && -n ${gitPassword} ]]; then
 			gitcredentials="${gitUsername}:${gitPassword}@"
 	   fi
 	   if [[ ${gitUrl} == https:* ]]; then
 			fullgiturl="https://$gitcredentials${gitUrl//https:\/\//}"
-		git clone $fullgiturl
+		git clone $gitcloneBranch --single-branch $fullgiturl
 	   fi
 	   if [[ ${gitUrl} == http:* ]]; then
 		fullgiturl="http://$gitcredentials${gitUrl//http:\/\//}"
-		git clone $fullgiturl
+		git clone $gitcloneBranch --single-branch $fullgiturl
 	   fi
-	   if [[ -n ${gitBranch} ]]; then
-	    cd `ls`
-		# Directory data/gitRootDirectory
-	    git checkout ${gitBranch}
-		cd ..
-	   fi
+	   ln -s `pwd`/`ls` `pwd`/origam
 	   #test custom scripts
-	   cd `ls`
+	   cd origam
 	   if [ -f custom.js ]; then
 		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
 	   fi
@@ -46,23 +45,25 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   cd $DIRCONFIG
 	   # Directory configuredata
 	   gitconfcredentials=""
+	   gitconfcloneBranch="-b master"
+	   if [[ -n ${gitConfBranch} ]]; then
+	    gitconfcloneBranch="-b $gitConfBranch"
+	   fi
 	   if [[ -n ${gitConfUsername} && -n ${gitConfPassword} ]]; then
 			gitconfcredentials="${gitConfUsername}:${gitConfPassword}@"
 	   fi
 	   if [[ ${gitConfUrl} == https:* ]]; then
 			fullconfgiturl="https://$gitconfcredentials${gitConfUrl//https:\/\//}"
-		git clone $fullconfgiturl
+		git clone $gitconfcloneBranch --single-branch $fullconfgiturl
 	   fi
 	   if [[ ${gitConfUrl} == http:* ]]; then
 		fullconfgiturl="http://$gitconfcredentials${gitConfUrl//http:\/\//}"
-		git clone $fullconfgiturl
+		git clone $gitconfcloneBranch --single-branch $fullconfgiturl
 	   fi
+	   ln -s `pwd`/`ls` `pwd`/origam
 	   #need to move to gitRootDirectory everytime
-	   cd `ls`
+	   cd origam
 	   # Directory configuredata/gitRootDirectory
-	   if [[ -n ${gitConfBranch} ]]; then
-	    git checkout ${gitConfBranch}
-	   fi
 	   if [ -f _OrigamSettings.mssql.template ]; then
 		cp _OrigamSettings.mssql.template ../../
 	   fi
@@ -122,7 +123,7 @@ fi
 
 if [[ ! -z ${EnableChat} && ${EnableChat} == true ]]; then
 	sed -i "s|pathchatapp|/home/origam/HTML5/clients/chat|" appsettings.json
-	sed -i "s|chatinterval|1000|" appsettings.json
+	sed -i "s|chatinterval|10000|" appsettings.json
 else
 	sed -i "s|pathchatapp||" appsettings.json
 	sed -i "s|chatinterval|0|" appsettings.json
@@ -132,11 +133,11 @@ if [[ -n ${OrigamSettings_SetOnStart} && ${OrigamSettings_SetOnStart} == true ]]
 	rm -f OrigamSettings.config
 fi
 if [[ ! -f "OrigamSettings.config" ]]; then
-	if [[ -z ${OrigamSettings_SchemaExtensionGuid} || -z ${OrigamSettings_DbHost}  || -z ${OrigamSettings_DbPort}  || -z ${OrigamSettings_DbUsername}  || -z ${OrigamSettings_DbPassword}  || -z ${DatabaseName}  || -z ${OrigamSettings_ModelName}  ]];then
+	if [[ -z ${OrigamSettings_SchemaExtensionGuid} || -z ${OrigamSettings_DbHost}  || -z ${OrigamSettings_DbPort}  || -z ${OrigamSettings_DbUsername}  || -z ${OrigamSettings_DbPassword}  || -z ${DatabaseName}  ]];then
 		echo "OrigamSettings.config not exists!!"
 		echo "one or more variables are undefined"
 		echo "Please check if environment variables are set properly."
-		echo "OrigamSettings_SchemaExtensionGuid, OrigamSettings_DbHost, OrigamSettings_DbPort, OrigamSettings_DbUsername, OrigamSettings_DbPassword, DatabaseName,OrigamSettings_ModelName"
+		echo "OrigamSettings_SchemaExtensionGuid, OrigamSettings_DbHost, OrigamSettings_DbPort, OrigamSettings_DbUsername, OrigamSettings_DbPassword, DatabaseName"
 		exit 1
 	fi
 	if [[ -z ${DatabaseType} ]]; then
@@ -160,8 +161,8 @@ if [[ ! -f "OrigamSettings.config" ]]; then
 		sed -i "s/OrigamSettings_DbPassword/${OrigamSettings_DbPassword}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
 		sed -i "s/OrigamSettings_DatabaseName/${DatabaseName}/" OrigamSettings.config
-		sed -i "s|OrigamSettings_ModelName|data\/${OrigamSettings_ModelName}${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
-		sed -i "s/OrigamSettings_Title/${OrigamSettings_ModelName}/" OrigamSettings.config
+		sed -i "s|OrigamSettings_ModelName|data\/origam${OrigamSettings_ModelSubDirectory}|" OrigamSettings.config
+		sed -i "s/OrigamSettings_Title/${OrigamSettings_Title}/" OrigamSettings.config
 		sed -i "s|OrigamSettings_ReportDefinitionsPath|${OrigamSettings_ReportDefinitionsPath}|" OrigamSettings.config
 	fi
 fi
