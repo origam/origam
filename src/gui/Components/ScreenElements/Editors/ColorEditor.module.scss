@@ -1,0 +1,31 @@
+@import "./EditorsCommon.scss";
+@import "src/styles/common_styles.scss";
+@import "src/styles/definitions.scss";
+
+.droppedPanelContainer {
+  z-index: 1000;
+  background-color: white;
+  overflow: hidden;
+  @include popoverShadow;
+
+  box-shadow: 0 0.5em 1.5em 0 rgba($black, 0.25);
+  border: 1px solid $grey3;
+  @include border-radius(4px);
+}
+
+.dropdownSymbol {
+  @include dropdownSymbol;
+}
+
+.input {
+  @include input;
+}
+
+.notification {
+  @include notification;
+}
+
+.editorContainer {
+  @include editorContainer;
+}
+

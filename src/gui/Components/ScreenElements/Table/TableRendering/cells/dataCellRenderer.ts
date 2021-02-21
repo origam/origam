@@ -64,12 +64,7 @@ class ColorCellRenderer implements IDataCellRenderer {
   paddingLeft = 0;
 
   drawCellText(): void {
-    this.ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
-    this.ctx2d.textAlign = "center";
-    this.ctx2d.textBaseline = "middle";
-
     this.ctx2d.fillStyle = flashColor2htmlColor(currentCellValue()) || "black";
-
     this.ctx2d.fillRect(
       (currentColumnLeft() + 3) * CPR(),
       (currentRowTop() + 3) * CPR(),

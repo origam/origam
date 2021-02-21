@@ -25,6 +25,7 @@ import { onDropdownEditorClick } from "model/actions/DropdownEditor/onDropdownEd
 import { shadeHexColor } from "utils/colorUtils";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
+import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -33,10 +34,10 @@ import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
     onEditorBlur: (event: any) => onFieldBlur(formPanelView)(event),
     onChange: (event: any, value: any) => {
       onFieldChange(formPanelView)({
-        event: event, 
-        row: row, 
-        property: property, 
-        value: value, 
+        event: event,
+        row: row,
+        property: property,
+        value: value,
       });
     },
   };
@@ -62,12 +63,9 @@ export class FormViewEditor extends React.Component<{
   getEditor() {
     const rowId = getSelectedRowId(this.props.property);
     const row = getSelectedRow(this.props.property);
-    const foregroundColor = getRowStateForegroundColor(
-      this.props.property,
-      rowId || ""
-    );
+    const foregroundColor = getRowStateForegroundColor(this.props.property, rowId || "");
     const readOnly = !row || isReadOnly(this.props.property!, rowId);
-    const backgroundColor = readOnly 
+    const backgroundColor = readOnly
       ? shadeHexColor(this.props.backgroundColor, -0.1)
       : this.props.backgroundColor;
     let isInvalid = false;
@@ -264,6 +262,8 @@ export class FormViewEditor extends React.Component<{
             onClick={() => getDataView(this.props.property).focusManager.stopAutoFocus()}
           />
         );
+      case "Color":
+        return <ColorEditor />;
       case "Image":
         return <ImageEditor value={this.props.value} />;
       case "Blob":
@@ -302,34 +302,33 @@ export class FormViewEditor extends React.Component<{
     const dataView = getDataView(this.props.property);
 
     return (event: any) => {
-      runInFlowWithHandler(
-        {
-          ctx: this.props.property,
-          action: async ()=> {
-            dataView.focusManager.stopAutoFocus();
-            if (event.key === "Tab") {
-              DomEvent.preventDefault(event);
-              if (event.shiftKey) {
-                this.focusManager.focusPrevious(document.activeElement);
-              } else {
-                this.focusManager.focusNext(document.activeElement);
-              }
-              return;
+      runInFlowWithHandler({
+        ctx: this.props.property,
+        action: async () => {
+          dataView.focusManager.stopAutoFocus();
+          if (event.key === "Tab") {
+            DomEvent.preventDefault(event);
+            if (event.shiftKey) {
+              this.focusManager.focusPrevious(document.activeElement);
+            } else {
+              this.focusManager.focusNext(document.activeElement);
             }
-            if (this.props.property!.multiline) {
-              return;
-            }
-            if (event.key === "Enter") {
-              await this.props.onEditorBlur?.(null);
-              if (dataView.firstEnabledDefaultAction) {
-                uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
-                  event,
-                  dataView.firstEnabledDefaultAction
-                );
-              }
+            return;
+          }
+          if (this.props.property!.multiline) {
+            return;
+          }
+          if (event.key === "Enter") {
+            await this.props.onEditorBlur?.(null);
+            if (dataView.firstEnabledDefaultAction) {
+              uiActions.actions.onActionClick(dataView.firstEnabledDefaultAction)(
+                event,
+                dataView.firstEnabledDefaultAction
+              );
             }
           }
-        });
+        },
+      });
     };
   }
 

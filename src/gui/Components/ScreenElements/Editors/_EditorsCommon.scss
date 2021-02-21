@@ -53,8 +53,7 @@
 
   & :global(.red) {
     color: #ff0000;
-    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
-      1px 1px 0 #fff;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
   }
 }
 
@@ -69,6 +68,11 @@
   cursor: pointer;
   @include hoverItemAnimation;
   color: $black;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     transform: scale(1.2, 1.2);
