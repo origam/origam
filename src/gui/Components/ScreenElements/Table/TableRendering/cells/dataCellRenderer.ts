@@ -5,30 +5,35 @@ import {
   currentColumnLeft,
   currentColumnWidth,
   currentProperty,
-  currentRowTop
+  currentRowHeight,
+  currentRowTop,
 } from "gui/Components/ScreenElements/Table/TableRendering/currentCell";
 import {
   cellPaddingLeft,
   cellPaddingLeftFirstCell,
-  checkBoxCharacterFontSize, numberCellPaddingRight,
-  topTextOffset
+  checkBoxCharacterFontSize,
+  numberCellPaddingRight,
+  topTextOffset,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
-import {CPR} from "utils/canvas";
+import { CPR } from "utils/canvas";
 import moment from "moment";
 import selectors from "model/selectors-tree";
 import {
+  currentRow,
   drawingColumnIndex,
-  formScreen, rowHeight
+  formScreen,
+  rowHeight,
 } from "gui/Components/ScreenElements/Table/TableRendering/renderingValues";
+import { flashColor2htmlColor } from "utils/flashColorFormat";
 
-interface IDataCellRenderer{
+interface IDataCellRenderer {
   drawCellText(): void;
   cellText: string | undefined;
   cellTextMulitiline: string | undefined;
   paddingLeft: number;
 }
 
-export function currentDataCellRenderer(ctx2d: CanvasRenderingContext2D){
+export function currentDataCellRenderer(ctx2d: CanvasRenderingContext2D) {
   const type = currentProperty().column;
   switch (type) {
     case "CheckBox":
@@ -44,25 +49,48 @@ export function currentDataCellRenderer(ctx2d: CanvasRenderingContext2D){
       return new NumberInputCellRenderer(ctx2d);
     case "Image":
       return new ImageCellRenderer(ctx2d);
+    case "Color":
+      return new ColorCellRenderer(ctx2d);
     default:
       return new GenericCellRenderer(ctx2d);
   }
 }
 
-class CheckBoxCellRenderer implements IDataCellRenderer{
+class ColorCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
 
-  constructor(private ctx2d: CanvasRenderingContext2D) {
+  cellText = "";
+  cellTextMulitiline = "";
+  paddingLeft = 0;
+
+  drawCellText(): void {
+    this.ctx2d.font = `${checkBoxCharacterFontSize * CPR()}px "Font Awesome 5 Free"`;
+    this.ctx2d.textAlign = "center";
+    this.ctx2d.textBaseline = "middle";
+
+    this.ctx2d.fillStyle = flashColor2htmlColor(currentCellValue()) || "black";
+
+    this.ctx2d.fillRect(
+      (currentColumnLeft() + 3) * CPR(),
+      (currentRowTop() + 3) * CPR(),
+      (currentColumnWidth() - 2 * 3) * CPR(),
+      (currentRowHeight() - 2 * 3) * CPR()
+    );
   }
+}
 
-  get paddingLeft(){
+class CheckBoxCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
+
+  get paddingLeft() {
     return getPaddingLeft();
   }
 
-  get cellText(){
+  get cellText() {
     return currentCellText();
   }
 
-  get cellTextMulitiline(){
+  get cellTextMulitiline() {
     return currentCellTextMultiline();
   }
 
@@ -79,34 +107,32 @@ class CheckBoxCellRenderer implements IDataCellRenderer{
   }
 }
 
-class DateCellRenderer implements IDataCellRenderer{
+class DateCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
 
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft(){
+  get paddingLeft() {
     return getPaddingLeft();
   }
 
-  get cellText(){
+  get cellText() {
     if (currentCellText() !== null && currentCellText() !== "") {
       let momentValue = moment(currentCellText());
       if (!momentValue.isValid()) {
         return undefined;
       }
-      return  momentValue.format(currentProperty().formatterPattern);
-    }else{
+      return momentValue.format(currentProperty().formatterPattern);
+    } else {
       return undefined;
     }
   }
 
-  get cellTextMulitiline(){
+  get cellTextMulitiline() {
     return this.cellText;
   }
 
   drawCellText(): void {
     const dateTimeText = this.cellText;
-    if(dateTimeText){
+    if (dateTimeText) {
       this.ctx2d.fillText(
         dateTimeText,
         CPR() * (currentColumnLeft() + this.paddingLeft),
@@ -115,20 +141,18 @@ class DateCellRenderer implements IDataCellRenderer{
     }
   }
 }
-class TagInputCellRenderer implements IDataCellRenderer{
+class TagInputCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
 
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft(){
+  get paddingLeft() {
     return getPaddingLeft();
   }
 
-  get cellText(){
+  get cellText() {
     return currentCellText();
   }
 
-  get cellTextMulitiline(){
+  get cellTextMulitiline() {
     return currentCellTextMultiline();
   }
 
@@ -143,20 +167,18 @@ class TagInputCellRenderer implements IDataCellRenderer{
   }
 }
 
-class CheckListCellRenderer implements IDataCellRenderer{
+class CheckListCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
 
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft(){
+  get paddingLeft() {
     return getPaddingLeft();
   }
 
-  get cellText(){
+  get cellText() {
     return currentCellText();
   }
 
-  get cellTextMulitiline(){
+  get cellTextMulitiline() {
     return currentCellTextMultiline();
   }
 
@@ -184,20 +206,18 @@ class CheckListCellRenderer implements IDataCellRenderer{
   }
 }
 
-class NumberInputCellRenderer implements IDataCellRenderer{
+class NumberInputCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
 
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft(){
+  get paddingLeft() {
     return currentColumnWidth() - this.paddingRight;
   }
 
-  get cellText(){
+  get cellText() {
     return currentCellText();
   }
 
-  get cellTextMulitiline(){
+  get cellTextMulitiline() {
     return currentCellTextMultiline();
   }
 
@@ -219,20 +239,18 @@ class NumberInputCellRenderer implements IDataCellRenderer{
   }
 }
 
-class ImageCellRenderer implements IDataCellRenderer{
+class ImageCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
 
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft(){
+  get paddingLeft() {
     return getPaddingLeft();
   }
 
-  get cellText(){
+  get cellText() {
     return currentCellText();
   }
 
-  get cellTextMulitiline(){
+  get cellTextMulitiline() {
     return currentCellTextMultiline();
   }
 
@@ -272,20 +290,18 @@ class ImageCellRenderer implements IDataCellRenderer{
   }
 }
 
-class GenericCellRenderer implements IDataCellRenderer{
+class GenericCellRenderer implements IDataCellRenderer {
+  constructor(private ctx2d: CanvasRenderingContext2D) {}
 
-  constructor(private ctx2d: CanvasRenderingContext2D) {
-  }
-
-  get paddingLeft(){
+  get paddingLeft() {
     return getPaddingLeft();
   }
 
-  get cellText(){
+  get cellText() {
     return currentCellText();
   }
 
-  get cellTextMulitiline(){
+  get cellTextMulitiline() {
     return currentCellTextMultiline();
   }
 
