@@ -85,9 +85,9 @@ namespace OrigamArchitect
                 switch (cboDeploymentType.SelectedIndex)
                 {
                     case 0:
-                        return DeploymentType.Local;
-                    case 1:
                         return DeploymentType.Docker;
+                    case 1:
+                        return DeploymentType.Local;
                     default:
                         throw new ArgumentOutOfRangeException("DeploymentType",
                             cboDeploymentType.SelectedIndex, strings.UnknownDeploymentType);
