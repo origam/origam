@@ -26,6 +26,8 @@ import {
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { shadeHexColor } from "utils/colorUtils";
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
+import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 
 @inject(({ tablePanelView }) => {
   const row = getSelectedRow(tablePanelView)!;
@@ -162,6 +164,15 @@ export class TableViewEditor extends React.Component<{
         );
       case "Checklist":
         return "";
+      case "Color":
+        return (
+          <ColorEditor
+            value={flashColor2htmlColor(this.props.getCellValue!()) || null}
+            onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
+            onBlur={() => this.props.onEditorBlur?.(undefined)}
+            isReadOnly={readOnly}
+          />
+        );
       case "TagInput":
         return (
           <div style={{ height: rowHeight * 5 + "px", backgroundColor: "white" }}>

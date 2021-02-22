@@ -10,6 +10,7 @@ import { identity } from "lodash";
 @observer
 export default class ColorEditor extends React.Component<{
   value: string | null;
+  isReadOnly?: boolean;
   onChange?: (value: string | null) => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -216,7 +217,6 @@ export default class ColorEditor extends React.Component<{
             className={S.editorContainer}
             ref={this.refContainer}
             style={{
-              minWidth: 80,
               zIndex: this.isDroppedDown ? 1000 : undefined,
             }}
           >
@@ -224,6 +224,7 @@ export default class ColorEditor extends React.Component<{
               style={{}}
               className={S.input}
               type="text"
+              readOnly={this.props.isReadOnly}
               onBlur={() => this.send({ type: "INPUT_FIELD_BLUR" })}
               onFocus={() => this.send({ type: "INPUT_FIELD_FOCUS" })}
               ref={this.refInput}
@@ -235,13 +236,18 @@ export default class ColorEditor extends React.Component<{
               onKeyDown={(event) => this.send({ type: "INPUT_FIELD_KEY_DOWN", payload: { event } })}
               value={(this.isDroppedDown ? this.pickedColor : this.appliedValue) || "#000000"}
             />
-            <div
-              className={S.dropdownSymbol}
-              onMouseDown={() => this.machine.send({ type: "DROPDOWN_SYMBOL_MOUSE_DOWN" })}
-              ref={refTrigger}
-            >
-              <i className="fas fa-palette" />
-            </div>
+            {!this.props.isReadOnly && (
+              <div
+                className={S.dropdownSymbol}
+                onMouseDown={() =>
+                  !this.props.isReadOnly &&
+                  this.machine.send({ type: "DROPDOWN_SYMBOL_MOUSE_DOWN" })
+                }
+                ref={refTrigger}
+              >
+                <i className="fas fa-palette" />
+              </div>
+            )}
           </div>
         )}
         content={({ setDropped }) => (
