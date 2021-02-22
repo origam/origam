@@ -58,7 +58,7 @@ namespace Origam.ProjectAutomation
                     CloneGitRepository(project);
                     CheckModelDirectory(project);
                     CheckNewProjectDirectory(project);
-                    project.NewPackageId = GetFromDockerEnvFile(project)??GetPackageId();
+                    project.NewPackageId = GetFromDockerEnvFile(project)?? GetPackageId();
                     break;
                 default:
                     throw new Exception("Bad TypeTemplate " + project.TypeTemplate.ToString());
@@ -165,9 +165,9 @@ namespace Origam.ProjectAutomation
                 return null;
             }
             string[] lines = File.ReadAllLines(files[0]);
-            string guidId = lines.Where(line=> line.Contains("OrigamSettings_SchemaExtensionGuid"))
-                .Select(line=> { return line.Split("=")[1] ; }).FirstOrDefault();
-            return string.IsNullOrEmpty(guidId)?null:guidId;
+            string guidId = lines.Where(line => line.Contains("OrigamSettings_SchemaExtensionGuid"))
+                .Select(line => { return line.Split("=")[1] ; }).FirstOrDefault();
+            return string.IsNullOrEmpty(guidId)? null: guidId;
         }
         private void UnzipDefaultModel(Project project)
         {
