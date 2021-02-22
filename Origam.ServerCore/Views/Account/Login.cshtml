@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-    <div class="centered">
+    <div class="left-aligned">
         <form id="languageSelectForm" asp-controller="Account"
               asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
               method="post" class="form-horizontal" role="form">
@@ -79,8 +79,8 @@
     </div>
 @if (guiConfig.AllowPasswordReset)
 {
-    <div class="centered">
-        <div>
+    <div class="left-aligned">
+        <div class="reset-password-statement">
             @SharedLocalizer["ToResetPassword1"] <a class="in-page-link" href="/account/forgotpassword">@SharedLocalizer["ToResetPassword2"]</a> @SharedLocalizer["ToResetPassword3"]
         </div>
     </div>
