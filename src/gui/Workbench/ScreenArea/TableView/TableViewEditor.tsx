@@ -141,6 +141,7 @@ export class TableViewEditor extends React.Component<{
           <BoolEditor
             value={this.props.getCellValue!()}
             isReadOnly={readOnly}
+            readOnlyNoGrey={true}
             isInvalid={false}
             onChange={this.props.onChange}
             onClick={undefined}
