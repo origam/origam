@@ -329,11 +329,19 @@ namespace Origam.Security.Common
             }
 
             // PORTAL_BASE_URL is mandatory if using default template
-            if (string.IsNullOrWhiteSpace(portalBaseUrl) &&
-                string.IsNullOrEmpty(ResetPasswordBodyFilename))
+            if (string.IsNullOrWhiteSpace(portalBaseUrl))
             {
                 log.Error("'PortalBaseUrl' not configured while default template"
                           + "is used. Can't send a password reset email.");
+                throw new Exception(Resources
+                    .ResetPasswordMail_PortalBaseUrlNotConfigured);
+            }
+            if (string.IsNullOrEmpty(ResetPasswordSubject) ||
+                string.IsNullOrEmpty(ResetPasswordBodyFilename))
+            {
+                log.Error("'ResetPasswordMailSubject' or 'ResetPasswordMailBodyFileName' "
+                          + "not configured while template"
+                          + "is used for specific language. Can't send a password reset email.");
                 throw new Exception(Resources
                     .ResetPasswordMail_PortalBaseUrlNotConfigured);
             }
