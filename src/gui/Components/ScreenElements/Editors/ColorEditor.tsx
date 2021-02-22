@@ -75,11 +75,11 @@ export default class ColorEditor extends React.Component<{
                     },
                   ],
                 },
-                after: {
+                /*after: {
                   100: {
                     actions: "focusInputField",
                   },
-                },
+                },*/
               },
               OPEN: {
                 entry: "pickValueFromApplied",
@@ -95,7 +95,12 @@ export default class ColorEditor extends React.Component<{
                     },
                   ],
                   PICKER_OUTSIDE_INTERACTION: {
-                    actions: ["applyPickedValue", "commitAppliedValue", "setDroppedUp"],
+                    actions: [
+                      "applyPickedValue",
+                      "commitAppliedValue",
+                      "signalComponentBlur",
+                      "setDroppedUp",
+                    ],
                   },
                   PICKER_DROPPED_UP: {
                     target: "CLOSED_ACTIVE",

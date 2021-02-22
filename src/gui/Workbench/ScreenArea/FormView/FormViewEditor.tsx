@@ -26,7 +26,7 @@ import { shadeHexColor } from "utils/colorUtils";
 import { getIsFormScreenDirty } from "model/selectors/FormScreen/getisFormScreenDirty";
 import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
 import ColorEditor from "gui/Components/ScreenElements/Editors/ColorEditor";
-import { flashColor2htmlColor } from "utils/flashColorFormat";
+import { flashColor2htmlColor, htmlColor2FlashColor } from "utils/flashColorFormat";
 
 @inject(({ property, formPanelView }) => {
   const row = getSelectedRow(formPanelView)!;
@@ -267,7 +267,7 @@ export class FormViewEditor extends React.Component<{
         return (
           <ColorEditor
             value={flashColor2htmlColor(this.props.value) || null}
-            onChange={(value) => this.props.onChange?.(undefined, value)}
+            onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
             onBlur={() => this.props.onEditorBlur?.(undefined)}
           />
         );
