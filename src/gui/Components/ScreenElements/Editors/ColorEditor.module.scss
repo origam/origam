@@ -27,5 +27,6 @@
 
 .editorContainer {
   @include editorContainer;
+  position: relative;
 }
 
