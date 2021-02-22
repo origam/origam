@@ -47,12 +47,12 @@ namespace Origam.Security.Common
         private readonly string registerNewUserSubject;
         private readonly string userUnlockNotificationBodyFilename;
         private readonly string userUnlockNotificationSubject;
-        private readonly string resetPwdBodyFilename;
-        private readonly string resetPwdSubject;
         private readonly string mfaTemplateFileName;
         private readonly string mfaSubject;
         private readonly string mailQueueName;
         private readonly string applicationBasePath;
+        public string ResetPasswordBodyFilename { get; set; }
+        public string ResetPasswordSubject { get; set; }
 
         public AccountMailSender(string portalBaseUrl,
             string registerNewUserFilename,
@@ -68,15 +68,13 @@ namespace Origam.Security.Common
             this.registerNewUserSubject = registerNewUserSubject;
             this.userUnlockNotificationBodyFilename = userUnlockNotificationBodyFilename;
             this.userUnlockNotificationSubject = userUnlockNotificationSubject;
-            this.resetPwdBodyFilename = resetPwdBodyFilename;
-            this.resetPwdSubject = resetPwdSubject;
+            this.ResetPasswordBodyFilename = resetPwdBodyFilename;
+            this.ResetPasswordSubject = resetPwdSubject;
             this.mailQueueName = mailQueueName;
             this.applicationBasePath = applicationBasePath;
             this.mfaTemplateFileName = mfaTemplateFileName;
             this.mfaSubject = mfaSubject;
         }
-
-
         public void SendNewUserToken(string userId, string email,
             string username, string name, string firstName, string token)
         {
@@ -331,11 +329,19 @@ namespace Origam.Security.Common
             }
 
             // PORTAL_BASE_URL is mandatory if using default template
-            if (string.IsNullOrWhiteSpace(portalBaseUrl) &&
-                string.IsNullOrEmpty(resetPwdBodyFilename))
+            if (string.IsNullOrWhiteSpace(portalBaseUrl))
             {
                 log.Error("'PortalBaseUrl' not configured while default template"
                           + "is used. Can't send a password reset email.");
+                throw new Exception(Resources
+                    .ResetPasswordMail_PortalBaseUrlNotConfigured);
+            }
+            if (string.IsNullOrEmpty(ResetPasswordSubject) ||
+                string.IsNullOrEmpty(ResetPasswordBodyFilename))
+            {
+                log.Error("'ResetPasswordMailSubject' or 'ResetPasswordMailBodyFileName' "
+                          + "not configured while template"
+                          + "is used for specific language. Can't send a password reset email.");
                 throw new Exception(Resources
                     .ResetPasswordMail_PortalBaseUrlNotConfigured);
             }
@@ -347,9 +353,9 @@ namespace Origam.Security.Common
                 try
                 {
                     mail = GenerateMail(email, fromAddress,
-                        resetPwdBodyFilename,
+                        ResetPasswordBodyFilename,
                         Resources.ResetPasswordMailTemplate,
-                        resetPwdSubject, userLangIETF, replacements);
+                        ResetPasswordSubject, userLangIETF, replacements);
                 }
                 catch (Exception ex)
                 {
