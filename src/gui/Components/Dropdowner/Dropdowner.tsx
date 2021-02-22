@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Measure, {ContentRect} from "react-measure";
+import Measure, { ContentRect } from "react-measure";
 import S from "./Dropdowner.module.scss";
-import {action, observable} from "mobx";
-import {observer, Observer} from "mobx-react";
+import { action, observable } from "mobx";
+import { observer, Observer } from "mobx-react";
 
 class DroppedBox extends React.Component<{
   triggerRect: ContentRect;
@@ -11,6 +11,7 @@ class DroppedBox extends React.Component<{
   dropdownRef: any;
   openEvent?: MouseEvent;
   onCloseRequest?: (event: any) => void;
+  onOutsideInteraction?: (event: any) => void;
 }> {
   elmDropdown: HTMLDivElement | null = null;
   refDropdown = (elm: HTMLDivElement | null) => {
@@ -39,11 +40,12 @@ class DroppedBox extends React.Component<{
   @action.bound
   handleMaybeClose(event: any) {
     if (this.elmDropdown && !this.elmDropdown.contains(event.target)) {
+      this.props.onOutsideInteraction?.(event);
       this.props.onCloseRequest && this.props.onCloseRequest(event);
     }
   }
 
-  calcPosition(){
+  calcPosition() {
     let style: any = {};
 
     const viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -63,12 +65,12 @@ class DroppedBox extends React.Component<{
     } else {
       style.left = tBounds.left + tBounds.width - dBounds.width || 0;
     }
-    return style
+    return style;
   }
 
   render() {
     const style: any = this.props.openEvent
-      ? {left: this.props.openEvent.clientX, top: this.props.openEvent.clientY}
+      ? { left: this.props.openEvent.clientX, top: this.props.openEvent.clientY }
       : this.calcPosition();
 
     return ReactDOM.createPortal(
@@ -88,11 +90,13 @@ export class Dropdowner extends React.Component<{
     refTrigger: any;
     measure: () => void;
     setDropped: (state: boolean, event?: any) => void;
-    isDropped: boolean
+    isDropped: boolean;
   }) => React.ReactNode;
   content: (args: { setDropped: (state: boolean) => void }) => React.ReactNode;
   onDroppedDown?: () => void;
+  onDroppedUp?: () => void;
   onContainerMouseDown?(event: any): void;
+  onOutsideInteraction?(event: any): void;
 }> {
   refMeasTrigger = (elm: any) => (this.elmMeasTrigger = elm);
   elmMeasTrigger: any | null = null;
@@ -116,11 +120,13 @@ export class Dropdowner extends React.Component<{
   setDropped(state: boolean, event?: any) {
     event?.persist();
     this.openEvent = event;
-    this.isDropped = state;
-    if (state) {
+    if (!this.isDropped && state) {
+      this.isDropped = state;
       this.reMeasure();
       this.props.onDroppedDown && this.props.onDroppedDown();
-    } else {
+    } else if (this.isDropped && !state) {
+      this.isDropped = state;
+      this.props.onDroppedUp && this.props.onDroppedUp();
     }
   }
 
@@ -165,7 +171,7 @@ export class Dropdowner extends React.Component<{
                       refTrigger: mRefTrigger,
                       measure: this.reMeasure,
                       setDropped: this.setDropped,
-                      isDropped: this.isDropped
+                      isDropped: this.isDropped,
                     })}
                     {this.isDropped && (
                       <DroppedBox
@@ -175,7 +181,9 @@ export class Dropdowner extends React.Component<{
                         dropdownRef={mRefDropdown}
                         onCloseRequest={() => {
                           this.setDropped(false);
+                          this.props.onDroppedUp?.();
                         }}
+                        onOutsideInteraction={this.props.onOutsideInteraction}
                       >
                         {this.props.content({ setDropped: this.setDropped })}
                       </DroppedBox>

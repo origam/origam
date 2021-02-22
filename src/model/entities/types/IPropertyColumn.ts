@@ -8,5 +8,6 @@ export enum IPropertyColumn {
   CheckList = "Checklist",
   Image = "Image",
   Blob = "Blob",
-  Polymorph = "Polymorph"
+  Polymorph = "Polymorph",
+  Color = "Color"
 }
