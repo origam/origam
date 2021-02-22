@@ -1419,11 +1419,7 @@ body {
         font-weight: bold;
     }
 
-#languageSelectForm {
+#languageSelectForm,.reset-password-statement {
     padding: 0 1.5em;
-    font-size: 0.9em;
-}
-
-.reset-password-statement {
     font-size: 0.9em;
 }
