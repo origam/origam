@@ -54,6 +54,7 @@ export class FormScreen implements IFormScreen {
   autoSaveOnListRecordChange: boolean = false;
   requestSaveAfterUpdate: boolean = false;
   screenUI: any;
+  @observable
   panelConfigurations: Map<string, IPanelConfiguration> = new Map();
   isLoading: false = false;
   formScreenLifecycle: IFormScreenLifecycle02 = null as any;
@@ -62,6 +63,10 @@ export class FormScreen implements IFormScreen {
   dataViews: IDataView[] = [];
   dataSources: IDataSource[] = [];
   componentBindings: IComponentBinding[] = [];
+
+  setPanelSize(id: string, size: number) {
+    this.panelConfigurations.get(id)!.position = size;
+  }
 
   getData(childEntity: string, parentRecordId: string, rootRecordId: string) {
     this.dataSources.filter(dataSource => dataSource.entity === childEntity)
