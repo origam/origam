@@ -71,6 +71,9 @@
   "UserApiOptions": {
     "RestrictedRoutes": [
       "/api/private"
+    ],
+    "PublicRoutes": [
+      "/api/attachment"
     ]
   },
   "BehindProxy": "false",

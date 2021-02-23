@@ -355,11 +355,11 @@ namespace Origam.DA.Service
             FilterCommandParser filterCommandParser =
                 new FilterCommandParser(
                     nameLeftBracket: NameLeftBracket,
-                    nameRightBracket: NameRightBracket, 
-                    sqlValueFormatter: sqlValueFormatter, 
+                    nameRightBracket: NameRightBracket,
                     dataStructureColumns: entity.Columns, 
                     filterRenderer: filterRenderer, 
-                    whereFilterInput: selectParameters.CustomFilters.Filters);            
+                    whereFilterInput: selectParameters.CustomFilters.Filters,
+                    parameterReferenceChar: ParameterReferenceChar);            
             OrderByCommandParser orderByCommandParser =
                 new OrderByCommandParser(
                     orderingsInput: selectParameters.CustomOrderings.Orderings);
@@ -374,10 +374,11 @@ namespace Origam.DA.Service
                     forceDatabaseCalculation: forceDatabaseCalculation,
                     filterCommandParser: filterCommandParser,
                     orderByCommandParser: orderByCommandParser));
-
+            
             BuildSelectParameters(adapter.SelectCommand, selectParameterReferences);
             BuildFilterParameters(adapter.SelectCommand, dataStructure,
                 selectParameters.Filter, null, selectParameters.Parameters);
+            AddCustomFilterParseParameters(adapter.SelectCommand, entity, filterCommandParser.ParameterDataList);
 
             if (!dataStructure.Name.StartsWith("Lookup") || entity.AllFields)
             {
@@ -388,6 +389,26 @@ namespace Origam.DA.Service
                 BuildUpdateParameters(adapter.UpdateCommand, entity);
                 BuildInsertParameters(adapter.InsertCommand, entity);
                 BuildDeleteParameters(adapter.DeleteCommand, entity);
+            }
+        }
+
+        private void AddCustomFilterParseParameters(
+            IDbCommand command,
+            DataStructureEntity dataStructureEntity,
+            List<ParameterData> parameterDataList)
+        {
+            foreach (var parameterData in parameterDataList)
+            {
+                var dataStructureColumn = dataStructureEntity.Columns
+                    .Find(column => column.Name == parameterData.ColumnName);
+                var parameter = BuildParameter(parameterData.ParameterName, 
+                    null,
+                    dataStructureColumn.DataType,
+                    null,
+                    dataStructureColumn.Field.DataLength,
+                    dataStructureColumn.Field.AllowNulls);
+                parameter.Value = parameterData.Value;
+                command.Parameters.Add(parameter);
             }
         }
 
