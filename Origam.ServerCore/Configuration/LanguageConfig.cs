@@ -53,8 +53,8 @@ namespace Origam.ServerCore.Configuration
                     {
                         CultureName = section.GetStringOrThrow("Culture"),
                         Caption = section.GetStringOrThrow("Caption"),
-                        ResetPasswordMailSubject = section.GetStringOrThrow("ResetPasswordMailSubject"),
-                        ResetPasswordMailBodyFileName = section.GetStringOrThrow("ResetPasswordMailBodyFileName"),
+                        ResetPasswordMailSubject = section["ResetPasswordMailSubject"],
+                        ResetPasswordMailBodyFileName = section["ResetPasswordMailBodyFileName"],
                     })
                 .ToArray();
 
