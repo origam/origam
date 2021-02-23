@@ -3,7 +3,7 @@
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 RUN apt-get update
-RUN apt-get -y install git sudo nginx
+RUN apt-get -y install git sudo nginx ssh
 RUN apt-get -y install libgdiplus
 RUN useradd -ms /bin/bash origam
 RUN usermod -aG sudo origam
