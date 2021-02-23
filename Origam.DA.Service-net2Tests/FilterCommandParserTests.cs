@@ -378,15 +378,13 @@ namespace Origam.DA.ServiceTests
 
         [TestCase(
             "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
-            new string[] {"city_name", "name", "age", "id"})]
+            new [] {"city_name", "name", "age", "id"})]
         public void ShouldParseColumnNames(string filter,
             string[] expectedColumnNames)
         {
             var sut = new FilterCommandParser(
                 nameLeftBracket: "[",
                 nameRightBracket: "]",
-                // sqlValueFormatter: new SQLValueFormatter("1", "0",
-                //     (text) => text.Replace("%", "[%]").Replace("_", "[_]")),
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter,
                 parameterReferenceChar: "@");
@@ -411,10 +409,6 @@ namespace Origam.DA.ServiceTests
                 var test = new FilterCommandParser(
                         nameLeftBracket: "[",
                         nameRightBracket: "]",
-                        // sqlValueFormatter: new SQLValueFormatter(
-                        //     "1", "0",
-                        //     text => text.Replace("%", "[%]")
-                        //         .Replace("_", "[_]")),
                         filterRenderer: new MsSqlFilterRenderer(),
                         whereFilterInput: filter,
                         parameterReferenceChar: "@")
