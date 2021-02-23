@@ -2,13 +2,12 @@
 cd /home/origam/HTML5
 DIR="data"
 if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
-	if [[ -n ${gitUrl} ]]; then
-	   rm -rf $DIR
-	   mkdir $DIR
-	   cd $DIR
 	   # Directory data
 	   gitcredentials=""
 	   gitcloneBranch="-b master"
+	   fullgiturl=""
+
+	if [[ -n ${gitUrl} ]]; then
 	   if [[ -n ${gitBranch} ]]; then
 	    gitcloneBranch="-b $gitBranch"
 	   fi
@@ -17,35 +16,48 @@ if [[ -n ${gitPullOnStart} && ${gitPullOnStart} == true ]]; then
 	   fi
 	   if [[ ${gitUrl} == https:* ]]; then
 			fullgiturl="https://$gitcredentials${gitUrl//https:\/\//}"
-		git clone $gitcloneBranch --single-branch $fullgiturl
 	   fi
 	   if [[ ${gitUrl} == http:* ]]; then
 		fullgiturl="http://$gitcredentials${gitUrl//http:\/\//}"
-		git clone $gitcloneBranch --single-branch $fullgiturl
 	   fi
+	fi
+	if [[ -n ${gitSshUrl} && -n ${gitSshKey} && -n ${gitSshDomain} ]]; then
+		#Prepare ssh keys
+		mkdir -p /home/origam/.ssh
+		echo ${gitSshKey} | base64 -d  >/home/origam/.ssh/id_rsa
+		chmod 600 /home/origam/.ssh/id_rsa
+		ssh-keyscan ${gitSshDomain} >> /home/origam/.ssh/known_hosts
+		fullgiturl=${gitSshUrl}
+	fi
+	   rm -rf $DIR
+	   mkdir $DIR
+	   cd $DIR
+	   git clone $gitcloneBranch --single-branch $fullgiturl
 	   ln -s `pwd`/`ls` `pwd`/origam
 	   #test custom scripts
 	   cd origam
 	   if [ -f custom.js ]; then
-		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
+			cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
 	   fi
 	   if [ -f reverse-proxy.conf ]; then
-		sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
-		sudo /etc/init.d/nginx restart
+			sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
+			sudo /etc/init.d/nginx restart
 	   fi
-	fi
+	   if [ -f "/home/origam/.ssh/id_rsa" ]; then
+		#Remove key
+		rm /home/origam/.ssh/id_rsa
+	   fi
 fi
 cd /home/origam/HTML5
 
 DIRCONFIG="configuredata"
 if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
-	if [[ -n ${gitConfUrl} ]]; then
-	   rm -rf $DIRCONFIG
-	   mkdir $DIRCONFIG
-	   cd $DIRCONFIG
-	   # Directory configuredata
+
 	   gitconfcredentials=""
 	   gitconfcloneBranch="-b master"
+	   fullconfgiturl=""
+	   
+	if [[ -n ${gitConfUrl} ]]; then
 	   if [[ -n ${gitConfBranch} ]]; then
 	    gitconfcloneBranch="-b $gitConfBranch"
 	   fi
@@ -54,16 +66,26 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   fi
 	   if [[ ${gitConfUrl} == https:* ]]; then
 			fullconfgiturl="https://$gitconfcredentials${gitConfUrl//https:\/\//}"
-		git clone $gitconfcloneBranch --single-branch $fullconfgiturl
 	   fi
 	   if [[ ${gitConfUrl} == http:* ]]; then
 		fullconfgiturl="http://$gitconfcredentials${gitConfUrl//http:\/\//}"
-		git clone $gitconfcloneBranch --single-branch $fullconfgiturl
 	   fi
+	 fi
+	 if [[ -n ${gitConfSshUrl} && -n ${gitConfSshKey} && -n ${gitConfSshDomain} ]]; then
+		#Prepare ssh keys
+		mkdir -p /home/origam/.ssh
+		echo ${gitConfSshKey} | base64 -d  >/home/origam/.ssh/id_rsa
+		chmod 600 /home/origam/.ssh/id_rsa
+		ssh-keyscan ${gitConfSshDomain} >> /home/origam/.ssh/known_hosts
+		fullconfgiturl=${gitConfSshUrl}
+	fi
+	   rm -rf $DIRCONFIG
+	   mkdir $DIRCONFIG
+	   cd $DIRCONFIG
+	   git clone $gitconfcloneBranch --single-branch $fullconfgiturl
 	   ln -s `pwd`/`ls` `pwd`/origam
 	   #need to move to gitRootDirectory everytime
 	   cd origam
-	   # Directory configuredata/gitRootDirectory
 	   if [ -f _OrigamSettings.mssql.template ]; then
 		cp _OrigamSettings.mssql.template ../../
 	   fi
@@ -79,17 +101,17 @@ if [[ -n ${gitConfPullOnStart} && ${gitConfPullOnStart} == true ]]; then
 	   if [ -f custom.js ]; then
 		cp custom.js /home/origam/HTML5/assets/identity/js/custom.js
 	   fi
-	   if [ -f reverse-proxy.conf ]; then
-		sudo cp reverse-proxy.conf /etc/nginx/sites-available/reverse-proxy.conf
-		sudo /etc/init.d/nginx restart
+	   if [ -f "/home/origam/.ssh/id_rsa" ]; then
+		#Remove key
+		rm /home/origam/.ssh/id_rsa
 	   fi
-	fi
 fi
 cd /home/origam/HTML5
 
-if [ ! "$(ls -A $DIR)" ]; then 
+if [ ! -d "$DIR/origam" ]; then 
 	echo “Server has no model!!!! Please set up with GIT.”;
 	echo "Mandatory: gitPullOnStart(true)"
+	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
 	echo "Mandatory: gitUrl(ie:https://github.com/user/HelloWord.git)"
 	echo "Optional: gitUsername, gitPassword"
 	exit 1
