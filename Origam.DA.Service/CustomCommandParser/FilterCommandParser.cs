@@ -21,7 +21,6 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.Schema;
@@ -81,7 +80,6 @@ namespace Origam.DA.Service.CustomCommandParser
                 return columns;
             }
         }
-
 
         public FilterCommandParser(string nameLeftBracket, string nameRightBracket, 
             AbstractFilterRenderer filterRenderer, string whereFilterInput, 
@@ -188,6 +186,7 @@ namespace Origam.DA.Service.CustomCommandParser
 
             return inpValue;
         }
+        
         public void AddDataType(string columnName, OrigamDataType columnDataType)
         {
             if (columnNameToType.ContainsKey(columnName))
@@ -359,26 +358,6 @@ namespace Origam.DA.Service.CustomCommandParser
             return value;
         }
         
-        private bool IsString(string value)
-        {
-            string columnValue = string.Join(",", value.Split(',').Skip(2));
-            return columnValue.Contains("\"");
-        }
-        
-        private bool ContainsIsoDates(string value)
-        {
-            var columnValues = value
-                .Split(',')
-                .Skip(2)
-                .Select(x => x.Replace("\"", "").Trim());
-
-            return columnValues
-                .All(colValue =>
-                    DateTime.TryParseExact(colValue, "yyyy-MM-ddTHH:mm:ss.fff",
-                        CultureInfo.InvariantCulture, DateTimeStyles.None, out _)
-                );
-        }
-
         public string SqlRepresentation()
         {
             if (IsBinaryOperator)
