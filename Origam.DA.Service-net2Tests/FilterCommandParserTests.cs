@@ -22,84 +22,342 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using NUnit.Framework;
-using Origam.DA.Service;
 using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 using Origam.Schema;
 
-namespace Origam.DA.Service_net2Tests
+namespace Origam.DA.ServiceTests
 {
     [TestFixture]
     class FilterCommandParserTests
     {
-        [TestCase(
-            "[\"name\",\"gt\",\"John Doe\"]",
-            "([name] > 'John Doe')")]
-        [TestCase(
-            "[\"name\",\"gt\",\"John, Doe\"]",
-            "([name] > 'John, Doe')")]
-        [TestCase(
-            "[\"name\",\"starts\",\"John Doe\"]",
-            "([name] LIKE 'John Doe%')")]
-        [TestCase(
-            "[\"name\",\"nstarts\",\"John Doe\"]",
-            "([name] NOT LIKE 'John Doe%')")]
-        [TestCase(
-            "[\"name\",\"ends\",\"John Doe\"]",
-            "([name] LIKE '%John Doe')")]
-        [TestCase(
-            "[\"name\",\"nends\",\"John Doe\"]",
-            "([name] NOT LIKE '%John Doe')")]
-        [TestCase(
-            "[\"name\",\"contains\",\"John Doe\"]",
-            "([name] LIKE '%John Doe%')")]
-        [TestCase(
-            "[\"name\",\"ncontains\",\"John Doe\"]",
-            "([name] NOT LIKE '%John Doe%')")]
-        [TestCase(
-            "[\"name\",\"gt\",\"John' Doe\"]",
-            "([name] > 'John'' Doe')")]
-        [TestCase(
-            "[\"name\",\"eq\",null]",
-            "[name] IS NULL")]
-        [TestCase(
-            "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
-            "((([city_name] LIKE '%Wash%') OR ([name] LIKE '%Smith%')) AND ([age] >= 18) AND [id] IN ('f2', 'f3', 'f4'))")]
-        [TestCase(
-            "[\"age\",\"between\",[18, 80]]",
-            "[age] BETWEEN 18 AND 80")]
-        [TestCase(
-            "[\"age\",\"nbetween\",[18, 80]]",
-            "[age] NOT BETWEEN 18 AND 80")]
-        [TestCase(
-            "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\", \"Ben\"]]",
-            "[Name] IN ('Tom', 'Jane', 'David', 'Ben')")] 
-        [TestCase(
-            "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\"]]",
-            "[Name] IN ('Tom', 'Jane', 'David')")]
-        [TestCase(
-            "[\"Name\",\"nin\",[\"Tom\", \"Jane\", \"David\"]]",
-            "[Name] NOT IN ('Tom', 'Jane', 'David')")]
-        [TestCase(
-            "[\"Timestamp\", \"between\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
-            "[Timestamp] BETWEEN  '2020-08-04 00:00:00'  AND  '2020-05-01 00:00:00' ")]
-        [TestCase(
-            "[\"Timestamp\", \"nbetween\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
-            "[Timestamp] NOT BETWEEN  '2020-08-04 00:00:00'  AND  '2020-05-01 00:00:00' ")]
-        [TestCase("", null)]
-        public void ShouldParseFilter(string filter, string expectedSqlWhere)
+        
+        static object[] filterCases =
+        {
+            new object[] {
+                "[\"name\",\"gt\",\"John Doe\"]",
+                "([name] > @name)",
+                new List<ParameterData> {
+                   new ParameterData
+                   {
+                       ColumnName = "name", 
+                       ParameterName = "name", 
+                       Value = "John Doe"
+                   }
+                } 
+            },
+            new object[] {
+                "[\"name\",\"gt\",\"John, Doe\"]",
+                "([name] > @name)",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John, Doe"
+                    }
+                }
+            },
+            new object[] {
+                "[\"name\",\"starts\",\"John Doe\"]",
+                "([name] LIKE @name+'%')",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John Doe"
+                    }
+                } 
+            },
+            new object[] {
+                "[\"name\",\"nstarts\",\"John Doe\"]",
+                "([name] NOT LIKE @name+'%')",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John Doe"
+                    }
+                } 
+            },
+            new object[] {
+                "[\"name\",\"ends\",\"John Doe\"]",
+                "([name] LIKE '%'+@name)",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John Doe"
+                    }
+                } 
+            },
+            new object[] {
+                "[\"name\",\"nends\",\"John Doe\"]",
+                "([name] NOT LIKE '%'+@name)",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John Doe"
+                    }
+                } 
+            },
+            new object[] {
+                "[\"name\",\"contains\",\"John Doe\"]",
+                "([name] LIKE '%'+@name+'%')",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John Doe"
+                    }
+                }  
+            },
+            new object[] {
+                "[\"name\",\"ncontains\",\"John Doe\"]",
+                "([name] NOT LIKE '%'+@name+'%')",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John Doe"
+                    }
+                }  
+            },
+            new object[] {
+                "[\"name\",\"gt\",\"John' Doe\"]",
+                "([name] > @name)",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "John' Doe"
+                    }
+                } 
+            },
+            new object[] {
+                "[\"name\",\"eq\",null]",
+                "[name] IS NULL",
+                new List<ParameterData>()
+            },
+            new object[] {
+                "[\"$AND\", [\"$OR\",[\"city_name\",\"like\",\"Wash\"],[\"name\",\"like\",\"Smith\"]], [\"age\",\"gte\",18],[\"id\",\"in\",[\"f2\",\"f3\",\"f4\"]]",
+                "((([city_name] LIKE '%'+@city_name+'%') OR ([name] LIKE '%'+@name+'%')) AND ([age] >= @age) AND [id] IN (@id_0, @id_1, @id_2))",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "city_name", 
+                        ParameterName = "city_name", 
+                        Value = "Wash"
+                    },
+                    new ParameterData
+                    {
+                        ColumnName = "name", 
+                        ParameterName = "name", 
+                        Value = "Smith"
+                    },
+                    new ParameterData
+                    {
+                        ColumnName = "age", 
+                        ParameterName = "age", 
+                        Value = 18
+                    },
+                    new ParameterData
+                    {
+                        ColumnName = "id", 
+                        ParameterName = "id_0", 
+                        Value = "f2"
+                    },
+                    new ParameterData
+                    {
+                        ColumnName = "id", 
+                        ParameterName = "id_1", 
+                        Value = "f3"
+                    },
+                    new ParameterData
+                    {
+                        ColumnName = "id", 
+                        ParameterName = "id_2", 
+                        Value = "f4"
+                    },
+                },
+            },
+            new object[] {
+                "[\"age\",\"between\",[18, 80]]",
+                "[age] BETWEEN @age_0 AND @age_1",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "age", 
+                        ParameterName = "age_0", 
+                        Value = 18
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "age", 
+                        ParameterName = "age_1", 
+                        Value = 80
+                    }
+                }
+            },
+            new object[] {
+                "[\"age\",\"nbetween\",[18, 80]]",
+                "[age] NOT BETWEEN @age_0 AND @age_1",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "age", 
+                        ParameterName = "age_0", 
+                        Value = 18
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "age", 
+                        ParameterName = "age_1", 
+                        Value = 80
+                    }
+                }
+            },
+            new object[] {
+                "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\", \"Ben\"]]",
+                "[Name] IN (@Name_0, @Name_1, @Name_2, @Name_3)",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_0", 
+                        Value = "Tom"
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_1", 
+                        Value = "Jane"
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_2", 
+                        Value = "David"
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_3", 
+                        Value = "Ben"
+                    }
+                }
+            },
+            new object[] {
+                "[\"Name\",\"in\",[\"Tom\", \"Jane\", \"David\"]]",
+                "[Name] IN (@Name_0, @Name_1, @Name_2)",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_0", 
+                        Value = "Tom"
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_1", 
+                        Value = "Jane"
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_2", 
+                        Value = "David"
+                    },
+                }
+            },
+            new object[] {
+                "[\"Name\",\"nin\",[\"Tom\", \"Jane\", \"David\"]]",
+                "[Name] NOT IN (@Name_0, @Name_1, @Name_2)",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_0", 
+                        Value = "Tom"
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_1", 
+                        Value = "Jane"
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Name", 
+                        ParameterName = "Name_2", 
+                        Value = "David"
+                    },
+                }
+            },
+            new object[] {
+                "[\"Timestamp\", \"between\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
+                "[Timestamp] BETWEEN @Timestamp_0 AND @Timestamp_1",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "Timestamp", 
+                        ParameterName = "Timestamp_0", 
+                        Value = DateTime.Parse("2020-08-04 00:00:00")
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Timestamp", 
+                        ParameterName = "Timestamp_1", 
+                        Value = DateTime.Parse("2020-05-01 00:00:00")
+                    }
+                } 
+            },
+            new object[] {
+                "[\"Timestamp\", \"nbetween\", [\"2020-08-04T00:00:00.000\", \"2020-05-01T00:00:00.000\"]]",
+                "[Timestamp] NOT BETWEEN @Timestamp_0 AND @Timestamp_1",
+                new List<ParameterData> {
+                    new ParameterData
+                    {
+                        ColumnName = "Timestamp", 
+                        ParameterName = "Timestamp_0", 
+                        Value = DateTime.Parse("2020-08-04 00:00:00")
+                    },                    
+                    new ParameterData
+                    {
+                        ColumnName = "Timestamp", 
+                        ParameterName = "Timestamp_1", 
+                        Value = DateTime.Parse("2020-05-01 00:00:00")
+                    }
+                } 
+            },
+            new object[] {
+                "",
+                null,
+                new List<ParameterData>()
+            },
+        };
+        
+        [Test, TestCaseSource(nameof(filterCases))]
+        public void ShouldParseFilter(string filter, string expectedSqlWhere,
+            List<ParameterData> expectedParameters)
         {
             var sut = new FilterCommandParser(
                 nameLeftBracket: "[",
                 nameRightBracket: "]",
-                sqlValueFormatter: new SQLValueFormatter("1", "0",
-                    (text) => text.Replace("%", "[%]").Replace("_", "[_]")),
                 filterRenderer: new MsSqlFilterRenderer(),
-                whereFilterInput: filter);
+                whereFilterInput: filter, 
+                parameterReferenceChar: "@");
             sut.AddDataType("name", OrigamDataType.String);
             sut.AddDataType("Timestamp", OrigamDataType.Date);
             sut.AddDataType("age", OrigamDataType.Integer);
@@ -108,6 +366,14 @@ namespace Origam.DA.Service_net2Tests
             sut.AddDataType("id", OrigamDataType.String);
 
             Assert.That(sut.Sql, Is.EqualTo(expectedSqlWhere));
+            Assert.That(sut.ParameterDataList, Has.Count.EqualTo(expectedParameters.Count));
+            foreach (var parameterData in sut.ParameterDataList)
+            {
+                var expectedData = expectedParameters.Find(data =>
+                    data.ParameterName == parameterData.ParameterName);
+                Assert.That(parameterData.ColumnName, Is.EqualTo(expectedData.ColumnName));
+                Assert.That(parameterData.Value, Is.EqualTo(expectedData.Value));
+            }
         }
 
         [TestCase(
@@ -119,10 +385,11 @@ namespace Origam.DA.Service_net2Tests
             var sut = new FilterCommandParser(
                 nameLeftBracket: "[",
                 nameRightBracket: "]",
-                sqlValueFormatter: new SQLValueFormatter("1", "0",
-                    (text) => text.Replace("%", "[%]").Replace("_", "[_]")),
+                // sqlValueFormatter: new SQLValueFormatter("1", "0",
+                //     (text) => text.Replace("%", "[%]").Replace("_", "[_]")),
                 filterRenderer: new MsSqlFilterRenderer(),
-                whereFilterInput: filter);
+                whereFilterInput: filter,
+                parameterReferenceChar: "@");
             sut.AddDataType("name", OrigamDataType.String);
             sut.AddDataType("Timestamp", OrigamDataType.Date);
             sut.AddDataType("age", OrigamDataType.Integer);
@@ -144,12 +411,13 @@ namespace Origam.DA.Service_net2Tests
                 var test = new FilterCommandParser(
                         nameLeftBracket: "[",
                         nameRightBracket: "]",
-                        sqlValueFormatter: new SQLValueFormatter(
-                            "1", "0",
-                            text => text.Replace("%", "[%]")
-                                .Replace("_", "[_]")),
+                        // sqlValueFormatter: new SQLValueFormatter(
+                        //     "1", "0",
+                        //     text => text.Replace("%", "[%]")
+                        //         .Replace("_", "[_]")),
                         filterRenderer: new MsSqlFilterRenderer(),
-                        whereFilterInput: filter)
+                        whereFilterInput: filter,
+                        parameterReferenceChar: "@")
                     .Sql;
             });
         }
