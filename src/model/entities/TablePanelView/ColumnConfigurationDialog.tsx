@@ -18,33 +18,21 @@ import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelV
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   @computed get columnsConfiguration() {
-
-    const columnConfigurations = []
     const groupingConf = getGroupingConfiguration(this);
     const groupingOnClient = !isLazyLoading(this);
-    for (let prop of this.tablePanelView.allTableProperties) {
+    const activeTableConfiguration = getConfigurationManager(this).activeTableConfiguration;
 
-      const columnConfiguration = new TableColumnConfiguration(prop.id);
-      columnConfiguration.name =  prop.name;
-      columnConfiguration.isVisible = !this.tablePanelView.hiddenPropertyIds.get(prop.id);
-      columnConfiguration.groupingIndex = groupingConf.groupingSettings.get(prop.id)?.groupIndex || 0;
-      columnConfiguration.aggregationType = this.tablePanelView.aggregations.getType(prop.id)!;
-      columnConfiguration.entity = prop.entity;
+    for (let columnConfiguration of activeTableConfiguration.columnConfigurations) {
+      const property = this.tablePanelView.allTableProperties
+        .find(prop => prop.id === columnConfiguration.propertyId)!;
       columnConfiguration.canGroup = groupingOnClient ||
-        (!prop.isAggregatedColumn && !prop.isLookupColumn && prop.column !== "TagInput");
+        (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput");
       columnConfiguration.canAggregate = groupingOnClient ||
-        (!prop.isAggregatedColumn && !prop.isLookupColumn && prop.column !== "TagInput");
-      columnConfiguration.timeGroupingUnit = groupingConf.groupingSettings.get(prop.id)?.groupingUnit;
-      columnConfiguration. width = 0;
-      columnConfigurations.push(columnConfiguration);
+        (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput");
+      columnConfiguration.entity = property.entity;
+      columnConfiguration.name = property.name;
     }
-
-    return new TableConfiguration({
-      name: undefined,
-      fixedColumnCount: this.tablePanelView.fixedColumnCount,
-      columnConf: columnConfigurations,
-      tablePropertyIds: this.tablePanelView.tablePropertyIds
-    });
+    return activeTableConfiguration;
   }
 
   dialogKey = "";
@@ -80,7 +68,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
             ctx: this,
             action: () => {
               const newConfig = configuration.cloneAs(name);
-              getConfigurationManager(this).setAsCurrent(newConfig)
+              getConfigurationManager(this).activeTableConfiguration = newConfig
             }
           });
           closeDialog();
@@ -102,7 +90,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     this.tablePanelView.hiddenPropertyIds.clear();
     const groupingConf = getGroupingConfiguration(this);
     groupingConf.clearGrouping();
-    for (let column of configuration.columnConfiguration) {
+    for (let column of configuration.columnConfigurations) {
       this.tablePanelView.hiddenPropertyIds.set(column.propertyId, !column.isVisible);
       if (column.groupingIndex) {
         groupingConf.setGrouping(column.propertyId, column.timeGroupingUnit, column.groupingIndex);

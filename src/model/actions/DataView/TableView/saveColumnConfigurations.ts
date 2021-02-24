@@ -12,19 +12,21 @@ export function saveColumnConfigurations(ctx: any) {
   return function* saveColumnConfigurations() {
     const dataView = getDataView(ctx);
     const configurationManager = getConfigurationManager(ctx);
+    const tablePanelView = getTablePanelView(ctx);
     const groupingConfiguration = getGroupingConfiguration(ctx);
 
     if(configurationManager.allTableConfigurations.length === 0){
       return;
     }
 
-    const tableConfiguration = configurationManager.defaultTableConfiguration;
+    const activeTableConfiguration = configurationManager.activeTableConfiguration;
     for (const property of getProperties(ctx)) {
-      const columnConfiguration = tableConfiguration.columnConfiguration.find(conf => conf.propertyId === property.id)
+      const columnConfiguration = activeTableConfiguration.columnConfigurations.find(conf => conf.propertyId === property.id)
       if(columnConfiguration){
         columnConfiguration.width = property.columnWidth;
       }
     }
+    activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
 
     yield getApi(ctx).saveObjectConfiguration({
       sessionFormIdentifier: getSessionId(ctx),

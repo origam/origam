@@ -3,7 +3,7 @@ import {AggregationType} from "model/entities/types/AggregationType";
 import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
 export interface IConfigurationManager {
-  setAsCurrent(newConfig: any): void;
+  activeTableConfiguration: ITableConfiguration;
   customTableConfigurations: ITableConfiguration[],
   defaultTableConfiguration: ITableConfiguration,
   allTableConfigurations: ITableConfiguration[]
@@ -12,10 +12,9 @@ export interface IConfigurationManager {
 export interface ITableConfiguration {
   name: string | undefined
   fixedColumnCount: number;
-  columnConfiguration: IColumnConfiguration[];
-  sortedColumnConfigurations: IColumnConfiguration[];
+  columnConfigurations: IColumnConfiguration[];
   isActive: boolean;
-  tablePropertyIds: string[];
+  sortColumnConfiguartions(propertyIds: string[]): void;
   apply(tablePanelView: ITablePanelView): void;
   cloneAs(name: string): ITableConfiguration;
 }

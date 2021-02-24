@@ -538,7 +538,7 @@ export class OrigamAPI implements IApi {
         ` fixedColumnCount="${tableConfig.fixedColumnCount}"`+
         ` isActive="${tableConfig.isActive}"`+
         ">"+
-          tableConfig.sortedColumnConfigurations
+          tableConfig.columnConfigurations
             .map(columnConfig =>
               "<ColumnConfiguration" +
               ` propertyId="${columnConfig.propertyId}"`+

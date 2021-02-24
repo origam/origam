@@ -41,7 +41,7 @@ export class ColumnsDialog extends React.Component<{
   refGrid = React.createRef<MultiGrid>();
 
   @action.bound setVisible(rowIndex: number, state: boolean) {
-    this.configuration.columnConfiguration[rowIndex].isVisible = state;
+    this.configuration.columnConfigurations[rowIndex].isVisible = state;
   }
 
   @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
@@ -54,12 +54,12 @@ export class ColumnsDialog extends React.Component<{
       }
     }
 
-    const columnConfCopy = [...this.configuration.columnConfiguration];
+    const columnConfCopy = [...this.configuration.columnConfigurations];
     columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
-      if (this.configuration.columnConfiguration[rowIndex].groupingIndex === 0) {
-        this.configuration.columnConfiguration[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
+      if (this.configuration.columnConfigurations[rowIndex].groupingIndex === 0) {
+        this.configuration.columnConfigurations[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
       } else {
-        this.configuration.columnConfiguration[rowIndex].groupingIndex = 0;
+        this.configuration.columnConfigurations[rowIndex].groupingIndex = 0;
         let groupingIndex = 1;
         columnConfCopy.reverse();
         for (let columnConfItem of columnConfCopy) {
@@ -71,11 +71,11 @@ export class ColumnsDialog extends React.Component<{
   }
 
   @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
-    this.configuration.columnConfiguration[rowIndex].timeGroupingUnit = groupingUnit;
+    this.configuration.columnConfigurations[rowIndex].timeGroupingUnit = groupingUnit;
   }
 
   @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
-    this.configuration.columnConfiguration[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
+    this.configuration.columnConfigurations[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
   }
 
   @action.bound handleFixedColumnsCountChange(event: any) {
@@ -118,7 +118,7 @@ export class ColumnsDialog extends React.Component<{
                     fixedRowCount={1}
                     cellRenderer={this.renderCell}
                     columnCount={5}
-                    rowCount={1 + this.configuration.columnConfiguration.length}
+                    rowCount={1 + this.configuration.columnConfigurations.length}
                     columnWidth={({ index }: { index: number }) => {
                       return this.columnWidths[index];
                     }}
@@ -155,7 +155,7 @@ export class ColumnsDialog extends React.Component<{
       canGroup,
       canAggregate,
       timeGroupingUnit
-    } = this.configuration.columnConfiguration[rowIndex];
+    } = this.configuration.columnConfigurations[rowIndex];
     switch (columnIndex) {
       case 0:
         return (

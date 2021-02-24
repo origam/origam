@@ -10,32 +10,29 @@ import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColum
 export function createConfigurationManager(configurationNodes: any, properties: IProperty[]) {
 
   if (configurationNodes.length === 0) {
-    return new ConfigurationManager([], new TableConfiguration({
-      tablePropertyIds: properties.map(prop => prop.id)
-    }));
+    return new ConfigurationManager(
+      [], TableConfiguration.createEmpty(properties));
   } else if (configurationNodes.length > 1) {
     throw new Error("Can not process more than one configuration node")
   }
 
   const tableConfigurationNodes = findStopping(configurationNodes[0], (n) => n.name === "tableConfigurations")?.[0]?.elements;
   if(!tableConfigurationNodes){
-    return new ConfigurationManager([], new TableConfiguration({
-      tablePropertyIds: properties.map(prop => prop.id)
-    }));
+    return new ConfigurationManager(
+      [], TableConfiguration.createEmpty(properties));
   }
   const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) =>
-    new TableConfiguration(
+    TableConfiguration.create(
       {
         name: tableConfigNode.attributes.name,
         fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
-        columnConf: tableConfigNode.elements
+        columnConfigurations: tableConfigNode.elements
           .map((columnConfigNode: any) => parseColumnConfigurationNode(columnConfigNode, properties))
           .filter((columnConfiguration: IColumnConfiguration | undefined) => columnConfiguration),
-        tablePropertyIds: tableConfigNode.elements.map((columnConfigNode: any) => columnConfigNode.id)
       }));
 
   const defaultTableConfiguration = tableConfigurations.find((tableConfig: TableConfiguration) => tableConfig.name === "")
-          ?? new TableConfiguration({tablePropertyIds: properties.map(prop => prop.id)});
+          ?? TableConfiguration.createEmpty(properties);
 
   return new ConfigurationManager(
     tableConfigurations
@@ -49,7 +46,7 @@ function parseColumnConfigurationNode(columnConfigNode: any, properties: IProper
   if (!property) {
     return undefined;
   }
-  const tableConfiguration = new TableColumnConfiguration(columnConfigNode.attributes.propertyId)
+  const tableConfiguration = new TableColumnConfiguration(property.id, property.name)
   tableConfiguration.width = fixColumnWidth(parseInt(columnConfigNode.attributes.width));
 
   if (columnConfigNode.attributes.isVisible === "false" || tableConfiguration.width < 0) {

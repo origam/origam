@@ -14,7 +14,17 @@ export class ConfigurationManager implements IConfigurationManager {
       : this.customTableConfigurations;
   }
 
-  setAsCurrent(configToActivate: TableConfiguration): void {
+  get activeTableConfiguration(){
+    const activeTableConfiguration = this.allTableConfigurations.find(config => config.isActive)
+    if (activeTableConfiguration) {
+      return activeTableConfiguration;
+    } else {
+      this.defaultTableConfiguration.isActive = true;
+      return this.defaultTableConfiguration;
+    }
+  }
+
+  set activeTableConfiguration(configToActivate: TableConfiguration) {
     for (const tableConfiguration of this.allTableConfigurations) {
       tableConfiguration.isActive = false;
     }
