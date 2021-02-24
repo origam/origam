@@ -167,6 +167,7 @@
   "column_config_new_config_name": "New Column Configuration",
   "column_config_config_name": "Name:",
   "column_config_locked_columns": "Locked columns count",
+  "column_config_name_empty": "Name cannot be empty",
   "calendar_week": "Week No. {0}",
   "calendar_monday": "Monday",
   "calendar_tuesday": "Tuesday",
