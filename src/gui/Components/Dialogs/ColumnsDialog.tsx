@@ -20,9 +20,11 @@ import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel } from "model/
 import {IDataView} from "model/entities/types/IDataView";
 import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfigurationDialog";
 
 @observer
 export class ColumnsDialog extends React.Component<{
+  columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
   onOkClick?: (event: any, configuration: ITableConfiguration) => void;
   onSaveAsClick: (event: any, configuration: ITableConfiguration) => void;
@@ -148,14 +150,19 @@ export class ColumnsDialog extends React.Component<{
   getCell(rowIndex: number, columnIndex: number) {
     const {
       isVisible,
-      name,
+      propertyId,
       aggregationType,
       groupingIndex,
+      timeGroupingUnit
+    } = this.configuration.columnConfigurations[rowIndex];
+
+    const {
+      name,
       entity,
       canGroup,
       canAggregate,
-      timeGroupingUnit
-    } = this.configuration.columnConfigurations[rowIndex];
+    } = this.props.columnOptions.get(propertyId)!;
+
     switch (columnIndex) {
       case 0:
         return (

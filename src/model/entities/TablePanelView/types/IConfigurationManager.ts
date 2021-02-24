@@ -21,14 +21,10 @@ export interface ITableConfiguration {
 
 export interface IColumnConfiguration {
   propertyId: string;
-  name: string;
   isVisible: boolean;
   groupingIndex: number;
   aggregationType: AggregationType | undefined;
   timeGroupingUnit: GroupingUnit | undefined;
-  entity: string;
-  canGroup: boolean;
-  canAggregate: boolean;
   width: number;
   clone(): IColumnConfiguration;
 }

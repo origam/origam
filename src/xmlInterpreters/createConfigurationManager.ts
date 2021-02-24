@@ -46,7 +46,7 @@ function parseColumnConfigurationNode(columnConfigNode: any, properties: IProper
   if (!property) {
     return undefined;
   }
-  const tableConfiguration = new TableColumnConfiguration(property.id, property.name)
+  const tableConfiguration = new TableColumnConfiguration(property.id)
   tableConfiguration.width = fixColumnWidth(parseInt(columnConfigNode.attributes.width));
 
   if (columnConfigNode.attributes.isVisible === "false" || tableConfiguration.width < 0) {

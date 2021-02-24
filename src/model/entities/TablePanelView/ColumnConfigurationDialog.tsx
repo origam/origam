@@ -7,32 +7,45 @@ import {onColumnConfigurationSubmit} from "model/actions-ui/ColumnConfigurationD
 import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {ITableConfiguration} from "./types/IConfigurationManager";
-import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
-import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
 import {NewConfigurationDialog} from "gui/Components/Dialogs/NewConfigurationDialog";
-import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 
+export interface IColumnOptions {
+  canGroup: boolean;
+  canAggregate: boolean;
+  entity: string;
+  name: string;
+}
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
-  @computed get columnsConfiguration() {
+  getColumnOptions(){
     const groupingConf = getGroupingConfiguration(this);
     const groupingOnClient = !isLazyLoading(this);
     const activeTableConfiguration = getConfigurationManager(this).activeTableConfiguration;
+    const optionsMap = new Map<string, IColumnOptions>()
 
     for (let columnConfiguration of activeTableConfiguration.columnConfigurations) {
       const property = this.tablePanelView.allTableProperties
         .find(prop => prop.id === columnConfiguration.propertyId)!;
-      columnConfiguration.canGroup = groupingOnClient ||
-        (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput");
-      columnConfiguration.canAggregate = groupingOnClient ||
-        (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput");
-      columnConfiguration.entity = property.entity;
-      columnConfiguration.name = property.name;
+      optionsMap.set(
+        property.id,
+        {
+          canGroup: groupingOnClient ||
+            (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
+          canAggregate: groupingOnClient ||
+            (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
+          entity: property.entity,
+          name: property.name,
+        })
     }
-    return activeTableConfiguration;
+    return optionsMap;
+  }
+
+  @computed get columnsConfiguration() {
+    return getConfigurationManager(this).activeTableConfiguration;
   }
 
   dialogKey = "";
@@ -44,6 +57,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     getDialogStack(this).pushDialog(
       this.dialogKey,
       <ColumnsDialog
+        columnOptions={this.getColumnOptions()}
         configuration={this.columnsConfiguration}
         onCancelClick={this.onColumnConfCancel}
         onSaveAsClick={this.onSaveAsClick}

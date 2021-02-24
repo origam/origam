@@ -31,7 +31,7 @@ export class TableConfiguration implements ITableConfiguration {
   static createEmpty(properties: IProperty[]){
     const newInstance = new TableConfiguration();
     newInstance.columnConfigurations = properties
-      .map(property => new TableColumnConfiguration(property.id, property.name));
+      .map(property => new TableColumnConfiguration(property.id));
     return newInstance;
   }
 

@@ -8,16 +8,12 @@ import {isLazyLoading} from "model/selectors/isLazyLoading";
 export class TableColumnConfiguration implements IColumnConfiguration {
 
   constructor(
-    public propertyId: string,
-    public name: string
+    public propertyId: string
   ) {
   }
 
   @observable
   aggregationType: AggregationType | undefined;
-  canAggregate: boolean = false;
-  canGroup: boolean = true;
-  entity: string = "";
   @observable
   groupingIndex: number = 0;
   @observable
