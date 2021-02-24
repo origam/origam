@@ -33,7 +33,7 @@ namespace Origam
 		private static Hashtable _transactionStore = new Hashtable();
 		private static Hashtable _savePoints = new Hashtable();
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+		private static object _obj = new object();
 		public static void RegisterTransaction(string transactionId, string resourceManagerId, OrigamTransaction transaction)
 		{
 			if(log.IsDebugEnabled)
@@ -250,10 +250,13 @@ namespace Origam
 			}
 			else
 			{
-				ArrayList result = new ArrayList();
-				_savePoints[transactionId] = result;
+				lock (_obj)
+				{
+					ArrayList result = new ArrayList();
+					_savePoints[transactionId] = result;
 
-				return result;
+					return result;
+				}
 			}
 		}
 		#endregion
