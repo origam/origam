@@ -11,8 +11,9 @@ import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfiguratio
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
-import { TableConfiguration, TableColumnConfiguration } from "xmlInterpreters/screenXml";
 import { ITableColumnsConf } from "./types/IConfigurationManager";
+import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
+import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {

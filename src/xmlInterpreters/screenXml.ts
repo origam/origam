@@ -34,7 +34,7 @@ import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspec
 import {SCOPE_TablePerspective} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
 import {ITablePerspectiveDirector} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
 import {IPerspective} from "modules/DataView/Perspective/Perspective";
-import {flow, observable} from "mobx";
+import {flow} from "mobx";
 import {IViewConfiguration, ViewConfiguration} from "modules/DataView/ViewConfiguration";
 import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
 import {IPanelConfiguration} from "model/entities/types/IPanelConfiguration";
@@ -42,7 +42,6 @@ import {parseToOrdering} from "model/entities/types/IOrderingConfiguration";
 import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
 import {cssString2Object} from "utils/objects";
 import {TreeDataTable} from "model/entities/TreeDataTable";
-import {AggregationType, parseAggregationType} from "model/entities/types/AggregationType";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {getEntity} from "model/selectors/DataView/getEntity";
 import {DataViewAPI} from "modules/DataView/DataViewAPI";
@@ -74,13 +73,7 @@ import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupi
 import {splitterPositionFromRatio} from "model/actions-ui/Splitter/splitterPositionToServerValue";
 import {ITablePerspective} from "modules/DataView/Perspective/TablePerspective/TablePerspective";
 import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
-import {
-  ITablePanelView
-} from "model/entities/TablePanelView/types/ITablePanelView";
-import {GroupingUnit} from "model/entities/types/GroupingUnit";
-import {IDataView} from "model/entities/types/IDataView";
-import {getProperties} from "model/selectors/DataView/getProperties";
-import {IConfigurationManager, ITableColumnsConf, ITableColumnConf} from "model/entities/TablePanelView/types/IConfigurationManager";
+import {createConfigurationManager} from "xmlInterpreters/createConfigurationManager";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -120,7 +113,7 @@ function getPropertyParameters(node: any) {
 
 const instance2XmlNode = new WeakMap<any, any>();
 
-function fixColumnWidth(width: number) {
+export function fixColumnWidth(width: number) {
   // Sometimes they send us negative width, which destroys table rendering.
   if (isNaN(width)) {
     return 100;
@@ -699,177 +692,3 @@ function populateMapViewSetup(mss: MapSetupStore, xmlNode: any) {
   }
 }
 
-export class TableColumnConfiguration implements ITableColumnConf {
-
-  constructor(public id: string){
-  }
-
-  @observable
-  aggregationType: AggregationType | undefined;
-  canAggregate: boolean = false;
-  canGroup: boolean = true;
-  entity: string = "";
-  @observable
-  groupingIndex: number = 0;
-  @observable
-  isVisible: boolean = true;
-  name: string = "";
-  @observable
-  timeGroupingUnit: GroupingUnit | undefined;
-  width = 0;
-}
-
-export class TableConfiguration implements ITableColumnsConf {
-
-  public name: string | undefined;
-  public fixedColumnCount: number;
-  public columnConf: ITableColumnConf[];
-  public tablePropertyIds: string[];
-
-  constructor(args:{
-      name?: string | undefined,
-      fixedColumnCount?: number,
-      columnConf?: ITableColumnConf[],
-      tablePropertyIds: string[]
-    }
-  ){
-    this.name = args.name;
-    this.fixedColumnCount = args.fixedColumnCount ?? 0;
-    this.columnConf = args.columnConf ?? args.tablePropertyIds.map(id=> new TableColumnConfiguration(id));
-    this.tablePropertyIds = args.tablePropertyIds;
-  }
-
-  apply(tablePanelView: ITablePanelView){
-    const properties = getProperties(tablePanelView);
-
-    for (const columnConfiguration of this.columnConf) {
-      if(!columnConfiguration.isVisible){
-        tablePanelView.setPropertyHidden(columnConfiguration.id, true);
-      }
-      if(columnConfiguration.aggregationType !== undefined){
-        tablePanelView.aggregations.setType(
-          columnConfiguration.id,
-          columnConfiguration.aggregationType
-        );
-      }
-      if(columnConfiguration.groupingIndex > 0){
-        tablePanelView.groupingConfiguration.setGrouping(
-          columnConfiguration.id,
-          columnConfiguration.timeGroupingUnit,
-          columnConfiguration.groupingIndex
-        );
-      }
-      const property = properties.find(prop => prop.id === columnConfiguration.id)
-      if(property && columnConfiguration.width > 0){
-        property.setColumnWidth(columnConfiguration.width);
-      }
-      tablePanelView.tablePropertyIds = tablePanelView.tablePropertyIds
-        .slice()
-        .sort((columnIdA, columnIdB) => {
-          const columnIdxA = this.tablePropertyIds.findIndex((id) => id === columnIdA);
-          if (columnIdxA === -1) return 0;
-          const columnIdxB = this.tablePropertyIds.findIndex((id) => id === columnIdB);
-          if (columnIdxB === -1) return 0;
-          return columnIdxA - columnIdxB;
-        });
-    }
-  }
-}
-
-class ConfigurationManager implements IConfigurationManager{
-  constructor(
-    public tableConfigurations: TableConfiguration[],
-    public defaultTableConfiguration: TableConfiguration
-  ) {
-  }
-}
-
-function createConfigurationManager(configurationNodes: any, properties: IProperty[]){
-  const columnConfigurations: ITableColumnConf[] = [];
-
-  function getColumnConfiguration(id: string){
-    let configIndex = columnConfigurations.findIndex(config => config.id === id);
-    if(configIndex === -1){
-      columnConfigurations.unshift(new TableColumnConfiguration(id));
-      configIndex = 0;
-    }
-    return columnConfigurations[configIndex];
-  }
-  if(configurationNodes.length === 0){
-    return new ConfigurationManager([], new TableConfiguration({
-      tablePropertyIds: properties.map(prop=> prop.id)
-    }));
-  }else if(configurationNodes.length > 1){
-    throw new Error("Can not process more than one configuration node")
-  }
-  let groupingColumnCounter = 1;
-
-  let fixedColumnCount = 0;
-  const configurationNode = configurationNodes[0];
-  const defaultFixedColumns = findStopping(configurationNode, (n) => n.name === "lockedColumns");
-  if (defaultFixedColumns && defaultFixedColumns.length > 0) {
-    const fixedColumnsNode = findStopping(
-      defaultFixedColumns?.[0],
-      (n) => n.name === "lockedColumns"
-    );
-    const fixedColumnsStr = fixedColumnsNode?.[0]?.attributes?.["count"];
-    const fixedColumnsInt = parseInt(fixedColumnsStr, 10);
-    if (!isNaN(fixedColumnsStr)) {
-      fixedColumnCount = fixedColumnsInt;
-    }
-  }
-
-  const columnWidthsNodes = findStopping(configurationNode, (n) => n.name === "columnWidths");
-  if(columnWidthsNodes.length === 0){
-    return new ConfigurationManager([], new TableConfiguration({
-      tablePropertyIds: properties.map(prop=> prop.id)
-    }));
-  }
-  const columns = findStopping(columnWidthsNodes[0], (n) => n.name === "column");
-  for (const column of columns) {
-    if (column.attributes.property) {
-      const prop = properties.find((prop) => prop.id === column.attributes.property);
-      if(!prop){
-        continue;
-      }
-      const confuguration = getColumnConfiguration(column.attributes.property)
-
-      // COLUMN WIDTH
-      confuguration.width = fixColumnWidth(parseInt(column.attributes.width));
-
-      // COLUMN HIDING
-      if (column.attributes.isHidden === "true" || confuguration.width < 0) {
-        confuguration.isVisible = false;
-      }
-      if (column.attributes.aggregationType !== "0") {
-        confuguration.aggregationType = parseAggregationType(column.attributes.aggregationType);
-      }
-    } else if (column.attributes.groupingField) {
-      const property = properties.find(
-        (prop) => prop.id === column.attributes.groupingField
-      );
-      if(!property){
-        continue;
-      }
-      const confuguration = getColumnConfiguration(column.attributes.groupingField)
-      if (!property?.isLookupColumn) {
-        confuguration.groupingIndex = groupingColumnCounter;
-        confuguration.timeGroupingUnit = isNaN(parseInt(column.attributes.groupingUnit))
-          ? undefined
-          : parseInt(column.attributes.groupingUnit)
-        groupingColumnCounter++;
-      }
-    }
-  };
-
-  const tablePropertyIds = columns.map(columnNode => columnNode.attributes.property);
-  return new ConfigurationManager(
-    [],
-    new TableConfiguration({
-      name: "",
-      fixedColumnCount: fixedColumnCount,
-      columnConf: columnConfigurations,
-      tablePropertyIds: tablePropertyIds
-    })
-  );
-}

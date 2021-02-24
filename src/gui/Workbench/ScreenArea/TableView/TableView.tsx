@@ -11,7 +11,6 @@ import { getColumnHeaders } from "../../../../model/selectors/TablePanelView/get
 import { getSelectedColumnIndex } from "../../../../model/selectors/TablePanelView/getSelectedColumnIndex";
 import { getTableViewProperties } from "../../../../model/selectors/TablePanelView/getTableViewProperties";
 import { IColumnHeader } from "../../../../model/selectors/TablePanelView/types";
-import { ITableColumnsConf } from "../../../Components/Dialogs/ColumnsDialog";
 import { FilterSettings } from "../../../Components/ScreenElements/Table/FilterSettings/FilterSettings";
 import { Header } from "../../../Components/ScreenElements/Table/Header";
 import { RawTable, Table } from "../../../Components/ScreenElements/Table/Table";
@@ -44,6 +43,7 @@ import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfig
 import _ from "lodash";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
+import { ITableColumnsConf } from "model/entities/TablePanelView/types/IConfigurationManager";
 
 @inject(({ dataView }) => {
   return {

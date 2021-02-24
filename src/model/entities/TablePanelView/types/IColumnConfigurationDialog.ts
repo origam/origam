@@ -1,4 +1,4 @@
-import {ITableColumnsConf} from "../../../../gui/Components/Dialogs/ColumnsDialog";
+import { ITableColumnsConf } from "./IConfigurationManager";
 
 export interface IColumnConfigurationDialog {
   columnsConfiguration: ITableColumnsConf;
