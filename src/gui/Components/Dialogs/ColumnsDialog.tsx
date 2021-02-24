@@ -17,29 +17,15 @@ import {
 import { T } from "../../../utils/translation";
 import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel } from "model/entities/types/GroupingUnit";
-
-export interface ITableColumnsConf {
-  fixedColumnCount: number;
-  columnConf: ITableColumnConf[];
-}
-
-export interface ITableColumnConf {
-  id: string;
-  name: string;
-  isVisible: boolean;
-  groupingIndex: number;
-  aggregationType: AggregationType | undefined;
-  timeGroupingUnit: GroupingUnit | undefined;
-  entity: string;
-  canGroup: boolean;
-  canAggregate: boolean;
-}
+import {IDataView} from "model/entities/types/IDataView";
+import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
+import { ITableColumnsConf } from "model/entities/TablePanelView/types/IConfigurationManager";
 
 @observer
 export class ColumnsDialog extends React.Component<{
   configuration: ITableColumnsConf;
   onOkClick?: (event: any, configuration: ITableColumnsConf) => void;
-  onSaveAsClick?: (event: any) => void;
+  onSaveAsClick: (event: any, configuration: ITableColumnsConf) => void;
   onCancelClick?: (event: any) => void;
   onCloseClick?: (event: any) => void;
 }> {
@@ -48,16 +34,14 @@ export class ColumnsDialog extends React.Component<{
     this.configuration = this.props.configuration;
   }
 
-  @observable.ref configuration: ITableColumnsConf;
+  configuration: ITableColumnsConf;
 
   @observable columnWidths = [70, 160, 70, 70, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
   @action.bound setVisible(rowIndex: number, state: boolean) {
-    this.configuration = produce(this.configuration, (draft) => {
-      draft.columnConf[rowIndex].isVisible = state;
-    });
+    this.configuration.columnConf[rowIndex].isVisible = state;
   }
 
   @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
@@ -70,13 +54,12 @@ export class ColumnsDialog extends React.Component<{
       }
     }
 
-    this.configuration = produce(this.configuration, (draft) => {
-      const columnConfCopy = [...draft.columnConf];
-      columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
-      if (draft.columnConf[rowIndex].groupingIndex === 0) {
-        draft.columnConf[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
+    const columnConfCopy = [...this.configuration.columnConf];
+    columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
+      if (this.configuration.columnConf[rowIndex].groupingIndex === 0) {
+        this.configuration.columnConf[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
       } else {
-        draft.columnConf[rowIndex].groupingIndex = 0;
+        this.configuration.columnConf[rowIndex].groupingIndex = 0;
         let groupingIndex = 1;
         columnConfCopy.reverse();
         for (let columnConfItem of columnConfCopy) {
@@ -85,26 +68,18 @@ export class ColumnsDialog extends React.Component<{
           }
         }
       }
-    });
   }
 
   @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
-    this.configuration = produce(this.configuration, (draft) => {
-      draft.columnConf[rowIndex].timeGroupingUnit = groupingUnit;
-    });
+    this.configuration.columnConf[rowIndex].timeGroupingUnit = groupingUnit;
   }
 
   @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
-    this.configuration = produce(this.configuration, (draft) => {
-      draft.columnConf[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
-    });
+    this.configuration.columnConf[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
   }
 
   @action.bound handleFixedColumnsCountChange(event: any) {
-    this.configuration = produce(this.configuration, (draft) => {
-      draft.fixedColumnCount = parseInt(event.target.value, 10);
-    });
-    console.log(this.configuration);
+    this.configuration.fixedColumnCount = parseInt(event.target.value, 10);
   }
 
   render() {
@@ -122,9 +97,9 @@ export class ColumnsDialog extends React.Component<{
             >
               {T("OK", "button_ok")}
             </button>
-            {/*<button onClick={this.props.onSaveAsClick}>*/}
-            {/*  {T("Save As...","column_config_save_as")}*/}
-            {/*</button>*/}
+            <button onClick={event => this.props.onSaveAsClick(event, this.configuration)}>
+              {T("Save As...","column_config_save_as")}
+            </button>
             <button tabIndex={0} onClick={this.props.onCancelClick}>
               {T("Cancel", "button_cancel")}
             </button>

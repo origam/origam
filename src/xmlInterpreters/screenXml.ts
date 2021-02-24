@@ -1,80 +1,86 @@
-import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
-import { LookupLoader } from "model/entities/LookupLoader";
-import { RowState } from "model/entities/RowState";
-import { Action } from "model/entities/Action";
-import { ActionParameter } from "model/entities/ActionParameter";
-import { ComponentBinding, ComponentBindingPair } from "model/entities/ComponentBinding";
-import { DataSource } from "model/entities/DataSource";
-import { DataSourceField } from "model/entities/DataSourceField";
-import { DataTable } from "model/entities/DataTable";
-import { DataView } from "model/entities/DataView";
-import { DropDownColumn } from "model/entities/DropDownColumn";
-import { FilterConfiguration } from "model/entities/FilterConfiguration";
-import { FormPanelView } from "model/entities/FormPanelView/FormPanelView";
-import { FormScreen } from "model/entities/FormScreen";
-import { Lookup } from "model/entities/Lookup";
-import { OrderingConfiguration } from "model/entities/OrderingConfiguration";
-import { Property, ILookupIndividualEngine } from "model/entities/Property";
-import { ColumnConfigurationDialog } from "model/entities/TablePanelView/ColumnConfigurationDialog";
-import { TablePanelView } from "model/entities/TablePanelView/TablePanelView";
-import { IComponentBinding } from "model/entities/types/IComponentBinding";
-import { IFormScreenLifecycle02 } from "model/entities/types/IFormScreenLifecycle";
-import { IPanelViewType } from "model/entities/types/IPanelViewType";
-import { flf2mof } from "utils/flashDateFormat";
-import { findStopping } from "./xmlUtils";
-import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
-import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
-import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
+import {DataViewLifecycle} from "model/entities/DataViewLifecycle/DataViewLifecycle";
+import {LookupLoader} from "model/entities/LookupLoader";
+import {RowState} from "model/entities/RowState";
+import {Action} from "model/entities/Action";
+import {ActionParameter} from "model/entities/ActionParameter";
+import {ComponentBinding, ComponentBindingPair} from "model/entities/ComponentBinding";
+import {DataSource} from "model/entities/DataSource";
+import {DataSourceField} from "model/entities/DataSourceField";
+import {DataTable} from "model/entities/DataTable";
+import {DataView} from "model/entities/DataView";
+import {DropDownColumn} from "model/entities/DropDownColumn";
+import {FilterConfiguration} from "model/entities/FilterConfiguration";
+import {FormPanelView} from "model/entities/FormPanelView/FormPanelView";
+import {FormScreen} from "model/entities/FormScreen";
+import {Lookup} from "model/entities/Lookup";
+import {OrderingConfiguration} from "model/entities/OrderingConfiguration";
+import {Property} from "model/entities/Property";
+import {ColumnConfigurationDialog} from "model/entities/TablePanelView/ColumnConfigurationDialog";
+import {TablePanelView} from "model/entities/TablePanelView/TablePanelView";
+import {IComponentBinding} from "model/entities/types/IComponentBinding";
+import {IFormScreenLifecycle02} from "model/entities/types/IFormScreenLifecycle";
+import {IPanelViewType} from "model/entities/types/IPanelViewType";
+import {flf2mof} from "utils/flashDateFormat";
+import {findStopping} from "./xmlUtils";
+import {GroupingConfiguration} from "model/entities/GroupingConfiguration";
+import {ServerSideGrouper} from "model/entities/ServerSideGrouper";
+import {ClientSideGrouper} from "model/entities/ClientSideGrouper";
 import $root from "rootContainer";
-import { SCOPE_Screen } from "modules/Screen/ScreenModule";
-import { SCOPE_DataView } from "modules/DataView/DataViewModule";
-import { scopeFor, TypeSymbol } from "dic/Container";
-import { SCOPE_FormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
-import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
-import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
-import { ITablePerspectiveDirector } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
-import { IPerspective } from "modules/DataView/Perspective/Perspective";
-import { autorun, flow } from "mobx";
-import { IViewConfiguration, ViewConfiguration } from "modules/DataView/ViewConfiguration";
-import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
-import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
-import { parseToOrdering } from "model/entities/types/IOrderingConfiguration";
-import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
-import { cssString2Object } from "utils/objects";
-import { TreeDataTable } from "model/entities/TreeDataTable";
-import { parseAggregationType } from "model/entities/types/AggregationType";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { DataViewAPI } from "modules/DataView/DataViewAPI";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { IRowCursor, RowCursor } from "modules/DataView/TableCursor";
-import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
-import { DataViewData } from "modules/DataView/DataViewData";
-import { ScreenAPI } from "modules/Screen/ScreenAPI";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { getSessionId } from "model/selectors/getSessionId";
-import { getApi } from "model/selectors/getApi";
-import { getWorkbench } from "model/selectors/getWorkbench";
-import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
-import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
-import { IDataView as IDataViewTS } from "modules/DataView/DataViewTypes";
-import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
-import { IProperty } from "model/entities/types/IProperty";
-import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
-import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
+import {SCOPE_Screen} from "modules/Screen/ScreenModule";
+import {SCOPE_DataView} from "modules/DataView/DataViewModule";
+import {scopeFor, TypeSymbol} from "dic/Container";
+import {SCOPE_FormPerspective} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
+import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
+import {SCOPE_TablePerspective} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
+import {ITablePerspectiveDirector} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
+import {IPerspective} from "modules/DataView/Perspective/Perspective";
+import {flow, observable} from "mobx";
+import {IViewConfiguration, ViewConfiguration} from "modules/DataView/ViewConfiguration";
+import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
+import {IPanelConfiguration} from "model/entities/types/IPanelConfiguration";
+import {parseToOrdering} from "model/entities/types/IOrderingConfiguration";
+import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
+import {cssString2Object} from "utils/objects";
+import {TreeDataTable} from "model/entities/TreeDataTable";
+import {AggregationType, parseAggregationType} from "model/entities/types/AggregationType";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {DataViewAPI} from "modules/DataView/DataViewAPI";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {IRowCursor, RowCursor} from "modules/DataView/TableCursor";
+import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
+import {DataViewData} from "modules/DataView/DataViewData";
+import {ScreenAPI} from "modules/Screen/ScreenAPI";
+import {getMenuItemId} from "model/selectors/getMenuItemId";
+import {getSessionId} from "model/selectors/getSessionId";
+import {getApi} from "model/selectors/getApi";
+import {getWorkbench} from "model/selectors/getWorkbench";
+import {SCOPE_FormScreen} from "modules/Screen/FormScreen/FormScreenModule";
+import {IOrigamAPI, OrigamAPI} from "model/entities/OrigamAPI";
+import {IDataView as IDataViewTS} from "modules/DataView/DataViewTypes";
+import {createIndividualLookupEngine} from "modules/Lookup/LookupModule";
+import {IProperty} from "model/entities/types/IProperty";
+import {SCOPE_MapPerspective} from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
+import {IMapPerspectiveDirector} from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
 import {
   MapLayer as MapLayerSetup,
   MapSetupStore,
 } from "modules/DataView/Perspective/MapPerspective/stores/MapSetupStore";
-import { MapRootStore } from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
-import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
-import { addFilterGroups } from "./filterXml";
-import { FilterGroupManager } from "model/entities/FilterGroupManager";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { isLazyLoading } from "model/selectors/isLazyLoading";
-import { splitterPositionFromRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
-import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspective";
-import {runInFlowWithHandler, runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
+import {MapRootStore} from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
+import {IFormPerspective} from "modules/DataView/Perspective/FormPerspective/FormPerspective";
+import {addFilterGroups} from "./filterXml";
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {splitterPositionFromRatio} from "model/actions-ui/Splitter/splitterPositionToServerValue";
+import {ITablePerspective} from "modules/DataView/Perspective/TablePerspective/TablePerspective";
+import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
+import {
+  ITablePanelView
+} from "model/entities/TablePanelView/types/ITablePanelView";
+import {GroupingUnit} from "model/entities/types/GroupingUnit";
+import {IDataView} from "model/entities/types/IDataView";
+import {getProperties} from "model/selectors/DataView/getProperties";
+import {IConfigurationManager, ITableColumnsConf, ITableColumnConf} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -460,76 +466,10 @@ export function* interpretScreenXml(
 
       instance2XmlNode.set(dataViewInstance, dataView);
 
-      let groupingColumnCounter = 1;
-      configuration.forEach((conf) => {
-        const defaultFixedColumns = findStopping(conf, (n) => n.name === "lockedColumns");
-        if (defaultFixedColumns && defaultFixedColumns.length > 0) {
-          const fixedColumnsNode = findStopping(
-            defaultFixedColumns?.[0],
-            (n) => n.name === "lockedColumns"
-          );
-          const fixedColumnsStr = fixedColumnsNode?.[0]?.attributes?.["count"];
-          const fixedColumnsInt = parseInt(fixedColumnsStr, 10);
-          if (!isNaN(fixedColumnsStr)) {
-            dataViewInstance.tablePanelView.fixedColumnCount = fixedColumnsInt;
-          }
-        }
-
-        const defaultColumnConfigurations = findStopping(conf, (n) => n.name === "columnWidths");
-        defaultColumnConfigurations.forEach((defaultColumnConfiguration) => {
-          const columns = findStopping(defaultColumnConfiguration, (n) => n.name === "column");
-          for (const column of columns) {
-            if (column.attributes.property) {
-              const prop = properties.find((prop) => prop.id === column.attributes.property);
-              if(!prop){
-                continue;
-              }
-              // COLUMN WIDTH
-              const width = parseInt(column.attributes.width);
-              prop.setColumnWidth(fixColumnWidth(width));
-
-              // COLUMN HIDING
-              if (column.attributes.isHidden === "true" || width < 0) {
-                dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
-              }
-              if (column.attributes.aggregationType !== "0") {
-                const aggregationType = parseAggregationType(column.attributes.aggregationType);
-                dataViewInstance.tablePanelView.aggregations.setType(
-                  column.attributes.property,
-                  aggregationType
-                );
-              }
-            } else if (column.attributes.groupingField) {
-              const property = properties.find(
-                (prop) => prop.id === column.attributes.groupingField
-              );
-              if(!property){
-                continue;
-              }
-              if (!property?.isLookupColumn) {
-                dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
-                  column.attributes.groupingField,
-                  isNaN(parseInt(column.attributes.groupingUnit)) 
-                    ? undefined
-                    : parseInt(column.attributes.groupingUnit),
-                  groupingColumnCounter
-                );
-                groupingColumnCounter++;
-              }
-            }
-          };
-          dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds
-            .slice()
-            .sort((a, b) => {
-              const colIdxA = columns.findIndex((column) => column.attributes.property === a);
-              if (colIdxA === -1) return 0;
-              const colIdxB = columns.findIndex((column) => column.attributes.property === b);
-              if (colIdxB === -1) return 0;
-              return colIdxA - colIdxB;
-            });
-        });
+      const configurationNode = configuration.length === 1 ? configuration[0] : undefined;
+      if(configurationNode){
         const defaultView = findStopping(
-          conf,
+          configurationNode,
           (n) => n.name === "view" && n.parent.name === "defaultView"
         );
         defaultView.forEach((element) => {
@@ -537,8 +477,11 @@ export function* interpretScreenXml(
             dataViewInstance.activePanelView = element.attributes.id;
           }
         });
-      });
+      }
 
+      const configurationManager = createConfigurationManager(configuration, properties);
+      configurationManager.defaultTableConfiguration?.apply(dataViewInstance.tablePanelView);
+      dataViewInstance.tablePanelView.configurationManager = configurationManager;
       properties
         .filter((prop) => prop.width < 0)
         .forEach((prop) => {
@@ -754,4 +697,179 @@ function populateMapViewSetup(mss: MapSetupStore, xmlNode: any) {
       );
     }
   }
+}
+
+export class TableColumnConfiguration implements ITableColumnConf {
+
+  constructor(public id: string){
+  }
+
+  @observable
+  aggregationType: AggregationType | undefined;
+  canAggregate: boolean = false;
+  canGroup: boolean = true;
+  entity: string = "";
+  @observable
+  groupingIndex: number = 0;
+  @observable
+  isVisible: boolean = true;
+  name: string = "";
+  @observable
+  timeGroupingUnit: GroupingUnit | undefined;
+  width = 0;
+}
+
+export class TableConfiguration implements ITableColumnsConf {
+
+  public name: string | undefined;
+  public fixedColumnCount: number;
+  public columnConf: ITableColumnConf[];
+  public tablePropertyIds: string[];
+
+  constructor(args:{
+      name?: string | undefined,
+      fixedColumnCount?: number,
+      columnConf?: ITableColumnConf[],
+      tablePropertyIds: string[]
+    }
+  ){
+    this.name = args.name;
+    this.fixedColumnCount = args.fixedColumnCount ?? 0;
+    this.columnConf = args.columnConf ?? args.tablePropertyIds.map(id=> new TableColumnConfiguration(id));
+    this.tablePropertyIds = args.tablePropertyIds;
+  }
+
+  apply(tablePanelView: ITablePanelView){
+    const properties = getProperties(tablePanelView);
+
+    for (const columnConfiguration of this.columnConf) {
+      if(!columnConfiguration.isVisible){
+        tablePanelView.setPropertyHidden(columnConfiguration.id, true);
+      }
+      if(columnConfiguration.aggregationType !== undefined){
+        tablePanelView.aggregations.setType(
+          columnConfiguration.id,
+          columnConfiguration.aggregationType
+        );
+      }
+      if(columnConfiguration.groupingIndex > 0){
+        tablePanelView.groupingConfiguration.setGrouping(
+          columnConfiguration.id,
+          columnConfiguration.timeGroupingUnit,
+          columnConfiguration.groupingIndex
+        );
+      }
+      const property = properties.find(prop => prop.id === columnConfiguration.id)
+      if(property && columnConfiguration.width > 0){
+        property.setColumnWidth(columnConfiguration.width);
+      }
+      tablePanelView.tablePropertyIds = tablePanelView.tablePropertyIds
+        .slice()
+        .sort((columnIdA, columnIdB) => {
+          const columnIdxA = this.tablePropertyIds.findIndex((id) => id === columnIdA);
+          if (columnIdxA === -1) return 0;
+          const columnIdxB = this.tablePropertyIds.findIndex((id) => id === columnIdB);
+          if (columnIdxB === -1) return 0;
+          return columnIdxA - columnIdxB;
+        });
+    }
+  }
+}
+
+class ConfigurationManager implements IConfigurationManager{
+  constructor(
+    public tableConfigurations: TableConfiguration[],
+    public defaultTableConfiguration: TableConfiguration
+  ) {
+  }
+}
+
+function createConfigurationManager(configurationNodes: any, properties: IProperty[]){
+  const columnConfigurations: ITableColumnConf[] = [];
+
+  function getColumnConfiguration(id: string){
+    let configIndex = columnConfigurations.findIndex(config => config.id === id);
+    if(configIndex === -1){
+      columnConfigurations.unshift(new TableColumnConfiguration(id));
+      configIndex = 0;
+    }
+    return columnConfigurations[configIndex];
+  }
+  if(configurationNodes.length === 0){
+    return new ConfigurationManager([], new TableConfiguration({
+      tablePropertyIds: properties.map(prop=> prop.id)
+    }));
+  }else if(configurationNodes.length > 1){
+    throw new Error("Can not process more than one configuration node")
+  }
+  let groupingColumnCounter = 1;
+
+  let fixedColumnCount = 0;
+  const configurationNode = configurationNodes[0];
+  const defaultFixedColumns = findStopping(configurationNode, (n) => n.name === "lockedColumns");
+  if (defaultFixedColumns && defaultFixedColumns.length > 0) {
+    const fixedColumnsNode = findStopping(
+      defaultFixedColumns?.[0],
+      (n) => n.name === "lockedColumns"
+    );
+    const fixedColumnsStr = fixedColumnsNode?.[0]?.attributes?.["count"];
+    const fixedColumnsInt = parseInt(fixedColumnsStr, 10);
+    if (!isNaN(fixedColumnsStr)) {
+      fixedColumnCount = fixedColumnsInt;
+    }
+  }
+
+  const columnWidthsNodes = findStopping(configurationNode, (n) => n.name === "columnWidths");
+  if(columnWidthsNodes.length === 0){
+    return new ConfigurationManager([], new TableConfiguration({
+      tablePropertyIds: properties.map(prop=> prop.id)
+    }));
+  }
+  const columns = findStopping(columnWidthsNodes[0], (n) => n.name === "column");
+  for (const column of columns) {
+    if (column.attributes.property) {
+      const prop = properties.find((prop) => prop.id === column.attributes.property);
+      if(!prop){
+        continue;
+      }
+      const confuguration = getColumnConfiguration(column.attributes.property)
+
+      // COLUMN WIDTH
+      confuguration.width = fixColumnWidth(parseInt(column.attributes.width));
+
+      // COLUMN HIDING
+      if (column.attributes.isHidden === "true" || confuguration.width < 0) {
+        confuguration.isVisible = false;
+      }
+      if (column.attributes.aggregationType !== "0") {
+        confuguration.aggregationType = parseAggregationType(column.attributes.aggregationType);
+      }
+    } else if (column.attributes.groupingField) {
+      const property = properties.find(
+        (prop) => prop.id === column.attributes.groupingField
+      );
+      if(!property){
+        continue;
+      }
+      const confuguration = getColumnConfiguration(column.attributes.groupingField)
+      if (!property?.isLookupColumn) {
+        confuguration.groupingIndex = groupingColumnCounter;
+        confuguration.timeGroupingUnit = isNaN(parseInt(column.attributes.groupingUnit))
+          ? undefined
+          : parseInt(column.attributes.groupingUnit)
+        groupingColumnCounter++;
+      }
+    }
+  };
+
+  const tablePropertyIds = columns.map(columnNode => columnNode.attributes.property);
+  return new ConfigurationManager(
+    [],
+    new TableConfiguration({
+      name: "",
+      fixedColumnCount: fixedColumnCount,
+      columnConf: columnConfigurations,
+      tablePropertyIds: tablePropertyIds
+    })
+  );
 }

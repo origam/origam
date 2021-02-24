@@ -533,7 +533,7 @@ export class OrigamAPI implements IApi {
     lockedColumns: number;
   }): Promise<any> {
     const columnFields = data.columnSettings
-      .filter((settings) => settings.groupingIndex !== undefined)
+      .filter((settings) => settings.groupingIndex !== undefined && settings.groupingIndex !==0)
       .sort(compareByGroupingIndex)
       .map(
         (setting) =>
@@ -557,7 +557,8 @@ export class OrigamAPI implements IApi {
       SectionNameAndData: {
         columnWidths: columnsProps.concat(columnFields).join(""), 
         defaultView: `<view id="${data.defaultView}" />`,
-        lockedColumns: `<lockedColumns count="${data.lockedColumns}" />`
+        lockedColumns: `<lockedColumns count="${data.lockedColumns}" />`,
+        customColumnConfigurations: ""
       }
     });
   }
