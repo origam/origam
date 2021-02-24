@@ -1,11 +1,11 @@
-import {ITableColumnConf} from "model/entities/TablePanelView/types/IConfigurationManager";
+import {IColumnConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 import {observable} from "mobx";
 import {AggregationType} from "model/entities/types/AggregationType";
 import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
-export class TableColumnConfiguration implements ITableColumnConf {
+export class TableColumnConfiguration implements IColumnConfiguration {
 
-  constructor(public id: string) {
+  constructor(public propertyId: string) {
   }
 
   @observable
@@ -22,7 +22,7 @@ export class TableColumnConfiguration implements ITableColumnConf {
   timeGroupingUnit: GroupingUnit | undefined;
   width = 0;
 
-  clone(): ITableColumnConf {
+  clone(): IColumnConfiguration {
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this)
   }
 }

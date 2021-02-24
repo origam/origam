@@ -1,5 +1,5 @@
 import {IProperty} from "model/entities/types/IProperty";
-import {ITableColumnConf} from "model/entities/TablePanelView/types/IConfigurationManager";
+import {IColumnConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 import {ConfigurationManager} from "model/entities/TablePanelView/configurationManager";
 import {findStopping} from "xmlInterpreters/xmlUtils";
 import {parseAggregationType, tryParseAggregationType} from "model/entities/types/AggregationType";
@@ -30,7 +30,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
         fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
         columnConf: tableConfigNode.elements
           .map((columnConfigNode: any) => parseColumnConfigurationNode(columnConfigNode, properties))
-          .filter((columnConfiguration: ITableColumnConf | undefined) => columnConfiguration),
+          .filter((columnConfiguration: IColumnConfiguration | undefined) => columnConfiguration),
         tablePropertyIds: tableConfigNode.elements.map((columnConfigNode: any) => columnConfigNode.id)
       }));
 

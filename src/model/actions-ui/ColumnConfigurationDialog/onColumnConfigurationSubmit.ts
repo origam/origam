@@ -3,12 +3,12 @@ import {getColumnConfigurationDialog} from "model/selectors/getColumnConfigurati
 import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
 import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
 import {getProperties} from "model/selectors/DataView/getProperties";
-import { ITableColumnsConf } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export function onColumnConfigurationSubmit(ctx: any) {
   return flow(function* onColumnConfigurationSubmit(
     event: any,
-    configuration: ITableColumnsConf
+    configuration: ITableConfiguration
   ) {
     const columnConfigurationDialog = getColumnConfigurationDialog(ctx);
     getTablePanelView(ctx).configurationManager.defaultTableConfiguration = configuration;

@@ -6,7 +6,7 @@ import {ColumnsDialog,} from "gui/Components/Dialogs/ColumnsDialog";
 import {onColumnConfigurationSubmit} from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
 import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
-import {ITableColumnsConf} from "./types/IConfigurationManager";
+import {ITableConfiguration} from "./types/IConfigurationManager";
 import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
@@ -69,7 +69,7 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 
-  @action.bound onSaveAsClick(event: any, configuration: ITableColumnsConf): void {
+  @action.bound onSaveAsClick(event: any, configuration: ITableConfiguration): void {
     this.ApplyConfiguration(configuration);
 
     const closeDialog = getDialogStack(this).pushDialog(
@@ -92,22 +92,22 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 
-  @action.bound onColumnConfSubmit(event: any, configuration: ITableColumnsConf): void {
+  @action.bound onColumnConfSubmit(event: any, configuration: ITableConfiguration): void {
     this.ApplyConfiguration(configuration);
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 
-  private ApplyConfiguration(configuration: ITableColumnsConf) {
+  private ApplyConfiguration(configuration: ITableConfiguration) {
     this.tablePanelView.fixedColumnCount = configuration.fixedColumnCount;
     this.tablePanelView.hiddenPropertyIds.clear();
     const groupingConf = getGroupingConfiguration(this);
     groupingConf.clearGrouping();
-    for (let column of configuration.columnConf) {
-      this.tablePanelView.hiddenPropertyIds.set(column.id, !column.isVisible);
+    for (let column of configuration.columnConfiguration) {
+      this.tablePanelView.hiddenPropertyIds.set(column.propertyId, !column.isVisible);
       if (column.groupingIndex) {
-        groupingConf.setGrouping(column.id, column.timeGroupingUnit, column.groupingIndex);
+        groupingConf.setGrouping(column.propertyId, column.timeGroupingUnit, column.groupingIndex);
       }
-      this.tablePanelView.aggregations.setType(column.id, column.aggregationType);
+      this.tablePanelView.aggregations.setType(column.propertyId, column.aggregationType);
     }
     getFormScreenLifecycle(this).loadInitialData();
   }

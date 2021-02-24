@@ -4,24 +4,24 @@ import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
 export interface IConfigurationManager {
   setAsCurrent(newConfig: any): void;
-  customTableConfigurations: ITableColumnsConf[],
-  defaultTableConfiguration: ITableColumnsConf,
-  allTableConfigurations: ITableColumnsConf[]
+  customTableConfigurations: ITableConfiguration[],
+  defaultTableConfiguration: ITableConfiguration,
+  allTableConfigurations: ITableConfiguration[]
 }
 
-export interface ITableColumnsConf {
+export interface ITableConfiguration {
   name: string | undefined
   fixedColumnCount: number;
-  columnConf: ITableColumnConf[];
-  sortedColumnConfigurations: ITableColumnConf[];
+  columnConfiguration: IColumnConfiguration[];
+  sortedColumnConfigurations: IColumnConfiguration[];
   isActive: boolean;
   tablePropertyIds: string[];
   apply(tablePanelView: ITablePanelView): void;
-  cloneAs(name: string): ITableColumnsConf;
+  cloneAs(name: string): ITableConfiguration;
 }
 
-export interface ITableColumnConf {
-  id: string;
+export interface IColumnConfiguration {
+  propertyId: string;
   name: string;
   isVisible: boolean;
   groupingIndex: number;
@@ -31,5 +31,5 @@ export interface ITableColumnConf {
   canGroup: boolean;
   canAggregate: boolean;
   width: number;
-  clone(): ITableColumnConf;
+  clone(): IColumnConfiguration;
 }

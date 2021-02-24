@@ -4,7 +4,7 @@ import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
 import { GroupingUnit } from "./GroupingUnit";
 import { IColumnSettings } from "./IColumnSettings";
-import {ITableColumnsConf} from "model/entities/TablePanelView/types/IConfigurationManager";
+import {ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -295,7 +295,7 @@ export interface IApi {
   saveObjectConfiguration(data: {
     sessionFormIdentifier: string;
     instanceId: string;
-    tableConfigurations: ITableColumnsConf[];
+    tableConfigurations: ITableConfiguration[];
     defaultView: string;
   }): Promise<any>;
 

@@ -43,7 +43,7 @@ import { getFilterConfiguration } from "model/selectors/DataView/getFilterConfig
 import _ from "lodash";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
-import { ITableColumnsConf } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 
 @inject(({ dataView }) => {
   return {
@@ -60,7 +60,7 @@ export class TableView extends React.Component<{
   dataView?: IDataView;
   tablePanelView?: ITablePanelView;
   onColumnDialogCancel?: (event: any) => void;
-  onColumnDialogOk?: (event: any, configuration: ITableColumnsConf) => void;
+  onColumnDialogOk?: (event: any, configuration: ITableConfiguration) => void;
   onTableKeyDown?: (event: any) => void;
 }> {
 

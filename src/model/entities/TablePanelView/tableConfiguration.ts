@@ -1,39 +1,39 @@
 import {
-  ITableColumnConf,
-  ITableColumnsConf
+  IColumnConfiguration,
+  ITableConfiguration
 } from "model/entities/TablePanelView/types/IConfigurationManager";
 import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
 import {getProperties} from "model/selectors/DataView/getProperties";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 
-export class TableConfiguration implements ITableColumnsConf {
+export class TableConfiguration implements ITableConfiguration {
 
   public name: string | undefined;
   public fixedColumnCount: number;
-  public columnConf: ITableColumnConf[];
+  public columnConfiguration: IColumnConfiguration[];
   public tablePropertyIds: string[];
   public isActive: boolean = false;
 
   constructor(args: {
     name?: string | undefined,
     fixedColumnCount?: number,
-    columnConf?: ITableColumnConf[],
+    columnConf?: IColumnConfiguration[],
     tablePropertyIds: string[]
   }
   ) {
     this.name = args.name;
     this.fixedColumnCount = args.fixedColumnCount ?? 0;
-    this.columnConf = args.columnConf ?? args.tablePropertyIds.map(id => new TableColumnConfiguration(id));
+    this.columnConfiguration = args.columnConf ?? args.tablePropertyIds.map(id => new TableColumnConfiguration(id));
     this.tablePropertyIds = args.tablePropertyIds;
   }
 
   get sortedColumnConfigurations(){
-    return this.columnConf
+    return this.columnConfiguration
       .slice()
       .sort((columnConfigA, columnConfigB) => {
-        const columnIdxA = this.tablePropertyIds.findIndex((id) => id === columnConfigA.id);
+        const columnIdxA = this.tablePropertyIds.findIndex((id) => id === columnConfigA.propertyId);
         if (columnIdxA === -1) return 0;
-        const columnIdxB = this.tablePropertyIds.findIndex((id) => id === columnConfigB.id);
+        const columnIdxB = this.tablePropertyIds.findIndex((id) => id === columnConfigB.propertyId);
         if (columnIdxB === -1) return 0;
         return columnIdxA - columnIdxB;
       });
@@ -43,7 +43,7 @@ export class TableConfiguration implements ITableColumnsConf {
     return new TableConfiguration({
       name: name,
       fixedColumnCount: this.fixedColumnCount,
-      columnConf: this.columnConf.map(columnConfifuration => columnConfifuration.clone()),
+      columnConf: this.columnConfiguration.map(columnConfifuration => columnConfifuration.clone()),
       tablePropertyIds: [...this.tablePropertyIds]
     });
   }
@@ -51,24 +51,24 @@ export class TableConfiguration implements ITableColumnsConf {
   apply(tablePanelView: ITablePanelView) {
     const properties = getProperties(tablePanelView);
 
-    for (const columnConfiguration of this.columnConf) {
+    for (const columnConfiguration of this.columnConfiguration) {
       if (!columnConfiguration.isVisible) {
-        tablePanelView.setPropertyHidden(columnConfiguration.id, true);
+        tablePanelView.setPropertyHidden(columnConfiguration.propertyId, true);
       }
       if (columnConfiguration.aggregationType !== undefined) {
         tablePanelView.aggregations.setType(
-          columnConfiguration.id,
+          columnConfiguration.propertyId,
           columnConfiguration.aggregationType
         );
       }
       if (columnConfiguration.groupingIndex > 0) {
         tablePanelView.groupingConfiguration.setGrouping(
-          columnConfiguration.id,
+          columnConfiguration.propertyId,
           columnConfiguration.timeGroupingUnit,
           columnConfiguration.groupingIndex
         );
       }
-      const property = properties.find(prop => prop.id === columnConfiguration.id)
+      const property = properties.find(prop => prop.id === columnConfiguration.propertyId)
       if (property && columnConfiguration.width > 0) {
         property.setColumnWidth(columnConfiguration.width);
       }

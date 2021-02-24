@@ -11,7 +11,7 @@ import { TypeSymbol } from "dic/Container";
 import { IAboutInfo } from "./types/IAboutInfo";
 import { T } from "utils/translation";
 import fileDownload from "js-file-download";
-import {ITableColumnsConf} from "model/entities/TablePanelView/types/IConfigurationManager";
+import {ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -529,7 +529,7 @@ export class OrigamAPI implements IApi {
   async saveObjectConfiguration(data: {
     sessionFormIdentifier: string;
     instanceId: string;
-    tableConfigurations: ITableColumnsConf[];
+    tableConfigurations: ITableConfiguration[];
     defaultView: string;
   }): Promise<any> {
     const tableConfigurationsXml = data.tableConfigurations.map(tableConfig =>{
@@ -541,7 +541,7 @@ export class OrigamAPI implements IApi {
           tableConfig.sortedColumnConfigurations
             .map(columnConfig =>
               "<ColumnConfiguration" +
-              ` propertyId="${columnConfig.id}"`+
+              ` propertyId="${columnConfig.propertyId}"`+
               ` width="${columnConfig.width}"`+
               (columnConfig.timeGroupingUnit !== undefined ? ` groupingUnit="${columnConfig.timeGroupingUnit}"` : "")+
               (columnConfig.groupingIndex > 0 ? ` groupingIndex="${columnConfig.groupingIndex}"` : "")+

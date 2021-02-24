@@ -20,7 +20,7 @@ export function saveColumnConfigurations(ctx: any) {
 
     const tableConfiguration = configurationManager.defaultTableConfiguration;
     for (const property of getProperties(ctx)) {
-      const columnConfiguration = tableConfiguration.columnConf.find(conf => conf.id === property.id)
+      const columnConfiguration = tableConfiguration.columnConfiguration.find(conf => conf.propertyId === property.id)
       if(columnConfiguration){
         columnConfiguration.width = property.columnWidth;
       }

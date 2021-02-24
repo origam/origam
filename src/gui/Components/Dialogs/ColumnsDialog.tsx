@@ -19,13 +19,13 @@ import { rowHeight } from "gui/Components/ScreenElements/Table/TableRendering/ce
 import { GroupingUnit, GroupingUnitToLabel as groupingUnitToLabel } from "model/entities/types/GroupingUnit";
 import {IDataView} from "model/entities/types/IDataView";
 import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
-import { ITableColumnsConf } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
 
 @observer
 export class ColumnsDialog extends React.Component<{
-  configuration: ITableColumnsConf;
-  onOkClick?: (event: any, configuration: ITableColumnsConf) => void;
-  onSaveAsClick: (event: any, configuration: ITableColumnsConf) => void;
+  configuration: ITableConfiguration;
+  onOkClick?: (event: any, configuration: ITableConfiguration) => void;
+  onSaveAsClick: (event: any, configuration: ITableConfiguration) => void;
   onCancelClick?: (event: any) => void;
   onCloseClick?: (event: any) => void;
 }> {
@@ -34,14 +34,14 @@ export class ColumnsDialog extends React.Component<{
     this.configuration = this.props.configuration;
   }
 
-  configuration: ITableColumnsConf;
+  configuration: ITableConfiguration;
 
   @observable columnWidths = [70, 160, 70, 70, 90];
 
   refGrid = React.createRef<MultiGrid>();
 
   @action.bound setVisible(rowIndex: number, state: boolean) {
-    this.configuration.columnConf[rowIndex].isVisible = state;
+    this.configuration.columnConfiguration[rowIndex].isVisible = state;
   }
 
   @action.bound setGrouping(rowIndex: number, state: boolean, entity: string) {
@@ -54,12 +54,12 @@ export class ColumnsDialog extends React.Component<{
       }
     }
 
-    const columnConfCopy = [...this.configuration.columnConf];
+    const columnConfCopy = [...this.configuration.columnConfiguration];
     columnConfCopy.sort((a, b) => b.groupingIndex - a.groupingIndex);
-      if (this.configuration.columnConf[rowIndex].groupingIndex === 0) {
-        this.configuration.columnConf[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
+      if (this.configuration.columnConfiguration[rowIndex].groupingIndex === 0) {
+        this.configuration.columnConfiguration[rowIndex].groupingIndex = columnConfCopy[0].groupingIndex + 1;
       } else {
-        this.configuration.columnConf[rowIndex].groupingIndex = 0;
+        this.configuration.columnConfiguration[rowIndex].groupingIndex = 0;
         let groupingIndex = 1;
         columnConfCopy.reverse();
         for (let columnConfItem of columnConfCopy) {
@@ -71,11 +71,11 @@ export class ColumnsDialog extends React.Component<{
   }
 
   @action.bound setTimeGroupingUnit(rowIndex: number, groupingUnit: GroupingUnit | undefined) {
-    this.configuration.columnConf[rowIndex].timeGroupingUnit = groupingUnit;
+    this.configuration.columnConfiguration[rowIndex].timeGroupingUnit = groupingUnit;
   }
 
   @action.bound setAggregation(rowIndex: number, selectedAggregation: any) {
-    this.configuration.columnConf[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
+    this.configuration.columnConfiguration[rowIndex].aggregationType = tryParseAggregationType(selectedAggregation);
   }
 
   @action.bound handleFixedColumnsCountChange(event: any) {
@@ -118,7 +118,7 @@ export class ColumnsDialog extends React.Component<{
                     fixedRowCount={1}
                     cellRenderer={this.renderCell}
                     columnCount={5}
-                    rowCount={1 + this.configuration.columnConf.length}
+                    rowCount={1 + this.configuration.columnConfiguration.length}
                     columnWidth={({ index }: { index: number }) => {
                       return this.columnWidths[index];
                     }}
@@ -155,7 +155,7 @@ export class ColumnsDialog extends React.Component<{
       canGroup,
       canAggregate,
       timeGroupingUnit
-    } = this.configuration.columnConf[rowIndex];
+    } = this.configuration.columnConfiguration[rowIndex];
     switch (columnIndex) {
       case 0:
         return (
