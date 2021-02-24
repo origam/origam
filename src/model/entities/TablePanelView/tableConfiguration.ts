@@ -12,18 +12,28 @@ export class TableConfiguration implements ITableColumnsConf {
   public fixedColumnCount: number;
   public columnConf: ITableColumnConf[];
   public tablePropertyIds: string[];
+  public isActive: boolean = false;
 
   constructor(args: {
-                name?: string | undefined,
-                fixedColumnCount?: number,
-                columnConf?: ITableColumnConf[],
-                tablePropertyIds: string[]
-              }
+    name?: string | undefined,
+    fixedColumnCount?: number,
+    columnConf?: ITableColumnConf[],
+    tablePropertyIds: string[]
+  }
   ) {
     this.name = args.name;
     this.fixedColumnCount = args.fixedColumnCount ?? 0;
     this.columnConf = args.columnConf ?? args.tablePropertyIds.map(id => new TableColumnConfiguration(id));
     this.tablePropertyIds = args.tablePropertyIds;
+  }
+
+  cloneAs(name: string){
+    return new TableConfiguration({
+      name: name,
+      fixedColumnCount: this.fixedColumnCount,
+      columnConf: this.columnConf.map(columnConfifuration => columnConfifuration.clone()),
+      tablePropertyIds: [...this.tablePropertyIds]
+    });
   }
 
   apply(tablePanelView: ITablePanelView) {

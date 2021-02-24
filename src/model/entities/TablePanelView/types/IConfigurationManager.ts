@@ -3,6 +3,7 @@ import {AggregationType} from "model/entities/types/AggregationType";
 import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
 export interface IConfigurationManager {
+  setAsCurrent(newConfig: any): void;
   tableConfigurations: ITableColumnsConf[],
   defaultTableConfiguration: ITableColumnsConf
 }
@@ -13,6 +14,7 @@ export interface ITableColumnsConf {
   columnConf: ITableColumnConf[];
   tablePropertyIds: string[];
   apply(tablePanelView: ITablePanelView): void;
+  cloneAs(name: string): ITableColumnsConf;
 }
 
 export interface ITableColumnConf {
@@ -26,4 +28,5 @@ export interface ITableColumnConf {
   canGroup: boolean;
   canAggregate: boolean;
   width: number;
+  clone(): ITableColumnConf;
 }

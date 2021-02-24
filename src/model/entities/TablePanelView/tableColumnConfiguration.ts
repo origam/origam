@@ -21,4 +21,8 @@ export class TableColumnConfiguration implements ITableColumnConf {
   @observable
   timeGroupingUnit: GroupingUnit | undefined;
   width = 0;
+
+  clone(): ITableColumnConf {
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this)
+  }
 }

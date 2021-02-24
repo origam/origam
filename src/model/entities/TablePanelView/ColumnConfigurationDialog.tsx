@@ -1,20 +1,19 @@
 import React from "react";
 import {action, computed} from "mobx";
-
-import {getTablePanelView} from "../../selectors/TablePanelView/getTablePanelView";
 import {getDialogStack} from "../../selectors/DialogStack/getDialogStack";
 import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
 import {ColumnsDialog,} from "gui/Components/Dialogs/ColumnsDialog";
 import {onColumnConfigurationSubmit} from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
 import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
-import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 import {ITableColumnsConf} from "./types/IConfigurationManager";
 import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 import {runInFlowWithHandler} from "utils/runInFlowWithHandler";
 import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
 import {NewConfigurationDialog} from "gui/Components/Dialogs/NewConfigurationDialog";
+import { getFormScreenLifecycle } from "model/selectors/FormScreen/getFormScreenLifecycle";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
 
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
@@ -79,7 +78,10 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
         onOkClick={(name) => {
           runInFlowWithHandler({
             ctx: this,
-            action: () => getConfigurationManager(this),
+            action: () => {
+              const newConfig = configuration.cloneAs(name);
+              getConfigurationManager(this).setAsCurrent(newConfig)
+            }
           });
           closeDialog();
         }}
