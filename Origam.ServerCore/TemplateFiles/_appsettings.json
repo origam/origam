@@ -1,10 +1,9 @@
 {
   "PathToClientApp": "clients/origam",
-  // Uncomment the ChatConfig section and set up if you wish enable chat modul in your application
-  //"ChatConfig": {
-  //  "PathToChatApp": "",
-  //  "ChatRefreshInterval": 1000
-  //},
+  "ChatConfig": {
+    "PathToChatApp": "",
+    "ChatRefreshInterval": 1000
+  },
   "UserConfig": {
     "FromAddress": "admin@localhost",
     "NewUserRoleId": "",
