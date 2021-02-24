@@ -3,17 +3,21 @@ import {TableConfiguration} from "model/entities/TablePanelView/tableConfigurati
 
 export class ConfigurationManager implements IConfigurationManager {
   constructor(
-    public tableConfigurations: TableConfiguration[],
+    public customTableConfigurations: TableConfiguration[],
     public defaultTableConfiguration: TableConfiguration
   ) {
   }
 
+  get allTableConfigurations(){
+    return this.defaultTableConfiguration
+      ? [this.defaultTableConfiguration, ...this.customTableConfigurations]
+      : this.customTableConfigurations;
+  }
+
   setAsCurrent(configToActivate: TableConfiguration): void {
-    for (const tableConfiguration of this.tableConfigurations) {
+    for (const tableConfiguration of this.allTableConfigurations) {
       tableConfiguration.isActive = false;
     }
-    this.defaultTableConfiguration.isActive = false;
-
     configToActivate.isActive = true;
   }
 }

@@ -6,18 +6,19 @@ import {getGroupingConfiguration} from "../../../selectors/TablePanelView/getGro
 import {aggregationTypeToNumber} from "../../../entities/types/AggregationType";
 import { getSessionId } from "model/selectors/getSessionId";
 import {getProperties} from "model/selectors/DataView/getProperties";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
 
 export function saveColumnConfigurations(ctx: any) {
   return function* saveColumnConfigurations() {
     const dataView = getDataView(ctx);
-    const tablePanelView = getTablePanelView(ctx);
+    const configurationManager = getConfigurationManager(ctx);
     const groupingConfiguration = getGroupingConfiguration(ctx);
 
-    const tableConfiguration = tablePanelView.configurationManager.defaultTableConfiguration;
-    if(!tableConfiguration){
+    if(configurationManager.allTableConfigurations.length === 0){
       return;
     }
 
+    const tableConfiguration = configurationManager.defaultTableConfiguration;
     for (const property of getProperties(ctx)) {
       const columnConfiguration = tableConfiguration.columnConf.find(conf => conf.id === property.id)
       if(columnConfiguration){
@@ -28,21 +29,8 @@ export function saveColumnConfigurations(ctx: any) {
     yield getApi(ctx).saveObjectConfiguration({
       sessionFormIdentifier: getSessionId(ctx),
       instanceId: dataView.modelInstanceId,
-      columnSettings: tableConfiguration.tablePropertyIds
-        .map(id=> tableConfiguration.columnConf.find(configuration=> configuration.id === id))
-        .filter(configuration => configuration)
-        .map(columnConfiguration => {
-          return {
-            propertyId: columnConfiguration!.id,
-            width: columnConfiguration!.width,
-            isHidden: !columnConfiguration!.isVisible,
-            aggregationTypeNumber: aggregationTypeToNumber(columnConfiguration!.aggregationType),
-            groupingIndex: columnConfiguration!.groupingIndex,
-            timeGroupingUnit: columnConfiguration!.timeGroupingUnit
-        }
-      }),
+      tableConfigurations: configurationManager.allTableConfigurations,
       defaultView: getActivePanelView(ctx),
-      lockedColumns: tablePanelView.fixedColumnCount
     });
   };
 }

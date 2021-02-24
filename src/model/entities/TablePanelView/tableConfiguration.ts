@@ -27,6 +27,18 @@ export class TableConfiguration implements ITableColumnsConf {
     this.tablePropertyIds = args.tablePropertyIds;
   }
 
+  get sortedColumnConfigurations(){
+    return this.columnConf
+      .slice()
+      .sort((columnConfigA, columnConfigB) => {
+        const columnIdxA = this.tablePropertyIds.findIndex((id) => id === columnConfigA.id);
+        if (columnIdxA === -1) return 0;
+        const columnIdxB = this.tablePropertyIds.findIndex((id) => id === columnConfigB.id);
+        if (columnIdxB === -1) return 0;
+        return columnIdxA - columnIdxB;
+      });
+  }
+
   cloneAs(name: string){
     return new TableConfiguration({
       name: name,

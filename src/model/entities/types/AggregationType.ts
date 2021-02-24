@@ -1,7 +1,7 @@
 export enum AggregationType { SUM = "SUM", AVG = "AVG", MIN = "MIN", MAX = "MAX", COUNT = "COUNT"}
 
 export function tryParseAggregationType(candidate: any | undefined){
-  if(!candidate) return undefined;
+  if(!candidate || candidate === "0") return undefined;
   return parseAggregationType(candidate);
 }
 

@@ -4,14 +4,17 @@ import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
 export interface IConfigurationManager {
   setAsCurrent(newConfig: any): void;
-  tableConfigurations: ITableColumnsConf[],
-  defaultTableConfiguration: ITableColumnsConf
+  customTableConfigurations: ITableColumnsConf[],
+  defaultTableConfiguration: ITableColumnsConf,
+  allTableConfigurations: ITableColumnsConf[]
 }
 
 export interface ITableColumnsConf {
   name: string | undefined
   fixedColumnCount: number;
   columnConf: ITableColumnConf[];
+  sortedColumnConfigurations: ITableColumnConf[];
+  isActive: boolean;
   tablePropertyIds: string[];
   apply(tablePanelView: ITablePanelView): void;
   cloneAs(name: string): ITableColumnsConf;
