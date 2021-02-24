@@ -1035,7 +1035,8 @@ namespace Origam.ServerCore.Controller
             result.LogoUrl = string.IsNullOrWhiteSpace(customAssetsConfig.Html5ClientLogoUrl)
                 ? "./img/logo-left.png"
                 : customAssetsConfig.Html5ClientLogoUrl;
-            result.ChatRefreshInterval = string.IsNullOrEmpty(chatConfig.PathToChatApp)?0:chatConfig.ChatRefreshInterval;
+            result.ChatRefreshInterval = string.IsNullOrEmpty(chatConfig.PathToChatApp)? 0: 
+                                         chatConfig.ChatRefreshInterval;
             result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
         }
     }
