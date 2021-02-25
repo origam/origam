@@ -22,10 +22,13 @@ export interface IColumnOptions {
 }
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
+
+  tableConfigBeforeChanges: ITableConfiguration | undefined;
+
   getColumnOptions(){
     const groupingConf = getGroupingConfiguration(this);
     const groupingOnClient = !isLazyLoading(this);
-    const activeTableConfiguration = getConfigurationManager(this).activeTableConfiguration;
+    const activeTableConfiguration = this.configManager.activeTableConfiguration;
     const optionsMap = new Map<string, IColumnOptions>()
 
     for (let columnConfiguration of activeTableConfiguration.columnConfigurations) {
@@ -46,7 +49,8 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
   }
 
   @computed get columnsConfiguration() {
-    return getConfigurationManager(this).activeTableConfiguration;
+    this.tableConfigBeforeChanges = this.configManager.activeTableConfiguration.deepClone();
+    return this.configManager.activeTableConfiguration;
   }
 
   dialogKey = "";
@@ -75,13 +79,22 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
       ctx: this,
       generator: function* (){
         self.onColumnConfSubmit(configuration);
+        self.tableConfigBeforeChanges = undefined;
         yield* saveColumnConfigurations(self)();
       }()
     })
   }
 
   @action.bound onColumnConfCancel(event: any): void {
+    this.revertChanges();
     getDialogStack(this).closeDialog(this.dialogKey);
+  }
+
+  private revertChanges() {
+    if (!this.tableConfigBeforeChanges) {
+      throw new Error("TableConfiguration was not backed up")
+    }
+    this.configManager.activeTableConfiguration = this.tableConfigBeforeChanges;
   }
 
   @action.bound onSaveAsClick(event: any, configuration: ITableConfiguration): void {
@@ -92,9 +105,9 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
           runInFlowWithHandler({
             ctx: this,
             action: () => {
-              const configurationManager = getConfigurationManager(this);
-              configurationManager.cloneAndActivate(configuration, name);
-              this.onColumnConfigurationSubmit(configurationManager.activeTableConfiguration);
+              this.revertChanges();
+              this.configManager.cloneAndActivate(configuration, name);
+              this.onColumnConfigurationSubmit(this.configManager.activeTableConfiguration);
             }
           });
           closeDialog();
@@ -114,6 +127,10 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
 
   @computed get tablePanelView() {
     return getTablePanelView(this);
+  }
+
+  get configManager(){
+    return getConfigurationManager(this);
   }
 
   parent?: any;

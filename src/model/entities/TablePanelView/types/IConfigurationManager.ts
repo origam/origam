@@ -20,7 +20,7 @@ export interface ITableConfiguration {
   isActive: boolean;
   sortColumnConfiguartions(propertyIds: string[]): void;
   apply(tablePanelView: ITablePanelView): void;
-  cloneAs(name: string): ITableConfiguration;
+  deepClone(): ITableConfiguration;
 }
 
 export interface IColumnConfiguration {
@@ -30,5 +30,5 @@ export interface IColumnConfiguration {
   aggregationType: AggregationType | undefined;
   timeGroupingUnit: GroupingUnit | undefined;
   width: number;
-  clone(): IColumnConfiguration;
+  deepClone(): IColumnConfiguration;
 }

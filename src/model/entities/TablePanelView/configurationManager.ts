@@ -2,14 +2,23 @@ import {IConfigurationManager, ITableConfiguration} from "model/entities/TablePa
 import {TableConfiguration} from "model/entities/TablePanelView/tableConfiguration";
 import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
+import { observable } from "mobx";
 
 export class ConfigurationManager implements IConfigurationManager {
   parent: any;
 
+  @observable.shallow
+  customTableConfigurations: TableConfiguration[];
+
+  @observable.shallow
+  defaultTableConfiguration: TableConfiguration;
+
   constructor(
-    public customTableConfigurations: TableConfiguration[],
-    public defaultTableConfiguration: TableConfiguration
+    customTableConfigurations: TableConfiguration[],
+    defaultTableConfiguration: TableConfiguration
   ) {
+    this.defaultTableConfiguration = defaultTableConfiguration;
+    this.customTableConfigurations = customTableConfigurations;
   }
 
   get allTableConfigurations(){
@@ -29,14 +38,31 @@ export class ConfigurationManager implements IConfigurationManager {
   }
 
   set activeTableConfiguration(configToActivate: TableConfiguration) {
+    this.replace(configToActivate);
+
     for (const tableConfiguration of this.allTableConfigurations) {
       tableConfiguration.isActive = false;
     }
     configToActivate.isActive = true;
   }
 
+  private replace(newConfiguration: TableConfiguration) {
+    const index = this.customTableConfigurations
+      .findIndex(config => config.name === newConfiguration.name);
+    if (index > -1) {
+      this.customTableConfigurations[index] = newConfiguration;
+    } else {
+      if (newConfiguration.name === "") {
+        this.defaultTableConfiguration = newConfiguration;
+      } else {
+        this.customTableConfigurations.push(newConfiguration);
+      }
+    }
+  }
+
   cloneAndActivate(configuration: ITableConfiguration, newName: string): void {
-    const newConfig = configuration.cloneAs(newName);
+    const newConfig = configuration.deepClone();
+    newConfig.name = newName;
     this.customTableConfigurations.push(newConfig);
     this.activeTableConfiguration = newConfig;
   }

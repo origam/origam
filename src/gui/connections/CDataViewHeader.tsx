@@ -391,6 +391,7 @@ export class CDataViewHeaderInner extends React.Component<{
                                 [
                                   <DropdownItem
                                     isDisabled={false}
+                                    isSelected={configurationManager.defaultTableConfiguration.isActive}
                                     onClick={(event: any) => {
                                       setDropped(false);
                                       configurationManager.activeTableConfiguration = configurationManager.defaultTableConfiguration;

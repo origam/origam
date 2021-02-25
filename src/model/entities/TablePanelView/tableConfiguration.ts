@@ -40,11 +40,12 @@ export class TableConfiguration implements ITableConfiguration {
     return newInstance;
   }
 
-  cloneAs(name: string){
+  deepClone(){
     const newinstance =  new TableConfiguration();
-    newinstance.name = name;
+    newinstance.name = this.name;
     newinstance.fixedColumnCount = this.fixedColumnCount;
-    newinstance.columnConfigurations = this.columnConfigurations.map(columnConfifuration => columnConfifuration.clone());
+    newinstance.columnConfigurations = this.columnConfigurations
+      .map(columnConfifuration => columnConfifuration.deepClone());
     return newinstance;
   }
 

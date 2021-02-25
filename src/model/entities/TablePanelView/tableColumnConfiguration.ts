@@ -22,7 +22,7 @@ export class TableColumnConfiguration implements IColumnConfiguration {
   timeGroupingUnit: GroupingUnit | undefined;
   width = 0;
 
-  clone(): IColumnConfiguration {
+  deepClone(): IColumnConfiguration {
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this)
   }
 }
