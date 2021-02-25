@@ -68,11 +68,12 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     );
   }
 
+  @action.bound
   onColumnConfigurationSubmit(configuration: ITableConfiguration) {
     const self = this;
     runGeneratorInFlowWithHandler({
       ctx: this,
-      generator: function* bla(){
+      generator: function* (){
         self.onColumnConfSubmit(configuration);
         yield* saveColumnConfigurations(self)();
       }()

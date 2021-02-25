@@ -475,6 +475,7 @@ export function* interpretScreenXml(
       const configurationManager = createConfigurationManager(configuration, dataViewInstance.tablePanelView.tableProperties);
       configurationManager.defaultTableConfiguration?.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
+      configurationManager.parent = dataViewInstance.tablePanelView;
       properties
         .filter((prop) => prop.width < 0)
         .forEach((prop) => {
