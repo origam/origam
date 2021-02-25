@@ -296,7 +296,7 @@ export class BlobEditor extends React.Component<{
               onBlur={() => this.onBlur()}
               onKeyDown={(event) => this.props.onKeyDown && this.props.onKeyDown(event)}
             />
-            <i className="fas fa-upload"></i>
+            {T("Upload", "blob_upload")}
           </label>
           {this.isUploading && (
             <div className="progress">
