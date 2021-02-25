@@ -113,9 +113,10 @@ export class TableView extends React.Component<{
     dataView: this.props.dataView!,
     getColumnHeaders: () => getColumnHeaders(this.props.dataView),
     getTableViewProperties: () => getTableViewProperties(this.props.dataView),
-    onColumnWidthChange: (cid, nw) => onColumnWidthChanged(this.props.tablePanelView)(cid, nw),
+    onColumnWidthChange: (propertyId, width) =>
+      onColumnWidthChanged(this.props.tablePanelView, propertyId, width),
     onColumnOrderChange: (id1, id2) =>
-      onColumnOrderChangeFinished(this.props.tablePanelView)(id1, id2),
+      onColumnOrderChangeFinished(this.props.tablePanelView, id1, id2),
     onColumnOrderAttendantsChange: (idSource, idTarget) =>
       this.onColumnOrderAttendantsChange(idSource, idTarget),
   });
