@@ -21,10 +21,7 @@ export function saveColumnConfigurations(ctx: any) {
 
     const activeTableConfiguration = configurationManager.activeTableConfiguration;
     for (const property of getProperties(ctx)) {
-      const columnConfiguration = activeTableConfiguration.columnConfigurations.find(conf => conf.propertyId === property.id)
-      if(columnConfiguration){
-        columnConfiguration.width = property.columnWidth;
-      }
+      activeTableConfiguration.updateColumnWidth(property.id, property.columnWidth);
     }
     activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
 

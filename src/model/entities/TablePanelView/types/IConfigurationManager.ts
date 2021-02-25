@@ -3,6 +3,8 @@ import {AggregationType} from "model/entities/types/AggregationType";
 import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
 export interface IConfigurationManager {
+  onColumnOrderChnaged(): Generator;
+  onColumnWidthChanged(id: string, width: number): Generator;
   deleteActiveTableConfiguration(): Promise<any>;
   saveTableConfigurations(): Promise<any>;
   cloneAndActivate(configuration: ITableConfiguration, newName: string): void;
@@ -20,6 +22,7 @@ export interface ITableConfiguration {
   columnConfigurations: IColumnConfiguration[];
   isActive: boolean;
   sortColumnConfiguartions(propertyIds: string[]): void;
+  updateColumnWidth(propertyId: string, width: number): void;
   apply(tablePanelView: ITablePanelView): void;
   deepClone(): ITableConfiguration;
 }

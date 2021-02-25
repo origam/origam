@@ -79,8 +79,9 @@ export class ConfigurationManager implements IConfigurationManager {
       return;
     }
     this.customTableConfigurations.remove(this.activeTableConfiguration);
-    this.defaultTableConfiguration.isActive = true;
+    this.activeTableConfiguration = this.defaultTableConfiguration;
     await this.saveTableConfigurations();
+    getFormScreenLifecycle(this).loadInitialData();
   }
 
   async saveTableConfigurations(): Promise<any> {
@@ -91,5 +92,22 @@ export class ConfigurationManager implements IConfigurationManager {
         yield* saveColumnConfigurations(self)();
       }()
     })
+  }
+
+  *onColumnWidthChanged(propertyId: string, width: number): Generator {
+    if(!this.defaultTableConfiguration.isActive){
+      return;
+    }
+    this.activeTableConfiguration.updateColumnWidth(propertyId, width);
+    yield* saveColumnConfigurations(this)();
+  }
+
+  *onColumnOrderChnaged(): Generator {
+    if(!this.defaultTableConfiguration.isActive){
+      return;
+    }
+    const tablePanelView = getTablePanelView(this);
+    this.activeTableConfiguration.sortColumnConfiguartions(tablePanelView.tablePropertyIds);
+    yield* saveColumnConfigurations(this)();
   }
 }

@@ -110,4 +110,12 @@ export class TableConfiguration implements ITableConfiguration {
         return columnIdxA - columnIdxB;
       });
   }
+
+  updateColumnWidth(propertyId: string, width: number) {
+    const columnConfiguration = this.columnConfigurations
+      .find(configuration => configuration.propertyId === propertyId);
+    if (columnConfiguration) {
+      columnConfiguration.width = width;
+    }
+  }
 }

@@ -392,9 +392,10 @@ export class CDataViewHeaderInner extends React.Component<{
                                   <DropdownItem
                                     isDisabled={false}
                                     isSelected={configurationManager.defaultTableConfiguration.isActive}
-                                    onClick={(event: any) => {
+                                    onClick={async (event: any) => {
                                       setDropped(false);
                                       configurationManager.activeTableConfiguration = configurationManager.defaultTableConfiguration;
+                                      await configurationManager.saveTableConfigurations();
                                     }}
                                   >
                                     {T("Default View", "default_grid_view_view")}
@@ -403,9 +404,10 @@ export class CDataViewHeaderInner extends React.Component<{
                                   <DropdownItem
                                     isDisabled={false}
                                     isSelected={tableConfig.isActive}
-                                    onClick={(event: any) => {
+                                    onClick={async (event: any) => {
                                       setDropped(false);
                                       configurationManager.activeTableConfiguration = tableConfig;
+                                      await configurationManager.saveTableConfigurations();
                                     }}
                                   >
                                     {tableConfig.name}

@@ -8,12 +8,7 @@ export function onColumnWidthChangeFinished(ctx: any) {
     // TODO: Error handling
     const prop = getDataViewPropertyById(ctx, id);
     if(prop) {
-      const columnConfiguration = getTablePanelView(ctx).configurationManager.defaultTableConfiguration.columnConfigurations
-        .find(configuration =>  configuration.propertyId === prop.id);
-      if(columnConfiguration){
-        columnConfiguration.width = width;
-      }
-      yield* saveColumnConfigurations(ctx)();
+      yield* getTablePanelView(ctx).configurationManager.onColumnWidthChanged(id, width);
 
       // TODO: Error handling
     }
