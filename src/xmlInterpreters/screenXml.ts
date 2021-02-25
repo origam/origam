@@ -459,7 +459,8 @@ export function* interpretScreenXml(
 
       instance2XmlNode.set(dataViewInstance, dataView);
 
-      const configurationNode = configuration.length === 1 ? configuration[0] : undefined;
+      const gridConfigurationNodes = configuration.filter(node => node?.parent?.attributes?.Type === "Grid")
+      const configurationNode = gridConfigurationNodes.length === 1 ? gridConfigurationNodes[0] : undefined;
       if(configurationNode){
         const defaultView = findStopping(
           configurationNode,
@@ -471,8 +472,10 @@ export function* interpretScreenXml(
           }
         });
       }
-
-      const configurationManager = createConfigurationManager(configuration, dataViewInstance.tablePanelView.tableProperties);
+      const configurationManager = createConfigurationManager(
+        gridConfigurationNodes,
+        dataViewInstance.tablePanelView.tableProperties
+      );
       configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       configurationManager.parent = dataViewInstance.tablePanelView;
