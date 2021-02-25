@@ -14,6 +14,7 @@ export class TableConfiguration implements ITableConfiguration {
   public static DefaultConfigId = "default";
 
   public name: string | undefined;
+  @observable
   public fixedColumnCount: number = 0;
   public columnConfigurations: IColumnConfiguration[] = [];
   @observable
