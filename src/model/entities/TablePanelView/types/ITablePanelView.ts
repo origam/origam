@@ -1,12 +1,13 @@
-import { IFilterConfiguration } from "../../types/IFilterConfiguration";
-import { IProperty } from "../../types/IProperty";
-import { IColumnConfigurationDialog } from "./IColumnConfigurationDialog";
-import { IOrderingConfiguration } from "model/entities/types/IOrderingConfiguration";
-import { IGroupingConfiguration } from "model/entities/types/IGroupingConfiguration";
-import { AggregationContainer } from "../TablePanelView";
-import { ICellRectangle } from "./ICellRectangle";
+import {IFilterConfiguration} from "../../types/IFilterConfiguration";
+import {IProperty} from "../../types/IProperty";
+import {IColumnConfigurationDialog} from "./IColumnConfigurationDialog";
+import {IOrderingConfiguration} from "model/entities/types/IOrderingConfiguration";
+import {IGroupingConfiguration} from "model/entities/types/IGroupingConfiguration";
+import {AggregationContainer} from "../TablePanelView";
+import {ICellRectangle} from "./ICellRectangle";
 
 import {FilterGroupManager} from "model/entities/FilterGroupManager";
+import {IConfigurationManager} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export interface ITablePanelViewData {
   tablePropertyIds: string[];
@@ -32,6 +33,7 @@ export interface ITablePanelView extends ITablePanelViewData {
   selectedRowIndex: number | undefined;
   isEditing: boolean;
   fixedColumnCount: number;
+  configurationManager: IConfigurationManager;
 
   tableCanvas: ITableCanvas | null;
   setTableCanvas(tableCanvas: ITableCanvas | null): void;

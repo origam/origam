@@ -163,6 +163,7 @@
   "column_config_save_as_tool_tip": "Als neue Konfiguration speichern",
   "column_config_new_config_name": "Neue Spaltenkonfiguration",
   "column_config_config_name": "Name:",
+  "column_config_name_empty": "Name darf nicht leer sein",
   "calendar_week": "Woche Nr. {0}",
   "calendar_monday": "Montag",
   "calendar_tuesday": "Dienstag",

@@ -11,6 +11,7 @@ import { TypeSymbol } from "dic/Container";
 import { IAboutInfo } from "./types/IAboutInfo";
 import { T } from "utils/translation";
 import fileDownload from "js-file-download";
+import {ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export enum IAuditLogColumnIndices {
   Id = 0,
@@ -528,36 +529,34 @@ export class OrigamAPI implements IApi {
   async saveObjectConfiguration(data: {
     sessionFormIdentifier: string;
     instanceId: string;
-    columnSettings: IColumnSettings[];
+    tableConfigurations: ITableConfiguration[];
     defaultView: string;
-    lockedColumns: number;
   }): Promise<any> {
-    const columnFields = data.columnSettings
-      .filter((settings) => settings.groupingIndex !== undefined)
-      .sort(compareByGroupingIndex)
-      .map(
-        (setting) =>
-          `<column 
-          groupingField="${setting.propertyId}" 
-          groupingUnit="${setting.timeGroupingUnit}" 
-        />`
-      );
-    const columnsProps = data.columnSettings.map(
-      (setting) =>
-        `<column 
-            property="${setting.propertyId}" 
-            isHidden="${setting.isHidden ? "true" : "false"}" 
-            width="${setting.width}" 
-            aggregationType="${setting.aggregationTypeNumber}" 
-          />`
-    );
-
+    const tableConfigurationsXml = data.tableConfigurations.map(tableConfig =>{
+      return "<TableConfiguration" +
+        ` name="${tableConfig.name ?? ""}"`+
+        ` fixedColumnCount="${tableConfig.fixedColumnCount}"`+
+        ` isActive="${tableConfig.isActive}"`+
+        ` id="${tableConfig.id}"`+
+        ">"+
+          tableConfig.columnConfigurations
+            .map(columnConfig =>
+              "<ColumnConfiguration" +
+              ` propertyId="${columnConfig.propertyId}"`+
+              ` width="${columnConfig.width}"`+
+              (columnConfig.timeGroupingUnit !== undefined ? ` groupingUnit="${columnConfig.timeGroupingUnit}"` : "")+
+              (columnConfig.groupingIndex > 0 ? ` groupingIndex="${columnConfig.groupingIndex}"` : "")+
+              ` isVisible="${columnConfig.isVisible}"`+
+              (columnConfig.aggregationType ? ` aggregationType="${columnConfig.aggregationType}"` : "")+
+              "/>")
+            .join("\n")
+        +"</TableConfiguration>"
+    })
     await this.axiosInstance.post(`/UIService/SaveObjectConfig`, {
       ObjectInstanceId: data.instanceId,
       SectionNameAndData: {
-        columnWidths: columnsProps.concat(columnFields).join(""), 
+        tableConfigurations: tableConfigurationsXml.join("\n"),
         defaultView: `<view id="${data.defaultView}" />`,
-        lockedColumns: `<lockedColumns count="${data.lockedColumns}" />`
       }
     });
   }

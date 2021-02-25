@@ -52,6 +52,8 @@ import Measure from "react-measure";
 import { onFirstRowClick } from "model/actions-ui/DataView/onFirstRowClick";
 import { onLastRowClick } from "model/actions-ui/DataView/onLastRowClick";
 import { T } from "utils/translation";
+import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
+import {IConfigurationManager} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 @observer
 export class CDataViewHeaderInner extends React.Component<{
@@ -195,6 +197,8 @@ export class CDataViewHeaderInner extends React.Component<{
     const goToLastRowDisabled = getGroupingConfiguration(dataView).isGrouping ||
       isInfiniteScrollingActive(dataView);
 
+    const configurationManager = getConfigurationManager(dataView);
+    const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
     return (
       <Measure bounds={true}>
         {({ measureRef, contentRect }) => {
@@ -382,6 +386,51 @@ export class CDataViewHeaderInner extends React.Component<{
                                 >
                                   {T("Show record information", "info_button_tool_tip")}
                                 </DropdownItem>
+                              }
+                              {customTableConfigsExist &&
+                                [
+                                  <DropdownItem
+                                    isDisabled={false}
+                                    isSelected={configurationManager.defaultTableConfiguration.isActive}
+                                    onClick={async (event: any) => {
+                                      setDropped(false);
+                                      configurationManager.activeTableConfiguration = configurationManager.defaultTableConfiguration;
+                                      await configurationManager.saveTableConfigurations();
+                                    }}
+                                  >
+                                    {T("Default View", "default_grid_view_view")}
+                                  </DropdownItem>,
+                                  ...(configurationManager.customTableConfigurations.map(tableConfig =>
+                                  <DropdownItem
+                                    isDisabled={false}
+                                    isSelected={tableConfig.isActive}
+                                    onClick={async (event: any) => {
+                                      setDropped(false);
+                                      configurationManager.activeTableConfiguration = tableConfig;
+                                      await configurationManager.saveTableConfigurations();
+                                    }}
+                                  >
+                                    {tableConfig.name}
+                                  </DropdownItem>)),
+                                  <DropdownItem
+                                    isDisabled={false}
+                                    onClick={async (event: any) => {
+                                      setDropped(false);
+                                      await configurationManager.saveTableConfigurations();
+                                    }}
+                                  >
+                                    {T("Save View", "save_current_column_config")}
+                                  </DropdownItem>,
+                                  <DropdownItem
+                                    isDisabled={configurationManager.defaultTableConfiguration.isActive}
+                                    onClick={async (event: any) => {
+                                      setDropped(false);
+                                      await configurationManager.deleteActiveTableConfiguration();
+                                    }}
+                                  >
+                                    {T("Delete View", "delete_current_column_config")}
+                                  </DropdownItem>,
+                                ]
                               }
                             </Dropdown>
                           )}

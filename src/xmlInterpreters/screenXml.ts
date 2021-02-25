@@ -1,80 +1,79 @@
-import { DataViewLifecycle } from "model/entities/DataViewLifecycle/DataViewLifecycle";
-import { LookupLoader } from "model/entities/LookupLoader";
-import { RowState } from "model/entities/RowState";
-import { Action } from "model/entities/Action";
-import { ActionParameter } from "model/entities/ActionParameter";
-import { ComponentBinding, ComponentBindingPair } from "model/entities/ComponentBinding";
-import { DataSource } from "model/entities/DataSource";
-import { DataSourceField } from "model/entities/DataSourceField";
-import { DataTable } from "model/entities/DataTable";
-import { DataView } from "model/entities/DataView";
-import { DropDownColumn } from "model/entities/DropDownColumn";
-import { FilterConfiguration } from "model/entities/FilterConfiguration";
-import { FormPanelView } from "model/entities/FormPanelView/FormPanelView";
-import { FormScreen } from "model/entities/FormScreen";
-import { Lookup } from "model/entities/Lookup";
-import { OrderingConfiguration } from "model/entities/OrderingConfiguration";
-import { Property, ILookupIndividualEngine } from "model/entities/Property";
-import { ColumnConfigurationDialog } from "model/entities/TablePanelView/ColumnConfigurationDialog";
-import { TablePanelView } from "model/entities/TablePanelView/TablePanelView";
-import { IComponentBinding } from "model/entities/types/IComponentBinding";
-import { IFormScreenLifecycle02 } from "model/entities/types/IFormScreenLifecycle";
-import { IPanelViewType } from "model/entities/types/IPanelViewType";
-import { flf2mof } from "utils/flashDateFormat";
-import { findStopping } from "./xmlUtils";
-import { GroupingConfiguration } from "model/entities/GroupingConfiguration";
-import { ServerSideGrouper } from "model/entities/ServerSideGrouper";
-import { ClientSideGrouper } from "model/entities/ClientSideGrouper";
+import {DataViewLifecycle} from "model/entities/DataViewLifecycle/DataViewLifecycle";
+import {LookupLoader} from "model/entities/LookupLoader";
+import {RowState} from "model/entities/RowState";
+import {Action} from "model/entities/Action";
+import {ActionParameter} from "model/entities/ActionParameter";
+import {ComponentBinding, ComponentBindingPair} from "model/entities/ComponentBinding";
+import {DataSource} from "model/entities/DataSource";
+import {DataSourceField} from "model/entities/DataSourceField";
+import {DataTable} from "model/entities/DataTable";
+import {DataView} from "model/entities/DataView";
+import {DropDownColumn} from "model/entities/DropDownColumn";
+import {FilterConfiguration} from "model/entities/FilterConfiguration";
+import {FormPanelView} from "model/entities/FormPanelView/FormPanelView";
+import {FormScreen} from "model/entities/FormScreen";
+import {Lookup} from "model/entities/Lookup";
+import {OrderingConfiguration} from "model/entities/OrderingConfiguration";
+import {Property} from "model/entities/Property";
+import {ColumnConfigurationDialog} from "model/entities/TablePanelView/ColumnConfigurationDialog";
+import {TablePanelView} from "model/entities/TablePanelView/TablePanelView";
+import {IComponentBinding} from "model/entities/types/IComponentBinding";
+import {IFormScreenLifecycle02} from "model/entities/types/IFormScreenLifecycle";
+import {IPanelViewType} from "model/entities/types/IPanelViewType";
+import {flf2mof} from "utils/flashDateFormat";
+import {findStopping} from "./xmlUtils";
+import {GroupingConfiguration} from "model/entities/GroupingConfiguration";
+import {ServerSideGrouper} from "model/entities/ServerSideGrouper";
+import {ClientSideGrouper} from "model/entities/ClientSideGrouper";
 import $root from "rootContainer";
-import { SCOPE_Screen } from "modules/Screen/ScreenModule";
-import { SCOPE_DataView } from "modules/DataView/DataViewModule";
-import { scopeFor, TypeSymbol } from "dic/Container";
-import { SCOPE_FormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
-import { IFormPerspectiveDirector } from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
-import { SCOPE_TablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
-import { ITablePerspectiveDirector } from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
-import { IPerspective } from "modules/DataView/Perspective/Perspective";
-import { autorun, flow } from "mobx";
-import { IViewConfiguration, ViewConfiguration } from "modules/DataView/ViewConfiguration";
-import { saveColumnConfigurations } from "model/actions/DataView/TableView/saveColumnConfigurations";
-import { IPanelConfiguration } from "model/entities/types/IPanelConfiguration";
-import { parseToOrdering } from "model/entities/types/IOrderingConfiguration";
-import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
-import { cssString2Object } from "utils/objects";
-import { TreeDataTable } from "model/entities/TreeDataTable";
-import { parseAggregationType } from "model/entities/types/AggregationType";
-import { getDataStructureEntityId } from "model/selectors/DataView/getDataStructureEntityId";
-import { getEntity } from "model/selectors/DataView/getEntity";
-import { DataViewAPI } from "modules/DataView/DataViewAPI";
-import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
-import { IRowCursor, RowCursor } from "modules/DataView/TableCursor";
-import { getDataViewPropertyById } from "model/selectors/DataView/getDataViewPropertyById";
-import { DataViewData } from "modules/DataView/DataViewData";
-import { ScreenAPI } from "modules/Screen/ScreenAPI";
-import { getMenuItemId } from "model/selectors/getMenuItemId";
-import { getSessionId } from "model/selectors/getSessionId";
-import { getApi } from "model/selectors/getApi";
-import { getWorkbench } from "model/selectors/getWorkbench";
-import { SCOPE_FormScreen } from "modules/Screen/FormScreen/FormScreenModule";
-import { IOrigamAPI, OrigamAPI } from "model/entities/OrigamAPI";
-import { IDataView as IDataViewTS } from "modules/DataView/DataViewTypes";
-import { createIndividualLookupEngine } from "modules/Lookup/LookupModule";
-import { IProperty } from "model/entities/types/IProperty";
-import { SCOPE_MapPerspective } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
-import { IMapPerspectiveDirector } from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
+import {SCOPE_Screen} from "modules/Screen/ScreenModule";
+import {SCOPE_DataView} from "modules/DataView/DataViewModule";
+import {scopeFor, TypeSymbol} from "dic/Container";
+import {SCOPE_FormPerspective} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveModule";
+import {IFormPerspectiveDirector} from "modules/DataView/Perspective/FormPerspective/FormPerspectiveDirector";
+import {SCOPE_TablePerspective} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveModule";
+import {ITablePerspectiveDirector} from "modules/DataView/Perspective/TablePerspective/TablePerspectiveDirector";
+import {IPerspective} from "modules/DataView/Perspective/Perspective";
+import {flow} from "mobx";
+import {IViewConfiguration, ViewConfiguration} from "modules/DataView/ViewConfiguration";
+import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
+import {IPanelConfiguration} from "model/entities/types/IPanelConfiguration";
+import {parseToOrdering} from "model/entities/types/IOrderingConfiguration";
+import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
+import {cssString2Object} from "utils/objects";
+import {TreeDataTable} from "model/entities/TreeDataTable";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getEntity} from "model/selectors/DataView/getEntity";
+import {DataViewAPI} from "modules/DataView/DataViewAPI";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
+import {IRowCursor, RowCursor} from "modules/DataView/TableCursor";
+import {getDataViewPropertyById} from "model/selectors/DataView/getDataViewPropertyById";
+import {DataViewData} from "modules/DataView/DataViewData";
+import {ScreenAPI} from "modules/Screen/ScreenAPI";
+import {getMenuItemId} from "model/selectors/getMenuItemId";
+import {getSessionId} from "model/selectors/getSessionId";
+import {getApi} from "model/selectors/getApi";
+import {getWorkbench} from "model/selectors/getWorkbench";
+import {SCOPE_FormScreen} from "modules/Screen/FormScreen/FormScreenModule";
+import {IOrigamAPI, OrigamAPI} from "model/entities/OrigamAPI";
+import {IDataView as IDataViewTS} from "modules/DataView/DataViewTypes";
+import {createIndividualLookupEngine} from "modules/Lookup/LookupModule";
+import {IProperty} from "model/entities/types/IProperty";
+import {SCOPE_MapPerspective} from "modules/DataView/Perspective/MapPerspective/MapPerspectiveModule";
+import {IMapPerspectiveDirector} from "modules/DataView/Perspective/MapPerspective/MapPerspectiveDirector";
 import {
   MapLayer as MapLayerSetup,
   MapSetupStore,
 } from "modules/DataView/Perspective/MapPerspective/stores/MapSetupStore";
-import { MapRootStore } from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
-import { IFormPerspective } from "modules/DataView/Perspective/FormPerspective/FormPerspective";
-import { addFilterGroups } from "./filterXml";
-import { FilterGroupManager } from "model/entities/FilterGroupManager";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { isLazyLoading } from "model/selectors/isLazyLoading";
-import { splitterPositionFromRatio } from "model/actions-ui/Splitter/splitterPositionToServerValue";
-import { ITablePerspective } from "modules/DataView/Perspective/TablePerspective/TablePerspective";
-import {runInFlowWithHandler, runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
+import {MapRootStore} from "modules/DataView/Perspective/MapPerspective/stores/MapRootStore";
+import {IFormPerspective} from "modules/DataView/Perspective/FormPerspective/FormPerspective";
+import {addFilterGroups} from "./filterXml";
+import {FilterGroupManager} from "model/entities/FilterGroupManager";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {splitterPositionFromRatio} from "model/actions-ui/Splitter/splitterPositionToServerValue";
+import {ITablePerspective} from "modules/DataView/Perspective/TablePerspective/TablePerspective";
+import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
+import {createConfigurationManager} from "xmlInterpreters/createConfigurationManager";
 
 export const findUIRoot = (node: any) => findStopping(node, (n) => n.name === "UIRoot")[0];
 
@@ -114,7 +113,7 @@ function getPropertyParameters(node: any) {
 
 const instance2XmlNode = new WeakMap<any, any>();
 
-function fixColumnWidth(width: number) {
+export function fixColumnWidth(width: number) {
   // Sometimes they send us negative width, which destroys table rendering.
   if (isNaN(width)) {
     return 100;
@@ -460,76 +459,10 @@ export function* interpretScreenXml(
 
       instance2XmlNode.set(dataViewInstance, dataView);
 
-      let groupingColumnCounter = 1;
-      configuration.forEach((conf) => {
-        const defaultFixedColumns = findStopping(conf, (n) => n.name === "lockedColumns");
-        if (defaultFixedColumns && defaultFixedColumns.length > 0) {
-          const fixedColumnsNode = findStopping(
-            defaultFixedColumns?.[0],
-            (n) => n.name === "lockedColumns"
-          );
-          const fixedColumnsStr = fixedColumnsNode?.[0]?.attributes?.["count"];
-          const fixedColumnsInt = parseInt(fixedColumnsStr, 10);
-          if (!isNaN(fixedColumnsStr)) {
-            dataViewInstance.tablePanelView.fixedColumnCount = fixedColumnsInt;
-          }
-        }
-
-        const defaultColumnConfigurations = findStopping(conf, (n) => n.name === "columnWidths");
-        defaultColumnConfigurations.forEach((defaultColumnConfiguration) => {
-          const columns = findStopping(defaultColumnConfiguration, (n) => n.name === "column");
-          for (const column of columns) {
-            if (column.attributes.property) {
-              const prop = properties.find((prop) => prop.id === column.attributes.property);
-              if(!prop){
-                continue;
-              }
-              // COLUMN WIDTH
-              const width = parseInt(column.attributes.width);
-              prop.setColumnWidth(fixColumnWidth(width));
-
-              // COLUMN HIDING
-              if (column.attributes.isHidden === "true" || width < 0) {
-                dataViewInstance.tablePanelView.setPropertyHidden(column.attributes.property, true);
-              }
-              if (column.attributes.aggregationType !== "0") {
-                const aggregationType = parseAggregationType(column.attributes.aggregationType);
-                dataViewInstance.tablePanelView.aggregations.setType(
-                  column.attributes.property,
-                  aggregationType
-                );
-              }
-            } else if (column.attributes.groupingField) {
-              const property = properties.find(
-                (prop) => prop.id === column.attributes.groupingField
-              );
-              if(!property){
-                continue;
-              }
-              if (!property?.isLookupColumn) {
-                dataViewInstance.tablePanelView.groupingConfiguration.setGrouping(
-                  column.attributes.groupingField,
-                  isNaN(parseInt(column.attributes.groupingUnit)) 
-                    ? undefined
-                    : parseInt(column.attributes.groupingUnit),
-                  groupingColumnCounter
-                );
-                groupingColumnCounter++;
-              }
-            }
-          };
-          dataViewInstance.tablePanelView.tablePropertyIds = dataViewInstance.tablePanelView.tablePropertyIds
-            .slice()
-            .sort((a, b) => {
-              const colIdxA = columns.findIndex((column) => column.attributes.property === a);
-              if (colIdxA === -1) return 0;
-              const colIdxB = columns.findIndex((column) => column.attributes.property === b);
-              if (colIdxB === -1) return 0;
-              return colIdxA - colIdxB;
-            });
-        });
+      const configurationNode = configuration.length === 1 ? configuration[0] : undefined;
+      if(configurationNode){
         const defaultView = findStopping(
-          conf,
+          configurationNode,
           (n) => n.name === "view" && n.parent.name === "defaultView"
         );
         defaultView.forEach((element) => {
@@ -537,8 +470,12 @@ export function* interpretScreenXml(
             dataViewInstance.activePanelView = element.attributes.id;
           }
         });
-      });
+      }
 
+      const configurationManager = createConfigurationManager(configuration, dataViewInstance.tablePanelView.tableProperties);
+      configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
+      dataViewInstance.tablePanelView.configurationManager = configurationManager;
+      configurationManager.parent = dataViewInstance.tablePanelView;
       properties
         .filter((prop) => prop.width < 0)
         .forEach((prop) => {
@@ -755,3 +692,4 @@ function populateMapViewSetup(mss: MapSetupStore, xmlNode: any) {
     }
   }
 }
+

@@ -13,7 +13,7 @@ import { IFilterConfiguration } from "../types/IFilterConfiguration";
 import { IOrderingConfiguration } from "../types/IOrderingConfiguration";
 import { IProperty } from "../types/IProperty";
 import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ITableCanvas, ITablePanelView, ITablePanelViewData } from "./types/ITablePanelView";
+import { ITableCanvas, ITablePanelView, ITablePanelViewData} from "./types/ITablePanelView";
 import { IGroupingConfiguration } from "../types/IGroupingConfiguration";
 import { IAggregationInfo } from "../types/IAggregationInfo";
 import { AggregationType } from "../types/AggregationType";
@@ -26,6 +26,7 @@ import { FilterGroupManager } from "model/entities/FilterGroupManager";
 import { handleUserInputOnChangingRow } from "../FormScreenLifecycle/questionSaveDataAfterRecordChange";
 import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
+import {IConfigurationManager} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export class TablePanelView implements ITablePanelView {
   $type_ITablePanelView: 1 = 1;
@@ -40,6 +41,7 @@ export class TablePanelView implements ITablePanelView {
   }
 
   columnConfigurationDialog: IColumnConfigurationDialog = null as any;
+  configurationManager: IConfigurationManager = null as any;
   filterConfiguration: IFilterConfiguration = null as any;
   filterGroupManager: FilterGroupManager = null as any;
   orderingConfiguration: IOrderingConfiguration = null as any;
