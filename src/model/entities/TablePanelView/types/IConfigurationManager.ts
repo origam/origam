@@ -17,6 +17,7 @@ export interface IConfigurationManager {
 
 export interface ITableConfiguration {
   id: string;
+  isGrouping: boolean;
   name: string | undefined
   fixedColumnCount: number;
   columnConfigurations: IColumnConfiguration[];

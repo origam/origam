@@ -12,7 +12,6 @@ import { observable } from "mobx";
 export class TableConfiguration implements ITableConfiguration {
 
   public static DefaultConfigId = "default";
-
   public name: string | undefined;
   @observable
   public fixedColumnCount: number = 0;
@@ -49,6 +48,10 @@ export class TableConfiguration implements ITableConfiguration {
     newInstance.columnConfigurations = properties
       .map(property => new TableColumnConfiguration(property.id));
     return newInstance;
+  }
+
+  public get isGrouping(){
+    return this.columnConfigurations.some(columnConfig => columnConfig.groupingIndex > 0);
   }
 
   deepClone(){

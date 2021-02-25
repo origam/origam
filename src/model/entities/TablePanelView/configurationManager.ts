@@ -41,6 +41,7 @@ export class ConfigurationManager implements IConfigurationManager {
   }
 
   set activeTableConfiguration(configToActivate: TableConfiguration) {
+    const groupingWasActine = this.activeTableConfiguration.isGrouping;
     this.replace(configToActivate);
 
     for (const tableConfiguration of this.allTableConfigurations) {
@@ -49,7 +50,9 @@ export class ConfigurationManager implements IConfigurationManager {
     configToActivate.isActive = true;
     const tablePanelView = getTablePanelView(this);
     configToActivate.apply(tablePanelView);
-    getFormScreenLifecycle(this).loadInitialData();
+    if(groupingWasActine !== configToActivate.isGrouping){
+      getFormScreenLifecycle(this).loadInitialData();
+    }
   }
 
   private replace(newConfiguration: TableConfiguration) {
@@ -81,7 +84,6 @@ export class ConfigurationManager implements IConfigurationManager {
     this.customTableConfigurations.remove(this.activeTableConfiguration);
     this.activeTableConfiguration = this.defaultTableConfiguration;
     await this.saveTableConfigurations();
-    getFormScreenLifecycle(this).loadInitialData();
   }
 
   async saveTableConfigurations(): Promise<any> {
