@@ -4,6 +4,8 @@ import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { observable } from "mobx";
 import {uuidv4} from "utils/uuid";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
 
 export class ConfigurationManager implements IConfigurationManager {
   parent: any;
@@ -45,6 +47,9 @@ export class ConfigurationManager implements IConfigurationManager {
       tableConfiguration.isActive = false;
     }
     configToActivate.isActive = true;
+    const tablePanelView = getTablePanelView(this);
+    configToActivate.apply(tablePanelView);
+    getFormScreenLifecycle(this).loadInitialData();
   }
 
   private replace(newConfiguration: TableConfiguration) {

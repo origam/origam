@@ -473,7 +473,7 @@ export function* interpretScreenXml(
       }
 
       const configurationManager = createConfigurationManager(configuration, dataViewInstance.tablePanelView.tableProperties);
-      configurationManager.defaultTableConfiguration?.apply(dataViewInstance.tablePanelView);
+      configurationManager.activeTableConfiguration.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       configurationManager.parent = dataViewInstance.tablePanelView;
       properties
