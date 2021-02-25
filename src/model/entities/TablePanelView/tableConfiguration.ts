@@ -6,6 +6,7 @@ import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelVi
 import {getProperties} from "model/selectors/DataView/getProperties";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 import { IProperty } from "../types/IProperty";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 
 export class TableConfiguration implements ITableConfiguration {
 
@@ -45,6 +46,10 @@ export class TableConfiguration implements ITableConfiguration {
 
   apply(tablePanelView: ITablePanelView) {
     const properties = getProperties(tablePanelView);
+
+    tablePanelView.fixedColumnCount = this.fixedColumnCount;
+    tablePanelView.hiddenPropertyIds.clear();
+    tablePanelView.groupingConfiguration.clearGrouping();
 
     for (const columnConfiguration of this.columnConfigurations) {
       if (!columnConfiguration.isVisible) {

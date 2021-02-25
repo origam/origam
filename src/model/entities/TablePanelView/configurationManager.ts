@@ -30,4 +30,10 @@ export class ConfigurationManager implements IConfigurationManager {
     }
     configToActivate.isActive = true;
   }
+
+  cloneAndActivate(configuration: ITableConfiguration, newName: string): void {
+    const newConfig = configuration.cloneAs(newName);
+    this.customTableConfigurations.push(newConfig);
+    this.activeTableConfiguration = newConfig;
+  }
 }

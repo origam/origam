@@ -26,7 +26,7 @@ import { IColumnOptions } from "model/entities/TablePanelView/ColumnConfiguratio
 export class ColumnsDialog extends React.Component<{
   columnOptions: Map<string, IColumnOptions>;
   configuration: ITableConfiguration;
-  onOkClick?: (event: any, configuration: ITableConfiguration) => void;
+  onOkClick?: (configuration: ITableConfiguration) => void;
   onSaveAsClick: (event: any, configuration: ITableConfiguration) => void;
   onCancelClick?: (event: any) => void;
   onCloseClick?: (event: any) => void;
@@ -94,7 +94,7 @@ export class ColumnsDialog extends React.Component<{
             <button
               tabIndex={0}
               onClick={(event: any) =>
-                this.props.onOkClick && this.props.onOkClick(event, this.configuration)
+                this.props.onOkClick && this.props.onOkClick(this.configuration)
               }
             >
               {T("OK", "button_ok")}

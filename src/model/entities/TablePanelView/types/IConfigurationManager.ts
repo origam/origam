@@ -3,6 +3,7 @@ import {AggregationType} from "model/entities/types/AggregationType";
 import {GroupingUnit} from "model/entities/types/GroupingUnit";
 
 export interface IConfigurationManager {
+  cloneAndActivate(configuration: ITableConfiguration, newName: string): void;
   activeTableConfiguration: ITableConfiguration;
   customTableConfigurations: ITableConfiguration[],
   defaultTableConfiguration: ITableConfiguration,
