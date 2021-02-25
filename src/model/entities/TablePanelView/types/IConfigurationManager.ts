@@ -14,6 +14,7 @@ export interface IConfigurationManager {
 }
 
 export interface ITableConfiguration {
+  id: string;
   name: string | undefined
   fixedColumnCount: number;
   columnConfigurations: IColumnConfiguration[];

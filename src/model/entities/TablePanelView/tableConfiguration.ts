@@ -11,30 +11,40 @@ import { observable } from "mobx";
 
 export class TableConfiguration implements ITableConfiguration {
 
+  public static DefaultConfigId = "default";
+
   public name: string | undefined;
   public fixedColumnCount: number = 0;
   public columnConfigurations: IColumnConfiguration[] = [];
   @observable
   public isActive: boolean = false;
+  id: string = "";
+
+  private constructor() {
+  }
 
   static create(
     args:{
       name: string | undefined,
       isActive: boolean,
+      id: string,
       fixedColumnCount: number,
       columnConfigurations: IColumnConfiguration[]
     }
   ){
     const newInstance = new TableConfiguration();
     newInstance.name = args.name;
+    newInstance.id = args.id;
     newInstance.isActive = args.isActive;
     newInstance.fixedColumnCount = args.fixedColumnCount ?? 0;
     newInstance.columnConfigurations = args.columnConfigurations;
     return newInstance;
   }
 
-  static createEmpty(properties: IProperty[]){
+
+  static createDefault(properties: IProperty[]){
     const newInstance = new TableConfiguration();
+    newInstance.id = this.DefaultConfigId
     newInstance.columnConfigurations = properties
       .map(property => new TableColumnConfiguration(property.id));
     return newInstance;
@@ -43,6 +53,7 @@ export class TableConfiguration implements ITableConfiguration {
   deepClone(){
     const newinstance =  new TableConfiguration();
     newinstance.name = this.name;
+    newinstance.id = this.id;
     newinstance.fixedColumnCount = this.fixedColumnCount;
     newinstance.columnConfigurations = this.columnConfigurations
       .map(columnConfifuration => columnConfifuration.deepClone());

@@ -11,7 +11,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
 
   if (configurationNodes.length === 0) {
     return new ConfigurationManager(
-      [], TableConfiguration.createEmpty(properties));
+      [], TableConfiguration.createDefault(properties));
   } else if (configurationNodes.length > 1) {
     throw new Error("Can not process more than one configuration node")
   }
@@ -19,12 +19,13 @@ export function createConfigurationManager(configurationNodes: any, properties: 
   const tableConfigurationNodes = findStopping(configurationNodes[0], (n) => n.name === "tableConfigurations")?.[0]?.elements;
   if(!tableConfigurationNodes){
     return new ConfigurationManager(
-      [], TableConfiguration.createEmpty(properties));
+      [], TableConfiguration.createDefault(properties));
   }
   const tableConfigurations = tableConfigurationNodes.map((tableConfigNode: any) =>
     TableConfiguration.create(
       {
         name: tableConfigNode.attributes.name,
+        id: tableConfigNode.attributes.id,
         isActive: tableConfigNode.attributes.isActive === "true",
         fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
         columnConfigurations: tableConfigNode.elements
@@ -33,7 +34,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
       }));
 
   const defaultTableConfiguration = tableConfigurations.find((tableConfig: TableConfiguration) => tableConfig.name === "")
-          ?? TableConfiguration.createEmpty(properties);
+          ?? TableConfiguration.createDefault(properties);
 
   return new ConfigurationManager(
     tableConfigurations

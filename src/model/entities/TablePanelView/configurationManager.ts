@@ -3,6 +3,7 @@ import {TableConfiguration} from "model/entities/TablePanelView/tableConfigurati
 import {runGeneratorInFlowWithHandler} from "utils/runInFlowWithHandler";
 import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
 import { observable } from "mobx";
+import {uuidv4} from "utils/uuid";
 
 export class ConfigurationManager implements IConfigurationManager {
   parent: any;
@@ -48,11 +49,11 @@ export class ConfigurationManager implements IConfigurationManager {
 
   private replace(newConfiguration: TableConfiguration) {
     const index = this.customTableConfigurations
-      .findIndex(config => config.name === newConfiguration.name);
+      .findIndex(config => config.id === newConfiguration.id);
     if (index > -1) {
       this.customTableConfigurations[index] = newConfiguration;
     } else {
-      if (newConfiguration.name === "") {
+      if (newConfiguration.id === TableConfiguration.DefaultConfigId) {
         this.defaultTableConfiguration = newConfiguration;
       } else {
         this.customTableConfigurations.push(newConfiguration);
@@ -63,6 +64,7 @@ export class ConfigurationManager implements IConfigurationManager {
   cloneAndActivate(configuration: ITableConfiguration, newName: string): void {
     const newConfig = configuration.deepClone();
     newConfig.name = newName;
+    newConfig.id = uuidv4();
     this.customTableConfigurations.push(newConfig);
     this.activeTableConfiguration = newConfig;
   }
