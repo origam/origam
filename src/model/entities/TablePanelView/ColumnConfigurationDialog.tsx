@@ -112,11 +112,12 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
           });
           closeDialog();
         }}
-        onCancelClick={() => closeDialog()}
+        onCancelClick={() => {
+          this.revertChanges();
+          closeDialog();
+        }}
       />
     );
-
-    getDialogStack(this).closeDialog(this.dialogKey);
   }
 
   @action.bound onColumnConfSubmit(configuration: ITableConfiguration): void {
