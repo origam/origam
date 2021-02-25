@@ -50,6 +50,13 @@ export class FocusManager {
   }
 
   focusNext(activeElement: any) {
+      this.focusNextInternal(activeElement, 0);
+  }
+
+  focusNextInternal(activeElement: any, callNumber: number) {
+    if(callNumber > 20){
+      return;
+    }
     const currentContainerIndex = this.focusAbleContainers.findIndex(
       (container) => container.focusAble === activeElement
     );
@@ -57,7 +64,7 @@ export class FocusManager {
       this.focusAbleContainers.length - 1 > currentContainerIndex ? currentContainerIndex + 1 : 0;
     const focusAble = this.focusAbleContainers[nextIndex].focusAble;
     if (focusAble !== activeElement && focusAble.disabled) {
-      this.focusNext(focusAble);
+      this.focusNextInternal(focusAble, callNumber + 1);
     } else {
       setTimeout(() => {
         focusAble.focus();
