@@ -472,7 +472,7 @@ export function* interpretScreenXml(
         });
       }
 
-      const configurationManager = createConfigurationManager(configuration, properties);
+      const configurationManager = createConfigurationManager(configuration, dataViewInstance.tablePanelView.tableProperties);
       configurationManager.defaultTableConfiguration?.apply(dataViewInstance.tablePanelView);
       dataViewInstance.tablePanelView.configurationManager = configurationManager;
       properties

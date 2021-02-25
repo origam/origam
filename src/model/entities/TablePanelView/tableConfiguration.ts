@@ -7,23 +7,27 @@ import {getProperties} from "model/selectors/DataView/getProperties";
 import {TableColumnConfiguration} from "model/entities/TablePanelView/tableColumnConfiguration";
 import { IProperty } from "../types/IProperty";
 import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import { observable } from "mobx";
 
 export class TableConfiguration implements ITableConfiguration {
 
   public name: string | undefined;
   public fixedColumnCount: number = 0;
   public columnConfigurations: IColumnConfiguration[] = [];
+  @observable
   public isActive: boolean = false;
 
   static create(
     args:{
       name: string | undefined,
+      isActive: boolean,
       fixedColumnCount: number,
       columnConfigurations: IColumnConfiguration[]
     }
   ){
     const newInstance = new TableConfiguration();
     newInstance.name = args.name;
+    newInstance.isActive = args.isActive;
     newInstance.fixedColumnCount = args.fixedColumnCount ?? 0;
     newInstance.columnConfigurations = args.columnConfigurations;
     return newInstance;

@@ -25,6 +25,7 @@ export function createConfigurationManager(configurationNodes: any, properties: 
     TableConfiguration.create(
       {
         name: tableConfigNode.attributes.name,
+        isActive: tableConfigNode.attributes.isActive === "true",
         fixedColumnCount: parseIntOrZero(tableConfigNode.attributes.fixedColumnCount),
         columnConfigurations: tableConfigNode.elements
           .map((columnConfigNode: any) => parseColumnConfigurationNode(columnConfigNode, properties))
