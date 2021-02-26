@@ -96,10 +96,6 @@ namespace Origam.ServerCore
                 options.Lockout.MaxFailedAccessAttempts = lockoutConfig.MaxFailedAccessAttempts;
             });
             services.TryAddScoped<ILookupNormalizer, Authorization.UpperInvariantLookupNormalizer>();
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = startUpConfiguration.PathToClientApp ?? ".";
-            });
             services.AddScoped<IManager, CoreManagerAdapter>();
             services.AddSingleton<IMailService, MailService>();
             services.AddSingleton<SearchHandler>();
@@ -234,7 +230,7 @@ namespace Origam.ServerCore
                 {
                     FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToCustomAssetsFolder),
                     RequestPath = new PathString(startUpConfiguration.RouteToCustomAssetsFolder)
-                });
+                });                
             }
 
             if(!string.IsNullOrEmpty(startUpConfiguration.PathToChatApp))
@@ -245,14 +241,17 @@ namespace Origam.ServerCore
                     RequestPath = new PathString("/chatrooms")
                 });
             }
-            app.UseSpaStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp ?? "."),
+                RequestPath = new PathString("")
+            });
             app.UseCors(builder => 
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
             });
-            app.UseSpa(spa => {});
             // add DI to origam, in order to be able to resolve IPrincipal from
             // https://davidpine.net/blog/principal-architecture-changes/
             // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
