@@ -92,10 +92,7 @@ namespace Origam.Workflow.Tasks
 				{
 					_call.ParentContexts.Add(key, this.Engine.RuleEngine.GetContext(key));
 				}
-
-				IAsyncResult thread = this.Engine.Host.ExecuteWorkflow(_call);
-
-				thread.AsyncWaitHandle.WaitOne();
+				Engine.Host.ExecuteWorkflow(_call);
 			} while ((bool)this.Engine.RuleEngine.EvaluateContext(block.LoopConditionXPath, block.LoopConditionContextStore, OrigamDataType.Boolean, null));
 
 			// there is no other iteration, we finish

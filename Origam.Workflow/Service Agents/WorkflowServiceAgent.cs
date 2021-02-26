@@ -100,11 +100,9 @@ namespace Origam.Workflow
                 host = WorkflowHost.DefaultHost;
             }
 
-            IAsyncResult thread = host.ExecuteWorkflow(engine);
+            host.ExecuteWorkflow(engine);
 
-			thread.AsyncWaitHandle.WaitOne();
-
-			if(engine.Exception != null)
+            if(engine.Exception != null)
 			{
 				throw engine.Exception;
 			}

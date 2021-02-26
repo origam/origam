@@ -401,12 +401,8 @@ namespace Origam.Workflow
 		#endregion
 
 		#region Public Methods
-		public void RunWorkflowFromHost(CultureInfo uiCulture,
-			CultureInfo culture, IPrincipal principal)
+		public void RunWorkflowFromHost()
 		{
-			Thread.CurrentThread.CurrentCulture = culture;
-			Thread.CurrentThread.CurrentUICulture = uiCulture;
-			Thread.CurrentPrincipal = principal;
 			if (ProfilingTools.IsDebugEnabled)
 			{
 				localOperationTimer.Start(GetHashCode());
@@ -982,9 +978,9 @@ namespace Origam.Workflow
 			return call;
 		}
 
-		internal IAsyncResult ExecuteSubEngineWorkflow(WorkflowEngine subEngine)
+		internal void ExecuteSubEngineWorkflow(WorkflowEngine subEngine)
 		{
-			return this.Host.ExecuteWorkflow(subEngine);
+			this.Host.ExecuteWorkflow(subEngine);
 		}
 
 		private object CloneContext(object context)

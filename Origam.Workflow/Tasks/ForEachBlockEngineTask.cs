@@ -143,10 +143,7 @@ namespace Origam.Workflow.Tasks
 						_call.ParentContexts.Add(key, context);
 					}
 				}
-
-				IAsyncResult thread = this.Engine.Host.ExecuteWorkflow(_call);
-
-				thread.AsyncWaitHandle.WaitOne();
+				Engine.Host.ExecuteWorkflow(_call);
 			}
 		}
 
