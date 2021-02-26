@@ -8,6 +8,10 @@ import { flow } from "mobx";
 import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "model/actions-ui/DataView/TableView/shouldProceedToChangeRow";
+import {onPossibleSelectedRowChange} from "model/actions-ui/onPossibleSelectedRowChange";
+import {getMenuItemId} from "model/selectors/getMenuItemId";
+import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
+import {getSelectedRowId} from "model/selectors/TablePanelView/getSelectedRowId";
 
 
 export function onFieldKeyDown(ctx: any) {
@@ -39,7 +43,11 @@ export function onFieldKeyDown(ctx: any) {
                 yield selectNextColumn(ctx)(true);
               }
             });
-
+            yield onPossibleSelectedRowChange(ctx)(
+              getMenuItemId(ctx),
+              getDataStructureEntityId(ctx),
+              getSelectedRowId(ctx)
+            );
             event.preventDefault();
             tablePanelView.dontHandleNextScroll();
             tablePanelView.scrollToCurrentCell();
