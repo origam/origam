@@ -39,8 +39,6 @@ namespace Origam.Workflow.Tasks
 	/// </summary>
 	public class UIEngineTask : AbstractWorkflowEngineTask
 	{
-		private ManualResetEvent _manualEvent = new ManualResetEvent(false);
-
 		public UIEngineTask() : base()
 		{
 		}
@@ -121,24 +119,17 @@ namespace Origam.Workflow.Tasks
 				task.RefreshMethod, task.RefreshSortSet, task.IsRefreshSuppressedBeforeFirstSave,
 				task.SaveConfirmationRule, task.SaveDataStructure, parameters, 
                 task.RefreshPortalAfterSave == TrueFalseEnum.True);
-			
-			_manualEvent.WaitOne();
 		}
 
 		public void Finish()
 		{
 			if(this.Result == null) OnFinished(new WorkflowEngineTaskEventArgs(new NullReferenceException(ResourceUtils.GetString("ErrorNoResultData"))));
-
 			OnFinished(new WorkflowEngineTaskEventArgs());
-
-			_manualEvent.Set();
 		}
 
 		public void Abort()
 		{
 			OnFinished(new WorkflowEngineTaskEventArgs(new WorkflowCancelledByUserException(ResourceUtils.GetString("ErrorUserCanceled"))));
-
-			_manualEvent.Set();
 		}
 	}
 }

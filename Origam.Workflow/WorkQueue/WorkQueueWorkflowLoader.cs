@@ -154,7 +154,7 @@ namespace Origam.Workflow.WorkQueue
 				log.Debug("Starting workflow " + _workflow.Name);
 			}
 			// execute workflow
-			host.ExecuteWorkflow(workflowEngine).AsyncWaitHandle.WaitOne();
+			host.ExecuteWorkflow(workflowEngine);
 			if(log.IsDebugEnabled)
 			{
 				log.Debug("Finishing workflow " + _workflow.Name);

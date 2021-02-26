@@ -232,8 +232,7 @@ namespace OrigamScheduler
 
 				_numberOfWorkflowsRunning++;
 
-				IAsyncResult r = WorkflowHost.DefaultHost.ExecuteWorkflow(engine);
-				r.AsyncWaitHandle.WaitOne();
+				WorkflowHost.DefaultHost.ExecuteWorkflow(engine);
 
 				if(engine.Exception != null)
 				{

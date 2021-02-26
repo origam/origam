@@ -118,7 +118,7 @@ namespace Origam.Workflow.Tasks
 			}
 
 			// Run
-			this.Engine.ExecuteSubEngineWorkflow(_call).AsyncWaitHandle.WaitOne();
+			Engine.ExecuteSubEngineWorkflow(_call);
 		}
 
 		private void Host_WorkflowFinished(object sender, WorkflowHostEventArgs e)

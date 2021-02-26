@@ -81,23 +81,14 @@ namespace Origam.Workflow
 			}
 		}
 
-		public IAsyncResult ExecuteWorkflow(WorkflowEngine engine)
+		public void ExecuteWorkflow(WorkflowEngine engine)
 		{
             lock(_runningWorkflows)
             {
                 _runningWorkflows.Add(engine);
             }
 			engine.Host = this;
-			string currentUICulture = 
-				Thread.CurrentThread.CurrentUICulture.Name;
-			string currentCulture = 
-				Thread.CurrentThread.CurrentCulture.Name;
-
-			return System.Threading.Tasks.Task.Run(() => 
-				engine.RunWorkflowFromHost(
-					new CultureInfo(currentUICulture),
-					new CultureInfo(currentCulture), 
-					SecurityManager.CurrentPrincipal));
+			engine.RunWorkflowFromHost();
 		}
 
 		internal void OnWorkflowFinished(WorkflowEngine engine, Exception exception)
