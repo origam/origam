@@ -8,7 +8,10 @@ import { IFilterGroup } from "model/entities/types/IFilterGroup";
 
 function filterJsonToFilterGroup(filterJson: any, properties: IProperty[]) {
   const filters: IFilter[] = filterJson.details.map((detail: any) => {
-    const property = properties.find((prop) => prop.id === detail.property)!;
+    const property = properties.find((prop) => prop.id === detail.property);
+    if(!property){
+      return undefined;
+    }
     const setting = property.column === "ComboBox"
       ? new LookupFilterSetting(
           filterTypeFromNumber(detail.operator, property.column),
@@ -74,6 +77,7 @@ export function addFilterGroups(
 
   filterGroupManager.filterGroups = panelConfigurationJson.filters
     .map((filterJson: any) => filterJsonToFilterGroup(filterJson, properties))
+    .filter((group: any) => group);
 
   if (panelConfigurationJson.initialFilter) {
     filterGroupManager.defaultFilter = filterJsonToFilterGroup(
