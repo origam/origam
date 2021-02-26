@@ -52,7 +52,11 @@ import {
   numberCellPaddingRight,
   topTextOffset,
 } from "./cellsCommon";
-import { currentDataCellRenderer, getPaddingLeft, xCenter } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
+import {
+  currentDataCellRenderer,
+  getPaddingLeft,
+  xCenter,
+} from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
 
 export function dataColumnsWidths() {
   return tableColumnIds().map((id) => columnWidths().get(id) || 100);
@@ -61,8 +65,8 @@ export function dataColumnsWidths() {
 export function dataColumnsDraws() {
   return tableColumnIds().map((id) => () => {
     applyScrollTranslation();
-    clipCell();
     drawDataCellBackground();
+    clipCell();
     drawCellValue();
     registerClickHandler(id);
     registerToolTipGetter(id);
@@ -87,13 +91,12 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-  if (property.column === "CheckBox" ||
-    property.column === "Image" ||
-    property.column === "Blob") {
+  if (property.column === "CheckBox" || property.column === "Image" || property.column === "Blob") {
     return;
   }
 
-  const widthToMakeTextVisible = CPR() * ctx2d.measureText(currentCellText()).width + cellRenderer.paddingLeft;
+  const widthToMakeTextVisible =
+    CPR() * ctx2d.measureText(currentCellText()).width + cellRenderer.paddingLeft;
   if (cellWidth > widthToMakeTextVisible) {
     return;
   }
@@ -110,7 +113,7 @@ function registerToolTipGetter(columnId: string) {
         content: cellText,
         cellWidth: cellWidth,
         cellHeight: cellHeight,
-        positionRectangle: toolTipPositionRectangle
+        positionRectangle: toolTipPositionRectangle,
       };
     },
   });
@@ -236,15 +239,21 @@ export function drawDataCellBackground() {
   if (drawingColumnIndex() === 0) {
     getTablePanelView(ctx).firstColumn = currentProperty();
   }
-  ctx2d.fillStyle = getUnderLineColor();
-  ctx2d.fillRect(0, 0, currentColumnWidth() * CPR(), rowHeight() * CPR());
+  
+  /*ctx2d.fillStyle = getUnderLineColor();
+  ctx2d.fillRect(
+    currentColumnLeft() * CPR(),
+    currentRowTop() * CPR(),
+    currentColumnWidth() * CPR(),
+    rowHeight() * CPR()
+  );*/
 
   ctx2d.fillStyle = getBackGroundColor();
   ctx2d.fillRect(
     CPR() * currentColumnLeft(),
     CPR() * currentRowTop(),
     CPR() * currentColumnWidth(),
-    CPR() * currentRowHeight()
+    CPR() * (currentRowHeight() - 1)
   );
   if (isRowCursor) {
     drawSelectedRowBorder(8);
@@ -330,13 +339,9 @@ function getBackGroundColor() {
     return "#eeeeff";
   } else if (isCellCursor) {
     return "#EDF2FF";
-  } 
-  else if (isRowCursor) {
-    return backgroundColor 
-      ? shadeHexColor(backgroundColor,-0.1)!
-      : "#EDF2FF";
-  } 
-  else {
+  } else if (isRowCursor) {
+    return backgroundColor ? shadeHexColor(backgroundColor, -0.1)! : "#EDF2FF";
+  } else {
     if (backgroundColor) {
       return backgroundColor;
     } else {
