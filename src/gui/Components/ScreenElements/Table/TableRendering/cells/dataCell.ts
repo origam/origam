@@ -95,9 +95,8 @@ function registerToolTipGetter(columnId: string) {
     return;
   }
 
-  const widthToMakeTextVisible =
-    CPR() * ctx2d.measureText(currentCellText()).width + cellRenderer.paddingLeft;
-  if (cellWidth > widthToMakeTextVisible) {
+  const widthToMakeTextVisible = ctx2d.measureText(currentCellText()).width;
+  if (cellWidth + 8 > widthToMakeTextVisible) {
     return;
   }
 
@@ -239,7 +238,7 @@ export function drawDataCellBackground() {
   if (drawingColumnIndex() === 0) {
     getTablePanelView(ctx).firstColumn = currentProperty();
   }
-  
+
   /*ctx2d.fillStyle = getUnderLineColor();
   ctx2d.fillRect(
     currentColumnLeft() * CPR(),
