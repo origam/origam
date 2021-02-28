@@ -30,3 +30,19 @@
   position: relative;
 }
 
+.colorDiv {
+  border: 1px solid #b0afb7;
+  border-radius: 2px;
+  padding: 2px;
+  width: 100%;
+  height: 100%;
+  &:focus {
+    border-color: #4c84ff;
+  }
+}
+
+.colorRect {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+}

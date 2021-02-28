@@ -5,7 +5,10 @@ import React from "react";
 import S from "./ColorEditor.module.scss";
 import { ColorResult, SketchPicker } from "react-color";
 import { createMachine, interpret } from "xstate";
-import { identity } from "lodash";
+
+import { IFocusAble } from "model/entities/FocusManager";
+
+
 
 @observer
 export default class ColorEditor extends React.Component<{
@@ -14,15 +17,24 @@ export default class ColorEditor extends React.Component<{
   onChange?: (value: string | null) => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onKeyDown?(event: any): void;
+  subscribeToFocusManager?: (obj: IFocusAble) => void;
 }> {
   refContainer = (elm: any) => (this.elmContainer = elm);
   elmContainer: any;
-  refInput = (elm: any) => (this.elmInput = elm);
-  elmInput: any;
+
   refDropdowner = (elm: any) => (this.elmDropdowner = elm);
   elmDropdowner: Dropdowner | null = null;
   refDroppedPanelContainer = (elm: any) => (this.elmDroppedPanelContainer = elm);
   elmDroppedPanelContainer: any;
+
+  elmInput: any = null;
+  refInput = (elm: any) => {
+    this.elmInput = elm;
+    if (this.elmInput && this.props.subscribeToFocusManager) {
+      this.props.subscribeToFocusManager(this.elmInput);
+    }
+  };
 
   constructor(props: any) {
     super(props);
@@ -96,6 +108,7 @@ export default class ColorEditor extends React.Component<{
                     },
                   ],
                   PICKER_OUTSIDE_INTERACTION: {
+                    target: "CLOSED_INACTIVE",
                     actions: [
                       "applyPickedValue",
                       "commitAppliedValue",
@@ -159,7 +172,6 @@ export default class ColorEditor extends React.Component<{
     )
   )
     .onTransition((state, event) => {
-      console.log(state.value, state);
       if (state.changed) {
         this.machineState = state;
       }
@@ -220,34 +232,38 @@ export default class ColorEditor extends React.Component<{
               zIndex: this.isDroppedDown ? 1000 : undefined,
             }}
           >
-            <input
-              style={{}}
+            <div
+              className={S.colorDiv}
+              tabIndex={0}
+              ref={(elm) => {
+                refTrigger(elm);
+                this.refInput(elm);
+              }}
+              onMouseDown={() => this.send({ type: "DROPDOWN_SYMBOL_MOUSE_DOWN" })}
+              onFocus={() => this.send({ type: "INPUT_FIELD_FOCUS" })}
+              onBlur={() => this.send({ type: "INPUT_FIELD_BLUR" })}
+              onKeyDown={(event) => this.props.onKeyDown?.(event)}
+            >
+              <div
+                className={S.colorRect}
+                style={{
+                  backgroundColor:
+                    (this.isDroppedDown ? this.pickedColor : this.appliedValue) || "#000000",
+                }}
+              />
+            </div>
+            {/*<input
+              style={{
+                backgroundColor:
+                  ,
+              }}
               className={S.input}
               type="text"
-              readOnly={this.props.isReadOnly}
+              readOnly={true}
               onBlur={() => this.send({ type: "INPUT_FIELD_BLUR" })}
               onFocus={() => this.send({ type: "INPUT_FIELD_FOCUS" })}
               ref={this.refInput}
-              // value={this.textfieldValue}
-              // readOnly={this.props.isReadOnly}
-              // onChange={this.handleTextfieldChange}
-              //onClick={this.props.onClick}
-              //onDoubleClick={this.props.onDoubleClick}
-              onKeyDown={(event) => this.send({ type: "INPUT_FIELD_KEY_DOWN", payload: { event } })}
-              value={(this.isDroppedDown ? this.pickedColor : this.appliedValue) || "#000000"}
-            />
-            {!this.props.isReadOnly && (
-              <div
-                className={S.dropdownSymbol}
-                onMouseDown={() =>
-                  !this.props.isReadOnly &&
-                  this.machine.send({ type: "DROPDOWN_SYMBOL_MOUSE_DOWN" })
-                }
-                ref={refTrigger}
-              >
-                <i className="fas fa-palette" />
-              </div>
-            )}
+            />*/}
           </div>
         )}
         content={({ setDropped }) => (
@@ -255,7 +271,9 @@ export default class ColorEditor extends React.Component<{
             tabIndex={0}
             ref={this.refDroppedPanelContainer}
             className={S.droppedPanelContainer}
-            onKeyDown={(event: any) => this.send({ type: "PICKER_KEY_DOWN", payload: { event } })}
+            onKeyDown={(event: any) => {
+              this.send({ type: "PICKER_KEY_DOWN", payload: { event } });
+            }}
           >
             <SketchPicker
               color={this.pickedColor || "#000000"}

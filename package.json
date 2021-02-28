@@ -29,6 +29,7 @@
     "@types/string-strip-html": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
+    "@xstate/inspect": "^0.4.1",
     "axios": "^0.19.2",
     "babel-eslint": "10.1.0",
     "babel-jest": "^24.9.0",
@@ -105,7 +106,6 @@
     "terser-webpack-plugin": "2.3.5",
     "ts-pnp": "1.1.6",
     "tui-image-editor": "^3.9.0",
-    "typescript": "~3.7.2",
     "url-loader": "2.3.0",
     "webpack": "4.42.0",
     "webpack-dev-server": "3.10.3",
@@ -197,5 +197,8 @@
   },
   "prettier": {
     "printWidth": 100
+  },
+  "devDependencies": {
+    "typescript": "3.9.9"
   }
 }
