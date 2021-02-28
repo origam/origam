@@ -269,7 +269,15 @@ export class FormViewEditor extends React.Component<{
             value={flashColor2htmlColor(this.props.value) || null}
             onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
             onBlur={() => this.props.onEditorBlur?.(undefined)}
+            onKeyDown={this.makeOnKeyDownCallBack()}
             isReadOnly={readOnly}
+            subscribeToFocusManager={(textEditor) =>
+              this.focusManager.subscribe(
+                textEditor,
+                this.props.property?.id,
+                this.props.property?.tabIndex
+              )
+            }
           />
         );
       case "Image":

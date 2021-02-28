@@ -170,7 +170,9 @@ export class TableViewEditor extends React.Component<{
             value={flashColor2htmlColor(this.props.getCellValue!()) || null}
             onChange={(value) => this.props.onChange?.(undefined, htmlColor2FlashColor(value))}
             onBlur={() => this.props.onEditorBlur?.(undefined)}
+            onKeyDown={this.props.onEditorKeyDown}
             isReadOnly={readOnly}
+            subscribeToFocusManager={(input) => input.focus()}
           />
         );
       case "TagInput":
