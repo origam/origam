@@ -42,8 +42,8 @@ export class ListRowContainer implements IRowsContainer {
       () => [
         this.filterConfiguration.activeFilters.map((filter) => [
           filter.propertyId,
-          filter.setting.val1,
-          filter.setting.val2,
+          Array.isArray(filter.setting.val1) ? [...filter.setting.val1] : filter.setting.val1,
+          Array.isArray(filter.setting.val2) ? [...filter.setting.val2] : filter.setting.val2,
           filter.setting.type,
         ]),
         this.orderingConfiguration.orderings.map((x) => [x.columnId, x.direction])],
