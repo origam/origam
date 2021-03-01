@@ -243,8 +243,7 @@ namespace Origam.ServerCore
             }
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp ?? "."),
-                RequestPath = new PathString("")
+                FileProvider = new PhysicalFileProvider(startUpConfiguration.PathToClientApp)
             });
             app.UseCors(builder => 
                 builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -252,6 +251,7 @@ namespace Origam.ServerCore
             {
                 routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
             });
+            app.UseCustomSpa(startUpConfiguration.PathToClientApp);
             // add DI to origam, in order to be able to resolve IPrincipal from
             // https://davidpine.net/blog/principal-architecture-changes/
             // https://docs.microsoft.com/cs-cz/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-3.0
