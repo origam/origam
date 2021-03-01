@@ -118,7 +118,9 @@ export class DataTable implements IDataTable {
 
   // Returns all values from currently loaded rows (in case the table is infinitely scrolled)
   getAllValuesOfProp(property: IProperty): Set<any> {
-    const values = this.rowsContainer.allRows.map((row) => this.getCellValue(row, property)).filter((row) => row);
+    const values = this.rowsContainer
+      .getFilteredRows({propertyFilterIdToExclude: property.id})
+      .map((row) => this.getCellValue(row, property)).filter((row) => row)
     if(values.some(value => isArray(value))){
       return new Set(values.flatMap(array => array));
     }

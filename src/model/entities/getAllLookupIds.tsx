@@ -9,11 +9,13 @@ import {getMenuItemId} from "model/selectors/getMenuItemId";
 import {getSessionId} from "model/selectors/getSessionId";
 import {getDataStructureEntityId} from "model/selectors/DataView/getDataStructureEntityId";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
+import {getUserFilters} from "model/selectors/DataView/getUserFilters";
+import {getUserFilterLookups} from "model/selectors/DataView/getUserFilterLookups";
 
 export function* getAllLookupIds(property: IProperty): Generator {
   const dataView = getDataView(property);
   if (isLazyLoading(dataView)) {
-    return yield getAllValuesOfProp(dataView, property);
+      return yield getAllValuesOfProp(property);
   }
   else {
     const dataTable = getDataTable(property);
@@ -21,13 +23,15 @@ export function* getAllLookupIds(property: IProperty): Generator {
   }
 }
 
-async function getAllValuesOfProp(ctx: any, property: IProperty): Promise<Set<any>> {
-  const api = getApi(ctx);
+async function getAllValuesOfProp(property: IProperty): Promise<Set<any>> {
+  const api = getApi(property);
   const listValues = await api.getFilterListValues({
-    MenuId: getMenuItemId(ctx),
-    SessionFormIdentifier: getSessionId(ctx),
-    DataStructureEntityId: getDataStructureEntityId(ctx),
-    Property: property.id
+    MenuId: getMenuItemId(property),
+    SessionFormIdentifier: getSessionId(property),
+    DataStructureEntityId: getDataStructureEntityId(property),
+    Property: property.id,
+    Filter: getUserFilters(property, property.id),
+    FilterLookups: getUserFilterLookups(property),
   });
   return new Set(
     listValues

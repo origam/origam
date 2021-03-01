@@ -436,6 +436,8 @@ export class OrigamAPI implements IApi {
     DataStructureEntityId: string;
     Property: string;
     SessionFormIdentifier: string | undefined;
+    Filter: string;
+    FilterLookups?: { [key: string]: string };
   }): Promise<any[]> {
     return (await this.axiosInstance.post(`/UIService/GetFilterListValues`, data)).data;
   }
@@ -477,12 +479,12 @@ export class OrigamAPI implements IApi {
     MenuId: string;
     SessionFormIdentifier: string;
     DataStructureEntityId: string;
-    Filter: string;
     Ordering: IOrdering[];
     RowLimit: number;
     RowOffset: number;
     ColumnNames: string[];
     MasterRowId: string | undefined;
+    Filter: string;
     FilterLookups?: { [key: string]: string };
   }): Promise<any> {
     return (await this.axiosInstance.post(`/UIService/GetRows`, data)).data;
