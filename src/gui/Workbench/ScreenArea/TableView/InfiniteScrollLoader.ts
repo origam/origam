@@ -150,7 +150,7 @@ export class InfiniteScrollLoader implements IInfiniteScrollLoader {
     if (this.groupFilter) {
       filters.push(this.groupFilter);
     }
-    const userFilters = getUserFilters(this.ctx);
+    const userFilters = getUserFilters({ctx: this.ctx});
     if (userFilters) {
       filters.push(userFilters);
     }

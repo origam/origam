@@ -166,7 +166,7 @@ export class ServerSideGrouper implements IGrouper {
 
   composeFinalFilter(rowGroup: IGroupTreeNode){
     const groupingFilter = rowGroup.composeGroupingFilter();
-    const userFilters = getUserFilters(this, rowGroup.columnId);
+    const userFilters = getUserFilters( {ctx: this, excludePropertyId: rowGroup.columnId});
 
     return userFilters 
       ? joinWithAND([groupingFilter, userFilters])
