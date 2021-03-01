@@ -102,6 +102,7 @@ export class ErrorDialogController implements IErrorDialogController {
   @action.bound displayDialog() {
     if (!this.isDialogDisplayed) {
       this.isDialogDisplayed = true;
+      const previouslyFocusedElement = document.activeElement as HTMLElement;
       const closeDialog = getDialogStack(this).pushDialog(
         "",
         <Observer>
@@ -113,6 +114,7 @@ export class ErrorDialogController implements IErrorDialogController {
                 closeDialog();
                 this.isDialogDisplayed = false;
                 this.dismissErrors();
+                previouslyFocusedElement?.focus();
               })}
             />
           )}
