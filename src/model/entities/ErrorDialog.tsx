@@ -114,7 +114,7 @@ export class ErrorDialogController implements IErrorDialogController {
                 closeDialog();
                 this.isDialogDisplayed = false;
                 this.dismissErrors();
-                previouslyFocusedElement?.focus();
+                setTimeout(() => previouslyFocusedElement?.focus(), 100);
               })}
             />
           )}
