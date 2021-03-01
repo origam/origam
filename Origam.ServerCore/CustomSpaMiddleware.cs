@@ -43,8 +43,10 @@ namespace Origam.ServerCore
                 {
                     return next();
                 }
-
-                context.Request.Path = "/index.html";
+                if (context.Request.Path == "/")
+                {
+                    context.Request.Path = "/index.html";
+                }
                 return next();
             });
             app.UseStaticFiles(new StaticFileOptions
