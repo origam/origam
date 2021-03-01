@@ -102,6 +102,7 @@ export class ErrorDialogController implements IErrorDialogController {
   @action.bound displayDialog() {
     if (!this.isDialogDisplayed) {
       this.isDialogDisplayed = true;
+      const previouslyFocusedElement = document.activeElement as HTMLElement;
       const closeDialog = getDialogStack(this).pushDialog(
         "",
         <Observer>
@@ -113,6 +114,7 @@ export class ErrorDialogController implements IErrorDialogController {
                 closeDialog();
                 this.isDialogDisplayed = false;
                 this.dismissErrors();
+                previouslyFocusedElement?.focus();
               })}
             />
           )}
@@ -143,6 +145,17 @@ export class ErrorDialogComponent extends React.Component<{
   errorMessages: Array<{ id: number; message: string; timestamp: string }>;
   onOkClick?: (event: any) => void;
 }> {
+
+  // previouslyFocusedElement: any;
+  //
+  // componentDidMount() {
+  //   this.previouslyFocusedElement = document.activeElement;
+  // }
+  //
+  // componentWillUnmount() {
+  //   setTimeout(()=> this.previouslyFocusedElement?.focus(), 500);
+  // }
+
   render() {
     return (
       <ModalWindow
