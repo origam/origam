@@ -1,10 +1,10 @@
-import {selectPrevRow} from "model/actions/DataView/selectPrevRow";
-import {selectNextRow} from "model/actions/DataView/selectNextRow";
-import {selectPrevColumn} from "model/actions/DataView/TableView/selectPrevColumn";
-import {selectNextColumn} from "model/actions/DataView/TableView/selectNextColumn";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
+import { selectPrevRow } from "model/actions/DataView/selectPrevRow";
+import { selectNextRow } from "model/actions/DataView/selectNextRow";
+import { selectPrevColumn } from "model/actions/DataView/TableView/selectPrevColumn";
+import { selectNextColumn } from "model/actions/DataView/TableView/selectNextColumn";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
@@ -16,7 +16,7 @@ export function onTableKeyDown(ctx: any) {
   return flow(function* onTableKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
-      console.log('KEY DOWN', dataView.id, event.key)
+      console.log("KEY DOWN", dataView.id, event.key);
       switch (event.key) {
         case "ArrowUp":
           event.preventDefault();
@@ -80,49 +80,6 @@ export function onTableKeyDown(ctx: any) {
           getTablePanelView(ctx).setEditing(false);
           getTablePanelView(ctx).clearCurrentCellEditData();
           getTablePanelView(ctx).triggerOnFocusTable();
-          break;
-        }
-
-        case "i": {
-          if(event.ctrlKey || event.metaKey) {
-            // Add record
-          }
-          break;
-        }
-        case "j": {
-          if((event.ctrlKey || event.metaKey) && event.shiftKey) {
-            // Add record
-          }
-          break;
-        }
-        case "Delete": {
-          if(event.ctrlKey || event.metaKey) {
-            // Delete record
-          }
-          break;
-        }
-        case "d": {
-          if(event.ctrlKey || event.metaKey) {
-
-          }
-          break;
-        }
-        case "k": {
-          if(event.ctrlKey || event.metaKey) {
-
-          }
-          break;
-        }
-        case "f": {
-          if(event.ctrlKey || event.metaKey) {
-
-          }
-          break;
-        }
-        case "g": {
-          if(event.ctrlKey || event.metaKey) {
-
-          }
           break;
         }
       }

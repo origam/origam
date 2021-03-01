@@ -29,7 +29,7 @@ import { onNextRowClick } from "model/actions-ui/DataView/onNextRowClick";
 import { onPrevRowClick } from "model/actions-ui/DataView/onPrevRowClick";
 import { onRecordAuditClick } from "model/actions-ui/RecordInfo/onRecordAuditClick";
 import { onRecordInfoClick } from "model/actions-ui/RecordInfo/onRecordInfoClick";
-import {IAction, IActionMode, IActionType} from "model/entities/types/IAction";
+import { IAction, IActionMode, IActionType } from "model/entities/types/IAction";
 import { getIsEnabledAction } from "model/selectors/Actions/getIsEnabledAction";
 import { getDataViewLabel } from "model/selectors/DataView/getDataViewLabel";
 import { getExpandedGroupRowCount } from "model/selectors/DataView/getExpandedGroupRowCount";
@@ -52,8 +52,29 @@ import Measure from "react-measure";
 import { onFirstRowClick } from "model/actions-ui/DataView/onFirstRowClick";
 import { onLastRowClick } from "model/actions-ui/DataView/onLastRowClick";
 import { T } from "utils/translation";
-import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
-import {IConfigurationManager} from "model/entities/TablePanelView/types/IConfigurationManager";
+import { getConfigurationManager } from "model/selectors/TablePanelView/getConfigurationManager";
+import { IConfigurationManager } from "model/entities/TablePanelView/types/IConfigurationManager";
+
+function isAddRecordShortcut(event: any) {
+  return (
+    ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "i") ||
+    ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "j")
+  );
+}
+
+function isDeleteRecordShortcut(event: any) {
+  return (event.ctrlKey || event.metaKey) && !event.shiftKey && event.key === "Delete";
+}
+
+function isDuplicateRecordShortcut(event: any) {
+  return (
+    (event.ctrlKey || event.metaKey) && !event.shiftKey && (event.key === "d" || event.key === "k")
+  );
+}
+
+function isFilterRecordShortcut(event: any) {
+  return (event.ctrlKey || event.metaKey) && event.key === "f";
+}
 
 @observer
 export class CDataViewHeaderInner extends React.Component<{
@@ -70,14 +91,14 @@ export class CDataViewHeaderInner extends React.Component<{
     hiddenActionIds: new Set<string>(),
   };
 
-  shouldBeShown(action: IAction){
+  shouldBeShown(action: IAction) {
     return getIsEnabledAction(action) || action.mode !== IActionMode.ActiveRecord;
   }
 
   renderActions(actions: IAction[]) {
     return actions
       .filter((action) => !action.groupId)
-      .filter(action => this.shouldBeShown(action))
+      .filter((action) => this.shouldBeShown(action))
       .map((action, idx) => this.renderAction(action, actions));
   }
 
@@ -192,10 +213,10 @@ export class CDataViewHeaderInner extends React.Component<{
     const selectedRow = getSelectedRow(dataView);
     const isDialog = !!getOpenedScreen(dataView).dialogInfo;
 
-    const goToFirstRowDisabled = getGroupingConfiguration(dataView).isGrouping ||
-      isInfiniteScrollingActive(dataView);
-    const goToLastRowDisabled = getGroupingConfiguration(dataView).isGrouping ||
-      isInfiniteScrollingActive(dataView);
+    const goToFirstRowDisabled =
+      getGroupingConfiguration(dataView).isGrouping || isInfiniteScrollingActive(dataView);
+    const goToLastRowDisabled =
+      getGroupingConfiguration(dataView).isGrouping || isInfiniteScrollingActive(dataView);
 
     const configurationManager = getConfigurationManager(dataView);
     const customTableConfigsExist = configurationManager.customTableConfigurations.length > 0;
@@ -241,6 +262,8 @@ export class CDataViewHeaderInner extends React.Component<{
                             <DataViewHeaderAction
                               className="isGreenHover"
                               onClick={onCreateRowClickEvt}
+                              onShortcut={onCreateRowClickEvt}
+                              shortcutPredicate={isAddRecordShortcut}
                             >
                               <Icon src="./icons/add.svg" tooltip={T("Add", "add_tool_tip")} />
                             </DataViewHeaderAction>
@@ -250,6 +273,8 @@ export class CDataViewHeaderInner extends React.Component<{
                             <DataViewHeaderAction
                               className="isRedHover"
                               onMouseDown={onDeleteRowClickEvt}
+                              onShortcut={onDeleteRowClickEvt}
+                              shortcutPredicate={isDeleteRecordShortcut}
                             >
                               <Icon
                                 src="./icons/minus.svg"
@@ -262,6 +287,8 @@ export class CDataViewHeaderInner extends React.Component<{
                             <DataViewHeaderAction
                               className="isOrangeHover"
                               onMouseDown={onCopyRowClickEvt}
+                              onShortcut={onCopyRowClickEvt}
+                              shortcutPredicate={isDuplicateRecordShortcut}
                             >
                               <Icon
                                 src="./icons/duplicate.svg"
@@ -281,9 +308,10 @@ export class CDataViewHeaderInner extends React.Component<{
                         {!isBreak640 && (
                           <>
                             <DataViewHeaderGroup noShrink={true}>
-                              <DataViewHeaderAction 
+                              <DataViewHeaderAction
                                 onMouseDown={onFirstRowClickEvt}
-                                isDisabled={goToFirstRowDisabled}>
+                                isDisabled={goToFirstRowDisabled}
+                              >
                                 <Icon
                                   src="./icons/list-arrow-first.svg"
                                   tooltip={T("First", "move_first_tool_tip")}
@@ -301,9 +329,10 @@ export class CDataViewHeaderInner extends React.Component<{
                                   tooltip={T("Next", "move_next_tool_tip")}
                                 />
                               </DataViewHeaderAction>
-                              <DataViewHeaderAction 
+                              <DataViewHeaderAction
                                 onMouseDown={onLastRowClickEvt}
-                                isDisabled={goToLastRowDisabled}>
+                                isDisabled={goToLastRowDisabled}
+                              >
                                 <Icon
                                   src="./icons/list-arrow-last.svg"
                                   tooltip={T("Last", "move_last_tool_tip")}
@@ -324,6 +353,8 @@ export class CDataViewHeaderInner extends React.Component<{
                         <DataViewHeaderGroup noShrink={true}>
                           <DataViewHeaderAction
                             onMouseDown={onFilterButtonClickEvt}
+                            onShortcut={onFilterButtonClickEvt}
+                            shortcutPredicate={isFilterRecordShortcut}
                             isActive={isFilterSettingsVisible}
                             className={"test-filter-button"}
                           >
@@ -365,7 +396,7 @@ export class CDataViewHeaderInner extends React.Component<{
                               >
                                 {T("Column configuration", "column_config_tool_tip")}
                               </DropdownItem>
-                              {!isDialog &&
+                              {!isDialog && (
                                 <DropdownItem
                                   isDisabled={false}
                                   onClick={(event: any) => {
@@ -375,8 +406,8 @@ export class CDataViewHeaderInner extends React.Component<{
                                 >
                                   {T("Show audit", "audit_title")}
                                 </DropdownItem>
-                              }
-                              {!isDialog &&
+                              )}
+                              {!isDialog && (
                                 <DropdownItem
                                   isDisabled={false}
                                   onClick={(event: any) => {
@@ -386,52 +417,58 @@ export class CDataViewHeaderInner extends React.Component<{
                                 >
                                   {T("Show record information", "info_button_tool_tip")}
                                 </DropdownItem>
-                              }
-                              {customTableConfigsExist &&
-                                [
-                                  <DropdownItem
-                                    isDisabled={false}
-                                    isSelected={configurationManager.defaultTableConfiguration.isActive}
-                                    onClick={async (event: any) => {
-                                      setDropped(false);
-                                      configurationManager.activeTableConfiguration = configurationManager.defaultTableConfiguration;
-                                      await configurationManager.saveTableConfigurations();
-                                    }}
-                                  >
-                                    {T("Default View", "default_grid_view_view")}
-                                  </DropdownItem>,
-                                  ...(configurationManager.customTableConfigurations.map(tableConfig =>
-                                  <DropdownItem
-                                    isDisabled={false}
-                                    isSelected={tableConfig.isActive}
-                                    onClick={async (event: any) => {
-                                      setDropped(false);
-                                      configurationManager.activeTableConfiguration = tableConfig;
-                                      await configurationManager.saveTableConfigurations();
-                                    }}
-                                  >
-                                    {tableConfig.name}
-                                  </DropdownItem>)),
-                                  <DropdownItem
-                                    isDisabled={false}
-                                    onClick={async (event: any) => {
-                                      setDropped(false);
-                                      await configurationManager.saveTableConfigurations();
-                                    }}
-                                  >
-                                    {T("Save View", "save_current_column_config")}
-                                  </DropdownItem>,
-                                  <DropdownItem
-                                    isDisabled={configurationManager.defaultTableConfiguration.isActive}
-                                    onClick={async (event: any) => {
-                                      setDropped(false);
-                                      await configurationManager.deleteActiveTableConfiguration();
-                                    }}
-                                  >
-                                    {T("Delete View", "delete_current_column_config")}
-                                  </DropdownItem>,
-                                ]
-                              }
+                              )}
+                              {customTableConfigsExist && [
+                                <DropdownItem
+                                  isDisabled={false}
+                                  isSelected={
+                                    configurationManager.defaultTableConfiguration.isActive
+                                  }
+                                  onClick={async (event: any) => {
+                                    setDropped(false);
+                                    configurationManager.activeTableConfiguration =
+                                      configurationManager.defaultTableConfiguration;
+                                    await configurationManager.saveTableConfigurations();
+                                  }}
+                                >
+                                  {T("Default View", "default_grid_view_view")}
+                                </DropdownItem>,
+                                ...configurationManager.customTableConfigurations.map(
+                                  (tableConfig) => (
+                                    <DropdownItem
+                                      isDisabled={false}
+                                      isSelected={tableConfig.isActive}
+                                      onClick={async (event: any) => {
+                                        setDropped(false);
+                                        configurationManager.activeTableConfiguration = tableConfig;
+                                        await configurationManager.saveTableConfigurations();
+                                      }}
+                                    >
+                                      {tableConfig.name}
+                                    </DropdownItem>
+                                  )
+                                ),
+                                <DropdownItem
+                                  isDisabled={false}
+                                  onClick={async (event: any) => {
+                                    setDropped(false);
+                                    await configurationManager.saveTableConfigurations();
+                                  }}
+                                >
+                                  {T("Save View", "save_current_column_config")}
+                                </DropdownItem>,
+                                <DropdownItem
+                                  isDisabled={
+                                    configurationManager.defaultTableConfiguration.isActive
+                                  }
+                                  onClick={async (event: any) => {
+                                    setDropped(false);
+                                    await configurationManager.deleteActiveTableConfiguration();
+                                  }}
+                                >
+                                  {T("Delete View", "delete_current_column_config")}
+                                </DropdownItem>,
+                              ]}
                             </Dropdown>
                           )}
                         />
