@@ -214,6 +214,10 @@ export class ScrollRowContainer implements IRowsContainer {
     }
     return this.rows[0];
   }
+
+  getFilteredRows(args: { propertyFilterIdToExclude: string }): any[] {
+    return [];
+  }
 }
 
 class RowChunk {
