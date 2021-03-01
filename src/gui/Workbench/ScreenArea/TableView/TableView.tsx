@@ -2,7 +2,7 @@ import bind from "bind-decorator";
 import { action, autorun, computed, observable, reaction } from "mobx";
 import { inject, observer, Provider } from "mobx-react";
 import { onTableKeyDown } from "model/actions-ui/DataView/TableView/onTableKeyDown";
-import React from "react";
+import React, { useContext } from "react";
 import { onColumnHeaderClick } from "../../../../model/actions-ui/DataView/TableView/onColumnHeaderClick";
 import { ITablePanelView } from "../../../../model/entities/TablePanelView/types/ITablePanelView";
 import { IDataView } from "../../../../model/entities/types/IDataView";
@@ -29,11 +29,9 @@ import { getLeadingColumnCount } from "model/selectors/TablePanelView/getLeading
 import { getDataTable } from "../../../../model/selectors/DataView/getDataTable";
 import { getTablePanelView } from "../../../../model/selectors/TablePanelView/getTablePanelView";
 import { getFormScreenLifecycle } from "../../../../model/selectors/FormScreen/getFormScreenLifecycle";
-import {
-  IAggregation,
-} from "model/entities/types/IAggregation";
-import {SelectionCheckBoxHeader} from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
-import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
+import { IAggregation } from "model/entities/types/IAggregation";
+import { SelectionCheckBoxHeader } from "gui/Components/ScreenElements/Table/SelectionCheckBoxHeader";
+import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
 import {
   parseAggregations,
   calcAggregations,
@@ -44,6 +42,15 @@ import _ from "lodash";
 import { getOpenedScreen } from "model/selectors/getOpenedScreen";
 import { getIsEditing } from "model/selectors/TablePanelView/getIsEditing";
 import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfigurationManager";
+import { CtxDataView, DataViewContext } from "gui/Components/ScreenElements/DataView";
+
+interface ITableViewProps {
+  dataView?: IDataView;
+  tablePanelView?: ITablePanelView;
+  onColumnDialogCancel?: (event: any) => void;
+  onColumnDialogOk?: (event: any, configuration: ITableConfiguration) => void;
+  onTableKeyDown?: (event: any) => void;
+}
 
 @inject(({ dataView }) => {
   return {
@@ -56,14 +63,9 @@ import { ITableConfiguration } from "model/entities/TablePanelView/types/IConfig
   };
 })
 @observer
-export class TableView extends React.Component<{
-  dataView?: IDataView;
-  tablePanelView?: ITablePanelView;
-  onColumnDialogCancel?: (event: any) => void;
-  onColumnDialogOk?: (event: any, configuration: ITableConfiguration) => void;
-  onTableKeyDown?: (event: any) => void;
-}> {
-
+export class TableViewInner extends React.Component<
+  ITableViewProps & { dataViewContext?: DataViewContext }
+> {
   constructor(props: any) {
     super(props);
 
@@ -73,13 +75,15 @@ export class TableView extends React.Component<{
     });
   }
 
-  componentDidMount(){
-    const openScreen = getOpenedScreen(this.props.dataView)
+  componentDidMount() {
+    const openScreen = getOpenedScreen(this.props.dataView);
     const dataViews = openScreen.content.formScreen?.dataViews;
-    const isMainDatView = dataViews && (dataViews.length > 0 && this.props.dataView?.isBindingRoot) || dataViews?.length === 1
+    const isMainDatView =
+      (dataViews && dataViews.length > 0 && this.props.dataView?.isBindingRoot) ||
+      dataViews?.length === 1;
 
-    if(openScreen.isActive && isMainDatView){
-      if(!this.props.dataView?.isFormViewActive()){
+    if (openScreen.isActive && isMainDatView) {
+      if (!this.props.dataView?.isFormViewActive()) {
         const tablePanelView = getTablePanelView(this.props.dataView);
         tablePanelView.triggerOnFocusTable();
       }
@@ -126,6 +130,12 @@ export class TableView extends React.Component<{
     getDataTable(this.props.dataView).unlockAddedRowPosition();
   }
 
+  @action.bound
+  handleTableKeyDown(event: any) {
+    this.props.onTableKeyDown?.(event);
+    this.props.dataViewContext?.handleTableKeyDown(event);
+  }
+
   render() {
     const self = this;
     const isSelectionCheckboxes = getIsSelectionCheckboxesShown(this.props.tablePanelView);
@@ -158,13 +168,18 @@ export class TableView extends React.Component<{
             onOutsideTableClick={onOutsideTableClick(this.props.tablePanelView)}
             onContentBoundsChanged={(bounds) => (this.props.dataView!.contentBounds = bounds)}
             refCanvasMovingComponent={this.props.tablePanelView!.setTableCanvas}
-            onKeyDown={this.props.onTableKeyDown}
+            onKeyDown={this.handleTableKeyDown}
             refTable={this.refTable}
           />
         </>
       </Provider>
     );
   }
+}
+
+export function TableView(props: ITableViewProps) {
+  const dataViewContext = useContext(CtxDataView);
+  return <TableViewInner {...props} dataViewContext={dataViewContext} />;
 }
 
 interface IHeaderRendererData {
@@ -313,10 +328,8 @@ class HeaderRenderer implements IHeaderRendererData {
     return <div style={{ minWidth: columnWidth + "px" }}></div>;
   }
 
-  renderSelectionCheckBoxHeader(columnWidth: number){
-    return <SelectionCheckBoxHeader
-      width={columnWidth}
-      dataView={this.dataView}/>;
+  renderSelectionCheckBoxHeader(columnWidth: number) {
+    return <SelectionCheckBoxHeader width={columnWidth} dataView={this.dataView} />;
   }
 
   @bind
@@ -368,7 +381,7 @@ class HeaderRenderer implements IHeaderRendererData {
 
   start() {
     return reaction(
-      ()=> [
+      () => [
         [...getTablePanelView(this.dataView).aggregations.aggregationList],
         getFilterConfiguration(this.dataView).activeFilters.map((x) => [
           x.propertyId,
@@ -376,34 +389,30 @@ class HeaderRenderer implements IHeaderRendererData {
           x.setting.val1,
           x.setting.val2,
         ]),
-        isInfiniteScrollingActive(this.dataView)
-          ? true 
-          : this.dataView.dataTable.rows.length === 0
+        isInfiniteScrollingActive(this.dataView) ? true : this.dataView.dataTable.rows.length === 0,
       ],
-      ()=> this.reloadAggregationsDebounced(),
+      () => this.reloadAggregationsDebounced(),
       { fireImmediately: true }
-    )
+    );
   }
 
-  reloadAggregationsDebounced = _.debounce(this.reloadAggregations, 10); 
+  reloadAggregationsDebounced = _.debounce(this.reloadAggregations, 10);
 
-  reloadAggregations(){
-      const aggregations = getTablePanelView(this.dataView).aggregations.aggregationList;
-      if (aggregations.length === 0) {
-        this.aggregationData.length = 0;
-        return;
-      }
-      if(isInfiniteScrollingActive(this.dataView)){
-        getFormScreenLifecycle(this.dataView)
-          .loadAggregations(this.dataView, aggregations)
-          .then((data) => (this.aggregationData = parseAggregations(data) || []));
-      }else{
-        this.aggregationData = calcAggregations(this.dataView, aggregations);
-      }
-    
+  reloadAggregations() {
+    const aggregations = getTablePanelView(this.dataView).aggregations.aggregationList;
+    if (aggregations.length === 0) {
+      this.aggregationData.length = 0;
+      return;
+    }
+    if (isInfiniteScrollingActive(this.dataView)) {
+      getFormScreenLifecycle(this.dataView)
+        .loadAggregations(this.dataView, aggregations)
+        .then((data) => (this.aggregationData = parseAggregations(data) || []));
+    } else {
+      this.aggregationData = calcAggregations(this.dataView, aggregations);
+    }
   }
 }
-
 
 export interface IHeaderContainer {
   header: JSX.Element;

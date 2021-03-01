@@ -1,10 +1,10 @@
-import {selectPrevRow} from "model/actions/DataView/selectPrevRow";
-import {selectNextRow} from "model/actions/DataView/selectNextRow";
-import {selectPrevColumn} from "model/actions/DataView/TableView/selectPrevColumn";
-import {selectNextColumn} from "model/actions/DataView/TableView/selectNextColumn";
-import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
-import {flow} from "mobx";
-import {handleError} from "model/actions/handleError";
+import { selectPrevRow } from "model/actions/DataView/selectPrevRow";
+import { selectNextRow } from "model/actions/DataView/selectNextRow";
+import { selectPrevColumn } from "model/actions/DataView/TableView/selectPrevColumn";
+import { selectNextColumn } from "model/actions/DataView/TableView/selectNextColumn";
+import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
+import { flow } from "mobx";
+import { handleError } from "model/actions/handleError";
 import { getDataView } from "model/selectors/DataView/getDataView";
 import { shouldProceedToChangeRow } from "./shouldProceedToChangeRow";
 import { getMenuItemId } from "model/selectors/getMenuItemId";
@@ -16,6 +16,7 @@ export function onTableKeyDown(ctx: any) {
   return flow(function* onTableKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
+      console.log("KEY DOWN", dataView.id, event.key);
       switch (event.key) {
         case "ArrowUp":
           event.preventDefault();

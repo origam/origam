@@ -1,7 +1,7 @@
 import { CDataViewHeader } from "gui/connections/CDataViewHeader";
 import { inject, Observer, observer, Provider } from "mobx-react";
 import { getIsDataViewOrFormScreenWorkingDelayed } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking";
-import React, { createContext, Fragment, ReactNode } from "react";
+import React, { createContext, Fragment, ReactNode, useState } from "react";
 import { IDataView } from "../../../model/entities/types/IDataView";
 import { getDataViewById } from "../../../model/selectors/DataView/getDataViewById";
 import S from "./DataView.module.css";
@@ -11,6 +11,7 @@ import { IDataViewBodyUI } from "modules/DataView/DataViewUI";
 import { TreeView } from "./TreeView";
 import { observable } from "mobx";
 import { getIsDataViewOrFormScreenWorking } from "model/selectors/DataView/getIsDataViewOrFormScreenWorking.1";
+import { PubSub } from "utils/events";
 
 export interface IDataViewHeaderExtensionItem {
   $iid: number;
@@ -46,9 +47,17 @@ export class DataViewHeaderExtension {
   }
 }
 
-export const CtxDataViewHeaderExtension = createContext<
-  DataViewHeaderExtension
->(new DataViewHeaderExtension());
+export const CtxDataViewHeaderExtension = createContext<DataViewHeaderExtension>(
+  new DataViewHeaderExtension()
+);
+
+interface IDataViewProps {
+  id: string;
+  height?: number;
+  width?: number;
+  isHeadless: boolean;
+  dataView?: IDataView;
+}
 
 @inject(({ formScreen }, { id }) => {
   const dataView = getDataViewById(formScreen, id);
@@ -57,13 +66,7 @@ export const CtxDataViewHeaderExtension = createContext<
   };
 })
 @observer
-export class DataView extends React.Component<{
-  id: string;
-  height?: number;
-  width?: number;
-  isHeadless: boolean;
-  dataView?: IDataView;
-}> {
+export class DataViewInner extends React.Component<IDataViewProps> {
   dataViewHeaderExtension = new DataViewHeaderExtension();
 
   getDataViewStyle() {
@@ -94,18 +97,14 @@ export class DataView extends React.Component<{
           <CDataViewHeader isVisible={!this.props.isHeadless} />
           {isWorking && <DataViewLoading />}
         </div>
-        <div className={S.dataViewContentContainer}>
-          {uiBody && uiBody.render()}
-        </div>
+        <div className={S.dataViewContentContainer}>{uiBody && uiBody.render()}</div>
       </>
     );
   }
 
   render() {
     // TODO: Move styling to stylesheet
-    const isWorkingDelayed = getIsDataViewOrFormScreenWorkingDelayed(
-      this.props.dataView
-    );
+    const isWorkingDelayed = getIsDataViewOrFormScreenWorkingDelayed(this.props.dataView);
 
     return (
       <CtxDataViewHeaderExtension.Provider value={this.dataViewHeaderExtension}>
@@ -123,4 +122,28 @@ export class DataView extends React.Component<{
       </CtxDataViewHeaderExtension.Provider>
     );
   }
+}
+
+export class DataViewContext {
+  private tableKeyDownChannel = new PubSub();
+
+  subscribeTableKeyDownHandler(fn: (event: any) => void) {
+    return this.tableKeyDownChannel.subscribe(fn);
+  }
+
+  handleTableKeyDown(event: any) {
+    console.log("DataView context handled", event);
+    this.tableKeyDownChannel.trigger(event);
+  }
+}
+
+export const CtxDataView = createContext<DataViewContext | undefined>(undefined);
+
+export function DataView(props: IDataViewProps) {
+  const [context] = useState(() => new DataViewContext());
+  return (
+    <CtxDataView.Provider value={context}>
+      <DataViewInner {...props} />
+    </CtxDataView.Provider>
+  );
 }

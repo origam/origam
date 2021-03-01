@@ -36,6 +36,14 @@ import { getApi } from "model/selectors/getApi";
 import { getIsSuppressRefresh } from "model/selectors/FormScreen/getIsSuppressRefresh";
 import { getHelpUrl } from "model/selectors/User/getHelpUrl";
 
+function isSaveShortcut(event: any) {
+  return event.key === "s" && (event.ctrlKey || event.metaKey);
+}
+
+function isRefreshShortcut(event: any) {
+  return event.key === "r" && (event.ctrlKey || event.metaKey);
+}
+
 @observer
 export class CScreenToolbar extends React.Component<{}> {
   static contextType = MobXProviderContext;
@@ -187,6 +195,8 @@ export class CScreenToolbar extends React.Component<{}> {
                 <ScreenToolbarAction
                   className={isDirty ? "isRed isHoverGreen" : ""}
                   onClick={onSaveSessionClick(formScreen)}
+                  onShortcut={onSaveSessionClick(formScreen)}
+                  shortcutPredicate={isSaveShortcut}
                   icon={
                     <Icon
                       src="./icons/save.svg"
@@ -200,6 +210,8 @@ export class CScreenToolbar extends React.Component<{}> {
               {!getIsSuppressRefresh(formScreen) && (
                 <ScreenToolbarAction
                   onClick={onRefreshSessionClick(formScreen)}
+                  onShortcut={onRefreshSessionClick(formScreen)}
+                  shortcutPredicate={isRefreshShortcut}
                   icon={
                     <Icon src="./icons/refresh.svg" tooltip={T("Refresh", "refresh_tool_tip")} />
                   }
