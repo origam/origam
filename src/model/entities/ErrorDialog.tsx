@@ -145,17 +145,6 @@ export class ErrorDialogComponent extends React.Component<{
   errorMessages: Array<{ id: number; message: string; timestamp: string }>;
   onOkClick?: (event: any) => void;
 }> {
-
-  // previouslyFocusedElement: any;
-  //
-  // componentDidMount() {
-  //   this.previouslyFocusedElement = document.activeElement;
-  // }
-  //
-  // componentWillUnmount() {
-  //   setTimeout(()=> this.previouslyFocusedElement?.focus(), 500);
-  // }
-
   render() {
     return (
       <ModalWindow
