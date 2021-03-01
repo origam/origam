@@ -104,7 +104,7 @@ export class FormField extends React.Component<{
     const editorStyle = this.formFieldStyle as any;
     editorStyle["position"] = "static";
     return(
-      <Tooltip html={this.props.toolTip} position={"right"} theme={"light"} distance={10} style={toolTipStyle}>
+      <Tooltip html={this.props.toolTip} position={"top-start"} theme={"light"} distance={10} style={toolTipStyle}>
         <div className={S.editor} style={editorStyle}>
           {this.props.editor}
         </div>
