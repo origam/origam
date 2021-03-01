@@ -20,6 +20,7 @@ along with ORIGAM. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Origam.ServerCommon;
 
 namespace Origam.ServerCore.Model.UIService
@@ -32,5 +33,7 @@ namespace Origam.ServerCore.Model.UIService
         [RequiredNonDefault]
         public Guid DataStructureEntityId { get; set; }
         public string Property { get; set; }
+        public string Filter { get; set; }
+        public Dictionary<string, Guid> FilterLookups { get; set; }
     }
 }
