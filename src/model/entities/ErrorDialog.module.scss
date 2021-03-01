@@ -1,15 +1,17 @@
 .dialogContent {
-  width: 50vh;
   padding: 1.5em 1em;
   white-space: pre-wrap;
   display: flex;
+  max-height: 400px;
+  max-width: 527px;
 }
 
 .errorMessageList {
   display: flex;
   flex-direction: column;
   overflow: auto;
-  max-height: 40vh;
+  max-height: 350px;
+  max-width: 460px;
   flex: 1;
 }
 
