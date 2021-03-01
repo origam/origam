@@ -883,7 +883,11 @@ namespace Origam.ServerCore.Controller
             var query = new DataStructureQuery
             {
                 Entity = entity,
-                CustomFilters = new CustomFilters{Filters = ""},
+                CustomFilters = new CustomFilters
+                {
+                    Filters = input.Filter,
+                    FilterLookups = input.FilterLookups ?? new Dictionary<string, Guid>()
+                },
                 CustomOrderings = new CustomOrderings(new List<Ordering>()),
                 RowLimit = 999999,
                 ColumnsInfo = new ColumnsInfo(
