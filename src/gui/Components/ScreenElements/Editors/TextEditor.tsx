@@ -13,6 +13,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
+const autoUpdateUntervalMs = 60_000;
+
 @observer
 export class TextEditor extends React.Component<{
   value: string | null;
@@ -36,10 +38,27 @@ export class TextEditor extends React.Component<{
   onEditorBlur?(event: any): void;
 }> {
   disposers: any[] = [];
+  currentValue = this.props.value;
+  lastAutoUpdatedValue = this.props.value;
+  updateInterval: NodeJS.Timeout | undefined;
 
   componentDidMount() {
     this.props.refocuser && this.disposers.push(this.props.refocuser(this.makeFocusedIfNeeded));
+    if (this.props.isMultiline){
+      this.disposers.push(this.startAutoUpdate());
+    }
     this.makeFocusedIfNeeded();
+  }
+
+  private startAutoUpdate() {
+    this.updateInterval = setInterval(() => {
+        if (this.lastAutoUpdatedValue !== this.currentValue) {
+          this.props.onEditorBlur?.(null);
+          this.lastAutoUpdatedValue = this.currentValue;
+        }
+      },
+      autoUpdateUntervalMs);
+    return () => this.updateInterval && clearTimeout(this.updateInterval);
   }
 
   componentWillUnmount() {
@@ -128,6 +147,7 @@ export class TextEditor extends React.Component<{
           <RichTextEditor
             value={this.props.value ?? ""}
             onChange={(newValue: any) => {
+              this.currentValue = newValue;
               this.props.onChange?.(undefined, newValue);
             }}
             onBlur={this.props.onEditorBlur}
@@ -181,9 +201,10 @@ export class TextEditor extends React.Component<{
           readOnly={this.props.isReadOnly}
           ref={this.refInput}
           maxLength={maxLength}
-          onChange={(event: any) =>
-            this.props.onChange && this.props.onChange(event, event.target.value)
-          }
+          onChange={(event: any) => {
+            this.currentValue = event.target.value;
+            this.props.onChange && this.props.onChange(event, event.target.value);
+          }}
           onKeyDown={this.props.onKeyDown}
           onDoubleClick={this.props.onDoubleClick}
           onClick={this.props.onClick}
