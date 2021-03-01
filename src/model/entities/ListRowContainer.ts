@@ -7,6 +7,7 @@ import {getDataView} from "model/selectors/DataView/getDataView";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import _ from "lodash";
 import { fixRowIdentifier } from "utils/dataRow";
+import {IProperty} from "model/entities/types/IProperty";
 
 export class ListRowContainer implements IRowsContainer {
   private orderingConfiguration: IOrderingConfiguration;
@@ -42,8 +43,8 @@ export class ListRowContainer implements IRowsContainer {
       () => [
         this.filterConfiguration.activeFilters.map((filter) => [
           filter.propertyId,
-          filter.setting.val1,
-          filter.setting.val2,
+          Array.isArray(filter.setting.val1) ? [...filter.setting.val1] : filter.setting.val1,
+          Array.isArray(filter.setting.val2) ? [...filter.setting.val2] : filter.setting.val2,
           filter.setting.type,
         ]),
         this.orderingConfiguration.orderings.map((x) => [x.columnId, x.direction])],
@@ -90,7 +91,7 @@ export class ListRowContainer implements IRowsContainer {
       function* () {
         yield * self.preloadLookups();
         let rows = self.allRows;
-        if (self.filterConfiguration.filteringFunction) {
+        if (self.filterConfiguration.filteringFunction()) {
           rows = rows.filter((row) => self.filterConfiguration.filteringFunction()(row));
         }
         if (self.orderingConfiguration.orderings.length !== 0) {
@@ -103,6 +104,11 @@ export class ListRowContainer implements IRowsContainer {
         }
       }
     )();
+  }
+
+  getFilteredRows(args:{propertyFilterIdToExclude: string}){
+    return this.allRows
+      .filter((row) => this.filterConfiguration.filteringFunction(args.propertyFilterIdToExclude)(row));
   }
 
   @computed get rows() {

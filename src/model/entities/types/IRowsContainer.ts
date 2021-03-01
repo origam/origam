@@ -1,3 +1,5 @@
+import {IProperty} from "model/entities/types/IProperty";
+
 export interface IRowsContainer {
   clear(): void;
 
@@ -20,6 +22,8 @@ export interface IRowsContainer {
   rows: any[];
 
   allRows: any[];
+
+  getFilteredRows(args:{propertyFilterIdToExclude: string}): any[];
 
   updateSortAndFilter(data?: {retainPreviousSelection?: true}): Promise<any>;
 

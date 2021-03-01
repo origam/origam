@@ -242,6 +242,8 @@ export interface IApi {
     DataStructureEntityId: string;
     Property: string;
     SessionFormIdentifier: string | undefined;
+    Filter: string;
+    FilterLookups?: { [key: string]: string };
   }): Promise<any[]>;
 
   getGroups(data: {

@@ -7,6 +7,7 @@ import { IRowsContainer } from "./types/IRowsContainer";
 import { IOpenedScreen } from "model/entities/types/IOpenedScreen";
 import { getDataTable } from "model/selectors/DataView/getDataTable";
 import { fixRowIdentifier } from "utils/dataRow";
+import {IProperty} from "model/entities/types/IProperty";
 
 // The constants have to be defined here for the unit tests to work.
 // const MAX_CHUNKS_TO_HOLD = 20;
@@ -38,6 +39,10 @@ export class ScrollRowContainer implements IRowsContainer {
   }
 
   get allRows() {
+    return this.rows;
+  }
+
+  getAllValuesOfProp(property: IProperty){
     return this.rows;
   }
 
@@ -208,6 +213,10 @@ export class ScrollRowContainer implements IRowsContainer {
       return undefined;
     }
     return this.rows[0];
+  }
+
+  getFilteredRows(args: { propertyFilterIdToExclude: string }): any[] {
+    return [];
   }
 }
 

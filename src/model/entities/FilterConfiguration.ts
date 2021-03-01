@@ -68,18 +68,22 @@ export class FilterConfiguration implements IFilterConfiguration {
     }
   }
 
-  get filteringFunction(): () => (row: any[]) => boolean {
-    return () => (row: any[]) => {
+  filteringFunction(ignorePropertyId?: string): (row: any[]) => boolean {
+    return (row: any[]) => {
       if (!this.isPresentInDetail(row)) {
         return false;
       }
       for (let term of this.implicitFilters) {
-        if (!this.implicitFilterPredicate(row, term)) {
+        if ((!ignorePropertyId || ignorePropertyId !== term.propertyId) &&
+          !this.implicitFilterPredicate(row, term))
+        {
           return false;
         }
       }
       for (let term of this.activeFilters) {
-        if (!this.userFilterPredicate(row, term)) {
+        if ((!ignorePropertyId || ignorePropertyId !== term.propertyId) &&
+          !this.userFilterPredicate(row, term))
+        {
           return false;
         }
       }

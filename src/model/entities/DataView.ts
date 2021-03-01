@@ -737,7 +737,7 @@ export class DataView implements IDataView {
         RowIds: [],
         LazyLoadedEntityInput: {
           SessionFormIdentifier: getSessionId(this),
-          Filter: getUserFilters(this),
+          Filter: getUserFilters({ctx: this}),
           MenuId: getMenuItemId(this),
           DataStructureEntityId: getDataStructureEntityId(this),
           Ordering: getUserOrdering(this),
