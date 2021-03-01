@@ -67,6 +67,7 @@ import produce from "immer";
 import { getDataSourceFieldIndexByName } from "model/selectors/DataSources/getDataSourceFieldIndexByName";
 import { onMainMenuItemClick } from "model/actions-ui/MainMenu/onMainMenuItemClick";
 import Axios from "axios";
+import { onPossibleSelectedRowChange } from "model/actions-ui/onPossibleSelectedRowChange";
 
 class SavedViewState {
   constructor(public selectedRowId: string | undefined) {}

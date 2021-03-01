@@ -8,3 +8,7 @@
 .scroller:global(.hidden) {
   display: none;
 }
+
+.scroller:focus {
+  box-shadow: inset 0px 0px 0px 1px #4c84ff;
+}

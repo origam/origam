@@ -71,6 +71,10 @@
   background-color: $blue;
   color: white !important;
 }
+.resultIemRowSelected div svg{
+  stroke: white;
+  stroke-width: 1.5;
+}
 
 .resultIemRowHovered {
   cursor: pointer;

@@ -136,7 +136,7 @@ export const CheckListRaw: React.FC<IRawCheckListProps> = observer((props) => {
   function focusLeft(x: number, y: number) {
     const inputsOnTheLeft = inputRefs
       .filter((input) => input.hasYEqualTo(y) && input.isOnTheLeftOf(x))
-      .sort((i1, i2) => i2.x - i1.x);
+      .sort((i1, i2) => i2.x  - i1.x);
 
     if (inputsOnTheLeft.length > 0) {
       inputsOnTheLeft[0].focus();
@@ -294,11 +294,11 @@ class InputReference {
   constructor(private inputRef: RefObject<HTMLInputElement>) {}
 
   get x() {
-    return this.inputRef.current?.getBoundingClientRect()!.x;
+    return this.inputRef.current?.getBoundingClientRect()!.x || 0;
   }
 
   get y() {
-    return this.inputRef.current?.getBoundingClientRect()!.y;
+    return this.inputRef.current?.getBoundingClientRect()!.y || 0;
   }
 
   hasXEqualTo(x: number) {

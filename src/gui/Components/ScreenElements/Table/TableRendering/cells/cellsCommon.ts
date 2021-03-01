@@ -1,4 +1,10 @@
-import {context2d, drawingColumnIndex, scRenderCell, scrollLeft, scrollTop} from "../renderingValues";
+import {
+  context2d,
+  drawingColumnIndex,
+  scRenderCell,
+  scrollLeft,
+  scrollTop,
+} from "../renderingValues";
 import {
   currentColumnLeft,
   currentColumnWidth,
@@ -6,8 +12,8 @@ import {
   currentRowTop,
   isCurrentCellFixed,
 } from "../currentCell";
-import {CPR} from "utils/canvas";
-import {Memoized} from "../common/Memoized";
+import { CPR } from "utils/canvas";
+import { Memoized } from "../common/Memoized";
 
 export function applyScrollTranslation() {
   const ctx2d = context2d();
@@ -18,16 +24,15 @@ export function clipCell() {
   const ctx2d = context2d();
   ctx2d.beginPath();
   ctx2d.rect(
-    CPR() * currentColumnLeft(),
+    CPR() * (currentColumnLeft() + 6),
     CPR() * currentRowTop(),
-    CPR() * currentColumnWidth(),
+    CPR() * (currentColumnWidth() - 12),
     CPR() * currentRowHeight()
   );
   ctx2d.clip();
 }
 
-
-export function drawSelectedRowBorder(frontStripeWidth: number){
+export function drawSelectedRowBorder(frontStripeWidth: number) {
   const ctx2d = context2d();
   ctx2d.beginPath();
   ctx2d.strokeStyle = "#4C84FF";
@@ -52,11 +57,10 @@ export function drawSelectedRowBorder(frontStripeWidth: number){
   }
 }
 
-
-export const numberCellPaddingRight = Memoized(() => 15)
+export const numberCellPaddingRight = Memoized(() => 15);
 scRenderCell.push(() => numberCellPaddingRight.clear());
 
-export const cellPaddingLeft = 5
+export const cellPaddingLeft = 5;
 export const cellPaddingLeftFirstCell = 25;
 export const cellPaddingRightFirstCell = 25;
 export const topTextOffset = 17;

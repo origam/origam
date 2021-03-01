@@ -1,41 +1,56 @@
 import React from "react";
-import { action, computed } from "mobx";
-
-import { getTablePanelView } from "../../selectors/TablePanelView/getTablePanelView";
-import { getDialogStack } from "../../selectors/DialogStack/getDialogStack";
-import { IColumnConfigurationDialog } from "./types/IColumnConfigurationDialog";
-import { ColumnsDialog, ITableColumnsConf } from "gui/Components/Dialogs/ColumnsDialog";
-import { onColumnConfigurationSubmit } from "model/actions-ui/ColumnConfigurationDialog/onColumnConfigurationSubmit";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {action, computed, flow} from "mobx";
+import {getDialogStack} from "../../selectors/DialogStack/getDialogStack";
+import {IColumnConfigurationDialog} from "./types/IColumnConfigurationDialog";
+import {ColumnsDialog,} from "gui/Components/Dialogs/ColumnsDialog";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
 import {isLazyLoading} from "model/selectors/isLazyLoading";
+import {ITableConfiguration} from "./types/IConfigurationManager";
+import {runGeneratorInFlowWithHandler, runInFlowWithHandler} from "utils/runInFlowWithHandler";
+import {getConfigurationManager} from "model/selectors/TablePanelView/getConfigurationManager";
+import {NewConfigurationDialog} from "gui/Components/Dialogs/NewConfigurationDialog";
 import {getFormScreenLifecycle} from "model/selectors/FormScreen/getFormScreenLifecycle";
+import {getTablePanelView} from "model/selectors/TablePanelView/getTablePanelView";
+import {getColumnConfigurationDialog} from "model/selectors/getColumnConfigurationDialog";
+import {saveColumnConfigurations} from "model/actions/DataView/TableView/saveColumnConfigurations";
+
+export interface IColumnOptions {
+  canGroup: boolean;
+  canAggregate: boolean;
+  entity: string;
+  name: string;
+}
 
 export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
-  @computed get columnsConfiguration() {
-    const conf: ITableColumnsConf = {
-      fixedColumnCount: this.tablePanelView.fixedColumnCount,
-      columnConf: [],
-    };
+
+  tableConfigBeforeChanges: ITableConfiguration | undefined;
+
+  getColumnOptions(){
     const groupingConf = getGroupingConfiguration(this);
     const groupingOnClient = !isLazyLoading(this);
-    for (let prop of this.tablePanelView.allTableProperties) {
-      conf.columnConf.push({
-        id: prop.id,
-        name: prop.name,
-        isVisible: !this.tablePanelView.hiddenPropertyIds.get(prop.id),
-        groupingIndex: groupingConf.groupingSettings.get(prop.id)?.groupIndex || 0,
-        aggregationType: this.tablePanelView.aggregations.getType(prop.id)!,
-        entity: prop.entity,
-        canGroup:
-          groupingOnClient ||
-          (!prop.isAggregatedColumn && !prop.isLookupColumn && prop.column !== "TagInput"),
-        canAggregate:
-          groupingOnClient ||
-          (!prop.isAggregatedColumn && !prop.isLookupColumn && prop.column !== "TagInput"),
-        timeGroupingUnit: groupingConf.groupingSettings.get(prop.id)?.groupingUnit
-      });
+    const activeTableConfiguration = this.configManager.activeTableConfiguration;
+    const optionsMap = new Map<string, IColumnOptions>()
+
+    for (let columnConfiguration of activeTableConfiguration.columnConfigurations) {
+      const property = this.tablePanelView.allTableProperties
+        .find(prop => prop.id === columnConfiguration.propertyId)!;
+      optionsMap.set(
+        property.id,
+        {
+          canGroup: groupingOnClient ||
+            (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
+          canAggregate: groupingOnClient ||
+            (!property.isAggregatedColumn && !property.isLookupColumn && property.column !== "TagInput"),
+          entity: property.entity,
+          name: property.name,
+        })
     }
-    return conf;
+    return optionsMap;
+  }
+
+  @computed get columnsConfiguration() {
+    this.tableConfigBeforeChanges = this.configManager.activeTableConfiguration.deepClone();
+    return this.configManager.activeTableConfiguration;
   }
 
   dialogKey = "";
@@ -47,36 +62,76 @@ export class ColumnConfigurationDialog implements IColumnConfigurationDialog {
     getDialogStack(this).pushDialog(
       this.dialogKey,
       <ColumnsDialog
+        columnOptions={this.getColumnOptions()}
         configuration={this.columnsConfiguration}
         onCancelClick={this.onColumnConfCancel}
+        onSaveAsClick={this.onSaveAsClick}
         onCloseClick={this.onColumnConfCancel}
-        onOkClick={onColumnConfigurationSubmit(this.tablePanelView)}
+        onOkClick={this.onColumnConfigurationSubmit.bind(this)}
       />
     );
   }
 
+  @action.bound
+  onColumnConfigurationSubmit(configuration: ITableConfiguration) {
+    const self = this;
+    runGeneratorInFlowWithHandler({
+      ctx: this,
+      generator: function* (){
+        self.onColumnConfSubmit(configuration);
+        self.tableConfigBeforeChanges = undefined;
+        yield* saveColumnConfigurations(self)();
+      }()
+    })
+  }
+
   @action.bound onColumnConfCancel(event: any): void {
+    this.revertChanges();
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 
-  @action.bound onColumnConfSubmit(event: any, configuration: ITableColumnsConf): void {
-    this.tablePanelView.fixedColumnCount = configuration.fixedColumnCount;
-    this.tablePanelView.hiddenPropertyIds.clear();
-    const groupingConf = getGroupingConfiguration(this);
-    groupingConf.clearGrouping();
-    for (let column of configuration.columnConf) {
-      this.tablePanelView.hiddenPropertyIds.set(column.id, !column.isVisible);
-      if (column.groupingIndex) {
-        groupingConf.setGrouping(column.id, column.timeGroupingUnit, column.groupingIndex);
-      }
-      this.tablePanelView.aggregations.setType(column.id, column.aggregationType);
+  private revertChanges() {
+    if (!this.tableConfigBeforeChanges) {
+      throw new Error("TableConfiguration was not backed up")
     }
+    this.configManager.activeTableConfiguration = this.tableConfigBeforeChanges;
+  }
+
+  @action.bound onSaveAsClick(event: any, configuration: ITableConfiguration): void {
+     const closeDialog = getDialogStack(this).pushDialog(
+      "",
+      <NewConfigurationDialog
+        onOkClick={(name) => {
+          runInFlowWithHandler({
+            ctx: this,
+            action: () => {
+              this.revertChanges();
+              this.configManager.cloneAndActivate(configuration, name);
+              this.onColumnConfigurationSubmit(this.configManager.activeTableConfiguration);
+            }
+          });
+          closeDialog();
+        }}
+        onCancelClick={() => {
+          this.revertChanges();
+          closeDialog();
+        }}
+      />
+    );
+  }
+
+  @action.bound onColumnConfSubmit(configuration: ITableConfiguration): void {
+    configuration.apply(this.tablePanelView);
     getFormScreenLifecycle(this).loadInitialData();
     getDialogStack(this).closeDialog(this.dialogKey);
   }
 
   @computed get tablePanelView() {
     return getTablePanelView(this);
+  }
+
+  get configManager(){
+    return getConfigurationManager(this);
   }
 
   parent?: any;

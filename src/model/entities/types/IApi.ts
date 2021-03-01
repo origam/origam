@@ -4,6 +4,7 @@ import { IServerSearchResult } from "model/entities/types/ISearchResult";
 import { IAboutInfo } from "./IAboutInfo";
 import { GroupingUnit } from "./GroupingUnit";
 import { IColumnSettings } from "./IColumnSettings";
+import {ITableConfiguration} from "model/entities/TablePanelView/types/IConfigurationManager";
 
 export interface IApi {
   getAboutInfo(): Promise<IAboutInfo>;
@@ -294,9 +295,8 @@ export interface IApi {
   saveObjectConfiguration(data: {
     sessionFormIdentifier: string;
     instanceId: string;
-    columnSettings: IColumnSettings[];
+    tableConfigurations: ITableConfiguration[];
     defaultView: string;
-    lockedColumns: number;
   }): Promise<any>;
 
   saveSplitPanelConfiguration(data: { InstanceId: string; Position: number }): Promise<any>;
