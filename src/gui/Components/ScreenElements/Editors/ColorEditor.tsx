@@ -8,8 +8,6 @@ import { createMachine, interpret } from "xstate";
 
 import { IFocusAble } from "model/entities/FocusManager";
 
-
-
 @observer
 export default class ColorEditor extends React.Component<{
   value: string | null;
@@ -201,7 +199,9 @@ export default class ColorEditor extends React.Component<{
   }
 
   @action.bound commitAppliedValue() {
-    this.props.onChange?.(this.appliedValue);
+    if (this.appliedValue !== this.props.value) {
+      this.props.onChange?.(this.appliedValue);
+    }
   }
 
   @action.bound revertAppliedValue() {
