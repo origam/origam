@@ -8,16 +8,13 @@ import { getRowStateForegroundColor } from "model/selectors/RowState/getRowState
 import { getRowStateRowBgColor } from "model/selectors/RowState/getRowStateRowBgColor";
 import { getSelectedRowId } from "model/selectors/TablePanelView/getSelectedRowId";
 import { getTablePanelView } from "model/selectors/TablePanelView/getTablePanelView";
-import moment from "moment";
 import { CPR } from "utils/canvas";
 import { shadeHexColor } from "utils/colorUtils";
-import actionsUi from "../../../../../../model/actions-ui-tree";
-import { getDataView } from "../../../../../../model/selectors/DataView/getDataView";
+import actionsUi from "model/actions-ui-tree";
+import { getDataView } from "model/selectors/DataView/getDataView";
 import {
   currentCellErrorMessage,
   currentCellText,
-  currentCellTextMultiline,
-  currentCellValue,
   currentColumnLeft,
   currentColumnLeftVisible,
   currentColumnWidth,
@@ -34,22 +31,17 @@ import {
   context2d,
   currentDataRow,
   drawingColumnIndex,
-  formScreen,
   recordId,
-  rowHeight,
   rowIndex,
   tableColumnIds,
   tablePanelView,
 } from "../renderingValues";
 import {
   applyScrollTranslation,
-  cellPaddingLeft,
-  cellPaddingLeftFirstCell,
   checkBoxCharacterFontSize,
   clipCell,
   drawSelectedRowBorder,
   fontSize,
-  numberCellPaddingRight,
   topTextOffset,
 } from "./cellsCommon";
 import {
@@ -95,7 +87,8 @@ function registerToolTipGetter(columnId: string) {
     return;
   }
 
-  const widthToMakeTextVisible = ctx2d.measureText(currentCellText()).width;
+  const widthToMakeTextVisible
+    = ctx2d.measureText(currentCellText()).width / CPR();
   if (cellWidth + 8 > widthToMakeTextVisible) {
     return;
   }
