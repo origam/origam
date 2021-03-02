@@ -349,13 +349,6 @@ namespace Origam.DA.Service.CustomCommandParser
                     {
                        return Guid.Empty;
                     }
-
-                    // if (operatorString == "starts" || operatorString == "nstarts" ||
-                    //     operatorString == "ends" || operatorString == "nends" || 
-                    //     operatorString == "contains" || operatorString == "ncontains")
-                    // {
-                    //     return value;
-                    // }
                     if (!Guid.TryParse(value, out Guid guidValue))
                     {
                         throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to Guid");
