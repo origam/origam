@@ -389,6 +389,7 @@
   "lookup_hint_cmd": "CMD + klikněte pro přechod na odkaz",
   "script_failed": "Selhalo vykonání skriptu '{0}'.",
   "blob_delete": "Vymazat",
+  "blob_delete_confirmation": "Přejete si vymazat {0}?",
   "blob_download": "Stáhnout",
   "blob_preview": "Náhled",
   "blob_upload": "Nahrát",

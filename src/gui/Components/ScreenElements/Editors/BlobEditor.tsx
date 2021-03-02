@@ -22,7 +22,6 @@ import {IFocusAble} from "model/entities/FocusManager";
 import {Tooltip} from "react-tippy";
 import cx from "classnames";
 import {Dropdowner} from "gui/Components/Dropdowner/Dropdowner";
-import {itemForNode} from "gui/connections/CMainMenu";
 import {Dropdown} from "gui/Components/Dropdown/Dropdown";
 import {DropdownItem} from "gui/Components/Dropdown/DropdownItem";
 import {T} from "utils/translation";
@@ -174,7 +173,7 @@ export class BlobEditor extends React.Component<{
           const closeDialog = this.props.dialogStack!.pushDialog(
             "",
             <ModalWindow
-              title="Question"
+              title={T("Question", "question_title")}
               titleButtons={null}
               buttonsCenter={
                 <>
@@ -186,7 +185,7 @@ export class BlobEditor extends React.Component<{
                       resolve(true);
                     }}
                   >
-                    OK
+                    {T("Yes", "button_yes")}
                   </button>
                   <button
                     tabIndex={0}
@@ -195,14 +194,16 @@ export class BlobEditor extends React.Component<{
                       resolve(false);
                     }}
                   >
-                    Cancel
+                    {T("No", "button_no")}
                   </button>
                 </>
               }
               buttonsLeft={null}
               buttonsRight={null}
             >
-              <div className={S.dialogContent}>Do you wish to delete {this.props.value} ?</div>
+              <div className={S.dialogContent}>
+                {T("Do you wish to delete {0}?", "blob_delete_confirmation", this.props.value)}
+              </div>
             </ModalWindow>
           );
         })

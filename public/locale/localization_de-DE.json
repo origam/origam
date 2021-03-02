@@ -389,6 +389,7 @@
   "lookup_hint_cmd": "CMD + Klick um Link zu folgen",
   "script_failed": "Script  '{0}' wurde nicht ausgeführt.",
   "blob_delete": "Löschen",
+  "blob_delete_confirmation": "Möchten Sie {0} löschen?",
   "blob_download": "Download",
   "blob_preview": "Preview",
   "blob_upload": "Hochladen",

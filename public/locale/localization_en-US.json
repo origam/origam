@@ -393,6 +393,7 @@
   "lookup_hint_cmd": "CMD + click to follow link",
   "script_failed": "Failed to perform script '{0}'.",
   "blob_delete": "Delete",
+  "blob_delete_confirmation": "Do you wish to delete {0}?",
   "blob_download": "Download",
   "blob_preview": "Preview",
   "blob_upload": "Upload",
