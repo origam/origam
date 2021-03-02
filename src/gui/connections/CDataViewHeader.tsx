@@ -375,7 +375,9 @@ export class CDataViewHeaderInner extends React.Component<{
                               onMouseDown={() => setDropped(true)}
                               isActive={false}
                             >
-                              <Icon src="./icons/dot-menu.svg" tooltip={""} />
+                              <Icon
+                                src="./icons/dot-menu.svg"
+                                tooltip={T("Tools", "tools_tool_tip")} />
                             </DataViewHeaderAction>
                           )}
                           content={({ setDropped }) => (
