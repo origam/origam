@@ -88,7 +88,6 @@ export class FormViewEditor extends React.Component<{
             value={this.props.value}
             isReadOnly={readOnly}
             isInvalid={isInvalid}
-            isMultiline={this.props.property!.multiline}
             isPassword={this.props.property!.isPassword}
             invalidMessage={invalidMessage}
             property={this.props.property}

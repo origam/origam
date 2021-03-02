@@ -13,7 +13,6 @@ import { IProperty } from "model/entities/types/IProperty";
 @observer
 export class NumberEditor extends React.Component<{
   value: string | null;
-  isMultiline?: boolean;
   isReadOnly: boolean;
   isPassword?: boolean;
   isInvalid: boolean;
@@ -45,8 +44,9 @@ export class NumberEditor extends React.Component<{
     }
     return formatNumber(
       this.props.customNumberFormat,
-      this.props.property?.entity ?? '',
-      Number(this.props.value));
+      this.props.property?.entity ?? "",
+      Number(this.props.value)
+    );
   }
 
   @computed get editValue() {
@@ -69,13 +69,15 @@ export class NumberEditor extends React.Component<{
     this.disposers.forEach((d) => d());
   }
 
-  componentDidUpdate(prevProps: { isFocused: boolean, value: any }) {
+  componentDidUpdate(prevProps: { isFocused: boolean; value: any }) {
     if (!prevProps.isFocused && this.props.isFocused) {
       this.makeFocusedIfNeeded();
     }
-    if(this.props.value !== prevProps.value) {
+    if (this.props.value !== prevProps.value) {
       this.wasChanged = false;
-      this.editingValue = this.numeralFormattedValue;
+      if (!this.hasFocus) {
+        this.editingValue = this.numeralFormattedValue;
+      }
     }
   }
 
@@ -99,6 +101,7 @@ export class NumberEditor extends React.Component<{
 
   @action.bound
   handleBlur(event: any) {
+    this.hasFocus = false;
     if (!this.wasChanged || this.props.value === this.editValue) {
       this.props.onEditorBlur?.(event);
       return;
@@ -106,7 +109,6 @@ export class NumberEditor extends React.Component<{
     if (this.editValue === "") {
       this.props.onEditorBlur?.(event);
     } else {
-      this.hasFocus = false;
       this.props.onEditorBlur?.(event);
     }
   }
@@ -133,6 +135,8 @@ export class NumberEditor extends React.Component<{
   @action.bound handleKeyDown(event: any) {
     if (event.key === "Escape") {
       this.wasChanged = false;
+    } else if (event.key === "Enter") {
+      this.editingValue = this.numeralFormattedValue;
     }
     this.props.onKeyDown && this.props.onKeyDown(event);
   }
@@ -154,46 +158,30 @@ export class NumberEditor extends React.Component<{
   }
 
   render() {
-    const maxLength = this.props.maxLength === 0
-      ? undefined
-      : this.props.maxLength;
+    const maxLength = this.props.maxLength === 0 ? undefined : this.props.maxLength;
     return (
       <div className={S.editorContainer}>
-        {!this.props.isMultiline ? (
-          <input
-            style={this.getStyle()}
-            title={this.props.customNumberFormat || ""}
-            className={cx(S.input, "isRightAligned")}
-            type={this.props.isPassword ? "password" : "text"}
-            autoComplete={this.props.isPassword ? "new-password" : undefined}
-            value={this.editValue !== undefined && this.editValue !== "NaN" && this.editValue !== null
+        <input
+          style={this.getStyle()}
+          title={this.props.customNumberFormat || ""}
+          className={cx(S.input, "isRightAligned")}
+          type={this.props.isPassword ? "password" : "text"}
+          autoComplete={this.props.isPassword ? "new-password" : undefined}
+          value={
+            this.editValue !== undefined && this.editValue !== "NaN" && this.editValue !== null
               ? this.editValue
-              : ""}
-            maxLength={maxLength}
-            readOnly={this.props.isReadOnly}
-            ref={this.refInput}
-            onChange={this.handleChange}
-            onKeyDown={this.props.onKeyDown}
-            onClick={this.props.onClick}
-            onDoubleClick={this.props.onDoubleClick}
-            onBlur={this.handleBlur}
-            onFocus={this.handleFocus}
-          />
-        ) : (
-          <textarea
-            style={this.getStyle()}
-            className={S.input}
-            value={this.props.value || ""}
-            maxLength={maxLength}
-            readOnly={this.props.isReadOnly}
-            ref={this.refInput}
-            onChange={this.handleChange}
-            onKeyDown={this.props.onKeyDown}
-            onClick={this.props.onClick}
-            onBlur={this.handleBlur}
-            onFocus={this.handleFocus}
-          />
-        )}
+              : ""
+          }
+          maxLength={maxLength}
+          readOnly={this.props.isReadOnly}
+          ref={this.refInput}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+          onClick={this.props.onClick}
+          onDoubleClick={this.props.onDoubleClick}
+          onBlur={this.handleBlur}
+          onFocus={this.handleFocus}
+        />
         {this.props.isInvalid && (
           <div className={S.notification}>
             <Tooltip html={this.props.invalidMessage} arrow={true}>
