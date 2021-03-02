@@ -296,7 +296,7 @@ namespace Origam.DA.Service.CustomCommandParser
             this.parameterReferenceChar = parameterReferenceChar;
         }
 
-        private string GetParameterName(string columnName, object value)
+        private string GetParameterName(string columnName)
         {
             return parameterReferenceChar + columnName;
         }
@@ -387,7 +387,7 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private string GetSqlOfLeafNode(){
 
-            string parameterName = GetParameterName(ColumnName, ColumnValue);
+            string parameterName = GetParameterName(ColumnName);
             var (operatorName, renderedColumnValue) =
                 GetRendererInput(Operator, parameterName);    
             if (Children.Count == 0)
@@ -404,6 +404,12 @@ namespace Origam.DA.Service.CustomCommandParser
                         rightValue: null, 
                         operatorName: operatorName);
                 }
+
+                if ((Operator == "eq" || Operator == "neq") && DataType == OrigamDataType.Date)
+                {
+                    return RenderDateEquals();
+                }
+
                 parameterDataList.Add(new ParameterData
                 {
                     ColumnName = ColumnName,
@@ -433,7 +439,7 @@ namespace Origam.DA.Service.CustomCommandParser
                             ParameterName = columnNameNumbered,
                             Value = ToDbValue(value, DataType)
                         });
-                        return GetParameterName(columnNameNumbered, value);
+                        return GetParameterName(columnNameNumbered);
                     })
                     .ToArray();
                 return renderer.BinaryOperator(
@@ -447,7 +453,51 @@ namespace Origam.DA.Service.CustomCommandParser
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
         }
-        
+
+        private string RenderDateEquals()
+        {
+            string actualOperator;
+            switch (Operator)
+            {
+                case "eq":
+                    actualOperator = "between";
+                    break;
+                case "neq":
+                    actualOperator = "nbetween";
+                    break;
+                default:
+                    throw new InvalidOperationException("Operator must be eq or neq");
+            }
+            
+            var (operatorName, _) =
+                GetRendererInput(actualOperator, ""); 
+
+            DateTime equalsDate = (DateTime)ToDbValue(ColumnValue, DataType);
+            DateTime startDate = new DateTime(equalsDate.Year, equalsDate.Month, equalsDate.Day);
+            DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
+            var parameterNames = new[] { startDate, endDate }
+                .Select((value, i) =>
+                {
+                    string columnNameNumbered = ColumnName + "_" + i;
+                    parameterDataList.Add(new ParameterData
+                    {
+                        ColumnName = ColumnName,
+                        ParameterName = columnNameNumbered,
+                        Value = value
+                    });
+                    return GetParameterName(columnNameNumbered);
+                })
+                .ToArray();
+
+            return renderer.BinaryOperator(
+                columnName: ColumnName,
+                leftValue: RenderedColumnName, 
+                rightValues: parameterNames, 
+                operatorName: operatorName,
+                isColumnArray: columnNameToType[ColumnName] 
+                               == OrigamDataType.Array);
+        }
+
         private (string,string) GetRendererInput(string operatorName, string value)
         {
             switch (operatorName)
