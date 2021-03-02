@@ -143,6 +143,9 @@ export class FilterSettingsDate extends React.Component<{
         break;
       case "between":
       case "nbetween":
+        if(setting.val2 != undefined){
+          setting.val2 = setting.val2.substr(0, 10).concat("T23:59:59")
+        }
         setting.isComplete = setting.val1 !== undefined && setting.val2 !== undefined;
         break;
       default:
