@@ -12,4 +12,11 @@
     width: 20px;
     height: 20px;
   }
+
+  :global(.editor) {
+    position: relative;
+    left: -1px;
+    top: 0px;
+  }
 }
+

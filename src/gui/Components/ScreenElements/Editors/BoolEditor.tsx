@@ -10,6 +10,7 @@ import { Tooltip } from "react-tippy";
 export class BoolEditor extends React.Component<{
   value: boolean;
   isReadOnly: boolean;
+  readOnlyNoGrey?: boolean;
   onChange?(event: any, value: boolean): void;
   onKeyDown?(event: any): void;
   onClick?(event: any): void;
@@ -43,8 +44,8 @@ export class BoolEditor extends React.Component<{
           className="editor"
           type="checkbox"
           checked={this.props.value}
-          readOnly={this.props.isReadOnly}
-          disabled={this.props.isReadOnly}
+          readOnly={!this.props.readOnlyNoGrey && this.props.isReadOnly}
+          disabled={!this.props.readOnlyNoGrey && this.props.isReadOnly}
           onChange={(event: any) => {
             this.props.onChange &&
               !this.props.isReadOnly &&
