@@ -260,7 +260,7 @@ namespace Origam.DA.Service.CustomCommandParser
             : null;
         private string ColumnValue => ValueToOperand(SplitValue[2]);
 
-        private OrigamDataType DataType
+        private OrigamDataType ColumnDataType
         {
             get
             {
@@ -349,6 +349,13 @@ namespace Origam.DA.Service.CustomCommandParser
                     {
                        return Guid.Empty;
                     }
+
+                    // if (operatorString == "starts" || operatorString == "nstarts" ||
+                    //     operatorString == "ends" || operatorString == "nends" || 
+                    //     operatorString == "contains" || operatorString == "ncontains")
+                    // {
+                    //     return value;
+                    // }
                     if (!Guid.TryParse(value, out Guid guidValue))
                     {
                         throw new ArgumentOutOfRangeException($"Cannot parse \"{value}\" to Guid");
@@ -405,11 +412,12 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
                 parameterDataList.Add(new ParameterData
-                {
-                    ColumnName = ColumnName,
-                    ParameterName = ColumnName,
-                    Value = ToDbValue(ColumnValue, DataType)
-                });
+                (
+                    columnName: ColumnName,
+                    parameterName: ColumnName,
+                    value: ToDbValue(ColumnValue, ParameterDataType),
+                    dataType: ParameterDataType
+                ));
                 return renderer.BinaryOperator(
                     leftValue: RenderedColumnName, 
                     rightValue: renderedColumnValue, 
@@ -427,12 +435,11 @@ namespace Origam.DA.Service.CustomCommandParser
                     .Select((value, i) =>
                     {
                         string columnNameNumbered = ColumnName + "_" + i;
-                        parameterDataList.Add(new ParameterData
-                        {
-                            ColumnName = ColumnName,
-                            ParameterName = columnNameNumbered,
-                            Value = ToDbValue(value, DataType)
-                        });
+                        parameterDataList.Add(new ParameterData(
+                            columnName: ColumnName,
+                            parameterName: columnNameNumbered,
+                            value: ToDbValue(value, ParameterDataType),
+                            dataType: ParameterDataType));
                         return GetParameterName(columnNameNumbered, value);
                     })
                     .ToArray();
@@ -447,7 +454,25 @@ namespace Origam.DA.Service.CustomCommandParser
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
         }
-        
+
+        public OrigamDataType ParameterDataType {
+            get
+            {
+                if (ColumnDataType == OrigamDataType.Array)
+                {
+                    return OrigamDataType.String;
+                }
+
+                if (ColumnDataType == OrigamDataType.UniqueIdentifier &&
+                    (Operator != "eq" || Operator != "neq"))
+                {
+                    return OrigamDataType.String;
+                }
+
+                return ColumnDataType;
+            }
+        }
+
         private (string,string) GetRendererInput(string operatorName, string value)
         {
             switch (operatorName)
@@ -495,8 +520,18 @@ namespace Origam.DA.Service.CustomCommandParser
 
     public class ParameterData
     {
-        public string ParameterName { get; set; }
-        public string ColumnName { get; set; }
-        public object Value { get; set; }
+        public string ParameterName { get;  }
+        public string ColumnName { get;  }
+        public object Value { get;  }
+        public OrigamDataType DataType { get; }
+
+        public ParameterData(string parameterName, string columnName, 
+            object value, OrigamDataType dataType)
+        {
+            ParameterName = parameterName;
+            ColumnName = columnName;
+            Value = value;
+            DataType = dataType;
+        }
     }
 }

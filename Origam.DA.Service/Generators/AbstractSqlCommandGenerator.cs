@@ -403,9 +403,10 @@ namespace Origam.DA.Service
                     .Find(column => column.Name == parameterData.ColumnName);
                 var parameter = BuildParameter(parameterData.ParameterName, 
                     null,
-                    dataStructureColumn.DataType == OrigamDataType.Array 
-                        ? OrigamDataType.String 
-                        : dataStructureColumn.DataType,
+                    parameterData.DataType,
+                    // dataStructureColumn.DataType == OrigamDataType.Array 
+                    //     ? OrigamDataType.String 
+                    //     : dataStructureColumn.DataType,
                     null,
                     dataStructureColumn.Field.DataLength,
                     dataStructureColumn.Field.AllowNulls);
