@@ -404,9 +404,6 @@ namespace Origam.DA.Service
                 var parameter = BuildParameter(parameterData.ParameterName, 
                     null,
                     parameterData.DataType,
-                    // dataStructureColumn.DataType == OrigamDataType.Array 
-                    //     ? OrigamDataType.String 
-                    //     : dataStructureColumn.DataType,
                     null,
                     dataStructureColumn.Field.DataLength,
                     dataStructureColumn.Field.AllowNulls);
