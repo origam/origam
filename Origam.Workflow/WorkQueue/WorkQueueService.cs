@@ -52,6 +52,7 @@ namespace Origam.Workflow.WorkQueue
     public class WorkQueueService : IWorkQueueService
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private const string WQ_EVENT_ONCREATE = "fe40902f-8a44-477e-96f9-d157eee16a0f";
 
         Timer _t = new Timer(60000);
         Timer _queueAutoProcessTimer = new Timer(10000);
@@ -267,7 +268,7 @@ namespace Origam.Workflow.WorkQueue
                 }
 
                 // notifications - OnCreate
-                ProcessNotifications(wqc, workQueueId, new Guid("fe40902f-8a44-477e-96f9-d157eee16a0f"), ds, transactionId);
+                ProcessNotifications(wqc, workQueueId, new Guid(WQ_EVENT_ONCREATE), ds, transactionId);
 
                 return (Guid)row["Id"];
             }
@@ -1096,8 +1097,9 @@ namespace Origam.Workflow.WorkQueue
             }
         }
 
-        private void HandleMoveQueue(WorkQueueClass wqc, DataTable selectedRows, Guid newQueueId,
-            string errorMessage, string transactionId, bool resetErrors)
+        private void HandleMoveQueue(WorkQueueClass wqc, DataTable selectedRows, 
+            Guid newQueueId, string errorMessage, string transactionId, 
+            bool resetErrors)
         {
             foreach (DataRow row in selectedRows.Rows)
             {
@@ -1105,7 +1107,10 @@ namespace Origam.Workflow.WorkQueue
                 {
                     Guid itemId = (Guid)row["Id"];
 
-                    log.Info("Moving queue item " + itemId.ToString() + " to queue id " + newQueueId.ToString() + (errorMessage == null ? "" : " with error: " + errorMessage));
+                    log.Info("Moving queue item " + itemId.ToString() + 
+                        " to queue id " + newQueueId.ToString() +
+                        (errorMessage == null ? "" : " with error: " 
+                        + errorMessage));
                 }
                 row["refWorkQueueId"] = newQueueId;
                 if (resetErrors || errorMessage == null)
@@ -1118,6 +1123,18 @@ namespace Origam.Workflow.WorkQueue
                 }
             }
             StoreQueueItems(wqc, selectedRows, transactionId);
+            foreach (DataRow row in selectedRows.Rows)
+            {
+                DataSet slice = DatasetTools.CloneDataSet(selectedRows.DataSet);
+                DatasetTools.GetDataSlice(slice, new List<DataRow> { row });
+                if (log.IsInfoEnabled)
+                {
+                    Guid itemId = (Guid)row["Id"];
+                    log.Info("Running notifications for item " + itemId.ToString() + ".");
+                }
+                ProcessNotifications(wqc, newQueueId, new Guid(WQ_EVENT_ONCREATE),
+                    slice, transactionId);
+            }
         }
 
         private void HandleStateChange(string queueClass, DataTable selectedRows, string fieldName, string newValue, string transactionId)
