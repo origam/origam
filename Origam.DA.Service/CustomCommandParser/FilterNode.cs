@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.Service.CustomCommandParser
 {
@@ -11,7 +12,7 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
         private readonly Dictionary<string, string> lookupExpressions;
-        private readonly Dictionary<string, OrigamDataType> columnNameToType;
+        private readonly List<DataStructureColumn> dataStructureColumns;
         private string[] splitValue;
         public FilterNode Parent { get; set; }
         public List<FilterNode> Children { get; } = new List<FilterNode>();
@@ -69,17 +70,11 @@ namespace Origam.DA.Service.CustomCommandParser
             : null;
         private string ColumnValue => ValueToOperand(SplitValue[2]);
 
-        private OrigamDataType ColumnDataType
-        {
-            get
-            {
-                if (columnNameToType.ContainsKey(ColumnName))
-                {
-                    return columnNameToType[ColumnName];
-                }
-                throw new Exception($"Data type of column \"{ColumnName}\" is unknown");
-            }
-        }
+        private OrigamDataType ColumnDataType =>
+            dataStructureColumns
+                .FirstOrDefault(column => column.Name == ColumnName)
+                ?.DataType
+            ?? throw new Exception($"Data type of column \"{ColumnName}\" is unknown");
 
         public OrigamDataType ParameterDataType {
             get
@@ -110,14 +105,14 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly string parameterReferenceChar;
 
         public FilterNode(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
-            Dictionary<string, OrigamDataType> columnNameToType,
+            List<DataStructureColumn> dataStructureColumns,
             AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList,
             string parameterReferenceChar)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.lookupExpressions = lookupExpressions;
-            this.columnNameToType = columnNameToType;
+            this.dataStructureColumns = dataStructureColumns;
             renderer = filterRenderer;
             this.parameterDataList = parameterDataList;
             this.parameterReferenceChar = parameterReferenceChar;
@@ -276,8 +271,7 @@ namespace Origam.DA.Service.CustomCommandParser
                     leftValue: RenderedColumnName, 
                     rightValues: parameterNames, 
                     operatorName: operatorName,
-                    isColumnArray: columnNameToType[ColumnName] 
-                                   == OrigamDataType.Array);
+                    isColumnArray: ColumnDataType == OrigamDataType.Array);
             }
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
@@ -350,8 +344,7 @@ namespace Origam.DA.Service.CustomCommandParser
                 leftValue: RenderedColumnName, 
                 rightValues: parameterNames, 
                 operatorName: operatorName,
-                isColumnArray: columnNameToType[ColumnName] 
-                               == OrigamDataType.Array);
+                isColumnArray: ColumnDataType == OrigamDataType.Array);
         }
 
         private (string,string) GetRendererInput(string operatorName, string value)

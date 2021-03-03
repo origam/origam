@@ -30,21 +30,19 @@ namespace Origam.DA.Service.CustomCommandParser
 {
     public class FilterCommandParser: ICustomCommandParser
     {
+        private readonly List<DataStructureColumn> dataStructureColumns;
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
         private FilterNode root = null;
         private FilterNode currentNode = null;
-
         private readonly string whereFilterInput;
         private readonly string parameterReferenceChar;
-
         private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
-        private readonly Dictionary<string, OrigamDataType> columnNameToType = new Dictionary<string, OrigamDataType>();
         private readonly AbstractFilterRenderer filterRenderer;
         private string sql;
         private string[] columns;
 
-        public List<ParameterData> ParameterDataList { get; set; } = new List<ParameterData>();
+        public List<ParameterData> ParameterDataList { get; } = new List<ParameterData>();
         public string Sql
         {
             get
@@ -98,10 +96,7 @@ namespace Origam.DA.Service.CustomCommandParser
         :this(nameLeftBracket, nameRightBracket, filterRenderer,
             whereFilterInput, parameterReferenceChar)
         {
-            foreach (var column in dataStructureColumns)
-            {
-                AddDataType(column.Name, column.DataType); 
-            }
+            this.dataStructureColumns = dataStructureColumns;
         }
         
         public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
@@ -142,7 +137,7 @@ namespace Origam.DA.Service.CustomCommandParser
         {
             FilterNode newNode = new FilterNode(
                 nameLeftBracket, nameRightBracket,
-                filterColumnExpressions, columnNameToType,
+                filterColumnExpressions, dataStructureColumns,
                 filterRenderer, ParameterDataList, parameterReferenceChar)
             {
                 Parent = currentNode
@@ -184,15 +179,6 @@ namespace Origam.DA.Service.CustomCommandParser
             }
 
             return inpValue;
-        }
-        
-        public void AddDataType(string columnName, OrigamDataType columnDataType)
-        {
-            if (columnNameToType.ContainsKey(columnName))
-            {
-                throw new Exception(string.Format("Dupliacate column: {0}", columnName));
-            }
-            columnNameToType.Add(columnName, columnDataType);
         }
     }
 
