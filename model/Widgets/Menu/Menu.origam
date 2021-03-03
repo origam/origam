@@ -83,6 +83,21 @@
         frmi:requestSaveAfterUpdate="false"
         ami:roles="WidgetDropdownTest_MultiColumn_SuppressEmptyColumns"
         frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_MultiColumn_SuppressEmptyColumns.origam#WidgetDropdownTest_MultiColumn_SuppressEmptyColumns/250345d4-8c0f-4bbc-9320-72786aa0144e" />
+      <frmi:MenuItem
+        asi:abstract="false"
+        ami:alwaysOpenNew="false"
+        frmi:autoSaveOnListRecordChange="false"
+        ami:displayName="DropDown Server Side"
+        x:id="b472864c-ca39-4906-b4bc-e0d34ef3b907"
+        asi:name="WidgetDropdownTest_ServerSide"
+        ami:openExclusively="false"
+        frmi:readOnlyAccess="false"
+        frmi:refreshAfterSaveType="RefreshChangedRecords"
+        frmi:refreshOnFocus="false"
+        frmi:refreshPortalAfterSave="false"
+        frmi:requestSaveAfterUpdate="false"
+        ami:roles="WidgetDropdownTest_ServerSide"
+        frmi:screen="Widgets/FormControlSet/Widgets/WidgetDropdownTest_ServerSide.origam#WidgetDropdownTest_ServerSide/9fd5e1fe-4de1-408d-9708-cc1dd65d0a09" />
     </s:MenuItem>
     <s:MenuItem
       asi:abstract="false"

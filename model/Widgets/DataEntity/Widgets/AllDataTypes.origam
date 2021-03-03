@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0">
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:dp="http://schemas.origam.com/Origam.Schema.EntityModel.DatabaseParameter/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0">
   <tmi:DataEntity
     asi:abstract="false"
     ade:audit="None"
@@ -9,6 +9,84 @@
     tmi:mappedObjectName="AllDataTypes"
     asi:name="AllDataTypes"
     ade:readOnly="false">
+    <dp:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataLength="50"
+      sip:dataType="String"
+      x:id="daafcc1e-46db-44bd-9bf1-732e4a2d1387"
+      asi:name="parText1" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="37cb378c-573a-4c5d-9b4f-4cc151bc501d"
+      asi:name="GetLikeText1">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Like.origam#Like/519cd4e2-59fd-49cf-a820-9d5cb4f5078c"
+        x:id="814eed3c-7b5e-4e3a-b471-0465d93f8235"
+        adec:isPrimaryKey="false"
+        asi:name="Like"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="17666e5c-2919-4679-ab0b-aa8e8ed0be0c"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Like.origam#Like/Right/561a7476-b805-466d-a71d-0654eaff7b1f">
+          <fc:DataEntityColumn
+            asi:abstract="false"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Concat.origam#Concat/de6ad4e0-aa2d-406b-a48f-190a5aafa37e"
+            x:id="9bbdcf5f-39ca-4361-806e-731040c62bdc"
+            adec:isPrimaryKey="false"
+            asi:name="Concat"
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="4a7b62b6-a9b1-4c7e-8427-d9d2363daff9"
+              asi:name="Strings"
+              fcp:parameter="Root/Function/Concat.origam#Concat/Strings/53183c5f-f3bc-47a4-933d-dc5ffdd9c503">
+              <dcr:DataConstantReference
+                asi:abstract="false"
+                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                x:id="e122fc85-2709-4477-8d34-668faec6d427"
+                asi:name="1_wildcard" />
+              <dcr:DataConstantReference
+                asi:abstract="false"
+                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                x:id="b48b1f68-2d5b-4e0e-9499-222b48f7cbd9"
+                asi:name="3_wildcard" />
+              <pr:ParameterReference
+                asi:abstract="false"
+                x:id="5f03d1e3-1fd0-42ce-8458-7143996729b6"
+                asi:name="2_parText1"
+                pr:parameter="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/parText1/daafcc1e-46db-44bd-9bf1-732e4a2d1387" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="9fbdf658-4a1c-4824-a5b9-8a6f93e49d09"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Like.origam#Like/Left/f09324de-cc07-40f4-834e-2fe90599d1b7">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Widgets/DataEntity/Widgets/AllDataTypes.origam#AllDataTypes/Text1/8954ae10-e0db-49b8-b04c-351e03249c36"
+            x:id="b87a1c63-d3f5-4d7b-879e-521a4b5a51c2"
+            asi:name="Text1" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
     <fmi:DataEntityColumn
       asi:abstract="false"
       adec:allowNulls="false"
