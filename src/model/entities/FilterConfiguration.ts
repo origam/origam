@@ -182,7 +182,10 @@ export class FilterConfiguration implements IFilterConfiguration {
               return true;
             if (cellValue === null) return false;
             const t0 = term.setting.val1;
-            const t2 = term.setting.val2;
+            let t2 = term.setting.val2;
+            if(t2.endsWith("T00:00:00")){
+              t2 = t2.substr(0, 10).concat("T23:59:59")
+            }
             return t0 <= t1 && t1 <= t2;
           }
           case "eq":
