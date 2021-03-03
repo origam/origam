@@ -405,7 +405,10 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
 
-                if ((Operator == "eq" || Operator == "neq") && DataType == OrigamDataType.Date)
+                object value = ToDbValue(ColumnValue, DataType);
+                if ((Operator == "eq" || Operator == "neq") &&
+                    DataType == OrigamDataType.Date &&
+                    IsWholeDay((DateTime)value))
                 {
                     return RenderDateEquals();
                 }
@@ -414,7 +417,7 @@ namespace Origam.DA.Service.CustomCommandParser
                 {
                     ColumnName = ColumnName,
                     ParameterName = ColumnName,
-                    Value = ToDbValue(ColumnValue, DataType)
+                    Value = value
                 });
                 return renderer.BinaryOperator(
                     leftValue: RenderedColumnName, 
@@ -425,11 +428,7 @@ namespace Origam.DA.Service.CustomCommandParser
             if (Children.Count == 1 && 
                 (Operator == "in" ||  Operator == "nin" ||  Operator == "between" ||  Operator == "nbetween") )
             {
-                string[] rightHandValues = Children.First()
-                    .SplitValue
-                    .Select(ValueToOperand)
-                    .ToArray();
-                var parameterNames = rightHandValues
+                var parameterNames = GetRightHandValues()
                     .Select((value, i) =>
                     {
                         string columnNameNumbered = ColumnName + "_" + i;
@@ -437,7 +436,7 @@ namespace Origam.DA.Service.CustomCommandParser
                         {
                             ColumnName = ColumnName,
                             ParameterName = columnNameNumbered,
-                            Value = ToDbValue(value, DataType)
+                            Value = value
                         });
                         return GetParameterName(columnNameNumbered);
                     })
@@ -452,6 +451,30 @@ namespace Origam.DA.Service.CustomCommandParser
             }
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
+        }
+
+        private object[] GetRightHandValues()
+        {
+            object[] rightHandValues = Children.First()
+                .SplitValue
+                .Select(ValueToOperand)
+                .Select(value => ToDbValue(value, DataType))
+                .ToArray();
+            if (DataType == OrigamDataType.Date &&
+                rightHandValues.Length == 2 &&
+                IsWholeDay((DateTime) rightHandValues[1]))
+            {
+                rightHandValues[1] = ((DateTime) rightHandValues[1])
+                    .AddDays(1).AddSeconds(-1);
+            }
+
+            return rightHandValues;
+        }
+
+        private bool IsWholeDay(DateTime dateTime)
+        {
+            return dateTime.Millisecond == 0 && dateTime.Second == 0 &&
+                   dateTime.Minute == 0 && dateTime.Hour == 0;
         }
 
         private string RenderDateEquals()
