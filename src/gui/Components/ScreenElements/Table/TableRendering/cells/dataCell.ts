@@ -12,7 +12,7 @@ import { CPR } from "utils/canvas";
 import { shadeHexColor } from "utils/colorUtils";
 import actionsUi from "model/actions-ui-tree";
 import { getDataView } from "model/selectors/DataView/getDataView";
-import { getShowToolTipsForMemoFieldsOnly} from "model/selectors/Workbench/getShowToolTipsForMemoFieldsOnly";
+import { getShowToolTipsForMemoFieldsOnly } from "model/selectors/Workbench/getShowToolTipsForMemoFieldsOnly";
 import {
   currentCellErrorMessage,
   currentCellText,
@@ -49,6 +49,7 @@ import {
   currentDataCellRenderer,
   getPaddingLeft,
   xCenter,
+  getPaddingRight,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/dataCellRenderer";
 
 export function dataColumnsWidths() {
@@ -81,7 +82,10 @@ function registerToolTipGetter(columnId: string) {
     return;
   }
 
-  if(getShowToolTipsForMemoFieldsOnly(property) && (property.column !== "Text" || !property.multiline)){
+  if (
+    getShowToolTipsForMemoFieldsOnly(property) &&
+    (property.column !== "Text" || !property.multiline)
+  ) {
     return;
   }
 
@@ -92,29 +96,25 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-
-  const widthToMakeTextVisible
-    = ctx2d.measureText(currentCellText()).width / CPR();
-  if (cellWidth + 8 > widthToMakeTextVisible) {
-    return;
+  const textWidth = ctx2d.measureText(currentCellText()).width / CPR();
+  if (cellWidth - getPaddingLeft() - getPaddingRight() < textWidth) {
+    onMouseOver({
+      x: cellClickableArea.x,
+      y: cellClickableArea.y,
+      w: cellClickableArea.width,
+      h: cellClickableArea.height,
+      toolTipGetter() {
+        return {
+          columnIndex: currentColumnIndex,
+          rowIndex: currentRowIndex,
+          content: cellText,
+          cellWidth: cellWidth,
+          cellHeight: cellHeight,
+          positionRectangle: toolTipPositionRectangle,
+        };
+      },
+    });
   }
-
-  onMouseOver({
-    x: cellClickableArea.x,
-    y: cellClickableArea.y,
-    w: cellClickableArea.width,
-    h: cellClickableArea.height,
-    toolTipGetter() {
-      return {
-        columnIndex: currentColumnIndex,
-        rowIndex: currentRowIndex,
-        content: cellText,
-        cellWidth: cellWidth,
-        cellHeight: cellHeight,
-        positionRectangle: toolTipPositionRectangle,
-      };
-    },
-  });
 }
 
 function registerClickHandler(columnId: string) {
