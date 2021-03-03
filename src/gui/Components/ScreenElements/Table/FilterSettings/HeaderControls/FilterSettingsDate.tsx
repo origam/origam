@@ -10,6 +10,9 @@ import { FilterSetting } from "./FilterSetting";
 import { T } from "utils/translation";
 import { Operator } from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/Operator";
 import {LookupFilterSetting} from "gui/Components/ScreenElements/Table/FilterSettings/HeaderControls/FilterSettingsLookup";
+import {getLocaleFromCookie} from "utils/cookies";
+import DateCompleter from "gui/Components/ScreenElements/Editors/DateCompleter";
+import moment from "moment";
 
 const OPERATORS = [
     Operator.equals,
@@ -64,7 +67,9 @@ const OpEditors: React.FC<{
       return (
         <DateTimeEditor
           value={setting.val1 ?? ""}
-          outputFormat="D.M.YYYY"
+          outputFormat={getLocaleFromCookie() === "en-US"
+            ? "MM/DD/YYYY h:mm:ss"
+            : "DD.MM.YYYY h:mm:ss"}
           onChange={(event, isoDay) => {
             runInAction(()=> {
               setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -82,7 +87,9 @@ const OpEditors: React.FC<{
         <>
           <DateTimeEditor
             value={setting.val1}
-            outputFormat="D.M.YYYY"
+            outputFormat={getLocaleFromCookie() === "en-US"
+              ? "MM/DD/YYYY h:mm:ss"
+              : "DD.MM.YYYY h:mm:ss"}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val1 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -95,7 +102,9 @@ const OpEditors: React.FC<{
           />
           <DateTimeEditor
             value={setting.val2}
-            outputFormat="D.M.YYYY"
+            outputFormat={getLocaleFromCookie() === "en-US"
+              ? "MM/DD/YYYY h:mm:ss"
+              : "DD.MM.YYYY h:mm:ss"}
             onChange={(event, isoDay) => {
               runInAction(()=> {
                 setting.val2 = isoDay === null ? undefined : removeTimeZone(isoDay);
@@ -143,9 +152,6 @@ export class FilterSettingsDate extends React.Component<{
         break;
       case "between":
       case "nbetween":
-        if(setting.val2 != undefined){
-          setting.val2 = setting.val2.substr(0, 10).concat("T23:59:59")
-        }
         setting.isComplete = setting.val1 !== undefined && setting.val2 !== undefined;
         break;
       default:
