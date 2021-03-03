@@ -30,7 +30,7 @@ namespace Origam.DA.Service.CustomCommandParser
 {
     public class FilterCommandParser: ICustomCommandParser
     {
-        private readonly List<DataStructureColumn> dataStructureColumns;
+        private readonly List<ColumnInfo> columns;
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
         private FilterNode root = null;
@@ -40,7 +40,7 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly Dictionary<string, string> filterColumnExpressions = new Dictionary<string, string>();
         private readonly AbstractFilterRenderer filterRenderer;
         private string sql;
-        private string[] columns;
+        private string[] columnsNames;
 
         public List<ParameterData> ParameterDataList { get; } = new List<ParameterData>();
         public string Sql
@@ -60,33 +60,34 @@ namespace Origam.DA.Service.CustomCommandParser
         public string[] Columns
         {
             get {
-                if (columns == null)
+                if (columnsNames == null)
                 {
                     if (string.IsNullOrWhiteSpace(whereFilterInput))
                     {
-                        columns = new string[0];
-                        return columns;
+                        columnsNames = new string[0];
+                        return columnsNames;
                     }
                     var inpValue = GetCheckedInput(whereFilterInput);
                     ParseToNodeTree(inpValue);
-                    columns = root.AllChildren
+                    columnsNames = root.AllChildren
                         .Where(node => !node.IsBinaryOperator && !node.IsValueNode)
                         .Select(node => node.ColumnName)
                         .ToArray();
                 }
-                return columns;
+                return columnsNames;
             }
         }
 
         public FilterCommandParser(string nameLeftBracket, string nameRightBracket, 
             AbstractFilterRenderer filterRenderer, string whereFilterInput, 
-            string parameterReferenceChar)
+            string parameterReferenceChar, List<ColumnInfo> columns)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.filterRenderer = filterRenderer;
             this.whereFilterInput = whereFilterInput;
             this.parameterReferenceChar = parameterReferenceChar;
+            this.columns = columns;
         }
 
         public FilterCommandParser(string nameLeftBracket, string nameRightBracket,
@@ -94,9 +95,16 @@ namespace Origam.DA.Service.CustomCommandParser
             AbstractFilterRenderer filterRenderer, string whereFilterInput, 
             string parameterReferenceChar)
         :this(nameLeftBracket, nameRightBracket, filterRenderer,
-            whereFilterInput, parameterReferenceChar)
+            whereFilterInput, parameterReferenceChar, 
+            dataStructureColumns
+                .Select(column => new ColumnInfo
+                {
+                    Name = column.Name,
+                    DataType = column.DataType,
+                    IsNullable = column.Field.AllowNulls
+                })
+                .ToList())
         {
-            this.dataStructureColumns = dataStructureColumns;
         }
         
         public void SetColumnExpressionsIfMissing(string columnName, string[] expressions)
@@ -137,7 +145,7 @@ namespace Origam.DA.Service.CustomCommandParser
         {
             FilterNode newNode = new FilterNode(
                 nameLeftBracket, nameRightBracket,
-                filterColumnExpressions, dataStructureColumns,
+                filterColumnExpressions, columns,
                 filterRenderer, ParameterDataList, parameterReferenceChar)
             {
                 Parent = currentNode

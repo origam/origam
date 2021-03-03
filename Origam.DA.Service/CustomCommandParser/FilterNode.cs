@@ -12,7 +12,7 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly string nameLeftBracket;
         private readonly string nameRightBracket;
         private readonly Dictionary<string, string> lookupExpressions;
-        private readonly List<DataStructureColumn> dataStructureColumns;
+        private readonly List<ColumnInfo> columns;
         private string[] splitValue;
         public FilterNode Parent { get; set; }
         public List<FilterNode> Children { get; } = new List<FilterNode>();
@@ -70,27 +70,26 @@ namespace Origam.DA.Service.CustomCommandParser
             : null;
         private string ColumnValue => ValueToOperand(SplitValue[2]);
 
-        private OrigamDataType ColumnDataType =>
-            dataStructureColumns
+        private ColumnInfo Column =>
+            columns
                 .FirstOrDefault(column => column.Name == ColumnName)
-                ?.DataType
-            ?? throw new Exception($"Data type of column \"{ColumnName}\" is unknown");
+            ?? throw new Exception($"Unknown column \"{ColumnName}\"");
 
         public OrigamDataType ParameterDataType {
             get
             {
-                if (ColumnDataType == OrigamDataType.Array)
+                if (Column.DataType == OrigamDataType.Array)
                 {
                     return OrigamDataType.String;
                 }
 
-                if (ColumnDataType == OrigamDataType.UniqueIdentifier &&
+                if (Column.DataType == OrigamDataType.UniqueIdentifier &&
                     (Operator != "eq" || Operator != "neq"))
                 {
                     return OrigamDataType.String;
                 }
 
-                return ColumnDataType;
+                return Column.DataType;
             }
         }
 
@@ -105,14 +104,14 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly string parameterReferenceChar;
 
         public FilterNode(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
-            List<DataStructureColumn> dataStructureColumns,
+            List<ColumnInfo> columns,
             AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList,
             string parameterReferenceChar)
         {
             this.nameLeftBracket = nameLeftBracket;
             this.nameRightBracket = nameRightBracket;
             this.lookupExpressions = lookupExpressions;
-            this.dataStructureColumns = dataStructureColumns;
+            this.columns = columns;
             renderer = filterRenderer;
             this.parameterDataList = parameterDataList;
             this.parameterReferenceChar = parameterReferenceChar;
@@ -227,9 +226,9 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
 
-                object value = ToDbValue(ColumnValue, ColumnDataType);
+                object value = ToDbValue(ColumnValue, Column.DataType);
                 if ((Operator == "eq" || Operator == "neq") &&
-                    ColumnDataType == OrigamDataType.Date &&
+                    Column.DataType == OrigamDataType.Date &&
                     IsWholeDay((DateTime)value))
                 {
                     return RenderDateEquals();
@@ -271,7 +270,7 @@ namespace Origam.DA.Service.CustomCommandParser
                     leftValue: RenderedColumnName, 
                     rightValues: parameterNames, 
                     operatorName: operatorName,
-                    isColumnArray: ColumnDataType == OrigamDataType.Array);
+                    isColumnArray: Column.DataType == OrigamDataType.Array);
             }
 
             throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
@@ -284,9 +283,9 @@ namespace Origam.DA.Service.CustomCommandParser
             object[] rightHandValues = Children.First()
                 .SplitValue
                 .Select(ValueToOperand)
-                .Select(value => ToDbValue(value, ColumnDataType))
+                .Select(value => ToDbValue(value, Column.DataType))
                 .ToArray();
-            if (ColumnDataType == OrigamDataType.Date &&
+            if (Column.DataType == OrigamDataType.Date &&
                 rightHandValues.Length == 2 &&
                 IsWholeDay((DateTime) rightHandValues[1]))
             {
@@ -321,7 +320,7 @@ namespace Origam.DA.Service.CustomCommandParser
             var (operatorName, _) =
                 GetRendererInput(actualOperator, ""); 
 
-            DateTime equalsDate = (DateTime)ToDbValue(ColumnValue, ColumnDataType);
+            DateTime equalsDate = (DateTime)ToDbValue(ColumnValue, Column.DataType);
             DateTime startDate = new DateTime(equalsDate.Year, equalsDate.Month, equalsDate.Day);
             DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
             var parameterNames = new[] { startDate, endDate }
@@ -344,7 +343,7 @@ namespace Origam.DA.Service.CustomCommandParser
                 leftValue: RenderedColumnName, 
                 rightValues: parameterNames, 
                 operatorName: operatorName,
-                isColumnArray: ColumnDataType == OrigamDataType.Array);
+                isColumnArray: Column.DataType == OrigamDataType.Array);
         }
 
         private (string,string) GetRendererInput(string operatorName, string value)
@@ -392,3 +391,4 @@ namespace Origam.DA.Service.CustomCommandParser
         }
     }
 }
+
