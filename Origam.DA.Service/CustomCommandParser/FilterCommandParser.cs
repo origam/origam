@@ -198,8 +198,18 @@ namespace Origam.DA.Service.CustomCommandParser
 
     public class ParameterData
     {
-        public string ParameterName { get; set; }
-        public string ColumnName { get; set; }
-        public object Value { get; set; }
+        public string ParameterName { get;  }
+        public string ColumnName { get;  }
+        public object Value { get;  }
+        public OrigamDataType DataType { get; }
+
+        public ParameterData(string parameterName, string columnName, 
+            object value, OrigamDataType dataType)
+        {
+            ParameterName = parameterName;
+            ColumnName = columnName;
+            Value = value;
+            DataType = dataType;
+        }
     }
 }
