@@ -213,8 +213,8 @@ namespace Origam.DA.Service.CustomCommandParser
             {
                 string isNullSql = renderer.BinaryOperator(
                     leftValue: RenderedColumnName,
-                    rightValue: null,
-                    operatorName: "Equal");
+                    operatorName: "Equal",
+                    rightValue: null);
                 return renderer.LogicalAndOr("OR", new []{nodeSql, isNullSql});
             }
             return nodeSql;
