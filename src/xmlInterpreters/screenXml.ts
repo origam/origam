@@ -603,23 +603,24 @@ export function* interpretScreenXml(
 
     const { lookupMultiEngine } = workbench;
 
-    for (let property of dataView.properties) {
-      if (property.isLookup && property.lookupId) {
+    dataView.properties
+      .flatMap(property => [property, ...property.childProperties])
+      .filter(property => property.isLookup && property.lookupId)
+      .forEach(property => {
         const { lookupId } = property;
-        foundLookupIds.add(lookupId);
-        if (!lookupMultiEngine.lookupEngineById.has(lookupId)) {
-          const lookupIndividualEngine = createIndividualLookupEngine(lookupId, lookupMultiEngine);
+        foundLookupIds.add(lookupId!);
+        if (!lookupMultiEngine.lookupEngineById.has(lookupId!)) {
+          const lookupIndividualEngine = createIndividualLookupEngine(lookupId!, lookupMultiEngine);
           lookupMultiEngine.lookupCleanerReloaderById.set(
-            lookupId,
+            lookupId!,
             lookupIndividualEngine.lookupCleanerReloader
           );
           lookupIndividualEngine.startup();
-          lookupMultiEngine.lookupEngineById.set(lookupId, lookupIndividualEngine);
+          lookupMultiEngine.lookupEngineById.set(lookupId!, lookupIndividualEngine);
         }
-        const lookupIndividualEngine = lookupMultiEngine.lookupEngineById.get(lookupId)!;
+        const lookupIndividualEngine = lookupMultiEngine.lookupEngineById.get(lookupId!)!;
         property.lookupEngine = lookupIndividualEngine;
-      }
-    }
+      });
 
     flow($dataView.resolve(IPerspective).activateDefault)();
   }
