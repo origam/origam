@@ -156,8 +156,10 @@ export class RowState implements IRowState {
     this.resolvedValues.clear();
     this.idStates.clear();
     for (let obsvIdVal of this.observedIds.values()) {
-      obsvIdVal.atom.onBecomeObservedListeners.clear();
-      obsvIdVal.atom.onBecomeUnobservedListeners.clear();
+      if(obsvIdVal){
+        obsvIdVal.atom.onBecomeUnobservedListeners.clear();
+        obsvIdVal.atom.onBecomeObservedListeners.clear();
+      }
     }
     this.observedIds.clear();
     this.firstLoadingPerformed = false;
