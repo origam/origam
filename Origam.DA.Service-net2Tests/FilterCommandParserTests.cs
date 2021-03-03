@@ -27,6 +27,7 @@ using NUnit.Framework;
 using Origam.DA.Service.CustomCommandParser;
 using Origam.DA.Service.Generators;
 using Origam.Schema;
+using Origam.Schema.EntityModel;
 
 namespace Origam.DA.ServiceTests
 {
@@ -390,13 +391,16 @@ namespace Origam.DA.ServiceTests
                 nameRightBracket: "]",
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter, 
-                parameterReferenceChar: "@");
-            sut.AddDataType("name", OrigamDataType.String);
-            sut.AddDataType("Timestamp", OrigamDataType.Date);
-            sut.AddDataType("age", OrigamDataType.Integer);
-            sut.AddDataType("city_name", OrigamDataType.String);
-            sut.AddDataType("Name", OrigamDataType.String);
-            sut.AddDataType("id", OrigamDataType.String);
+                parameterReferenceChar: "@",
+                columns: new List<ColumnInfo>
+                {
+                    new ColumnInfo{Name = "name", DataType = OrigamDataType.String},
+                    new ColumnInfo{Name = "Timestamp", DataType = OrigamDataType.Date},
+                    new ColumnInfo{Name = "age", DataType = OrigamDataType.Integer},
+                    new ColumnInfo{Name = "city_name", DataType = OrigamDataType.String},
+                    new ColumnInfo{Name = "Name", DataType = OrigamDataType.String},
+                    new ColumnInfo{Name = "id", DataType = OrigamDataType.String},
+                });
 
             Assert.That(sut.Sql, Is.EqualTo(expectedSqlWhere));
             Assert.That(sut.ParameterDataList, Has.Count.EqualTo(expectedParameters.Count));
@@ -420,13 +424,16 @@ namespace Origam.DA.ServiceTests
                 nameRightBracket: "]",
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter,
-                parameterReferenceChar: "@");
-            sut.AddDataType("name", OrigamDataType.String);
-            sut.AddDataType("Timestamp", OrigamDataType.Date);
-            sut.AddDataType("age", OrigamDataType.Integer);
-            sut.AddDataType("city_name", OrigamDataType.String);
-            sut.AddDataType("Name", OrigamDataType.String);
-            sut.AddDataType("id", OrigamDataType.String);
+                parameterReferenceChar: "@",
+                columns: new List<ColumnInfo>
+                {
+                    new ColumnInfo{Name = "name", DataType = OrigamDataType.String},
+                    new ColumnInfo{Name = "Timestamp", DataType = OrigamDataType.Date},
+                    new ColumnInfo{Name = "age", DataType = OrigamDataType.Integer},
+                    new ColumnInfo{Name = "city_name", DataType = OrigamDataType.String},
+                    new ColumnInfo{Name = "Name", DataType = OrigamDataType.String},
+                    new ColumnInfo{Name = "id", DataType = OrigamDataType.String},
+                });
 
             Assert.That(sut.Columns, Is.EquivalentTo(expectedColumnNames));
         }
@@ -444,7 +451,8 @@ namespace Origam.DA.ServiceTests
                         nameRightBracket: "]",
                         filterRenderer: new MsSqlFilterRenderer(),
                         whereFilterInput: filter,
-                        parameterReferenceChar: "@")
+                        parameterReferenceChar: "@",
+                        columns: new List<ColumnInfo>())
                     .Sql;
             });
         }
