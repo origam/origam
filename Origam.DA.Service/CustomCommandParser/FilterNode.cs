@@ -206,23 +206,38 @@ namespace Origam.DA.Service.CustomCommandParser
             throw new Exception("Could not parse node value to logical operator: \"" + Value+"\"");
         }
 
-        private string GetSqlOfLeafNode(){
+        private string GetSqlOfLeafNode()
+        {
+            string nodeSql = RenderNodeSql();
+            if (Operator.StartsWith("n") && Column.IsNullable)
+            {
+                string isNullSql = renderer.BinaryOperator(
+                    leftValue: RenderedColumnName,
+                    rightValue: null,
+                    operatorName: "Equal");
+                return renderer.LogicalAndOr("OR", new []{nodeSql, isNullSql});
+            }
+            return nodeSql;
+        }
 
+        private string RenderNodeSql()
+        {
             string parameterName = GetParameterName(ColumnName);
             var (operatorName, renderedColumnValue) =
-                GetRendererInput(Operator, parameterName);    
+                GetRendererInput(Operator, parameterName);
             if (Children.Count == 0)
             {
                 if (SplitValue.Length != 3)
                 {
-                    throw new ArgumentException("could not parse: " + Value + " to a filter node");
+                    throw new ArgumentException("could not parse: " + Value +
+                                                " to a filter node");
                 }
 
                 if (ColumnValue == null || ColumnValue.ToLower() == "null")
                 {
                     return renderer.BinaryOperator(
-                        leftValue: RenderedColumnName, 
-                        rightValue: null, 
+                        leftValue: RenderedColumnName,
+                        rightValue: null,
                         operatorName: operatorName);
                 }
 
@@ -242,13 +257,14 @@ namespace Origam.DA.Service.CustomCommandParser
                     dataType: ParameterDataType
                 ));
                 return renderer.BinaryOperator(
-                    leftValue: RenderedColumnName, 
-                    rightValue: renderedColumnValue, 
+                    leftValue: RenderedColumnName,
+                    rightValue: renderedColumnValue,
                     operatorName: operatorName);
             }
 
-            if (Children.Count == 1 && 
-                (Operator == "in" ||  Operator == "nin" ||  Operator == "between" ||  Operator == "nbetween"))
+            if (Children.Count == 1 &&
+                (Operator == "in" || Operator == "nin" || Operator == "between" ||
+                 Operator == "nbetween"))
             {
                 var parameterNames = GetRightHandValues()
                     .Select((value, i) =>
@@ -267,16 +283,15 @@ namespace Origam.DA.Service.CustomCommandParser
                     .ToArray();
                 return renderer.BinaryOperator(
                     columnName: ColumnName,
-                    leftValue: RenderedColumnName, 
-                    rightValues: parameterNames, 
+                    leftValue: RenderedColumnName,
+                    rightValues: parameterNames,
                     operatorName: operatorName,
                     isColumnArray: Column.DataType == OrigamDataType.Array);
             }
 
-            throw new Exception("Cannot parse filter node: " + Value + ". If this should be a binary operator prefix it with \"$\".");
+            throw new Exception("Cannot parse filter node: " + Value +
+                                ". If this should be a binary operator prefix it with \"$\".");
         }
-        
-        
 
         private object[] GetRightHandValues()
         {
