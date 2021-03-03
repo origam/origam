@@ -140,5 +140,6 @@ namespace Origam.Server
 
         public int ChatRefreshInterval { get; set; }
         public string Title { get; set; }
+        public bool ShowToolTipsForMemoFieldsOnly { get; set; }
     }
 }

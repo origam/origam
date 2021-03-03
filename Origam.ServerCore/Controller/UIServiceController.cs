@@ -67,19 +67,23 @@ namespace Origam.ServerCore.Controller
         private readonly IOptions<RequestLocalizationOptions> 
             localizationOptions;
         private readonly CustomAssetsConfig customAssetsConfig;
+        private readonly HtmlClientConfig htmlClientConfig;
         private readonly ChatConfig chatConfig;
 
         public UIServiceController(
             SessionObjects sessionObjects,
             IStringLocalizer<SharedResources> localizer,
             ILogger<AbstractController> log,
-            IOptions<RequestLocalizationOptions> localizationOptions, IOptions<CustomAssetsConfig> customAssetsOptions,
+            IOptions<RequestLocalizationOptions> localizationOptions,
+            IOptions<CustomAssetsConfig> customAssetsOptions,
+            IOptions<HtmlClientConfig> htmlClientConfigOptions,
             IOptions<ChatConfig> chatConfigOptions)
             : base(log, sessionObjects)
         {
             this.localizer = localizer;
             this.localizationOptions = localizationOptions;
             customAssetsConfig = customAssetsOptions.Value;
+            htmlClientConfig = htmlClientConfigOptions.Value;
             lookupService
                 = ServiceManager.Services.GetService<IDataLookupService>();
             chatConfig = chatConfigOptions.Value;
@@ -1043,6 +1047,7 @@ namespace Origam.ServerCore.Controller
                 ? 0
                 : chatConfig.ChatRefreshInterval;
             result.CustomAssetsRoute = customAssetsConfig.RouteToCustomAssetsFolder;
+            result.ShowToolTipsForMemoFieldsOnly = htmlClientConfig.ShowToolTipsForMemoFieldsOnly;
         }
     }
 }

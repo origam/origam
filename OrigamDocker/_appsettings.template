@@ -1,5 +1,5 @@
 {
-    "PathToClientApp": "clients/origam",
+    "PathToClientApp": "/home/origam/HTML5/clients/origam",
 	"ChatConfig": {
     "PathToChatApp": "pathchatapp",
     "ChatRefreshInterval": chatinterval
