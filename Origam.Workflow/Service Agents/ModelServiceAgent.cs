@@ -26,6 +26,7 @@ using Origam.Schema.EntityModel;
 using Origam.Schema;
 using Origam.Services;
 using Origam.Workbench.Services;
+using System.Data;
 
 namespace Origam.Workflow
 {
@@ -104,20 +105,57 @@ namespace Origam.Workflow
 
 		public override void Run()
 		{
-			switch(this.MethodName)
+			switch(MethodName)
 			{
 				case "GenerateSimpleModel":
-					// Check input parameters
-					if(! (this.Parameters["Data"] is IDataDocument))
-						throw new InvalidCastException(ResourceUtils.GetString("ErrorWorkflowNotGuid"));
-					
-					_result = this.GenerateSimpleModel((IDataDocument)this.Parameters["Data"]);
+					_result = GenerateSimpleModel(
+                        GetParameter<IDataDocument>("Data"));
 					break;
 
-				default:
-					throw new ArgumentOutOfRangeException("MethodName", this.MethodName, ResourceUtils.GetString("InvalidMethodName"));
+                case "ElementName":
+                    _result = ElementName(
+                        GetParameter<Guid>("Id"));
+                    break;
+
+                case "ElementListByParent":
+                    _result = ElementList(
+                        GetParameter<Guid>("ParentId"),
+                        GetParameter<string>("ItemType"));
+                    break;
+
+                default:
+					throw new ArgumentOutOfRangeException("MethodName", 
+                        MethodName, ResourceUtils.GetString("InvalidMethodName"));
 			}
 		}
-		#endregion
-	}
+
+        private string ElementName(Guid id)
+        {
+            var persistence = ServiceManager.Services.GetService
+                <IPersistenceService>();
+            var element = persistence.SchemaProvider.RetrieveInstance
+                <AbstractSchemaItem>(id);
+            return element.Name;
+        }
+
+        private IDataDocument ElementList(Guid parentId, string itemType)
+        {
+            var persistence = ServiceManager.Services.GetService
+                <IPersistenceService>();
+            var parent = persistence.SchemaProvider.RetrieveInstance
+                <AbstractSchemaItem>(parentId);
+
+            DataSet data = new DataSet("ROOT");
+            DataTable table = new DataTable("Element");
+            table.Columns.Add("Id", typeof(Guid));
+            table.Columns.Add("Name", typeof(string));
+            data.Tables.Add(table);
+            foreach(AbstractSchemaItem item in parent.ChildItemsByType(itemType))
+            {
+                table.Rows.Add(new object[] { item.Id, item.Name });
+            }
+            return DataDocumentFactory.New(data);
+        }
+        #endregion
+    }
 }
