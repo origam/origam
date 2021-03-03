@@ -9,7 +9,7 @@
     euia:default="false"
     x:id="18258213-097a-4947-a45d-39b5b1147610"
     euia:label="Save"
-    ewa:mergeType="AppendMergeExisting"
+    ewa:mergeType="Ignore"
     euia:modal="false"
     euia:mode="ActiveRecord"
     asi:name="Save"
