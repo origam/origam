@@ -14,6 +14,7 @@ import {
   checkBoxCharacterFontSize,
   numberCellPaddingRight,
   topTextOffset,
+  cellPaddingRight,
 } from "gui/Components/ScreenElements/Table/TableRendering/cells/cellsCommon";
 import { CPR } from "utils/canvas";
 import moment from "moment";
@@ -317,6 +318,10 @@ class GenericCellRenderer implements IDataCellRenderer {
 
 export function getPaddingLeft() {
   return drawingColumnIndex() === 0 ? cellPaddingLeftFirstCell : cellPaddingLeft;
+}
+
+export function getPaddingRight() {
+  return cellPaddingRight;
 }
 
 export function xCenter() {
