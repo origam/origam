@@ -178,6 +178,7 @@ namespace Origam.Schema.MenuModel
 
 		[Category("Data Loading")]
 		[TypeConverter(typeof(MenuFormReferenceMethodConverter))]
+		[NotNullModelElementRule("ListDataStructure")]
 		[XmlReference("method", "MethodId")]
 		public DataStructureMethod Method
 		{
@@ -235,6 +236,7 @@ namespace Origam.Schema.MenuModel
 
 		[Category("Data Loading")]
 		[TypeConverter(typeof(MenuFormReferenceListSortSetConverter))]
+		[NotNullModelElementRule("ListDataStructure")]
 		[XmlReference("listSortSet", "ListSortSetId")]
 		public DataStructureSortSet ListSortSet
 		{
@@ -429,6 +431,7 @@ namespace Origam.Schema.MenuModel
 
 		[Category("Data Loading")]
 		[TypeConverter(typeof(MenuFormReferenceSortSetConverter))]
+		[NotNullModelElementRule("ListDataStructure")]
 		[XmlReference("sortSet", "SortSetId")]
 		public DataStructureSortSet SortSet
 		{
