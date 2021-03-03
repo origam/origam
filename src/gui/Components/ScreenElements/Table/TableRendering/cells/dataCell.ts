@@ -12,6 +12,7 @@ import { CPR } from "utils/canvas";
 import { shadeHexColor } from "utils/colorUtils";
 import actionsUi from "model/actions-ui-tree";
 import { getDataView } from "model/selectors/DataView/getDataView";
+import { getShowToolTipsForMemoFieldsOnly} from "model/selectors/Workbench/getShowToolTipsForMemoFieldsOnly";
 import {
   currentCellErrorMessage,
   currentCellText,
@@ -76,6 +77,14 @@ function registerToolTipGetter(columnId: string) {
   const cellWidth = currentColumnWidth();
   const cellHeight = currentRowHeight();
 
+  if (property.column === "CheckBox" || property.column === "Image" || property.column === "Blob") {
+    return;
+  }
+
+  if(getShowToolTipsForMemoFieldsOnly(property) && (property.column !== "Text" || !property.multiline)){
+    return;
+  }
+
   const toolTipPositionRectangle = {
     columnLeft: currentColumnLeft() + currentColumnWidth() * 0.2,
     columnWidth: 0,
@@ -83,9 +92,6 @@ function registerToolTipGetter(columnId: string) {
     rowHeight: 0,
   };
 
-  if (property.column === "CheckBox" || property.column === "Image" || property.column === "Blob") {
-    return;
-  }
 
   const widthToMakeTextVisible
     = ctx2d.measureText(currentCellText()).width / CPR();
