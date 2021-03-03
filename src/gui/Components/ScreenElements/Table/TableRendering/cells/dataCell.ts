@@ -260,18 +260,18 @@ export function drawDataCellBackground() {
 
 function drawCellValue() {
   const ctx2d = context2d();
-  const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), currentProperty().id);
+  const property = currentProperty();
+  const isHidden = !getRowStateAllowRead(tablePanelView(), recordId(), property.id);
   const foregroundColor = getRowStateForegroundColor(tablePanelView(), recordId());
-  const type = currentProperty().column;
+  const type = property.column;
 
   let isLink = false;
   let isLoading = false;
   let isInvalid = !!currentCellErrorMessage();
 
-  const property = currentProperty();
   if (property.isLookup && property.lookupEngine) {
     isLoading = isCurrentCellLoading();
-    isLink = selectors.column.isLinkToForm(currentProperty());
+    isLink = selectors.column.isLinkToForm(property);
   }
 
   ctx2d.font = `${fontSize * CPR()}px "IBM Plex Sans", sans-serif`;
