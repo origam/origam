@@ -62,6 +62,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
     item: any;
     idParameter: string | undefined;
     isSingleRecordEdit?: boolean;
+    forceOpenNew?: boolean;
   }): Generator {
     const {
       type,
@@ -73,7 +74,7 @@ export class WorkbenchLifecycle implements IWorkbenchLifecycle {
       urlOpenMethod,
     } = args.item.attributes;
     const { event } = args;
-    const alwaysOpenNew = args.item.attributes.alwaysOpenNew === "true";
+    const alwaysOpenNew = args.item.attributes.alwaysOpenNew === "true" || args.forceOpenNew;
 
     if (urlOpenMethod === "LaunchBrowserWindow") {
       const url = (yield this.getReportTabUrl(id)) as string;
