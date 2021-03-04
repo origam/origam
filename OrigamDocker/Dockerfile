@@ -25,8 +25,12 @@ COPY --chown=origam:origam ["_OrigamSettings.mssql.template", "/home/origam/HTML
 COPY --chown=origam:origam ["_OrigamSettings.postgres.template", "/home/origam/HTML5"]
 COPY --chown=origam:origam ["startServer.sh", "/home/origam/HTML5"]
 COPY --chown=origam:origam ["log4net.config", "/home/origam/HTML5"]
+COPY --chown=origam:origam ["updateEnvironment.sh", "/home/origam/HTML5"]
+COPY --chown=origam:origam ["updateEnvironmentRoot.sh", "/home/origam/HTML5"]
 WORKDIR HTML5
 RUN mkdir data
 RUN mkdir logs
 RUN chmod +x startServer.sh
+RUN chmod +x updateEnvironment.sh
+RUN chmod +x updateEnvironmentRoot.sh
 CMD sudo /etc/init.d/nginx start & sudo /root/updateTimezone.sh & ./startServer.sh
