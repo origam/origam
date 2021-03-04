@@ -112,9 +112,10 @@ namespace Origam.Workflow
                         GetParameter<IDataDocument>("Data"));
 					break;
 
-                case "ElementName":
-                    _result = ElementName(
-                        GetParameter<Guid>("Id"));
+                case "ElementAttribute":
+                    _result = ElementAttribute(
+                        GetParameter<Guid>("Id"),
+                        GetParameter<string>("AttributeName"));
                     break;
 
                 case "ElementListByParent":
@@ -129,13 +130,13 @@ namespace Origam.Workflow
 			}
 		}
 
-        private string ElementName(Guid id)
+        private string ElementAttribute(Guid id, string attributeName)
         {
             var persistence = ServiceManager.Services.GetService
                 <IPersistenceService>();
             var element = persistence.SchemaProvider.RetrieveInstance
                 <AbstractSchemaItem>(id);
-            return element.Name;
+            return Reflector.GetValue(element.GetType(), element, attributeName)?.ToString() ?? "";
         }
 
         private IDataDocument ElementList(Guid parentId, string itemType)
@@ -152,7 +153,32 @@ namespace Origam.Workflow
             data.Tables.Add(table);
             foreach(AbstractSchemaItem item in parent.ChildItemsByType(itemType))
             {
-                table.Rows.Add(new object[] { item.Id, item.Name });
+                DataRow row = table.NewRow();
+                row["Id"] = item.Id;
+                var members = Reflector.FindMembers(item.GetType(), typeof(System.Xml.Serialization.XmlAttributeAttribute));
+                foreach (MemberAttributeInfo memberInfo in members)
+                {
+                    string name = memberInfo.MemberInfo.Name;
+                    Type type;
+                    if (memberInfo.MemberInfo is System.Reflection.PropertyInfo propertyInfo)
+                    {
+                        type = propertyInfo.PropertyType;
+                    }
+                    else if (memberInfo.MemberInfo is System.Reflection.FieldInfo fieldInfo)
+                    {
+                        type = fieldInfo.FieldType;
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown type.");
+                    }
+                    if (! table.Columns.Contains(name))
+                    {
+                        table.Columns.Add(name, type);
+                    }
+                    row[name] = Reflector.GetValue(memberInfo.MemberInfo, item);
+                }
+                table.Rows.Add(row);
             }
             return DataDocumentFactory.New(data);
         }
