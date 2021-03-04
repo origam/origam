@@ -1593,8 +1593,11 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
 					}
 					else if(bindingMember != "" & processEditControls) // property (entry field)
 					{
-						if(! table.Columns.Contains(bindingMember)) throw new Exception("Field '" + bindingMember + "' not found in a data structure for the form '" + panel.RootItem.Path + "'");
-						
+						if (!table.Columns.Contains(bindingMember))
+						{
+							throw new Exception("Field '" + table.TableName + "." + bindingMember + 
+								"' not found in a data structure for the form '" + panel.RootItem.Path + "'");
+						}
 						XmlElement propertyElement = AsPanelPropertyBuilder.CreateProperty(
 							propertiesElement: propertiesElement, 
 							propertyNamesElement: hideOnForm ? null : propertyNamesElement, 
