@@ -175,6 +175,24 @@ if [[ ! -f "OrigamSettings.config" ]]; then
 		sed -i "s|OrigamSettings_ReportDefinitionsPath|${OrigamSettings_ReportDefinitionsPath}|" OrigamSettings.config
 	fi
 fi
+export gitUrl
+export gitBranch
+export gitUsername
+export gitPassword
+export gitSshUrl
+export gitSshKey
+export gitSshDomain
+export gitConfUrl
+export gitConfUsername
+export gitConfPassword
+export gitConfUrl
+export gitConfSshUrl
+export gitConfSshKey
+export gitConfSshDomain
+export OrigamSettings_DbUsername
+export OrigamSettings_DbPassword
+./updateEnvironment.sh
+sudo ./updateEnvironmentRoot.sh
 export ASPNETCORE_URLS="http://+:8080"
 dotnet Origam.ServerCore.dll
 
