@@ -367,6 +367,6 @@ class DropDownApi implements IDropdownEditorApi {
   constructor(private getOptions: (searchTerm: string) => CancellablePromise<Array<any>>) {}
 
   *getLookupList(searchTerm: string): Generator {
-    return yield this.getOptions("");
+    return yield this.getOptions(searchTerm);
   }
 }
