@@ -652,6 +652,12 @@ namespace Origam.ServerCommon {
             get {
                 return ResourceManager.GetString("WorkQueueTitle", resourceCulture);
             }
+        }        
+        
+        internal static string SessionStoreDisposed {
+            get {
+                return ResourceManager.GetString("SessionStoreDisposed", resourceCulture);
+            }
         }
     }
 }
