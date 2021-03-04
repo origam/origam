@@ -40,11 +40,17 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 typeof(SchemaService)) as SchemaService;
             MenuSchemaItemProvider menuProvider = schema.GetProvider(
                 typeof(MenuSchemaItemProvider)) as MenuSchemaItemProvider;
-            if (menuProvider.ChildItems.Count > 0)
+
+            XmlDocument doc = new XmlDocument();
+            RenderNode(doc, doc, menuProvider.MainMenu);
+            foreach (var item in menuProvider.ChildItems)
             {
-                return GetXml(menuProvider.ChildItems[0] as Menu).OuterXml;
+                if (item is ContextMenu contextMenu)
+                {
+                    RenderNode(doc, doc.FirstChild, contextMenu);
+                }
             }
-            return null;
+            return doc.OuterXml;
         }
 
         public static XmlDocument GetXml(Menu menu)
@@ -57,10 +63,9 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
         private static void RenderNode(
             XmlDocument doc, XmlNode parentNode, AbstractSchemaItem item)
         {
-            AbstractMenuItem menu = item as AbstractMenuItem;
-            DynamicMenu dynamicMenu = item as DynamicMenu;
-            bool process = false;
-            if (menu == null)
+            AbstractMenuItem menuItem = item as AbstractMenuItem;
+            bool process;
+            if (menuItem == null)
             {
                 process = true;
             }
@@ -68,29 +73,28 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
             {
                 IParameterService param = ServiceManager.Services.GetService(
                     typeof(IParameterService)) as IParameterService;
-                if (menu.Features == "FLASH")
+                if (menuItem.Features == "FLASH")
                 {
                     process = true;
                 }
-                else if (menu.Features == "!FLASH")
+                else if (menuItem.Features == "!FLASH")
                 {
                     process = false;
                 }
                 else
                 {
-                    process = param.IsFeatureOn(menu.Features);
+                    process = param.IsFeatureOn(menuItem.Features);
                 }
                 if (process)
                 {
                     // check if user has access to this item, if not, we don't display it
-                    if (menu is IAuthorizationContextContainer)
+                    if (menuItem is IAuthorizationContextContainer authContainer)
                     {
                         IOrigamAuthorizationProvider authorizationProvider 
                             = SecurityManager.GetAuthorizationProvider();
                         if (!authorizationProvider.Authorize(
-                            SecurityManager.CurrentPrincipal, 
-                            (menu as IAuthorizationContextContainer)
-                            .AuthorizationContext))
+                            SecurityManager.CurrentPrincipal,
+                            authContainer.AuthorizationContext))
                         {
                             process = false;
                         }
@@ -102,84 +106,112 @@ namespace Origam.OrigamEngine.ModelXmlBuilders
                 return;
             }
             XmlNode newNode = null;
-            if (item is Menu)
+            switch (item)
             {
-                XmlElement el = doc.CreateElement(item.GetType().Name);
-                el.SetAttribute("label", (item as Menu).DisplayName);
-                el.SetAttribute("icon", "folder");
-                parentNode.AppendChild(el);
-                newNode = el;
-            }
-            else if (item is Submenu)
-            {
-                XmlElement el = doc.CreateElement(item.GetType().Name);
-                el.SetAttribute("label", menu.DisplayName);
-                el.SetAttribute("icon", ResolveMenuIcon(
-                    menu.GetType().Name, menu.MenuIcon));
-                if ((item as Submenu).IsHidden)
-                {
-                    el.SetAttribute("isHidden", XmlConvert.ToString(true));
-                }
-                el.SetAttribute("id", item.Id.ToString());
-                parentNode.AppendChild(el);
-                newNode = el;
-            }
-            else if (dynamicMenu != null)
-            {
-                string[] splittedClassPath = dynamicMenu.ClassPath.Split(',');
-                IDynamicMenuProvider provider = Reflector.InvokeObject(
-                    splittedClassPath[0].Trim(), splittedClassPath[1].Trim())
-                    as IDynamicMenuProvider;
-                provider.AddMenuItems(parentNode);
-            }
-            else if (item is FormReferenceMenuItem)
-            {
-                FormReferenceMenuItem formRef = item as FormReferenceMenuItem;
-                XmlElement el = GetMenuItemElement(doc, menu);
-                if (formRef.SelectionDialogPanel != null)
-                {
-                    el.SetAttribute("type", 
-                        el.GetAttribute("type") + "_WithSelection");
-                    SetSelectionDialogSize(el, formRef.SelectionDialogPanel);
-                }
-                if (formRef.ListDataStructure != null)
-                {
-                    el.SetAttribute("lazyLoading", "true");
-                }
-                parentNode.AppendChild(el);
-            }
-            else if (item is DataConstantReferenceMenuItem)
-            {
-                XmlElement el = GetMenuItemElement(doc, menu);
-                parentNode.AppendChild(el);
-            }
-            else if (item is WorkflowReferenceMenuItem)
-            {
-                XmlElement el = GetMenuItemElement(doc, menu);
-                parentNode.AppendChild(el);
-            }
-            else if (item is ReportReferenceMenuItem)
-            {
-                ReportReferenceMenuItem rr = item as ReportReferenceMenuItem;
-                XmlElement el = GetMenuItemElement(doc, menu);
-                if (rr.SelectionDialogPanel != null)
-                {
-                    el.SetAttribute("type", 
-                        el.GetAttribute("type") + "_WithSelection");
-                    SetSelectionDialogSize(el, rr.SelectionDialogPanel);
-                }
-                WebReport wr = rr.Report as WebReport;
-                if (wr != null)
-                {
-                    el.SetAttribute("urlOpenMethod", wr.OpenMethod.ToString());
-                }
-                parentNode.AppendChild(el);
-            }
-            else if (item is DashboardMenuItem)
-            {
-                XmlElement el = GetMenuItemElement(doc, menu);
-                el.SetAttribute("type", "Dashboard");
-                parentNode.AppendChild(el);
+                case Menu menu:
+                    {
+                        XmlElement el = doc.CreateElement(item.GetType().Name);
+                        el.SetAttribute("label", menu.DisplayName);
+                        el.SetAttribute("icon", "folder");
+                        parentNode.AppendChild(el);
+                        newNode = el;
+                        break;
+                    }
+
+                case ContextMenu _:
+                    {
+                        XmlElement el = doc.CreateElement(typeof(Submenu).Name);
+                        el.SetAttribute("label", item.Name);
+                        el.SetAttribute("icon", "folder");
+                        el.SetAttribute("isHidden", XmlConvert.ToString(true));
+                        parentNode.AppendChild(el);
+                        newNode = el;
+                        break;
+                    }
+
+                case Submenu submenu:
+                    {
+                        XmlElement el = doc.CreateElement(item.GetType().Name);
+                        el.SetAttribute("label", menuItem.DisplayName);
+                        el.SetAttribute("icon", ResolveMenuIcon(
+                            menuItem.GetType().Name, menuItem.MenuIcon));
+                        if (submenu.IsHidden)
+                        {
+                            el.SetAttribute("isHidden", XmlConvert.ToString(true));
+                        }
+                        el.SetAttribute("id", item.Id.ToString());
+                        parentNode.AppendChild(el);
+                        newNode = el;
+                        break;
+                    }
+
+                case DynamicMenu dynamicMenu:
+                    {
+                        string[] splittedClassPath = dynamicMenu.ClassPath.Split(',');
+                        IDynamicMenuProvider provider = Reflector.InvokeObject(
+                            splittedClassPath[0].Trim(), splittedClassPath[1].Trim())
+                            as IDynamicMenuProvider;
+                        provider.AddMenuItems(parentNode);
+                        break;
+                    }
+
+                case FormReferenceMenuItem formRef:
+                    {
+                        XmlElement el = GetMenuItemElement(doc, menuItem);
+                        if (formRef.SelectionDialogPanel != null)
+                        {
+                            el.SetAttribute("type",
+                                el.GetAttribute("type") + "_WithSelection");
+                            SetSelectionDialogSize(el, formRef.SelectionDialogPanel);
+                        }
+                        if (formRef.ListDataStructure != null)
+                        {
+                            el.SetAttribute("lazyLoading", "true");
+                        }
+                        parentNode.AppendChild(el);
+                        break;
+                    }
+
+                case DataConstantReferenceMenuItem _:
+                    {
+                        XmlElement el = GetMenuItemElement(doc, menuItem);
+                        parentNode.AppendChild(el);
+                        break;
+                    }
+
+                case WorkflowReferenceMenuItem _:
+                    {
+                        XmlElement el = GetMenuItemElement(doc, menuItem);
+                        parentNode.AppendChild(el);
+                        break;
+                    }
+
+                case ReportReferenceMenuItem reportRef:
+                    {
+                        XmlElement el = GetMenuItemElement(doc, menuItem);
+                        if (reportRef.SelectionDialogPanel != null)
+                        {
+                            el.SetAttribute("type",
+                                el.GetAttribute("type") + "_WithSelection");
+                            SetSelectionDialogSize(el, reportRef.SelectionDialogPanel);
+                        }
+                        if (reportRef.Report is WebReport wr)
+                        {
+                            el.SetAttribute("urlOpenMethod", wr.OpenMethod.ToString());
+                        }
+                        parentNode.AppendChild(el);
+                        break;
+                    }
+
+                case DashboardMenuItem _:
+                    {
+                        XmlElement el = GetMenuItemElement(doc, menuItem);
+                        el.SetAttribute("type", "Dashboard");
+                        parentNode.AppendChild(el);
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException($"Unknown menu type {item.GetType()}");
             }
             if (newNode != null)
             {

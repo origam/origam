@@ -46,7 +46,7 @@ namespace Origam.Schema.MenuModel
 			
 			if(menuProvider.ChildItems.Count > 0 && menuProvider.ChildItems[0].IsPersisted)
 			{
-				Menu menu = menuProvider.ChildItems[0] as Menu;
+                Menu menu = menuProvider.MainMenu;
 
 				FormReferenceMenuItem formMenu = menu.NewItem(typeof(FormReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as FormReferenceMenuItem;
 				formMenu.Name = form.Name;
@@ -77,7 +77,7 @@ namespace Origam.Schema.MenuModel
 			
 			if(menuProvider.ChildItems.Count > 0)
 			{
-				Menu menu = menuProvider.ChildItems[0] as Menu;
+				Menu menu = menuProvider.MainMenu;
 
 				DataConstantReferenceMenuItem constantMenu = menu.NewItem(typeof(DataConstantReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as DataConstantReferenceMenuItem;
 				constantMenu.Name = constant.Name;
@@ -108,7 +108,7 @@ namespace Origam.Schema.MenuModel
 			
 			if(menuProvider.ChildItems.Count > 0)
 			{
-				Menu menu = menuProvider.ChildItems[0] as Menu;
+				Menu menu = menuProvider.MainMenu;
 				WorkflowReferenceMenuItem wfMenu = menu.NewItem(typeof(WorkflowReferenceMenuItem), schema.ActiveSchemaExtensionId, null) as WorkflowReferenceMenuItem;
 				wfMenu.Name = wf.Name;
 				wfMenu.DisplayName = caption;

@@ -80,7 +80,7 @@ namespace Origam.Gui.Win
 		private ToolBar toolBar;
 		private ToolBarButton btnFilter;
 		private FilterPanel pnlFilter;
-		private ContextMenu filterMenu;
+		private System.Windows.Forms.ContextMenu filterMenu;
 		private MenuItem mnuFilterAdd;
 		private MenuItem mnuFilterDelete;
 		private MenuItem mnuFilterClear;
