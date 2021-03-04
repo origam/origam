@@ -52,6 +52,7 @@ using Origam.Server.Properties;
 using Origam.Server.Search;
 using Origam.ServerCommon;
 using core = Origam.Workbench.Services.CoreServices;
+using Resources = Origam.Server.Properties.Resources;
 
 namespace Origam.Server
 {

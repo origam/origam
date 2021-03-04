@@ -44,6 +44,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Origam.Schema;
 using Origam.Schema.EntityModel;
+using Origam.Schema.MenuModel;
 using Origam.Schema.WorkflowModel;
 using Origam.ServerCore.Controller;
 using Origam.ServerCore.Resources;
@@ -437,15 +438,22 @@ namespace Origam.ServerCore
         public RuleExceptionDataCollection ExecuteActionQuery(
             ExecuteActionQueryInput input)
         {
-            EntityUIAction action = null;
-            try
+            EntityUIAction action = GetAction(input.ActionId);
+            if (action is EntityMenuAction menuAction)
             {
-                action = UIActionTools.GetAction(input.ActionId);
+                bool isAuthorized = SecurityManager.GetAuthorizationProvider().Authorize(
+                    SecurityManager.CurrentPrincipal, menuAction.Menu.Roles);
+                if (!isAuthorized)
+                {
+                    return new RuleExceptionDataCollection(new []
+                    {
+                        new RuleExceptionData(string.Format(
+                            Origam.ServerCommon.Resources.MenuNotAuthorized, menuAction.Menu.NodeText)
+                        )
+                    });
+                }
             }
-            catch
-            {
-                // ignored
-            }
+
             if(action?.ConfirmationRule == null)
             {
                 return new RuleExceptionDataCollection();
@@ -461,6 +469,19 @@ namespace Origam.ServerCore
         }
         public IList ExecuteAction(ExecuteActionInput input)
         {
+            EntityUIAction action = GetAction(input.ActionId);
+            if (action is EntityMenuAction menuAction)
+            {
+                bool isAuthorized = SecurityManager.GetAuthorizationProvider().Authorize(
+                    SecurityManager.CurrentPrincipal, menuAction.Menu.Roles);
+                if (!isAuthorized)
+                {
+                    throw new UIException(string.Format(
+                        Origam.ServerCommon.Resources.MenuNotAuthorized,
+                        menuAction.Menu.NodeText)
+                    );
+                }
+            }
             var actionRunnerClient 
                 = new ServerEntityUIActionRunnerClient(
                     sessionManager, input.SessionFormIdentifier.ToString());
@@ -480,6 +501,20 @@ namespace Origam.ServerCore
                 input.SelectedItems, 
                 input.InputParameters);
         }
+        private static EntityUIAction GetAction(string actionId)
+        {
+            try
+            {
+               return UIActionTools.GetAction(actionId);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return null;
+        }
+
         public Result<RowData, IActionResult> GetRow(
             Guid sessionFormIdentifier, string entity, 
             DataStructureEntity dataStructureEntity, Guid rowId)

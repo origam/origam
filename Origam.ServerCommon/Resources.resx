@@ -315,4 +315,7 @@
   <data name="SearchError" xml:space="preserve">
     <value>Search Error</value>
   </data>
+  <data name="MenuNotAuthorized" xml:space="preserve">
+    <value>You don't have access to {0}</value>
+  </data>
 </root>
