@@ -9,9 +9,9 @@ const HANDLED = Symbol("_$ErrorHandled");
 
 export function handleError(ctx: any) {
   return function* handleError(error: any) {
-    const openedScreen = tryGetOpenedScreen(ctx);
-    if (!openedScreen || openedScreen && !getOpenedScreens(ctx).isShown(openedScreen)){
-      console.log("ERROR was ignored, because it originated from a closed screen:", error);
+    if (error.response && error.response.status === 474) {
+      // 747 ~ ServerObjectDisposed happens when the user closes a form before all pending requests have
+      // finished (RowStates for example)
       return;
     }
     if (error.response && error.response.status === 401) {
