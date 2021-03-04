@@ -1,26 +1,27 @@
-import { action, autorun, comparer, computed, observable, runInAction } from "mobx";
-import { MobXProviderContext, Observer, observer } from "mobx-react";
+import {action, autorun, comparer, computed, observable, runInAction} from "mobx";
+import {MobXProviderContext, Observer, observer} from "mobx-react";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import Measure, { BoundingRect } from "react-measure";
-import { Canvas } from "./Canvas";
-import { HeaderRow } from "./HeaderRow";
-import { PositionedField } from "./PositionedField";
+import Measure, {BoundingRect} from "react-measure";
+import {Canvas} from "./Canvas";
+import {HeaderRow} from "./HeaderRow";
+import {PositionedField} from "./PositionedField";
 import Scrollee from "./Scrollee";
 import Scroller from "./Scroller";
 import S from "./Table.module.scss";
-import { IGridDimensions, ITableProps } from "./types";
-import { CtxPanelVisibility } from "gui/contexts/GUIContexts";
-import { IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData } from "./TableRendering/types";
-import { renderTable } from "./TableRendering/renderTable";
-import { getTooltip, handleTableClick } from "./TableRendering/onClick";
-import { getProperties } from "model/selectors/DataView/getProperties";
-import { getTableViewProperties } from "model/selectors/TablePanelView/getTableViewProperties";
-import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGroupingConfiguration";
-import { getIsSelectionCheckboxesShown } from "model/selectors/DataView/getIsSelectionCheckboxesShown";
-import { IProperty } from "model/entities/types/IProperty";
-import { Tooltip } from "react-tippy";
-import { ITablePanelView } from "model/entities/TablePanelView/types/ITablePanelView";
+import {IGridDimensions, ITableProps} from "./types";
+import {CtxPanelVisibility} from "gui/contexts/GUIContexts";
+import {IClickSubsItem, IMouseOverSubsItem, ITableRow, IToolTipData} from "./TableRendering/types";
+import {renderTable} from "./TableRendering/renderTable";
+import {getTooltip, handleTableClick} from "./TableRendering/onClick";
+import {getProperties} from "model/selectors/DataView/getProperties";
+import {getTableViewProperties} from "model/selectors/TablePanelView/getTableViewProperties";
+import {getGroupingConfiguration} from "model/selectors/TablePanelView/getGroupingConfiguration";
+import {getIsSelectionCheckboxesShown} from "model/selectors/DataView/getIsSelectionCheckboxesShown";
+import {IProperty} from "model/entities/types/IProperty";
+import {Tooltip} from "react-tippy";
+import {ITablePanelView} from "model/entities/TablePanelView/types/ITablePanelView";
+import {formatTooltipText} from "gui/Components/ToolTip/FormatTooltipText";
 
 function createTableRenderer(ctx: any, gridDimensions: IGridDimensions) {
   const groupedColumnSettings = computed(() => getGroupingConfiguration(ctx).orderedGroupingColumnSettings);
@@ -456,15 +457,3 @@ export class RawTable extends React.Component<ITableProps & { isVisible: boolean
   }
 }
 
-function formatTooltipText(content: string | string[]){
-  if(Array.isArray(content)) {
-    const lines = content.flatMap(line => line.match(/.{1,72}/g));
-    const linesToShow = lines.length > 10 ? lines.slice(0, 10).concat(["..."]) : lines;
-    return (
-      <div className={S.tooltipContent}>
-        {linesToShow.map(line => <div className={S.toolTipLine}>{line}</div>)}
-      </div>)
-  }else{
-    return <div>{content}</div>;
-  }
-}
