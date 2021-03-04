@@ -85,24 +85,28 @@ namespace Origam.ServerCore.Controller
             {
                 return func();
             }
-            catch(SessionExpiredException ex)
+            catch (SessionExpiredException ex)
             {
                 return NotFound(ex);
             }
-            catch(RuleException ex)
+            catch (RuleException ex)
             {
                 return StatusCode(420, ex);
             }
-            catch(DBConcurrencyException ex)
+            catch (DBConcurrencyException ex)
             {
                 log.LogError(ex, ex.Message);
                 return StatusCode(409, ex);
             }
-            catch(UIException ex)
+            catch (ObjectDisposedException ex)
             {
                 return StatusCode(422, ex);
             }
-            catch(Exception ex)
+            catch (UIException ex)
+            {
+                return StatusCode(422, ex);
+            }
+            catch (Exception ex)
             {
                 log.LogError(ex, ex.Message);
                 return StatusCode(500, ex);

@@ -174,4 +174,7 @@ under certain conditions.</value>
   <data name="XmlNoRoot" xml:space="preserve">
     <value>Attempting to merge an XML document that has a root element with attributes. Root element should have no attributes. This is probably a result of an XSLT transformation that does not produce a proper root element.</value>
   </data>
+  <data name="SessionStoreDisposed" xml:space="preserve">
+    <value>Session store has already been disposed</value>
+  </data>
 </root>

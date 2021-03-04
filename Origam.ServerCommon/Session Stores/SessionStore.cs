@@ -89,6 +89,8 @@ namespace Origam.Server
         private bool _refreshPortalAfterSave = false;
         private bool _isExclusive = false;
         private readonly Analytics analytics;
+        private bool _isDisposed;
+        private IDataDocument _xmlData;
 
         public const string LIST_LOADED_COLUMN_NAME = "___ORIGAM_IsLoaded";
         public const string ACTION_SAVE = "SAVE";
@@ -135,13 +137,27 @@ namespace Origam.Server
 
         public IBasicUIService Service
         {
-            get { return _service; }
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _service;
+            }
             set { _service = value; }
         }
 
         public SessionStore ParentSession
         {
-            get { return _parentSession; }
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _parentSession;
+            }
             set { _parentSession = value; }
         }
 
@@ -189,23 +205,51 @@ namespace Origam.Server
 
         public SessionStore ActiveSession
         {
-            get { return _activeSession; }
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _activeSession;
+            }
             set { _activeSession = value; }
         }
 
         public RuleEngine RuleEngine
         {
-            get { return _ruleEngine; }
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _ruleEngine;
+            }
         }
 
         public DatasetRuleHandler RuleHandler
         {
-            get { return _ruleHandler; }
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _ruleHandler;
+            }
         }
 
         public DataSet Data
         {
-            get { return _data; }
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _data;
+            }
         }
 
         public DataSet DataList
@@ -248,11 +292,29 @@ namespace Origam.Server
             set { _request = value; }
         }
 
-        public IDataDocument XmlData { get; private set; }
+        public IDataDocument XmlData
+        {
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _xmlData;
+            }
+            private set => _xmlData = value;
+        }
 
         public DataStructureRuleSet RuleSet
         {
-            get { return _ruleSet; }
+            get
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException(Resources.SessionStoreDisposed);
+                }
+                return _ruleSet;
+            }
             set
             {
                 _ruleSet = value;
@@ -494,7 +556,7 @@ namespace Origam.Server
                     _data = dataSource as DataSet;
 
                     bool selfJoinExists = false;
-                    foreach (DataRelation r in _data.Relations)
+                    foreach (DataRelation r in Data.Relations)
                     {
                         if (r.ParentTable.Equals(r.ChildTable))
                         {
@@ -506,7 +568,7 @@ namespace Origam.Server
                     // no XML for self joins (incompatible with XmlDataDocument)
                     if (!selfJoinExists)
                     {
-                        XmlData = DataDocumentFactory.New(_data);
+                        XmlData = DataDocumentFactory.New(Data);
                     }
                 }
                 else if (dataSource is IDataDocument)
@@ -633,7 +695,7 @@ namespace Origam.Server
             {
                 if (_registerEventsCounter == 0)
                 {
-                    _ruleHandler.RegisterDatasetEvents(XmlData, _ruleSet, _ruleEngine);
+                    RuleHandler.RegisterDatasetEvents(XmlData, RuleSet, RuleEngine);
                 }
             }
         }
@@ -644,7 +706,7 @@ namespace Origam.Server
 
             if (XmlData != null)
             {
-                _ruleHandler.UnregisterDatasetEvents(XmlData);
+                RuleHandler.UnregisterDatasetEvents(XmlData);
             }
         }
 
@@ -695,6 +757,7 @@ namespace Origam.Server
             _service = null;
             _parentSession = null;
             _activeSession = null;
+            _isDisposed = true;
         }
 
         public virtual void OnDispose()
@@ -1545,6 +1608,11 @@ namespace Origam.Server
             {
                 UserProfile profile = SecurityTools.CurrentUserProfile();
                 DataRow row = GetSessionRow(entity, id);
+                if (row == null )
+                {
+                    throw new ArgumentOutOfRangeException("id", id, Resources.ErrorRecordNotFound);
+                }
+
                 DataColumn dataColumn = row.Table.Columns[property];
                 if (dataColumn == null)
                 {
