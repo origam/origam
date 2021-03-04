@@ -10,7 +10,7 @@ const HANDLED = Symbol("_$ErrorHandled");
 export function handleError(ctx: any) {
   return function* handleError(error: any) {
     const openedScreen = tryGetOpenedScreen(ctx);
-    if (openedScreen && !getOpenedScreens(ctx).isShown(openedScreen)){
+    if (!openedScreen || openedScreen && !getOpenedScreens(ctx).isShown(openedScreen)){
       console.log("ERROR was ignored, because it originated from a closed screen:", error);
       return;
     }
