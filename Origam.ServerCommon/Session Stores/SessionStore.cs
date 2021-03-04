@@ -1545,6 +1545,11 @@ namespace Origam.Server
             {
                 UserProfile profile = SecurityTools.CurrentUserProfile();
                 DataRow row = GetSessionRow(entity, id);
+                if (row == null )
+                {
+                    throw new ArgumentOutOfRangeException("id", id, Resources.ErrorRecordNotFound);
+                }
+
                 DataColumn dataColumn = row.Table.Columns[property];
                 if (dataColumn == null)
                 {
