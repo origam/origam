@@ -30,16 +30,16 @@ using System.Data;
 
 namespace Origam.Workflow
 {
-	/// <summary>
-	/// Summary description for WorkflowServiceAgent.
-	/// </summary>
-	public class ModelServiceAgent : AbstractServiceAgent
-	{
+    /// <summary>
+    /// Summary description for WorkflowServiceAgent.
+    /// </summary>
+    public class ModelServiceAgent : AbstractServiceAgent
+    {
         const string GENERATED_PACKAGE_ID = "3cfc0308-fd23-454c-9d7a-a00054e0b9b1";
         const string GENERATED_PACKAGE_NAME = "_generated";
-		public ModelServiceAgent()
-		{
-		}
+        public ModelServiceAgent()
+        {
+        }
 
         #region Private Methods
         private object GenerateSimpleModel(IDataDocument dataDocument)
@@ -59,7 +59,7 @@ namespace Origam.Workflow
                 foreach (var field in entity.GetOrigamFieldRows())
                 {
                     var column = EntityHelper.CreateColumn(table, field.Name,
-                        !field.IsMandatory, ConvertType(field.refOrigamDataTypeId.ToString()), 
+                        !field.IsMandatory, ConvertType(field.refOrigamDataTypeId.ToString()),
                         field.IsTextLengthNull() ? 0 : field.TextLength, field.Label, null, null, true);
                 }
             }
@@ -87,7 +87,7 @@ namespace Origam.Workflow
                 case "d7483b5f-cb08-4691-a886-67eb548cb3c2":
                     return OrigamDataType.Memo;
                 default:
-                    throw new ArgumentOutOfRangeException("origamDataTypeId", 
+                    throw new ArgumentOutOfRangeException("origamDataTypeId",
                         origamDataTypeId, "Invalid type");
             }
         }
@@ -95,22 +95,22 @@ namespace Origam.Workflow
 
         #region IServiceAgent Members
         private object _result;
-		public override object Result
-		{
-			get
-			{
-				return _result;
-			}
-		}
+        public override object Result
+        {
+            get
+            {
+                return _result;
+            }
+        }
 
-		public override void Run()
-		{
-			switch(MethodName)
-			{
-				case "GenerateSimpleModel":
-					_result = GenerateSimpleModel(
+        public override void Run()
+        {
+            switch (MethodName)
+            {
+                case "GenerateSimpleModel":
+                    _result = GenerateSimpleModel(
                         GetParameter<IDataDocument>("Data"));
-					break;
+                    break;
 
                 case "ElementAttribute":
                     _result = ElementAttribute(
@@ -125,10 +125,10 @@ namespace Origam.Workflow
                     break;
 
                 default:
-					throw new ArgumentOutOfRangeException("MethodName", 
+                    throw new ArgumentOutOfRangeException("MethodName",
                         MethodName, ResourceUtils.GetString("InvalidMethodName"));
-			}
-		}
+            }
+        }
 
         private string ElementAttribute(Guid id, string attributeName)
         {
@@ -151,7 +151,7 @@ namespace Origam.Workflow
             table.Columns.Add("Id", typeof(Guid));
             table.Columns.Add("Name", typeof(string));
             data.Tables.Add(table);
-            foreach(AbstractSchemaItem item in parent.ChildItemsByType(itemType))
+            foreach (AbstractSchemaItem item in parent.ChildItemsByType(itemType))
             {
                 DataRow row = table.NewRow();
                 row["Id"] = item.Id;
@@ -160,19 +160,18 @@ namespace Origam.Workflow
                 {
                     string name = memberInfo.MemberInfo.Name;
                     Type type;
-                    if (memberInfo.MemberInfo is System.Reflection.PropertyInfo propertyInfo)
+                    switch (memberInfo.MemberInfo)
                     {
-                        type = propertyInfo.PropertyType;
+                        case System.Reflection.PropertyInfo propertyInfo:
+                            type = propertyInfo.PropertyType;
+                            break;
+                        case System.Reflection.FieldInfo fieldInfo:
+                            type = fieldInfo.FieldType;
+                            break;
+                        default:
+                            throw new Exception("Unknown type.");
                     }
-                    else if (memberInfo.MemberInfo is System.Reflection.FieldInfo fieldInfo)
-                    {
-                        type = fieldInfo.FieldType;
-                    }
-                    else
-                    {
-                        throw new Exception("Unknown type.");
-                    }
-                    if (! table.Columns.Contains(name))
+                    if (!table.Columns.Contains(name))
                     {
                         table.Columns.Add(name, type);
                     }
