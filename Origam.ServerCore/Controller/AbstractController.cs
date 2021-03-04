@@ -98,9 +98,9 @@ namespace Origam.ServerCore.Controller
                 log.LogError(ex, ex.Message);
                 return StatusCode(409, ex);
             }
-            catch (ObjectDisposedException ex)
+            catch (ServerObjectDisposedException ex)
             {
-                return StatusCode(422, ex);
+                return StatusCode(474, ex); // Suggests to the client that this error could be ignored
             }
             catch (UIException ex)
             {
