@@ -116,26 +116,13 @@ if [ ! -d "$DIR/origam" ]; then
 	echo "Optional: gitUsername, gitPassword"
 	exit 1
 fi
-
-if [ ! -f "serverCore.key" ]; then
+# generate certificate every start.
 	openssl rand -base64 10 >certpass
 	openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
 	openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/HTML5/serverCore.pfx
 	cp _appsettings.template appsettings.prepare
-        sed -i "s|certpassword|$(cat certpass)|" appsettings.prepare
-fi
-KEYEAR=`ls -l --time-style=+%Y serverCore.key | cut -d" " -f6`
+    sed -i "s|certpassword|$(cat certpass)|" appsettings.prepare
 
-if [ `date "+%Y"` -gt $KEYEAR ]; then
-	rm serverCore.key
-	rm serverCore.cer
-	rm serverCore.pfx
-	openssl rand -base64 10 >certpass
-	openssl req -batch -newkey rsa:2048 -nodes -keyout serverCore.key -x509 -days 728 -out serverCore.cer
-	openssl pkcs12 -export -in serverCore.cer -inkey serverCore.key -passout file:certpass -out /home/origam/HTML5/serverCore.pfx
-	cp _appsettings.template appsettings.prepare
-	sed -i "s|certpassword|$(cat certpass)|" appsettings.prepare
-fi
 
 if [[ ! -z ${ExternalDomain_SetOnStart} ]]; then
 	rm -f appsettings.json
