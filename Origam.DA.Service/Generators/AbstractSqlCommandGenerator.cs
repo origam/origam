@@ -2174,25 +2174,31 @@ namespace Origam.DA.Service
             else if (((columnsInfo.ColumnNames.Count == 0) || columnsInfo.ColumnNames.Contains(column.Name))
                 && aggregatedColumn != null)
             {
-                bool found = false;
-                foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
+                if (forceDatabaseCalculation)
                 {
-                    // if we have an aggregation column and
-                    // and the aggregation sub-entity with source field
-                    // exist in our DS, then we don't render sql for the
-                    // column, but just rely on dataset aggregation computation
-                    if (childEntity.Entity.PrimaryKey.Equals(aggregatedColumn.Relation.PrimaryKey))
+                    processColumn = true;
+                }
+                else
+                {
+                    bool found = false;
+                    foreach (DataStructureEntity childEntity in entity.ChildItemsByType(DataStructureEntity.CategoryConst))
                     {
-                        // search for aggregation source column in related entity 
-                        if (childEntity.ExistsEntityFieldAsColumn(aggregatedColumn.Field))
+                        // if we have an aggregation column and
+                        // and the aggregation sub-entity with source field
+                        // exist in our DS, then we don't render sql for the
+                        // column, but just rely on dataset aggregation computation
+                        if (childEntity.Entity.PrimaryKey.Equals(aggregatedColumn.Relation.PrimaryKey))
                         {
-                            found = true;
-                            break;
+                            // search for aggregation source column in related entity 
+                            if (childEntity.ExistsEntityFieldAsColumn(aggregatedColumn.Field))
+                            {
+                                found = true;
+                                break;
+                            }
                         }
                     }
+                    if (!found) processColumn = true;
                 }
-
-                if (!found) processColumn = true;
             }
             else if (columnsInfo.RenderSqlForDetachedFields && 
                      columnsInfo.ColumnNames.Contains(column.Name) &&
