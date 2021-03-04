@@ -291,4 +291,7 @@
   <data name="ErrorTooManyTabsOpen" xml:space="preserve">
     <value>Je otevřeno příliš mnoho obrazovek. Před otevřením nové obrazovky zavřete některé záložky.</value>
   </data>
+  <data name="MenuNotAuthorized" xml:space="preserve">
+    <value>Nemáte přístup k menu {0}</value>
+  </data>
 </root>

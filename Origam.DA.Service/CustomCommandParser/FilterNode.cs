@@ -84,7 +84,8 @@ namespace Origam.DA.Service.CustomCommandParser
                 }
 
                 if (Column.DataType == OrigamDataType.UniqueIdentifier &&
-                    (Operator != "eq" || Operator != "neq"))
+                    Operator != "eq" && Operator != "neq" && Operator != "in" 
+                    && Operator != "nin")
                 {
                     return OrigamDataType.String;
                 }
