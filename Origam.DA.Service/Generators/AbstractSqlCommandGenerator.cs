@@ -1850,7 +1850,11 @@ namespace Origam.DA.Service
                     if (!string.IsNullOrWhiteSpace(customGrouping?.GroupingUnit))
                     {
                         var timeGroupingRenderer =
-                            new TimeGroupingRenderer(columnRenderData, ColumnDataToSql, customGrouping.GroupingUnit);
+                            new TimeGroupingRenderer(
+                                columnRenderData: columnRenderData, 
+                                columnDataToSql: ColumnDataToSql, 
+                                groupingUnit: customGrouping.GroupingUnit,
+                                renderDatePart: RenderDatePart);
                         string[] columnsWithoutAliases = timeGroupingRenderer.RenderWithoutAliases();
                         orderByCommandParser.SetColumnExpressionsIfMissing(column.Name, columnsWithoutAliases);
                         string allColumnsExpression = string.Join(", ", columnsWithoutAliases);
@@ -3763,6 +3767,7 @@ namespace Origam.DA.Service
         internal abstract string ArraySql(string expresion1, string expresion2);
         internal abstract string LengthSql(string expresion);
         internal abstract string VarcharSql();
+        internal abstract string RenderDatePart( string groupingUnit, string columnName);
 
         internal string GetItemByFunctionParameter(
             FunctionCall item, string parameterName, DataStructureEntity entity,
