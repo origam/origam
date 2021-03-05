@@ -242,7 +242,7 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
 
-                object value = ToDbValue(renderedColumnValue, ParameterDataType);
+                object value = ToDbValue(ColumnValue, Column.DataType);
                 if ((Operator == "eq" || Operator == "neq") &&
                     Column.DataType == OrigamDataType.Date &&
                     IsWholeDay((DateTime)value))
@@ -395,7 +395,7 @@ namespace Origam.DA.Service.CustomCommandParser
             {
                 throw new ArgumentException("Cannot prepend \"%\" to a value which is not a parameter");
             }
-            return "'%'+"+value;
+            return "'%' " + renderer.StringConcatenationChar+" "+value;
         } 
         private string AppendWildCard(string value)
         {
@@ -403,7 +403,8 @@ namespace Origam.DA.Service.CustomCommandParser
             {
                 throw new ArgumentException("Cannot append \"%\" to a value which is not a parameter");
             }
-            return value + "+'%'";
+            // return value + "+'%'";
+            return value +" "+ renderer.StringConcatenationChar + " '%'";
         }
     }
 }
