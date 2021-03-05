@@ -229,11 +229,11 @@ namespace Origam.DA.Service
                 + RenderExpression(field, null)
                 + " = " + sqlRenderer.ParameterReferenceChar + "oldValue");
             cmd.CommandType = CommandType.Text;
-            IDataParameter sqlParam = sqlRenderer.BuildParameter(
+            IDataParameter sqlParam = BuildParameter(
                 sqlRenderer.ParameterDeclarationChar + "oldValue", null, field.DataType,
                 field.MappedDataType, field.DataLength, field.AllowNulls);
             cmd.Parameters.Add(sqlParam);
-            sqlParam = sqlRenderer.BuildParameter(sqlRenderer.ParameterDeclarationChar + "newValue",
+            sqlParam = BuildParameter(sqlRenderer.ParameterDeclarationChar + "newValue",
                 null, field.DataType, field.MappedDataType, field.DataLength,
                 field.AllowNulls);
             cmd.Parameters.Add(sqlParam);
@@ -369,7 +369,7 @@ namespace Origam.DA.Service
             {
                 var dataStructureColumn = dataStructureEntity.Columns
                     .Find(column => column.Name == parameterData.ColumnName);
-                var parameter = sqlRenderer.BuildParameter(parameterData.ParameterName, 
+                var parameter = BuildParameter(parameterData.ParameterName, 
                     null,
                     parameterData.DataType,
                     null,
@@ -416,7 +416,7 @@ namespace Origam.DA.Service
         {
             IDatabaseDataTypeMapping mappableDataType = parameterRef.Parameter
                 as IDatabaseDataTypeMapping;
-            return sqlRenderer.BuildParameter(paramName, null,
+            return BuildParameter(paramName, null,
                 parameterRef.Parameter.DataType,
                 mappableDataType?.MappedDataType,
                 parameterRef.Parameter.DataLength,
@@ -490,7 +490,7 @@ namespace Origam.DA.Service
         public void BuildUpdateFieldParameters(IDbCommand command,
             FieldMappingItem column)
         {
-            command.Parameters.Add(sqlRenderer.BuildParameter(
+            command.Parameters.Add(BuildParameter(
                 sqlRenderer.ParameterDeclarationChar + column.Name,
                 column.Name,
                 column.DataType,
@@ -504,7 +504,7 @@ namespace Origam.DA.Service
             DataStructureColumn column)
         {
             FieldMappingItem dbField = GetDatabaseField(column);
-            return sqlRenderer.BuildParameter(
+            return BuildParameter(
                 NewValueParameterName(column, true),
                 column.Name,
                 dbField.DataType,
@@ -516,7 +516,7 @@ namespace Origam.DA.Service
             DataStructureColumn column)
         {
             FieldMappingItem dbField = GetDatabaseField(column);
-            return sqlRenderer.BuildParameter(
+            return BuildParameter(
                 NewValueParameterName(column, true),
                 column.Name,
                 OrigamDataType.Array,
@@ -541,7 +541,7 @@ namespace Origam.DA.Service
             DataStructureColumn column)
         {
             FieldMappingItem dbField = GetDatabaseField(column);
-            IDataParameter result = sqlRenderer.BuildParameter(
+            IDataParameter result = BuildParameter(
                 OriginalParameterName(column, true),
                 column.Name,
                 dbField.DataType,
@@ -557,7 +557,7 @@ namespace Origam.DA.Service
             DataStructureColumn column)
         {
             FieldMappingItem dbField = GetDatabaseField(column);
-            IDataParameter result = sqlRenderer.BuildParameter(
+            IDataParameter result = BuildParameter(
                 OriginalParameterNameForNullComparison(column, true),
                 column.Name,
                 dbField.DataType,
@@ -708,7 +708,7 @@ namespace Origam.DA.Service
             // fname | varchar(20) | NOT NULL | PRIMARY KEY
             ddl.AppendFormat("{0} {1}",
                 sqlRenderer.NameLeftBracket + field.MappedColumnName + sqlRenderer.NameRightBracket,
-                sqlRenderer.DdlDataType(field.DataType, field.DataLength, field.MappedDataType)
+                DdlDataType(field.DataType, field.DataLength, field.MappedDataType)
                 );
             if (field.AllowNulls)
                 ddl.Append(" NULL");
@@ -746,6 +746,24 @@ namespace Origam.DA.Service
             return ddl.ToString();
         }
 
+        public abstract string DefaultDdlDataType(OrigamDataType columnType);
+    
+        public abstract IDbDataParameter BuildParameter(string paramName,
+            string sourceColumn, OrigamDataType dataType, DatabaseDataType dbDataType,
+            int dataLength, bool allowNulls);
+    
+        public string DdlDataType(OrigamDataType columnType,
+            DatabaseDataType dbDataType)
+        {
+            if (dbDataType != null)
+            {
+                return dbDataType.MappedDatabaseTypeName;
+            }
+            else
+            {
+                return DefaultDdlDataType(columnType);
+            }
+        }
 
         public string TableDefinitionDdl(TableMappingItem table)
         {
@@ -3904,18 +3922,33 @@ namespace Origam.DA.Service
         public abstract OrigamDataType ToOrigamDataType(string ddlType);
         
                     
+        // public string DdlDataType(OrigamDataType columnType, int dataLenght,
+        //     DatabaseDataType dbDataType)
+        // {
+        //     return sqlRenderer.DdlDataType(columnType, dataLenght, dbDataType);
+        // }
+        
+        
         public string DdlDataType(OrigamDataType columnType, int dataLenght,
             DatabaseDataType dbDataType)
         {
-            return sqlRenderer.DdlDataType(columnType, dataLenght, dbDataType);
-        }
+            switch (columnType)
+            {
+                case OrigamDataType.String:
+                    return DdlDataType(columnType, dbDataType)
+                           + "(" + dataLenght + ")";
 
-        public string DdlDataType(OrigamDataType columnType,
-            DatabaseDataType dbDataType)
-        {
-            return sqlRenderer.DdlDataType(columnType, dbDataType);
-        }
+                case OrigamDataType.Xml:
+                    return DdlDataType(columnType, dbDataType);
 
+                case OrigamDataType.Float:
+                    return DdlDataType(columnType, dbDataType) + "(28,10)";
+
+                default:
+                    return DdlDataType(columnType, dbDataType);
+            }
+        }
+        
         #endregion
 
         #region ICloneable Members

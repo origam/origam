@@ -33,43 +33,4 @@ public abstract class SqlRenderer
     internal abstract string CreateDataStructureHead();
     internal abstract string DeclareBegin();
     internal abstract string SetParameter(string name);
-
-    public abstract string DefaultDdlDataType(OrigamDataType columnType);
-    
-    public abstract IDbDataParameter BuildParameter(string paramName,
-        string sourceColumn, OrigamDataType dataType, DatabaseDataType dbDataType,
-        int dataLength, bool allowNulls);
-    
-    public string DdlDataType(OrigamDataType columnType, int dataLenght,
-        DatabaseDataType dbDataType)
-    {
-        switch (columnType)
-        {
-            case OrigamDataType.String:
-                return DdlDataType(columnType, dbDataType)
-                       + "(" + dataLenght + ")";
-
-            case OrigamDataType.Xml:
-                return DdlDataType(columnType, dbDataType);
-
-            case OrigamDataType.Float:
-                return DdlDataType(columnType, dbDataType) + "(28,10)";
-
-            default:
-                return DdlDataType(columnType, dbDataType);
-        }
-    }
-    
-    public string DdlDataType(OrigamDataType columnType,
-        DatabaseDataType dbDataType)
-    {
-        if (dbDataType != null)
-        {
-            return dbDataType.MappedDatabaseTypeName;
-        }
-        else
-        {
-            return DefaultDdlDataType(columnType);
-        }
-    }
 }

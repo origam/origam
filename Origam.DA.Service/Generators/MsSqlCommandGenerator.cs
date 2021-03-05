@@ -34,12 +34,13 @@ namespace Origam.DA.Service
 {
     public class MsSqlCommandGenerator : AbstractSqlCommandGenerator
     {
-        public MsSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker):
+        public MsSqlCommandGenerator(IDetachedFieldPacker detachedFieldPacker) :
             base(
                 trueValue: "1",
                 falseValue: "0",
-                detachedFieldPacker: detachedFieldPacker, 
-                sqlValueFormatter: new SQLValueFormatter("1", "0", (text) => text.Replace("%", "[%]").Replace("_", "[_]"))
+                detachedFieldPacker: detachedFieldPacker,
+                sqlValueFormatter: new SQLValueFormatter("1", "0",
+                    (text) => text.Replace("%", "[%]").Replace("_", "[_]"))
                 , filterRenderer: new MsSqlFilterRenderer(),
                 new MsSqlRenderer())
         {
@@ -56,7 +57,8 @@ namespace Origam.DA.Service
             return new SqlParameter();
         }
 
-        public override IDbCommand GetCommand(string cmdText, IDbConnection connection)
+        public override IDbCommand GetCommand(string cmdText,
+            IDbConnection connection)
         {
             return new SqlCommand(cmdText, connection as SqlConnection);
         }
@@ -71,10 +73,13 @@ namespace Origam.DA.Service
             return new SqlDataAdapter(command as SqlCommand);
         }
 
-        public override IDbCommand GetCommand(string cmdText, IDbConnection connection, IDbTransaction transaction)
+        public override IDbCommand GetCommand(string cmdText,
+            IDbConnection connection, IDbTransaction transaction)
         {
-            return new SqlCommand(cmdText, connection as SqlConnection, transaction as SqlTransaction);
+            return new SqlCommand(cmdText, connection as SqlConnection,
+                transaction as SqlTransaction);
         }
+
         public override void DeriveStoredProcedureParameters(IDbCommand command)
         {
             SqlCommand cmd = command as SqlCommand;
@@ -86,12 +91,14 @@ namespace Origam.DA.Service
                 {
                     continue;
                 }
+
                 string name = parameter.TypeName;
                 int index = name.IndexOf(".");
                 if (index == -1)
                 {
                     continue;
                 }
+
                 name = name.Substring(index + 1);
                 if (name.Contains("."))
                 {
@@ -102,27 +109,33 @@ namespace Origam.DA.Service
 
 
         #region Cloning
+
         public override DbDataAdapter CloneAdapter(DbDataAdapter adapter)
         {
             SqlDataAdapter newa = GetAdapter() as SqlDataAdapter;
             SqlDataAdapter sqla = adapter as SqlDataAdapter;
-            if (sqla == null) throw new ArgumentOutOfRangeException("adapter", adapter, ResourceUtils.GetString("InvalidAdapterType"));
+            if (sqla == null)
+                throw new ArgumentOutOfRangeException("adapter", adapter,
+                    ResourceUtils.GetString("InvalidAdapterType"));
 
             newa.AcceptChangesDuringFill = adapter.AcceptChangesDuringFill;
             newa.ContinueUpdateOnError = adapter.ContinueUpdateOnError;
-            newa.DeleteCommand = (SqlCommand)CloneCommand(sqla.DeleteCommand);
-            newa.InsertCommand = (SqlCommand)CloneCommand(sqla.InsertCommand);
+            newa.DeleteCommand = (SqlCommand) CloneCommand(sqla.DeleteCommand);
+            newa.InsertCommand = (SqlCommand) CloneCommand(sqla.InsertCommand);
             newa.MissingMappingAction = sqla.MissingMappingAction;
             newa.MissingSchemaAction = sqla.MissingSchemaAction;
-            newa.SelectCommand = (SqlCommand)CloneCommand(sqla.SelectCommand);
-            newa.UpdateCommand = (SqlCommand)CloneCommand(sqla.UpdateCommand);
+            newa.SelectCommand = (SqlCommand) CloneCommand(sqla.SelectCommand);
+            newa.UpdateCommand = (SqlCommand) CloneCommand(sqla.UpdateCommand);
 
             foreach (DataTableMapping tm in adapter.TableMappings)
             {
-                DataTableMapping newtm = new DataTableMapping(tm.SourceTable, tm.DataSetTable);
+                DataTableMapping newtm =
+                    new DataTableMapping(tm.SourceTable, tm.DataSetTable);
                 foreach (DataColumnMapping cm in tm.ColumnMappings)
                 {
-                    newtm.ColumnMappings.Add(new DataColumnMapping(cm.SourceColumn, cm.DataSetColumn));
+                    newtm.ColumnMappings.Add(
+                        new DataColumnMapping(cm.SourceColumn,
+                            cm.DataSetColumn));
                 }
 
                 newa.TableMappings.Add(newtm);
@@ -162,11 +175,12 @@ namespace Origam.DA.Service
             if (param.DbType != DbType.Binary) newp.Size = param.Size;
             newp.SourceColumn = param.SourceColumn;
             newp.SourceVersion = param.SourceVersion;
-            newp.SqlDbType = ((SqlParameter)param).SqlDbType;
-            newp.Offset = ((SqlParameter)param).Offset;
-            newp.TypeName = ((SqlParameter)param).TypeName;
+            newp.SqlDbType = ((SqlParameter) param).SqlDbType;
+            newp.Offset = ((SqlParameter) param).Offset;
+            newp.TypeName = ((SqlParameter) param).TypeName;
             return newp;
         }
+
         #endregion
 
         public override OrigamDataType ToOrigamDataType(string ddlType)
@@ -217,7 +231,8 @@ namespace Origam.DA.Service
             }
         }
 
-        public override string GetIndexName(IDataEntity entity, DataEntityIndex index)
+        public override string GetIndexName(IDataEntity entity,
+            DataEntityIndex index)
         {
             return index.Name;
         }
@@ -235,7 +250,8 @@ namespace Origam.DA.Service
             return result;
         }
 
-        internal override string FixAggregationDataType(OrigamDataType dataType, string expression)
+        internal override string FixAggregationDataType(OrigamDataType dataType,
+            string expression)
         {
             switch (dataType)
             {
@@ -248,22 +264,27 @@ namespace Origam.DA.Service
             }
         }
 
-        internal override string MergeSql(string tableName, StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder, StringBuilder updateBuilder, StringBuilder insertColumnsBuilder, StringBuilder insertValuesBuilder)
+        internal override string MergeSql(string tableName,
+            StringBuilder keysBuilder, StringBuilder searchPredicatesBuilder,
+            StringBuilder updateBuilder, StringBuilder insertColumnsBuilder,
+            StringBuilder insertValuesBuilder)
         {
             StringBuilder sqlExpression = new StringBuilder();
-            return sqlExpression.AppendFormat("MERGE INTO {0} USING (SELECT {1}) AS src ON {2} WHEN MATCHED THEN UPDATE SET {3} WHEN NOT MATCHED THEN INSERT ({4}) VALUES ({5});",
+            return sqlExpression.AppendFormat(
+                "MERGE INTO {0} USING (SELECT {1}) AS src ON {2} WHEN MATCHED THEN UPDATE SET {3} WHEN NOT MATCHED THEN INSERT ({4}) VALUES ({5});",
                 tableName,
                 keysBuilder,
                 searchPredicatesBuilder,
                 updateBuilder,
                 insertColumnsBuilder,
                 insertValuesBuilder
-                ).ToString();
+            ).ToString();
         }
-        
+
         public override object Clone()
         {
-            MsSqlCommandGenerator gen = new MsSqlCommandGenerator(new DetachedFieldPackerMs());
+            MsSqlCommandGenerator gen =
+                new MsSqlCommandGenerator(new DetachedFieldPackerMs());
             return gen;
         }
 
@@ -271,16 +292,18 @@ namespace Origam.DA.Service
         {
             return "";
         }
-        
-        public override string CreateDataStructureFooterSql(List<string> tmptables)
+
+        public override string CreateDataStructureFooterSql(
+            List<string> tmptables)
         {
             return "";
         }
-       
+
         internal override string ChangeColumnDef(FieldMappingItem field)
         {
             StringBuilder ddl = new StringBuilder();
-            ddl.Append(sqlRenderer.DdlDataType(field.DataType, field.DataLength, field.MappedDataType));
+            ddl.Append(DdlDataType(field.DataType, field.DataLength,
+                field.MappedDataType));
             if (field.AllowNulls)
                 ddl.Append(" NULL");
             else
@@ -288,33 +311,43 @@ namespace Origam.DA.Service
             return ddl.ToString();
         }
 
-        internal override string DropDefaultValue(FieldMappingItem field, string constraintName)
+        internal override string DropDefaultValue(FieldMappingItem field,
+            string constraintName)
         {
             return string.Format("ALTER TABLE {0} DROP CONSTRAINT {1};",
-                    RenderExpression(field.ParentItem as TableMappingItem),
-                    sqlRenderer.NameLeftBracket + constraintName + sqlRenderer.NameRightBracket);
+                RenderExpression(field.ParentItem as TableMappingItem),
+                sqlRenderer.NameLeftBracket + constraintName +
+                sqlRenderer.NameRightBracket);
         }
-        
+
         public override string FunctionDefinitionDdl(Function function)
         {
             if (function.FunctionType == OrigamFunctionType.Database)
             {
-                StringBuilder builder = new StringBuilder("CREATE FUNCTION dbo.");
+                StringBuilder builder =
+                    new StringBuilder("CREATE FUNCTION dbo.");
                 builder.Append(function.Name + "(");
                 int i = 0;
                 foreach (FunctionParameter parameter in function.ChildItems)
                 {
                     if (i > 0) builder.Append(", ");
-                    builder.Append(ParameterDeclarationChar + parameter.Name + " as ?");
+                    builder.Append(ParameterDeclarationChar + parameter.Name +
+                                   " as ?");
                     i++;
                 }
+
                 builder.Append(")" + Environment.NewLine);
-                builder.Append("RETURNS " + DdlDataType(function.DataType, 0, null)
-                                          + Environment.NewLine);
-                builder.Append("AS" + Environment.NewLine + "BEGIN" + Environment.NewLine);
-                builder.Append("DECLARE " + ParameterDeclarationChar + "result AS "
-                               + DdlDataType(function.DataType, 0, null) + Environment.NewLine);
-                builder.Append("RETURN " + sqlRenderer.ParameterReferenceChar + "result"
+                builder.Append(
+                    "RETURNS " + DdlDataType(function.DataType, 0, null)
+                               + Environment.NewLine);
+                builder.Append("AS" + Environment.NewLine + "BEGIN" +
+                               Environment.NewLine);
+                builder.Append("DECLARE " + ParameterDeclarationChar +
+                               "result AS "
+                               + DdlDataType(function.DataType, 0, null) +
+                               Environment.NewLine);
+                builder.Append("RETURN " + sqlRenderer.ParameterReferenceChar +
+                               "result"
                                + Environment.NewLine);
                 builder.Append("END");
                 return builder.ToString();
@@ -326,5 +359,108 @@ namespace Origam.DA.Service
             }
         }
 
+        public override string DefaultDdlDataType(OrigamDataType columnType)
+        {
+            switch (columnType)
+            {
+                case OrigamDataType.Geography:
+                    return "geography";
+                case OrigamDataType.Memo:
+                    return "nvarchar(max)";
+                case OrigamDataType.Object:
+                    return "nvarchar(max)";
+                case OrigamDataType.Xml:
+                    return "nvarchar(max)";
+                case OrigamDataType.Blob:
+                    return "varbinary(max)";
+                default:
+                    return ConvertDataType(columnType, null).ToString();
+            }
+        }
+
+        private SqlDbType ConvertDataType(OrigamDataType columnType,
+            DatabaseDataType dbDataType)
+        {
+            if (dbDataType != null)
+            {
+                return (SqlDbType) Enum.Parse(typeof(SqlDbType),
+                    dbDataType.MappedDatabaseTypeName);
+            }
+
+            switch (columnType)
+            {
+                case OrigamDataType.Blob:
+                    return SqlDbType.Image;
+                case OrigamDataType.Boolean:
+                    return SqlDbType.Bit;
+                case OrigamDataType.Byte:
+                    //TODO: check right 
+                    return SqlDbType.TinyInt;
+                case OrigamDataType.Currency:
+                    return SqlDbType.Money;
+                case OrigamDataType.Date:
+                    return SqlDbType.DateTime;
+                case OrigamDataType.Long:
+                    return SqlDbType.BigInt;
+                case OrigamDataType.Xml:
+                case OrigamDataType.Memo:
+                    return SqlDbType.NVarChar;
+                case OrigamDataType.Array:
+                    return SqlDbType.Structured;
+                case OrigamDataType.Geography:
+                    return SqlDbType.Text;
+                case OrigamDataType.Integer:
+                    return SqlDbType.Int;
+                case OrigamDataType.Float:
+                    return SqlDbType.Decimal;
+                case OrigamDataType.Object:
+                case OrigamDataType.String:
+                    return SqlDbType.NVarChar;
+                case OrigamDataType.UniqueIdentifier:
+                    return SqlDbType.UniqueIdentifier;
+                default:
+                    throw new NotSupportedException(
+                        ResourceUtils.GetString("UnsupportedType"));
+            }
+        }
+
+        public override IDbDataParameter BuildParameter(string paramName,
+            string sourceColumn, OrigamDataType dataType,
+            DatabaseDataType dbDataType,
+            int dataLength, bool allowNulls)
+        {
+            SqlParameter sqlParam = new SqlParameter(
+                paramName,
+                ConvertDataType(dataType, dbDataType),
+                dataLength,
+                sourceColumn
+            );
+            sqlParam.IsNullable = allowNulls;
+            if (sqlParam.SqlDbType == SqlDbType.Decimal)
+            {
+                sqlParam.Precision = 28;
+                sqlParam.Scale = 10;
+            }
+
+            // Workaround: in .net 2.0 if NText is not -1, 
+            // sometimes the memo is truncated when storing to db
+            if (sqlParam.SqlDbType == SqlDbType.NVarChar && dataLength == 0)
+            {
+                sqlParam.Size = -1;
+            }
+
+            if (sqlParam.SqlDbType == SqlDbType.NText
+                || sqlParam.SqlDbType == SqlDbType.Text)
+            {
+                sqlParam.Size = -1;
+            }
+
+            if (sqlParam.SqlDbType == SqlDbType.Structured)
+            {
+                sqlParam.TypeName = "OrigamListValue";
+            }
+
+            return sqlParam;
+        }
     }
 }

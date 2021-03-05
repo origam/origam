@@ -322,5 +322,94 @@ namespace Origam.DA.Service
 			        ResourceUtils.GetString("DDLForFunctionsOnly"));
 	        }
         }
-    }
+        public override string DefaultDdlDataType(OrigamDataType columnType)
+        {
+	        switch (columnType)
+	        {
+		        case OrigamDataType.Date:
+			        return string.Format("{0}(3)",
+				        ConvertDataType(columnType, null).ToString());
+		        default:
+			        return ConvertDataType(columnType, null).ToString();
+	        }
+        }
+
+        public override IDbDataParameter BuildParameter(string paramName,
+	        string sourceColumn, OrigamDataType dataType,
+	        DatabaseDataType dbDataType,
+	        int dataLength, bool allowNulls)
+        {
+	        NpgsqlDbType convDataType = ConvertDataType(dataType, dbDataType);
+	        if (dataType == OrigamDataType.Array)
+	        {
+		        convDataType = ConvertDataType(dataType, dbDataType) |
+		                       NpgsqlDbType.Text;
+	        }
+
+	        NpgsqlParameter sqlParam = new NpgsqlParameter(
+		        paramName,
+		        convDataType,
+		        dataLength,
+		        sourceColumn
+	        )
+	        {
+		        IsNullable = allowNulls
+	        };
+
+	        if (sqlParam.NpgsqlDbType == NpgsqlTypes.NpgsqlDbType.Numeric)
+	        {
+		        sqlParam.Precision = 18;
+		        sqlParam.Scale = 10;
+	        }
+
+	        if (sqlParam.NpgsqlDbType == NpgsqlTypes.NpgsqlDbType.Timestamp)
+	        {
+		        sqlParam.Precision = 3;
+	        }
+
+	        return sqlParam;
+        }
+        private NpgsqlDbType ConvertDataType(OrigamDataType columnType,
+	        DatabaseDataType dbDataType)
+        {
+	        if (dbDataType != null)
+	        {
+		        return (NpgsqlDbType)Enum.Parse(typeof(NpgsqlDbType),
+			        dbDataType.MappedDatabaseTypeName);
+	        }
+	        switch (columnType)
+	        {
+		        case OrigamDataType.Blob:
+			        return NpgsqlDbType.Bytea;
+		        case OrigamDataType.Boolean:
+			        return NpgsqlDbType.Boolean;
+		        case OrigamDataType.Byte:
+			        //TODO: check right 
+			        return NpgsqlDbType.Smallint;
+		        case OrigamDataType.Currency:
+			        return NpgsqlDbType.Money;
+		        case OrigamDataType.Date:
+			        return NpgsqlDbType.Timestamp;
+		        case OrigamDataType.Long:
+			        return NpgsqlDbType.Bigint;
+		        case OrigamDataType.Xml:
+		        case OrigamDataType.Geography:
+		        case OrigamDataType.Memo:
+			        return NpgsqlDbType.Text;
+		        case OrigamDataType.Array:
+			        return NpgsqlDbType.Array;
+		        case OrigamDataType.Integer: 
+			        return NpgsqlDbType.Integer;
+		        case OrigamDataType.Float:
+			        return NpgsqlDbType.Numeric;
+		        case OrigamDataType.Object:
+		        case OrigamDataType.String:
+			        return NpgsqlDbType.Varchar;
+		        case OrigamDataType.UniqueIdentifier:
+			        return NpgsqlDbType.Uuid;
+		        default:
+			        throw new NotSupportedException(ResourceUtils.GetString("UnsupportedType"));
+	        }
+        }
+	}
 }
