@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="String"
+    x:id="1aefaf2e-f9d2-4018-b951-932166d8c062"
+    asi:name="ReportFormat_Text"
+    dc:userDefinable="false"
+    dc:value="TEXT" />
+</x:file>

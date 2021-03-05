@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="009eb501-4c82-47d8-a9c6-e74edcd4c180"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationChannelType.origam#LookupOrigamNotificationChannelType/2ed970ee-d0bf-4c0f-befc-95ffd0736f7b"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="OrigamNotificationChannelType"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationChannelType.origam#LookupOrigamNotificationChannelType/2ed970ee-d0bf-4c0f-befc-95ffd0736f7b"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Work Queue/Lookups/LookupOrigamNotificationChannelType.origam#LookupOrigamNotificationChannelType/GetId/537c102d-f423-4788-b8f1-93af279c654e"
+    adl:valueValueMember="Id" />
+</x:file>

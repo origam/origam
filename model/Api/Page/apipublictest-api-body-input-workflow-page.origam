@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ap="http://schemas.origam.com/Origam.Schema.GuiModel.AbstractPage/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ppm="http://schemas.origam.com/Origam.Schema.GuiModel.PageParameterMapping/6.0.0" xmlns:wp="http://schemas.origam.com/Origam.Schema.WorkflowModel.WorkflowPage/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <wp:Page
+    asi:abstract="false"
+    ap:allowDelete="false"
+    ap:allowPut="false"
+    wp:disableConstraintForInputValidation="false"
+    x:id="5006a1b4-5c38-4de9-9534-efb174c93060"
+    ap:mimeType="application/json"
+    asi:name="api/public/test-api-body-input-workflow-page"
+    ap:roles="*"
+    ap:url="api/public/test-api-body-input-workflow-page"
+    wp:workflow="Api/Workflow/Api/TestApiBodyInput.origam#TestApiBodyInput/e6235f64-bf67-4391-b346-d745c9a1be27">
+    <ppm:PageParameterMapping
+      asi:abstract="false"
+      x:id="f1c53768-4af6-4873-a0dc-a1d20405a1e8"
+      ppm:isList="false"
+      asi:name="TestApiBodyInput" />
+  </wp:Page>
+</x:file>

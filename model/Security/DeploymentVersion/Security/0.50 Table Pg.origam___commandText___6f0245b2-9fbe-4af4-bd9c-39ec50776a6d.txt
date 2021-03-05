@@ -1,0 +1,9 @@
+﻿CREATE TABLE "OrigamRole" (
+	"Alias" Varchar(255) NULL,
+	"Name" Varchar(255) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE UNIQUE  INDEX  "OrigamRole_ix_Unique" ON "OrigamRole" ("Name" ASC);

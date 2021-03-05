@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE "OrigamFavoritesUserConfig" ADD CONSTRAINT FK_OrigamFavoritesUserConfig_refBusinessPartnerId_BusinessPartner
+	FOREIGN KEY (
+		"refBusinessPartnerId"
+	)
+
+	REFERENCES "BusinessPartner" (
+		"Id"
+	);

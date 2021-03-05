@@ -1,0 +1,10 @@
+﻿CREATE TABLE "WorkQueueNotificationContactType_l10n" (
+	"refWorkQueueNotificationContactTypeId" Uuid NOT NULL,
+	"Name" Varchar(200) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"refLanguageId" Uuid NOT NULL);
+CREATE UNIQUE  INDEX  "WorkQueueNotificationContactType_l10n_ix_unq_WorkQueueNotificationContactType" ON "WorkQueueNotificationContactType_l10n" ("refWorkQueueNotificationContactTypeId" ASC, "refLanguageId" ASC);

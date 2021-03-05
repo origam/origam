@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="994608ad-9634-439b-975a-484067f5b5a6"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/42011861-8b29-4ba8-9d5e-79830961fbef"
+    adl:listDisplayMember="refOrigamRoundingTypeId"
+    adl:listValueMember="Id"
+    asi:name="OrigamRounding_refOrigamRoundingTypeId"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/42011861-8b29-4ba8-9d5e-79830961fbef"
+    adl:valueDisplayMember="refOrigamRoundingTypeId"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRounding_refOrigamRoundingTypeId.origam#LookupOrigamRounding_refOrigamRoundingTypeId/GetId/e13f8859-2661-43c7-854f-edadb604af50"
+    adl:valueValueMember="Id" />
+</x:file>

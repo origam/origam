@@ -1,0 +1,8 @@
+﻿CREATE TABLE "Language" (
+	"Name" Varchar(200) NULL,
+	"TagIETF" Varchar(20) NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);

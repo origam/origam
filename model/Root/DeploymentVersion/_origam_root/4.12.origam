@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    x:id="2578bce9-4fdb-4591-8ed6-4a21dc78bfac"
+    asi:name="4.12"
+    dv:version="4.12">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:4.12.origam___commandText___01f92cea-3c5a-4abf-ae3a-154cd8d5655c.txt"
+      x:id="01f92cea-3c5a-4abf-ae3a-154cd8d5655c"
+      asi:name="00020_DROP_View_BusinessPartnerLookup"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:4.12.origam___commandText___465e3250-5887-4721-a9ae-1d76b32e472f.txt"
+      x:id="465e3250-5887-4721-a9ae-1d76b32e472f"
+      asi:name="00010_Database_Field_BusinessPartner.UserEmail"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:4.12.origam___commandText___86c0f1c7-80c8-4cb2-a092-a638577f2aaf.txt"
+      x:id="86c0f1c7-80c8-4cb2-a092-a638577f2aaf"
+      asi:name="00030_Recreate_View_BusinessPartnerLookup"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

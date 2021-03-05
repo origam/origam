@@ -1,0 +1,2 @@
+﻿DELETE FROM AsapDataAuditLog WHERE 
+refColumnId IN ('24d46fc2-6afa-4eb6-b9b0-a32ff1c844fe', 'ffe314a2-0b7d-40a7-94ab-55a486fdf48c')

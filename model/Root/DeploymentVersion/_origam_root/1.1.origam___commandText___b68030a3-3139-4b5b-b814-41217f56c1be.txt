@@ -1,0 +1,15 @@
+﻿CREATE TABLE [AsapParameters] (
+	[FloatValue] DECIMAL(28,10) NULL,
+	[StringValue] NVARCHAR(2000) NULL,
+	[DateValue] DATETIME NULL,
+	[BooleanValue] BIT NOT NULL,
+	[IntValue] INT NULL,
+	[GuidValue] UNIQUEIDENTIFIER NULL,
+	[CurrencyValue] MONEY NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)

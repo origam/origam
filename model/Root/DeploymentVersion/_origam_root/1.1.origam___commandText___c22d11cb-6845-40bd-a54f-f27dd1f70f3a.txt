@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [Dimension2] ADD CONSTRAINT FK_Dimension2_refDimensionTypeId_DimensionType
+	FOREIGN KEY (
+		[refDimensionTypeId]
+	)
+
+	REFERENCES [DimensionType] (
+		[Id]
+	)

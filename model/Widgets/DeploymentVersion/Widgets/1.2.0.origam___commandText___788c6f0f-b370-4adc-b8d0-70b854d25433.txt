@@ -1,0 +1,9 @@
+﻿CREATE TABLE [WidgetSectionTestMaster] (
+	[Text1] NVarChar(100) NULL,
+	[Text2] NVarChar(100) NULL,
+	[Memo1] nvarchar(max) NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

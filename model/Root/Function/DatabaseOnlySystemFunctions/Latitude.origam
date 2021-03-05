@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Float"
+    x:id="1f0168fa-5a2d-417a-b937-c5576bbf7375"
+    asi:name="Latitude"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="5cf6b722-24bd-4620-9bc1-bb486992753c"
+      asi:name="Point" />
+  </f:Function>
+</x:file>

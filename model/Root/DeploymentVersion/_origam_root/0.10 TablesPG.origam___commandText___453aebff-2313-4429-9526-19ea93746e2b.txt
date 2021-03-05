@@ -1,0 +1,22 @@
+﻿CREATE TABLE "OrigamPanelFilterDetail" (
+	"StringValue" Varchar(300) NULL,
+	"StringValue2" Varchar(300) NULL,
+	"BoolValue2" Boolean NULL,
+	"Operator" Integer NULL,
+	"refOrigamPanelFilterId" Uuid NOT NULL,
+	"ColumnName" Varchar(300) NOT NULL,
+	"CurrencyValue2" Money NULL,
+	"GuidValue" Uuid NULL,
+	"CurrencyValue" Money NULL,
+	"BoolValue" Boolean NULL,
+	"GuidValue2" Uuid NULL,
+	"DateValue" Timestamp(3) NULL,
+	"DateValue2" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+CREATE  INDEX  "OrigamPanelFilterDetail_ix_refOrigamPanelFilterId" ON "OrigamPanelFilterDetail" ("refOrigamPanelFilterId" ASC);

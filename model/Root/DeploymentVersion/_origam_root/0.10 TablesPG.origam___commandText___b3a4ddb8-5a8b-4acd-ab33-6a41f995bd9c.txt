@@ -1,0 +1,4 @@
+﻿CREATE TABLE "OrigamModelVersion" (
+	"Version" Varchar(20) NULL,
+	"refSchemaExtensionId" Uuid NOT NULL PRIMARY KEY ,
+	"DateUpdated" Timestamp(3) NOT NULL);

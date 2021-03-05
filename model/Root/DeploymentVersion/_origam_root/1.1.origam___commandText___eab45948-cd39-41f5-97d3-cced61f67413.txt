@@ -1,0 +1,1 @@
+﻿INSERT [WorkQueueNotificationContactType] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'3535c6f5-c48d-4ae9-ba21-43852d4f66f8', getdate(), NULL, N'Inserted Value')

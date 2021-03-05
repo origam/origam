@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureDefaultSet/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:dsrs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureRuleSet/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsds:DataStructureDefaultSet
+    asi:abstract="false"
+    x:id="71ca6430-691f-4e7d-8f49-7432e575763e"
+    asi:name="Users"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598" />
+  <dsfs:DataStructureFilterSet
+    asi:abstract="false"
+    dsfs:dynamic="false"
+    x:id="19b2f124-1f60-4463-8e57-81c9f87be43b"
+    asi:name="GetId"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598">
+    <dsfsf:DataStructureFilterSetFilter
+      asi:abstract="false"
+      dsfsf:entity="Root/DataStructure/__system/Users.origam#Users/BusinessPartner/79bede18-ff01-49cd-8703-94aa6bfe787c"
+      dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/GetId/02c6ef72-70bd-4971-90e9-51e64705eea9"
+      x:id="003c3067-bc8e-47f0-b804-34fa5f4f944a"
+      asi:name="BusinessPartner_GetId"
+      dsfsf:passWhenParameterMatch="false" />
+  </dsfs:DataStructureFilterSet>
+  <dsrs:DataStructureRuleSet
+    asi:abstract="false"
+    x:id="31d9285b-a4f1-4c1f-88b7-0568da5ed9bf"
+    asi:name="Users"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598" />
+  <dsss:DataStructureSortSet
+    asi:abstract="false"
+    x:id="2e795e58-9abd-43a7-bec4-efd4e65b158c"
+    asi:name="ByName"
+    x:parentId="01194cd6-6cff-41bb-9ed8-d3642c909598">
+    <dsssi:DataStructureSortSetItem
+      asi:abstract="false"
+      dsssi:entity="Root/DataStructure/__system/Users.origam#Users/BusinessPartner/79bede18-ff01-49cd-8703-94aa6bfe787c"
+      dsssi:fieldName="Name"
+      x:id="c43b051f-e89f-44f4-8093-89643fb01f41"
+      asi:name="BusinessPartner_0_Name"
+      dsssi:sortDirection="Ascending" />
+    <dsssi:DataStructureSortSetItem
+      asi:abstract="false"
+      dsssi:entity="Root/DataStructure/__system/Users.origam#Users/BusinessPartner/79bede18-ff01-49cd-8703-94aa6bfe787c"
+      dsssi:fieldName="FirstName"
+      x:id="e228db70-3da4-464b-a43b-c2d8fe6ecb33"
+      asi:name="BusinessPartner_1_FirstName"
+      dsssi:sortDirection="Ascending"
+      dsssi:sortOrder="1" />
+  </dsss:DataStructureSortSet>
+</x:file>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="eeaffeb8-6f47-414b-8e72-835690aaab87"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/1231691b-395f-4654-b1a9-23ac6404b04a"
+    adl:listDisplayMember="FileName"
+    adl:listValueMember="Id"
+    asi:name="Attachment_FileName"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/1231691b-395f-4654-b1a9-23ac6404b04a"
+    adl:valueDisplayMember="FileName"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupAttachment_FileName.origam#LookupAttachment_FileName/GetId/4fc33120-2a07-454b-b3f4-d68344c58983"
+    adl:valueValueMember="Id" />
+</x:file>

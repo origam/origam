@@ -1,0 +1,17 @@
+﻿
+ALTER TABLE "OrigamRoleOrigamApplicationRole" ADD CONSTRAINT FK_OrigamRoleOrigamApplicationRole_refOrigamRoleId_OrigamRole
+	FOREIGN KEY (
+		"refOrigamRoleId"
+	)
+
+	REFERENCES "OrigamRole" (
+		"Id"
+	);
+ALTER TABLE "OrigamRoleOrigamApplicationRole" ADD CONSTRAINT FK_OrigamRoleOrigamApplicationRole_refOrigamApplicationRoleId_OrigamApplicationRole
+	FOREIGN KEY (
+		"refOrigamApplicationRoleId"
+	)
+
+	REFERENCES "OrigamApplicationRole" (
+		"Id"
+	);

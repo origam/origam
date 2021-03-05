@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="e77b0cfb-f982-44ab-9c3a-4dabac54b622"
+    dc:lookup="Root/DataLookup/Resource Management/LookupResourceType.origam#LookupResourceType/84ea8eb8-5bbd-49c7-bf1e-a9e89186cbc0"
+    asi:name="ResourceType_Human"
+    dc:userDefinable="false"
+    dc:value="e0360aa5-fa37-4e3d-9827-26f6b4a8905e" />
+</x:file>

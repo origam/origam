@@ -1,0 +1,6 @@
+﻿INSERT [AsapTooltipHelpDestroyEvent] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'59d08fb8-5f49-4a44-b9d9-0ef79aca413a', getdate(), NULL, N'On Click')
+INSERT [AsapTooltipHelpDestroyEvent] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'77ddfc8d-57a9-4793-ba20-cc6e85d3575d', getdate(), NULL, N'Manually')
+INSERT [AsapTooltipHelpDestroyEvent] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'f49d9d54-2f94-49b4-837a-735bf17c8b6e', getdate(), NULL, N'On Item Selection')
+INSERT [AsapTooltipHelpDestroyEvent] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'1341a433-94cd-4ae0-8e3f-f4949b80a2da', getdate(), NULL, N'On Opening Screen')
+INSERT [AsapTooltipHelpDestroyEvent] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'3e6c58c8-df5d-4347-ab9e-4d425423ed26', getdate(), NULL, N'On Field Entry')
+INSERT [AsapTooltipHelpDestroyEvent] ([RecordCreatedBy], [RecordUpdatedBy], [Id], [RecordCreated], [RecordUpdated], [Name]) VALUES (NULL, NULL, N'3b701836-b4c0-4a0a-ac69-cc40e6057655', getdate(), NULL, N'On Field Exit')

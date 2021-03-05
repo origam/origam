@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="2c00faae-d522-4b04-b42c-de97b5c12dfb"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
+    adl:listDisplayMember="Expression"
+    adl:listValueMember="Id"
+    asi:name="OrigamRegularExpression_Expression"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/7a1f617b-644d-468e-87a4-03b20343cacb"
+    adl:valueDisplayMember="Expression"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamRegularExpression_Expression.origam#LookupOrigamRegularExpression_Expression/GetId/e624887f-25aa-4702-be02-0b4d9c13b4e9"
+    adl:valueValueMember="Id" />
+</x:file>

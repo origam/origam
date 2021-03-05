@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ausa="http://schemas.origam.com/Origam.Schema.DeploymentModel.AbstractUpdateScriptActivity/6.0.0" xmlns:dv="http://schemas.origam.com/Origam.Schema.DeploymentModel.DeploymentVersion/6.0.0" xmlns:scusa="http://schemas.origam.com/Origam.Schema.DeploymentModel.ServiceCommandUpdateScriptActivity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dv:DeploymentVersion
+    asi:abstract="false"
+    dv:deploymentDependenciesCsv="&#xD;&#xA;147fa70d-6519-4393-b5d0-87931f9fd609, 5.0.2"
+    x:id="fc3dc108-b16b-44d6-a490-69481873f7ea"
+    asi:name="5.2"
+    dv:version="5.2">
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="10"
+      scusa:commandText="-***-ExternalFile:5.2.origam___commandText___aea2f6bd-a236-441e-88a1-b31fdd506972.txt"
+      x:id="aea2f6bd-a236-441e-88a1-b31fdd506972"
+      asi:name="00010_Database_Field_OrigamUser.SecurityStamp"
+      scusa:platform="MsSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="20"
+      scusa:commandText="-***-ExternalFile:5.2.origam___commandText___663bc63b-0240-4cce-b4bd-432d1634bc5f.txt"
+      x:id="663bc63b-0240-4cce-b4bd-432d1634bc5f"
+      asi:name="00020_PG_Database_Entity_OrigamIdentityGrant"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+    <scusa:DeploymentUpdateScriptActivity
+      asi:abstract="false"
+      ausa:activityOrder="30"
+      scusa:commandText="-***-ExternalFile:5.2.origam___commandText___63ed4acb-d668-49c0-a8b7-789fc778c833.txt"
+      x:id="63ed4acb-d668-49c0-a8b7-789fc778c833"
+      asi:name="00030_PG_Database_Field_OrigamUser.SecurityStamp"
+      scusa:platform="PgSql"
+      scusa:service="Root/Service/DataService.origam#DataService/bbd7bd32-d40b-441a-bb5b-0b0fa89169d4" />
+  </dv:DeploymentVersion>
+</x:file>

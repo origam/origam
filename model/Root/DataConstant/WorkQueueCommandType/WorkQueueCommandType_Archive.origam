@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="UniqueIdentifier"
+    x:id="af0e504e-9ec0-4aea-9a80-bc5cce309494"
+    dc:lookup="Root/DataLookup/Work Queue/WorkQueueCommandType.origam#WorkQueueCommandType/122a4b55-9069-4f5a-a771-0e861af68791"
+    asi:name="WorkQueueCommandType_Archive"
+    dc:userDefinable="false"
+    dc:value="98aaf208-dd29-48b0-9a37-7549918dd86d" />
+</x:file>

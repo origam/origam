@@ -1,0 +1,7 @@
+﻿CREATE TABLE [WidgetDropdownTest] (
+	[refAllDataTypesId] UniqueIdentifier NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

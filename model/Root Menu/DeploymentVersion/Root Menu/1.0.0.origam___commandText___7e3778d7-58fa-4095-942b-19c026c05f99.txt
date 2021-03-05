@@ -1,0 +1,1 @@
+﻿INSERT INTO AsapApplicationRole (Id, Name, Description, IsSystemRole, RecordCreated) VALUES (newid(), 'FRM_WorkQueue', 'Menu > Settings > General > Work Queues', 1, getdate())

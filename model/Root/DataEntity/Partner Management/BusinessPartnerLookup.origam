@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dcr="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstantReference/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:efr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilterReference/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="View"
+    tmi:generateDeploymentScript="true"
+    x:id="5ff75cca-06c1-42d3-8553-0e5105820b51"
+    tmi:mappedObjectName="BusinessPartnerLookup"
+    asi:name="BusinessPartnerLookup"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/457a4391-e94f-424c-89d0-dc3804121ce6"
+      x:id="3a5d35d4-2a14-4647-9de8-fab709c67014" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataLength="1000"
+      adec:dataType="String"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="1fdb538d-525f-414c-93b1-29cadb29b1cb"
+      adec:isPrimaryKey="false"
+      adec:label="Name"
+      fmi:mappedColumnName="LookupText"
+      asi:name="LookupText"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Element" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="433b3ef5-42f3-46ab-99c0-2aa05ed5be20"
+      asi:name="GetLikeLookupText">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Like.origam#Like/519cd4e2-59fd-49cf-a820-9d5cb4f5078c"
+        x:id="5761c224-0f35-4862-b212-87e192a7755a"
+        adec:isPrimaryKey="false"
+        asi:name="Like"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="fa1f4cd1-a0fe-4223-a815-90d7a046742f"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Like.origam#Like/Left/f09324de-cc07-40f4-834e-2fe90599d1b7">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/LookupText/1fdb538d-525f-414c-93b1-29cadb29b1cb"
+            x:id="b210d085-804a-4053-ae6d-198354c013f7"
+            asi:name="LookupText" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="818b15a2-f6eb-4f2f-bdf8-9b541201194c"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Like.origam#Like/Right/561a7476-b805-466d-a71d-0654eaff7b1f">
+          <fc:DataEntityColumn
+            asi:abstract="false"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Concat.origam#Concat/de6ad4e0-aa2d-406b-a48f-190a5aafa37e"
+            x:id="78564790-9b0a-4ec0-9d2b-7234aa5ce3b5"
+            adec:isPrimaryKey="false"
+            asi:name="Concat"
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="e242d119-3241-4893-bc33-e6468a445ffe"
+              asi:name="Strings"
+              fcp:parameter="Root/Function/Concat.origam#Concat/Strings/53183c5f-f3bc-47a4-933d-dc5ffdd9c503">
+              <dcr:DataConstantReference
+                asi:abstract="false"
+                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                x:id="db94f0b0-aefe-48cf-97d9-0aa03d1a1125"
+                asi:name="3_wildcard" />
+              <dcr:DataConstantReference
+                asi:abstract="false"
+                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                x:id="32916883-1a12-4955-a326-86b793b4536b"
+                asi:name="1_wildcard" />
+              <pr:ParameterReference
+                asi:abstract="false"
+                x:id="edc7ebf0-8d09-4483-a48c-248320d9c9fb"
+                asi:name="2_parSearchText"
+                pr:parameter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/parSearchText/bac333ea-e4de-48e0-b3bf-04108bb6402a" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="d3c75b27-f9c1-49dd-ad75-2e7624c99a9c"
+      asi:name="GetLikeReferenceCode">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Like.origam#Like/519cd4e2-59fd-49cf-a820-9d5cb4f5078c"
+        x:id="61a00b9d-713f-46b7-b161-64090692d67b"
+        adec:isPrimaryKey="false"
+        asi:name="Like"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="14b60a27-9a76-4b7c-970c-2b2a1a7ede8a"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Like.origam#Like/Left/f09324de-cc07-40f4-834e-2fe90599d1b7">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/ReferenceCode/b19baf6b-56ac-4506-a076-769c663be977"
+            x:id="3211ddde-8847-41ac-ae48-71642b5ac425"
+            asi:name="ReferenceCode" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="39175069-6b15-4055-92be-45bacfef2d06"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Like.origam#Like/Right/561a7476-b805-466d-a71d-0654eaff7b1f">
+          <fc:DataEntityColumn
+            asi:abstract="false"
+            adec:allowNulls="true"
+            adec:autoIncrement="false"
+            adec:dataType="Boolean"
+            adec:excludeFromAllFields="false"
+            fc:forceDatabaseCalculation="false"
+            fc:function="Root/Function/Concat.origam#Concat/de6ad4e0-aa2d-406b-a48f-190a5aafa37e"
+            x:id="bd3bd2f0-ef79-4dd4-a8af-83478a05228f"
+            adec:isPrimaryKey="false"
+            asi:name="Concat"
+            adec:onCopyAction="Copy"
+            adec:xmlMappingType="Attribute">
+            <fcp:FunctionCallParameter
+              asi:abstract="false"
+              x:id="6f4b3045-14ab-4fe2-81d7-524207466701"
+              asi:name="Strings"
+              fcp:parameter="Root/Function/Concat.origam#Concat/Strings/53183c5f-f3bc-47a4-933d-dc5ffdd9c503">
+              <dcr:DataConstantReference
+                asi:abstract="false"
+                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                x:id="3cdeab4a-c9ee-4f40-a8c0-24a53a4525c5"
+                asi:name="3_wildcard" />
+              <dcr:DataConstantReference
+                asi:abstract="false"
+                dcr:constant="Root/DataConstant/_strings/_wildcard.origam#_wildcard/7623e70b-d02d-4856-b713-a7a8510e2f3a"
+                x:id="9dd2d985-d88b-4221-b741-3d456fdabb30"
+                asi:name="1_wildcard" />
+              <pr:ParameterReference
+                asi:abstract="false"
+                x:id="f33d1a08-30bb-418f-9f00-1b40f752a575"
+                asi:name="2_parSearchText"
+                pr:parameter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/parSearchText/bac333ea-e4de-48e0-b3bf-04108bb6402a" />
+            </fcp:FunctionCallParameter>
+          </fc:DataEntityColumn>
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="f9eda42b-c31a-44f8-b49f-9f0a8cc5f021"
+      asi:name="LikeLookupTextOrReferenceCode">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/LogicalOr.origam#LogicalOr/eb44d24a-9aab-4801-9568-9669d9401e0f"
+        x:id="0e01e3ce-18aa-4a73-8506-4813ff9f5af8"
+        adec:isPrimaryKey="false"
+        asi:name="LogicalOr"
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="1da57c6b-c39d-4cc2-939d-bd4512256586"
+          asi:name="Arguments"
+          fcp:parameter="Root/Function/LogicalOr.origam#LogicalOr/Arguments/a75c624e-c329-48e1-a33c-a98c764bc162">
+          <efr:EntityFilterReference
+            asi:abstract="false"
+            efr:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/GetLikeReferenceCode/d3c75b27-f9c1-49dd-ad75-2e7624c99a9c"
+            x:id="96e25791-8fb9-40b2-9abd-0da1023c6ba1"
+            asi:name="GetLikeReferenceCode" />
+          <efr:EntityFilterReference
+            asi:abstract="false"
+            efr:filter="Root/DataEntity/Partner Management/BusinessPartnerLookup.origam#BusinessPartnerLookup/GetLikeLookupText/433b3ef5-42f3-46ab-99c0-2aa05ed5be20"
+            x:id="49274104-05ef-4a5c-ac37-8ab88d20c4bc"
+            asi:name="GetLikeLookupText" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <sip:Parameter
+      asi:abstract="false"
+      sip:allowNulls="true"
+      sip:dataLength="1000"
+      sip:dataType="String"
+      x:id="bac333ea-e4de-48e0-b3bf-04108bb6402a"
+      asi:name="parSearchText" />
+  </tmi:DataEntity>
+</x:file>

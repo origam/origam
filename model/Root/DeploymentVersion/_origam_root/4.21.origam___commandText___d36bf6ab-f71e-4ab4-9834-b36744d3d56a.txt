@@ -1,0 +1,17 @@
+﻿DECLARE pk_cursor CURSOR
+   FOR
+	SELECT OBJECT_NAME(parent_object_id), name
+	FROM sys.key_constraints WHERE type = 'PK'
+	and OBJECT_NAME(parent_object_id) <> 'dtproperties'
+OPEN pk_cursor;
+DECLARE @tablename sysname;
+DECLARE @pkname sysname;
+FETCH NEXT FROM pk_cursor INTO @tablename, @pkname;
+WHILE (@@FETCH_STATUS <> -1)
+BEGIN;
+   EXECUTE ('sp_rename ''' + @tablename + '.' 
+	+ @pkname + ''', ''PK_' + @tablename + '''');
+   FETCH NEXT FROM pk_cursor INTO @tablename, @pkname;
+END;
+CLOSE pk_cursor;
+DEALLOCATE pk_cursor;

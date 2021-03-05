@@ -1,0 +1,16 @@
+﻿CREATE TABLE [CounterDetail] (
+	[refCounterId] UNIQUEIDENTIFIER NOT NULL,
+	[Prefix] NVARCHAR(255) NULL,
+	[ValidFrom] DATETIME NULL,
+	[CurrentPosition] INT NOT NULL,
+	[Length] INT NOT NULL,
+	[Increment] INT NOT NULL,
+	[ValidTo] DATETIME NULL,
+	[CounterFrom] INT NOT NULL,
+	[CounterTo] INT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_refCounterId] ON [CounterDetail] ([refCounterId] ASC)

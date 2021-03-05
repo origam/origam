@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="All"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="8928dc62-e5e2-412b-b69c-a4dc6f3c1f51"
+    ade:label="Dimenze 3"
+    tmi:mappedObjectName="Dimension3"
+    asi:name="Dimension3"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="0417aed7-9ea3-4733-a7bf-c4e9120fa692" />
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/Dimensions/IDimension.origam#IDimension/8f904896-6095-49c3-b972-f5329b73b3da"
+      x:id="b6470c36-c0e2-446b-ab85-df7d146e51c1" />
+  </tmi:DataEntity>
+</x:file>

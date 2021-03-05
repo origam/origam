@@ -1,0 +1,1 @@
+﻿INSERT INTO "OrigamApplicationRole" ("Id", "Name", "Description", "IsSystemRole", "RecordCreated") VALUES (gen_random_uuid(), 'WF_NewUser', 'Menu > Settings > Users & Security > Add User', true, now())

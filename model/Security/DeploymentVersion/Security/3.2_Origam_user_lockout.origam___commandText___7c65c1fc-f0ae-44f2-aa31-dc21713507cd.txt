@@ -1,0 +1,2 @@
+﻿ALTER TABLE [OrigamUser] ADD [IsLockedOut] BIT NOT NULL CONSTRAINT [DF_OrigamUser_IsLockedOut] DEFAULT 0
+ALTER TABLE [OrigamUser] DROP CONSTRAINT [DF_OrigamUser_IsLockedOut]

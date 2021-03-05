@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="92c3c8b4-68a3-482b-8a90-f7142c4b17ec"
+    ds:localized="true"
+    asi:name="OrigamNotificationTemplate">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/0760e633-9e95-4f62-9443-360eaa624854"
+      x:id="e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamNotificationTemplate"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="false"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate_l10n/554b0bc6-d226-4424-8716-2211bc7aed92"
+        x:id="641a1b91-ff38-4a55-80ac-a506b304fe20"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamNotificationTemplate_l10n"
+        dse:relationType="LeftJoin"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="3724bd2a-9466-4129-bdfa-ca8dc8621a72"
+      asi:name="GetId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamNotificationTemplate.origam#OrigamNotificationTemplate/OrigamNotificationTemplate/e6f6f1cc-ba25-445c-a262-5aa5f9ebdee7"
+        dsfsf:filter="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/GetId/e0649cee-8033-435f-9831-211b7ad47c0b"
+        x:id="5d708e20-af32-4ef8-8421-fd9b24518208"
+        asi:name="OrigamNotificationTemplate_GetId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

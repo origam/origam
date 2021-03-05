@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Date"
+    x:id="693ac006-9047-481c-9954-835374c5927a"
+    asi:name="Month"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="92067faa-3b52-479b-8c1f-c0fd3d6c706a"
+      asi:name="Expression" />
+  </f:Function>
+</x:file>

@@ -1,0 +1,1 @@
+﻿INSERT INTO "OrigamNotificationChannelType" ("Name", "RecordCreatedBy", "RecordUpdatedBy", "Id", "RecordCreated", "RecordUpdated") VALUES (N'E-mail', NULL, NULL, '{3a0bbbb5-a7f0-4667-93d0-071f935702be}', now(), NULL)

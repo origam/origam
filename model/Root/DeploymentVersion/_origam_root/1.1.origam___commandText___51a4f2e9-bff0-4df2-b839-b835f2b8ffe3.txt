@@ -1,0 +1,12 @@
+﻿CREATE TABLE [DimensionTransformationMatrix] (
+	[refSource4DimensionEntityId] UNIQUEIDENTIFIER NULL,
+	[refSource2DimensionEntityId] UNIQUEIDENTIFIER NULL,
+	[refTargetDimensionEntityId] UNIQUEIDENTIFIER NOT NULL,
+	[refSource3DimensionEntityId] UNIQUEIDENTIFIER NULL,
+	[refSource1DimensionEntityId] UNIQUEIDENTIFIER NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL)
+CREATE INDEX [ix_refTargetDimensionEntityId] ON [DimensionTransformationMatrix] ([refTargetDimensionEntityId] ASC)

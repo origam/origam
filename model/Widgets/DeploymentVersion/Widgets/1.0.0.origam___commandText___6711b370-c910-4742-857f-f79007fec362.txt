@@ -1,0 +1,10 @@
+﻿CREATE TABLE [WidgetPlainTextTest] (
+	[TextMandatoryMemo] nvarchar(max) NOT NULL,
+	[TextNullableMemo] nvarchar(max) NULL,
+	[TextNullableLimited20] NVarChar(20) NULL,
+	[TextMandatoryLimited20] NVarChar(20) NOT NULL,
+	[RecordCreatedBy] UniqueIdentifier NULL,
+	[RecordUpdatedBy] UniqueIdentifier NULL,
+	[Id] UniqueIdentifier NOT NULL PRIMARY KEY ,
+	[RecordCreated] DateTime NULL,
+	[RecordUpdated] DateTime NULL);

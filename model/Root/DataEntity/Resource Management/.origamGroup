@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="aced65e9-0f03-4fdc-a06f-93eb3edad238"
+    x:isFolder="true"
+    g:name="Resource Management"
+    g:rootItemType="DataEntity" />
+</x:file>

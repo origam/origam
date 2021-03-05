@@ -1,0 +1,14 @@
+﻿CREATE VIEW [ResourceList] AS
+SELECT
+	Id AS refGroupResourceId,
+	Id AS refMemberResourceId
+FROM 
+	[Resource]
+	
+UNION ALL
+
+SELECT
+	refGroupResourceId,
+	refMemberResourceId
+FROM
+	[ResourceGroupMember]

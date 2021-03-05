@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="43b67a51-68f3-4696-b08d-de46ae0223ce"
+    ds:localized="false"
+    asi:name="OrigamUser">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Security/DataEntity/Security/OrigamUser.origam#OrigamUser/a6cca53b-1bdd-4b1a-a7e9-a462c88e9bc1"
+      x:id="3d9b3523-12c8-40ba-a429-580e8f20b23e"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamUser"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="982f45a9-b610-4e2f-8d7f-2b1eebe93390"
+      asi:name="GetByBusinessPartnerId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Security/DataStructure/Security/OrigamUser.origam#OrigamUser/OrigamUser/3d9b3523-12c8-40ba-a429-580e8f20b23e"
+        dsfsf:filter="Security/DataEntity/Security/OrigamUser.origam#OrigamUser/GetByBusinessPartnerId/c236591e-6726-4fd5-aafb-0901b7543486"
+        x:id="d6671127-b691-4b8e-a25a-6173050cf03d"
+        asi:name="OrigamUser_GetByBusinessPartnerId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="a60c9817-ae18-465c-a91f-d4b8a25f15a4"
+      asi:name="GetByUserName">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Security/DataStructure/Security/OrigamUser.origam#OrigamUser/OrigamUser/3d9b3523-12c8-40ba-a429-580e8f20b23e"
+        dsfsf:filter="Security/DataEntity/Security/OrigamUser.origam#OrigamUser/GetByUserName/1e98c6c3-ada8-4eff-aa13-8929d1799eff"
+        x:id="96ec2b67-0424-4cdf-a613-b2bbe048d853"
+        asi:name="OrigamUser_GetByUserName"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

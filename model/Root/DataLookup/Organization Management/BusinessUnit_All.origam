@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="d32d9f3f-ec41-4575-bee8-176145d29d42"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Organization Management/LookupBusinessUnit_All.origam#LookupBusinessUnit_All/4fa112aa-77f5-4ba4-9aa9-295fa7173c89"
+    adl:listDisplayMember="Name"
+    adl:listMethod="Root/DataStructure/Organization Management/LookupBusinessUnit_All.origam#LookupBusinessUnit_All/GetByOrganization/f6b2627e-6697-40a9-a935-580504b9bb27"
+    adl:listValueMember="Id"
+    asi:name="BusinessUnit_All"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Organization Management/LookupBusinessUnit_All.origam#LookupBusinessUnit_All/4fa112aa-77f5-4ba4-9aa9-295fa7173c89"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Organization Management/LookupBusinessUnit_All.origam#LookupBusinessUnit_All/GetId/859bf9c3-ea0d-49cc-80c9-bb9be02b8222"
+    adl:valueValueMember="Id" />
+</x:file>

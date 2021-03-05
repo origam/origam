@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [AsapPanelFilterDetail] ADD CONSTRAINT FK_AsapPanelFilterDetail_refAsapPanelFilterId_AsapPanelFilter
+	FOREIGN KEY (
+		[refAsapPanelFilterId]
+	)
+
+	REFERENCES [AsapPanelFilter] (
+		[Id]
+	)

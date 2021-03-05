@@ -1,0 +1,14 @@
+﻿CREATE TABLE "OrigamPanelFilter" (
+	"PanelId" Uuid NOT NULL,
+	"IsDefault" Boolean NOT NULL,
+	"IsGlobal" Boolean NOT NULL,
+	"ProfileId" Uuid NULL,
+	"Name" Varchar(300) NOT NULL,
+	"RecordUpdated" Timestamp(3) NULL,
+	"RecordCreatedServer" Timestamp(3) NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordUpdatedServer" Timestamp(3) NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdatedBy" Uuid NULL);
+CREATE  INDEX  "OrigamPanelFilter_ix_Main" ON "OrigamPanelFilter" ("ProfileId" ASC, "PanelId" ASC);

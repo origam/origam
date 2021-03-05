@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsfs="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSet/6.0.0" xmlns:dsfsf="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureFilterSetFilter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="e564c554-ca83-47eb-980d-95b4faba8fb8"
+    ds:localized="false"
+    asi:name="OrigamFavoritesUserConfig">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/f229eb75-03ab-4b62-ab60-bc8e74860332"
+      x:id="4f81244c-7335-4bcd-8246-a027a86e3c6c"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamFavoritesUserConfig"
+      dse:relationType="Normal"
+      dse:useUpsert="false" />
+    <dsfs:DataStructureFilterSet
+      asi:abstract="false"
+      dsfs:dynamic="false"
+      x:id="e468076e-a641-4b7d-b9b4-7d80ff312b1c"
+      asi:name="GetByBusinessPartnerId">
+      <dsfsf:DataStructureFilterSetFilter
+        asi:abstract="false"
+        dsfsf:entity="Root/DataStructure/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/OrigamFavoritesUserConfig/4f81244c-7335-4bcd-8246-a027a86e3c6c"
+        dsfsf:filter="Root/DataEntity/__system/OrigamFavoritesUserConfig.origam#OrigamFavoritesUserConfig/GetByBusinessPartnerId/de7e62ac-c64a-4a6f-840b-b2c85a112302"
+        x:id="50acd291-d423-485e-b8bc-e6c3dcfb619a"
+        asi:name="OrigamFavoritesUserConfig_GetByBusinessPartnerId"
+        dsfsf:passWhenParameterMatch="false" />
+    </dsfs:DataStructureFilterSet>
+  </ds:DataStructure>
+</x:file>

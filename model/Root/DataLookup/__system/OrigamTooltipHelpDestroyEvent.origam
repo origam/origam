@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="c8dffab8-f56a-4f9d-9757-9ba387db9a9e"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/194a6db2-f8c6-45c2-b40d-4f76adbcdf05"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="OrigamTooltipHelpDestroyEvent"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/194a6db2-f8c6-45c2-b40d-4f76adbcdf05"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamTooltipHelpDestroyEvent.origam#LookupOrigamTooltipHelpDestroyEvent/GetId/7ec14287-940b-4f35-bfc5-c1d099b1c27c"
+    adl:valueValueMember="Id" />
+</x:file>

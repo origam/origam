@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:x="http://schemas.origam.com/model-persistence/1.0.0" xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0">
+  <g:group
+    x:id="d070777b-526d-42e7-96db-3780fe38c902"
+    x:isFolder="true"
+    g:name="Widgets"
+    g:rootItemType="DeploymentVersion" />
+</x:file>

@@ -1,0 +1,1 @@
+﻿delete from BusinessPartnerAsapRole where not exists (select * from BusinessPartner bp where bp.Id = BusinessPartnerAsapRole.refBusinessPartnerId)

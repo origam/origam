@@ -1,0 +1,2 @@
+﻿ALTER TABLE [AsapMapLayer] ADD [DefaultEnabled] BIT NOT NULL CONSTRAINT [DF_AsapMapLayer_DefaultEnabled] DEFAULT 1
+ALTER TABLE [AsapMapLayer] DROP CONSTRAINT [DF_AsapMapLayer_DefaultEnabled]

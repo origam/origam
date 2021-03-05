@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="d27877bc-3fd5-4fe6-a5c9-b4119fb821b6"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamDashboardView_ConfigXml.origam#LookupOrigamDashboardView_ConfigXml/eb83b3d7-871e-4c1c-a318-8b3bd77797dd"
+    adl:listDisplayMember="ConfigXml"
+    adl:listValueMember="Id"
+    asi:name="OrigamDashboardView_ConfigXml"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamDashboardView_ConfigXml.origam#LookupOrigamDashboardView_ConfigXml/eb83b3d7-871e-4c1c-a318-8b3bd77797dd"
+    adl:valueDisplayMember="ConfigXml"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamDashboardView_ConfigXml.origam#LookupOrigamDashboardView_ConfigXml/GetId/4644f0a2-17d3-41e4-86d6-7d8aeb997791"
+    adl:valueValueMember="Id" />
+</x:file>

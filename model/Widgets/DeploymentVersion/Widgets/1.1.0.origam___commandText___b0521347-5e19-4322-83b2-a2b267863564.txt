@@ -1,0 +1,5 @@
+﻿ INSERT INTO "OrigamApplicationRole" ("Id", "Name", "Description", "IsSystemRole" , "RecordCreated")
+ VALUES ('71ae0108-543e-40c2-a64c-d2cbf1ed28d5', 'WidgetDropdownTest_MultiColumn_SearchByFirstColumnOnly', '', true, now()); 
+-- add to the built-in SuperUser role 
+ INSERT INTO "OrigamRoleOrigamApplicationRole" ("Id", "refOrigamRoleId", "refOrigamApplicationRoleId", "RecordCreated", "IsFormReadOnly") 
+ VALUES (gen_random_uuid(), 'e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', '71ae0108-543e-40c2-a64c-d2cbf1ed28d5', now(), false)

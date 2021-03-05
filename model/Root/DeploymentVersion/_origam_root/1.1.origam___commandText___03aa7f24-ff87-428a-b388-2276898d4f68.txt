@@ -1,0 +1,9 @@
+﻿
+ALTER TABLE [AsapFavoritesUserConfig] ADD CONSTRAINT FK_AsapFavoritesUserConfig_refBusinessPartnerId_BusinessPartner
+	FOREIGN KEY (
+		[refBusinessPartnerId]
+	)
+
+	REFERENCES [BusinessPartner] (
+		[Id]
+	)

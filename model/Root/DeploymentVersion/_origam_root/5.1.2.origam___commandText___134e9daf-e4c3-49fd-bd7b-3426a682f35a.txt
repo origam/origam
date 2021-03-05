@@ -1,0 +1,1 @@
+﻿ALTER TABLE [BusinessPartner] ALTER COLUMN [AvatarFile] varbinary(max) NULL

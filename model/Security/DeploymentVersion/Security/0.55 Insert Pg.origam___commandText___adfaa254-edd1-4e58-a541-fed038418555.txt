@@ -1,0 +1,2 @@
+﻿INSERT INTO "OrigamRole" ("Id", "Name", "RecordCreated")
+VALUES ('e0ad1a0b-3e05-4b97-be38-12ff63e7f2f2', 'Super User (Built-in)', now());

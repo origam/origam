@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dse:DataStructureEntity
+    asi:abstract="false"
+    dse:allFields="true"
+    dse:concurrencyHandling="Standard"
+    dse:entity="Security/DataEntity/Partner Management/BusinessPartner.origam#BusinessPartner/BusinessPartnerOrigamRole/bd05e4af-804f-4307-99eb-6bbcee6bfa6a"
+    x:id="e84434bc-b646-48e9-bb22-e3ae6dfa1f5e"
+    dse:ignoreCondition="None"
+    dse:ignoreImplicitFilters="false"
+    asi:name="BusinessPartnerOrigamRole"
+    x:parentId="79bede18-ff01-49cd-8703-94aa6bfe787c"
+    dse:relationType="Normal"
+    dse:useUpsert="false" />
+</x:file>

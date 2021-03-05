@@ -1,0 +1,1 @@
+﻿ALTER TABLE [BusinessPartner] ADD [AvatarFilename] NVARCHAR(200) NULL

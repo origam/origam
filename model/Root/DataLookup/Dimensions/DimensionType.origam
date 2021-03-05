@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="ba96eab8-f4ea-41bf-a798-1f3b1eeeaf72"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionType.origam#LookupDimensionType/77c3f720-64d1-4a0f-8a80-da6d3c89c446"
+    adl:listDisplayMember="Name"
+    adl:listValueMember="Id"
+    asi:name="DimensionType"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Dimensions/Lookups/LookupDimensionType.origam#LookupDimensionType/77c3f720-64d1-4a0f-8a80-da6d3c89c446"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Dimensions/Lookups/LookupDimensionType.origam#LookupDimensionType/GetId/a4b5b333-1382-4dd9-a326-98e067942641"
+    adl:valueValueMember="Id" />
+</x:file>

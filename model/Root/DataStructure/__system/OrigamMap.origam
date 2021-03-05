@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ds="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructure/6.0.0" xmlns:dse="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureEntity/6.0.0" xmlns:dsss="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSet/6.0.0" xmlns:dsssi="http://schemas.origam.com/Origam.Schema.EntityModel.DataStructureSortSetItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <ds:DataStructure
+    asi:abstract="false"
+    x:id="4f8dc9c0-7079-4128-b6e9-8a071dc46533"
+    ds:localized="false"
+    asi:name="OrigamMap">
+    <dse:DataStructureEntity
+      asi:abstract="false"
+      dse:allFields="true"
+      dse:concurrencyHandling="Standard"
+      dse:entity="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/033c386d-5906-4535-ad71-8e51d3488207"
+      x:id="b9ca57f5-2f54-4994-9301-91a4bced9e3a"
+      dse:ignoreCondition="None"
+      dse:ignoreImplicitFilters="false"
+      asi:name="OrigamMap"
+      dse:relationType="Normal"
+      dse:useUpsert="false">
+      <dse:DataStructureEntity
+        asi:abstract="false"
+        dse:allFields="true"
+        dse:concurrencyHandling="Standard"
+        dse:entity="Root/DataEntity/__system/OrigamMap.origam#OrigamMap/OrigamMapOrigamMapLayer/5ed03d67-c5ab-44da-9f60-5e3220e2f342"
+        x:id="a7899e0c-5ddf-4338-a88a-d7c17edf00d0"
+        dse:ignoreCondition="None"
+        dse:ignoreImplicitFilters="false"
+        asi:name="OrigamMapOrigamMapLayer"
+        dse:relationType="Normal"
+        dse:useUpsert="false" />
+    </dse:DataStructureEntity>
+    <dsss:DataStructureSortSet
+      asi:abstract="false"
+      x:id="181d2ba3-b3e2-491a-9b87-9e1d0cf47cfc"
+      asi:name="Sort">
+      <dsssi:DataStructureSortSetItem
+        asi:abstract="false"
+        dsssi:entity="Root/DataStructure/__system/OrigamMap.origam#OrigamMap/OrigamMap/OrigamMapOrigamMapLayer/a7899e0c-5ddf-4338-a88a-d7c17edf00d0"
+        dsssi:fieldName="SortOrder"
+        x:id="0fec5dbe-9667-4f4e-8dcf-ab95f42ae432"
+        asi:name="OrigamMapOrigamMapLayer_0_SortOrder"
+        dsssi:sortDirection="Ascending" />
+    </dsss:DataStructureSortSet>
+  </ds:DataStructure>
+</x:file>

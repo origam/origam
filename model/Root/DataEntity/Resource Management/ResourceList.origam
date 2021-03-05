@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:ecr="http://schemas.origam.com/Origam.Schema.EntityModel.EntityColumnReference/6.0.0" xmlns:ef="http://schemas.origam.com/Origam.Schema.EntityModel.EntityFilter/6.0.0" xmlns:fc="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCall/6.0.0" xmlns:fcp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionCallParameter/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:pr="http://schemas.origam.com/Origam.Schema.ParameterReference/6.0.0" xmlns:sip="http://schemas.origam.com/Origam.Schema.SchemaItemParameter/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    tmi:databaseObjectType="View"
+    tmi:generateDeploymentScript="true"
+    x:id="f54b6a02-d405-4317-8c60-84baf0824024"
+    tmi:mappedObjectName="ResourceList"
+    asi:name="ResourceList"
+    ade:readOnly="false">
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="5b30db10-ac2a-4d0f-b7b2-448388fef1b1"
+      adec:isPrimaryKey="false"
+      adec:label="Zdroj"
+      fmi:mappedColumnName="refMemberResourceId"
+      asi:name="refMemberResourceId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      x:id="2c5fa65e-e977-4968-9940-9360e8641c42"
+      adec:isPrimaryKey="false"
+      adec:label="Skupina"
+      fmi:mappedColumnName="refGroupResourceId"
+      asi:name="refGroupResourceId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <ef:EntityFilter
+      asi:abstract="false"
+      x:id="74b13a30-a6fa-4fcc-8db4-66f80ac30763"
+      asi:name="GetByResourceId_ActiveResource">
+      <fc:DataEntityColumn
+        asi:abstract="false"
+        adec:allowNulls="true"
+        adec:autoIncrement="false"
+        adec:dataType="Boolean"
+        adec:excludeFromAllFields="false"
+        fc:forceDatabaseCalculation="false"
+        fc:function="Root/Function/Equal.origam#Equal/6882ebdc-54d4-4847-830d-defd9c9540a4"
+        x:id="09091d40-675b-41ef-85bc-954df7488c73"
+        adec:isPrimaryKey="false"
+        asi:name="="
+        adec:onCopyAction="Copy"
+        adec:xmlMappingType="Attribute">
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="18c83d92-eacb-400f-baae-42229bff09de"
+          asi:name="Right"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Right/b1ebfe7e-8c38-4e53-8ecb-cee20ab61c34">
+          <pr:ParameterReference
+            asi:abstract="false"
+            x:id="c0a72574-0cb2-439b-8c97-5d79cf0fdb1f"
+            asi:name="parCurrentUserResourceId"
+            pr:parameter="Root/DataEntity/Resource Management/ResourceList.origam#ResourceList/parCurrentUserResourceId/5e9895fc-8f28-4a73-911d-ddd00133575d" />
+        </fcp:FunctionCallParameter>
+        <fcp:FunctionCallParameter
+          asi:abstract="false"
+          x:id="bfcb777c-4b93-4cc7-a4ec-a41b9ee282a0"
+          asi:name="Left"
+          fcp:parameter="Root/Function/Equal.origam#Equal/Left/eb0c430b-1247-4f2f-9e37-ecb931a98498">
+          <ecr:EntityColumnReference
+            asi:abstract="false"
+            ecr:field="Root/DataEntity/Resource Management/ResourceList.origam#ResourceList/refMemberResourceId/5b30db10-ac2a-4d0f-b7b2-448388fef1b1"
+            x:id="8bfce9fe-3af9-4fc5-95a2-489a8f24c979"
+            asi:name="ResourceId" />
+        </fcp:FunctionCallParameter>
+      </fc:DataEntityColumn>
+    </ef:EntityFilter>
+    <sip:Parameter
+      asi:abstract="true"
+      sip:allowNulls="true"
+      sip:dataType="UniqueIdentifier"
+      x:id="5e9895fc-8f28-4a73-911d-ddd00133575d"
+      asi:name="parCurrentUserResourceId" />
+  </tmi:DataEntity>
+</x:file>

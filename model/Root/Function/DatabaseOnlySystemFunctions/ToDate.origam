@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:f="http://schemas.origam.com/Origam.Schema.EntityModel.Function/6.0.0" xmlns:fp="http://schemas.origam.com/Origam.Schema.EntityModel.FunctionParameter/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <f:Function
+    asi:abstract="false"
+    f:dataType="Date"
+    x:id="a5d86c5f-4986-4ef6-af02-1f1efb186f4a"
+    asi:name="ToDate"
+    f:type="Database">
+    <fp:FunctionParameter
+      asi:abstract="false"
+      x:id="c9431e2c-3d99-4925-9ff7-a9c455729b7c"
+      asi:name="argument" />
+  </f:Function>
+</x:file>

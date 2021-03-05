@@ -1,0 +1,2 @@
+﻿INSERT INTO [dbo].[WorkQueueExternalSourceType] ([Id], [Name])
+VALUES ('76402268-6e7e-4ee4-bbf5-ae054b2eb793', 'IATA BSP File')

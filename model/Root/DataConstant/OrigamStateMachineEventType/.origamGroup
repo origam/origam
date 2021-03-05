@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:g="http://schemas.origam.com/Origam.Schema.SchemaItemGroup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <g:group
+    x:id="d2110dea-2a40-4098-99db-be7b7fd0ffdf"
+    x:isFolder="true"
+    g:name="OrigamStateMachineEventType"
+    g:rootItemType="DataConstant" />
+</x:file>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="8eef998d-3f54-47bf-9ff7-de8869a22c0e"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/ccd0efe5-fadf-4f50-9d0e-4d6eba39f83d"
+    adl:listDisplayMember="Name"
+    adl:listMethod="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/GetNotGroups/b6d17ff0-c1b7-4271-910d-a1643c23e1a7"
+    adl:listValueMember="Id"
+    asi:name="Resource_GetNotGroups"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/ccd0efe5-fadf-4f50-9d0e-4d6eba39f83d"
+    adl:valueDisplayMember="Name"
+    adl:valueMethod="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/GetId/0b604a51-e6e4-43ec-9d08-a3d63b452e81"
+    adl:valueSortSet="Root/DataStructure/Resource Management/Lookups/LookupResource.origam#LookupResource/Default/9134c60a-7c74-4b2c-836f-3d42200a0cd9"
+    adl:valueValueMember="Id" />
+</x:file>

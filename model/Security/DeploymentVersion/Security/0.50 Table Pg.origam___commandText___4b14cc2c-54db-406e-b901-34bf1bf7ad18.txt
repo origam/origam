@@ -1,0 +1,10 @@
+﻿CREATE TABLE "BusinessPartnerOrigamRole" (
+	"refBusinessPartnerId" Uuid NOT NULL,
+	"refOrigamRoleId" Uuid NOT NULL,
+	"RecordCreatedBy" Uuid NULL,
+	"RecordUpdatedBy" Uuid NULL,
+	"Id" Uuid NOT NULL PRIMARY KEY ,
+	"RecordCreated" Timestamp(3) NULL,
+	"RecordUpdated" Timestamp(3) NULL);
+CREATE  INDEX  "BusinessPartnerOrigamRole_refBusinessPartnerId" ON "BusinessPartnerOrigamRole" ("refBusinessPartnerId" ASC);
+CREATE UNIQUE  INDEX  "BusinessPartnerOrigamRole_ix_Unique" ON "BusinessPartnerOrigamRole" ("refBusinessPartnerId" ASC, "refOrigamRoleId" ASC);

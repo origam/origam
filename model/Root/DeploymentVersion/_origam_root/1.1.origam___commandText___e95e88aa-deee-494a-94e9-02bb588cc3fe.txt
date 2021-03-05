@@ -1,0 +1,18 @@
+﻿CREATE TABLE [BusinessPartner] (
+	[FirstName] NVARCHAR(255) NULL,
+	[UserName] NVARCHAR(255) NULL,
+	[ParentId] UNIQUEIDENTIFIER NULL,
+	[ReferenceCode] NVARCHAR(255) NULL,
+	[Name] NVARCHAR(255) NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[refDimension4Id] UNIQUEIDENTIFIER NULL,
+	[refDimension3Id] UNIQUEIDENTIFIER NULL,
+	[refDimension1Id] UNIQUEIDENTIFIER NULL,
+	[refDimension2Id] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_ReferenceCode] ON [BusinessPartner] ([ReferenceCode] ASC)

@@ -1,0 +1,10 @@
+﻿CREATE TABLE [AsapTraceWorkflow] (
+	[WorkflowId] UNIQUEIDENTIFIER NOT NULL,
+	[WorkflowName] NVARCHAR(255) NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)

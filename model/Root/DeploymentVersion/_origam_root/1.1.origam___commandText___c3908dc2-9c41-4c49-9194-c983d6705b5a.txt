@@ -1,0 +1,14 @@
+﻿CREATE TABLE [Attachment] (
+	[Note] NVARCHAR(3900) NULL,
+	[FileName] NVARCHAR(3900) NULL,
+	[Data] IMAGE NULL,
+	[refParentRecordEntityId] UNIQUEIDENTIFIER NULL,
+	[refParentRecordId] UNIQUEIDENTIFIER NOT NULL,
+	[RecordUpdated] DATETIME NULL,
+	[RecordCreatedServer] DATETIME NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordUpdatedServer] DATETIME NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL)
+CREATE INDEX [ix_refParentRecordId] ON [Attachment] ([refParentRecordId] ASC)

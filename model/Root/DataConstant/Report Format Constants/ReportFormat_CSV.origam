@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dc="http://schemas.origam.com/Origam.Schema.EntityModel.DataConstant/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dc:DataConstant
+    asi:abstract="false"
+    dc:dataType="String"
+    x:id="df1b2345-18c5-4aec-a79d-e6f9204b5ac5"
+    asi:name="ReportFormat_CSV"
+    dc:userDefinable="false"
+    dc:value="CSV" />
+</x:file>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dei="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndex/6.0.0" xmlns:deif="http://schemas.origam.com/Origam.Schema.EntityModel.DataEntityIndexField/6.0.0" xmlns:fmi="http://schemas.origam.com/Origam.Schema.EntityModel.FieldMappingItem/6.0.0" xmlns:sia="http://schemas.origam.com/Origam.Schema.SchemaItemAncestor/6.0.0" xmlns:tmi="http://schemas.origam.com/Origam.Schema.EntityModel.TableMappingItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <tmi:DataEntity
+    asi:abstract="false"
+    ade:audit="All"
+    tmi:databaseObjectType="Table"
+    tmi:generateDeploymentScript="true"
+    x:id="d65a29d8-4fd4-4745-8304-371c410d6a3f"
+    tmi:mappedObjectName="ResourceAccessLevelResource"
+    asi:name="ResourceAccessLevelResource"
+    ade:readOnly="false">
+    <sia:ancestor
+      sia:ancestor="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/28c21d99-785a-4cc5-bce9-62dca7b852c6"
+      x:id="df3ee47b-3813-494f-9bc9-c8b1ab28c6c7" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Resource Management/ResourceAccessLevel.origam#ResourceAccessLevel/21ec1441-46b4-44db-8b3f-576f6fcbbb42"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity2.origam#IOrigamEntity2/Id/c54413b6-eb88-49c8-a7ff-3bb942c1984e"
+      x:id="4e7d12d5-3d3c-40be-b08e-0a889163ed2e"
+      adec:isPrimaryKey="false"
+      adec:label="Úroveň přístupu zdroje"
+      fmi:mappedColumnName="refResourceAccessLevelId"
+      asi:name="refResourceAccessLevelId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <fmi:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="UniqueIdentifier"
+      adec:defaultLookup="Root/DataLookup/Resource Management/LookupResource.origam#LookupResource/0c75ba7a-b402-4a92-b9d1-224ad60bca4d"
+      adec:excludeFromAllFields="false"
+      fmi:excludeFromAuditing="false"
+      adec:foreignKeyEntity="Root/DataEntity/Resource Management/Resource.origam#Resource/b8d208f2-c703-4e8a-9602-c70327f56173"
+      adec:foreignKeyField="Root/DataEntity/__Origam General Interfaces/IOrigamEntity.origam#IOrigamEntity/Id/2fdc34b8-fe8b-4353-aa84-92bb5d768370"
+      x:id="6cdf63e0-e6e0-419d-ad8c-9b104b5815c7"
+      adec:isPrimaryKey="false"
+      adec:label="Přiřazený zdroj"
+      fmi:mappedColumnName="refResourceId"
+      asi:name="refResourceId"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="3e4aed1d-1fdb-4800-bb89-271364893d67"
+      asi:name="ix_ResourceAccessLevel"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/refResourceAccessLevelId/4e7d12d5-3d3c-40be-b08e-0a889163ed2e"
+        x:id="4f3ec5ed-0b7f-418c-ad02-6c029ad9a6a2"
+        asi:name="0_refResourceAccessLevelId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+    <dei:DataEntityIndex
+      asi:abstract="false"
+      dei:generateDeploymentScript="false"
+      x:id="a8c3a104-4009-4952-902a-8eac081cbd78"
+      asi:name="ix_Resource"
+      dei:unique="false">
+      <deif:DataEntityIndexField
+        asi:abstract="false"
+        deif:field="Root/DataEntity/Resource Management/ResourceAccessLevelResource.origam#ResourceAccessLevelResource/refResourceId/6cdf63e0-e6e0-419d-ad8c-9b104b5815c7"
+        x:id="09da57d7-a1f0-4257-99e0-f8bf91c3d6d1"
+        asi:name="0_refResourceId"
+        deif:sortOrder="Ascending" />
+    </dei:DataEntityIndex>
+  </tmi:DataEntity>
+</x:file>

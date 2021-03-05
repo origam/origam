@@ -1,0 +1,10 @@
+﻿CREATE TABLE [AsapNotificationChannelType_l10n] (
+	[refAsapNotificationChannelTypeId] UNIQUEIDENTIFIER NOT NULL,
+	[Name] NVARCHAR(200) NOT NULL,
+	[RecordCreatedBy] UNIQUEIDENTIFIER NULL,
+	[RecordUpdatedBy] UNIQUEIDENTIFIER NULL,
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY NONCLUSTERED,
+	[RecordCreated] DATETIME NULL,
+	[RecordUpdated] DATETIME NULL,
+	[refLanguageId] UNIQUEIDENTIFIER NOT NULL)
+CREATE UNIQUE INDEX [ix_unq_AsapNotificationChannelType] ON [AsapNotificationChannelType_l10n] ([refAsapNotificationChannelTypeId] ASC, [refLanguageId] ASC)

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:adl="http://schemas.origam.com/Origam.Schema.LookupModel.AbstractDataLookup/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:dsdl="http://schemas.origam.com/Origam.Schema.LookupModel.DataServiceDataLookup/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <dsdl:DataLookup
+    asi:abstract="false"
+    adl:alwaysAllowReturnToForm="false"
+    x:id="c9c13f3c-064b-4405-8068-6104e54ccf36"
+    adl:isFilteredServerside="false"
+    adl:isTree="false"
+    adl:listDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
+    adl:listDisplayMember="IsFeatureOn"
+    adl:listValueMember="Id"
+    asi:name="OrigamFeatureList_IsFeatureOn"
+    adl:searchByFirstColumnOnly="false"
+    adl:suppressEmptyColumns="false"
+    adl:valueDataStructure="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/97a76cd4-8376-4f04-b3e1-c76c36ab57a8"
+    adl:valueDisplayMember="IsFeatureOn"
+    adl:valueMethod="Root/DataStructure/__system/Lookups/LookupOrigamFeatureList_IsFeatureOn.origam#LookupOrigamFeatureList_IsFeatureOn/GetId/88c58151-e4f2-4d15-ad7c-dc02a981800d"
+    adl:valueValueMember="Id" />
+</x:file>

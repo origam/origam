@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<x:file xmlns:ade="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntity/6.0.0" xmlns:adec="http://schemas.origam.com/Origam.Schema.EntityModel.AbstractDataEntityColumn/6.0.0" xmlns:asi="http://schemas.origam.com/Origam.Schema.AbstractSchemaItem/6.0.0" xmlns:de="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedEntity/6.0.0" xmlns:df="http://schemas.origam.com/Origam.Schema.EntityModel.DetachedField/6.0.0" xmlns:ercpi="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationColumnPairItem/6.0.0" xmlns:eri="http://schemas.origam.com/Origam.Schema.EntityModel.EntityRelationItem/6.0.0" xmlns:x="http://schemas.origam.com/model-persistence/1.0.0">
+  <de:DataEntity
+    asi:abstract="false"
+    ade:audit="None"
+    x:id="42013bb5-6ad9-456e-bf21-269a8d30867a"
+    asi:name="OrigamSpreadsheetRow"
+    ade:readOnly="false">
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="true"
+      adec:autoIncrement="false"
+      adec:dataType="Boolean"
+      adec:excludeFromAllFields="false"
+      x:id="f0ecf1a6-9af9-4a5e-8f21-41f743b1eb1d"
+      adec:isPrimaryKey="false"
+      asi:name="PageBreak"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="1d2f937b-61c8-479e-8e6a-86ac68a93e6e"
+      adec:isPrimaryKey="false"
+      asi:name="SheetIndex"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Hidden" />
+    <df:DataEntityColumn
+      asi:abstract="false"
+      adec:allowNulls="false"
+      adec:autoIncrement="false"
+      adec:dataType="Integer"
+      adec:excludeFromAllFields="false"
+      x:id="232feef8-d188-478b-803a-959aa260f69b"
+      adec:isPrimaryKey="true"
+      asi:name="Index"
+      adec:onCopyAction="Copy"
+      adec:xmlMappingType="Attribute" />
+    <eri:EntityRelation
+      asi:abstract="false"
+      x:id="a929969c-8875-48c6-9ef5-718c3e456bf8"
+      asi:name="Cell"
+      eri:or="false"
+      eri:parentChild="true"
+      eri:relatedEntity="Root/DataEntity/__spreadsheet/OrigamSpreadsheetCell.origam#OrigamSpreadsheetCell/c6559c7f-0381-4448-9e16-e137aa27b0c0"
+      eri:selfJoin="false">
+      <ercpi:EntityRelationColumnPair
+        asi:abstract="false"
+        ercpi:baseEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetRow.origam#OrigamSpreadsheetRow/Index/232feef8-d188-478b-803a-959aa260f69b"
+        x:id="ef94be2e-1c68-436e-b08b-c69dd3359c8e"
+        asi:name="OrigamSpreadsheetCellKey1"
+        ercpi:relatedEntityField="Root/DataEntity/__spreadsheet/OrigamSpreadsheetCell.origam#OrigamSpreadsheetCell/RowIndex/4cec0c06-55bc-4414-8f4b-a4876e01b3ac" />
+    </eri:EntityRelation>
+  </de:DataEntity>
+</x:file>
