@@ -1,7 +1,5 @@
-import { getApi } from "model/selectors/getApi";
-import { runInFlowWithHandler } from "utils/runInFlowWithHandler";
-import { IApi, IUpdateData } from "../types/IApi";
-import { interpret, createMachine } from "xstate";
+import { createMachine, interpret } from "xstate";
+import { IUpdateData } from "../types/IApi";
 
 
 interface IUpdateObjectData {
@@ -31,11 +29,7 @@ export class UpdateRequestAggregator {
   constructor(
     private api: { updateObject(data: IUpdateObjectData): Promise<any> }
   ) {
-    this.interpreter
-      .onTransition((state, event) => {
-        console.log("TR", state, event);
-      })
-      .start();
+    this.interpreter.start();
   }
 
   registeredRequests: Array<
@@ -68,7 +62,7 @@ export class UpdateRequestAggregator {
               },
             },
             after: {
-              5000: "DEQUEUE",
+              170: "DEQUEUE",
             },
           },
           DEQUEUE: {
@@ -110,21 +104,17 @@ export class UpdateRequestAggregator {
       {
         services: {
           apiUpdateObject: (ctx, event) => {
-            console.log("Invoking apiUpdateRequest", this.currentRequest);
             return this.api.updateObject(this.currentRequest!);
           },
         },
         actions: {
           enqueueRequest: (ctx, event) => {
-            console.log("Enqueuing: ", event.payload);
             const updateObjectItem = this.mergeToQueue(event.payload);
             this.itemJustEnqueued = updateObjectItem;
-            console.log(JSON.stringify(this.registeredRequests, null, 2));
           },
           dequeueToCurrentRequest: (ctx, event) => {
             const item = this.registeredRequests.shift();
             this.currentRequest = item;
-            console.log("Dequeued: ", item);
           },
           resolveCurrentPromise: (ctx, event) => {
             this.currentRequest?.promise.resolve(event.data);
@@ -147,7 +137,6 @@ export class UpdateRequestAggregator {
   );
 
   enqueue(data: IUpdateObjectData): Promise<any> {
-    
     this.interpreter.send({
       type: "UPDATE_REQUESTED",
       payload: data,
