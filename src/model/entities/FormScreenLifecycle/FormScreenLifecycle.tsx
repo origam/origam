@@ -51,7 +51,7 @@ import { getGroupingConfiguration } from "model/selectors/TablePanelView/getGrou
 import { startEditingFirstCell } from "model/actions/DataView/startEditingFirstCell";
 import { getFocusManager } from "model/selectors/DataView/getFocusManager";
 import { getDataSourceFieldByName } from "model/selectors/DataSources/getDataSourceFieldByName";
-import {isLazyLoading} from "model/selectors/isLazyLoading";
+import { isLazyLoading } from "model/selectors/isLazyLoading";
 import { getAllBindingChildren } from "model/selectors/DataView/getAllBindingChildren";
 import { getEntity } from "model/selectors/DataView/getEntity";
 import { isInfiniteScrollingActive } from "model/selectors/isInfiniteScrollingActive";
@@ -77,13 +77,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
   _updateRequestAggregator: UpdateRequestAggregator | undefined;
 
-  get updateRequestAggregator(){
-    if(!this._updateRequestAggregator){
-      this._updateRequestAggregator = new UpdateRequestAggregator(this);
+  get updateRequestAggregator() {
+    if (!this._updateRequestAggregator) {
+      this._updateRequestAggregator = new UpdateRequestAggregator(getApi(this));
     }
     return this._updateRequestAggregator;
   }
-  
+
   @observable allDataViewsSteady = true;
 
   monitor: FlowBusyMonitor = new FlowBusyMonitor();
@@ -224,7 +224,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         sessionFormIdentifier: sessionId,
       })) as IQueryInfo[];
       const formScreen = getFormScreen(this);
-      const processQueryInfoResult = yield* processActionQueryInfo(this)(actionQueryInfo, formScreen.title);
+      const processQueryInfoResult = yield* processActionQueryInfo(this)(
+        actionQueryInfo,
+        formScreen.title
+      );
       if (!processQueryInfoResult.canContinue) return;
       let uiResult;
       try {
@@ -364,12 +367,12 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         _steadyDebounceTimeout = undefined;
       }
     );
-    try{
-      this.initialSelectedRowId = initUIResult.currentRecordId
+    try {
+      this.initialSelectedRowId = initUIResult.currentRecordId;
       yield* this.applyInitUIResult({ initUIResult });
       if (!this.eagerLoading) {
         yield* this.clearTotalCounts();
-        yield* this.loadData({keepCurrentData: true});
+        yield* this.loadData({ keepCurrentData: true });
         yield* this.updateTotalRowCounts();
         const formScreen = getFormScreen(this);
         for (let rootDataView of formScreen.rootDataViews) {
@@ -383,7 +386,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                     x.propertyId,
                     x.setting.type,
                     isArray(x.setting.val1) ? [...x.setting.val1] : x.setting.val1,
-                    x.setting.val2])
+                    x.setting.val2,
+                  ])
                   .filter((item) => {
                     if (
                       item[1] === "in" ||
@@ -413,7 +417,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
                   filters,
                 } as any;
               },
-              () => this.sortAndFilterReaction({dataView: rootDataView, updateTotalRowCount: true}),
+              () =>
+                this.sortAndFilterReaction({ dataView: rootDataView, updateTotalRowCount: true }),
               {
                 equals: comparer.structural,
                 delay: 100,
@@ -423,7 +428,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           this.disposers.push(
             reaction(
               () => orderingConfiguration.userOrderings.map((x) => [x.columnId, x.direction]),
-              () => this.sortAndFilterReaction({dataView: rootDataView, updateTotalRowCount: false}),
+              () =>
+                this.sortAndFilterReaction({ dataView: rootDataView, updateTotalRowCount: false }),
               {
                 equals: comparer.structural,
                 delay: 100,
@@ -432,15 +438,13 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           );
         }
       }
-    }
-    finally
-    {
+    } finally {
       this.initialSelectedRowId = undefined;
     }
     yield* this.startAutoRefreshIfNeeded();
   }
 
-  sortAndFilterReaction(args: {dataView: IDataView, updateTotalRowCount: boolean}) {
+  sortAndFilterReaction(args: { dataView: IDataView; updateTotalRowCount: boolean }) {
     const self = this;
     flow(function* () {
       if (!(yield shouldProceedToChangeRow(args.dataView))) {
@@ -463,7 +467,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const openedScreen = getOpenedScreen(this);
 
     assignIIds(args.initUIResult.formDefinition);
-    
+
     const { formScreen: screen, foundLookupIds } = yield* interpretScreenXml(
       args.initUIResult.formDefinition,
       this,
@@ -500,9 +504,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   async loadChildRows(dataView: IDataView, filter: string, ordering: IOrdering | undefined) {
     try {
       this.monitor.inFlow++;
-      const masterRowId = !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
-        ? dataView.bindingParent.selectedRowId
-        : undefined
+      const masterRowId =
+        !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
+          ? dataView.bindingParent.selectedRowId
+          : undefined;
       const api = getApi(this);
       return await api.getRows({
         MenuId: getMenuItemId(dataView),
@@ -561,12 +566,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     groupByLookupId: string | undefined,
     aggregations: IAggregationInfo[] | undefined
   ) {
-
     const orderingConfig = getOrderingConfiguration(dataView);
-    const orderingDirection = orderingConfig.orderings
-      .find(ordering => ordering.columnId === columnSettings.columnId)
-      ?.direction 
-      ?? IOrderByDirection.ASC
+    const orderingDirection =
+      orderingConfig.orderings.find((ordering) => ordering.columnId === columnSettings.columnId)
+        ?.direction ?? IOrderByDirection.ASC;
 
     const api = getApi(this);
     const ordering = {
@@ -575,9 +578,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       lookupId: groupByLookupId,
     };
 
-    const masterRowId = !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
-      ? dataView.bindingParent.selectedRowId
-      : undefined
+    const masterRowId =
+      !this.eagerLoading && !dataView.isRootGrid && dataView.bindingParent
+        ? dataView.bindingParent.selectedRowId
+        : undefined;
 
     try {
       this.monitor.inFlow++;
@@ -585,7 +589,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MenuId: getMenuItemId(dataView),
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(dataView),
-        Filter: getUserFilters({ctx: dataView}),
+        Filter: getUserFilters({ ctx: dataView }),
         FilterLookups: getUserFilterLookups(dataView),
         Ordering: [ordering],
         RowLimit: 999999,
@@ -606,14 +610,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       MenuId: getMenuItemId(rootDataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(rootDataView),
-      Filter: getUserFilters({ctx: rootDataView}),
+      Filter: getUserFilters({ ctx: rootDataView }),
       FilterLookups: getUserFilterLookups(rootDataView),
       MasterRowId: undefined,
       AggregatedColumns: aggregations,
     });
   }
 
-  *loadData(args: {keepCurrentData: boolean}) {
+  *loadData(args: { keepCurrentData: boolean }) {
     const formScreen = getFormScreen(this);
     try {
       this.monitor.inFlow++;
@@ -630,7 +634,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           yield this.updateTotalRowCount(rootDataView);
           yield* this.readFirstChunkOfRows({
             rootDataView: rootDataView,
-            keepCurrentData: args.keepCurrentData});
+            keepCurrentData: args.keepCurrentData,
+          });
         }
       }
     } finally {
@@ -676,6 +681,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
+  _processedUpdateObjectResults = new WeakSet<any>();
+
   private *runUpdateObject(dataView: IDataView) {
     const updateData = dataView.dataTable.getDirtyValueRows().map((row) => {
       return {
@@ -691,9 +698,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       Entity: dataView.entity,
       UpdateData: updateData,
     });
-
+    
     dataView.focusManager.stopAutoFocus();
-    yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
+
+    // This might run more times in parallel, but we want to apply the result just once.
+    // Parallel promises will be resolved all by the same result of merged update request.
+    if (!this._processedUpdateObjectResults.has(updateObjectResult)) {
+      this._processedUpdateObjectResults.add(updateObjectResult);
+      yield* processCRUDResult(dataView, updateObjectResult, false, dataView);
+    }
+
     return true;
   }
 
@@ -726,17 +740,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-  rowSelectedReactionsDisabled(dataView: IDataView){
-    if( this.initialSelectedRowId &&
-        dataView.isBindingRoot &&
-        !this.eagerLoading
-      ){
+  rowSelectedReactionsDisabled(dataView: IDataView) {
+    if (this.initialSelectedRowId && dataView.isBindingRoot && !this.eagerLoading) {
       return true;
     }
     return false;
   }
 
-  *readFirstChunkOfRows(args: {keepCurrentData: boolean, rootDataView: IDataView}) {
+  *readFirstChunkOfRows(args: { keepCurrentData: boolean; rootDataView: IDataView }) {
     const rootDataView = args.rootDataView;
     const api = getApi(this);
     rootDataView.setSelectedRowId(undefined);
@@ -746,7 +757,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         MenuId: getMenuItemId(rootDataView),
         SessionFormIdentifier: getSessionId(this),
         DataStructureEntityId: getDataStructureEntityId(rootDataView),
-        Filter: getUserFilters({ctx: rootDataView}),
+        Filter: getUserFilters({ ctx: rootDataView }),
         FilterLookups: getUserFilterLookups(rootDataView),
         Ordering: getUserOrdering(rootDataView),
         RowLimit: SCROLL_ROW_CHUNK,
@@ -754,14 +765,14 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         RowOffset: 0,
         ColumnNames: getColumnNamesToLoad(rootDataView),
       });
-      if(args.keepCurrentData){
+      if (args.keepCurrentData) {
         rootDataView.appendRecords(loadedData);
-      }else{
+      } else {
         yield rootDataView.setRecords(loadedData);
       }
-      if(this.initialSelectedRowId){
+      if (this.initialSelectedRowId) {
         rootDataView.selectRowById(this.initialSelectedRowId);
-      }else{
+      } else {
         rootDataView.reselectOrSelectFirst();
       }
 
@@ -785,7 +796,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         this._readFirstChunkOfRowsScheduled = false;
         yield* this.readFirstChunkOfRows({
           rootDataView: rootDataView,
-          keepCurrentData:false});
+          keepCurrentData: false,
+        });
       } while (this._readFirstChunkOfRowsScheduled);
     } finally {
       this._readFirstChunkOfRowsRunning = false;
@@ -801,7 +813,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   private getNewRowValues(targetDataView: IDataView) {
     if (!targetDataView.orderMember) {
       return;
-    } 
+    }
     const orderMember = targetDataView.orderMember;
     const dataSourceField = getDataSourceFieldByName(targetDataView, orderMember);
     const orderValues = targetDataView.tableRows
@@ -810,7 +822,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     const nextOrderValue = orderValues.length > 0 ? Math.max(...orderValues) + 1 : 0;
     const values = {} as any;
     values[orderMember] = nextOrderValue;
-    return values;  }
+    return values;
+  }
 
   *createRow(entity: string, gridId: string) {
     try {
@@ -833,7 +846,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       }
       yield* processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
       if (targetDataView.newRecordView === "0" && targetDataView.activateFormView) {
-        yield targetDataView.activateFormView({saveNewState: true});
+        yield targetDataView.activateFormView({ saveNewState: true });
       } else {
         if (!targetDataView.isFormViewActive()) {
           yield* startEditingFirstCell(targetDataView)();
@@ -850,8 +863,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     try {
       this.monitor.inFlow++;
       const targetDataView = getDataViewByGridId(this, gridId)!;
-      const childEntities = getAllBindingChildren(targetDataView).map(dataView => getEntity(dataView))
-     
+      const childEntities = getAllBindingChildren(targetDataView).map((dataView) =>
+        getEntity(dataView)
+      );
+
       const api = getApi(this);
       const formScreen = getFormScreen(this);
       let createObjectResult;
@@ -877,7 +892,6 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
     }
   }
 
-
   *deleteRow(entity: string, rowId: string, targetDataView: IDataView) {
     try {
       this.monitor.inFlow++;
@@ -889,7 +903,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
 
         if (targetDataView.orderMember) {
           deleteObjectResult = yield* this.deleteObjectInOrderedList(rowId, entity, targetDataView);
-        } else {          
+        } else {
           deleteObjectResult = yield api.deleteObject({
             SessionFormIdentifier: getSessionId(this),
             Entity: entity,
@@ -917,8 +931,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         .forEach((row) => {
           const rowId = targetDataView.dataTable.getRowId(row);
           const newOrder = row[dataSourceField.index] - 1;
-          newRowOrderMap[rowId] = newOrder;
-        });
+          newRowOrderMap[rowId] = newOrder;        });
 
       return yield api.deleteObjectInOrderedList({
         SessionFormIdentifier: getSessionId(this),
@@ -926,7 +939,8 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         Id: rowId,
         OrderProperty: orderMember,
         UpdatedOrderValues: newRowOrderMap,
-      });    }
+      });
+    }
   }
 
   *saveSession() {
@@ -942,7 +956,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         yield* formScreen.dataUpdateCRS.enterGenerator();
         const queryResult = yield api.saveSessionQuery(getSessionId(this));
 
-        const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult, formScreen.title);
+        const processQueryInfoResult = yield* processActionQueryInfo(this)(
+          queryResult,
+          formScreen.title
+        );
         if (!processQueryInfoResult.canContinue) return;
         result = yield api.saveSession(getSessionId(this));
         getFormScreen(this).dataViews.forEach((dataView) =>
@@ -995,7 +1012,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         getFormScreen(this).setDirty(false);
         getFormScreen(this).dataViews.forEach((dv) => dv.restoreViewState());
       } else {
-        yield* this.loadData({keepCurrentData: false});
+        yield* this.loadData({ keepCurrentData: false });
       }
       yield* this.refreshLookups();
       getFormScreen(this).clearDataCache();
@@ -1014,17 +1031,16 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       const self = this;
       flow(function* () {
         yield* self.clearTotalCounts();
-        yield* self.loadData({keepCurrentData: false});
+        yield* self.loadData({ keepCurrentData: false });
         yield* self.updateTotalRowCounts();
       })();
     }
   }
 
-  *clearTotalCounts(){
+  *clearTotalCounts() {
     const formScreen = getFormScreen(this);
     for (const dataView of formScreen.rootDataViews) {
-      if(isInfiniteScrollingActive(dataView) && 
-         !getGroupingConfiguration(dataView).isGrouping){
+      if (isInfiniteScrollingActive(dataView) && !getGroupingConfiguration(dataView).isGrouping) {
         dataView.setRowCount(undefined);
       }
     }
@@ -1033,32 +1049,31 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
   *updateTotalRowCounts() {
     const formScreen = getFormScreen(this);
     for (const dataView of formScreen.rootDataViews) {
-      if(isInfiniteScrollingActive(dataView) && 
-         !getGroupingConfiguration(dataView).isGrouping){
-          yield this.updateTotalRowCount(dataView);
+      if (isInfiniteScrollingActive(dataView) && !getGroupingConfiguration(dataView).isGrouping) {
+        yield this.updateTotalRowCount(dataView);
       }
     }
   }
 
-  async updateTotalRowCount(dataView: IDataView){
+  async updateTotalRowCount(dataView: IDataView) {
     const api = getApi(this);
     const aggregationResult = await api.getAggregations({
       MenuId: getMenuItemId(dataView),
       SessionFormIdentifier: getSessionId(this),
       DataStructureEntityId: getDataStructureEntityId(dataView),
-      Filter: getUserFilters({ctx: dataView}),
+      Filter: getUserFilters({ ctx: dataView }),
       FilterLookups: getUserFilterLookups(dataView),
       MasterRowId: undefined,
       AggregatedColumns: [
         {
           ColumnName: "Id",
-          AggregationType: AggregationType.COUNT
-        }
+          AggregationType: AggregationType.COUNT,
+        },
       ],
     });
 
     const aggregationData = parseAggregations(aggregationResult);
-    if(aggregationData && aggregationData.length > 0) {
+    if (aggregationData && aggregationData.length > 0) {
       dataView.setRowCount(aggregationData[0].value);
     }
   }
@@ -1090,7 +1105,10 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
           SelectedItems: selectedItems,
           InputParameters: {},
         })) as IQueryInfo[];
-        const processQueryInfoResult = yield* processActionQueryInfo(this)(queryResult, formScreen.title);
+        const processQueryInfoResult = yield* processActionQueryInfo(this)(
+          queryResult,
+          formScreen.title
+        );
         if (!processQueryInfoResult.canContinue) return;
 
         const self = this;

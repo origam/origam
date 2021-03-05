@@ -34,7 +34,6 @@ export class DataViewHeaderActionInner extends React.Component<
 
   @action.bound
   handleTriggerAreaKeyDown(event: any) {
-    console.log("***", event);
     if (this.props.shortcutPredicate?.(event)) {
       event.preventDefault();
       this.props.onShortcut?.(event);

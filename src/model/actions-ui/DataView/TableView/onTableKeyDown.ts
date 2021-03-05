@@ -16,7 +16,6 @@ export function onTableKeyDown(ctx: any) {
   return flow(function* onTableKeyDown(event: any) {
     try {
       const dataView = getDataView(ctx);
-      console.log("KEY DOWN", dataView.id, event.key);
       switch (event.key) {
         case "ArrowUp":
           event.preventDefault();
