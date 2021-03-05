@@ -23,6 +23,8 @@ namespace Origam.DA.Service.Generators
 {
     public class PgSqlFilterRenderer : AbstractFilterRenderer
     {
+        public override string StringConcatenationChar => "||";
+
         protected override string LikeOperator()
         {
             //for support case insensitive in PostgreSQL
