@@ -791,7 +791,7 @@ namespace Origam.DA.Service
             StringBuilder result = new StringBuilder();
             Hashtable ht = new Hashtable();
             DataStructure ds = filter.RootItem as DataStructure;
-            result.AppendLine(sqlRenderer.CreateDataStructureHeadSql());
+            result.AppendLine(sqlRenderer.CreateDataStructureHead());
             foreach (DataStructureEntity entity in ds.Entities)
             {
                 SelectParameterDeclarationsSql(result, ht, ds, entity, filter, null, paging,
@@ -815,7 +815,7 @@ namespace Origam.DA.Service
         {
             StringBuilder result = new StringBuilder();
             Hashtable ht = new Hashtable();
-            result.AppendLine(sqlRenderer.CreateDataStructureHeadSql());
+            result.AppendLine(sqlRenderer.CreateDataStructureHead());
             foreach (DataStructureEntity entity in ds.Entities)
             {
                 SelectParameterDeclarationsSql(result, ht, ds, entity, null, sort, paging, columnName);
@@ -891,7 +891,7 @@ namespace Origam.DA.Service
         {
             foreach (string name in parameters.Keys)
             {
-                result.Append(sqlRenderer.SetParameterSql(name));
+                result.Append(sqlRenderer.SetParameter(name));
             }
         }
         public string SelectSql(DataStructure ds, DataStructureEntity entity,
@@ -1433,7 +1433,7 @@ namespace Origam.DA.Service
                 throw new OrigamException(ResourceUtils.GetString("NoPrimaryKey", entity.Name));
             }
             PrettyLine(sqlExpression);
-            sqlExpression.Append(sqlRenderer.SequenceSql(entity.Name, ((DataStructureColumn)primaryKeys[0]).Name));
+            sqlExpression.Append(sqlRenderer.Sequence(entity.Name, ((DataStructureColumn)primaryKeys[0]).Name));
         }
 
         public string SelectRowSql(DataStructureEntity entity,
@@ -1480,7 +1480,7 @@ namespace Origam.DA.Service
             {
                 if (i > 0) sqlExpression.Append(" AND");
                 PrettyIndent(sqlExpression);
-                sqlExpression.Append(sqlRenderer.ArraySql(
+                sqlExpression.Append(sqlRenderer.Array(
                     sqlRenderer.NameLeftBracket + entity.Name +sqlRenderer.NameRightBracket
                     + "." + 
                     RenderExpression(column.Field, null, null, null, null), 
@@ -1556,7 +1556,7 @@ namespace Origam.DA.Service
             StringBuilder sqlExpression = new StringBuilder();
 
             ArrayList selectKeys = new ArrayList();
-            sqlExpression.Append("SELECT " + sqlRenderer.CountAggregateSql() + "(*) ");
+            sqlExpression.Append("SELECT " + sqlRenderer.CountAggregate() + "(*) ");
 
             foreach (DataStructureColumn column in entity.Columns)
             {
@@ -1882,7 +1882,7 @@ namespace Origam.DA.Service
             
             if (customGrouping != null)
             {
-                sqlExpression.Append($", {sqlRenderer.CountAggregateSql()}(*) AS {ColumnData.GroupByCountColumn} ");
+                sqlExpression.Append($", {sqlRenderer.CountAggregate()}(*) AS {ColumnData.GroupByCountColumn} ");
                
                 if (customGrouping.LookupId != Guid.Empty)
                 {
@@ -2049,7 +2049,7 @@ namespace Origam.DA.Service
                         break;                    
                     case CustomAggregationType.Count:
                         sqlExpression.Append(
-                            $"{sqlRenderer.CountAggregateSql()}({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
+                            $"{sqlRenderer.CountAggregate()}({renderedColumn}) as {aggregation.SqlQueryColumnName} ");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -2352,7 +2352,7 @@ namespace Origam.DA.Service
         {
             if (aggregationType == AggregationType.Sum)
             {
-                return sqlRenderer.IsNullSql() + " (" + expression + ", 0)";
+                return sqlRenderer.IsNull() + " (" + expression + ", 0)";
             }
             else
             {
@@ -3246,7 +3246,7 @@ namespace Origam.DA.Service
                 string result = sqlRenderer.NameLeftBracket + item.GetLocalizationField(tmi).MappedColumnName + sqlRenderer.NameRightBracket;
                 result = sqlRenderer.NameLeftBracket + FieldMappingItem.GetLocalizationTable(tmi).Name
                     + sqlRenderer.NameRightBracket + "." + result;
-                result = String.Format(sqlRenderer.IsNullSql()+"({0},{1})", result, nonLocalizedResult);
+                result = String.Format(sqlRenderer.IsNull()+"({0},{1})", result, nonLocalizedResult);
                 return result;
             }
             else
@@ -3384,9 +3384,9 @@ namespace Origam.DA.Service
                     //            + ")-1900),"
                     //            + date
                     //            + "))";
-                    result = sqlRenderer.DateDiffSql(DateTypeSql.Day,
-                        sqlRenderer.DateAddSql(DateTypeSql.Year, "-(" + sqlRenderer.DatePartSql("year", sqlRenderer.NowSql()) + "-1900)", sqlRenderer.NowSql()),
-                        sqlRenderer.DateAddSql(DateTypeSql.Year, "-(" + sqlRenderer.DatePartSql("year", date) + "-1900)", date)
+                    result = sqlRenderer.DateDiff(DateTypeSql.Day,
+                        sqlRenderer.DateAdd(DateTypeSql.Year, "-(" + sqlRenderer.DatePart("year", sqlRenderer.Now()) + "-1900)", sqlRenderer.Now()),
+                        sqlRenderer.DateAdd(DateTypeSql.Year, "-(" + sqlRenderer.DatePart("year", date) + "-1900)", date)
                     );
                     break;
 
@@ -3407,7 +3407,7 @@ namespace Origam.DA.Service
                     {
                         throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
                     }
-                    result = sqlRenderer.DatePartSql(item.Function.Name,
+                    result = sqlRenderer.DatePart(item.Function.Name,
                         RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
@@ -3418,7 +3418,7 @@ namespace Origam.DA.Service
                     {
                         throw new Exception(ResourceUtils.GetString("ErrorExpressionNotSet", item.Path));
                     }
-                      result = sqlRenderer.DatePartSql(item.Function.Name,
+                      result = sqlRenderer.DatePart(item.Function.Name,
                             RenderExpression(item.ChildItems[0].ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
@@ -3427,7 +3427,7 @@ namespace Origam.DA.Service
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem daysArg = item.GetChildByName("Days").ChildItems[0];
 
-                       result = sqlRenderer.DateAddSql(DateTypeSql.Day, 
+                       result = sqlRenderer.DateAdd(DateTypeSql.Day, 
                            RenderExpression(daysArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences), 
                            RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -3436,7 +3436,7 @@ namespace Origam.DA.Service
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Minutes").ChildItems[0];
-                        result = sqlRenderer.DateAddSql(DateTypeSql.Minute
+                        result = sqlRenderer.DateAdd(DateTypeSql.Minute
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -3445,7 +3445,7 @@ namespace Origam.DA.Service
                     {
                         ISchemaItem dateArg = item.GetChildByName("Date").ChildItems[0];
                         ISchemaItem countArg = item.GetChildByName("Seconds").ChildItems[0];
-                        result = sqlRenderer.DateAddSql(DateTypeSql.Second
+                        result = sqlRenderer.DateAdd(DateTypeSql.Second
                             , RenderExpression(countArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                             , RenderExpression(dateArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
@@ -3481,8 +3481,8 @@ namespace Origam.DA.Service
                     {
                         languageForFullText += RenderExpression(languageArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences);
                     }
-                    if (item.Function.Name == "FullText") result = sqlRenderer.FreeTextSql(columnsForSeach, freetext_string, languageForFullText);
-                    if (item.Function.Name == "FullTextContains") result = sqlRenderer.ContainsSql(columnsForSeach, freetext_string, languageForFullText);
+                    if (item.Function.Name == "FullText") result = sqlRenderer.FreeText(columnsForSeach, freetext_string, languageForFullText);
+                    if (item.Function.Name == "FullTextContains") result = sqlRenderer.Contains(columnsForSeach, freetext_string, languageForFullText);
                     break;
 
                 case "Soundex":
@@ -3495,18 +3495,18 @@ namespace Origam.DA.Service
                     ISchemaItem param1 = item.GetChildByName("Param1").ChildItems[0];
                     ISchemaItem param2 = item.GetChildByName("Param2").ChildItems[0];
 
-                    result = sqlRenderer.STDistanceSql(RenderExpression(param1, entity, replaceParameterTexts, dynamicParameters, parameterReferences),
+                    result = sqlRenderer.STDistance(RenderExpression(param1, entity, replaceParameterTexts, dynamicParameters, parameterReferences),
                         RenderExpression(param2, entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "Latitude":
-                    result = sqlRenderer.LatLonSql(
+                    result = sqlRenderer.LatLon(
                         geoLatLonSql.Lat,
                         RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
                 case "Longitude":
-                    result = sqlRenderer.LatLonSql(
+                    result = sqlRenderer.LatLon(
                         geoLatLonSql.Lon,
                         RenderExpression(item.GetChildByName("Point").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
@@ -3527,14 +3527,14 @@ namespace Origam.DA.Service
                         );
                     break;
                 case "DateDiffMinutes":
-                    result = sqlRenderer.DateDiffSql(DateTypeSql.Minute,
+                    result = sqlRenderer.DateDiff(DateTypeSql.Minute,
                         RenderExpression(item.GetChildByName("DateFrom").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         , RenderExpression(item.GetChildByName("DateTo").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences)
                         );
                     break;
 
                 default:
-                    result = sqlRenderer.FunctionPrefixSql() + item.Function.Name + "(";
+                    result = sqlRenderer.FunctionPrefix() + item.Function.Name + "(";
 
                     ArrayList sortedParams = new ArrayList(item.ChildItems);
                     sortedParams.Sort();
@@ -3639,7 +3639,7 @@ namespace Origam.DA.Service
                     break;
 
                 case "Length":
-                    result = sqlRenderer.LengthSql(
+                    result = sqlRenderer.Length(
                         RenderExpression(item.GetChildByName("Text").ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     break;
 
@@ -3659,7 +3659,7 @@ namespace Origam.DA.Service
 
                     if (listExpressions.Count == 1 && listExpressions[0] is ParameterReference && (listExpressions[0] as ParameterReference).Parameter.DataType == OrigamDataType.Array)
                     {
-                        result = sqlRenderer.ArraySql(RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences),
+                        result = sqlRenderer.Array(RenderExpression(leftArg.ChildItems[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences),
                              RenderExpression(listExpressions[0], entity, replaceParameterTexts, dynamicParameters, parameterReferences));
                     }
                     else
@@ -3680,7 +3680,7 @@ namespace Origam.DA.Service
                 case "IsNull":
                     ISchemaItem expressionArg = item.GetChildByName("Expression").ChildItems[0];
                     ISchemaItem replacementArg = item.GetChildByName("ReplacementValue").ChildItems[0];
-                    result = sqlRenderer.IsNullSql() +"(" + RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + 
+                    result = sqlRenderer.IsNull() +"(" + RenderExpression(expressionArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + 
                              ", " + RenderExpression(replacementArg, entity, replaceParameterTexts, dynamicParameters, parameterReferences) + ")";
                     break;
 
@@ -3782,10 +3782,10 @@ namespace Origam.DA.Service
                         concatBuilder.Append(" " + sqlRenderer.StringConcatenationChar + " ");
                     }
                 }
-                string sqlText = sqlRenderer.TextSql(
+                string sqlText = sqlRenderer.Text(
                     RenderExpression(columnRenderItem, replaceParameterTexts,
                         dynamicParameters, parameterReferences));
-                string nonNullExpression = $"{sqlRenderer.IsNullSql()} ({sqlText}, '')";
+                string nonNullExpression = $"{sqlRenderer.IsNull()} ({sqlText}, '')";
                 concatBuilder.Append(nonNullExpression);
                 i++;
             }
@@ -3882,7 +3882,7 @@ namespace Origam.DA.Service
                     return "SUM";
 
                 case AggregationType.Count:
-                    return sqlRenderer.CountAggregateSql();
+                    return sqlRenderer.CountAggregate();
                 case AggregationType.Average:
                     return "AVG";
 

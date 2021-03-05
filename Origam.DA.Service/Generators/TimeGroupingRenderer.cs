@@ -130,7 +130,7 @@ namespace Origam.DA.Service.Generators
 
         public string Render(ColumnRenderData columnRenderData, string groupingUnit)
         {
-            return sqlRenderer.DatePartSql(groupingUnit.ToUpper(), columnRenderData.Expression);
+            return sqlRenderer.DatePart(groupingUnit.ToUpper(), columnRenderData.Expression);
         }
     }  
     

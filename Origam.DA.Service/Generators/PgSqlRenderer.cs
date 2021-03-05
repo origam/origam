@@ -21,7 +21,7 @@ class PgSqlRenderer : SqlRenderer
         return "";
     }
 
-    internal override string FunctionPrefixSql()
+    internal override string FunctionPrefix()
     {
         return "";
     }
@@ -31,22 +31,22 @@ class PgSqlRenderer : SqlRenderer
         return "VARCHAR";
     }
 
-    internal override string LengthSql(string expresion)
+    internal override string Length(string expresion)
     {
         return string.Format("LENGTH({0})", expresion);
     }
 
-    internal override string TextSql(string expresion)
+    internal override string Text(string expresion)
     {
         return string.Format("CAST ({0} AS {1} )", expresion, "TEXT");
     }
 
-    internal override string DatePartSql(string datetype, string expresion)
+    internal override string DatePart(string datetype, string expresion)
     {
         return string.Format("DATE_PART('{0}',{1})", datetype, expresion);
     }
 
-    internal override string DateAddSql(DateTypeSql datepart, string number,
+    internal override string DateAdd(DateTypeSql datepart, string number,
         string date)
     {
         return string.Format("({0} + ( {1} || '{2}')::interval)", date, number,
@@ -75,7 +75,7 @@ class PgSqlRenderer : SqlRenderer
         }
     }
 
-    internal override string DateDiffSql(DateTypeSql datepart, string startdate,
+    internal override string DateDiff(DateTypeSql datepart, string startdate,
         string enddate)
     {
         StringBuilder stringBuilder = new StringBuilder();
@@ -117,7 +117,7 @@ class PgSqlRenderer : SqlRenderer
         return string.Format(stringBuilder.ToString(), enddate, startdate);
     }
 
-    internal override string STDistanceSql(string point1, string point2)
+    internal override string STDistance(string point1, string point2)
     {
         return string.Format(
             "ST_Distance(('SRID=4326;' || {0})::geography,('SRID=4326;' || {1})::geography)",
@@ -125,26 +125,26 @@ class PgSqlRenderer : SqlRenderer
             ConvertGeoToTextClause(point2));
     }
 
-    internal override string NowSql()
+    internal override string Now()
     {
         return "NOW()";
     }
 
-    internal override string FreeTextSql(string columnsForSeach,
+    internal override string FreeText(string columnsForSeach,
         string freetext_string, string languageForFullText)
     {
         return string.Format("{0} @@ to_tsquery({1},{2})", columnsForSeach,
             languageForFullText, freetext_string);
     }
 
-    internal override string ContainsSql(string columnsForSeach,
+    internal override string Contains(string columnsForSeach,
         string freetext_string, string languageForFullText)
     {
         return string.Format("levenshtein({0},{1})", columnsForSeach,
             freetext_string);
     }
 
-    internal override string LatLonSql(geoLatLonSql latLon, string expresion)
+    internal override string LatLon(geoLatLonSql latLon, string expresion)
     {
         switch (latLon)
         {
@@ -159,12 +159,12 @@ class PgSqlRenderer : SqlRenderer
         }
     }
 
-    internal override string ArraySql(string expresion1, string expresion2)
+    internal override string Array(string expresion1, string expresion2)
     {
         return string.Format("{0}::text = ANY ({1})", expresion1, expresion2);
     }
 
-    internal override string CreateDataStructureHeadSql()
+    internal override string CreateDataStructureHead()
     {
         return "DO $$";
     }
@@ -174,7 +174,7 @@ class PgSqlRenderer : SqlRenderer
         return "BEGIN";
     }
     
-    internal override string SetParameterSql(string name)
+    internal override string SetParameter(string name)
     {
         return string.Format("{0} = NULL;{1}", name, Environment.NewLine);
     }
@@ -201,7 +201,7 @@ class PgSqlRenderer : SqlRenderer
         return "ST_AsText(" + argument + ")";
     }
 
-    internal override string SequenceSql(string entityName, string primaryKeyName)
+    internal override string Sequence(string entityName, string primaryKeyName)
     {
         StringBuilder actualsequence = new StringBuilder();
         actualsequence.Append(entityName);
@@ -343,11 +343,11 @@ class PgSqlRenderer : SqlRenderer
         return sqlParam;
     }
     
-    internal override string IsNullSql()
+    internal override string IsNull()
     {
         return "COALESCE";
     }
-    internal override string CountAggregateSql()
+    internal override string CountAggregate()
     {
         return "COUNT";
     }

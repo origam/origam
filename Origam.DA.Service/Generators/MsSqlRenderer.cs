@@ -36,15 +36,15 @@ public class MsSqlRenderer: SqlRenderer {
         return argument + ".STAsText()";
     }
     
-    internal override string SequenceSql(string entityName, string primaryKeyName)
+    internal override string Sequence(string entityName, string primaryKeyName)
     {
         return "; SELECT @@IDENTITY AS " + primaryKeyName;
     }
-    internal override string IsNullSql()
+    internal override string IsNull()
     {
         return "ISNULL";
     }
-    internal override string CountAggregateSql()
+    internal override string CountAggregate()
     {
         return "COUNT_BIG";
     }
@@ -53,7 +53,7 @@ public class MsSqlRenderer: SqlRenderer {
     {
         return "AS";
     }
-    internal override string FunctionPrefixSql()
+    internal override string FunctionPrefix()
     {
         return "dbo.";
     }
@@ -62,19 +62,19 @@ public class MsSqlRenderer: SqlRenderer {
         return "NVARCHAR";
     }
 
-    internal override string LengthSql(string expresion)
+    internal override string Length(string expresion)
     {
         return string.Format("LEN({0})", expresion);
     }
-    internal override string TextSql(string expresion)
+    internal override string Text(string expresion)
     {
         return string.Format("CAST ({0} AS {1} )", expresion, "NVARCHAR(MAX)");
     }
-    internal override string DatePartSql(string datetype, string expresion)
+    internal override string DatePart(string datetype, string expresion)
     {
         return string.Format("DATEPART({0},{1})", datetype, expresion);
     }
-    internal override string DateAddSql(DateTypeSql datepart, string number, string date)
+    internal override string DateAdd(DateTypeSql datepart, string number, string date)
     {
         return string.Format("DATEADD({0},{1},{2})", GetAddDateSql(datepart),number,date);
     }
@@ -100,19 +100,19 @@ public class MsSqlRenderer: SqlRenderer {
         }
     }
 
-    internal override string DateDiffSql(DateTypeSql datepart, string startdate, string enddate)
+    internal override string DateDiff(DateTypeSql datepart, string startdate, string enddate)
     {
         return string.Format("DATEDIFF({0}, {1}, {2})", GetAddDateSql(datepart), startdate, enddate);
     }
-    internal override string STDistanceSql(string point1, string point2)
+    internal override string STDistance(string point1, string point2)
     {
         return string.Format("{0}.STDistance({1})", point1, point2);
     }
-    internal override string NowSql()
+    internal override string Now()
     {
         return "GETDATE()";
     }
-    internal override string FreeTextSql(string columnsForSeach, string freetext_string, string languageForFullText)
+    internal override string FreeText(string columnsForSeach, string freetext_string, string languageForFullText)
     {
         if(string.IsNullOrEmpty(languageForFullText))
         {
@@ -120,7 +120,7 @@ public class MsSqlRenderer: SqlRenderer {
         }
         return string.Format("FREETEXT({0},{1},{2})", columnsForSeach,freetext_string,languageForFullText);
     }
-    internal override string ContainsSql(string columnsForSeach, string freetext_string, string languageForFullText)
+    internal override string Contains(string columnsForSeach, string freetext_string, string languageForFullText)
     {
         if (string.IsNullOrEmpty(languageForFullText))
         {
@@ -128,7 +128,7 @@ public class MsSqlRenderer: SqlRenderer {
         }
         return string.Format("CONTAINS({0},{1},{2})", columnsForSeach, freetext_string, languageForFullText);
     }
-    internal override string LatLonSql(geoLatLonSql latLon, string expresion)
+    internal override string LatLon(geoLatLonSql latLon, string expresion)
     {
         switch (latLon)
         {
@@ -140,11 +140,11 @@ public class MsSqlRenderer: SqlRenderer {
                 throw new NotSupportedException("Unsuported in Latitude or Longtitude " + latLon.ToString());
         }
     }
-    internal override string ArraySql(string expresion1, string expresion2)
+    internal override string Array(string expresion1, string expresion2)
     {
         return string.Format("{0} IN (SELECT ListValue FROM {1} origamListValue)", expresion1,expresion2);
     }
-    internal override string CreateDataStructureHeadSql()
+    internal override string CreateDataStructureHead()
     {
         return "";
     }
@@ -152,7 +152,7 @@ public class MsSqlRenderer: SqlRenderer {
     {
         return "";
     }
-    internal override string SetParameterSql(string name)
+    internal override string SetParameter(string name)
     {
         return string.Format("SET {0} = NULL{1}", name, Environment.NewLine);
     }
