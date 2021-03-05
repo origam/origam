@@ -13,9 +13,9 @@ import {applyScrollTranslation, cellPaddingLeft, clipCell, fontSize, topTextOffs
 import {isGroupRow} from "../rowCells/groupRowCells";
 import {onClick} from "../onClick";
 import {CPR} from "utils/canvas";
-import {onGroupHeaderToggleClick} from "../../../../../../model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
+import {onGroupHeaderToggleClick} from "model/actions-ui/DataView/TableView/onGroupHeaderToggleClick";
 import {flow} from "mobx";
-import {isInfiniteScrollingActive} from "../../../../../../model/selectors/isInfiniteScrollingActive";
+import {isInfiniteScrollingActive} from "model/selectors/isInfiniteScrollingActive";
 import { getGrouper } from "model/selectors/DataView/getGrouper";
 import { getDataView } from "model/selectors/DataView/getDataView";
 
@@ -72,7 +72,6 @@ export function drawEmptyGroupCell() {
 
 export function drawGroupCell() {
   applyScrollTranslation();
-  clipCell();
   drawGroupCellBackground();
 
   const ctx2d = context2d();
@@ -84,8 +83,8 @@ export function drawGroupCell() {
     const state = row.isExpanded;
     ctx2d.fillText(
       state ? "\uf146" : "\uf0fe",
-      CPR() * (currentColumnLeft() + cellPaddingLeft),
-      CPR() * (currentRowTop() + topTextOffset)
+      CPR() * (currentColumnLeft() + 6),
+      CPR() * (currentRowTop() + topTextOffset + 1)
     );
     ctx2d.font = `${CPR() * fontSize}px "IBM Plex Sans", Arial, sans-serif`;
     ctx2d.fillText(
