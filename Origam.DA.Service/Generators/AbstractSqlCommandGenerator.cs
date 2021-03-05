@@ -1805,7 +1805,7 @@ namespace Origam.DA.Service
                                 columnRenderData: columnRenderData, 
                                 columnDataToSql: ColumnDataToSql, 
                                 groupingUnit: customGrouping.GroupingUnit,
-                                renderDatePart: sqlRenderer.DatePartSql);
+                                sqlRenderer: sqlRenderer);
                         string[] columnsWithoutAliases = timeGroupingRenderer.RenderWithoutAliases();
                         orderByCommandParser.SetColumnExpressionsIfMissing(column.Name, columnsWithoutAliases);
                         string allColumnsExpression = string.Join(", ", columnsWithoutAliases);

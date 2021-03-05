@@ -4,7 +4,6 @@ namespace Origam.DA.Service.Generators
 {
     public class TimeGroupingRenderer
     {
-
         private readonly Func<ColumnRenderData, string> columnDataToSql;
         private readonly ColumnRenderData columnRenderData;
         private readonly string groupingUnit;
@@ -12,12 +11,12 @@ namespace Origam.DA.Service.Generators
 
         public TimeGroupingRenderer(ColumnRenderData columnRenderData,
             Func<ColumnRenderData, string> columnDataToSql, string groupingUnit,
-            Func<string, string, string> renderDatePart)
+            SqlRenderer sqlRenderer)
         {
             this.columnRenderData = columnRenderData;
             this.columnDataToSql = columnDataToSql;
             this.groupingUnit = groupingUnit;
-            datePartRenderer = new DatePartRenderer(renderDatePart);
+            datePartRenderer = new DatePartRenderer(sqlRenderer);
         }
 
         public string RenderWithAliases()
@@ -122,16 +121,16 @@ namespace Origam.DA.Service.Generators
     }    
     class DatePartRenderer: IColumnRenderer
     {
-        private readonly Func<string, string, string> renderDatePart;
+        private readonly SqlRenderer sqlRenderer;
 
-        public DatePartRenderer(Func<string, string, string> renderDatePart)
+        public DatePartRenderer(SqlRenderer sqlRenderer)
         {
-            this.renderDatePart = renderDatePart;
+            this.sqlRenderer = sqlRenderer;
         }
 
         public string Render(ColumnRenderData columnRenderData, string groupingUnit)
         {
-            return renderDatePart(groupingUnit.ToUpper(), columnRenderData.Expression);
+            return sqlRenderer.DatePartSql(groupingUnit.ToUpper(), columnRenderData.Expression);
         }
     }  
     
