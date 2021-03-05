@@ -54,7 +54,7 @@ namespace Origam.Gui.Win.Commands
             AbstractSqlCommandGenerator generator = (AbstractSqlCommandGenerator)abstractSqlDataService.DbDataAdapterFactory.Clone();
             DataStructureFilterSet filterSet = Owner as DataStructureFilterSet;
             generator.PrettyFormat = true;
-            generator.generateConsoleUseSyntax = true;
+            generator.GenerateConsoleUseSyntax = true;
             StringBuilder builder = new StringBuilder();
             DataStructure ds = filterSet.RootItem as DataStructure;
             builder.AppendFormat("-- SQL statements for data structure: {0}\r\n", ds.Name);
