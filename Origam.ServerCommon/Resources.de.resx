@@ -255,4 +255,7 @@
   <data name="ErrorDependentColumnNotFound" xml:space="preserve">
     <value>Zeile `{0}' abhängig von Zeile `{1}' bei Entität `{2}', ({3}) konnte nicht aktualisiert werden.</value>
   </data>
+  <data name="MenuNotAuthorized" xml:space="preserve">
+    <value>Sie haben keinen Zugriff auf {0}</value>
+  </data>
 </root>
