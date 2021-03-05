@@ -459,11 +459,6 @@ namespace Origam.DA.Service
             return "VARCHAR";
         }
 
-        internal override string RenderDatePart(string groupingUnit, string columnName)
-        {
-	        return $"DATE_PART({groupingUnit}, {columnName})";
-        }
-
         internal override string LengthSql(string expresion)
         {
             return string.Format("LENGTH({0})", expresion);
