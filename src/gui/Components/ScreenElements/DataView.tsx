@@ -132,7 +132,6 @@ export class DataViewContext {
   }
 
   handleTableKeyDown(event: any) {
-    console.log("DataView context handled", event);
     this.tableKeyDownChannel.trigger(event);
   }
 }
