@@ -8,25 +8,28 @@ namespace Origam.DA.Service.Generators
         private readonly Func<ColumnRenderData, string> columnDataToSql;
         private readonly ColumnRenderData columnRenderData;
         private readonly string groupingUnit;
+        private readonly DatePartRenderer datePartRenderer;
 
         public TimeGroupingRenderer(ColumnRenderData columnRenderData,
-            Func<ColumnRenderData, string> columnDataToSql, string groupingUnit)
+            Func<ColumnRenderData, string> columnDataToSql, string groupingUnit,
+            Func<string, string, string> renderDatePart)
         {
             this.columnRenderData = columnRenderData;
             this.columnDataToSql = columnDataToSql;
             this.groupingUnit = groupingUnit;
+            datePartRenderer = new DatePartRenderer(renderDatePart);
         }
 
         public string RenderWithAliases()
         {
             return string.Join(", ", RenderExpression(
-                new SelectExpressionRenderer(columnDataToSql), columnRenderData, groupingUnit));
+                new SelectExpressionRenderer(columnDataToSql, datePartRenderer),
+                columnRenderData, groupingUnit));
         }
 
         public string[] RenderWithoutAliases()
         {
-            return RenderExpression(
-                new DatePartRenderer(), columnRenderData, groupingUnit);
+            return RenderExpression(datePartRenderer, columnRenderData, groupingUnit);
         }
 
         public static string[] GetColumnNames(string columnName, string groupingUnit)
@@ -98,11 +101,13 @@ namespace Origam.DA.Service.Generators
     class SelectExpressionRenderer: IColumnRenderer
     {
         private readonly Func<ColumnRenderData, string> columnDataToSql;
-        private readonly DatePartRenderer datePartRenderer = new DatePartRenderer();
+        private readonly DatePartRenderer datePartRenderer;
 
-        public SelectExpressionRenderer(Func<ColumnRenderData, string> columnDataToSql)
+        public SelectExpressionRenderer(Func<ColumnRenderData, string> columnDataToSql,
+            DatePartRenderer datePartRenderer)
         {
             this.columnDataToSql = columnDataToSql;
+            this.datePartRenderer = datePartRenderer;
         }
 
         public string Render(ColumnRenderData columnRenderData, string groupingUnit)
@@ -117,9 +122,16 @@ namespace Origam.DA.Service.Generators
     }    
     class DatePartRenderer: IColumnRenderer
     {
+        private readonly Func<string, string, string> renderDatePart;
+
+        public DatePartRenderer(Func<string, string, string> renderDatePart)
+        {
+            this.renderDatePart = renderDatePart;
+        }
+
         public string Render(ColumnRenderData columnRenderData, string groupingUnit)
         {
-            return $"DATEPART({groupingUnit.ToUpper()}, {columnRenderData.Expression})";
+            return renderDatePart(groupingUnit.ToUpper(), columnRenderData.Expression);
         }
     }  
     

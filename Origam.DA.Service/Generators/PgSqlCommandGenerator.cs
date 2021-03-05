@@ -458,6 +458,7 @@ namespace Origam.DA.Service
         {
             return "VARCHAR";
         }
+
         internal override string LengthSql(string expresion)
         {
             return string.Format("LENGTH({0})", expresion);

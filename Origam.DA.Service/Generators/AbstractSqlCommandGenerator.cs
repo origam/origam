@@ -1850,7 +1850,11 @@ namespace Origam.DA.Service
                     if (!string.IsNullOrWhiteSpace(customGrouping?.GroupingUnit))
                     {
                         var timeGroupingRenderer =
-                            new TimeGroupingRenderer(columnRenderData, ColumnDataToSql, customGrouping.GroupingUnit);
+                            new TimeGroupingRenderer(
+                                columnRenderData: columnRenderData, 
+                                columnDataToSql: ColumnDataToSql, 
+                                groupingUnit: customGrouping.GroupingUnit,
+                                renderDatePart: DatePartSql);
                         string[] columnsWithoutAliases = timeGroupingRenderer.RenderWithoutAliases();
                         orderByCommandParser.SetColumnExpressionsIfMissing(column.Name, columnsWithoutAliases);
                         string allColumnsExpression = string.Join(", ", columnsWithoutAliases);

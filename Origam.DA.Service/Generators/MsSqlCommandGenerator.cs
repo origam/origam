@@ -485,6 +485,7 @@ namespace Origam.DA.Service
         {
             return "NVARCHAR";
         }
+
         internal override string LengthSql(string expresion)
         {
             return string.Format("LEN({0})", expresion);

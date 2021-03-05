@@ -118,10 +118,12 @@ namespace Origam.DA.Service.CustomCommandParser
             this.parameterReferenceChar = parameterReferenceChar;
         }
 
-        private string GetParameterName(string columnName)
+        private string GetParameterNameSql(string columnName)
         {
             return parameterReferenceChar + columnName;
         }
+        
+        private string ParameterName => ColumnName + "_" + Operator;
 
         private string ValueToOperand(string value)
         {
@@ -223,7 +225,7 @@ namespace Origam.DA.Service.CustomCommandParser
 
         private string RenderNodeSql()
         {
-            string parameterName = GetParameterName(ColumnName);
+            string parameterName = GetParameterNameSql(ParameterName);
             var (operatorName, renderedColumnValue) =
                 GetRendererInput(Operator, parameterName);
             if (Children.Count == 0)
@@ -253,7 +255,7 @@ namespace Origam.DA.Service.CustomCommandParser
                 parameterDataList.Add(new ParameterData
                 (
                     columnName: ColumnName,
-                    parameterName: ColumnName,
+                    parameterName: ParameterName,
                     value: value,
                     dataType: ParameterDataType
                 ));
@@ -270,16 +272,16 @@ namespace Origam.DA.Service.CustomCommandParser
                 var parameterNames = GetRightHandValues()
                     .Select((value, i) =>
                     {
-                        string columnNameNumbered = ColumnName + "_" + i;
+                        string parameterNameNumbered = ParameterName + "_" + i;
                         parameterDataList.Add(new ParameterData
                             (
                                 columnName: ColumnName,
-                                parameterName: columnNameNumbered,
+                                parameterName: parameterNameNumbered,
                                 value: value,
                                 dataType: ParameterDataType
                             )
                         );
-                        return GetParameterName(columnNameNumbered);
+                        return GetParameterNameSql(parameterNameNumbered);
                     })
                     .ToArray();
                 return renderer.BinaryOperator(
@@ -342,15 +344,15 @@ namespace Origam.DA.Service.CustomCommandParser
             var parameterNames = new[] { startDate, endDate }
                 .Select((value, i) =>
                 {
-                    string columnNameNumbered = ColumnName + "_" + i;
+                    string parameterNameNumbered = ParameterName + "_" + i;
                     parameterDataList.Add(new ParameterData
                     (
                         columnName: ColumnName,
-                        parameterName: columnNameNumbered,
+                        parameterName: parameterNameNumbered,
                         value: value,
                         dataType: ParameterDataType
                     ));
-                    return GetParameterName(columnNameNumbered);
+                    return GetParameterNameSql(parameterNameNumbered);
                 })
                 .ToArray();
 
@@ -362,23 +364,23 @@ namespace Origam.DA.Service.CustomCommandParser
                 isColumnArray: Column.DataType == OrigamDataType.Array);
         }
 
-        private (string,string) GetRendererInput(string operatorName, string value)
+        private (string,string) GetRendererInput(string operatorName, string parameterName)
         {
             switch (operatorName)
             {
-                case "gt": return ("GreaterThan", value);
-                case "lt": return ("LessThan", value);
-                case "gte": return ("GreaterThanOrEqual", value);
-                case "lte": return ("LessThanOrEqual", value);
-                case "eq": return ("Equal", value);
-                case "neq": return ("NotEqual", value);
-                case "starts": return ("Like", AppendWildCard(value));
-                case "nstarts": return ("NotLike", AppendWildCard(value));
-                case "ends": return ("Like", PrependWildCard(value));
-                case "nends": return ("NotLike",  PrependWildCard(value));
+                case "gt": return ("GreaterThan", parameterName);
+                case "lt": return ("LessThan", parameterName);
+                case "gte": return ("GreaterThanOrEqual", parameterName);
+                case "lte": return ("LessThanOrEqual", parameterName);
+                case "eq": return ("Equal", parameterName);
+                case "neq": return ("NotEqual", parameterName);
+                case "starts": return ("Like", AppendWildCard(parameterName));
+                case "nstarts": return ("NotLike", AppendWildCard(parameterName));
+                case "ends": return ("Like", PrependWildCard(parameterName));
+                case "nends": return ("NotLike",  PrependWildCard(parameterName));
                 case "like":
-                case "contains": return ("Like", PrependWildCard(AppendWildCard(value)));
-                case "ncontains": return ("NotLike", PrependWildCard(AppendWildCard(value)));
+                case "contains": return ("Like", PrependWildCard(AppendWildCard(parameterName)));
+                case "ncontains": return ("NotLike", PrependWildCard(AppendWildCard(parameterName)));
                 case "null": return ("Equal", null);
                 case "nnull": return ("NotEqual", null);
                 case "between": return ("Between", null);
