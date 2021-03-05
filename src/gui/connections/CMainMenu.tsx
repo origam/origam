@@ -159,6 +159,31 @@ class CMainMenuCommandItem extends React.Component<{
         )}
         content={({ setDropped }) => (
           <Dropdown>
+            <DropdownItem
+              onClick={(event: any) => {
+                setDropped(false);
+                onMainMenuItemClick(this.workbench)({
+                  event,
+                  item: props.node,
+                  idParameter: undefined,
+                })
+              }}
+            >
+              {T("Open", "open_form")}
+            </DropdownItem>
+            <DropdownItem
+              onClick={(event: any) => {
+                setDropped(false);
+                onMainMenuItemClick(this.workbench)({
+                  event,
+                  item: props.node,
+                  idParameter: undefined,
+                  forceOpenNew: true
+                })
+              }}
+            >
+              {T("Open in New Tab", "open_in_new_tab")}
+            </DropdownItem>
             {!this.favorites.isInAnyFavoriteFolder(this.menuId) && (
               <DropdownItem
                 onClick={(event: any) => {

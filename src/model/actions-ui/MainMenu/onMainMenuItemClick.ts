@@ -8,6 +8,7 @@ export function onMainMenuItemClick(ctx: any) {
     item: any;
     idParameter: string | undefined;
     isSingleRecordEdit?: boolean;
+    forceOpenNew?: boolean;
   }) {
     try {
       yield* getWorkbenchLifecycle(ctx).onMainMenuItemClick(args);

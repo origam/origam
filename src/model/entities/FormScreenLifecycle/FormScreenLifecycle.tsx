@@ -883,6 +883,9 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
       } finally {
         formScreen.dataUpdateCRS.leave();
       }
+      for (let dataView of getAllBindingChildren(targetDataView)) {
+        dataView.clear();
+      }
       yield* processCRUDResult(targetDataView, createObjectResult, false, targetDataView);
     } finally {
       this.monitor.inFlow--;
@@ -928,9 +931,7 @@ export class FormScreenLifecycle02 implements IFormScreenLifecycle02 {
         .forEach((row) => {
           const rowId = targetDataView.dataTable.getRowId(row);
           const newOrder = row[dataSourceField.index] - 1;
-          newRowOrderMap[rowId] = newOrder;
-          newRowOrderMap[rowId] = newOrder;
-        });
+          newRowOrderMap[rowId] = newOrder;        });
 
       return yield api.deleteObjectInOrderedList({
         SessionFormIdentifier: getSessionId(this),
