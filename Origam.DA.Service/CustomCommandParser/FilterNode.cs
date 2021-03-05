@@ -68,7 +68,7 @@ namespace Origam.DA.Service.CustomCommandParser
         private string Operator => SplitValue?.Length > 1 
             ? SplitValue[1].Replace("\"","") 
             : null;
-        private string ColumnValue => ValueToOperand(SplitValue[2]);
+        private string ParameterValue => ValueToOperand(SplitValue[2]);
 
         private ColumnInfo Column =>
             columns
@@ -234,7 +234,7 @@ namespace Origam.DA.Service.CustomCommandParser
                                                 " to a filter node");
                 }
 
-                if (ColumnValue == null || ColumnValue.ToLower() == "null")
+                if (ParameterValue == null || ParameterValue.ToLower() == "null")
                 {
                     return renderer.BinaryOperator(
                         leftValue: RenderedColumnName,
@@ -242,7 +242,7 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
 
-                object value = ToDbValue(ColumnValue, ParameterDataType);
+                object value = ToDbValue(ParameterValue, ParameterDataType);
                 if ((Operator == "eq" || Operator == "neq") &&
                     Column.DataType == OrigamDataType.Date &&
                     IsWholeDay((DateTime)value))
@@ -336,7 +336,7 @@ namespace Origam.DA.Service.CustomCommandParser
             var (operatorName, _) =
                 GetRendererInput(actualOperator, ""); 
 
-            DateTime equalsDate = (DateTime)ToDbValue(ColumnValue, Column.DataType);
+            DateTime equalsDate = (DateTime)ToDbValue(ParameterValue, Column.DataType);
             DateTime startDate = new DateTime(equalsDate.Year, equalsDate.Month, equalsDate.Day);
             DateTime endDate = startDate.AddDays(1).AddSeconds(-1);
             var parameterNames = new[] { startDate, endDate }
