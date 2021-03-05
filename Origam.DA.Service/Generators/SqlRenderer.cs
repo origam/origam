@@ -33,8 +33,7 @@ public abstract class SqlRenderer
     internal abstract string CreateDataStructureHead();
     internal abstract string DeclareBegin();
     internal abstract string SetParameter(string name);
-    public abstract string FunctionDefinitionDdl(Function function);
-    
+
     public abstract string DefaultDdlDataType(OrigamDataType columnType);
     
     public abstract IDbDataParameter BuildParameter(string paramName,

@@ -211,43 +211,6 @@ class PgSqlRenderer : SqlRenderer
         return "; SELECT currval(" + actualsequence + ")";
     }
     
-    public override string FunctionDefinitionDdl(Function function)
-    {
-        if (function.FunctionType == OrigamFunctionType.Database)
-        {
-            StringBuilder builder = new StringBuilder("CREATE FUNCTION ");
-            builder.Append(function.Name + "(");
-            int i = 0;
-            foreach (FunctionParameter parameter in function.ChildItems)
-            {
-                if (i > 0) builder.Append(", ");
-                builder.Append(ParameterDeclarationChar + parameter.Name +
-                               " ?");
-                i++;
-            }
-
-            builder.Append(")" + Environment.NewLine);
-            builder.Append("RETURNS " +
-                           DdlDataType(function.DataType, 0, null) +
-                           Environment.NewLine);
-            builder.Append("AS $$" + Environment.NewLine);
-            builder.Append("DECLARE " + ParameterDeclarationChar + " "
-                           + DdlDataType(function.DataType, 0, null) +
-                           Environment.NewLine);
-            builder.Append("BEGIN" + Environment.NewLine);
-
-            builder.Append("RETURN " + ParameterReferenceChar +
-                           Environment.NewLine);
-            builder.Append("END;" + Environment.NewLine);
-            builder.Append("$$ LANGUAGE plpgsql;");
-            return builder.ToString();
-        }
-        else
-        {
-            throw new InvalidOperationException(
-                ResourceUtils.GetString("DDLForFunctionsOnly"));
-        }
-    }
     public override string ParameterReferenceChar => GenerateConsoleUseSyntax ? "" : ":";
 
     public override string StringConcatenationChar => "||";

@@ -64,6 +64,7 @@ namespace Origam.DA.Service
         }
         public abstract string CreateOutputTableSql(string tmpTable);
         public abstract string CreateDataStructureFooterSql(List<string>tmpTables);
+        public abstract string FunctionDefinitionDdl(Function function);
         public abstract IDbDataParameter GetParameter();
         public IDbDataParameter GetParameter(string name, Type type)
         {
