@@ -6,7 +6,7 @@ using Origam.Schema;
 using Origam.Schema.EntityModel;
 using ResourceUtils = Origam.Schema.ResourceUtils;
 
-class MsSqlRenderer: SqlRenderer {
+public class MsSqlRenderer: SqlRenderer {
     
     public override string NameLeftBracket => "[";
 

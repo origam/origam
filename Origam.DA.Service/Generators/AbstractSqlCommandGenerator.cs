@@ -323,12 +323,10 @@ namespace Origam.DA.Service
             
             FilterCommandParser filterCommandParser =
                 new FilterCommandParser(
-                    nameLeftBracket: sqlRenderer.NameLeftBracket,
-                    nameRightBracket: sqlRenderer.NameRightBracket,
                     dataStructureColumns: entity.Columns, 
                     filterRenderer: filterRenderer, 
                     whereFilterInput: selectParameters.CustomFilters.Filters,
-                    parameterReferenceChar: sqlRenderer.ParameterReferenceChar);            
+                    sqlRenderer: sqlRenderer);            
             OrderByCommandParser orderByCommandParser =
                 new OrderByCommandParser(
                     orderingsInput: selectParameters.CustomOrderings.Orderings);

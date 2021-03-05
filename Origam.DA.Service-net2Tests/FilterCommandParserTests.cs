@@ -387,11 +387,9 @@ namespace Origam.DA.ServiceTests
             List<ParameterData> expectedParameters)
         {
             var sut = new FilterCommandParser(
-                nameLeftBracket: "[",
-                nameRightBracket: "]",
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter, 
-                parameterReferenceChar: "@",
+                sqlRenderer: new MsSqlRenderer(),
                 columns: new List<ColumnInfo>
                 {
                     new ColumnInfo{Name = "name", DataType = OrigamDataType.String},
@@ -420,11 +418,9 @@ namespace Origam.DA.ServiceTests
             string[] expectedColumnNames)
         {
             var sut = new FilterCommandParser(
-                nameLeftBracket: "[",
-                nameRightBracket: "]",
                 filterRenderer: new MsSqlFilterRenderer(),
                 whereFilterInput: filter,
-                parameterReferenceChar: "@",
+                sqlRenderer: new MsSqlRenderer(),
                 columns: new List<ColumnInfo>
                 {
                     new ColumnInfo{Name = "name", DataType = OrigamDataType.String},
@@ -447,11 +443,9 @@ namespace Origam.DA.ServiceTests
             Assert.Throws<ArgumentException>(() =>
             {
                 var test = new FilterCommandParser(
-                        nameLeftBracket: "[",
-                        nameRightBracket: "]",
                         filterRenderer: new MsSqlFilterRenderer(),
                         whereFilterInput: filter,
-                        parameterReferenceChar: "@",
+                        sqlRenderer: new MsSqlRenderer(),
                         columns: new List<ColumnInfo>())
                     .Sql;
             });

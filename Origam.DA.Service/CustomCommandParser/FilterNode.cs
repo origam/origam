@@ -9,8 +9,7 @@ namespace Origam.DA.Service.CustomCommandParser
 {
     class FilterNode
     {
-        private readonly string nameLeftBracket;
-        private readonly string nameRightBracket;
+        private readonly SqlRenderer sqlRenderer;
         private readonly Dictionary<string, string> lookupExpressions;
         private readonly List<ColumnInfo> columns;
         private string[] splitValue;
@@ -62,7 +61,7 @@ namespace Origam.DA.Service.CustomCommandParser
         private string RenderedColumnName =>
             lookupExpressions.ContainsKey(ColumnName)
                 ? lookupExpressions[ColumnName]
-                : nameLeftBracket + ColumnName + nameRightBracket;
+                : sqlRenderer.NameLeftBracket + ColumnName + sqlRenderer.NameRightBracket;
 
 
         private string Operator => SplitValue?.Length > 1 
@@ -104,18 +103,15 @@ namespace Origam.DA.Service.CustomCommandParser
         private readonly List<ParameterData> parameterDataList;
         private readonly string parameterReferenceChar;
 
-        public FilterNode(string nameLeftBracket, string nameRightBracket, Dictionary<string,string> lookupExpressions, 
+        public FilterNode(SqlRenderer sqlRenderer,Dictionary<string,string> lookupExpressions, 
             List<ColumnInfo> columns,
-            AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList,
-            string parameterReferenceChar)
+            AbstractFilterRenderer filterRenderer, List<ParameterData> parameterDataList)
         {
-            this.nameLeftBracket = nameLeftBracket;
-            this.nameRightBracket = nameRightBracket;
+            this.sqlRenderer = sqlRenderer;
             this.lookupExpressions = lookupExpressions;
             this.columns = columns;
             renderer = filterRenderer;
             this.parameterDataList = parameterDataList;
-            this.parameterReferenceChar = parameterReferenceChar;
         }
 
         private string GetParameterNameSql(string columnName)
