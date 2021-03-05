@@ -395,7 +395,7 @@ namespace Origam.DA.Service.CustomCommandParser
             {
                 throw new ArgumentException("Cannot prepend \"%\" to a value which is not a parameter");
             }
-            return "'%' " + renderer.StringConcatenationChar+" "+value;
+            return "'%'" + renderer.StringConcatenationChar + value;
         } 
         private string AppendWildCard(string value)
         {
@@ -403,7 +403,7 @@ namespace Origam.DA.Service.CustomCommandParser
             {
                 throw new ArgumentException("Cannot append \"%\" to a value which is not a parameter");
             }
-            return value +" "+ renderer.StringConcatenationChar + " '%'";
+            return value + renderer.StringConcatenationChar + "'%'";
         }
     }
 }
