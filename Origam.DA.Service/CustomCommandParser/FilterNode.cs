@@ -242,7 +242,7 @@ namespace Origam.DA.Service.CustomCommandParser
                         operatorName: operatorName);
                 }
 
-                object value = ToDbValue(ColumnValue, Column.DataType);
+                object value = ToDbValue(ColumnValue, ParameterDataType);
                 if ((Operator == "eq" || Operator == "neq") &&
                     Column.DataType == OrigamDataType.Date &&
                     IsWholeDay((DateTime)value))
