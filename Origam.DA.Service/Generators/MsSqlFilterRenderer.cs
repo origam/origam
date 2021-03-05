@@ -23,6 +23,8 @@ namespace Origam.DA.Service.Generators
 {
     public class MsSqlFilterRenderer : AbstractFilterRenderer
     {
+        public override string StringConcatenationChar => "+";
+
         protected override string LikeOperator()
         {
             return "LIKE";

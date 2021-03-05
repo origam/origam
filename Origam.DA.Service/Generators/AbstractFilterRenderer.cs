@@ -189,6 +189,8 @@ namespace Origam.DA.Service
 
         protected abstract string LikeOperator();
 
+        public abstract string StringConcatenationChar { get; }
+
         private static void CheckArgumentEmpty(string name, string argument)
         {
             if (argument == null)
