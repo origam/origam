@@ -55,7 +55,9 @@ namespace Origam.ServerCore.Authorization
         // invoked, when e-mail is changed (comes also with EmailConfirmed change)
         // since we're going to change only OrigamUser - Only EmailConfirmed is
         // relevant and this info comes in IsApproved
+#pragma warning disable 1998
         public override async Task<IdentityResult> UpdateAsync(IOrigamUser user)
+#pragma warning restore 1998
         {
             var origamUserDataSet = UserStore.GetOrigamUserDataSet(
                 UserStore.GET_ORIGAM_USER_BY_USER_NAME,
