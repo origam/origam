@@ -403,7 +403,6 @@ namespace Origam.DA.Service.CustomCommandParser
             {
                 throw new ArgumentException("Cannot append \"%\" to a value which is not a parameter");
             }
-            // return value + "+'%'";
             return value +" "+ renderer.StringConcatenationChar + " '%'";
         }
     }
